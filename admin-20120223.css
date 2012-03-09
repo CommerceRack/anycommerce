@@ -1,0 +1,222 @@
+/*
+items that are floated may cause their containers to 'shrink'. apply this class to the container
+class can also be applied to a 1 item per row list.
+*/
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+.displayNone	{display:none;}
+
+/* for use on lists where no bullets, indents, etc are needed. add on ul */
+.plainList	{margin:0; padding:0; list-style:none;}
+
+button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for buttons. i like buttons. this is to handle padding on text only buttons */
+.ui-selectee	{cursor:pointer;}
+
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+/*
+
+FINDER STYLES
+
+
+*/
+
+
+/*
+any div that is going to be the container for a product finder should have this class.
+the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
+*/
+
+.finderContainer	{width:100%; margin:12px 0;}
+.finderContainer .ui-widget-header	{padding:4px;}
+
+
+.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.8em} /* search button */
+.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+/*
+used in the template for a product finder.
+use only variable widths, so that the finder expands proportionally depending
+on it's container element.
+*/
+.finderTable	{width:800px;}
+.finderTable	td {padding:6px; width:50%;}
+
+
+
+/* for product lists in a finder. */
+
+/* scrolly-div for product lists */
+.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
+
+/*
+parent element for list (either ol or ul)
+min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
+*/
+.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
+
+/*
+a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
+the right padding is to accomodate the handle and removeProd elements.
+ */
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff;}
+.finderProdlist li:hover	{border-color: #cccccc;}
+
+.finderProdlist .prodThumb	{float:left; margin-right:12px;}
+.finderProdlist .pid	{font-size:.8em}
+.finderProdlist .prodName	{margin-right:55px;}
+
+
+/*
+styles for lists that are selectable
+a background on the target element may require an implicit override here.
+*/
+.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
+.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
+
+/* if a list is selectable and sortable, add an element with a handle class */
+.ui-selecting .handle { background: #ddd; }
+.ui-selected .handle { background: #cde; }
+
+
+.finderResults	{z-index:100;}
+.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
+
+/* the remove feature is only available on the target side */
+.finderResults .removeProd	{display:none;}
+
+
+/* a global 'handle' class for now. for consistency. 
+later if more variety is needed, we can either create exceptions or more rules to handle all cases.
+*/
+.handle { background: #f8f8f8; position: absolute; right: 0; top: 0; bottom: 0; padding:14px 6px 0 6px; cursor:pointer; }
+
+.simpleListItem .removeProd, .simpleListItem .handle	{padding-top:3px;} /* less padding on top because lineitem is shorter (no image) */
+
+
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(//static.zoovy.com/graphics/layouts/checkout-20111031/loading_blue-28x28.gif) no-repeat center center  !important; min-height:28px;}
+
+
+/* multipage controls */
+
+
+/* a border is added via another class on the mpheader, so this strips off all but the bottom */
+.mpControls	{clear:both; display:block; padding:3px; position:relative; margin-bottom:6px; z-index:600;}
+.mpControls span.ui-state-active	{padding: 2px 3px;}
+.finderProdlistContainer .mpControls	{border:0; border-bottom-width:1px; line-height:24px;}
+
+
+
+
+
+.ui-widget fieldset	{margin:0; padding:0; border:0;}
+.ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
+
+/* used for the wiki header 1 & 2 */
+.ui-widget h2	{font-size:1.4em; color:#333333; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h3, .ui-widget  legend	{font-size:1.3em; color:#616161; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h4	{font-size:1.2em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h5	{font-size:1.1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h6	{font-size:1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
+
+#headerSearchFrm	{float:right;}
+#headerSearchFrm legend {display:none;}
+#headerSearchFrm fieldset	{text-align:right}
+#headerKeywordsInput	{width:350px;}
+
+
+
+
+/* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
+
+
+
+/* Pure CSS3 Multi Level Drop Down Navigation Menu */
+/*             http://www.bloggermint.com/demos/darknavmenu/#            */
+
+
+/* menu container */
+.ddUlMenu ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier1 menu behavior */
+.ddUlMenu ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier 1 menu link style (ok to change this). will affect tier2 also */
+.ddUlMenu ul li a {
+	float: left;
+	text-decoration:none;
+	padding:0 12px;
+	cursor:pointer;
+	}
+
+
+.ddUlMenu li ul {
+	background:#efefef;
+	left: -999em;
+	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
+	position: absolute;
+	width: 160px;
+	z-index: 9999;
+	border:1px solid #cccccc;
+	}
+
+.ddUlMenu li:hover ul {
+	left: auto;
+	}
+
+/* tier 2 nav */
+.ddUlMenu li ul li	{cursor:pointer;} /* click is likely binded to li, so make it all a cursor */
+.ddUlMenu li ul a {
+	background: none;
+	line-height:24px;
+	font-weight:normal; font-size:.8em;
+	display:block;
+	border: 0 none;
+	width: 160px;
+	}
+	
+
+
+
+/* order manager styles */
+
+#orderListMessaging	{max-height:220px; overflow:auto;}
+#orderList	{margin:0 auto;font-size:.8em;} /* the container. the margin will center it on the page */
+table.leftMenuTable, table.leftMenuTable td {padding:0; border-collapse:collapse;}
+.leftMenuTable	td.mainCol	{vertical-align:top;}
+.leftMenuTable	td.leftCol	{width:210px; vertical-align:top; height:100%;}
+.leftMenuTable	td.mainCol .ui-widget-header	{padding:2px 12px;}
+.leftMenuTable	td.leftCol .ui-widget-content	{border-right:none;}
+#orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
+#orderFilters h4	{margin:1px 6px;}
+#orderFilters ul	{margin-bottom:12px;}
+#orderFilters li	{padding:1px 12px;}
+
+.viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
