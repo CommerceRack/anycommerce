@@ -70,13 +70,17 @@ however, it is highly recommended that you only use the immutable q for checkout
 
 even though multiple dispatches can occur at the same time, it's still in your interest to pack the queue and dispatch at once.
 it'll be faster with fewer dispatches.
+
+
+myControl.ajax.overrideAttempts - keeps track of how many times a dispatch has attempted while another is in progress.
+myControl.ajax.lastDispatch - keeps track of when the last dispatch occurs. Not currently used for much, but could allow for some auto-passive dispatches when idle.
 */
 
 function zoovyModel() {
 		
 	var r = {
 	
-		version : "201209",
+		version : "201215",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -187,6 +191,7 @@ function zoovyModel() {
 			var myQ = new Array();
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in myControl.q[QID]) {
+//				myControl.util.dump(" -> CMD: "+myControl.q[QID][index]['_cmd']);
 				if(myControl.q[QID][index].status == 'queued')	{
 					myControl.q[QID][index]['status'] = "requesting";
 					myQ.push(myControl.q[QID][index]);
@@ -208,6 +213,7 @@ function zoovyModel() {
 //for this reason, the passive q requests should NEVER have callbacks on them.
 //and tho technically you 'could' pass immutable as the QID, you should never cancel an immutable request, as these should be saved for 'add to cart' or 'checkout' requests.
 		abortQ : function(QID)	{
+			myControl.ajax.overrideAttempts = 0;  //the q is being reset essentially. this needs to be reset to zero so attempts starts over. 
 			var r = 0; //incremented with each cancelled request. returned.
 			for(index in myControl.ajax.requests[QID])	{
 				myControl.ajax.requests[QID][index].abort();
@@ -228,7 +234,7 @@ function zoovyModel() {
 				}
 			},
 */
-//if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid in question.
+//if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid(s) in question.
 //function is also run when model.abortQ is executed.
 //don't need a QID because only the general dispatchQ gets muted... for now. ### add support for multiple qids
 		handleDualRequests : function()	{
@@ -268,7 +274,7 @@ function zoovyModel() {
 	*/
 	
 		dispatchThis : function(QID)	{
-			myControl.util.dump('BEGIN model.dispatchThis');
+//			myControl.util.dump('BEGIN model.dispatchThis');
 			var r = true; //set to false if no dispatch occurs. return value.
 			QID = QID === undefined ? 'mutable' : QID; //default to the general Q, but allow for priorityQ to be passed in.
 //			myControl.util.dump(' -> Focus Q = '+QID);
@@ -322,10 +328,13 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 //it is constantly being overwritten, emptied, etc and by the time handle_response is running, another request could occur using a different Q
 //and your code breaks.
 
-				myControl.util.dump(' -> Q In Use is '+QID);
+//				myControl.util.dump(' -> Q In Use is '+QID);
 	//			myControl.util.dump(' -> Q = ');
 	//			myControl.util.dump(Q);
-		myControl.ajax.lastDispatch = myControl.util.unixNow();
+//if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
+				myControl.ajax.lastDispatch = myControl.util.unixNow();
+				myControl.ajax.overrideAttempts = 0;
+				
 				myControl.ajax.requests[QID][UUID] = $.ajax({
 					type: "POST",
 					url: myControl.vars.jqurl,
@@ -350,7 +359,7 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 						myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
 //IMPORTANT
 //this delete removes the ajax request from the requests array. If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results.
-//even though it gets attempted again. ### maybe the if/else loop should see if the uuid object already exists and if so, proceed?
+//even though it gets attempted again.
 						delete myControl.ajax.requests[QID][UUID];
 						setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 						},
@@ -528,8 +537,12 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 //effectively, a request occured but no data manipulation is required and/or available.
 			if(!$.isEmptyObject(responseData['_rtag']) && myControl.util.isSet(responseData['_rtag']['datapointer']) && hasErrors == false)	{
 				datapointer = responseData['_rtag']['datapointer'];
-	//on a ping, it is possible a datapointer may be set but we DO NOT want to write the pings response over that data, so we ignore pings.
-				if(responseData['_rcmd'] != 'ping')	{
+//on a ping, it is possible a datapointer may be set but we DO NOT want to write the pings response over that data, so we ignore pings.
+//an appPageGet request needs the requested data to extend the original page object. (in case two separate request come in for different attributes for the same category.	
+				if(responseData['_rcmd'] == 'ping' || responseData['_rcmd'] == 'appPageGet')	{
+
+					}
+				else	{
 					myControl.data[datapointer] = responseData;
 					myControl.storageFunctions.writeLocal(datapointer,responseData); //save to local storage, if feature is available.
 					}
@@ -543,8 +556,11 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 					myControl.util.dump('WARNING response for uuid '+uuid+' had errors. no callback was defined.')
 					}
 				else if(!$.isEmptyObject(callbackObj) && typeof callbackObj.onError != 'undefined'){
-					myControl.util.dump('WARNING response for uuid '+uuid+' had errors. callback defined and executed.')
-					callbackObj.onError(responseData,responseData['_rtag']); //execute a myControl. must be a myControl. view and model don't talk.
+					myControl.util.dump('WARNING response for uuid '+uuid+' had errors. callback defined and executed.');
+/* below, responseData['_rtag'] was passed instead of uuid, but that's already available as part of the first var passed in.
+uuid is more useful because on a high level error, rtag isn't passed back in responseData. this way uuid can be used to look up originat _tag obj.
+*/
+					callbackObj.onError(responseData,uuid); //execute a myControl. must be a myControl. view and model don't talk.
 					}
 				else{
 					myControl.util.dump('ERROR response for uuid '+uuid+'. callback defined but does not exist or is not valid type. callback = '+callback+' datapointer = '+datapointer)
@@ -589,22 +605,22 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 	
 	//this function gets executed upon a successful request for a create order.
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
-		handleResponse_createOrder : function(responseData)	{
+		handleResponse_cartOrderCreate : function(responseData)	{
 	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
-			myControl.util.dump("BEGIN model.handleResponse_createOrder");
+//			myControl.util.dump("BEGIN model.handleResponse_createOrder");
 			var datapointer = "order|"+responseData.orderid;
-			myControl.storageFunctions.writeLocal(datapointer,myControl.data.showCart);  //save order locally to make it available for upselling et all.
-			myControl.data[datapointer] = myControl.data.showCart; //saved to object as well for easy access.
+			myControl.storageFunctions.writeLocal(datapointer,myControl.data.cartItemsList);  //save order locally to make it available for upselling et all.
+			myControl.data[datapointer] = myControl.data.cartItemsList; //saved to object as well for easy access.
 	//nuke cc fields, if present.		
 			myControl.data[datapointer].cart['payment.cc'] = null;
 			myControl.data[datapointer].cart['payment.cv'] = null;
 			myControl.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			return responseData.orderid;
-			}, //handleResponse_newSession
+			}, //handleResponse_cartOrderCreate
 	
 	
 //no special error handling or anything like that.  this is just here to get the category safe id into the response for easy reference.	
-		handleResponse_categoryDetail : function(responseData)	{
+		handleResponse_appCategoryDetail : function(responseData)	{
 //			myControl.util.dump("BEGIN model.handleResponse_categoryDetail");
 //save detail into response to make it easier to see what level of data has been requested during a fetch or call
 			if(responseData['_rtag'] && responseData['_rtag'].detail){
@@ -617,14 +633,36 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 			}, //handleResponse_categoryDetail
 
 
-//admin session returns a zjsid if response	
+/*
+It is possible that multiple requests for page content could come in for the same page at different times.
+so to ensure saving to appPageGet|.safe doesn't save over previously requested data, we extend it the ['%page'] object.
+*/
+		handleResponse_appPageGet : function(responseData)	{
+			if(responseData['_rtag'] && responseData['_rtag'].datapointer)	{
+				var datapointer = responseData['_rtag'].datapointer;
+				if(myControl.data[datapointer])	{
+					//already exists.  extend the %page
+					myControl.data[datapointer]['%page'] = $.extend(myControl.data[datapointer]['%page'],responseData['%page']);
+					}
+				else	{
+					myControl.data[datapointer] = responseData;
+					}
+				myControl.storageFunctions.writeLocal(datapointer,myControl.data[datapointer]); //save to local storage, if feature is available.
+				}
+			myControl.model.handleResponse_defaultAction(responseData);
+			}, //handleResponse_appPageGet
 
-		handleResponse_authorizeAdminSession : function(responseData)	{
+
+
+//admin session returns a zjsid if response	
+// formerly authorizeAdminSession
+//		handleResponse_appAdminAuthenticate
+		handleResponse_appAdminAuthenticate: function(responseData)	{
 //			myControl.storageFunctions.deleteCookie('zjsid'); //nuke any previous zjsid cookie
 			myControl.util.dump("BEGIN model.handleResponse_newAdminSession . ("+responseData['_uuid']+")");
 			myControl.util.dump(" -> _zjsid = "+responseData['_zjsid']);
 			if(myControl.util.isSet(responseData['_zjsid']))	{
-				this.handleResponse_newSession(responseData); //saves session data locally and into control.
+				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				myControl.storageFunctions.writeLocal('zjsid',responseData['_zjsid']);
 				myControl.storageFunctions.writeCookie('zjsid',responseData['_zjsid']);
 //				var date = new Date();
@@ -635,12 +673,12 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 				}
 			},
 
-
-		handleResponse_canIHaveSession : function(responseData)	{
+// formerly canIHaveSession
+		handleResponse_appCartExists : function(responseData)	{
 //			myControl.util.dump("BEGIN model.handleResponse_canIHaveSession . ("+responseData['_uuid']+")");
 //			myControl.util.dump(" -> exists = "+responseData.exists);
 			if(responseData.exists == 1)	{
-				this.handleResponse_newSession(responseData); //saves session data locally and into control.
+				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				}
 			else	{
 				myControl.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
@@ -648,9 +686,10 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 			},
 
 //this function gets executed upon a successful request for a new session id.
-//it is also executed if canIHaveSession returns exists=1 (yes, you can).
-		handleResponse_newSession : function(responseData)	{
-			myControl.util.dump(" --> newSession Response executed. ("+responseData['_uuid']+")");
+//it is also executed if appAdminAuthenticate returns exists=1 (yes, you can).
+//formerly newSession
+		handleResponse_appCartCreate : function(responseData)	{
+			myControl.util.dump(" --> appCartCreate Response executed. ("+responseData['_uuid']+")");
 //			myControl.util.dump("RESPONSE DATA:");
 //			myControl.util.dump(responseData);
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
@@ -661,10 +700,12 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 			myControl.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			myControl.util.dump("sessionID = "+responseData['_zjsid']);
 			return responseData['_zjsid'];
-			}, //handleResponse_newSession
+			}, //handleResponse_appCartCreate
 	
-
-	
+/*
+in most cases, the errors are handled well by the API and returned either as a single message (errmsg)
+or as a series of messages (_msg_X_id) where X is incremented depending on the number of errors.
+*/	
 		responseHasErrors : function(responseData)	{
 	//		myControl.util.dump('BEGIN model.responseHasErrors');
 //at the time of this version, some requests don't have especially good warning/error in the response.
@@ -672,10 +713,21 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 			var r = false; //defaults to no errors found.
 			switch(responseData['_rcmd'])	{
 				case 'getProduct':
-					if(!responseData['%attribs']['db:id']) {r = true; } //db:id will not be set if invalid sku was passed.
+//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
+					if(!responseData['%attribs']['db:id']) {
+						r = true;
+						responseData['errid'] = "MVC-M-100";
+						responseData['errtype'] = "apperr"; 
+						responseData['errmsg'] = "could not find product (may not exist)";
+						} //db:id will not be set if invalid sku was passed.
 					break;
 				case 'categoryDetail':
-					if(responseData.errid > 0 || responseData['exists'] == 0)	{r = true} //a response errid of zero 'may' mean no errors.
+					if(responseData.errid > 0 || responseData['exists'] == 0)	{
+						r = true
+						responseData['errid'] = "MVC-M-200";
+						responseData['errtype'] = "apperr";
+						responseData['errmsg'] = "could not find category (may not exist)";
+						} //a response errid of zero 'may' mean no errors.
 					break;
 				case 'searchResult':
 					//currently, there are no errors. I have a hunch this will change.
@@ -795,7 +847,7 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 			else if(s = myControl.storageFunctions.readLocal('sessionId'))	{
 //				myControl.util.dump(' -> sessionId is set in local from previous ajax session');										 
 				}
-//see note in handleResponse_newSession to learn why this is commented out.
+//see note in handleResponse_appCartCreate to learn why this is commented out.
 //			else if(s = myControl.storageFunctions.readLocal(myControl['username']+"-cartid"))	{
 //				myControl.util.dump(' -> sessionId is set in local from cookie. possibly from storefront session (non-ajax)');
 //				}
@@ -856,7 +908,7 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 	
 	
 	loadTemplates : function(namespace)	{
-		myControl.util.dump("model.loadTemplates for "+namespace);
+//		myControl.util.dump("model.loadTemplates for "+namespace);
 		var errors = ''; //what is returned.  if not false, errors are present (and returned)
 		var templateID; //used for a quick reference to which id in the loop is in focus.
 		var $templateSpec; //used to store the template/spec itself for the template.
@@ -992,7 +1044,7 @@ respond accordingly.
 						}
 					},
 				error: function(a,b,c) {
-					$('#globalMessaging').append("<div class='ui-state-error ui-corner-all'>Uh oh! It appears something went wrong with our app. If error persists, please contact the side administrator.<br \/>(error: ext "+extensionObjItem.namespace+" had error type "+b+")<\/div>"); 
+					$('#globalMessaging').append("<div class='ui-state-error ui-corner-all'>Uh oh! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extensionObjItem.namespace+" had error type "+b+")<\/div>"); 
 					myControl.util.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					myControl.util.dump(c);
 					}
@@ -1041,9 +1093,9 @@ this makes extension sequence less important when initializing the controller.
 //that contains most of the logic native to their app.
 */
 		handleDependenciesFor : function(extension,callback)	{
-			myControl.util.dump("BEGIN myControl.model.handleDependenciesFor");
-			myControl.util.dump(" -> extension: "+extension);
-			myControl.util.dump(" -> callback: "+callback);
+//			myControl.util.dump("BEGIN myControl.model.handleDependenciesFor");
+//			myControl.util.dump(" -> extension: "+extension);
+//			myControl.util.dump(" -> callback: "+callback);
 			var L = myControl.ext[extension].vars.dependencies.length;
 			var inc = 0;
 //			myControl.util.dump(" -> # dependencies: "+L);
@@ -1052,7 +1104,7 @@ this makes extension sequence less important when initializing the controller.
 				}
 
 			if(inc == L)	{
-				myControl.util.dump(" -> all dependencies for extension."+extension+" should be loaded. execute callback.");
+//				myControl.util.dump(" -> all dependencies for extension."+extension+" should be loaded. execute callback.");
 				myControl.ext[extension].callbacks[callback].onSuccess();
 				}
 			else	{

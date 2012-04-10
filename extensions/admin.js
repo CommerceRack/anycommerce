@@ -31,6 +31,7 @@ var admin = function() {
 		
 	vars : {
 		"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
+		"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
 		"dependencies" : ['store_prodlist','store_navcats','store_product','store_search'] //a list of other extensions (just the namespace) that are required for this one to load
 		},
 
@@ -42,45 +43,45 @@ var admin = function() {
 
 	calls : {
 		navcats : {
-//myControl.ext.admin.calls.navcats.categoryDetailNoLocal.init(path,{},'immutable');
-			categoryDetailNoLocal : {
+//myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
+			appCategoryDetailNoLocal : {
 				init : function(path,tagObj,Q)	{
 					tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-					tagObj.datapointer = 'categoryDetail|'+path;
+					tagObj.datapointer = 'appCategoryDetail|'+path;
 					this.dispatch(path,tagObj,Q);
 					return 1;
 					},
 				dispatch : function(path,tagObj,Q)	{
-					myControl.model.addDispatchToQ({"_cmd":"categoryDetail","safe":path,"detail":"fast","_tag" : tagObj},Q);	
+					myControl.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":path,"detail":"fast","_tag" : tagObj},Q);	
 					}
-				}//categoryDetail
+				}//appCategoryDetail
 			
 			}, //navcats
 
-		getResource : {
+		appResource : {
 			init : function(filename)	{
 				this.dispatch(filename);
 				},
 			dispatch : function(filename)	{
-				myControl.model.addDispatchToQ({"_cmd":"getResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
+				myControl.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
 				}
 			
-			}, //mediaLib
+			}, 
 
 		mediaLib : {
 
-			folderList : {
+			adminImageFolderList : {
 				init : function()	{
 					this.dispatch();
 					},
 				dispatch : function()	{
 					myControl.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : {"datapointer":"adminImageFolderList"}});	
 					}
-				} //folderList
+				} //adminImageFolderList
 			
 			}, //mediaLib
 		product : {
-			getProductNoLocal : {
+			appProductGetNoLocal : {
 				init : function(pid,tagObj,Q)	{
 					this.dispatch(pid,tagObj,Q)
 					return 1;
@@ -88,13 +89,13 @@ var admin = function() {
 				dispatch : function(pid,tagObj,Q)	{
 					var obj = {};
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-					tagObj["datapointer"] = "getProduct|"+pid; 
-					obj["_cmd"] = "getProduct";
+					tagObj["datapointer"] = "appProductGet|"+pid; 
+					obj["_cmd"] = "appProductGet";
 					obj["pid"] = pid;
 					obj["_tag"] = tagObj;
 					myControl.model.addDispatchToQ(obj,Q);
 					}
-				},//getProductNoLocal
+				},//appProductGetNoLocal
 //myControl.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
 			adminProductUpdate : {
 				init : function(pid,attrObj,tagObj)	{
@@ -112,12 +113,13 @@ var admin = function() {
 					}
 				}
 				
-			},
+			}, //product
 		finder : {
 			
-			productInsert : {
+			adminNavcatProductInsert : {
 				init : function(pid,position,path,tagObj)	{
-						this.dispatch(pid,position,path,tagObj);
+					this.dispatch(pid,position,path,tagObj);
+					return 1;
 					},
 				dispatch : function(pid,position,path,tagObj)	{
 					var obj = {};
@@ -129,11 +131,11 @@ var admin = function() {
 					obj['_tag'].datapointer = "adminNavcatProductInsert|"+path+"|"+pid;
 					myControl.model.addDispatchToQ(obj,'immutable');	
 					}
-				},
+				}, //adminNavcatProductInsert
 			
-			productDelete : {
+			adminNavcatProductDelete : {
 				init : function(pid,path,tagObj)	{
-						this.dispatch(pid,path,tagObj);
+					this.dispatch(pid,path,tagObj);
 					},
 				dispatch : function(pid,path,tagObj)	{
 					var obj = {};
@@ -144,9 +146,9 @@ var admin = function() {
 					obj['_tag'].datapointer = "adminNavcatProductDelete|"+path+"|"+pid;
 					myControl.model.addDispatchToQ(obj,'immutable');	
 					}
-				} //productDelete
+				} //adminNavcatProductDelete
 			
-			}
+			} //finder
 
 		}, //calls
 
@@ -170,7 +172,8 @@ var admin = function() {
 
 var $templateDiv = $('<div \/>')
 $templateDiv.attr('id','adminTemplates').hide().appendTo('body');
-var result = $templateDiv.load('/biz/ajax/zmvc/201209/admin_templates.html',function(response, status, xhr){
+// /biz/ajax/zmvc/201211/admin_templates.html
+var result = $templateDiv.load('//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html',function(response, status, xhr){
 	if (status == "error") {
 		r = false;
 		alert('An error occured while trying to load the admin templates.'); //!!! improve this.
@@ -202,6 +205,34 @@ var result = $templateDiv.load('/biz/ajax/zmvc/201209/admin_templates.html',func
 				}
 			}, //init
 
+
+
+		handleElasticFinderResults : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
+				var L = myControl.data[tagObj.datapointer]['_count'];
+				myControl.util.dump(" -> Number Results: "+L);
+				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
+				if(L == 0)	{
+					$parent.append("Your query returned zero results.");
+					}
+				else	{
+					var pid;//recycled shortcut to product id.
+					for(var i = 0; i < L; i += 1)	{
+						pid = myControl.data[tagObj.datapointer].hits.hits[i]['_id'];
+//						myControl.util.dump(" -> "+i+" pid: "+pid);
+						$parent.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},'adminElasticResult',myControl.data[tagObj.datapointer].hits.hits[i]['_source']));
+						}
+					myControl.ext.admin.util.filterFinderResults();
+					}
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
+				}
+			},
+
+
+
 //callback executed after the navcat data is retrieved. the util.addfinder does most of the work.
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
@@ -210,13 +241,14 @@ var result = $templateDiv.load('/biz/ajax/zmvc/201209/admin_templates.html',func
 				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+myControl.data[tagObj.datapointer].pretty); //updates modal title
 //				myControl.util.dump(tagObj);
 				},
-			onError : function(d)	{
+			onError : function(responseData,uuid)	{
 				myControl.util.dump("BEGIN admin.callback.addFinderToDom.onError");
-				$('#'+d['_rtag'].targetID).removeClass('loadingBG').empty().append(myControl.util.getResponseErrors(d)).toggle(true);
+				myControl.util.handleErrors(responseData,uuid)
+//				$('#'+d['_rtag'].targetID).removeClass('loadingBG').empty().append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
-			},
+			}, //addFinderToDom
 
-//callback executed after the getProduct data is retrieved for creating a finder, specific to editing an attribute of a product (related items, for example)
+//callback executed after the appProductGet data is retrieved for creating a finder, specific to editing an attribute of a product (related items, for example)
 		addPIDFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump("BEGIN admin.callback.addPIDFinderToDom.success");
@@ -228,7 +260,8 @@ var result = $templateDiv.load('/biz/ajax/zmvc/201209/admin_templates.html',func
 				myControl.util.dump("BEGIN admin.callback.addPIDFinderToDom.onError");
 				$('#'+d['_rtag'].targetID).removeClass('loadingBG').empty().append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
-			},
+			}, //addPIDFinderToDom
+			
 //when a finder for a product attribute is executed, this is the callback.
 		pidFinderChangesSaved : {
 			onSuccess : function(tagObj)	{
@@ -241,7 +274,7 @@ var result = $templateDiv.load('/biz/ajax/zmvc/201209/admin_templates.html',func
 				myControl.ext.admin.util.changeFinderButtonsState('enable');
 				}
 			
-			},
+			}, //pidFinderChangesSaved
 //when a finder for a category/list/etc is executed...
 		finderChangesSaved : {
 			onSuccess : function(tagObj)	{
@@ -256,7 +289,7 @@ var $tmp;
 
 $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function(){
 	$tmp = $(this);
-	myControl.util.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
+//	myControl.util.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
 	if($tmp.attr('data-status') == 'complete')	{
 		uCount += 1;
 		$tmp.removeAttr('data-status'); //get rid of this so additional saves from same session are not impacted.
@@ -286,7 +319,7 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 				$('#finderMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
 				myControl.ext.admin.util.changeFinderButtonsState('enable');
 				}
-			},
+			}, //finderChangesSaved
 		
 //callback is used for the product finder search results.
 		showProdlist : {
@@ -296,6 +329,8 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 					$('#'+tagObj.parentID).empty().removeClass('loadingBG').append('Your search returned zero results');
 					}
 				else	{
+				myControl.util.dump(" -> parentID: "+tagObj.parentID);
+				myControl.util.dump(" -> datapointer: "+tagObj.datapointer);
 				var numRequests = myControl.ext.store_prodlist.util.buildProductList({
 "templateID":"adminProdStdForList",
 "parentID":tagObj.parentID,
@@ -307,13 +342,13 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 						myControl.model.dispatchThis();
 					}
 				},
-			onError : function(d)	{
+			onError : function(responseData,uuid)	{
 				myControl.util.dump('BEGIN admin.callbacks.showProdlist.onError');
-				myControl.util.dump(d);
-				var safePath = myControl.util.makeSafeHTMLId(d.tagObj.parentID);
-				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
+//				myControl.util.dump(d);
+				myControl.util.handleErrors(responseData,uuid);
+//				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
-			},
+			}, //showProdlist
 		
 			
 //executed as part of a finder update for a category page. this is executed for each product.
@@ -323,22 +358,22 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 //				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onSuccess");
 //				myControl.util.dump(myControl.data[tagObj.datapointer]);
 				var tmp = tagObj.datapointer.split('|'); // tmp1 is command and tmp1 is path and tmp2 is pid
-				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "targetCat" : "finderRemovedList";
+				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				targetID += "_"+tmp[2];
-				myControl.util.dump(" -> targetID: "+targetID);
+//				myControl.util.dump(" -> targetID: "+targetID);
 				$('#'+targetID).attr('data-status','complete');
 				},
 			onError : function(d)	{
 //				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
 				var tmp = myControl.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
 //on an insert, the li will be in finderTargetList... but on a remove, the li will be in finderRemovedList_...
-				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "targetCat" : "finderRemovedList";
+				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
 				$('#'+targetID).attr({'data-status':'error','data-pointer':tagObj.datapointer});
 //				myControl.util.dump(d);
 				}
-			},
+			}, //finderProductUpdate
 
 		filterFinderSearchResults : {
 			onSuccess : function(tagObj)	{
@@ -357,9 +392,9 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 						}
 					})
 				},
-			onError : function(d)	{
-				var safePath = myControl.util.makeSafeHTMLId(d.tagObj.path);
-				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid);
+//				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
 			} //filterFinderSearchResults
 
@@ -368,7 +403,22 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 		}, //callbacks
 
 		validate : {}, //validate
-		renderFormats : {},
+		
+		
+		
+////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+		
+		
+		renderFormats : {
+			
+			elastimage1URL : function($tag,data)	{
+//				myControl.util.dump(data.value[0]);
+//				var L = data.bindData.numImages ? data.bindData.numImages : 1; //default to only showing 1 image.
+//				for(var i = 0; i < L; i += 1)	{
+//					}
+				$tag.attr('src',myControl.util.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
+				}
+			},
 
 
 
@@ -386,13 +436,13 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 */
 			addFinderTo : function(targetID,path,sku)	{
 				if(sku)	{
-					myControl.ext.store_product.calls.getProduct.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
+					myControl.ext.store_product.calls.appProductGet.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
 				else	{
-					myControl.ext.store_navcats.calls.categoryDetail.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					myControl.ext.store_navcats.calls.appCategoryDetail.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
 				myControl.model.dispatchThis();
-				},
+				}, //addFinderTo
 
 			showFinderInModal : function(path,sku)	{
 				var $finderModal = $('#prodFinder')
@@ -409,9 +459,9 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 				if(sku){$finderModal.attr('data-sku',sku)}
 				else{$finderModal.removeAttr('data-sku')}
 				
-				$finderModal.attr({'data-path':path}).dialog({modal:true,width:850,height:550});
+				$finderModal.attr({'data-path':path}).dialog({modal:true,width:'94%',height:650});
 				this.addFinderTo('prodFinder',path,sku);
-				}
+				} //showFinderInModal
 			
 			}, //action
 
@@ -423,6 +473,7 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 
 		util : {
 			
+
 			
 			saveFinderChanges : function()	{
 				myControl.util.dump("BEGIN admin.util.saveFinderChanges");
@@ -453,7 +504,7 @@ for a category, each sku added or removed is a separate request.
 					var attribObj = {};
 					attribObj[attribute] = list;
 					myControl.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
-					myControl.ext.admin.calls.product.getProductNoLocal.init(sku,{},'immutable');
+					myControl.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
 					}
 				else	{
 //category/list based finder.
@@ -462,17 +513,17 @@ for a category, each sku added or removed is a separate request.
 						$tmp = $(this);
 						if($tmp.attr('data-status') == 'changed')	{
 							$tmp.attr('data-status','queued')
-							myControl.ext.admin.calls.finder.productInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
+							myControl.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
 							}
 						else if($tmp.attr('data-status') == 'remove')	{
-							myControl.ext.admin.calls.finder.productDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
+							myControl.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
 							$tmp.attr('data-status','queued')
 							}
 						else	{
 //datastatus set but not to a valid value. maybe queued?
 							}
 						});
-					myControl.ext.admin.calls.navcats.categoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				//dispatch occurs on save button, not here.
 				}, //saveFinderChanges
@@ -505,8 +556,11 @@ $listItem.empty().remove();
 
 
 
+
+
+
 /*
-executed in a callback for a categoryDetail or a getProduct.
+executed in a callback for a appCategoryDetail or a appProductGet.
 generates an instance of the product finder.
 targetID is the id of the element you want the finder added to. so 'bob' would add an instance of the finder to id='bob'
 path is the list/category src (ex: .my.safe.id) or a product attribute [ex: product(zoovy:relateditems)].
@@ -515,10 +569,10 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,path,pid){
 
-//myControl.util.dump("BEGIN admin.util.addFinder");
+myControl.util.dump("BEGIN admin.util.addFinder");
 //jquery likes id's with no special characters.
 var safePath = myControl.util.makeSafeHTMLId(path);
-//myControl.util.dump(" -> safePath: "+safePath);
+myControl.util.dump(" -> safePath: "+safePath);
 var prodlist = new Array();
 
 $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
@@ -526,22 +580,28 @@ $target = $('#'+targetID).empty(); //empty to make sure we don't get two instanc
 $target.append(myControl.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+myControl.util.makeSafeHTMLId(path)));
 
 if(pid)	{
-	myControl.renderFunctions.translateTemplate(myControl.data['getProduct|'+pid],"productFinder_"+safePath);
+	myControl.renderFunctions.translateTemplate(myControl.data['appProductGet|'+pid],"productFinder_"+safePath);
 // !!! need to add a check here to see if the field is populated before doing a split.
 //also need to look at path and get the actual field. this is hard coded for testing.
 	var attribute = myControl.renderFunctions.parseDataVar(path);
 	myControl.util.dump(" -> ATTRIBUTE: "+attribute);
-//	myControl.util.dump(" -> aattribute value = "+myControl.data['getProduct|'+pid]['%attribs'][attribute]);
-	if(myControl.data['getProduct|'+pid]['%attribs'][attribute])
-		prodlist = myControl.data['getProduct|'+pid]['%attribs'][attribute].split(',');
+//	myControl.util.dump(" -> aattribute value = "+myControl.data['appProductGet|'+pid]['%attribs'][attribute]);
+	if(myControl.data['appProductGet|'+pid]['%attribs'][attribute])
+		prodlist = myControl.data['appProductGet|'+pid]['%attribs'][attribute].split(',');
 	}
 else	{
-	myControl.renderFunctions.translateTemplate(myControl.data['categoryDetail|'+path],"productFinder_"+safePath);
-	prodlist = myControl.data['categoryDetail|'+path]['@products'];
+	myControl.util.dump(" -> NON product attribute (no pid specified)");
+	myControl.renderFunctions.translateTemplate(myControl.data['appCategoryDetail|'+path],"productFinder_"+safePath);
+	prodlist = myControl.data['appCategoryDetail|'+path]['@products'];
 	}
+
+//myControl.util.dump(" -> path: "+path);
+//myControl.util.dump(" -> prodlist: "+prodlist);
 
 var numRequests = myControl.ext.store_prodlist.util.buildProductList({
 	"templateID": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
+	"items_per_page" : 500, //max out at 500 items
+	"hide_multipage" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
 	"parentID":"finderTargetList",
 //	"items_per_page":100,
 	"csv":prodlist
@@ -587,19 +647,71 @@ $('#productFinder_'+safePath+' [data-finderAction]').each(function(){
 	});
 
 //bind the action on the search form.
-$('#finderSearchForm').submit(function(){
-	myControl.ext.store_search.calls.searchResult.init($(this).serializeJSON(),{
-		"callback":"showProdlist",
-		"extension":"admin",
-		"parentID":"finderSearchResults"});
-	myControl.calls.ping.init({"callback":"filterFinderSearchResults","extension":"admin","path":path});
-	myControl.model.dispatchThis();
+$('#finderSearchForm').submit(function(event){
+	myControl.ext.admin.util.handleFinderSearch();
+	event.preventDefault();
 	return false})
+
 
 				
 				}, //addFinder
 
+//was used in the finder, but it isn't anymore or limited to this.
+//returns an array of tags that were checked.
+//idprefex will be prepended to the tag name. ex: idprefix = bob_, then id's bob_IS_FRESH will be checked.
+			whichTagsAreChecked : function(idprefix)	{
+				var r = new Array();
+				var L = myControl.ext.admin.vars.tags.length;
+				for(var i = 0; i < L; i += 1)	{
+					if($('#'+idprefix+myControl.ext.admin.vars.tags[i]).is(':checked')){r.push(myControl.ext.admin.vars.tags[i])};
+					}
+				return r;
+				},
+
+			tagsAsCheckboxes : function(idprefix)	{
+				var r = ''; //what is returned. a chunk of html. each tag with a checkbox.
+				var L = myControl.ext.admin.vars.tags;
+				for(var i = 0; i < L; i += 1)	{
+					r += "<div><input type='checkbox' id='finderSearchFilter_"+myControl.ext.admin.vars.tags[i]+"' name='"+myControl.ext.admin.vars.tags[i]+"' /><label for='finderSearchFilter_"+myControl.ext.admin.vars.tags[i]+"'>"+myControl.ext.admin.vars.tags[i].toLowerCase()+"</label></div>"
+					}
+				return r;
+				},
+
+
+//need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
+			handleFinderSearch : function()	{
+				$('#finderSearchResults').empty().addClass('loadingBG');
+				var qObj = {}; //query object
+				var columnValue = $('#finderSearchQuery').val();
+				qObj.type = 'product';
+				qObj.mode = 'elastic-native';
+				qObj.size = 400;
+				qObj.query =  {"query_string" : {"query" : columnValue}};
 			
+				//dispatch is handled by form submit binder
+				myControl.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch"});
+				myControl.model.dispatchThis();
+				},
+
+
+//will 'disable' any item that is in the result set that already appears in the category or as a accessory/related item.
+			filterFinderResults : function()	{
+//				myControl.util.dump("BEGIN admin.callbacks.filterFinderSearchResults");
+				var $tmp;
+//go through the results and if they are already in this category, disable drag n drop.
+				$results = $('#finderSearchResults');
+				$results.find('li').each(function(){
+					$tmp = $(this);
+					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
+//						myControl.util.dump(" -> MATCH! disable dragging.");
+						$tmp.addClass('ui-state-disabled');
+						}
+					})				
+				
+				}, //filterFinderResults
+
+
+
 			changeFinderButtonsState : function(state)	{
 				$dom = $('#prodFinder [data-finderaction]')
 				if(state == 'enable')	{
@@ -611,7 +723,7 @@ $('#finderSearchForm').submit(function(){
 				else	{
 					//catch. unknown state.
 					}
-				},
+				}, //changeFinderButtonsState 
 
 
 //run as part of addFinder. will bind click events to buttons with data-finderAction on them
@@ -657,7 +769,7 @@ else	{
 
 
 
-			},	//util
+			}	//util
 
 		} //r object.
 	return r;

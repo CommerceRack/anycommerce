@@ -47,15 +47,18 @@ the exception to this would be in a pad-specific environment or if opening the f
 
 
 .finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
-.finderContainer .ui-button-text-icon-secondary	{font-size:.8em} /* search button */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
 .finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+
+#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
 
 /*
 used in the template for a product finder.
 use only variable widths, so that the finder expands proportionally depending
 on it's container element.
 */
-.finderTable	{width:800px;}
+.finderTable	{width:96%; margin:0 auto;}
 .finderTable	td {padding:6px; width:50%;}
 
 
@@ -75,7 +78,7 @@ min-height is there to make dropping easy for small/empty lists. min-height shou
 a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
 the right padding is to accomodate the handle and removeProd elements.
  */
-.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff;}
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
 .finderProdlist li:hover	{border-color: #cccccc;}
 
 .finderProdlist .prodThumb	{float:left; margin-right:12px;}

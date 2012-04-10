@@ -52,7 +52,8 @@ Parse.Simple.Base.prototype = {
         }
         data = data.replace(/\r\n?/g, '\n');
         this.grammar.root.apply(node, data, options);
-		node.innerHTML =  wikiLinks2html(node.innerHTML,linkCmdPointer);  //zoovy-ify the links.
+		//stripHTML()
+		node.innerHTML =  wikiLinks2html(node.innerHTML,linkCmdPointer);  //zoovy-ify the links after stripping all the html out.
         if (options && options.forIE) { node.innerHTML = node.innerHTML.replace(/\r?\n/g, '\r\n'); }
     }
 };
@@ -250,7 +251,7 @@ Parse.Simple.Creole = function(options) {
                 img.alt = r[2] === undefined
                     ? (options && options.defaultImageText ? options.defaultImageText : '')
                     : r[2].replace(/~(.)/g, '$1');
-                node.appendChild(img);
+//                node.appendChild(img); //images not supported at this time. zoovy.
             } },
 
         namedUri: { regex: '\\[\\[(' + rx.uri + ')\\|(' + rx.linkText + ')\\]\\]',
@@ -380,17 +381,24 @@ Parse.Simple.Creole.prototype.constructor = Parse.Simple.Creole;
 /*
 
 
-The function below was written by Zoovy (brian) specifically for
-translating the zoovy linking syntax and also a little regularizing
-of the data. specifically, zoovy support ==word and == word but the 
-creole translator didn't.
+The functions below were written by Zoovy 
 
 
 */
 
 
+function stripHTML(text)	{
+	var r = text.replace(/<\/?[a-z][a-z0-9]*[^<>]*>/ig, "");
+	return r;
+	}
 
 
+
+/*
+translate the zoovy linking syntax and also a little regularizing
+of the data. specifically, zoovy support ==word and == word but the 
+creole translator didn't.
+*/
 
 
 function wikiLinks2html(wiki,linkCmdPointer) {

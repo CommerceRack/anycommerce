@@ -67,8 +67,23 @@ var store_search = function() {
 				frmObj['_tag'] = myTagObj;
 				myControl.model.addDispatchToQ(frmObj);
 				}
-			} //searchResult
+			}, //searchResult
 
+//no local caching (fetch) of results yet. need to work with the new search a bit
+// to get a good handle on what datapointers should look like.
+		appPublicSearch : {
+			init : function(obj,tagObj,Q)	{
+				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
+//				myControl.util.dump(obj);
+				this.dispatch(obj,tagObj)
+				return 1;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj['_cmd'] = "appPublicSearch";
+				obj['_tag'] = tagObj;
+				myControl.model.addDispatchToQ(obj,Q);
+				}
+			} //appPublicSearch
 
 
 		}, //calls
@@ -106,6 +121,8 @@ var store_search = function() {
 				myControl.util.dump('BEGIN myControl.ext.store_navcats.callbacks.init.onError');
 				}
 			}
+
+
 		}, //callbacks
 
 

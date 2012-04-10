@@ -20,16 +20,20 @@
 
 zController = function(params,extensions) {
 	this.util.dump('zController has been initialized');
-	var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1];
-	var JQUrl = params.jqurl.match(/:\/\/(.[^/]+)/)[1]
-//	console.log('root domain: '+rootUrl+' and JQUrl = '+JQUrl+' appName = '+navigator.appName+' and browser version == '+jQuery.browser.version);
+	var protocol = document.location.protocol; //only check for IE compat issues if protocol is not local
+	if(protocol != 'file:')	{
+		var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1]; //get root domain (www.something.com)
+		var JQUrl = params.jqurl.match(/:\/\/(.[^/]+)/)[1]; //get root jqurl domain (www.something.com)
+//		console.log('root domain: '+rootUrl+' and JQUrl = '+JQUrl+' appName = '+navigator.appName+' and browser version == '+jQuery.browser.version);
+		}
+
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
 //	else if(typeof zGlobals == 'undefined')	{
 //		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
 //		}
-	else if(JQUrl != rootUrl && navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
+	else if(protocol != 'file:' && JQUrl != rootUrl && navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
 		//ie 8 and 9 don't support xss.
 		alert("We're very sorry, but it appears you are using a version of Internet Explorer that doesn't support our Rich Internet Application. Please upgrade your IE or try another browser.");
 		}
@@ -56,8 +60,8 @@ $.extend(zController.prototype, {
 		myControl.model = zoovyModel(); // will return model as object. so references are myControl.model.dispatchThis et all.
 
 		myControl.vars = {};
-		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of newAdminSession.
-		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal cart object. Figure it out and document it.
+		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
+		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		myControl.vars.fbUser = {};
 
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
@@ -120,7 +124,7 @@ Exception - the controller is used for admin sessions too. if an admin session i
 			//for now, do nothing.  this may change later.
 			}
 		else	{
-			P.sessionId ? myControl.calls.canIHaveSession.init(P.sessionId,{'callback':'handleTrySession','datapointer':'canIHaveSession'}) :  myControl.calls.getValidSessionID.init('handleNewSession');
+			P.sessionId ? myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'}) :  myControl.calls.getValidSessionID.init('handleNewSession');
 			myControl.model.dispatchThis('immutable'); //handles dispatching for session validation. want this run prior to extensions.
 			}
 		
@@ -139,21 +143,17 @@ Exception - the controller is used for admin sessions too. if an admin session i
 			}
 		}, //initialize
 
-
-
-
-
-					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
+					// //////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\		
 
 
 /*
 calls all have an 'init' as well as a 'dispatch'.
 the init allows for the call to check if the data being retrieved is already in the session or local storage and, if so, avoid a request.
-If the data is not there, or there's no data to be retrieved (a setSession, for instance) the init will execute the dispatch.
+If the data is not there, or there's no data to be retrieved (a Set, for instance) the init will execute the dispatch.
 */
 	calls : {
 
-	
+//all authentication calls use immutable Q
 		authentication : {
 //the authentication through FB sdk has already taken place and this is an internal server check to verify integrity.	
 //the getFacebookUserData function also updates bill_email and adds the fb.user info into memory in a place quickly accessed
@@ -168,7 +168,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					},
 				dispatch : function(tagObj)	{
 //note - was using FB['_session'].access_token pre v-1202. don't know how long it wasn't working, but now using _authRepsonse.accessToken
-					myControl.model.addDispatchToQ({'_cmd':'verifyTrustedPartner','partner':'facebook','appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':myControl.sessionID,"_tag":tagObj},'immutable');
+					myControl.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':'facebook','appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':myControl.sessionID,"_tag":tagObj},'immutable');
 					}
 				}, //facebook
 //obj is login/password.
@@ -178,15 +178,15 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 //					myControl.util.dump('BEGIN myControl.calls.authentication.zoovy.init ');
 //					myControl.util.dump(' -> username: '+obj.login);
 //email should be validated prior to call.  allows for more custom error handling based on use case (login form vs checkout login)
-					myControl.calls.setSessionVars.init({"data.bill_email":obj.login}) //whether the login succeeds or not, set data.bill_email in cart/session
+					myControl.calls.cartSet.init({"data.bill_email":obj.login}) //whether the login succeeds or not, set data.bill_email in /session
 					this.dispatch(obj,tagObj);
 					return 1;
 					},
 				dispatch : function(obj,tagObj)	{
-					obj["_cmd"] = "tryCustomerLogin";
+					obj["_cmd"] = "appBuyerLogin";
 					obj['method'] = "unsecure";
 					obj["_tag"] = tagObj;
-					obj["_tag"]["datapointer"] = "tryCustomerLogin";
+					obj["_tag"]["datapointer"] = "appBuyerLogin";
 					
 					myControl.model.addDispatchToQ(obj,'immutable');
 					}
@@ -197,11 +197,43 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					return 1;
 					},
 				dispatch : function(tagObj){
-					myControl.model.addDispatchToQ({'_cmd':'customerLogout',"_tag":tagObj},'immutable');
+					myControl.model.addDispatchToQ({'_cmd':'buyerLogout',"_tag":tagObj},'immutable');
 					}
-				}
+				},
+
+//use this to get an admin login token. It expires quick, so callback should immediately fire the next call with encrypted data.
+//pass only the login.  Password needs to be passed securely in the appAdminAuthenticate request.
+//formerly newAdminSession
+			appAdminInit : {
+				 init : function() {
+					$('#loginFormContainer .button').attr('disabled','disabled').addClass('ui-state-disabled');
+					$('#loginFormContainer .zMessage').empty().remove(); //clear any existing error messages.
+					this.dispatch();
+					return 1;
+					},
+				 dispatch : function()   {
+					myControl.model.addDispatchToQ({"_cmd":"appAdminInit","login":$('#loginFormLogin').val(),"_tag":{"callback":"handleNewAdminResponse","datapointer":"appAdminInit"}},'immutable');
+					}
+				},
+
+//formerly authorizeAdminSession
+//requires encrypted password.
+			appAdminAuthenticate : {
+				 init : function(obj) {
+	//				 myControl.util.dump("BEGIN myControl.calls.appAdminAuthenticate");
+					this.dispatch(obj);
+					return 1;
+					},
+				 dispatch : function(obj)   {
+					obj["_tag"] = {};
+					obj["_cmd"] = "appAdminAuthenticate";
+					obj["_tag"].callback = "handlePasswordResponse";
+					myControl.model.addDispatchToQ(obj,'immutable');
+					}
+				} //appAdminAuthenticate
 			}, //authentication
-			
+
+//always uses immutable Q
 		getValidSessionID : {
 			init : function(callback)	{
 //				myControl.util.dump('BEGIN myControl.calls.getValidSessionID.init');
@@ -211,7 +243,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				if(sid)	{
 //					myControl.util.dump(' -> sessionid was set, verify it is valid.');
 //make sure the session id is valid. 'handleTrySession' overrides the callback because error handling/logic is different between create new and verify one exists.
-					myControl.calls.canIHaveSession.init(sid,{'callback':'handleTrySession','datapointer':'canIHaveSession'}); 
+					myControl.calls.appCartExists.init(sid,{'callback':'handleTrySession','datapointer':'appCartExists'}); 
 					}
 				else	{
 //					myControl.util.dump(' -> no session id. get a new one.');
@@ -220,63 +252,66 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				return 1;
 				},
 			dispatch : function(callback)	{
-				myControl.model.addDispatchToQ({"_cmd":"newSession","_tag":{"callback":callback}},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":{"callback":callback}},'immutable');
 				}
 			},//getValidSessionID
 
-		
-		canIHaveSession : {
+//always uses immutable Q
+//formerly canIHaveSession
+		appCartExists : {
 			init : function(zjsid,tagObj)	{
-//					myControl.util.dump('BEGIN myControl.calls.canIHaveSession');
+//					myControl.util.dump('BEGIN myControl.calls.appCartExists');
 				myControl.sessionId = zjsid; //needed for the request. may get overwritten if not valid.
 				this.dispatch(zjsid,tagObj);
 				return 1;
 				},
 			dispatch : function(zjsid,tagObj)	{
 				var obj = {};
-				obj["_cmd"] = "canIHaveSession"; 
+				obj["_cmd"] = "appCartExists"; 
 				obj["_zjsid"] = zjsid; 
 				obj["_tag"] = tagObj;
 				myControl.model.addDispatchToQ(obj,'immutable');
 				}
-			}, //canIHaveSession
+			}, //appCartExists
 
 //for now, no fetch is done here. it's assumed if you execute this, you don't know who you are dealing with.
 		whoAmI : {
-			init : function(tagObj)	{
+			init : function(tagObj,Q)	{
 //				myControl.util.dump('BEGIN myControl.ext.store_crm.calls.categoryDetail.init');
 				var r = 1; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				this.dispatch(tagObj);
+				this.dispatch(tagObj,Q);
 				return r;
 				},
-			dispatch : function(tagObj)	{
+			dispatch : function(tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "whoAmI"
-				myControl.model.addDispatchToQ({"_cmd":"whoAmI","_zjsid":myControl.sessionId,"_tag" : tagObj});	
+				myControl.model.addDispatchToQ({"_cmd":"whoAmI","_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
 				}
 			},//whoAmI
 
-
 		canIUse : {
-			init : function(flag)	{
-				this.dispatch(flag);
+			init : function(flag,Q)	{
+				this.dispatch(flag,Q);
 				return 1;
 				},
-			dispatch : function(flag)	{
-				myControl.model.addDispatchToQ({"_cmd":"canIUse","flag":flag,"_tag":{"datapointer":"canIUse|"+flag}},'immutable');
+			dispatch : function(flag,Q)	{
+				myControl.model.addDispatchToQ({"_cmd":"canIUse","flag":flag,"_tag":{"datapointer":"canIUse|"+flag}},Q);
 				}
-			}, //setSessionVars				
-		setSessionVars : {
+			}, //canIUse
+
+//always uses immutable Q
+//formerly setSessionVars
+		cartSet : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
 				return 1;
 				},
 			dispatch : function(obj,tagObj)	{
-				obj["_cmd"] = "setSession";
+				obj["_cmd"] = "cartSet";
 				if(tagObj)	{obj["_tag"] = tagObj;}
 				myControl.model.addDispatchToQ(obj,'immutable');
 				}
-			}, //setSessionVars
+			}, //cartSet
 
 		ping : {
 			init : function(tagObj,Q)	{
@@ -286,25 +321,26 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			dispatch : function(tagObj,Q)	{
 				myControl.model.addDispatchToQ({"_cmd":"ping","_tag":tagObj},Q); //get new session id.
 				}
-			},//ping
+			}, //ping
 
-
-		getNewSessionId : {
+//always uses immutable Q.
+// used when a new session id must be generated, such as post-checkout.
+		appCartCreate : {
 			init : function(callback)	{
 				this.dispatch(callback);
 				return 1;
 				},
 			dispatch : function(callback)	{
-				myControl.model.addDispatchToQ({"_cmd":"newSession","_tag":{"callback":callback}},'immutable'); //get new session id.
+				myControl.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":{"callback":callback}},'immutable'); //get new session id.
 				}
-			},//getNewSessionId
-
-		getProfile : {
+			}, //appCartCreate
+			
+		appProfileInfo : {
 			init : function(profileID,tagObj,Q)	{
-//				myControl.util.dump("BEGIN myControl.calls.getProfile.init");
+//				myControl.util.dump("BEGIN myControl.calls.appProfileInfo.init");
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj == 'object' ? tagObj : {};
-				tagObj.datapointer = 'getProfile|'+profileID; //for now, override datapointer for consistency's sake.
+				tagObj.datapointer = 'appProfileInfo|'+profileID; //for now, override datapointer for consistency's sake.
 
 				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
 					r = 1;
@@ -315,68 +351,34 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					}
 
 				return r;
-				},
+				}, // init
 			dispatch : function(profileID,tagObj,Q)	{
 				obj = {};
-				obj['_cmd'] = "getProfile";
+				obj['_cmd'] = "appProfileInfo";
 				obj['profile'] = profileID;
 				obj['_tag'] = tagObj;
 				myControl.model.addDispatchToQ(obj,Q);
-				}
-			}, //getProfile
+				} // dispatch
+			}, //appProfileInfo
 
-//use this to get an admin login token. It expires quick, so callback should immediately fire the next call with encrypted data.
-		newAdminSession : {
-			 init : function() {
-				$('#loginFormContainer .button').attr('disabled','disabled').addClass('ui-state-disabled');
-				$('#loginFormContainer .zMessage').empty().remove(); //clear any existing error messages.
-				this.dispatch();
-				return 1;
+//used to get a clean copy of the cart. ignores local/memory. used for logout.
+		refreshCart : {
+			init : function(tagObj,Q)	{
+				var r = 1;
+//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which will likely need datapointer to be set).
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+				tagObj.datapointer = "cartItemsList";
+				this.dispatch(tagObj,Q);
+				return r;
 				},
-			 dispatch : function()   {
-//!!! need to pass in only user login info.
-				myControl.model.addDispatchToQ({"_cmd":"newAdminSession","login":$('#loginFormLogin').val(),"_tag":{"callback":"handleNewAdminResponse","datapointer":"newAdminSession"}},'immutable');
-				}
-			},
-		
-		authorizeAdminSession : {
-			 init : function(obj) {
-//				 myControl.util.dump("BEGIN myControl.calls.authorizeAdminSession");
-				this.dispatch(obj);
-				return 1;
-				},
-			 dispatch : function(obj)   {
-				obj["_tag"] = {};
-				obj["_cmd"] = "authorizeAdminSession";
-				obj["_tag"].callback = "handlePasswordResponse";
-				myControl.model.addDispatchToQ(obj,'immutable');
-				}
-			} //newAdminSession
+			dispatch : function(tagObj,Q)	{
+//				myControl.util.dump('BEGIN myControl.ext.store_cart.calls.cartItemsList.dispatch');
+				myControl.model.addDispatchToQ({"_cmd":"cartItemsList","_zjsid":myControl.sessionId,"_tag": tagObj},Q);
+				} 
+			} // refreshCart removed comma from here line 383
+		}, // calls
 
-		}, //calls
-
-
-
-
-
-
-
-
-
-
-
-					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-
-
-
-
-
-
-
-
-
+					// //////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
 	callbacks : {
 		
 /*
@@ -386,34 +388,35 @@ this call converts users password to md5.
 		handleNewAdminResponse : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleNewAdminResponse.onSuccess');
-				var obj = {}
+				var obj = {};
 				myControl.sessionId = myControl.data[tagObj.datapointer]['_zjsid']; //must be set in control for pipelined dispatches to work.
 				obj['_zjsid'] = myControl.data[tagObj.datapointer]['_zjsid'];
 				obj.hashtype = 'md5';
-				obj.login = $('#loginFormLogin').val()
+				obj.login = $('#loginFormLogin').val();
 				obj.hashpass = Crypto.MD5($('#loginFormPassword').val()+myControl.data[tagObj.datapointer]['_zjsid']);
-				myControl.calls.authorizeAdminSession.init(obj); //handleNewAdminResponse
+				myControl.calls.authentication.appAdminAuthenticate.init(obj); // handleNewAdminResponse
+				
 				myControl.model.dispatchThis('immutable');
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleNewAdminResponse.onError');
 				$('#loginFormContainer .button').removeAttr('disabled').removeClass('ui-state-disabled');
 //				myControl.util.dump(d);
-				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(d)).toggle(true);
+				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(responseData)).toggle(true);
 				}
 			},//handleNewAdminResponse
 
 		handlePasswordResponse : {
 			onSuccess : function(tagObj)	{
-//				alert(myControl.sessionId);
 				myControl.util.dump("session ID from cookie (with timeout) "+myControl.storageFunctions.readCookie('zjsid'));
-//was having issues with the cookie setting/redir. added a short timeout so that
-				setTimeout("window.location = 'https://www.zoovy.com/biz/'",500);
+//was having issues with the cookie setting/redir. added a short timeout so that the cookie/browser can catch up to our blazing speed.
+//				alert(myControl.sessionId);
+				setTimeout("window.location = 'https://www.zoovy.com/biz/'",2000);
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handlePasswordResponse.onError');
 //				myControl.util.dump(d);
-				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(d)).toggle(true);
+				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(responseData)).toggle(true);
 				}
 			},//sendEncryptedPassword
 
@@ -425,18 +428,18 @@ this call converts users password to md5.
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleNewSession.onSuccess');
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleNewSession.onError');
-				$('#globalMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
+				$('#globalMessaging').append(myControl.util.getResponseErrors(responseData)).toggle(true);
 				}
 			},//convertSessionToOrder
 
-//executed when canIHaveSession is requested.
+//executed when appCartExists is requested.
 //myControl.sessionID is already set by this point. need to reset it onError.
 		handleTrySession : {
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump('BEGIN myControl.callbacks.handleTrySession.onSuccess');
-				if(myControl.data.canIHaveSession.exists == 1)	{
+				if(myControl.data.appCartExists.exists == 1)	{
 //					myControl.util.dump(' -> valid session id.  Proceed.');
 					}
 				else	{
@@ -444,9 +447,9 @@ this call converts users password to md5.
 //					$('#globalMessaging').append(myControl.util.formatMessage("It appears the cart you were using has expired. We will go ahead and build you a new one. You should be able to continue as normal.")).toggle(true);
 					}
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 //				myControl.util.dump('BEGIN myControl.callbacks.handleTrySession.onError');
-				$('#globalMessaging').toggle(true).append(myControl.util.getResponseErrors(d));
+				$('#globalMessaging').toggle(true).append(myControl.util.getResponseErrors(responseData));
 				myControl.sessionId = null;
 				}
 			}, //handleTrySession
@@ -457,34 +460,42 @@ this call converts users password to md5.
 //in DEV still. do not use this callback.
 //				myControl.vars['_admin'] is set in the model.
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleAdminSession.onError');
-				$('#globalMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
+				$('#globalMessaging').append(myControl.util.getResponseErrors(responseData)).toggle(true);
 				}
 			},
-
 //pass the following on _tag:
 // parentID is the container id that the template instance is already in (should be created before call)
 // templateID is the template that will get translated.
 // the myControl.data.datapointer is what'll get passed in to the translate function as the data src. (ex: getProduct|PID)
 		translateTemplate : 	{
 			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN store_crm.callbacks.translateTemplate");
-//				myControl.util.dump(tagObj);
-				var dataSrc = tagObj.datapointer == 'showCart' ? myControl.data[tagObj.datapointer].cart : myControl.data[tagObj.datapointer];  //for cart, go one level deeper than datapointer.
-//				myControl.util.dump(" -> parentID = "+tagObj.parentID);
+//				myControl.util.dump("BEGIN callbacks.translateTemplate");
+//				myControl.util.dump(" -> datapointer: "+tagObj.datapointer);
 //				myControl.util.dump(" -> dataSrc = ");
 //				myControl.util.dump(dataSrc);
+//				myControl.util.dump(" -> parentID: "+tagObj.parentID);
+//				myControl.util.dump(" -> $('#'+tagObj.parentID).attr('data-templateid'): "+$('#'+tagObj.parentID).attr('data-templateid'));
+
+				var dataSrc;
+//not all data is at the root level.
+				if(tagObj.datapointer == 'cartItemsList')	{dataSrc = myControl.data[tagObj.datapointer].cart}
+				else if(tagObj.datapointer.indexOf('appPageGet') >= 0)	{
+					dataSrc = myControl.data[tagObj.datapointer]['%page']
+					}
+				else {dataSrc = myControl.data[tagObj.datapointer]};
 				myControl.renderFunctions.translateTemplate(dataSrc,tagObj.parentID);
 				},
-			onError : function(d)	{
+			onError : function(responseData)	{
 //something went wrong, so empty the parent (which likely only holds an empty template) and put an error message in there.
-				$('#'+tagObj.parentID).empty.append(myControl.util.getResponseErrors(d)).toggle(true);
+				$('#'+responseData.tagObj.parentID).empty().toggle(true)
+				myControl.util.handleErrors(responseData,uuid)
 				}
 			
 			}, //translateTemplate
-			
-// a generic callback to allow for success messaging to be added. pass a parentID and the message will be PREPENDED to that id (at the top).
+// a generic callback to allow for success messaging to be added. pass a parentID and the message will be PREPENDED to that id (at the top) and will shrink after a few seconds.
+//for more precise control of destination and no shrinkage, pass a targetID.
 // pass message for what will be displayed.  For error messages, the system messaging is used.
 		showMessaging : {
 			onSuccess : function(tagObj)	{
@@ -493,13 +504,13 @@ this call converts users password to md5.
 					var htmlid = 'random_'+Math.floor(Math.random()*10001); //give message an ID so the a timeout is supported.
 					$('#'+tagObj.parentID).prepend(myControl.util.formatMessage({'message':tagObj.message,'htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"}));
 					}
+				else if(tagObj.targetID)	{
+					$('#'+tagObj.targetID).append(myControl.util.formatMessage({'message':tagObj.message,'uiIcon':'check'}));
+					}
 				},
-			onError : function(d)	{
-//something went wrong, so empty the parent (which likely only holds an empty template) and put an error message in there.
-				targetID = d['_rtag'].parentID ? d['_rtag'].parentID : "globalMessaging";
-				$('#'+d['_rtag'].parentID).prepend(myControl.util.getResponseErrors(d)).toggle(true);
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
 				}
-			
 			}
 		}, //callbacks
 
@@ -533,6 +544,7 @@ myControl.util.handleCallback(tagObj);
 		handleCallback : function(tagObj)	{
 //			myControl.util.dump("BEGIN util.handleCallback");
 			var callback;
+			if(tagObj && tagObj.datapointer){myControl.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback.
 			if(tagObj && tagObj.callback){
 //				myControl.util.dump(" -> executing callback ("+tagObj.callback+") in extension ("+tagObj.extension+")");
 //most callbacks are likely in an extension, but support for 'root' callbacks is necessary.
@@ -546,6 +558,14 @@ myControl.util.handleCallback(tagObj);
 				}
 			},
 		
+		logBuyerOut : function()	{
+	
+			myControl.calls.authentication.zoovyLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out','targetID':'logMessaging'});
+			myControl.calls.refreshCart.init({},'immutable');
+			myControl.vars.cid = null; //nuke cid as it's used in the soft auth.
+			myControl.model.dispatchThis('immutable');
+			},
+		
 		thisIsAnAdminSession : function()	{
 			var r = false; //what is returned.
 			if(myControl.sessionId && myControl.sessionId.substring(0,2) != '**')	{
@@ -553,11 +573,81 @@ myControl.util.handleCallback(tagObj);
 				}
 			return r;
 			},
-		
+
 //jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
 		jumpToAnchor : function(id)	{
 			window.location.hash=id;
 			},
+
+
+
+
+
+/*
+a generic error handler for callback.onError
+often, parentID or targetID is specified in a tagObj for a destination for rendering a template. put errors there if set, if not put in globalMessaging.
+if tagObj isn't set, look it up in the original Q (tagObj may be blank if the error is high level.)
+If none of those vars are set or are not present in DOM, throw the errors at the user via a modal. this is a last resort.
+
+sometimes, globalMessaging may be turned off, so show() is set.
+loadingBG is a class set on templates that is turned off in transmogrify/translateTemplate.  need to make sure that is also removed.
+*/
+		handleErrors : function(d,uuid)	{
+			myControl.util.dump("BEGIN control.util.handleErrors for uuid: "+uuid);
+			var $target;
+			if(!d || !d['_rtag'])	{
+				myControl.util.dump(" -> responseData (d) or responseData['_rtag'] is blank.");
+				var DQ = myControl.model.whichQAmIFrom(uuid);
+				d['_rtag'] = myControl.q[DQ][uuid]['_tag'];
+				}
+//			myControl.util.dump(d['_rtag']);
+			if(d['_rtag'].targetID)	{$target = $('#'+d['_rtag'].targetID)}
+			else if(d['_rtag'].parentID)	{$target = $('#'+d['_rtag'].parentID)}
+			else	{$target = $('#globalMessaging')}
+
+			if($target.length == 0)	{
+				$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');
+				}
+			$target.removeClass('loadingBG').show().append(this.getResponseErrors(d));
+			},
+
+//pass in the response and an li for each error (parent ul not returned) will be generated.
+//called frequently in checkout, but univeral enough to justify being in main control.
+// note that if you use this, you may need to also update a panel so that more than just an error shows up or the user may not be able to proceed.
+		getResponseErrors : function(d)	{
+//			myControl.util.dump("BEGIN myControl.util.getResponseErrors");
+//			myControl.util.dump(d);
+			var r;
+			if(!d)	{
+				r = 'unknown error has occured';
+				}
+			else if(typeof d == 'string')	{
+				r = d;
+				}
+			else if(typeof d == 'object')	{
+				r = "";
+/*
+a response could come back with messages (like adding to cart and multiple errors occured)
+which will have _msgs set or just one error, which will have errid set.
+*/
+				if(d['_msgs'])	{
+					for(var i = 1; i <= d['_msgs']; i += 1)	{
+						myControl.util.dump(d['_msg_'+i+'_type']+": "+d['_msg_'+i+'_id']);
+						r += "<div>"+d['_msg_'+i+'_txt']+"<\/div>";
+						}
+					}
+				else if(d['errid'] > 0)	{
+					r += "<div>"+d.errmsg+" ("+d.errid+")<\/div>";
+					}
+				}
+			else	{
+				myControl.util.dump(" -> getResponseErrors 'else' hit. Should not have gotten to this point");
+				r = 'unknown error has occured';
+				}
+//			myControl.util.dump(r);
+			return myControl.util.formatMessage(r);
+			},
+
 
 /*
 for handling app messaging to the user.
@@ -585,7 +675,7 @@ pass in additional information for more control, such as css class of 'error' an
 //the zMessage class is added so that these warning can be cleared (either universally or within a selector).
 			var r = obj.htmlid ? "<div class='ui-widget zMessage' id='"+obj.htmlid+"'>": "<div class='ui-widget zMessage'>";
 			r += "<div class='ui-state-"+obj.uiClass+" ui-corner-all appMessage'>";
-			r += "<p><span style='float: left; margin-right: .3em;' class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/p>";
+			r += "<div class='clearfix'><span style='float: left; margin-right: .3em;' class='ui-icon ui-icon-"+obj.uiIcon+"'></span><div style='float:left;' >"+obj.message+"<\/div><\/div>";
 			r += "<\/div><\/div>";
 			
 //			myControl.util.dump(" -> obj.htmlid: "+obj.htmlid);
@@ -598,6 +688,8 @@ pass in additional information for more control, such as css class of 'error' an
 				}
 			return r;
 			},
+			
+			
 //pass in a name and if it is a parameter on the uri, the value is returned.
 		getParameterByName : function(name)	{
 			name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
@@ -609,15 +701,20 @@ pass in additional information for more control, such as css class of 'error' an
 			else
 				return decodeURIComponent(results[1].replace(/\+/g, " "));
 			},
-//will create an object of all the uri parameters.
-		getParametersAsObject : function()	{
-			var url = location.search;
-			url = url.replace('?', '');
-			var queries = url.split('&');
+//will create an object of a series of key/value pairs in URI format.
+//if nothing is passed in, will get string directly from URL.
+		getParametersAsObject : function(string)	{
+			var url = string ? string : location.search;
+			myControl.util.dump(url);
 			var params = {};
-			for(var q in queries) {
-				var param = queries[q].split('=');
-				params[ param[0] ] = decodeURIComponent(param[1].replace(/\+/g, " "));
+//check for ? to avoid js error which results when no uri params are present
+			if(string || url.indexOf('?') > 0)	{
+				url = url.replace('?', '');
+				var queries = url.split('&');
+				for(var q in queries) {
+					var param = queries[q].split('=');
+					params[ param[0] ] = decodeURIComponent(param[1].replace(/\+/g, " "));
+					}
 				}
 			return params;
 			},
@@ -670,49 +767,12 @@ pass in additional information for more control, such as css class of 'error' an
 				}
 			},
 
-
-//pass in the response and an li for each error (parent ul not returned) will be generated.
-//called frequently in checkout, but univeral enough to justify being in main control.
-// note that if you use this, you may need to also update a panel so that more than just an error shows up or the user may not be able to proceed.
-		getResponseErrors : function(d)	{
-//			myControl.util.dump("BEGIN myControl.util.getResponseErrors");
-//			myControl.util.dump(d);
-			var r;
-			if(!d)	{
-				r = 'unknown error has occured';
-				}
-			else if(typeof d == 'string')	{
-				r = d;
-				}
-			else if(typeof d == 'object')	{
-				r = "";
-/*
-a response could come back with messages (like adding to cart and multiple errors occured)
-which will have _msgs set or just one error, which will have errid set.
-*/
-				if(d['_msgs'])	{
-					for(var i = 1; i <= d['_msgs']; i += 1)	{
-	//					myControl.util.dump(d['_msg_'+i+'_type']+": "+d['_msg_'+i+'_id']);
-						r += "<div>"+d['_msg_'+i+'_txt']+"<\/div>";
-						}
-					}
-				else if(d['errid'] > 0)	{
-					r += "<div>"+d.errmsg+" ("+d.errid+")<\/div>";
-					}
-				}
-			else	{
-				myControl.util.dump(" -> getResponseErrors 'else' hit. Should not have gotten to this point");
-				r = 'unknown error has occured';
-				}
-//			myControl.util.dump(r);
-			return myControl.util.formatMessage(r);
-			},
 		
 //current time in unix format.
 		unixNow : function()	{
 			return Math.round(new Date().getTime()/1000.0)
 			}, //unixnow
-//very simple date translator. if something more specific is needed, create a custom function.
+//very simple date translator. if something more sprmatecific is needed, create a custom function.
 //will support a boolean for showtime, which will show the time, in addition to the date.
 		unix2Pretty : function(unix_timestamp,showtime)	{
 //			myControl.util.dump('BEGIN myControl.util.unix2Pretty');
@@ -748,35 +808,43 @@ which will have _msgs set or just one error, which will have errid set.
 			},
 		
 		isValidEmail : function(str) {
+			myControl.util.dump("BEGIN isValidEmail for: "+str);
+			var r = true; //what is returned.
 			if(!str || str == false)
-				return false;
+				r = false;
 			var at="@"
 			var dot="."
 			var lat=str.indexOf(at)
 			var lstr=str.length
 			var ldot=str.indexOf(dot)
 			if (str.indexOf(at)==-1){
-				return false
+				myControl.util.dump(" -> email does not contain an @");
+				r = false
 				}
 			if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-				return false
+				myControl.util.dump(" -> @ in email is in invalid location (first or last)");
+				r = false
 				}
 			if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-				return false
+				myControl.util.dump(" -> email does not have a period or it is in an invalid location (first or last)");
+				r = false
 				}
 			if (str.indexOf(at,(lat+1))!=-1){
-				return false
+				myControl.util.dump(" -> email contains two @");
+				r = false
 				}
 			if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-				return false
+				myControl.util.dump(" -> email contains multiple periods");
+				r = false
 				}
 			if (str.indexOf(dot,(lat+2))==-1){
-				return false
+				r = false
 				}
 			if (str.indexOf(" ")!=-1){
-				return false
+				r = false
 				}
-			return true					
+			myControl.util.dump("util.isValidEmail: "+r);
+			return r;					
 			}, //isValidEmail
 
 //used frequently to throw errors or debugging info at the console.
@@ -871,6 +939,8 @@ b = bgcolor (used to pad if original image aspect ratio doesn't conform to aspec
  -> use TTTTTT for transparent png (will result in larger file sizes)
 class = css class
 tag = boolean. Set to true to output the <img tag. set to false or blank to just get url
+
+myControl.util.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag":1});
 */
 		makeImage : function(a)	{
 		//	myControl.util.dump('W = '+a.w+' and H = '+a.h);
@@ -960,18 +1030,22 @@ a word */
 			return r;
 			}, //makeSafeHTMLId
 
+//note - had a report of expirations coming in with 0 set for month and year.
+//2012-04-09 the following two functions were set up to return errors on 0 values.
+
 		isValidMonth : function(val)	{
 			var valid = true;
 			if(isNaN(val)){valid = false}
 			else if(!myControl.util.isSet(val)){valid = false}
 			else if(val > 12){valid = false}
-			else if(val < 0){valid = false}
+			else if(val <= 0){valid = false} //val starts at 1, so zero is not a valid entry
 			return valid;
 			}, //isValidMonth
 
 		isValidCCYear : function (val)	{
 			var valid = true;
 			if(isNaN(val)){valid = false}
+			else if(val == 0){valid = false} //make sure 0000 is not entered.
 			else if(val.length != 4){valid = false}
 			return valid;
 			}, //isValidCCYear
@@ -1096,10 +1170,16 @@ name Mod 10 or Modulus 10. */
 //if country is undefinded, treat as domestic.
 			if(country == 'US' || !country)	{
 				var regex = /^(?:\+?1[-. ]?)?\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{4})$/;
+				r = regex.test(phoneNumber)
 				}
-			else	{var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;}
+//international.
+			else	{
+//this regex is no good.
+//				var regex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
+					r = phoneNumber ? true : false;
+				}
 
-			r = regex.test(phoneNumber)
+			
 //			myControl.util.dump("regex.text ="+r);
 			
 			return r;
@@ -1153,12 +1233,12 @@ later, it will handle other third party plugins as well.
 		getUsernameFromCart : function()	{
 //			myControl.util.dump('BEGIN util.getUsernameFromCart');
 			var r = false;
-			if(myControl.util.isSet(myControl.data.showCart.cart['login']))	{
-				r = myControl.data.showCart.cart['login'];
+			if(myControl.util.isSet(myControl.data.cartItemsList.cart['login']))	{
+				r = myControl.data.cartItemsList.cart['login'];
 //				myControl.util.dump(' -> login was set. email = '+r);
 				}
-			else if(myControl.util.isSet(myControl.data.showCart.cart['data.bill_email'])){
-				r = myControl.data.showCart.cart['data.bill_email'];
+			else if(myControl.util.isSet(myControl.data.cartItemsList.cart['data.bill_email'])){
+				r = myControl.data.cartItemsList.cart['data.bill_email'];
 //				myControl.util.dump(' -> data.bill_email was set. email = '+r);
 				}
 			else if(!$.isEmptyObject(myControl.vars.fbUser))	{
@@ -1200,6 +1280,10 @@ In other cases, we know the data is present and it makes more sense to create, t
 
 when placeholders are needed, execute a createTemplateInstance first and then once the data is retrieved, execute translateTemplate.
 If everything is being done at once, execute transmogrify.
+
+WARNING - if transmogrify is used, then show, toggle and hide jquery functions don't work right when modifying $tag in a renderFormat in IE. 
+I believe this to be because $tag isn't in the DOM yet. I solved by adding/removing a class to handle show/hide.
+
 */
 
 
@@ -1222,8 +1306,9 @@ Then we'll be in a better place to use data() instead of attr().
 		transmogrify : function(eleAttr,templateID,data)	{
 //			myControl.util.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
 //			myControl.util.dump(eleAttr);
-			if(!templateID || !eleAttr || typeof data != 'object' || !myControl.templates[templateID])	{
-				myControl.util.dump(" -> templateID ("+templateID+") or target (typeof: "+typeof target+") or typeof data ("+typeof data+") or template doesn't exist not present/correct.");
+			if(!templateID || typeof data != 'object' || !myControl.templates[templateID])	{
+				myControl.util.dump(" -> templateID ("+templateID+") not set or typeof data ("+typeof data+") not object or template doesn't exist not present/correct.");
+				myControl.util.dump(eleAttr);
 				}
 			else	{
 //we have everything we need. proceed.
@@ -1245,7 +1330,7 @@ else if(typeof eleAttr == 'object')	{
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
 	$r.find('[data-bind]').each(function()	{
 											   
-		$focusTag = $(this);
+		var $focusTag = $(this);
 
 //		myControl.util.dump(' -> data-bind match found (ID = '+$focusTag.attr('id')+').');
 //proceed if data-bind has a value (not empty).
@@ -1268,7 +1353,7 @@ else if(typeof eleAttr == 'object')	{
 //in cases where cleanValue is used inside the renderFormats.function, pre and post text must also be added.
 			bindData.cleanValue = value;
 			}
-
+//		myControl.util.dump(" -> value: "+value);
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 
 		if((value  == 0 || value == '0.00') && bindData.hideZero)	{
@@ -1301,6 +1386,8 @@ else if(typeof eleAttr == 'object')	{
 			}
 		else	{
 //				myControl.util.dump(' -> data-bind is set, but it has no/invalid value.');
+			if($focusTag.prop('tagName') == 'IMG'){$focusTag.remove()} //remove empty/blank images from dom. necessary for IE.
+
 			}
 		value = ''; //reset value.
 		}); //end each for children.
@@ -1345,7 +1432,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				r.attr('data-templateid',templateID); //used by translateTemplate to know which template was used..
 				}
 			else	{
-				myControl.util.dump(" -> ERROR! template ("+templateID+") does not exist! eleAttr = "+eleAttr);
+				myControl.util.dump(" -> ERROR! createTemplateInstance -> templateID ("+templateID+") does not exist! eleAttr = "+eleAttr);
 				r = false;
 				}
 
@@ -1509,6 +1596,7 @@ $('#'+safeTarget).replaceWith($tmp);
 
 					////////////////////////////////////   renderFormats    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+
 	renderFormats : {
 
 		imageURL : function($tag,data){
@@ -1516,7 +1604,7 @@ $('#'+safeTarget).replaceWith($tmp);
 			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 //			myControl.util.dump(" -> width: "+$tag.width());
 			if(data.value)	{
-				var imgSrc = myControl.util.makeImage({'tag':0,'w':$tag.width(),'h':$tag.height(),'name':data.value,'b':bgcolor});
+				var imgSrc = myControl.util.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
 //				myControl.util.dump('IMGSRC => '+imgSrc);
 				$tag.attr('src',imgSrc);
 				}
@@ -1530,11 +1618,14 @@ $('#'+safeTarget).replaceWith($tmp);
 //			myControl.util.dump('BEGIN control.renderFormats.hideorShowTab');
 //			myControl.util.dump(' -> data.value'+data.value);
 			if(data.value)	{
-				$tag.show();
+//				myControl.util.dump(' -> setting $tag.show()');
+				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
+
+		
 		youtubeVideo : function($tag,data){
-			var r = "<iframe width='560' height='315' src='http://www.youtube.com/embed/"+data.bindData.cleanValue+"' frameborder='0' allowfullscreen></iframe>";
+			var r = "<iframe style='z-index:1;' width='560' height='315' src='http://www.youtube.com/embed/"+data.bindData.cleanValue+"' frameborder='0' allowfullscreen></iframe>";
 			if(data.bindData.pretext){r = data.bindData.pretext + r}
 			if(data.bindData.posttext){r += data.bindData.posttext}			
 			$tag.append(r);
@@ -1604,6 +1695,9 @@ $tmp.empty().remove();
 			$tag.val(data.bindData.cleanValue);
 			}, //text
 
+
+
+
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
 		assignAttribute : function($tag,data){
 			if(data.bindData.attribute == 'id')
@@ -1659,7 +1753,7 @@ $tmp.empty().remove();
 					}
 				catch(e)	{
 					r = false;
-					myControl.util.dump(' -> localStorage defined but not available (no space? no write permissions?)');
+//					myControl.util.dump(' -> localStorage defined but not available (no space? no write permissions?)');
 //					myControl.util.dump(e);
 					}
 				
@@ -1746,7 +1840,7 @@ myControl.util.dump(" -> DELETED cookie "+c_name);
 							if(user != null) {
 //								myControl.util.dump(" -> FB.user is defined.");
 								myControl.vars.fbUser = user;
-								myControl.calls.setSessionVars.init({"data.bill_email":user.email});
+								myControl.calls.cartSet.init({"data.bill_email":user.email});
 
 //								myControl.util.dump(" -> user.gender = "+user.gender);
 
@@ -1787,17 +1881,17 @@ some id's may be hard coded (can change this later if need be), but they're form
 				var r = 'none';
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
 				if(myControl.vars.cid && myControl.util.getUsernameFromCart())	{r = 'authenticated'}
-				else if(myControl.model.fetchData('showCart') && myControl.util.isSet(myControl.data.showCart.cart.cid))	{
+				else if(myControl.model.fetchData('cartItemsList') && myControl.util.isSet(myControl.data.cartItemsList.cart.cid))	{
 					r = 'authenticated';
-					myControl.vars.cid = myControl.data.showCart.cart.cid;
+					myControl.vars.cid = myControl.data.cartItemsList.cart.cid;
 					}
 //need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
 //and all third parties would get 'guest'
-				else if(FB && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
+				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
 					r = 'thirdPartyGuest';
 //					myControl.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(myControl.model.fetchData('showCart') && myControl.data.showCart.cart['data.bill_email'])	{
+				else if(myControl.model.fetchData('cartItemsList') && myControl.data.cartItemsList.cart['data.bill_email'])	{
 					r = 'guest';
 					}
 				else	{
@@ -1818,17 +1912,17 @@ this function closely mirrors core logic.
 				var r = false; //what is returned
 				if(!TYPE){ r = false}
 				else	{
-					var L = myControl.data.getCustomerAddresses['@'+TYPE].length;
+					var L = myControl.data.buyerAddressList['@'+TYPE].length;
 //look to see if a default is set. if so, take the first one.
 					for(var i = 0; i < L; i += 1)	{
-						if(myControl.data.getCustomerAddresses['@'+TYPE][i]['_is_default'] == 1)	{
-							r = myControl.data.getCustomerAddresses['@'+TYPE][i]['_id'];
+						if(myControl.data.buyerAddressList['@'+TYPE][i]['_is_default'] == 1)	{
+							r = myControl.data.buyerAddressList['@'+TYPE][i]['_id'];
 							break; //no sense continuing the loop.
 							}
 						}
 //if no default is set, use the first address.
 					if(r == false)	{
-						r =myControl.data.getCustomerAddresses['@'+TYPE][0]['_id']
+						r =myControl.data.buyerAddressList['@'+TYPE][0]['_id']
 						}
 					}
 //				myControl.util.dump("address id = "+r);
@@ -1857,13 +1951,13 @@ this function closely mirrors core logic.
 //				myControl.util.dump(' -> address type = '+addressType);
 //				myControl.util.dump(' -> address id = '+addressId);
 				
-				var L = myControl.data.getCustomerAddresses['@'+addressType].length
+				var L = myControl.data.buyerAddressList['@'+addressType].length
 				var a,i;
 				var r = false;
 //looks through predefined addresses till it finds a match for the address id. sets a to address object.
 				for(i = 0; i < L; i += 1)	{
-					if(myControl.data.getCustomerAddresses['@'+addressType][i]['_id'] == addressId){
-						a = myControl.data.getCustomerAddresses['@'+addressType][i];
+					if(myControl.data.buyerAddressList['@'+addressType][i]['_id'] == addressId){
+						a = myControl.data.buyerAddressList['@'+addressType][i];
 						r = true;
 						break;
 						}

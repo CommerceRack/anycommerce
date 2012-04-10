@@ -33,7 +33,8 @@ var admin_orders = function() {
 		},
 	calls : {
 //never get from local or memory.
-		getOrders : {
+//formerly getOrders
+		adminOrderList : {
 			init : function(cmdObj,tagObj,Q)	{
 				this.dispatch(cmdObj,tagObj,Q)
 				return 1;
@@ -47,7 +48,7 @@ var admin_orders = function() {
 				}
 			}, //orderList
 
-		getOrderDetail : {
+		adminOrderDetail : {
 			init : function(orderID,tagObj,Q)	{
 				this.dispatch(orderID,tagObj,Q)
 				return 1;
@@ -59,15 +60,15 @@ var admin_orders = function() {
 				cmdObj["_cmd"] = "adminOrderDetail"
 				myControl.model.addDispatchToQ(cmdObj,Q);
 				}
-			}, //getOrderDetail
+			}, //adminOrderDetail
 
-		orderUpdate : {
+		adminOrderUpdate : {
 			init : function(orderID,updates,tagObj)	{
 				this.dispatch(orderID,updates,tagObj)
 				return 1;
 				},
 			dispatch : function(orderID,updates,tagObj)	{
-				myControl.util.dump("BEGIN admin_orders.calls.orderUpdate.dispatch");
+				myControl.util.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
 				myControl.util.dump(" -> orderID = "+orderID);
 				cmdObj = {};
 				cmdObj['_cmd'] = 'adminOrderUpdate';
@@ -242,7 +243,7 @@ myControl.ext.admin_orders.util.bindOrderListButtons();
 				myControl.util.dump('BEGIN myControl.ext.store_crm.callbacks.init.onError');
 				$('#'+d['_rtag'].targetID).prepend(myControl.util.getResponseErrors(d)).toggle(true);
 				}
-			}, //listOrders
+			} //listOrders
 		}, //callbacks
 
 ////////////////////////////////////   ACTIONS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -288,7 +289,7 @@ myControl.ext.admin_orders.util.bindOrderListButtons();
 				//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 5;
 				filterObj.LIMIT = 200; //for now, cap at 200. ###
-				myControl.ext.admin_orders.calls.getOrders.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
+				myControl.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				myControl.model.dispatchThis();
 				},
 			
@@ -371,7 +372,7 @@ var pool = $('#CMD').val().substr(5);
 var numRequests = 0; //the number of requests that need to be made.
 $('#orderListTable tr.trSelected').each(function() {
 	$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-	numRequests += myControl.ext.admin_orders.calls.orderUpdate.init($(this).attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$(this).attr('id')});
+	numRequests += myControl.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$(this).attr('id')});
 	});
 if(numRequests)	{
 //	myControl.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable'); //for now, don't do anything.
@@ -397,7 +398,7 @@ $('#orderListTable tr.trSelected').each(function() {
 		}
 	else	{
 		$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-		numRequests += myControl.ext.admin_orders.calls.orderUpdate.init($(this).attr('data-orderid'),['FLAGORDERASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
+		numRequests += myControl.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGORDERASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
 		}
 	});
 if(numRequests)	{

@@ -59,14 +59,47 @@ var store_crm = function() {
 				}
 			},//whereAmI
 
-
-		getAllCustomerLists : {
+		appFAQsAll : {
 			init : function(tagObj)	{
 				var r = 0;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getAllCustomerLists"
+				tagObj.datapointer = "appFAQs"
+				if(myControl.model.fetchData('appFAQs') == false)	{
+					r = 1;
+					this.dispatch(tagObj);
+					}
+				else	{
+					myControl.util.handleCallback(tagObj);
+					}
+				return r;
+				},
+			dispatch : function(tagObj)	{
+				myControl.model.addDispatchToQ({"_cmd":"appFAQs","method":"all","_tag" : tagObj});	
+				}
+			},//appFAQsTopics	
+//sendMessages always are sent thru the immutable Q
+		appSendMessage : {
+			init : function(obj,tagObj)	{
+				myControl.util.dump("store_crm.calls.appSendMessage");
+				myControl.util.dump(obj);
+				obj.msgtype = "feedback"
+				obj["_cmd"] = "appSendMessage";
+				obj['_tag'] = tagObj;
+				this.dispatch(obj);
+				return 1;
+				},
+			dispatch : function(obj)	{
+				myControl.model.addDispatchToQ(obj,'immutable');	
+				}
+			},//appFAQsTopics	
+//formerly getAllCustomerLists
+		buyerProductLists : {
+			init : function(tagObj)	{
+				var r = 0;
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj.datapointer = "buyerProductLists"
 				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
-					myControl.util.dump(" -> getAllCustomerLists is not local. go get her Ray!");
+					myControl.util.dump(" -> buyerProductLists is not local. go get her Ray!");
 					r = 1;
 					this.dispatch(tagObj);
 					}
@@ -77,17 +110,19 @@ var store_crm = function() {
 				return r;
 				},
 			dispatch : function(tagObj)	{
-				myControl.model.addDispatchToQ({"_cmd":"getAllCustomerLists","_tag" : tagObj});	
+				myControl.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag" : tagObj});	
 				}
-			},//getAllCustomerLists
+			},//buyerProductLists
 
-		getCustomerList : {
+
+//formerly getCustomerList
+		buyerProductListDetail : {
 			init : function(listID,tagObj,Q)	{
 				var r = 0;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getCustomerList|"+listID
+				tagObj.datapointer = "buyerProductListDetail|"+listID
 				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
-					myControl.util.dump(" -> getCustomerList is not local. go get her Ray!");
+					myControl.util.dump(" -> buyerProductListDetail is not local. go get her Ray!");
 					r = 1;
 					this.dispatch(listID,tagObj,Q);
 					}
@@ -98,34 +133,37 @@ var store_crm = function() {
 				return r;
 				},
 			dispatch : function(listID,tagObj,Q)	{
-				myControl.model.addDispatchToQ({"_cmd":"getCustomerList","listid":listID,"_tag" : tagObj},Q);	
+				myControl.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : tagObj},Q);	
 				}
-			},//getCustomerList
+			},//buyerProductListDetail
+
 
 //obj must include listid
 //obj can include sku, qty,priority, note and replace. see webdoc for more info.
 //sku can be a fully qualified stid (w/ options)
-		addToCustomerList : {
+//formerly addToCustomerList
+		buyerProductListAppendTo : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
 				return 1;
 				},
 			dispatch : function(obj,tagObj)	{
-				obj['_cmd'] = "addToCustomerList"
+				obj['_cmd'] = "buyerProductListAppendTo"
 				obj['_tag'] = tagObj;
 				myControl.model.addDispatchToQ(obj);	
 				}
-			},//addToCustomerList
+			},//buyerProductListAppendTo
 
-		removeFromCustomerList : {
+//formerly removeFromCustomerList
+		buyerProductListRemoveFrom : {
 			init : function(listID,stid,tagObj)	{
 				this.dispatch(listID,stid,tagObj);
 				return 1;
 				},
 			dispatch : function(listID,stid,tagObj)	{
-				myControl.model.addDispatchToQ({"_cmd":"removeFromCustomerList","listid":listID,"sku":stid,"_tag" : tagObj});	
+				myControl.model.addDispatchToQ({"_cmd":"buyerProductListRemoveFrom","listid":listID,"sku":stid,"_tag" : tagObj});	
 				}
-			},//removeFromCustomerList
+			},//buyerProductListRemoveFrom
 
 
 //!!! INCOMPLETE
@@ -150,22 +188,39 @@ a stid (pid + options can be passed) or just a pid.
 obj is most likely a form object serialized to json.
 see jquery/api webdoc for required/optional param
 !!! the review piece needs testing.
+
+//formerly addReview
 */
-		addReview : {
+		appReviewAdd : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
 				return 1;
 				},
 			dispatch : function(obj,tagObj)	{
-				obj['_cmd'] = 'addReview';
+				obj['_cmd'] = 'appReviewAdd';
 				obj['_tag'] = tagObj;
 				myControl.model.addDispatchToQ(obj);
+				}
+			},//appReviewAdd
+			
+//formerly customerPasswordRecover
+		appBuyerPasswordRecover : {
+			init : function(login,tagObj)	{
+				this.dispatch(login,tagObj);
+				return 1;
+				},
+			dispatch : function(login,tagObj)	{
+				var obj = {};
+				obj.login = login;
+				obj.method = 'email';
+				obj['_tag'] = tagObj;
+				myControl.model.addDispatchToQ(obj,'immutable');
 				}
 			},//addReview
 			
 //as part of tagObj, pass parentID so the success/error message knows where to go.
 //will be prepended to parentID
-		tellAFriend : {
+/*		tellAFriend : {
 			init : function(pid,tagObj)	{
 				this.dispatch(pid,tagObj);
 				return 1;
@@ -173,7 +228,6 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(pid,tagObj)	{
 				var obj = {};
 				obj['_cmd'] = 'sendEmail';
-				obj['recipient'] = 'jt@zoovy.com';
 				obj['method'] = 'tellafriend';
 				obj['SENDER_BODY'] = 'THIS IS CONTENT I ADDED. WOOT!';
 				obj['product'] = pid;
@@ -181,6 +235,22 @@ see jquery/api webdoc for required/optional param
 				myControl.model.addDispatchToQ(obj);
 				}
 			},//addReview
+*/
+
+
+		buyerNewsletters: {
+			init : function(tagObj,Q)	{
+				myControl.util.dump("BEGIN store_crm.calls.buyerNewsletters.init");
+				this.dispatch(tagObj,Q);
+				return 1;
+				},
+			dispatch : function(tagObj,Q)	{
+				obj = {};
+				obj['_tag'] = tagObj;
+				obj['_cmd'] = "buyerNewsletters";
+				myControl.model.addDispatchToQ(obj,Q);
+				}
+			}, //buyerNewsletters
 
 		setNewsletters : {
 			init : function(obj,tagObj)	{
@@ -195,6 +265,7 @@ see jquery/api webdoc for required/optional param
 				myControl.model.addDispatchToQ(obj);	
 				}
 			}, //setNewsletters
+
 //get a list of newsletter subscription lists.
 		getNewsletters : {
 			init : function(tagObj)	{
@@ -219,49 +290,53 @@ see jquery/api webdoc for required/optional param
 				}
 			},//getNewsletters			
 
-		getCustomerOrderList : {
+		buyerPasswordUpdate : {
+			init : function(password,tagObj)	{
+				myControl.util.dump("BEGIN store_crm.calls.buyerPasswordUpdate.init");
+				this.dispatch(password,tagObj);
+				return 1;
+				},
+			dispatch : function(password,tagObj)	{
+				var obj = {};
+				obj.password = password;
+				obj['_tag'] = tagObj;
+				obj['_cmd'] = "buyerPasswordUpdate";
+				myControl.util.dump(obj);
+				myControl.model.addDispatchToQ(obj,'immutable');	
+				}
+			},
+//a request for order history should always request latest list (as per B)
+//formerly getCustomerOrderList
+		buyerPurchaseHistory : {
 			init : function(tagObj,Q)	{
-				var r = 0;
+				var r = 1;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getCustomerOrderList"
-				
-				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
-					this.dispatch(tagObj,Q);
-					r = 1;
-					}
-				else	{
-					myControl.util.handleCallback(tagObj);
-					}
+				tagObj.datapointer = "buyerPurchaseHistory"
+				this.dispatch(tagObj,Q);
 				return r;
 				},
 			dispatch : function(tagObj,Q)	{
-				myControl.model.addDispatchToQ({"_cmd":"getCustomerOrderList","DETAIL":"5","_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
+				myControl.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
 				}			
-			}, //getCustomerOrderList
+			}, //buyerPurchaseHistory
 
 
-
-		getCustomerOrderDetail : {
+//a request for order details should always request latest list (as per B)
+		buyerPurchaseHistoryDetail : {
 			init : function(orderid,tagObj,Q)	{
 				var r = 0;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getCustomerOrderDetail|"+orderid;
-
-				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
-					this.dispatch(orderid,tagObj,Q);
-					r = 1;
-					}
-				else	{
-					myControl.util.handleCallback(tagObj);
-					}
+				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid;
+				this.dispatch(orderid,tagObj,Q);
+				r = 1;
 				return r;
 				},
 			dispatch : function(orderid,tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getCustomerOrderDetail|"+orderid
-				myControl.model.addDispatchToQ({"_cmd":"getCustomerOrderDetail","orderid":orderid,"_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
+				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid
+				myControl.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
 				}			
-			} //getCustomerOrderDetail
+			} //buyerPurchaseHistoryDetail
 
 		}, //calls
 
@@ -295,7 +370,33 @@ see jquery/api webdoc for required/optional param
 				myControl.util.dump('BEGIN myControl.ext.store_crm.callbacks.init.onError');
 				}
 			},
+			
+		showFAQTopics : {
 
+			onSuccess : function(tagObj)	{
+				myControl.util.dump('BEGIN store_crm.howFAQTopics.onSuccess ');
+				var $parent = $('#'+tagObj.parentID);
+				$parent.removeClass('loadingBG');
+				var L = myControl.data[tagObj.datapointer]['@topics'].length;
+				myControl.util.dump(" -> L = "+L);
+				var topicID;
+				if(L > 0)	{
+					for(i = 0; i < L; i += 1)	{
+						topicID = myControl.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
+						myControl.util.dump(" -> TOPIC ID = "+topicID);
+						$parent.append(myControl.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,myControl.data[tagObj.datapointer]['@topics'][i]))
+						}
+					
+					}
+				else	{
+					$parent.append("There are no FAQ at this time.");
+					}
+				
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
+				}
+			},
 
 		showOrderHistory : {
 			onSuccess : function(tagObj)	{
@@ -303,18 +404,22 @@ see jquery/api webdoc for required/optional param
 				var $parent = $('#'+tagObj.parentID);
 				var orderid;
 				var L = myControl.data[tagObj.datapointer]['@orders'].length;
-				for(i = 0; i < L; i += 1)	{
-					orderid = myControl.data[tagObj.datapointer]['@orders'][i].ORDERID;
-					$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
-					myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer]['@orders'][i],"order_"+orderid);
+				if(L > 0)	{
+					for(i = 0; i < L; i += 1)	{
+						orderid = myControl.data[tagObj.datapointer]['@orders'][i].ORDERID;
+						$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
+						myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer]['@orders'][i],"order_"+orderid);
+						}
+					}
+				else	{
+					$parent.empty().removeClass('loadingBG').append("You have not placed an order with us.");
 					}
 				
 		
 				
 				},
-			onError : function(d)	{
-				myControl.util.dump('BEGIN myControl.ext.store_crm.callbacks.init.onError');
-				$('#'+d['_rtag'].parentID).prepend(myControl.util.getResponseErrors(d)).toggle(true);
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
 				}
 			
 			
@@ -328,9 +433,8 @@ see jquery/api webdoc for required/optional param
 				$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,"subscribeFormContainer"));
 				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer],"subscribeFormContainer");
 				},
-			onError : function(d)	{
-				myControl.util.dump('BEGIN myControl.ext.store_crm.callbacks.init.onError');
-				$('#'+d['_rtag'].parentID).prepend(myControl.util.getResponseErrors(d)).toggle(true);
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
 				}
 			}, //showSubscribeForm
 
@@ -339,17 +443,15 @@ see jquery/api webdoc for required/optional param
 				myControl.util.dump('BEGIN myControl.ext.store_crm.showSubscribeForm.onSuccess ');
 				$('#'+tagObj.parentID).empty("thank you!");
 				},
-			onError : function(d)	{
-				myControl.util.dump('BEGIN myControl.ext.store_crm.showSubscribeForm.onSError ');
-				myControl.util.dump(d);
-				$('#'+d['_rtag'].parentID).prepend(myControl.util.getResponseErrors(d)).toggle(true);
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
 				}
 			}, //showSubscribeSuccess
 
 		showOrder : 	{
 			onSuccess : function(tagObj)	{
 				myControl.util.dump("BEGIN store_crm.callbacks.showOrder");
-//				myControl.util.dump(tagObj);
+				myControl.util.dump(tagObj);
 //translates the general info for the order. bill to, status, etc.
 				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer].order,tagObj.parentID);
 
@@ -404,15 +506,26 @@ see jquery/api webdoc for required/optional param
 				else
 					return errors;
 				},
+			changePassword : function(obj)	{
+				myControl.util.dump("BEGIN store_crm.validate.subscribe");
+				myControl.util.dump(obj);
+				var valid = true;
+				if(obj.password == ''){valid = false}
+				if(obj.password != obj.password2)	{valid = false}
+				return valid;
+				},
 			subscribe : function(obj)	{
+				myControl.util.dump("BEGIN store_crm.validate.subscribe");
+				myControl.util.dump(obj);
 				var errors = '';
 				if(!obj.login)
-					errors += 'please enter an email address.';
+					errors += '<li>please enter an email address.</li>';
 				else if(!myControl.util.isValidEmail(obj.login))
-					errors += 'please enter a valid email address.';
+					errors += '<li>please enter a valid email address.</li>';
+
 //name is not required, but if something is there, make sure its the full name.
 				if(obj.fullname && obj.fullname.indexOf(' ') < 0)
-					errors += 'please enter your full name';
+					errors += '<li>please enter your full name.</li>';
 					
 				if(!errors)
 					return true;
@@ -431,7 +544,7 @@ see jquery/api webdoc for required/optional param
 				var o = "<ul class='subscriberLists'>";
 				for(index in data.bindData.cleanValue)	{
 					o += "<li title='"+data.bindData.cleanValue[index].EXEC_SUMMARY+"'>";
-					o += "<input type='checkbox' name='newsletter-"+data.bindData.cleanValue[index].ID+"' id='newsletter-"+data.bindData.cleanValue[index].ID+"' \/>";
+					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.bindData.cleanValue[index].ID+"' id='newsletter-"+data.bindData.cleanValue[index].ID+"' \/>";
 					o += "<label for='newsletter-"+data.bindData.cleanValue[index].ID+"'>"+data.bindData.cleanValue[index].NAME+"<\/label><\/li>";
 					}
 				o += '<\/ul>';
@@ -470,20 +583,22 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 						$parent.empty();
 						}
 
-					$parent.attr({"title":"Write a review for "+myControl.data['getProduct|'+P.pid]['%attribs']['zoovy:prod_name']}).append(myControl.renderFunctions.createTemplateInstance(P.templateID,'review-modal_'+P.pid));
-					myControl.renderFunctions.translateTemplate(myControl.data['getProduct|'+P.pid],'review-modal_'+P.pid);
-					$parent.dialog({modal: true,width:$(window).width() - 48,height:$(window).height() - 48});
-					
-					
-					}			
+					$parent.attr({"title":"Write a review for "+myControl.data['appProductGet|'+P.pid]['%attribs']['zoovy:prod_name']}).append(myControl.renderFunctions.createTemplateInstance(P.templateID,'review-modal_'+P.pid));
+					myControl.renderFunctions.translateTemplate(myControl.data['appProductGet|'+P.pid],'review-modal_'+P.pid);
+					$parent.dialog({modal: true,width:500,height:500});
+
+
+					}
 				},
+
+
 
 			handleReviews : function(formID)	{
 				frmObj = $('#'+formID).serializeJSON();
 				$('#'+formID+' .zMessage').empty().remove(); //clear any existing error messages.
 				var isValid = myControl.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
 				if(isValid === true)	{
-					myControl.ext.store_crm.calls.addReview.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
+					myControl.ext.store_crm.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
 					myControl.model.dispatchThis();
 					}
 				else	{
@@ -510,36 +625,44 @@ will output a newsletter form into 'parentid' using 'templateid'.
 //assumes the list is already in memory
 			getSkusFromList : function(listID)	{
 				myControl.util.dump("BEGIN store_crm.util.getSkusFromList ("+listID+")");
-				var L = myControl.data['getCustomerList|'+listID]['@'+listID].length;
+				var L = myControl.data['buyerProductListDetail|'+listID]['@'+listID].length;
 				var csvArray = new Array(); //array of skus. What is returned.
 				
 				for(i = 0; i < L; i+=1)	{
-					csvArray.push(myControl.data['getCustomerList|'+listID]['@'+listID][i].SKU);
+					csvArray.push(myControl.data['buyerProductListDetail|'+listID]['@'+listID][i].SKU);
 					}
 				csvArray = $.grep(csvArray,function(n){return(n);}); //remove blanks
 				return csvArray;
 				},
-
+			handleChangePassword : function(formID,tagObj)	{
+$('#'+formID+' .zMessage').empty().remove(); //clear any existing messaging
+var formObj = $('#'+formID).serializeJSON();
+if(myControl.ext.store_crm.validate.changePassword(formObj)){
+	myControl.ext.store_crm.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
+	myControl.model.dispatchThis('immutable');
+	}
+else{
+	$('#'+formID).prepend(myControl.util.formatMessage("The two passwords entered do not match."));
+	}
+				
+				},
 			handleSubscribe : function(formID,tagObj)	{
+				myControl.util.dump("BEGIN store_crm.util.handleSubscribe");
 				frmObj = $('#'+formID).serializeJSON();
+				$('#'+formID+' .zMessage').empty().remove(); //clear any existing messaging
 				var isValid = myControl.ext.store_crm.validate.subscribe(frmObj); //returns true or an li's of errors.
 				if(isValid === true)	{
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
 					tagObj.callback = tagObj.callback ? tagObj.callback : 'showMessaging';
 					tagObj.message = tagObj.message ? tagObj.message : 'Thank you, you have been added to our newsletter.';
-					tagObj.parentID = $('#'+formID).parent().attr('id');
+					tagObj.parentID = tagObj.parentID ? tagObj.parentID : formID; //don't look for parent, because it may not have an id.
 
 					myControl.ext.store_crm.calls.setNewsletters.init(frmObj,tagObj);
 					myControl.model.dispatchThis();
 					}
 				else	{
-//report errors.
-					var $messageEle = $('#newsletterMessaging').empty();
-//need to make sure a messaging div exists for error reporting.
-					if($messageEle.length == 0)
-						$('#'+formID).prepend("<ul id='newsletterMessaging'>"+isValid+"</ul>");
-					else
-						$messageEle.append(isValid);
+//report errors				
+					$('#'+formID).append(myControl.util.formatMessage("<ul>"+isValid+"<\/ul>"));
 					}
 				}
 			} //util		

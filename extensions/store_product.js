@@ -35,11 +35,11 @@ var store_product = function() {
 
 
 	calls : {
-
-		getProduct : {
-			init : function(pid,tagObj)	{
+//formerly getProduct
+		appProductGet : {
+			init : function(pid,tagObj,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-//				myControl.util.dump("BEGIN myControl.ext.store_product.calls.getProduct");
+//				myControl.util.dump("BEGIN myControl.ext.store_product.calls.appProductGet");
 //				myControl.util.dump(" -> PID: "+pid);
 
 //datapointer must be added here because it needs to be passed into the callback. The callback could get executed before the ajax call (if in local).
@@ -48,101 +48,73 @@ var store_product = function() {
 // The advantage of saving the data in memory and local storage is lost if the datapointer isn't consistent, especially for product data.
 
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj["datapointer"] = "getProduct|"+pid; 
+				tagObj["datapointer"] = "appProductGet|"+pid; 
 
 //fetchData checks the timestamp, so no need to doublecheck it here unless there's a need to make sure it is newer than what is specified (1 day) in the fetchData function				
 				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
-					myControl.util.dump(" -> getProduct not in memory or local. refresh both.");
+//					myControl.util.dump(" -> appProductGet not in memory or local. refresh both.");
 					r += 1;
-					this.dispatch(pid,tagObj)
+					this.dispatch(pid,tagObj,Q)
 					}
 				else if(typeof myControl.data[tagObj.datapointer]['@inventory'] == 'undefined' || typeof myControl.data[tagObj.datapointer]['@variations'] == 'undefined')	{
 //					myControl.util.dump(" -> either inventory or variations not in memory or local. get everything.");
 //check to make sure inventory and pog info is available.
 					r += 1;
-					this.dispatch(pid,tagObj)
+					this.dispatch(pid,tagObj,Q)
 					}
 				else 	{
 					myControl.util.handleCallback(tagObj)
 					}
 				return r;
 				},
-			dispatch : function(pid,tagObj)	{
-//no tagobj passed because the datapointer is set in the call and we don't want to duplicate this callback (executed as part of getProduct).
-//the getReview call is added to the DQ prior to getProduct, so that when the getProduct callback is executed, the getReview data is already in memory.
-				myControl.ext.store_product.calls.getReviews.dispatch(pid);  //skip init here. we're making a call anyway, get most recent data.
+			dispatch : function(pid,tagObj,Q)	{
+//initially, reviews were obtained here automatically. But now it is likely a callback will be needed or that no reviews are needed, so removed. 20120326
 				var obj = {};
-				obj["_cmd"] = "getProduct";
+				obj["_cmd"] = "appProductGet";
 				obj["withVariations"] = 1;
 //only get inventory if it matters. inv_mode of 1 means inventory is not important.
 				if(typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1)
 					obj["withInventory"] = 1;
 				obj["pid"] = pid;
 				obj["_tag"] = tagObj;
-				myControl.model.addDispatchToQ(obj);
+				myControl.model.addDispatchToQ(obj,Q);
 				}
-			}, //getProduct
+			}, //appProductGet
 
 		
 
 
-
-		addToCart : {
+//formerly addToCart
+// early version of this had validation built into it, but that was inconsistent with how most other calls work
+// and made it harder to customize per RIA, if desired.
+		cartItemsAdd : {
 			init : function(formID,tagObj)	{
-//				myControl.util.dump("BEGIN store_product.calls.addtocart.init")
-				var r = 1; //unless this fails validation or some other error, 1 requests are made.
-				if(!formID)	{
-					r = 0;
-					}
-				else	{
-					var pid = $('#'+formID+'_product_id').val();
-					if(myControl.ext.store_product.validate.addToCart(pid))	{
-						$('.atcButton').attr('disabled','disabled');
-						tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-//						myControl.util.dump(" -> tagObj = ")
-//						myControl.util.dump(tagObj)
-						tagObj.datapointer = 'atc_'+myControl.util.unixNow();
-						this.dispatch($('#'+formID).serialize(),tagObj);
-						}
-					else	{
-						r = 0;
-	//didn't add to cart for some reason, most likely sog validation failed. errors reported to screen by validate function.
-	//this could get used to re-enable any buttons that were disabled.
-						}
-					}
-				return r;
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj.datapointer = 'atc_'+myControl.util.unixNow(); //unique datapointer for callback to work off of, if need be.
+				this.dispatch($('#'+formID).serialize(),tagObj);
+				return 1;
 				},
 			dispatch : function(serFrmData,tagObj)	{
 				var obj = {};
 				obj.data = serFrmData;
-				obj["_cmd"] = "addSerializedDataToCart"; 
+				obj["_cmd"] = "addSerializedDataToCart"; //cartItemsAddSerialized
+				obj["_zjsid"] = myControl.sessionId; 
 				obj["_tag"] = tagObj;
 				myControl.model.addDispatchToQ(obj,'immutable');
 				}
 			},//addToCart
 
-		getCartContents : {
-			init : function(tagObj)	{
-//				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.calls.getCartContents. callback = '+callback)
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
-				tagObj.datapointer = "showCart";
-				this.dispatch(tagObj);
-				return 1;
-				},
-			dispatch : function(tagObj)	{
-//				myControl.util.dump(' -> adding to PDQ. callback = '+callback)
-				myControl.model.addDispatchToQ({"_cmd":"showCart","_zjsid":myControl.sessionId,"_tag": tagObj},'immutable');
-				}
-			},//getCartContents
-		getReviews : {
+
+//formerly appReviewsList
+		appReviewsList : {
 			init : function(pid,tagObj)	{
 				var r = 0; //will return a 1 or a 0 based on whether the item is in local storage or not, respectively.
-//myControl.util.dump("getReviews tagObj:");
+//myControl.util.dump("appReviewsList tagObj:");
 //myControl.util.dump(tagObj);
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
-				tagObj["datapointer"] = "getReviews|"+pid;
+				tagObj["datapointer"] = "appReviewsList|"+pid;
 
-				if(myControl.model.fetchData('getReviews|'+pid) == false)	{
+				if(myControl.model.fetchData('appReviewsList|'+pid) == false)	{
 					r = 1;
 					this.dispatch(pid,tagObj)
 					}
@@ -152,9 +124,9 @@ var store_product = function() {
 				return r;
 				},
 			dispatch : function(pid,tagObj)	{
-				myControl.model.addDispatchToQ({"_cmd":"getReviews","pid":pid,"_tag" : tagObj});	
+				myControl.model.addDispatchToQ({"_cmd":"appReviewsList","pid":pid,"_tag" : tagObj});	
 				}
-			}//getReviews
+			}//appReviewsList
 		}, //calls
 
 
@@ -188,19 +160,15 @@ var store_product = function() {
 				$('.atcButton').removeAttr('disabled'); //makes atc button clickable again.
 				$('#atcMessaging_'+myControl.data[tagObj.datapointer].product1).append(myControl.util.formatMessage({'message':'Item(s) added to the cart!','uiIcon':'check'}))
 				},
-			onError : function(d)	{
+			onError : function(responseData,uuid)	{
 				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.init.onError');
 				$('.atcButton').removeAttr('disabled'); //remove the disabling so users can push the button again, if need be.
-				$('#atcMessaging_'+myControl.data[d['_rtag'].datapointer].product1).append(myControl.util.getResponseErrors(d))
+				$('#atcMessaging_'+myControl.data[responseData['_rtag'].datapointer].product1).append(myControl.util.getResponseErrors(responseData))
 				}
 			} //itemAddedToCart
 
 
 		}, //callbacks
-
-
-
-
 
 
 
@@ -214,7 +182,7 @@ var store_product = function() {
 
 addToCart : function (pid){
 	//copied locally for quick reference.
-	var sogJSON = myControl.data['getProduct|'+pid]['@variations']
+	var sogJSON = myControl.data['appProductGet|'+pid]['@variations']
 	var valid = true;
 //	myControl.util.dump('BEGIN validate_pogs. Formid ='+formId);
 	
@@ -288,7 +256,7 @@ addToCart : function (pid){
 	//if all options are selected AND checkinventory is on, do inventory check.
 		else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
 	//		alert(thisSTID);
-			if(!$.isEmptyObject(myControl.data['getProduct|'+pid]['@inventory']) && !$.isEmptyObject(myControl.data['getProduct|'+pid]['@inventory'][thisSTID]) && myControl.data['getProduct|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
+			if(!$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory'][thisSTID]) && myControl.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
 				$('#JSONpogErrors_'+pid).append("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>");
 				valid = false;
 				}
@@ -369,6 +337,7 @@ addToCart : function (pid){
 				if(data.bindData.posttext){o += data.bindData.posttext}
 				$tag.append(o);
 				},
+
 			simpleInvDisplay : function($tag,data)	{
 //data.value = available inventory
 //				myControl.util.dump("BEGIN store_product.renderFunctions.invAvail.");
@@ -384,12 +353,17 @@ addToCart : function (pid){
 				if(myControl.ext.store_product.util.productIsPurchaseable(data.bindData.cleanValue))	{
 					var o = '';
 					o += data.bindData.pretext ? data.bindData.pretext : "";
-					o += "<input type='text' value='1' size='5' name='quantity' class='zform_textbox' id='quantity_"+data.bindData.cleanValue+"' />";
+					o += "<input type='text' value='1' size='3' name='quantity' class='zform_textbox' id='quantity_"+data.bindData.cleanValue+"' />";
 					o += data.bindData.posttext ? data.bindData.posttext : ""
 					$tag.append(o);
 					}
 				else
-					$tag.toggle(false); //hide input if item is not purchaseable.
+					$tag.hide().addClass('displayNone'); //hide input if item is not purchaseable.
+				},
+
+//add all the necessary fields for quantity inputs.
+			atcFixedQuantity : function($tag,data)	{
+				$tag.attr('id','quantity_'+data.bindData.cleanValue);
 				},
 
 
@@ -400,21 +374,21 @@ addToCart : function (pid){
 //this code requires the variations.js file.
 //it loops through the products options and adds them to the fieldset (or whatever $tag is, but a fieldset is a good idea).
 			atcVariations : function($tag,data)	{
-				myControl.util.dump("BEGIN store_product.renderFormats.atcVariations");
+//				myControl.util.dump("BEGIN store_product.renderFormats.atcVariations");
 				var pid = data.bindData.cleanValue; 
 				var formID = $tag.parent('form').get(0).id;
 
-				myControl.util.dump(" -> pid: "+pid);
-				myControl.util.dump(" -> formID: "+formID);
+//				myControl.util.dump(" -> pid: "+pid);
+//				myControl.util.dump(" -> formID: "+formID);
 				
 				if(myControl.ext.store_product.util.productIsPurchaseable(pid))	{
-					myControl.util.dump(" -> item is purchaseable.");
-					if(!$.isEmptyObject(myControl.data['getProduct|'+pid]['@variations']) && myControl.model.countProperties(myControl.data['getProduct|'+pid]['@variations']) > 0)	{
+//					myControl.util.dump(" -> item is purchaseable.");
+					if(!$.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']) && myControl.model.countProperties(myControl.data['appProductGet|'+pid]['@variations']) > 0)	{
 $("<div \/>").attr('id','JSONpogErrors_'+pid).addClass('zwarn').appendTo($tag);
 
 var $display = $("<div \/>").attr('id','JSONPogDisplay_'+pid); //holds all the pogs and is appended to at the end.
 
-pogs = new handlePogs(myControl.data['getProduct|'+pid]['@variations'],{"formId":formID,"sku":pid});
+pogs = new handlePogs(myControl.data['appProductGet|'+pid]['@variations'],{"formId":formID,"sku":pid});
 var pog;
 if(typeof pogs.xinit === 'function')	{pogs.xinit()}  //this only is needed if the class is being extended (custom sog style).
 var ids = pogs.listOptionIDs();
@@ -425,7 +399,7 @@ for ( var i=0, len=ids.length; i<len; ++i) {
 $display.appendTo($tag);	
 						}
 					else	{
-						myControl.util.dump(" -> @variations is empty.");
+//						myControl.util.dump(" -> @variations is empty.");
 						}
 					}
 					
@@ -433,9 +407,10 @@ $display.appendTo($tag);
 
 
 
-
 //will remove the add to cart button if the item is not purchaseable.
 			addToCartButton : function($tag,data)	{
+//				myControl.util.dump("BEGIN store_product.renderFunctions.addToCartButton");
+//				myControl.util.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.bindData.cleanValue;
 // add _pid to end of atc button to make sure it has a unique id.
 // add a success message div to be output before the button so that messaging can be added to it.
@@ -443,11 +418,13 @@ $display.appendTo($tag);
 				$tag.attr('id',$tag.attr('id')+'_'+pid).addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(myControl.ext.store_product.util.productIsPurchaseable(pid))	{
 //product is purchaseable. make sure button is visible and enabled.
-					$tag.toggle(true).removeAttr('disabled');
+					$tag.show().removeClass('displayNone').removeAttr('disabled');
 					}
 				else	{
-					$tag.toggle(false).before("<span class='notAvailableForPurchase'>This item is not available for purchase<\/span>"); //hide button, item is not purchaseable.
+					$tag.hide().addClass('displayNone').before("<span class='notAvailableForPurchase'>This item is not available for purchase<\/span>"); //hide button, item is not purchaseable.
 					}
+
+//				myControl.util.dump(" -> ID at end: "+$tag.attr('id'));
 				} //addToCartButton
 
 			},
@@ -461,7 +438,7 @@ $display.appendTo($tag);
 A product is NOT purchaseable if:
 it has no price. ### SANITY 0 IS a valid price. blank is not.
 it is a parent
-it has no inventory
+it has no inventory AND inventory matters to merchant 
 */
 			productIsPurchaseable : function(pid)	{
 //				myControl.util.dump("BEGIN store_product.util.productIsPurchaseable");
@@ -470,26 +447,29 @@ it has no inventory
 					myControl.util.dump(" -> pid not passed into store_product.util.productIsPurchaseable");
 					r = false;
 					}
-				else if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:base_price'] == '')	{
-//					myControl.util.dump(" -> base price not set");
+				else if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:base_price'] == '')	{
+					myControl.util.dump(" -> base price not set: "+pid);
 					r = false;
 					}
-				else if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
-//					myControl.util.dump(" -> product is a parent");
+				else if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
+					myControl.util.dump(" -> product is a parent: "+pid);
 					r = false;
 					}
 //inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
 				else if(typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1)	{
 //if a product has no options, the inventory record looks like this:
-//["getProduct|PID"]["@inventory"].PID.inv where both instances of PID are subbed with the product id
-// ex: myControl.data["getProduct|"+PID]["@inventory"][PID].inv
+//["appProductGet|PID"]["@inventory"].PID.inv where both instances of PID are subbed with the product id
+// ex: myControl.data["appProductGet|"+PID]["@inventory"][PID].inv
 // also avail is ...[PID].res (reserved)
-					if(typeof myControl.data['getProduct|'+pid]['@inventory'] === 'undefined' || typeof myControl.data['getProduct|'+pid]['@variations'] === 'undefined')	{
-						myControl.util.dump(" -> inventory ("+typeof myControl.data['getProduct|'+pid]['@inventory']+") and/or variations ("+typeof myControl.data['getProduct|'+pid]['@variations']+") object(s) not defined.");
+					if(typeof myControl.data['appProductGet|'+pid]['@inventory'] === 'undefined' || typeof myControl.data['appProductGet|'+pid]['@variations'] === 'undefined')	{
+						myControl.util.dump(" -> inventory ("+typeof myControl.data['appProductGet|'+pid]['@inventory']+") and/or variations ("+typeof myControl.data['appProductGet|'+pid]['@variations']+") object(s) not defined.");
 						r = false;
 						}
 					else	{
-						if(this.getProductInventory(pid) <= 0)	{r = false}
+						if(this.appProductGetInventory(pid) <= 0)	{
+							myControl.util.dump(" -> inventory not available: "+pid);
+							r = false
+							}
 						}
 					}
 				return r;
@@ -500,14 +480,14 @@ it has no inventory
 //uses the passive q.
 			getXsellForPID : function(pid,Q)	{
 				var csvArray = new Array();
-				if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:related_products'])
-					csvArray.concat(myControl.data['getProduct|'+pid]['%attribs']['zoovy:related_products'])
-				if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:accessory_products'])
-					csvArray.concat(myControl.data['getProduct|'+pid]['%attribs']['zoovy:accessory_products'])
-				if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:grp_children'])
-					csvArray.concat(myControl.data['getProduct|'+pid]['%attribs']['zoovy:grp_children'])
-				if(myControl.data['getProduct|'+pid]['%attribs']['zoovy:grp_parent'])
-					csvArray.concat(myControl.data['getProduct|'+pid]['%attribs']['zoovy:grp_parent'])
+				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:related_products'])
+					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:related_products'])
+				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:accessory_products'])
+					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:accessory_products'])
+				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_children'])
+					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_children'])
+				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_parent'])
+					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_parent'])
 
 //				myControl.util.dump("csvArray.length before remove duplicates = "+csvArray.length);
 				csvArray = $.grep(csvArray,function(n){return(n);}); //remove blanks
@@ -515,16 +495,22 @@ it has no inventory
 				csvArray = myControl.util.removeDuplicatesFromArray(csvArray);
 //				myControl.util.dump("csvArray.length after remove duplicates = "+csvArray.length);
 			
-				this.getProductDataForLaterUse(csvArray,Q);
+				return this.getProductDataForLaterUse(csvArray,Q); //will return the # of requests. will b zero if all data in memory/local.
 				},
 
 //fairly straightforward way of getting a list of csv and doing nothing with it.
 //or, a followup 'ping' could be added to perform an action once this data is obtained.
+//checks to make sure no blanks, undefined or null pids go through
 			getProductDataForLaterUse : function(csv,Q)	{
+				var r = 0; //what's returned. # of requests
+//				myControl.util.dump("BEGIN store_product.util.getProductDataForLaterUse");
+//				myControl.util.dump(csv);
 				var L = csv.length;
 				for(var i = 0; i < L; i += 1)	{
-					myControl.ext.store_prodlist.calls.getProd.init(csv[i],{},Q);
+					if(myControl.util.isSet(csv[i]))	{r += myControl.ext.store_product.calls.appProductGet.init(csv[i],{},Q)}
 					}
+				myControl.util.dump(" -> getProdDataForLaterUser numRequests: "+r);
+				return r;
 				}, //getProductDataForList
 
 //will return 0 if no inventory is available.
@@ -532,13 +518,13 @@ it has no inventory
 //basically, a simple check to see if the item has purchaseable inventory.
 			getProductInventory : function(pid)	{
 				var inv = 0;
-				if($.isEmptyObject(myControl.data['getProduct|'+pid]['@variations']))	{
-					inv = myControl.data['getProduct|'+pid]['@inventory'][pid].inv
+				if($.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']))	{
+					inv = myControl.data['appProductGet|'+pid]['@inventory'][pid].inv
 //					myControl.util.dump(" -> item has no variations. inv = "+inv);
 					}
 				else	{
-					for(var index in myControl.data['getProduct|'+pid]['@inventory']) {
-						inv += Number(myControl.data['getProduct|'+pid]['@inventory'][index].inv)
+					for(var index in myControl.data['appProductGet|'+pid]['@inventory']) {
+						inv += Number(myControl.data['appProductGet|'+pid]['@inventory'][index].inv)
 						}
 //					myControl.util.dump(" -> item HAS variations. inv = "+inv);
 					}
@@ -563,18 +549,20 @@ NOTES
 					var parentID = P.parentID ? P.parentID : "image-modal";
 					var imageAttr = "zoovy:prod_image";
 					imageAttr += P.int ? P.int : "1";
-
-					var $parent = this.handleParentForModal(parentID,myControl.data["getProduct|"+P.pid]['%attribs']['zoovy:prod_name'])
+					P.width = P.width ? P.width : 600;
+					P.height = P.height ? P.height : 600;
+					
+					var $parent = this.handleParentForModal(parentID,myControl.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
 
 					if(!P.parentID)	{$parent.empty()} //only empty the parent if no parent was passed in. 
 					if(P.templateID)	{
 						$parent.append(myControl.renderFunctions.createTemplateInstance(P.templateID,"imageViewer_"+parentID));
-						myControl.renderFunctions.translateTemplate(myControl.data["getProduct|"+P.pid],"imageViewer_"+parentID);
+						myControl.renderFunctions.translateTemplate(myControl.data["appProductGet|"+P.pid],"imageViewer_"+parentID);
 						}
 					else	{
-						$parent.append(myControl.util.makeImage({"class":"imageViewerSoloImage","h":"500","w":"500","bg":"ffffff","name":myControl.data['getProduct|'+P.pid]['%attribs'][imageAttr],"tag":1}));
+						$parent.append(myControl.util.makeImage({"class":"imageViewerSoloImage","h":"550","w":"550","bg":"ffffff","name":myControl.data['appProductGet|'+P.pid]['%attribs'][imageAttr],"tag":1}));
 						}	
-					$parent.dialog({modal: true,width:"94%",height:$(document).height() - 100});
+					$parent.dialog({modal: true,width:P.width ,height:P.height });
 					}
 				else	{
 					myControl.util.dump(" -> no pid specified for image viewer.  That little tidbit is required.");
@@ -586,7 +574,7 @@ this is done because it is likely multiple summaries could be displayed at the s
 */
 			showReviewSummary : function(P)	{
 				if(P.pid && P.parentID && P.templateID)	{
-					$revSum = $('#'+P.parentID);
+					var $revSum = $('#'+P.parentID);
 					$revSum.append(myControl.renderFunctions.createTemplateInstance(P.templateID,P.parentID+'_summary_'+P.pid));
 					myControl.renderFunctions.translateTemplate(myControl.ext.store_product.util.summarizeReviews(P.pid),P.parentID+'_summary_'+P.pid);
 					}
@@ -598,13 +586,13 @@ this is done because it is likely multiple summaries could be displayed at the s
 //requires P.pid, P.templateID and P.parentID.
 			showReviews : function(P)	{
 				if(P.pid && P.parentID && P.templateID)	{
-					myControl.util.dump("Required for showReviews. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
-					$reviews = $('#'+P.parentID);
-					var L = myControl.data['getReviews|'+P.pid]['@reviews'].length;
+//					myControl.util.dump("Required for showReviews. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
+					var $reviews = $('#'+P.parentID);
+					var L = myControl.data['appReviewsList|'+P.pid]['@reviews'].length;
 //					myControl.util.dump(" -> length = "+L);
 					for(i = 0; i < L; i += 1)	{
 						$reviews.append(myControl.renderFunctions.createTemplateInstance(P.templateID,'prodReview_'+P.pid+'_'+i));
-						myControl.renderFunctions.translateTemplate(myControl.data['getReviews|'+P.pid]['@reviews'][i],'prodReview_'+P.pid+'_'+i);
+						myControl.renderFunctions.translateTemplate(myControl.data['appReviewsList|'+P.pid]['@reviews'][i],'prodReview_'+P.pid+'_'+i);
 						}
 
 					}
@@ -621,7 +609,7 @@ template = template id to translate for the viewer. [REQUIRED]
 parentID = id for parent. [OPTIONAL] template will get translated into that and then the parent will be used to create the modal. if no parent, generic id will be used AND recycled.
 
 NOTES
-- this utility will make a getProduct cat with variations and, based on global var inventory preferences, an  inventory request.
+- this utility will make a appProductGet cat with variations and, based on global var inventory preferences, an  inventory request.
 - if you pass a parentID, it is your responsibility to add a title to it, if needed.
 - if you pass a parentID, it is your responsibility to empty that parent, if needed.
 */
@@ -629,7 +617,7 @@ NOTES
 				if(P.pid && P.templateID)	{
 //					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
 					var parentID = "product-modal"
-					var $parent = this.handleParentForModal(parentID,myControl.data["getProduct|"+P.pid]['%attribs']['zoovy:prod_name'])
+					var $parent = this.handleParentForModal(parentID,myControl.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
 					
 					if(!P.parentID)	{
 						myControl.util.dump(" -> parent not specified. empty contents.");
@@ -646,8 +634,8 @@ NOTES
 					tagObj.callback = P.callback ? P.callback : 'translateTemplate';
 					tagObj.extension = P.extension ? P.extension : ''; //translateTemplate is part of controller, not an extension
 					
-					myControl.ext.store_product.calls.getProduct.init(P.pid,tagObj);
-					myControl.ext.store_product.calls.getReviews.init(P.pid); //
+					myControl.ext.store_product.calls.appProductGet.init(P.pid,tagObj);
+					myControl.ext.store_product.calls.appReviewsList.init(P.pid); //
 
 //					myControl.util.dump(' -> numRequests = '+numRequests);
 					myControl.model.dispatchThis();
@@ -689,30 +677,30 @@ NOTES
 				tagObj.callback = tagObj.callback ? tagObj.callback : 'itemAddedToCart';
 				tagObj.extension = tagObj.extension ? tagObj.extension : 'store_product';
 				
-				if (myControl.ext.store_product.calls.addToCart.init(formID,tagObj)){
-					myControl.ext.store_product.calls.getCartContents.init(); //piggyback an update cart so that next time 'view cart' is pushed, it's accurate.
+				if (myControl.ext.store_product.calls.cartItemsAdd.init(formID,tagObj)){
+					myControl.calls.refreshCart.init({},'immutable'); //piggyback an update cart so that next time 'view cart' is pushed, it's accurate.
 					myControl.model.dispatchThis('immutable');
 					}
 				
 				},
-//will generate some useful review info (total number of reviews, average review, etc ) and put it into getProduct|PID	
-//data saved into getProduct so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
+//will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
+//data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
 			summarizeReviews : function(pid)	{
 //				myControl.util.dump("BEGIN store_product.util.summarizeReviews");
 				var L = 0;
 				var sum = 0;
 				var avg = 0;
-				if($.isEmptyObject(myControl.data['getReviews|'+pid]['@reviews']))	{
+				if($.isEmptyObject(myControl.data['appReviewsList|'+pid]['@reviews']))	{
 //item has no reviews or for whatver reason, data isn't available. 
 					}
 				else	{
-					L = myControl.data['getReviews|'+pid]['@reviews'].length;
+					L = myControl.data['appReviewsList|'+pid]['@reviews'].length;
 					myControl.util.dump(" -> length = "+L);
 					sum = 0;
 					avg = 0;
 					for(i = 0; i < L; i += 1)	{
-//						myControl.util.dump(" -> rating = "+myControl.data['getReviews|'+pid]['@reviews'][i].RATING);
-						sum += Number(myControl.data['getReviews|'+pid]['@reviews'][i].RATING);
+//						myControl.util.dump(" -> rating = "+myControl.data['appReviewsList|'+pid]['@reviews'][i].RATING);
+						sum += Number(myControl.data['appReviewsList|'+pid]['@reviews'][i].RATING);
 						}
 					avg = Math.round(sum/L);
 					}
