@@ -1,6 +1,6 @@
 
 Zoovy MVC JQuery Framework
-release 2012.09
+release 2012.15
 
 Rich Internet Application, Model View Controller created using jQuery Plugins 
 for creating standalone or pluggable shopping applications against the Zoovy 
@@ -16,4 +16,7 @@ API Calls Input/Output Reference:
 http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51609
 
 Examples are stored in examples sub-directory.
+
+
+
 
