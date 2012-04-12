@@ -329,12 +329,12 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 //and your code breaks.
 
 //				myControl.util.dump(' -> Q In Use is '+QID);
-	//			myControl.util.dump(' -> Q = ');
-	//			myControl.util.dump(Q);
+//				myControl.util.dump(' -> Q = ');
+//				myControl.util.dump(Q);
+//				myControl.util.dump("ajax URL: "+myControl.vars.jqurl);
 //if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
 				myControl.ajax.lastDispatch = myControl.util.unixNow();
 				myControl.ajax.overrideAttempts = 0;
-				
 				myControl.ajax.requests[QID][UUID] = $.ajax({
 					type: "POST",
 					url: myControl.vars.jqurl,

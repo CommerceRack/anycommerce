@@ -6,16 +6,23 @@ Rich Internet Application, Model View Controller created using jQuery Plugins
 for creating standalone or pluggable shopping applications against the Zoovy 
 e-Commerce Platform.
 
-For more information on "what is a shopping application" please visit:
-http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51695
+What is a Shopping App?
+	http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51695
 
-Since we're having issues with Google's hosting we decided to move to GitHub:
-https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin
+To see how this whole thing works, please visit our github-wiki.
+
+WIKI Documentation:
+	https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki
+
+Official Repository:
+	https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin
 
 API Calls Input/Output Reference:
-http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51609
+	http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51609
 
 Examples are stored in examples sub-directory.
+Extensions are stored in the extensions sub-directory.
+
 
 
 

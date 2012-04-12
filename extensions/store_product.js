@@ -101,6 +101,7 @@ var store_product = function() {
 				obj["_zjsid"] = myControl.sessionId; 
 				obj["_tag"] = tagObj;
 				myControl.model.addDispatchToQ(obj,'immutable');
+				myControl.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			},//addToCart
 
@@ -585,7 +586,7 @@ this is done because it is likely multiple summaries could be displayed at the s
 			
 //requires P.pid, P.templateID and P.parentID.
 			showReviews : function(P)	{
-				if(P.pid && P.parentID && P.templateID)	{
+				if(P.pid && P.parentID && P.templateID && typeof myControl.data['appReviewsList|'+P.pid] != 'undefined' )	{
 //					myControl.util.dump("Required for showReviews. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
 					var $reviews = $('#'+P.parentID);
 					var L = myControl.data['appReviewsList|'+P.pid]['@reviews'].length;
@@ -690,7 +691,7 @@ NOTES
 				var L = 0;
 				var sum = 0;
 				var avg = 0;
-				if($.isEmptyObject(myControl.data['appReviewsList|'+pid]['@reviews']))	{
+				if(typeof myControl.data['appReviewsList|'+pid] == 'undefined' || $.isEmptyObject(myControl.data['appReviewsList|'+pid]['@reviews']))	{
 //item has no reviews or for whatver reason, data isn't available. 
 					}
 				else	{

@@ -106,16 +106,28 @@ formerly showCart
 			dispatch : function(stid,qty,tagObj)	{
 //				myControl.util.dump(' -> adding to PDQ. callback = '+callback)
 				myControl.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":myControl.sessionId,"_tag": tagObj},'immutable');
+				myControl.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			 },
 // formerly getShippingRates
+// checks for local copy first. used in showCartInModal.
 		cartShippingMethods : {
 			init : function(tagObj,Q)	{
+				var r = 0
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; //makesure tagObj is an object so that datapointer can be added w/o causing a JS error
-				Q = Q ? Q : 'immutable'; //allow for muted request, but default to immutable. it's a priority request.
 				tagObj.datapointer = "cartShippingMethods";
-				this.dispatch(tagObj,Q);
-				return 1;
+				
+				if(myControl.model.fetchData('cartShippingMethods') == false)	{
+					myControl.util.dump(" -> cartItemsList is not local. go get her Ray!");
+					r = 1;
+					Q = Q ? Q : 'immutable'; //allow for muted request, but default to immutable. it's a priority request.
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+//					myControl.util.dump(' -> data is local');
+					myControl.util.handleCallback(tagObj);
+					}
+				return r;
 				},
 			dispatch : function(tagObj,Q)	{
 				myControl.model.addDispatchToQ({"_cmd":"cartShippingMethods","_tag": tagObj},Q);
@@ -155,7 +167,7 @@ formerly showCart
 			dispatch : function(coupon,tagObj)	{
 				myControl.model.addDispatchToQ({"_cmd":"cartCouponAdd","coupon":coupon,"_tag" : tagObj},'immutable');	
 				}			
-			}, //cartCouponAdd
+			} //cartCouponAdd
 
 
 		}, //calls
@@ -352,6 +364,8 @@ $tag.click(function(){
 
 
 		util : {
+
+			
 /*
 Guess what this does?  Yep, shows the cart in a modal. shocking, no?
 In this case, the id is hard coded because we only want one instantation of the cart at a time.

@@ -29,12 +29,19 @@ some notes about templates;
 	</li>
 </ul>
 
+<ul>
+	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
+	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
+	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
+	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
+	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+	</li>
+</ul>
 
 
 
 
-
-<!-- an id of productFinder_path will be added to this parent. -->
 <div class='loadingBG' id='adminProductFinder'>
 	<section class='ui-corner-bottom ui-widget'>
 	<table class='finderTable'>
@@ -42,7 +49,7 @@ some notes about templates;
 		<td>
 <form id='finderSearchForm' action='#' name='finderSearchForm' >
 <fieldset>
-<input type='text' class='ui-corner-left finderSearch' value='' name='KEYWORDS' size='20' />
+<input type='text' class=' finderSearch' value='' name='query' id='finderSearchQuery' size='20' />
 <input class='ui-state-default ui-corner-right ui-state-active' type='submit' value='search' />
 <input type='hidden' value='' name='CATALOG' />
 </fieldset>
@@ -91,7 +98,6 @@ some notes about templates;
 	</table>
 </section>
 </div>
-
 
 
 

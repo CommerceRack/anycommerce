@@ -20,37 +20,15 @@
 
 zController = function(params,extensions) {
 	this.util.dump('zController has been initialized');
-	var protocol = document.location.protocol; //only check for IE compat issues if protocol is not local
-	if(protocol != 'file:')	{
-		var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1]; //get root domain (www.something.com)
-		var JQUrl = params.jqurl.match(/:\/\/(.[^/]+)/)[1]; //get root jqurl domain (www.something.com)
-//		console.log('root domain: '+rootUrl+' and JQUrl = '+JQUrl+' appName = '+navigator.appName+' and browser version == '+jQuery.browser.version);
-		}
-
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
-//	else if(typeof zGlobals == 'undefined')	{
+//	else if(typeof zGlobals != 'object')	{
 //		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
 //		}
-	else if(protocol != 'file:' && JQUrl != rootUrl && navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
-		//ie 8 and 9 don't support xss.
-		alert("We're very sorry, but it appears you are using a version of Internet Explorer that doesn't support our Rich Internet Application. Please upgrade your IE or try another browser.");
-		}
 	else	{
 		this.initialize(params,extensions);
 		}
-//bind an unload event to the window.  This will save all the checkout fields to the DQ, then dispatch them and any others that are waiting.
-//this will display a 'do you want to leave' warning. We need to bind this only during checkout and unbind it when not in checkout (or finished checking out). !!!
-//this works in safari and FF reliably. In IE it works so-so. test to see if the jquery vs. js works better.
-//also, it's possible to 'name' a bind to make it easier to unbind. read jquery docs for more info.
-//	$(window).unload(function() {});
-//	window.onbeforeunload = function(){
-//		myControl.calls.saveCheckoutFields.init();
-//		myControl.model.dispatchThis();
-//		alert('test 2 (returns false)');
-//		return 'there are unsaved changes'  //IE will display this message.
-//		};
 	}
 	
 $.extend(zController.prototype, {
@@ -63,6 +41,14 @@ $.extend(zController.prototype, {
 		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
 		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		myControl.vars.fbUser = {};
+		myControl.vars.profile = zGlobals.appSettings.profile;
+		myControl.vars.username = zGlobals.appSettings.username;
+		myControl.vars.secureURL = zGlobals.appSettings.https_app_url;
+		myControl.vars.sdomain = zGlobals.appSettings.sdomain;
+
+		if('https:' == document.location.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
+		else	{myControl.vars.jqurl = zGlobals.appSettings.http_api_url}
+
 
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
 // default to blank, not 'null', or += below will start with 'undefined'.
@@ -70,16 +56,8 @@ $.extend(zController.prototype, {
 		myControl.vars.passInDispatchV = '';  
 		myControl.vars.release = 'unspecified'; //will get overridden if set in P. this is defualt.
 
-//set after individual defaults are set above so that what is passed in can override. Should give priority to vars set in P.
+//set after individual defaults so that what is passed in can override. Should give priority to vars set in P.
 		myControl.vars = $.extend(myControl.vars,P);
-
-//!!! - this needs to be addressed.
-//if a merchant has a ssl cert, secure url is formatted as .com but if no ssl, formatted as .com/
-//so for now, compensate by adding / to the end so we can depend on it being there.
-		if(myControl.vars.secureURL && myControl.vars.secureURL.charAt( myControl.vars.secureURL.length-1 ) != "/")
-			myControl.vars.secureURL = myControl.vars.secureURL+"/";
-			
-//myControl.util.dump(myControl.vars); //here just to test is safari will output an obj to the console.
 
 // += is used so that this is appended to anything passed in P.
 		myControl.vars.passInDispatchV += myControl.util.getBrowserInfo()+";OS:"+myControl.util.getOSInfo()+';'; 
@@ -232,7 +210,8 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					}
 				} //appAdminAuthenticate
 			}, //authentication
-
+		
+		
 //always uses immutable Q
 		getValidSessionID : {
 			init : function(callback)	{
@@ -557,7 +536,7 @@ myControl.util.handleCallback(tagObj);
 //				myControl.util.dump(" -> no callback was defined.");
 				}
 			},
-		
+//## allow for targetID to be passed in.
 		logBuyerOut : function()	{
 	
 			myControl.calls.authentication.zoovyLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out','targetID':'logMessaging'});
@@ -1442,7 +1421,6 @@ most likely, this will be expanded to support setting other data- attributes. ##
 //each template may have a unique set of required parameters.
 /*
 
-
 */
 		translateTemplate : function(data,target)	{
 //		myControl.util.dump('BEGIN translateTemplate (target = '+target+')');
@@ -1452,11 +1430,11 @@ most likely, this will be expanded to support setting other data- attributes. ##
 		
 		var templateID = $divObj.attr('data-templateid'); //always use all lowercase for data- attributes. browser compatibility.
 		var dataObj = $divObj.data();
-//myControl.util.dump(' -> safeTarget: '+safeTarget);
-//myControl.util.dump(' -> $divObj.length: '+$divObj.length);
-//myControl.util.dump(' -> templateID: '+templateID);
-//myControl.util.dump(' -> dataObj: ');
-//myControl.util.dump(dataObj);
+// myControl.util.dump(' -> safeTarget: '+safeTarget);
+// myControl.util.dump(' -> $divObj.length: '+$divObj.length);
+// myControl.util.dump(' -> templateID: '+templateID);
+// myControl.util.dump(' -> dataObj: ');
+// myControl.util.dump(dataObj);
 
 		if(dataObj)	{dataObj.id = safeTarget}
 		else	{dataObj = safeTarget;}
@@ -1630,8 +1608,33 @@ $('#'+safeTarget).replaceWith($tmp);
 			if(data.bindData.posttext){r += data.bindData.posttext}			
 			$tag.append(r);
 			},
-			
-			
+
+		paypalECButton : function($tag,data)	{
+$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
+	myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
+	$(this).addClass('disabled').attr('disabled','disabled');
+	myControl.model.dispatchThis('immutable');
+	});
+				},
+
+		googleCheckoutButton : function($tag,data)	{
+			var payObj = myControl.sharedCheckoutUtilities.which3PCAreCompatible();
+//certain product can be flagged to disable googlecheckout as a payment option.
+			if(payObj.googlecheckout)	{
+$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
+	myControl.ext.convertSessionToOrder.calls.cartGoogleCheckoutURL.init();
+	$(this).addClass('disabled').attr('disabled','disabled');
+	myControl.model.dispatchThis('immutable');
+	});
+				}
+			else	{
+				$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=disable&loc=en_US' \/>")			
+				}
+			},
+
+		
+		
+		
 		addClass : function($tag,data){
 			$tag.addClass(data.value);
 			},
@@ -1871,6 +1874,26 @@ some id's may be hard coded (can change this later if need be), but they're form
 
 
 	sharedCheckoutUtilities : 	{
+		
+		//cart must already be in memory when this is run.
+//will tell you which third party checkouts are compatible. does NOT look to see if merchant has them enabled,
+// just checks to see if the cart contents would even allow it.
+//currently, there is only a google field for disabling their checkout, but this is likely to change.
+			which3PCAreCompatible :	function(){
+				myControl.util.dump("BEGIN sharedCheckoutUtilities.which3PCAreCompatible");
+				var obj = {};
+				obj.paypalec = true;
+				obj.amazonpayment = true;
+				obj.googlecheckout = true;
+				
+				var L = myControl.data.cartItemsList.cart.stuff.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(myControl.data.cartItemsList.cart.stuff[i].full_product['gc:blocked'])	{obj.googlecheckout = false}
+					}
+
+				return obj;
+				},
+
 //pretty straightforward. If a cid is set, the session has been authenticated.
 //if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
 //if no cid but email, they are a guest.
@@ -1901,6 +1924,8 @@ some id's may be hard coded (can change this later if need be), but they're form
 
 				return r;
 				},
+			
+	
 
 /*
 sometimes _is_default is set for an address in the list of bill/ship addresses.
