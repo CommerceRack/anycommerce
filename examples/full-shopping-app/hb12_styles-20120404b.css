@@ -1,0 +1,386 @@
+body	{background:#d5b474 url('hb12_body_bg-1040x1.png') repeat-y center;}
+
+
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(hb12_red_loading-32x32.gif) no-repeat center center; min-height:28px;}
+
+
+a	{color:#990000;} /* this color should match the color set in zlink */
+a:hover	{color:#990000;}
+
+h1  {font-size:1.6em; color:#000000; font-weight:bold;} /* Used for the page title element */
+
+/* used for the wiki header 1 & 2 */
+h2	{font-size:1.4em; color:#333333; font-weight:bold;}
+h3, legend	{font-size:1.3em; color:#616161; font-weight:bold;}
+h4	{font-size:1.2em; color:#666666; font-weight:bold;}
+h5	{font-size:1.1em; color:#666666; font-weight:bold;}
+h6	{font-size:1em; color:#666666; font-weight:bold;}
+
+
+.redGrit	{background:url(hb12_redgrit-1230x27.jpg) repeat-x #761117;}
+
+.grittyBG	{background:url(hb12_gritttybg-1372x802.jpg) no-repeat top center;}
+
+.padMargBorderBottom	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #cccccc;} /* used in various places, including cart modal */
+.marginBottom, .amzVideo	{margin-bottom:12px;} /* generic margin used throughout site to add spacing between stacked elements */
+
+button.ui-button	{padding: .2em .5em;} /* ui-button doesn't handle styling on a 'button' type by default (though it does handle 'submit') */
+
+.disabled	{
+	cursor:crosshair !important;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+/* master header */
+
+#mastHead	{padding:10px 0;}
+.mcText		{font-size:.8em;}
+
+#headerSearchSubmit	{background-position:-314px -6px; width:22px; height:18px; float:left; margin-left:4px;}
+
+/* typically, em is used for height/line-height, but all browsers but FF were barfing all over this, so switched to px */
+#headerKeywordsInput	{font-size:11px; line-height:16px; padding:0 3px;  height:16px; float:left; width:200px; border:1px solid #0a3424;}
+
+.phoneAndMC, .searchAndDecals	{margin-left:30px}
+.phoneAndMC	{font-size:1.3em; line-height:12px;} /* use line height to center on cart icon */
+.searchAndDecals .decal	{display:inline-block; height:45px;}
+
+
+
+
+
+
+/* left column */
+
+#logo	{margin:10px 0; text-align:center;}
+
+.leftCats	{margin-bottom:10px;}
+
+.leftCats li	{border-bottom:1px solid #e0c286;  font-size:.9em;}
+.leftCats a	{display:block; padding:4px 10px; color:#022d1d; text-decoration:none;}
+.leftCats li:last-child	{border-bottom:0;}
+
+.leftHeadBG		{height:27px; background-color:#761117;}
+
+
+/* the background image is set in the hbspritebg class. these just set positioning */
+.beerCatsHead		{background-position:0 -1px;}
+.wineCatsHead		{background-position:0 -30px;}
+.relatedCatsHead		{background-position:0 -58px;}
+.relatedItemsHead		{background-position:0 -58px; display:inline-block; height:27px; width:200px;}
+
+.subscribeHead		{background-position:0 -86px;}
+
+.subscribeContent	{padding:10px;}
+.subscribeContent h6	{margin-bottom:5px;}
+.subscribeInput	{border:1px solid #977d48; font-size:.9em; color:#77787b; padding:0 2px; line-height:.9em; width:147px; margin-bottom:3px;}
+#subscribeSubmit	{width:61px; height:24px; background-position: -23px -61px;}
+
+
+
+
+
+
+
+/* content area styles */
+
+#mainContentArea	{padding:10px 0;}
+
+hgroup.breadcrumbContainer	{margin-bottom:10px;}
+#breadcrumb	{float:left;}
+.breadcrumbContainer, .breadcrumbContainer h1	{list-style:none; float:left; font-size:.9em; line-height:1em; margin:0; padding:0; }
+.breadcrumbContainer h1	{float:left; font-size:1em;}
+.breadcrumbContainer li	{ float:left; display:block;}
+.breadcrumbContainer li:after {content: ">"; padding-left: 12px; margin-right:12px;}
+.breadcrumbContainer li a.ui-state-default	{background:none; text-decoration:none; border:none;}
+
+
+
+#subcats	{clear:both;}
+
+#rightCol	{float:right; margin-left:20px; width:150px;}
+#rightCol nav li	a {display:block; padding:1px 6px; text-decoration:none; margin-bottom:3px;}
+
+
+
+/* homepage */
+
+.prodlistHead	{height:27px;}
+.featuredItemsHead	{background-position:0 -142px; height:27px; width:200px; display:block;}
+.bestSellersHead	{background-position:0 -114px; height:27px; width:200px; display:block;}
+
+.hpBannersRow2	{margin:10px 0;}
+
+#bestSellersHP	{margin:4px 0 12px 0;} /* container element for prodlist. adds spacing below header and at end of list */
+#bestSellersHP li	{width:355px; margin-right:10px; float:left;}
+#bestSellersHP li p	{font-size:.9em; line-height:1em;} /* product description */
+#bestSellersHP .prodThumbContainer	{margin-right:10px;}
+
+
+/* contact info page */
+
+#contactForm {float:right; margin: 0 0 12px 12px;}
+#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
+#contactForm div	{margin-bottom:5px}
+#contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
+#contactForm input, #contactForm textarea	{width:145px;}
+#contactForm textarea	{height:125px;}
+
+
+/* for accordian-esque styling where there are clickable-headers but more than one section can be open at a time. (faq, order history, etc) */
+
+.appAccordianesque .ui-accordion-header {padding:3px 24px;}
+
+
+/* newsletter subscription page */
+#subscribeFormContainer .userInfo div	{margin-bottom:6px;}
+#subscribeFormContainer li	{list-style:none;}
+#subscribeFormContainer .userInfo label	{width:100px; display:inline-block; margin-right:10px;}
+.subscriberLists label	{width:300px;}
+
+/* product details viewer */
+
+
+.prodViewerContainer	{width:796px;}
+#productViewer h1	{color:#022d1d; margin-bottom:6px;}
+#productViewer td.imageContainer	{width:370px; text-align:left;} /* container is bigger than image to handle right spacing */
+#prodThumbs div	{margin-bottom:12px;} /* middle column thumbnail list. applied to each thumb */
+
+#prodViewerAddThis	{margin-top:6px;}
+
+.prodSummaryContainer h6	{margin-bottom:12px; font-weight:normal} /* pid */
+
+.priceContainer	{margin-bottom:12px; font-size:1em;}
+.prodSummaryContainer .basePrice	{color:#022d1d; font-size:1.4em;} /* price */
+.prodSummaryContainer .retailPrice	{color:#000000;} /* msrp */
+.prodSummaryContainer .retailPrice .value	{text-decoration:line-through;}
+.prodSummaryContainer .savings	{color:#000000;} /* price */
+
+.prodSummaryContainer .latency	{margin-bottom:12px;} /* handles margin below stock and latency messaging */
+
+/* if inventory display is disabled, these styles are not used */
+.prodSummaryContainer .instock	{color:#006600;}
+.prodSummaryContainer .outofstock	{color:#660000;}
+
+.prodViewerAddToCartForm fieldset	{margin:12px 0;} /* for around options */
+
+.prodSummaryContainer .addToCartButton {margin:12px 0;} /* add to cart button, product detail view only */
+
+.prodSummaryContainer menu	{padding:12px 0; display:block; clear:both;}
+.prodSummaryContainer menu button	{margin:0 12px 12px 0;}
+
+
+
+.prodViewerAddToCartForm label	{padding-right:6px;}
+.prodViewerAddToCartForm select	{font-size:.9em}
+
+#prodlistAccessories {margin:0;} /* tab container handles padding/margin around product list */
+#prodlistAccessories	li	{width:155px; margin-left:0;}
+
+
+.imageViewerSoloImage	{margin:0 auto;} /* class around solo image that appears in modal on image enlargement */
+
+
+/* write review modal */
+#reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
+#reviewsMessage		{width:250px; height:250px;}
+
+#CRMButtonMenu	{padding:0; margin:0; margin-bottom:12px;}
+#CRMButtonMenu a	{margin-right:20px; color:#000000; text-decoration:underline;}
+
+#tabbedProductContentTD {padding:12px 0;} /* spacing above and below tabs/tab content */
+
+/* cart viewer modal */
+#cartViewerContents .prodThumb	{margin-right:12px;}
+
+
+
+/* for search resulsts page */
+
+#resultsProdlist	{width:620px; overflow:hidden;}
+
+#altSearchesContainer, #recentSearchesContainer {margin-bottom:12px;}
+#altSearchesContainer li, #recentSearchesContainer li	{padding:1px 8px;}
+#altSearchesContainer a, #recentSearchesContainer a	{text-decoration:none;}
+#altSearchesContainer h3, #recentSearchesContainer h3	{padding:1px 8px; font-size:1em; font-weight:bold;}
+
+#resultsProductListContainer	{margin:0; width:665px;} /* wider than container so that right most column's margin is effectively ignored */
+#resultsProductListContainer .fourColListItem	{margin-left:0; width:140px; margin-right:20px; }
+
+
+/* footer */
+
+.mastFootHorRule	{height:27px; margin:10px;}
+
+.sidebarTable	{margin:10px auto;}
+.sidebarTable td	{padding:6px 12px;}
+
+#mastFoot section	{margin:0 40px;}
+
+#mastFoot section div	{
+	border-right:1px solid #cccccc;
+	height:120px;
+	padding: 10px 20px;
+	width:145px;
+	}
+
+#footLinks a	{display:block; text-decoration:none; padding-left:12px;}
+
+.decals	{margin:20px  0;}
+
+
+/* category page */
+
+/*
+fourColList is applied to the ul around both the prodlist and subcategory list.
+fourColListItem is applied to each li in both the prodlists and subcat lists
+each list has a respective listItem class for overrides.  fourColCatListItem and fourColProdListItem
+*/
+
+.fourColList	{margin:0 35px;}
+.noListStyle li.fourColListItem	{text-align:center;} /* overrides the noListStyle li align left style */
+
+.fourColListItem	{
+	float:left; margin:10px 20px; text-align:center;
+	height:170px; /* if height is removed, rows may not be 'level' */
+	width:122px;
+	color:#323232; margin:10px 25px;
+	}
+
+.fourColCatListItem	{
+	font-size:.9em;
+	}
+
+.fourColCatListItem	.thumbContainer {
+	border:1px solid #700d04;
+	width:120px; height:120px;
+	margin-bottom:5px;
+	}
+
+.fourColProdListItem	{height:235px;}
+.fourColProdListItem .prodThumbContainer	{margin-bottom:5px;}
+
+.fourColProdListItem h5	{font-weight:normal; font-size:.9em; height:58px; overflow:hidden; color:#323232;} /* fixed height so buttons align horizontally - merchant request */
+.fourColProdListItem h6	{font-weight:bold; font-size:.9em; color:#570a04; margin:5px 0; height:20px;}
+
+
+#homepage .fourColProdListItem h5	{height: auto;} /* override the fixed height used for the product list in all the other places */
+#homepage .fourColListItem	{width:140px; margin:10px 20px;}
+
+.atcSuccessMessage	{font-size:.8em; color:#006633; margin-bottom:6px;} /* used for the 'item added to cart' success message on both category and product pages */
+
+
+/* product list addtocart/choose option buttons */
+.atcButton, .ui-widget button.atcButton	{width:71px; height:23px; border:0; margin:0; font-size:.1em; text-indent: -9999999px; background-color:none; padding:0;} /* applied to both buttons */
+.addToCartButton	{background-position: -350px 0;}
+.chooseOptionsButton	{background-position:-429px 0;}
+.notAvailable	{display:none;} /* used in lists when an item is not purchaseable. hidden because he has 'videos' as product on some pages. */
+
+
+
+/*
+styling of elements within content and tabs
+handles styling of some wiki output as well
+*/
+
+#catPageTopContent ul, #catPageBottomContent ul, .ui-tabs-panel ul	{margin-left:30px; margin-bottom:12px;} /* indent lists a bit in content areas */
+#catPageTopContent table, #catPageBottomContent table, .ui-tabs-panel table	{margin-bottom:12px;}
+
+
+
+.vidSectionHead	{padding-left:20px; line-height:27px; color:#ffffff; margin:12px 0 3px 0;}
+.vidSubcats .catThumb	{margin-right:12px;}
+.vidSubcats li:last-child {border-botoom:0;}
+
+
+.prodSummaryContainer .atcButton {width:154px; height:55px; background-position:-230px -157px;} /* product viewer (detail) atc button */
+.prodSummaryContainer .estArrDateButton {width:154px; height:28px; background-position:-237px -123px; font-size:.1em; text-indent: -9999999px; padding:0; border:0; margin:0; margin-bottom:6px;} /* product viewer (detail) atc button */
+
+/* multipage controls */
+.mpControls	{clear:both; display:block; padding:6px 12px; position:relative;}
+.mpControls span.ui-state-active	{padding: 2px 4px;}
+
+/* video page styles */
+button.watchVideo	{background:url(hb12_c_watchvideo-156x36.png) no-repeat; width:156px; height:36px; padding:0; margin:0; border:0;}
+
+
+
+/* customer pages */
+.buyerAddressContainer	{width:250px; float:left; margin:0 24px 24px 0; padding:12px;}
+
+#buyerAddresses h2	{clear:both; margin-top:12px;}
+
+.orderContentsTable h3	{font-size:1.1em} /* order status */
+.orderContentsTable h5	{font-size:.9em} /* order total and balance due and product name */
+.orderContentsTable h4	{font-size:1em; margin-top:12px;} /* bill/ship to header */
+.orderContentsTable .ui-widget	{font-size:1em} /* address */
+
+.orderContentsProdlistContainer	{padding-left:24px; font-size:.9em} /* td for order contents */
+.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 6px 6px 0}
+
+
+
+
+
+
+
+
+
+/* Pure CSS3 Multi Level Drop Down Navigation Menu */
+/*             http://www.bloggermint.com/demos/darknavmenu/#            */
+
+
+/* menu container */
+.ddUlMenu {
+	overflow: hidden;
+	}
+.ddUlMenu ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier1 menu behavior */
+.ddUlMenu ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier 1 menu link style (ok to change this). will affect tier2 also */
+.ddUlMenu ul li a {
+	float: left;
+	text-decoration:none;
+	padding:0 12px;
+	cursor:pointer;
+	}
+
+
+.ddUlMenu li ul {
+	background:#efefef;
+	left: -999em;
+	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
+	position: absolute;
+	width: 160px;
+	z-index: 9999;
+	border:1px solid #cccccc;
+	}
+
+.ddUlMenu li:hover ul {
+	left: auto;
+	}
+
+/* tier 2 nav */
+.ddUlMenu li ul li	{cursor:pointer;} /* click is likely binded to li, so make it all a cursor */
+.ddUlMenu li ul a {
+	background: none;
+	line-height:24px;
+	font-weight:normal; font-size:.8em;
+	display:block;
+	border: 0 none;
+	width: 160px;
+	}
+
