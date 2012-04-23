@@ -275,6 +275,7 @@ renderOptionHIDDEN: function(pog,safeid) {
 renderOptionATTRIBS: function(pog,safeid)	{
 //attributes are used with finders. They don't do anything and they don't require a form element in the add to cart.. BUT we may want to do something merchant specific, so here it is.... to overide...
 //	document.getElementById("div_"+safeid).style.display = 'none'; !!!
+	
 	},
 
 
@@ -443,7 +444,7 @@ renderOption: function(pog,pid) {
 	var pogid = pog.id;
 	var safeid = myControl.util.makeSafeHTMLId(pogid); //pogs have # signs, which must be stripped to be jquery friendly.
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").attr("id","div_"+safeid).addClass("zform_div");
+	var $formFieldDiv = $("<div>").attr("id","div_"+safeid).addClass("zform_div").addClass("pogType_"+pog.type);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;

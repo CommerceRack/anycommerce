@@ -91,13 +91,13 @@ var store_product = function() {
 			init : function(formID,tagObj)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = 'atc_'+myControl.util.unixNow(); //unique datapointer for callback to work off of, if need be.
-				this.dispatch($('#'+formID).serialize(),tagObj);
+				this.dispatch($('#'+formID).serializeJSON(),tagObj);
 				return 1;
 				},
-			dispatch : function(serFrmData,tagObj)	{
-				var obj = {};
-				obj.data = serFrmData;
-				obj["_cmd"] = "addSerializedDataToCart"; //cartItemsAddSerialized
+			dispatch : function(obj,tagObj)	{
+//				myControl.util.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
+//				myControl.util.dump(obj);
+				obj["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
 				obj["_zjsid"] = myControl.sessionId; 
 				obj["_tag"] = tagObj;
 				myControl.model.addDispatchToQ(obj,'immutable');
@@ -467,7 +467,7 @@ it has no inventory AND inventory matters to merchant
 						r = false;
 						}
 					else	{
-						if(this.appProductGetInventory(pid) <= 0)	{
+						if(myControl.ext.store_product.util.getProductInventory(pid) <= 0)	{
 							myControl.util.dump(" -> inventory not available: "+pid);
 							r = false
 							}
@@ -659,8 +659,10 @@ NOTES
 				if($parent.length == 0)	{
 					$parent = $("<div \/>").attr({"id":parentID,"title":title}).appendTo(document.body);
 					}
-				else
+				else	{
+//					myControl.util.dump("GOT HERE");
 					$parent.attr('title',title);
+					}
 				return $parent;
 				}, //handleParentForModal
 

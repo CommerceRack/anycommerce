@@ -614,7 +614,7 @@ will output a newsletter form into 'parentid' using 'templateid'.
 					myControl.util.dump("for crm_store.util.showSubscribe, both targetID and templateID are required");
 					}
 				else	{
-					$('#'+P.parentID);  //if a loadingBG class is needed, add it outside this function.
+//					$('#'+P.parentID);  //if a loadingBG class is needed, add it outside this function.
 // ### modify this so callback and extension can be passed in, but are defaulted if none.
 //in this case, the template is not populated until the call comes back. otherwise, the form would show up but no subscribe list.
 					if(myControl.ext.store_crm.calls.getNewsletters.init({"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm"}))	{myControl.model.dispatchThis()}

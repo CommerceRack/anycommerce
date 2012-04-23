@@ -80,7 +80,7 @@ function zoovyModel() {
 		
 	var r = {
 	
-		version : "201215",
+		version : "201216",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -657,9 +657,9 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 //admin session returns a zjsid if response	
 // formerly authorizeAdminSession
 //		handleResponse_appAdminAuthenticate
-		handleResponse_appAdminAuthenticate: function(responseData)	{
+		handleResponse_appSessionStart: function(responseData)	{
 //			myControl.storageFunctions.deleteCookie('zjsid'); //nuke any previous zjsid cookie
-			myControl.util.dump("BEGIN model.handleResponse_newAdminSession . ("+responseData['_uuid']+")");
+			myControl.util.dump("BEGIN model.handleResponse_appSessionStart . ("+responseData['_uuid']+")");
 			myControl.util.dump(" -> _zjsid = "+responseData['_zjsid']);
 			if(myControl.util.isSet(responseData['_zjsid']))	{
 				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.

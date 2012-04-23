@@ -348,7 +348,7 @@ $tag.click(function(){
 					o += "/><label for='ship-selected_id_"+safeid+"'>"+shipName+": <span >"+myControl.util.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
 					}
 				$tag.html(o);
-				}
+				} //shipMethodsAsRadioButtons
 
 
 			},
@@ -393,7 +393,7 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 					myControl.calls.refreshCart.init(tagObj,'immutable');
 					}
 				else	{
-//if we get to this point, ship methods are already in memory/local. the cartItemsList call below will memory/local there before making a request.
+//if we get to this point, ship methods are already in memory/local. the cartItemsList call below will check memory/local before making a request.
 					myControl.ext.store_cart.calls.cartItemsList.init(tagObj,'immutable');
 					}
 				myControl.model.dispatchThis('immutable');

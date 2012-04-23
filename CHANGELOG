@@ -3,5 +3,10 @@
 # This file will be updated with each release (duh)
 #
 
+2012.16
+* Updated the examples with better formatting, more in-line help
+* Added demo of accessing the API using Perl
+
 2012.15
 * This is rapidly approaching "near production" for building full blown shopping apps.
+

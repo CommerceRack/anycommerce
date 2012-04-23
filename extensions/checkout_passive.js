@@ -68,14 +68,22 @@ a callback was also added which just executes this call, so that checkout COULD 
 				myControl.ext.convertSessionToOrder.vars.containerID = containerID;
 				$('#'+containerID).append(myControl.renderFunctions.createTemplateInstance('zCheckoutContainerSpec','zCheckoutContainer'));
 
-
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
-// executed w/out triggering the paypal code which happens when payment method switches FROM paypal to some other method.
+// executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
+// the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
 				var token = myControl.util.getParameterByName('token');
 				var payerid = myControl.util.getParameterByName('PayerID');
 				if(token && payerid)	{
 					r += myControl.calls.cartSet.init({'payment-pt':token,'payment-pi':payerid});
+					r += myControl.ext.convertSessionToOrder.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
 					}
+				else	{
+//if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
+//need to reset paypal vars in case cart/session was manipulated.
+// ### NOTE - in an all RIA environment, this isnt needed. the add to cart functions should do this. however, in a hybrid (1PC) it is needed.
+					myControl.calls.cartSet.init({'payment-pt':null,'payment-pi':null}); //nuke vars
+					}
+
 //inital render is just a container, so no data is needed.
 				myControl.renderFunctions.translateTemplate({},'zCheckoutContainer');
 
@@ -158,7 +166,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(getBuyerAddress)	{
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis","returnURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis","returnURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120416&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 
@@ -172,11 +180,12 @@ a callback was also added which just executes this call, so that checkout COULD 
 				return 1;
 				},
 			dispatch : function(obj)	{
-				var tagObj = {'callback':'handleCartPaypalGetECDetails',"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder"};
+// 'callback':'handleCartPaypalGetECDetails' - removed 20120416. the action in the callback is executed as part of loadPanelContent, if needed.
+// has to be done there or it 'could' be run twice.
+				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder"};
 				myControl.model.addDispatchToQ({"_cmd":"cartPaypalGetExpressCheckoutDetails","token":obj.token,"payerid":obj.payerid,"_tag":tagObj},'immutable');
 				}
 			}, //cartPaypalGetExpressCheckoutDetails	
-
 
 
 //formerly getCustomerAddresses
@@ -525,7 +534,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				}
 			},
 
-		
+
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalSetECResponse.onSuccess');
@@ -536,7 +545,6 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				myControl.util.handleErrors(responseData,uuid);
 				}
 			},
-
 
 
 		handleCartPaypalGetECDetails : {
@@ -694,13 +702,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 
 		loadPanelContent : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.loadPanelContent.onSuccess');
-
-//this code can't be executed till after the cart is in memory. 
-				if(myControl.ext.convertSessionToOrder.utilities.thisSessionIsPayPal())	{
-					myControl.ext.convertSessionToOrder.calls.cartPaypalGetExpressCheckoutDetails.init({'token':myControl.data.cartItemsList.cart['payment-pt'],'payerid':myControl.data.cartItemsList.cart['payment-pi']});
-					myControl.model.dispatchThis('immutable');
-					}
+				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.loadPanelContent.onSuccess');
 
 //had some issues using length. these may have been due to localStorage/expired cart issue. countProperties is more reliable though, so still using that one.			
 				var stuffCount = myControl.model.countProperties(myControl.data.cartItemsList.cart.stuff);
@@ -743,6 +745,16 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 					myControl.ext.convertSessionToOrder.utilities.cartIsEmptyWarning();
 					}
 				$('#'+myControl.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
+				
+//will lock many input fields so they match the paypal response (ship address, shipping, etc).
+//needs to executed in here instead of in a callback for the payalget because the get is only run once per cart/session (unless cart is changed)
+//but checkout may get load/reloaded and if the cart hasn't changed, the forms still need to be 'locked'.
+//needs to run at the end here so that all the dom manipulating is done prior so function can 'lock' fields
+				if(myControl.ext.convertSessionToOrder.utilities.thisSessionIsPayPal())	{
+					myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
+					}
+
+				
 				},
 			onError : function(d)	{
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.loadPanelContent.onError.');
@@ -768,13 +780,13 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 //this generates the post-checkout message from the template in the view file.
 				$zContent.append(myControl.renderFunctions.createTemplateInstance('checkoutSuccess','checkoutSuccessContent')); 
 				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer],'checkoutSuccessContent');
-// !!! test this before switching back.
+// ### test this before switching back.
 //				$zContent.append(myControl.renderFunctions.transmogrify('checkoutSuccess','checkoutSuccessContent',myControl.data[tagObj.datapointer]))
 
 /*
 right now, we're just displaying the payment_status_detail message.  
-v2 should/will be more sophicstiated and actually check the status and do better handling or the response.
-the checkoutSuccessPaymentFailure started to do this but for the sake of getting this out, we improvised. !!!
+eventually, it will check the status and do better handling of the response.
+the checkoutSuccessPaymentFailure started to do this but for the sake of getting this out, we improvised. ###
 */
 				$('.paymentRequired').append(myControl.data[tagObj.datapointer].payment_status_detail);
 
@@ -1320,6 +1332,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //only check the cart object. If the uri is checked here, then when 'nukepaypal' is executed and checkout is re-initiated, the uri vars will trigger the paypal code.
 //plus, the token is deleted from the cart when the cart is updated, so we should check there to make sure it is/is not set.
 		thisSessionIsPayPal : function()	{
+//			myControl.util.dump("BEGIN convertSessionToCheckout.utilities.thisSessionIsPayPal");
 			var r = false; //what is returned.  will be set to true if paypalEC approved.
 //if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
 			token = myControl.data.cartItemsList.cart['payment-pt'];
@@ -1341,7 +1354,7 @@ note - predefined addresses are hidden and the form is shown so that if the user
 
 4. lock down payment options so they are not editable.
 5. select paypal EC as payment option.
-6. lock down shipping. hide panel maybe? make sure no option is selected? !!! look at data returned by paypal and see what needs to be done.
+6. lock down shipping (a method is selected in paypal)
 7. add button near 'place order' that says 'change from paypal to other payment option'.
 
 */
@@ -1586,7 +1599,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 							o += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.yy\"] = this.value;'><option value=''><\/option>"+myControl.util.getCCExpYears(myControl.data.cartItemsList.cart['payment.yy'])+"<\/select><\/li>";
 							o += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return myControl.util.numbersOnly(event);' value='";
 							if(myControl.ext.convertSessionToOrder.vars['payment.cv']){o += myControl.ext.convertSessionToOrder.vars['payment.cv']}
-							o += "' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cv\"] = this.value' /><\/li>";
+							o += "' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cv\"] = this.value' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
 							break;
 	
 						case 'PO':

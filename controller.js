@@ -41,14 +41,16 @@ $.extend(zController.prototype, {
 		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
 		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		myControl.vars.fbUser = {};
-		myControl.vars.profile = zGlobals.appSettings.profile;
-		myControl.vars.username = zGlobals.appSettings.username;
-		myControl.vars.secureURL = zGlobals.appSettings.https_app_url;
-		myControl.vars.sdomain = zGlobals.appSettings.sdomain;
-
-		if('https:' == document.location.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
-		else	{myControl.vars.jqurl = zGlobals.appSettings.http_api_url}
-
+//in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
+		if(typeof zGlobals == 'object')	{
+			myControl.vars.profile = zGlobals.appSettings.profile;
+			myControl.vars.username = zGlobals.appSettings.username;
+			myControl.vars.secureURL = zGlobals.appSettings.https_app_url;
+			myControl.vars.sdomain = zGlobals.appSettings.sdomain;
+	
+			if('https:' == document.location.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
+			else	{myControl.vars.jqurl = zGlobals.appSettings.http_api_url}
+			}
 
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
 // default to blank, not 'null', or += below will start with 'undefined'.
@@ -60,13 +62,14 @@ $.extend(zController.prototype, {
 		myControl.vars = $.extend(myControl.vars,P);
 
 // += is used so that this is appended to anything passed in P.
-		myControl.vars.passInDispatchV += myControl.util.getBrowserInfo()+";OS:"+myControl.util.getOSInfo()+';'; 
+		myControl.vars.passInDispatchV += 'browser:'+myControl.util.getBrowserInfo()+";OS:"+myControl.util.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
 		
 		myControl.ext = {}; //for holding extensions, including checkout.
 		myControl.data = {}; //used to hold all data retrieved from ajax requests.
 		
 /* some diagnostic reporting info */
 		myControl.util.dump(' -> v: '+myControl.model.version+'.'+myControl.vars.release);
+		myControl.util.dump(' -> myControl.vars.passInDispatchV: '+myControl.vars.passInDispatchV)
 		
 /*
 myControl.templates holds a copy of each of the templates declared in an extension but defined in the view.
@@ -101,21 +104,19 @@ Exception - the controller is used for admin sessions too. if an admin session i
 		else if(P.noVerifyzjsid)	{
 			//for now, do nothing.  this may change later.
 			}
+		else if(P.sessionId)	{
+			myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			myControl.model.dispatchThis('immutable');
+			}
 		else	{
-			P.sessionId ? myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'}) :  myControl.calls.getValidSessionID.init('handleNewSession');
-			myControl.model.dispatchThis('immutable'); //handles dispatching for session validation. want this run prior to extensions.
+			myControl.calls.getValidSessionID.init('handleNewSession');
+			myControl.model.dispatchThis('immutable');
 			}
 		
-//piggybacking some requests on the session handling request. These are to get flags so app init can use them during validation.		
-//		myControl.calls.canIUse.init('xsell');
-//		myControl.calls.canIUse.init('crm');
-		
-		
-//		myControl.util.dump('zController method has been initialized');
 //if third party inits are not done before extensions, the extensions can't use any vars loaded by third parties. yuck. would rather load our code first.
 // -> EX: username from FB and OPC.
 		myControl.util.handleThirdPartyInits();
-//E is the extensions. if there are any (and most likely there always will be) add then to the controller
+//E is the extensions. if there are any (and most likely there will be) add then to the controller
 		if(E && E.length > 0)	{
 			myControl.model.addExtensions(E);
 			}
@@ -179,38 +180,30 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					}
 				},
 
-//use this to get an admin login token. It expires quick, so callback should immediately fire the next call with encrypted data.
-//pass only the login.  Password needs to be passed securely in the appAdminAuthenticate request.
-//formerly newAdminSession
-			appAdminInit : {
+			appSessionStart : {
 				 init : function() {
 					$('#loginFormContainer .button').attr('disabled','disabled').addClass('ui-state-disabled');
 					$('#loginFormContainer .zMessage').empty().remove(); //clear any existing error messages.
+					myControl.storageFunctions.writeLocal('zuser',$('#loginFormLogin').val()); //save username to local storage so we can pre-populate.
 					this.dispatch();
 					return 1;
 					},
 				 dispatch : function()   {
-					myControl.model.addDispatchToQ({"_cmd":"appAdminInit","login":$('#loginFormLogin').val(),"_tag":{"callback":"handleNewAdminResponse","datapointer":"appAdminInit"}},'immutable');
+var security = myControl.util.guidGenerator().substring(0,10);
+var ts = myControl.util.unixNow();
+myControl.model.addDispatchToQ({
+	"_cmd" : "appSessionStart",
+	"security" : security,
+	"ts" : ts,
+	"login" : $('#loginFormLogin').val(),
+	"hashtype" : "md5",
+	"hashpass" : Crypto.MD5($('#loginFormPassword').val()+security+ts),
+	"_tag": {'callback':'handleSessionStartResponse'}
+},'immutable');
 					}
-				},
+				} //appSessionStart
 
-//formerly authorizeAdminSession
-//requires encrypted password.
-			appAdminAuthenticate : {
-				 init : function(obj) {
-	//				 myControl.util.dump("BEGIN myControl.calls.appAdminAuthenticate");
-					this.dispatch(obj);
-					return 1;
-					},
-				 dispatch : function(obj)   {
-					obj["_tag"] = {};
-					obj["_cmd"] = "appAdminAuthenticate";
-					obj["_tag"].callback = "handlePasswordResponse";
-					myControl.model.addDispatchToQ(obj,'immutable');
-					}
-				} //appAdminAuthenticate
 			}, //authentication
-		
 		
 //always uses immutable Q
 		getValidSessionID : {
@@ -360,32 +353,8 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					// //////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ \\
 	callbacks : {
 		
-/*
-called after a userid/account getToken is requested. The token expires quickly.
-this call converts users password to md5.
-*/
-		handleNewAdminResponse : {
-			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN myControl.callbacks.handleNewAdminResponse.onSuccess');
-				var obj = {};
-				myControl.sessionId = myControl.data[tagObj.datapointer]['_zjsid']; //must be set in control for pipelined dispatches to work.
-				obj['_zjsid'] = myControl.data[tagObj.datapointer]['_zjsid'];
-				obj.hashtype = 'md5';
-				obj.login = $('#loginFormLogin').val();
-				obj.hashpass = Crypto.MD5($('#loginFormPassword').val()+myControl.data[tagObj.datapointer]['_zjsid']);
-				myControl.calls.authentication.appAdminAuthenticate.init(obj); // handleNewAdminResponse
-				
-				myControl.model.dispatchThis('immutable');
-				},
-			onError : function(responseData)	{
-				myControl.util.dump('BEGIN myControl.callbacks.handleNewAdminResponse.onError');
-				$('#loginFormContainer .button').removeAttr('disabled').removeClass('ui-state-disabled');
-//				myControl.util.dump(d);
-				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(responseData)).toggle(true);
-				}
-			},//handleNewAdminResponse
 
-		handlePasswordResponse : {
+		handleSessionStartResponse : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump("session ID from cookie (with timeout) "+myControl.storageFunctions.readCookie('zjsid'));
 //was having issues with the cookie setting/redir. added a short timeout so that the cookie/browser can catch up to our blazing speed.
@@ -536,6 +505,18 @@ myControl.util.handleCallback(tagObj);
 //				myControl.util.dump(" -> no callback was defined.");
 				}
 			},
+			
+
+//http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
+		guidGenerator : function() {
+			var S4 = function() {
+				return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+				};
+			return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
+			},
+
+		
+			
 //## allow for targetID to be passed in.
 		logBuyerOut : function()	{
 	
@@ -654,7 +635,7 @@ pass in additional information for more control, such as css class of 'error' an
 //the zMessage class is added so that these warning can be cleared (either universally or within a selector).
 			var r = obj.htmlid ? "<div class='ui-widget zMessage' id='"+obj.htmlid+"'>": "<div class='ui-widget zMessage'>";
 			r += "<div class='ui-state-"+obj.uiClass+" ui-corner-all appMessage'>";
-			r += "<div class='clearfix'><span style='float: left; margin-right: .3em;' class='ui-icon ui-icon-"+obj.uiIcon+"'></span><div style='float:left;' >"+obj.message+"<\/div><\/div>";
+			r += "<div class='clearfix'><span style='float: left; margin-right: .3em;' class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/div>";
 			r += "<\/div><\/div>";
 			
 //			myControl.util.dump(" -> obj.htmlid: "+obj.htmlid);
@@ -720,7 +701,7 @@ pass in additional information for more control, such as css class of 'error' an
 			var r;
 			var BI = jQuery.browser; //browser information. returns an object. will set 'true' for value of browser 
 			jQuery.each(BI, function(i, val) {
-				if(val === true){r = 'browser:'+i;}
+				if(val === true){r = i;}
 				});
 			r += '-'+BI.version;
 //			myControl.util.dump(' r = '+r);
@@ -730,10 +711,10 @@ pass in additional information for more control, such as css class of 'error' an
 		getOSInfo : function()	{
 
 			var OSName="Unknown OS";
-			if (navigator.appVersion.indexOf("Win")!=-1) OSName="Windows";
-			if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MacOS";
-			if (navigator.appVersion.indexOf("X11")!=-1) OSName="UNIX";
-			if (navigator.appVersion.indexOf("Linux")!=-1) OSName="Linux";
+			if (navigator.appVersion.indexOf("Win")!=-1) OSName="WI";
+			if (navigator.appVersion.indexOf("Mac")!=-1) OSName="MC";
+			if (navigator.appVersion.indexOf("X11")!=-1) OSName="UN";
+			if (navigator.appVersion.indexOf("Linux")!=-1) OSName="LI";
 			return OSName;
 			},
 			
@@ -1047,23 +1028,23 @@ a word */
 		getCCExpMonths : function(focusMonth)	{
 			var r = "";
 			var month=new Array(12);
-			month[1]="January";
-			month[2]="February";
-			month[3]="March";
-			month[4]="April";
-			month[5]="May";
-			month[6]="June";
-			month[7]="July";
-			month[8]="August";
-			month[9]="September";
-			month[10]="October";
-			month[11]="November";
-			month[12]="December";
+			month[1]="01";
+			month[2]="02";
+			month[3]="03";
+			month[4]="04";
+			month[5]="05";
+			month[6]="06";
+			month[7]="07";
+			month[8]="08";
+			month[9]="09";
+			month[10]="10";
+			month[11]="11";
+			month[12]="12";
 			for(i = 1; i < 13; i += 1)	{
 				r += "<option value='"+i+"' id='ccMonth_"+i+"' ";
 				if(i == focusMonth)
 					r += "selected='selected'";
-				r += ">"+month[i]+" ("+i+")</option>";
+				r += ">"+month[i]+"</option>";
 				}
 			return r;				
 			},
@@ -1509,6 +1490,12 @@ $('#'+safeTarget).replaceWith($tmp);
 					if(attributeID.substring(0,10) == '@inventory' && !$.isEmptyObject(data['@inventory']))	{
 						value = typeof data['@inventory'][data.pid] != 'undefined' ? data['@inventory'][data.pid][attributeID.substr(11)] : '';
 						}
+//cart items have some data at root level and some nested one level deeper in full_product
+					else if(attributeID.substring(0,12) == 'full_product')	{
+						myControl.util.dump(' -> attributeID: '+attributeID+'[ '+attributeID.substr(13)+']');
+						value = data.full_product[attributeID.substr(13)]
+						myControl.util.dump(' -> value: '+value);
+						}
 					else if(attributeID.indexOf(':') < 0)	{
 //					myControl.util.dump(' -> attribute does not contain : probably a stid or sku reference.');
 						value = data[attributeID]
@@ -1590,6 +1577,13 @@ $('#'+safeTarget).replaceWith($tmp);
 				$tag.style('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
 				}
 			}, //imageURL
+
+		elastimage1URL : function($tag,data)	{
+			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
+			if(data.value[0])	{$tag.attr('src',myControl.util.makeImage({"name":data.value[0],"w":$tag.attr('width'),"h":$tag.attr('height'),"b":bgcolor,"tag":0}))}
+			else	{$tag.style('display','none');}
+			},
+
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
@@ -1800,11 +1794,12 @@ $tmp.empty().remove();
 var myDate = new Date();
 myDate.setTime(myDate.getTime()+(1*24*60*60*1000));
 document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=.zoovy.com;path=/";
+document.cookie = c_name +"=" + value + ";expires=" + myDate + ";domain=www.zoovy.com;path=/";
 			},
+//deleting a cookie seems to cause lots of issues w/ iOS and some other mobile devices (where admin login is concerned, particularly. 
+//test before earlier.
 		deleteCookie : function(c_name)	{
-var date=new Date();
-date.setDate(date.getDate()-1);
-document.cookie = c_name+ "=''; expires=" + date + "; path=/";
+document.cookie = c_name+ "=; expires=Thu, 01-Jan-70 00:00:01 GMT; path=/";
 myControl.util.dump(" -> DELETED cookie "+c_name);
 			}
 

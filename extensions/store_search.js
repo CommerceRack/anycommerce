@@ -90,16 +90,7 @@ var store_search = function() {
 
 
 
-
-
-
-
-
-
 					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-
 
 
 
@@ -131,7 +122,8 @@ var store_search = function() {
 
 
 		util : {
-		
+			
+			
 			getAlternativeQueries : function(keywords,tagObj)	{
 				var keywordsArray = new Array();
 			
