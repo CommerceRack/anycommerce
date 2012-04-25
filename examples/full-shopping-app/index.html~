@@ -17,6 +17,7 @@
 <script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui-1.8.16/js/jquery-ui.min.js"></script>
 
 <!-- config.js contains hints about server configuration -->
+<!-- HINT: make sure you replace this URL with the proper config.js file -->
 <script type="text/javascript" src="http://www.homebrewers.com/jquery/config.js"></script>
 
 <!-- mvc -->
@@ -31,14 +32,7 @@
 <!-- boot loader -->
 <script type="text/javascript">
 
-//HERE FOR TESTING PURPOSES
-// -> checkout requires async GA. remove prior to deployment.
-
-var _gaq = {};
-_gaq.push = function(){};
-
-// END TESTING CODE
-
+var _gaq = {}; _gaq.push = function(){}; // google analytics stub, replace this with real ga code in production.
 
 var myControl;
 var myCreole;

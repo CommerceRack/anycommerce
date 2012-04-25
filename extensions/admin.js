@@ -173,7 +173,10 @@ var admin = function() {
 var $templateDiv = $('<div \/>')
 $templateDiv.attr('id','adminTemplates').hide().appendTo('body');
 // /biz/ajax/zmvc/201211/admin_templates.html
-var result = $templateDiv.load('//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html',function(response, status, xhr){
+var protocol = document.location.protocol == 'https:' ? 'https:' : 'http:' //sometimes the protocol may be file:, so default to http unless secure.
+var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201216/admin_templates.html';
+myControl.util.dump("admin template url: "+adminTemplateURL);
+var result = $templateDiv.load(adminTemplateURL,function(response, status, xhr){
 	if (status == "error") {
 		r = false;
 		alert('An error occured while trying to load the admin templates.'); //!!! improve this.
