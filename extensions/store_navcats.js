@@ -64,6 +64,9 @@ datapointer needs to be defined early in the process so that it can be used in t
 */
 		appPageGet : {
 			init : function(obj,tagObj,Q)	{
+//				myControl.util.dump("BEGIN store_navcats.calls.appPageGet");
+//				myControl.util.dump(obj);
+//				myControl.util.dump(tagObj);
 				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 				obj['_tag'].datapointer = 'appPageGet|'+obj.PATH;  //no local storage of this. ### need to explore solutions.
 				var r = 0;

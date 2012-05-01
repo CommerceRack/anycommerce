@@ -80,7 +80,7 @@ function zoovyModel() {
 		
 	var r = {
 	
-		version : "201216",
+		version : "201217",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -263,6 +263,23 @@ function zoovyModel() {
 				myControl.util.dump(' -> stopped trying to override because many attempts were already made.');
 				}			
 			},
+			
+//executed in control init.
+//will set some vars used for each ajax request.
+//uses json request UNLESS browser is not compatible with XSS.
+//currently, only IE isn't compatible.
+		whatAjaxDataType2Use : function()	{
+			var r = 'json'; //what is returned. default datatype is json.
+			if(navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
+				var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1]; //root domain of current page (www.something.com)
+				var JQUrl = myControl.vars.jqurl.match(/:\/\/(.[^/]+)/)[1]; //root domain of jquery url (www.something.com or www.somethingelse.com)
+				if(JQUrl != rootUrl)	{
+					r = 'jsonp';
+					}
+				}
+			return r;
+			},
+		
 	/*
 	
 	sends dispatches with status of 'queued' in a single json request.
@@ -332,47 +349,54 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 //				myControl.util.dump(' -> Q = ');
 //				myControl.util.dump(Q);
 //				myControl.util.dump("ajax URL: "+myControl.vars.jqurl);
-//if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
-				myControl.ajax.lastDispatch = myControl.util.unixNow();
-				myControl.ajax.overrideAttempts = 0;
-				myControl.ajax.requests[QID][UUID] = $.ajax({
-					type: "POST",
-					url: myControl.vars.jqurl,
-					context : myControl,
-					async: true,
-					contentType : "text/json",
-					dataType:"json",
-					data: JSON.stringify({"_uuid":UUID,"_zjsid": myControl.sessionId,"_cmd":"pipeline","@cmds":Q}),
-					
-					error: function(j, textStatus, errorThrown)	{
-	//error handling for individual requests is handled below.
-						myControl.util.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request.');
-//						myControl.util.dump("QID = "+QID+" and L = "+myControl.model.countProperties(Q));
-//						myControl.util.dump("myControl.vars.jqurl = "+myControl.vars.jqurl);
-	//					myControl.util.dump(' -> j = ');
-	//					myControl.util.dump(j);
-						myControl.util.dump(' -> textStatus = '+textStatus);
-						myControl.util.dump(' -> errorThrown = '+errorThrown);
-//						myControl.util.dump(' -> ajax.request follows:');
-//						myControl.util.dump(myControl.ajax.request);
-						
-						myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
-//IMPORTANT
-//this delete removes the ajax request from the requests array. If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results.
-//even though it gets attempted again.
-						delete myControl.ajax.requests[QID][UUID];
-						setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
-						},
-					success: function(d)	{
-	//					myControl.util.dump(' -> Successful request (in dispatch).');
-//IMPORTANT
-//this delete removes the ajax request from the requests array. If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results.
-// do this before handleResponse so that if it executes any requests as part of a callback, no conflicts arise.
-						delete myControl.ajax.requests[QID][UUID];
-						myControl.model.handleResponse(d,QID);
 
-						}
-					});
+//if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
+
+
+myControl.ajax.lastDispatch = myControl.util.unixNow();
+myControl.ajax.overrideAttempts = 0;
+//IE < 10 doesn't support xss. the check is done during the init.
+if(myControl.ajax.dataType == 'jsonp')	{
+	var thisJsonURL = myControl.vars.jqurl+"?_callback=ieBlows&_json="+encodeURIComponent(JSON.stringify({"_uuid":UUID,"_zjsid": myControl.sessionId,"_cmd":"pipeline","@cmds":Q}))
+	myControl.util.dump("NOTE - this is a JSONP request: "+thisJsonURL);
+	myControl.ajax.requests[QID][UUID] = $.ajax({
+		type: "GET",
+		url: thisJsonURL,
+		contentType : "text/json",
+		dataType:"jsonp",
+		jsonpCallback:"ieBlows",
+		});
+	}
+else	{
+	myControl.ajax.requests[QID][UUID] = $.ajax({
+		type: "POST",
+		url: myControl.vars.jqurl,
+		context : myControl,
+		async: true,
+		contentType : "text/json",
+		dataType:"json",
+		data: JSON.stringify({"_uuid":UUID,"_zjsid": myControl.sessionId,"_cmd":"pipeline","@cmds":Q})
+		});	
+	}
+
+
+//IMPORTANT
+/*
+the delete in the success AND error callbacks removes the ajax request from the requests array. If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results. 
+must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
+can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
+*/
+myControl.ajax.requests[QID][UUID].error(function(j, textStatus, errorThrown)	{
+	myControl.util.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
+	delete myControl.ajax.requests[QID][UUID];
+	myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
+	setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
+	});
+myControl.ajax.requests[QID][UUID].success(function(d)	{
+	delete myControl.ajax.requests[QID][UUID];
+	myControl.model.handleResponse(d,QID);}
+	)
+
 				}
 
 		return r;

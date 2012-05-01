@@ -116,7 +116,7 @@ var admin_orders = function() {
 		initOrderManager : {
 			onSuccess : function(tagObj)	{
 			var defaultPool = 'RECENT';
-//myControl.util.dump("BEGIN admin_orders.callback.showBlankOrderTable.onSuccess");
+myControl.util.dump("BEGIN admin_orders.callback.showBlankOrderTable.onSuccess");
 myControl.ext.admin_orders.actions.showOrderList({'POOL':defaultPool});
 //$('#orderList').append(myControl.renderFunctions.createTemplateInstance('orderListTemplate'));
 $( "#orderFilters ul" ).selectable({
@@ -200,7 +200,7 @@ myControl.ext.admin_orders.util.bindOrderListButtons();
 
 		listOrders : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump('BEGIN myControl.ext.admin_orders.callbacks.listOrders.onSuccess');
+				myControl.util.dump('BEGIN myControl.ext.admin_orders.callbacks.listOrders.onSuccess');
 				var $target = $('#orderListTable');
 				var orderid;
 				var L = myControl.data[tagObj.datapointer]['@orders'].length;
@@ -285,10 +285,13 @@ myControl.ext.admin_orders.util.bindOrderListButtons();
 
 //myControl.ext.admin_orders.actions.showOrderList();		
 //shows a list of orders by pool.			
-			showOrderList : function(filterObj)	{
+			showOrderList : function(pool)	{
+				myControl.util.dump("BEGIN admin_orders.actions.showOrderList");
 				//create instance of the template. currently, there's no data to populate.
+				filterObj = {};
+				filterObj.POOL = pool;
 				filterObj.DETAIL = 5;
-				filterObj.LIMIT = 200; //for now, cap at 200. ###
+				filterObj.LIMIT = 20; //for now, cap at 200. ###
 				myControl.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				myControl.model.dispatchThis();
 				},

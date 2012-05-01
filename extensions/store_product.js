@@ -186,11 +186,12 @@ addToCart : function (pid){
 	var sogJSON = myControl.data['appProductGet|'+pid]['@variations']
 	var valid = true;
 //	myControl.util.dump('BEGIN validate_pogs. Formid ='+formId);
-	
+
 	if($.isEmptyObject(sogJSON))	{
 		myControl.util.dump('no sogs present (or empty object)');
 		}
 	else	{
+		
 		$('#JSONpogErrors_'+pid).empty(); //empty the div so that all old errors are gone.
 	
 //		myControl.util.dump(' -> Sogs are present.');
@@ -377,7 +378,7 @@ addToCart : function (pid){
 			atcVariations : function($tag,data)	{
 //				myControl.util.dump("BEGIN store_product.renderFormats.atcVariations");
 				var pid = data.bindData.cleanValue; 
-				var formID = $tag.parent('form').get(0).id;
+				var formID = $tag.closest('form').attr('id'); //move up the dom tree till the parent form is found
 
 //				myControl.util.dump(" -> pid: "+pid);
 //				myControl.util.dump(" -> formID: "+formID);

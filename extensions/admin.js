@@ -173,10 +173,41 @@ var admin = function() {
 var $templateDiv = $('<div \/>')
 $templateDiv.attr('id','adminTemplates').hide().appendTo('body');
 // /biz/ajax/zmvc/201211/admin_templates.html
-var result = $templateDiv.load('//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html',function(response, status, xhr){
+var protocol = document.location.protocol == 'https:' ? 'https:' : 'http:' //sometimes the protocol may be file:, so default to http unless secure.
+var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html';
+myControl.util.dump("admin template url: "+adminTemplateURL);
+
+var result = $.ajax({
+		type: "GET",
+		url: adminTemplateURL,
+		async: false,
+		dataType:"html"
+		});	
+result.error(function(){alert('An error occured while trying to load the admin templates.')});
+result.success(function(data){
+	$templateDiv.append(data);
+	$templateDiv.children().each(function(){
+		var id = false;
+		if(id = $(this).attr('id')){}  //set's id to element id for cloning. 
+		else if($(this).is('table')){
+			id = $(this).find("tr:first").attr('id')
+			}
+//certain element types, such as li or tr have the id on the li or tr, but require a parent element in the definition file for IE support.
+		else if(id = $(this).children(":first").attr('id'))	{}
+		if(id)	{
+//				myControl.util.dump(" -> clone id: "+id);
+			myControl.templates[id] = $('#'+id).clone();
+//remove original template so duplicate ID's don't occur (may cause jquery confusion).
+//leave sections that didn't become templates for troubleshooting purposes. 
+			$(this).empty().remove();
+			}
+		})
+	})
+/*
+var result = $templateDiv.load(adminTemplateURL,function(response, status, xhr){
 	if (status == "error") {
 		r = false;
-		alert('An error occured while trying to load the admin templates.'); //!!! improve this.
+		 //!!! improve this.
 		}
 	else	{
 		$templateDiv.children().each(function(){
@@ -197,7 +228,7 @@ var result = $templateDiv.load('//www.zoovy.com/biz/ajax/zmvc/201211/admin_templ
 			}) //templatediv.each
 		}//else for status
 	}); //ajax request
-	
+*/	
 				return r;
 				},
 			onError : function(d)	{
@@ -211,6 +242,7 @@ var result = $templateDiv.load('//www.zoovy.com/biz/ajax/zmvc/201211/admin_templ
 			onSuccess : function(tagObj)	{
 				myControl.util.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
 				var L = myControl.data[tagObj.datapointer]['_count'];
+				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
 				myControl.util.dump(" -> Number Results: "+L);
 				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
 				if(L == 0)	{
@@ -628,6 +660,7 @@ this does NOT get executed when items are moved over via selectable and move but
 		if(parent == 'finderTargetList')	{
 			ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
 			}
+		myControl.ext.admin.util.updateFinderCurrentItemCount();
 		} 
 	});
 
@@ -651,6 +684,7 @@ $('#finderSearchForm').submit(function(event){
 	myControl.ext.admin.util.handleFinderSearch();
 	event.preventDefault();
 	return false})
+	myControl.ext.admin.util.updateFinderCurrentItemCount();
 
 
 				
@@ -677,6 +711,10 @@ $('#finderSearchForm').submit(function(event){
 				return r;
 				},
 
+			updateFinderCurrentItemCount : function()	{
+				$('#focusListItemCount').text(" ("+$("#finderTargetList li").size()+")");
+				$('#resultslistItemCount').text(" ("+$("#finderSearchResults li").size()+" remain)");
+				},
 
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
 			handleFinderSearch : function()	{
@@ -710,8 +748,6 @@ $('#finderSearchForm').submit(function(event){
 				
 				}, //filterFinderResults
 
-
-
 			changeFinderButtonsState : function(state)	{
 				$dom = $('#prodFinder [data-finderaction]')
 				if(state == 'enable')	{
@@ -738,7 +774,14 @@ if($button.attr('data-finderAction') == 'save')	{
 		myControl.ext.admin.util.saveFinderChanges($button.attr('data-path'));
 		myControl.model.dispatchThis('immutable');
 		myControl.ext.admin.util.changeFinderButtonsState('disable');
+		
 		return false;
+		});
+	}
+else if($button.attr('data-finderAction') == 'selectAll')	{
+	$button.click(function(event){
+		event.preventDefault();
+		$('#finderSearchResults li').not('.ui-state-disabled').addClass('ui-selected');
 		});
 	}
 //these two else if's are very similar. the important part is that when the items are moved over, the id is modified to match the targetCat 
@@ -757,6 +800,7 @@ else if($button.attr('data-finderAction') == 'moveToTop' || $button.attr('data-f
 			$copy.removeClass('ui-selected').attr('id','finderTargetList_'+$copy.attr('data-pid'));
 			$(this).remove();
 			})
+		myControl.ext.admin.util.updateFinderCurrentItemCount();
 		return false;
 		})
 	}

@@ -23,9 +23,9 @@ zController = function(params,extensions) {
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
-//	else if(typeof zGlobals != 'object')	{
-//		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
-//		}
+	else if(typeof zGlobals != 'object')	{
+		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
+		}
 	else	{
 		this.initialize(params,extensions);
 		}
@@ -88,6 +88,7 @@ copying the template into memory was done for two reasons:
 
 
 		myControl.ajax = {}; //holds ajax related vars.
+		myControl.ajax.dataType = myControl.model.whatAjaxDataType2Use();
 		myControl.ajax.overrideAttempts = 0; //incremented when an override occurs. allows for a cease after X attempts.
 		myControl.ajax.lastDispatch = null; //incremented when an override occurs. allows for a cease after X attempts.
 		myControl.ajax.requests = {"mutable":{},"immutable":{},"passive":{}}; //'holds' each ajax request. completed requests are removed.
@@ -336,6 +337,7 @@ myControl.model.addDispatchToQ({
 //used to get a clean copy of the cart. ignores local/memory. used for logout.
 		refreshCart : {
 			init : function(tagObj,Q)	{
+//				myControl.util.dump("BEGIN myControl.calls.refreshCart");
 				var r = 1;
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which will likely need datapointer to be set).
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
@@ -435,7 +437,9 @@ myControl.model.addDispatchToQ({
 				else {dataSrc = myControl.data[tagObj.datapointer]};
 				myControl.renderFunctions.translateTemplate(dataSrc,tagObj.parentID);
 				},
-			onError : function(responseData)	{
+			onError : function(responseData,uuid)	{
+				myControl.util.dump("BEGIN control.callback.translateTemplate.onError");
+				myControl.util.dump(responseData);
 //something went wrong, so empty the parent (which likely only holds an empty template) and put an error message in there.
 				$('#'+responseData.tagObj.parentID).empty().toggle(true)
 				myControl.util.handleErrors(responseData,uuid)
@@ -1578,7 +1582,7 @@ $('#'+safeTarget).replaceWith($tmp);
 				}
 			}, //imageURL
 
-		elastimage1URL : function($tag,data)	{
+		elasticImage1URL : function($tag,data)	{
 			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 			if(data.value[0])	{$tag.attr('src',myControl.util.makeImage({"name":data.value[0],"w":$tag.attr('width'),"h":$tag.attr('height'),"b":bgcolor,"tag":0}))}
 			else	{$tag.style('display','none');}
@@ -1604,27 +1608,38 @@ $('#'+safeTarget).replaceWith($tmp);
 			},
 
 		paypalECButton : function($tag,data)	{
-$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
-	myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
-	$(this).addClass('disabled').attr('disabled','disabled');
-	myControl.model.dispatchThis('immutable');
-	});
-				},
+if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
+	$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
+		myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
+		$(this).addClass('disabled').attr('disabled','disabled');
+		myControl.model.dispatchThis('immutable');
+		});
+	}
+else	{
+	$tag.addClass('displayNone');
+	}
+			}, //paypalECButton
 
 		googleCheckoutButton : function($tag,data)	{
-			var payObj = myControl.sharedCheckoutUtilities.which3PCAreCompatible();
-//certain product can be flagged to disable googlecheckout as a payment option.
-			if(payObj.googlecheckout)	{
-$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
-	myControl.ext.convertSessionToOrder.calls.cartGoogleCheckoutURL.init();
-	$(this).addClass('disabled').attr('disabled','disabled');
-	myControl.model.dispatchThis('immutable');
-	});
-				}
-			else	{
-				$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=disable&loc=en_US' \/>")			
-				}
-			},
+
+if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
+	var payObj = myControl.sharedCheckoutUtilities.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
+	if(payObj.googlecheckout)	{
+	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
+		myControl.ext.convertSessionToOrder.calls.cartGoogleCheckoutURL.init();
+		$(this).addClass('disabled').attr('disabled','disabled');
+		myControl.model.dispatchThis('immutable');
+		});
+		}
+	else	{
+		$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=disable&loc=en_US' \/>")			
+		}
+	}
+else	{
+	$tag.addClass('displayNone');
+	}
+	
+			}, //googleCheckoutButton
 
 		
 		
@@ -1701,7 +1716,11 @@ $tmp.empty().remove();
 				data.value = myControl.util.makeSafeHTMLId(data.value);
 			$tag.attr(data.bindData.attribute,data.value);
 			}, //text
-
+		elasticMoney :function($tag,data)	{
+			data.bindData.cleanValue = data.bindData.cleanValue / 100;
+			this.money($tag,data);
+			}, //money
+		
 		money : function($tag,data)	{
 			
 //			myControl.util.dump('BEGIN view.formats.money');
@@ -1871,11 +1890,11 @@ some id's may be hard coded (can change this later if need be), but they're form
 	sharedCheckoutUtilities : 	{
 		
 		//cart must already be in memory when this is run.
-//will tell you which third party checkouts are compatible. does NOT look to see if merchant has them enabled,
+//will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
 // just checks to see if the cart contents would even allow it.
 //currently, there is only a google field for disabling their checkout, but this is likely to change.
-			which3PCAreCompatible :	function(){
-				myControl.util.dump("BEGIN sharedCheckoutUtilities.which3PCAreCompatible");
+			which3PCAreAvailable :	function(){
+				myControl.util.dump("BEGIN sharedCheckoutUtilities.which3PCAreAvailable");
 				var obj = {};
 				obj.paypalec = true;
 				obj.amazonpayment = true;

@@ -68,14 +68,30 @@ var store_search = function() {
 				myControl.model.addDispatchToQ(frmObj);
 				}
 			}, //searchResult
-
+		appPublicProductSearch : {
+			init : function(qObj,tagObj,Q)	{
+				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
+//				myControl.util.dump(obj);
+				this.dispatch(qObj,tagObj,Q)
+				return 1;
+				},
+			dispatch : function(qObj,tagObj,Q)	{
+				obj['_cmd'] = "appPublicSearch";
+				obj.type = 'product';
+				obj.mode = 'elastic-native';
+				obj.size = 250;
+				obj['query'] = qObj;
+				obj['_tag'] = tagObj;
+				myControl.model.addDispatchToQ(obj,Q);
+				}
+			}, //appPublicSearch
 //no local caching (fetch) of results yet. need to work with the new search a bit
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
 				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
 //				myControl.util.dump(obj);
-				this.dispatch(obj,tagObj)
+				this.dispatch(obj,tagObj,Q)
 				return 1;
 				},
 			dispatch : function(obj,tagObj,Q)	{
@@ -236,10 +252,18 @@ $keywordInput.autocomplete({
 
 
 
-				} //bindKeywordAutoComplete
+				}, //bindKeywordAutoComplete
 			
 
-
+			handleElasticSimpleQuery : function(keywords,tagObj)	{
+				var qObj = {}; //query object
+				qObj.type = 'product';
+				qObj.mode = 'elastic-native';
+				qObj.size = 250;
+				qObj.query =  {"query_string" : {"query" : keywords}};
+				myControl.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
+				myControl.model.dispatchThis();
+				},
 
 
 			} //util

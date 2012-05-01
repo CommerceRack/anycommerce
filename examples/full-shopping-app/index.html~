@@ -20,40 +20,33 @@
 <script type="text/javascript" src="http://www.homebrewers.com/jquery/config.js"></script>
 
 <!-- mvc -->
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201215/model.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201215/controller.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/model.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/controller.js"></script>
 
 <!-- utilities -->
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201215/json2.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201215/variations.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201215/wiki.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/json2.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/variations.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/wiki.js"></script>
 
 <!-- boot loader -->
 <script type="text/javascript">
 
-//HERE FOR TESTING PURPOSES
-// -> checkout requires async GA. remove prior to deployment.
-
-var _gaq = {};
-_gaq.push = function(){};
-
-// END TESTING CODE
-
+var _gaq = {}; _gaq.push = function(){}; // google analytics stub, replace this with real ga code in production.
 
 var myControl;
 var myCreole;
 var myExtensions = [
 	// Standard extensions - most shopping apps will need these
-	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_prodlist.js"},
-	{"namespace":"convertSessionToOrder","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/checkout_passive.js"},
-	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_search.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_cart.js"},
-	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201215/extensions/store_crm.js"},
+	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_prodlist.js"},
+	{"namespace":"convertSessionToOrder","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/checkout_passive.js"},
+	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_navcats.js"},
+	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_search.js"},
+	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
+	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_cart.js"},
+	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_crm.js"},
 
 	// guts of your application:
-	{"namespace":"myRIA","filename":"myria-20120410.js","callback":"startMyProgram"} // should be last
+	{"namespace":"myRIA","filename":"full-shopping-app.js","callback":"startMyProgram"} // should be last
 	
 	// hint: the "callback":"xyz" parameter above specifies which function in the extension will be run when the extension
    // is completed loading.  The view will already be displayed before the extensions are loaded. So in the example above
@@ -1249,7 +1242,7 @@ used for store_crm.js
 
 
 
-
+<!-- used in the /customer section for order view -->
 
 <section id='orderLineItemTemplate' class='appAccordianesque'>
 	

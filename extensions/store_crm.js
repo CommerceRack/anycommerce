@@ -336,8 +336,18 @@ see jquery/api webdoc for required/optional param
 				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid
 				myControl.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
 				}			
-			} //buyerPurchaseHistoryDetail
-
+			}, //buyerPurchaseHistoryDetail
+		buyerAddressList : {
+			init : function(tagObj,Q)	{
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj["datapointer"] = "buyerAddressList"; 
+				this.dispatch(tagObj,Q);
+				return 1;
+				},
+			dispatch : function(tagObj,Q)	{
+				myControl.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag": tagObj},Q);
+				}
+			} //buyerAddressList
 		}, //calls
 
 

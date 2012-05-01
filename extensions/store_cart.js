@@ -377,7 +377,7 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 				var $parent = $('#modalCart');
 //if the parent doesn't already exist, add it to the dom.
 				if($parent.length == 0)	{
-					$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo(document.body);
+					$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
 					}
 				else	{
 //empty the existing cart and add a loadingBG so that the user sees something is happening.

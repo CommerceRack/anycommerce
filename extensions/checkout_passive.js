@@ -800,11 +800,14 @@ the checkoutSuccessPaymentFailure started to do this but for the sake of getting
 					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
 					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
 					});
-				
-				$('.ocmFacebookComment').click(function(){
-					myControl.thirdParty.fb.postToWall(cartContentsAsLinks);
-					_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
-					});
+//the fb code only works if an appID is set, so don't show banner if not present.				
+				if(zGlobals.thirdParty.facebook.appId)	{
+					$('.ocmFacebookComment').click(function(){
+						myControl.thirdParty.fb.postToWall(cartContentsAsLinks);
+						_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+						});
+					}
+				else	{$('.ocmFacebookComment').addClass('displayNone')}
 
 				myControl.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
 				myControl.ext.convertSessionToOrder.calls.getCartContents.init(); //!IMPORTANT! will reset local cart object. 
@@ -1053,7 +1056,10 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 				if($lastName.val().length < 2){$lastName.parent().addClass('mandatory'); r = false;}
 				if($address1.val().length < 2){$address1.parent().addClass('mandatory'); r = false;}
 				if($city.val().length < 2){$city.parent().addClass('mandatory'); r = false;}
-				if($state.val().length < 2){$state.parent().addClass('mandatory'); r = false;}
+//state is only validated if country is US (not all countries have a state/province selection
+				if($country.val() == 'US' && $state.val().length < 2)	{
+					$state.parent().addClass('mandatory'); r = false;
+					}
 				
 				if(TYPE=="bill")	{
 					var $email = $('#data-bill_email');
@@ -1305,9 +1311,19 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 
 		utilities : {
-
-
-
+//when a country is selected, the required attribute must be added or dropped from state/province.
+//this is important because the browser itself will indicate which fields are required.
+//some countries do not have state/province, so for international it is automatically not required.
+			countryChange : function(type,country)	{
+//				myControl.util.dump('BEGIN convertSessionToOrder.utilities.countryChange. type: '+type+' and country: '+country)
+				if(country == 'US')	{
+					$('#data-'+type+'_state').attr('required','required');
+					}
+				else	{
+					myControl.util.dump(' -> got here: '+type);
+					$('#data-'+type+'_state').removeAttr('required').parent().removeClass('mandatory');
+					}
+				},
 //executed when a coupon is submitted. handles ajax call for coupon and also updates cart.
 			handleCouponSubmit : function()	{
 				$('#chkoutSummaryErrors').empty(); //remove any existing errors.
@@ -1422,6 +1438,7 @@ the re-initiate checkout.
 				myControl.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
 				myControl.model.dispatchThis('immutable');
 				},
+
 
 //generate the list of existing addresses (for users that are logged in )
 //appends addresses to a fieldset based on TYPE (bill or ship)
@@ -2085,7 +2102,7 @@ the getCartContents call can come second because none of the following calls are
 					isSelectedMethod = false;
 					}
 				$tag.html(o);
-				},
+				}, //shipMethodsAsRadioButtons 
 
 
 			payMethodsAsRadioButtons : function($tag,data)	{
@@ -2112,7 +2129,7 @@ the getCartContents call can come second because none of the following calls are
 					}
 
 				$tag.html(o);
-				},
+				}, //payMethodsAsRadioButtons
 
 
 //for displaying order balance in checkout order totals.				

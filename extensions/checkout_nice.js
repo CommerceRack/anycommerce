@@ -69,6 +69,23 @@ a callback was also added which just executes this call, so that checkout COULD 
 				myControl.ext.convertSessionToOrder.vars.containerID = containerID;
 				$('#'+containerID).append(myControl.renderFunctions.createTemplateInstance('zCheckoutContainerSpec','zCheckoutContainer'));
 
+//paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
+// executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
+// the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
+				var token = myControl.util.getParameterByName('token');
+				var payerid = myControl.util.getParameterByName('PayerID');
+				if(token && payerid)	{
+					r += myControl.calls.cartSet.init({'payment-pt':token,'payment-pi':payerid});
+					r += myControl.ext.convertSessionToOrder.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
+					}
+				else	{
+//if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
+//need to reset paypal vars in case cart/session was manipulated.
+// ### NOTE - in an all RIA environment, this isnt needed. the add to cart functions should do this. however, in a hybrid (1PC) it is needed.
+					myControl.calls.cartSet.init({'payment-pt':null,'payment-pi':null}); //nuke vars
+					}
+
+
 //myControl.data is passed in because something needs to be, but this is generated prior to any ajax calls occuring (possibly) so the cart can't be passed in. !!! can we just pass in an empty object? seems better. test this.
 				myControl.renderFunctions.translateTemplate({},'zCheckoutContainer');
 
@@ -88,7 +105,36 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 			},
 		
 		
+		cartPaypalSetExpressCheckout : {
+			init : function()	{
+				var getBuyerAddress = 0;
+				if(myControl.ext.convertSessionToOrder.utilities.taxShouldGetRecalculated())
+					getBuyerAddress = 1;
+				this.dispatch(getBuyerAddress);
+				return 1;
+				},
+			dispatch : function(getBuyerAddress)	{
+				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis","returnURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120416&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				}
+			}, //cartPaypalSetExpressCheckout	
 
+// obj.token and obj.payerid are required.
+//this gets executed after a user is returned to checkout from paypal
+		cartPaypalGetExpressCheckoutDetails : {
+			init : function(obj)	{
+//				myControl.util.dump("BEGIN convertSessionToOrder.calls.cartPaypalGetExpressCheckoutDetails.init");
+//				myControl.util.dump(obj);
+				this.dispatch(obj);
+				return 1;
+				},
+			dispatch : function(obj)	{
+// 'callback':'handleCartPaypalGetECDetails' - removed 20120416. the action in the callback is executed as part of loadPanelContent, if needed.
+// has to be done there or it 'could' be run twice.
+				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder"};
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalGetExpressCheckoutDetails","token":obj.token,"payerid":obj.payerid,"_tag":tagObj},'immutable');
+				}
+			}, //cartPaypalGetExpressCheckoutDetails	
 
 //update will modify the cart. only run this when actually selecting a shipping method (like during checkout). heavier call.
 		cartShippingMethodsWithUpdate : {
@@ -418,7 +464,34 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				$('#chkoutShipMethodsFieldsetErrors').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
 			},
-			
+
+
+		handleCartPaypalSetECResponse : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalSetECResponse.onSuccess');
+				window.location = myControl.data[tagObj.datapointer].URL
+				},
+			onError : function(responseData,uuid)	{
+				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on cart page.
+				myControl.util.handleErrors(responseData,uuid);
+				}
+			},
+
+
+		handleCartPaypalGetECDetails : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalGetECDetails.onSuccess');
+//lock down form fields so ship addresses match (and a variety of other form manipulation occurs).
+				myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid);
+				}
+			},		
+
+
+
+
 		addGiftcardToCart : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('got to addGiftcardToCart success');
@@ -535,8 +608,13 @@ error would mean something was not complete.
 		finishedValidatingCheckout : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.finishedValidatingCheckout.onSuccess');
-//for payby, used what is in the form, NOT what is set in the cart/session (it may not have been updated prior to this dispatch being executed).
-				myControl.ext.convertSessionToOrder.calls.cartOrderCreate.init("checkoutSuccess");
+//if paypal is selected but a valid token doesn't exist, route to paypal.
+				if($("#chkout-payby_PAYPALEC").is(':checked') && !myControl.data.cartItemsList.cart['payment-pt'])	{
+					myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
+					}
+				else	{
+					myControl.ext.convertSessionToOrder.calls.cartOrderCreate.init("checkoutSuccess");
+					}
 				myControl.model.dispatchThis('immutable');
 
 
@@ -637,6 +715,16 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 					myControl.ext.convertSessionToOrder.utilities.cartIsEmptyWarning();
 					}
 				$('#'+myControl.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
+				
+//will lock many input fields so they match the paypal response (ship address, shipping, etc).
+//needs to executed in here instead of in a callback for the payalget because the get is only run once per cart/session (unless cart is changed)
+//but checkout may get load/reloaded and if the cart hasn't changed, the forms still need to be 'locked'.
+//needs to run at the end here so that all the dom manipulating is done prior so function can 'lock' fields
+				if(myControl.ext.convertSessionToOrder.utilities.thisSessionIsPayPal())	{
+					myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
+					}				
+				
+				
 				},
 			onError : function(d)	{
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.loadPanelContent.onError.');
@@ -680,11 +768,18 @@ the checkoutSuccessPaymentFailure started to do this but for the sake of getting
 					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
 					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
 					});
-				
-				$('.ocmFacebookComment').click(function(){
-					myControl.thirdParty.fb.postToWall(cartContentsAsLinks);
-					_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+				$('.ocmTwitterComment').click(function(){
+					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
+					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
 					});
+//the fb code only works if an appID is set, so don't show banner if not present.				
+				if(zGlobals.thirdParty.facebook.appId)	{
+					$('.ocmFacebookComment').click(function(){
+						myControl.thirdParty.fb.postToWall(cartContentsAsLinks);
+						_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
+						});
+					}
+				else	{$('.ocmFacebookComment').addClass('displayNone')}
 
 				myControl.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
 				myControl.ext.convertSessionToOrder.calls.getCartContents.init(); //!IMPORTANT! will reset local cart object. 
@@ -1025,7 +1120,10 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 				if($lastName.val().length < 2){$lastName.parent().addClass('mandatory'); r = false;}
 				if($address1.val().length < 2){$address1.parent().addClass('mandatory'); r = false;}
 				if($city.val().length < 2){$city.parent().addClass('mandatory'); r = false;}
-				if($state.val().length < 2){$state.parent().addClass('mandatory'); r = false;}
+//state is only validated if country is US (not all countries have a state/province selection
+				if($country.val() == 'US' && $state.val().length < 2)	{
+					$state.parent().addClass('mandatory'); r = false;
+					}
 				
 				if(zGlobals.checkoutSettings.chkout_phone == 'REQUIRED'){
 //					myControl.util.dump(' -> phone number IS required');
@@ -1315,6 +1413,7 @@ in these instances, the selected method in the cart/memory/local storage must ge
 
 
 
+
 //displays the cart contents in a non-editable format in the right column of checkout		
 			cartContents : function()	{
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.panelContent.cartContents');
@@ -1383,7 +1482,19 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 		utilities : {
 
-
+//when a country is selected, the required attribute must be added or dropped from state/province.
+//this is important because the browser itself will indicate which fields are required.
+//some countries do not have state/province, so for international it is automatically not required.
+			countryChange : function(type,country)	{
+				myControl.util.dump('BEGIN convertSessionToOrder.utilities.countryChange. type: '+type+' and country: '+country)
+				if(country == 'US')	{
+					$('#data-'+type+'_state').attr('required','required');
+					}
+				else	{
+					myControl.util.dump(' -> got here: '+type);
+					$('#data-'+type+'_state').removeAttr('required').parent().removeClass('mandatory');
+					}
+				},
 
 //executed when a coupon is submitted. handles ajax call for coupon and also updates cart.
 			handleCouponSubmit : function()	{
@@ -1404,6 +1515,108 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				myControl.ext.convertSessionToOrder.calls.getCartContents.init('updateCheckoutOrderContents');
 				myControl.model.dispatchThis('immutable');
 				}, //handleGiftcardSubmit
+
+
+
+
+
+
+//only check the cart object. If the uri is checked here, then when 'nukepaypal' is executed and checkout is re-initiated, the uri vars will trigger the paypal code.
+//plus, the token is deleted from the cart when the cart is updated, so we should check there to make sure it is/is not set.
+		thisSessionIsPayPal : function()	{
+//			myControl.util.dump("BEGIN convertSessionToCheckout.utilities.thisSessionIsPayPal");
+			var r = false; //what is returned.  will be set to true if paypalEC approved.
+//if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
+			token = myControl.data.cartItemsList.cart['payment-pt'];
+			payerid = myControl.data.cartItemsList.cart['payment-pi'];
+			myControl.util.dump("paypal -> token: "+token+" and payerid: "+payerid);
+			if(token && payerid)	{
+				r = true;
+				}
+			return r;
+			},
+
+/*
+paypal returns a user to the checkout page, not the order complete page.
+if token and payerid are set on URI, then user has just returned to checkout, so do the following:
+1. get checkout details (will include paypal info like address)
+2. if address is not populated already, populate address. (if logged in, show form, not predefined addresses)
+3. lock down address fields so they are not editable.
+note - predefined addresses are hidden and the form is shown so that if the user used a paypal address, we don't have to try to 'map' it back to an account address.
+
+4. lock down payment options so they are not editable.
+5. select paypal EC as payment option.
+6. lock down shipping (a method is selected in paypal)
+7. add button near 'place order' that says 'change from paypal to other payment option'.
+
+*/
+			handlePaypalFormManipulation : function()	{
+			myControl.util.dump("BEGIN convertSessionToOrder.utilities.handlePaypalFormManipulation ");
+//when paypal redirects back to checkout, these two vars will be on URI: token=XXXX&PayerID=YYYY
+
+//uncheck the bill to ship option so that user can see the paypal-set shipping address.
+//
+var $billToShipCB = $('#chkout-bill_to_ship_cb');
+$billToShipCB.attr('disabled','disabled')
+if($billToShipCB.is(':checked'))	{
+//code didn't like running a .click() here. the trigered function registered the checkbox as checked.
+	$billToShipCB.removeAttr("checked");
+	myControl.ext.convertSessionToOrder.utilities.toggleShipAddressPanel();
+	}
+//hide all bill/ship predefined addresses.
+$('#chkoutBillAddressFieldset address').hide();
+$('#chkoutShipAddressFieldset address').hide();
+//show bill/ship address form
+$('#billAddressUL').show();
+$('#shipAddressUL').show();
+//disable all shipping address inputs that are populated (by paypal) and select lists except phone number (which isn't populated by paypal)
+$('#chkoutShipAddressFieldset input, #chkoutShipAddressFieldset select').each(function(){
+	if($(this).val() != '')	{
+		$(this).attr('disabled','disabled')
+		}
+	});
+$('#data-ship_phone').removeAttr('disabled');
+
+//name and email are disabled for billing address. They'll be populated by paypal and are not allowed to be different.
+$('#data-bill_firstname, #data-bill_lastname, #data-bill_email').attr('disabled','disabled');
+$('.addressListPrompt').hide(); //this text needs to be hidden if a user is logged in cuz it doesn't make sense at this point.
+
+
+
+//make sure paypal is selected payment option. this will trigger a request to select it as well.
+//disable all other payment optins.
+$('#chkout-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
+$('#chkoutPayOptionsFieldset input[type=radio]').attr('disabled','disabled');
+
+//disable all ship methods.
+$('#chkoutShipMethodsFieldset input[type=radio]').attr('disabled','disabled');
+
+//disable giftcards
+$('#giftcardMessaging').text('PayPal not compatible with giftCards');
+//$('#couponMessaging').show().text('PayPal is not compatible with Coupons');
+$('#giftcardCode').attr('disabled','disabled'); //, #couponCode
+$('#addGiftcardBtn').attr('disabled','disabled').addClass('ui-state-disabled'); //, #addCouponBtn
+
+$('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='myControl.ext.convertSessionToOrder.utilities.nukePayPalEC();'>Choose Alternate Payment Method<\/a>");
+				
+				},
+/*
+once paypalEC has been approved by paypal, a lot of form fields lock down, but the user may decide to change
+payment methods. If they do, execute this function. It will remove the paypal params from the session/cart and 
+the re-initiate checkout.
+*/
+			nukePayPalEC : function() {
+				myControl.calls.cartSet.init({'payment-pt':null,'payment-pi':null,'chkout.payby':null}); //nuke vars
+				myControl.ext.convertSessionToOrder.utilities.handlePanel('chkoutPayOptions');
+				myControl.ext.convertSessionToOrder.utilities.handlePanel('chkoutBillAddress');
+				myControl.ext.convertSessionToOrder.utilities.handlePanel('chkoutShipAddress');
+				myControl.ext.convertSessionToOrder.utilities.handlePanel('chkoutShipMethods');
+				myControl.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
+				myControl.model.dispatchThis('immutable');
+				},
+
+
+
 
 
 
@@ -1650,7 +1863,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 							o += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.yy\"] = this.value;'><option value=''><\/option>"+myControl.util.getCCExpYears(myControl.data.cartItemsList.cart['payment.yy'])+"<\/select><\/li>";
 							o += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return myControl.util.numbersOnly(event);' value='";
 							if(myControl.ext.convertSessionToOrder.vars['payment.cv']){o += myControl.ext.convertSessionToOrder.vars['payment.cv']}
-							o += "' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cv\"] = this.value' /><\/li>";
+							o += "' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cv\"] = this.value' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
 							break;
 	
 						case 'PO':
@@ -1682,7 +1895,6 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 	//			myControl.util.dump('END myControl.ext.convertSessionToOrder.utilities.updatePayDetails. paymentID = '+paymentID);			
 _gaq.push(['_trackEvent','Checkout','User Event','Payment method selected ('+paymentID+')']);
 				}, //updatePayDetails
-
 
 
 //used to display errors that are returned on the validateCheckout call if validation fails. 
@@ -1912,6 +2124,7 @@ handleBill2Ship function added.
 				},
 
 
+
 //for tax to accurately be computed, several fields may be required.
 //this function checks to see if they're populated and, if so, returns true.
 			taxShouldGetRecalculated : function()	{
@@ -1994,6 +2207,7 @@ the getCartContents call can come second because none of the following calls are
 				
 					}
 				}, //recalculateShipMethods
+
 
 
 //will remove the selected and ui-state-active classes from all address elements within the passed parent div id.
@@ -2108,9 +2322,13 @@ the getCartContents call can come second because none of the following calls are
 				var L = data.value.length;
 
 
-				var id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.
+				var id,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.
+				var isSelectedMethod = false;
+				if(L == 1)	{
+					isSelectedMethod = data.value[0].id; //will make the ship method 'selected' if it's the only choice.
+					}
 				for(var i = 0; i < L; i += 1)	{
-					isSelectedMethod = false;
+					
 					safeid = myControl.util.makeSafeHTMLId(data.value[i].id);
 					id = data.value[i].id;
 
@@ -2131,9 +2349,10 @@ the getCartContents call can come second because none of the following calls are
 					if(isSelectedMethod)
 						o += " checked='checked' "
 					o += "/><label for='ship-selected_id_"+safeid+"'>"+shipName+": <span >"+myControl.util.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+					isSelectedMethod = false;
 					}
 				$tag.html(o);
-				},
+				}, //shipMethodsAsRadioButtons 
 
 
 			payMethodsAsRadioButtons : function($tag,data)	{
@@ -2142,27 +2361,25 @@ the getCartContents call can come second because none of the following calls are
 				var L = data.value.length;
 				var o = "";
 				var id = '';
-				var i,isSelectedMethod;
-				for(i = 0; i < L; i += 1)	{
-					isSelectedMethod = false;
+				var isSelectedMethod = false;
+				if(L == 1)	{
+					isSelectedMethod = data.value[0].id; //will make the ship method 'selected' if it's the only choice.
+					}
+				
+				for(var i = 0; i < L; i += 1)	{
 					id = data.value[i].id;
-					if(id == 'PAYPALEC')	{
-//paypalec is not supported at this time.						
+					if(id == myControl.data.cartItemsList.cart['chkout.payby'])	{
+						isSelectedMethod = true;
 						}
-					else	{
-						if(id == myControl.data.cartItemsList.cart['chkout.payby'])	{
-							isSelectedMethod = true;
-							}
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='chkout.payby' id='chkout-payby_"+id+"' value='"+id+"' onClick='myControl.ext.convertSessionToOrder.utilities.updatePayDetails(this.value); myControl.calls.cartSet.init({\"chkout.payby\":this.value}); myControl.model.dispatchThis(\"immutable\"); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
-						if(isSelectedMethod)
-							o += " checked='checked' "
-						o += "/><label for='chkout-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
-						}
+					o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='chkout.payby' id='chkout-payby_"+id+"' value='"+id+"' onClick='myControl.ext.convertSessionToOrder.utilities.updatePayDetails(this.value); myControl.calls.cartSet.init({\"chkout.payby\":this.value}); myControl.model.dispatchThis(\"immutable\"); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
+					if(isSelectedMethod)
+						o += " checked='checked' "
+					o += "/><label for='chkout-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+					isSelectedMethod = false; //reset on each iteration so 'next' item isn't accidentally set as selected.
 					}
 
 				$tag.html(o);
-				},
-
+				}, //payMethodsAsRadioButtons
 
 //for displaying order balance in checkout order totals.				
 			orderBalance : function($tag,data)	{

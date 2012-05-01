@@ -510,17 +510,6 @@ need to be customized on a per-ria basis.
 					}		
 				}, //subcatList			
 
-//TEMPORARY SOLUTIONS!  these two hacks are here because we need something right now.
-			paypalButtonHack : function($tag,data)	{
-				$tag.empty().append("<a href='https://secure.homebrewers.com/c="+myControl.sessionId+"/s=homebrewers.com/paypal.cgis?mode=cartec&cart="+myControl.sessionId+"&ts='"+myControl.util.unixNow()+"><img width='145' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' /></a>");
-				},
-			
-			googleButtonHack : function($tag,data)	{
-				$tag.empty().append("<a href=\"javascript:setUrchinInputCode(pageTracker); document.location='https://secure.homebrewers.com/c="+myControl.sessionId+"/s=homebrewers.com/_googlecheckout?analyticsdata='+getUrchinFieldValue();\"><img height=43 width=160 border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id=826419156185928&w=160&h=43&style=white&variant=text&loc=en_US'></a>");
-				},
-			
-
-
 
 
 			legacyURLToRIA : function($tag,data)	{

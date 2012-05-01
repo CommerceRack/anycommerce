@@ -3,7 +3,7 @@ body	{background:#d5b474 url('hb12_body_bg-1040x1.png') repeat-y center;}
 
 
 /* loading classes. do NOT change class name. change styling as needed */
-.loadingBG	{background:url(hb12_red_loading-32x32.gif) no-repeat center center; min-height:28px;}
+.loadingBG	{background:url(loading.gif) no-repeat center center; min-height:28px;}
 
 
 a	{color:#990000;} /* this color should match the color set in zlink */

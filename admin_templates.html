@@ -46,19 +46,19 @@ some notes about templates;
 	<section class='ui-corner-bottom ui-widget'>
 	<table class='finderTable'>
 	<tr>
-		<td>
+		<td colspan='2'>
 <form id='finderSearchForm' action='#' name='finderSearchForm' >
 <fieldset>
-<input type='text' class=' finderSearch' value='' name='query' id='finderSearchQuery' size='20' />
+<input type='text' class='ui-corner-left finderSearch' value='' name='query' id='finderSearchQuery' size='40' />
 <input class='ui-state-default ui-corner-right ui-state-active' type='submit' value='search' />
 <input type='hidden' value='' name='CATALOG' />
 </fieldset>
 </form>
 		</td>
-		<td>
-		<h4>Current Product:</h4>
-		</td>
 	</tr>
+	<tr>
+		<td><h4 id='resultsKeyword'></h4></td>
+		<td><h4>Current Items<span id='focusListItemCount'></span>:</h4></td>
 	<tr>
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
@@ -76,12 +76,12 @@ some notes about templates;
 	</tr>
 	<tr>
 		<td class='alignRight'>
-<!--		
+		
 		<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='selectAll'>
 		<span class='ui-button-text'>select all</span>
 		<span class='ui-icon ui-icon-arrow-1-n ui-button-icon-secondary'></span>
 		</button>
--->		
+
 		<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='moveToTop'>
 		<span class='ui-button-text'>move selected to top</span>
 		<span class='ui-icon ui-icon-arrow-1-ne ui-button-icon-secondary'></span>
