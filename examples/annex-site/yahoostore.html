@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySpectacularWebsite.com</title>
+
+
+<link rel="stylesheet" type="text/css" href="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui_themes/ui-cupertino-1.8.16/jquery-ui-1.8.16.custom.css" />
+<link rel="stylesheet" type="text/css" href="styles-20120430.css" />
+
+
+<!-- profile specific settings -->
+<script type="text/javascript" src="http://www.toynk.com/jquery/config.js"></script>
+
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jquery-1.6.4.min.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui-1.8.16/js/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/model.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/controller.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/json2.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/variations.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/wiki.js"></script>
+
+<script type="text/javascript">
+
+var myControl;
+var myCreole;
+var myExtensions = [
+	// Standard extensions - comment these out if your app does not need them
+	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
+	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_cart.js"},
+	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_crm.js"},
+	{"namespace":"myRIA","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/examples/addtocart-hijack/myria-20120430.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
+	];
+
+$(function() {
+
+	$.support.cors = true;  //cross site scripting for non cors sites. will b needed for IE10. IE8 & 9 don't support xss well.
+	myControl = new zController({
+		"release":"20120430075200" //increment this with each change. should solve caching issues.
+		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
+		
+	});
+
+
+</script>
+
+
+
+</head>
+<body>
+
+<div id="topbardiv">
+<img border="0" alt="" src="/images/theme/gray/topbaredge.jpg">
+<a class="topmenulink" href="https://www.someyahoostore.com/myaccount.html">My Account</a>
+<a class="topmenulink" href="http://www.someyahoostore.com/myaccount.html">Track Package</a>
+<a class="topmenulink" href="http://www.someyahoostore.com/wishlist.html">Wishlist</a>
+<a id="menu-cart" class="topmenulink" href="http://www.someyahoostore.com/cart.html">My Cart (0)</a>
+<div id="mini-cart" style="display: none;">
+<span>No Items in Your Cart</span>
+</div>
+</div>
+
+
+
+
+<!--
+///////////////////////////////////////
+
+Sample add to cart button from a Yahoo Store
+
+\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<form action="cart.html" method="post" id="kb_form">
+<input type="hidden" name="todo" value="add">
+<input type="hidden" name="IndexID" id="ProductIndexID" value="KTO-01358-C">
+<input type="text" value="1" id="product-page-buy-qty" name="IndexQty">
+<input id="add-to-cart-button" type="image" src="https://static.zoovy.com/merchant/toynk/_ticket_1161491/tnk_add_to_cart.gif" alt="Add to Cart">
+<input type="text" class="alt_zipcode" onclick="if (this.value=='Enter ZIP'){this.value='';}" onkeypress="if (event.keyCode==13) {copy_save_zip_code(); return false;}" size="7" value="Enter ZIP">
+<input type="button" value="Write a Review" onclick="window.location='http://www.someyahoostore.com/review.html?IndexID=160141'; return false;">
+</form>
+
+
+
+<h3 class="acce_title" style="text-align:center">Related Items</h3>
+<table class="wtab_box" cellspacing="0">
+<tbody>
+<tr>
+<td align="center" style="line-height:25px">
+<a href="http://www.someyahoostore.com/CMN-92555-C.html">
+<br>
+<b style="color:red">$5.99</b>
+<br>
+<a href="http://www.someyahoostorecom/CMN-92555-C.html">CMN-92555-C</a>
+<br>
+<a onclick="add_to_cart_direct(CMN-92555-C)" href="javascript:;">add to cart</a>
+</td>
+</tr>
+<tr>
+<tr>
+</tbody>
+</table>
+
+</body>
+</html>

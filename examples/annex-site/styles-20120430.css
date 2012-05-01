@@ -1,0 +1,206 @@
+.displayNone	{display:none;}
+.clearfix	{clear:both;} /* experimenting here - 20120327 */
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(hb12_red_loading-32x32.gif) no-repeat center center; min-height:28px;}
+
+.noListStyle, .noListStyle li	{list-style:none; padding:0; margin:0;}
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+
+
+.alignCenter	{text-align:center;}
+.alignLeft	{text-align:left;}
+.alignRight	{text-align:right;}
+
+div.center	{text-align:center;}
+
+
+#templates {display:none;}
+
+#productDetailModal	fieldset	{border:0; margin:0 0 12px 0; padding:0;}
+.priceContainer	{margin-bottom:12px;}
+
+
+
+
+/* cart styles */
+.cartTotalLineItem	{display:block;}
+.cartTotalLineItem .prodThumb	{margin:0 12px 12px 0;}
+
+#modalCartContents table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	}
+#modalCartContents td	{vertical-align:top;}
+
+#cartSummary	{margin:9px 12px;}
+#cartViewerForm table	{width:100%; margin-top:12px;}
+#cartViewerContentsContainer {padding-right:12px;} /* left column of cart */
+#cartSummaryTotalsContainer {width:45%; font-weight:normal;} /* right column of minicart. also used in checkout. */
+
+#cartSummaryTotalsContainer .ui-widget	{padding:4px;}
+#cartSummaryTotalsContainer .ui-widget-header	{padding:3px 12px;margin:0;}
+#cartSummaryTotalsContainer h5	{margin:3px 0;} /* shipping header */
+#cartViewerForm .prodOptions .prompt:after	{content:": "}
+
+#cartSummaryTotals	{line-height:160%; margin-bottom:12px; width:100%;}
+.qtyInput	{width:3em; text-align:center;}
+
+#cartViewerContents .prodThumb	{margin-right:12px;}
+#checkoutButtonContainer div	{margin:12px 0; display:block; cursor:pointer;}
+
+.padMargBorderBottom	{padding-bottom:10px; border-bottom:1px solid #efefef; margin-bottom:10px;}
+
+
+/* carousel & prodlist container styles */
+
+#prodlistCarouselContainer	{width:210px; position:relative; background:#fff1d3;}
+#prodlistCarouselContainer h5	{margin:0; padding:2px 5px; font-size:14px; color:#333333;}
+#prodlistCarouselContainer h6	{margin:0; padding:2px 5px; font-size:16px; color:#744d3a;}
+#prodlistCarouselContainer button	{padding:3px 8px; margin:2px 5px; cursor:pointer;}
+/* jquery ui modal is zindex 1002 */
+.checkoutNowButton	{position:absolute; bottom:0; right:0; font-size:15px; z-index:1001; display:none; cursor:pointer;}
+
+
+
+
+.jcarousel-skin-proximus .jcarousel-container {}
+
+.jcarousel-skin-proximus .jcarousel-container-horizontal {
+	width: auto;
+	padding: 0 0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-container-vertical {
+	width: auto;
+	height: 290px;
+	padding: 0;
+	}
+
+.jcarousel-skin-proximus .jcarousel-clip-horizontal {
+	height: 290px;
+	width: auto;
+	}
+
+.jcarousel-skin-proximus .jcarousel-clip-vertical {
+	width: auto;
+	height: 290px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item {
+    width: 210px;
+    height: 290px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-horizontal {
+	margin-left: 0;
+    margin-right:0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-vertical {
+    margin-bottom: 0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-placeholder {
+    background: none;
+    color: #000;
+	}
+
+/**
+ *  Horizontal Buttons
+ */
+.jcarousel-skin-proximus .jcarousel-next-horizontal {
+	position: absolute;
+    width: 22px;
+    height: 75px;
+	right: -10px;
+	top:60px;
+    background: transparent url(hb12_carousel_arrows-275x275.png) no-repeat -140px -149px;
+	cursor:pointer;
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal,
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal:hover,
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-horizontal {
+    position: absolute;
+    top: 60px;
+    left: -10px;
+    width: 22px;
+    height: 75px;
+    cursor: pointer;
+    background: transparent url(hb12_carousel_arrows-275x275.png) no-repeat -106px -149px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal:hover,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+
+
+/**
+ *  Vertical Buttons
+ */
+.jcarousel-skin-proximus .jcarousel-next-vertical {
+    position: absolute;
+    bottom: 0px;
+    width: 75px;
+    height: 23px;
+    cursor: pointer;
+    background: url(hb12_carousel_arrows-275x275.png) no-repeat -11px -190px transparent;
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-vertical:hover {
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-vertical:active {
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical,
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical:hover,
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical {
+    position: absolute;
+    top: 0px;
+    width: 75px;
+    height: 23px;
+    cursor: pointer;
+    background: url(hb12_carousel_arrows-275x275.png) no-repeat -11px -155px transparent;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical:hover {
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical:active {
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical:hover,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
