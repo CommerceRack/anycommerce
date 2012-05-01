@@ -174,6 +174,7 @@ var $templateDiv = $('<div \/>')
 $templateDiv.attr('id','adminTemplates').hide().appendTo('body');
 // /biz/ajax/zmvc/201211/admin_templates.html
 var protocol = document.location.protocol == 'https:' ? 'https:' : 'http:' //sometimes the protocol may be file:, so default to http unless secure.
+<<<<<<< HEAD
 var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html';
 myControl.util.dump("admin template url: "+adminTemplateURL);
 
@@ -204,6 +205,10 @@ result.success(function(data){
 		})
 	})
 /*
+=======
+var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201216/admin_templates.html';
+myControl.util.dump("admin template url: "+adminTemplateURL);
+>>>>>>> 4d24d9788da63fc2f80f6bd73c836fd54656df9f
 var result = $templateDiv.load(adminTemplateURL,function(response, status, xhr){
 	if (status == "error") {
 		r = false;

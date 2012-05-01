@@ -17,7 +17,19 @@
 <script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui-1.8.16/js/jquery-ui.min.js"></script>
 
 <!-- config.js contains hints about server configuration -->
+<!-- HINT: make sure you replace this URL with the proper config.js file -->
 <script type="text/javascript" src="http://www.homebrewers.com/jquery/config.js"></script>
+<!-- 
+   ** BEST PRACTICES **
+	The config file contains details about the server/hosting configuration.
+	The config file should *NOT* be copied locally in the project or edited.
+	If there are 'required' settings for your app (ex: a particular checkout setting) that setting should be verified
+		and if the setting in the config file is not compatible then a message stating what functionality will be broken
+		should be displayed to the app user.  (Ex: checkout not available due to 'nice' mode, please change to 'passive')
+	It is the application(extensions) responsibility to verify that the server configuration meets it's needs.
+	Again, this will mostly impact the customer, and checkout extensions which are rarely customized.
+-->
+
 
 <!-- mvc -->
 <script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/model.js"></script>
