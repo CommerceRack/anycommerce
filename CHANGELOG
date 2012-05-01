@@ -3,6 +3,17 @@
 # This file will be updated with each release (duh)
 #
 
+2012.17
+* Add quickstart.html/quickstart.js in root project
+* created well known div id='appView' and div id='appTemplates' within file
+* added site-analyzer: an app which explores sites.
+* added annex-site: an app which can intercept add to cart + checkout on non-zoovy native store
+* added carousel-ad: an app which is suitable for adding dynamic content + checkout to a blog such as blogger or wordpress
+* changed myControl.ext.myRia.util.handlePageContent to myControl.ext.myRia.action.showContent
+* added 'showContent' alias
+* changed second/third pageInfo parameters to showContent from scalar+boolean to associative array with pageType specific params.
+* simplified up template naming convention
+
 2012.16
 * Updated the examples with better formatting, more in-line help
 * Added demo of accessing the API using Perl
