@@ -1,15 +1,8 @@
 
 Zoovy MVC JQuery Framework
-release 2012.16
 
-Rich Internet Application, Model View Controller created using jQuery Plugins 
-for creating standalone or pluggable shopping applications against the Zoovy 
-e-Commerce Platform.
-
-What is a Shopping App?
-	http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51695
-
-To see how this whole thing works, please visit our github-wiki.
+Rich Internet Application, Model View Controller created using jQuery for creating standalone or 
+pluggable shopping applications that connect to the Zoovy e-Commerce Platform.
 
 WIKI Documentation:
 	https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki
@@ -22,8 +15,4 @@ API Calls Input/Output Reference:
 
 Examples are stored in examples sub-directory.
 Extensions are stored in the extensions sub-directory.
-
-
-
-
 
