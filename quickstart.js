@@ -544,13 +544,14 @@ need to be customized on a per-ria basis.
 
 //loads page content. pass in a type: category, product, customer or help
 // and a page info: catSafeID, sku, customer admin page (ex: newsletter) or 'returns' (respectively to the line above.
-			showContent : function(pageType,infoObj,skipPushState)	{
+			showContent : function(pageType,infoObj)	{
 //				myControl.util.dump("BEGIN showContent. type: "+pageType+" and info: "+pageInfo+" and skipPushState: "+skipPushState);
 
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
 				if(pageType){infoObj.pageType = pageType} //pageType
 				else if(pageType == '')	{pageType = infoObj.pageType}
-
+				
+				infoObj.back = infoObj.back == 0 ? infoObj.back : -1;
 				$(".ui-dialog-content").dialog("close"); //close all modal windows.
 
 				switch(pageType)	{
@@ -573,14 +574,14 @@ need to be customized on a per-ria basis.
 					if('https:' != document.location.protocol)	{
 // !!! wrapper is on uri for testing purposes. Remove before deployment.
 // if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-						document.location = myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SENDER=JCHECKOUT&SKIPPUSHSTATE=1&WRAPPER=~homebrewer_homebrewerscom_20120323";
+						document.location = myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1";
 						
 						}
 					else	{
 //will get here if session is already secure and checkout is clicked and also if a non-secure session got redirected to secure.
 // this condition is met after the redirect, so skippushstate is checked on URI.
-						if(myControl.util.getParameterByName('SKIPPUSHSTATE') == 1)
-							skipPushState = true;
+						if(myControl.util.getParameterByName('SKIPPUSHSTATE') == 1)	{infoObj.back = 0}
+						
 						$('#mainContentArea').empty(); //duh.
 						myControl.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
 						}
@@ -613,10 +614,32 @@ need to be customized on a per-ria basis.
 //					myControl.util.dump(infoObj);
 					myControl.ext.myRIA.util.addPushState(infoObj)
 					}
-				}
+				}, //showContent
 
 
-
+//assumes the faq are already in memory.
+			showFAQbyTopic : function(topicID)	{
+				myControl.util.dump("BEGIN showFAQbyTopic ["+topicID+"]");
+				var templateID = 'faqQnATemplate'
+				var $target = $('#faqDetails4Topic_'+topicID).empty().show();
+				if(!topicID)	{
+					$('#globalMessaging').append(myControl.util.formatMessage("Uh Oh. It seems an app error occured. Error: no topic id. see console for details."));
+					myControl.util.dump("a required parameter (topicID) was left blank for myRIA.action.showFAQbyTopic");
+					}
+				else if(!myControl.data['appFAQs'] || $.isEmptyObject(myControl.data['appFAQs']['@detail']))	{
+					myControl.util.dump(" -> No data is present");
+					}
+				else	{
+					var L = myControl.data['appFAQs']['@detail'].length;
+					myControl.util.dump(" -> total #faq: "+L);
+					for(var i = 0; i < L; i += 1)	{
+						if(myControl.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
+							myControl.util.dump(" -> faqid matches topic: "+myControl.data['appFAQs']['@detail'][i]['ID']);
+							$target.append(myControl.renderFunctions.transmogrify({'id':topicID+'_'+myControl.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+myControl.data['appFAQs']['@detail'][i]['ID']},templateID,myControl.data['appFAQs']['@detail'][i]))
+							}
+						}
+					}
+				},
 		
 		
 			},
@@ -647,6 +670,7 @@ need to be customized on a per-ria basis.
 // will return either the safe path or pid or something else useful
 // hash.substring(0) will return everything preceding a #, if present.
 				var pageInfo = this.detectRelevantInfoToPage(window.location.href); 
+				pageInfo.back = 0; //skip adding a pushState on initial page load.
 				myControl.ext.myRIA.action.showContent('',pageInfo);
 
 				return pageInfo //returning this saves some additional looking up in the appInit
@@ -714,7 +738,7 @@ need to be customized on a per-ria basis.
 //on initial load, P will be blank.
 				if(P)	{
 					P.back = 0;
-					myControl.ext.myRIA.action.showContent(P);
+					myControl.ext.myRIA.action.showContent('',P);
 //					myControl.util.dump("POPSTATE Executed.  pageType = "+P.pageType+" and pageInfo = "+P.pageInfo);
 					}
 				else	{
@@ -722,23 +746,27 @@ need to be customized on a per-ria basis.
 					}
 				},
 			
+			
+			
 //pass in the 'state' object. ex: {'pid':'somesku'} or 'catSafeID':'.some.safe.path'
 //will add a pushstate to the browser for the back button and change the URL
 //http://spoiledmilk.dk/blog/html5-changing-the-browser-url-without-refreshing-page
 
 			addPushState : function(P)	{
+				
 				var title = P.pageInfo;
 				var relativePath;
 //				myControl.util.dump("BEGIN addPushState. ");
 //				myControl.util.dump(P);
 //handle cases where the homepage is treated like a category page. happens in breadcrumb.
-				if(P.pageInfo == '.')	{
-					P.pageType = 'other'
+				if(P.navcat == '.')	{
+					P.pageType = 'homepage'
 					relativePath = '/';
 					}
 				else	{
 					relativePath = this.buildRelativePath(P);
 					}
+				$('title').text(relativePath);
 				try	{
 					window.history.pushState(P, title, relativePath);
 					}
@@ -753,25 +781,34 @@ need to be customized on a per-ria basis.
 				var relativePath; //what is returned.
 				switch(P.pageType)	{
 				case 'product':
-					relativePath = '/product/'+P.pageInfo+'/';
+					relativePath = '/product/'+P.pid+'/';
 					break;
 				case 'category':
 
 //don't want /category/.something, wants /category/something
 //but the period is needed for passing into the pushstate.
-					var noPrePeriod = P.pageInfo.charAt(0) == '.' ? P.pageInfo.substr(1) : P.pageInfo; 
+					var noPrePeriod = P.navcat.charAt(0) == '.' ? P.navcat.substr(1) : P.navcat; 
 					relativePath = '/category/'+noPrePeriod+'/';
 					break;
 				case 'customer':
-					relativePath = '/customer/'+P.pageInfo+'/';
+					relativePath = '/customer/'+P.show+'/';
 					break;
-				case 'other':
-					relativePath = '/'+P.pageInfo;
+				case 'checkout':
+					relativePath = '/checkout';
 					break;
+				case 'cart':
+					relativePath = '/cart';
+					break;
+
+				case 'company':
+					relativePath = '/'+P.show;
+					break;
+
 				default:
 					//uh oh. what are we?
-					relativePath = '/'+P.pageInfo;
+					relativePath = '/'+P.show;
 					}
+				myControl.util.dump("");
 				return relativePath;
 				},
 
@@ -779,7 +816,7 @@ need to be customized on a per-ria basis.
 			showProd : function(P)	{
 				var pid = P.pid
 				if(!myControl.util.isSet(pid))	{
-					myControl.util.formatMessage("Uh Oh. It seems an app error occured. Error: no product id. see console for log.");
+					$('#globalMessaging').append(myControl.util.formatMessage("Uh Oh. It seems an app error occured. Error: no product id. see console for details."));
 					myControl.util.dump("ERROR! showProd had no P.pid.  P:");
 					myControl.util.dump(P);
 					}
@@ -837,24 +874,22 @@ myControl.util.dump("WARNING - unknown nav type ["+newNav+"] specified for chang
 				return r;
 				},
 
+//selector is a jquery selector. could be as simple as .someClass or #someID li a
+//will add an onclick event of showContent().  uses the href value to set params.
+//href should be ="#customer?show=myaccount" or "#company?show=shipping" or #product?pid=PRODUCTID" or #category?navcat=.some.cat.id
 			bindNav : function(selector)	{
 //myControl.util.dump("BEGIN bindNav ("+newNav+")");
-// customer?show=newsletter
-$(selector).each(function(){
-	var $this = $(this);
-//	myControl.util.dump("match -> "+$(this).attr('id'));
-	$this.click(function(event){
-		event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
-		var temp = $this.attr('href').substring(1).split('?');
-//		myControl.util.dump("TEMP = ");
-//		myControl.util.dump(temp);
-		var P = new Array();
-		P[temp[1].split('=')[0]] = temp[1].split('=')[1];
-		myControl.util.dump(P);
-//		myControl.ext.myRIA.util.showArticle($this.attr('href').substring(1)); //substring is to strip the # off the front
-		myControl.ext.myRIA.action.showContent(temp[0],P)
-		});
-	});
+				$(selector).each(function(){
+					var $this = $(this);
+					$this.click(function(event){
+						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
+						var tmp1 = $this.attr('href').substring(1).split('?');
+						var tmp2 = tmp1[1].split('=');
+						var P = new Array();
+						P[tmp2[0]] = tmp2[1];
+						myControl.ext.myRIA.action.showContent(tmp1[0],P)
+						});
+					});
 				},
 
 
@@ -878,7 +913,7 @@ $(selector).each(function(){
 				$('#globalMessaging').empty();
 
 				var authState = myControl.sharedCheckoutUtilities.determineAuthentication();
-				myControl.util.dump(" -> authState = "+authState);
+//				myControl.util.dump(" -> authState = "+authState);
 //don't show any pages that require login unless the user is logged in.
 				if((authState != 'authenticated') && (subject == 'orders' || subject == 'wishlist' || subject == 'changepassword' || subject == 'forgetme' || subject == 'myaccount'))	{
 //in addition to showing the modal window, the article the user was trying to see is added to the 'continue' button that appears after a successful login

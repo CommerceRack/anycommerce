@@ -68,23 +68,30 @@ var store_search = function() {
 				myControl.model.addDispatchToQ(frmObj);
 				}
 			}, //searchResult
+/*
+P is the params object. something like: 
+var P = {}
+P.mode = 'elastic-native';
+P.size = 250;
+P.filter =  { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } }
+or instead of P.filter, you may have
+P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } };
+*/
 		appPublicProductSearch : {
-			init : function(qObj,tagObj,Q)	{
+			init : function(P,tagObj,Q)	{
 				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
 //				myControl.util.dump(obj);
-				this.dispatch(qObj,tagObj,Q)
+				this.dispatch(P,tagObj,Q)
 				return 1;
 				},
-			dispatch : function(qObj,tagObj,Q)	{
-				obj['_cmd'] = "appPublicSearch";
-				obj.type = 'product';
-				obj.mode = 'elastic-native';
-				obj.size = 250;
-				obj['query'] = qObj;
-				obj['_tag'] = tagObj;
-				myControl.model.addDispatchToQ(obj,Q);
+			dispatch : function(P,tagObj,Q)	{
+				P['_cmd'] = "appPublicSearch";
+				P.type = 'product';
+				P['_tag'] = tagObj;
+				myControl.model.addDispatchToQ(P,Q);
 				}
 			}, //appPublicSearch
+
 //no local caching (fetch) of results yet. need to work with the new search a bit
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {

@@ -930,17 +930,20 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	/* functions for extending the controller (adding extensions) */
 	
 	
-	
-	loadTemplates : function(namespace)	{
+//templates should be an array of element id's.
+	loadTemplates : function(templates)	{
+//		myControl.util.dump("BEGIN model.loadTemplates")
+		var L = templates.length
+
 //		myControl.util.dump("model.loadTemplates for "+namespace);
 		var errors = ''; //what is returned.  if not false, errors are present (and returned)
 		var templateID; //used for a quick reference to which id in the loop is in focus.
 		var $templateSpec; //used to store the template/spec itself for the template.
-		var L = myControl.ext[namespace].vars.templates.length
+//		myControl.util.dump(" -> loading "+L+" templates ");
 		for(var i = 0; i < L; i += 1)	{
-			templateID = myControl.ext[namespace].vars.templates[i];
+			templateID = templates[i];
 			$templateSpec = $('#'+templateID);
-//						myControl.util.dump($templateSpec);
+//			myControl.util.dump(" -> templateID: "+templateID);
 			if($templateSpec.length < 1)	{
 				errors += "<li>Template '"+templateID+"' is not defined in the view<\/li>";
 				}
@@ -952,7 +955,24 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			}
 		return errors;
 		},
-	
+
+
+//templateURL is the .html file that contains the templates. be cautions about loading http: from a secure page.
+//this is just a request to get the html. doesn't actually load the templates.
+	loadRemoteTemplates : function(templateURL)	{
+
+//result is the ajax request and what is returned.
+//should allow for .error and .success to be set outside this function. 
+var result = $.ajax({
+		type: "GET",
+		url: templateURL,
+		async: false,
+		dataType:"html"
+		});	
+return result;
+
+		},
+
 /*
 extensions are like plugins. They are self-contained* objects that may include calls, callbacks, utitity functions and/or variables.
 the extension object passed in looks like so:
@@ -1024,7 +1044,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 //whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
 //						myControl.util.dump(" -> templates.length = "+myControl.ext[namespace].vars.templates.length);
 						if(myControl.ext[namespace].vars && myControl.ext[namespace].vars.templates)	{
-							errors += myControl.model.loadTemplates(namespace);
+							errors += myControl.model.loadTemplates(myControl.ext[namespace].vars.templates);
 							}
 						else	{
 //							myControl.util.dump("WARNING: extension "+namespace+" did not define any templates. This 'may' valid, as some extensions may have no templates.");

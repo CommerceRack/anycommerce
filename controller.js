@@ -31,7 +31,7 @@ zController = function(params,extensions) {
 		}
 	}
 	
-$.extend(zController.prototype, {
+jQuery.extend(zController.prototype, {
 	
 	initialize: function(P,E) {
 		myControl = this;
@@ -45,9 +45,9 @@ $.extend(zController.prototype, {
 		if(typeof zGlobals == 'object')	{
 			myControl.vars.profile = zGlobals.appSettings.profile;
 			myControl.vars.username = zGlobals.appSettings.username;
+//need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			myControl.vars.secureURL = zGlobals.appSettings.https_app_url;
 			myControl.vars.sdomain = zGlobals.appSettings.sdomain;
-	
 			if('https:' == document.location.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
 			else	{myControl.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
@@ -59,7 +59,7 @@ $.extend(zController.prototype, {
 		myControl.vars.release = 'unspecified'; //will get overridden if set in P. this is defualt.
 
 //set after individual defaults so that what is passed in can override. Should give priority to vars set in P.
-		myControl.vars = $.extend(myControl.vars,P);
+		myControl.vars = jQuery.extend(myControl.vars,P);
 
 // += is used so that this is appended to anything passed in P.
 		myControl.vars.passInDispatchV += 'browser:'+myControl.util.getBrowserInfo()+";OS:"+myControl.util.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
@@ -256,7 +256,7 @@ myControl.model.addDispatchToQ({
 				return r;
 				},
 			dispatch : function(tagObj,Q)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj = jQuery.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "whoAmI"
 				myControl.model.addDispatchToQ({"_cmd":"whoAmI","_zjsid":myControl.sessionId,"_tag" : tagObj},Q);	
 				}
@@ -340,7 +340,7 @@ myControl.model.addDispatchToQ({
 //				myControl.util.dump("BEGIN myControl.calls.refreshCart");
 				var r = 1;
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which will likely need datapointer to be set).
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+				tagObj = jQuery.isEmptyObject(tagObj) ? {} : tagObj;
 				tagObj.datapointer = "cartItemsList";
 				this.dispatch(tagObj,Q);
 				return r;
@@ -1205,7 +1205,7 @@ later, it will handle other third party plugins as well.
 				r = myControl.data.cartItemsList.cart['data.bill_email'];
 //				myControl.util.dump(' -> data.bill_email was set. email = '+r);
 				}
-			else if(!$.isEmptyObject(myControl.vars.fbUser))	{
+			else if(!jQuery.isEmptyObject(myControl.vars.fbUser))	{
 //				myControl.util.dump(' -> user is logged in via facebook');
 				r = myControl.vars.fbUser.email;
 				}
@@ -1215,7 +1215,7 @@ later, it will handle other third party plugins as well.
 ,
 getAllDataAttributes : function(node)	{
 			var d = {}, re_dataAttr = /^data\-(.+)$/;
-			$.each(node.get(0).attributes, function(index, attr) {
+			jQuery.each(node.get(0).attributes, function(index, attr) {
 				if (re_dataAttr.test(attr.nodeName)) {
 					var key = attr.nodeName.match(re_dataAttr)[1];
 					d[key] = attr.nodeValue;
@@ -1254,7 +1254,7 @@ I believe this to be because $tag isn't in the DOM yet. I solved by adding/remov
 	renderFunctions : {
 /*
 
-$('target').html(myControl.renderFunctions.transmogrify(eleAttr,templateID,data));  or $.append() depending on need.
+$('target').html(myControl.renderFunctions.transmogrify(eleAttr,templateID,data));  or jQuery.append() depending on need.
 either way, what's returned from this function is a fully translated jquery object of the template.
 
 if eleAttr is a string, that's the ID to be added to the template.  If the eleAttr is an object, it's a list of data attributes to be added to the template. this allows for things like data-pid or data-orderid to be set, which is handy for onClicks and such. pass in as {'pid':'productid'} and it'll be translated to data-pid='productid'
@@ -1491,7 +1491,7 @@ $('#'+safeTarget).replaceWith($tmp);
 				else if(namespace == 'product')	{
 //inventory record may be emtpy, if merchant has inventory set up to not matter.
 //if data['@inventory'][data.pid] doesn't exist, the item likely has options, so inventory isn't displayed.
-					if(attributeID.substring(0,10) == '@inventory' && !$.isEmptyObject(data['@inventory']))	{
+					if(attributeID.substring(0,10) == '@inventory' && !jQuery.isEmptyObject(data['@inventory']))	{
 						value = typeof data['@inventory'][data.pid] != 'undefined' ? data['@inventory'][data.pid][attributeID.substr(11)] : '';
 						}
 //cart items have some data at root level and some nested one level deeper in full_product
@@ -1541,15 +1541,15 @@ $('#'+safeTarget).replaceWith($tmp);
 				for (var i = 0; i < len; i++)	{
 					var loc = declarations[i].indexOf(':'); //splits at first :. this may mean : in the values is okay. test.
 //remove whitespace from property otherwise could get invalid 'key'.
-					var property = $.trim(declarations[i].substring(0, loc)); 
-//					var value = $.trim(declarations[i].substring(loc + 1));  //commented out 12/15/12. may want a space in the value.
+					var property = jQuery.trim(declarations[i].substring(0, loc)); 
+//					var value = jQuery.trim(declarations[i].substring(loc + 1));  //commented out 12/15/12. may want a space in the value.
 					var value = declarations[i].substring(loc + 1);
 //						myControl.util.dump(' -> property['+i+']: '+property);
 //						myControl.util.dump(' -> value['+i+']: "'+value+'"');
 					if (property != "" && value != "")	{
 //						rule[property] = value;
 //need to trim whitespace from values except pre and post text. having whitespace in the value causes things to not load. However, it's needed in pre and post text.
-						rule[property] = (property != 'pretext' && property != 'posttext') ? $.trim(value) : value; 
+						rule[property] = (property != 'pretext' && property != 'posttext') ? jQuery.trim(value) : value; 
 						}
 					}
 				}
@@ -1696,7 +1696,7 @@ $tmp.empty().remove();
 	
 		text : function($tag,data){
 			var o = '';
-			if($.isEmptyObject(data.bindData))	{o = data.value}
+			if(jQuery.isEmptyObject(data.bindData))	{o = data.value}
 			else	{
 				o += data.value;
 				}
@@ -1924,7 +1924,7 @@ some id's may be hard coded (can change this later if need be), but they're form
 					}
 //need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
 //and all third parties would get 'guest'
-				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
+				else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
 					r = 'thirdPartyGuest';
 //					myControl.thirdParty.fb.saveUserDataToSession();
 					}

@@ -33,7 +33,6 @@ var myExtensions = [
 	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_navcats.js"},
 	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_search.js"},
 	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_results.js"},
 	{"namespace":"myRIA","filename":"myria-20120426.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
 	];
 
@@ -218,7 +217,7 @@ ul .prompt	{display:inline-block; width:250px;}
 
 
 
-<div id='templates' style='display:none;'>
+<div id='appTemplates' style='display:none;'>
 <!-- a template. will be removed from the dom as templates are loaded into memory -->
 	<div id='profileTemplate'>
 
@@ -254,6 +253,7 @@ ul .prompt	{display:inline-block; width:250px;}
 		# product: <span data-bind='var: category(@products); format:numProduct; extension:store_navcats; defaultVal:0;'></span>
 		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="myControl.ext.myRIA.actions.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
 	</div>
+	
 	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; pretext:categoryTreeSubs_;' class='subcats'></ul>
 </li>
 </ul>

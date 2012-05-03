@@ -374,14 +374,18 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 //put the loadingBG class into the template, not onto the div created here (jqueryUI classes will override it).
 */
 			showCartInModal : function(templateID)	{
+				myControl.util.dump("BEGIN store_cart.util.showCartInModal");
+
 				var $parent = $('#modalCart');
-//if the parent doesn't already exist, add it to the dom.
+//the modal opens as quick as possible so users know something is happening.
+//open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
 				if($parent.length == 0)	{
 					$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+					$parent.dialog({modal: true,width:'80%',height:$(window).height() - 100});  //browser doesn't like percentage for height
 					}
 				else	{
 //empty the existing cart and add a loadingBG so that the user sees something is happening.
-					$parent.empty();
+					$parent.empty().dialog('open');
 					}
 
 //populate the modal with the template (which includes 'loadingBG'.
@@ -396,10 +400,10 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 //if we get to this point, ship methods are already in memory/local. the cartItemsList call below will check memory/local before making a request.
 					myControl.ext.store_cart.calls.cartItemsList.init(tagObj,'immutable');
 					}
-				myControl.model.dispatchThis('immutable');
+				myControl.util.dump(" -> GOT THIS FAR");
 
+				myControl.model.dispatchThis('immutable');
 //show modal, even though pretty much empty. Allows for something to happen right away so user knows the app is working on it.
-				$parent.dialog({modal: true,width:'80%',height:$(window).height() - 100});  //browser doesn't like percentage for height
 				
 				}, //showCartInModal
 

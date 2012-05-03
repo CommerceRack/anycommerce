@@ -11,7 +11,7 @@ the rest of the code below that is for backward compatibility with IE7... and ma
 
 if(typeof jQuery === 'function')	{
 //will serialize a form into JSON
-	$.fn.serializeJSON=function() {
+	jQuery.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];

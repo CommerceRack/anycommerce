@@ -48,25 +48,34 @@ optionalZipCountries = [];
 
 
 <!--
-// THESE ARE THE ZOOVY MVC FILES THAT NEED TO BE INCLUDED/EXECUTED;
+//////////////////////////////// B E G I N   Z O O V Y   C O D E  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -->
 
-<link rel="stylesheet" type="text/css" href="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui_themes/ui-cupertino-1.8.16/jquery-ui-1.8.16.custom.css" />
-<link rel="stylesheet" type="text/css" href="styles-20120430.css" />
+
 
 <!-- profile specific settings -->
-<script type="text/javascript" src="http://www.toynk.com/jquery/config.js"></script>
+<script type="text/javascript" src="http://www.bigoutlet.com/jquery/config.js"></script>
 
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jquery-1.6.4.min.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui-1.8.16/js/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="styles-20120430.css" />
 
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/model.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/controller.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/json2.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/variations.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201217/wiki.js"></script>
+
+<!-- jquery and jquery ui -->
+<script type="text/javascript" src="../../jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../../jqueryui-1.7.2.min.js"></script>
+<script type='text/javascript'>
+jQuery.noConflict(true);
+</script>
+
+<!-- zoovy mvc -->
+<script type="text/javascript" src="../../model.js"></script>
+<script type="text/javascript" src="../../controller.js"></script>
+<script type="text/javascript" src="../../json2.js"></script>
+<script type="text/javascript" src="../../variations.js"></script>
+<script type="text/javascript" src="../../wiki.js"></script>
+
+
 <script type="text/javascript">
-
 var myControl;
 var myCreole;
 var myExtensions = [
@@ -74,7 +83,7 @@ var myExtensions = [
 	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
 	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_cart.js"},
 	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_crm.js"},
-	{"namespace":"myRIA","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/examples/addtocart-hijack/myria-20120430.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
+	{"namespace":"myRIA","filename":"yahoostore.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
 	];
 
 $(function() {
@@ -85,13 +94,12 @@ $(function() {
 		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
 		
 	});
-
-
 </script>
 
 
+
 <!--
-// END ZOOVY CODE
+//////////////////////////////// E N D   Z O O V Y   C O D E  \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -->
 
 

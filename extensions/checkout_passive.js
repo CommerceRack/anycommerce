@@ -129,8 +129,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				myControl.model.addDispatchToQ({
 "_cmd":"cartAmazonPaymentParams",
 "shipping":1,
-"CancelUrl":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis",
-"ReturnUrl":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1",
+"CancelUrl":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis",
+"ReturnUrl":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1",
 '_tag':tagObj
 					},'immutable');
 				}
@@ -146,8 +146,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				myControl.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-					"edit_cart_url" : myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis",
-					"continue_shopping_url" : myControl.vars.secureURL+"c="+myControl.sessionId+"/",
+					"edit_cart_url" : zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis",
+					"continue_shopping_url" : zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/",
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'convertSessionToOrder','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -166,7 +166,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(getBuyerAddress)	{
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis","returnURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120416&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis","returnURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 
@@ -580,6 +580,29 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added'
 
 
 
+
+// formerly updateCartQty
+		cartItemUpdate : {
+			init : function(stid,qty,tagObj)	{
+				myControl.util.dump('BEGIN myControl.ext.store_cart.calls.cartItemUpdate.');
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+				var r = 0;
+				if(!stid || isNaN(qty))	{
+					myControl.util.dump(" -> cartItemUpdate requires both a stid ("+stid+") and a quantity as a number("+qty+")");
+					}
+				else	{
+					r = 1;
+					this.dispatch(stid,qty,tagObj);
+					}
+				return r;
+				},
+			dispatch : function(stid,qty,tagObj)	{
+//				myControl.util.dump(' -> adding to PDQ. callback = '+callback)
+				myControl.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":myControl.sessionId,"_tag": tagObj},'immutable');
+				myControl.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
+				}
+			 },
+
 			
 		addCouponToCart : {
 			onSuccess : function(tagObj)	{
@@ -617,7 +640,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added'])
 						r = "<div id='inventoryErrors'>It appears that some inventory adjustments needed to be made:<ul>";
 						for(var key in myControl.data[tagObj.datapointer]['%changes']) {
 							r += "<li>sku: "+key+" was set to "+myControl.data[tagObj.datapointer]['%changes'][key]+" due to availability<\/li>";
-							myControl.calls.updateCartContents.init({"stid":key,"quantity":myControl.data[tagObj.datapointer]['%changes'][key]});
+							myControl.ext.convertSessionToOrder.calls.cartItemUpdate.init({"stid":key,"quantity":myControl.data[tagObj.datapointer]['%changes'][key]});
 							}
 						r += "<\/ul><\/div>";
 						
@@ -1999,9 +2022,9 @@ the getCartContents call can come second because none of the following calls are
 //				myControl.util.dump(" -> data.windowName = '"+data.windowName+"'");
 //if data.windowName is set, the link will open a new tab/window. otherwise, it just changes the page/tab in focus.
 				if(myControl.util.isSet(data.windowName))
-					$tag.click(function(){window.open(myControl.vars.secureURL+$.trim(data.value)),data.windowName});
+					$tag.click(function(){window.open(zGlobals.appSettings.https_app_url+$.trim(data.value)),data.windowName});
 				else
-					$tag.click(function(){window.location = myControl.vars.secureURL+$.trim(data.value)});
+					$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+$.trim(data.value)});
 				}, //secureLink
 
 
@@ -2009,7 +2032,7 @@ the getCartContents call can come second because none of the following calls are
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.renderFormats.orderStatusLink');
 				var orderSessionID = myControl.data['order|'+data.value].cart.id;
 //				https://ssl.zoovy.com/s=sporks.zoovy.com/customer/order/status?cartid=SESSION&orderid=data.value
-				$tag.click(function(){window.location = myControl.vars.secureURL+"customer/order/status?cartid="+orderSessionID+"&amp;orderid="+data.value,'orderStatus'});
+				$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+"customer/order/status?cartid="+orderSessionID+"&amp;orderid="+data.value,'orderStatus'});
 
 				
 				},

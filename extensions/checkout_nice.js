@@ -115,7 +115,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 				},
 			dispatch : function(getBuyerAddress)	{
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/cart.cgis","returnURL":myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120416&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis","returnURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120426&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 
@@ -224,6 +224,27 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 			}, //cartCouponAdd
 
 
+// formerly updateCartQty
+		cartItemUpdate : {
+			init : function(stid,qty,tagObj)	{
+				myControl.util.dump('BEGIN myControl.ext.store_cart.calls.cartItemUpdate.');
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+				var r = 0;
+				if(!stid || isNaN(qty))	{
+					myControl.util.dump(" -> cartItemUpdate requires both a stid ("+stid+") and a quantity as a number("+qty+")");
+					}
+				else	{
+					r = 1;
+					this.dispatch(stid,qty,tagObj);
+					}
+				return r;
+				},
+			dispatch : function(stid,qty,tagObj)	{
+//				myControl.util.dump(' -> adding to PDQ. callback = '+callback)
+				myControl.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":myControl.sessionId,"_tag": tagObj},'immutable');
+				myControl.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
+				}
+			 },
 
 
 //used to save all the populated checkout fields to the cart. 
@@ -468,7 +489,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalSetECResponse.onSuccess');
+				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
 				window.location = myControl.data[tagObj.datapointer].URL
 				},
 			onError : function(responseData,uuid)	{
@@ -480,7 +501,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 
 		handleCartPaypalGetECDetails : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalGetECDetails.onSuccess');
+				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
 //lock down form fields so ship addresses match (and a variety of other form manipulation occurs).
 				myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
 				},
@@ -552,7 +573,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added'])
 						r = "<div id='inventoryErrors'>It appears that some inventory adjustments needed to be made:<ul>";
 						for(var key in myControl.data[tagObj.datapointer]['%changes']) {
 							r += "<li>sku: "+key+" was set to "+myControl.data[tagObj.datapointer]['%changes'][key]+" due to availability<\/li>";
-							myControl.calls.updateCartContents.init({"stid":key,"quantity":myControl.data[tagObj.datapointer]['%changes'][key]});
+							myControl.ext.convertSessionToOrder.calls.cartItemUpdate.init({"stid":key,"quantity":myControl.data[tagObj.datapointer]['%changes'][key]});
 							}
 						r += "<\/ul><\/div>";
 						
@@ -768,10 +789,6 @@ the checkoutSuccessPaymentFailure started to do this but for the sake of getting
 					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
 					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
 					});
-				$('.ocmTwitterComment').click(function(){
-					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
-					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
-					});
 //the fb code only works if an appID is set, so don't show banner if not present.				
 				if(zGlobals.thirdParty.facebook.appId)	{
 					$('.ocmFacebookComment').click(function(){
@@ -784,12 +801,12 @@ the checkoutSuccessPaymentFailure started to do this but for the sake of getting
 				myControl.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
 				myControl.ext.convertSessionToOrder.calls.getCartContents.init(); //!IMPORTANT! will reset local cart object. 
 				myControl.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
-$zContent.append(myControl.data[tagObj.datapointer]['html:roi']); //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
 _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
 
+//add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
+setTimeout("$('#"+myControl.ext.convertSessionToOrder.vars.containerID+"').append(myControl.data['"+tagObj.datapointer+"']['html:roi']); myControl.util.dump('wrote html:roi to DOM.');",2000); 
 
 				},
 			onError : function(responseData,uuid)	{

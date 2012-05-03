@@ -91,7 +91,8 @@ button:focus	{outline:none;}
 #globalMessaging .appMessage {padding:5px;} /* add padding to children, not parent, that way we can empty the parent and no space is reserved */
 .appMessage ul	{margin-left:12px; font-size:.9em;}
 
-
+/* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
+.appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
 
 

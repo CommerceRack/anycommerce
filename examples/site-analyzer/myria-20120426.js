@@ -45,6 +45,25 @@ var myRIA = function() {
 					myControl.model.addDispatchToQ(obj,Q);
 					}
 				},//appResource
+//<input hint="mode:elastic-native" id="filter"> { 'or':{ 'filters':[ {'term':{'profile':'DEFAULT'}},{'term':{'profile':'OTHER'}}  ] } };</input>
+			getItemsTaggedAs : {
+			init : function(qObj,tagObj,Q)	{
+				myControl.util.dump("BEGIN myControl.ext.store_search.calls.getItemsTaggedAs");
+//				myControl.util.dump(obj);
+				this.dispatch(qObj,tagObj,Q)
+				return 1;
+				},
+			dispatch : function(tag,tagObj,Q)	{
+				var obj = {};
+				obj['_cmd'] = "appPublicSearch";
+				obj.type = 'product';
+				obj.mode = 'elastic-native';
+				obj.size = 250;
+				obj['filter'] = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } };
+				obj['_tag'] = tagObj;
+				myControl.model.addDispatchToQ(obj,Q);
+				}
+				} //getItemsTaggedAs
 			}, //calls
 		
 		callbacks : {
@@ -70,7 +89,7 @@ $('#profileSummary').append(myControl.renderFunctions.createTemplateInstance('pr
 $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 
 					myControl.ext.myRIA.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'myRIA'});
-
+					myControl.ext.myRIA.calls.getItemsTaggedAs.init('IS_SALE');
 //request profile data (company name, logo, policies, etc)
 					myControl.calls.appProfileInfo.init(zGlobals.appSettings.profile,{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
 					myControl.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"});
@@ -165,7 +184,7 @@ $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 		actions : {
 			
 			showSubcats : function(path)	{
-//				myControl.util.dump("BEGIN myRIA.actions.showSubcats ["+path+"]");
+				myControl.util.dump("BEGIN myRIA.actions.showSubcats ["+path+"]");
 				var parentID = 'categoryTreeSubs_'+myControl.util.makeSafeHTMLId(path);
 				myControl.util.dump(" -> size() = "+$('#'+parentID+' li').size());
 //once the parentID has children, the subcats have already been loaded. don't load them twice.
@@ -174,6 +193,7 @@ $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 					myControl.model.dispatchThis();
 					}
 				}, //showSubcats
+
 			changeDomains : function()	{
 				localStorage.clear(); //make sure local storage is empty so a new cart is automatically obtained.
 				location.reload(true); //refresh page to restart experience.

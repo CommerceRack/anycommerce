@@ -1093,7 +1093,7 @@ used in order history.
 
 <section  id='faqTopicTemplate'>
 	
-	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="myControl.ext.myRIA.util.showFAQbyTopic($(this).attr('data-topicid'));">
+	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="myControl.ext.myRIA.action.showFAQbyTopic($(this).attr('data-topicid'));">
 	<span class="ui-icon ui-icon-triangle-1-e"></span>
 	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
 	</div>

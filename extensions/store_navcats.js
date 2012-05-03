@@ -64,9 +64,6 @@ datapointer needs to be defined early in the process so that it can be used in t
 */
 		appPageGet : {
 			init : function(obj,tagObj,Q)	{
-//				myControl.util.dump("BEGIN store_navcats.calls.appPageGet");
-//				myControl.util.dump(obj);
-//				myControl.util.dump(tagObj);
 				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 				obj['_tag'].datapointer = 'appPageGet|'+obj.PATH;  //no local storage of this. ### need to explore solutions.
 				var r = 0;
@@ -107,12 +104,6 @@ datapointer needs to be defined early in the process so that it can be used in t
 //whether max, more or just detail, always save to same loc.
 //add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
 				tagObj.datapointer = 'appCategoryDetail|'+catSafeID;
-
-//uncomment these lines to force a dispatch. (for testing)
-//				this.dispatch(catSafeID,tagObj,Q); 
-//				return true; 				
-				
-				
 				if(myControl.model.fetchData(tagObj.datapointer) == false)	{
 					r += 1;
 					this.dispatch(catSafeID,tagObj,Q);
@@ -126,8 +117,6 @@ datapointer needs to be defined early in the process so that it can be used in t
 			dispatch : function(catSafeID,tagObj,Q)	{
 //				myControl.util.dump('BEGIN myControl.ext.store_navcats.calls.appCategoryDetail.dispatch');
 				var catSafeID;
-//				myControl.util.dump(' -> safeid = '+catSafeID);
-//				myControl.util.dump(' -> executing dispatch.');
 				myControl.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":catSafeID,"detail":"fast","_tag" : tagObj},Q);	
 				}
 			},//appCategoryDetail
@@ -288,10 +277,16 @@ templateID - the template id used (from myControl.templates)
 		renderFormats : {
 
 
-/*
-$tag.append(myControl.renderFunctions.createTemplateInstance('categoryTemplate',{"id":"bob_"+$tag.attr('id')+"_"+catSafeID,"catsafeid":catSafeID}));
-myControl.renderFunctions.translateTemplate(myControl.data['appCategoryDetail|'+data.bindData.cleanValue]['@subcategoryDetail'][i],"bob_"+$tag.attr('id')+"_"+catSafeID);
-*/
+			numSubcats : function($tag,data){
+//					myControl.util.dump('BEGIN store_navcats.renderFormats.numSubcats');
+					$tag.append(data.value.length);
+				}, //numSubcats
+
+			numProduct : function($tag,data){
+//					myControl.util.dump('BEGIN store_navcats.renderFormats.numProduct');
+					$tag.append(data.value.length);
+				} //numSubcats
+
 			},
 
 
@@ -312,7 +307,7 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 //				myControl.util.dump(' -> num cats = '+L);
 				for(var i = 0; i < L; i += 1)	{
 					if(myControl.data.appCategoryList['@paths'][i].split('.').length == 2)	{
-						r.push({"id":myControl.data.appCategoryList['@paths'][i]});
+						r.push(myControl.data.appCategoryList['@paths'][i]);
 						}
 					}
 				return r;
@@ -326,25 +321,31 @@ assumes you have already retrieved data on parent so that @subcategories is pres
  -> call, in all likelyhood, will be set to one of the following:  appCategoryDetailMax, appCategoryDetailMore, appCategoryDetailFast.  It'll default to Fast.
 tagObj is optional and would contain the standard params that can be set in the _tag param (callback, templateID, etc).
 if the parentID and templateID are passed as part of tagObj, a template instance is created within parentID.
-This function just creates the calls.  Dispatch on your own.
+
+note - This function just creates the calls.  Dispatch on your own.
+note - there is NO error checking in here to make sure the subcats aren't already loaded. Do that in a parent function on your own.
+ (see examples/site-analyzer/ actions.showSubcats
+
 */
 			getChildDataOf : function(catSafeID,tagObj,call){
 				var numRequests = 0; //will get incremented once for each request that needs dispatching.
-//				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
-//				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
+				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
+				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
-				var catsArray = [];
-				
+				var catsArray = []; 
+				var newParentID;
+				var tier = (catSafeID.split('.').length) - 1; //root cat split to 2, so subtract 1.
 				if(catSafeID == '.')
 					catsArray = this.getRootCats();
-				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object')
-					catsArray = myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'];
+				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')
+					catsArray = myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'];
 				else	{
 					//most likely, category doesn't have subcats.
 					}
 				var L = catsArray.length;
-				var call = call ? call : "categoryDetailFast"
-//				myControl.util.dump(" -> catSafeID = "+catSafeID);
+				var call = call ? call : "appCategoryDetail"
+//				myControl.util.dump(" -> tier = "+tier);
+//				myControl.util.dump(" -> parentID = "+tagObj.parentID);
 //				myControl.util.dump(" -> call = "+call);
 //				myControl.util.dump(" -> # subcats = "+L);
  //used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
@@ -353,17 +354,21 @@ This function just creates the calls.  Dispatch on your own.
 					var $parent = $('#'+tagObj.parentID);
 					var renderTemplate = true;
 					}
-	
+//				myControl.util.dump(" -> parentid.length: "+$parent.length);
+//				myControl.util.dump(" -> renderTemplate: "+renderTemplate);
+
 				for(var i = 0; i < L; i += 1)	{
 					if(renderTemplate)	{
 //homepage is skipped. at this point we're dealing with subcat data and don't want 'homepage' to display among them
-						if(catsArray[i].id != '.')	{
-							$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":tagObj.parentID+"_"+catsArray[i].id,"catsafeid":catsArray[i].id}));
+						if(catsArray[i] != '.')	{
+//							myControl.util.dump(" -> createTemplateInstance for: "+catsArray[i]);
+							newParentID = tagObj.parentID+"_"+catsArray[i]
+							$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
 							}
 						}
 //if tagObj was passed in without .extend, the datapointer would end up being shared across all calls.
 //I would have though that manipulating tagObj within another function would be local to that function. apparently not.
-					numRequests += myControl.ext.store_navcats.calls[call].init(catsArray[i].id,$.extend({},tagObj));
+					numRequests += myControl.ext.store_navcats.calls[call].init(catsArray[i],$.extend({'parentID':newParentID},tagObj));
 					}
 //				myControl.util.dump(' -> num requests: '+numRequests);
 				return numRequests;

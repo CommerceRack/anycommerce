@@ -27,7 +27,7 @@ handlePogs = function(v,o) {
 	}
 
 
-$.extend(handlePogs.prototype, {
+jQuery.extend(handlePogs.prototype, {
 // object variables
 //	pogsJSON : handlePogs, //not sure what this is. appears we may not need it.
 

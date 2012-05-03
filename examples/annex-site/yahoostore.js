@@ -67,55 +67,38 @@ To minimize the footprint on the storefront, the templates are stored in an exte
 If the templates file does not successfully load
 */
 
-var $templateDiv = $('<div \/>')
-$templateDiv.attr('id','adminTemplates').hide().appendTo('body');
-// /biz/ajax/zmvc/201211/admin_templates.html
-var protocol = document.location.protocol == 'https:' ? 'https:' : 'http:' //sometimes the protocol may be file:, so default to http unless secure.
-var templateURL = protocol+'//static.zoovy.com/graphics/general/jslib/zmvc/201217/examples/addtocart-hijack/templates.html';
+var ajaxRequest = myControl.model.loadRemoteTemplates("templates.html");
 
-var result = $.ajax({
-		type: "GET",
-		url: templateURL,
-		async: false,
-		dataType:"html"
-		});	
-result.error(function(){alert('An error occured while trying to load the admin templates.')});
-result.success(function(data){
-	$templateDiv.append(data);
-	$templateDiv.children().each(function(){
-		var id = false;
-		if(id = $(this).attr('id')){}  //set's id to element id for cloning. 
-		else if($(this).is('table')){
-			id = $(this).find("tr:first").attr('id')
-			}
-//certain element types, such as li or tr have the id on the li or tr, but require a parent element in the definition file for IE support.
-		else if(id = $(this).children(":first").attr('id'))	{}
-		if(id)	{
-//				myControl.util.dump(" -> clone id: "+id);
-			myControl.templates[id] = $('#'+id).clone();
-//remove original template so duplicate ID's don't occur (may cause jquery confusion).
-//leave sections that didn't become templates for troubleshooting purposes. 
-			$(this).empty().remove();
-			}
-		})
-//actually starts the hijack process.
-var pid = $('#ProductIndexID').val();
-if(pid)	{
-	myControl.ext.store_product.calls.appProductGet.init(pid,{'callback':'commenceAC','extension':'myRIA'});
-	myControl.model.dispatchThis();
-	}
-
-$cartLink = $('#menu-cart');
-$cartLink.attr('href','#').unbind(); //disable and unbind any actions on cart link.
-$cartLink.click(function(){
-	myControl.ext.store_cart.util.showCartInModal('cartViewer');
-	return false;
+ajaxRequest.error(function(){
+	//the templates not loading is pretty much a catastrophic issue. however, we don't want to throw an error in this case so just hide the carousel.
+	myControl.util.dump("ERROR! template file could not load. carousel aborted.");
 	});
 
+ajaxRequest.success(function(data){
+	$('<div>').attr('id','remotelyLoadedTemplates').appendTo('body').hide().append(data);
+	var templateErrors = myControl.model.loadTemplates(['addToCartTemplate','cartViewer','cartSummaryTemplate','cartViewerProductTemplate','reviewFrmTemplate','subscribeFormTemplate','zCheckoutContainerSpec','chkout-cartSummarySpec','myCheckoutSpec','cartSummaryTotalsSpec','chkout-billAddressSpec','chkout-shipAddressSpec','chkout-shipMethodsSpec','checkout-payOptionsSpec','chkout-orderNotesSpec','checkoutSuccess','billAddressTemplate','shipAddressTemplate','prodViewerTemplate']);
 
-myControl.ext.myRIA.util.annexListATC(); //goes through product lists, such as recently viewed and accessories.
+	myControl.calls.refreshCart.init({'callback':'udpateMinicart','extension':'myRIA'},'mutable');
 
+//actually starts the annex process. only occurs if templates are successfully loaded.
+	var pid = $('#ProductIndexID').val();
+	if(pid)	{
+		myControl.ext.store_product.calls.appProductGet.init(pid,{'callback':'commenceAC','extension':'myRIA'});
+		}
+	myControl.model.dispatchThis();
 
+//handles the cart link.
+	$cartLink = $('#menu-cart');
+	$cartLink.attr('href','#').unbind(); //disable and unbind any actions on cart link.
+	$cartLink.click(function(){
+		 myControl.util.dump("cart link clicked");
+		myControl.ext.store_cart.util.showCartInModal('cartViewer');
+		return false;
+		});
+
+	myControl.ext.myRIA.util.annexListATC(); //goes through product lists, such as recently viewed and accessories.
+	myControl.ext.myRIA.util.annexListCheckbox('.wtab_box');	//goes through checkboxes within the passed selector
+	$('.price-table :first').hide(); //content would be replaced with product options. may or may not need this line.
 	})
 
 
@@ -190,6 +173,16 @@ $('#kb_form :button').each(function(index){
 	
 
 	//executed when the cart is changed, such as a zip entered or a country selected.
+			udpateMinicart :	{
+				onSuccess : function(tagObj)	{
+					var itemCount = myControl.util.isSet(myControl.data[tagObj.datapointer].cart['data.item_count']) ? myControl.data[tagObj.datapointer].cart['data.item_count'] : myControl.data[tagObj.datapointer].cart['data.add_item_count']
+					$('#menu-cart').text('My Cart ('+itemCount+')');
+					},
+				onError : function(responseData,uuid)	{
+					myControl.util.handleErrors(responseData,uuid)
+					}
+				}, 
+	//executed when the cart is changed, such as a zip entered or a country selected.
 			cartUpdated :	{
 				onSuccess : function(tagObj)	{
 					myControl.util.dump("BEGIN myRIA.callbacks.cartUpdated.onSuccess");
@@ -239,7 +232,18 @@ else	{
 return r;				
 				}, //handleAddToCart
 
+			annexListCheckbox : function(selector)	{
+//<input type="hidden" name="quantity:PID" value="1">
+//<input type="checkbox" name="product_id:PID" value="1">
+$(selector + ' :checkbox').each(function(){
+	var $checkbox = $(this);
+	var pid = $checkbox.val();
+	myControl.util.dump(" -> PID: "+pid);
+	$checkbox.attr({'name':'product_id:'+pid,'data-pid':pid}).val(1); //data-pid is kept in case pid is needed again later, it'll be easily accessable.
+	var $hidden = $("<input>").attr({'name':'quantity:'+pid,'type':'hidden'}).val(1).after($checkbox);
+	});
 
+				}, //annexListCheckbox
 			annexListATC : function()	{
 myControl.util.dump("BEGIN myRIA.util.annexListATC");
 $('a').each(function(index){	{
@@ -266,7 +270,9 @@ $('a').each(function(index){	{
 		myControl.ext.store_product.calls.appProductGet.init(pid);
 		}
 	}})
+
 myControl.model.dispatchThis();
+
 				}
 			
 			} //util
