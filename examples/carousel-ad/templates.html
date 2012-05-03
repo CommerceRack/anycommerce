@@ -1,0 +1,342 @@
+
+
+
+<ul>
+<li id='productChildrenTemplate' class='floatLeft'>
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
+	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
+</li>
+</ul>
+
+
+<!--
+used for store_cart.js
+
+
+The cart viewer is basically just a container for two other elements that get translated.
+Currently, the elements within that get translated have 'fixed' template ID's and element IDs.
+cartViewerContents is the id used for a list of the items in the cart, and it uses template id cartViewerProductTemplate.
+cartSummaryTotals is the id used for totals, subtotal, tax, shipping, etc. It uses template id cartSummaryTotalsTemplate.
+
+fixed id's and templates was a decision that was made for usability. transferring around the two id's for each template was
+sticky, so they're fixed. Makes it easier on the designer and the developer.
+
+So the cart template should contain these two elements and the extension should contain these two templates.
+-->
+
+<div id='cartViewer' class='loadingBG'>
+
+<form id='cartViewerForm' action='#' onSubmit='return false'>
+<table>
+<tr>
+	<td id='cartViewerContentsContainer'>
+	<ul id='cartViewerContents' class='noListStyle lineItemProdlist'></ul>
+	</td>
+
+	<td id='cartSummaryTotalsContainer'>
+	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
+		<h4 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h4>
+
+
+		<div id='cartMessaging'></div>
+
+		<div id='cartSummaryTotals' class='cartRtColMargin'></div>
+		
+		<section  class='stdMargin'>
+
+			<div class='padMargBorderBottom'>
+			<label for='data-ship_zip'>Zip/Postal Code</label>
+			<input type='text' size='10'  name='data.ship_zip' id='data-ship_zip' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' onChange="myControl.calls.cartSet.init({'data.ship_zip':this.value});
+			myControl.ext.store_cart.util.updateCartSummary();
+			myControl.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+			myControl.model.dispatchThis('immutable');"  />
+			</div>
+
+			
+
+<!--
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+-->			
+			<div class='marginBottom clearfix'></div>
+
+<div class='alignCenter' id='checkoutButtonContainer'>
+	<div title='proceed to secure checkout' class='ui-button-text ui-button ui-state-default ui-corner-all pointer' onClick="myControl.ext.myRIA.util.handleCheckout();">Checkout Now!</div>
+	<div id='payPalECButtonContainer' class='pointer' data-bind='var: cart(id); format:paypalECButton;'></div>
+	<div id='googleCheckoutButtonContainer' class='pointer' data-bind='var: cart(id); format:googleCheckoutButton;'></div>
+</div>
+			
+		</section>
+	</div>
+
+
+	</td>
+</tr>
+
+</table>
+</form>
+</div><!-- /cartViewer -->
+
+
+
+<!--
+cart summary template. used in both the shopping cart modal and checkout.
+### SANITY! - the shipping options are inside this spec so that they update every time
+the item totals do. shipping options could be effected by zip, what's in the cart, 
+and what promotions are added.
+-->
+
+<!--
+
+<div data-bind="var: cart(id); format:text; pretext:CART ID: ; "></div> here for testing. you probably wouldn't want this
+
+ -->
+		
+
+<div id='cartSummaryTemplate' class='loadingBG'>
+
+	<section class='padMargBorderBottom'>
+		<div data-bind="var: cart(data.order_subtotal); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		
+		<div data-bind='var: cart(data.tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+		<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+		
+		<div data-bind='var: cart(data.order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+		
+		<div data-bind='var: cart(chkout.giftcard_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+		<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	
+	</section>
+
+		<h5 class='marginBottom'>Shipping:</h5>
+
+		<ul class='noListStyle' data-bind='var: cart(@shipmethods); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+		
+</div><!-- /cartSummaryTemplate -->
+
+
+
+
+
+<!-- cart line-item template -->
+<ul>
+	<li id='cartViewerProductTemplate' class='padMargBorderBottom clearfix'>
+		
+		<div class='floatLeft'><img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+	
+		<h5 data-bind='var: product(prod_name); format:text; '></h5>
+		
+		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+		
+		<div>
+		qty: <input type='number' class='qtyInput' onChange="myControl.ext.store_cart.util.updateCartQty($(this).attr('data-stid'),this.value); myControl.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' />
+		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+		<button class='ui-state-default ui-corner-all' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;'>
+		<span class='ui-icon ui-icon-closethick'></span>
+		</button>
+		</div>
+		
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+	</li>
+</ul>
+
+
+
+
+
+
+
+
+<!--
+used for store_product.js ( product viewer )
+
+form - the form id gets modified to be unique in case multiple viewers are open at the same time. _pid is appended to it.
+NOTE - currently, variations.js supports only 1 viewer at a time. this will change.
+2 fieldsets are present:
+ -> One is for variations/options and really ought to be present. 
+ -> The other is for a quantity input and is optional
+
+the submit button does not need to be within the form (a button could be used elsewhere if needed. 
+ -> use the button to submit the form, not execute the call or utility separately. That way if additional
+ actions are added to the submit, they only have to be managed in one place.
+
+note - this is draft 1. currently, the view in modal utility has the reviewsummary and reviews content ID's hard coded.
+reviewSummaryID='prodViewerReviewSummary' 
+reviewsID='prodViewerReviews'
+
+Additionally, the cross selling features also have hard coded id's, though they're specified within this extension in the xsell callback.
+
+this will likely become more flexible in the future. ###
+-->
+
+
+
+<div id='productTemplate'  >
+
+<table id='prodViewerTable' class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<img src='%PROJECT_URL%/blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='350' height='350' />
+</div>
+	</td>
+
+	<td>
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
+	
+<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='%PROJECT_URL%/blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
+	
+<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='%PROJECT_URL%/blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
+	
+<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='%PROJECT_URL%/blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
+	
+	</div>
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
+	
+	<div data-bind='var: product(pid); format:priceRetailSavings; extension:myRIA;' class='priceContainer'></div>
+
+	
+	<div id='prodlistChildrenContainer' class='displayNone' data-bind='var: product(zoovy:grp_type); format:addClass; pretext:grpType_;'>
+		<h3>Please Choose: </h3>
+		<ul id='prodlistChildren' class='noListStyle loadingBG smallProdlist'></ul>
+	</div>
+	
+<!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+	
+<!--
+you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
+myControl.util.dump($(this).serializeJSON());
+-->	
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id);  return false;">
+	
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
+	
+		<input type='image' src='%PROJECT_URL%/hb12_addtocart-154x55.png' alt='Add to Cart' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' class='displayNone' />
+	</form>
+	
+
+	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+
+	<section id='prodViewerReviewSummary' class=' marginBottom'></section>
+
+	</td>
+</tr>
+<tr>
+	<td colspan='3' id="tabbedProductContentTD">
+
+<div id="tabbedProductContent">
+
+	<ul class='tabs'>
+		<li id='prodDescTab' class='displayNone' data-bind='var: product(zoovy:prod_desc); format:showIfSet;'><a href="#prodDesc" >Description</a></li>
+		<li id='prodDetailTab' class='displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
+		<li id='prodFeaturesTab' class='displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
+		<li id='prodReviewsTab' class='displayNone'><a href="#prodReviews">Reviews</a></li>
+		<li id='prodVideoTab' class='displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
+		<li id='prodAccessoriesTab' class='displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
+	</ul>
+<!-- tab content -->
+	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	
+	<div id="prodDetail" data-bind='var: product(zoovy:prod_detail);  format:wiki; wikiFormats:myRIA; '></div>
+	
+	<div id="prodFeatures" data-bind='var: product(zoovy:prod_features);  format:wiki; wikiFormats:myRIA; '></div>
+	
+	<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'>
+	<div id="mediaplayer"></div>
+	</div>
+	
+	<div id="prodReviews">
+		
+		<div class='clearfix alignRight'>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='myControl.ext.store_crm.util.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+		</div>
+		
+		<ul class='noListStyle clearfix' id='prodViewerReviews'></ul>
+	</div>
+	
+	
+	<div id='prodlistAccessoriesContainer'>
+		<ul id='prodlistAccessories' class='fourColList noListStyle prodlist clearfix loadingBG'></ul>
+	</div>
+
+
+
+	
+	
+	
+</div>
+
+	</td>
+</tr>
+</table>
+<!-- must be outside table, otherwise width goes way wide -->
+<div id='prodlistRelatedContainer'>
+	<div class='redGrit prodlistHead'>
+		<span class='hbSpriteBG relatedItemsHead'></span>
+	</div>
+	<ul id='prodlistRelated' class='prodlist loadingBG fourColList noListStyle'></ul>
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- review summary template -->
+
+<div id='prodReviewSummaryTemplate' class='reviewSummaryContainer'>
+<span data-bind='var: reviews(average); format:addClass; pretext:review_;className:reviewSprite;'></span>
+<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+</div>
+
+<!-- individual review template -->
+<ul>
+	<li id='prodReviewsTemplate' class='reviewLineItem'>
+	<ul class='prodReviewInfo'>
+		<li data-bind='var:review(RATING); format:addClass; pretext:review_;className:reviewSprite;'></li>
+		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
+		<li data-bind='var:review(LOCATION); format:text; pretext:of ;'></li>
+		<li data-bind='var:review(CREATED_GMT); format:unix2mdy; pretext:on ;'></li>
+		
+	</ul>
+	<blockquote>
+		<h2 data-bind='var:review(SUBJECT); format:text;'></h2>
+		<p data-bind='var:review(MESSAGE); format:text; ;'></p>
+	</blockquote>
+	</li>
+</ul>
+
+
+
+
+<!-- image viewer template -->
+<div id='imageViewerTemplate'>
+
+<table>
+<tr>
+	<td><img src='%PROJECT_URL%/blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
+	<td>
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
+	</td>
+</tr>
+</table>
+</div>
+
+
+
