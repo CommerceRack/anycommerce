@@ -30,7 +30,7 @@ input:focus {
 	}
 
 button:focus	{outline:none;}
-
+button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default class doesn't handle padding for 'button' elements. */
 
 
 
@@ -67,7 +67,7 @@ button:focus	{outline:none;}
 
 .lineThrough	{text-decoration:line-through}
 .underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
-
+.borderNone	{border:none;}
 
 .clearfix	{clear:both;}
 .clearfix:after {
@@ -78,7 +78,6 @@ button:focus	{outline:none;}
     visibility: hidden;
 	}
 	
-.listStyleNone, .listStyleNone li	{list-style:none;}
 
 
 
@@ -94,12 +93,38 @@ button:focus	{outline:none;}
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
 .appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
+/* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
+.sideline	{float:right; width:200px; margin-left:24px;}
 
+.marginBottom	{margin-bottom:12px;} /* a generic margin for between elements or sections */
 
+/***************************************************
 
+LISTS (product list and/or subcategory list)
+these get used just about everywhere. leave these fairly generic 
+and override using classes or id's as needed.
 
+***************************************************/
 
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
 
+/* over rides - height and width ensure each row is the same height. percentages could be used for width */
+.productList li	{width:150px; height:250px;}
+.lineItemProdlist li	{display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+
+.lineItemProdlist .prodThumb	{margin-right:12px;}
+
+.categoryList li	{width:150px; height:200px;}
+
+.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
+
+.productList li, categoryList li	{font-size:.8em;}
+
+.productList h4, .categoryList h4	{font-size:1em;}
+.productList h5, .categoryList h5	{font-size:.9em;}
+.productList h6, .categoryList h6	{font-size:.85em;}
 
 
 /***************************************************
@@ -108,6 +133,14 @@ PRODUCT DETAIL PAGE
 
 ***************************************************/
 
+#prodViewerTable	{width:100%;}
+
+/* primary image and thumbnails */
+.imageContainer	{width:10%; padding-right:24px;}
+#prodViewerTable .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+
+
+.prodSummaryContainer	{width:90%;}
 
 #tabbedProductContent .tabs li	{display:none;} /* tabs are hidden by default. enabled if field is populated */
 #tabbedProductContent #prodReviewsTab	{display:block;} /* reviews tab always shows up */
@@ -119,7 +152,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .grpType_PARENT	{display:block; margin-bottom:12px;}
 
 
-
+#prodViewerAddToCartForm	{padding-bottom:12px;} /* add some margin after add to cart */
 
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
@@ -206,21 +239,27 @@ HELP PAGES
 
 
 
+/***************************************************
 
+CART
+NOTE - Some of these classes are also shared with the cart summary that appears during checkout.
 
+***************************************************/
 
+.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
+.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
+.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
 
+.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
+.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
 
+.checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
 
+.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
 
+.cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
 
-
-
-
-
-
-
-
+.checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
 
 
 
@@ -235,8 +274,10 @@ CHECKOUT
 
 /* the padding is needed for buttons that use loadingButtonBG.  this is applied to all buttons for the sake of consistency */
 #zCheckoutContainer button	{padding:3px 20px;}
-
 .cartTotalLineItem .prodThumb	{margin:0 12px 12px 0;}
+
+
+#zCheckoutContainer h2	{font-size:1em; margin:0; padding:0;}
 
 
 

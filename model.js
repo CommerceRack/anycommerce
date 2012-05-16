@@ -80,7 +80,7 @@ function zoovyModel() {
 		
 	var r = {
 	
-		version : "201217",
+		version : "201219",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -131,7 +131,7 @@ function zoovyModel() {
 	In most cases, the following _rtag items should be set:
 	_rtag.callback -> a reference to an item in the control object that gets executed on successful request (response may include errors)
 	_rtag.datapointer -> this is where in myControl.data the information returned will be saved to. 
-	ex: datapointer:getProduct|SKU would put product data into myControl.data['getProduct|SKU']
+	ex: datapointer:appProductGet|SKU would put product data into myControl.data['appProductGet|SKU']
 	
 	if no datapointer is passed, no data is returned in an accessable location for manipulation.
 	 -> the only time the actual response is passed back to the control is if an error was present.
@@ -364,7 +364,7 @@ if(myControl.ajax.dataType == 'jsonp')	{
 		url: thisJsonURL,
 		contentType : "text/json",
 		dataType:"jsonp",
-		jsonpCallback:"ieBlows",
+		jsonpCallback:"ieBlows"
 		});
 	}
 else	{
@@ -469,7 +469,7 @@ myControl.ajax.requests[QID][UUID].success(function(d)	{
 	lower level (_cmd specific) get handled inside their independent response functions or in responseHasErrors(), as they're specific to the _cmd
 	
 	if no high level errors are present, execute a response function specific to the request (ex: request of addToCart executed handleResponse_addToCart).
-	this allows for request specific errors to get handled on an individual basis, based on request type (addToCart errors are different than getProduct errors).
+	this allows for request specific errors to get handled on an individual basis, based on request type (addToCart errors are different than appProductGet errors).
 	the defaultResponse also gets executed in most cases, if no errors are encountered. 
 	the defaultResponse contains all the 'success' code, since it is uniform across commands.
 	
@@ -645,10 +645,13 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 	
 //no special error handling or anything like that.  this is just here to get the category safe id into the response for easy reference.	
 		handleResponse_appCategoryDetail : function(responseData)	{
-//			myControl.util.dump("BEGIN model.handleResponse_categoryDetail");
+//			myControl.util.dump("BEGIN model.handleResponse_appCategoryDetail");
 //save detail into response to make it easier to see what level of data has been requested during a fetch or call
 			if(responseData['_rtag'] && responseData['_rtag'].detail){
 				responseData.detail = responseData['_rtag'].detail;
+				}
+			if(responseData['@products'] && !$.isEmptyObject(responseData['@products']))	{
+				responseData['@products'] = $.grep(responseData['@products'],function(n){return(n);}); //strip blanks
 				}
 			if(responseData['_rtag'] && responseData['_rtag'].datapointer)
 				responseData.id = responseData['_rtag'].datapointer.split('|')[1]; //safe id into data for easy reference.
@@ -736,16 +739,17 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //as response error handling is improved, this function may no longer be necessary.
 			var r = false; //defaults to no errors found.
 			switch(responseData['_rcmd'])	{
-				case 'getProduct':
+				case 'appProductGet':
 //the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
 					if(!responseData['%attribs']['db:id']) {
+//						myControl.util.dump("GOT HERE!");
 						r = true;
 						responseData['errid'] = "MVC-M-100";
 						responseData['errtype'] = "apperr"; 
 						responseData['errmsg'] = "could not find product (may not exist)";
 						} //db:id will not be set if invalid sku was passed.
 					break;
-				case 'categoryDetail':
+				case 'appCategoryDetail':
 					if(responseData.errid > 0 || responseData['exists'] == 0)	{
 						r = true
 						responseData['errid'] = "MVC-M-200";
@@ -753,16 +757,16 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						responseData['errmsg'] = "could not find category (may not exist)";
 						} //a response errid of zero 'may' mean no errors.
 					break;
-				case 'searchResult':
+				case 'appPublicSearch':
 					//currently, there are no errors. I have a hunch this will change.
 					break;
 	
 				case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
-				case 'addToCart':
+				case 'cartItemsAdd':
 					if(responseData['_msgs'] > 0)	{r = true};
 					break;
 	
-				case 'createOrder':
+				case 'cartOrderCreate':
 	//				myControl.util.dump(' -> case = createOrder');
 					if(!myControl.util.isSet(responseData['orderid']))	{
 	//					myControl.util.dump(' -> request has errors. orderid not set. orderid = '+responseData['orderid']);
@@ -805,6 +809,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	//			myControl.util.dump(' -> isSet in myControl. use it.');
 				uuid = myControl.vars.uuid; //have to, at some point, assume app integrity. if the uuid is set in the control, trust it.
 				}
+//in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal.
 			else if(L = myControl.storageFunctions.readLocal("uuid"))	{
 				L = Math.ceil(L * 1); //round it up (was occassionally get fractions for some odd reason) and treat as number.
 	//			myControl.util.dump(' -> isSet in local ('+L+' and typof = '+typeof L+')');

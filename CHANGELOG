@@ -3,6 +3,34 @@
 # This file will be updated with each release (duh)
 #
 
+2012.19
+* upgraded homepage render to work more like category page.
+* fixed issue with globalMessaging emptying on appInit (which contained app load errors)
+* renamed handleLegacyURL to more appropriate handleAppInit in quickstart.js and also added  support for params
+* added renderFormat for display of product tag(s).
+* update model error handling which still referenced older API calls.
+* fixed bugs in handleErrors and getResponseErrors causing MVC generated errors to not always appear.
+
+## renamed the following templates to be more inline w/ new template naming convention:
+* 'cartViewerTemplate' to 'cartTemplate'
+* 'productChildrenTemplate' to 'productListTemplateChildren'
+* 'cartViewerProductTemplate' to 'productListTemplateCart'
+
+
+2012.18
+* upgrade to category templates rendering so it's much simpler.
+
+## Checkout Specific upgrades (for both nice and passive)
+* support for PayPalEC in checkout.
+* support for PayPalEC and Google Checkout on cart.
+* selects shipping method if only 1 is available
+* selects payment method if only 1 is available
+* CC month dropdown changed to integers to more closely reflect what is on the card and reduce confusion
+* cvv/cid 'help' link added
+* if country is not US, state/province is no longer required
+* fixed bug in shipping where methods didn't always update when state/zip was changed (update view for shipping panel)
+
+
 2012.17
 * Add quickstart.html/quickstart.js in root project
 * created well known div id='appView' and div id='appTemplates' within file

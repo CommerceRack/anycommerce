@@ -180,9 +180,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				return 1;
 				},
 			dispatch : function(obj)	{
-// 'callback':'handleCartPaypalGetECDetails' - removed 20120416. the action in the callback is executed as part of loadPanelContent, if needed.
-// has to be done there or it 'could' be run twice.
-				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder"};
+				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder","callback":"handleCartPaypalGetECDetails"};
 				myControl.model.addDispatchToQ({"_cmd":"cartPaypalGetExpressCheckoutDetails","token":obj.token,"payerid":obj.payerid,"_tag":tagObj},'immutable');
 				}
 			}, //cartPaypalGetExpressCheckoutDetails	
@@ -535,9 +533,10 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 			},
 
 
+
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalSetECResponse.onSuccess');
+				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
 				window.location = myControl.data[tagObj.datapointer].URL
 				},
 			onError : function(responseData,uuid)	{
@@ -546,17 +545,28 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				}
 			},
 
-
+//mostly used for the error handling.
 		handleCartPaypalGetECDetails : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN convertSessionToOrder[passive].callbacks.handleCartPaypalGetECDetails.onSuccess');
-//lock down form fields so ship addresses match (and a variety of other form manipulation occurs).
-				myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
+//				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
+//do NOT execute handlePaypalFormManipulation here. It's run in panel view.
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid);
+//nuke vars so user MUST go thru paypal again or choose another method.
+//nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
+				myControl.data.cartItemsList.cart['payment-pt'] = null;
+				myControl.data.cartItemsList.cart['payment-pi'] = null;
+				myControl.calls.cartSet.init({'payment-pt':null,'payment-pi':null}); 
+				myControl.calls.refreshCart.init({},'immutable');
+				myControl.model.dispatchThis('immutable');
+//### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
+				setTimeout("$('#paybySupplemental_PAYPALEC').empty().addClass('ui-state-highlight').append(\"It appears something went wrong with PayPal. Please <a href='#' onClick='myControl.ext.convertSessionToOrder.utilities.nukePayPalEC();'>Click Here</a> to choose an alternate payment method.\")",2000);
 				}
 			},		
+
+
+	
 		addGiftcardToCart : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('got to addGiftcardToCart success');

@@ -39,13 +39,14 @@ var store_prodlist = function() {
 
 /*
 appProductGet includes all general product attributes (name, desc, base_price, etc)
- -> does include reviews.
- -> no inventory or options.
-
 the buildProdlist has a need for more advanced queries. appProductGet is for 'quick' lists where only basic info is needed.
 getDetailedProduct supports variations, inventory and reviews.
 more info may be passed in via obj, but only the pid is needed (so far).
 the other info is passed in to keep the csv loop in getProductDataForList fairly tight.
+
+datapointer must be set in the init because it needs to be passed into the callback, which may get executed without ever going in to dispatch() if the data is local
+This also overrides the datapointer, if set. This is for consistency's sake.
+The advantage of saving the data in memory and local storage is lost if the datapointer isn't consistent, especially for product data.
 
 //formerly getProduct
 */
@@ -53,12 +54,6 @@ the other info is passed in to keep the csv loop in getProductDataForList fairly
 			init : function(obj,tagObj,Q)	{
 				var r = 0; //will return # of requests, if any. if zero is returned, all data needed was in local.
 				var pid = obj.pid
-				
-//				myControl.util.dump("BEGIN myControl.ext.store_prodlist.calls.appProductGet");
-//				myControl.util.dump(" -> PID: "+pid);
-//datapointer must be added here because it needs to be passed into the callback, which may get executed without ever going in to dispatch() if the data is local
-// This also overrides the datapointer, if set. This is for consistency's sake.
-// The advantage of saving the data in memory and local storage is lost if the datapointer isn't consistent, especially for product data.
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj["datapointer"] = "appProductGet|"+pid; 
 //fetchData checks the timestamp, so no need to doublecheck it here unless there's a need to make sure it is newer than what is specified (1 day) in the fetchData function				
@@ -303,7 +298,7 @@ tagObj is not a passable param for this reason. specific callbacks are used.
 
 */
 			getProductDataForList : function(csv,parentID)	{
-				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.getProductDataForList");
+//				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.getProductDataForList");
 //				myControl.util.dump("csv = "+csv);
 				var $parent = $('#'+parentID).removeClass('loadingBG'); //do not empty here. may contain MP controls by this point.
 				var numRequests = 0; //# of product in local/memory. no strictly necessary, but used for testing.
@@ -328,16 +323,24 @@ tagObj is not a passable param for this reason. specific callbacks are used.
 /*
 a function similar to getProductDataForList, but this is just for getting data with no intent for immediate use.
 I recognize that the getProductDataForList 'could' be used for this, but I wanted another function that was very tight and fast. 
-no "if's". nothing but quickly generating requests and adding them to the passive q.
+minimal # of "if's". nothing but quickly generating requests and adding them to a q.
 allows for getting the 'next page' worth of data in advance.
 had issue with 'undefined' pids so a check was added to handle blanks, null or undef
 */
-			getProductDataForLaterUse : function(csv)	{
+			getProductDataForLaterUse : function(csv,Q)	{
+//				myControl.util.dump("BEGIN store_prodlist.util.getProductDataForLaterUse");
+				var r = 0; //number of requests. what is returned.
+				if(!Q){Q = 'passive'}
 //				csv = $.grep(csv,function(n){return(n);}); //remove blanks
 				var L = csv.length;
+//				myControl.util.dump(" -> # product: "+L);
+//				myControl.util.dump(csv);
 				for(var i = 0; i < L; i += 1)	{
-					if(myControl.util.isSet(csv[i]))	{myControl.ext.store_prodlist.calls.appProductGet.init(csv[i],{},'passive')};
+//					myControl.util.dump(" -> i: "+i+" and pid: "+csv[i]);
+					r += myControl.ext.store_prodlist.calls.appProductGet.init({'pid':csv[i]},{},'mutable')
 					}
+//				myControl.util.dump(" -> # dispatched: "+r);
+				return r;
 				}, //getProductDataForList
 
 /*
@@ -383,10 +386,9 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 			setProdlistVars : function(paramObj)	{
 //				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.setProdlistVars");
 				var r = true;
-//without a parent id and a spec, there is no place to put the prodlist and no idea what it should look like.
-				if(paramObj.parentID && paramObj.templateID)	{
-//					myControl.util.dump(" -> required fields present. and then...");
-//					myControl.util.dump(myControl.ext.store_prodlist.vars[paramObj.parentID])
+				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
+//parentID is required so that the prodlistVars can easily be associated with a dom prodlist
+				if(paramObj.parentID)	{
 					myControl.ext.store_prodlist.vars[paramObj.parentID] = typeof myControl.ext.store_prodlist.vars[paramObj.parentID] === 'object' ? myControl.ext.store_prodlist.vars[paramObj.parentID] : {}; //create object if it doesn't already exist.
 
 					var csvArray = new Array();
@@ -408,8 +410,8 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 							myControl.util.dump(" -> unknown data type for csv. csv type = "+typeof csv+" paramObj.csv type = "+typeof paramObj.csv);
 							}
 						}
-
-					csvArray = $.grep(csvArray,function(n){return(n);}); //removes any blanks.
+//blanks are removed for navcats in 'model' now.
+//					csvArray = $.grep(csvArray,function(n){return(n);}); //removes any blanks.
 
 //					myControl.util.dump(csvArray);
 					var L = csvArray.length;
@@ -432,6 +434,12 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 						if(paramObj.items_per_page)	{itemsPerPage = paramObj.items_per_page}
 						else if	(myControl.ext.store_prodlist.vars[paramObj.parentID] && myControl.ext.store_prodlist.vars[paramObj.parentID].items_per_page){itemsPerPage = myControl.ext.store_prodlist.vars[paramObj.parentID].items_per_page}
 						else {itemsPerPage = L}
+//allows for just the mp controls to be turned off, but will leave the rest of the header (sorting, summary, etc) enabled.
+						itemsPerPage = itemsPerPage * 1; //make sure this is treated as an int.
+						if(itemsPerPage <= L || paramObj.hide_multipage_controls || (myControl.ext.store_prodlist.vars[paramObj.parentID] && myControl.ext.store_prodlist.vars[paramObj.parentID].hide_multipage_controls))	{
+							hideMultipageControls = true; 
+							}
+						
 						var page = paramObj.page_in_focus ? paramObj.page_in_focus*1 : 1; //page start at 1. really, the only place we want page 1 to be 0 is when generating startpoint. so for sanity's sake, page 1 = 1.
 						var startpoint = (page-1)*itemsPerPage; //subtract 1 from page so that we start at the zero point in the array.
 						var endpoint = startpoint + itemsPerPage; //last spot in csv for this page.
@@ -443,6 +451,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 							"templateID": paramObj.templateID,
 							"parentID":paramObj.parentID,
 							"hide_multipage":hideMultipage,
+							"hide_multipage_controls":hideMultipageControls,
 							"withInventory": paramObj.withInventory ? paramObj.withInventory : 0,
 							"withVariations":paramObj.withVariations ? paramObj.withVariations : 0,
 							"withReviews":paramObj.withReviews ? paramObj.withReviews : 0,
@@ -499,8 +508,6 @@ execute this function to build a product list.
 				var r = 0; //returns the number of requests.
 //				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.handleProductList");
 //				myControl.util.dump(" -> parent = "+parentID);
-//get a fresh start. clear previous MP controls and product data.
-//in theory, in a MP format, we could add the children to a parentID_page_X container and, once rendered, just show/hide as a user moves back and forth. ### would require less dom updating. have to find out if it's better to bloat the dom or update it more often.
 				var $parent = $('#'+parentID).empty(); 
 				var csvArray = new Array();
 				if(myControl.ext.store_prodlist.vars[parentID].items_per_page >= myControl.ext.store_prodlist.vars[parentID].csv.length)	{
@@ -510,69 +517,55 @@ execute this function to build a product list.
 				else	{
 //in a multipage format, just request the pids of the page in focus.
 //					myControl.util.dump(' -> multi page product list.');
-			
-					csvArray = myControl.ext.store_prodlist.vars[parentID].csv.slice(myControl.ext.store_prodlist.vars[parentID].page_start_point - 1,myControl.ext.store_prodlist.vars[parentID].page_end_point); //only a portion of the array is needed because we're in mulitpage format and just loading one page.
-/*
-if hide_multipage is set, do NOT show the multipage header.
-allows for items_per_page to be set to X so only X items show up
-but no multipage header appears (essentially setting a max # of product displayed)
-*/
-					if(!myControl.ext.store_prodlist.vars[parentID].hide_multipage)	{
-						this.showMPControls(parentID);
-						}
-
+					csvArray = myControl.ext.store_prodlist.vars[parentID].csv.slice(myControl.ext.store_prodlist.vars[parentID].page_start_point - 1,myControl.ext.store_prodlist.vars[parentID].page_end_point);
 					}
 //now that we have our prodlist, get the product data and add it to the DOM.
-//				myControl.util.dump("CSV just before getProductDataForList");
-//				myControl.util.dump(csvArray);
 				r = myControl.ext.store_prodlist.util.getProductDataForList(csvArray,parentID);
 				return r;
 				},
-			
+
 			mpJumpToPage : function(parentID,page)	{
 //				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.mpJumpToPage");
 //				myControl.util.dump(" -> parentID = "+parentID);
 //				myControl.util.dump(" -> page = "+page);
-//update the object for the PL in question, including what page should be in focus and recomputing the start/end points.
-//then re-execute the handleProductList and everything will magically update.
+
+//update the vars object to reflect the new page that will be in focus.
 				myControl.ext.store_prodlist.vars[parentID].page_in_focus = page;
-				
+//once page is set, setProdlistVars will automatically recompute the start and end points.
 				myControl.ext.store_prodlist.util.setProdlistVars(myControl.ext.store_prodlist.vars[parentID]);
 				if(myControl.ext.store_prodlist.util.handleProductList(parentID)){myControl.model.dispatchThis()}
+				$('#mpControl_'+parentID).html(this.showMPControls(parentID)); //redo product list header to reflect changes (items 1-25 changes to 2-50)
 				},
 			
 			showMPControls : function(parentID)	{
-				var $parent = $('#'+parentID);
-				$('#mpControl_'+parentID).empty().remove(); //removes any existing MP header for this list.
-//add the mp header BEFORE the parent element. the parent element is most likely an unordered list or a table.
-				$parent.before(myControl.renderFunctions.createTemplateInstance('mpControlSpec','mpControl_'+parentID));
-				myControl.renderFunctions.translateTemplate(myControl.ext.store_prodlist.vars[parentID],'mpControl_'+parentID);
-				$parent.parent().find('.mpControlJumpToPage').click(function(){myControl.ext.store_prodlist.util.mpJumpToPage(parentID,$(this).attr('data-page'))})
+//				var $parent = $('#'+parentID);
+//$output is the multipage header object.  It is what is returned.
+				var $output = myControl.renderFunctions.transmogrify({'id':'mpControl_'+parentID},'mpControlSpec',myControl.ext.store_prodlist.vars[parentID]);
+				$output.find('.mpControlJumpToPage').click(function(){
+					myControl.ext.store_prodlist.util.mpJumpToPage(parentID,$(this).attr('data-page'))
+					})
 
-$parent.parent().find('.paging').each(function(){
-$this = $(this)
-if($this.attr('data-role') == 'next')	{
-	if(myControl.ext.store_prodlist.vars[parentID].page_in_focus == myControl.ext.store_prodlist.vars[parentID].total_page_count)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
-	else	{
-		$(this).click(function(){myControl.ext.store_prodlist.util.mpJumpToPage(parentID,myControl.ext.store_prodlist.vars[parentID].page_in_focus + 1)})
-		}
-	}
-else if($this.attr('data-role') == 'previous')	{
-	if(myControl.ext.store_prodlist.vars[parentID].page_in_focus == 1)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
-	else	{
-		$(this).click(function(){myControl.ext.store_prodlist.util.mpJumpToPage(parentID,myControl.ext.store_prodlist.vars[parentID].page_in_focus - 1)})
-		}
-	
-	}
-
-});
-
-
-
-				}
-			
+$output.find('.paging').each(function(){
+	$this = $(this)
+	if($this.attr('data-role') == 'next')	{
+		if(myControl.ext.store_prodlist.vars[parentID].page_in_focus == myControl.ext.store_prodlist.vars[parentID].total_page_count)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
+		else	{
+			$(this).click(function(){myControl.ext.store_prodlist.util.mpJumpToPage(parentID,myControl.ext.store_prodlist.vars[parentID].page_in_focus + 1)})
 			}
+		}
+	else if($this.attr('data-role') == 'previous')	{
+		if(myControl.ext.store_prodlist.vars[parentID].page_in_focus == 1)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
+		else	{
+			$(this).click(function(){myControl.ext.store_prodlist.util.mpJumpToPage(parentID,myControl.ext.store_prodlist.vars[parentID].page_in_focus - 1)})
+			}
+		}
+	});
 
+
+				return $output;
+				} //showMPControls
+			
+			} //util
 
 		
 		} //r object.

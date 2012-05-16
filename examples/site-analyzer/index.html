@@ -4,18 +4,22 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Site Analyzer.com</title>
 
-<link rel="stylesheet" type="text/css" href="../../../201215/examples/full-shopping-app/jquery-ui-1.8.18.custom-20120404.css">
-<link rel="stylesheet" type="text/css" href="../../admin-20120223.css">
-<!-- profile specific settings -->
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
 
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jquery-1.6.4.min.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jqueryui-1.8.16/js/jquery-ui.min.js"></script>
 
+
+<!-- jquery and jquery ui -->
+<script type="text/javascript" src="../../jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../../jqueryui-1.7.2.min.js"></script>
+
+
+<!-- zoovy mvc -->
 <script type="text/javascript" src="../../model.js"></script>
 <script type="text/javascript" src="../../controller.js"></script>
 <script type="text/javascript" src="../../json2.js"></script>
 <script type="text/javascript" src="../../variations.js"></script>
 <script type="text/javascript" src="../../wiki.js"></script>
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jcarousel-0.2.7/jquery.jcarousel.min.js"></script>
 
 
 
@@ -69,6 +73,8 @@ function getConfig4Domain()	{
 
 
 <style type="text/css">
+h1, h2, h3, h4, h5, h6	{margin:1px 0; padding:0;}
+
 #tabs-3 ul, #tabs-3 li	{margin:0; padding:0; list-style:none;}
 
 .catTree img	{float:left; margin-right:12px;}
@@ -84,15 +90,44 @@ ul .prompt	{display:inline-block; width:250px;}
 
 
 .prodlist, .prodlist li	{margin:0; padding:0; list-style:none;}
-.prodlist li	{float:left; width:150px; height:200px; margin:0 12px 12px 0; display:block;}
+.prodlist li	{float:left; width:150px; height:240px; margin:0 12px 12px 0; display:block;}
 .prodlist h5	{font-size:.7em; font-weight:normal;}
 .prodlist h6, .prodlist a	{font-size:.6em}
+
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+.clearBoth	{clear:both;}
+
+.alignRight	{text-align:right;}
+.alignLeft	{text-align:left;}
+.alignCenter	{text-align:center;}
+
+.displayNone	{display:none;}
+
+
+#tagList, #tagList li	{list-style:none; margin:0; padding:0;}
+#tagList, #filterContainer {width:20%; border:1px solid #efefef; padding:2px; float:left;} /* list ul container for the list of tags/prompts */
+#tagList li	{margin-bottom:2px; padding:2px; font-size:.8em; cursor:pointer;}
+#tagProdlist, #elasticResults	{width:70%; float:right;}
+
+#prodDebugThumbs	{width:150px; margin-left:24px;}
+#prodDebugThumbs figure	{margin:0 0 12px 0; padding:0;}
+
 </style>
 
 </head>
 <body class='ui-widget'>
 <div class='clearfix'>
-<button class='floatRight ui-button ui-corner-all ui-state-default displayNone' onClick="myControl.ext.myRIA.actions.changeDomains();" id='refreshBtn'>Change Domains</button>
+<button class='floatRight ui-button ui-corner-all ui-state-default displayNone' onClick="myControl.ext.myRIA.action.changeDomains();" id='refreshBtn'>Change Domains</button>
 
 <form action='#' onSubmit='getConfig4Domain(); return false;' id='domainFrm' name='domainFrm'>
 <label>Domain:</label>
@@ -103,6 +138,7 @@ ul .prompt	{display:inline-block; width:250px;}
 </div>
 <hr />
 
+<div id='globalMessaging'></div>
 
 <div id="tabs" class='displayNone'>
 	<ul>
@@ -136,13 +172,8 @@ ul .prompt	{display:inline-block; width:250px;}
 	
 	
 	
-	<div id="tabs-4">
+	<div id="tabs-4" class='clearfix'>
 
-<ul id='tagList'>
-	<li>Best Sellers</li>
-	<li>New Arrivals</li>
-	<li>On Sale</li>
-</ul>
 
 <ul id='tagProdlist'  class='prodlist clearfix'>
 
@@ -153,11 +184,13 @@ ul .prompt	{display:inline-block; width:250px;}
 	
 	
 	<div id="tabs-5" >
-<form action='#' onSubmit="myControl.ext.store_product.calls.appProductGet.init($('#pid').val(),{'callback':'prodDebug','extension':'myRIA'}); myControl.model.dispatchThis(); return false;">
+<form action='#' onSubmit="myControl.ext.myRIA.action.exploreProduct($('#pid').val()); return false;">
 <label for='pid'>Product ID: </label>
 <input type='text' name='pid' id='pid' size='25' />
 <input type='submit' value='go' class='ui-button ui-corner-all ui-state-active' id='prodExplorerBtn' />
 </form>
+
+<div class='floatRight' id='prodDebugThumbs'></div>
 
 <h2>Attribs</h2>
 <div id='attribsDebugData'></div>
@@ -171,7 +204,7 @@ ul .prompt	{display:inline-block; width:250px;}
 	
 	
 	
-	<div id="tabs-6">
+	<div id="tabs-6" class='clearfix'>
 	
 	
 <div id='keywordContainer'>
@@ -181,18 +214,17 @@ ul .prompt	{display:inline-block; width:250px;}
 </div>
 
 <div id='queryFilterContainer' class='displayNone'>
-<select id='filterQuerySelection' name='filterQuerySelection'>
-	<option value='query'>Query</option>
-	<option value='filter'>Filter</option>
-</select>
-<textarea id='filterQuery' name='filterQuery' cols='40' rows='10'></textarea>
+<textarea id='advsrch_filterQuery' name='advsrch_filterQuery' cols='40' rows='10'></textarea>
+<!-- <textarea id='advsrch_attributes' name='advsrch_attributes' cols='40' rows='10'></textarea> -->
 <button onClick="myControl.ext.myRIA.util.handleElasticFilterOrQuery(); return false;">Go</button>
 <span class='hint'><a href='#' onClick="$('#keywordContainer, #queryFilterContainer').toggle();">keyword search</a></span>
 </div>
 
 <hr>
 
-<ul id='elasticResults' class='prodlist clearfix'></ul>
+<div class='filterContainer'></div>
+
+<ul id='elasticResults' class='prodlist '></ul>
 
 
 
@@ -251,7 +283,7 @@ ul .prompt	{display:inline-block; width:250px;}
 		pretty: <span data-bind='var: category(pretty); format:text;'></span><br />
 		id: <span data-bind='var: category(id); format:text;'></span> 
 		# product: <span data-bind='var: category(@products); format:numProduct; extension:store_navcats; defaultVal:0;'></span>
-		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="myControl.ext.myRIA.actions.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
+		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="myControl.ext.myRIA.action.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
 	</div>
 	
 	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; pretext:categoryTreeSubs_;' class='subcats'></ul>

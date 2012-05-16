@@ -79,8 +79,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 */
 		appPublicProductSearch : {
 			init : function(P,tagObj,Q)	{
-				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
-//				myControl.util.dump(obj);
+//				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
 				this.dispatch(P,tagObj,Q)
 				return 1;
 				},
@@ -88,6 +87,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				P['_cmd'] = "appPublicSearch";
 				P.type = 'product';
 				P['_tag'] = tagObj;
+//				myControl.util.dump(P);
 				myControl.model.addDispatchToQ(P,Q);
 				}
 			}, //appPublicSearch
@@ -96,7 +96,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 // to get a good handle on what datapointers should look like.
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
-				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
+//				myControl.util.dump("BEGIN myControl.ext.store_search.calls.appPublicSearch");
 //				myControl.util.dump(obj);
 				this.dispatch(obj,tagObj,Q)
 				return 1;
@@ -134,8 +134,27 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 //you may or may not need it.
 				myControl.util.dump('BEGIN myControl.ext.store_navcats.callbacks.init.onError');
 				}
-			}
+			},
 
+
+//the request that uses this as a callback should have the following params set for _tag:
+// parentID, templateID (template used on each item in the results) and datapointer.
+		handleElasticResults : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
+				var L = myControl.data[tagObj.datapointer]['_count'];
+				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
+				if(L == 0)	{
+					$parent.append("Your query returned zero results.");
+					}
+				else	{
+					$parent.append(myControl.ext.store_search.util.getElasticResultsAsJQObject(tagObj));
+					}
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
+				}
+			}
 
 		}, //callbacks
 
@@ -260,7 +279,25 @@ $keywordInput.autocomplete({
 
 
 				}, //bindKeywordAutoComplete
-			
+
+/*
+P should contain the following:
+P.datapointer - pointer to where in myControl.data the results are stored.
+P.templateID - what productList template to use
+P.parentID - The parent ID is used as the pointer in the multipage controls object. myControl.ext.store_prodlist.vars[POINTER]
+#### note - not all these are used yet, but will be soon.
+*/
+
+			getElasticResultsAsJQObject : function(P)	{
+				var pid;//recycled shortcut to product id.
+				var $r = $(); //what is returned. a jquery object of all the results. ### eventually, this is where multipage would get handled.
+				for(var i = 0; i < L; i += 1)	{
+					pid = myControl.data[P.datapointer].hits.hits[i]['_id'];
+//					myControl.util.dump(" -> "+i+" pid: "+pid);
+					$r.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,myControl.data[P.datapointer].hits.hits[i]['_source']));
+					}
+				return $r;
+				},
 
 			handleElasticSimpleQuery : function(keywords,tagObj)	{
 				var qObj = {}; //query object
@@ -270,9 +307,8 @@ $keywordInput.autocomplete({
 				qObj.query =  {"query_string" : {"query" : keywords}};
 				myControl.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
 				myControl.model.dispatchThis();
-				},
-
-
+				}
+				
 			} //util
 
 

@@ -115,7 +115,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 				},
 			dispatch : function(getBuyerAddress)	{
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis","returnURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&fl=checkout-20120426&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis","returnURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1&sender=jcheckout","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 
@@ -129,9 +129,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 				return 1;
 				},
 			dispatch : function(obj)	{
-// 'callback':'handleCartPaypalGetECDetails' - removed 20120416. the action in the callback is executed as part of loadPanelContent, if needed.
-// has to be done there or it 'could' be run twice.
-				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder"};
+				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder","callback":"handleCartPaypalGetECDetails"};
 				myControl.model.addDispatchToQ({"_cmd":"cartPaypalGetExpressCheckoutDetails","token":obj.token,"payerid":obj.payerid,"_tag":tagObj},'immutable');
 				}
 			}, //cartPaypalGetExpressCheckoutDetails	
@@ -487,6 +485,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 			},
 
 
+
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
 				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
@@ -498,15 +497,23 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				}
 			},
 
-
+//mostly used for the error handling.
 		handleCartPaypalGetECDetails : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
-//lock down form fields so ship addresses match (and a variety of other form manipulation occurs).
-				myControl.ext.convertSessionToOrder.utilities.handlePaypalFormManipulation();
+//				myControl.util.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
+//do NOT execute handlePaypalFormManipulation here. It's run in panel view.
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid);
+//nuke vars so user MUST go thru paypal again or choose another method.
+//nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
+				myControl.data.cartItemsList.cart['payment-pt'] = null;
+				myControl.data.cartItemsList.cart['payment-pi'] = null;
+				myControl.calls.cartSet.init({'payment-pt':null,'payment-pi':null}); 
+				myControl.calls.refreshCart.init({},'immutable');
+				myControl.model.dispatchThis('immutable');
+//### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
+				setTimeout("$('#paybySupplemental_PAYPALEC').empty().addClass('ui-state-highlight').append(\"It appears something went wrong with PayPal. Please <a href='#' onClick='myControl.ext.convertSessionToOrder.utilities.nukePayPalEC();'>Click Here</a> to choose an alternate payment method.\")",2000);
 				}
 			},		
 
@@ -658,20 +665,21 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 
 		loadPanelContent : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.callbacks.loadPanelContent.onSuccess');
+				myControl.util.dump('BEGIN convertSessionToOrder(nice).callbacks.loadPanelContent.onSuccess');
 //had some issues using length. these may have been due to localStorage/expired cart issue. countProperties is more reliable though, so still using that one.			
 				var stuffCount = myControl.model.countProperties(myControl.data.cartItemsList.cart.stuff);
-//				myControl.util.dump('stuff util.countProperties = '+stuffCount+' and typeof = '+typeof stuffCount);
+				myControl.util.dump(' -> stuff util.countProperties = '+stuffCount+' and typeof = '+typeof stuffCount);
 
 
 				if(stuffCount > 0)	{
-
+					myControl.util.dump(" -> into stuffCount IF");
 					myControl.ext.convertSessionToOrder.panelContent.preflight();
-					
+					myControl.util.dump(" -> GOT HERE!");
+					myControl.util.dump(" -> softAuth: "+myControl.sharedCheckoutUtilities.determineAuthentication());
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
 					if(myControl.sharedCheckoutUtilities.determineAuthentication() != 'none')	{
-//						myControl.util.dump(' -> authentication passed. Showing panels.');
-//						myControl.util.dump(' -> chkout.bill_to_ship = '+myControl.data.cartItemsList.cart['chkout.bill_to_ship']);
+						myControl.util.dump(' -> authentication passed. Showing panels.');
+						myControl.util.dump(' -> chkout.bill_to_ship = '+myControl.data.cartItemsList.cart['chkout.bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
 //ship address will make itself visible if user is authenticated.
 						myControl.ext.convertSessionToOrder.utilities.handlePanel('chkoutAccountInfo');
@@ -695,35 +703,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 							myControl.ext.convertSessionToOrder.panelContent.orderNotes();
 							$('#chkoutOrderNotes').toggle(true); 
 							}
-							
-/*
-bind a change event to the fieldset. that way, if anything in the fieldset changes, this gets fired, 
-making it easy to determine if the fieldset has changed and, if so, to validate the last fieldset.
-*/
-/*
-//causing some IE issues.  Let's see how OPC runs without it. 2010-12-20
-						$('#zCheckoutFrm > fieldset').change(function(e){
-//if focusFieldset is not set, then this is the first time a panel/fieldset change has occured.
-							if(!myControl.util.isSet(myControl.ext.convertSessionToOrder.vars.focusFieldset))	{
-								myControl.ext.convertSessionToOrder.vars.focusFieldset = e.currentTarget.id;
-								}
-							else if(e.currentTarget.id != myControl.ext.convertSessionToOrder.vars.focusFieldset)	{
-								myControl.util.dump('FIELDSET changed! old = '+myControl.ext.convertSessionToOrder.vars.focusFieldset+' and new = '+e.currentTarget.id);
-								myControl.ext.convertSessionToOrder.validate[myControl.ext.convertSessionToOrder.vars.focusFieldset](); //validate the fieldset that was just left.
-								myControl.ext.convertSessionToOrder.vars.focusFieldset = e.currentTarget.id; //set currentfieldset to the new fieldset id.
-								}
-							else	{
-	//form focus changed, but stayed within the same panel/fieldset.
-								}
-								
-							});							
-							
-*/
-
-
 
 _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained']);
-
 
 
 						}
@@ -733,6 +714,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 
 					}//ends 'if' for whether cart has more than zero items in it.
 				else	{
+					myControl.util.dump(" -> Did not get past stuffCount > 0");
 					myControl.ext.convertSessionToOrder.utilities.cartIsEmptyWarning();
 					}
 				$('#'+myControl.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
@@ -1195,7 +1177,7 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			preflight : function()	{
-//				myControl.util.dump("BEGIN myControl.ext.convertSessionToOrder.panelContent.preflightPanel.");
+				myControl.util.dump("BEGIN myControl.ext.convertSessionToOrder.panelContent.preflightPanel.");
 				var username = myControl.util.getUsernameFromCart();
 				var className = '';
 				var o; //output.
@@ -1206,23 +1188,23 @@ payment options, pricing, etc
 //username may not be an email address, so only use it if it passes validation.
 				else if(username && myControl.util.isValidEmail(username))	{email = username;}
 				
-//				myControl.util.dump(" -> authState = "+authState);
-//				myControl.util.dump(" -> username = "+username);
-//				myControl.util.dump(" -> email = "+email);
+				myControl.util.dump(" -> authState = "+authState);
+				myControl.util.dump(" -> username = "+username);
+				myControl.util.dump(" -> email = "+email);
 
 	
 
 //user is already logged in...
 
 					if(authState == 'authenticated')	{
-//						myControl.util.dump(" -> Already Authenticated");
+						myControl.util.dump(" -> Already Authenticated");
 						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin noListStyle'>";
 						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
 						o += "<input type='hidden'   name='data.bill_email' id='data-bill_email' value='"+email+"' /><\/ul>";
 						}
 					else	{
 
-//						myControl.util.dump(" -> Login Prompts (default panel behavior/else)");
+						myControl.util.dump(" -> Login Prompts (default panel behavior/else)");
 						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='data.bill_email'>Email<\/label>";
 						o += "<input type='email'   name='data.bill_email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
 						o += "<button class='ui-state-default ui-corner-all' onClick='myControl.ext.convertSessionToOrder.utilities.handleGuestEmail($(\"#data-bill_email\").val());' id='guestCheckoutBtn'>"
@@ -1263,9 +1245,10 @@ payment options, pricing, etc
 				var $fieldset = $("#chkoutPreflightFieldset").toggle(true);
 //				myControl.util.dump(" -> GOT HERE. $fieldset.length = "+$fieldset.length);
 				$fieldset.removeClass("loadingBG").append(o);
-
-				FB.init({appId:zGlobals.thirdParty.facebook.appId, cookie:true, status:true, xfbml:true}); //must come after the <fb:... code is added to the dom.
-
+				
+				if(typeof FB == 'object')	{
+					FB.init({appId:zGlobals.thirdParty.facebook.appId, cookie:true, status:true, xfbml:true}); //must come after the <fb:... code is added to the dom.
+					}
 //				myControl.util.dump('END myControl.ext.convertSessionToOrder.panelContent.preflighPanel.');
 				}, //preflight
 

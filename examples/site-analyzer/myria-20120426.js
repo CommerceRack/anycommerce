@@ -31,7 +31,7 @@ var myRIA = function() {
 			
 			appResource : {
 				init : function(filename,tagObj,Q)	{
-					myControl.util.dump("BEGIN myRIA.calls.appResource.init");
+//					myControl.util.dump("BEGIN myRIA.calls.appResource.init");
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 					tagObj.datapointer = 'appResource|'+filename;
 					this.dispatch(filename,tagObj,Q);
@@ -44,26 +44,7 @@ var myRIA = function() {
 					obj["_tag"] = tagObj;
 					myControl.model.addDispatchToQ(obj,Q);
 					}
-				},//appResource
-//<input hint="mode:elastic-native" id="filter"> { 'or':{ 'filters':[ {'term':{'profile':'DEFAULT'}},{'term':{'profile':'OTHER'}}  ] } };</input>
-			getItemsTaggedAs : {
-			init : function(qObj,tagObj,Q)	{
-				myControl.util.dump("BEGIN myControl.ext.store_search.calls.getItemsTaggedAs");
-//				myControl.util.dump(obj);
-				this.dispatch(qObj,tagObj,Q)
-				return 1;
-				},
-			dispatch : function(tag,tagObj,Q)	{
-				var obj = {};
-				obj['_cmd'] = "appPublicSearch";
-				obj.type = 'product';
-				obj.mode = 'elastic-native';
-				obj.size = 250;
-				obj['filter'] = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_SALE'}}  ] } };
-				obj['_tag'] = tagObj;
-				myControl.model.addDispatchToQ(obj,Q);
-				}
-				} //getItemsTaggedAs
+				} //appResource
 			}, //calls
 		
 		callbacks : {
@@ -87,9 +68,9 @@ var myRIA = function() {
 $('#profileSummary').append(myControl.renderFunctions.createTemplateInstance('profileTemplate',"profileSummaryList"));
 					
 $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
+$('#tabs-4').append(myControl.ext.myRIA.util.buildTagsList({'id':'tagList'}));
 
 					myControl.ext.myRIA.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'myRIA'});
-					myControl.ext.myRIA.calls.getItemsTaggedAs.init('IS_SALE');
 //request profile data (company name, logo, policies, etc)
 					myControl.calls.appProfileInfo.init(zGlobals.appSettings.profile,{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
 					myControl.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"});
@@ -112,13 +93,14 @@ $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 					myControl.util.handleErrors(responseData,uuid);
 					}
 				}, //showRootCategories
+
 			prodDebug : {
 				onSuccess : function(tagObj)	{
-					myControl.util.dump("BEGIN myRIA.callbacks.prodDebug");
+//					myControl.util.dump("BEGIN myRIA.callbacks.prodDebug");
 					$('#attribsDebugData').append(myControl.ext.myRIA.util.objExplore(myControl.data[tagObj.datapointer]['%attribs']));
 					$('#variationsDebugData').append(myControl.ext.myRIA.util.objExplore(myControl.data[tagObj.datapointer]['@variations']));
 					$('#inventoryDebugData').append(myControl.ext.myRIA.util.objExplore(myControl.data[tagObj.datapointer]['@inventory']));
-					
+					$('#prodDebugThumbs').append(myControl.ext.myRIA.util.prodDebugImageList(tagObj.datapointer));
 					$('#tabs-5 li:odd').addClass('odd');
 					},
 				onError : function(responseData,uuid)	{
@@ -140,7 +122,7 @@ $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 					myControl.util.dump("BEGIN myRIA.callbacks.handleFlexedit.onError");
 					myControl.util.handleErrors(responseData,uuid);
 					}
-				}, //handleFlexedit
+				}, //handleProfile
 
 
 			handleFlexedit : {
@@ -154,56 +136,129 @@ $('#tabs-1').append(myControl.ext.myRIA.util.objExplore(zGlobals));
 					}
 				}, //handleFlexedit
 				
-		handleElasticResults : {
-			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
-				var L = myControl.data[tagObj.datapointer]['_count'];
-				myControl.util.dump(" -> Number Results: "+L);
-				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG');
-				if(L == 0)	{
-					$parent.append("Your query returned zero results.");
-					}
-				else	{
-					var pid;//recycled shortcut to product id.
-					for(var i = 0; i < L; i += 1)	{
-						pid = myControl.data[tagObj.datapointer].hits.hits[i]['_source']['pid'];
-						myControl.ext.store_product.calls.appProductGet.init(pid,{},'passive'); //need full prod data in memory for add to cart to work.
-						$parent.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},'prodlistProdTemplate',myControl.data[tagObj.datapointer].hits.hits[i]['_source']));
+			handleElasticResults : {
+				onSuccess : function(tagObj)	{
+//					myControl.util.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
+					var L = myControl.data[tagObj.datapointer]['_count'];
+//					myControl.util.dump(" -> Number Results: "+L);
+					$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG');
+					if(L == 0)	{
+						$parent.append("Your query returned zero results.");
 						}
-					myControl.model.dispatchThis('passive');
+					else	{
+						var pid;//recycled shortcut to product id.
+						for(var i = 0; i < L; i += 1)	{
+							pid = myControl.data[tagObj.datapointer].hits.hits[i]['_source']['pid'];
+							myControl.ext.store_product.calls.appProductGet.init(pid,{},'mutable'); //need full prod data in memory for add to cart to work.
+							$parent.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},'prodlistProdTemplate',myControl.data[tagObj.datapointer].hits.hits[i]['_source']));
+							}
+						myControl.calls.ping.init({'callback':'handleFilters','extension':'myRIA','datapointer':tagObj.datapointer},'mutable');
+						myControl.model.dispatchThis('mutable');
+						}
+					},
+				onError : function(responseData,uuid)	{
+					myControl.util.handleErrors(responseData,uuid)
 					}
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.handleErrors(responseData,uuid)
-				}
-			},				
+				},		//handleElasticResults	
 				
+
+			handleFilters : {
+				onSuccess : function(tagObj)	{
+					myControl.util.dump("BEGIN myRIA.callbacks.handleFilters.onSuccess");
+					var A = {'zoovy:prod_mfg':{},'zoovy:prod_condition':{},'zoovy:prod_color':{}};
+					var L = myControl.data[tagObj.datapointer].hits.hits.length;
+					var prod,pid; //shortcuts for product data.
+					for(var i = 0; i < L; i += 1)	{
+						pid = myControl.data[tagObj.datapointer].hits.hits[i]['_source'].pid
+						prod = myControl.data['appProductGet|'+pid]['%attribs'];
+//						myControl.util.dump(prod);
+						if(myControl.util.isSet(prod['zoovy:prod_mfg']))	{
+							myControl.util.dump(" -> zoovy:prod_mfg = "+prod['zoovy:prod_mfg']);
+							if(typeof A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] == 'object')	{
+								A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] += 1;
+								}
+							else	{
+								A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] = 1;
+								}
+							}
+						
+						
+						}
+					myControl.util.dump(A);
+					},
+				onError : function(responseData,uuid)	{
+					myControl.util.handleErrors(responseData,uuid)
+					}
+				}		//handleElasticResults		
+
+
 				
 			}, //callbacks
 
-		actions : {
+		action : {
 			
 			showSubcats : function(path)	{
-				myControl.util.dump("BEGIN myRIA.actions.showSubcats ["+path+"]");
+//				myControl.util.dump("BEGIN myRIA.actions.showSubcats ["+path+"]");
 				var parentID = 'categoryTreeSubs_'+myControl.util.makeSafeHTMLId(path);
-				myControl.util.dump(" -> size() = "+$('#'+parentID+' li').size());
+//				myControl.util.dump(" -> size() = "+$('#'+parentID+' li').size());
 //once the parentID has children, the subcats have already been loaded. don't load them twice.
 				if($('#'+parentID+' li').size() == 0)	{ 
 					myControl.ext.store_navcats.util.getChildDataOf(path,{'parentID':parentID,'callback':'addCatToDom','templateID':'catInfoTemplate','extension':'store_navcats'},'appCategoryDetailMore');
 					myControl.model.dispatchThis();
 					}
 				}, //showSubcats
+			
+			exploreProduct : function(pid)	{
+				$('#attribsDebugData, #variationsDebugData ,#inventoryDebugData, #prodDebugThumbs').empty();
+				myControl.ext.store_product.calls.appProductGet.init(pid,{'callback':'prodDebug','extension':'myRIA'});
+				myControl.model.dispatchThis();
+				},
+			
+			showItemsTaggedAs : function(tag)	{
+				$('#tagList li').removeClass('ui-state-active'); //remove any previously active states from list item choiced.
+				$('#'+tag).addClass('ui-state-active'); //add active state to list item now in focus.
+				$('#tagProdlist').empty().addClass('loadingBG'); //empty results container so new list isn't appended to previous list, if present.
+				myControl.ext.store_search.calls.appPublicProductSearch.init({'size':250,'mode':'elastic-native','filter':{'term':{'tags':tag}}},{'callback':'handleElasticResults','extension':'myRIA','datapointer':'appPublicSearch|'+tag,'parentID':'tagProdlist'});
+				myControl.model.dispatchThis();
+				}, //showItemsTaggedAs
 
 			changeDomains : function()	{
 				localStorage.clear(); //make sure local storage is empty so a new cart is automatically obtained.
 				location.reload(true); //refresh page to restart experience.
 				}
+
 			}, //actions
 		util : {
 			
+			buildTagsList : function(P)	{
+				var $ul = $("<ul>").attr(P); //what is returned.
+				var tags = new Array('IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9');
+				var $li;
+				var L = tags.length;
+				for(var i = 0; i < L; i += 1)	{
+					$li = $("<li>").attr('id',tags[i]).addClass('ui-state-default').text(tags[i]).click(function(){
+						myControl.ext.myRIA.action.showItemsTaggedAs(this.id);
+						});
+					$li.appendTo($ul);
+					}
+				return $ul;
+				},
+				
+			prodDebugImageList : function(datapointer)	{
+				var data = myControl.data[datapointer]['%attribs']
+				var $div = $("<div>").attr('id','debugImageContainer');
+				var filename;
+				for(var i = 1; i < 10; i += 1)	{
+					filename = data['zoovy:prod_image'+i];
+					if(filename)	{
+						$div.append("<figure>"+myControl.util.makeImage({"name":filename,"w":150,"b":"FFFFFF","tag":1})+"<figcaption>image"+i+": "+filename+"</figcaption>");
+						
+						}
+					}
+				return $div;
+				},
 			handleElasticFilterOrQuery : function()	{
-				var type = $('#filterQuerySelection').val();
-				var quilter = $.parseJSON($('#filterQuery').val()); //query/filter object
+				var quilter = $.parseJSON($('#advsrch_filterQuery').val()); //query/filter object
 				if(quilter)	{
 					myControl.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'myRIA','parentID':'elasticResults','datapointer':'elasticsearch|'+type});
 					myControl.model.dispatchThis();

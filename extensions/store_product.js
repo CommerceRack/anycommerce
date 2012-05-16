@@ -443,7 +443,7 @@ it is a parent
 it has no inventory AND inventory matters to merchant 
 */
 			productIsPurchaseable : function(pid)	{
-//				myControl.util.dump("BEGIN store_product.util.productIsPurchaseable");
+				myControl.util.dump("BEGIN store_product.util.productIsPurchaseable");
 				var r = true;  //returns true if purchaseable, false if not or error.
 				if(!pid)	{
 					myControl.util.dump(" -> pid not passed into store_product.util.productIsPurchaseable");
@@ -519,11 +519,14 @@ it has no inventory AND inventory matters to merchant
 //otherwise, will return the items inventory or, if variations are present, the sum of all inventoryable variations.
 //basically, a simple check to see if the item has purchaseable inventory.
 			getProductInventory : function(pid)	{
+				myControl.util.dump("BEGIN store_product.util.getProductInventory");
 				var inv = 0;
-				if($.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']))	{
-					inv = myControl.data['appProductGet|'+pid]['@inventory'][pid].inv
+//if variations are NOT present, inventory count is readily available.
+				if($.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory']))	{
+					inv = myControl.data['appProductGet|'+pid]['@inventory'][pid].inv 
 //					myControl.util.dump(" -> item has no variations. inv = "+inv);
 					}
+//if variations ARE present, inventory must be summed from each inventory-able variation.
 				else	{
 					for(var index in myControl.data['appProductGet|'+pid]['@inventory']) {
 						inv += Number(myControl.data['appProductGet|'+pid]['@inventory'][index].inv)
@@ -565,6 +568,7 @@ NOTES
 						$parent.append(myControl.util.makeImage({"class":"imageViewerSoloImage","h":"550","w":"550","bg":"ffffff","name":myControl.data['appProductGet|'+P.pid]['%attribs'][imageAttr],"tag":1}));
 						}	
 					$parent.dialog({modal: true,width:P.width ,height:P.height });
+					$parent.dialog('open'); //here to solve an issue where the modal would only open once.
 					}
 				else	{
 					myControl.util.dump(" -> no pid specified for image viewer.  That little tidbit is required.");

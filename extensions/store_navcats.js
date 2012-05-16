@@ -61,6 +61,7 @@ a typical 'fetchData' is done for a quick determination on whether or not ANY da
 if not, we're obviously missing what's needed.  If some data is local, check for the presence of the attributes
 requested and if even one isn't present, get all.
 datapointer needs to be defined early in the process so that it can be used in the handlecallback, which happens in INIT.
+obj.PATH = .cat.safe.id
 */
 		appPageGet : {
 			init : function(obj,tagObj,Q)	{
@@ -91,7 +92,6 @@ datapointer needs to be defined early in the process so that it can be used in t
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj['_cmd'] = "appPageGet";
-
 				myControl.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPageGet
@@ -249,6 +249,7 @@ templateID - the template id used (from myControl.templates)
 //				myControl.util.dump(" -> add data to template: "+tagObj.parentID+"_"+tagObj.datapointer.split('|')[1]);
 //yes, actually have to make sure .pretty exists. no shit. this happeneed. errored cuz pretty wasn't set.
 				if(myControl.data[tagObj.datapointer].pretty && myControl.data[tagObj.datapointer].pretty.charAt(0) !== '!')	{
+//					myControl.util.dump("store_navcats.callback.addCatToDom.onsuccess - Category ("+tagObj.datapointer+") is hidden.");
 					myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer],tagObj.parentID+"_"+tagObj.datapointer.split('|')[1]);
 					}
 				else	{
@@ -316,10 +317,10 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 
 /*
 a function for obtaining information about a categories children.
-assumes you have already retrieved data on parent so that @subcategories is present.
+assumes you have already retrieved data on parent so that @subcategories or @subcategoryDetail is present.
  -> catSafeID should be the category safe id that you want to obtain information for.
  -> call, in all likelyhood, will be set to one of the following:  appCategoryDetailMax, appCategoryDetailMore, appCategoryDetailFast.  It'll default to Fast.
-tagObj is optional and would contain the standard params that can be set in the _tag param (callback, templateID, etc).
+tagObj is optional and would contain an object to be passed as _tag in the request (callback, templateID, etc).
 if the parentID and templateID are passed as part of tagObj, a template instance is created within parentID.
 
 note - This function just creates the calls.  Dispatch on your own.
@@ -330,25 +331,34 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 			getChildDataOf : function(catSafeID,tagObj,call){
 				var numRequests = 0; //will get incremented once for each request that needs dispatching.
 				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
-				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
+//				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
 				var catsArray = []; 
 				var newParentID;
 				var tier = (catSafeID.split('.').length) - 1; //root cat split to 2, so subtract 1.
 				if(catSafeID == '.')
 					catsArray = this.getRootCats();
-				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')
+				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
 					catsArray = myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'];
+					myControl.util.dump("GOT HERE for "+catSafeID);
+					}
+//when a max detail is done for appCategoryDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
+				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
+					catsArray = this.getSubsFromDetail(catSafeID);
+					}
 				else	{
 					//most likely, category doesn't have subcats.
 					}
+				
+				
+				catsArray.sort(); //sort by safe id.
 				var L = catsArray.length;
 				var call = call ? call : "appCategoryDetail"
 //				myControl.util.dump(" -> tier = "+tier);
 //				myControl.util.dump(" -> parentID = "+tagObj.parentID);
 //				myControl.util.dump(" -> call = "+call);
 //				myControl.util.dump(" -> # subcats = "+L);
- //used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
+//used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
 				renderTemplate = false;
 				if(tagObj.templateID && tagObj.parentID)	{
 					var $parent = $('#'+tagObj.parentID);
@@ -372,8 +382,22 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 					}
 //				myControl.util.dump(' -> num requests: '+numRequests);
 				return numRequests;
-				} //getChildDataOf
-			}
+				}, //getChildDataOf
+
+//on a appCategoryDetail, the @subcategoryDetail contains an object. The data is structured differently than @subcategories.
+//this function will return an array of subcat id's, formatted like the value of 
+			getSubsFromDetail : function(catSafeID)	{
+
+var catsArray = new Array(); //what is returned. incremented with each dispatch created.
+var L = myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'].length
+for(var i = 0; i < L; i += 1)	{
+	catsArray.push(myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'][i].id);
+	}
+//myControl.util.dump(catsArray);
+return catsArray;			
+				} //getSubsFromDetail
+			
+			} //util
 
 
 		

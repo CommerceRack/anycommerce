@@ -42,6 +42,19 @@ var admin = function() {
 
 
 	calls : {
+
+
+		appResource : {
+			init : function(filename)	{
+				this.dispatch(filename);
+				},
+			dispatch : function(filename)	{
+				myControl.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
+				}
+			
+			}, 
+
+
 		navcats : {
 //myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
 			appCategoryDetailNoLocal : {
@@ -58,16 +71,6 @@ var admin = function() {
 			
 			}, //navcats
 
-		appResource : {
-			init : function(filename)	{
-				this.dispatch(filename);
-				},
-			dispatch : function(filename)	{
-				myControl.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
-				}
-			
-			}, 
-
 		mediaLib : {
 
 			adminImageFolderList : {
@@ -80,6 +83,9 @@ var admin = function() {
 				} //adminImageFolderList
 			
 			}, //mediaLib
+			
+			
+			
 		product : {
 			appProductGetNoLocal : {
 				init : function(pid,tagObj,Q)	{
@@ -174,8 +180,8 @@ var $templateDiv = $('<div \/>')
 $templateDiv.attr('id','adminTemplates').hide().appendTo('body');
 // /biz/ajax/zmvc/201211/admin_templates.html
 var protocol = document.location.protocol == 'https:' ? 'https:' : 'http:' //sometimes the protocol may be file:, so default to http unless secure.
-<<<<<<< HEAD
-var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201211/admin_templates.html';
+//<<<<<<< HEAD
+var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201218/admin_templates.html';
 myControl.util.dump("admin template url: "+adminTemplateURL);
 
 var result = $.ajax({
@@ -204,36 +210,7 @@ result.success(function(data){
 			}
 		})
 	})
-/*
-=======
-var adminTemplateURL = protocol+'//www.zoovy.com/biz/ajax/zmvc/201216/admin_templates.html';
-myControl.util.dump("admin template url: "+adminTemplateURL);
->>>>>>> 4d24d9788da63fc2f80f6bd73c836fd54656df9f
-var result = $templateDiv.load(adminTemplateURL,function(response, status, xhr){
-	if (status == "error") {
-		r = false;
-		 //!!! improve this.
-		}
-	else	{
-		$templateDiv.children().each(function(){
-			var id = false;
-			if(id = $(this).attr('id')){}  //set's id to element id for cloning. 
-			else if($(this).is('table')){
-				id = $(this).find("tr:first").attr('id')
-				}
-	//certain element types, such as li or tr have the id on the li or tr, but require a parent element in the definition file for IE support.
-			else if(id = $(this).children(":first").attr('id'))	{}
-			if(id)	{
-//				myControl.util.dump(" -> clone id: "+id);
-				myControl.templates[id] = $('#'+id).clone();
-	//remove original template so duplicate ID's don't occur (may cause jquery confusion).
-	//leave sections that didn't become templates for troubleshooting purposes. 
-				$(this).empty().remove();
-				}
-			}) //templatediv.each
-		}//else for status
-	}); //ajax request
-*/	
+
 				return r;
 				},
 			onError : function(d)	{
@@ -476,13 +453,14 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 					myControl.ext.store_product.calls.appProductGet.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
 				else	{
-					myControl.ext.store_navcats.calls.appCategoryDetail.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+//Too many f'ing issues with using a local copy of the cat data.
+					myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
 				myControl.model.dispatchThis();
 				}, //addFinderTo
 
 			showFinderInModal : function(path,sku)	{
-				var $finderModal = $('#prodFinder')
+				var $finderModal = $('#prodFinder');
 //a finder has already been opened. empty it.
 				if($finderModal.length > 0)	{
 					$finderModal.empty();
@@ -519,8 +497,8 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 				var $finderModal = $('#prodFinder')
 				var path = $finderModal.attr('data-path');
 				var sku = $finderModal.attr('data-sku');
-				myControl.util.dump(" -> path: "+path);
-				myControl.util.dump(" -> sku: "+sku);
+//				myControl.util.dump(" -> path: "+path);
+//				myControl.util.dump(" -> sku: "+sku);
 
 /*
 The process for updating a product vs a category are substantially different.  
@@ -544,23 +522,30 @@ for a category, each sku added or removed is a separate request.
 					myControl.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
 					}
 				else	{
+// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
+$('#finderRemovedList').find("li").each(function(){
+	$tmp = $(this);
+	if($tmp.attr('data-status') == 'remove')	{
+		myControl.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
+		$tmp.attr('data-status','queued')
+		}
+	});
+
 //category/list based finder.
 //concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
-					$('#finderTargetList, #finderRemovedList').find("li").each(function(index){
-						$tmp = $(this);
-						if($tmp.attr('data-status') == 'changed')	{
-							$tmp.attr('data-status','queued')
-							myControl.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
-							}
-						else if($tmp.attr('data-status') == 'remove')	{
-							myControl.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
-							$tmp.attr('data-status','queued')
-							}
-						else	{
+$("#finderTargetList li").each(function(index){
+	$tmp = $(this);
+	myControl.util.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
+	
+	if($tmp.attr('data-status') == 'changed')	{
+		$tmp.attr('data-status','queued')
+		myControl.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
+		}
+	else	{
 //datastatus set but not to a valid value. maybe queued?
-							}
-						});
-					myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+		}
+	});
+myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				//dispatch occurs on save button, not here.
 				}, //saveFinderChanges
@@ -588,6 +573,8 @@ else	{
 
 //kill original.
 $listItem.empty().remove();
+
+myControl.ext.admin.util.updateFinderCurrentItemCount();
 
 				}, //removePidFromFinder
 
@@ -718,7 +705,11 @@ $('#finderSearchForm').submit(function(event){
 
 			updateFinderCurrentItemCount : function()	{
 				$('#focusListItemCount').text(" ("+$("#finderTargetList li").size()+")");
-				$('#resultslistItemCount').text(" ("+$("#finderSearchResults li").size()+" remain)");
+				var resultsSize = $("#finderSearchResults li").size();
+				if(resultsSize > 0)	{
+					$('#resultsListItemCount').show(); //keeps the zero hidden on initial load.
+					}
+				$('#resultsListItemCount').text(" ("+resultsSize+" remain)")
 				},
 
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.

@@ -18,12 +18,13 @@
 
 
 
-zController = function(params,extensions) {
+var zController = function(params,extensions) {
 	this.util.dump('zController has been initialized');
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
-	else if(typeof zGlobals != 'object')	{
+//zglobals is not required in the UI, but is for any
+	else if(typeof zGlobals != 'object' && !params.noVerifyzGlobals)	{
 		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
 		}
 	else	{
@@ -39,6 +40,7 @@ jQuery.extend(zController.prototype, {
 
 		myControl.vars = {};
 		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
+		myControl.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
 		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		myControl.vars.fbUser = {};
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
@@ -92,7 +94,7 @@ copying the template into memory was done for two reasons:
 		myControl.ajax.overrideAttempts = 0; //incremented when an override occurs. allows for a cease after X attempts.
 		myControl.ajax.lastDispatch = null; //incremented when an override occurs. allows for a cease after X attempts.
 		myControl.ajax.requests = {"mutable":{},"immutable":{},"passive":{}}; //'holds' each ajax request. completed requests are removed.
-		myControl.sessionId;
+		myControl.sessionId = false;
 /*
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
 if no session id is passed, the getValidSessionID function will look to see if one is in local storage and use it or request a new one.
@@ -376,7 +378,7 @@ myControl.model.addDispatchToQ({
 //use myControl.sessionID if you need it in the onSuccess.
 //having a callback does allow for behavioral changes (update new session with old cart contents which may still be available.
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN myControl.callbacks.handleNewSession.onSuccess');
+//				myControl.util.dump('BEGIN myControl.callbacks.handleNewSession.onSuccess');
 				},
 			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handleNewSession.onError');
@@ -559,19 +561,17 @@ loadingBG is a class set on templates that is turned off in transmogrify/transla
 		handleErrors : function(d,uuid)	{
 			myControl.util.dump("BEGIN control.util.handleErrors for uuid: "+uuid);
 			var $target;
+//			myControl.util.dump(d);
 			if(!d || !d['_rtag'])	{
 				myControl.util.dump(" -> responseData (d) or responseData['_rtag'] is blank.");
 				var DQ = myControl.model.whichQAmIFrom(uuid);
 				d['_rtag'] = myControl.q[DQ][uuid]['_tag'];
 				}
 //			myControl.util.dump(d['_rtag']);
-			if(d['_rtag'].targetID)	{$target = $('#'+d['_rtag'].targetID)}
-			else if(d['_rtag'].parentID)	{$target = $('#'+d['_rtag'].parentID)}
-			else	{$target = $('#globalMessaging')}
-
-			if($target.length == 0)	{
-				$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');
-				}
+			if(d['_rtag'].targetID && $('#'+d['_rtag'].targetID).length)	{$target = $('#'+d['_rtag'].targetID)}
+			else if(d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID)}
+			else if	( $('#globalMessaging').length)	{$target = $('#globalMessaging')}
+			else	{$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');}
 			$target.removeClass('loadingBG').show().append(this.getResponseErrors(d));
 			},
 
@@ -596,11 +596,11 @@ which will have _msgs set or just one error, which will have errid set.
 */
 				if(d['_msgs'])	{
 					for(var i = 1; i <= d['_msgs']; i += 1)	{
-						myControl.util.dump(d['_msg_'+i+'_type']+": "+d['_msg_'+i+'_id']);
+//						myControl.util.dump(d['_msg_'+i+'_type']+": "+d['_msg_'+i+'_id']);
 						r += "<div>"+d['_msg_'+i+'_txt']+"<\/div>";
 						}
 					}
-				else if(d['errid'] > 0)	{
+				else if(d['errid'])	{
 					r += "<div>"+d.errmsg+" ("+d.errid+")<\/div>";
 					}
 				}
@@ -1259,7 +1259,6 @@ either way, what's returned from this function is a fully translated jquery obje
 
 if eleAttr is a string, that's the ID to be added to the template.  If the eleAttr is an object, it's a list of data attributes to be added to the template. this allows for things like data-pid or data-orderid to be set, which is handy for onClicks and such. pass in as {'pid':'productid'} and it'll be translated to data-pid='productid'
 
-
 transmogrify wants eleAttr passed in without data- on any of the keys.
 createTemplateInstance wants it WITH data- (legacy).
 
@@ -1272,7 +1271,7 @@ Then we'll be in a better place to use data() instead of attr().
 //			myControl.util.dump(eleAttr);
 			if(!templateID || typeof data != 'object' || !myControl.templates[templateID])	{
 				myControl.util.dump(" -> templateID ("+templateID+") not set or typeof data ("+typeof data+") not object or template doesn't exist not present/correct.");
-				myControl.util.dump(eleAttr);
+//				myControl.util.dump(eleAttr);
 				}
 			else	{
 //we have everything we need. proceed.
@@ -1296,11 +1295,11 @@ else if(typeof eleAttr == 'object')	{
 											   
 		var $focusTag = $(this);
 
-//		myControl.util.dump(' -> data-bind match found (ID = '+$focusTag.attr('id')+').');
+//		myControl.util.dump(' -> data-bind match found.');
 //proceed if data-bind has a value (not empty).
 		if(myControl.util.isSet($focusTag.attr('data-bind'))){
 			var bindData = myControl.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
-//				myControl.util.dump(bindData);
+//			myControl.util.dump(" -> "+bindData['var']);
 			if(bindData['var'])	{
 				value = myControl.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
 				}
@@ -1317,6 +1316,7 @@ else if(typeof eleAttr == 'object')	{
 //in cases where cleanValue is used inside the renderFormats.function, pre and post text must also be added.
 			bindData.cleanValue = value;
 			}
+//		myControl.util.dump(" -> typeof: "+typeof value);
 //		myControl.util.dump(" -> value: "+value);
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 
@@ -1341,6 +1341,7 @@ else if(typeof eleAttr == 'object')	{
 					myControl.renderFormats[bindData.format]($focusTag,{"value":value,"bindData":bindData}); 
 					}
 				else	{
+						$('#globalMessaging').append(myControl.util.formatMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)"));
 						myControl.util.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
 //						myControl.util.dump(bindData);
 					}
@@ -1421,12 +1422,9 @@ most likely, this will be expanded to support setting other data- attributes. ##
 // myControl.util.dump(' -> dataObj: ');
 // myControl.util.dump(dataObj);
 
+//yes, i wish I'd commented why this is here. jt.
 		if(dataObj)	{dataObj.id = safeTarget}
 		else	{dataObj = safeTarget;}
-
-//myControl.util.dump(' -> dataObj after ID: ');
-//myControl.util.dump(dataObj);
-
 
 //myControl.util.dump(dataObj);
 var $tmp = myControl.renderFunctions.transmogrify(dataObj,templateID,data);
@@ -1458,19 +1456,25 @@ $('#'+safeTarget).replaceWith($tmp);
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
 //myControl.util.dump('BEGIN myControl.renderFunctions.getAttributeValue');
-//myControl.util.dump(' -> attributeID = '+attributeID);
 //myControl.util.dump(' -> namespace = '+namespace);
+//myControl.util.dump(' -> attributeID = '+attributeID);
 
 
 				
 //In some cases, like categories, some data is in the root and some is in %meta.
 //pass %meta.cat_thumb, for instance.  currenlty, only %meta is supported. if/when another %var is needed, this'll need to be expanded. ###
 //just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
-				if(attributeID.charAt(0) === '%' && namespace == 'category')	{
-//					myControl.util.dump(' -> % attribute = '+attributeID.substr(6));
+				if(attributeID.substring(0,5) === '%meta' && namespace == 'category')	{
 					value = data['%meta'][attributeID.substr(6)];
-//					myControl.util.dump(" -> value = "+value);
 					}
+//rendering a category page now merges appCategoryDetail and appPage get (appCategoryDetail|safeid[%page]
+				else if(namespace == 'page')	{
+					if(typeof data['%page'] == 'object')	{value = data['%page'][attributeID]} //%page may get added into another object, such as categoryDetail
+					else {value = data[attributeID]}//will get used if translating a appPageGet
+					}
+//				else if(namespace == 'elastic-native')	{
+//					value = true; //for now just return true. need to set this up to return datapointer at some point. ###
+//					}
 //and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
 				else if(namespace == 'order')	{
 //					myControl.util.dump(' -> parsing order data. % attribute = '+attributeID);
@@ -1481,7 +1485,7 @@ $('#'+safeTarget).replaceWith($tmp);
 						value = data['payments'][attributeID.substr(9)];
 						}
 					else if(attributeID.substring(0,12) == 'full_product')	{
-						myControl.util.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
+//						myControl.util.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
 						value = data['full_product'][attributeID.substr(13)];
 						}
 					else	{
@@ -1496,12 +1500,12 @@ $('#'+safeTarget).replaceWith($tmp);
 						}
 //cart items have some data at root level and some nested one level deeper in full_product
 					else if(attributeID.substring(0,12) == 'full_product')	{
-						myControl.util.dump(' -> attributeID: '+attributeID+'[ '+attributeID.substr(13)+']');
+//						myControl.util.dump(' -> attributeID: '+attributeID+'[ '+attributeID.substr(13)+']');
 						value = data.full_product[attributeID.substr(13)]
-						myControl.util.dump(' -> value: '+value);
+//						myControl.util.dump(' -> value: '+value);
 						}
 					else if(attributeID.indexOf(':') < 0)	{
-//					myControl.util.dump(' -> attribute does not contain : probably a stid or sku reference.');
+//					myControl.util.dump(' -> attribute does not contain : possibly a stid or sku reference.');
 						value = data[attributeID]
 						}
 					else	{
@@ -1599,7 +1603,7 @@ $('#'+safeTarget).replaceWith($tmp);
 				}
 			},
 
-		
+
 		youtubeVideo : function($tag,data){
 			var r = "<iframe style='z-index:1;' width='560' height='315' src='http://www.youtube.com/embed/"+data.bindData.cleanValue+"' frameborder='0' allowfullscreen></iframe>";
 			if(data.bindData.pretext){r = data.bindData.pretext + r}
@@ -1642,7 +1646,47 @@ else	{
 			}, //googleCheckoutButton
 
 		
-		
+//set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
+//used for displaying a 'new arrival' tag on a product in a list or on the product detail page. Will only show one tag.
+//there are a lot of tags that can be used, but not all are as appropriate for this use case.
+//typically, free shipping is handled differently, so it is not whitelisted here.
+/* may not need this anymore, in favor of numtags support in addtagspans
+		assignTagClass : function($tag,data)	{
+			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER');
+//			var csv = data.value.split(',');
+			var L = whitelist.length;
+			var tag; //used to store which tag is enabled. processes in the order of the tags in whitelist, so use that order to set display priority
+			for(var i = 0; i < L; i += 1)	{
+				if(data.value.indexOf(whitelist[i])	{
+					tag = whitelist[i].toLowerCase();
+					break; //kill loop once a match is made.
+					}
+				}
+			$tag.addClass(tag);
+			},
+*/
+
+
+//set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
+//used for displaying a  series of tags, such as on the product detail page. Will show any tag enabled.
+//on bind-data, set maxTagsShown to 1 to show only 1 tag
+		addTagSpans : function($tag,data)	{
+			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9');
+			var csv = data.value.split(',');
+			var L = whitelist.length;
+			var tagsDisplayed = 0;
+			var maxTagsShown = myControl.util.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : 100; //default to a high # to show all tags.
+			var spans = ""; //1 or more span tags w/ appropriate tag class applied
+			for(var i = 0; i < L; i += 1)	{
+				if(data.value.indexOf(whitelist[i]) && tagsDisplayed <= maxTagsShown)	{
+					spans += "<span class='"+whitelist[i].toLowerCase()+"'><\/span>";
+					tagsDisplayed += 1;
+					}
+				}
+			$tag.append(spans);
+			},
+
+
 		
 		addClass : function($tag,data){
 			$tag.addClass(data.value);

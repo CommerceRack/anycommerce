@@ -534,9 +534,10 @@ see jquery/api webdoc for required/optional param
 					errors += '<li>please enter a valid email address.</li>';
 
 //name is not required, but if something is there, make sure its the full name.
-				if(obj.fullname && obj.fullname.indexOf(' ') < 0)
+				if(obj.fullname.toLowerCase == 'full name')
+					errors += '<li>please enter your full name.</li>';					
+				else if(obj.fullname && obj.fullname.indexOf(' ') < 0)
 					errors += '<li>please enter your full name.</li>';
-					
 				if(!errors)
 					return true;
 				else

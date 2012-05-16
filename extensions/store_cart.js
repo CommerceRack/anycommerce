@@ -118,7 +118,7 @@ formerly showCart
 				tagObj.datapointer = "cartShippingMethods";
 				
 				if(myControl.model.fetchData('cartShippingMethods') == false)	{
-					myControl.util.dump(" -> cartItemsList is not local. go get her Ray!");
+					myControl.util.dump(" -> cartShippingMethods is not local. go get her Ray!");
 					r = 1;
 					Q = Q ? Q : 'immutable'; //allow for muted request, but default to immutable. it's a priority request.
 					this.dispatch(tagObj,Q);
@@ -199,13 +199,13 @@ formerly showCart
 			}, //init
 		displayCart :  {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN myControl.ext.store_cart.callbacks.displayCart.onSuccess');
+//				myControl.util.dump('BEGIN myControl.ext.store_cart.callbacks.displayCart.onSuccess');
 				myControl.ext.store_cart.vars.cartAccessories = myControl.ext.store_cart.util.getCSVOfAccessories();
-				myControl.util.dump(' -> '+tagObj.parentID);
+//				myControl.util.dump(' -> '+tagObj.parentID);
 				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,tagObj.parentID);
 				var $parent = $('#'+tagObj.parentID);
 //generates the list of lineitems.
-				myControl.ext.store_cart.util.showStuff({"parentID":"cartViewerContents","templateID":"cartViewerProductTemplate"});
+				myControl.ext.store_cart.util.showStuff({"parentID":"cartStuffList","templateID":"productListTemplateCart"});
 //update summaries.
 //displays subtotals.
 				$('#cartSummaryTotals').append(myControl.renderFunctions.createTemplateInstance('cartSummaryTemplate','cartSummary'));
@@ -374,7 +374,7 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 //put the loadingBG class into the template, not onto the div created here (jqueryUI classes will override it).
 */
 			showCartInModal : function(templateID)	{
-				myControl.util.dump("BEGIN store_cart.util.showCartInModal");
+//				myControl.util.dump("BEGIN store_cart.util.showCartInModal");
 
 				var $parent = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.
@@ -400,7 +400,7 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 //if we get to this point, ship methods are already in memory/local. the cartItemsList call below will check memory/local before making a request.
 					myControl.ext.store_cart.calls.cartItemsList.init(tagObj,'immutable');
 					}
-				myControl.util.dump(" -> GOT THIS FAR");
+//				myControl.util.dump(" -> GOT THIS FAR");
 
 				myControl.model.dispatchThis('immutable');
 //show modal, even though pretty much empty. Allows for something to happen right away so user knows the app is working on it.
@@ -451,7 +451,7 @@ Parameters expected are:
 	templateID = the name of the template to use.
 */
 			showStuff : function(P)	{
-//				myControl.util.dump("BEGIN store_cart.util.showStuff");
+//				myControl.util.dump("BEGIN store_cart.util.showStuff (parentid = "+P.parentID+")");
 				if(!P.parentID || !P.templateID)	{
 					myControl.util.dump(" -> parentID ("+P.parentID+") and/or TemplateID ("+P.templateID+") blank. both are required.");
 					}
@@ -459,13 +459,15 @@ Parameters expected are:
 					var $parent = $('#'+P.parentID);
 					var L = myControl.data.cartItemsList.cart.stuff.length;
 					var stid; //stid for item in loop.
-					myControl.util.dump(" -> items in stuff = "+L);
+//					myControl.util.dump(" -> items in stuff = "+L);
 					
 					for(var i = 0; i < L; i += 1)	{
-						stid = myControl.data.cartItemsList.cart.stuff[i].stid
+						stid = myControl.data.cartItemsList.cart.stuff[i].stid;
+//						myControl.util.dump(" -> STID: "+stid);
+						$parent.append(myControl.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},P.templateID,myControl.data.cartItemsList.cart.stuff[i]));
 //						myControl.util.dump(" -> stid["+i+"] = "+stid);
-						$parent.append(myControl.renderFunctions.createTemplateInstance(P.templateID,{"id":"cartViewer_"+stid,"stid":stid}));
-						myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart.stuff[i],"cartViewer_"+stid);
+//						$parent.append(myControl.renderFunctions.createTemplateInstance(P.templateID,{"id":"cartViewer_"+stid,"stid":stid}));
+//						myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart.stuff[i],"cartViewer_"+stid);
 //make any inputs for coupons disabled.
 						if(stid[0] == '%')	{$parent.find(':input').attr({'disabled':'disabled'})}
 							
