@@ -1,0 +1,83 @@
+<!DOCTYPE html >
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Snippets</title>
+<script src="../jquery-1.7.2.min.js"></script>
+
+<script type='text/javascript'>
+
+resizeIt = function() {
+	var str = $('text-area').value;
+	var cols = $('text-area').cols;
+	
+	var linecount = 0;
+	$A(str.split("\n")).each( function(l) {
+	  linecount += Math.ceil( l.length / cols ); // take into account long lines
+	} )
+	$('text-area').rows = linecount + 1;
+	};
+
+
+$(function() {
+	$('textarea').each(function(){
+		var $this = $(this);
+		var str = $this.val().split('\n');
+		$this.height(str.length * 1.5 +'em');
+		})
+	});
+
+</script>
+
+<style type='text/css'>
+body, html	{font-size:100%; font-family:Verdana, Helvetica, sans-serif; color:#666666;}
+textarea	{width:90%; height:auto; font-size:.9em; line-height:1.3em;}
+</style>
+</head>
+
+<body>
+
+
+
+<h1>Quickstart Snippets</h1>
+
+
+<h2>Forms</h2>
+
+<h3>Search Form</h3>
+
+<textarea>
+<form id='headerSearchFrm' name='headerSearchFrm' action='#' class='productSearchForm' method="get">
+	<fieldset>
+	<legend>Search</legend>
+	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
+	<input type='hidden' name='CATALOG' value='' class="productSearchCatalog" />
+	</fieldset>
+	<input class="search" id='headerSearchSubmit' type="submit" value="Search" />
+</form>
+</textarea>
+<ul>
+	<li>The form class 'productSearchForm' is used to bind a submit action. Adding classes is fine, but do NOT remove this class.</li>
+	<li>The class 'handleDefault' is used to add an onFocus and onBlur event to take care of hiding/showing the defualt text.</li>
+</ul>
+
+<h3>Newsletter Sign Up</h3>
+<textarea>
+<form action='#' id='subscribeFrmFooter' name='subscribeFrm' class='newsletterSubscriptionForm' method="get">
+<fieldset >
+	<legend>Newsletter Signup</legend>
+	<input required='required' type='email' value='email address' class='newsSubscribeInput textbox email handleDefault'  maxlength='50' size='25' name='login' id='subscribeLoginFooter' />
+	<input required='required' type='text'  value='full name' class='newsSubscribeInput textbox fullname handleDefault' maxlength='50' size='25' name='fullname' id='subscribeFullnameFooter' />
+</fieldset>
+	<input type="submit" class="submit" value="Join Now!" />
+</form>
+</textarea>
+
+<ul>
+	<li>The form class 'newsletterSubscriptionForm' is used to bind a submitAction. Adding classes is fine, but do NOT remove this class.</li>
+	<li>The class 'handleDefault' is used to add an onFocus and onBlur event to take care of hiding/showing the defualt text.</li>
+</ul>
+
+
+</body>
+</html>
