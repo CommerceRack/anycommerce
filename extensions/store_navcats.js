@@ -260,7 +260,27 @@ templateID - the template id used (from myControl.templates)
 			onError : function(d)	{
 				$('#globalMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
-			}
+			},
+
+
+//to display a category w/ thumbnails, first the parent category obj is fetched (appCategoryDetail...) and this would be the callback.
+//it will get the detail of all the children, including 'meta' which has the thumbnail. It'll absorb the tag properties set in the inital request (parent, template) but
+// override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
+		getChildData : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.getChildData.onSuccess');
+				var catSafeID = tagObj.datapointer.split('|')[1];
+				myControl.util.dump(" -> catsafeid: "+catSafeID);
+				tagObj.callback = addCatToDom; //the tagObj will have 
+				myControl.ext.store_navcats.util.getChildDataOf(catSafeID,tagObj,'appCategoryDetail');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+				myControl.model.dispatchThis();
+				},
+			onError : function(d)	{
+				myControl.util.handleErrors(responseData,uuid)
+				}
+			} //getChildData
+
+
 		}, //callbacks
 
 
@@ -286,9 +306,66 @@ templateID - the template id used (from myControl.templates)
 			numProduct : function($tag,data){
 //					myControl.util.dump('BEGIN store_navcats.renderFormats.numProduct');
 					$tag.append(data.value.length);
-				} //numSubcats
+				}, //numSubcats
 
-			},
+
+
+//assumes that you have already gotten a 'max' detail for the safecat specified data.value.
+//shows the category, plus the first three subcategories.
+			subcategory2LevelList : function($tag,data)	{
+//				myControl.util.dump("BEGIN store_navcats.renderFormats.subcatList");
+				var catSafeID; //used in the loop for a short reference.
+				var subcatDetail = data.value;
+				var o = '';
+				if(!$.isEmptyObject(subcatDetail))	{
+					var L = subcatDetail.length;
+					var size = L > 15 ? 15 : L; //don't show more than 15.
+//!!! hhhmm.. needs fixin. need to compensate 'i' for hidden categories.
+					for(var i = 0; i < size; i +=1)	{
+						if(subcatDetail[i].pretty[0] != '!')	{
+							catSafeID = subcatDetail[i].id;
+							o += "<li><a href='#' onClick=\"showContent('category',{'navcat':'"+catSafeID+"'}); return false;\">"+subcatDetail[i].pretty+ "<\/a><\/li>";
+							}
+						}
+					if(L > size)	{
+						o += "<li class='viewAllSubcategories' onClick=\"showContent('category',{'navcat':'"+data.value+"'});\">View all "+L+" Categories<\/li>";
+						}
+					$tag.append(o);
+					}		
+				}, //subcategory2LevelList		
+
+//pass in category safe id as value
+			breadcrumb : function($tag,data)	{
+//myControl.util.dump("BEGIN store_navcats.renderFunctions.breadcrumb");
+var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
+var TID = data.bindData.loadsTemplate; //Template ID
+//on a category page, the catsafeid is the value. on a product page, the value is an array of recent categories, where 0 is always the most recent category.
+var path = typeof(data.value) == 'object' ? data.value[0] : data.value;
+if(path)	{
+	var pathArray = path.split('.');
+	var L = pathArray.length;
+	var s = '.'
+	var catSafeID; //recycled in loop for path of category in focus during iteration.
+	
+	//myControl.util.dump(" -> path: "+path);
+	//myControl.util.dump(" -> TID: "+TID);
+	//myControl.util.dump(pathArray);
+	//myControl.util.dump(" -> L: "+L);
+	//make sure homepage has a pretty.  yes, it sometimes happens that it doesn't.
+	if(!myControl.data['appCategoryDetail|.'].pretty)
+		myControl.data['appCategoryDetail|.'].pretty = 'Home';
+	
+	$tag.append(myControl.renderFunctions.transmogrify({'id':'.','catsafeid':'.'},data.bindData.loadsTemplate,myControl.data['appCategoryDetail|.']));
+	for(i = 1; i < L; i += 1)	{
+		s += pathArray[i];
+	//	myControl.util.dump(" -> "+i+" s(path): "+s);
+		$tag.append(myControl.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,myControl.data['appCategoryDetail|'+s]));
+		s += '.';
+		}
+}
+				} //breadcrumb
+
+			}, //renderFormats
 
 
 ////////////////////////////////////   UTIL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -330,7 +407,7 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 */
 			getChildDataOf : function(catSafeID,tagObj,call){
 				var numRequests = 0; //will get incremented once for each request that needs dispatching.
-				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
+//				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
 //				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
 				var catsArray = []; 
@@ -395,7 +472,27 @@ for(var i = 0; i < L; i += 1)	{
 	}
 //myControl.util.dump(catsArray);
 return catsArray;			
-				} //getSubsFromDetail
+				}, //getSubsFromDetail
+			
+						
+			addQueries4BreadcrumbToQ : function(path)	{
+//				myControl.util.dump("BEGIN myRIA.util.getBreadcrumbData");
+				var numRequests = 0;
+				var pathArray = path.split('.');
+				var len = pathArray.length
+				var s= '.'; //used to contatonate safe id.
+				numRequests += myControl.ext.store_navcats.calls.appCategoryDetail.init('.'); //homepage data. outside of loop so I can keep loop more efficient
+				for (var i=1; i < len; i += 1) {
+					s += pathArray[i]; //pathArray[0] will be blank, so s (.) plus nothing is just .
+//					myControl.util.dump(" -> path for breadcrumb: "+s);
+					numRequests += myControl.ext.store_navcats.calls.appCategoryDetail.init(s);
+				//after each loop, the . is added so when the next cat id is appended, they're concatonated with a . between. won't matter on the last loop cuz we're done.
+					s += "."; //put a period between each id. do this first so homepage data gets retrieved.
+					
+					}
+				return numRequests;
+				}			
+			
 			
 			} //util
 

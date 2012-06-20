@@ -162,7 +162,8 @@ var store_product = function() {
 				$('#atcMessaging_'+myControl.data[tagObj.datapointer].product1).append(myControl.util.formatMessage({'message':'Item(s) added to the cart!','uiIcon':'check'}))
 				},
 			onError : function(responseData,uuid)	{
-				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.init.onError');
+				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.itemAddedToCart.onError');
+				myControl.util.dump(responseData);
 				$('.atcButton').removeAttr('disabled'); //remove the disabling so users can push the button again, if need be.
 				$('#atcMessaging_'+myControl.data[responseData['_rtag'].datapointer].product1).append(myControl.util.getResponseErrors(responseData))
 				}
@@ -293,20 +294,28 @@ addToCart : function (pid){
 
 			atcForm : function($tag,data)	{
 //data.value = pid
-				var formID = $tag.attr('id')+'_'+data.bindData.cleanValue; //append the pid to the ID to give it a unique ID
+				var formID = $tag.attr('id')+'_'+data.value; //append the pid to the ID to give it a unique ID
 //				$tag.bind('submit',function(){return false;})
 				$tag.attr('id',formID).append("<input type='hidden' name='add' value='yes' /><input type='hidden' name='product_id' id='"+formID+"_product_id' value='"+data.value+"' />");
 				},
-
-			childrenProdlist : function($tag,data)	{
-				$tag.append(data.value);
+			
+			reviewList : function($tag,data)	{
+//				myControl.util.dump("BEGIN store_product.renderFormats.reviewList");
+				var templateID = data.bindData.loadsTemplate;
+//				myControl.util.dump(data.value)
+				var L = data.value.length;
+				for(i = 0; i < L; i += 1)	{
+					$tag.append(myControl.renderFunctions.transmogrify({'id':'review_'+i},templateID,data.value[i]));
+					}
+				return L;
 				},
+
 			quantityDiscounts : function($tag,data)	{
-				myControl.util.dump("BEGIN store_product.renderFormats.quantityDiscounts");
-				myControl.util.dump("value: "+data.bindData.cleanValue);
+//				myControl.util.dump("BEGIN store_product.renderFormats.quantityDiscounts");
+//				myControl.util.dump("value: "+data.value);
 				var o = ''; //what is output;
 				
-				var dArr = data.bindData.cleanValue.split(',');
+				var dArr = data.value.split(',');
 				var tmp,num;
 				var L = dArr.length;
 //## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
@@ -325,18 +334,15 @@ addToCart : function (pid){
 						if(tmp[1].indexOf('$') >= 0){tmp[1] = tmp[1].substring(1)} //strip $, if present
 //						myControl.util.dump(" -> tmp[1] = "+tmp[1]);
 						num = Number(tmp[1]) / Number(tmp[0])
-						myControl.util.dump(" -> number = "+num);
+//						myControl.util.dump(" -> number = "+num);
 						o += myControl.util.formatMoney(num,'$','') //test spork 1000
 						o += " each<\/div>";
 						}
 					else	{
-						myControl.util.dump("qty discount contained neither a / or an =. odd.");
+						myControl.util.dump("WARNING! invalid value for qty discount. Contained neither a '/' or an '='.");
 						}
 					tmp = ''; //reset after each loop.
 					}
-			
-				if(data.bindData.pretext){o = data.bindData.pretext + o}
-				if(data.bindData.posttext){o += data.bindData.posttext}
 				$tag.append(o);
 				},
 
@@ -352,11 +358,9 @@ addToCart : function (pid){
 
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
-				if(myControl.ext.store_product.util.productIsPurchaseable(data.bindData.cleanValue))	{
+				if(myControl.ext.store_product.util.productIsPurchaseable(data.value))	{
 					var o = '';
-					o += data.bindData.pretext ? data.bindData.pretext : "";
-					o += "<input type='text' value='1' size='3' name='quantity' class='zform_textbox' id='quantity_"+data.bindData.cleanValue+"' />";
-					o += data.bindData.posttext ? data.bindData.posttext : ""
+					o += "<input type='number' value='1' size='3' name='quantity' min='1' class='zform_number' id='quantity_"+data.value+"' />";
 					$tag.append(o);
 					}
 				else
@@ -365,7 +369,7 @@ addToCart : function (pid){
 
 //add all the necessary fields for quantity inputs.
 			atcFixedQuantity : function($tag,data)	{
-				$tag.attr('id','quantity_'+data.bindData.cleanValue);
+				$tag.attr('id','quantity_'+data.value);
 				},
 
 
@@ -377,7 +381,7 @@ addToCart : function (pid){
 //it loops through the products options and adds them to the fieldset (or whatever $tag is, but a fieldset is a good idea).
 			atcVariations : function($tag,data)	{
 //				myControl.util.dump("BEGIN store_product.renderFormats.atcVariations");
-				var pid = data.bindData.cleanValue; 
+				var pid = data.value; 
 				var formID = $tag.closest('form').attr('id'); //move up the dom tree till the parent form is found
 
 //				myControl.util.dump(" -> pid: "+pid);
@@ -413,7 +417,7 @@ $display.appendTo($tag);
 			addToCartButton : function($tag,data)	{
 //				myControl.util.dump("BEGIN store_product.renderFunctions.addToCartButton");
 //				myControl.util.dump(" -> ID before any manipulation: "+$tag.attr('id'));
-				var pid = data.bindData.cleanValue;
+				var pid = data.value;
 // add _pid to end of atc button to make sure it has a unique id.
 // add a success message div to be output before the button so that messaging can be added to it.
 // atcButton class is added as well, so that the addToCart call can disable and re-enable the buttons.
@@ -443,18 +447,18 @@ it is a parent
 it has no inventory AND inventory matters to merchant 
 */
 			productIsPurchaseable : function(pid)	{
-				myControl.util.dump("BEGIN store_product.util.productIsPurchaseable");
+//				myControl.util.dump("BEGIN store_product.util.productIsPurchaseable");
 				var r = true;  //returns true if purchaseable, false if not or error.
 				if(!pid)	{
-					myControl.util.dump(" -> pid not passed into store_product.util.productIsPurchaseable");
+					myControl.util.dump("ERROR! pid not passed into store_product.util.productIsPurchaseable");
 					r = false;
 					}
 				else if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:base_price'] == '')	{
-					myControl.util.dump(" -> base price not set: "+pid);
+//					myControl.util.dump(" -> base price not set: "+pid);
 					r = false;
 					}
 				else if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_type'] == 'PARENT')	{
-					myControl.util.dump(" -> product is a parent: "+pid);
+//					myControl.util.dump(" -> product is a parent: "+pid);
 					r = false;
 					}
 //inventory mode of 1 will allow selling more than what's in stock, so skip any inv validating if == 1.
@@ -477,28 +481,7 @@ it has no inventory AND inventory matters to merchant
 				return r;
 				},
 				
-				
-//will get prodDetails for all items in accessories, related items, grp_children and grp_parent.
-//uses the passive q.
-			getXsellForPID : function(pid,Q)	{
-				var csvArray = new Array();
-				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:related_products'])
-					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:related_products'])
-				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:accessory_products'])
-					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:accessory_products'])
-				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_children'])
-					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_children'])
-				if(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_parent'])
-					csvArray.concat(myControl.data['appProductGet|'+pid]['%attribs']['zoovy:grp_parent'])
 
-//				myControl.util.dump("csvArray.length before remove duplicates = "+csvArray.length);
-				csvArray = $.grep(csvArray,function(n){return(n);}); //remove blanks
-//				myControl.util.dump("csvArray.length after remove blanks = "+csvArray.length);
-				csvArray = myControl.util.removeDuplicatesFromArray(csvArray);
-//				myControl.util.dump("csvArray.length after remove duplicates = "+csvArray.length);
-			
-				return this.getProductDataForLaterUse(csvArray,Q); //will return the # of requests. will b zero if all data in memory/local.
-				},
 
 //fairly straightforward way of getting a list of csv and doing nothing with it.
 //or, a followup 'ping' could be added to perform an action once this data is obtained.
@@ -519,7 +502,7 @@ it has no inventory AND inventory matters to merchant
 //otherwise, will return the items inventory or, if variations are present, the sum of all inventoryable variations.
 //basically, a simple check to see if the item has purchaseable inventory.
 			getProductInventory : function(pid)	{
-				myControl.util.dump("BEGIN store_product.util.getProductInventory");
+//				myControl.util.dump("BEGIN store_product.util.getProductInventory");
 				var inv = 0;
 //if variations are NOT present, inventory count is readily available.
 				if($.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory']))	{
@@ -555,7 +538,7 @@ NOTES
 					var imageAttr = "zoovy:prod_image";
 					imageAttr += P.int ? P.int : "1";
 					P.width = P.width ? P.width : 600;
-					P.height = P.height ? P.height : 600;
+					P.height = P.height ? P.height : 660;
 					
 					var $parent = this.handleParentForModal(parentID,myControl.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
 
@@ -574,39 +557,7 @@ NOTES
 					myControl.util.dump(" -> no pid specified for image viewer.  That little tidbit is required.");
 					}
 				},
-/*
-when the review summary child is created, the parents ID is included as part of it.
-this is done because it is likely multiple summaries could be displayed at the same time (a short at the top and a detailed w/ reviews).
-*/
-			showReviewSummary : function(P)	{
-				if(P.pid && P.parentID && P.templateID)	{
-					var $revSum = $('#'+P.parentID);
-					$revSum.append(myControl.renderFunctions.createTemplateInstance(P.templateID,P.parentID+'_summary_'+P.pid));
-					myControl.renderFunctions.translateTemplate(myControl.ext.store_product.util.summarizeReviews(P.pid),P.parentID+'_summary_'+P.pid);
-					}
-				else	{
-					myControl.util.dump("Required parameters missing for showReviewSummary. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
-					}
-				},
-			
-//requires P.pid, P.templateID and P.parentID.
-			showReviews : function(P)	{
-				if(P.pid && P.parentID && P.templateID && typeof myControl.data['appReviewsList|'+P.pid] != 'undefined' )	{
-//					myControl.util.dump("Required for showReviews. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
-					var $reviews = $('#'+P.parentID);
-					var L = myControl.data['appReviewsList|'+P.pid]['@reviews'].length;
-//					myControl.util.dump(" -> length = "+L);
-					for(i = 0; i < L; i += 1)	{
-						$reviews.append(myControl.renderFunctions.createTemplateInstance(P.templateID,'prodReview_'+P.pid+'_'+i));
-						myControl.renderFunctions.translateTemplate(myControl.data['appReviewsList|'+P.pid]['@reviews'][i],'prodReview_'+P.pid+'_'+i);
-						}
 
-					}
-				else	{
-					myControl.util.dump("Required parameters missing for showReviews. P.pid = "+P.pid+" and P.templateID = "+P.templateID+" and P.parentID = "+P.parentID);
-					}
-				
-				},
 			
 /*
 P is passed in. Guess what? it's an object.
@@ -631,7 +582,9 @@ NOTES
 						} //if no parent is specified, this is a 'recycled' modal window. empty any old product data.
 					
 					$parent.append(myControl.renderFunctions.createTemplateInstance(P.templateID,"productViewer_"+parentID));
-					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100});
+					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false});
+					$parent.dialog('open');
+					
 					var tagObj = {};
 					
 					tagObj.templateID = P.templateID;
@@ -703,11 +656,7 @@ NOTES
 					}
 				else	{
 					L = myControl.data['appReviewsList|'+pid]['@reviews'].length;
-					myControl.util.dump(" -> length = "+L);
-					sum = 0;
-					avg = 0;
 					for(i = 0; i < L; i += 1)	{
-//						myControl.util.dump(" -> rating = "+myControl.data['appReviewsList|'+pid]['@reviews'][i].RATING);
 						sum += Number(myControl.data['appReviewsList|'+pid]['@reviews'][i].RATING);
 						}
 					avg = Math.round(sum/L);

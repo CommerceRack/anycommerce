@@ -32,7 +32,7 @@ input:focus {
 button:focus	{outline:none;}
 button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default class doesn't handle padding for 'button' elements. */
 
-
+.bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
 
 /* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
@@ -94,7 +94,8 @@ button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default cl
 .appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
 /* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
-.sideline	{float:right; width:200px; margin-left:24px;}
+.sideline	{float:right; width:200px; margin:0 0 24px 24px;}
+.sideline li a	{padding:3px 0; text-decoration:none;}
 
 .marginBottom	{margin-bottom:12px;} /* a generic margin for between elements or sections */
 
@@ -127,6 +128,11 @@ and override using classes or id's as needed.
 .productList h6, .categoryList h6	{font-size:.85em;}
 
 
+/* multpage header for lists (product list) - most styling handled by jqueryUI */
+
+.mpControls	{padding:2px 6px;}
+
+
 /***************************************************
 
 PRODUCT DETAIL PAGE
@@ -135,6 +141,8 @@ PRODUCT DETAIL PAGE
 
 #prodViewerTable	{width:100%;}
 
+.breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
+
 /* primary image and thumbnails */
 .imageContainer	{width:10%; padding-right:24px;}
 #prodViewerTable .prodThumbs div	{float:left; margin:12px 12px 0 0;}
@@ -142,7 +150,7 @@ PRODUCT DETAIL PAGE
 
 .prodSummaryContainer	{width:90%;}
 
-#tabbedProductContent .tabs li	{display:none;} /* tabs are hidden by default. enabled if field is populated */
+
 #tabbedProductContent #prodReviewsTab	{display:block;} /* reviews tab always shows up */
 
 /*
@@ -159,12 +167,18 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
-.reviewSprite	{background:url(qs_reviews_stars-150x150.png) no-repeat; width:122px; height:21px; display:inline-block;}
-.review_1, .review_2	{background-position:0 0;}
-.review_3, .review_4	{background-position:0 -26px;}
-.review_4, .review_6	{background-position:0 -53px;}
-.review_7, .review_8	{background-position:0 -79px;}
-.review_9, .review_10	{background-position:0 -106px;}
+.reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:inline-block;}
+.review_0 	{background-position:0 0;}
+.review_1 	{background-position:0 -29px;}
+.review_2	{background-position:0 -61px;}
+.review_3	{background-position:0 -91px;}
+.review_4	{background-position:0 -121px;}
+.review_4	{background-position:0 -151px;}
+.review_6	{background-position:0 -181px;}
+.review_7	{background-position:0 -211px;}
+.review_8	{background-position:0 -241px;}
+.review_9	{background-position:0 -270px;}
+.review_10	{background-position:0 -301px;}
 
 
 
@@ -184,6 +198,24 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 
 
+/***************************************************
+
+CATEGORY PAGES
+
+***************************************************/
+
+
+/* breadcrumb */
+
+#breadcrumb	{margin-bottom:12px;}
+#breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
+#breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
+#breadcrumb li:last-child:after	{content:"";}
+
+#breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
+
+
+
 
 /***************************************************
 
@@ -195,6 +227,7 @@ CUSTOMER PAGES
 
 
 /****** LOGIN MODAL ******/
+#loginFormForModal fieldset	{border:0}
 .loginOption fieldset div	{margin-bottom:12px;}
 .loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
 .loginOption label:after	{margin-right:12px; content:":"}
@@ -208,6 +241,16 @@ CUSTOMER PAGES
 
 
 
+/***************************************************
+
+SEARCH RESULTS PAGE
+
+***************************************************/
+
+#resultsProdlist {
+	float: left;
+	width: 760px;
+	}
 
 
 
@@ -302,35 +345,33 @@ don't set background: because the bgcolor is set by another class and this is ju
 .checkoutFormContainer fieldset	{padding:12px; margin-bottom:12px;}
 
 
-
+/* these are the errors that appear next to the place order button, typically reporting validation errors */
 #chkoutSummaryErrors	{clear:both;}
 #chkoutSummaryErrors li	{text-align:right;}
 
 #zCheckoutContainer .ui-widget p	{margin:3px;}
 
-
-
-#globalCheckoutErrors	{text-align:right;}
-
+/* by defualt, gift card will appear in the payment choices panel, above the other payment options */
 #giftCardContainer	{padding:5px 0px 5px 0px; border-bottom:1px dashed #efefef; display:block; text-align:left;}
 #giftCardContainer	label	{padding-right:12px;}
 #giftCardContainer	button	{margin-left:12px;}
+
 
 #couponContainer	{clear:both;}
 #couponFrmContainer	{clear:both;}
 
 
-
+/* preflight panel is used in 'nice' checkout and shows login information */
 #chkoutPreflightFieldset	{width:auto;}
-
 #chkoutPreflightFieldset .preflightInputContainer	{float:left; margin-right:24px; padding-bottom:12px;}
 #chkoutPreflightFieldset .preflightInputContainer .h2	{margin-bottom:12px;}
-
 #chkoutPreflightFieldset div button	{margin-left:12px;}
 
 #preflightGuestInputs label,
 #preflightAccountInputs label,
 #preflightAuthenticatedInputs label	{width:140px; display:inline-block;}
+
+
 
 
 #chkoutCartSummary #cartSummaryTotalsContainer	{width:auto;}

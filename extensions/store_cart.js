@@ -200,17 +200,7 @@ formerly showCart
 		displayCart :  {
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump('BEGIN myControl.ext.store_cart.callbacks.displayCart.onSuccess');
-				myControl.ext.store_cart.vars.cartAccessories = myControl.ext.store_cart.util.getCSVOfAccessories();
-//				myControl.util.dump(' -> '+tagObj.parentID);
 				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,tagObj.parentID);
-				var $parent = $('#'+tagObj.parentID);
-//generates the list of lineitems.
-				myControl.ext.store_cart.util.showStuff({"parentID":"cartStuffList","templateID":"productListTemplateCart"});
-//update summaries.
-//displays subtotals.
-				$('#cartSummaryTotals').append(myControl.renderFunctions.createTemplateInstance('cartSummaryTemplate','cartSummary'));
-				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'cartSummary');
-				
 				},
 			onError : function(d)	{
 				myControl.util.dump('BEGIN myControl.ext.store_cart.callbacks.displayCart.onError');
@@ -253,7 +243,7 @@ formerly showCart
 //				myControl.util.dump(data);
 				var stid = $tag.closest('[data-stid]').attr('data-stid'); //get the stid off the parent container.
 //				myControl.util.dump(stid);
-				$tag.val(data.bindData.cleanValue).attr('data-stid',stid);
+				$tag.val(data.value).attr('data-stid',stid);
 				},
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
@@ -269,14 +259,11 @@ $tag.click(function(){
 //for displaying order balance in checkout order totals.				
 			orderBalance : function($tag,data)	{
 				var o = '';
-				var amount = data.bindData.cleanValue;
+				var amount = data.value;
 //				myControl.util.dump('BEGIN myControl.renderFunctions.format.orderBalance()');
 //				myControl.util.dump('amount * 1 ='+amount * 1 );
 //if the total is less than 0, just show 0 instead of a negative amount. zero is handled here too, just to avoid a formatMoney call.
 //if the first character is a dash, it's a negative amount.  JS didn't like amount *1 (returned NAN)
-				
-				o += data.bindData.pretext ? data.bindData.pretext : '';
-				
 				if(amount * 1 <= 0){
 //					myControl.util.dump(' -> '+amount+' <= zero ');
 					o += data.bindData.currencySign ? data.bindData.currencySign : '$';
@@ -286,12 +273,11 @@ $tag.click(function(){
 //					myControl.util.dump(' -> '+amount+' > zero ');
 					o += myControl.util.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
 					}
-				
-				o += data.bindData.posttext ? data.bindData.posttext : '';
-				
+		
 				$tag.text(o);  //update DOM.
 //				myControl.util.dump('END myControl.renderFunctions.format.orderBalance()');
 				}, //orderBalance
+
 
 //displays the shipping method followed by the cost.
 //is used in cart summary total during checkout.
@@ -440,8 +426,8 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 				}, //handleCouponSubmit
 
 			updateCartSummary : function()	{
-				$('#cartSummaryTotals').empty().append(myControl.renderFunctions.createTemplateInstance('cartSummaryTemplate','cartSummary'));
-				myControl.ext.store_cart.calls.getCartContents.init({'callback':'translateTemplate','parentID':'cartSummary'},'immutable');
+				$('#cartTemplateCostSummary').empty().addClass('loadingBG');
+				myControl.calls.refreshCart.init({'callback':'translateTemplate','parentID':'modalCartContents'},'immutable');
 //don't set this up with a getShipping because we don't always need it.  Add it to parent functions when needed.
 				},
 /*
@@ -491,13 +477,18 @@ Parameters expected are:
 /*
 executing when quantities are adjusted for a given cart item.
 call is made to update quantities.
-since the target/parent already exists and we don't want to create a new one, don't create a new instance.
-the callback will update the existing and content will be replaced.  cart totals goes to 'loading' so it's clear
-something is happening.
-
+When a cart item is updated, it'll end up getting re-rendered, so data-request-state doesn't need to be updated after the request.
+Since theres no 'submit' or 'go' button on the form, there was an issue where the 'enter' keypress would double-execute the onChange event.
+so now, the input is disabled the first time this function is executed and a disabled class is added to the element. The presence of this class
+allows us to check and make sure no request is currently in progress.
 */
-			updateCartQty : function(stid,qty,tagObj)	{
-				if(stid)	{
+			updateCartQty : function($input,tagObj)	{
+				
+				var stid = $input.attr('data-stid');
+				var qty = $input.val();
+				
+				if(stid && qty && !$input.hasClass('disabled'))	{
+					$input.attr('disabled','disabled').addClass('disabled').addClass('loadingBG');
 					myControl.util.dump('got stid: '+stid);
 //some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
 //then create a callback that does nothing. IMHO, you should always let the user know the item was modified.
@@ -519,10 +510,10 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					else	{
 						$('#cartViewer_'+myControl.util.makeSafeHTMLId(stid)).empty().remove();
 						}
-
+					myControl.model.dispatchThis('immutable');
 					}
 				else	{
-					myControl.util.dump(' -> a stid is required to do an update cart.');
+					myControl.util.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
 					}
 				},
 

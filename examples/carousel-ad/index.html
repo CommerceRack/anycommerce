@@ -11,12 +11,12 @@
 
 
 <link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="styles.css" />
+<link rel="stylesheet" type="text/css" href="../../../201220/examples/carousel-ad/styles.css" />
 
 
 <!-- jquery and jquery ui -->
-<script type="text/javascript" src="../../jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="../../jqueryui-1.7.2.min.js"></script>
+<script type="text/javascript" src="../../../201220/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="../../../201220/jqueryui-1.7.2.min.js"></script>
 
 
 <!-- zoovy mvc -->
@@ -32,11 +32,11 @@
 var myControl;
 var myCreole;
 var myExtensions = [
-	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_prodlist.js"},
-	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_search.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_cart.js"},
-	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_crm.js"},
+	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_prodlist.js"},
+	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_search.js"},
+	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_product.js"},
+	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_cart.js"},
+	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_crm.js"},
 	{"namespace":"myRIA","filename":"carousel-ad.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
 	];
 var keywords4Search
@@ -45,7 +45,7 @@ $(function() {
 //	keywords4Search = $('h2:first').text().replace(/[^a-z0-9\s]/gi, ' ');	//get meta keywords for search. could be hard coded or loaded from someplace else.
 //NOTE - special characters need to be stripped from elastic searches
 	myControl = new zController({
-		"release":"20120312211200" //increment this with each change. should solve caching issues.
+		"release":"20120605105000" //increment this with each change. should solve caching issues.
 		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
 	myCreole = new Parse.Simple.Creole();
 	myControl.util.dump(" -> KEYWORDS: "+keywords4Search);
@@ -53,7 +53,7 @@ $(function() {
 
 </script>
 
-<link rel="stylesheet" type="text/css" href="%PROJECT_URL%/blog_ria_styles-20120424.css" />
+<link rel="stylesheet" type="text/css" href="../../../201220/examples/carousel-ad/%PROJECT_URL%/blog_ria_styles-20120424.css" />
 
 </head>
 <body>
@@ -84,7 +84,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplate' class='loadingBG fourColListItem fourColProdListItem' >
 	<div onClick="myControl.ext.myRIA.util.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:fff1d3;' width='210' height='160' />
+		<img src='../../../201220/examples/carousel-ad/%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:fff1d3;' width='210' height='160' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>

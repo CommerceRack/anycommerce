@@ -24,6 +24,7 @@ at some point in the future, it should to be.
 
 handlePogs = function(v,o) {
 	this.initialize(v,o);
+	return true; //return something. mostly just to appease the console warning.
 	}
 
 
@@ -54,11 +55,13 @@ initialize: function(pogs,o) {
 	this.addHandler("type","calendar","renderOptionCALENDAR");
 	this.addHandler("type","biglist","renderOptionBIGLIST");
 	this.addHandler("unknown","","renderOptionUNKNOWN");
+	return true; //return something. mostly just to appease the console warning.
 	},
 
 addHandler: function(key,value,f) {
 // adds a new entry to the this.handlers e.g.: this.handlers.renderOptionTEXT
 	this.handlers[ key+"." + value ] = f;
+	return true; //return something. mostly just to appease the console warning.
 	},
 
 
@@ -213,8 +216,8 @@ renderOptionIMGSELECT: function(pog,safeid) {
 	$imageDiv = $('<div>').attr({"id":"imgSelect_"+safeid+"_img"}).addClass('imageselect_image');
 	$imageDiv.html(myControl.util.makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"lib":myControl.username,"id":"selectImg_"+pogid}));
 	$imageDiv.appendTo($parentDiv);
-	return $parentDiv;
 	myControl.util.dump('END renderOptionIMGSELECT for pog '+pog.id);
+	return $parentDiv;
 	},
 
 //upgraded to jquery. needs css love.

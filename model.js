@@ -38,7 +38,7 @@ There are two types of data being dealt with:
 2. extensions loaded as part of control object instantiation or on the fly as needed.
 
 Some high level error handling occurs as part of the model, mostly for ISE's.
-The rest is in the controller or extension. The model will execute callbacks.CALLBACKID.onError(d)
+The rest is in the controller or extension. The model will execute callbacks.CALLBACKID.onError(d,uuid)
  -> d is the data object returned by the server. one of the few cases the raw response is returned.
 
 
@@ -80,7 +80,7 @@ function zoovyModel() {
 		
 	var r = {
 	
-		version : "201219",
+		version : "201225",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -96,7 +96,8 @@ function zoovyModel() {
 			}, //getLastIndex
 	
 	
-	//pass in a json object and how many tier1 nodes are returned. handy.
+//pass in a json object and how many tier1 nodes are returned. handy.
+
 		countProperties : function(obj) {
 		//	myControl.util.dump('BEGIN: countProperties');
 		//	myControl.util.dump(obj);
@@ -108,7 +109,7 @@ function zoovyModel() {
 		//	myControl.util.dump('END: countProperties. count = '+propCount);
 			return propCount;
 			},//countProperties
-	
+
 	
 	// --------------------------- DISPATCH QUEUE FUNCTIONS --------------------------- \\
 	
@@ -166,8 +167,8 @@ function zoovyModel() {
 			},// addDispatchToQ
 	
 	
-	//if an error happens during request or is present in response, change items from requested back to queued and adjust attempts.
-	//this is to make sure nothing gets left undispatched on critical errors.
+//if an error happens during request or is present in response, change items from requested back to queued and adjust attempts.
+//this is to make sure nothing gets left undispatched on critical errors.
 		changeDispatchStatusInQ: function(QID,UUID,STATUS)	{
 			var r = true;
 			if(!QID || !UUID)
@@ -179,10 +180,10 @@ function zoovyModel() {
 			return r;
 			},
 	
-	//used during dispatchThis to make sure only queued items are dispatched.
-	//returns items for the Q and sets status to 'requesting'.
-	//returns items in reverse order, so the dispatches occur as FIFO.
-	//in the actual DQ, the item id is the uuid. Here that gets dropped and the object id's start at zero (more friendly format for B).
+//used during dispatchThis to make sure only queued items are dispatched.
+//returns items for the Q and sets status to 'requesting'.
+//returns items in reverse order, so the dispatches occur as FIFO.
+//in the actual DQ, the item id is the uuid. Here that gets dropped and the object id's start at zero (more friendly format for B).
 		filterQ : function(QID)	{
 //			myControl.util.dump("BEGIN: filterQ");
 //			myControl.util.dump(" -> QID = "+QID);
@@ -215,7 +216,7 @@ function zoovyModel() {
 		abortQ : function(QID)	{
 			myControl.ajax.overrideAttempts = 0;  //the q is being reset essentially. this needs to be reset to zero so attempts starts over. 
 			var r = 0; //incremented with each cancelled request. returned.
-			for(index in myControl.ajax.requests[QID])	{
+			for(var index in myControl.ajax.requests[QID])	{
 				myControl.ajax.requests[QID][index].abort();
 //IMPORTANT
 //this delete removes the ajax request from the requests array. keep that array only full of active requests.
@@ -270,6 +271,7 @@ function zoovyModel() {
 //currently, only IE isn't compatible.
 		whatAjaxDataType2Use : function()	{
 			var r = 'json'; //what is returned. default datatype is json.
+// SANITY - a browser treats http://www.something.com and http://something.com as separate domains.
 			if(navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
 				var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1]; //root domain of current page (www.something.com)
 				var JQUrl = myControl.vars.jqurl.match(/:\/\/(.[^/]+)/)[1]; //root domain of jquery url (www.something.com or www.somethingelse.com)
@@ -279,16 +281,17 @@ function zoovyModel() {
 				}
 			return r;
 			},
-		
-	/*
+
+/*
 	
-	sends dispatches with status of 'queued' in a single json request.
-	only high-level errors are handled here, such as an ISE returned from server, no connection, etc.
-	a successful request executes handleresponse (handleresponse executes the controller.response.success action)
-	note - a successful request just means that contact with the server was made. it does not mean the request itself didn't return errors.
-	
-	QID = Queue ID.  Defaults to the general dispatchQ but allows for the PDQ to be used.
-	*/
+sends dispatches with status of 'queued' in a single json request.
+only high-level errors are handled here, such as an ISE returned from server, no connection, etc.
+a successful request executes handleresponse (handleresponse executes the controller.response.success action)
+note - a successful request just means that contact with the server was made. it does not mean the request itself didn't return errors.
+
+QID = Queue ID.  Defaults to the general dispatchQ but allows for the PDQ to be used.
+
+*/
 	
 		dispatchThis : function(QID)	{
 //			myControl.util.dump('BEGIN model.dispatchThis');
@@ -352,20 +355,57 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 
 //if this point is reached, we are exeuting a dispatch. Any vars used for tracking overrides, last dispatch, etc get reset.
 
-
 myControl.ajax.lastDispatch = myControl.util.unixNow();
 myControl.ajax.overrideAttempts = 0;
-//IE < 10 doesn't support xss. the check is done during the init.
+
+
+//IMPORTANT
+/*
+
+IE < 10 doesn't support xss. the check is done during the init. for xss in IE < 10, jsonp requests are used.
+jsonp requests must use a GET. To keep the URL to a reasonable length, some fat is trimmed (_tag, specifically) and re-added in handleResponse
+
+the delete in the success AND error callbacks removes the ajax request from the requests array. 
+If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results. 
+must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
+can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
+*/
+
+
 if(myControl.ajax.dataType == 'jsonp')	{
-	var thisJsonURL = myControl.vars.jqurl+"?_callback=ieBlows&_json="+encodeURIComponent(JSON.stringify({"_uuid":UUID,"_zjsid": myControl.sessionId,"_cmd":"pipeline","@cmds":Q}))
-	myControl.util.dump("NOTE - this is a JSONP request: "+thisJsonURL);
-	myControl.ajax.requests[QID][UUID] = $.ajax({
-		type: "GET",
-		url: thisJsonURL,
-		contentType : "text/json",
-		dataType:"jsonp",
-		jsonpCallback:"ieBlows"
-		});
+	myControl.util.dump("NOTE - JSONP request(s). # requests: "+L+" QID: "+QID);
+	var thisJsonURL; // recycled. used as the url for each ajax request.
+	var thisReq; //recycled. used to store each jsonp request (used for setting success and error handling)
+//a pipelined request with any substance is likely going to have too long of a URL to work.  
+//so for jsonp, pipelined requests are not used and each request is sent individually. 
+	for(var i = 0; i < L; i += 1)	{
+		Q[i]['_zjsid'] = myControl.sessionId; // since each request is being sent individually, need to add the session id.
+		Q[i]['_tag'] = ''; //need to keep the uri short. _rtag added during handleResponse
+		Q[i]['datatype'] = 'jsonp'; //let handleresponse know this is a jsonp request for readding _tag/_rtag
+		thisReq = myControl.ajax.requests[QID][Q[i]['_uuid']];
+		thisJsonURL = myControl.vars.jqurl+"?_callback=ieBlows&_json="+encodeURIComponent(JSON.stringify(Q[i]))
+		myControl.util.dump(" -> jsonURL: "+thisJsonURL);
+		thisReq = $.ajax({
+			type: "GET",
+			url: thisJsonURL,
+			contentType : "text/json",
+			dataType:"jsonp",
+			jsonpCallback:"ieBlows"
+			});
+
+		thisReq.error(function(j, textStatus, errorThrown)	{
+			myControl.util.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
+			delete myControl.ajax.requests[QID][UUID];
+			myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
+			setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
+			});
+
+		thisReq.success(function(d)	{
+			myControl.util.dump(" -> successful req for "+d['_uuid']);
+			delete myControl.ajax.requests[QID][d['_uuid']];
+			myControl.model.handleResponse(d,QID);
+			});
+		}
 	}
 else	{
 	myControl.ajax.requests[QID][UUID] = $.ajax({
@@ -376,26 +416,20 @@ else	{
 		contentType : "text/json",
 		dataType:"json",
 		data: JSON.stringify({"_uuid":UUID,"_zjsid": myControl.sessionId,"_cmd":"pipeline","@cmds":Q})
-		});	
+		});
+	myControl.ajax.requests[QID][UUID].error(function(j, textStatus, errorThrown)	{
+		myControl.util.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
+		delete myControl.ajax.requests[QID][UUID];
+		myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
+		setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
+		});
+	myControl.ajax.requests[QID][UUID].success(function(d)	{
+		delete myControl.ajax.requests[QID][UUID];
+		myControl.model.handleResponse(d,QID);}
+		)
+
 	}
 
-
-//IMPORTANT
-/*
-the delete in the success AND error callbacks removes the ajax request from the requests array. If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results. 
-must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
-can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
-*/
-myControl.ajax.requests[QID][UUID].error(function(j, textStatus, errorThrown)	{
-	myControl.util.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-	delete myControl.ajax.requests[QID][UUID];
-	myControl.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
-	setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
-	});
-myControl.ajax.requests[QID][UUID].success(function(d)	{
-	delete myControl.ajax.requests[QID][UUID];
-	myControl.model.handleResponse(d,QID);}
-	)
 
 				}
 
@@ -437,7 +471,7 @@ myControl.ajax.requests[QID][UUID].success(function(d)	{
 						callbackObj = Q[index]['_tag']['extension'] ? myControl.ext[Q[index]['_tag']['extension']].callbacks[Q[index]['_tag']['callback']] : myControl.callbacks[Q[index]['_tag']['callback']];
 
 						if(callbackObj && typeof callbackObj.onError == 'function'){
-							callbackObj.onError('It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (error: most likely a request failure after multiple attempts [uuid = '+uuid+'])')
+							callbackObj.onError({errmsg:'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'},uuid)
 							}
 						}
 					else	{
@@ -482,10 +516,11 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 //the handlereq function manages the error handling as well.
 			if(responseData)	{
 				if(responseData && responseData['_rcmd'] == 'err')	{
-					myControl.util.dump(' -> High Level Error in response!');
+					myControl.util.dump(' -> High Level Error in '+QID+' response!');
+					myControl.util.dump(responseData);
 					myControl.model.handleReQ(myControl.dispatchQ,QID,true)
 					}
-		
+
 //pipeline request
 				else if(responseData && responseData['_rcmd'] == 'pipeline')	{
 					
@@ -506,6 +541,10 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 					}
 //a solo successful request
 				else {
+//_tag is stripped on jsonP requests to keep URL as short as possible. It is readded to the responseData here as _rtag (which is how it is handled on a normal request)
+					if(responseData['datatype'] == 'jsonp')	{
+						responseData['datatype']['_rtag'] = myControl.q[QID][uuid]['_tag']
+						}
 					if(responseData['_rcmd'] && typeof this['handleResponse_'+responseData['_rcmd']] == 'function')	{
 	//					myControl.util.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
 						this['handleResponse_'+responseData['_rcmd']](responseData)	//executes a function called handleResponse_X where X = _cmd, if it exists.
@@ -514,7 +553,6 @@ QID is the dispatchQ ID (either dispatchQ or priorityDispatchQ. required for the
 	//					myControl.util.dump("NO custom handleresponse defined for "+responseData['_rcmd']);
 						this.handleResponse_defaultAction(responseData,null);
 						}
-					myControl.util.dump(' -> non-pipelined response. not supported at this time.');
 					}
 				}
 			else	{
@@ -809,7 +847,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	//			myControl.util.dump(' -> isSet in myControl. use it.');
 				uuid = myControl.vars.uuid; //have to, at some point, assume app integrity. if the uuid is set in the control, trust it.
 				}
-//in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal.
+//in this else, the L is set to =, not == because it's setting itself to the value of the return of readLocal so readLocal doesn't have to be executed twice.
 			else if(L = myControl.storageFunctions.readLocal("uuid"))	{
 				L = Math.ceil(L * 1); //round it up (was occassionally get fractions for some odd reason) and treat as number.
 	//			myControl.util.dump(' -> isSet in local ('+L+' and typof = '+typeof L+')');
@@ -872,7 +910,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //				myControl.util.dump(' -> sessionId is set in control');
 				s = myControl.sessionId
 				}
-	//sets s as part of else if so getLocal doesn't need to be run twice.
+//sets s as part of else if so getLocal doesn't need to be run twice.
 			else if(s = myControl.storageFunctions.readLocal('sessionId'))	{
 //				myControl.util.dump(' -> sessionId is set in local from previous ajax session');										 
 				}
@@ -932,50 +970,99 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	
 	
 	
-	/* functions for extending the controller (adding extensions) */
+	/* functions for extending the controller (adding extensions and templates) */
 	
-	
-//templates should be an array of element id's.
-	loadTemplates : function(templates)	{
-//		myControl.util.dump("BEGIN model.loadTemplates")
-		var L = templates.length
-
-//		myControl.util.dump("model.loadTemplates for "+namespace);
-		var errors = ''; //what is returned.  if not false, errors are present (and returned)
-		var templateID; //used for a quick reference to which id in the loop is in focus.
-		var $templateSpec; //used to store the template/spec itself for the template.
-//		myControl.util.dump(" -> loading "+L+" templates ");
-		for(var i = 0; i < L; i += 1)	{
-			templateID = templates[i];
-			$templateSpec = $('#'+templateID);
-//			myControl.util.dump(" -> templateID: "+templateID);
-			if($templateSpec.length < 1)	{
-				errors += "<li>Template '"+templateID+"' is not defined in the view<\/li>";
+//$templateSpec = the jquery obj for the template.
+//templateID is how the template will be referenced in myControl.templates.
+		makeTemplate : function($templateSpec,templateID)	{
+			var r = true; //what is returned. if a template is created, true is returned.
+			if(templateID && typeof $templateSpec == 'object')	{
+				myControl.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone();
+				$('#'+templateID).empty().remove(); //here for templates created from existing DOM elements. They're removed to ensure no duplicate ID's exist.
 				}
 			else	{
-				myControl.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone();
+				r = false;
+				myControl.util.dump("WARNING! - model.makeTemplate executed but no templateID and/or template object specified.");
 				}
-			$('#'+templateID).empty().remove(); //ensure no duplicate id's within spec and cloned template.
-			$templateSpec.empty(); //ensure previous spec isn't used on next iteration.
-			}
-		return errors;
-		},
+			return r;
+			},
+	
+//templates should be an array of element id's.
+		loadTemplates : function(templates)	{
+	//		myControl.util.dump("BEGIN model.loadTemplates")
+			var L = templates.length
+	
+	//		myControl.util.dump("model.loadTemplates for "+namespace);
+			var errors = ''; //what is returned.  if not false, errors are present (and returned)
+			var templateID; //used for a quick reference to which id in the loop is in focus.
+			var $templateSpec; //used to store the template/spec itself for the template.
+	//		myControl.util.dump(" -> loading "+L+" templates ");
+			for(var i = 0; i < L; i += 1)	{
+				templateID = templates[i];
+				$templateSpec = $('#'+templateID);
+	//			myControl.util.dump(" -> templateID: "+templateID);
+				if($templateSpec.length < 1)	{
+					errors += "<li>Template '"+templateID+"' is not defined in the view<\/li>";
+					}
+				else	{
+					this.makeTemplate($templateSpec,templateID);
+					}
+				$templateSpec.empty(); //ensure previous spec isn't used on next iteration.
+				}
+			return errors;
+			},
 
 
 //templateURL is the .html file that contains the templates. be cautions about loading http: from a secure page.
 //this is just a request to get the html. doesn't actually load the templates.
-	loadRemoteTemplates : function(templateURL)	{
+		fetchRemoteTemplates : function(templateURL)	{
+	
+	//result is the ajax request and what is returned.
+	//should allow for .error and .success to be set outside this function. 
+			var result = $.ajax({
+				type: "GET",
+				url: templateURL,
+				async: false,
+				dataType:"html"
+				});	
+			return result;
+	
+			},
 
-//result is the ajax request and what is returned.
-//should allow for .error and .success to be set outside this function. 
-var result = $.ajax({
-		type: "GET",
-		url: templateURL,
-		async: false,
-		dataType:"html"
-		});	
-return result;
+	fetchNLoadTemplates : function(templateURL,templates)	{
+//		myControl.util.dump("BEGIN model.fetchNLoadTemplates");
+//		myControl.util.dump(" -> templateURL: "+templateURL);
+//		myControl.util.dump(" -> templates: "+templates);
+		var ajaxRequest = this.fetchRemoteTemplates(templateURL);
+		
+		ajaxRequest.error(function(d,e,f){
+			//the templates not loading is pretty much a catastrophic issue. however, we don't want to throw an error in this case so just hide the carousel.
+			$('#globalMessaging').append(myControl.util.formatMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)"));
+			myControl.util.dump("ERROR! unable to load remote templates");
+			myControl.util.dump("templateURL: "+templateURL);
+			myControl.util.dump(e);
+			myControl.util.dump(d.statusText);
+			});
 
+		ajaxRequest.success(function(data){
+//			myControl.util.dump("template file loaded successfully.");
+//remote templates are added to their own div so that .html() can be used without impacting any default templates that may not have loaded.
+//unique id's are needed so that it multiple extensions are loading remote templates, .html doesn't save over them.
+//can't use append because it'll treat content as text not html
+//so if the templateurl is /something/checkout/templates.html, the template id will be remoteTemplates_checkout
+			var templateContainerID = 'remoteTemplates_'+templateURL.split('/').splice(-2,1);
+			var $remoteTemps = $('#'+templateContainerID);
+			if($remoteTemps.length == 0)	{
+				$remoteTemps = $("<div />").attr('id',templateContainerID).hide().appendTo('body');
+				}
+			$remoteTemps.html(data);
+			var templateErrors = myControl.model.loadTemplates(templates);
+			if(templateErrors)	{
+				$('#globalMessaging').append(myControl.util.formatMessage(templateErrors));
+//				myControl.util.dump(templateErrors);
+				}
+			});
+		return ajaxRequest;
 		},
 
 /*
@@ -1048,7 +1135,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 							}
 //whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
 //						myControl.util.dump(" -> templates.length = "+myControl.ext[namespace].vars.templates.length);
-						if(myControl.ext[namespace].vars && myControl.ext[namespace].vars.templates)	{
+						if(myControl.ext[namespace].vars && myControl.ext[namespace].vars.templates && !myControl.ext[namespace].vars.willFetchMyOwnTemplates)	{
 							errors += myControl.model.loadTemplates(myControl.ext[namespace].vars.templates);
 							}
 						else	{
@@ -1072,19 +1159,17 @@ respond accordingly.
 //the line above handles the errors. however, in some cases a template may want additional error handling so the errors are passed in to the onError callback.
 							if(myControl.ext[namespace].callbacks.init.onError)	{
 //								myControl.util.dump(" -> executing callback.onError.");
-								myControl.ext[namespace].callbacks.init.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>");
+								myControl.ext[namespace].callbacks.init.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>",'');
 								}							
 							}
 						else if(callback)	{
-							myControl.util.dump(" -> callback defined for "+namespace);
-							if(myControl.ext[namespace].vars.dependencies)	{
-//								myControl.util.dump(" -> extension ("+namespace+") has dependencies. veryify they're loaded before executing callback");
+							myControl.util.dump(" -> callback defined for namespace: "+namespace);
+							if(myControl.ext[namespace].vars.dependencies || myControl.ext[namespace].vars.templates)	{
+								myControl.util.dump(" -> extension ("+namespace+") has dependencies and/or templates. veryify they're loaded before executing callback");
 								myControl.model.handleDependenciesFor(namespace,callback);
 								}
 							else	{
-								if(typeof callback == 'function'){eval(callback)}
-								else if(typeof callback == 'string')	{myControl.ext[namespace].callbacks[callback].onSuccess()}
-								else	{myControl.util.dump("!Unknown type ["+typeof callback+"] for extension callback ");}
+								myControl.model.executeExtensionCallback(namespace,callback);
 								}
 							}
 						else	{
@@ -1100,29 +1185,35 @@ respond accordingly.
 				});
 
 			},
-			
+
+		executeExtensionCallback : function(namespace,callback)	{
+			myControl.util.dump("BEGIN model.executeExtensionCallback");
+			if(typeof callback == 'function'){eval(callback)}
+			else if(typeof callback == 'string')	{myControl.ext[namespace].callbacks[callback].onSuccess()}
+			else	{myControl.util.dump("!Unknown type ["+typeof callback+"] for extension callback ");}
+			},
 			
 //see big comment block above fetch for more info.
 		addExtensions : function(extensionObj)	{
 			myControl.util.dump('BEGIN model.addExtensions');
+			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
 			if(!extensionObj)	{
 				myControl.util.dump(' -> extensionObj not passed');
-				return false;
 				}
 			else if(typeof extensionObj != 'object')	{
 				myControl.util.dump(' -> extensionObj not a valid format');
-				return false;
 				}
 			else	{
 //				myControl.util.dump(' -> valid extension object containing '+extensionObj.length+' extensions');
 				var L = extensionObj.length;
+				r = L; //return the size of the extension object 
 				for(var i = 0; i < L; i += 1) {
 //					myControl.util.dump(" -> i: "+i);
 //namespace and filename are required for any extension.
 					if(!extensionObj[i].namespace || !extensionObj[i].filename)	{
 						
 						if(extensionObj.callback && typeof extensionObj.callback == 'string')	{
-							extensionObj[i].callback.onError("Extension did not load because namespace ["+extensionObj[i].namespace+"] and/or filename ["+extensionObj[i].filename+"]  not set")
+							extensionObj[i].callback.onError("Extension did not load because namespace ["+extensionObj[i].namespace+"] and/or filename ["+extensionObj[i].filename+"]  not set",'')
 							}
 						myControl.util.dump(" -> extension did not load because namespace ("+extensionObj[i].namespace+") or filename ("+extensionObj[i].filename+") was left blank.");
 						continue; //go to next index in loop.
@@ -1132,6 +1223,7 @@ respond accordingly.
 						}
 					} // end loop.
 				}
+			return r;
 //			myControl.util.dump('END model.addExtension');
 			},
 /*
@@ -1141,29 +1233,52 @@ this makes extension sequence less important when initializing the controller.
 // SANITY - a user should only have ONE extension that loads and has dependencies. the extension
 //that contains most of the logic native to their app.
 */
-		handleDependenciesFor : function(extension,callback)	{
-//			myControl.util.dump("BEGIN myControl.model.handleDependenciesFor");
-//			myControl.util.dump(" -> extension: "+extension);
-//			myControl.util.dump(" -> callback: "+callback);
-			var L = myControl.ext[extension].vars.dependencies.length;
-			var inc = 0;
-//			myControl.util.dump(" -> # dependencies: "+L);
-			for(var i = 0; i < L; i += 1)	{
-				if(typeof myControl.ext[myControl.ext[extension].vars.dependencies[i]] === 'object') {inc += 1}
+		handleDependenciesFor : function(namespace,callback)	{
+			myControl.util.dump("BEGIN myControl.model.handleDependenciesFor");
+			myControl.util.dump(" -> namespace: "+namespace);
+			myControl.util.dump(" -> callback: "+callback);
+			var dependencies = 0; //the total number of dependencies + templates.
+			var D = 0;
+			var T = 0;
+
+			if(myControl.ext[namespace].vars.dependencies)	{
+				D = myControl.ext[namespace].vars.dependencies.length
+				dependencies += D;
 				}
 
-			if(inc == L)	{
-//				myControl.util.dump(" -> all dependencies for extension."+extension+" should be loaded. execute callback.");
-				myControl.ext[extension].callbacks[callback].onSuccess();
+			if(myControl.ext[namespace].vars.templates)	{
+				T = myControl.ext[namespace].vars.templates.length;
+				dependencies += T;
+				}
+
+			var dl = 0; //# of dependies that have been loaded.
+			var tl = 0; //# of templates that have been loaded.
+//make sure all dependencies have been loaded.
+			for(var i = 0; i < D; i += 1)	{
+				if(typeof myControl.ext[myControl.ext[namespace].vars.dependencies[i]] === 'object') {dl += 1}
+				else	{myControl.util.dump(" -> missing: "+myControl.ext[namespace].vars.dependencies[i]); break} //once we have a no match, just end the loop. no point going forward if we're going to reexecute this function anyway.
+				}
+//make sure all templates have been loaded.
+			for(var i = 0; i < T; i += 1)	{
+				if(typeof myControl.templates[myControl.ext[namespace].vars.templates[i]] === 'object') {tl += 1;}
+				else	{break} //once we have a no match, just end the loop. no point going forward if we're going to reexecute this function anyway.
+				}
+myControl.util.dump(" -> dependencies: "+dependencies);
+myControl.util.dump(" -> T: "+T+" - loaded: "+tl);
+myControl.util.dump(" -> D: "+D+" - loaded: "+dl);
+
+			if((dl + tl) == dependencies)	{
+				myControl.util.dump(" -> all dependencies for namespace."+namespace+" should be loaded. execute callback.");
+				myControl.model.executeExtensionCallback(namespace,callback);
 				}
 			else	{
-				myControl.ext[extension].vars.dependAttempts += 1;
-				myControl.util.dump(" -> dependencies missing for extension "+extension+". try again. attempt: "+myControl.ext[extension].vars.dependAttempts);
-				if(myControl.ext[extension].vars.dependAttempts > 25)	{
+				myControl.ext[namespace].vars.dependAttempts += 1;
+				myControl.util.dump(" -> dependencies missing for namespace "+namespace+". try again. attempt: "+myControl.ext[namespace].vars.dependAttempts);
+				if(myControl.ext[namespace].vars.dependAttempts > 25)	{
 					$('#globalMessaging').append("Uh Oh. An error occured with our app. You can try refreshing the page. If error persists, please contact the site administrator").toggle(true);
 					}
 				else	{
-					setTimeout("myControl.model.handleDependenciesFor('"+extension+"','"+callback+"');",500)
+					setTimeout("myControl.model.handleDependenciesFor('"+namespace+"','"+callback+"');",500)
 					}
 				}
 			}

@@ -91,7 +91,9 @@ var store_crm = function() {
 			dispatch : function(obj)	{
 				myControl.model.addDispatchToQ(obj,'immutable');	
 				}
-			},//appFAQsTopics	
+			},//appFAQsTopics
+			
+			
 //formerly getAllCustomerLists
 		buyerProductLists : {
 			init : function(tagObj)	{
@@ -166,6 +168,29 @@ var store_crm = function() {
 			},//buyerProductListRemoveFrom
 
 
+//Get a list of previously used payment methods.
+		buyerWalletList : {
+			init : function(tagObj,Q)	{
+				var r = 0;
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj.datapointer = "buyerWalletList";
+				if(myControl.model.fetchData('getNewsletters') == false)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+					myControl.util.handleCallback(tagObj);
+					}
+				return r;
+				},
+			dispatch : function(tagObj,Q)	{
+				myControl.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag" : tagObj},Q);	
+				}
+			},//buyerProductListRemoveFrom
+
+
+
+
 //!!! INCOMPLETE
 /*
 this will allow a shopper to be notified by email when an items is back in stock.
@@ -211,6 +236,7 @@ see jquery/api webdoc for required/optional param
 				},
 			dispatch : function(login,tagObj)	{
 				var obj = {};
+				obj['_cmd'] = 'appBuyerPasswordRecover';
 				obj.login = login;
 				obj.method = 'email';
 				obj['_tag'] = tagObj;
@@ -553,10 +579,10 @@ see jquery/api webdoc for required/optional param
 //				myControl.util.dump('BEGIN myControl.ext.store_prodlist.renderFormats.mpPagesAsListItems');
 //				myControl.util.dump(data);
 				var o = "<ul class='subscriberLists'>";
-				for(index in data.bindData.cleanValue)	{
-					o += "<li title='"+data.bindData.cleanValue[index].EXEC_SUMMARY+"'>";
-					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.bindData.cleanValue[index].ID+"' id='newsletter-"+data.bindData.cleanValue[index].ID+"' \/>";
-					o += "<label for='newsletter-"+data.bindData.cleanValue[index].ID+"'>"+data.bindData.cleanValue[index].NAME+"<\/label><\/li>";
+				for(index in data.value)	{
+					o += "<li title='"+data.value[index].EXEC_SUMMARY+"'>";
+					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' id='newsletter-"+data.value[index].ID+"' \/>";
+					o += "<label for='newsletter-"+data.value[index].ID+"'>"+data.value[index].NAME+"<\/label><\/li>";
 					}
 				o += '<\/ul>';
 				$tag.append(o);		
@@ -593,12 +619,8 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //this is a new product being displayed in the viewer.
 						$parent.empty();
 						}
-
-					$parent.attr({"title":"Write a review for "+myControl.data['appProductGet|'+P.pid]['%attribs']['zoovy:prod_name']}).append(myControl.renderFunctions.createTemplateInstance(P.templateID,'review-modal_'+P.pid));
-					myControl.renderFunctions.translateTemplate(myControl.data['appProductGet|'+P.pid],'review-modal_'+P.pid);
-					$parent.dialog({modal: true,width:500,height:500});
-
-
+					$parent.dialog({modal: true,width:500,height:500,autoOpen:false,"title":"Write a review for "+P.pid});
+					$parent.dialog('open').append(myControl.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,myControl.data['appProductGet|'+P.pid]));
 					}
 				},
 
@@ -611,6 +633,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				if(isValid === true)	{
 					myControl.ext.store_crm.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
 					myControl.model.dispatchThis();
+					$('reviewFrm').hide(); //hide existing form to avoid confusion.
 					}
 				else	{
 					//report errors.

@@ -14,6 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+
+
 ************************************************************** */
 
 
@@ -108,6 +110,11 @@ Exception - the controller is used for admin sessions too. if an admin session i
 			//for now, do nothing.  this may change later.
 			}
 		else if(P.sessionId)	{
+			myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			myControl.model.dispatchThis('immutable');
+			}
+//if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
+		else if(myControl.util.isSet(myControl.util.getParameterByName('sessionId')))	{
 			myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			myControl.model.dispatchThis('immutable');
 			}
@@ -417,6 +424,18 @@ myControl.model.addDispatchToQ({
 				$('#globalMessaging').append(myControl.util.getResponseErrors(responseData)).toggle(true);
 				}
 			},
+			
+		translateSelector : {
+			onSuccess : function(tagObj)	{
+				myControl.util.dump("BEGIN callbacks.translateSelector");
+				myControl.renderFunctions.translateSelector(tagObj.selector,myControl.data[tagObj.datapointer]);
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid);
+				}
+			},
+	
+		
 //pass the following on _tag:
 // parentID is the container id that the template instance is already in (should be created before call)
 // templateID is the template that will get translated.
@@ -424,26 +443,23 @@ myControl.model.addDispatchToQ({
 		translateTemplate : 	{
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump("BEGIN callbacks.translateTemplate");
-//				myControl.util.dump(" -> datapointer: "+tagObj.datapointer);
-//				myControl.util.dump(" -> dataSrc = ");
-//				myControl.util.dump(dataSrc);
-//				myControl.util.dump(" -> parentID: "+tagObj.parentID);
-//				myControl.util.dump(" -> $('#'+tagObj.parentID).attr('data-templateid'): "+$('#'+tagObj.parentID).attr('data-templateid'));
-
 				var dataSrc;
 //not all data is at the root level.
+// NOTE - This shouldn't be here, it should be in transmogrify !!!
 				if(tagObj.datapointer == 'cartItemsList')	{dataSrc = myControl.data[tagObj.datapointer].cart}
 				else if(tagObj.datapointer.indexOf('appPageGet') >= 0)	{
 					dataSrc = myControl.data[tagObj.datapointer]['%page']
 					}
+				else if(tagObj.datapointer.indexOf('adminOrderDetail') >= 0)	{
+					dataSrc = myControl.data[tagObj.datapointer]['order']
+					}
 				else {dataSrc = myControl.data[tagObj.datapointer]};
+//				myControl.util.dump(dataSrc);
 				myControl.renderFunctions.translateTemplate(dataSrc,tagObj.parentID);
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.dump("BEGIN control.callback.translateTemplate.onError");
-				myControl.util.dump(responseData);
-//something went wrong, so empty the parent (which likely only holds an empty template) and put an error message in there.
-				$('#'+responseData.tagObj.parentID).empty().toggle(true)
+//				myControl.util.dump(responseData);
 				myControl.util.handleErrors(responseData,uuid)
 				}
 			
@@ -456,10 +472,10 @@ myControl.model.addDispatchToQ({
 //				myControl.util.dump("BEGIN myControl.callbacks.showMessaging");
 				if(tagObj.parentID)	{
 					var htmlid = 'random_'+Math.floor(Math.random()*10001); //give message an ID so the a timeout is supported.
-					$('#'+tagObj.parentID).prepend(myControl.util.formatMessage({'message':tagObj.message,'htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"}));
+					$('#'+tagObj.parentID).removeClass('loadingBG').prepend(myControl.util.formatMessage({'message':tagObj.message,'htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"}));
 					}
 				else if(tagObj.targetID)	{
-					$('#'+tagObj.targetID).append(myControl.util.formatMessage({'message':tagObj.message,'uiIcon':'check'}));
+					$('#'+tagObj.targetID).removeClass('loadingBG').append(myControl.util.formatMessage({'message':tagObj.message,'uiIcon':'check'}));
 					}
 				},
 			onError : function(responseData,uuid)	{
@@ -562,14 +578,14 @@ loadingBG is a class set on templates that is turned off in transmogrify/transla
 			myControl.util.dump("BEGIN control.util.handleErrors for uuid: "+uuid);
 			var $target;
 //			myControl.util.dump(d);
-			if(!d || !d['_rtag'])	{
+			if(!d || (d && !d['_rtag']))	{
 				myControl.util.dump(" -> responseData (d) or responseData['_rtag'] is blank.");
 				var DQ = myControl.model.whichQAmIFrom(uuid);
 				d['_rtag'] = myControl.q[DQ][uuid]['_tag'];
 				}
 //			myControl.util.dump(d['_rtag']);
-			if(d['_rtag'].targetID && $('#'+d['_rtag'].targetID).length)	{$target = $('#'+d['_rtag'].targetID)}
-			else if(d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID)}
+			if(typeof d['_rtag'] == 'object' && d['_rtag'].targetID && $('#'+d['_rtag'].targetID).length)	{$target = $('#'+d['_rtag'].targetID)}
+			else if(typeof d['_rtag'] == 'object' && d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID)}
 			else if	( $('#globalMessaging').length)	{$target = $('#globalMessaging')}
 			else	{$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');}
 			$target.removeClass('loadingBG').show().append(this.getResponseErrors(d));
@@ -668,16 +684,22 @@ pass in additional information for more control, such as css class of 'error' an
 //will create an object of a series of key/value pairs in URI format.
 //if nothing is passed in, will get string directly from URL.
 		getParametersAsObject : function(string)	{
-			var url = string ? string : location.search;
-			myControl.util.dump(url);
+//			myControl.util.dump("BEGIN control.util.getParametersAsObject");
+//			myControl.util.dump(" -> string: "+string);
+			var tmp = string ? string : location.search;
+			myControl.util.dump(" -> tmp: "+tmp);
+			var url = tmp.split('#')[0]; //split at hash and only use relevant segment. otherwise last param is key:value#something
 			var params = {};
 //check for ? to avoid js error which results when no uri params are present
 			if(string || url.indexOf('?') > 0)	{
-				url = url.replace('?', '');
-				var queries = url.split('&');
-				for(var q in queries) {
-					var param = queries[q].split('=');
-					params[ param[0] ] = decodeURIComponent(param[1].replace(/\+/g, " "));
+				url = url.replace('?', '').replace(/&amp;/g, '&'); //uri may be encoded or not. normalize.
+//				myControl.util.dump(" -> URL after tweaking: "+url);
+				if(myControl.util.isSet(url))	{
+					var queries = url.split('&');
+					for(var q in queries) {
+						var param = queries[q].split('=');
+						params[ param[0] ] = decodeURIComponent(param[1].replace(/\+/g, " ")); //may want to move this up further. may be more efficient to decode when url var is created.
+						}
 					}
 				}
 			return params;
@@ -747,6 +769,7 @@ pass in additional information for more control, such as css class of 'error' an
 			r += ' '+date.getDate();
 			r += ', '+date.getFullYear();
 			if(showtime)	{
+				r += " ";
 				r += date.getHours();
 				r += ':'+date.getMinutes();
 				}
@@ -987,8 +1010,10 @@ a word */
 			}, //truncate
 			
 		makeSafeHTMLId : function(string)	{
+//			myControl.util.dump("BEGIN control.util.makesafehtmlid");
+//			myControl.util.dump("string: "+string);
 			var r = false;
-			if(string)	{
+			if(typeof string == 'string')	{
 				r = string.replace(/[^a-zA-Z 0-9 - _]+/g,'');
 				}
 			return r;
@@ -1044,7 +1069,7 @@ a word */
 			month[10]="10";
 			month[11]="11";
 			month[12]="12";
-			for(i = 1; i < 13; i += 1)	{
+			for(var i = 1; i < 13; i += 1)	{
 				r += "<option value='"+i+"' id='ccMonth_"+i+"' ";
 				if(i == focusMonth)
 					r += "selected='selected'";
@@ -1189,7 +1214,25 @@ later, it will handle other third party plugins as well.
 //executed inside handleTHirdPartyInits as well as after a facebook login.
 //
 
+		//cart must already be in memory when this is run.
+//will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
+// just checks to see if the cart contents would even allow it.
+//currently, there is only a google field for disabling their checkout, but this is likely to change.
+			which3PCAreAvailable :	function(){
+				myControl.util.dump("BEGIN control.util.which3PCAreAvailable");
+				var obj = {};
+				obj.paypalec = true;
+				obj.amazonpayment = true;
+				obj.googlecheckout = true;
+				
+				var L = myControl.data.cartItemsList.cart.stuff.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(myControl.data.cartItemsList.cart.stuff[i].full_product['gc:blocked'])	{obj.googlecheckout = false}
+					if(myControl.data.cartItemsList.cart.stuff[i].full_product['paypalec:blocked'])	{obj.paypalec = false}
+					}
 
+				return obj;
+				},
 
 //used in checkout to populate username: so either login or bill.email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
@@ -1269,8 +1312,16 @@ Then we'll be in a better place to use data() instead of attr().
 		transmogrify : function(eleAttr,templateID,data)	{
 //			myControl.util.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
 //			myControl.util.dump(eleAttr);
+//If a template ID is specified but does not exist, try to make one. added 2012-06-12
+			if(templateID && !myControl.templates[templateID])	{
+				var tmp = $('#'+templateID);
+				if(tmp.length > 0)	{
+					myControl.model.makeTemplate(tmp,templateID);
+					}
+				}
+
 			if(!templateID || typeof data != 'object' || !myControl.templates[templateID])	{
-				myControl.util.dump(" -> templateID ("+templateID+") not set or typeof data ("+typeof data+") not object or template doesn't exist not present/correct.");
+				myControl.util.dump(" -> templateID ["+templateID+"] is not set or not a function ["+typeof myControl.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
 //				myControl.util.dump(eleAttr);
 				}
 			else	{
@@ -1278,7 +1329,7 @@ Then we'll be in a better place to use data() instead of attr().
 
 var $r = myControl.templates[templateID].clone(); //clone is always used so original is 'clean' each time it's used. This is what is returned.
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
-if(typeof eleAttr == 'string')	{
+if(myControl.util.isSet(eleAttr) && typeof eleAttr == 'string')	{
 //	myControl.util.dump(' -> eleAttr is a string.');
 	$r.attr('id',myControl.util.makeSafeHTMLId(eleAttr))  
 	}
@@ -1290,75 +1341,7 @@ else if(typeof eleAttr == 'object')	{
 	if(eleAttr.id)	{$r.attr('id',myControl.util.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
 
-//locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
-	$r.find('[data-bind]').each(function()	{
-											   
-		var $focusTag = $(this);
-
-//		myControl.util.dump(' -> data-bind match found.');
-//proceed if data-bind has a value (not empty).
-		if(myControl.util.isSet($focusTag.attr('data-bind'))){
-			var bindData = myControl.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
-//			myControl.util.dump(" -> "+bindData['var']);
-			if(bindData['var'])	{
-				value = myControl.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
-				}
-			if(!myControl.util.isSet(value) && bindData.defaultVar)	{
-				value = myControl.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
-//					myControl.util.dump(' -> used defaultVar because var had no value. new value = '+value);
-				}
-			if(!myControl.util.isSet(value) && bindData.defaultValue)	{
-				value = bindData['defaultValue']
-//					myControl.util.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
-				}
-//in some cases, the format function needs a 'clean' version of the value, such as money.
-//pre and post text are likely still necessary, but math or some other function may be needed prior to pre and post being added.
-//in cases where cleanValue is used inside the renderFormats.function, pre and post text must also be added.
-			bindData.cleanValue = value;
-			}
-//		myControl.util.dump(" -> typeof: "+typeof value);
-//		myControl.util.dump(" -> value: "+value);
-// SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
-
-		if((value  == 0 || value == '0.00') && bindData.hideZero)	{
-//				myControl.util.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
-			}
-		else if(value)	{
-			
-			if(myControl.util.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
-
-			if(bindData.pretext){value = bindData.pretext + value}
-			if(bindData.posttext){value += bindData.posttext}
-
-			if(myControl.util.isSet(bindData.format)){
-
-				if(bindData.extension && typeof myControl.ext[bindData.extension].renderFormats[bindData.format] == 'function')	{
-//						myControl.util.dump(" -> extension specified ("+bindData.extension+") and "+bindData.format+" is a function. executing.");
-					myControl.ext[bindData.extension].renderFormats[bindData.format]($focusTag,{"value":value,"bindData":bindData});
-					}
-				else if(typeof myControl.renderFormats[bindData.format] == 'function'){
-//						myControl.util.dump(" -> no extension specified. "+bindData.format+" is a valid default function. executing.");
-					myControl.renderFormats[bindData.format]($focusTag,{"value":value,"bindData":bindData}); 
-					}
-				else	{
-						$('#globalMessaging').append(myControl.util.formatMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)"));
-						myControl.util.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
-//						myControl.util.dump(bindData);
-					}
-//					myControl.util.dump(' -> custom display function "'+bindData.format+'" is defined');
-				
-				}
-			}
-		else	{
-//				myControl.util.dump(' -> data-bind is set, but it has no/invalid value.');
-			if($focusTag.prop('tagName') == 'IMG'){$focusTag.remove()} //remove empty/blank images from dom. necessary for IE.
-
-			}
-		value = ''; //reset value.
-		}); //end each for children.
-	$r.removeClass('loadingBG');
-//		myControl.util.dump('END translateTemplate');
-	return $r;
+return this.handleTranslation($r,data);
 
 
 				}
@@ -1376,17 +1359,22 @@ most likely, this will be expanded to support setting other data- attributes. ##
 //			myControl.util.dump(' -> templateID: '+templateID);
 //creates a copy of the template.
 			var r;
-			if(!templateID)	{
-				myControl.util.dump(" -> ERROR! templateID not specified in createTemplateInstance. eleAttr = "+eleAttr);
-				r = false;
+//if a templateID is passed, but no template exists, try to create one.
+			if(templateID && !myControl.templates[templateID])	{
+				var tmp = $('#'+templateID);
+				if(tmp.length > 0)	{
+					myControl.util.dump("Warning! template ["+templateID+"] did not exist. Matching element found in DOM and used to create template.");
+					myControl.model.makeTemplate(tmp,templateID);
+					}
 				}
-			else if(myControl.templates[templateID])	{
+				
+			if(templateID && myControl.templates[templateID])	{
 				r = myControl.templates[templateID].clone();
 				
 				if(typeof eleAttr == 'string')	{r.attr('id',myControl.util.makeSafeHTMLId(eleAttr))}
 				else if(typeof eleAttr == 'object')	{
 //an attibute will be set for each. {data-pid:PID} would output data-pid='PID'
-					for(index in eleAttr)	{
+					for(var index in eleAttr)	{
 						r.attr('data-'+index,eleAttr[index])
 						}
 				//override the id with a safe id, if set.
@@ -1397,12 +1385,102 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				r.attr('data-templateid',templateID); //used by translateTemplate to know which template was used..
 				}
 			else	{
-				myControl.util.dump(" -> ERROR! createTemplateInstance -> templateID ("+templateID+") does not exist! eleAttr = "+eleAttr);
+				myControl.util.dump(" -> ERROR! createTemplateInstance -> templateID ["+templateID+"] not specified or does not exist[ "+typeof myControl.templates[templateID]+"]! eleAttr = "+eleAttr);
 				r = false;
 				}
 
 			return r;
 			}, //createTemplateInstance
+
+
+//allows translation by selector and does NOT require a templateID. This is very handy for translating after the fact.
+		translateSelector : function(selector,data)	{
+//			myControl.util.dump("BEGIN controller.renderFunctions.translateSelector");
+//			myControl.util.dump(" -> selector: "+selector);
+//			myControl.util.dump(data);
+			if(!$.isEmptyObject(data) && selector)	{
+//				myControl.util.dump(" -> executing handleTranslation. $(selector).length: "+$(selector).length);
+				this.handleTranslation($(selector),data)
+				}
+			else	{
+				myControl.util.dump("WARNING! - either selector ["+selector+"] or data [typeof: "+typeof data+"] was not set in translateSelector");
+				}
+			},
+
+//NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
+		handleTranslation : function($r,data)	{
+//locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
+$r.find('[data-bind]').each(function()	{
+										   
+	var $focusTag = $(this);
+
+//		myControl.util.dump(' -> data-bind match found: '+$focusTag.data('bind'));
+//proceed if data-bind has a value (not empty).
+	if(myControl.util.isSet($focusTag.attr('data-bind'))){
+		var bindData = myControl.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
+//		myControl.util.dump(" -> bindData.var: "+bindData['var']);
+		if(bindData['var'])	{
+			value = myControl.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
+			}
+		if(!myControl.util.isSet(value) && bindData.defaultVar)	{
+			value = myControl.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
+//					myControl.util.dump(' -> used defaultVar because var had no value. new value = '+value);
+			}
+		if(!myControl.util.isSet(value) && bindData.defaultValue)	{
+			value = bindData['defaultValue']
+//					myControl.util.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
+			}
+		}
+// SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
+//	myControl.util.dump(" -> value: "+value);
+	
+	if((value  == 0 || value == '0.00') && bindData.hideZero)	{
+//				myControl.util.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
+		}
+	else if(value)	{
+		if(myControl.util.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
+
+		if(myControl.util.isSet(bindData.format)){
+//the renderFunction could be in 1 of 2 places, so it's saved to a local var so it can be used as a condition before executing itself.
+			var renderFunction; //saves a copy of the renderFunction to a local var.
+			if(bindData.extension && typeof myControl.ext[bindData.extension].renderFormats[bindData.format] == 'function')	{
+				renderFunction = myControl.ext[bindData.extension].renderFormats[bindData.format];
+				}
+			else if(typeof myControl.renderFormats[bindData.format] == 'function'){
+				renderFunction = myControl.renderFormats[bindData.format];
+				}
+
+			if(typeof renderFunction == 'function')	{
+				renderFunction($focusTag,{"value":value,"bindData":bindData});
+				if(bindData.pretext)	{$focusTag.prepend(bindData.pretext)} //used for text
+				if(bindData.posttext) {$focusTag.append(bindData.posttext)}
+				if(bindData.before) {$focusTag.before(bindData.before)} //used for html
+				if(bindData.after) {$focusTag.after(bindData.after)}
+				if(bindData.wrap) {$focusTag.wrap(bindData.wrap)}
+				}
+			else	{
+					$('#globalMessaging').append(myControl.util.formatMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)"));
+					myControl.util.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
+//						myControl.util.dump(bindData);
+				}
+//					myControl.util.dump(' -> custom display function "'+bindData.format+'" is defined');
+			
+			}
+		}
+	else	{
+		// attribute has no value.
+//				myControl.util.dump(' -> data-bind is set, but it has no/invalid value.');
+		if($focusTag.prop('tagName') == 'IMG'){$focusTag.remove()} //remove empty/blank images from dom. necessary for IE.
+
+		}
+	value = ''; //reset value.
+	}); //end each for children.
+$r.removeClass('loadingBG');
+//		myControl.util.dump('END translateTemplate');
+return $r;			
+			
+			},
+
 
 //each template may have a unique set of required parameters.
 /*
@@ -1446,6 +1524,7 @@ $('#'+safeTarget).replaceWith($tmp);
 //if no namespace is passed (zoovy: or user:) then the 'root' of the object is used.
 //%attribs is passed in a cart spec because that's where the data is stored.
 		getAttributeValue : function(v,data)	{
+//myControl.util.dump('BEGIN myControl.renderFunctions.getAttributeValue');
 			if(!v || !data)	{
 				value = false;
 				}
@@ -1455,7 +1534,6 @@ $('#'+safeTarget).replaceWith($tmp);
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
-//myControl.util.dump('BEGIN myControl.renderFunctions.getAttributeValue');
 //myControl.util.dump(' -> namespace = '+namespace);
 //myControl.util.dump(' -> attributeID = '+attributeID);
 
@@ -1464,7 +1542,8 @@ $('#'+safeTarget).replaceWith($tmp);
 //In some cases, like categories, some data is in the root and some is in %meta.
 //pass %meta.cat_thumb, for instance.  currenlty, only %meta is supported. if/when another %var is needed, this'll need to be expanded. ###
 //just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
-				if(attributeID.substring(0,5) === '%meta' && namespace == 'category')	{
+// need to verify object exists as well now (2012-20) because we're running translate over the same template more than once, specifically for admin_orders, but likely more.
+				if(attributeID.substring(0,5) === '%meta' && namespace == 'category' && typeof data['%meta'] == 'object')	{
 					value = data['%meta'][attributeID.substr(6)];
 					}
 //rendering a category page now merges appCategoryDetail and appPage get (appCategoryDetail|safeid[%page]
@@ -1472,25 +1551,56 @@ $('#'+safeTarget).replaceWith($tmp);
 					if(typeof data['%page'] == 'object')	{value = data['%page'][attributeID]} //%page may get added into another object, such as categoryDetail
 					else {value = data[attributeID]}//will get used if translating a appPageGet
 					}
-//				else if(namespace == 'elastic-native')	{
-//					value = true; //for now just return true. need to set this up to return datapointer at some point. ###
-//					}
+				else if(namespace == 'session')	{
+					value = data['session'][attributeID]; //for now just return true. need to set this up to return datapointer at some point. ###
+					}
 //and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
 				else if(namespace == 'order')	{
 //					myControl.util.dump(' -> parsing order data. % attribute = '+attributeID);
-					if(attributeID.substring(0,4) == 'data')	{
+
+//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
+//this is true for both adminorders and store orders.
+
+					if(typeof data.order == 'object')	{
+						data = data.order; 
+						}
+
+					if(attributeID.substring(0,4) == 'data' && typeof data['data'] == 'object')	{
 						value = data['data'][attributeID.substr(5)];
 						}
-					else if(attributeID.substring(0,8) == 'payments')	{
+//need to check for payments. because in and admin order view, payment is an array. in customer order view, it's an object.
+// so var: order(payments) in admin order view would enter here by accident (it shouldn't)
+					else if(attributeID.substring(0,9) == 'payments.' && typeof data['payments'] == 'object')	{
 						value = data['payments'][attributeID.substr(9)];
 						}
-					else if(attributeID.substring(0,12) == 'full_product')	{
+					else if(attributeID.substring(0,12) == 'full_product' && typeof data['full_product'] == 'object')	{
 //						myControl.util.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
 						value = data['full_product'][attributeID.substr(13)];
 						}
 					else	{
+//						myControl.util.dump(" -> GOT TO ELSE");
 						value = data[attributeID]
 						}
+					}
+/*
+in some cases, the reviews data is saved in to the product data, such as showPageContent in quickstart.js
+the first two cases below are to handle instances of this.
+*/
+				else if(namespace == 'reviews')	{
+					if(attributeID == '@reviews' && data.reviews)	{
+						myControl.util.dump(data);
+						value = data.reviews['@reviews']
+						}
+					else if(data.reviews)	{
+						value = data.reviews[attributeID];
+						}
+					else	{
+						value = data[attributeID];
+						}
+					}
+// 'customer' namespace is used in orders and customer manager (appCustomerGet).
+				else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object')	{
+					value = data['%CUSTOMER'][attributeID];
 					}
 				else if(namespace == 'product')	{
 //inventory record may be emtpy, if merchant has inventory set up to not matter.
@@ -1508,10 +1618,11 @@ $('#'+safeTarget).replaceWith($tmp);
 //					myControl.util.dump(' -> attribute does not contain : possibly a stid or sku reference.');
 						value = data[attributeID]
 						}
-					else	{
-//%attribs is what is going to be used most frequently. default here.
-						if(data['%attribs'])
+					else if(data['%attribs'])	{
 							value = data['%attribs'][attributeID];
+						}
+					else	{
+						//hhhmmm... don't know HTF we got here.
 						}
 					}
 //if the attribute ID contains a semi colon, than an attribute (such as product: or profile:) is being referenced. 
@@ -1567,6 +1678,7 @@ $('#'+safeTarget).replaceWith($tmp);
 		}, //renderFunctions
 
 
+
 					////////////////////////////////////   renderFormats    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -1582,9 +1694,27 @@ $('#'+safeTarget).replaceWith($tmp);
 				$tag.attr('src',imgSrc);
 				}
 			else	{
-				$tag.style('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
+				$tag.css('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
 				}
 			}, //imageURL
+
+
+
+		stuffList : function($tag,data)	{
+			var L = data.value.length;
+			var templateID = data.bindData.loadsTemplate;
+			var stid; //recycled. used as a short cut in the loop for each items stid when in focus.
+			var $o; // what is appended to tag.  saved to iterim var so changes can occur, if needed (locking form fields for coupons, for example)
+			for(var i = 0; i < L; i += 1)	{
+				stid = data.value[i].stid;
+				myControl.util.dump(" -> STID: "+stid);
+				$o = myControl.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},templateID,data.value[i])
+//make any inputs for coupons disabled.
+				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'})}
+				$tag.append($o);
+				}
+			},
+
 
 		elasticImage1URL : function($tag,data)	{
 			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
@@ -1605,19 +1735,23 @@ $('#'+safeTarget).replaceWith($tmp);
 
 
 		youtubeVideo : function($tag,data){
-			var r = "<iframe style='z-index:1;' width='560' height='315' src='http://www.youtube.com/embed/"+data.bindData.cleanValue+"' frameborder='0' allowfullscreen></iframe>";
-			if(data.bindData.pretext){r = data.bindData.pretext + r}
-			if(data.bindData.posttext){r += data.bindData.posttext}			
+			var r = "<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
 			$tag.append(r);
 			},
 
 		paypalECButton : function($tag,data)	{
 if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
-	$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
-		myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
-		$(this).addClass('disabled').attr('disabled','disabled');
-		myControl.model.dispatchThis('immutable');
-		});
+	var payObj = myControl.util.which3PCAreAvailable();
+	if(payObj.paypalec)	{
+		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
+			myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
+			$(this).addClass('disabled').attr('disabled','disabled');
+			myControl.model.dispatchThis('immutable');
+			});
+		}
+	else	{
+		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('disabled').attr('disabled','disabled');
+		}
 	}
 else	{
 	$tag.addClass('displayNone');
@@ -1627,7 +1761,7 @@ else	{
 		googleCheckoutButton : function($tag,data)	{
 
 if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
-	var payObj = myControl.sharedCheckoutUtilities.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
+	var payObj = myControl.util.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
 	if(payObj.googlecheckout)	{
 	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='https://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
 		myControl.ext.convertSessionToOrder.calls.cartGoogleCheckoutURL.init();
@@ -1647,38 +1781,20 @@ else	{
 
 		
 //set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
-//used for displaying a 'new arrival' tag on a product in a list or on the product detail page. Will only show one tag.
-//there are a lot of tags that can be used, but not all are as appropriate for this use case.
-//typically, free shipping is handled differently, so it is not whitelisted here.
-/* may not need this anymore, in favor of numtags support in addtagspans
-		assignTagClass : function($tag,data)	{
-			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER');
-//			var csv = data.value.split(',');
-			var L = whitelist.length;
-			var tag; //used to store which tag is enabled. processes in the order of the tags in whitelist, so use that order to set display priority
-			for(var i = 0; i < L; i += 1)	{
-				if(data.value.indexOf(whitelist[i])	{
-					tag = whitelist[i].toLowerCase();
-					break; //kill loop once a match is made.
-					}
-				}
-			$tag.addClass(tag);
-			},
-*/
-
-
-//set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
 //used for displaying a  series of tags, such as on the product detail page. Will show any tag enabled.
 //on bind-data, set maxTagsShown to 1 to show only 1 tag
 		addTagSpans : function($tag,data)	{
-			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9');
-			var csv = data.value.split(',');
+			var whitelist = new Array('IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_SALE','IS_CLEARANCE','IS_NEWARRIVAL','IS_BESTSELLER','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9','IS_FRESH','IS_SHIPFREE');
+//			var csv = data.value.split(',');
 			var L = whitelist.length;
 			var tagsDisplayed = 0;
 			var maxTagsShown = myControl.util.isSet(data.bindData.maxTagsShown) ? data.bindData.maxTagsShown : 100; //default to a high # to show all tags.
 			var spans = ""; //1 or more span tags w/ appropriate tag class applied
 			for(var i = 0; i < L; i += 1)	{
-				if(data.value.indexOf(whitelist[i]) && tagsDisplayed <= maxTagsShown)	{
+//				myControl.util.dump("whitelist[i]: "+whitelist[i]+" and tagsDisplayed: "+tagsDisplayed+" and maxTagsShown: "+maxTagsShown);
+//				myControl.util.dump("data.value.indexOf(whitelist[i]): "+data.value.indexOf(whitelist[i]));
+				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
+
 					spans += "<span class='"+whitelist[i].toLowerCase()+"'><\/span>";
 					tagsDisplayed += 1;
 					}
@@ -1686,10 +1802,15 @@ else	{
 			$tag.append(spans);
 			},
 
-
-		
+//if classname is set in the bindData, it'll be concatonated with the value so that specific classes can be defined.
+//ex: for a reviews item, instead of a class of 7, which isn't valid, it would be output as review_7
 		addClass : function($tag,data){
-			$tag.addClass(data.value);
+			var className;
+			if(data.bindData.className)	{
+				className = data.bindData.className+data.value;
+				}
+			else	{ className = data.value}
+			$tag.addClass(className);
 			},
 		
 		wiki : function($tag,data)	{
@@ -1730,11 +1851,7 @@ $tmp.empty().remove();
 
 		unix2mdy : function($tag,data)	{
 			var r;
-			r = myControl.util.unix2Pretty(data.bindData.cleanValue)
-			
-			if(data.bindData.pretext){r = data.bindData.pretext + r}
-			if(data.bindData.posttext){r += data.bindData.posttext}
-			
+			r = myControl.util.unix2Pretty(data.value,data.bindData.showtime)
 			$tag.text(r)
 			},
 	
@@ -1748,7 +1865,7 @@ $tmp.empty().remove();
 			}, //text
 //for use on inputs. populates val() with the value
 		popVal : function($tag,data){
-			$tag.val(data.bindData.cleanValue);
+			$tag.val(data.value);
 			}, //text
 
 
@@ -1761,24 +1878,19 @@ $tmp.empty().remove();
 			$tag.attr(data.bindData.attribute,data.value);
 			}, //text
 		elasticMoney :function($tag,data)	{
-			data.bindData.cleanValue = data.bindData.cleanValue / 100;
-			this.money($tag,data);
+			data.value = data.value / 100;
+			myControl.renderFormats.money($tag,data);
 			}, //money
 		
 		money : function($tag,data)	{
 			
 //			myControl.util.dump('BEGIN view.formats.money');
-//			myControl.util.dump(' -> value = "'+data.value+'" and cleanValue = '+data.bindData.cleanValue);
-			var amount = data.bindData.cleanValue;
+			var amount = data.value;
 			if(amount)	{
 				var r;
 				r = myControl.util.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
-				if(data.bindData.pretext){r = data.bindData.pretext + r}
-				if(data.bindData.posttext){r += data.bindData.posttext}
 //					myControl.util.dump(' -> attempting to use var. value: '+data.value);
 //					myControl.util.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
-//					myControl.util.dump(' -> pretext = '+data.bindData.pretext);
-//					myControl.util.dump(' -> posttext = '+data.bindData.posttext);
 //					myControl.util.dump(' -> r = '+r);
 				$tag.text(r)
 				}
@@ -1918,162 +2030,8 @@ else
 //				myControl.util.dump("END myControl.thirdParty.fb.saveUserDataToSession");
 				}
 			}
-		},
+		}
 
 
-////////////////////////////////////   						sharedCheckoutUtilities				    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-/*
-these functions are fairly generic and contain no extentension specific calls.
-some id's may be hard coded (can change this later if need be), but they're form field id's(bill_email), fieldsets, or obvious enough to be shared(addresses)
-*/
-
-
-
-
-	sharedCheckoutUtilities : 	{
-		
-		//cart must already be in memory when this is run.
-//will tell you which third party checkouts are available. does NOT look to see if merchant has them enabled,
-// just checks to see if the cart contents would even allow it.
-//currently, there is only a google field for disabling their checkout, but this is likely to change.
-			which3PCAreAvailable :	function(){
-				myControl.util.dump("BEGIN sharedCheckoutUtilities.which3PCAreAvailable");
-				var obj = {};
-				obj.paypalec = true;
-				obj.amazonpayment = true;
-				obj.googlecheckout = true;
-				
-				var L = myControl.data.cartItemsList.cart.stuff.length;
-				for(var i = 0; i < L; i += 1)	{
-					if(myControl.data.cartItemsList.cart.stuff[i].full_product['gc:blocked'])	{obj.googlecheckout = false}
-					}
-
-				return obj;
-				},
-
-//pretty straightforward. If a cid is set, the session has been authenticated.
-//if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
-//if no cid but email, they are a guest.
-//if logged in via facebook, they are a thirdPartyGuest.
-//this could easily become smarter to take into account the timestamp of when the session was authenticated.
-			
-			determineAuthentication : function(){
-				var r = 'none';
-//was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				if(myControl.vars.cid && myControl.util.getUsernameFromCart())	{r = 'authenticated'}
-				else if(myControl.model.fetchData('cartItemsList') && myControl.util.isSet(myControl.data.cartItemsList.cart.cid))	{
-					r = 'authenticated';
-					myControl.vars.cid = myControl.data.cartItemsList.cart.cid;
-					}
-//need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
-//and all third parties would get 'guest'
-				else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
-					r = 'thirdPartyGuest';
-//					myControl.thirdParty.fb.saveUserDataToSession();
-					}
-				else if(myControl.model.fetchData('cartItemsList') && myControl.data.cartItemsList.cart['data.bill_email'])	{
-					r = 'guest';
-					}
-				else	{
-					//catch.
-					}
-//				myControl.util.dump('myControl.sharedCheckoutUtilities.determineAuthentication run. authstate = '+r); 
-
-				return r;
-				},
-			
-	
-
-/*
-sometimes _is_default is set for an address in the list of bill/ship addresses.
-sometimes it isn't. sometimes, apparently, it's set more than once.
-this function closely mirrors core logic.
-*/
-			fetchPreferredAddress : function(TYPE)	{
-//				myControl.util.dump("BEGIN sharedCheckoutUtilities.fetchPreferredAddress  ("+TYPE+")");
-				var r = false; //what is returned
-				if(!TYPE){ r = false}
-				else	{
-					var L = myControl.data.buyerAddressList['@'+TYPE].length;
-//look to see if a default is set. if so, take the first one.
-					for(var i = 0; i < L; i += 1)	{
-						if(myControl.data.buyerAddressList['@'+TYPE][i]['_is_default'] == 1)	{
-							r = myControl.data.buyerAddressList['@'+TYPE][i]['_id'];
-							break; //no sense continuing the loop.
-							}
-						}
-//if no default is set, use the first address.
-					if(r == false)	{
-						r =myControl.data.buyerAddressList['@'+TYPE][0]['_id']
-						}
-					}
-//				myControl.util.dump("address id = "+r);
-				
-				return r;
-				},
-
-
-
-	
-
-				
-//sets the values of the shipping address to what is set in the billing address fields.
-//can't recycle the setAddressFormFromPredefined here because it may not be a predefined address.
-			setShipAddressToBillAddress : function()	{
-//				myControl.util.dump('BEGIN sharedCheckoutUtilities.setShipAddressToBillAddress');
-				$('#chkoutBillAddressFieldset > ul').children().children().each(function() {
-					if($(this).is(':input')){$('#'+this.id.replace('bill_','ship_')).val(this.value)}
-					});
-				},
-
-
-//allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
-			setAddressFormFromPredefined : function(addressType,addressId)	{
-//				myControl.util.dump('BEGIN sharedCheckoutUtilities.setAddressFormFromPredefined');
-//				myControl.util.dump(' -> address type = '+addressType);
-//				myControl.util.dump(' -> address id = '+addressId);
-				
-				var L = myControl.data.buyerAddressList['@'+addressType].length
-				var a,i;
-				var r = false;
-//looks through predefined addresses till it finds a match for the address id. sets a to address object.
-				for(i = 0; i < L; i += 1)	{
-					if(myControl.data.buyerAddressList['@'+addressType][i]['_id'] == addressId){
-						a = myControl.data.buyerAddressList['@'+addressType][i];
-						r = true;
-						break;
-						}
-					}
-				
-//				myControl.util.dump(' -> a = ');
-//				myControl.util.dump(a);
-				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
-				if(myControl.util.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
-				$('#data-'+addressType+'_city').val(a[addressType+'_city']);
-				$('#data-'+addressType+'_state').val(a[addressType+'_state']);
-				$('#data-'+addressType+'_zip').val(a[addressType+'_zip']);
-				$('#data-'+addressType+'_country').val(a[addressType+'_country'] ? a[addressType+'_country'] : "US"); //country is sometimes blank. This appears to mean it's a US company?
-				$('#data-'+addressType+'_firstname').val(a[addressType+'_firstname']);
-				$('#data-'+addressType+'_lastname').val(a[addressType+'_lastname']);
-				if(myControl.util.isSet(a[addressType+'_phone'])){$('#data-'+addressType+'_phone').val(a[addressType+'_phone'])};
-				return r;
-				}, //setAddressFormFromPredefined
-
-
-//will blank all fields in a fieldset. in theory, this would work even on a non-address field but not tested.
-			resetAddress : function(fieldsetId)	{
-				$('#'+fieldsetId+' :input').each(function() {
-					if ($(this).is('select')) {
-						$(this).val($(this).find('option[selected]').val());
-						}
-					else {
-						$(this).val(this.defaultValue);
-						}
-					});
-				} //resetAddress
-
-		} //sharedCheckoutUtilities
-	
 
 	});

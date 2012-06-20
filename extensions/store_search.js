@@ -281,6 +281,9 @@ $keywordInput.autocomplete({
 				}, //bindKeywordAutoComplete
 
 /*
+
+Will return the results a jquery object for display. append the return from this function to your list (or other element)
+
 P should contain the following:
 P.datapointer - pointer to where in myControl.data the results are stored.
 P.templateID - what productList template to use
@@ -289,8 +292,11 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 */
 
 			getElasticResultsAsJQObject : function(P)	{
+				myControl.util.dump("BEGIN store_search.util.getElasticResultsAsJQObject ["+P.datapointer+"]")
 				var pid;//recycled shortcut to product id.
 				var $r = $(); //what is returned. a jquery object of all the results. ### eventually, this is where multipage would get handled.
+				var L = myControl.data[P.datapointer].hits.hits.length;
+				myControl.util.dump(" -> L: ");
 				for(var i = 0; i < L; i += 1)	{
 					pid = myControl.data[P.datapointer].hits.hits[i]['_id'];
 //					myControl.util.dump(" -> "+i+" pid: "+pid);
