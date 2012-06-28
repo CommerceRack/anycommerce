@@ -2,14 +2,30 @@
 # This file will be updated with each release (duh)
 #
 
+Any time you are upgrading to a new version of the MVC, you should create a local backup of the site, so that you can easily restore or refer back as necessary.
+
+
 2012.25 changes
+
+Added a 'snippets.html' file to the examples directory. Contains some useful snippets for elements such as search and newsletter. More will be added...
+
 * controller.renderFunctions
  -> changed the way pre/post text work.  They are no longer added to the value before it is passed into the format function. Instead, they're handled afterwards. This means that bindData.cleanValue is no longer necessary (value is always 'clean' now) and has been removed. pre/post text should be used for text only (does not support html).
  -> support for before, after and wrap have been added globally. These should be used for adding any html.
+ -> added myControl.vars.protocol which will = https: (if secure) or http: (if non-secure or local). This may change as native app support progresses.
+
+Checkouts
+ -> panels.chkoutPayOptionsFieldset had the supplemental payment information removed. It was added as a function in the controller so it could be more global (it'll be shared in checkout, admin orders and customer order updates.
 
 * store_prodlist
  -> removed the 'getProductDataForLaterUse' function. Use getProductDataForList instead (they were very similar functions). 
- 
+
+* store_crm
+ -> started support for buyerOrderMacro (ability for a buyer to update their order)
+
+* store_cart
+ -> started amazon payments integration
+
 * store_product
  -> removed util.getXsellForPID (not necessary w/ buildQueriesFromTemplate code)
  
@@ -17,11 +33,18 @@
  -> change to addClass renderFormat (required because of changes to pre/posttext)
  -> some changes to reviews, including new templates and bindData's (productTemplate). new reviews img with all 11 ratings.
  -> broke changeNavTo out into separate functions, each called by showContent as needed:
-	showSearch (needs testing)
+	showSearch
 	showCompany
 	showCustomer
 	This change was necessary because of a bug where landing on a company page resulted in an error because the profile data hadn't been loaded yet.  This is cleaner too.
  -> as part of removing changeNavTo, added a function for util.thisArticleRequiresLogin(P) (article is what a 'show' value is internally referenced as (ex: return or myaccount is an article). will return true or false based on whether P.show is a secure article (ex: show=orders requires login).
+ -> removed some onSubmit and other events from the search and newsletter forms. added a function that gets executed on app init to add these.
+ -> orderContentsTemplate updated. specifically, the stuff list upgraded to use stuffList render format. No longer requires custom callback, can use translateTemplate.
+ -> orderProductLineItemTemplate renamed to productListTemplateInvoice (to be more consistent w/ naming convention)
+ -> added support for softauth order view if orderid and cartid are passed to /customer/orders
+ -> added pageNotFound template (gets used for 404 pages). app no longer defaults to homepage in these cases.
+ -> updated pushState code so setting back = 0 behaves as replaceState instead of doing nothing (this solves an issue where going back in history to first page of site didn't behave as expected)
+ -> better support for IE back button using hash (other browsers will read/load from hash as needed too)
 
 
 

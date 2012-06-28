@@ -167,8 +167,25 @@ formerly showCart
 			dispatch : function(coupon,tagObj)	{
 				myControl.model.addDispatchToQ({"_cmd":"cartCouponAdd","coupon":coupon,"_tag" : tagObj},'immutable');	
 				}			
-			} //cartCouponAdd
+			}, //cartCouponAdd
 
+
+		cartAmazonPaymentURL : {
+			init : function()	{
+				this.dispatch();
+				return 1;
+				},
+			dispatch : function()	{
+				var tagObj = {'callback':'',"datapointer":"cartAmazonPaymentURL","extension":"store_cart"}
+				myControl.model.addDispatchToQ({
+"_cmd":"cartAmazonPaymentURL",
+"shipping":1,
+"CancelUrl":zGlobals.appSettings.https_app_url+"cart.cgis?sessionid="+myControl.sessionId,
+"ReturnUrl":zGlobals.appSettings.https_app_url,
+"YourAccountUrl": zGlobals.appSettings.https_app_url+"customer/orders/",
+'_tag':tagObj},'immutable');
+				}
+			} //cartAmazonPaymentParams	
 
 		}, //calls
 
@@ -245,13 +262,16 @@ formerly showCart
 //				myControl.util.dump(stid);
 				$tag.val(data.value).attr('data-stid',stid);
 				},
+				
+				
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
 				if(data.value[0] == '%')	{$tag.remove()}
 				else	{
+$tag.attr({'data-stid':data.value}).val(0); //val is used for the updateCartQty
 //the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
 $tag.click(function(){
-	myControl.ext.store_cart.util.updateCartQty(data.value,0);
+	myControl.ext.store_cart.util.updateCartQty($tag);
 	myControl.model.dispatchThis('immutable');
 	});
 					}
@@ -359,9 +379,14 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 
 //put the loadingBG class into the template, not onto the div created here (jqueryUI classes will override it).
 */
-			showCartInModal : function(templateID)	{
+			showCartInModal : function(templateID,tagObj)	{
 //				myControl.util.dump("BEGIN store_cart.util.showCartInModal");
-
+				if(typeof tagObj == 'object'){}
+				else	{
+					tagObj = {"callback":"displayCart","extension":"store_cart"}
+					}
+				tagObj.parentID = "modalCartContents"
+				tagObj.templateID = templateID
 				var $parent = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
@@ -376,7 +401,7 @@ It also allows us to nuke it during checkout, if need be (ensure no duplicate id
 
 //populate the modal with the template (which includes 'loadingBG'.
 				$parent.append(myControl.renderFunctions.createTemplateInstance(templateID,"modalCartContents"));
-				var tagObj = {"callback":"displayCart","templateID":templateID,"parentID":"modalCartContents","extension":"store_cart"}
+
 //if the shipping methods haven't been retrieved yet, get a new cart too.
 //its done this way because if the cart callback is executed prior to the shipMethods one, then an error will occur in the cart display cuz shipmethods aren't present.
 				if(myControl.ext.store_cart.calls.cartShippingMethods.init({},'immutable'))	{

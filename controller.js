@@ -45,6 +45,7 @@ jQuery.extend(zController.prototype, {
 		myControl.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
 		myControl.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		myControl.vars.fbUser = {};
+		myControl.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
 			myControl.vars.profile = zGlobals.appSettings.profile;
@@ -52,7 +53,7 @@ jQuery.extend(zController.prototype, {
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			myControl.vars.secureURL = zGlobals.appSettings.https_app_url;
 			myControl.vars.sdomain = zGlobals.appSettings.sdomain;
-			if('https:' == document.location.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
+			if('https:' == myControl.vars.protocol)	{myControl.vars.jqurl = zGlobals.appSettings.https_api_url;}
 			else	{myControl.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
 
@@ -98,6 +99,7 @@ copying the template into memory was done for two reasons:
 		myControl.ajax.requests = {"mutable":{},"immutable":{},"passive":{}}; //'holds' each ajax request. completed requests are removed.
 		myControl.sessionId = false;
 /*
+
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
 if no session id is passed, the getValidSessionID function will look to see if one is in local storage and use it or request a new one.
 Exception - the controller is used for admin sessions too. if an admin session is being instantiated, forget about session id (zjsid) for now.
@@ -115,7 +117,7 @@ Exception - the controller is used for admin sessions too. if an admin session i
 			}
 //if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(myControl.util.isSet(myControl.util.getParameterByName('sessionId')))	{
-			myControl.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			myControl.calls.appCartExists.init(myControl.util.getParameterByName('sessionId'),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			myControl.model.dispatchThis('immutable');
 			}
 		else	{
@@ -427,7 +429,7 @@ myControl.model.addDispatchToQ({
 			
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN callbacks.translateSelector");
+//				myControl.util.dump("BEGIN callbacks.translateSelector");
 				myControl.renderFunctions.translateSelector(tagObj.selector,myControl.data[tagObj.datapointer]);
 				},
 			onError : function(responseData,uuid)	{
@@ -579,7 +581,7 @@ loadingBG is a class set on templates that is turned off in transmogrify/transla
 			var $target;
 //			myControl.util.dump(d);
 			if(!d || (d && !d['_rtag']))	{
-				myControl.util.dump(" -> responseData (d) or responseData['_rtag'] is blank.");
+//				myControl.util.dump(" -> responseData (d) or responseData['_rtag'] is blank.");
 				var DQ = myControl.model.whichQAmIFrom(uuid);
 				d['_rtag'] = myControl.q[DQ][uuid]['_tag'];
 				}
@@ -588,6 +590,7 @@ loadingBG is a class set on templates that is turned off in transmogrify/transla
 			else if(typeof d['_rtag'] == 'object' && d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID)}
 			else if	( $('#globalMessaging').length)	{$target = $('#globalMessaging')}
 			else	{$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');}
+			
 			$target.removeClass('loadingBG').show().append(this.getResponseErrors(d));
 			},
 
@@ -687,7 +690,7 @@ pass in additional information for more control, such as css class of 'error' an
 //			myControl.util.dump("BEGIN control.util.getParametersAsObject");
 //			myControl.util.dump(" -> string: "+string);
 			var tmp = string ? string : location.search;
-			myControl.util.dump(" -> tmp: "+tmp);
+//			myControl.util.dump(" -> tmp: "+tmp);
 			var url = tmp.split('#')[0]; //split at hash and only use relevant segment. otherwise last param is key:value#something
 			var params = {};
 //check for ? to avoid js error which results when no uri params are present
@@ -1206,7 +1209,7 @@ later, it will handle other third party plugins as well.
 				myControl.thirdParty.fb.saveUserDataToSession();
 				}
 			else	{
-				myControl.util.dump(" -> did not init FB app because either appid isn't set or FB is undefined ("+typeof FB+").");
+//				myControl.util.dump(" -> did not init FB app because either appid isn't set or FB is undefined ("+typeof FB+").");
 				}
 //			myControl.util.dump("END myControl.util.handleThirdPartyInits");
 			},
@@ -1219,7 +1222,7 @@ later, it will handle other third party plugins as well.
 // just checks to see if the cart contents would even allow it.
 //currently, there is only a google field for disabling their checkout, but this is likely to change.
 			which3PCAreAvailable :	function(){
-				myControl.util.dump("BEGIN control.util.which3PCAreAvailable");
+//				myControl.util.dump("BEGIN control.util.which3PCAreAvailable");
 				var obj = {};
 				obj.paypalec = true;
 				obj.amazonpayment = true;
@@ -1233,6 +1236,61 @@ later, it will handle other third party plugins as well.
 
 				return obj;
 				},
+// This function is in the controller so that it can be kept fairly global. It's used in checkout, store_crm (buyer admin) and will likely be used in admin (orders) at some point.
+			getSupplementalPaymentInputs : function(paymentID,data)	{
+//				myControl.util.dump("BEGIN control.util.getSupplementalPaymentInputs ["+paymentID+"]");
+				var $o; //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
+				$o = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental");
+				var safeid = ''; //used in echeck loop. recycled in loop.
+				var tmp = ''; //tmp var used to put together string of html to append to $o
+				switch(paymentID)	{
+	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
+	//expiration is less of a concern
+					case 'CREDIT':
+						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment.cc' id='payment-cc' class=' creditCard' value='";
+						if(data['payment.cc']){o += data['payment.cc']}
+						tmp += "' onKeyPress='return myControl.util.numbersOnly(event);' /><\/li>";
+						
+						tmp += "<li><label>Expiration<\/label><select name='payment.mm' id='payment-mm' class='creditCardMonthExp' onChange='data[\"payment.mm\"] = this.value;' required='required'><option><\/option>";
+						tmp += myControl.util.getCCExpMonths(myControl.data.cartItemsList.cart['payment.mm']);
+						tmp += "<\/select>";
+						tmp += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+myControl.util.getCCExpYears(myControl.data.cartItemsList.cart['payment.yy'])+"<\/select><\/li>";
+						
+						tmp += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return myControl.util.numbersOnly(event);' value='";
+						if(data['payment.cv']){o += data['payment.cv']}
+						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
+						break;
+	
+					case 'PO':
+						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment.po' id='payment-po' class=' purchaseOrder' onChange='myControl.calls.cartSet.init({\"payment.po\":this.value});' value='";
+						if(myControl.data.cartItemsList.cart['payment.po'])
+								o += myControl.data.cartItemsList.cart['payment.po'];
+						tmp += "' /><\/li>";
+						break;
+	
+					case 'ECHECK':
+						var echeckFields = {"payment.ea" : "Account #","payment.er" : "Routing #","payment.en" : "Account Name",			"payment.eb" : "Bank Name","payment.es" : "Bank State","payment.ei" : "Check #"}
+						for(var key in echeckFields) {
+							safeid = myControl.util.makeSafeHTMLId(key);
+//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
+//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
+							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input required='required' type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck' onChange='myControl.calls.cartSet.init({\""+key+"\":this.value});' value='";
+//if the value for this field is set in the data object (cart or invoice), set it here.
+							if(data[key])
+								tmp += data[key];
+							tmp += "' /><\/li>";
+							}
+						break;
+					default:
+//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
+						$o = false; //return false if there is no supplemental fields
+					}
+				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
+				return $o;
+//				myControl.util.dump(" -> $o:");
+//				myControl.util.dump($o);
+			},
+
 
 //used in checkout to populate username: so either login or bill.email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
@@ -1321,7 +1379,8 @@ Then we'll be in a better place to use data() instead of attr().
 				}
 
 			if(!templateID || typeof data != 'object' || !myControl.templates[templateID])	{
-				myControl.util.dump(" -> templateID ["+templateID+"] is not set or not a function ["+typeof myControl.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
+				myControl.util.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof myControl.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
+				if(typeof eleAttr == 'string'){myControl.util.dump(" -> ID: "+eleAttr)} else {myControl.util.dump(" -> ID: "+eleAttr.id)}
 //				myControl.util.dump(eleAttr);
 				}
 			else	{
@@ -1363,7 +1422,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 			if(templateID && !myControl.templates[templateID])	{
 				var tmp = $('#'+templateID);
 				if(tmp.length > 0)	{
-					myControl.util.dump("Warning! template ["+templateID+"] did not exist. Matching element found in DOM and used to create template.");
+					myControl.util.dump("WARNING! template ["+templateID+"] did not exist. Matching element found in DOM and used to create template.");
 					myControl.model.makeTemplate(tmp,templateID);
 					}
 				}
@@ -1588,7 +1647,7 @@ the first two cases below are to handle instances of this.
 */
 				else if(namespace == 'reviews')	{
 					if(attributeID == '@reviews' && data.reviews)	{
-						myControl.util.dump(data);
+//						myControl.util.dump(data);
 						value = data.reviews['@reviews']
 						}
 					else if(data.reviews)	{
@@ -1707,7 +1766,7 @@ the first two cases below are to handle instances of this.
 			var $o; // what is appended to tag.  saved to iterim var so changes can occur, if needed (locking form fields for coupons, for example)
 			for(var i = 0; i < L; i += 1)	{
 				stid = data.value[i].stid;
-				myControl.util.dump(" -> STID: "+stid);
+//				myControl.util.dump(" -> STID: "+stid);
 				$o = myControl.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},templateID,data.value[i])
 //make any inputs for coupons disabled.
 				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'})}
@@ -1733,7 +1792,9 @@ the first two cases below are to handle instances of this.
 				}
 			},
 
-
+//for embedding. There is an action for showing a youtube video in an iframe in quickstart.
+// hint: set the action as an onclick and set attribute youtube:video id on element and use jquery to pass it in. 
+//ex: data-bind='var:product(youtube:videoid);format:assignAttribute; attribute:data-videoid;' onClick="myControl.ext.myRIA.action.showYoutubeInModal($(this).attr('data-videoid'));
 		youtubeVideo : function($tag,data){
 			var r = "<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
 			$tag.append(r);
@@ -1778,6 +1839,43 @@ else	{
 	}
 	
 			}, //googleCheckoutButton
+
+
+
+
+		amazonCheckoutButton : function($tag,data)	{
+
+if(zGlobals.checkoutSettings.amazonCheckoutMerchantId)	{
+	//tmp for testing
+	$tag.append("<img id='amazonCheckoutButton' border=0 src='https://payments.amazon.com/gp/cba/button?ie=UTF8&color=orange&background=white&size=small' \/>").click(function(){
+	myControl.ext.store_cart.calls.cartAmazonPaymentURL.init();
+	myControl.model.dispatchThis('immutable');
+	});		
+/*
+	var payObj = myControl.util.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
+	if(payObj.amazoncheckout)	{
+	var $form = $("<form />").attr({'method':'post','action':'https://payments.amazon.com/checkout/'+zGlobals.checkoutSettings.amazonCheckoutMerchantId});
+	$form.append("<input >").attr({'type':'image','src':'https://payments.amazon.com/gp/cba/button?ie=UTF8&color=orange&background=white&size=small','id':'cbaImage'}).click(function(event){
+		event.preventDefault();
+		alert('button has been pushed.');
+		});
+	$tag.append("").one('click',function(){
+		myControl.ext.convertSessionToOrder.calls.cartGoogleCheckoutURL.init();
+		$(this).addClass('disabled').attr('disabled','disabled');
+		myControl.model.dispatchThis('immutable');
+		});
+		}
+	else	{
+		$tag.append("<img id='googleCheckoutButton' border=0 src='https://payments.amazon.com/gp/cba/button?ie=UTF8&color=orange&background=white&size=small' \/>")			
+		}
+*/	}
+else	{
+	$tag.addClass('displayNone');
+	}
+	
+			}, //amazonCheckoutButton
+
+
 
 		
 //set bind-data to val: product(zoovy:prod_is_tags) which is a comma separated list
@@ -1872,10 +1970,19 @@ $tmp.empty().remove();
 
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
+//pretext and posttext are added later in the process, but this function needed to be able to put some text before the output
+// so that the id could be valid (if used on an number field, an ID starting with a number isn't valid in old browsers)
 		assignAttribute : function($tag,data){
+			var o = ''; //what is appended to tag. the output (data.value plus any attributePretext and/or making it safe for id)
+			if(data.bindData.valuePretext)	{
+				o += data.bindData.valuePretext;
+				}
 			if(data.bindData.attribute == 'id')
-				data.value = myControl.util.makeSafeHTMLId(data.value);
-			$tag.attr(data.bindData.attribute,data.value);
+				o += myControl.util.makeSafeHTMLId(data.value);
+			else
+				o += data.value
+
+			$tag.attr(data.bindData.attribute,o);
 			}, //text
 		elasticMoney :function($tag,data)	{
 			data.value = data.value / 100;

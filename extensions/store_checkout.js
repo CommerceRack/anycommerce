@@ -43,24 +43,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				}
 			}, //cartShippingMethodsWithUpdate
 
-//not tested.
-		cartAmazonPaymentParams : {
-			init : function()	{
-				this.dispatch();
-				return 1;
-				},
-			dispatch : function()	{
-				var tagObj = {'callback':'',"datapointer":"cartAmazonPaymentParams","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({
-"_cmd":"cartAmazonPaymentParams",
-"shipping":1,
-"CancelUrl":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis",
-"ReturnUrl":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1",
-'_tag':tagObj
-					},'immutable');
-				}
-			}, //cartAmazonPaymentParams	
-
 
 //each time the cart changes, so does the google checkout url.
 		cartGoogleCheckoutURL : {
@@ -201,7 +183,6 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 // initially, was serializing the payment panel only.  Issues here with safari.
 // then, when loading .val(), field was not reliably present. 
 // cc info is saved in memory so that if payment panel is reloaded, cc# is available. so that reference is used for cc and cv.
-// exp alone is less valuable, so it's stored in data.cart obj and referenced there.
 				payObj['payment.cc'] = myControl.ext.convertSessionToOrder.vars["payment.cc"];
 				payObj['payment.cv'] = myControl.ext.convertSessionToOrder.vars["payment.cv"];
 				payObj['payment.yy'] = myControl.ext.convertSessionToOrder.vars["payment.yy"];
@@ -436,7 +417,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 						selAddress = myControl.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id'];								
 						}
 					else	{
-						selAddress = myControl.sharedCheckoutUtilities.fetchPreferredAddress(TYPE);
+						selAddress = myControl.ext.store_checkout.util.determinePreferredAddress(TYPE);
 						}
 					var L = myControl.data.buyerAddressList['@'+TYPE].length;
 
@@ -606,7 +587,7 @@ sometimes it isn't. sometimes, apparently, it's set more than once.
 this function closely mirrors core logic.
 */
 			determinePreferredAddress : function(TYPE)	{
-//				myControl.util.dump("BEGIN sharedCheckoutUtilities.fetchPreferredAddress  ("+TYPE+")");
+//				myControl.util.dump("BEGIN sharedCheckoutUtilities.determinePreferredAddress  ("+TYPE+")");
 				var r = false; //what is returned
 				if(!TYPE){ r = false}
 				else	{

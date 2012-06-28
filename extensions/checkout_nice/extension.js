@@ -19,7 +19,7 @@ CHECOUT_NICE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCartSummary","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo");
+	var theseTemplates = new Array("productListTemplateOrderContents","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo");
 	var r = {
 	vars : {
 //which fieldset is currently in focus.
@@ -71,7 +71,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 //generates the checkout container div and FORM.
 //formerly hardcoded to zContent
 				myControl.ext.convertSessionToOrder.vars.containerID = containerID;
-				$('#'+containerID).append(myControl.renderFunctions.createTemplateInstance('zCheckoutContainerSpec','zCheckoutContainer'));
+				$('#'+containerID).append(myControl.renderFunctions.createTemplateInstance('checkoutTemplate','zCheckoutContainer'));
 
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
@@ -156,8 +156,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 //yes, I could have done a += for each call, but since they're also a guaranteed request, just hard code this. It'll be faster and can always be changed later.
 				var r = 5;  
 //Do inventory check if inventory matters.
-//multiple inv_mode by 1 to treat as number
-				if((zGlobals.globalSettings.inv_mode * 1) > 0)	{ 
+//multiple inv_mode by 1 to treat as number. inventory only matters if 2 or greater.
+				if((zGlobals.globalSettings.inv_mode * 1) > 1)	{ 
 					r += myControl.ext.store_checkout.calls.cartItemsInventoryVerify.init("handleInventoryUpdate");
 					}
 				myControl.ext.store_checkout.calls.appPaymentMethods.init();
@@ -167,7 +167,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 					}
 				myControl.ext.store_checkout.calls.appCheckoutDestinations.init();
 				myControl.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init();
-				myControl.ext.convertSessionToOrder.calls.getCartContents.init("loadPanelContent");
+				myControl.calls.refreshCart.init({'callback':'loadPanelContent','extension':'convertSessionToOrder'},'immutable');
 				return r;
 				}
 			}, //showCheckoutForm
@@ -601,8 +601,9 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 right now, we're just displaying the payment_status_detail message.  
 v2 should/will be more sophicstiated and actually check the status and do better handling or the response.
 the checkoutSuccessPaymentFailure started to do this but for the sake of getting this out, we improvised. !!!
+note - the click prevent default is because the renderFormat adds an onclick that passes both order and cart id.
 */
-				$('.paymentRequired').append(myControl.data[tagObj.datapointer].payment_status_detail);
+				$('.paymentRequired').append(myControl.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
 
 //				$('.paymentRequired').append(myControl.ext.store_checkout.util.checkoutSuccessPaymentFailure(myControl.data[tagObj.datapointer].payment_success,myControl.data['order|'+orderID].cart['chkout.payby']));
 				
@@ -624,7 +625,7 @@ the checkoutSuccessPaymentFailure started to do this but for the sake of getting
 				else	{$('.ocmFacebookComment').addClass('displayNone')}
 
 				myControl.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-				myControl.ext.convertSessionToOrder.calls.getCartContents.init(); //!IMPORTANT! will reset local cart object. 
+				myControl.calls.refreshCart.init({},'immutable'); //!IMPORTANT! will reset local cart object. 
 				myControl.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
@@ -834,16 +835,8 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 							if($paymentCV.val().length < 3){$paymentCV.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please enter a cvv/cid #<\/li>'}
 							break;
 						
-						case 'ECHECK':
-							for(var key in myControl.ext.convertSessionToOrder.vars.echeck) {
-								$holder = $('#'+myControl.util.makeSafeHTMLId(key)).removeClass('mandatory');
-								if(!$holder.val())	{
-									$holder.parent().addClass('mandatory');
-									valid = 0;
-									errMsg += '<li>please enter a '+myControl.ext.convertSessionToOrder.vars.echeck[key]+'<\/li>'
-									}
-								}
-							break;
+//eCheck has required=required on it, so the browser will validate. if this causes no issues, we'll start moving all forms over to this instead of 
+//js validation. browser based validation is new at this point. (2012-06-22)
 						
 						case 'PO':
 							var $paymentPO = $('#payment-po').removeClass('mandatory');
@@ -1130,7 +1123,7 @@ payment options, pricing, etc
 					var o = "";
 	
 					var $panelFieldset = $("#chkoutAccountInfoFieldset").removeClass("loadingBG")
-					$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('chkout-accountInfoSpec','accountInfoContainer'));
+					$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateAccountInfo','accountInfoContainer'));
 					myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'accountInfoContainer');	
 	
 					$('#chkout-create_customer').val(createCustomer); //set the hidden form input to appropriate value.
@@ -1157,7 +1150,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				
 //troubleshooting IE issues, so saved to var instead of manipulating directly. may not need this, but test in IE if changed.
 				var $panelFieldset = $("#chkoutBillAddressFieldset").removeClass("loadingBG").append("<p>"+txt+"<\/p>");
-				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('chkout-billAddressSpec','billAddressUL'));
+				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateBillAddress','billAddressUL'));
 				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'billAddressUL');
 				$('#billAddressUL').addClass(cssClass);
 
@@ -1204,7 +1197,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 				$panelFieldset.removeClass('loadingBG').append(txt);
 
-				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('chkout-shipAddressSpec','shipAddressUL'));
+				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateShipAddress','shipAddressUL'));
 				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'shipAddressUL');
 				$('#shipAddressUL').addClass(cssClass);
 
@@ -1219,7 +1212,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.panelContent.shipMethods');
 
 				var $panelFieldset = $("#chkoutShipMethodsFieldset").removeClass("loadingBG");
-				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('chkout-shipMethodsSpec','shipMethodsContainer'));
+				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateShipMethods','shipMethodsContainer'));
 				myControl.renderFunctions.translateTemplate(myControl.data.cartShippingMethods,'shipMethodsContainer');
 
 //must appear after panel is loaded because otherwise the divs don't exist.
@@ -1269,7 +1262,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 */
 				if($('#chkoutCartSummary').length == 0)	{
 //					myControl.util.dump(" -> chkoutCartSummary has no children. render entire panel.");
-					$container.append(myControl.renderFunctions.createTemplateInstance('chkout-cartSummarySpec','chkoutCartSummary'));
+					$container.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateCartSummaryPanel','chkoutCartSummary'));
 					myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'chkoutCartSummary');
 					}
 				
@@ -1280,7 +1273,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 			paymentOptions : function()	{
 //				myControl.util.dump('myControl.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
 				var $panelFieldset = $("#chkoutPayOptionsFieldset").toggle(true).removeClass("loadingBG")
-				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkout-payOptionsSpec','payOptionsContainer'));
+				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				myControl.renderFunctions.translateTemplate(myControl.data.appPaymentMethods,'payOptionsContainer');	
 				myControl.ext.convertSessionToOrder.util.updatePayDetails(myControl.data.cartItemsList.cart['chkout.payby']);
 				}, //paymentOptions
@@ -1293,7 +1286,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			orderNotes : function()	{
 //				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.panelContent.orderNotes');
 				var $panelFieldset = $("#chkoutOrderNotesFieldset").toggle(true).removeClass("loadingBG")
-				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('chkout-orderNotesSpec','orderNotesContainer'));
+				$panelFieldset.append(myControl.renderFunctions.createTemplateInstance('checkoutTemplateOrderNotesPanel','orderNotesContainer'));
 				myControl.renderFunctions.translateTemplate(myControl.data.cartItemsList.cart,'orderNotesContainer');
 //				myControl.util.dump('END myControl.ext.convertSessionToOrder.panelContent.orderNotes');
 				} //orderNotes
@@ -1515,52 +1508,16 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				$('#paybySupplemental_'+paymentID).show();
 				
 				var $selectedPayment = $('#paybySupplemental_'+paymentID);
-	//only add the 'subcontents' once. if it has already been added, just display it (otherwise, toggling between payments will duplicate all the contents)
+//only add the 'subcontents' once. if it has already been added, just display it (otherwise, toggling between payments will duplicate all the contents)
 				if($selectedPayment.length == 0)	{
-					$selectedPayment = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental noPadOrMargin noListStyle ui-widget-content ui-corner-bottom");
-					$('#payby_'+paymentID).append($selectedPayment);
-					var o = '';
-					var safeid;
-					switch(paymentID)	{
-//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
-//expiration is less of a concern
-						case 'CREDIT':
-							o = "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment.cc' id='payment-cc' class=' creditCard' value='";
-							if(myControl.ext.convertSessionToOrder.vars['payment.cc']){o += myControl.ext.convertSessionToOrder.vars['payment.cc']}
-							o += "' onKeyPress='return myControl.util.numbersOnly(event);' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cc\"] = this.value' /><\/li>";
-							o += "<li><label>Expiration<\/label><select name='payment.mm' id='payment-mm' class='creditCardMonthExp' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.mm\"] = this.value;'><option><\/option>";
-							o += myControl.util.getCCExpMonths(myControl.data.cartItemsList.cart['payment.mm']);
-							o += "<\/select>";
-							o += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.yy\"] = this.value;'><option value=''><\/option>"+myControl.util.getCCExpYears(myControl.data.cartItemsList.cart['payment.yy'])+"<\/select><\/li>";
-							o += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return myControl.util.numbersOnly(event);' value='";
-							if(myControl.ext.convertSessionToOrder.vars['payment.cv']){o += myControl.ext.convertSessionToOrder.vars['payment.cv']}
-							o += "' onChange='myControl.ext.convertSessionToOrder.vars[\"payment.cv\"] = this.value' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
-							break;
-	
-						case 'PO':
-							o = "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment.po' id='payment-po' class=' purchaseOrder' onChange='myControl.calls.cartSet.init({\"payment.po\":this.value});' value='";
-							if(myControl.data.cartItemsList.cart['payment.po'])
-									o += myControl.data.cartItemsList.cart['payment.po'];
-							o += "' /><\/li>";
-							break;
-	
-						case 'ECHECK':
-							for(var key in myControl.ext.convertSessionToOrder.vars.echeck) {
-								safeid = myControl.util.makeSafeHTMLId(key);
-//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
-								o += "<li><label for='"+safeid+"'>"+myControl.ext.convertSessionToOrder.vars.echeck[key]+"<\/label><input type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck' onChange='myControl.calls.cartSet.init({\""+key+"\":this.value});' value='";
-								if(myControl.data.cartItemsList.cart[key])
-									o += myControl.data.cartItemsList.cart[key];
-								o += "' /><\/li>";
-								}
-							break;
-						default:
-//no supplemental material is present. hide it so no styling shows up. add bottom corners to payment method for consistency (with shipping). corners added on supplemental, when present.
-							$('#payby_'+paymentID+' .paycon').addClass('ui-corner-bottom');
-							$('#paybySupplemental_'+paymentID).hide(); 
-							o = '';
+					myControl.util.dump(" -> supplemental is empty. add if needed.");
+					var supplementalOutput = myControl.util.getSupplementalPaymentInputs(paymentID,myControl.data.cartItemsList); //this will either return false if no supplemental fields are required, or a jquery UL of the fields.
+					myControl.util.dump("typeof supplementalOutput: "+typeof supplementalOutput);
+					if(typeof supplementalOutput == 'object')	{
+						myControl.util.dump(" -> getSupplementalPaymentInputs returned an object");
+						supplementalOutput.addClass(' noPadOrMargin noListStyle ui-widget-content ui-corner-bottom');
+						$('#payby_'+paymentID).append(supplementalOutput);
 						}
-					$selectedPayment.append(o);
 					}
 
 	//			myControl.util.dump('END myControl.ext.convertSessionToOrder.util.updatePayDetails. paymentID = '+paymentID);			
@@ -1796,7 +1753,7 @@ handleBill2Ship function added.
 					
 /*
 in the list of calls below, sequence is important.  The session must be updated first so that all the other calls have accurate data to work with.
-the getCartContents call can come second because none of the following calls are updates, just gets.
+the refreshCart call can come second because none of the following calls are updates, just gets.
 */
 
 //save all the checkout fields.  This is cheaper (server side) than doing setSession for several fields according to BH (2012-12-29)
@@ -1890,23 +1847,22 @@ the getCartContents call can come second because none of the following calls are
 
 
 			payMethodsAsRadioButtons : function($tag,data)	{
-//				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.renderFormats.payOptionsAsRadioButtons');
+				myControl.util.dump('BEGIN myControl.ext.convertSessionToOrder.renderFormats.payOptionsAsRadioButtons');
 //				myControl.util.dump(data);
 				var L = data.value.length;
 				var o = "";
 				var id = '';
 				var isSelectedMethod = false;
-				if(L == 1)	{
-					isSelectedMethod = data.value[0].id; //will make the ship method 'selected' if it's the only choice.
-					}
-				
+				myControl.util.dump(" -> # payment options (L): "+L);
+			
 				for(var i = 0; i < L; i += 1)	{
 					id = data.value[i].id;
-
-					o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='chkout.payby' id='chkout-payby_"+id+"' value='"+id+"' onClick='myControl.ext.convertSessionToOrder.utilities.updatePayDetails(this.value); myControl.calls.cartSet.init({\"chkout.payby\":this.value}); myControl.model.dispatchThis(\"immutable\"); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
+					myControl.util.dump(" -> i: "+i+" ["+id+"]");
+					o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='chkout.payby' id='chkout-payby_"+id+"' value='"+id+"' onClick='myControl.ext.convertSessionToOrder.util.updatePayDetails(this.value); myControl.calls.cartSet.init({\"chkout.payby\":this.value}); myControl.model.dispatchThis(\"immutable\"); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
 					
-					if(id == myControl.data.cartItemsList.cart['chkout.payby'])	{
-						isSelectedMethod = true;
+					if(id == myControl.data.cartItemsList.cart['chkout.payby'] || L == 1)	{
+						myControl.util.dump("MATCH!!");
+						isSelectedMethod = id;
 						o += " checked='checked' ";
 						}					
 					

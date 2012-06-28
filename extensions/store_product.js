@@ -157,7 +157,7 @@ var store_product = function() {
 			
 		itemAddedToCart :	{
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.itemAddedToCart.onSuccess');
+//				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.itemAddedToCart.onSuccess');
 				$('.atcButton').removeAttr('disabled'); //makes atc button clickable again.
 				$('#atcMessaging_'+myControl.data[tagObj.datapointer].product1).append(myControl.util.formatMessage({'message':'Item(s) added to the cart!','uiIcon':'check'}))
 				},
@@ -249,7 +249,7 @@ addToCart : function (pid){
 			}
 
 
-		myControl.util.dump('past validation, before inventory validation. valid = '+valid);
+//		myControl.util.dump('past validation, before inventory validation. valid = '+valid);
 	
 	//if errors occured, report them.
 		 if(valid == false)	{
@@ -494,7 +494,7 @@ it has no inventory AND inventory matters to merchant
 				for(var i = 0; i < L; i += 1)	{
 					if(myControl.util.isSet(csv[i]))	{r += myControl.ext.store_product.calls.appProductGet.init(csv[i],{},Q)}
 					}
-				myControl.util.dump(" -> getProdDataForLaterUser numRequests: "+r);
+//				myControl.util.dump(" -> getProdDataForLaterUser numRequests: "+r);
 				return r;
 				}, //getProductDataForList
 

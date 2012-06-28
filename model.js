@@ -51,8 +51,10 @@ Each queue can be filled with several requests, then dispatched all at once.
 that'll piggyback several dispatches on one request, which is considerably more efficient
 than several requests.
 
-q.passive - should only be used for requests WITH NO CALLBACK.  For instance, if you wanted to retrieve product data for page
+q.passive - should only be used for requests with no callbacks or for requests that should never get cancelled by another, but are not strictly necessary.
+For instance, if you wanted to retrieve product data for page
 2 and 3 when the user is on page 1, you'd use passive. No action occurs as a results of getting this data.
+Or if you have dispatches occur during your app init but are concerned they could get over-written by the immutable q (such as requests for site nav that you don't want nukd if the user is coming in to the app for checkout) then use passive.
 the passive q requests are never aborted.
 
 q.mutable - this is the bulk of your calls. Getting information and then doing something with it (executed from the callback). It is called mutable
@@ -214,6 +216,7 @@ function zoovyModel() {
 //for this reason, the passive q requests should NEVER have callbacks on them.
 //and tho technically you 'could' pass immutable as the QID, you should never cancel an immutable request, as these should be saved for 'add to cart' or 'checkout' requests.
 		abortQ : function(QID)	{
+			myControl.util.dump("SANITY -> abortq is being run on "+QID); //output this so that when the red cancelled request shows in the console, we know why.
 			myControl.ajax.overrideAttempts = 0;  //the q is being reset essentially. this needs to be reset to zero so attempts starts over. 
 			var r = 0; //incremented with each cancelled request. returned.
 			for(var index in myControl.ajax.requests[QID])	{
@@ -251,14 +254,14 @@ function zoovyModel() {
 	//		myControl.util.dump('END model.handleDualRequests. '+inc+' requests set to overriden');
 			},
 
-//when a request fails or an immutable request is in process, this is called which handles the re-attempts.
+//when an immutable request is in process, this is called which handles the re-attempts.
 		handleReDispatch : function(QID)	{
 			if(myControl.ajax.overrideAttempts < 11)	{
-				setTimeout("myControl.model.dispatchThis('"+QID+"')",500); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
+				setTimeout("myControl.model.dispatchThis('"+QID+"')",750); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
 				}
 			else if(myControl.ajax.overrideAttempts < 22)	{
 // slow down a bit. try every second for a bit and see if the last response has completed.
-				setTimeout("myControl.model.dispatchThis('"+QID+"')",1000); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
+				setTimeout("myControl.model.dispatchThis('"+QID+"')",1250); //try again soon. if the first attempt is still in progress, this code block will get re-executed till it succeeds.
 				}
 			else	{
 				myControl.util.dump(' -> stopped trying to override because many attempts were already made.');
@@ -385,6 +388,7 @@ if(myControl.ajax.dataType == 'jsonp')	{
 		thisReq = myControl.ajax.requests[QID][Q[i]['_uuid']];
 		thisJsonURL = myControl.vars.jqurl+"?_callback=ieBlows&_json="+encodeURIComponent(JSON.stringify(Q[i]))
 		myControl.util.dump(" -> jsonURL: "+thisJsonURL);
+		myControl.util.dump(" -> length of url: "+thisJsonURL.length);
 		thisReq = $.ajax({
 			type: "GET",
 			url: thisJsonURL,
@@ -471,7 +475,7 @@ else	{
 						callbackObj = Q[index]['_tag']['extension'] ? myControl.ext[Q[index]['_tag']['extension']].callbacks[Q[index]['_tag']['callback']] : myControl.callbacks[Q[index]['_tag']['callback']];
 
 						if(callbackObj && typeof callbackObj.onError == 'function'){
-							callbackObj.onError({errmsg:'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'},uuid)
+							callbackObj.onError({'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'},uuid)
 							}
 						}
 					else	{

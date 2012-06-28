@@ -37,13 +37,13 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 <!--
 spec for the 'order summary' panel that appears in checkout.
 cartSummaryTotalsContainer - will get loaded with the checkoutTemplateOrderSummary
-chkoutCartContents - will get loaded with the productListTemplateCartSummary later (item list)
+chkoutCartContents - will get loaded with the productListTemplateContentsSummary later (item list)
 -->
 <fieldset id='checkoutTemplateCartSummaryPanel' class='ui-widget ui-widget-content ui-corner-all'>
 	<legend class='ui-widget-header ui-corner-all'>Order Contents</legend>
 
 
-<ul id='checkoutStuffList' data-bind="var: cart(stuff); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>	
+<ul id='checkoutStuffList' data-bind="var: cart(stuff); format:stuffList; loadsTemplate:productListTemplateOrderContents;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>	
 
 <section id='checkoutTemplateCostSummary' class='cartSummary'>
 
@@ -99,7 +99,7 @@ used in checkout for 'order total' panel. this is the line-item spec for a cart 
 the defaultVar on prodName is for promotions, which have a 'description' attribute
 -->
 <ul>
-<li id='productListTemplateCartSummary' class='cartTotalLineItem'>
+<li id='productListTemplateOrderContents' class='cartTotalLineItem'>
 	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
 	<div class='floatLeft '>
 		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
@@ -287,7 +287,7 @@ do NOT change the input name or id or checkout will likely break.
 
 <div id='checkoutTemplateOrderNotesPanel'>
 <p>Please include any special instructions or comments here:</p>
-<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='chkout.order_notes' onChange='myControl.calls.setSessionVars.init({"chkout.order_notes":this.value}); myControl.model.dispatchThis("immutable");' data-bind='var: cart(chkout.order_notes); format:popVal;'></textarea>
+<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='chkout.order_notes' onChange='myControl.calls.cartSet.init({"chkout.order_notes":this.value}); myControl.model.dispatchThis("immutable");' data-bind='var: cart(chkout.order_notes); format:popVal;'></textarea>
 </div>
 
 
@@ -302,11 +302,11 @@ do NOT change the input name or id or checkout will likely break.
 	<div class='floatRight ocmThirdParty'>
 		<h2 id='ocmPrompt'>What would you like to do next?</h2>
 <!-- the twitter and facebook actions are added post checkout. The order contents are included as part of the message -->
-		<div class='ocm ocmFacebookComment pointer zlink'><img src='../../../201220/extensions/checkout_nice/images/fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
-		<div class='ocm ocmTwitterComment pointer zlink' ><img src='../../../201220/extensions/checkout_nice/images/tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
-
-		<div class='ocm ocmContinue'><a href='../../../201220/extensions/checkout_nice/%NONSECURE_URL%' class='zlink'><img src='../../../201220/extensions/checkout_nice/images/continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></a></div>
-
+		<div class='ocm ocmFacebookComment pointer zlink'><img src='fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
+		<div class='ocm ocmTwitterComment pointer zlink' ><img src='tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
+<!--
+		<div class='ocm ocmContinue'><a href='/' class='zlink'><img src='continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></a></div>
+-->
 		
 
 	</div>
@@ -325,9 +325,6 @@ do NOT change the input name or id or checkout will likely break.
 
 	<div class='clearAll'></div>
 
-
-	<div data-bind='var: order(orderid); format:accessoryUpsell; extension: store_checkout;'></div>
-
 </div>
 
 
@@ -337,8 +334,8 @@ do NOT change the input name or id or checkout will likely break.
 
 
 <div id='cvvcidHelp' class='displayNone' title='Where to find your CVV/CID and why we ask for it'>
-	<img src='../../../201220/extensions/checkout_nice/images/sec_code.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
-	<img src='../../../201220/extensions/checkout_nice/images/sec_code_amex.gif' alt='AMEX card security code' width='238' height='150' />
+	<img src='sec_code.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
+	<img src='sec_code_amex.gif' alt='AMEX card security code' width='238' height='150' />
 	<p>For higher security and more efficient processing of your payment, you must provide a card security code to make this purchase. For Visa, MasterCard and Discover the security code is the last section of numbers in the signature area on the back of the card. For American Express the security code is the 4-digit number found in small print next to your account number on the front, usually above it on the right.</p>
 </div>
 

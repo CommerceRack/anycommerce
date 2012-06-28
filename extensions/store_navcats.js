@@ -271,7 +271,7 @@ templateID - the template id used (from myControl.templates)
 				myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.getChildData.onSuccess');
 				var catSafeID = tagObj.datapointer.split('|')[1];
 				myControl.util.dump(" -> catsafeid: "+catSafeID);
-				tagObj.callback = addCatToDom; //the tagObj will have 
+				tagObj.callback = 'addCatToDom'; //the tagObj will have 
 				myControl.ext.store_navcats.util.getChildDataOf(catSafeID,tagObj,'appCategoryDetail');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 				myControl.model.dispatchThis();
 				},

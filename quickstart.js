@@ -26,7 +26,7 @@ var myRIA = function() {
 	vars : {
 //a list of the templates used by this extension.
 //if this is a custom extension and you are loading system extensions (prodlist, etc), then load ALL templates you'll need here.
-		"templates" : ['productTemplate','mpControlSpec','categoryTemplate','categoryListTemplate','productListTemplate','cartTemplate','productListTemplateCart','productListTemplateChildren','productReviewsTemplateDetail','reviewFrmTemplate','subscribeFormTemplate','breadcrumbTemplate','orderLineItemTemplate','orderContentsTemplate','orderProductLineItemTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','faqTopicTemplate','faqQnATemplate','billAddressTemplate','shipAddressTemplate','productListTemplateResults','categoryListTemplateRootCats'],
+		"templates" : ['productTemplate','mpControlSpec','categoryTemplate','categoryListTemplate','productListTemplate','cartTemplate','productListTemplateCart','productListTemplateChildren','productReviewsTemplateDetail','reviewFrmTemplate','subscribeFormTemplate','breadcrumbTemplate','orderLineItemTemplate','orderContentsTemplate','productListTemplateInvoice','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','faqTopicTemplate','faqQnATemplate','billAddressTemplate','shipAddressTemplate','productListTemplateResults','categoryListTemplateRootCats','pageNotFoundTemplate'],
 		"session" : {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
@@ -69,48 +69,57 @@ var myRIA = function() {
 
 		startMyProgram : {
 			onSuccess : function()	{
-			myControl.util.dump("BEGIN myRIA.callback.startMyProgram");
+//			myControl.util.dump("BEGIN myRIA.callback.startMyProgram");
 //			myControl.util.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			myControl.util.dump(" -> window.history.pushState: "+typeof window.history.pushState);
 
 //attach an event to the window that will execute code on 'back' some history has been added to the history.
-if(typeof window.history.pushState == 'function')	{
+//if ?debug=anything is on URI, show all elements with a class of debug.
+if(myControl.util.getParameterByName('debug'))	{
+	$('.debug').show();
+	}
+if(typeof window.onpopstate == 'object')	{
 	window.onpopstate = function(event) { 
 		myControl.ext.myRIA.util.handlePopState(event.state);
 		}
 	}
 //if popstate isn't supporeted, hashchange will use the anchor.
-else if ("onhashchange" in window) // does the browser support the hashchange event?
-	window.onhashchange = function () {
-		myControl.util.dump(" -> window.location.hash: "+window.location.hash);
-	//  ## TEST AND DO SOMETHING WITH THIS
-	}
+else if ("onhashchange" in window)	{ // does the browser support the hashchange event?
+		_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
+		window.onhashchange = function () {
+			myControl.ext.myRIA.util.handleHashState();
+			}
+		}
 else	{
 	// wow. upgrade your browser. should only get here if older than:
 	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8 
 	}
 
+//if the user is using a shared SSL cert, nuke local storage @ init or cross-merchant data could get loaded.
+if(window.location.href.indexOf('ssl.zoovy') > -1)	{localStorage.clear();}
+
 //This will create the arrays for the template[templateID].onCompletes and onInits
 				myControl.ext.myRIA.util.createTemplateFunctions();
 
-				myControl.ext.store_navcats.calls.appCategoryDetailMax.init('.'); //have this handy.
-				myControl.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"}); //get list of categories.
+				myControl.ext.store_navcats.calls.appCategoryDetailMax.init('.','passive'); //have this handy.
+				myControl.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"},'passive'); //get list of categories.
+				if(typeof myRIAisLoaded == 'function'){myRIAisLoaded()};
 
 				var page = myControl.ext.myRIA.util.handleAppInit({"skipClearMessaging":true}); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
 
 //get some info to have handy for when needed (cart, profile, etc)
-				myControl.calls.appProfileInfo.init(myControl.vars.profile,{'callback':'showLogo','extension':'myRIA'});
+				myControl.calls.appProfileInfo.init(myControl.vars.profile,{'callback':'showLogo','extension':'myRIA'},'passive');
 
 
 				if(page.pageType == 'cart' || page.pageType == 'checkout')	{
 //if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
 					}
 				else	{
-					myControl.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'mutable');
-					myControl.ext.store_cart.calls.cartShippingMethods.init({},'mutable');
+					myControl.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'passive');
+					myControl.ext.store_cart.calls.cartShippingMethods.init({},'passive');
 					}
 
-				myControl.model.dispatchThis();
+				myControl.model.dispatchThis('passive');
 
 
 //adds submit functionality to search form. keeps dom clean to do it here.
@@ -118,13 +127,10 @@ else	{
 				
 				showContent = myControl.ext.myRIA.action.showContent; //a shortcut bcuz
 				myControl.ext.myRIA.util.bindNav('#appView .bindByAnchor');
-				myRIAisLoaded();
+
 				
 				$('.disableAtStart').removeAttr('disabled').removeAttr('disableAtStart'); //set disabledAtStart on elements that should be disabled prior to init completing.
-//if ?debug=anything is on URI, show all elements with a class of debug.
-				if(myControl.util.getParameterByName('debug'))	{
-					$('.debug').show();
-					}
+
 				},
 			onError : function(d)	{
 				$('#globalMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
@@ -162,12 +168,16 @@ else	{
 
 
 //optional callback on getProfile which will display the logo in any element with a class of .logo
-// ### smarten this up so that it looks at img w/ logo class and grabs dimensions as needed.
+// ### smarten this up so that it looks at img w/ logo class and grabs dimensions as needed. !!! test this.
 		showLogo :	{
 			onSuccess : function(tagObj)	{
 				if(myControl.data[tagObj.datapointer]['zoovy:logo_website'])	{
-					$('.logo').append(myControl.util.makeImage({"name":myControl.data[tagObj.datapointer]['zoovy:logo_website'],"w":140,"h":60,"b":"TTTTTT","tag":1}));
+					$('.logo').each(function(){
+						var $logo = $(this);
+						$logo.attr('src',myControl.util.makeImage({"name":myControl.data[tagObj.datapointer]['zoovy:logo_website'],"w":$logo.width(),"h":$logo.height(),"b":"TTTTTT","tag":0}));
+						});
 					}
+
 				},
 			onError : function(responseData,uuid)	{
 //				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.init.onError');
@@ -176,15 +186,28 @@ else	{
 				}
 			}, //itemAddedToCart
 
-//update any element with a .itemCount class with current # of items in the mincart.
+//used for callback on showCartInModal function
+//
+		handleCart : 	{
+			onSuccess : function(tagObj)	{
+				myControl.util.dump("BEGIN myRIA.callbacks.onSuccess.handleCart");
+				myControl.ext.myRIA.util.handleMinicartUpdate(tagObj);
+				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer].cart,tagObj.parentID);				
+				tagObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
+				myControl.ext.myRIA.util.handleTemplateFunctions(tagObj);
+				},
+			onError : function(responseData,uuid)	{
+				myControl.util.handleErrors(responseData,uuid)
+				}
+			}, //updateMCLineItems
+
+
+
+//used in init.
 		updateMCLineItems : 	{
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump("BEGIN myRIA.callbacks.updateMCLineItems");
-				var itemCount = myControl.util.isSet(myControl.data[tagObj.datapointer].cart['data.item_count']) ? myControl.data[tagObj.datapointer].cart['data.item_count'] : myControl.data[tagObj.datapointer].cart['data.add_item_count']
-//				myControl.util.dump(" -> itemCount: "+itemCount);
-				$('.cartItemCount').text(itemCount);
-				$('.cartSubtotal').text(myControl.data[tagObj.datapointer].cart['data.order_subtotal']);
-				$('.cartTotal').text(myControl.data[tagObj.datapointer].cart['data.order_total']);
+				myControl.ext.myRIA.util.handleMinicartUpdate(tagObj);
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid)
@@ -206,6 +229,8 @@ else	{
 				tagObj.pid = pid;
 				myControl.ext.myRIA.util.buildQueriesFromTemplate(tagObj);
 				myControl.model.dispatchThis();
+				
+// SANITY - handleTemplateFunctions does not get called here. It'll get executed as part of showPageContent callback, which is executed in buildQueriesFromTemplate.
 				},
 			onError : function(responseData,uuid)	{
 //				myControl.util.dump(responseData);
@@ -222,6 +247,15 @@ else	{
 				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer],tagObj.parentID);
 				myControl.ext.myRIA.util.bindNav('#companyNav a');
 				myControl.ext.myRIA.util.showArticle(tagObj.infoObj);
+				
+				if(!tagObj.infoObj.templateID)	{
+					if(tagObj.infoObj.templateID){} //use existing value
+					else if(tagObj.templateID)	{tagObj.infoObj.templateID = 'companyTemplate'}
+					else	{tagObj.infoObj.templateID = 'companyTemplate'}
+					}
+				tagObj.infoObj.state = 'onCompletes';
+				myControl.ext.myRIA.util.handleTemplateFunctions(tagObj.infoObj);				
+				
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid)
@@ -265,17 +299,6 @@ else	{
 				myControl.util.handleErrors(responseData,uuid)
 				}
 			}, //showAddresses
-
-//executed when the cart is changed, such as a zip entered or a country selected.
-		cartUpdated :	{
-			onSuccess : function(tagObj)	{
-//				myControl.util.dump("BEGIN myRIA.callbacks.cartUpdated.onSuccess");
-				myControl.ext.store_cart.util.showCartInModal(); 
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.handleErrors(responseData,uuid)
-				}
-			}, //cartUpdated
 
 //used as part of showContent for the home and category pages.
 		fetchPageContent : {
@@ -393,7 +416,7 @@ else	{
 				$('#loginSuccessContainer').show(); //contains 'continue' button.
 				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 				$('#loginFormContainer').hide(); //contains actual form.
-				
+				$('#recoverPasswordContainer').hide(); //contains password recovery form.
 
 				
 //_gaq.push(['_trackEvent','Authentication','User Event','Logged in through Store']);
@@ -455,6 +478,11 @@ else	{
 					}
 				myControl.ext.myRIA.util.showRecentSearches();
 				myControl.model.dispatchThis(); // will dispatch requests for product and/or requests for alternative queries.
+				
+				if(!tagObj.templateID)	{tagObj.templateID = 'searchTemplate'}
+				tagObj.state = 'onCompletes';
+				myControl.ext.myRIA.util.handleTemplateFunctions(tagObj);
+				
 				},
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid)
@@ -476,14 +504,14 @@ need to be customized on a per-ria basis.
 				return "<a href='#' onClick=\"$('#headerKeywordsInput').val('"+suffix+"'); $('#headerSearchFrm').submit(); return false; \">"+phrase+"<\/a>"
 				},
 			":category" : function(suffix,phrase){
-				return "<a href='#' onClick='myControl.ext.myRIA.action.showContent(\"category\",{\"navcat\":\""+suffix+"\"}); return false;'>"+phrase+"<\/a>"
+				return "<a href='#category?navcat="+suffix+"' onClick='return myControl.ext.myRIA.action.showContent(\"category\",{\"navcat\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 			":product" : function(suffix,phrase){
-				return "<a href='#' onClick='myControl.ext.myRIA.action.showContent(\"product\",{\"pid\":\""+suffix+"\"}); return false;'>"+phrase+"<\/a>"
+				return "<a href='#product?pid="+suffix+"' onClick='return myControl.ext.myRIA.action.showContent(\"product\",{\"pid\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 			":customer" : function(suffix,phrase){
 // ### this needs to get smarter. look at what the suffix is and handle cases. (for orders, link to orders, newsletter link to newsletter, etc)				
-				return "<a href='#' onClick='myControl.ext.myRIA.action.showContent({\"customer\",{\"show\":\""+suffix+"\"}); return false;'>"+phrase+"<\/a>"
+				return "<a href='#customer?show="+suffix+"' onClick='return myControl.ext.myRIA.action.showContent({\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				}
 			}, //wiki
 
@@ -506,16 +534,24 @@ need to be customized on a per-ria basis.
 //data.value is the category object. data.bindData is the bindData obj.
 			subcategoryList : function($tag,data)	{
 //				myControl.util.dump("BEGIN control.renderFormats.subcats");
+//				myControl.util.dump(data.value);
 				var L = data.value.length;
 				var thisCatSafeID; //used in the loop below to store the cat id during each iteration
 	//			myControl.util.dump(data);
 				for(var i = 0; i < L; i += 1)	{
 					thisCatSafeID = data.value[i].id;
-					if(myControl.data['appCategoryDetail|'+thisCatSafeID].pretty.charAt(0) == '!')	{
+					if(data.value[i].id[1] == '$')	{
+						//ignore 'lists', which start with .$
+//						myControl.util.dump(" -> list! "+data.value[i].id);
+						}
+					else if(!data.value[i].pretty || data.value[i].pretty.charAt(0) == '!')	{
 						//categories that start with ! are 'hidden' and should not be displayed.
 						}
-					else	{
+					else if(!$.isEmptyObject(myControl.data['appCategoryDetail|'+thisCatSafeID]))	{
 						$tag.append(myControl.renderFunctions.transmogrify({'id':thisCatSafeID,'catsafeid':thisCatSafeID},data.bindData.loadsTemplate,myControl.data['appCategoryDetail|'+thisCatSafeID]));
+						}
+					else	{
+						myControl.util.dump("WARNING - subcategoryList reference to appCategoryDetail|"+thisCatSafeID+" was an empty object.");
 						}
 					}
 				}, //subcategoryList
@@ -545,28 +581,67 @@ need to be customized on a per-ria basis.
 					}
 				},
 
+/*
+data.value in a banner element is passed in as a string of key value pairs:
+LINK, ALT and IMG
+The value of link could be a hash (anchor) or a url (full or relative) so we try to guess.
+fallback is to just output the value.
+*/
 
 			banner : function($tag, data)	{
-				var tmp = decodeURI(data.value);
-				var obj = myControl.util.getParametersAsObject(tmp); //returns an object LINK: ALT: and IMG
+//				myControl.util.dump("begin myRIA.renderFormats.banner");
+				obj = myControl.util.getParametersAsObject(decodeURI(data.value)); //returns an object LINK, ALT and IMG
+				var hash; //used to store the href value in hash syntax. ex: #company?show=return
+				var pageInfo = {};
+				
+				
+//				myControl.util.dump(" -> obj.LINK: "+obj.LINK);
+				
+//if value starts with a #, then most likely the hash syntax is being used.
+				if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
+					hash = obj.LINK;
+					pageInfo = myControl.ext.myRIA.util.getPageInfoFromHash(hash);
+					}
+// Initially attempted to do some sort of validating to see if this was likely to be a intra-store link.
+//  && data.value.indexOf('/') == -1 || data.value.indexOf('http') == -1 || data.value.indexOf('www') > -1
+				else if(obj.LINK)	{
+					pageInfo = myControl.ext.myRIA.util.detectRelevantInfoToPage(obj.LINK);
+					if(pageInfo.pageType)	{
+						hash = myControl.ext.myRIA.util.getHashFromPageInfo(pageInfo);
+						}
+					else	{
+						hash = obj.LINK
+						}
+					}
+				else	{
+					//obj.link is not set
+					}
 				if(!myControl.util.isSet(obj.IMG))	{$tag.remove()} //if the image isn't set, don't show the banner. if a banner is set, then unset, val may = ALT=&IMG=&LINK=
  				else	{
+//					myControl.util.dump(" -> banner hash: "+hash);
+//					myControl.util.dump(" -> banner pageInfo: ");
+//					myControl.util.dump(pageInfo);
+//if we don't have a valid pageInfo object AND a valid hash, then we'll default to what's in the obj.LINK value.
+
+				
 					$tag.attr('alt',obj.ALT);
+//if the link isn't set, no href is added. This is better because no 'pointer' is then on the image which isn't linked.
 					if(obj.LINK)	{
-	//					myControl.util.dump(" -> obj.LINK is set: "+obj.LINK);
-						var $a = $("<a />").addClass('bannerBind').attr({'href':obj.LINK,'title':obj.ALT});
-						$a.click(function(){
-							showContent('',myControl.ext.myRIA.util.parseAnchor(obj.LINK))
-							})
+//						myControl.util.dump(" -> obj.LINK is set: "+obj.LINK);
+						var $a = $("<a />").addClass('bannerBind').attr({'href':hash,'title':obj.ALT});
+						if(pageInfo && pageInfo.pageType)	{
+							$a.click(function(){
+								return showContent('',pageInfo)
+								})
+							}
 						$tag.wrap($a);
-						myControl.ext.myRIA.util.bindNav('.bannerBind'); //parses anchor link and adds onclick event
 						}
-					data.value = obj.IMG;
 					data.value = obj.IMG; //this will enable the image itself to be rendered by the default image handler. recycling is good.
 					myControl.renderFormats.imageURL($tag,data);
 					}
-				},
-
+				}, //banner
+				
+//could be used for some legacy upgrades that used the old textbox/image element combo to create a banner.
 			legacyURLToRIA : function($tag,data)	{
 //				myControl.util.dump("BEGIN control.renderFormats.legacyURLToRIA");
 //				myControl.util.dump(" -> data.value: "+data.value);
@@ -577,7 +652,7 @@ need to be customized on a per-ria basis.
 					var pageInfo = myControl.ext.myRIA.util.detectRelevantInfoToPage(data.value);
 					pageInfo.back = 0;
 					$tag.addClass('pointer').click(function(){
-						myControl.ext.myRIA.action.showContent('',pageInfo);
+						return myControl.ext.myRIA.action.showContent('',pageInfo);
 						});
 					}
 				}, //legacyURLToRIA
@@ -627,24 +702,24 @@ need to be customized on a per-ria basis.
 //				myControl.util.dump("BEGIN showContent.");
 
 /*
-what is returned. is set to true if pop/pushState not supported. 
+what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
 for legacy browsers. That means old browsers will use the anchor to retain 'back' button functionality.
 */
 				var r = false; 
-
+				if(typeof infoObj != 'object')	{infoObj = {}} //infoObj could be empty for a cart or checkout
 
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
 				if(pageType){infoObj.pageType = pageType} //pageType
 				else if(pageType == '')	{pageType = infoObj.pageType}
 				
-				infoObj.back = infoObj.back == 0 ? infoObj.back : -1;
+				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
 				$(".ui-dialog-content").dialog("close"); //close all modal windows.
 
 //				myControl.util.dump(" -> infoObj follows:");
 //				myControl.util.dump(infoObj);
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
-				myControl.ext.myRIA.util.handleTemplateFunctions(infoObj);
+				
 
 				switch(pageType)	{
 
@@ -658,10 +733,11 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 	
 					case 'homepage':
-						infoObj.pageType = 'category';
+						infoObj.pageType = 'homepage';
 						infoObj.navcat = '.'
 						myControl.ext.myRIA.util.showPage(infoObj);
 						break;
+
 					case 'category':
 //add item to recently viewed list IF it is not already in the list.				
 						if($.inArray(infoObj.navcat,myControl.ext.myRIA.vars.session.recentCategories) < 0)	{
@@ -681,18 +757,29 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'checkout':
-	//					myControl.util.dump("PROTOCOL: "+document.location.protocol);
-						if('https:' != document.location.protocol)	{
-	// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Loading Secure Checkout</h1>");
-							document.location = myControl.vars.secureURL+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1";
-							}
-						else	{
-	//will get here if session is already secure and checkout is clicked and also if a non-secure session got redirected to secure.
-							if(myControl.util.getParameterByName('SKIPPUSHSTATE') == 1)	{infoObj.back = 0}//if skipPushState is set on URI, then this is likely just after a redir to secure session. no pushstate needed.
+						myControl.util.dump("PROTOCOL: "+document.location.protocol);
+
+						infoObj.templateID = 'checkoutTemplate'
+						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
+						myControl.ext.myRIA.util.handleTemplateFunctions(infoObj);
+
+//for local, don't jump to secure. !!! discuss w/ b.
+						if('file:' == document.location.protocol)	{
 							$('#mainContentArea').empty(); //duh.
 							myControl.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
 							}
+						else if('https:' != document.location.protocol)	{
+// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
+							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Loading Secure Checkout</h1>");
+							document.location = myControl.vars.secureURL+"#checkout?show=checkout&sessionId="+myControl.sessionId;
+							}
+						else	{
+							$('#mainContentArea').empty(); //duh.
+							myControl.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
+							}
+						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						myControl.ext.myRIA.util.handleTemplateFunctions(infoObj);
+
 						break;
 	
 					case 'company':
@@ -701,34 +788,80 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 	
 					case 'cart':
-	//						myControl.ext.myRIA.util.showPage('.'); //commented out.
-							myControl.ext.myRIA.util.showCart();
-							break;
-	
-					default:
-						//uh oh. what are we? default to homepage.
-						myControl.ext.myRIA.util.showPage('.');
+//						infoObj.mode = 'modal';
+						infoObj.back = 0; //no popstate or hash change since it's opening in a modal.
+//						myControl.ext.myRIA.util.showPage('.'); //commented out.
+						myControl.ext.myRIA.util.showCart(infoObj);
+						break;
+
+					case '404': 	//no specific code. shared w/ default, however a case is present because it is a recognized pageType.
+					default:		//uh oh. what are we? default to 404.
+						infoObj.pageType = '404';
+						infoObj.back = 0;
+						infoObj.templateID = 'pageNotFoundTemplate'
+						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
+						myControl.ext.myRIA.util.handleTemplateFunctions(infoObj);
+
+						$('#mainContentArea').empty().append(myControl.renderFunctions.transmogrify('',infoObj.templateID,infoObj));
+						
+						r.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						myControl.ext.myRIA.util.handleTemplateFunctions(infoObj);
 					}
-//				myControl.util.jumpToAnchor('#top'); //this will totally F up the push/pop state feature.
-//				myControl.util.dump(" -> handled switch. now go to pushstate.");
-				if(infoObj.back == 0)	{
-					myControl.util.dump("skipped adding a pushstate for "+pageType);
-					//skipped when executed from a 'pop' or when initial page loads.
-					}
-				else	{
 //					myControl.util.dump("adding pushstate");
 //					myControl.util.dump(infoObj);
-					r = myControl.ext.myRIA.util.addPushState(infoObj);
-					$('html, body').animate({scrollTop : 0},200); //likely new page content loading. scroll to top.
+				r = myControl.ext.myRIA.util.addPushState(infoObj);
+				$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
+				
+				
+//r will = true if pushState isn't working (IE or local). so the hash is updated instead.
+				myControl.util.dump(" -> R: "+r+" and infoObj.back: "+infoObj.back);
+				if(r == true && infoObj.back == -1)	{
+					var hash = myControl.ext.myRIA.util.getHashFromPageInfo(infoObj);
+//					myControl.util.dump(" -> hash from infoObj: "+hash);
+//see if hash on URI matches what it should be and if not, change. This will only impact browsers w/out push/pop state support.
+					if(hash != window.location.hash)	{
+						_ignoreHashChange = true; //make sure changing the hash doesn't execute our hashChange code.
+						window.location.hash = hash;
+						}
 					}
-				myControl.util.dump(" -> r: "+r);
-				return r;
+				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
 
+
+			printByElementID : function(id)	{
+//				myControl.util.dump("BEGIN myRIA.action.printByElementID");
+				if(id && $('#'+id).length)	{
+					var html="<html><body style='font-family:sans-serif;'>";
+					html+= document.getElementById(id).innerHTML;
+					html+="</body></html>";
+					
+					var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
+					printWin.document.write(html);
+					printWin.document.close();
+					printWin.focus();
+					printWin.print();
+					printWin.close();
+					}
+				else	{
+					myControl.util.dump("WARNING! - myRIA.action.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
+					}
+				},
+
+			showYoutubeInModal : function(videoid)	{
+				var $ele = $('#youtubeVideoModal');
+				if($ele.length == 0)	{
+					$ele = $("<div />").attr('id','youtubeVideoModal').appendTo('body');
+					}
+				$ele.empty().append("<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+videoid+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
+				$ele.dialog({modal:true,width:600,height:400,autoOpen:false});
+				$ele.dialog('open');
+				return false;
+				},
+
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
-//				myControl.util.dump("BEGIN showFAQbyTopic ["+topicID+"]");
+				myControl.util.dump("BEGIN showFAQbyTopic ["+topicID+"]");
 				var templateID = 'faqQnATemplate'
 				var $target = $('#faqDetails4Topic_'+topicID).empty().show();
 				if(!topicID)	{
@@ -740,10 +873,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 				else	{
 					var L = myControl.data['appFAQs']['@detail'].length;
-//					myControl.util.dump(" -> total #faq: "+L);
+					myControl.util.dump(" -> total #faq: "+L);
 					for(var i = 0; i < L; i += 1)	{
 						if(myControl.data['appFAQs']['@detail'][i]['TOPIC_ID'] == topicID)	{
-//							myControl.util.dump(" -> faqid matches topic: "+myControl.data['appFAQs']['@detail'][i]['ID']);
+							myControl.util.dump(" -> faqid matches topic: "+myControl.data['appFAQs']['@detail'][i]['ID']);
 							$target.append(myControl.renderFunctions.transmogrify({'id':topicID+'_'+myControl.data['appFAQs']['@detail'][i]['ID'],'data-faqid':+myControl.data['appFAQs']['@detail'][i]['ID']},templateID,myControl.data['appFAQs']['@detail'][i]))
 							}
 						}
@@ -766,71 +899,220 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 			handleAppInit : function(P)	{
 //				myControl.util.dump("BEGIN myRIA.util.handleAppInit");
 				if(typeof P != 'object')	{P = {}}
-//what gets loaded first when app is initiated from a local copy.
-// ### this could easily be expanded to use myControl.vars.platform to behave different based on that value.
-				if(location.protocol == 'file:')	{
-					P.pageType = myControl.util.isSet(P.pageType) ? P.pageType : 'homepage';
-					P.navcat = myControl.util.isSet(P.navcat) ? P.navcat : '.';
-					}
-				else	{
+
 // will return either the safe path or pid or something else useful
-					P = this.detectRelevantInfoToPage(window.location.href); 
-					P.back = 0; //skip adding a pushState on initial page load.
-					}
+				P = this.detectRelevantInfoToPage(window.location.href); 
+				P.back = 0; //skip adding a pushState on initial page load.
 //				myControl.util.dump(" -> P follows:");
 //				myControl.util.dump(P);
 				myControl.ext.myRIA.action.showContent('',P);
 				return P //returning this saves some additional looking up in the appInit
 				},
 
-				
-			detectRelevantInfoToPage : function(url)	{
-				var r = new Array(); //what is returned. r.pageInfo and r.navcat or r.show or r.pid
+//executed on initial app load AND in some elements where user/merchant defined urls are present (banners).
+// Determines what page is in focus and returns appropriate object (r.pageType)
+// if no page content can be determined based on the url, the hash is examined and if appropriately formed, used (ex: #company?show=contact or #category?navcat=.something)
+// should be renamed getPageInfoFromURL
+			detectRelevantInfoToPage : function(URL)	{
+				var r = {}; //what is returned. r.pageInfo and r.navcat or r.show or r.pid
 //				myControl.util.dump("BEGIN myRIA.util.detectRelevantInfoToPage");
 //				myControl.util.dump(" -> url before hashsplit = "+url);
-				
-				if(url.indexOf('#') > 0)	{
-//					myControl.util.dump(" -> url contains hash (#)");
-					url = url.substr(0, url.indexOf('#')); //strip off everything after hash (#)
+				var url = URL; //leave original intact.
+				var hashObj;
+				if(url.indexOf('#') > -1)	{
+					myControl.util.dump(" -> url contains hash (#)");
+					var tmp = url.split("#");
+					url = tmp[0]; //strip off everything after hash (#)
+					hashObj = this.getPageInfoFromHash(tmp[1]); //will be an object if the hash was a valid pageInfo anchor. otherwise false.
+					
+					myControl.util.dump("url: "+url);
+					myControl.util.dump("hashObj: ");
+					myControl.util.dump(hashObj);
+					
 					}
-				url = url.split('?')[0] //get rid of any uri vars.
+
+				if(url.indexOf('?') > -1) {
+					var tmp = url.split('?')[1];
+//					r.uriParams = myControl.util.getParametersAsObject(tmp);
+					r.uriParams = tmp; //a simple string of uri params. used to add back onto uri in pushState.
+					url = url.split('?')[0] //get rid of any uri vars.
+					} //keep the params handy 
+
+				
 //				myControl.util.dump(" -> url after hashsplit = "+url);
-				if(url.indexOf('/product/') > 0)	{
+				if(url.indexOf('/product/') > -1)	{
 					r.pageType = 'product';
 					r.pid = url.split('/product/')[1]; //should be left with SKU or SKU/something_seo_friendly.html
 					if(r.pid.indexOf('/') > 0)	{r.pid = r.pid.split('/')[0];} //should be left with only SKU by this point.
 					}
-				else if(url.indexOf('/category/') > 0)	{
+				else if(url.indexOf('/category/') > -1)	{
 					r.pageType = 'category'
 					r.navcat = url.split('/category/')[1]; //left with category.safe.id or category.safe.id/
 
 					if(r.navcat.charAt(r.navcat.length-1) == '/')	{r.navcat = r.navcat.slice(0, -1)} //strip trailing /
-					myControl.util.dump(" after strip trailing slash, r = "+r.navcat);
+//					myControl.util.dump(" after strip trailing slash, r = "+r.navcat);
 					if(r.navcat.charAt(0) != '.')	{r.navcat = '.'+r.navcat}
 					}
-				else if(url.indexOf('/customer/') > 0)	{
+				else if(url.indexOf('/customer/') > -1)	{
 					r.pageType = 'customer'
 					r.show = url.split('/customer/')[1]; //left with order_summary or order_summary/
 					if(r.show.charAt(r.show.length-1) == '/')	{r.show = r.show.slice(0, -1)} //strip trailing /
 					}
+				else if(url.indexOf('/company/') > -1)	{
+					r.pageType = 'company'
+					r.show = url.split('/company/')[1]; //left with order_summary or order_summary/
+					if(r.show.charAt(r.show.length-1) == '/')	{r.show = r.show.slice(0, -1)} //strip trailing /
+					}
+//use hash. check before homepage so something.com#checkout or index.html#checkout doesn't load homepage.
+				else if(!$.isEmptyObject(hashObj))	{
+					r = hashObj;
+					}
+				else if(url.indexOf('index.html') > -1)	{
+					r.pageType = 'homepage'
+					r.navcat = '.'; //left with category.safe.id or category.safe.id/
+					}
+
+//the url in the domain may or may not have a slash at the end. Check for both
+				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url)	{
+					r.pageType = 'homepage'
+					r.navcat = '.'; //left with category.safe.id or category.safe.id/
+					}
+//the url in the domain may or may not have a slash at the end. Check for both
+				else if(url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
+					r.pageType = 'homepage'
+					r.navcat = '.'; //left with category.safe.id or category.safe.id/
+					}
 				else	{
-				// url = www.something.com/returns.cgis or ...cgis   or  www.something.com/
-					var chunks = url.split('/');
-					r.show = chunks[chunks.length -1]; //should be left with returns or returns.cgis potentially 
-//if show is empty, this is likely the root page.
-					if(r.show == "")	{
-						r.pageType = 'category';
-						r.navcat = '.';
-						}
-					else	{
-//					if(r.show.indexOf('?') > 0){r.show = r.show.split('?')[1]} //remove any uri vars. commented out 2012-05-11. uri vars handled above.
-						r.pageType = 'company'
-						r.show = r.show.replace('.cgis');  // should be left with just returns
-						}
+//					alert('Got to else case.');
+					r.pageType = '404';
 					}
 //				myControl.util.dump("detectRelevantInfoToPage = ");
 //				myControl.util.dump(r);
 				return r;
+				},
+
+
+
+
+
+/*
+
+#########################################     FUNCTIONS FOR DEALING WITH pageInfo obj and/or HASH
+
+*/
+
+//pass in a pageInfo object and a valid hash will be returned.
+// EX:  pass: {pageType:company,show:contact} and return: #company?show=contact
+// EX:  pass: {pageType:product,pid:TEST} and return: #product?pid=TEST
+// if a valid hash can't be built, false is returned.
+
+			getHashFromPageInfo : function(P)	{
+//				myControl.util.dump("BEGIN myRIA.util.getHashFromPageInfo");
+				var r = false; //what is returned. either false if no match or hash (#company?show=contact)
+				if(this.thisPageInfoIsValid(P))	{
+					if(P.pageType == 'product' && P.pid)	{r = '#product?pid='+P.pid}
+					else if(P.pageType == 'category' && P.navcat)	{r = '#category?navcat='+P.navcat}
+					else if(P.pageType == 'homepage')	{r = '#category?navcat=.'}
+					else if(P.pageType == 'cart')	{r = '#cart?show='+P.show}
+					else if(P.pageType == 'checkout')	{r = '#checkout?show='+P.show}
+					else if(P.pageType == 'search' && P.KEYWORDS)	{r = '#search?KEYWORDS='+P.KEYWORDS}
+					else if(P.pageType && P.show)	{r = '#'+P.pageType+'?show='+P.show}
+					else	{
+						//shouldn't get here because pageInfo was already validated. but just in case...
+						myControl.util.dump("WARNING! invalid pageInfo object passed into getHashFromPageInfo. infoObj: ");
+						myControl.util.dump(P);
+						}
+					}
+				else	{
+					myControl.util.dump("WARNING! invalid pageInfo object passed into getHashFromPageInfo. infoObj: ");
+					myControl.util.dump(P);
+					}
+				return r;
+				},
+
+//will return a t/f based on whether or not the object passed in is a valid pageInfo object.
+//ex: category requires navcat. company requires show.
+			thisPageInfoIsValid : function(P)	{
+				var r = false; //what is returned. boolean.
+				if($.isEmptyObject(P))	{
+					//can't have an empty object.
+					myControl.util.dump("WARNING! thisPageInfoIsValid did not receive a valid object.");
+					}
+				else if(P.pageType)	{
+					if(P.pageType == 'product' && P.pid)	{r = true}
+					else if(P.pageType == 'category' && P.navcat)	{r = true}
+					else if(P.pageType == 'homepage')	{r = true}
+					else if(P.pageType == 'cart')	{r = true}
+					else if(P.pageType == 'checkout')	{r = true}
+					else if(P.pageType == 'search' && P.KEYWORDS)	{r = true}
+					else if(P.pageType == 'customer' && P.show)	{r = true}
+					else if(P.pageType == 'company' && P.show)	{r = true}
+					else	{
+						//no matching params for specified pageType
+						myControl.util.dump("WARNING! thisPageInfoIsValid had no matching params for specified pageType");
+						}
+					}
+				else{
+					myControl.util.dump("WARNING! thisPageInfoIsValid did not receive a pageType");
+					}
+//				myControl.util.dump(" -> thisPageInfoIsValid.r = "+r);
+				return r;
+				},
+
+//pass in a hash string and a valid pageInfo object will be returned.
+// EX:  pass: #company?show=contact and return: {pageType:company,show:contact}
+// EX:  pass: #product?pid=TEST and return: {pageType:product,pid:TEST}
+// if the hash is not a valid pageInfo, false is returned.
+
+
+			getPageInfoFromHash : function(HASH)	{
+				var P = {}; //what is returned. P.pageType and based on value of page type, p.show or p.pid or p.navcat, etc
+				var splits = HASH.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
+				P = myControl.util.getParametersAsObject(splits[1]); //will set P.show=something or P.pid=PID
+				P.pageType = splits[0];
+				if(!P.pageType || !this.thisPageInfoIsValid(P))	{
+					P = false;
+					}
+				return P;
+				},
+
+
+//pass in a pageInfo obj and a relative path will be returned.
+//EX:  pass: {pageType:category,navcat:.something} 		return: /category/something/
+//used in add push state and also for addthis.
+// ### should be renamed getURLFromPageInfo
+			buildRelativePath : function(P)	{
+				var relativePath; //what is returned.
+				switch(P.pageType)	{
+				case 'product':
+					relativePath = 'product/'+P.pid+'/';
+					break;
+				case 'category':
+
+//don't want /category/.something, wants /category/something
+//but the period is needed for passing into the pushstate.
+					var noPrePeriod = P.navcat.charAt(0) == '.' ? P.navcat.substr(1) : P.navcat; 
+					relativePath = 'category/'+noPrePeriod+'/';
+					break;
+				case 'customer':
+					relativePath = 'customer/'+P.show+'/';
+					break;
+				case 'checkout':
+					relativePath = '#checkout?show=checkout';
+					break;
+				case 'cart':
+					relativePath = '#cart?show=cart';
+					break;
+
+				case 'company':
+					relativePath = '#company?show='+P.show;
+					break;
+
+				default:
+					//uh oh. what are we?
+					relativePath = P.show;
+					}
+				return relativePath;
 				},
 
 
@@ -856,13 +1138,41 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				else if(P.page)	{r = 'company'}
 				return r;
 				},
+				
+				
 
+/*
+
+#########################################     FUNCTIONS FOR DEALING WITH CHANGING URL or HASH (popstate)
+
+*/
+
+				
+				
+//Executed instead of handlePopState if popState isn't supporeted (ex: IE < 10).
+// from the hash, formatted as #company?show=returns, it determines pageType (company)
+// a pageInfo (pio) object is created and validated (pageInfo will be set to false if invalid)
+//showcontent is NOT executed if pio is not valid (otherwise every anchor would execute a showContent - that would be bad.)
+// _ignoreHashChange is set to true if the hash is changed w/ js instead of an anchor or some other browser related event.
+// this keeps the code inside handleHashState from being triggered when no update desired.
+// ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
+
+			handleHashState : function()	{
+//				myControl.util.dump("BEGIN myRIA.util.handleHashState");
+				var hash = window.location.hash;
+				var pio = this.getPageInfoFromHash(hash); //if not valid pageInfo hash, false is returned
+//				myControl.util.dump(" -> hash: "+hash);
+				if(!$.isEmptyObject(pio) && _ignoreHashChange === false)	{
+					showContent('',pio);
+					}
+				_ignoreHashChange = false; //always return to false so it isn't "left on" by accident.
+				},
 
 //p is an object that gets passed into a pushState in 'addPushState'.  pageType and pageInfo are the only two params currently.
 //https://developer.mozilla.org/en/DOM/window.onpopstate
 			handlePopState : function(P)	{
-				myControl.util.dump("BEGIN handlePopState");
-				myControl.util.dump(P);
+//				myControl.util.dump("BEGIN handlePopState");
+//				myControl.util.dump(P);
 
 //on initial load, P will be blank.
 				if(P)	{
@@ -880,33 +1190,41 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //pass in the 'state' object. ex: {'pid':'somesku'} or 'catSafeID':'.some.safe.path'
 //will add a pushstate to the browser for the back button and change the URL
 //http://spoiledmilk.dk/blog/html5-changing-the-browser-url-without-refreshing-page
+//when a page is initially loaded or reloaded, P.back is set to zero. This won't stop the addition of a popState, but will instead replace the most recent popstate.
+//this ensures there is always a popstate (content won't get loaded properly if there's no object) and that no duplicates are created.
+
 
 			addPushState : function(P)	{
 //				myControl.util.dump("BEGIN addPushState. ");
 				var useAnchor = false; //what is returned. set to true if pushState supported
 				var title = P.pageInfo;
-				
-				
-				
-				var fullpath;
-				if('https:' == document.location.protocol)	{
-					fullpath = zGlobals.appSettings.https_app_url;
+				var historyFunction = P.back == 0 ? 'replaceState' : 'pushState'; //could be changed to replaceState if back == 0;
+				var fullpath = ''; //set to blank by default so += does not start w/ undefined
+//for 404 pages, leave url as is for troubleshooting purposes (more easily track down why page is 404)	
+				if(P.pageType == '404')	{
+					fullpath = window.location.href;
 					}
 				else	{
-//					fullpath = zGlobals.appSettings.http_app_url; //!!! commented out for testing on static.
-					}
-//				myControl.util.dump(P);
-//handle cases where the homepage is treated like a category page. happens in breadcrumb.
-				if(P.navcat == '.')	{
-					P.pageType = 'homepage'
-					}
-				else	{
-					fullpath += this.buildRelativePath(P);
+					if('https:' == document.location.protocol)	{
+						fullpath = zGlobals.appSettings.https_app_url;
+						}
+					else	{
+						fullpath = zGlobals.appSettings.http_app_url;
+						}
+	//				myControl.util.dump(P);
+	//handle cases where the homepage is treated like a category page. happens in breadcrumb.
+					if(P.navcat == '.')	{
+						P.pageType = 'homepage'
+						}
+					else	{
+						fullpath += this.buildRelativePath(P);
+						}
+					if(typeof P.uriParams == 'string')	{fullpath += '?'+P.uriParams} //add params back on to url.
 					}
 				$('title').text(fullpath);
-//				myControl.util.dump("fullpath: "+fullpath);
+
 				try	{
-					window.history.pushState(P, title, fullpath);
+					window.history[historyFunction](P, title, fullpath);
 					}
 				catch(err)	{
 					//Handle errors here
@@ -915,42 +1233,21 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				return useAnchor;
 				},
 
-//used in add push state and also for addthis.
-//combines the pageType with the pageInfo to build the relative path (ex: /product/pid/)
-			buildRelativePath : function(P)	{
-				var relativePath; //what is returned.
-				switch(P.pageType)	{
-				case 'product':
-					relativePath = 'product/'+P.pid+'/';
-					break;
-				case 'category':
 
-//don't want /category/.something, wants /category/something
-//but the period is needed for passing into the pushstate.
-					var noPrePeriod = P.navcat.charAt(0) == '.' ? P.navcat.substr(1) : P.navcat; 
-					relativePath = 'category/'+noPrePeriod+'/';
-					break;
-				case 'customer':
-					relativePath = 'customer/'+P.show+'/';
-					break;
-				case 'checkout':
-					relativePath = 'checkout';
-					break;
-				case 'cart':
-					relativePath = 'cart';
-					break;
 
-				case 'company':
-					relativePath = P.show;
-					break;
 
-				default:
-					//uh oh. what are we?
-					relativePath = P.show;
-					}
-				return relativePath;
-				},
 
+
+
+
+
+
+
+/*
+
+#########################################     FUNCTIONS FOR DEALING WITH PAGE CONTENT (SHOW)
+
+*/
 
 
 //rather than having all the params in the dom, just call this function. makes updating easier too.
@@ -963,12 +1260,15 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					myControl.util.dump(P);
 					}
 				else	{
+					P.templateID = 'productTemplate';
+					P.state = 'onInits'
+					myControl.ext.myRIA.util.handleTemplateFunctions(P);
 	//				myControl.ext.store_product.util.prodDataInModal({'pid':pid,'templateID':'productTemplate',});
 	//nuke existing content and error messages.
 					if(!myControl.util.isSet(P.skipClearMessaging))	{
 						$('#globalMessaging').empty();  //when app inits, don't clear messaing because it may include load errors
 						}
-					$('#mainContentArea').empty().append(myControl.renderFunctions.createTemplateInstance('productTemplate',"productViewer"));
+					$('#mainContentArea').empty().append(myControl.renderFunctions.createTemplateInstance(P.templateID,"productViewer"));
 //					myControl.util.dump(" -> product template instance created.");
 
 //need to obtain the breadcrumb info pretty early in the process as well.
@@ -981,29 +1281,38 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					myControl.model.dispatchThis();
 					}
 				
-				},
-
+				}, //showProd
+				
+				
 //Show one of the company pages. This function gets executed by showContent.
 //handleTemplateFunctions gets executed in showContent, which should always be used to execute this function.
 			showCompany : function(P)	{
 				P.show = P.show ? P.show : 'about'; //what page to put into focus. default to 'about us' page
 				$('#mainContentArea').empty(); //clear Existing content.
-				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
-				$('#mainContentArea').append(myControl.renderFunctions.createTemplateInstance('companyTemplate',parentID));
 				
-				myControl.calls.appProfileInfo.init(myControl.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'immutable');
+				P.templateID = 'companyTemplate';
+				P.state = 'onInits';
+				myControl.ext.myRIA.util.handleTemplateFunctions(P);
+				
+				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
+				$('#mainContentArea').append(myControl.renderFunctions.createTemplateInstance(P.templateID,parentID));
+				
+				myControl.calls.appProfileInfo.init(myControl.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'mutable');
 				myControl.model.dispatchThis();
 
-				P.state = 'onComplete'; //needed for handleTemplateFunctions.
-				myControl.ext.myRIA.util.handleTemplateFunctions(P);
-
-				},
-
+				}, //showCompany
+				
+				
 			showSearch : function(P)	{
-				myControl.util.dump("BEGIN myRIA.util.showSearch. P follows: ");
-				myControl.util.dump(P);
+//				myControl.util.dump("BEGIN myRIA.util.showSearch. P follows: ");
+//				myControl.util.dump(P);
+				P.templateID = 'searchTemplate'
+				P.state = 'onInits';
+				myControl.ext.myRIA.util.handleTemplateFunctions(P);
 				var parentID = 'mainContentArea_search'; //this is the id that will be assigned to the companyTemplate instance.
-				$('#mainContentArea').empty().append(myControl.renderFunctions.createTemplateInstance('searchTemplate',parentID))
+				
+				
+				$('#mainContentArea').empty().append(myControl.renderFunctions.createTemplateInstance(P.templateID,parentID))
 
 //add item to recently viewed list IF it is not already in the list.
 				if($.inArray(P.KEYWORDS,myControl.ext.myRIA.vars.session.recentSearches) < 0)	{
@@ -1017,7 +1326,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				P.state = 'onComplete'; //needed for handleTemplateFunctions.
 				myControl.ext.myRIA.util.handleTemplateFunctions(P);
 
-				},
+				}, //showSearch
 
 //Customer pages differ from company pages. In this case, special logic is needed to determine whether or not content can be displayed based on authentication.
 // plus, most of the articles require an API request for more data.
@@ -1029,7 +1338,32 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				$('#mainContentArea').append(myControl.renderFunctions.createTemplateInstance('customerTemplate',parentID))
 				myControl.ext.myRIA.util.bindNav('#customerNav a');
 				var authState = myControl.ext.store_checkout.util.determineAuthentication();
-				if(authState != 'authenticated' && this.thisArticleRequiresLogin(P))	{
+				
+				P.templateID = 'customerTemplate';
+				P.state = 'onInits';
+				myControl.ext.myRIA.util.handleTemplateFunctions(P);
+
+				
+				
+				if(P && P.uriParams && P.uriParams.cartid && P.uriParams.orderid)	{
+					myControl.util.dump(" -> in order view softauth");
+					var orderID = P.uriParams.orderid
+					var cartID = P.uriParams.cartid
+					var parentSafeID = 'orderContentsTable_'+myControl.util.makeSafeHTMLId(orderID);
+					var $invoice = $("<article />").attr('id','orderInvoiceSoloPage');
+					$invoice.append(myControl.renderFunctions.createTemplateInstance('orderContentsTemplate',parentSafeID));
+//					myControl.util.dump($invoice);
+					$invoice.appendTo($('#customerMainContentArea'));
+
+					
+					myControl.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'orderContentsTemplate','parentID':parentSafeID},'mutable');
+					
+					myControl.model.dispatchThis('mutable');
+//					myControl.util.dump(" -> most likely this was a link from the order complete or email page to view the invoice.");
+					
+//					myControl.util.dump($invoice);
+					}
+				else if(authState != 'authenticated' && this.thisArticleRequiresLogin(P))	{
 					myControl.ext.myRIA.util.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
 //this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
@@ -1071,7 +1405,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				P.state = 'onComplete'; //needed for handleTemplateFunctions.
 				myControl.ext.myRIA.util.handleTemplateFunctions(P);
 
-				},
+				},  //showCustomer
+				
+				
 //here, we error on the side of NOT requiring login. if a page does require login, the API will return that.
 //this way, if a new customer page is introduced that doesn't require login, it isn't hidden.
 			thisArticleRequiresLogin : function(P)	{
@@ -1090,7 +1426,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				},
 
 
-
+/*
+removed 2012-06-26. replaced with showCompany and showCustomer and showSearch
 			changeNavTo : function(P)	{
 //				myControl.util.dump("BEGIN myRIA.util.changeNavTo ("+newNav+")");
 //				myControl.model.abortQ('mutable');  // ### NOTE - test this when DEV is stable.
@@ -1122,21 +1459,9 @@ myControl.util.dump("WARNING - unknown nav type ["+newNav+"] specified for chang
 					P.state = 'onComplete'; //needed for handleTemplateFunctions.
 					myControl.ext.myRIA.util.handleTemplateFunctions(P);
 					}
-				},
+				}, //changeNavTo
+*/
 
-
-
-//figures which nav tree is visible and returns the id. not used in all rias.
-			whichNavIsVisible : function()	{
-				var r = ''; //this is what's returned.
-				$('#rightCol nav').each(function(){
-					if($(this).is(':visible'))	{
-						r = $(this).attr('id');
-						r = r.slice(0,r.length-3);//trims 'Nav' off the end.
-						}
-					});
-				return r;
-				},
 //pass in a bindNav anchor and the 'pageInfo' will be returned.
 //ex #category?navcat=.something will return {pageType:category,navcat:.something}
 			parseAnchor : function(str)	{
@@ -1148,7 +1473,7 @@ myControl.util.dump("WARNING - unknown nav type ["+newNav+"] specified for chang
 					P[tmp2[0]] = tmp2[1];
 //					myControl.util.dump(P);
 					return P;
-				},
+				}, //parseAnchor
 			
 //selector is a jquery selector. could be as simple as .someClass or #someID li a
 //will add an onclick event of showContent().  uses the href value to set params.
@@ -1159,22 +1484,21 @@ myControl.util.dump("WARNING - unknown nav type ["+newNav+"] specified for chang
 					var $this = $(this);
 //					myControl.util.dump($this.attr('href'));
 					$this.click(function(event){
-						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
-						myControl.ext.myRIA.action.showContent('',myControl.ext.myRIA.util.parseAnchor($this.attr('href')))
+//						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
+						return myControl.ext.myRIA.action.showContent('',myControl.ext.myRIA.util.parseAnchor($this.attr('href')))
 						});
 					});
-				},
+				}, //bindNav
 
 		
 			showLoginModal : function()	{
 //make sure form is showing and previous messaging is removed/reset.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
-				$('#loginMessaging').empty(); //used for success and fail messaging.
-				$('#loginFormContainer').show(); //contains actual form.
-
+				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
+				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
 				$('#loginFormForModal').dialog({modal: true,width:400,autoOpen:false});
 				$('#loginFormForModal').dialog('open');
-				},
+				}, //showLoginModal
 
 //executed from showCompany (used to be used for customer too)
 //articles should exist inside their respective pageInfo templates (companyTemplate or customerTemplate)
@@ -1223,36 +1547,6 @@ myControl.util.dump("WARNING - unknown nav type ["+newNav+"] specified for chang
 				$('#recentSearchesList').html(o);
 				},
 
-/*			breadcrumb : function(catSafeID)	{
-//				myControl.util.dump("BREADCRUMB cat safe id = "+catSafeID);
-				if(catSafeID == '.')	{
-//do nothing on the homepage.
-					}
-				else	{
-					var pathArray = catSafeID.split('.');
-					var $bc = $('#breadcrumb'); //no need to empty because the 'page' gets reset each load .
-					var len = pathArray.length - 1; // don't show the breadcrumb for the page in focus. we'll use an H1 for that.
-//s is used to concatonate the safe id.  so if safeid = my.safe.id.is.here, then when i=1 s = my, when i=2, pass = my.safe and so forth.
-//when split occurs on catSafeId, the zero spot in the array is blank.  so s is set to . and in the zero pass in the loop, it'll load the homepage.
-					var s = '.';
-					var numRequests = 0;
-//add homepage.
-					$bc.append(myControl.renderFunctions.createTemplateInstance('breadcrumbTemplate','breadcrumb_homepage'));
-					numRequests += myControl.ext.store_navcats.calls.appCategoryDetail.init(s,{"callback":"translateTemplate","parentID":'breadcrumb_homepage'});
-//start at position 1. position 0 is homepage, which is taken care of already.
-					for (var i=1; i<len; i+=1) {
-						s += pathArray[i];
-//						myControl.util.dump(s);
-						$bc.append(myControl.renderFunctions.createTemplateInstance('breadcrumbTemplate','breadcrumb_'+s));
-						numRequests += myControl.ext.store_navcats.calls.appCategoryDetail.init(s,{"callback":"translateTemplate","parentID":'breadcrumb_'+s});
-//after each loop, the . is added so when the next cat id is appended, they're concatonated with a . between. won't matter on the last loop cuz we're done.
-						s += ".";
-						}
-//					myControl.util.dump(" -> breadcrumb # requests: "+numRequests);
-					if(numRequests > 0)	{myControl.model.dispatchThis()}
-					}
-				},
-*/
 			showPage : function(P)	{
 
 //myControl.util.dump("BEGIN myRIA.util.showPage("+P.navcat+")");
@@ -1264,20 +1558,25 @@ if(!myControl.util.isSet(P.skipClearMessaging))	{
 $('#mainContentArea').empty();
 
 var catSafeID = P.navcat;
-var templateID;
 if(!catSafeID)	{
 	alert('UH OH! navcat not set.') //use errorHandler here !!!
 	}
 else	{
-	if(catSafeID == '.' || P.pageType == 'homepage')	{
-		templateID = 'homepageTemplate'
+	if(P.templateID){
+		//templateID 'forced'. use it.
+		}
+	else if(catSafeID == '.' || P.pageType == 'homepage')	{
+		P.templateID = 'homepageTemplate'
 		}
 	else	{
-		templateID = 'categoryTemplate'
+		P.templateID = 'categoryTemplate'
 		}
+	P.state = 'onInits';
+	myControl.ext.myRIA.util.handleTemplateFunctions(P);
+	
 	var parentID = 'page_'+myControl.util.makeSafeHTMLId(catSafeID);
-	$('#mainContentArea').append(myControl.renderFunctions.createTemplateInstance(templateID,{"id":parentID,"catsafeid":catSafeID}));
-	myControl.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':templateID,'parentID':parentID});
+	$('#mainContentArea').append(myControl.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID}));
+	myControl.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
 	myControl.model.dispatchThis();
 	}
 			
@@ -1306,6 +1605,7 @@ tagObj.extension = 'myRIA'
 myControl.templates[P.templateID].find('[data-bind]').each(function()	{
 
 	var $focusTag = $(this);
+	var eleid = $focusTag.attr('id') ? $focusTag.attr('id') : ''; //element id. default to blank. used in prodlists.
 		
 //proceed if data-bind has a value (not empty).
 	if(myControl.util.isSet($focusTag.attr('data-bind'))){
@@ -1385,11 +1685,13 @@ myControl.templates[P.templateID].find('[data-bind]').each(function()	{
 	//			myControl.util.dump(" -> category(@products) found.");
 				if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@products'] == 'object' && !$.isEmptyObject(myControl.data['appCategoryDetail|'+catSafeID]['@products']))	{
 	//				myControl.util.dump("fetching product records");
+					bindData.parentID = myControl.util.isSet(bindData.parentID) ? bindData.parentID : eleid; //prodlists really want an id.
+					bindData.csv = myControl.data['appCategoryDetail|'+catSafeID]['@products']; // setProdlistVars wants a csv.
 					myControl.ext.store_prodlist.util.setProdlistVars(bindData); //build prodlist object
 					bindData.skipCreateInstance = true; //not implemented yet. prodlist needs substantial improvements.
 	//get the first page of product. The rest will be retrieved later in the process, but this lets us get as much in front of the user as quickly as possible.
 	//right now, this doesn't have good support for variations or inventory. ### planned improvement
-					numRequests += myControl.ext.store_prodlist.util.getProductDataForList(myControl.data['appCategoryDetail|'+catSafeID]['@products'].slice(0,itemsPerPage),'','mutable');
+					numRequests += myControl.ext.store_prodlist.util.getProductDataForList(myControl.data['appCategoryDetail|'+catSafeID]['@products'].slice(0,itemsPerPage),eleid,'mutable');
 					}
 				}
 			else if(namespace == 'category')	{
@@ -1432,16 +1734,21 @@ myControl.templates[P.templateID].find('[data-bind]').each(function()	{
 				$orderEle = $('#orderContents_'+safeID);
 //if the element is empty, then this is the first time it's been clicked. Go get the data and display it, changing classes as needed.
 				if($orderEle.is(':empty'))	{
-					$orderEle.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
-					$orderEle.append(myControl.renderFunctions.createTemplateInstance('orderContentsTemplate','orderContentsTable_'+safeID))
-					$('#orderContentsTable_'+safeID).addClass('loadingBG');
-					if(myControl.ext.store_crm.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'showOrder','extension':'store_crm','templateID':'orderContentsTemplate','parentID':'orderContentsTable_'+safeID}))
-						myControl.model.dispatchThis();
-						
-					$orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
+
+//myControl.util.dump(" -> first time viewing order. go get it");
+$orderEle.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
+$orderEle.append(myControl.renderFunctions.createTemplateInstance('orderContentsTemplate','orderContentsTable_'+safeID))
+$('#orderContentsTable_'+safeID).addClass('loadingBG');
+if(myControl.ext.store_crm.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'orderContentsTemplate','parentID':'orderContentsTable_'+safeID}))
+	myControl.model.dispatchThis();
+	
+$orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
+
 					}
+
 				else	{
 //will only get here if the data is already loaded. show/hide panel and adjust classes.
+
 //myControl.util.dump("$orderEle.is(':visible') = "+$orderEle.is(':visible'));
 if($orderEle.is(':visible'))	{
 	$orderEle.removeClass('ui-corner-bottom ui-accordion-content-active').hide();
@@ -1465,11 +1772,14 @@ else	{
 					}
 				}, //removeByValue
 
-			showCart : function()	{
+			showCart : function(pio)	{
+				if(typeof pio != 'object'){var pio = {}}
 //				myControl.util.dump("BEGIN myRIA.util.showCart");
 // ### update. if mainContentArea is empty, put the cart there. if not, show in modal.
-				myControl.ext.store_cart.util.showCartInModal('cartTemplate');
-
+				pio.templateID = 'cartTemplate'
+				pio.state = 'onInits'; //needed for handleTemplateFunctions.
+				myControl.ext.myRIA.util.handleTemplateFunctions(pio);
+				myControl.ext.store_cart.util.showCartInModal(pio.templateID,{'callback':'handleCart','extension':'myRIA'});
 				}, //showCart
 
 
@@ -1548,13 +1858,27 @@ return r;
 
 
 
-				},
+				}, //handleAddToCart
 				
+//myControl.ext.myRIA.util.handleMinicartUpdate();			
+			handleMinicartUpdate : function(tagObj)	{
+
+				var itemCount = myControl.util.isSet(myControl.data[tagObj.datapointer].cart['data.item_count']) ? myControl.data[tagObj.datapointer].cart['data.item_count'] : myControl.data[tagObj.datapointer].cart['data.add_item_count']
+//				myControl.util.dump(" -> itemCount: "+itemCount);
+//used for updating minicarts.
+				$('.cartItemCount').text(itemCount);
+				var subtotal = myControl.util.isSet(myControl.data[tagObj.datapointer].cart['data.order_subtotal']) ? myControl.data[tagObj.datapointer].cart['data.order_subtotal'] : 0;
+				var total = myControl.util.isSet(myControl.data[tagObj.datapointer].cart['data.order_total']) ? myControl.data[tagObj.datapointer].cart['data.order_total'] : 0;
+				$('.cartSubtotal').text(myControl.util.formatMoney(subtotal,'$',2,false));
+				$('.cartTotal').text(myControl.util.formatMoney(total,'$',2,false));
+
+				},
+			
 			
 			createTemplateFunctions : function()	{
 
 				myControl.ext.myRIA.template = {};
-				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate');
+				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
 					myControl.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[]}
@@ -1600,11 +1924,11 @@ return r;
 					myControl.util.dump(" -> template ID: "+P.templateID);
 					myControl.util.dump(" -> state: "+P.state);
 //					myControl.util.dump(" -> typeof myControl.ext.myRIA.template[P.templateID]:"+ typeof myControl.ext.myRIA.template[P.templateID]);
-					myControl.util.dump(P);
+//					myControl.util.dump(P);
 					}
 //				myControl.util.dump("END myRIA.util.handleTemplateFunctions");
 				return r;
-				},
+				}, //handleTemplateFunctions 
 
 //htmlObj is 'this' if you add this directly to a form input.
 //this function is used in bindAppViewForms
@@ -1619,22 +1943,21 @@ return r;
 //for now,classes are hard coded. later, we could support an object here that allows for id's and/or classes to be set
 //the selector parameter is optional. allows for the function to be run over  a specific section of html. on init, it's run over #appView
 			bindAppViewForms : function(selector)	{
-				myControl.util.dump("BEGIN myRIA.util.bindAppViewForms");
+//				myControl.util.dump("BEGIN myRIA.util.bindAppViewForms");
 				selector = selector ? selector+' ' : ''; //default to blank, not undef, to avoid 'undefined' being part of jquery selectors below
-				myControl.util.dump(" -> selector: '"+selector+"'");
+//				myControl.util.dump(" -> selector: '"+selector+"'");
 //				myControl.util.dump(" -> $(selector+' .handleDefault').length: "+$(selector+' .handleDefault').length);
 
 //for any form input in appView where there is default text that should be removed onFocus and re-inserted onBlur (if no text added), assign a class of .handleDefault
 				$(selector+'.handleDefault').bind('focus blur',function(event){myControl.ext.myRIA.util.handleFormField(this)});
 		
-				myControl.util.dump(" -> $(selector+' .productSearchForm').length: "+$(selector+' .productSearchForm').length);
+//				myControl.util.dump(" -> $(selector+' .productSearchForm').length: "+$(selector+' .productSearchForm').length);
 
 				$(selector+'.productSearchForm').submit(function(event){
 					event.preventDefault(); //stops form from actually submitting.
 					var P = {}
 					P.pageType = 'search';
 					P.KEYWORDS = $(this).find('.productSearchKeyword').val();
-					P.CATALOG = $(this).find('.productSearchCatalog').val();
 					showContent('search',P);
 					return false;
 					});
@@ -1645,7 +1968,7 @@ return r;
 					return false;
 					});
 
-				}
+				} //bindAppViewForms
 
 
 			

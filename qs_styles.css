@@ -24,6 +24,11 @@ td	{vertical-align:top;}
 td.valignMiddle	{vertical-align: middle;}
 
 
+
+/* feel free to delete these or override in your own .css file */
+h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
+p	{margin:0 0 12px 0;}
+
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
 input:focus {
 	outline:none;
@@ -97,7 +102,7 @@ button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default cl
 .sideline	{float:right; width:200px; margin:0 0 24px 24px;}
 .sideline li a	{padding:3px 0; text-decoration:none;}
 
-.marginBottom	{margin-bottom:12px;} /* a generic margin for between elements or sections */
+.marginBottom	{margin-bottom:12px;} /* a generic margin for between stacked elements or sections */
 
 /***************************************************
 
@@ -200,12 +205,11 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 /***************************************************
 
-CATEGORY PAGES
+BREADCRUMB
+ -> used on product and category pages
 
 ***************************************************/
 
-
-/* breadcrumb */
 
 #breadcrumb	{margin-bottom:12px;}
 #breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
@@ -214,6 +218,18 @@ CATEGORY PAGES
 
 #breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
 
+
+
+/***************************************************
+
+cartTemplate
+
+***************************************************/
+
+
+
+
+.cartContainer	{width:100%;}
 
 
 
@@ -239,6 +255,12 @@ CUSTOMER PAGES
 #subscribeFormContainer .userInfo label	{width:100px; display:inline-block; margin-right:10px;}
 .subscriberLists label	{width:300px;}
 
+
+/****** ORDER HISTORY AND INVOICE ******/
+
+#ordersArticle	{margin-right:250px;} /* w/out the margin, the sections lay over the sideline */
+#ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
+#ordersArticle .orderContentsTable	{width:100%}
 
 
 /***************************************************
@@ -357,7 +379,7 @@ don't set background: because the bgcolor is set by another class and this is ju
 #giftCardContainer	button	{margin-left:12px;}
 
 
-#couponContainer	{clear:both;}
+#couponContainer	{clear:both; float:right;}
 #couponFrmContainer	{clear:both;}
 
 
@@ -372,7 +394,7 @@ don't set background: because the bgcolor is set by another class and this is ju
 #preflightAuthenticatedInputs label	{width:140px; display:inline-block;}
 
 
-
+#checkoutTemplateCostSummary	{text-align:right;}
 
 #chkoutCartSummary #cartSummaryTotalsContainer	{width:auto;}
 .checkoutFormContainer fieldset, #chkoutCartSummary	{margin:0 0px 12px 0; min-height:50px;}
@@ -393,8 +415,8 @@ don't set background: because the bgcolor is set by another class and this is ju
 #chkout-create_customerContainer label:after	{content: ""}
 
 #chkoutSummaryTotalsContainer	{float:right; width:35%;}
-#chkoutCartContents	{float:left; width:60%}
-
+#checkoutStuffList	{float:left; width:60%}
+#checkoutStuffList .prodThumb	{float:left;}
 
 #chkoutPlaceOrderBtn	{font-size:1.5em; font-weight:bold; 
 	clear:both; margin:12px 0;

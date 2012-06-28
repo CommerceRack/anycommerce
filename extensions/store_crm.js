@@ -93,7 +93,56 @@ var store_crm = function() {
 				}
 			},//appFAQsTopics
 			
-			
+
+//always uses immutable q so that an order update is not cancelled.
+/*
+cmdObj should include the following:
+'tender':'CREDIT',
+'amt':'5.00',
+'payment.cc':'4111111111111111',
+'payment.mm':'03',
+'payment.yy':'2013',
+'payment.cv':'123',
+'orderid':'2012-01-380'
+obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignored. turn on invoice view
+*/
+		buyerOrderPaymentAdd  : {
+			init : function(cmdObj,tagObj)	{
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+//				tagObj.datapointer = "buyerOrderMacro"  //don't think we want a data pointer here.
+				cmdObj['_cmd'] = 'buyerOrderPaymentAdd';
+				cmdObj['_tag'] = tagObj;
+				this.dispatch(cmdObj);
+				return 1;
+				},
+			dispatch : function(cmdObj)	{
+				myControl.model.addDispatchToQ(cmdObj,'immutable');	
+				}
+			},//buyerOrderMacro
+
+
+//always uses immutable q so that an order update is not cancelled.
+/*
+NOT SUPPORTED.
+		buyerOrderUpdate  : {
+			init : function(orderid,updateArray,tagObj)	{
+				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+//				tagObj.datapointer = "buyerOrderMacro"  //don't think we want a data pointer here.
+				var cmdObj = {};
+				cmdObj.orderid = orderid;
+				cmdObj['_cmd'] = 'buyerOrderUpdate';
+				cmdObj['@updates'] = updateArray;
+				cmdObj['_tag'] = tagObj;
+				this.dispatch(cmdObj);
+				return 1;
+				},
+			dispatch : function(cmdObj)	{
+				myControl.model.addDispatchToQ(cmdObj,'immutable');	
+				}
+			},//buyerOrderMacro
+*/
+
+
 //formerly getAllCustomerLists
 		buyerProductLists : {
 			init : function(tagObj)	{
@@ -277,6 +326,21 @@ see jquery/api webdoc for required/optional param
 				myControl.model.addDispatchToQ(obj,Q);
 				}
 			}, //buyerNewsletters
+//obj should contain cartid and orderid
+		buyerOrderGet : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				if(!Q)	{Q = 'mutable'}
+				obj["_cmd"] = "buyerOrderGet";
+				obj['softauth'] = "order";
+				obj["_tag"] = tagObj;
+				obj["_tag"]["datapointer"] = "buyerOrderGet|"+obj.orderid;
+				myControl.model.addDispatchToQ(obj,Q);
+				}
+			}, //buyerOrderGet
 
 		setNewsletters : {
 			init : function(obj,tagObj)	{
@@ -482,39 +546,8 @@ see jquery/api webdoc for required/optional param
 			onError : function(responseData,uuid)	{
 				myControl.util.handleErrors(responseData,uuid)
 				}
-			}, //showSubscribeSuccess
+			} //showSubscribeSuccess
 
-		showOrder : 	{
-			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN store_crm.callbacks.showOrder");
-				myControl.util.dump(tagObj);
-//translates the general info for the order. bill to, status, etc.
-				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer].order,tagObj.parentID);
-
-				var orderID = tagObj.datapointer.split('|')[1]
-				myControl.util.dump(" -> order id = "+orderID);
-				var L = myControl.data[tagObj.datapointer].order.stuff.length;
-				var stid,pid;
-				var $parent = $("#orderProductLineitem_"+myControl.util.makeSafeHTMLId(orderID)).removeClass('loadingBG');
-
-//adds a lineitem template for each stid in stuff
-				for(i = 0; i < L; i +=1)	{
-					stid = myControl.data[tagObj.datapointer].order.stuff[i].sku;
-					pid = stid.split(':')[0]
-					$parent.append(myControl.renderFunctions.createTemplateInstance('orderProductLineItemTemplate',{
-"id":'order_'+orderID+'_stid_'+stid,
-"pid":pid,
-"stid":stid}));
-					myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer].order.stuff[i],'order_'+orderID+'_stid_'+stid);	
-
-					}
-			
-				},
-			onError : function(d)	{
-//something went wrong, so empty the parent (which likely only holds an empty template) and put an error message in there.
-				$('#'+d['_rtag'].parentID).empty.append(myControl.util.getResponseErrors(d)).toggle(true);
-				}
-			}
 		}, //callbacks
 
 
@@ -586,8 +619,24 @@ see jquery/api webdoc for required/optional param
 					}
 				o += '<\/ul>';
 				$tag.append(o);		
-				}
+				},
+
 			
+			orderTrackingLinks : function($tag,data)	{
+				myControl.util.dump("BEGIN myRIA.renderFormats.orderTrackingLinks");
+				myControl.util.dump(data.value);
+				
+				var L = data.value.length;
+				var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
+				for(i = 0; i < L; i += 1)	{
+					o += "<li><a href='"+myControl.ext.myRIA.util.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
+					if(myControl.util.isSet(data.value[i].cost))
+						o += " ("+myControl.util.formatMoney(data.value[i].cost,'$',2,true)+")";
+					o += "<\/li>";
+					}
+				$tag.show().append("<h4>Tracking Number(s):</h4>").append(o);
+				}
+
 			},
 
 
@@ -620,7 +669,9 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 						$parent.empty();
 						}
 					$parent.dialog({modal: true,width:500,height:500,autoOpen:false,"title":"Write a review for "+P.pid});
-					$parent.dialog('open').append(myControl.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,myControl.data['appProductGet|'+P.pid]));
+//the only data needed in the reviews form is the pid.
+//the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
+					$parent.dialog('open').append(myControl.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
 					}
 				},
 
@@ -653,6 +704,25 @@ will output a newsletter form into 'parentid' using 'templateid'.
 //in this case, the template is not populated until the call comes back. otherwise, the form would show up but no subscribe list.
 					if(myControl.ext.store_crm.calls.getNewsletters.init({"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm"}))	{myControl.model.dispatchThis()}
 					}
+				},
+
+
+			getTrackingURL : function(carrier,tracknum){
+				var url; //the composed url. what is returned.
+				if(carrier == 'FEDX')	{
+					url = "http://www.fedex.com/Tracking?ascend_header=1&clienttype=dotcom&cntry_code=us&language=english&tracknumbers="+tracknum
+					}
+				else if(carrier == 'USPS')	{
+					url = "http://wwwapps.ups.com/WebTracking/processInputRequest?HTMLVersion=5.0&loc=en_US&Requester=UPSHome&"+tracknum+"=321654987456&AgreeToTermsAndConditions=yes"
+					}
+				else if(carrier = 'UPS')	{
+					url = "https://tools.usps.com/go/TrackConfirmAction_input?origTrackNum="+tracknum
+					}
+				else	{
+					url = false; //unrecognized ship carrier.
+					myControl.util.dump("WARNING: unrecognized ship carrier ["+carrier+"] for parcel: "+tracknum);
+					}
+				return url;
 				},
 
 
@@ -695,7 +765,7 @@ else{
 					myControl.model.dispatchThis();
 					}
 				else	{
-//report errors				
+//report errors
 					$('#'+formID).append(myControl.util.formatMessage("<ul>"+isValid+"<\/ul>"));
 					}
 				}
