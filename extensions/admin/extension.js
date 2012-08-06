@@ -229,8 +229,8 @@ var admin = function() {
 			onSuccess : function()	{
 //				myControl.util.dump('BEGIN myControl.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
-
-myControl.model.fetchNLoadTemplates('201220/extensions/admin/templates.html',theseTemplates);
+//myControl.util.dump("DEBUG - template url is changed for local testing. add: ");
+myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/templates.html',theseTemplates);
 
 				return r;
 				},

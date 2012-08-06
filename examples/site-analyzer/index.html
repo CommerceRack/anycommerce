@@ -10,15 +10,13 @@
 
 <!-- jquery and jquery ui -->
 <script type="text/javascript" src="../../jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="../../jqueryui-1.7.2.min.js"></script>
+<script type="text/javascript" src="../../jquery-ui-1.8.20.custom.min.js"></script>
 
 
 <!-- zoovy mvc -->
 <script type="text/javascript" src="../../model.js"></script>
 <script type="text/javascript" src="../../controller.js"></script>
-<script type="text/javascript" src="../../json2.js"></script>
-<script type="text/javascript" src="../../variations.js"></script>
-<script type="text/javascript" src="../../wiki.js"></script>
+<script type="text/javascript" src="../../includes.js"></script>
 <script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jcarousel-0.2.7/jquery.jcarousel.min.js"></script>
 
 
@@ -34,9 +32,9 @@ var myControl;
 var myCreole;
 var myExtensions = [
 	// Standard extensions - comment these out if your app does not need them
-	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_search.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201217/extensions/store_product.js"},
+	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_navcats.js"},
+	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_search.js"},
+	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_product.js"},
 	{"namespace":"myRIA","filename":"site_analyzer.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
 	];
 
@@ -295,7 +293,7 @@ ul .prompt	{display:inline-block; width:250px;}
 <li id='prodlistProdTemplate'>
 	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='100' height='100' />
 	<h5 data-bind='var: product(prod_name); format:text;'></h5>
-	<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
+	<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price;'></h6>
 	<a href='#top' data-bind='var: product(pid); format:text;pretext: explore ;' onClick="$('#pid').val($(this).parent().attr('data-pid')); $('#prodExplorerBtn').click(); $tabs.tabs('select',4);"></a>
 </li>
 </ul>

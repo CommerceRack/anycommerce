@@ -163,7 +163,8 @@ later if more variety is needed, we can either create exceptions or more rules t
 
 
 /* loading classes. do NOT change class name. change styling as needed */
-.loadingBG	{background:url(https://static.zoovy.com/graphics/layouts/checkout-20111031/loading_blue-28x28.gif) no-repeat center center  !important; min-height:28px;}
+.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:100px; min-width:100px;}
+li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
 
 /* multipage controls */

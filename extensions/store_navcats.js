@@ -268,9 +268,9 @@ templateID - the template id used (from myControl.templates)
 // override the callback, which will be set to simply display the category in the DOM. getChildDataOf handles creating the template instance as long as parentID and templateID are set.
 		getChildData : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.getChildData.onSuccess');
+//				myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.getChildData.onSuccess');
 				var catSafeID = tagObj.datapointer.split('|')[1];
-				myControl.util.dump(" -> catsafeid: "+catSafeID);
+//				myControl.util.dump(" -> catsafeid: "+catSafeID);
 				tagObj.callback = 'addCatToDom'; //the tagObj will have 
 				myControl.ext.store_navcats.util.getChildDataOf(catSafeID,tagObj,'appCategoryDetail');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 				myControl.model.dispatchThis();
@@ -380,12 +380,15 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 */
 			getRootCats : function()	{
 //				myControl.util.dump('BEGIN myControl.ext.store_navcats.util.getRootCats');
-				var L = myControl.data.appCategoryList['@paths'].length;
-				var r = new Array();
-//				myControl.util.dump(' -> num cats = '+L);
-				for(var i = 0; i < L; i += 1)	{
-					if(myControl.data.appCategoryList['@paths'][i].split('.').length == 2)	{
-						r.push(myControl.data.appCategoryList['@paths'][i]);
+				var r = false;
+				if(myControl.data.appCategoryList)	{
+					var L = myControl.data.appCategoryList['@paths'].length;
+					r = new Array();
+	//				myControl.util.dump(' -> num cats = '+L);
+					for(var i = 0; i < L; i += 1)	{
+						if(myControl.data.appCategoryList['@paths'][i].split('.').length == 2)	{
+							r.push(myControl.data.appCategoryList['@paths'][i]);
+							}
 						}
 					}
 				return r;
@@ -410,14 +413,14 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 //				myControl.util.dump("BEGIN myControl.ext.store_navcats.util.getChildDataOf ("+catSafeID+")");
 //				myControl.util.dump(myControl.data['appCategoryDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
-				var catsArray = []; 
+				var catsArray = new Array(); 
 				var newParentID;
 				var tier = (catSafeID.split('.').length) - 1; //root cat split to 2, so subtract 1.
 				if(catSafeID == '.')
 					catsArray = this.getRootCats();
-				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
+				else if(myControl.data['appCategoryDetail|'+catSafeID] && typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
 					catsArray = myControl.data['appCategoryDetail|'+catSafeID]['@subcategories'];
-					myControl.util.dump("GOT HERE for "+catSafeID);
+//					myControl.util.dump("GOT HERE for "+catSafeID);
 					}
 //when a max detail is done for appCategoryDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
 				else if(typeof myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(myControl.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
@@ -427,37 +430,39 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 					//most likely, category doesn't have subcats.
 					}
 				
-				
-				catsArray.sort(); //sort by safe id.
-				var L = catsArray.length;
-				var call = call ? call : "appCategoryDetail"
-//				myControl.util.dump(" -> tier = "+tier);
-//				myControl.util.dump(" -> parentID = "+tagObj.parentID);
-//				myControl.util.dump(" -> call = "+call);
-//				myControl.util.dump(" -> # subcats = "+L);
-//used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
-				renderTemplate = false;
-				if(tagObj.templateID && tagObj.parentID)	{
-					var $parent = $('#'+tagObj.parentID);
-					var renderTemplate = true;
-					}
-//				myControl.util.dump(" -> parentid.length: "+$parent.length);
-//				myControl.util.dump(" -> renderTemplate: "+renderTemplate);
-
-				for(var i = 0; i < L; i += 1)	{
-					if(renderTemplate)	{
-//homepage is skipped. at this point we're dealing with subcat data and don't want 'homepage' to display among them
-						if(catsArray[i] != '.')	{
-//							myControl.util.dump(" -> createTemplateInstance for: "+catsArray[i]);
-							newParentID = tagObj.parentID+"_"+catsArray[i]
-							$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
-							}
+				if(catsArray.length > 0)	{
+					
+					catsArray.sort(); //sort by safe id.
+					var L = catsArray.length;
+					var call = call ? call : "appCategoryDetail"
+	//				myControl.util.dump(" -> tier = "+tier);
+	//				myControl.util.dump(" -> parentID = "+tagObj.parentID);
+	//				myControl.util.dump(" -> call = "+call);
+	//				myControl.util.dump(" -> # subcats = "+L);
+	//used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
+					renderTemplate = false;
+					if(tagObj.templateID && tagObj.parentID)	{
+						var $parent = $('#'+tagObj.parentID);
+						var renderTemplate = true;
 						}
-//if tagObj was passed in without .extend, the datapointer would end up being shared across all calls.
-//I would have though that manipulating tagObj within another function would be local to that function. apparently not.
-					numRequests += myControl.ext.store_navcats.calls[call].init(catsArray[i],$.extend({'parentID':newParentID},tagObj));
+	//				myControl.util.dump(" -> parentid.length: "+$parent.length);
+	//				myControl.util.dump(" -> renderTemplate: "+renderTemplate);
+	
+					for(var i = 0; i < L; i += 1)	{
+						if(renderTemplate)	{
+	//homepage is skipped. at this point we're dealing with subcat data and don't want 'homepage' to display among them
+							if(catsArray[i] != '.')	{
+	//							myControl.util.dump(" -> createTemplateInstance for: "+catsArray[i]);
+								newParentID = tagObj.parentID+"_"+catsArray[i]
+								$parent.append(myControl.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
+								}
+							}
+	//if tagObj was passed in without .extend, the datapointer would end up being shared across all calls.
+	//I would have though that manipulating tagObj within another function would be local to that function. apparently not.
+						numRequests += myControl.ext.store_navcats.calls[call].init(catsArray[i],$.extend({'parentID':newParentID},tagObj));
+						}
+	//				myControl.util.dump(' -> num requests: '+numRequests);
 					}
-//				myControl.util.dump(' -> num requests: '+numRequests);
 				return numRequests;
 				}, //getChildDataOf
 

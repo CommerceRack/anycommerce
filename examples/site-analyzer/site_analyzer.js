@@ -149,48 +149,15 @@ $('#tabs-4').append(myControl.ext.myRIA.util.buildTagsList({'id':'tagList'}));
 						var pid;//recycled shortcut to product id.
 						for(var i = 0; i < L; i += 1)	{
 							pid = myControl.data[tagObj.datapointer].hits.hits[i]['_source']['pid'];
-							myControl.ext.store_product.calls.appProductGet.init(pid,{},'mutable'); //need full prod data in memory for add to cart to work.
 							$parent.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},'prodlistProdTemplate',myControl.data[tagObj.datapointer].hits.hits[i]['_source']));
 							}
-						myControl.calls.ping.init({'callback':'handleFilters','extension':'myRIA','datapointer':tagObj.datapointer},'mutable');
-						myControl.model.dispatchThis('mutable');
 						}
 					},
 				onError : function(responseData,uuid)	{
 					myControl.util.handleErrors(responseData,uuid)
 					}
-				},		//handleElasticResults	
+				}		//handleElasticResults	
 				
-
-			handleFilters : {
-				onSuccess : function(tagObj)	{
-					myControl.util.dump("BEGIN myRIA.callbacks.handleFilters.onSuccess");
-					var A = {'zoovy:prod_mfg':{},'zoovy:prod_condition':{},'zoovy:prod_color':{}};
-					var L = myControl.data[tagObj.datapointer].hits.hits.length;
-					var prod,pid; //shortcuts for product data.
-					for(var i = 0; i < L; i += 1)	{
-						pid = myControl.data[tagObj.datapointer].hits.hits[i]['_source'].pid
-						prod = myControl.data['appProductGet|'+pid]['%attribs'];
-//						myControl.util.dump(prod);
-						if(myControl.util.isSet(prod['zoovy:prod_mfg']))	{
-							myControl.util.dump(" -> zoovy:prod_mfg = "+prod['zoovy:prod_mfg']);
-							if(typeof A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] == 'object')	{
-								A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] += 1;
-								}
-							else	{
-								A['zoovy:prod_mfg'][prod['zoovy:prod_mfg']] = 1;
-								}
-							}
-						
-						
-						}
-					myControl.util.dump(A);
-					},
-				onError : function(responseData,uuid)	{
-					myControl.util.handleErrors(responseData,uuid)
-					}
-				}		//handleElasticResults		
-
 
 				
 			}, //callbacks
@@ -260,7 +227,7 @@ $('#tabs-4').append(myControl.ext.myRIA.util.buildTagsList({'id':'tagList'}));
 			handleElasticFilterOrQuery : function()	{
 				var quilter = $.parseJSON($('#advsrch_filterQuery').val()); //query/filter object
 				if(quilter)	{
-					myControl.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'myRIA','parentID':'elasticResults','datapointer':'elasticsearch|'+type});
+					myControl.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'myRIA','parentID':'elasticResults','datapointer':'elasticsearch|Test'});
 					myControl.model.dispatchThis();
 					}
 				else	{

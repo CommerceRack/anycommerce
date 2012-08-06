@@ -1,13 +1,14 @@
-#appTemplates {display:none;} /* container for all templates. should be hidden */
+#appTemplates, #appView {display:none;} /* container for all templates. should be hidden */
 
+#appPreView	{width:550px; margin:0 auto;}
 
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
 loadingBG classname is removed once template is rendered.
 */
-.loadingBG	{background:url(qs_loading.gif) no-repeat center center; min-height:28px;}
-
+.loadingBG	{background:url(loading.gif) no-repeat center center; min-height:100px; min-width:100px;}
+li.loadingBG	{background:url(wait.gif) no-repeat top center; min-height:20px; min-width:20px;}
 
 /******* global styles - added for cross-browser uniformity or usability ******/
 
@@ -140,7 +141,7 @@ and override using classes or id's as needed.
 
 /***************************************************
 
-PRODUCT DETAIL PAGE
+PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
 
@@ -163,10 +164,15 @@ the child list and loading graphic should only show up IF the product is a paren
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
 */
 .grpType_PARENT	{display:block; margin-bottom:12px;}
+#prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
 
+.prodViewerAddToCartForm	{margin-bottom:24px;}
+.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
+.prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
-#prodViewerAddToCartForm	{padding-bottom:12px;} /* add some margin after add to cart */
+#CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
 
+.pogType_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
 
@@ -185,7 +191,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .review_9	{background-position:0 -270px;}
 .review_10	{background-position:0 -301px;}
 
-
+.prodlist .review_0	{display:none;} /* hide the stars for items with no reviews */
 
 
 /****** REVIEW LIST - on product detail page, used for product reviews. ******/
@@ -200,8 +206,8 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 /****** WRITE REVIEW MODAL ******/
 #reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
 #reviewsMessage		{width:250px; height:250px;}
-
-
+#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:5px;}
+#reviewFrm .ui-button	{float:right;}
 
 /***************************************************
 
@@ -263,6 +269,11 @@ CUSTOMER PAGES
 #ordersArticle .orderContentsTable	{width:100%}
 
 
+#orderInvoiceSoloPage table	{width:700px;}
+.orderContentsProdlistContainer	{width:500px;}
+.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
+
+
 /***************************************************
 
 SEARCH RESULTS PAGE
@@ -274,8 +285,8 @@ SEARCH RESULTS PAGE
 	width: 760px;
 	}
 
-
-
+#searchNav a	{padding:2px 6px;}
+#recentSearchesList	{border-top:0;}
 
 
 
@@ -344,14 +355,9 @@ CHECKOUT
 
 #zCheckoutContainer h2	{font-size:1em; margin:0; padding:0;}
 
+#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
 
-
-/*
-don't set background: because the bgcolor is set by another class and this is just for adding the image.
-*/
-.loadingButtonBg	{background-image:url(qs_loading_white-16x16.gif); background-repeat: no-repeat; background-position: 2px center;}
-
-
+#modalProcessCheckout .loadingBG	{width:100px; height:200px;}
 
 
 
@@ -471,7 +477,7 @@ ul.zwarn li	{margin-left:15px;}
 
 /* -----------------> POST-CHECKOUT MARKETING PAGE  <----------------- */
 
-.checkoutSuccess	{margin:20px 0;}
+.checkoutSuccess	{padding:20px 0;} /* don't change this to margin. will F up sites */
 
 
 .ocmThirdParty	{ line-height:200%; width:300px;}

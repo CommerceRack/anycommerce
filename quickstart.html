@@ -1,73 +1,43 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
 <title>QuickStart</title>
 
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" />
 
-<script type="text/javascript" src="http://www.toynk.com/jquery/config.js"></script>
+<base href='' /><!-- leave blank so it works for a local file -->
+
 <script type="text/javascript">
 //sets the base url based on secure or non-secure protocol. necessary to play well across all browsers.
-//specifically, IE didn't like base href="/", plus that doesn't play well w/ zoovy hosting of non SSL domains.
-// the check for file allows us to leave this code uncommented .
+//specifically, IE didn't like base href="/", plus that doesn't play well w/ zoovy hosting of SSL domains.
+// the check for file allows us to leave this code uncommented while testing locally.
+
+var ac = {
+	"baseURL":"",
+	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
+	"httpURL":"http://www.sporks.zoovy.com/"
+	};
+
 if(document.location.protocol != 'file:')	{
-	var base = document.getElementsByTagName('base')[0];
-	base.href = "https:" == document.location.protocol ? "https://ssl.zoovy.com/s=www.toynk.com/" : "http://www.toynk.com/";
+	ac.baseURL  = "https:" == document.location.protocol ? ac.httpsURL : ac.httpURL; 
+	document.getElementsByTagName('base')[0].href = ac.baseURL;
 	}
 </script>
-
 <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="jquery-ui-1.8.20.custom.min.js"></script>
-
-
-
-<script type="text/javascript" src="model.js"></script>
-<script type="text/javascript" src="controller.js"></script>
-<script type="text/javascript" src="json2.js"></script>
-<script type="text/javascript" src="variations.js"></script>
-<script type="text/javascript" src="wiki.js"></script>
-
+<script type="text/javascript" src="loadscript.js"></script>
+<!-- for local testing, use full path. for deplyment, use "jquery/config.js" -->
+<script type="text/javascript">
+loadScript(ac.baseURL+"init.js");
+</script>
 
 <script type='text/javascript'>
 
-var _gaq = {'push':function(){}}
-
+var _gaq = {'push':function(){}} //here for testing. replace with actual GA code or delete at deployment.
 var myControl;
 var myCreole;
-var myExtensions = [
-	{"namespace":"store_prodlist","filename":"extensions/store_prodlist.js"},
-//	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_passive/extension.js"},  /* checkout_passive does not require buyer to login */
-	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_nice/extension.js"},	/* checkout_nice prompts buyer to login */
-	{"namespace":"store_checkout","filename":"extensions/store_checkout.js"},
-	{"namespace":"store_navcats","filename":"extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"extensions/store_search.js"},
-	{"namespace":"store_product","filename":"extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"extensions/store_cart.js"},
-	{"namespace":"store_crm","filename":"extensions/store_crm.js"},
-	{"namespace":"myRIA","filename":"quickstart.js","callback":"startMyProgram"}];
 
-// Now start the party (by instantiate the controller)
-$(function() {
-	
-	$.support.cors = true;  //cross site scripting for non cors sites. will b needed for IE10. IE8 & 9 don't support xss well.
-	myControl = new zController({
-		"release":"20120612123700" //increment this with each change. should solve caching issues.
-		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
-
-	//instantiate wiki parser.
-	myCreole = new Parse.Simple.Creole();
-	
-	
-	});
-
-//put any code that you want executed AFTER myRIA has been initiated in here.  This may include adding onCompletes or onInits for a given template.
-function myRIAisLoaded()	{
-	myControl.util.dump("Executing myRIAisLoaded code...");
-	myControl.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) //display product blob fields in tabbed format.
-		myControl.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {myControl.util.dump(" -> Test. execute some script here...");}) //display product blob fields in tabbed format.
-	}
 </script>
 </head>
 
@@ -76,15 +46,41 @@ function myRIAisLoaded()	{
 <!-- DELETE THIS WHEN YOU GET STARTED -->
 <h1>WELCOME TO QUICKSTART</h1>
 This file is intended to go along with the 10-step tutorial at: 
-<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki/quickstart">https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki/quickstart</a>
+<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
 <!-- /DELETE THIS WHEN YOU GET STARTED -->
 
-<div id='appView'>
-<!-- sample links:
-<a href='#cart?show=cart' class='bindByAnchor'>Cart</a>
+
+
+
+<!-- what is displayed onLoad until the view is loaded -->
+<div id='appPreView'>
+<table>
+<tr>
+	<td><!-- put logo here --></td>
+	<td>
+	<h3>One moment please.</h3>
+	
+	<div class='alignCenter'>
+	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+	</div>
+	<div id='appPreViewProgressText'>0% Complete</div>
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+<div id='appView' class='displayNone'>
+<!--
+sample links:
 <a href='#category?navcat=.' class='bindByAnchor'>Homepage</a>
-<a href='#company?show=return' class='bindByAnchor'>Returns</a>
 <a href='#customer?show=orders' class='bindByAnchor'>Orders</a>
+<a href='#cart?show=cart' class='bindByAnchor'>Cart</a>
+<a href='#company?show=return' class='bindByAnchor'>Returns</a>
+
+put this where you want the main nav to appear:
+<ul id='tier1categories'></ul>
 -->
 
 <!-- VIEW CONTENT -->
@@ -228,7 +224,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		
 		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
-		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+<!-- 	<span data-bind='var: reviews(total); format:text; posttext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 </li>
 </ul>
@@ -246,7 +242,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResults' class='loadingBG  ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
@@ -295,7 +291,7 @@ this will likely become more flexible in the future. ###
 <div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='330' height='330' />
+	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 
 </div>
 
@@ -315,10 +311,18 @@ this will likely become more flexible in the future. ###
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
 	
-	<div data-bind='var: product(pid); format:priceRetailSavings; extension:myRIA;' class='priceContainer'></div>
-
 	
-		<ul title='please choose' id='prodlistChildren' class='listStyleNone fluidList clearfix noPadOrMargin productList smallProdlist' data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;"></ul>
+	<div class='priceContainer'>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		<span class='savings'>
+			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
+			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+		</span>
+	</div>
+	
+	
+	<ul title='please choose' id='prodlistChildren' class='listStyleNone fluidList clearfix noPadOrMargin productList smallProdlist' data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_multipage:true;"></ul>
 
 	
 <!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
@@ -328,7 +332,7 @@ this will likely become more flexible in the future. ###
 you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
 -->	
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id);  return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id,{'action':'modal'});  return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
@@ -388,7 +392,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	
 	
 	<div id='prodlistAccessoriesContainer'>
-		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true;"></ul>
+		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true; withReviews:1;"></ul>
 	</div>
 
 
@@ -406,7 +410,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	<div class='redGrit prodlistHead'>
 		<span class='hbSpriteBG relatedItemsHead'></span>
 	</div>
-	<ul id='prodlistRelated' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true;"></ul>
+	<ul id='prodlistRelated' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true;  withReviews:1"></ul>
 </div>
 
 
@@ -415,202 +419,6 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 
 
 
-
-
-
-
-
-
-
-
-<div id='companyTemplate'>
-
-	<div class='sideline' id='sideline'>
-<nav id='companyNav'>
-<ul class='listStyleNone noPadOrMargin'>
-	<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
-	<li><a href='#company?show=contact'  id='navLink_contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'  id='navLink_faq'>FAQ</a></li>
-	<li><a href='#company?show=payment' id='navLink_payment'>Payment Policy</a></li>
-	<li><a href='#company?show=privacy' id='navLink_privacy'>Privacy Statement</a></li>
-	<li><a href='#company?show=return' id='navLink_return'>Return Policy</a></li>
-	<li><a href='#company?show=shipping' id='navLink_shipping'>Shipping Information</a></li>
-</ul>
-</nav>
-	</div>
-
-	<div class='mainColumn'>
-
-		<article id='aboutArticle' class='textContentArea'>
-			<h1>About Us</h1>
-			<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
-		</article>
-		
-	
-		<article id='contactArticle' class='displayNone textContentArea'>
-			<h1>Contact Information</h1>
-			<form action='#' onSubmit="myControl.ext.myRIA.util.validateContactForm(); return false;" id='contactForm' name='contactForm'>
-			<fieldset>
-				<legend>Contact Us</legend>
-				<div id='contactFormMessaging'></div>
-				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' id='contactFormSender' /></div>
-				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
-				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
-				<div><label for='contactFormBody'>Message: </label><textarea name='body' id='contactFormBody'></textarea></div>
-				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Send Message' />
-				</div>
-			</fieldset>
-			</form>
-			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
-		</article>
-	
-		
-	
-		<article id='faqArticle' class='displayNone textContentArea'>
-			<h1>Frequently Asked Questions</h1>
-			<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
-		</article>
-	
-
-	
-		<article class='displayNone textContentArea' id='paymentArticle'>
-			<h1>Payment Policy</h1>
-			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
-		</article>
-		
-		
-		<article class='displayNone textContentArea' id='privacyArticle'>
-			<h1>Privacy Statement</h1>
-	<h4>About this Privacy Policy:</h4>
-	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
-	
-	<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
-	
-	<h5>Zoovy.com tracks IP Addresses</h5>
-	<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
-	
-	
-	<h3>This site may contains links to other sites.</h3>
-	<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
-	
-	<h3>This site requires Unique Identifiers.</h3>
-	<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
-	
-	<h3>This site requires Financial Information.</h3>
-	<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
-	
-	<h3>This site may have Surveys and/or Contests.</h3>
-	<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
-	
-	<h3>This site may contain Public Forums</h3>
-	<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
-	
-	<h3>About our System Security</h3>
-	<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
-	
-	<h3>This site provides the choice to Opt In or Out</h3>
-	<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
-	
-	<h3>We provide the ability to Correct/Update YOUR information.</h3>
-	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
-	<!-- !!! load amendments here -->
-		</article>
-		
-		
-		
-		
-		<article class='displayNone textContentArea' id='returnArticle'>
-			<h1>Return Policy</h1>
-			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
-		</article>
-	
-	
-		
-		<article class='displayNone textContentArea' id='shippingArticle'>
-			<h1>Shipping Information</h1>
-			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
-		</article>
-	
-	</div>
-
-</div><!-- /companyTemplate -->
-
-
-
-
-<div id='customerTemplate'>
-
-	<div class='sideline' id='sideline'>
-	<nav id='customerNav'>
-	<ul class='listStyleNone noPadOrMargin'>
-<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
-		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
-	</ul>
-	</nav>
-	</div>
-
-	<div class='mainColumn'>
-
-		<article id='newsletterArticle' class='displayNone'>
-			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div id='newsletterFormContainer'></div>
-		</article>
-	
-		<article id='myaccountArticle' class='displayNone'>
-			<h1>My Account</h1>
-			<div id='logMessaging'></div>
-			<div><a href="#" onClick="myControl.util.logBuyerOut(); return false;">Log Out</a></div>
-			
-			<section id='buyerAddresses'>
-
-			</section>
-
-			
-		</article>
-	
-	
-		<article id='ordersArticle' class='displayNone'>
-			<h1>Order History</h1>
-			<div id='orderHistoryContainer' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
-		</article>
-	
-	
-	
-		<article id='changepasswordArticle' class='displayNone'>
-			<h1>Change Password</h1>
-			<div id='changepasswordContainer'>
-
-<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="myControl.ext.store_crm.util.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
-<fieldset>
-
-<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
-<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
-<div class='marginBottom'><input type='submit' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
-
-</fieldset>
-</form>
-			</div>
-		</article>
-	
-		<article id='wishlistArticle' class='displayNone'>
-			<h1>Your Wishlist</h1>
-			<ul id='wishlistContainer' class='prodlist loadingBG'></ul>
-		</article>
-	
-		<article id='forgetmeArticle' class='displayNone'>
-			<h1>Your 'Forget Me' list</h1>
-			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
-			<ul id='forgetmeContainer' class='prodlist loadingBG'>
-			</ul>
-		</article>
-
-	</div>
-
-</div>
 
 
 
@@ -646,6 +454,8 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 ############################
 
 MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
+if modified, be careful about changing id's or classes.
+adding classes is not likely to have any bad effects.
 
 ############################
 
@@ -661,6 +471,206 @@ MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
 	<a href='#' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" data-bind='var: category(pretty); format:text;'></a>
 	</li>
 </ul>
+
+
+
+
+
+<div id='companyTemplate'>
+
+	<div class='sideline' id='sideline'>
+<nav id='companyNav'>
+<ul class='listStyleNone noPadOrMargin'>
+	<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
+	<li><a href='#company?show=contact'  id='navLink_contact'>Contact Information</a></li>
+	<li><a href='#company?show=faq'  id='navLink_faq'>FAQ</a></li>
+	<li><a href='#company?show=payment' id='navLink_payment'>Payment Policy</a></li>
+	<li><a href='#company?show=privacy' id='navLink_privacy'>Privacy Statement</a></li>
+	<li><a href='#company?show=return' id='navLink_return'>Return Policy</a></li>
+	<li><a href='#company?show=shipping' id='navLink_shipping'>Shipping Information</a></li>
+</ul>
+</nav>
+	</div>
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
+		<div id='aboutArticle' class='textContentArea article'>
+			<h1>About Us</h1>
+			<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
+		</div>
+	
+	
+		<div id='contactArticle' class='displayNone textContentArea'>
+			<h1>Contact Information</h1>
+			<form action='#' onSubmit="myControl.ext.store_crm.calls.appSendMessage.init($(this).serializeArray(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); return false;" id='contactForm' name='contactForm'>
+			<fieldset>
+				<legend>Contact Us</legend>
+				<div id='contactFormMessaging'></div>
+				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
+				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
+				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
+				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
+				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Send Message' />
+				</div>
+			</fieldset>
+			</form>
+			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
+		</div>
+	
+		
+	
+		<div id='faqArticle' class='displayNone textContentArea'>
+			<h1>Frequently Asked Questions</h1>
+			<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
+		</div>
+	
+
+	
+		<div class='displayNone textContentArea' id='paymentArticle'>
+			<h1>Payment Policy</h1>
+			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
+		</div>
+		
+		
+		<div class='displayNone textContentArea' id='privacyArticle'>
+			<h1>Privacy Statement</h1>
+	<h4>About this Privacy Policy:</h4>
+	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
+	
+	<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
+	
+	<h5>Zoovy.com tracks IP Addresses</h5>
+	<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
+	
+	
+	<h3>This site may contains links to other sites.</h3>
+	<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
+	
+	<h3>This site requires Unique Identifiers.</h3>
+	<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
+	
+	<h3>This site requires Financial Information.</h3>
+	<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
+	
+	<h3>This site may have Surveys and/or Contests.</h3>
+	<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
+	
+	<h3>This site may contain Public Forums</h3>
+	<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
+	
+	<h3>About our System Security</h3>
+	<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
+	
+	<h3>This site provides the choice to Opt In or Out</h3>
+	<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
+	
+	<h3>We provide the ability to Correct/Update YOUR information.</h3>
+	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
+	<!-- !!! load amendments here -->
+		</div>
+		
+		
+		
+		
+		<div class='displayNone textContentArea' id='returnArticle'>
+			<h1>Return Policy</h1>
+			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
+		</div>
+	
+	
+		
+		<div class='displayNone textContentArea' id='shippingArticle'>
+			<h1>Shipping Information</h1>
+			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
+		</div>
+	
+	</div>
+
+</div><!-- /companyTemplate -->
+
+
+
+
+<div id='customerTemplate'>
+
+	<div class='sideline' id='sideline'>
+	<nav id='customerNav'>
+	<ul class='listStyleNone noPadOrMargin'>
+<!-- before restoring this, test cuz news form on left was causing some conflicts -->
+<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
+		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
+		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
+		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
+		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
+	</ul>
+	</nav>
+	</div>
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
+		<div id='newsletterArticle' class='displayNone textContentArea'>
+			<h1>Subscribe to our Newsletter and Save!</h1>
+			<div id='newsletterFormContainer'></div>
+		</div>
+	
+		<div id='myaccountArticle' class='displayNone textContentArea'>
+			<h1>My Account</h1>
+			<div id='logMessaging'></div>
+			<div><a href="#" onClick="myControl.util.logBuyerOut(); return false;">Log Out</a></div>
+			
+			<section id='buyerAddresses'>
+
+			</section>
+
+			
+		</div>
+	
+	
+		<div id='ordersArticle' class='displayNone textContentArea'>
+			<h1>Order History</h1>
+			<div id='orderHistoryContainer' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+		</div>
+	
+	
+	
+		<div id='changepasswordArticle' class='displayNone textContentArea'>
+			<h1>Change Password</h1>
+			<div id='changepasswordContainer'>
+
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="myControl.ext.store_crm.util.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<fieldset>
+
+<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
+<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
+<div class='marginBottom'><input type='submit' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+
+</fieldset>
+</form>
+			</div>
+		</div>
+	
+		<div id='wishlistArticle' class='displayNone textContentArea'>
+			<h1>Your Wishlist</h1>
+			<ul id='wishlistContainer' class='prodlist loadingBG'></ul>
+		</div>
+	
+		<div id='forgetmeArticle' class='displayNone textContentArea'>
+			<h1>Your 'Forget Me' list</h1>
+			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
+			<ul id='forgetmeContainer' class='prodlist loadingBG'>
+			</ul>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -713,15 +723,16 @@ onclicks are recursive, so only add it to the parent element.
 
 
 
-<div id='searchTemplate' class='searchResultsPage'>
+<div id='searchTemplate' class='searchResultsPage clearfix'>
+
 	<div class='sideline' id='sideline'>
 	<nav id='searchNav'>
-	<ul class='listStyleNone noPadOrMargin'>
+	<ul class='listStyleNone noPadOrMargin'><!--
 		<li id='altSearchesContainer'>
 		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
 		<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
 		</li>
-	
+	-->
 		<li id='recentSearchesContainer'>
 		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
 		<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
@@ -854,9 +865,9 @@ So the cart template should contain these two elements and the extension should 
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<button class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
+		<span class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
 		<span class='ui-icon ui-icon-closethick'></span>
-		</button>
+		</span>
 		
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
@@ -866,6 +877,7 @@ So the cart template should contain these two elements and the extension should 
 		
 		<div>
 		qty: <input type='number' class='qtyInput' onChange="myControl.ext.store_cart.util.updateCartQty($(this)); myControl.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 
@@ -891,8 +903,8 @@ used on a product layout. Some product have 'children' which may represent the s
 -->
 
 <ul>
-<li id='productListTemplateChildren' class='floatLeft'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
+<li id='productListTemplateChildren' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' />
 	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
 </li>
 </ul>
@@ -1298,15 +1310,7 @@ If this gets recycled, test in order history after making changes.
 
 <div class='debug displayNone'>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.util.dump(myControl.ext.myRIA); return false;">myrRIA to Console</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.ext.store_crm.calls.buyerOrderPaymentAdd.init({'tender':'CREDIT',
-'amt':'5.00',
-'payment.cc':'4111111111111111',
-'payment.mm':'03',
-'payment.yy':'2013',
-'payment.cv':'123',
-'orderid':'2012-01-380'
-}); myControl.model.dispatchThis('immutable'); return false;">Buyer Order Macro test</button>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.util.dump(myControl); return false;">Control to Console</button>
 </div>
 
 

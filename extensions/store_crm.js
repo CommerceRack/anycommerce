@@ -79,16 +79,16 @@ var store_crm = function() {
 			},//appFAQsTopics	
 //sendMessages always are sent thru the immutable Q
 		appSendMessage : {
-			init : function(obj,tagObj)	{
+			init : function(obj,tagObj,Q)	{
 				myControl.util.dump("store_crm.calls.appSendMessage");
 				myControl.util.dump(obj);
 				obj.msgtype = "feedback"
 				obj["_cmd"] = "appSendMessage";
 				obj['_tag'] = tagObj;
-				this.dispatch(obj);
+				this.dispatch(obj,Q);
 				return 1;
 				},
-			dispatch : function(obj)	{
+			dispatch : function(obj,Q)	{
 				myControl.model.addDispatchToQ(obj,'immutable');	
 				}
 			},//appFAQsTopics

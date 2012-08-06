@@ -5,9 +5,60 @@
 Any time you are upgrading to a new version of the MVC, you should create a local backup of the site, so that you can easily restore or refer back as necessary.
 
 
+2012.28 changes
+
+* model.js
+ -> added feature to allow for loading .json (flat files) of product data. Useful for native apps.
+ -> Changed the # of cmds in a pipelined request to a var instead of a fixed #. Will later allow a debug mode to excersize more control.
+ -> immutableQ no longer aborts mutable. Now, for a Q or request to get aborted, the app must do it.
+ -> added a supported param in _tag for 'forceError'. set to 1 and the 'onError' function (if a callback is specified) will get reached instead of onSuccess (even if call is successful).
+ -> started adding some support for planned debugger tool.
+
+* controller.js
+ -> youtube renderFormat now supports a height/width param (set in data-bind) for more control over appearance. default height/width set.
+
+* checkout_nice and checkout_passive
+ -> updated so that when the form validation and order creation is taking place, a loading modal appears w/ status updates.
+
+* store_checkout.js
+ -> fixed major bug where payment info (cc) was not being sent on buyerOrderCreate (bug introduced in 201225)
+
+* store_cart.js
+ -> added new call 'cartItemsInventoryVerify' to allow a check of the cart (prior to checkout) for inventory availability.
+
+* store_product.js
+ -> fixed bug in addToCart error that cause messaging to not consistently appear.
+
+* store_prodlist.js
+ -> finished adding support for reviews in a prodlist.
+
+* store_search.js
+ -> deprecated legacy search. keyword now uses a native elastic search.
+
+* quickstart.html
+A big change to the way the MVC is loaded.  Instead of directly including all the .js files, only two are included (jquery and loadscript). There is a new appPreView ID that contains a loader, some text, and the merchants logo (which needs to be hard coded and should be a fairly small file). The html5 progress bar is updated as the inlcudes are loaded.  
+
+There is a new file, init.js which is the first file included via loadscript.  It contains all the references to ALL the other files that need to be included, including any third party scripts. 
+
+ -> productListTemplateChildren to be clickable.
+ -> price/msrp/savings updated to use new render formats (see quickstart.js update)
+
+* quickstart.js
+ -> added new function for changing body/html cursor.
+ -> added onInit and onComplete functions to change cursor to 'wait' and 'auto' respectively.
+ -> new render formats for priceRetailSavingsPercentage and priceRetailSavingsDifference
+
+* qs_styles
+ -> adjusted loadingBG classes to reference new loading/wait animated gifs
+
+
+
 2012.25 changes
 
 Added a 'snippets.html' file to the examples directory. Contains some useful snippets for elements such as search and newsletter. More will be added...
+
+model.js
+ -> Bug fix in extensions loader. Will now check to make sure all dependencies templates have loaded before executing the init callback.
 
 * controller.renderFunctions
  -> changed the way pre/post text work.  They are no longer added to the value before it is passed into the format function. Instead, they're handled afterwards. This means that bindData.cleanValue is no longer necessary (value is always 'clean' now) and has been removed. pre/post text should be used for text only (does not support html).

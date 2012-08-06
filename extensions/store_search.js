@@ -36,7 +36,8 @@ var store_search = function() {
 
 
 	calls : {
-
+/*
+THIS CALL IS DEPRECATED. use elastic.
 		searchResult : {
 			init : function(frmObj,tagObj)	{
 //				myControl.util.dump("BEGIN myControl.ext.store_search.calls.searchResult");
@@ -68,6 +69,7 @@ var store_search = function() {
 				myControl.model.addDispatchToQ(frmObj);
 				}
 			}, //searchResult
+*/			
 /*
 P is the params object. something like: 
 var P = {}
@@ -227,58 +229,6 @@ return combine(keywordsArray);
 
 			}, //getPermutationsOfArray
 			
-/*
-keyword auto-complete does not use the dispatchq. Instead, it fires it's own request.
-This was done for a few reasons, the most important being the speed needed for the response. If the response
-doesn't load very fast, it becomes pointless.
-
-In addition, none of the params typically set in tagObj are necessary because they're all fixed.
-
-// http://jqueryui.com/demos/autocomplete/#remote-jsonp
-
-*/
-		bindKeywordAutoComplete : function(formID)	{
-//			myControl.util.dump("BEGIN store_search.util.bindKeywordAutoComplete");
-			var $keywordInput = $('#'+formID+' input[name*="KEYWORDS"]');
-			var $catalogInput = $('#'+formID+' input[name*="CATALOG"]');
-
-
-$keywordInput.autocomplete({
-	source: function( request, response ) {
-		if(!$.isEmptyObject(myControl.ext.store_search.vars.ajaxRequest)){
-			myControl.ext.store_search.vars.ajaxRequest.abort(); //kill any keyword complete requests in process so the results aren't doubled-up.
-			}
-		myControl.ext.store_search.vars.ajaxRequest = $.ajax({
-			type: "GET",
-			url: myControl.vars.jqurl+"?_cmd=getKeywordAutoComplete&_zjsid="+myControl.sessionId+"&_uuid="+myControl.model.fetchUUID()+"&keywords="+$keywordInput.val()+"&catalog="+$catalogInput.val(),
-			context : this,
-			dataType:"json",
-			complete: function()	{
-				myControl.ext.store_search.vars.ajaxRequest = {}; //empty request holder.
-				},
-			success: function( data ) {
-				response( $.map( data['@result'], function( item ) {
-					return {
-						label: item[0]+" ( "+item[1]+" items )",
-						value: item[0]
-						}
-					}));
-				}
-			});
-		},
-	minLength: 2,
-	select: function( event, ui ) {
-//		myControl.util.dump("ui.item: ");
-//		myControl.util.dump(ui.item.value);
-//		$keywordInput.empty().val(ui.item ? 	"Selected: " + ui.item.label :	"Nothing selected, input was " + this.value);
-		$keywordInput.val(ui.item.value);
-		$('#'+formID).submit();
-		}
-	});
-
-
-
-				}, //bindKeywordAutoComplete
 
 /*
 
@@ -292,17 +242,18 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 */
 
 			getElasticResultsAsJQObject : function(P)	{
-				myControl.util.dump("BEGIN store_search.util.getElasticResultsAsJQObject ["+P.datapointer+"]")
+//				myControl.util.dump("BEGIN store_search.util.getElasticResultsAsJQObject ["+P.datapointer+"]")
 				var pid;//recycled shortcut to product id.
-				var $r = $(); //what is returned. a jquery object of all the results. ### eventually, this is where multipage would get handled.
-				var L = myControl.data[P.datapointer].hits.hits.length;
-				myControl.util.dump(" -> L: ");
+				var L = myControl.data[P.datapointer]['_count'];
+				var $r = $("<ul />"); //when this was a blank jquery object, it didn't work. so instead, we append all content to this imaginary list, then just return the children.
+//				myControl.util.dump(" -> parentID: "+P.parentID); //resultsProductListContainer
+//				myControl.util.dump(" -> L: "+L);
 				for(var i = 0; i < L; i += 1)	{
 					pid = myControl.data[P.datapointer].hits.hits[i]['_id'];
 //					myControl.util.dump(" -> "+i+" pid: "+pid);
 					$r.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},P.templateID,myControl.data[P.datapointer].hits.hits[i]['_source']));
 					}
-				return $r;
+				return $r.children();
 				},
 
 			handleElasticSimpleQuery : function(keywords,tagObj)	{
@@ -311,6 +262,8 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				qObj.mode = 'elastic-native';
 				qObj.size = 250;
 				qObj.query =  {"query_string" : {"query" : keywords}};
+				if(typeof tagObj != 'object')	{tagObj = {}};
+				tagObj.datapointer = "appPublicSearch|"+keywords
 				myControl.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
 				myControl.model.dispatchThis();
 				}

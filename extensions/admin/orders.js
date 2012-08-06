@@ -108,7 +108,8 @@ var admin_orders = function() {
 			onSuccess : function()	{
 //				myControl.util.dump('BEGIN myControl.ext.store_navcats.init.onSuccess ');
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
-				myControl.model.fetchNLoadTemplates('201220/extensions/admin/order_templates.html',theseTemplates);
+//				myControl.util.dump("DEBUG - template url is changed for local testing. add: ");
+				myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/order_templates.html',theseTemplates);
 //				if(!myControl.util.thisIsAnAdminSession())	{
 //					$('#globalMessaging').toggle(true).append(myControl.util.formatMessage({'message':'<strong>Uh Oh!<\/strong> This session is not an admin session and the app is trying to load an admin module (admin_orders.js).','uiClass':'error','uiIcon':'alert'}));
 //					r = false;

@@ -54,8 +54,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				myControl.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-					"edit_cart_url" : zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis",
-					"continue_shopping_url" : zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/",
+					"edit_cart_url" : zGlobals.appSettings.https_app_url+"#cart?show=cart&sessionId="+myControl.sessionId,
+					"continue_shopping_url" : zGlobals.appSettings.https_app_url+"?sessionId="+myControl.sessionId,
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'convertSessionToOrder','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -71,7 +71,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(getBuyerAddress)	{
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
-				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/cart.cgis","returnURL":zGlobals.appSettings.https_app_url+"c="+myControl.sessionId+"/checkout.cgis?SKIPPUSHSTATE=1","getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
+				myControl.model.addDispatchToQ({"_cmd":"cartPaypalSetExpressCheckout","cancelURL":zGlobals.appSettings.https_app_url+"#cart?show=cart&sessionId="+myControl.sessionId,"returnURL":zGlobals.appSettings.https_app_url+"#checkout?show=checkout&sessionId="+myControl.sessionId,"getBuyerAddress":getBuyerAddress,'_tag':tagObj},'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 
@@ -181,12 +181,11 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 // initially, was serializing the payment panel only.  Issues here with safari.
-// then, when loading .val(), field was not reliably present. 
 // cc info is saved in memory so that if payment panel is reloaded, cc# is available. so that reference is used for cc and cv.
-				payObj['payment.cc'] = myControl.ext.convertSessionToOrder.vars["payment.cc"];
-				payObj['payment.cv'] = myControl.ext.convertSessionToOrder.vars["payment.cv"];
-				payObj['payment.yy'] = myControl.ext.convertSessionToOrder.vars["payment.yy"];
-				payObj['payment.mm'] = myControl.ext.convertSessionToOrder.vars["payment.mm"];
+				payObj['payment.cc'] = $('#payment-cc').val();
+				payObj['payment.cv'] = $('#payment-cv').val();
+				payObj['payment.yy'] = $('#payment-yy').val();
+				payObj['payment.mm'] = $('#payment-mm').val();
 				payObj['_cmd'] = 'cartOrderCreate';
 				payObj['_tag'] = {"callback":callback,"extension":"convertSessionToOrder","datapointer":"cartOrderCreate"}
 				
@@ -371,7 +370,17 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 		}, //callbacks
 
 		
+//push onto this (store_checkout.checkoutCompletes.push(function(P){});
+//after checkout, these will be iterated thru and executed.
+/*
+Parameters included are as follows:
+P.orderID
+P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
+P.datapointer - pointer to cartOrderCreate
 
+note - the order object is available at myControl.data['order|'+P.orderID]
+*/
+		checkoutCompletes : [],
 
 
 ////////////////////////////////////   						utilities			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -391,69 +400,74 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 					}
 				}, //countryChange
 
+//pass in either 'bill' or 'ship' to determine if any predefined addresses for that type exist.
+//buyerAddressList data should already have been retrieved by the time this is executed.
+			buyerHasPredefinedAddresses : function(TYPE)	{
+				var r; //What is returned. TFU.  U = unknown (no TYPE)
+				if(TYPE)	{
+					if(myControl.data.buyerAddressList && !$.isEmptyObject(myControl.data.buyerAddressList['@'+TYPE]))	{r = true}
+					else	{r = false}
+					}
+				return r;
+				},
 
 //generate the list of existing addresses (for users that are logged in )
 //appends addresses to a fieldset based on TYPE (bill or ship)
-// ### UNFINISHED> TEMPLATE NOT SUPPORTED YET.
-			addressListOptions : function(TYPE,TemplateID)	{
-				var $r = $();  //used for what is returned
-				if(!TYPE || !TemplateID)	{
-					$r.text("Uh oh. an error occured. templateID and/or TYPE not set."); //!!! return as formatMessage.
-					}
-//				myControl.util.dump("BEGIN sharedCheckoutUtilities.addressListOptions ("+TYPE+")");
 
-				var $a; //a paticular address, set once within the loop. shorter that myControl.data... each reference
+			addressListOptions : function(TYPE)	{
+				myControl.util.dump("BEGIN sharedCheckoutUtilities.addressListOptions ("+TYPE+")");
 
-				var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
+				var r = "";  //used for what is returned
+				if(TYPE && this.buyerHasPredefinedAddresses(TYPE))	{
+
+var $a; //a paticular address, set once within the loop. shorter that myControl.data... each reference
+var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
 			
-				if(!TYPE) {r = false}
-				else if($.isEmptyObject(myControl.data.buyerAddressList) || $.isEmptyObject(myControl.data.buyerAddressList['@'+TYPE])) {
-					r = false
+//if an address has already been selected, highlight it.  if not, use default.
+if(myControl.util.isSet(myControl.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id']))	{
+	selAddress = myControl.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id'];								
+	}
+else	{
+	selAddress = myControl.ext.store_checkout.util.determinePreferredAddress(TYPE);
+	}
+
+var L = myControl.data.buyerAddressList['@'+TYPE].length;
+//myControl.util.dump(" -> # addresses: "+L);
+//myControl.util.dump(" -> selectedAddressID = "+selAddress);
+
+for(var i = 0; i < L; i += 1)	{
+	a = myControl.data.buyerAddressList['@'+TYPE][i];
+//	myControl.util.dump(" -> ID = "+a['_id']);
+	r += "<address class='pointer ui-state-default ";
+//if an address has already been selected, add appropriate class.
+	if(selAddress == a['_id'])	{
+//		myControl.util.dump(" -> MATCH!");
+		r += ' ui-state-active';
+		}
+//if no predefined address is selected, add approriate class to account default address
+	else if(a['_is_default'] == 1 && selAddress == false)	{
+		r += ' ui-state-active ';
+//		myControl.util.dump(" -> no address selected. using default. ");
+		}
+							
+	r += "' data-addressClass='"+TYPE+"' data-addressId='"+a['_id']+"' onClick='myControl.ext.store_checkout.util.selectPredefinedAddress(this);' id='"+TYPE+"_address_"+a['_id']+"'>";
+	r +=a[TYPE+'_firstname']+" "+a[TYPE+'_lastname']+"<br \/>";
+	r +=a[TYPE+'_address1']+"<br \/>";
+	if(a[TYPE+'_address2'])	{r +=a[TYPE+'_address2']+"<br \/>"}
+	r += a[TYPE+'_city'];
+//state, zip and country may not be populated. check so 'undef' isn't written to screen.
+	if(a[TYPE+'_state']) {r += " "+a[TYPE+'_state']+", "}
+	if(a[TYPE+'_zip'])	{r +=a[TYPE+'_zip']}
+	if(myControl.util.isSet(a[TYPE+'_country']))	{r += "<br \/>"+a[TYPE+'_country']}
+	r += "<\/address>";
+	}
+var parentID = (TYPE == 'ship') ? 'chkoutShipAddressFieldset' : 'chkoutBillAddressFieldset';
+r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); myControl.ext.store_checkout.util.removeClassFromChildAddresses(\""+parentID+"\");'>Enter new address or edit selected address<\/address>";
+					
 					}
 				else	{
-//if an address has already been selected, highlight it.  if not, use default.
-					if(myControl.util.isSet(myControl.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id']))	{
-//						myControl.util.dump(' -> address what previously selected.');
-						selAddress = myControl.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id'];								
-						}
-					else	{
-						selAddress = myControl.ext.store_checkout.util.determinePreferredAddress(TYPE);
-						}
-					var L = myControl.data.buyerAddressList['@'+TYPE].length;
-
-//					myControl.util.dump(" -> selectedAddressID = "+selAddress);
-					for(var i = 0; i < L; i += 1)	{
-						a = myControl.data.buyerAddressList['@'+TYPE][i];
-//						myControl.util.dump(" -> ID = "+a['_id']);
-						r += "<address class='pointer ui-state-default ";
-//if an address has already been selected, add appropriate class.
-						if(selAddress == a['_id'])	{
-//							myControl.util.dump(" -> MATCH!");
-							r += ' ui-state-active';
-							}
-//if no predefined address is selected, add approriate class to account default address
-						else if(a['_is_default'] == 1 && selAddress == false)	{
-							r += ' ui-state-active ';
-//							myControl.util.dump(" -> no address selected. using default. ");
-							}
-							
-						r += "' data-addressClass='"+TYPE+"' data-addressId='"+a['_id']+"' onClick='myControl.ext.store_checkout.util.selectPredefinedAddress(this);' id='"+TYPE+"_address_"+a['_id']+"'>";
-						r +=a[TYPE+'_firstname']+" "+a[TYPE+'_lastname']+"<br \/>";
-						r +=a[TYPE+'_address1']+"<br \/>";
-						if(a[TYPE+'_address2'])
-							r +=a[TYPE+'_address2']+"<br \/>";
-						r += a[TYPE+'_city'];
-//state, zip and country may not be populated. check so 'undef' isn't written to screen.
-						if(a[TYPE+'_state'])
-							r += " "+a[TYPE+'_state']+", ";
-						if(a[TYPE+'_zip'])
-							r +=a[TYPE+'_zip']
-						if(myControl.util.isSet(a[TYPE+'_country']))
-							r += "<br \/>"+a[TYPE+'_country'];					
-						r += "<\/address>";
-						}
-					r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); myControl.ext.store_checkout.util.removeClassFromChildAddresses(\""+parentDivId+"\");'>Enter new address or edit selected address<\/address>";
-					r += "<div class='clearAll'><\/div>";
+					//no predefined addresses. make sure address input is visible.
+					$("#"+TYPE+"AddressUL").toggle(true);
 					}
 				return r;
 				}, //addressListOptions
@@ -557,7 +571,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 			determineAuthentication : function(){
 				var r = 'none';
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				if(myControl.vars.cid && myControl.util.getUsernameFromCart())	{r = 'authenticated'}
+				if(myControl.data.appBuyerLogin && myControl.data.appBuyerLogin.cid)	{r = 'authenticated'}
+				else if(myControl.vars.cid && myControl.util.getUsernameFromCart())	{r = 'authenticated'}
 				else if(myControl.model.fetchData('cartItemsList') && myControl.util.isSet(myControl.data.cartItemsList.cart.cid))	{
 					r = 'authenticated';
 					myControl.vars.cid = myControl.data.cartItemsList.cart.cid;

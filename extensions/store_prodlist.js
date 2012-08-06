@@ -82,6 +82,7 @@ The advantage of saving the data in memory and local storage is lost if the data
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 //				myControl.util.dump("BEGIN myControl.ext.store_product.calls.appProductGet");
 //				myControl.util.dump(" -> PID: "+obj.pid);
+//				myControl.util.dump(" -> obj['withReviews']: "+obj['withReviews']);
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj["datapointer"] = "appProductGet|"+obj.pid; 
 
@@ -97,11 +98,14 @@ The advantage of saving the data in memory and local storage is lost if the data
 					r += 1;
 					
 					}
-				
-				if(obj['withReviews'] && myControl.model.addDispatchToQ(obj,Q))	{
-					r +=1;
+//  && myControl.model.addDispatchToQ(obj,Q) -> not sure why this was here.
+				if(obj['withReviews'])	{
+//callback will b on appProductGet, but make sure this request is first so that when callback is executed, this is already in memory.
+					r += myControl.ext.store_prodlist.calls.appReviewsList.init(obj.pid,{},Q);
 					}
-//basing off of 'r', we may not need the product data, but do need reviews. making a request anyway so get both.
+					
+//To ensure accurate data, if inventory or variations are desired, data is requested.
+//r will be greater than zero if product record not already in local or memory
 				if(r == 0) 	{
 					myControl.util.handleCallback(tagObj)
 					}
@@ -112,8 +116,6 @@ The advantage of saving the data in memory and local storage is lost if the data
 				return r;
 				},
 			dispatch : function(obj,tagObj,Q)	{
-//callback will b on appProductGet, but make sure this request is first so that when callback is executed, this is already in memory.
-				myControl.ext.store_prodlist.calls.appReviewsList.init(obj.pid,{},Q); 
 				obj["_cmd"] = "appProductGet";
 				obj["_tag"] = tagObj;
 				myControl.model.addDispatchToQ(obj,Q);
@@ -176,12 +178,19 @@ The advantage of saving the data in memory and local storage is lost if the data
 				myControl.util.dump('BEGIN myControl.ext.store_prodlist.callbacks.init.onError');
 				}
 			},
+
 		translateTemplate : {
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump("BEGIN myControl.ext.store_prodlist.callbacks.translateTemplate.onSuccess");
 //				myControl.util.dump(tagObj);
 //				myControl.util.dump(" -> tagObj.datapointer = "+tagObj.datapointer);
 //				myControl.util.dump(" -> tagObj.parentID = "+tagObj.parentID);
+				var tmp = myControl.data[tagObj.datapointer];
+				var pid = myControl.data[tagObj.datapointer].pid;
+				if(typeof myControl.data['appReviewsList|'+pid] == 'object')	{
+					tmp['reviews'] = myControl.ext.store_prodlist.util.summarizeReviews(pid); //generates a summary object (total, average)
+					tmp['reviews']['@reviews'] = myControl.data['appReviewsList|'+pid]['@reviews']
+					}
 				myControl.renderFunctions.translateTemplate(myControl.data[tagObj.datapointer],tagObj.parentID);
 				},
 			onError : function(responseData,uuid)	{
@@ -368,12 +377,14 @@ if no parentID is set, then this function gets the data into memory for later us
 
 */
 			getProductDataForList : function(csv,parentID,Q)	{
-				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.getProductDataForList");
+//				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.getProductDataForList ["+parentID+"]");
 //				myControl.util.dump("csv = "+csv);
 
 				if(parentID)	{
-					myControl.util.dump(" -> parentID: "+parentID);
+//					myControl.util.dump(" -> parentID: "+parentID);
+//very soon, we'll be throwing placeholders w/ loading gfx onto the screen. Clean up the big loading gfx cuz it looks silly when both are shown.
 					var $parent = $('#'+parentID).removeClass('loadingBG'); //do not empty here. may contain MP controls by this point.
+					$('#mainContentArea').removeClass('loadingBG');
 					}
 				if(!Q){Q = 'mutable'}
 				var numRequests = 0; //# of product in local/memory. not strictly necessary, but used for testing.
@@ -488,7 +499,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 //					myControl.util.dump(csvArray);
 					var L = csvArray.length;
 //					myControl.util.dump(" -> setProdlistVars for "+paramObj.parentID+"(L = "+L+")");
-					csvArray = myControl.ext.store_prodlist.util.filterProdlist(csvArray);
+//					csvArray = myControl.ext.store_prodlist.util.filterProdlist(csvArray);
 					var itemsRemoved = L - csvArray.length;
 
 //if there are no product in the list. stop here.
@@ -506,23 +517,27 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 						if(paramObj.items_per_page)	{itemsPerPage = paramObj.items_per_page}
 						else if	(myControl.ext.store_prodlist.vars[paramObj.parentID] && myControl.ext.store_prodlist.vars[paramObj.parentID].items_per_page){itemsPerPage = myControl.ext.store_prodlist.vars[paramObj.parentID].items_per_page}
 						else {itemsPerPage = L}
+						
 //allows for just the mp controls to be turned off, but will leave the rest of the header (sorting, summary, etc) enabled.
+// NOTE - initially the check below also checked against the object in memory. this caused issues tho cuz on cat pages it would use the last viewed cat pages data, which
+// sometimes caused the controls to be hidden when they were needed.
+//  || (myControl.ext.store_prodlist.vars[paramObj.parentID] && myControl.ext.store_prodlist.vars[paramObj.parentID].hide_multipage_controls)
 						itemsPerPage = itemsPerPage * 1; //make sure this is treated as an int.
-						if(itemsPerPage >= L || paramObj.hide_multipage_controls || (myControl.ext.store_prodlist.vars[paramObj.parentID] && myControl.ext.store_prodlist.vars[paramObj.parentID].hide_multipage_controls))	{
+						if(itemsPerPage >= L || paramObj.hide_multipage_controls)	{
 							hideMultipageControls = true; 
 							}
 						
 						var page = paramObj.page_in_focus ? paramObj.page_in_focus*1 : 1; //page start at 1. really, the only place we want page 1 to be 0 is when generating startpoint. so for sanity's sake, page 1 = 1.
 						var startpoint = (page-1)*itemsPerPage; //subtract 1 from page so that we start at the zero point in the array.
 						var endpoint = startpoint + itemsPerPage; //last spot in csv for this page.
-						var hideMultipage = myControl.ext.store_prodlist.vars[paramObj.parentID].hide_multipage;
+
 						endpoint = endpoint > L ? L : endpoint; //endpoint shouldn't be greater than the total number of product
 // for now, this is effectively a whitelist.  probably should 'extend' instead of saving over. ###	
 						myControl.ext.store_prodlist.vars[paramObj.parentID] = {
 							"csv": csvArray, //original 'full' list of skus as an object.
 							"templateID": paramObj.templateID,
 							"parentID":paramObj.parentID,
-							"hide_multipage":hideMultipage,
+							"hide_multipage":paramObj.hide_multipage ? paramObj.hide_multipage : false,
 							"hide_multipage_controls":hideMultipageControls,
 							"withInventory": paramObj.withInventory ? paramObj.withInventory : 0,
 							"withVariations":paramObj.withVariations ? paramObj.withVariations : 0,
@@ -560,7 +575,7 @@ Params 'can' include a csv or the csv can be passed in separately. Either is fin
 			buildProductList : function(paramObj)	{
 				var r = 0;
 //				myControl.util.dump("BEGIN myControl.ext.store_prodlist.util.buildProductList");
-//				myControl.util.dump(paramObj.csv);
+//				myControl.util.dump(" -> store_prodlist.util.buildProductList paramObj: "); myControl.util.dump(paramObj);
 				if(myControl.ext.store_prodlist.util.setProdlistVars(paramObj))	{
 //					myControl.util.dump(" -> required params present. PL object now in memory. show PL.");
 					r = myControl.ext.store_prodlist.util.handleProductList(paramObj.parentID);
@@ -648,8 +663,27 @@ if(myControl.ext.store_prodlist.vars[parentID].hide_multipage_controls == true)	
 	}
 				
 				return $output;
-				} //showMPControls
-			
+				}, //showMPControls
+			//will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
+//data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
+//NOTE - this function is also in store_product. probably ought to merge prodlist and product, as they're sharing more and more.
+			summarizeReviews : function(pid)	{
+//				myControl.util.dump("BEGIN store_product.util.summarizeReviews");
+				var L = 0;
+				var sum = 0;
+				var avg = 0;
+				if(typeof myControl.data['appReviewsList|'+pid] == 'undefined' || $.isEmptyObject(myControl.data['appReviewsList|'+pid]['@reviews']))	{
+//item has no reviews or for whatver reason, data isn't available. 
+					}
+				else	{
+					L = myControl.data['appReviewsList|'+pid]['@reviews'].length;
+					for(i = 0; i < L; i += 1)	{
+						sum += Number(myControl.data['appReviewsList|'+pid]['@reviews'][i].RATING);
+						}
+					avg = Math.round(sum/L);
+					}
+				return {"average":avg,"total":L}
+				}
 			} //util
 
 		

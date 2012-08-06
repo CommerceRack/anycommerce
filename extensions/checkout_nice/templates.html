@@ -43,7 +43,7 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 	<legend class='ui-widget-header ui-corner-all'>Order Contents</legend>
 
 
-<ul id='checkoutStuffList' data-bind="var: cart(stuff); format:stuffList; loadsTemplate:productListTemplateOrderContents;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>	
+<ul id='checkoutStuffList' data-bind="var: cart(stuff); format:stuffList; loadsTemplate:productListTemplateCheckout;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>	
 
 <section id='checkoutTemplateCostSummary' class='cartSummary'>
 
@@ -51,13 +51,13 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 
 	<div data-bind='var: cart(data.tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
-	<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+	<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_checkout;'></div>
 
 	<div data-bind='var: cart(data.order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 
 	<div data-bind='var: cart(chkout.giftcard_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
 
-	<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_checkout;'></div>
 
 </section>
 
@@ -99,7 +99,7 @@ used in checkout for 'order total' panel. this is the line-item spec for a cart 
 the defaultVar on prodName is for promotions, which have a 'description' attribute
 -->
 <ul>
-<li id='productListTemplateOrderContents' class='cartTotalLineItem'>
+<li id='productListTemplateCheckout' class='cartTotalLineItem'>
 	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
 	<div class='floatLeft '>
 		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
@@ -334,8 +334,8 @@ do NOT change the input name or id or checkout will likely break.
 
 
 <div id='cvvcidHelp' class='displayNone' title='Where to find your CVV/CID and why we ask for it'>
-	<img src='sec_code.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
-	<img src='sec_code_amex.gif' alt='AMEX card security code' width='238' height='150' />
+	<img src='sec_code-159x100.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
+	<img src='sec_code_amex-159x100.gif' alt='AMEX card security code' width='238' height='150' />
 	<p>For higher security and more efficient processing of your payment, you must provide a card security code to make this purchase. For Visa, MasterCard and Discover the security code is the last section of numbers in the signature area on the back of the card. For American Express the security code is the 4-digit number found in small print next to your account number on the front, usually above it on the right.</p>
 </div>
 

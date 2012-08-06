@@ -46,7 +46,7 @@ var store_product = function() {
 //if no object is passed in, one must be created so that adding datapointer to a non existent object doesn't cause a js error
 // Override datapointer, if set.
 // The advantage of saving the data in memory and local storage is lost if the datapointer isn't consistent, especially for product data.
-
+				pid = pid.toUpperCase();
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj["datapointer"] = "appProductGet|"+pid; 
 
@@ -57,7 +57,7 @@ var store_product = function() {
 					this.dispatch(pid,tagObj,Q)
 					}
 				else if(typeof myControl.data[tagObj.datapointer]['@inventory'] == 'undefined' || typeof myControl.data[tagObj.datapointer]['@variations'] == 'undefined')	{
-//					myControl.util.dump(" -> either inventory or variations not in memory or local. get everything.");
+					myControl.util.dump(" -> either inventory or variations not in memory or local. get everything.");
 //check to make sure inventory and pog info is available.
 					r += 1;
 					this.dispatch(pid,tagObj,Q)
@@ -112,6 +112,7 @@ var store_product = function() {
 				var r = 0; //will return a 1 or a 0 based on whether the item is in local storage or not, respectively.
 //myControl.util.dump("appReviewsList tagObj:");
 //myControl.util.dump(tagObj);
+				pid = pid.toUpperCase();
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
 				tagObj["datapointer"] = "appReviewsList|"+pid;
 
@@ -158,14 +159,14 @@ var store_product = function() {
 		itemAddedToCart :	{
 			onSuccess : function(tagObj)	{
 //				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.itemAddedToCart.onSuccess');
-				$('.atcButton').removeAttr('disabled'); //makes atc button clickable again.
+				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //makes atc button clickable again.
 				$('#atcMessaging_'+myControl.data[tagObj.datapointer].product1).append(myControl.util.formatMessage({'message':'Item(s) added to the cart!','uiIcon':'check'}))
 				},
 			onError : function(responseData,uuid)	{
-				myControl.util.dump('BEGIN myControl.ext.store_product.callbacks.itemAddedToCart.onError');
-				myControl.util.dump(responseData);
-				$('.atcButton').removeAttr('disabled'); //remove the disabling so users can push the button again, if need be.
-				$('#atcMessaging_'+myControl.data[responseData['_rtag'].datapointer].product1).append(myControl.util.getResponseErrors(responseData))
+				myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.itemAddedToCart.onError');
+//				myControl.util.dump(responseData);
+				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //remove the disabling so users can push the button again, if need be.
+				$('#atcMessaging_'+responseData.product1).append(myControl.util.getResponseErrors(responseData))
 				}
 			} //itemAddedToCart
 
@@ -260,7 +261,7 @@ addToCart : function (pid){
 		else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
 	//		alert(thisSTID);
 			if(!$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory'][thisSTID]) && myControl.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
-				$('#JSONpogErrors_'+pid).append("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>");
+				$('#JSONpogErrors_'+pid).append(myControl.util.formatMessage("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>"));
 				valid = false;
 				}
 	
@@ -418,12 +419,19 @@ $display.appendTo($tag);
 //				myControl.util.dump("BEGIN store_product.renderFunctions.addToCartButton");
 //				myControl.util.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
+				var pData = myControl.data['appProductGet|'+pid];
 // add _pid to end of atc button to make sure it has a unique id.
 // add a success message div to be output before the button so that messaging can be added to it.
 // atcButton class is added as well, so that the addToCart call can disable and re-enable the buttons.
 				$tag.attr('id',$tag.attr('id')+'_'+pid).addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(myControl.ext.store_product.util.productIsPurchaseable(pid))	{
 //product is purchaseable. make sure button is visible and enabled.
+					if(pData && pData['%attribs']['is:preorder'])	{
+						$tag.addClass('preorderButton').prop('value', 'Preorder');
+						}
+					else	{
+						$tag.addClass('addToCartButton');
+						}
 					$tag.show().removeClass('displayNone').removeAttr('disabled');
 					}
 				else	{
@@ -502,7 +510,7 @@ it has no inventory AND inventory matters to merchant
 //otherwise, will return the items inventory or, if variations are present, the sum of all inventoryable variations.
 //basically, a simple check to see if the item has purchaseable inventory.
 			getProductInventory : function(pid)	{
-//				myControl.util.dump("BEGIN store_product.util.getProductInventory");
+//				myControl.util.dump("BEGIN store_product.util.getProductInventory ["+pid+"]");
 				var inv = 0;
 //if variations are NOT present, inventory count is readily available.
 				if($.isEmptyObject(myControl.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(myControl.data['appProductGet|'+pid]['@inventory']))	{
@@ -540,7 +548,7 @@ NOTES
 					P.width = P.width ? P.width : 600;
 					P.height = P.height ? P.height : 660;
 					
-					var $parent = this.handleParentForModal(parentID,myControl.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
+					var $parent = this.handleParentForModal(parentID)
 
 					if(!P.parentID)	{$parent.empty()} //only empty the parent if no parent was passed in. 
 					if(P.templateID)	{
@@ -550,7 +558,8 @@ NOTES
 					else	{
 						$parent.append(myControl.util.makeImage({"class":"imageViewerSoloImage","h":"550","w":"550","bg":"ffffff","name":myControl.data['appProductGet|'+P.pid]['%attribs'][imageAttr],"tag":1}));
 						}	
-					$parent.dialog({modal: true,width:P.width ,height:P.height });
+					$parent.dialog({modal: true,width:P.width ,height:P.height});
+					$parent.dialog('option', 'title', myControl.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']); //proper way to set title. otherwise doesn't update after first dialog is opened.
 					$parent.dialog('open'); //here to solve an issue where the modal would only open once.
 					}
 				else	{
@@ -611,15 +620,14 @@ NOTES
 //used in prodDataInModal and imageInModal
 //if a parentid is not passed in, a new id is created and added to the dom.
 
-			handleParentForModal : function(parentID,title)	{
+			handleParentForModal : function(parentID)	{
+				if(!parentID)	{
+					parentID = 'placeholder_'+Math.floor(Math.random()*10001)
+					}
 				var $parent = $('#'+parentID);
 //if the parent doesn't already exist, add it to the dom.
 				if($parent.length == 0)	{
-					$parent = $("<div \/>").attr({"id":parentID,"title":title}).appendTo(document.body);
-					}
-				else	{
-//					myControl.util.dump("GOT HERE");
-					$parent.attr('title',title);
+					$parent = $("<div \/>").attr({"id":parentID}).appendTo(document.body);
 					}
 				return $parent;
 				}, //handleParentForModal
@@ -646,6 +654,7 @@ NOTES
 				},
 //will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
 //data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
+//NOTE - this function is also in store_prodlist. probably ought to merge prodlist and product, as they're sharing more and more.
 			summarizeReviews : function(pid)	{
 //				myControl.util.dump("BEGIN store_product.util.summarizeReviews");
 				var L = 0;

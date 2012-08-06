@@ -2,73 +2,87 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Bamboo tiki bar: Sip Your Mai-Tai Hawaiian Style</title>
+<title>Sample Carousel</title>
 
-<meta name="keywords" content="tiki, tiki totem, tiki mask, tikis, tikimaster blog, koa, nautical decor, hawaiian decor, authentic hawaiian tikis, polynesian" />
+
+
 
 <!-- profile specific settings -->
-<script type="text/javascript" src="http://www.tikimaster.com/jquery/config.js"></script><!-- the domain here needs to be set by the blog user. -->
+<script type="text/javascript" src="http://www.toynk.com/jquery/config.js"></script><!-- the domain here needs to be set by the blog user. -->
 
 
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="../../../201220/examples/carousel-ad/styles.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="../../examples/carousel-ad/styles.css" />
 
 
 <!-- jquery and jquery ui -->
-<script type="text/javascript" src="../../../201220/jquery-1.7.1.min.js"></script>
-<script type="text/javascript" src="../../../201220/jqueryui-1.7.2.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
 
 
 <!-- zoovy mvc -->
 <script type="text/javascript" src="../../model.js"></script>
 <script type="text/javascript" src="../../controller.js"></script>
-<script type="text/javascript" src="../../json2.js"></script>
-<script type="text/javascript" src="../../variations.js"></script>
-<script type="text/javascript" src="../../wiki.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jcarousel-0.2.7/jquery.jcarousel.min.js"></script>
+<script type="text/javascript" src="../../includes.js"></script>
+<script type="text/javascript" src="jquery.jcarousel.min-0.2.7.js"></script>
 
 
+<!--
+
+!!! IMPORTANT !!!
+
+The files below have a full path listed because browsers won't allow an ajax file to be loaded from a relative path when running locally.
+once you deploy this app, change the filename="http://... below to a relative path or the full path for the local server.
+the static path below will stop working 1 year after the deployment data (ex: 201225 will expire in week 25 of 2013).
+
+-->
 <script type="text/javascript">
 var myControl;
 var myCreole;
 var myExtensions = [
-	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_prodlist.js"},
-	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_search.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_cart.js"},
-	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201220/extensions/store_crm.js"},
+	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_prodlist.js"},
+	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_search.js"},
+	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_product.js"},
+	{"namespace":"store_cart","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_cart.js"},
+	{"namespace":"store_crm","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_crm.js"},
 	{"namespace":"myRIA","filename":"carousel-ad.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
 	];
 var keywords4Search
 $(function() {
-	keywords4Search = $('meta[name=keywords]').attr("content").replace(/[^a-z0-9\s]/gi, ' ');	//get meta keywords for search. could be hard coded or loaded from someplace else.
-//	keywords4Search = $('h2:first').text().replace(/[^a-z0-9\s]/gi, ' ');	//get meta keywords for search. could be hard coded or loaded from someplace else.
 //NOTE - special characters need to be stripped from elastic searches
 	myControl = new zController({
-		"release":"20120605105000" //increment this with each change. should solve caching issues.
+		"release":"20120712072100" //increment this with each change. should solve caching issues.
 		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
 	myCreole = new Parse.Simple.Creole();
-	myControl.util.dump(" -> KEYWORDS: "+keywords4Search);
 	});
+
+function myAppIsLoaded()	{
+	myControl.util.dump("BEGIN myAppIsLoaded.");
+	myControl.ext.myRIA.action.showCarousel({"parentID":"prodlistCarousel","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_PREORDER"}}}});
+	myControl.ext.myRIA.action.showCarousel({"parentID":"prodlistCarousel2","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}});
+	}
 
 </script>
 
-<link rel="stylesheet" type="text/css" href="../../../201220/examples/carousel-ad/%PROJECT_URL%/blog_ria_styles-20120424.css" />
 
 </head>
 <body>
 
 
-
-<h2>Bamboo tiki bar: Sip Your Mai-Tai Hawaiian Style! _456</h2>
-
-<div id="prodlistCarouselContainer" class='ui-widget'>
+<div class='ui-widget prodlistCarouselContainer'>
 	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='myControl.ext.myRIA.util.showCart();'>Checkout Now</div>
 	<ul id="prodlistCarousel" class="jcarousel-skin-proximus"></ul>
 </div>
 
 
-<h2>Secondary Header</h2>
+
+
+<div class='ui-widget prodlistCarouselContainer'>
+	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='myControl.ext.myRIA.util.showCart();'>Checkout Now</div>
+	<ul id="prodlistCarousel2" class="jcarousel-skin-proximus"></ul>
+</div>
+
+
 
 
 
@@ -84,7 +98,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplate' class='loadingBG fourColListItem fourColProdListItem' >
 	<div onClick="myControl.ext.myRIA.util.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='../../../201220/examples/carousel-ad/%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:fff1d3;' width='210' height='160' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='250' height='160' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
@@ -94,7 +108,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id); return false;">
 		<input type="hidden" data-bind='var: product(pid); format:atcFixedQuantity; extension:store_product;' name="quantity" value="1">
-		<div class='atcSuccessMessage' data-bind='var:product(pid);format:assignAttribute; attribute:id; pretext:atcMessaging_;'></div>
+		<div class='atcSuccessMessage' data-bind='var:product(pid);format:assignAttribute; attribute:id; valuePretext:atcMessaging_;'></div>
 		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 			<button data-bind='var: product(pogs); format:addToCartButton; extension:myRIA;' class='ui-button-text ui-button ui-state-active ui-corner-all' id='addToCartBtn'>Add To Cart</button>
 		</div>

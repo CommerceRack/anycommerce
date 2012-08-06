@@ -39,7 +39,7 @@ jQuery.extend(zController.prototype, {
 	initialize: function(P,E) {
 		myControl = this;
 		myControl.model = zoovyModel(); // will return model as object. so references are myControl.model.dispatchThis et all.
-
+		ieBlows = myControl.model.ieBlows; //global reference to JSONP callback function. a global is used to keep the url as short as possible for thejsonp req.
 		myControl.vars = {};
 		myControl.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
 		myControl.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
@@ -74,7 +74,7 @@ jQuery.extend(zController.prototype, {
 		
 /* some diagnostic reporting info */
 		myControl.util.dump(' -> v: '+myControl.model.version+'.'+myControl.vars.release);
-		myControl.util.dump(' -> myControl.vars.passInDispatchV: '+myControl.vars.passInDispatchV)
+//		myControl.util.dump(' -> myControl.vars.passInDispatchV: '+myControl.vars.passInDispatchV)
 		
 /*
 myControl.templates holds a copy of each of the templates declared in an extension but defined in the view.
@@ -94,8 +94,10 @@ copying the template into memory was done for two reasons:
 
 		myControl.ajax = {}; //holds ajax related vars.
 		myControl.ajax.dataType = myControl.model.whatAjaxDataType2Use();
+//		myControl.util.dump("HEY JT - you have hard coded datatype to JSONP. don't forget to change this back.");
 		myControl.ajax.overrideAttempts = 0; //incremented when an override occurs. allows for a cease after X attempts.
-		myControl.ajax.lastDispatch = null; //incremented when an override occurs. allows for a cease after X attempts.
+		myControl.ajax.lastDispatch = null; //timestamp.
+		myControl.ajax.numRequestsPerPipe = 50;
 		myControl.ajax.requests = {"mutable":{},"immutable":{},"passive":{}}; //'holds' each ajax request. completed requests are removed.
 		myControl.sessionId = false;
 /*
@@ -119,6 +121,11 @@ Exception - the controller is used for admin sessions too. if an admin session i
 		else if(myControl.util.isSet(myControl.util.getParameterByName('sessionId')))	{
 			myControl.calls.appCartExists.init(myControl.util.getParameterByName('sessionId'),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			myControl.model.dispatchThis('immutable');
+			}
+//check localStorage
+		else if(myControl.model.fetchSessionId())	{
+			myControl.calls.appCartExists.init(myControl.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			myControl.model.dispatchThis('immutable');			
 			}
 		else	{
 			myControl.calls.getValidSessionID.init('handleNewSession');
@@ -194,8 +201,9 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 
 			appSessionStart : {
 				 init : function() {
-					$('#loginFormContainer .button').attr('disabled','disabled').addClass('ui-state-disabled');
+					$('#loginFormContainer button').attr('disabled','disabled').addClass('ui-state-disabled');
 					$('#loginFormContainer .zMessage').empty().remove(); //clear any existing error messages.
+					$('#userLoginButton .loadingPlaceholder').html("<img src='//static.zoovy.com/graphics/general/loading_orange_arrows-16x16.gif' width='16' height='16' />");
 					myControl.storageFunctions.writeLocal('zuser',$('#loginFormLogin').val()); //save username to local storage so we can pre-populate.
 					this.dispatch();
 					return 1;
@@ -283,17 +291,18 @@ myControl.model.addDispatchToQ({
 				}
 			}, //canIUse
 
-//always uses immutable Q
+//default immutable Q
 //formerly setSessionVars
 		cartSet : {
-			init : function(obj,tagObj)	{
-				this.dispatch(obj,tagObj);
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
 				return 1;
 				},
-			dispatch : function(obj,tagObj)	{
+			dispatch : function(obj,tagObj,Q)	{
+				if(!Q)	{Q = 'immutable'}
 				obj["_cmd"] = "cartSet";
 				if(tagObj)	{obj["_tag"] = tagObj;}
-				myControl.model.addDispatchToQ(obj,'immutable');
+				myControl.model.addDispatchToQ(obj,Q);
 				}
 			}, //cartSet
 
@@ -372,12 +381,16 @@ myControl.model.addDispatchToQ({
 				myControl.util.dump("session ID from cookie (with timeout) "+myControl.storageFunctions.readCookie('zjsid'));
 //was having issues with the cookie setting/redir. added a short timeout so that the cookie/browser can catch up to our blazing speed.
 //				alert(myControl.sessionId);
-				setTimeout("window.location = 'https://www.zoovy.com/biz/'",2000);
+				setTimeout("window.location = '"+myControl.vars.secureURL+"/biz/?_zjsid="+myControl.sessionId+"'",2000);
 				},
 			onError : function(responseData)	{
 				myControl.util.dump('BEGIN myControl.callbacks.handlePasswordResponse.onError');
 //				myControl.util.dump(d);
 				$('#loginFormContainer').prepend(myControl.util.getResponseErrors(responseData)).toggle(true);
+				$('#loginFormContainer button').removeAttr('disabled').removeClass('ui-state-disabled');
+				$('#userLoginButton .loadingPlaceholder').empty();
+				
+				
 				}
 			},//sendEncryptedPassword
 
@@ -399,13 +412,14 @@ myControl.model.addDispatchToQ({
 //myControl.sessionID is already set by this point. need to reset it onError.
 		handleTrySession : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump('BEGIN myControl.callbacks.handleTrySession.onSuccess');
+				myControl.util.dump('BEGIN myControl.callbacks.handleTrySession.onSuccess');
 				if(myControl.data.appCartExists.exists == 1)	{
 //					myControl.util.dump(' -> valid session id.  Proceed.');
 					}
 				else	{
-//					myControl.util.dump(' -> UH OH! invalid session ID. Generate a new session. '); //this is happening, but where? !!! look in to this. 
-//					$('#globalMessaging').append(myControl.util.formatMessage("It appears the cart you were using has expired. We will go ahead and build you a new one. You should be able to continue as normal.")).toggle(true);
+					myControl.util.dump(' -> UH OH! invalid session ID. Generate a new session. ');
+					myControl.calls.appCartCreate.init('handleNewSession');
+					myControl.model.dispatchThis('immutable');
 					}
 				},
 			onError : function(responseData)	{
@@ -538,8 +552,15 @@ myControl.util.handleCallback(tagObj);
 				};
 			return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
 			},
-
-		
+//when sending the user into a waiting pattern, pass true.  This changes the cursor into the browser 'waiting' state
+		handleWait : function (tfu){
+			if(tfu == true)	{
+				$('body').css({'cursor':'wait'})
+				}
+			else	{
+				$('body').css({'cursor':auto})
+				}
+			},
 			
 //## allow for targetID to be passed in.
 		logBuyerOut : function()	{
@@ -577,7 +598,7 @@ sometimes, globalMessaging may be turned off, so show() is set.
 loadingBG is a class set on templates that is turned off in transmogrify/translateTemplate.  need to make sure that is also removed.
 */
 		handleErrors : function(d,uuid)	{
-			myControl.util.dump("BEGIN control.util.handleErrors for uuid: "+uuid);
+//			myControl.util.dump("BEGIN control.util.handleErrors for uuid: "+uuid);
 			var $target;
 //			myControl.util.dump(d);
 			if(!d || (d && !d['_rtag']))	{
@@ -586,10 +607,18 @@ loadingBG is a class set on templates that is turned off in transmogrify/transla
 				d['_rtag'] = myControl.q[DQ][uuid]['_tag'];
 				}
 //			myControl.util.dump(d['_rtag']);
-			if(typeof d['_rtag'] == 'object' && d['_rtag'].targetID && $('#'+d['_rtag'].targetID).length)	{$target = $('#'+d['_rtag'].targetID)}
-			else if(typeof d['_rtag'] == 'object' && d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID)}
+			if(typeof d['_rtag'] == 'object' && d['_rtag'].parentID && $('#'+d['_rtag'].parentID).length)	{$target = $('#'+d['_rtag'].parentID); myControl.util.dump(" -> using parentID to display error message.");}
+			else if(typeof d['_rtag'] == 'object' && d['_rtag'].targetID && $('#'+d['_rtag'].targetID).length)	{$target = $('#'+d['_rtag'].targetID)}
 			else if	( $('#globalMessaging').length)	{$target = $('#globalMessaging')}
-			else	{$target = $("<div \/>").dialog({modal:true,width:500,height:500}).appendTo('body');}
+			else if	( $('#globalErrorMessaging').length)	{
+				$target = $('#globalErrorMessaging')
+				if(!$target.dialog( "isOpen" ))	{$target.dialog('open');}
+				}
+			else	{
+				$target = $("<div \/>").attr({'id':'globalErrorMessaging','title':'Warning'}).appendTo('body');
+				$target.dialog({width:500,height:500,autoOpen:false})
+				$target.dialog('open');
+				} //NO modal. could nuke existing modal.
 			
 			$target.removeClass('loadingBG').show().append(this.getResponseErrors(d));
 			},
@@ -1237,8 +1266,11 @@ later, it will handle other third party plugins as well.
 				return obj;
 				},
 // This function is in the controller so that it can be kept fairly global. It's used in checkout, store_crm (buyer admin) and will likely be used in admin (orders) at some point.
+// ### NOTE! SANITY ! WHATEVER - myControl.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the myControl.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
+
 			getSupplementalPaymentInputs : function(paymentID,data)	{
 //				myControl.util.dump("BEGIN control.util.getSupplementalPaymentInputs ["+paymentID+"]");
+//				myControl.util.dump(" -> data:"); myControl.util.dump(data);
 				var $o; //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
 				$o = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental");
 				var safeid = ''; //used in echeck loop. recycled in loop.
@@ -1248,36 +1280,36 @@ later, it will handle other third party plugins as well.
 	//expiration is less of a concern
 					case 'CREDIT':
 						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment.cc' id='payment-cc' class=' creditCard' value='";
-						if(data['payment.cc']){o += data['payment.cc']}
+						if(data['payment.cc']){tmp += data['payment.cc']}
 						tmp += "' onKeyPress='return myControl.util.numbersOnly(event);' /><\/li>";
 						
-						tmp += "<li><label>Expiration<\/label><select name='payment.mm' id='payment-mm' class='creditCardMonthExp' onChange='data[\"payment.mm\"] = this.value;' required='required'><option><\/option>";
-						tmp += myControl.util.getCCExpMonths(myControl.data.cartItemsList.cart['payment.mm']);
+						tmp += "<li><label>Expiration<\/label><select name='payment.mm' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += myControl.util.getCCExpMonths(data['payment.mm']);
 						tmp += "<\/select>";
-						tmp += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+myControl.util.getCCExpYears(myControl.data.cartItemsList.cart['payment.yy'])+"<\/select><\/li>";
+						tmp += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+myControl.util.getCCExpYears(data['payment.yy'])+"<\/select><\/li>";
 						
 						tmp += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return myControl.util.numbersOnly(event);' value='";
-						if(data['payment.cv']){o += data['payment.cv']}
+						if(data['payment.cv']){tmp += data['payment.cv']}
 						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
 						break;
 	
 					case 'PO':
 						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment.po' id='payment-po' class=' purchaseOrder' onChange='myControl.calls.cartSet.init({\"payment.po\":this.value});' value='";
 						if(myControl.data.cartItemsList.cart['payment.po'])
-								o += myControl.data.cartItemsList.cart['payment.po'];
+								tmp += myControl.data.cartItemsList.cart['payment.po'];
 						tmp += "' /><\/li>";
 						break;
 	
 					case 'ECHECK':
-						var echeckFields = {"payment.ea" : "Account #","payment.er" : "Routing #","payment.en" : "Account Name",			"payment.eb" : "Bank Name","payment.es" : "Bank State","payment.ei" : "Check #"}
+						var echeckFields = {"payment.ea" : "Account #","payment.er" : "Routing #","payment.en" : "Account Name","payment.eb" : "Bank Name","payment.es" : "Bank State","payment.ei" : "Check #"}
 						for(var key in echeckFields) {
 							safeid = myControl.util.makeSafeHTMLId(key);
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
 //The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input required='required' type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck' onChange='myControl.calls.cartSet.init({\""+key+"\":this.value});' value='";
+							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input required='required' type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck'  value='";
 //if the value for this field is set in the data object (cart or invoice), set it here.
-							if(data[key])
-								tmp += data[key];
+							if(myControl.ext.convertSessionToOrder.vars[key])
+								tmp += myControl.ext.convertSessionToOrder.vars[key];
 							tmp += "' /><\/li>";
 							}
 						break;
@@ -1290,6 +1322,7 @@ later, it will handle other third party plugins as well.
 //				myControl.util.dump(" -> $o:");
 //				myControl.util.dump($o);
 			},
+
 
 
 //used in checkout to populate username: so either login or bill.email will work.
@@ -1379,8 +1412,12 @@ Then we'll be in a better place to use data() instead of attr().
 				}
 
 			if(!templateID || typeof data != 'object' || !myControl.templates[templateID])	{
-				myControl.util.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof myControl.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
-				if(typeof eleAttr == 'string'){myControl.util.dump(" -> ID: "+eleAttr)} else {myControl.util.dump(" -> ID: "+eleAttr.id)}
+//product lists get rendered twice, the first time empty and always throw this error, which clutters up the console, so they're suppressed.
+				if(templateID && templateID.indexOf('productListTemplate') == -1)	{
+					myControl.util.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof myControl.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
+					if(typeof eleAttr == 'string'){myControl.util.dump(" -> ID: "+eleAttr)} else {myControl.util.dump(" -> ID: "+eleAttr.id)}
+
+					}
 //				myControl.util.dump(eleAttr);
 				}
 			else	{
@@ -1502,7 +1539,7 @@ $r.find('[data-bind]').each(function()	{
 		if(myControl.util.isSet(bindData.format)){
 //the renderFunction could be in 1 of 2 places, so it's saved to a local var so it can be used as a condition before executing itself.
 			var renderFunction; //saves a copy of the renderFunction to a local var.
-			if(bindData.extension && typeof myControl.ext[bindData.extension].renderFormats[bindData.format] == 'function')	{
+			if(bindData.extension && myControl.ext[bindData.extension] && typeof myControl.ext[bindData.extension].renderFormats[bindData.format] == 'function')	{
 				renderFunction = myControl.ext[bindData.extension].renderFormats[bindData.format];
 				}
 			else if(typeof myControl.renderFormats[bindData.format] == 'function'){
@@ -1658,7 +1695,7 @@ the first two cases below are to handle instances of this.
 						}
 					}
 // 'customer' namespace is used in orders and customer manager (appCustomerGet).
-				else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object')	{
+				else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object' && !$.isEmptyObject(data['%CUSTOMER']))	{
 					value = data['%CUSTOMER'][attributeID];
 					}
 				else if(namespace == 'product')	{
@@ -1796,7 +1833,9 @@ the first two cases below are to handle instances of this.
 // hint: set the action as an onclick and set attribute youtube:video id on element and use jquery to pass it in. 
 //ex: data-bind='var:product(youtube:videoid);format:assignAttribute; attribute:data-videoid;' onClick="myControl.ext.myRIA.action.showYoutubeInModal($(this).attr('data-videoid'));
 		youtubeVideo : function($tag,data){
-			var r = "<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
+			var width = data.bindData.width ? data.bindData.width : 560
+			var height = data.bindData.height ? data.bindData.height : 315
+			var r = "<iframe style='z-index:1;' width='"+width+"' height='"+height+"' src='https://www.youtube.com/embed/"+data.value+"' frameborder='0' allowfullscreen></iframe>";
 			$tag.append(r);
 			},
 
@@ -1804,8 +1843,8 @@ the first two cases below are to handle instances of this.
 if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
 	var payObj = myControl.util.which3PCAreAvailable();
 	if(payObj.paypalec)	{
-		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").one('click',function(){
-			myControl.ext.convertSessionToOrder.calls.cartPaypalSetExpressCheckout.init();
+		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='https://www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').one('click',function(){
+			myControl.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
 			$(this).addClass('disabled').attr('disabled','disabled');
 			myControl.model.dispatchThis('immutable');
 			});
@@ -1845,7 +1884,7 @@ else	{
 
 		amazonCheckoutButton : function($tag,data)	{
 
-if(zGlobals.checkoutSettings.amazonCheckoutMerchantId)	{
+if(zGlobals.checkoutSettings.amazonCheckoutMerchantId && zGlobals.checkoutSettings.amazonCheckoutEnable)	{
 	//tmp for testing
 	$tag.append("<img id='amazonCheckoutButton' border=0 src='https://payments.amazon.com/gp/cba/button?ie=UTF8&color=orange&background=white&size=small' \/>").click(function(){
 	myControl.ext.store_cart.calls.cartAmazonPaymentURL.init();
@@ -2046,7 +2085,14 @@ $tmp.empty().remove();
 				return myControl.storageFunctions.readCookie(key); //return blank if no cookie exists. needed because getLocal is used to set vars in some if statements and 'null'	
 				}
 			else	{
-				var value = localStorage.getItem(key);
+				var value = null;
+				try{
+					value = localStorage.getItem(key);
+					}
+				catch(e)	{
+					//myControl.util.dump("Local storage does not appear to be available. e = ");
+					//myControl.util.dump(e);
+					}
 				if(value == null)	{
 					return myControl.storageFunctions.readCookie(key);
 					}
