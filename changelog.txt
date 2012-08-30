@@ -5,6 +5,24 @@
 Any time you are upgrading to a new version of the MVC, you should create a local backup of the site, so that you can easily restore or refer back as necessary.
 
 
+2012.31 changes
+
+* controller.js
+ -> updated util.getSupplementalPaymentInputs (need to test PO and ECHECK in C/O)
+
+* store_crm.js
+ -> call added for buyerAddressAddUpdate
+
+* quickstart.js
+ -> callbacks for buyer to update address.
+ -> util for jeditable.
+ -> Fixed bug where uri params got nuked on landing page (were in memory, but not on URI which may be necessary for third party scripts)
+ -> moved the createTemplateFunctions to top of start. better for third party plugins that use templateFunctions.
+
+* store_product.js
+ -> fixed issue where prodlist vars were getting dropped when pagination was used (effected withReviews setting)
+
+
 2012.28 changes
 
 * model.js

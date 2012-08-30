@@ -6,7 +6,21 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
  -> do not change the checkout form id.
  -> do not change the chkoutCartSummaryContainer id. that is where the cart summary is generated (using other templates).
 -->
+
+
 <div id='checkoutTemplate' class='checkoutFormContainer'>
+
+
+
+<div id='returnFromThirdPartyPayment' class="displayNone ui-widget zMessage">
+	<div class='ui-state-highlight ui-corner-all appMessage'>
+	<p class='clearfix'>
+	<span class='floatLeft ui-icon ui-icon-info'></span>
+	<strong>Welcome back, you are nearly done!</strong> Just confirm your information below and then push the 'place order' button at the bottom.
+	</p>
+	</div>
+</div>
+
 
 	<form id='zCheckoutFrm' name='zCheckoutFrm' action='' onSubmit='return false;'>
 	
@@ -64,7 +78,7 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 	<div id='couponFrmContainer'>
 		<label for='coupon'>Coupon/Promo Code:</label>
 		<input type='text' name='coupon' id='couponCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
-		<button class='loadingButton ui-state-default ui-corner-all' onClick="myControl.ext.convertSessionToOrder.util.handleCouponSubmit(); return false;" id='addCouponBtn'><span></span>add</button>
+		<button class='loadingButton ui-state-default ui-corner-all' onClick="app.ext.convertSessionToOrder.u.handleCouponSubmit(); return false;" id='addCouponBtn'><span></span>add</button>
 	</div>
 </div>
 
@@ -75,7 +89,7 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 <div class='zwarn displayNone' id='chkoutSummaryErrors'></div>
 
 <div class='checkoutMethods clearfix'>
-	<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="myControl.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); myControl.model.dispatchThis('immutable'); return false;">
+	<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;">
 		<span></span>
 		Place Order
 	</button>
@@ -119,7 +133,7 @@ billing address panel spec
 do NOT change any input names or id's or checkout will likely break.
 -->
 
-<ul id='checkoutTemplateBillAddress' class='noPadOrMargin listStyleNone'>
+<ul id='checkoutTemplateBillAddress' class='noPadOrMargin listStyleNone clearfix'>
 
 	<li class='bill_firstname'><label for='data-bill_firstname'>First Name</label><input type='text' name='data.bill_firstname' id='data-bill_firstname' required='required' value='' data-bind='var: cart(data.bill_firstname); format:popVal;'  /></li>
 
@@ -130,22 +144,22 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='data.bill_company' id='data-bill_company' value='' data-bind='var: cart(data.bill_company); format:popVal;'  /></li>
 
-	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='data.bill_address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(data.bill_address1); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='data.bill_address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(data.bill_address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='data.bill_address2' id='data-bill_address2' value='' data-bind='var: cart(data.bill_address2); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='data.bill_address2' id='data-bill_address2' value='' data-bind='var: cart(data.bill_address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='data.bill_city' id='data-bill_city' required='required' value='' data-bind='var: cart(data.bill_city); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='data.bill_city' id='data-bill_city' required='required' value='' data-bind='var: cart(data.bill_city); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='data.bill_state' id='data-bill_state' size='2' value='' data-bind='var: cart(data.bill_state); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='data.bill_state' id='data-bill_state' size='2' value='' data-bind='var: cart(data.bill_state); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='data.bill_zip' id='data-bill_zip' size='10' value='' data-bind='var: cart(data.bill_zip); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='data.bill_zip' id='data-bill_zip' size='10' value='' data-bind='var: cart(data.bill_zip); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='data.bill_country' id='data-bill_country' data-bind='var: cart(data.bill_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="myControl.ext.store_checkout.util.countryChange('bill',this.value); myControl.ext.convertSessionToOrder.util.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" ></select></li>
+	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='data.bill_country' id='data-bill_country' data-bind='var: cart(data.bill_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
 
 	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='data.bill_phone' id='data-bill_phone' value='' data-bind='var: cart(data.bill_phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
 
 	<li id='chkout-bill_to_ship_cb_container'>
-	<div class='checkbox'><input type='checkbox' onClick='myControl.ext.convertSessionToOrder.util.toggleShipAddressPanel();' name='chkout.bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
+	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='chkout.bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
 	<!--
 SANITY: under the form tag is a hidden var that is actually used for the value for bill_to_ship. checkboxes are unreliable.
 the hidden input is higher in the code to make sure it added to the DOM prior to the shipping panel code getting executed.
@@ -163,7 +177,7 @@ shipping address panel spec
 do NOT change any input names or id's or checkout will likely break.
 -->
 
-<ul id='checkoutTemplateShipAddress' class='noPadOrMargin listStyleNone'>
+<ul id='checkoutTemplateShipAddress' class='noPadOrMargin listStyleNone clearfix'>
 
 	<li class='ship_firstname'><label for='data-ship_firstname'>First Name</label><input type='text' name='data.ship_firstname' id='data-ship_firstname' required='required' value='' data-bind='var: cart(data.ship_firstname); format:popVal;'  /></li>
 
@@ -179,9 +193,9 @@ do NOT change any input names or id's or checkout will likely break.
 	
 	<li class='ship_state'><label for='data-ship_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='data.ship_state' id='data-ship_state' size='2' value='' data-bind='var: cart(data.ship_state); format:popVal;' maxlength='10' required='required' /></li>
 	
-	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='data.ship_zip' id='data-ship_zip' size='10' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.util.recalculateShipMethods('ship'); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='data.ship_zip' id='data-ship_zip' size='10' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='data.ship_country' id='data-ship_country' data-bind='var: cart(data.ship_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="myControl.ext.store_checkout.util.countryChange('ship',this.value); myControl.ext.convertSessionToOrder.util.recalculateShipMethods('ship'); myControl.model.dispatchThis('immutable');" ></select></li>
+	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='data.ship_country' id='data-ship_country' data-bind='var: cart(data.ship_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('ship',this.value); app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></li>
 
 	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='data.ship_phone' id='data-ship_phone' value='' data-bind='var: cart(data.ship_phone); format:popVal;'  /></li>
 	
@@ -208,7 +222,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 
 <!-- use this for shipping methods in a dropdown -->
 <!-- 
-	<label for='ship.selected_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='ship.selected_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension: store_checkout;' onChange="myControl.ext.convertSessionToOrder.util.updateShipMethod(this.value); myControl.model.dispatchThis('immutable');"></select>	
+	<label for='ship.selected_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='ship.selected_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension: store_checkout;' onChange="app.ext.convertSessionToOrder.u.updateShipMethod(this.value); app.model.dispatchThis('immutable');"></select>	
 -->
 
 </div>
@@ -253,7 +267,7 @@ do NOT change any div id's or messaging will not work properly.
 		<p id='giftcardMessaging'></p><!-- used to report success and fail messaging -->
 		<label for='giftcardCode'>Gift Certificate Code:</label>
 		<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
-		<button class='ui-state-default ui-corner-all loadingButton' onClick="myControl.ext.convertSessionToOrder.util.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
+		<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.u.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
 	</div>
 
 	<ul id='chkout-payOptions' class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
@@ -270,7 +284,7 @@ do NOT change the input name or id or checkout will likely break.
 
 <div id='checkoutTemplateOrderNotesPanel'>
 <p>Please include any special instructions or comments here:</p>
-<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='chkout.order_notes' onChange='myControl.calls.cartSet.init({"chkout.order_notes":this.value}); myControl.model.dispatchThis("immutable");' data-bind='var: cart(chkout.order_notes); format:popVal;'></textarea>
+<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='chkout.order_notes' onChange='app.calls.cartSet.init({"chkout.order_notes":this.value}); app.model.dispatchThis("immutable");' data-bind='var: cart(chkout.order_notes); format:popVal;'></textarea>
 </div>
 
 

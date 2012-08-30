@@ -4,45 +4,48 @@
 <meta charset="utf-8">
 <title>QuickStart</title>
 
-<link rel="stylesheet" type="text/css" href="qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/cupertino/jquery-ui.css" />
+
 
 <base href='' /><!-- leave blank so it works for a local file -->
 
+
+
 <script type="text/javascript">
-//sets the base url based on secure or non-secure protocol. necessary to play well across all browsers.
-//specifically, IE didn't like base href="/", plus that doesn't play well w/ zoovy hosting of SSL domains.
-// the check for file allows us to leave this code uncommented while testing locally.
-
-var ac = {
-	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
-	"httpURL":"http://www.sporks.zoovy.com/"
-	};
-
-if(document.location.protocol != 'file:')	{
-	ac.baseURL  = "https:" == document.location.protocol ? ac.httpsURL : ac.httpURL; 
-	document.getElementsByTagName('base')[0].href = ac.baseURL;
-	}
-</script>
-<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="loadscript.js"></script>
-<!-- for local testing, use full path. for deplyment, use "jquery/config.js" -->
-<script type="text/javascript">
-loadScript(ac.baseURL+"init.js");
-</script>
-
-<script type='text/javascript'>
-
-var _gaq = {'push':function(){}} //here for testing. replace with actual GA code or delete at deployment.
-var myControl;
+var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLOYMENT!
 var myCreole;
 
+var app = {vars:{
+	"release":"20120813102400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"baseURL":"",
+	"ada":"xyz",
+	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
+	"httpURL":"http://www.sporks.zoovy.com/"
+	},u:{}};
+
+//set base url so images, css, js, etc all load from appropriate location once deployed.
+//baseURL as blank lets loadScript function run off local copy when testing locally.
+if(document.location.protocol != 'file:')	{
+	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL; 
+	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+	}
 </script>
+
+
+<!-- all css includes need to be after the js that changes the base url -->
+<link rel="stylesheet" type="text/css" href="qs_styles.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
+
+<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="loadscript.js"></script><!-- rename this to bootstrap -->
+
+<script type="text/javascript">
+app.u.loadScript(app.vars.baseURL+"init.js");
+</script>
+
+
 </head>
 
 <body>
-
 <!-- DELETE THIS WHEN YOU GET STARTED -->
 <h1>WELCOME TO QUICKSTART</h1>
 This file is intended to go along with the 10-step tutorial at: 
@@ -64,6 +67,8 @@ This file is intended to go along with the 10-step tutorial at:
 	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
 	</div>
 	<div id='appPreViewProgressText'>0% Complete</div>
+	
+	<div class='appMessaging'></div>
 	</td>
 </tr>
 </table>
@@ -72,16 +77,6 @@ This file is intended to go along with the 10-step tutorial at:
 
 
 <div id='appView' class='displayNone'>
-<!--
-sample links:
-<a href='#category?navcat=.' class='bindByAnchor'>Homepage</a>
-<a href='#customer?show=orders' class='bindByAnchor'>Orders</a>
-<a href='#cart?show=cart' class='bindByAnchor'>Cart</a>
-<a href='#company?show=return' class='bindByAnchor'>Returns</a>
-
-put this where you want the main nav to appear:
-<ul id='tier1categories'></ul>
--->
 
 <!-- VIEW CONTENT -->
 <!-- leave the appView div, put your your html here ...  -->
@@ -90,7 +85,7 @@ put this where you want the main nav to appear:
 	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
 	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
 	-->
-<div id='globalMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 
 <!-- ... your html ends -->
@@ -118,7 +113,7 @@ put this where you want the main nav to appear:
 -->
 
 
-<div id='appTemplates'>
+<div id='appTemplates' class='displayNone'>
 
 
 <!--
@@ -165,7 +160,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
-	<img data-bind="var: page(something); format: banner; editor: banner; height:250; width:750;" />
+	<img data-bind="var: page(banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
 	<h2 data-bind="var: page(header); format: text; editor: text;"></h2>
 	
@@ -173,7 +168,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
 	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	
 	<p data-bind="var: page(description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
@@ -197,7 +192,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 <li id='categoryListTemplateRootCats'>
-	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')}); $('#tier1catContainer').toggle();" class='pointer'>
+	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
 		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
 		<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
 	</div>
@@ -215,7 +210,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 -->
 <li id='productListTemplate' class='loadingBG  ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
-		<div class='prodThumbContainer'>
+		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
 		</div>
 		
@@ -227,6 +222,77 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <!-- 	<span data-bind='var: reviews(total); format:text; posttext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 </li>
+
+
+<!--
+for product lists with addToCart feature (accessories, for example)
+container ul should have lineItemProdlist class on it instead of productList
+-->
+<li id='productListTemplateATC' class='loadingBG  ' >
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+
+		<div class='prodThumbContainer floatLeft'>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		</div>
+		
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+	
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		
+		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+
+		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'}); return false;">
+		
+			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+			
+			<input type='submit' value='Add to Cart' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' class='displayNone ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton' />
+			
+			<input type='hidden' value='1' size='3' name='quantity' />
+		
+		</form>
+
+	</div>
+</li>
+
+
+<li id='productListTemplateBuyerList' class='loadingBG clearfix' >
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
+
+		<div class='prodThumbContainer floatLeft'>
+			<div class='ui-widget ui-widget-content ui-corner-all'>
+				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
+
+<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
+<span class="ui-icon ui-icon-cart"></span>
+</button>
+		
+<button class='ui-state-default ui-corner-all' title='more information'>
+<span class="ui-icon ui-icon-info"></span>
+</button>
+
+<button class='ui-state-default ui-corner-all' title='write a review for this item' onClick="app.ext.store_crm.u.showReviewFrmInModal({'pid':$(this).closest('[data-pid]').attr('data-pid'),'templateID':'reviewFrmTemplate'});">
+<span class="ui-icon ui-icon-star"></span>
+</button>
+
+<button class='ui-state-default ui-corner-all' title='remove item from list' onClick="app.ext.myRIA.a.removeItemFromBuyerList({'stid':$(this).closest('[data-pid]').attr('data-pid'),'listID':$(this).closest('[data-buyerlistid]').attr('data-buyerlistid')},{'parentID':$(this).closest('li').attr('id')});">
+<span class="ui-icon ui-icon-trash"></span>
+</button>
+			
+				</div>
+			</div>
+		</div>
+		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
+
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+	
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		
+
+	</div>
+</li>
+
+
 </ul>
 
 
@@ -281,14 +347,14 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div id='productTemplate'  >
+<div id='productTemplate'>
 
 <ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: session(recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <table id='prodViewerTable' class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
@@ -297,11 +363,11 @@ this will likely become more flexible in the future. ###
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
 	
 	</div>
 
@@ -332,12 +398,12 @@ this will likely become more flexible in the future. ###
 you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
 -->	
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id,{'action':'modal'});  return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'});  return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
 	
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-active addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 	</form>
 	
 
@@ -350,11 +416,13 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id='CRMButtonMenu'>
 
-	<a href='#' onClick='myControl.ext.store_crm.util.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</a>	
-	
+	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	| 
+
+	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({pid:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+
 	</menu>
 
-	
+	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
 <tr>
@@ -384,15 +452,15 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	<div id="prodReviews">
 		
 		<div class='clearfix alignRight'>
-			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='myControl.ext.store_crm.util.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 		</div>
 		
-		<ul class='listStyleNone clearfix' id='prodViewerReviews' data-bind="var: reviews(@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
+		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
 	</div>
 	
 	
 	<div id='prodlistAccessoriesContainer'>
-		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true; withReviews:1;"></ul>
+		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_multipage_controls:true;hide_multipage:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
 	</div>
 
 
@@ -475,8 +543,8 @@ adding classes is not likely to have any bad effects.
 
 
 
-
-<div id='companyTemplate'>
+<!-- loadingBG needed on this for app init (content may take a moment to load) -->
+<div id='companyTemplate' class='clearfix loadingBG'>
 
 	<div class='sideline' id='sideline'>
 <nav id='companyNav'>
@@ -502,7 +570,7 @@ adding classes is not likely to have any bad effects.
 	
 		<div id='contactArticle' class='displayNone textContentArea'>
 			<h1>Contact Information</h1>
-			<form action='#' onSubmit="myControl.ext.store_crm.calls.appSendMessage.init($(this).serializeArray(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); return false;" id='contactForm' name='contactForm'>
+			<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeArray(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); return false;" id='contactForm' name='contactForm'>
 			<fieldset>
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>
@@ -510,7 +578,7 @@ adding classes is not likely to have any bad effects.
 				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
 				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
 				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
-				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Send Message' />
+				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
 				</div>
 			</fieldset>
 			</form>
@@ -590,8 +658,8 @@ adding classes is not likely to have any bad effects.
 
 
 
-
-<div id='customerTemplate'>
+<!-- loadingBG needed on this for app init (content may take a moment to load) -->
+<div id='customerTemplate' class='clearfix loadingBG'>
 
 	<div class='sideline' id='sideline'>
 	<nav id='customerNav'>
@@ -602,6 +670,7 @@ adding classes is not likely to have any bad effects.
 		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
+		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -616,10 +685,22 @@ adding classes is not likely to have any bad effects.
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
 			<div id='logMessaging'></div>
-			<div><a href="#" onClick="myControl.util.logBuyerOut(); return false;">Log Out</a></div>
+			<div><a href="#" onClick="app.u.logBuyerOut(); return false;">Log Out</a></div>
 			
-			<section id='buyerAddresses'>
+			<section id='buyerAddresses' class='clearfix'>
 
+<div class='billAddressContainer'>
+	<h2>Billing Address(es)</h2>
+<!--	<button class='floatRight ui-state-default ui-corner-all'><span class='ui-icon ui-icon-plusthick floatLeft'></span> Add </button> coming soon -->
+	<div class='billAddresses'></div><!-- billing addresses are loaded into here using billAddressTemplate -->
+</div>
+
+<div class='shipAddressContainer'>
+	<h2>Shipping Address(es)</h2>
+	<div class='shipAddresses'></div><!-- shipping addresses are loaded into here using shipAddressTemplate -->
+</div>
+			
+			
 			</section>
 
 			
@@ -637,21 +718,24 @@ adding classes is not likely to have any bad effects.
 			<h1>Change Password</h1>
 			<div id='changepasswordContainer'>
 
-<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="myControl.ext.store_crm.util.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
-<fieldset>
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<fieldset class='borderNone'>
 
 <div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
 <div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
-<div class='marginBottom'><input type='submit' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
 
 </fieldset>
 </form>
 			</div>
 		</div>
 	
-		<div id='wishlistArticle' class='displayNone textContentArea'>
-			<h1>Your Wishlist</h1>
-			<ul id='wishlistContainer' class='prodlist loadingBG'></ul>
+		<div id='listsArticle' class='displayNone textContentArea'>
+			<h1>List Manager</h1>
+			<div id='listsContainer' class='prodlist loadingBG'></div>
+			
+			<div id='listEditorContainer' class='displayNone loadingBG'></div><!-- editor for a given list gets added here -->
+			
 		</div>
 	
 		<div id='forgetmeArticle' class='displayNone textContentArea'>
@@ -790,7 +874,7 @@ So the cart template should contain these two elements and the extension should 
 		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
 		<div class='cartSummaryContainer'>
 		
-<div id='cartMessaging'></div>
+<div id='cartMessaging' class='appMessaging'></div>
 
 
 <section id='cartTemplateCostSummary' class='cartSummary'>
@@ -817,10 +901,10 @@ So the cart template should contain these two elements and the extension should 
 
 	<div class='cartZipCodeContainer'>
 	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='data.ship_zip' id='data-ship_zip' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' onChange="myControl.calls.cartSet.init({'data.ship_zip':this.value});
-	myControl.ext.store_cart.util.updateCartSummary();
-	myControl.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-	myControl.model.dispatchThis('immutable');"  />
+	<input type='text' size='6'  name='data.ship_zip' id='data-ship_zip' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'data.ship_zip':this.value});
+	app.ext.store_cart.u.updateCartSummary();
+	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+	app.model.dispatchThis('immutable');"  />
 	</div>
 
 	
@@ -832,7 +916,7 @@ So the cart template should contain these two elements and the extension should 
 	
 	<div class='checkoutButtonsContainer'>
 
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-active ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
 
 		<span id='paypalECButton' data-bind='var: cart(id); format:paypalECButton;'></span>
 
@@ -844,6 +928,7 @@ So the cart template should contain these two elements and the extension should 
 			
 </section>
 
+<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed PostIt 170x52"></span>
 
 		</div>
 	</div>
@@ -876,7 +961,7 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="myControl.ext.store_cart.util.updateCartQty($(this)); myControl.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -914,7 +999,7 @@ used on a product layout. Some product have 'children' which may represent the s
 
 <!-- individual review template -->
 <ul>
-	<li id='productReviewsTemplateDetail' class='reviewLineItem'>
+	<li id='productReviewsTemplateDetail' class='reviewLineItem clearfix'>
 	<ul class='prodReviewInfo'>
 		<li data-bind='var:review(RATING); format:addClass; format:addClass; className:review_;' class='reviewSprite'></li>
 		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
@@ -962,7 +1047,7 @@ used for store_crm.js
 
 <div id='reviewFrmTemplate'>
 
-<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="myControl.ext.store_crm.util.handleReviews('reviewFrm'); return false;">
+<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
 <input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
 
 <label for='reviewsCustomerName'>Your Name:</label>
@@ -997,16 +1082,16 @@ used for store_crm.js
 </select>
 <br />
 
-<input type="submit" value="submit review" class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' />
+<input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
 
 </form>
 </div>
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="myControl.ext.store_crm.util.handleSubscribe('subscribeFrm'); return false">
+<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
 
-<fieldset class='userInfo'>
+<fieldset class='userInfo borderNone'>
 <div>
 <label for='subscribeLogin'>Email Address</label>
 <input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
@@ -1020,7 +1105,7 @@ used for store_crm.js
 
 <fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
 
-<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Subscribe'>
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe'>
 
 </form>
 </div>
@@ -1034,7 +1119,7 @@ used for store_crm.js
 
 <section id='orderLineItemTemplate' class='appAccordianesque'>
 	
-	<div onClick="myControl.ext.myRIA.util.showOrderDetails($(this).attr('data-orderid'));" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
+	<div onClick="app.ext.myRIA.u.showOrderDetails($(this).attr('data-orderid'));" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
 	<span class="ui-icon ui-icon-triangle-1-e"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
 	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
@@ -1056,7 +1141,7 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 <tr>
 	<td colspan='2'>
 <div class='floatRight ui-state-default ui-corner-all'>
-<a href='#' onClick="myControl.ext.myRIA.action.printByElementID($(this).closest('table').attr('id')); return false;"  class="ui-icon ui-icon-print">Print</a>
+<a href='#' onClick="app.ext.myRIA.a.printByElementID($(this).closest('table').attr('id')); return false;"  class="ui-icon ui-icon-print">Print</a>
 </div>
 
 <h3 data-bind='var:order(data.pool);format:text; pretext:Order Status: ;'></h3>
@@ -1144,7 +1229,7 @@ If this gets recycled, test in order history after making changes.
 
 	<div class='ztable_row_small prodOptions' data-bind='var: order(*options); format:selectedOptionsDisplay;'></div>
 
-<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='myControl.ext.store_crm.util.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 
 	
 </div>
@@ -1158,7 +1243,7 @@ If this gets recycled, test in order history after making changes.
 
 <section  id='faqTopicTemplate'>
 	
-	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="myControl.ext.myRIA.action.showFAQbyTopic($(this).attr('data-topicid'));">
+	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="app.ext.myRIA.a.showFAQbyTopic($(this).attr('data-topicid'));">
 	<span class="ui-icon ui-icon-triangle-1-e"></span>
 	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
 	</div>
@@ -1175,26 +1260,49 @@ If this gets recycled, test in order history after making changes.
 
 
 
-<!-- used in the my account area -->
-<address id='billAddressTemplate' class='ui-state-default buyerAddressContainer buyerBillAddressContainer'>
+<!--
+
+The following classes used in the bill and ship address templates are used in the quickstart.js file: buyerAddressContainer, buttonMenu, offMenu, onMenu, editable
+The 'data-action' attribute is used to assign an onclick.
+
+-->
+
+<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerBillAddressContainer '>
+	<menu class='buttonMenu alignRight floatRight'>
+		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
+		<div class='onMenu'>
+			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
+			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>Save</button>
+		</div>
+		<div class='changeLog'></div>
+	</menu>
 	<div class='addressFullname'>
-		<span data-bind="var: address(bill_firstname);format:text;"></span> <span data-bind="var: address(bill_lastname);format:text;"></span>
+		<span data-bind="var: address(bill_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(bill_lastname);format:text;" class='editable' title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(bill_address1);format:text;"></div>
-		<div data-bind="var: address(bill_address2);format:text;"></div>
+		<div data-bind="var: address(bill_address1);format:text;" class='editable' title='address'></div>
+		<div data-bind="var: address(bill_address2);format:text;" class='editable' title='address 2'></div>
 		
-		<span data-bind="var: address(bill_city);format:text; posttext:, ;"></span>
-		<span data-bind="var: address(bill_state);format:text;posttext:. ;"></span>
-		<span data-bind="var: address(bill_zip);format:text;"></span>
-		<div data-bind="var: address(bill_country);format:text;"></div>
+		<span data-bind="var: address(bill_city);format:text;" class='editable' title='city'></span>, 
+		<span data-bind="var: address(bill_state);format:text;" class='editable' title='state'></span>. 
+		<span data-bind="var: address(bill_zip);format:text;" class='editable' title='zip'></span>
+		<div data-bind="var: address(bill_country);format:text;" title='country'></div>
 
 	</div>
+
 </address>
 
 
 <!-- used in the my account area -->
-<address id='shipAddressTemplate' class='ui-state-default buyerAddressContainer buyerShipAddressContainer'>
+<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerShipAddressContainer'>
+	<menu class='buttonMenu alignRight floatRight'>
+		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
+		<div class='onMenu'>
+			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
+			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default  ui-corner-all'>Save</button>
+		</div>
+		<div class='changeLog'></div>
+	</menu>
 	<div class='addressFullname'>
 		<span data-bind="var: address(ship_firstname);format:text;"></span> <span data-bind="var: address(ship_lastname);format:text;"></span>
 	</div>
@@ -1261,7 +1369,7 @@ If this gets recycled, test in order history after making changes.
 <p id='loginMessaging' class='marginBottom'></p>
 
 <div id='loginFormContainer'>
-<form action='#' onSubmit='myControl.ext.myRIA.util.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
 <input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 	<fieldset>
 	
@@ -1276,7 +1384,7 @@ If this gets recycled, test in order history after making changes.
 	</div>
 	
 	<div class='center'>
-	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' />
+	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
 	</div>
 	</fieldset>
 </form>
@@ -1286,11 +1394,11 @@ If this gets recycled, test in order history after making changes.
 
 <h3 class='marginBottom'>Recover Password</h3>
 <div id='recoverPasswordMessaging'></div>
-<form action='#' onSubmit="myControl.ext.store_crm.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); myControl.model.dispatchThis('immutable'); return false;">
+<form action='#' onSubmit="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 <div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
 
-<div class='center'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Email Password to Me' /></div>
+<div class='center'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
 
 </fieldset>
 </form>
@@ -1302,15 +1410,46 @@ If this gets recycled, test in order history after making changes.
 
 <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
 	<div id='loginSuccessContainer' class='center displayNone'>
-		<button class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
+		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
 	</div>
 </div>
 
 
 
 <div class='debug displayNone'>
+
+<menu>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.'});">Homepage</a></li>
+	<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
+	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
+	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
+	<li><a href='#category?navcat=.subcategories.subcat_9' class='bindByAnchor'>.subcategories.subcat_9</a></li>
+</menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.util.dump(myControl); return false;">Control to Console</button>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
+
+
+
+<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_crm.calls.buyerOrderPaymentAdd.init({'tender':'CREDIT',
+'amt':'5.00',
+'payment.cc':'4111111111111111',
+'payment.mm':'03',
+'payment.yy':'2013',
+'payment.cv':'123',
+'orderid':'2012-01-396'
+}); app.model.dispatchThis('immutable'); return false;">Buyer Order Macro test</button>
+
+
+<form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
+	<fieldset>
+	<legend>Search</legend>
+	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
+	<input type='hidden' name='CATALOG' value='' class="productSearchCatalog" />
+	</fieldset>
+	<input class="search" type="submit" value="Search" />
+</form>
+
+
 </div>
 
 

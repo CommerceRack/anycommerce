@@ -46,7 +46,7 @@ var admin_orders = function() {
 				tagObj.datapointer = "adminOrderList";
 				cmdObj['_tag'] = tagObj;
 				cmdObj["_cmd"] = "adminOrderList"
-				myControl.model.addDispatchToQ(cmdObj,Q);
+				app.model.addDispatchToQ(cmdObj,Q);
 				}
 			}, //orderList
 
@@ -64,7 +64,7 @@ var admin_orders = function() {
 				tagObj.datapointer = "adminOrderDetail|"+orderID;
 				cmdObj['_tag'] = tagObj;
 				cmdObj["_cmd"] = "adminOrderDetail"
-				myControl.model.addDispatchToQ(cmdObj,Q);
+				app.model.addDispatchToQ(cmdObj,Q);
 				}
 			}, //adminOrderDetail
 
@@ -75,15 +75,15 @@ var admin_orders = function() {
 				return 1;
 				},
 			dispatch : function(orderID,updates,tagObj)	{
-				myControl.util.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
-				myControl.util.dump(" -> orderID = "+orderID);
+				app.u.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
+				app.u.dump(" -> orderID = "+orderID);
 				cmdObj = {};
 				cmdObj['_cmd'] = 'adminOrderUpdate';
 				cmdObj.orderid = orderID;
 				cmdObj['@updates'] = updates;
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
 				cmdObj['_tag'] = tagObj;
-				myControl.model.addDispatchToQ(cmdObj,'immutable');
+				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
 			} //orderList
 
@@ -106,12 +106,12 @@ var admin_orders = function() {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
-//				myControl.util.dump('BEGIN myControl.ext.store_navcats.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.store_navcats.init.onSuccess ');
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
-//				myControl.util.dump("DEBUG - template url is changed for local testing. add: ");
-				myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/order_templates.html',theseTemplates);
-//				if(!myControl.util.thisIsAnAdminSession())	{
-//					$('#globalMessaging').toggle(true).append(myControl.util.formatMessage({'message':'<strong>Uh Oh!<\/strong> This session is not an admin session and the app is trying to load an admin module (admin_orders.js).','uiClass':'error','uiIcon':'alert'}));
+//				app.u.dump("DEBUG - template url is changed for local testing. add: ");
+				app.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/order_templates.html',theseTemplates);
+//				if(!app.u.thisIsAnAdminSession())	{
+//					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> This session is not an admin session and the app is trying to load an admin module (admin_orders.js).','uiClass':'error','uiIcon':'alert'}));
 //					r = false;
 //					}
 				return r;
@@ -119,43 +119,41 @@ var admin_orders = function() {
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-				myControl.util.dump('BEGIN admin_orders.callbacks.init.onError');
+				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}, //init
 // if the order manager is loaded as part of the controller init, this callback gets run
 		initOrderManager : {
 			onSuccess : function()	{
-				myControl.util.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
-				myControl.ext.admin_orders.action.initOrderManager({"pool":"RECENT","targetID":"mainContentArea"});
-				},
-			onError : function(d)	{
-				$('body').append(myControl.util.getResponseErrors(d));
+				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
+				app.ext.admin_orders.action.initOrderManager({"pool":"RECENT","targetID":"mainContentArea"});
 				}
 			}, //initOrderManager
 
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump(" -> targetID: "+targetID);
+//				app.u.dump(" -> targetID: "+targetID);
 				$('#'+tagObj.targetID).empty().remove();
 				},
-			onError : function(d)	{
-//				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+myControl.ext.admin_orders.util.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				$('#orderListMessaging').append(myControl.util.getResponseErrors(d));
+			onError : function(responseData)	{
+				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
+				responseData.parentID = 'orderListMessaging'
+				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
 
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump(" -> targetID: "+tagObj.targetID);
-				$('#'+tagObj.targetID).find('td:nth-child('+myControl.ext.admin_orders.util.getFlexgridColIdByName('ORDER_PAYMENT_STATUS')+')').text('Paid');
+				app.u.dump(" -> targetID: "+tagObj.targetID);
+				$('#'+tagObj.targetID).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('ORDER_PAYMENT_STATUS')+')').text('Paid');
 				},
 			onError : function(d)	{
-//				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+myControl.ext.admin_orders.util.getFlexgridColIdByName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				$('#orderListMessaging').append(myControl.util.getResponseErrors(d));
+//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
+				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
+				responseData.parentID = 'orderListMessaging'
+				app.u.throwMessage(responseData);
 				}		
 			}, //orderFlagAsPaid
 			
@@ -185,32 +183,33 @@ var admin_orders = function() {
 					}
 				},
 			onError : function(d)	{
-//				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				$('#orderListMessaging').append(myControl.util.getResponseErrors(d));
+//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
+				responseData.parentID = 'orderListMessaging'
+				app.u.throwMessage(responseData);
 				}		
 			}, //handleBulkUpdate
 
 		listOrders : {
 			onSuccess : function(tagObj)	{
 
-myControl.util.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 
 var orderid,cid;
-var L = myControl.data[tagObj.datapointer]['@orders'].length;
+var L = app.data[tagObj.datapointer]['@orders'].length;
 if(L)	{
 	for(var i = 0; i < L; i += 1)	{
-		orderid = myControl.data[tagObj.datapointer]['@orders'][i].ORDERID; //used for fetching order record.
-		cid = myControl.data[tagObj.datapointer]['@orders'][i].CUSTOMER; //used for sending adminCustomerGet call.
-		$target.append(myControl.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,myControl.data[tagObj.datapointer]['@orders'][i]))
+		orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID; //used for fetching order record.
+		cid = app.data[tagObj.datapointer]['@orders'][i].CUSTOMER; //used for sending adminCustomerGet call.
+		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,app.data[tagObj.datapointer]['@orders'][i]))
 		}
 //assign a click event to the 'view order' button that appears in each row.
 	$target.find('.viewOrder').each(function(){
 		$(this).click(function(){
 			var orderID = $(this).attr('data-orderid');
 			var CID = $(this).closest('tr').attr('data-cid');
-			myControl.ext.admin_orders.action.orderDetailsInDialog(orderID,CID);
-			myControl.model.dispatchThis();
+			app.ext.admin_orders.action.orderDetailsInDialog(orderID,CID);
+			app.model.dispatchThis();
 			})
 		});
 
@@ -227,10 +226,6 @@ else	{
 $('#orderListTableContainer').removeClass('loadingBG');
 
 
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.dump('BEGIN myControl.ext.admin.orders.callbacks.init.onError');
-				myControl.util.handleErrors(responseData,uuid)
 				}
 			} //listOrders
 		}, //callbacks
@@ -241,16 +236,17 @@ $('#orderListTableContainer').removeClass('loadingBG');
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-
+//the root admin extension still uses .action because there are links in the UI coded for it.
+//for consistency, leave the same as admin extension.
 	action : {
 		
 		initOrderManager : function(P)	{
-//			myControl.util.dump("BEGIN admin_orders.actions.initOrderManager");
-//			myControl.util.dump(P);
+//			app.u.dump("BEGIN admin_orders.actions.initOrderManager");
+//			app.u.dump(P);
 			if(P.pool && P.targetID)	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$('#'+P.targetID).append(myControl.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				$('#'+P.targetID).append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
 				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
@@ -260,35 +256,35 @@ $('#orderListTableContainer').removeClass('loadingBG');
 					else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
 					});
 //go get the list of orders.
-				myControl.ext.admin_orders.action.showOrderList({'POOL':P.pool});
+				app.ext.admin_orders.action.showOrderList({'POOL':P.pool});
 //will add selected class to appropriate default filter in select list.
 				$("#orderListFilterPool [data-filtervalue="+P.pool+"]").addClass('ui-selected');
 //assigns all the button click events.
-				myControl.ext.admin_orders.util.bindOrderListButtons(P.targetID);
+				app.ext.admin_orders.u.bindOrderListButtons(P.targetID);
 				}
 			else	{
-				myControl.util.dump("ERROR! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
+				app.u.dump("ERROR! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
 				}
 			}, //initOrderManager
 		
 		
 		saveChangesToOrder : function()	{
-			myControl.util.dump("BEGIN admin_orders.action.saveChangesToOrder");
+			app.u.dump("BEGIN admin_orders.action.saveChangesToOrder");
 			alert('not working yet');
 			$ordersModal.find('.edited').each(function(){
-				myControl.util.dump(" -> "+$(this).attr('data-bind'));
+				app.u.dump(" -> "+$(this).attr('data-bind'));
 				});
 			}, //saveChangesToOrder
 			
 			
 			
 		orderDetailsInDialog : function(orderID,CID)	{
-myControl.util.dump("BEGIN extensions.admin_orders.action.orderDetailsInDialog");
-myControl.util.dump(" -> CID : "+CID);
-myControl.util.dump(" -> orderID : "+orderID);
+app.u.dump("BEGIN extensions.admin_orders.action.orderDetailsInDialog");
+app.u.dump(" -> CID : "+CID);
+app.u.dump(" -> orderID : "+orderID);
 if(orderID)	{
 
-	var safeID = myControl.util.makeSafeHTMLId(orderID);
+	var safeID = app.u.makeSafeHTMLId(orderID);
 	//when a modal may be opened more than once, set autoOpen to false then execute a dialog('open'). Otherwise it won't open after the first time.
 	
 	var $ordersModal = $('#viewOrderDialog_'+safeID); //global so it can be easily closed.
@@ -308,26 +304,26 @@ if(orderID)	{
 		//be sure to empty the div or if it has already been loaded, duplicate content will show up.
 		$ordersModal.empty().dialog('open');
 		//create an instance of the invoice display so something is in front of the user quickly.
-		$ordersModal.append(myControl.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':'orderDetails_'+safeID,'data-orderid':orderID}));
+		$ordersModal.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':'orderDetails_'+safeID,'data-orderid':orderID}));
 		//go fetch order data. callback handles data population.
-		myControl.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':'#orderDetails_'+safeID});
+		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':'#orderDetails_'+safeID});
 		
 		if(CID)	{
-			myControl.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','selector':'#customerInformation'},'mutable'); //
+			app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','selector':'#customerInformation'},'mutable'); //
 			}
 		else	{
-			myControl.util.dump("WARNING! - no CID set.");
+			app.u.dump("WARNING! - no CID set.");
 			}
 		//dispatch occurs outside this function.
 		$('#orderDetails_'+safeID+' .orderSupplementalInformation').accordion();
 		}
 	}
 else	{
-	myControl.util.dump("WARNING! - no orderID specificed for view order.");
+	app.u.dump("WARNING! - no orderID specificed for view order.");
 	}
 			}, //orderDetailsInDialog
 			
-//myControl.ext.admin_orders.actions.applyFilters();			
+//app.ext.admin_orders.actions.applyFilters();			
 		applyFilters : function()	{
 			$('#orderListTableBody').empty(); //this is targeting the table body.
 			$('#orderListTableContainer').addClass('loadingBG'); //this is the container. tbody won't show the loading gfx.
@@ -340,59 +336,59 @@ else	{
 					}
 				});
 			if($.isEmptyObject(obj))	{
-				$('#orderListMessaging').append(myControl.util.formatMessage('Please select at least one filter criteria'));
+				$('#orderListMessaging').append(app.u.formatMessage('Please select at least one filter criteria'));
 				}
 			else	{
-				myControl.util.dump(obj);
-				myControl.ext.admin_orders.action.showOrderList(obj);
+				app.u.dump(obj);
+				app.ext.admin_orders.action.showOrderList(obj);
 				}
 			},
 
-//myControl.ext.admin_orders.actions.showOrderList();		
+//app.ext.admin_orders.actions.showOrderList();		
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
 			
-//			myControl.util.dump("BEGIN admin_orders.action.showOrderList");
+//			app.u.dump("BEGIN admin_orders.action.showOrderList");
 			
 			if(typeof filterObj == 'object' || !$.isEmptyObject(filterObj))	{
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 5;
 				filterObj.LIMIT = 20; //for now, cap at 20 so test pool is small. ###
-				myControl.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
-				myControl.model.dispatchThis();
+				app.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
+				app.model.dispatchThis();
 				
 				}
 			else	{
-				myControl.util.dump("Warning - no filter object passed into showOrderList");
+				app.u.dump("Warning - no filter object passed into showOrderList");
 				}
 	
 			},
 			
 			
 		bulkCMDOrders : function()	{
-//				myControl.util.dump("BEGIN admin_orders.actions.bulkCMDOrders");
+//				app.u.dump("BEGIN admin_orders.actions.bulkCMDOrders");
 			var command = $('#CMD').val().substring(0,4); //will = POOL or MAIL or PMNT
-//			myControl.util.dump(" -> command: "+command);
+//			app.u.dump(" -> command: "+command);
 			$('#orderListMessaging').empty(); //clear any existing messaging.
 			if(!command)	{
-				$('#orderListMessaging').append(myControl.util.formatMessage('Please select an action to perform'));
+				$('#orderListMessaging').append(app.u.formatMessage('Please select an action to perform'));
 				}
 			else	{
 				switch(command)	{
 					case 'POOL':
-					myControl.ext.admin_orders.util.bulkChangeOrderPool();
+					app.ext.admin_orders.u.bulkChangeOrderPool();
 					break;
 					
 					case 'PMNT':
-					myControl.ext.admin_orders.util.bulkFlagOrdersAsPaid();
+					app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
 					break;
 					
 					case 'MAIL':
-					myControl.ext.admin_orders.util.bulkSendEmail();
+					app.ext.admin_orders.u.bulkSendEmail();
 					break;
 					
 					default:
-						$('#orderListMessaging').append(myControl.util.formatMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support."));
+						$('#orderListMessaging').append(app.u.formatMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support."));
 					}
 				}
 			},
@@ -416,12 +412,12 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 */
 			editOrderContents : function(P)	{
 var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
-var orderObj = myControl.data['adminOrderDetail|'+P.orderID].order;
+var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
 var L = orderObj.stuff.length;
 var stid;
 for(var i = 0; i < L; i += 1)	{
 	stid = P.templateID,orderObj.stuff[i].stid
-	$r.append(myControl.util.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj.stuff[i]));
+	$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj.stuff[i]));
 	}
 return $r;
 				}
@@ -434,13 +430,13 @@ return $r;
 //a product list needs an ID for multipage to work right. will assign a random one if none is set.
 //that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
 		stuffList : function($tag,data)	{
-//			myControl.util.dump("BEGIN admin_orders.renderFormats.stuffList");
+//			app.u.dump("BEGIN admin_orders.renderFormats.stuffList");
 			var L = data.value.length;
 			if(L > 0)	{
 				var thisSTID; //used as a shortcut in the loop below to store the pid during each iteration.
 				for(var i = 0; i < L; i += 1)	{
 					thisSTID = data.value[i].stid;
-					$tag.append(myControl.renderFunctions.transmogrify({'id':thisSTID,'pid':thisSTID},data.bindData.loadsTemplate,data.value[i]));
+					$tag.append(app.renderFunctions.transmogrify({'id':thisSTID,'pid':thisSTID},data.bindData.loadsTemplate,data.value[i]));
 					}
 				}
 			return true;
@@ -448,7 +444,7 @@ return $r;
 
 		orderPoolSelect : function($tag,data)	{
 			var $opt;
-			var pools = myControl.ext.admin_orders.vars.pools;
+			var pools = app.ext.admin_orders.vars.pools;
 			var L = pools.length;
 			
 			for(var i = 0; i < L; i += 1)	{
@@ -471,13 +467,13 @@ return $r;
 				var L = data.value.length;
 				var $o = $("<ul />"); //what is appended to tag. 
 				for(var i = 0; i < L; i += 1)	{
-					$o.append("<li>"+myControl.util.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
+					$o.append("<li>"+app.u.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
 					}
 				$tag.append($o.children());
 				},
 			
 		paystatus : function($tag,data){
-//			myControl.util.dump("BEGIN admin_orders.renderFormats.paystatus");
+//			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
 			var ps = data.value.substr(0,1); //first characer of pay status.
 			var pretty;
 			switch(ps)	{
@@ -495,10 +491,10 @@ return $r;
 			return true;
 			} //billzone
 		},
-////////////////////////////////////   UTIL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		util : {
+		u : {
 
 
 
@@ -508,41 +504,41 @@ var pool = $('#CMD').val().substr(5);
 var numRequests = 0; //the number of requests that need to be made.
 $('#orderListTable tr.ui-selected').each(function() {
 	$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-	numRequests += myControl.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$(this).attr('id')});
+	numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$(this).attr('id')});
 	});
 if(numRequests)	{
-//	myControl.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable'); //for now, don't do anything.
-	myControl.model.dispatchThis('immutable');
+//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable'); //for now, don't do anything.
+	app.model.dispatchThis('immutable');
 	}
 else	{
-	$('#orderListMessaging').append(myControl.util.formatMessage('Please select at least one row.'));
+	$('#orderListMessaging').append(app.u.formatMessage('Please select at least one row.'));
 	}
 				}, //bulkChangeOrderPool
 
 			bulkFlagOrdersAsPaid : function()	{
 var numRequests = 0;
-var poolColID = myControl.ext.admin_orders.util.getFlexgridColIdByName('POOL');
-var statusColID = myControl.ext.admin_orders.util.getFlexgridColIdByName('status');
+var poolColID = app.ext.admin_orders.u.getFlexgridColIdByName('POOL');
+var statusColID = app.ext.admin_orders.u.getFlexgridColIdByName('status');
 
 $('#orderListTable tr.ui-selected').each(function() {
 	var $row = $(this);
-//	myControl.util.dump(" -> poolColID: "+poolColID);
-//	myControl.util.dump(" -> status: "+$row.find('td:nth-child('+poolColID+')').text().toLowerCase());
+//	app.u.dump(" -> poolColID: "+poolColID);
+//	app.u.dump(" -> status: "+$row.find('td:nth-child('+poolColID+')').text().toLowerCase());
 	if($row.find('td:nth-child('+poolColID+')').text().toLowerCase() != 'pending')	{
-		$('#orderListMessaging').append(myControl.util.formatMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending'));
+		$('#orderListMessaging').append(app.u.formatMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending'));
 		$row.attr({'data-status':'error'}).removeClass('ui-selected').find('td:nth-child('+statusColID+')').html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
 		}
 	else	{
 		$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-		numRequests += myControl.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGORDERASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
+		numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGORDERASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
 		}
 	});
 if(numRequests)	{
-//	myControl.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable');
-	myControl.model.dispatchThis('immutable');
+//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable');
+	app.model.dispatchThis('immutable');
 	}
 else	{
-	$('#orderListMessaging').append(myControl.util.formatMessage('Please select at least one row.'));
+	$('#orderListMessaging').append(app.u.formatMessage('Please select at least one row.'));
 	}
 				}, //bulkFlagOrdersAsPaid
 //for now, we are linking to the legacy email page. This dynamically builds a form and submits it.
@@ -568,14 +564,14 @@ else	{
 				},
 
 			getFlexgridColIdByName : function(name)	{
-//				myControl.util.dump("BEGIN admin_orders.util.getFlexgridColIdByName");
-//				myControl.util.dump(" -> name = "+name);
+//				app.u.dump("BEGIN admin_orders.u.getFlexgridColIdByName");
+//				app.u.dump(" -> name = "+name);
 				var colIndex = false; //what is returned. the column index.
 //SANITY - flexigrid creates a separate table for the header columns.
 				$('#orderList thead th').each(function(index){
 					if($(this).attr('data-name') == name)	{ colIndex = index+1} 
 					});
-//				myControl.util.dump(" -> colIndex = "+colIndex);
+//				app.u.dump(" -> colIndex = "+colIndex);
 				return colIndex; //should only get here if there was no match
 				},
 
@@ -584,27 +580,27 @@ else	{
 //this way, a specific section of the page can be made editable (instead of just changing all editable elements).
 //using the .editable class inside allows for editing all elements on a page at one time. may be suicide tho.
 			makeEditable : function(selector,P)	{
-//myControl.util.dump("BEGIN admin_orders.util.makeEditable");
+//app.u.dump("BEGIN admin_orders.u.makeEditable");
 if(!P.inputType)	{P.inputType == 'text'}
 //info on editable can be found here: https://github.com/tuupola/jquery_jeditable
-//myControl.util.dump("BEGIN admin.action.makeEditable ["+selector+" .editable]");
+//app.u.dump("BEGIN admin.action.makeEditable ["+selector+" .editable]");
 $(selector + ' .editable').each(function(){
 	var $text = $(this)
-//	myControl.util.dump(" -> making editable: "+$text.data('bind'));
+//	app.u.dump(" -> making editable: "+$text.data('bind'));
 	if($text.attr('title'))	{
 		$text.before("<label>"+$text.attr('title')+": </label>");
 		$text.after("<br />");
 		}
 	var defaultValue = $text.text(); //saved to data.defaultValue and used to compare the post-editing value to the original so that if no change occurs, .edited class not added.
-//	myControl.util.dump(" -> defaultValue: "+defaultValue);
+//	app.u.dump(" -> defaultValue: "+defaultValue);
 	$text.addClass('editEnabled').data('defaultValue',defaultValue).editable(function(value,settings){
 //onSubmit code:
 		if(value == $(this).data('defaultValue'))	{
-			myControl.util.dump("field edited. no change.")
+			app.u.dump("field edited. no change.")
 			}
 		else	{
 			$(this).addClass('edited');
-			myControl.ext.admin_orders.util.updateOrderChangeCount();
+			app.ext.admin_orders.u.updateOrderChangeCount();
 			}
 		return value;
 		}, {
@@ -618,18 +614,18 @@ $(selector + ' .editable').each(function(){
 
 				
 			bindOrderListButtons : function(targetID)	{
-//				myControl.util.dump("BEGIN admin_orders.util.bindOrderListButtons");
+//				app.u.dump("BEGIN admin_orders.u.bindOrderListButtons");
 				$('#'+targetID+' [data-orderaction]').each(function(){
 					var action = $(this).attr('data-orderaction');
-//					myControl.util.dump(" -> action: "+action);
+//					app.u.dump(" -> action: "+action);
 					$(this).click(function(){
-//						myControl.util.dump(" -> action: "+action);
-						myControl.ext.admin_orders.action[action]()
+//						app.u.dump(" -> action: "+action);
+						app.ext.admin_orders.action[action]()
 						})
 					});
 				} //bindOrderListButtons
 		
-			} //util
+			} //u
 
 
 		

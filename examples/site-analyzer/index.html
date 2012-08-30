@@ -31,7 +31,6 @@ var $tabs; //set globally so tabs can be opened via click events
 var myControl;
 var myCreole;
 var myExtensions = [
-	// Standard extensions - comment these out if your app does not need them
 	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_navcats.js"},
 	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_search.js"},
 	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_product.js"},
@@ -285,7 +284,7 @@ ul .prompt	{display:inline-block; width:250px;}
 		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="myControl.ext.myRIA.action.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
 	</div>
 	
-	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; pretext:categoryTreeSubs_;' class='subcats'></ul>
+	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; valuePretext:categoryTreeSubs_;' class='subcats'></ul>
 </li>
 </ul>
 

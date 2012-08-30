@@ -60,14 +60,14 @@ var admin = function() {
 				this.dispatch(filename);
 				},
 			dispatch : function(filename)	{
-				myControl.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
+				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
 				}
 			
 			}, 
 
 
 		navcats : {
-//myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
+//app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
 			appCategoryDetailNoLocal : {
 				init : function(path,tagObj,Q)	{
 					tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -76,7 +76,7 @@ var admin = function() {
 					return 1;
 					},
 				dispatch : function(path,tagObj,Q)	{
-					myControl.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":path,"detail":"fast","_tag" : tagObj},Q);	
+					app.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":path,"detail":"fast","_tag" : tagObj},Q);	
 					}
 				}//appCategoryDetail
 			
@@ -89,7 +89,7 @@ var admin = function() {
 					this.dispatch();
 					},
 				dispatch : function()	{
-					myControl.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : {"datapointer":"adminImageFolderList"}});	
+					app.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : {"datapointer":"adminImageFolderList"}});	
 					}
 				} //adminImageFolderList
 			
@@ -99,31 +99,31 @@ var admin = function() {
 
 			adminCustomerGet : {
 				init : function(CID,tagObj,Q)	{
-//					myControl.util.dump("CID: "+CID);
+//					app.u.dump("CID: "+CID);
 					var r = 0;
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
 					tagObj.datapointer = "adminCustomerGet|"+CID;
-					if(myControl.model.fetchData(tagObj.datapointer) == false)	{
+					if(app.model.fetchData(tagObj.datapointer) == false)	{
 						r = 1;
 						this.dispatch(CID,tagObj,Q);
 						}
 					else	{
-						myControl.util.handleCallback(tagObj);
+						app.u.handleCallback(tagObj);
 						}
 					return r;
 					},
 				dispatch : function(CID,tagObj,Q)	{
-//					myControl.util.dump("CID: "+CID);
+//					app.u.dump("CID: "+CID);
 					var obj = {};
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 					obj["_cmd"] = "adminCustomerGet";
 					obj["CID"] = CID;
 					obj["_tag"] = tagObj;
-					myControl.model.addDispatchToQ(obj,Q);
+					app.model.addDispatchToQ(obj,Q);
 					}
 				},
-//myControl.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
+//app.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
 			adminCustomerSet : {
 				init : function(CID,setObj,tagObj)	{
 					this.dispatch(CID,setObj,tagObj)
@@ -136,7 +136,7 @@ var admin = function() {
 					obj["CID"] = CID;
 					obj['%set'] = setObj;
 					obj["_tag"] = tagObj;
-					myControl.model.addDispatchToQ(obj,'immutable');
+					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}
 			},
@@ -154,10 +154,10 @@ var admin = function() {
 					obj["_cmd"] = "appProductGet";
 					obj["pid"] = pid;
 					obj["_tag"] = tagObj;
-					myControl.model.addDispatchToQ(obj,Q);
+					app.model.addDispatchToQ(obj,Q);
 					}
 				},//appProductGetNoLocal
-//myControl.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
+//app.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
 			adminProductUpdate : {
 				init : function(pid,attrObj,tagObj)	{
 					this.dispatch(pid,attrObj,tagObj)
@@ -170,7 +170,7 @@ var admin = function() {
 					obj["product"] = pid;
 					obj['%attribs'] = attrObj;
 					obj["_tag"] = tagObj;
-					myControl.model.addDispatchToQ(obj,'immutable');
+					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}
 				
@@ -190,7 +190,7 @@ var admin = function() {
 					obj.path = path;
 					obj.position = position;
 					obj['_tag'].datapointer = "adminNavcatProductInsert|"+path+"|"+pid;
-					myControl.model.addDispatchToQ(obj,'immutable');	
+					app.model.addDispatchToQ(obj,'immutable');	
 					}
 				}, //adminNavcatProductInsert
 			
@@ -205,7 +205,7 @@ var admin = function() {
 					obj.product = pid;
 					obj.path = path;
 					obj['_tag'].datapointer = "adminNavcatProductDelete|"+path+"|"+pid;
-					myControl.model.addDispatchToQ(obj,'immutable');	
+					app.model.addDispatchToQ(obj,'immutable');	
 					}
 				} //adminNavcatProductDelete
 			
@@ -227,10 +227,10 @@ var admin = function() {
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-//				myControl.util.dump('BEGIN myControl.ext.admin.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
-//myControl.util.dump("DEBUG - template url is changed for local testing. add: ");
-myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/templates.html',theseTemplates);
+//app.u.dump("DEBUG - template url is changed for local testing. add: ");
+app.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/templates.html',theseTemplates);
 
 				return r;
 				},
@@ -243,10 +243,10 @@ myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/temp
 
 		handleElasticFinderResults : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
-				var L = myControl.data[tagObj.datapointer]['_count'];
+				app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
+				var L = app.data[tagObj.datapointer]['_count'];
 				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
-				myControl.util.dump(" -> Number Results: "+L);
+				app.u.dump(" -> Number Results: "+L);
 				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
 				if(L == 0)	{
 					$parent.append("Your query returned zero results.");
@@ -254,59 +254,48 @@ myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/temp
 				else	{
 					var pid;//recycled shortcut to product id.
 					for(var i = 0; i < L; i += 1)	{
-						pid = myControl.data[tagObj.datapointer].hits.hits[i]['_id'];
-//						myControl.util.dump(" -> "+i+" pid: "+pid);
-						$parent.append(myControl.renderFunctions.transmogrify({'id':pid,'pid':pid},'adminElasticResult',myControl.data[tagObj.datapointer].hits.hits[i]['_source']));
+						pid = app.data[tagObj.datapointer].hits.hits[i]['_id'];
+//						app.u.dump(" -> "+i+" pid: "+pid);
+						$parent.append(app.renderFunctions.transmogrify({'id':pid,'pid':pid},'adminElasticResult',app.data[tagObj.datapointer].hits.hits[i]['_source']));
 						}
-					myControl.ext.admin.util.filterFinderResults();
+					app.ext.admin.u.filterFinderResults();
 					}
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.handleErrors(responseData,uuid)
 				}
 			},
 
 
 
-//callback executed after the navcat data is retrieved. the util.addfinder does most of the work.
+//callback executed after the navcat data is retrieved. the u.addfinder does most of the work.
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump("BEGIN admin.callback.addFinderToDom.success");
-				myControl.ext.admin.util.addFinder(tagObj.targetID,myControl.data[tagObj.datapointer].id);
-				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+myControl.data[tagObj.datapointer].pretty); //updates modal title
-//				myControl.util.dump(tagObj);
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.dump("BEGIN admin.callback.addFinderToDom.onError");
-				myControl.util.handleErrors(responseData,uuid)
-//				$('#'+d['_rtag'].targetID).removeClass('loadingBG').empty().append(myControl.util.getResponseErrors(d)).toggle(true);
+//				app.u.dump("BEGIN admin.callback.addFinderToDom.success");
+				app.ext.admin.u.addFinder(tagObj.targetID,app.data[tagObj.datapointer].id);
+				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer].pretty); //updates modal title
+//				app.u.dump(tagObj);
 				}
 			}, //addFinderToDom
 
 //callback executed after the appProductGet data is retrieved for creating a finder, specific to editing an attribute of a product (related items, for example)
 		addPIDFinderToDom : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump("BEGIN admin.callback.addPIDFinderToDom.success");
-				myControl.ext.admin.util.addFinder(tagObj.targetID,tagObj.path,tagObj.datapointer.split('|')[1]);
-				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+myControl.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']); //updates modal title
-//				myControl.util.dump(tagObj);
-				},
-			onError : function(d)	{
-				myControl.util.dump("BEGIN admin.callback.addPIDFinderToDom.onError");
-				$('#'+d['_rtag'].targetID).removeClass('loadingBG').empty().append(myControl.util.getResponseErrors(d)).toggle(true);
+//				app.u.dump("BEGIN admin.callback.addPIDFinderToDom.success");
+				app.ext.admin.u.addFinder(tagObj.targetID,tagObj.path,tagObj.datapointer.split('|')[1]);
+				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']); //updates modal title
+//				app.u.dump(tagObj);
 				}
 			}, //addPIDFinderToDom
 			
 //when a finder for a product attribute is executed, this is the callback.
 		pidFinderChangesSaved : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
-				$('#finderMessaging').prepend(myControl.util.formatMessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
-				myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clickable
+				app.u.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
+				$('#finderMessaging').prepend(app.u.formatMessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
+				app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
-			onError : function(d)	{
-				$('#finderMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
-				myControl.ext.admin.util.changeFinderButtonsState('enable');
+			onError : function(responseData)	{
+				responseData.parentID = "finderMessaging";
+				app.u.throwMessage(responseData);
+				app.ext.admin.u.changeFinderButtonsState('enable');
 				}
 			
 			}, //pidFinderChangesSaved
@@ -315,7 +304,7 @@ myControl.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/temp
 			onSuccess : function(tagObj)	{
 
 
-myControl.util.dump("BEGIN admin.callbacks.finderChangesSaved");
+app.u.dump("BEGIN admin.callbacks.finderChangesSaved");
 var uCount = 0; //# of updates
 var eCount = 0; //# of errros.
 var eReport = ''; // a list of all the errors.
@@ -324,64 +313,59 @@ var $tmp;
 
 $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function(){
 	$tmp = $(this);
-//	myControl.util.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
+//	app.u.dump(" -> PID: "+$tmp.attr('data-pid')+" status: "+$tmp.attr('data-status'));
 	if($tmp.attr('data-status') == 'complete')	{
 		uCount += 1;
 		$tmp.removeAttr('data-status'); //get rid of this so additional saves from same session are not impacted.
 		}
 	else if($tmp.attr('data-status') == 'error')	{
 		eCount += 1;
-		eReport += "<li>"+$tmp.attr('data-pid')+": "+myControl.data[$tmp.attr('data-pointer')].errmsg+" ("+myControl.data[$tmp.attr('data-pointer')].errid+"<\/li>";
+		eReport += "<li>"+$tmp.attr('data-pid')+": "+app.data[$tmp.attr('data-pointer')].errmsg+" ("+app.data[$tmp.attr('data-pointer')].errid+"<\/li>";
 		}
 	});
 
-myControl.util.dump(" -> items updated: "+uCount);
-myControl.util.dump(" -> errors: "+eCount);
+app.u.dump(" -> items updated: "+uCount);
+app.u.dump(" -> errors: "+eCount);
 if(uCount > 0)	{
-	$('#finderMessaging').prepend(myControl.util.formatMessage({'message':'Items Updated: '+uCount,'htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
+	$('#finderMessaging').prepend(app.u.formatMessage({'message':'Items Updated: '+uCount,'htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
 	}
 
 if(eCount > 0)	{
-	$('#finderMessaging').prepend(myControl.util.formatMessage(eCount+' errors occured!<ul>'+eReport+'<\/ul>'));
+	$('#finderMessaging').prepend(app.u.formatMessage(eCount+' errors occured!<ul>'+eReport+'<\/ul>'));
 	}
 
-myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clickable
+app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 
 				},
-			onError : function(d)	{
-				$('#finderMessaging').append(myControl.util.getResponseErrors(d)).toggle(true);
-				myControl.ext.admin.util.changeFinderButtonsState('enable');
+			onError : function(responseData)	{
+				responseData.parentID = "finderMessaging";
+				app.u.throwMessage(responseData);
+				app.ext.admin.u.changeFinderButtonsState('enable');
 				}
 			}, //finderChangesSaved
 		
 //callback is used for the product finder search results.
 		showProdlist : {
 			onSuccess : function(tagObj)	{
-				myControl.util.dump("BEGIN admin.callbacks.showProdlist");
-				if($.isEmptyObject(myControl.data[tagObj.datapointer]['@products']))	{
+				app.u.dump("BEGIN admin.callbacks.showProdlist");
+				if($.isEmptyObject(app.data[tagObj.datapointer]['@products']))	{
 					$('#'+tagObj.parentID).empty().removeClass('loadingBG').append('Your search returned zero results');
 					}
 				else	{
-				myControl.util.dump(" -> parentID: "+tagObj.parentID);
-				myControl.util.dump(" -> datapointer: "+tagObj.datapointer);
-				var numRequests = myControl.ext.store_prodlist.util.buildProductList({
+				app.u.dump(" -> parentID: "+tagObj.parentID);
+				app.u.dump(" -> datapointer: "+tagObj.datapointer);
+				var numRequests = app.ext.store_prodlist.u.buildProductList({
 "templateID":"adminProdStdForList",
 "parentID":tagObj.parentID,
 "items_per_page":100,
-"csv":myControl.data[tagObj.datapointer]['@products']
+"csv":app.data[tagObj.datapointer]['@products']
 					});
-//				myControl.util.dump(" -> numRequests = "+numRequests);
+//				app.u.dump(" -> numRequests = "+numRequests);
 					if(numRequests)
-						myControl.model.dispatchThis();
+						app.model.dispatchThis();
 					}
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.dump('BEGIN admin.callbacks.showProdlist.onError');
-//				myControl.util.dump(d);
-				myControl.util.handleErrors(responseData,uuid);
-//				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
 			}, //showProdlist
 		
@@ -390,46 +374,42 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 //it simply changes the data-status appropriately, then the classback "finderChangesSaved" loops through the lists and handles messaging for all the updates.
 		finderProductUpdate : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onSuccess");
-//				myControl.util.dump(myControl.data[tagObj.datapointer]);
+//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onSuccess");
+//				app.u.dump(app.data[tagObj.datapointer]);
 				var tmp = tagObj.datapointer.split('|'); // tmp1 is command and tmp1 is path and tmp2 is pid
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				targetID += "_"+tmp[2];
-//				myControl.util.dump(" -> targetID: "+targetID);
+//				app.u.dump(" -> targetID: "+targetID);
 				$('#'+targetID).attr('data-status','complete');
 				},
 			onError : function(d)	{
-//				myControl.util.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				var tmp = myControl.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
+//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
+				var tmp = app.data[tagObj.datapointer].split('|'); // tmp0 is call, tmp1 is path and tmp2 is pid
 //on an insert, the li will be in finderTargetList... but on a remove, the li will be in finderRemovedList_...
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
 				$('#'+targetID).attr({'data-status':'error','data-pointer':tagObj.datapointer});
-//				myControl.util.dump(d);
+//				app.u.dump(d);
 				}
 			}, //finderProductUpdate
 
 		filterFinderSearchResults : {
 			onSuccess : function(tagObj)	{
-//				myControl.util.dump("BEGIN admin.callbacks.filterFinderSearchResults");
-				var safePath = myControl.util.makeSafeHTMLId(tagObj.path);
+//				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
+				var safePath = app.u.makeSafeHTMLId(tagObj.path);
 				var $tmp;
-//				myControl.util.dump(" -> safePath: "+safePath);
+//				app.u.dump(" -> safePath: "+safePath);
 				//go through the results and if they are already in this category, disable drag n drop.
 				$results = $('#finderSearchResults');
 				//.find( "li" ).addClass( "ui-corner-all" ) )
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
-				//		myControl.util.dump(" -> MATCH! disable dragging.");
+				//		app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
 					})
-				},
-			onError : function(responseData,uuid)	{
-				myControl.util.handleErrors(responseData,uuid);
-//				$('#finderSearchResults').append(myControl.util.getResponseErrors(d)).toggle(true);
 				}
 			} //filterFinderSearchResults
 
@@ -447,17 +427,17 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 		renderFormats : {
 			
 			elastimage1URL : function($tag,data)	{
-//				myControl.util.dump(data.value[0]);
+//				app.u.dump(data.value[0]);
 //				var L = data.bindData.numImages ? data.bindData.numImages : 1; //default to only showing 1 image.
 //				for(var i = 0; i < L; i += 1)	{
 //					}
-				$tag.attr('src',myControl.util.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
+				$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
 				},
 			
 			array2ListItems : function($tag,data)	{
 				var L = data.value.length;
-				myControl.util.dump(" -> cleanValue for array2listItems");
-				myControl.util.dump(data.value);
+				app.u.dump(" -> cleanValue for array2listItems");
+				app.u.dump(data.value);
 				var $o = $("<ul />"); //what is appended to tag. 
 				for(var i = 0; i < L; i += 1)	{
 					$o.append("<li>"+data.value[i]+"<\/li>");
@@ -466,11 +446,11 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 				},
 			
 			array2Template : function($tag,data)	{
-//				myControl.util.dump("BEGIN admin.renderFormats.array2Template");
-//				myControl.util.dump(data.value);
+//				app.u.dump("BEGIN admin.renderFormats.array2Template");
+//				app.u.dump(data.value);
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
-					$tag.append(myControl.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
+					$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
 					}
 				}
 			
@@ -483,22 +463,22 @@ myControl.ext.admin.util.changeFinderButtonsState('enable'); //make buttons clic
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-
+//there are links in the UI that reference .action, so don't change this without updating the UI.
 		action : {
 /*
 to generate an instance of the finder, run: 
-myControl.ext.admin.action.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
+app.ext.admin.action.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 
 */
 			addFinderTo : function(targetID,path,sku)	{
 				if(sku)	{
-					myControl.ext.store_product.calls.appProductGet.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
+					app.ext.store_product.calls.appProductGet.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
 				else	{
 //Too many f'ing issues with using a local copy of the cat data.
-					myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
-				myControl.model.dispatchThis();
+				app.model.dispatchThis();
 				}, //addFinderTo
 
 			showFinderInModal : function(path,sku)	{
@@ -525,22 +505,22 @@ myControl.ext.admin.action.addFinderTo() passing in targetID (the element you wa
 
 
 
-////////////////////////////////////   UTIL    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		util : {
+		u : {
 			
 
 			
 			saveFinderChanges : function()	{
-				myControl.util.dump("BEGIN admin.util.saveFinderChanges");
+				app.u.dump("BEGIN admin.u.saveFinderChanges");
 				var myArray = new Array();
 				var $tmp;
 				var $finderModal = $('#prodFinder')
 				var path = $finderModal.attr('data-path');
 				var sku = $finderModal.attr('data-sku');
-//				myControl.util.dump(" -> path: "+path);
-//				myControl.util.dump(" -> sku: "+sku);
+//				app.u.dump(" -> path: "+path);
+//				app.u.dump(" -> sku: "+sku);
 
 /*
 The process for updating a product vs a category are substantially different.  
@@ -551,24 +531,24 @@ for a category, each sku added or removed is a separate request.
 				if(sku)	{
 //finder for product attribute.
 					var list = '';
-					var attribute = myControl.renderFunctions.parseDataVar(path);
+					var attribute = app.renderFunctions.parseDataVar(path);
 					$('#finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
 						});
 					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
-					myControl.util.dump(" -> "+attribute+" = "+list);
+					app.u.dump(" -> "+attribute+" = "+list);
 					var attribObj = {};
 					attribObj[attribute] = list;
-					myControl.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
-					myControl.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
+					app.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+					app.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
 					}
 				else	{
 // items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
 $('#finderRemovedList').find("li").each(function(){
 	$tmp = $(this);
 	if($tmp.attr('data-status') == 'remove')	{
-		myControl.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
+		app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
 		$tmp.attr('data-status','queued')
 		}
 	});
@@ -577,17 +557,17 @@ $('#finderRemovedList').find("li").each(function(){
 //concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
 $("#finderTargetList li").each(function(index){
 	$tmp = $(this);
-	myControl.util.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
+	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
 	
 	if($tmp.attr('data-status') == 'changed')	{
 		$tmp.attr('data-status','queued')
-		myControl.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
+		app.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
 		}
 	else	{
 //datastatus set but not to a valid value. maybe queued?
 		}
 	});
-myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				//dispatch occurs on save button, not here.
 				}, //saveFinderChanges
@@ -598,11 +578,11 @@ myControl.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback"
 			
 //onclick, pass in a jquery object of the list item
 			removePidFromFinder : function($listItem){
-//myControl.util.dump("BEGIN admin.util.removePidFromFinder");
+//app.u.dump("BEGIN admin.u.removePidFromFinder");
 var path = $listItem.closest('[data-path]').attr('data-path');
-//myControl.util.dump(" -> safePath: "+path);
+//app.u.dump(" -> safePath: "+path);
 var newLiID = 'finderRemovedList_'+$listItem.attr('data-pid');
-//myControl.util.dump(" -> newLiID: "+newLiID);
+//app.u.dump(" -> newLiID: "+newLiID);
 
 if($('#'+newLiID).length > 0)	{
 	//item is already in removed list.  set data-status to remove to ensure item is removed from list on save.
@@ -616,7 +596,7 @@ else	{
 //kill original.
 $listItem.empty().remove();
 
-myControl.ext.admin.util.updateFinderCurrentItemCount();
+app.ext.admin.u.updateFinderCurrentItemCount();
 
 				}, //removePidFromFinder
 
@@ -635,36 +615,36 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,path,pid){
 
-myControl.util.dump("BEGIN admin.util.addFinder");
+app.u.dump("BEGIN admin.u.addFinder");
 //jquery likes id's with no special characters.
-var safePath = myControl.util.makeSafeHTMLId(path);
-myControl.util.dump(" -> safePath: "+safePath);
+var safePath = app.u.makeSafeHTMLId(path);
+app.u.dump(" -> safePath: "+safePath);
 var prodlist = new Array();
 
 $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
-$target.append(myControl.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+myControl.util.makeSafeHTMLId(path)));
+$target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
 
 if(pid)	{
-	myControl.renderFunctions.translateTemplate(myControl.data['appProductGet|'+pid],"productFinder_"+safePath);
+	app.renderFunctions.translateTemplate(app.data['appProductGet|'+pid],"productFinder_"+safePath);
 // !!! need to add a check here to see if the field is populated before doing a split.
 //also need to look at path and get the actual field. this is hard coded for testing.
-	var attribute = myControl.renderFunctions.parseDataVar(path);
-	myControl.util.dump(" -> ATTRIBUTE: "+attribute);
-//	myControl.util.dump(" -> aattribute value = "+myControl.data['appProductGet|'+pid]['%attribs'][attribute]);
-	if(myControl.data['appProductGet|'+pid]['%attribs'][attribute])
-		prodlist = myControl.data['appProductGet|'+pid]['%attribs'][attribute].split(',');
+	var attribute = app.renderFunctions.parseDataVar(path);
+	app.u.dump(" -> ATTRIBUTE: "+attribute);
+//	app.u.dump(" -> aattribute value = "+app.data['appProductGet|'+pid]['%attribs'][attribute]);
+	if(app.data['appProductGet|'+pid]['%attribs'][attribute])
+		prodlist = app.data['appProductGet|'+pid]['%attribs'][attribute].split(',');
 	}
 else	{
-	myControl.util.dump(" -> NON product attribute (no pid specified)");
-	myControl.renderFunctions.translateTemplate(myControl.data['appCategoryDetail|'+path],"productFinder_"+safePath);
-	prodlist = myControl.data['appCategoryDetail|'+path]['@products'];
+	app.u.dump(" -> NON product attribute (no pid specified)");
+	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
+	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
 
-//myControl.util.dump(" -> path: "+path);
-//myControl.util.dump(" -> prodlist: "+prodlist);
+//app.u.dump(" -> path: "+path);
+//app.u.dump(" -> prodlist: "+prodlist);
 
-var numRequests = myControl.ext.store_prodlist.util.buildProductList({
+var numRequests = app.ext.store_prodlist.u.buildProductList({
 	"templateID": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
 	"items_per_page" : 500, //max out at 500 items
 	"hide_multipage" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
@@ -673,7 +653,7 @@ var numRequests = myControl.ext.store_prodlist.util.buildProductList({
 	"csv":prodlist
 	});
 if(numRequests)
-	myControl.model.dispatchThis();
+	app.model.dispatchThis();
 
 
 // connect the results and targetlist together by class for 'sortable'.
@@ -690,11 +670,11 @@ this does NOT get executed when items are moved over via selectable and move but
 */
 	stop: function(event, ui) {
 		var parent = ui.item.parent().attr('id')
-//		myControl.util.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
+//		app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
 		if(parent == 'finderTargetList')	{
 			ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
 			}
-		myControl.ext.admin.util.updateFinderCurrentItemCount();
+		app.ext.admin.u.updateFinderCurrentItemCount();
 		} 
 	});
 
@@ -703,22 +683,22 @@ this does NOT get executed when items are moved over via selectable and move but
 // .ui-state-disabled is added to items in the results list that are already in the category list.
 $("#finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
 //make category product list only draggable within itself. (can't drag items out).
-$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {myControl.util.dump($(this).attr('id'))});
+$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {app.u.dump($(this).attr('id'))});
 	
 
 //set a data-finderAction on an element with a value of save, moveToTop or moveToBottom.
 //save will save the changes. moveToTop will move selected product from the results over to the top of column the category list.
 //moveToBottom will do the same as moveToTop except put the product at the bottom of the category.
 $('#productFinder_'+safePath+' [data-finderAction]').each(function(){
-	myControl.ext.admin.util.bindFinderButtons($(this),safePath);
+	app.ext.admin.u.bindFinderButtons($(this),safePath);
 	});
 
 //bind the action on the search form.
 $('#finderSearchForm').submit(function(event){
-	myControl.ext.admin.util.handleFinderSearch();
+	app.ext.admin.u.handleFinderSearch();
 	event.preventDefault();
 	return false})
-	myControl.ext.admin.util.updateFinderCurrentItemCount();
+	app.ext.admin.u.updateFinderCurrentItemCount();
 
 
 				
@@ -729,18 +709,18 @@ $('#finderSearchForm').submit(function(event){
 //idprefex will be prepended to the tag name. ex: idprefix = bob_, then id's bob_IS_FRESH will be checked.
 			whichTagsAreChecked : function(idprefix)	{
 				var r = new Array();
-				var L = myControl.ext.admin.vars.tags.length;
+				var L = app.ext.admin.vars.tags.length;
 				for(var i = 0; i < L; i += 1)	{
-					if($('#'+idprefix+myControl.ext.admin.vars.tags[i]).is(':checked')){r.push(myControl.ext.admin.vars.tags[i])};
+					if($('#'+idprefix+app.ext.admin.vars.tags[i]).is(':checked')){r.push(app.ext.admin.vars.tags[i])};
 					}
 				return r;
 				},
 
 			tagsAsCheckboxes : function(idprefix)	{
 				var r = ''; //what is returned. a chunk of html. each tag with a checkbox.
-				var L = myControl.ext.admin.vars.tags;
+				var L = app.ext.admin.vars.tags;
 				for(var i = 0; i < L; i += 1)	{
-					r += "<div><input type='checkbox' id='finderSearchFilter_"+myControl.ext.admin.vars.tags[i]+"' name='"+myControl.ext.admin.vars.tags[i]+"' /><label for='finderSearchFilter_"+myControl.ext.admin.vars.tags[i]+"'>"+myControl.ext.admin.vars.tags[i].toLowerCase()+"</label></div>"
+					r += "<div><input type='checkbox' id='finderSearchFilter_"+app.ext.admin.vars.tags[i]+"' name='"+app.ext.admin.vars.tags[i]+"' /><label for='finderSearchFilter_"+app.ext.admin.vars.tags[i]+"'>"+app.ext.admin.vars.tags[i].toLowerCase()+"</label></div>"
 					}
 				return r;
 				},
@@ -765,21 +745,21 @@ $('#finderSearchForm').submit(function(event){
 				qObj.query =  {"query_string" : {"query" : columnValue}};
 			
 				//dispatch is handled by form submit binder
-				myControl.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch"});
-				myControl.model.dispatchThis();
+				app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch"});
+				app.model.dispatchThis();
 				},
 
 
 //will 'disable' any item that is in the result set that already appears in the category or as a accessory/related item.
 			filterFinderResults : function()	{
-//				myControl.util.dump("BEGIN admin.callbacks.filterFinderSearchResults");
+//				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
 				var $tmp;
 //go through the results and if they are already in this category, disable drag n drop.
 				$results = $('#finderSearchResults');
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
-//						myControl.util.dump(" -> MATCH! disable dragging.");
+//						app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}
 					})				
@@ -804,14 +784,14 @@ $('#finderSearchForm').submit(function(event){
 			bindFinderButtons : function($button,safePath){
 // ### Move search button into this too. 
 
-//	myControl.util.dump(" -> finderAction found on element "+$button.attr('id'));
+//	app.u.dump(" -> finderAction found on element "+$button.attr('id'));
 if($button.attr('data-finderAction') == 'save')	{
 
 	$button.click(function(event){
 		event.preventDefault();
-		myControl.ext.admin.util.saveFinderChanges($button.attr('data-path'));
-		myControl.model.dispatchThis('immutable');
-		myControl.ext.admin.util.changeFinderButtonsState('disable');
+		app.ext.admin.u.saveFinderChanges($button.attr('data-path'));
+		app.model.dispatchThis('immutable');
+		app.ext.admin.u.changeFinderButtonsState('disable');
 		
 		return false;
 		});
@@ -829,7 +809,7 @@ else if($button.attr('data-finderAction') == 'moveToTop' || $button.attr('data-f
 		event.preventDefault();
 		$('#finderSearchResults .ui-selected').each(function(){
 			var $copy = $(this).clone();
-			myControl.util.dump(" -> moving item "+$copy.attr('data-pid'));
+			app.u.dump(" -> moving item "+$copy.attr('data-pid'));
 			if($button.attr('data-finderAction') == 'moveToTop')
 				$copy.prependTo('#finderTargetList')
 			else
@@ -838,7 +818,7 @@ else if($button.attr('data-finderAction') == 'moveToTop' || $button.attr('data-f
 			$copy.removeClass('ui-selected').attr('id','finderTargetList_'+$copy.attr('data-pid'));
 			$(this).remove();
 			})
-		myControl.ext.admin.util.updateFinderCurrentItemCount();
+		app.ext.admin.u.updateFinderCurrentItemCount();
 		return false;
 		})
 	}

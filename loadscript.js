@@ -1,9 +1,10 @@
-//http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
-function loadScript(url, callback){
-//	acDump("load script: "+url)
-    var script = document.createElement("script")
-    script.type = "text/javascript";
+var app = app || {vars:{},u:{}}; //make sure app exists.
 
+//http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
+app.u.loadScript = function(url, callback){
+	app.u.dump("load script: "+url);
+    var script = document.createElement("script");
+    script.type = "text/javascript";
     if (script.readyState){  //IE
         script.onreadystatechange = function(){
             if (script.readyState == "loaded" || script.readyState == "complete"){
@@ -12,32 +13,20 @@ function loadScript(url, callback){
 				}
 			};
 		}
-	else {  //Others
+	else {
 		if(typeof callback == 'function')	{
-//			acDump(' -> callback is a function');
 			script.onload = function(){callback()}
 			}
     	}
-
     script.src = url;
     document.getElementsByTagName("head")[0].appendChild(script);
 	}
 
-
-
-// a function for dumping to the console. It is present in this first loading script because it is used as a diagnostic tool so frequently.
-function acDump(msg)	{
+/*
+this function gets overwritten when the control object is instantiated.
+keep this small and light.
+*/
+app.u.dump = function(msg)	{
 //if the console isn't open, an error occurs, so check to make sure it's defined. If not, do nothing.
-	if(typeof console != 'undefined')	{
-		if(typeof console.dir == 'function' && typeof msg == 'object')	{
-		//IE8 doesn't support console.dir.
-			console.dir(msg);
-			}
-		else if(typeof console.dir == 'undefined' && typeof msg == 'object')	{
-			//browser doesn't support writing object to console. probably IE8.
-			console.log('object output not supported');
-			}
-		else
-			console.log(msg);
-		}
+	if(typeof console != 'undefined')	{console.log(msg);}
 	} //dump
