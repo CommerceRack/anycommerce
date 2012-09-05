@@ -1608,7 +1608,7 @@ jQuery.extend(imgSlider.prototype, {
 		},
 	handleAnime : function(){
 //		console.log("slide: "+this.focusSlide+"/"+this.numSlides);
-		var bob = this;  // 'this' loses it's meaning inside the anonymous function below, so a new var is created to reference
+		var tmp = this;  // 'this' loses it's meaning inside the anonymous function below, so a new var is created to reference
 		if(this.focusSlide >= (this.numSlides - 1))	{
 			this.direction = 'right'
 			}
@@ -1618,7 +1618,7 @@ jQuery.extend(imgSlider.prototype, {
 		else	{
 //shouldn't get here.
 			}
-		this.to = setTimeout(function(){bob['slide'+bob.direction]()},bob.pause); //the animation takes 1.5 seconds, so a 3.5 second timeout gives 2 seconds per pic of non movement.
+		this.to = setTimeout(function(){tmp['slide'+tmp.direction]()},tmp.pause); //the animation takes 1.5 seconds, so a 3.5 second timeout gives 2 seconds per pic of non movement.
 		},
 	slideleft : function()	{
 		this.focusSlide += 1;

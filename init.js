@@ -12,7 +12,7 @@ app.vars.extensions = [
 	{"namespace":"store_product","filename":"extensions/store_product.js"},
 	{"namespace":"store_cart","filename":"extensions/store_cart.js"},
 //	{"namespace":"analytics_google","filename":"extensions/analytics_google.js","callback":"addTriggers"},
-	{"namespace":"bonding_buysafe","filename":"extensions/bonding_buysafe.js","callback":"addTriggers"},
+//	{"namespace":"bonding_buysafe","filename":"extensions/bonding_buysafe.js","callback":"addTriggers"},
 	{"namespace":"store_crm","filename":"extensions/store_crm.js"},
 	{"namespace":"myRIA","filename":"quickstart.js","callback":"startMyProgram"}
 	];

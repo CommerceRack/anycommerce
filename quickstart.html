@@ -15,7 +15,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLO
 var myCreole;
 
 var app = {vars:{
-	"release":"20120813102400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20120905130000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"ada":"xyz",
 	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
@@ -482,7 +482,63 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 </div>
 
 
+</div><!-- productTemplate -->
+
+
+
+
+
+<div id='productTemplateQuickView'>
+
+<table class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+<div>
+
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+
 </div>
+
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
+	
+	
+	<div class='priceContainer'>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		<span class='savings'>
+			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
+			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+		</span>
+	</div>
+	
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+	
+	<section id='prodViewerReviewSummary' class='marginBottom'>
+		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+	</section>
+	
+	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+		
+	<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	</td>
+</tr>
+</table>
+
+
+</div><!-- productTemplateQuickView -->
+
 
 
 
@@ -1429,15 +1485,6 @@ The 'data-action' attribute is used to assign an onclick.
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
 
 
-
-<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_crm.calls.buyerOrderPaymentAdd.init({'tender':'CREDIT',
-'amt':'5.00',
-'payment.cc':'4111111111111111',
-'payment.mm':'03',
-'payment.yy':'2013',
-'payment.cv':'123',
-'orderid':'2012-01-396'
-}); app.model.dispatchThis('immutable'); return false;">Buyer Order Macro test</button>
 
 
 <form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
