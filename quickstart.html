@@ -36,7 +36,7 @@ if(document.location.protocol != 'file:')	{
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
 
 <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src="loadscript.js"></script><!-- rename this to bootstrap -->
+<script type="text/javascript" src="loadscript.js"></script>
 
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"init.js");
@@ -208,7 +208,10 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id='productListTemplate' class='loadingBG  ' >
+<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	
+	<button class='floatRight pointer quickView displayNone' onClick="quickView({'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid'),'pageType':'product'});">Quickview</button>
+	
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
@@ -217,6 +220,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 	
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		
 		
 		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(total); format:text; posttext: from ;posttext: reviews; className:numReviews;'></span> -->

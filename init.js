@@ -89,7 +89,6 @@ app.u.loadScriptsByPass = function(PASS,CONTINUE)	{
 /*
 This function is overwritten once the controller is instantiated. 
 Having a placeholder allows us to always reference the same messaging function, but not impede load time with a bulky error function.
-function could be used for warnings, errors or success. defaults to 'error'.
 */
 app.u.throwMessage = function(m)	{
 	alert(m); 

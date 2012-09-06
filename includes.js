@@ -1590,7 +1590,7 @@ jQuery.extend(imgSlider.prototype, {
 		this.$jObjUl = $jObjUl; //Jquery Object of the Unordered List
 		this.direction = 'left'; //will toggle left/right as slideshow goes one direction or the other. used to execute which slide occurs.
 		this.focusSlide = 0; //which slide is in focus. 0 = pic1
-		this.to; //will hold timeout. allows cancellation if desired. (see kill)
+		this.to; //will hold TimeOut instance. allows cancellation if desired. (see kill)
 		this.numSlides = this.$jObjUl.children().length;
 		this.width = this.getWidth(); // sum width of all slides. used to computes width of individual slides.
 //assuming all slides are same width, this will compute the slide width.
@@ -1598,6 +1598,7 @@ jQuery.extend(imgSlider.prototype, {
 		this.pause = 200; //first pic has been displayed, so start rotation quickly.
 		this.handleAnime(); //start the slideshow
 		this.pause = 3500; //used to determine length of time before slide leaves. takes into account time it takes to slide in (but not depart)
+//		app.u.dump(this);
 		},
 	getWidth : function(){
 		var r = 0; //what is returned. sum width;

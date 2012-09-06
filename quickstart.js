@@ -132,6 +132,8 @@ else	{
 				app.ext.myRIA.u.bindAppViewForms();
 				
 				showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
+				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
+				
 				app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
 
 app.ext.store_checkout.checkoutCompletes.push(function(P){
@@ -537,11 +539,12 @@ need to be customized on a per-ria basis.
 
 
 			addPicSlider : function($tag,data)	{
-//				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
-				if(app.data['appProductGet|'+data.value])	{
+				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
+				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
 					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
 //if image 1 or 2 isn't set, likely there are no secondary images. stop.
 					if(app.u.isSet(pdata['zoovy:prod_image1']) && app.u.isSet(pdata['zoovy:prod_image2']))	{
+						$tag.attr('data-pid',data.value); //no params are passed into picSlider function, so pid is added to tag for easy ref.
 //						app.u.dump(" -> image1 ["+pdata['zoovy:prod_image1']+"] and image2 ["+pdata['zoovy:prod_image2']+"] both are set.");
 //adding this as part of mouseenter means pics won't be downloaded till/unless needed.
 // no anonymous function in mouseenter. We'll need this fixed to ensure no double add (most likely) if template re-rendered.
@@ -873,6 +876,23 @@ else	{
 				},
 
 */
+//for now, only product is supported in quickview. This may change in the future.
+//Required Params:  pageType, pid and templateID.
+//no defaulting on template id because that'll make expanding this to support other page types more difficult.
+//assumes data to be displayed is already in memory.
+			quickView : function(P){
+				if(P && P.pageType && P.templateID)	{
+					if(P.pageType == 'product' && P.pid)	{
+						app.ext.store_product.u.prodDataInModal(P);
+						}
+					else	{
+						app.u.throwGMessage("Based on pageType, some other variable is required (ex: pid for pageType = product). P follows: "); app.u.dump(P);
+						}
+					}
+				else	{
+					app.u.throwGMessage("P should contain pageType and templateID. "); app.u.dump(P);
+					}
+				},
 
 /*
 required:
@@ -880,7 +900,7 @@ P.stid
 P.listID (buyer list id)
 */
 			removeItemFromBuyerList : function(P,tagObj)	{
-				app.u.dump(P);
+//				app.u.dump(P);
 				if(P.stid && P.listID)	{
 					app.ext.store_crm.calls.buyerProductListRemoveFrom.init(P.listID,P.stid,tagObj,'immutable');
 					app.ext.store_crm.calls.buyerProductListDetail.init(P.listID,{},'immutable'); //update list in memory
@@ -1050,7 +1070,7 @@ P.listID (buyer list id)
 					}
 				else	{
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
-					var pid = $obj.closest('[data-pid]').attr('data-pid');
+					var pid = $obj.attr('data-pid');
 					app.u.dump(" -> pid: "+pid);
 					var data = app.data['appProductGet|'+pid]['%attribs'];
 					var $img = $obj.find('img')
