@@ -243,7 +243,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				tagObj.infoObj.state = 'onCompletes';
 				app.ext.myRIA.u.handleTemplateFunctions(tagObj.infoObj);				
 				}
-			}, //showProd 
+			}, //showCompany 
 
 
 
@@ -255,6 +255,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				$parent = $('#'+tagObj.parentID);
 				$('button',$parent).removeAttr('disabled').removeClass('ui-state-disabled');
 				$('.changeLog',$parent).empty().append('Changes Saved');
+				$('.edited',$parent).removeClass('edited'); //if the save button is clicked before 'exiting' the input, the edited class wasn't being removed.
 				$('.buttonMenu',$parent).find('.offMenu').show();
 				$('.buttonMenu',$parent).find('.onMenu').hide();
 				app.ext.myRIA.u.destroyEditable($parent);
@@ -264,7 +265,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				$('.changeLog',$parent).append(app.u.formatResponseErrors(responseData))
 				$('button',$parent).removeAttr('disabled').removeClass('ui-state-disabled');
 				}
-			}, //showProd 
+			}, //handleBuyerAddressUpdate
 
 //used in /customer
 		showAddresses : {
@@ -273,7 +274,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 //clean the workspace.
 				var authState = app.ext.store_checkout.u.determineAuthentication();
 				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses, ').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
-				var $buyerAddresses; //recycled. use as target for bill and ship addresses
+				var $buyerAddresses; //recycled. use as target for bill and ship addresses. the target of this changes in the loop below
 //only show addresses if user is logged in.
 				if(authState == 'authenticated')	{
 					var types = new Array('@ship','@bill');
@@ -289,17 +290,18 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 //						app.u.dump(" -> # addresses: "+L);
 						if(L)	{
 //							$buyerAddresses.append(type == '@bill' ? '<h2>Billing Address(es)</h2>' : '<h2>Shipping Address(es)</h2>');
+							var addressClass = type == '@bill' ? 'BILL' : 'SHIP';
 							for(var i = 0; i < L; i += 1)	{
 								$buyerAddresses.append(app.renderFunctions.transmogrify({
-									'id':'address_'+app.data.buyerAddressList[type][i]['_id'],
-									'addressclass': type == '@bill' ? 'BILL' : 'SHIP', //appBuyerAddressAddUpdate wants this as UC w/ no @
+									'id':addressClass+'_address_'+app.data.buyerAddressList[type][i]['_id'], //_id may not be unique between classes, so class is part of ID (ex: DEFAULT)
+									'addressclass': addressClass, //appBuyerAddressAddUpdate wants this as UC w/ no @
 									'addressid':app.data.buyerAddressList[type][i]['_id']
 									},type.substring(1)+'AddressTemplate',app.data.buyerAddressList[type][i]))
 								} //for loop for addresses
 							}// L if
 						} //for loop for address types
 
-					$('button',$buyerAddresses).each(function(){
+					$('button',$('#buyerAddresses')).each(function(){
 						var $button = $(this);
 						if($button.data('action') == 'cancelAddressChanges'){
 							$button.click(function(){
@@ -1047,8 +1049,8 @@ P.listID (buyer list id)
 				P.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
-				if(P.uriParams.META)	{
-					app.calls.cartSet.init({'META':P.uriParams.META},{},'passive');
+				if(P.uriParams.meta)	{
+					app.calls.cartSet.init({'meta':P.uriParams.META},{},'passive');
 					}
 //				app.u.dump(" -> P follows:");
 //				app.u.dump(P);
@@ -1488,11 +1490,17 @@ return r;
 			getAllDataFromEditable : function($parent)	{
 				var obj = {}; //what is returned. either an empty object or an assoc of key/value pairs where key = attribute and value = new value
 				$parent.find('[data-bind]').each(function(){
-					var bindData = app.renderFunctions.parseDataBind($(this).attr('data-bind'));
-					obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
-					});				
+					var bindData = myControl.renderFunctions.parseDataBind($(this).attr('data-bind'));
+					obj[myControl.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
+//in jeditable, if you edit then click 'save' directly, the .text() val hasn't been updated yet.
+//so this'll search for the input value. if additional (more than just text input) are supported later, this wil need to be updated.
+					if(!$(this).text())
+						obj[myControl.renderFunctions.parseDataVar(bindData['var'])] = $(this).find('input').val()
+					});
+//				myControl.util.dump(obj);		
 				return obj;	
 				},
+
 
 
 
@@ -1659,7 +1667,7 @@ return r;
 
 				P.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(P);
-
+				$('#mainContentArea_customer').removeClass('loadingBG');
 				},  //showCustomer
 				
 				
@@ -1718,11 +1726,17 @@ setTimeout(function(){
 					});
 				}, //bindNav
 
-		
+/*
+will close any open modals. 
+by closing modals only, we can use dialogs to show information that we want to allow the
+buyer to 'take with them' as they move between  pages.
+*/
 			closeAllModals : function(){
+				app.u.dump("BEGIN myRIA.u.closeAllModals");
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
-					if($dialog.dialog('option','dialog') == true)	{
+///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));
+					if($dialog.dialog( "option", "modal" ) === true)	{
 						$dialog.dialog("close"); //close all modal windows.
 						}
 					});
