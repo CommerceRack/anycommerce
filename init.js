@@ -97,7 +97,7 @@ app.u.throwMessage = function(m)	{
 
 //put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
 app.u.appInitComplete = function()	{
-	
+	app.u.loadScriptsByPass(2,true); //loads the rest of the scripts.
 	app.u.dump("Executing myAppIsLoaded code...");
 //display product blob fields in tabbed format.
 	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) 

@@ -243,7 +243,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				tagObj.infoObj.state = 'onCompletes';
 				app.ext.myRIA.u.handleTemplateFunctions(tagObj.infoObj);				
 				}
-			}, //showProd 
+			}, //showCompany 
 
 
 
@@ -255,6 +255,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				$parent = $('#'+tagObj.parentID);
 				$('button',$parent).removeAttr('disabled').removeClass('ui-state-disabled');
 				$('.changeLog',$parent).empty().append('Changes Saved');
+				$('.edited',$parent).removeClass('edited'); //if the save button is clicked before 'exiting' the input, the edited class wasn't being removed.
 				$('.buttonMenu',$parent).find('.offMenu').show();
 				$('.buttonMenu',$parent).find('.onMenu').hide();
 				app.ext.myRIA.u.destroyEditable($parent);
@@ -264,7 +265,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 				$('.changeLog',$parent).append(app.u.formatResponseErrors(responseData))
 				$('button',$parent).removeAttr('disabled').removeClass('ui-state-disabled');
 				}
-			}, //showProd 
+			}, //handleBuyerAddressUpdate
 
 //used in /customer
 		showAddresses : {
@@ -273,7 +274,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 //clean the workspace.
 				var authState = app.ext.store_checkout.u.determineAuthentication();
 				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses, ').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
-				var $buyerAddresses; //recycled. use as target for bill and ship addresses
+				var $buyerAddresses; //recycled. use as target for bill and ship addresses. the target of this changes in the loop below
 //only show addresses if user is logged in.
 				if(authState == 'authenticated')	{
 					var types = new Array('@ship','@bill');
@@ -289,17 +290,18 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 //						app.u.dump(" -> # addresses: "+L);
 						if(L)	{
 //							$buyerAddresses.append(type == '@bill' ? '<h2>Billing Address(es)</h2>' : '<h2>Shipping Address(es)</h2>');
+							var addressClass = type == '@bill' ? 'BILL' : 'SHIP';
 							for(var i = 0; i < L; i += 1)	{
 								$buyerAddresses.append(app.renderFunctions.transmogrify({
-									'id':'address_'+app.data.buyerAddressList[type][i]['_id'],
-									'addressclass': type == '@bill' ? 'BILL' : 'SHIP', //appBuyerAddressAddUpdate wants this as UC w/ no @
+									'id':addressClass+'_address_'+app.data.buyerAddressList[type][i]['_id'], //_id may not be unique between classes, so class is part of ID (ex: DEFAULT)
+									'addressclass': addressClass, //appBuyerAddressAddUpdate wants this as UC w/ no @
 									'addressid':app.data.buyerAddressList[type][i]['_id']
 									},type.substring(1)+'AddressTemplate',app.data.buyerAddressList[type][i]))
 								} //for loop for addresses
 							}// L if
 						} //for loop for address types
 
-					$('button',$buyerAddresses).each(function(){
+					$('button',$('#buyerAddresses')).each(function(){
 						var $button = $(this);
 						if($button.data('action') == 'cancelAddressChanges'){
 							$button.click(function(){
@@ -708,7 +710,8 @@ what is returned. is set to true if pop/pushState NOT supported.
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
 for legacy browsers. That means old browsers will use the anchor to retain 'back' button functionality.
 */
-				var r = false; 
+				var r = false;
+				infoObj.performTransition = infoObj.performTransition || true; //set to true if the link should not tranisition (such as slide to top). used 'my account' in footer linked but login modal displayed. may b set for cart modal or other modals as well.
 				if(typeof infoObj != 'object')	{infoObj = {}} //infoObj could be empty for a cart or checkout
 
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
@@ -755,7 +758,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'customer':
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
-							app.ext.myRIA.u.showCustomer(infoObj);
+							var showTransition = app.ext.myRIA.u.showCustomer(infoObj);
+							infoObj.performTransition = infoObj.performTransition || showTransition;
 							}
 						else	{
 							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
@@ -781,7 +785,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						else if('https:' != document.location.protocol)	{
 							app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 // if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Loading Secure Checkout</h1>");
+							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							var SSLlocation = app.vars.secureURL+"?sessionId="+app.sessionId+"#checkout?show=checkout";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
@@ -841,10 +845,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						$('#appView').slideDown(3000);
 						});
 					}
+//if user is not logged in, don't animate because the login modal won't appear on screen if you do.
+				else if(infoObj.performTransition == false)	{}
 				else	{
 					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
 					}
-				
+
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
@@ -1047,8 +1053,8 @@ P.listID (buyer list id)
 				P.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
-				if(P.uriParams.META)	{
-					app.calls.cartSet.init({'META':P.uriParams.META},{},'passive');
+				if(P.uriParams.meta)	{
+					app.calls.cartSet.init({'meta':P.uriParams.META},{},'passive');
 					}
 //				app.u.dump(" -> P follows:");
 //				app.u.dump(P);
@@ -1490,9 +1496,14 @@ return r;
 				$parent.find('[data-bind]').each(function(){
 					var bindData = app.renderFunctions.parseDataBind($(this).attr('data-bind'));
 					obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
-					});				
+//in jeditable, if you edit then click 'save' directly, the .text() val hasn't been updated yet.
+//so this'll search for the input value. if additional (more than just text input) are supported later, this wil need to be updated.
+					if(!$(this).text())
+						obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).find('input').val()
+					});
 				return obj;	
 				},
+
 
 
 
@@ -1587,6 +1598,7 @@ return r;
 //handleTemplateFunctions gets executed in showContent, which should always be used to execute this function.
 			showCustomer : function(P)	{
 //				app.u.dump("BEGIN showCustomer. P: "); app.u.dump(P);
+				var r = true; //what is returned. set to false if content not shown (because use is not logged in)
 				if(P && P.uriParams && P.uriParams.cartid && P.uriParams.orderid)	{
 					P.show = 'invoice'; //force to order view if these params are set (most likely invoice view).
 					}
@@ -1610,6 +1622,7 @@ return r;
 				
 				
 				if(authState != 'authenticated' && this.thisArticleRequiresLogin(P))	{
+					r = false;
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
 //this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
@@ -1659,7 +1672,8 @@ return r;
 
 				P.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(P);
-
+				$('#mainContentArea_customer').removeClass('loadingBG');
+				return r;
 				},  //showCustomer
 				
 				
@@ -1718,11 +1732,17 @@ setTimeout(function(){
 					});
 				}, //bindNav
 
-		
+/*
+will close any open modals. 
+by closing modals only, we can use dialogs to show information that we want to allow the
+buyer to 'take with them' as they move between  pages.
+*/
 			closeAllModals : function(){
+				app.u.dump("BEGIN myRIA.u.closeAllModals");
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
-					if($dialog.dialog('option','dialog') == true)	{
+///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));
+					if($dialog.dialog( "option", "modal" ) === true)	{
 						$dialog.dialog("close"); //close all modal windows.
 						}
 					});
@@ -1798,7 +1818,7 @@ $('#mainContentArea').empty();
 
 var catSafeID = P.navcat;
 if(!catSafeID)	{
-	myControl.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
+	app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
 	}
 else	{
 	if(P.templateID){

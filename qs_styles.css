@@ -133,7 +133,7 @@ and offMenu is toggle off, hiding the change button.
 
 /* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
 .sideline	{float:right; width:200px; margin:0 0 24px 24px;}
-.sideline li a	{padding:3px 0; text-decoration:none;}
+.sideline li a	{padding:5px 0; text-decoration:none;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 

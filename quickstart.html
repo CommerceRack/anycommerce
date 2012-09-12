@@ -31,9 +31,13 @@ if(document.location.protocol != 'file:')	{
 </script>
 
 
-<!-- all css includes need to be after the js that changes the base url -->
+<!-- 
+all css includes need to be after the js that changes the base url. 
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
+
 
 <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
@@ -87,6 +91,7 @@ This file is intended to go along with the 10-step tutorial at:
 	-->
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+
 
 <!-- ... your html ends -->
 <!-- /VIEW CONTENT -->
@@ -1364,16 +1369,16 @@ The 'data-action' attribute is used to assign an onclick.
 		<div class='changeLog'></div>
 	</menu>
 	<div class='addressFullname'>
-		<span data-bind="var: address(ship_firstname);format:text;"></span> <span data-bind="var: address(ship_lastname);format:text;"></span>
+		<span data-bind="var: address(ship_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(ship_lastname);format:text;" class='editable' title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(ship_address1);format:text;"></div>
-		<div data-bind="var: address(ship_address2);format:text;"></div>
+		<div data-bind="var: address(ship_address1);format:text;" class='editable' title='address'></div>
+		<div data-bind="var: address(ship_address2);format:text;" class='editable' title='address 2'></div>
 		
-		<span data-bind="var: address(ship_city); format:text; posttext:, ;"></span>
-		<span data-bind="var: address(ship_state); format:text; posttext:. ;"></span>
-		<span data-bind="var: address(ship_zip); format:text;"></span>
-		<div data-bind="var: address(ship_country); format:text;"></div>
+		<span data-bind="var: address(ship_city);format:text;" class='editable' title='city'></span>, 
+		<span data-bind="var: address(ship_state);format:text;" class='editable' title='state'></span>. 
+		<span data-bind="var: address(ship_zip);format:text;" class='editable' title='zip'></span>
+		<div data-bind="var: address(ship_country);format:text;" title='country'></div>
 
 	</div>
 </address>
