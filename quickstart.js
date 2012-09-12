@@ -710,7 +710,8 @@ what is returned. is set to true if pop/pushState NOT supported.
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
 for legacy browsers. That means old browsers will use the anchor to retain 'back' button functionality.
 */
-				var r = false; 
+				var r = false;
+				infoObj.performTransition = infoObj.performTransition || true; //set to true if the link should not tranisition (such as slide to top). used 'my account' in footer linked but login modal displayed. may b set for cart modal or other modals as well.
 				if(typeof infoObj != 'object')	{infoObj = {}} //infoObj could be empty for a cart or checkout
 
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
@@ -757,7 +758,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'customer':
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
-							app.ext.myRIA.u.showCustomer(infoObj);
+							var showTransition = app.ext.myRIA.u.showCustomer(infoObj);
+							infoObj.performTransition = infoObj.performTransition || showTransition;
 							}
 						else	{
 							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
@@ -843,10 +845,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						$('#appView').slideDown(3000);
 						});
 					}
+//if user is not logged in, don't animate because the login modal won't appear on screen if you do.
+				else if(infoObj.performTransition == false)	{}
 				else	{
 					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
 					}
-				
+
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
@@ -1594,6 +1598,7 @@ return r;
 //handleTemplateFunctions gets executed in showContent, which should always be used to execute this function.
 			showCustomer : function(P)	{
 //				app.u.dump("BEGIN showCustomer. P: "); app.u.dump(P);
+				var r = true; //what is returned. set to false if content not shown (because use is not logged in)
 				if(P && P.uriParams && P.uriParams.cartid && P.uriParams.orderid)	{
 					P.show = 'invoice'; //force to order view if these params are set (most likely invoice view).
 					}
@@ -1617,6 +1622,7 @@ return r;
 				
 				
 				if(authState != 'authenticated' && this.thisArticleRequiresLogin(P))	{
+					r = false;
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
 //this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
@@ -1667,6 +1673,7 @@ return r;
 				P.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(P);
 				$('#mainContentArea_customer').removeClass('loadingBG');
+				return r;
 				},  //showCustomer
 				
 				
