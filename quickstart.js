@@ -783,7 +783,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						else if('https:' != document.location.protocol)	{
 							app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 // if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Loading Secure Checkout</h1>");
+							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							var SSLlocation = app.vars.secureURL+"?sessionId="+app.sessionId+"#checkout?show=checkout";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
@@ -1490,14 +1490,13 @@ return r;
 			getAllDataFromEditable : function($parent)	{
 				var obj = {}; //what is returned. either an empty object or an assoc of key/value pairs where key = attribute and value = new value
 				$parent.find('[data-bind]').each(function(){
-					var bindData = myControl.renderFunctions.parseDataBind($(this).attr('data-bind'));
-					obj[myControl.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
+					var bindData = app.renderFunctions.parseDataBind($(this).attr('data-bind'));
+					obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).text();
 //in jeditable, if you edit then click 'save' directly, the .text() val hasn't been updated yet.
 //so this'll search for the input value. if additional (more than just text input) are supported later, this wil need to be updated.
 					if(!$(this).text())
-						obj[myControl.renderFunctions.parseDataVar(bindData['var'])] = $(this).find('input').val()
+						obj[app.renderFunctions.parseDataVar(bindData['var'])] = $(this).find('input').val()
 					});
-//				myControl.util.dump(obj);		
 				return obj;	
 				},
 
@@ -1812,7 +1811,7 @@ $('#mainContentArea').empty();
 
 var catSafeID = P.navcat;
 if(!catSafeID)	{
-	myControl.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
+	app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
 	}
 else	{
 	if(P.templateID){
