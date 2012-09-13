@@ -21,12 +21,12 @@
 
 
 var zController = function(params) {
-	this.u.dump('zController has been initialized');
+	this.u.dump('zController has been instantiated');
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
 //zglobals is not required in the UI, but is for any
-	else if(typeof zGlobals != 'object' && !params.noVerifyzGlobals)	{
+	else if(typeof zGlobals != 'object' && !params.vars.noVerifyzGlobals)	{
 		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
 		}
 	else	{
@@ -40,6 +40,7 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
+		this.u.dump(" -> initialize executed.");
 //		app = this;
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nexted functions are preserved. If duplicates, 'this' will override P.
@@ -106,6 +107,7 @@ copying the template into memory was done for two reasons:
 
 
 	onReady : function()	{
+		this.u.dump(" -> onReady executed.");
 /*
 
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
@@ -117,9 +119,11 @@ A session ID could be passed in through vars, but app.sessionId isn't set until 
 		if(app.vars.noVerifyzjsid && app.vars.sessionId)	{
 //you'd get here in the UI.
 			app.sessionId = app.vars.sessionId
+			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.noVerifyzjsid)	{
 			//for now, do nothing.  this may change later.
+			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.sessionId)	{
 			app.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
@@ -406,7 +410,7 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 				if(app.data.appCartExists.exists == 1)	{
-//					app.u.dump(' -> valid session id.  Proceed.');
+					app.u.dump(' -> valid session id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);

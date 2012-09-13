@@ -230,7 +230,7 @@ var admin = function() {
 //				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
-app.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/templates.html',theseTemplates);
+app.model.fetchNLoadTemplates('http://static.zoovy.com/graphics/general/jslib/zmvc/201231/extensions/admin/templates.html',theseTemplates);
 
 				return r;
 				},
