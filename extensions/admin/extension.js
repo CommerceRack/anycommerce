@@ -230,7 +230,7 @@ var admin = function() {
 //				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
-app.model.fetchNLoadTemplates('http://static.zoovy.com/graphics/general/jslib/zmvc/201231/extensions/admin/templates.html',theseTemplates);
+app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
 				return r;
 				},
@@ -280,7 +280,7 @@ app.model.fetchNLoadTemplates('http://static.zoovy.com/graphics/general/jslib/zm
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addPIDFinderToDom.success");
 				app.ext.admin.u.addFinder(tagObj.targetID,tagObj.path,tagObj.datapointer.split('|')[1]);
-				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']); //updates modal title
+				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']+" ("+app.renderFunctions.parseDataVar(tagObj.path)+")"); //updates modal title
 //				app.u.dump(tagObj);
 				}
 			}, //addPIDFinderToDom
@@ -403,6 +403,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				//go through the results and if they are already in this category, disable drag n drop.
 				$results = $('#finderSearchResults');
 				//.find( "li" ).addClass( "ui-corner-all" ) )
+
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
@@ -464,10 +465,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 //there are links in the UI that reference .action, so don't change this without updating the UI.
-		action : {
+		a : {
 /*
 to generate an instance of the finder, run: 
-app.ext.admin.action.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
+app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 
 */
 			addFinderTo : function(targetID,path,sku)	{
@@ -480,7 +481,7 @@ app.ext.admin.action.addFinderTo() passing in targetID (the element you want the
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
-
+//path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(path,sku)	{
 				var $finderModal = $('#prodFinder');
 //a finder has already been opened. empty it.
@@ -633,7 +634,7 @@ if(pid)	{
 	app.u.dump(" -> ATTRIBUTE: "+attribute);
 //	app.u.dump(" -> aattribute value = "+app.data['appProductGet|'+pid]['%attribs'][attribute]);
 	if(app.data['appProductGet|'+pid]['%attribs'][attribute])
-		prodlist = app.data['appProductGet|'+pid]['%attribs'][attribute].split(',');
+		prodlist = app.ext.store_prodlist.u.handleAttributeProductList(app.data['appProductGet|'+pid]['%attribs'][attribute]);
 	}
 else	{
 	app.u.dump(" -> NON product attribute (no pid specified)");
@@ -756,9 +757,10 @@ $('#finderSearchForm').submit(function(event){
 				var $tmp;
 //go through the results and if they are already in this category, disable drag n drop.
 				$results = $('#finderSearchResults');
+				var sku = $results.closest('[data-sku]').attr('data-sku');
 				$results.find('li').each(function(){
 					$tmp = $(this);
-					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0)	{
+					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0 || $tmp.attr('data-pid') == sku)	{
 //						app.u.dump(" -> MATCH! disable dragging.");
 						$tmp.addClass('ui-state-disabled');
 						}

@@ -107,7 +107,7 @@ copying the template into memory was done for two reasons:
 
 
 	onReady : function()	{
-		this.u.dump(" -> onReady executed.");
+		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
 /*
 
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
@@ -538,6 +538,20 @@ app.u.handleCallback(tagObj);
 			},
 			
 
+//pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
+//ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
+//will be used in updates to translator.
+		getObjValFromDotString : function (dotStr,obj)	{
+			function multiIndex(obj,is) {  // obj,[1,2,3] -> obj[1][2][3]
+				return is.length ? multiIndex(obj[is[0]],is.slice(1)) : obj
+				}
+			function pathIndex(is,obj) {       // obj,'1.2.3' -> obj[1][2][3]
+				return multiIndex(obj,is.split('.'))
+				}
+			return pathIndex(dotStr,obj);
+			},
+
+
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 		guidGenerator : function() {
 			var S4 = function() {
@@ -558,7 +572,6 @@ app.u.handleCallback(tagObj);
 			},
 			
 
-
 //jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
 		jumpToAnchor : function(id)	{
 			window.location.hash=id;
@@ -572,14 +585,17 @@ app.u.handleCallback(tagObj);
 			app.u.dump(err);
 			},
 /*
-err could be a string or an object.
+msg could be a string or an object.
 if an object, could be: {errid,errmsg,errtype}   OR   {msg_X_txt,msg_X_type,msg_X_id}
  -> if msg_X format, X will be an integer and _msgs will be set to indicate the # of messages.
 
 $target - a jquery object of the target/destination for the message itself. Will check err for parentID, targetID and if not present, check to see if globalMessaging is present AND visible.  If not visible, will open modal.
 returns the id of the message, so that an action can be easily added if needed (onclick or timeout w/ a hide, etc)
+
+skipAutoHide - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
+and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
-		throwMessage : function(msg){
+		throwMessage : function(msg,skipAutoHide){
 //			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
@@ -606,6 +622,7 @@ returns the id of the message, so that an action can be easily added if needed (
 				$container.append(this.formatMessage(msg)).prependTo($target); //always put new messages at the top.
 				}
 			else if(typeof msg === 'object')	{
+				skipAutoHide = msg.skipAutoHide || false;
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
@@ -620,7 +637,7 @@ returns the id of the message, so that an action can be easily added if needed (
 				app.u.dump("WARNING! - unknown type ["+typeof err+"] set on parameter passed into app.u.throwMessage");
 				r = false; //don't return an html id.
 				}
-			if(typeof msg == 'string' || (typeof msg == 'object' && !msg.skipAutoHide))	{
+			if(skipAutoHide !== true)	{
 				setTimeout(function(){
 					$('.'+messageClass).slideUp(2000);
 					},8000); //shrink message after a short display period
@@ -719,9 +736,9 @@ pass in additional information for more control, such as css class of 'error' an
 				}
 
 //the zMessage class is added so that these warning can be cleared (either universally or within a selector).
-			var r = "<div class='ui-widget appMessage'>";
+			var r = "<div class='ui-widget appMessage clearfix'>";
 			r += "<div class='ui-state-"+obj.uiClass+" ui-corner-all'>";
-			r += "<div class='clearfix'><span class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/div>";
+			r += "<div class='clearfix stdMargin'><span class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/div>";
 			r += "<\/div><\/div>";
 			return r;
 			},
@@ -866,7 +883,6 @@ BROWSER/OS
 
 
 // .browser returns an object of info about the browser (name and version).
-//this is a function because .browser is deprecated and will need to be replaced, but I need something now. !!! fix in next version.
 		getBrowserInfo : function()	{
 			var r;
 			var BI = jQuery.browser; //browser information. returns an object. will set 'true' for value of browser 
@@ -1664,7 +1680,7 @@ $r.find('[data-bind]').each(function()	{
 				if(bindData.wrap) {$focusTag.wrap(bindData.wrap)}
 				}
 			else	{
-					$('#globalMessaging').append(app.u.formatMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)"));
+					app.u.throwMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)");
 					app.u.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
 //						app.u.dump(bindData);
 				}
@@ -1899,7 +1915,7 @@ the first two cases below are to handle instances of this.
 				$tag.attr('src',imgSrc);
 				}
 			else	{
-				$tag.css('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
+				$tag.css('display','none'); //if there is no image, hide the src. 
 				}
 			}, //imageURL
 

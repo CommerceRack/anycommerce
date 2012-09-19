@@ -118,7 +118,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 /* messaging css. some error css is defined in the jqueryui styles */
-.appMessage	{margin-bottom:3px;}
+.appMessage	{margin-bottom:3px; text-align:left;}
 .appMessage .ui-icon	{float:left; margin:4px 5px;}
 .appMessage {padding:5px;} /* add padding to children, not parent, that way we can empty the parent and no space is reserved */
 .appMessage ul	{margin-left:12px; font-size:.9em;}
@@ -133,7 +133,7 @@ and offMenu is toggle off, hiding the change button.
 
 /* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
 .sideline	{float:right; width:200px; margin:0 0 24px 24px;}
-.sideline li a	{padding:5px 0; text-decoration:none;} /* recommend at least 5px vert padding for mobile/pad */
+.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 

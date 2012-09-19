@@ -81,7 +81,11 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
+<<<<<<< HEAD
 		version : "201235",
+=======
+		version : "201237",
+>>>>>>> origin/201237-jt
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -1075,8 +1079,14 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				});	//this.fetchFileViaAjax(templateURL);
 		
 		ajaxRequest.error(function(d,e,f){
+<<<<<<< HEAD
 			//the templates not loading is pretty much a catastrophic issue. however, we don't want to throw an error in this case so just hide the carousel.
 			$('#globalMessaging').append(app.u.formatMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)"));
+=======
+			//the templates not loading is pretty much a catastrophic issue.
+			app.u.throwMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)",true);			
+
+>>>>>>> origin/201237-jt
 			app.u.dump("ERROR! unable to load remote templates");
 			app.u.dump("templateURL: "+templateURL);
 			app.u.dump(e);
@@ -1097,7 +1107,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			$remoteTemps.html(data);
 			var templateErrors = app.model.loadTemplates(templates);
 			if(templateErrors)	{
+<<<<<<< HEAD
 				$('#globalMessaging').append(app.u.formatMessage(templateErrors));
+=======
+				app.u.throwMessage(templateErrors,true);
+>>>>>>> origin/201237-jt
 //				app.u.dump(templateErrors);
 				}
 			});
@@ -1184,6 +1198,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 /*
 now we know whether the extension properly loaded, had and executed an init and has a callback.
 respond accordingly.
+<<<<<<< HEAD
 
 */
 						if(initPassed == false)	{
@@ -1194,6 +1209,18 @@ respond accordingly.
 							app.u.dump(" -> "+errors);
 //view templates must contain the globalMessaging div. The testing harness needs it.
 							$('#globalMessaging').append("<div class='ui-state-error ui-corner-all'>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>");
+=======
+an extension should throw it's own specific error.  This is a more global error that will also always be displayed and be persistant.
+*/
+						if(initPassed == false)	{
+							app.u.throwMessage("Uh Oh! Something went wrong with our app. We apologize for any inconvenience. (err: "+namespace+" extension did not pass init)",true);
+							}
+//errors would be populated if, say, no init is set.
+						else if(errors)	{
+							app.u.dump(" -> extension contained errors. callback not executed yet.");
+							app.u.dump(" -> "+errors);
+							app.u.throwMessage("Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul>",true);
+>>>>>>> origin/201237-jt
 
 //the line above handles the errors. however, in some cases a template may want additional error handling so the errors are passed in to the onError callback.
 							if(app.ext[namespace].callbacks.onError)	{
@@ -1217,12 +1244,16 @@ respond accordingly.
 						}
 					},
 				error: function(a,b,c) {
+<<<<<<< HEAD
 					var $messageEle = $('#globalMessaging');
 					if(!$messageEle.is(':visible'))	{
 						$messageEle = $('.appErrors');
 						}
 					$messageEle.append("<div class='ui-state-error ui-corner-all'>Uh oh! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extensionObjItem.namespace+" had error type "+b+")<\/div>");
 						
+=======
+					app.u.throwMessage("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extensionObjItem.namespace+" had error type "+b+")");
+>>>>>>> origin/201237-jt
 					app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					app.u.dump(c);
 					}
@@ -1231,7 +1262,11 @@ respond accordingly.
 			},
 
 		executeExtensionCallback : function(namespace,callback)	{
+<<<<<<< HEAD
 			app.u.dump("BEGIN model.executeExtensionCallback ["+namespace+"]");
+=======
+//			app.u.dump("BEGIN model.executeExtensionCallback ["+namespace+"]");
+>>>>>>> origin/201237-jt
 			if(namespace && callback)	{
 				if(typeof callback == 'function'){eval(callback)}
 				else if(typeof callback == 'string' && typeof app.ext[namespace] == 'object' && typeof app.ext[namespace].callbacks[callback] == 'object')	{
@@ -1384,7 +1419,11 @@ this makes extension sequence less important when initializing the controller.
 				app.ext[namespace].vars.dependAttempts += 1;
 				app.u.dump(" -> dependencies missing for namespace "+namespace+". try again. attempt: "+app.ext[namespace].vars.dependAttempts);
 				if(app.ext[namespace].vars.dependAttempts > 25)	{
+<<<<<<< HEAD
 					$('#globalMessaging').append("Uh Oh. An error occured with our app. You can try refreshing the page. If error persists, please contact the site administrator").toggle(true);
+=======
+					app.u.throwMessage("Uh Oh. An error occured with our app. You can try refreshing the page. If error persists, please contact the site administrator",true);
+>>>>>>> origin/201237-jt
 					}
 				else	{
 					setTimeout("app.model.handleDependenciesFor('"+namespace+"','"+callback+"');",500)

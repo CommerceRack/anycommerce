@@ -12,7 +12,7 @@ PRODUCT FINDER
 
 <ul>
 	<li class='clearfix loadingBG stdListItem' id='adminProdStdForList'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
@@ -20,14 +20,14 @@ PRODUCT FINDER
 	</li>
 
 	<li class='clearfix loadingBG simpleListItem' id='adminProdSimpleForList'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
 
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>

@@ -15,7 +15,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLO
 var myCreole;
 
 var app = {vars:{
-	"release":"20120905130000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20120912074300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
 	"httpURL":"http://www.sporks.zoovy.com/"
@@ -483,10 +483,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 </table>
 <!-- must be outside table, otherwise width goes way wide -->
 <div id='prodlistRelatedContainer'>
-	<div class='redGrit prodlistHead'>
-		<span class='hbSpriteBG relatedItemsHead'></span>
-	</div>
-	<ul id='prodlistRelated' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true;  withReviews:1"></ul>
+	<ul id='prodlistRelated' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true; before:<h2>Similar Items</h2>; withReviews:1"></ul>
 </div>
 
 
@@ -495,7 +492,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 
 
 
-
+<!-- a template used for a quickview link off of a category page -->
 <div id='productTemplateQuickView'>
 
 <table class='prodViewerContainer'>
@@ -817,6 +814,34 @@ adding classes is not likely to have any bad effects.
 
 
 
+<div id='searchTemplate' class='searchResultsPage clearfix'>
+
+	<div class='sideline' id='sideline'>
+	<nav id='searchNav'>
+	<ul class='listStyleNone noPadOrMargin'><!--
+		<li id='altSearchesContainer'>
+		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
+		<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
+		</li>
+	-->
+		<li id='recentSearchesContainer'>
+		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
+		<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
+		</li>
+	</ul>
+	</nav>
+	</div>
+	
+	<div class='mainColumn'>
+	<section id='resultsProdlist'>
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>	
+	</section>
+	</div>
+</div>
+
+
+
+
 
 
 
@@ -867,34 +892,6 @@ onclicks are recursive, so only add it to the parent element.
 
 
 
-
-
-
-
-<div id='searchTemplate' class='searchResultsPage clearfix'>
-
-	<div class='sideline' id='sideline'>
-	<nav id='searchNav'>
-	<ul class='listStyleNone noPadOrMargin'><!--
-		<li id='altSearchesContainer'>
-		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
-		<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-		</li>
-	-->
-		<li id='recentSearchesContainer'>
-		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
-		<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-		</li>
-	</ul>
-	</nav>
-	</div>
-	
-	<div class='mainColumn'>
-	<section id='resultsProdlist'>
-		<ul id='resultsProductListContainer' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>	
-	</section>
-	</div>
-</div>
 
 
 
@@ -984,9 +981,9 @@ So the cart template should contain these two elements and the extension should 
 
 		<span id='paypalECButton' data-bind='var: cart(id); format:paypalECButton;'></span>
 
-		<span id='googleCheckoutButton' data-bind='var: cart(id); format:googleCheckoutButton;'></span>
+		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(id); format:googleCheckoutButton;'></span>
 		
-		<span id='amazonCheckoutButton' data-bind='var: cart(id); format:amazonCheckoutButton;'></span>
+		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(id); format:amazonCheckoutButton;'></span>
 
 	</div>
 			
@@ -1018,7 +1015,7 @@ So the cart template should contain these two elements and the extension should 
 		<span class='ui-icon ui-icon-closethick'></span>
 		</span>
 		
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: full_product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 		
@@ -1035,13 +1032,6 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
 	</li>
 </ul>
-
-
-
-
-
-
-
 
 
 
@@ -1150,6 +1140,9 @@ used for store_crm.js
 
 </form>
 </div>
+
+
+
 
 
 <div id='subscribeFormTemplate'>
@@ -1400,20 +1393,6 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </div><!-- /templates -->
 
 
@@ -1491,8 +1470,6 @@ The 'data-action' attribute is used to assign an onclick.
 </menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
-
-
 
 
 <form name='headerSearchFrm' action='#' class='productSearchForm' method="get">

@@ -105,11 +105,11 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 
 <!--
 used in checkout for 'order total' panel. this is the line-item spec for a cart item (product/coupon/etc)
-the defaultVar on prodName is for promotions, which have a 'description' attribute
+the defaultVar on prodName & image is for promotions, which have a 'description' attribute
 -->
 <ul>
 <li id='productListTemplateCheckout' class='cartTotalLineItem'>
-	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
+	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL; defaultVar: product(full_product.zoovy:prod_image1);' width='50' height='50' />
 	<div class='floatLeft '>
 		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
 		<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
@@ -332,6 +332,8 @@ do NOT change the input name or id or checkout will likely break.
 	</div>
 
 
+	<div class='clearAll'></div>
+	<span id='BuySafeGuaranteeSpan'></span>
 	<div class='clearAll'></div>
 
 </div>
