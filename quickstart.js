@@ -772,7 +772,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
 
 				app.ext.myRIA.u.closeAllModals();  //close any open modal dialogs. important cuz a 'showpage' could get executed via wiki in a modal window.
-
+				//to avoid confusion, clear keywords when leaving a search page. cart opens a modal, so no need to clear.
+				if(pageType != 'search' || pageType != 'cart')	{$('.productSearchKeyword').val('');}
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 
 				switch(pageType)	{
