@@ -366,48 +366,39 @@ $tag.click(function(){
 
 			
 /*
-Guess what this does?  Yep, shows the cart in a modal. shocking, no?
-In this case, the id is hard coded because we only want one instantation of the cart at a time.
-It also allows us to nuke it during checkout, if need be (ensure no duplicate id's)
-
-//put the loadingBG class into the template, not onto the div created here (jqueryUI classes will override it).
+This will open the cart in a modal. If an update is needed, that must be performed outside this function.
+assumes that cart is in memory before it's loaded.
+either templateID needs to be set OR showloading must be true. TemplateID will translate the template. showLoading will (you guessed it) show the loading class.
+ so you can execute showCartInModal with showLoading set to true, then dispatch a request for a cart and translate the parent ID in the callback.
+ can't think of a reason not to use the default parentID, but just in case, it can be set.
 */
-			showCartInModal : function(templateID,tagObj)	{
+			showCartInModal : function(P)	{
 //				app.u.dump("BEGIN store_cart.u.showCartInModal");
-				if(typeof tagObj == 'object'){}
-				else	{
-					tagObj = {"callback":"displayCart","extension":"store_cart"}
-					}
-				tagObj.parentID = "modalCartContents"
-				tagObj.templateID = templateID
-				var $parent = $('#modalCart');
+				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
+					P.parentID = P.parentID || "modalCartContents" //parent id for 'template' not modal.
+					var $parent = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
-				if($parent.length == 0)	{
-					$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
-					$parent.dialog({modal: true,width:'80%',height:$(window).height() - 100});  //browser doesn't like percentage for height
+					if($parent.length == 0)	{
+						$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$parent.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+						}
+					else	{
+						$parent.empty().dialog('open'); //empty to remove any previous content.
+						}
+
+					if(P.showLoading === true)	{
+						$parent.append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
+						}
+					else	{
+						$parent.append(app.renderFunctions.transmogrify(P.parentID,P.templateID,app.data['cartItemsList'].cart));
+						}
 					}
 				else	{
-//empty the existing cart and add a loadingBG so that the user sees something is happening.
-					$parent.empty().dialog('open');
+					app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");
+					app.u.dump(P);
 					}
 
-//populate the modal with the template (which includes 'loadingBG'.
-				$parent.append(app.renderFunctions.createTemplateInstance(templateID,"modalCartContents"));
-
-//if the shipping methods haven't been retrieved yet, get a new cart too.
-//its done this way because if the cart callback is executed prior to the shipMethods one, then an error will occur in the cart display cuz shipmethods aren't present.
-				if(app.ext.store_cart.calls.cartShippingMethods.init({},'immutable'))	{
-					app.calls.refreshCart.init(tagObj,'immutable');
-					}
-				else	{
-//if we get to this point, ship methods are already in memory/local. the cartItemsList call below will check memory/local before making a request.
-					app.ext.store_cart.calls.cartItemsList.init(tagObj,'immutable');
-					}
-//				app.u.dump(" -> GOT THIS FAR");
-
-				app.model.dispatchThis('immutable');
-//show modal, even though pretty much empty. Allows for something to happen right away so user knows the app is working on it.
 				
 				}, //showCartInModal
 

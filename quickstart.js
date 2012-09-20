@@ -226,7 +226,8 @@ else	{
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN myRIA.callbacks.onSuccess.handleCart");
 				app.ext.myRIA.u.handleMinicartUpdate(tagObj);
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer].cart,tagObj.parentID);				
+				//empty is to get rid of loading gfx.
+				$('#'+tagObj.parentID).empty().append(app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,app.data[tagObj.datapointer].cart));
 				tagObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(tagObj);
 				}
@@ -845,10 +846,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						app.ext.myRIA.u.showCompany(infoObj);
 						break;
 	
-	
 					case 'cart':
 //						infoObj.mode = 'modal';
 						infoObj.back = 0; //no popstate or hash change since it's opening in a modal.
+						infoObj.performTransition = false; //dont jump to top.
 //						app.ext.myRIA.u.showPage('.'); //commented out.
 						app.ext.myRIA.u.showCart(infoObj);
 						break;
@@ -1632,6 +1633,26 @@ return r;
 
 				}, //showSearch
 
+
+
+//pio is PageInfo object
+//this showCart should only be run when no cart update is being run.
+//this is run from showContent.
+// when a cart update is run, the handleCart response also executes the handleTemplateFunctions
+			showCart : function(P)	{
+				if(typeof P != 'object'){var P = {}}
+//				app.u.dump("BEGIN myRIA.u.showCart");
+// ### update. if mainContentArea is empty, put the cart there. if not, show in modal.
+				P.templateID = 'cartTemplate'
+				P.state = 'onInits'; //needed for handleTemplateFunctions.
+				app.ext.myRIA.u.handleTemplateFunctions(P);
+				app.ext.store_cart.u.showCartInModal(P);
+				P.state = 'onCompletes'; //needed for handleTemplateFunctions.
+				app.ext.myRIA.u.handleTemplateFunctions(P);
+				}, //showCart
+
+
+
 //Customer pages differ from company pages. In this case, special logic is needed to determine whether or not content can be displayed based on authentication.
 // plus, most of the articles require an API request for more data.
 //handleTemplateFunctions gets executed in showContent, which should always be used to execute this function.
@@ -2072,15 +2093,6 @@ else	{
 				}, //removeByValue
 
 
-			showCart : function(pio)	{
-				if(typeof pio != 'object'){var pio = {}}
-//				app.u.dump("BEGIN myRIA.u.showCart");
-// ### update. if mainContentArea is empty, put the cart there. if not, show in modal.
-				pio.templateID = 'cartTemplate'
-				pio.state = 'onInits'; //needed for handleTemplateFunctions.
-				app.ext.myRIA.u.handleTemplateFunctions(pio);
-				app.ext.store_cart.u.showCartInModal(pio.templateID,{'callback':'handleCart','extension':'myRIA'});
-				}, //showCart
 
 
 
@@ -2153,8 +2165,9 @@ else	{
 //this product call displays the messaging regardless, but the modal opens over it, so that's fine.
 		app.ext.store_product.calls.cartItemsAdd.init(formID,{'callback':'itemAddedToCart','extension':'myRIA'});
 		if(obj.action == 'modal')	{
-			app.ext.store_cart.u.showCartInModal('cartTemplate');
-			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
+			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
+			app.ext.store_cart.u.showCartInModal({'showLoading':true});
+			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCart','templateID':'cartTemplate'},'immutable');
 			}
 		else	{
 			app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');

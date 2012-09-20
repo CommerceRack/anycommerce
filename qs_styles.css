@@ -9,8 +9,9 @@ body,html	{font-size:100%;}
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
 loadingBG classname is removed once template is rendered.
 note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
+note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
 */
-.loadingBG	{background:url(loading.gif) no-repeat center center; min-height:100px; min-width:100px;}
+.loadingBG	{background-image:url(loading.gif); background-repeat: no-repeat; background-position: center center; min-height:100px; min-width:100px;}
 li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center; min-height:20px; min-width:20px;}
 span.wait	{display:inline-block;}
 
