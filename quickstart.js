@@ -582,6 +582,14 @@ need to be customized on a per-ria basis.
 				app.renderFormats.text($tag,data)
 				},
 
+//### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
+			searchLink : function($tag,data){
+				var keywords = data.value.replace(/ /g,"+");
+				$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
+					showContent('search',{'KEYWORDS':keywords})
+					});
+				}, //searchLink
+
 
 			addPicSlider : function($tag,data)	{
 				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
