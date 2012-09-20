@@ -26,15 +26,6 @@ var convertSessionToOrder = function() {
 		focusFieldset : '',
 		willFetchMyOwnTemplates : true,
 		containerID : '',
-//used to both generate and validate the echeck fields.
-		echeck : {
-			"payment.ea" : "Account #",
-			"payment.er" : "Routing #",
-			"payment.en" : "Account Name",
-			"payment.eb" : "Bank Name",
-			"payment.es" : "Bank State",
-			"payment.ei" : "Check #"
-			},
 		legends : {
 			"chkoutPreflight" : "Contact Information",
 			"chkoutAccountInfo" : "Account Information",
@@ -98,7 +89,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 				app.model.dispatchThis("immutable");
 
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated')	{
+				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
 					$('#chkout-create_customer').val(0);
 					}
@@ -164,7 +155,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 					}
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 //only send the request for addresses if the user is logged in or the request will return an error.
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated')	{
+				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.ext.store_checkout.calls.buyerAddressList.init();
 					}
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
@@ -541,9 +532,9 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 					app.u.dump(" -> into stuffCount IF");
 					app.ext.convertSessionToOrder.panelContent.preflight();
 //					app.u.dump(" -> GOT HERE!");
-					app.u.dump(" -> softAuth: "+app.ext.store_checkout.u.determineAuthentication());
+					app.u.dump(" -> softAuth: "+app.u.determineAuthentication());
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
-					if(app.ext.store_checkout.u.determineAuthentication() != 'none')	{
+					if(app.u.determineAuthentication() != 'none')	{
 						app.u.dump(' -> authentication passed. Showing panels.');
 						app.u.dump(' -> chkout.bill_to_ship = '+app.data.cartItemsList.cart['chkout.bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
@@ -721,7 +712,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var valid = 1; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
 				var $errorDiv = $('#chkoutPreflightFieldsetErrors').empty().toggle(false);
 //if the user is authenticated already (logged in) the email input may not even appear, so no need to validate.
-				if(app.ext.store_checkout.u.determineAuthentication() != 'authenticated')	{
+				if(app.u.determineAuthentication() != 'authenticated')	{
 //					app.u.dump(' -> validating');
 					var $email = $('#data-bill_email');
 //					app.u.dump(' -> validating. email = '+$email.val());
@@ -748,7 +739,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					
-					app.u.dump(' -> did not validate preflight panel because user is authenticated. authentication = '+app.ext.store_checkout.u.determineAuthentication());
+					app.u.dump(' -> did not validate preflight panel because user is authenticated. authentication = '+app.u.determineAuthentication());
 					
 					}
 //				app.u.dump('END app.ext.convertSessionToOrder.validation.chkoutPreflightFieldset');
@@ -765,7 +756,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var valid = 1;
 				var $fieldsetErrors = $('#chkoutAccountInfoFieldsetErrors').empty().toggle(false);
 				
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				app.u.dump('authState = '+authState);
 				if(authState == 'authenticated' || authState == 'thirdPartyGuest')	{
 					app.u.dump(' -> user is logged in, authentication not needed.');
@@ -1046,7 +1037,7 @@ payment options, pricing, etc
 				var username = app.u.getUsernameFromCart();
 				var className = '';
 				var o; //output.
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				var email = '';
 				
 				if(app.data.cartItemsList.cart['data.bill_email'])	{email = app.data.cartItemsList.cart['data.bill_email'];}
@@ -1125,7 +1116,7 @@ payment options, pricing, etc
 
 			accountInfo : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.accountInfo.  ');
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				var createCustomer = app.data.cartItemsList.cart['chkout.create_customer'] ? app.data.cartItemsList.cart['chkout.create_customer'] : 0;
 				
 //				app.u.dump(' -> createCustomer = '+createCustomer);
@@ -1169,7 +1160,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				var data = app.data.cartItemsList.cart;
 				var txt = '';
 				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
-			 	var authState = app.ext.store_checkout.u.determineAuthentication();
+			 	var authState = app.u.determineAuthentication();
 				if(authState == 'authenticated' && app.ext.store_checkout.u.buyerHasPredefinedAddresses('bill') == true)	{
 //					app.u.dump(" -> user is logged in AND has predefined billing address(es)");
 					txt = "Please choose from (click on) billing address(es) below:";
@@ -1215,7 +1206,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				var cssClass = '';  //used around the form fields. turned off if pre-defined addresses exist, but form is still generated so a new address can be added.
 				var $panelFieldset = $("#chkoutShipAddressFieldset");
 				
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
+				if(app.u.determineAuthentication() == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
 					app.u.dump(' -> user is authenticated and has predefined shipping addressses.');
 // for existing customers/addresses, there is a default bill and a default ship address that could be different. So, the checkbox for bill to ship is NOT checked and the ship address panel is displayed.
 					$panelFieldset.toggle(true); //toggles the panel on.

@@ -88,7 +88,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.dispatchThis("immutable");
 
 // even in passive, this field is needed. Can be set to zero out of the gate. API will return error if not present.
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated')	{
+				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
 					$('#chkout-create_customer').val(0);
 					}
@@ -129,7 +129,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 					}
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 //only send the request for addresses if the user is logged in or the request will return an error.
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated')	{
+				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.ext.store_checkout.calls.buyerAddressList.init();
 					app.ext.store_checkout.calls.buyerWalletList.init();
 					}
@@ -963,7 +963,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //				app.u.dump(data);
 				var txt = '';
 				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
-			 	var authState = app.ext.store_checkout.u.determineAuthentication();
+			 	var authState = app.u.determineAuthentication();
 				if(authState == 'authenticated' && app.ext.store_checkout.u.buyerHasPredefinedAddresses('bill') == true)	{
 //					app.u.dump(" -> user is logged in AND has predefined billing address(es)");
 					txt = "<span class='addressListPrompt'>Please choose from (click on) billing address(es) below:<\/span>";
@@ -1010,7 +1010,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				var cssClass = '';  //used around the form fields. turned off if pre-defined addresses exist, but form is still generated so a new address can be added.
 				var $panelFieldset = $("#chkoutShipAddressFieldset");
 				
-				if(app.ext.store_checkout.u.determineAuthentication() == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
+				if(app.u.determineAuthentication() == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
 					app.u.dump(' -> user is authenticated and has predefined shipping addressses.');
 // for existing customers/addresses, there is a default bill and a default ship address that could be different. So, the checkbox for bill to ship is NOT checked and the ship address panel is displayed.
 					$panelFieldset.toggle(true); //toggles the panel on.

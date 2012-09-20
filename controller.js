@@ -824,8 +824,8 @@ If the user has subscribed to email during this visit, then guest will be return
 if there was no login of any kind, they're not authenticated. false is returned.
 
 use this function to determine IF you need to make calls, do NOT add any calls if auth level isn't as high as needed.
-*/
 
+commented out in 201238
 		whatAuthIsThisSession : function()	{
 			var r = false; //what is returned.
 			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
@@ -835,6 +835,46 @@ use this function to determine IF you need to make calls, do NOT add any calls i
 			else{}
 			return r;
 			}, //whatAuthIsThisSession
+
+*/
+
+
+//pretty straightforward. If a cid is set, the session has been authenticated.
+//if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
+//if no cid but email, they are a guest.
+//if logged in via facebook, they are a thirdPartyGuest.
+//this could easily become smarter to take into account the timestamp of when the session was authenticated.
+			
+			determineAuthentication : function(){
+				var r = 'none';
+				if(this.thisIsAnAdminSession())	{
+					r = 'admin';
+					}
+//was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
+				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
+				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
+				else if(app.model.fetchData('cartItemsList') && app.u.isSet(app.data.cartItemsList.cart.cid))	{
+					r = 'authenticated';
+					app.vars.cid = app.data.cartItemsList.cart.cid;
+					}
+//need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
+//and all third parties would get 'guest'
+				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
+					r = 'thirdPartyGuest';
+//					app.thirdParty.fb.saveUserDataToSession();
+					}
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['data.bill_email'])	{
+					r = 'guest';
+					}
+				else	{
+					//catch.
+					}
+//				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
+
+				return r;
+				},
+
+
 
 //pass in a simple array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)

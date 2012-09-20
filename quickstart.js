@@ -309,7 +309,7 @@ else	{
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN myRIA.callbacks.showAddresses.onSuccess");
 //clean the workspace.
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses, ').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
 				var $buyerAddresses; //recycled. use as target for bill and ship addresses. the target of this changes in the loop below
 //only show addresses if user is logged in.
@@ -1016,7 +1016,7 @@ P.listID (buyer list id)
 //P.listid and p.sku are required.
 //optional params include: qty, priority, note, and replace. see API docs for explanation.
 			add2BuyerList : function(P){
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				if(typeof P != 'object' || !P.pid || !P.listid)	{
 					app.u.throwMessage("Uh Oh! Something went wrong. Please try that again or contact the site administrator if error persists. err: required param for add2buyerList was missing. see console for details.");
 					app.u.dump("ERROR! params missing for add2BuyerList. listid and pid required. params: "); app.u.dump(P);
@@ -1652,7 +1652,7 @@ return r;
 				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
 				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
 				app.ext.myRIA.u.bindNav('#sideline a');
-				var authState = app.ext.store_checkout.u.determineAuthentication();
+				var authState = app.u.determineAuthentication();
 				
 				P.templateID = 'customerTemplate';
 				P.state = 'onInits';
@@ -2091,7 +2091,7 @@ I believe this was updated to the add2buyerlist function but not deleted when it
 			handleAddToList : function(pid,listID)	{
 
 //app.u.dump("BEGIN myRIA.u.handleAddToList ("+pid+")");
-var authState = app.ext.store_checkout.u.determineAuthentication();
+var authState = app.u.determineAuthentication();
 if(authState == 'authenticated')	{
 	app.ext.store_crm.calls.addToCustomerList.init({"listid":listID,"sku":pid},{"parentID":"CRMButtonMenu","message":"Item has been added to your list","callback":"showMessaging"}); 
 	app.model.dispatchThis();
