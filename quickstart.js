@@ -408,6 +408,7 @@ else	{
 				var tmp = {};
 //cat page handling.
 				if(tagObj.navcat)	{
+					app.u.dump("BEGIN myRIA.callbacks.showPageContent");
 					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
 						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
 						}
@@ -592,7 +593,7 @@ need to be customized on a per-ria basis.
 
 
 			addPicSlider : function($tag,data)	{
-				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
+//				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
 				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
 					var pdata = app.data['appProductGet|'+data.value]['%attribs'];
 //if image 1 or 2 isn't set, likely there are no secondary images. stop.
@@ -1684,6 +1685,8 @@ return r;
 				app.ext.myRIA.u.bindNav('#sideline a');
 				var authState = app.u.determineAuthentication();
 				
+				app.u.dump(" -> authState:"+authState);
+				
 				P.templateID = 'customerTemplate';
 				P.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(P);
@@ -1957,7 +1960,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				tagObj.searchArray.push('appPublicSearch|'+elementID); //keep a list of all the searches that are being done. used in callback.
 				}
 			}
-//session is a globally recognized namespace. It's content may require a request. the data is in memory (myRIA.vars.session)
+//session is a globally recognized namespace. It's content usually doesn't require a request. the data is in memory (myRIA.vars.session)
 		else if(namespace == 'session')	{
 
 			}
@@ -1993,8 +1996,9 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 // this is a navcat in focus
 		else	{
-			if(namespace == 'page')	{
-				myAttributes.push(attribute);  //set value to the actual value
+			if(namespace == 'category' &&  attribute.substring(0,5) === '%page')	{
+				app.u.dump(attribute.substring(6));
+				myAttributes.push(attribute.substring(6));  //set value to the actual value
 				}
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
 	//			app.u.dump(" -> category(@subcategoryDetail) found");

@@ -92,7 +92,7 @@ copying the template into memory was done for two reasons:
 		app.q = {mutable : new Array(), passive: new Array(), immutable : new Array()};
 		
 		app.globalAjax = {
-			dataType : app.model.whatAjaxDataType2Use(),
+			dataType : 'json',
 			overrideAttempts : 0, //incremented when an override occurs. allows for a cease after X attempts.
 			lastDispatch : null, //timestamp.
 			passiveInterval : setInterval(function(){app.model.dispatchThis('passive')},5000), //auto-dispatch the passive q every five seconds.
@@ -541,15 +541,19 @@ app.u.handleCallback(tagObj);
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
 //ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
 //will be used in updates to translator.
-		getObjValFromDotString : function (dotStr,obj)	{
-			function multiIndex(obj,is) {  // obj,[1,2,3] -> obj[1][2][3]
-				return is.length ? multiIndex(obj[is[0]],is.slice(1)) : obj
+
+//http://stackoverflow.com/questions/5240785/split-abc/5240797#5240797
+		getObjValFromDotString : function (s,obj)	{
+
+			var o=obj, attrs=s.split(".");
+			while (attrs.length > 0) {
+				o = o[attrs.shift()];
+				if (!o) {o= null; break;}
 				}
-			function pathIndex(is,obj) {       // obj,'1.2.3' -> obj[1][2][3]
-				return multiIndex(obj,is.split('.'))
-				}
-			return pathIndex(dotStr,obj);
+			return o;
+
 			},
+
 
 
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
@@ -809,7 +813,7 @@ AUTHENTICATION/USER
 		
 		thisIsAnAdminSession : function()	{
 			var r = false; //what is returned.
-			if(app.sessionId && app.sessionId.substring(0,2) != '**')	{
+			if(app.sessionId && app.sessionId.substring(0,2) === '**')	{
 				r = true;
 				}
 			return r;
@@ -1795,112 +1799,91 @@ $('#'+safeTarget).replaceWith($tmp);
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
+				
+				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
 //app.u.dump(' -> namespace = '+namespace);
 //app.u.dump(' -> attributeID = '+attributeID);
+//app.u.dump(' -> value = '+value);
+//This is an attempt to skip a lot of the code block below. It was added in 201239.
+				if(typeof value == 'string')	{}
+				else	{
 
-
-				
+/*
+attributes are often stored as some.data.location where each dot is an object name and the last one is the pointer for the data.
+the getObjValFromDotString function takes the string (some.data.location) and uses that to find the value in the data object.
+wonderful... except in some cases (orders, cart, etc) some fields have periods in them. hopefully this is addressed in cart2
+#### may be able to lighten this up after cart2
+*/
 //In some cases, like categories, some data is in the root and some is in %meta.
 //pass %meta.cat_thumb, for instance.  currenlty, only %meta is supported. if/when another %var is needed, this'll need to be expanded. ###
 //just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
 // need to verify object exists as well now (2012-20) because we're running translate over the same template more than once, specifically for admin_orders, but likely more.
-				if(attributeID.substring(0,5) === '%meta' && namespace == 'category' && typeof data['%meta'] == 'object')	{
-					value = data['%meta'][attributeID.substr(6)];
-					}
-//rendering a category page now merges appCategoryDetail and appPage get (appCategoryDetail|safeid[%page]
-				else if(namespace == 'page')	{
-					if(typeof data['%page'] == 'object')	{value = data['%page'][attributeID]} //%page may get added into another object, such as categoryDetail
-					else {value = data[attributeID]}//will get used if translating a appPageGet
-					}
-				else if(namespace == 'session')	{
-					value = data['session'][attributeID]; //for now just return true. need to set this up to return datapointer at some point. ###
-					}
 //and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
-				else if(namespace == 'order')	{
-//					app.u.dump(' -> parsing order data. % attribute = '+attributeID);
-
-//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
-//this is true for both adminorders and store orders.
-
-					if(typeof data.order == 'object')	{
-						data = data.order; 
+					if(namespace == 'order')	{
+						app.u.dump(' -> parsing order data. % attribute = '+attributeID);
+	
+	//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
+	//this is true for both adminorders and store orders.
+	
+						if(typeof data.order == 'object')	{
+							data = data.order; 
+							}
+	
+						if(attributeID.substring(0,4) == 'data' && typeof data['data'] == 'object')	{
+							value = data['data'][attributeID.substr(5)];
+							}
+	//need to check for payments. because in and admin order view, payment is an array. in customer order view, it's an object.
+	// so var: order(payments) in admin order view would enter here by accident (it shouldn't)
+						else if(attributeID.substring(0,9) == 'payments.' && typeof data['payments'] == 'object')	{
+							value = data['payments'][attributeID.substr(9)];
+							}
+						else	{
+	//						app.u.dump(" -> GOT TO ELSE");
+							value = data[attributeID]
+							}
 						}
-
-					if(attributeID.substring(0,4) == 'data' && typeof data['data'] == 'object')	{
-						value = data['data'][attributeID.substr(5)];
+						
+	
+	//this handles reviews in a reviews spec.
+					else if(namespace == 'reviews')	{
+						if(attributeID == '@reviews' && data.reviews)	{
+	//						app.u.dump(data);
+							value = data.reviews['@reviews']
+							}
+						else if(data.reviews)	{
+							value = data.reviews[attributeID];
+							}
+						else	{
+							value = data[attributeID];
+							}
 						}
-//need to check for payments. because in and admin order view, payment is an array. in customer order view, it's an object.
-// so var: order(payments) in admin order view would enter here by accident (it shouldn't)
-					else if(attributeID.substring(0,9) == 'payments.' && typeof data['payments'] == 'object')	{
-						value = data['payments'][attributeID.substr(9)];
+	// 'customer' namespace is used in orders and customer manager (appCustomerGet).
+					else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object' && !$.isEmptyObject(data['%CUSTOMER']))	{
+						value = data['%CUSTOMER'][attributeID];
 						}
-					else if(attributeID.substring(0,12) == 'full_product' && typeof data['full_product'] == 'object')	{
-//						app.u.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
-						value = data['full_product'][attributeID.substr(13)];
+					else if(namespace == 'product')	{
+	//for inventory, use the inventory renderFormat.
+	//cart items have some data at root level and some nested one level deeper in full_product
+						if(attributeID.indexOf(':') < 0)	{
+	//					app.u.dump(' -> attribute does not contain : possibly a stid or sku reference.');
+							value = data[attributeID]
+							}
+						else if(data['%attribs'])	{
+								value = data['%attribs'][attributeID];
+							}
+						else	{
+							//hhhmmm... don't know HTF we got here.
+							}
 						}
+	
+	//it's assumed at this point in the history of time that if a product isn't in focus, the data is not in a sub node (like %attribs).
+	//if subnodes are used, they'll need to be added as an 'else if' above.
 					else	{
-//						app.u.dump(" -> GOT TO ELSE");
 						value = data[attributeID]
 						}
 					}
-/*
-in some cases, the reviews data is saved in to the product data, such as showPageContent in quickstart.js
-the first two cases below are to handle instances of this.
-*/
-				else if(namespace == 'reviews')	{
-					if(attributeID == '@reviews' && data.reviews)	{
-//						app.u.dump(data);
-						value = data.reviews['@reviews']
-						}
-					else if(data.reviews)	{
-						value = data.reviews[attributeID];
-						}
-					else	{
-						value = data[attributeID];
-						}
-					}
-// 'customer' namespace is used in orders and customer manager (appCustomerGet).
-				else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object' && !$.isEmptyObject(data['%CUSTOMER']))	{
-					value = data['%CUSTOMER'][attributeID];
-					}
-				else if(namespace == 'product')	{
-//inventory record may be emtpy, if merchant has inventory set up to not matter.
-//if data['@inventory'][data.pid] doesn't exist, the item likely has options, so inventory isn't displayed.
-					if(attributeID.substring(0,10) == '@inventory' && !jQuery.isEmptyObject(data['@inventory']))	{
-						value = typeof data['@inventory'][data.pid] != 'undefined' ? data['@inventory'][data.pid][attributeID.substr(11)] : '';
-						}
-//cart items have some data at root level and some nested one level deeper in full_product
-					else if(attributeID.substring(0,12) == 'full_product')	{
-//						app.u.dump(' -> attributeID: '+attributeID+'[ '+attributeID.substr(13)+']');
-						value = data.full_product[attributeID.substr(13)]
-//						app.u.dump(' -> value: '+value);
-						}
-					else if(attributeID.indexOf(':') < 0)	{
-//					app.u.dump(' -> attribute does not contain : possibly a stid or sku reference.');
-						value = data[attributeID]
-						}
-					else if(data['%attribs'])	{
-							value = data['%attribs'][attributeID];
-						}
-					else	{
-						//hhhmmm... don't know HTF we got here.
-						}
-					}
-//if the attribute ID contains a semi colon, than an attribute (such as product: or profile:) is being referenced. 
-// sometimes an attribute is not used, such as sku or reviews, or when using sku to execute another display function (ex: add to cart).
-// technically, these would fall under the 'else', but I want to keep them separate now... for comfort. 2011-09-29
-				else if(attributeID.indexOf(':') < 0)	{
-//					app.u.dump(' -> attribute does not contain :');
-					value = data[attributeID]
-					}
-
-//it's assumed at this point in the history of time that if a product isn't in focus, the data is not in a sub node (like %attribs).
-//if subnodes are used, they'll need to be added as an 'else if' above.
-				else	{
-					value = data[attributeID]
-					}
-				}
 //			app.u.dump(' -> value = '+value);
+				}
 			return value;
 			},
 

@@ -150,7 +150,7 @@ function zoovyModel() {
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				dispatch["_uuid"] = uuid;
 				dispatch["status"] = 'queued';
-				dispatch["_v"] = 'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV;
+//				dispatch["_v"] = 'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV;
 				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = dispatch;
 				r = uuid;
@@ -250,22 +250,6 @@ function zoovyModel() {
 				}			
 			},
 			
-//executed in control init.
-//will set some vars used for each ajax request.
-//uses json request UNLESS browser is not compatible with XSS.
-//currently, only IE isn't compatible.
-		whatAjaxDataType2Use : function()	{
-			var r = 'json'; //what is returned. default datatype is json.
-// SANITY - a browser treats http://www.something.com and http://something.com as separate domains.
-			if(navigator.appName == 'Microsoft Internet Explorer' && Number(jQuery.browser.version) < 10)	{
-				var rootUrl = window.location.href.match(/:\/\/(.[^/]+)/)[1]; //root domain of current page (www.something.com)
-				var JQUrl = app.vars.jqurl.match(/:\/\/(.[^/]+)/)[1]; //root domain of jquery url (www.something.com or www.somethingelse.com)
-				if(JQUrl != rootUrl)	{
-					r = 'jsonp';
-					}
-				}
-			return r;
-			},
 		
 /*
 	
@@ -346,17 +330,6 @@ must be run before handleResponse so that if handleresponse executes any request
 can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
 */
 
-
-if(app.globalAjax.dataType == 'jsonp')	{
-	app.u.dump("NOTE - JSONP request(s). # requests: "+L+" QID: "+QID);
-//a pipelined request with any substance is likely going to have too long of a URL to work.  
-//so for jsonp, pipelined requests are not used and each request is sent individually. 
-	for(var i = 0; i < L; i += 1)	{
-//		app.u.dump(Q2);
-		this.jsonpRequest(Q[i])
-		}
-	}
-else	{
 	app.globalAjax.requests[QID][UUID] = $.ajax({
 		type: "POST",
 		url: app.vars.jqurl,
@@ -364,7 +337,7 @@ else	{
 		async: true,
 		contentType : "text/json",
 		dataType:"json",
-		data: JSON.stringify({"_uuid":UUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q})
+		data: JSON.stringify({"_uuid":UUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q, "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV})
 		});
 	app.globalAjax.requests[QID][UUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
@@ -377,7 +350,7 @@ else	{
 		app.model.handleResponse(d);}
 		)
 
-	}
+
 
 
 				}

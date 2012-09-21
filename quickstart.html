@@ -140,7 +140,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 	<ul id='homepageFeaturedItems' data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_multipage:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-	<p data-bind="var: page(description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
@@ -164,17 +164,17 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
-	<img data-bind="var: page(banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
+	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
-	<h2 data-bind="var: page(header); format: text; editor: text;"></h2>
+	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
 	
-	<p data-bind="var: page(description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 	
 	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	
-	<p data-bind="var: page(description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 		
 </div>
@@ -226,7 +226,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		
 		
-		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(total); format:text; posttext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 </li>
@@ -247,7 +247,7 @@ container ul should have lineItemProdlist class on it instead of productList
 	
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		
-		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 
 		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'}); return false;">
 		
@@ -290,7 +290,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				</div>
 			</div>
 		</div>
-		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
+		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
 
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 	
@@ -357,7 +357,7 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate'>
 
-<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: session(recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: session(session.recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <table id='prodViewerTable' class='prodViewerContainer'>
 <tr>
@@ -421,7 +421,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 
 	<section id='prodViewerReviewSummary' class='marginBottom'>
-		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 	
@@ -527,7 +527,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
 	
 	<section id='prodViewerReviewSummary' class='marginBottom'>
-		<span data-bind='var: reviews(average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 	
@@ -1018,7 +1018,7 @@ So the cart template should contain these two elements and the extension should 
 		<span class='ui-icon ui-icon-closethick'></span>
 		</span>
 		
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: full_product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(full_product.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 		
@@ -1273,21 +1273,21 @@ If this gets recycled, test in order history after making changes.
 <ul>
 	<li id='productListTemplateInvoice' class='padMargBorderBottom'>
 	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: order(full_product.zoovy:prod_image1); format:imageURL;' width='55' height='55' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
 	</div>
 	
 <div class='infoContainer'>
 
-	<h5 data-bind='var: order(full_product.zoovy:prod_name); format:text; '></h5>
-	<div class='ztable_row_small stid' data-bind='var: order(sku); format:text; className: stid; pretext: Sku: ;'></div>
+	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
+	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 	<div>
-	<span data-bind='var: order(qty); format:text; pretext:qty: ;'></span>
-	<span data-bind='var: order(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-	<span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+	<span data-bind='var: product(qty); format:text; pretext:qty: ;'></span>
+	<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 	</div>
 
-	<div class='ztable_row_small prodOptions' data-bind='var: order(*options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 
 <button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 
