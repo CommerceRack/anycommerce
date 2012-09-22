@@ -1801,12 +1801,22 @@ $('#'+safeTarget).replaceWith($tmp);
 				var namespace = v.split('(')[0];
 				
 				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
-//app.u.dump(' -> namespace = '+namespace);
-//app.u.dump(' -> attributeID = '+attributeID);
-//app.u.dump(' -> value = '+value);
+app.u.dump(' -> namespace = '+namespace); app.u.dump(' -> attributeID = '+attributeID); app.u.dump(' -> typeof value = '+typeof value); app.u.dump(' -> value = '+value);
 //This is an attempt to skip a lot of the code block below. It was added in 201239.
-				if(typeof value == 'string')	{}
+				if(typeof value == 'string' || typeof value == 'number')	{}
 				else	{
+
+					if(namespace == 'product')	{
+//						app.u.dump(' in translate product. attributeID: '+attributeID);
+						if(attributeID.indexOf(':') > -1)	{
+							attributeID = '%attribs.'+attributeID
+							}
+						else	{
+							//could get here for nested attrib that's undefined. ex: reviews.average when there's no reviews.	
+							}
+						value = app.u.getObjValFromDotString(attributeID,data)
+//						app.u.dump(' -> value: '+value);
+						}
 
 /*
 attributes are often stored as some.data.location where each dot is an object name and the last one is the pointer for the data.
@@ -1819,7 +1829,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 //just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
 // need to verify object exists as well now (2012-20) because we're running translate over the same template more than once, specifically for admin_orders, but likely more.
 //and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
-					if(namespace == 'order')	{
+					else if(namespace == 'order')	{
 						app.u.dump(' -> parsing order data. % attribute = '+attributeID);
 	
 	//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
@@ -1861,21 +1871,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 					else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object' && !$.isEmptyObject(data['%CUSTOMER']))	{
 						value = data['%CUSTOMER'][attributeID];
 						}
-					else if(namespace == 'product')	{
-	//for inventory, use the inventory renderFormat.
-	//cart items have some data at root level and some nested one level deeper in full_product
-						if(attributeID.indexOf(':') < 0)	{
-	//					app.u.dump(' -> attribute does not contain : possibly a stid or sku reference.');
-							value = data[attributeID]
-							}
-						else if(data['%attribs'])	{
-								value = data['%attribs'][attributeID];
-							}
-						else	{
-							//hhhmmm... don't know HTF we got here.
-							}
-						}
-	
+
 	//it's assumed at this point in the history of time that if a product isn't in focus, the data is not in a sub node (like %attribs).
 	//if subnodes are used, they'll need to be added as an 'else if' above.
 					else	{
