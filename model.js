@@ -975,6 +975,47 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 	
 	/* functions for extending the controller (adding extensions and templates) */
 	
+	
+	
+			
+//Gets executed fairly early in the init process. Starts the process of adding the extension.
+
+		addExtensions : function(extObj)	{
+//			app.u.dump('BEGIN model.addExtensions');
+			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
+			if(!extObj)	{
+				app.u.dump(' -> extObj not passed');
+				}
+			else if(typeof extObj != 'object')	{
+				app.u.dump(' -> extObj not a valid format');
+				}
+			else	{
+//				app.u.dump(' -> valid extension object containing '+extObj.length+' extensions');
+				var L = extObj.length;
+				r = L; //return the size of the extension object 
+				for(var i = 0; i < L; i += 1) {
+//					app.u.dump(" -> i: "+i);
+//namespace and filename are required for any extension.
+					if(!extObj[i].namespace || !extObj[i].filename)	{
+						
+						if(extObj.callback && typeof extObj.callback == 'string')	{
+							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] and/or filename ["+extObj[i].filename+"]  not set",'')
+							}
+						app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") or filename ("+extObj[i].filename+") was left blank.");
+						continue; //go to next index in loop.
+						}
+					else	{
+						app.model.fetchExtension(extObj[i],i);
+						}
+					} // end loop.
+				}
+			app.model.executeCallbacksWhenExtensionsAreReady(extObj); //reexecutes itself. will execute callbacks when all extensions are loaded.
+			return r;
+//			app.u.dump('END model.addExtension');
+			},	
+	
+	
+	
 //$templateSpec = the jquery obj for the template.
 //templateID is how the template will be referenced in app.templates.
 		makeTemplate : function($templateSpec,templateID)	{
@@ -990,7 +1031,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return r;
 			},
 	
-//templates should be an array of element id's.
+//pass in an array of template id's and they'll get added to the app.templates object.
+//the id's must already be in the DOM by this point.
 		loadTemplates : function(templates)	{
 	//		app.u.dump("BEGIN model.loadTemplates")
 			var L = templates.length
@@ -1017,24 +1059,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 
 
 //templateURL is the .html file that contains the templates. be cautions about loading http: from a secure page.
-//this is just a request to get the html. doesn't actually load the templates.
-
-// NOTE - at the point this function becomes flexible enough to be useful, you might as well just make the request.
-
-/*		fetchFileViaAjax : function(URL)	{
-//			app.u.dump("BEGIN model.fetchFileViaAjax");
-	//result is the ajax request and what is returned.
-	//should allow for .error and .success to be set outside this function. 
-			var result = $.ajax({
-				type: "GET",
-				url: URL,
-				async: false,
-				dataType:"html"
-				});	
-//			app.u.dump("result: ");
-//			app.u.dump(result);
-			return result;
-			}, */
+//templates is an array of element id's that are present in the .html file.
+//an ajax request is made to load the .html file and, if successful, the templates are loaded into app.templates.
 
 	fetchNLoadTemplates : function(templateURL,templates)	{
 //		app.u.dump("BEGIN model.fetchNLoadTemplates");
@@ -1101,12 +1127,12 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 
 */
 		
-		fetchExtension : function(extensionObjItem)	{
+		fetchExtension : function(extObjItem)	{
 //			app.u.dump('BEGIN model.fetchExtention');
-//			app.u.dump(' -> namespace: '+extensionObjItem.namespace);
+//			app.u.dump(' -> namespace: '+extObjItem.namespace);
 			var errors = '';
-			var url = extensionObjItem.filename;
-			var namespace = extensionObjItem.namespace; //for easy reference.
+			var url = extObjItem.filename;
+			var namespace = extObjItem.namespace; //for easy reference.
 //			app.u.dump(' -> url = '+url);
 		
 			var ajaxLoadExt = $.ajax({
@@ -1133,7 +1159,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 //it means that a developer could use an extension that didn't load properly, but that is their perogative, since we told them its broke.
 						app.ext[namespace] = eval(namespace+'()'); //keep this as early in the process as possible so it's done before the next extension loads.
 
-						var callback = extensionObjItem.callback; //for easy reference.
+						var callback = extObjItem.callback; //for easy reference.
 //						app.u.dump(" -> typeof callback: "+typeof callback);
 						if(typeof app.ext[namespace].callbacks.init === 'object')	{
 //							app.u.dump(" typeof === object");
@@ -1175,23 +1201,24 @@ respond accordingly.
 								app.ext[namespace].callbacks.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>",'');
 								}							
 							}
-						else if(callback)	{
+//commented out in 201239 as part of load all extensions, then execute callback. gets rid of 'dependencies'.
+//						else if(callback)	{
 //							app.u.dump(" -> callback defined for namespace: "+namespace);
-							if(app.ext[namespace].vars.dependencies || app.ext[namespace].vars.templates)	{
+//							if(app.ext[namespace].vars.dependencies || app.ext[namespace].vars.templates)	{
 //								app.u.dump(" -> extension ("+namespace+") has dependencies and/or templates. veryify they're loaded before executing callback");
-								app.model.handleDependenciesFor(namespace,callback);
-								}
-							else	{
-								app.model.executeExtensionCallback(namespace,callback);
-								}
-							}
+//								app.model.handleDependenciesFor(namespace,callback);
+//								}
+//							else	{
+//								app.model.executeExtensionCallback(namespace,callback);
+//								}
+//							}
 						else	{
 //							app.u.dump(" -> extension "+namespace+" loaded fine but contained no callback");
 							}
 						}
 					},
 				error: function(a,b,c) {
-					app.u.throwMessage("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extensionObjItem.namespace+" had error type "+b+")");
+					app.u.throwMessage("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")");
 					app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					app.u.dump(c);
 					}
@@ -1216,44 +1243,11 @@ respond accordingly.
 				app.u.dump("WARNING!  either namespace ["+namespace+"] or callback ["+callback+"] was undefined in model.executeExtensionCallback");
 				}
 			},
-			
-//see big comment block above fetch for more info.
-		addExtensions : function(extensionObj)	{
-//			app.u.dump('BEGIN model.addExtensions');
-			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
-			if(!extensionObj)	{
-				app.u.dump(' -> extensionObj not passed');
-				}
-			else if(typeof extensionObj != 'object')	{
-				app.u.dump(' -> extensionObj not a valid format');
-				}
-			else	{
-//				app.u.dump(' -> valid extension object containing '+extensionObj.length+' extensions');
-				var L = extensionObj.length;
-				r = L; //return the size of the extension object 
-				for(var i = 0; i < L; i += 1) {
-//					app.u.dump(" -> i: "+i);
-//namespace and filename are required for any extension.
-					if(!extensionObj[i].namespace || !extensionObj[i].filename)	{
-						
-						if(extensionObj.callback && typeof extensionObj.callback == 'string')	{
-							extensionObj[i].callback.onError("Extension did not load because namespace ["+extensionObj[i].namespace+"] and/or filename ["+extensionObj[i].filename+"]  not set",'')
-							}
-						app.u.dump(" -> extension did not load because namespace ("+extensionObj[i].namespace+") or filename ("+extensionObj[i].filename+") was left blank.");
-						continue; //go to next index in loop.
-						}
-					else	{
-						app.model.fetchExtension(extensionObj[i],i);
-						}
-					} // end loop.
-				}
-			return r;
-//			app.u.dump('END model.addExtension');
-			},
+
 
 //verifies that all the templates for a given extension/namespace have been loaded.
-		allTemplatesForExtensionHaveLoaded : function(namespace)	{
-//			app.u.dump("BEGIN model.alltemplatesHaveLoaded ["+namespace+"]");
+		allTemplatesForThisExtensionHaveLoaded : function(namespace)	{
+//			app.u.dump("BEGIN model.allTemplatesForThisExtensionHaveLoaded ["+namespace+"]");
 			var r = true; //what is returned. t/f based on whether or not all the templates extensions have loaded.
 			var templateID; //shortcut.
 			if(app.ext[namespace].vars && app.ext[namespace].vars.templates)	{
@@ -1264,9 +1258,9 @@ respond accordingly.
 					if(typeof app.templates[templateID] != 'object'){r = false}
 					}
 				}
-//			app.u.dump("END model.allTemplatesHaveLoaded ["+r+"]");
+//			app.u.dump("END model.allTemplatesForThisExtensionHaveLoaded ["+r+"]");
 			return r;
-			}, //allTemplatesForExtensionHaveLoaded
+			}, //allTemplatesForThisExtensionHaveLoaded
 
 /*
 loop through control. object and make sure all the extensions have completely loaded.
@@ -1275,21 +1269,23 @@ This is checks for two things:
 2. are all the templates for each extension loaded.
 */
 
-		allTemplatesHaveLoaded : function(extObj)	{
-//			app.u.dump("BEGIN model.allTemplatesHaveLoaded");
-//			app.u.dump(extObj);
+		allExtensionsHaveLoaded : function(extObj)	{
+			app.u.dump("BEGIN model.allExtensionsHaveLoaded");
+			app.u.dump(extObj);
+
 			var r = true; //what is returned (whether or not all extensions have loaded.
 			var L = extObj.length;
 			var namespace; //shortcut.
 			for(var i = 0; i < L; i += 1) {
-				namespace = extObj[i];
+				namespace = extObj[i].namespace;
 				if(typeof app.ext[namespace] == 'object')	{
-					if(!this.allTemplatesForExtensionHaveLoaded(namespace)){
+					if(!this.allTemplatesForThisExtensionHaveLoaded(namespace)){
 						r = false;
 						break;
 						}
 					}
 				else	{
+					app.u.dump(' -> waiting on: '+namespace);
 					r = false;
 					break;
 					}
@@ -1297,68 +1293,31 @@ This is checks for two things:
 //			app.u.dump("END model.allExtensionsHaveLoaded ["+r+"]");
 			return r;
 			}, //allExtensionsHaveLoaded
-			
-/*
-for extensions. When an extension is loaded and it has dependencies, this function is executed. 
-It waits until the other necessary extensions are loaded, then executes the callback.
-this makes extension sequence less important when initializing the controller.
-// SANITY - a user should only have ONE extension that loads and has dependencies. the extension
-//that contains most of the logic native to their app.
-*/
-		handleDependenciesFor : function(namespace,callback)	{
-//			app.u.dump("BEGIN app.model.handleDependenciesFor");
-//			app.u.dump(" -> namespace: "+namespace);
-//			app.u.dump(" -> callback: "+callback);
-			var pass = true;
-			var D = 0; //# of dependencies
-			if(app.ext[namespace].vars.dependencies)	{
-				D = app.ext[namespace].vars.dependencies.length
-				}
-
-//			app.u.dump(" -> # of dependant extensions: "+D);
-//make sure all dependencies have been loaded.
-			for(var i = 0; i < D; i += 1)	{
-				if(typeof app.ext[app.ext[namespace].vars.dependencies[i]] !== 'object') {
-					app.u.dump(" -> missing: "+app.ext[namespace].vars.dependencies[i]);
-					pass = false;
-					break
-					} //once we have a no match, just end the loop. no point going forward if we're going to reexecute this function anyway.
-				}
-//			app.u.dump(" -> after dependencies loop. pass: "+pass);
-
-//make sure all templates for this extension have been loaded. 
-//if a fail has already occured, no point executing this verification
-			if(pass)	{
-				pass = app.model.allTemplatesForExtensionHaveLoaded(namespace);
-				}
-
-//			app.u.dump(" -> after check for this template. pass: "+pass);
-
-
-//check to make sure other extensions templates are loaded. Do this last to allow for most time for external template file to be loaded.
-//if a fail has already occured, no point executing this verification
-			if(pass)	{
-				pass = app.model.allTemplatesHaveLoaded(app.ext[namespace].vars.dependencies)
-				}
-
-//			app.u.dump(" -> after allTemplatesHaveLoaded. pass: "+pass);
-			
-
-			if(pass)	{
-				app.u.dump(" -> all dependencies for namespace."+namespace+" should be loaded. execute callback.");
-				app.model.executeExtensionCallback(namespace,callback);
+		
+		
+		executeCallbacksWhenExtensionsAreReady : function(extObj){
+			app.u.dump(" -> executeCallbacksWhenExtensionsAreReady");
+			if(this.allExtensionsHaveLoaded(extObj))	{
+				app.u.dump("Woot! All extensions are loaded. execute callbacks.");
+				var L = extObj.length;
+				for(var i = 0; i < L; i += 1) {
+//					app.u.dump(" -> i: "+i);
+//namespace and filename are required for any extension.
+					if(extObj[i].callback)	{
+						app.model.executeExtensionCallback(extObj[i].namespace,extObj[i].callback);
+						}
+					else	{
+						//no callback defined. no worries.
+						}
+					} // end loop.				
 				}
 			else	{
-				app.ext[namespace].vars.dependAttempts += 1;
-				app.u.dump(" -> dependencies missing for namespace "+namespace+". try again. attempt: "+app.ext[namespace].vars.dependAttempts);
-				if(app.ext[namespace].vars.dependAttempts > 25)	{
-					app.u.throwMessage("Uh Oh. An error occured with our app. You can try refreshing the page. If error persists, please contact the site administrator",true);
-					}
-				else	{
-					setTimeout("app.model.handleDependenciesFor('"+namespace+"','"+callback+"');",500)
-					}
+				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj)},250);
 				}
-			}
+			
+			
+			}, //executeCallbacksWhenExtensionsAreReady
+		
 		}
 
 	
