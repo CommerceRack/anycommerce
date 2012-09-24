@@ -437,17 +437,17 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	</td>
 </tr>
 <tr>
-	<td colspan='2' id="tabbedProductContentTD">
+	<td colspan='2' class="tabbedProductContentTD">
 
 <div id="tabbedProductContent">
 
 	<ul class='tabs'>
-		<li id='prodDescTab'><a href="#prodDesc" >Description</a></li>
-		<li id='prodDetailTab' class='displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
-		<li id='prodFeaturesTab' class='displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
-		<li id='prodReviewsTab' class='displayNone'><a href="#prodReviews">Reviews</a></li>
-		<li id='prodVideoTab' class='displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
-		<li id='prodAccessoriesTab' class='displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
+		<li class='prodDescTab'><a href="#prodDesc" >Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
+		<li class='prodReviewsTab displayNone'><a href="#prodReviews">Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
 	</ul>
 <!-- tab content -->
 	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>

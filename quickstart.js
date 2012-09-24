@@ -807,6 +807,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					case 'search':
 	//					app.u.dump(" -> Got to search case.");	
 						app.ext.myRIA.u.showSearch(infoObj);
+						infoObj.parentID = 'mainContentArea_search';
 						break;
 	
 					case 'customer':
@@ -821,30 +822,29 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
+						infoObj.parentID = 'mainContentArea_customer';
 						break;
 	
 					case 'checkout':
 //						app.u.dump("PROTOCOL: "+document.location.protocol);
-
+						infoObj.parentID = 'zCheckoutContainer';
 						infoObj.templateID = 'checkoutTemplate'
 						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
 //for local, don't jump to secure. !!! discuss w/ b.
 						if('file:' == document.location.protocol)	{
-							$('#mainContentArea').empty(); //duh.
 							app.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
 							}
 						else if('https:' != document.location.protocol)	{
 							app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 // if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
+							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
 							var SSLlocation = app.vars.secureURL+"?sessionId="+app.sessionId+"#checkout?show=checkout";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
 							}
 						else	{
-							$('#mainContentArea').empty(); //duh.
 							app.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
 							}
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
@@ -853,6 +853,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'company':
+						infoObj.parentID = 'mainContentArea_company';
 						app.ext.myRIA.u.showCompany(infoObj);
 						break;
 	
@@ -904,12 +905,20 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //if user is not logged in, don't animate because the login modal won't appear on screen if you do.
 				else if(infoObj.performTransition == false)	{}
+				else if(infoObj.parentID && typeof app.ext.myRIA.pageTransition == 'function')	{
+app.u.dump(" -> parentID: "+infoObj.parentID);
+var $old = $("#mainContentArea :visible:first");
+var $new = $('#'+infoObj.parentID);
+app.ext.myRIA.pageTransition($new,$old);
+//					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
+//					$("#mainContentArea :visible:first").slideUp(2000,function(){
+//						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
+//						}); //hide currently visible content area.
+					}
 				else if(infoObj.parentID)	{
-					app.u.dump("GOT HERE!!!!" +$("#mainContentArea :visible:first").attr('id'));
-					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
-					$("#mainContentArea :visible:first").slideUp(2000,function(){
-						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
-						}); //hide currently visible content area.
+//no page transition specified. hide old content, show new. fancy schmancy.
+					$("#mainContentArea :visible:first").hide();
+					$('#'+infoObj.parentID).show();
 					}
 				else	{
 					app.u.dump("WARNING! in showContent and no parentID is set for the element being translated.");
@@ -1583,6 +1592,7 @@ return r;
 //rather than having all the params in the dom, just call this function. makes updating easier too.
 			showProd : function(P)	{
 				var pid = P.pid
+				var parentID = null; //what is returned. will be set to parent id if a pid is defined.
 //				app.u.dump("BEGIN myRIA.u.showProd ["+pid+"]");
 				if(!app.u.isSet(pid))	{
 					app.u.throwMessage("Uh Oh. It seems an app error occured. Error: no product id. see console for details.",true);
@@ -1591,34 +1601,25 @@ return r;
 				else	{
 					P.templateID = 'productTemplate';
 					P.state = 'onInits'
-					P.parentID = P.templateID+"_"+pid
+					parentID = P.templateID+"_"+pid
 					app.ext.myRIA.u.handleTemplateFunctions(P);
-
-					if($('#'+P.parentID).length)	{
-						//product has already been rendered.
-						}
-					else	{
-						var $content = app.renderFunctions.createTemplateInstance(P.templateID,P.parentID)
+//no need to render template again.
+					if(!$('#'+parentID).length){
+						var $content = app.renderFunctions.createTemplateInstance(P.templateID,parentID)
 						$content.addClass('displayNone')
 						$('#mainContentArea').append($content);
 						}
-					
-					
-
-					
-					
-//					app.u.dump(" -> product template instance created.");
 
 //need to obtain the breadcrumb info pretty early in the process as well.
 					if(app.ext.myRIA.vars.session.recentCategories.length > 0)	{
 						app.ext.store_navcats.u.addQueries4BreadcrumbToQ(app.ext.myRIA.vars.session.recentCategories[0])
 						}
-					
+
 					app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
-					app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':P.parentID,'templateID':'productTemplate'});
+					app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':parentID,'templateID':'productTemplate'});
 					app.model.dispatchThis();
 					}
-				return P.parentID;
+				return parentID;
 				}, //showProd
 				
 				
@@ -1903,37 +1904,40 @@ buyer to 'take with them' as they move between  pages.
 					}
 				$('#recentSearchesList').html(o);
 				},
+				
 //best practice would be to NOT call this function directly. call showContent.
+
 			showPage : function(P)	{
+				//app.u.dump("BEGIN myRIA.u.showPage("+P.navcat+")");
+				var r = null; //what is returned. will be set to parent id, if all required data is present.
+				var catSafeID = P.navcat;
+				if(!catSafeID)	{
+					app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
+					}
+				else	{
+					if(P.templateID){
+						//templateID 'forced'. use it.
+						}
+					else if(catSafeID == '.' || P.pageType == 'homepage')	{
+						P.templateID = 'homepageTemplate'
+						}
+					else	{
+						P.templateID = 'categoryTemplate'
+						}
+					P.state = 'onInits';
+					app.ext.myRIA.u.handleTemplateFunctions(P);
+					var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
+//only have to create the template instance once. Once created, just re-render as part of fetchPageContent.
+					if(!$('#'+parentID).length)	{
+						var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
+						$content.addClass('displayNone');
+						$('#mainContentArea').append($content);
+						}
 
-//app.u.dump("BEGIN myRIA.u.showPage("+P.navcat+")");
-
-var catSafeID = P.navcat;
-if(!catSafeID)	{
-	app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
-	}
-else	{
-	if(P.templateID){
-		//templateID 'forced'. use it.
-		}
-	else if(catSafeID == '.' || P.pageType == 'homepage')	{
-		P.templateID = 'homepageTemplate'
-		}
-	else	{
-		P.templateID = 'categoryTemplate'
-		}
-	P.state = 'onInits';
-	app.ext.myRIA.u.handleTemplateFunctions(P);
-	
-	var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
-	var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
-	$content.addClass('displayNone');
-	$('#mainContentArea').append($content);
-	app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
-	app.model.dispatchThis();
-	return parentID;
-	}
-			
+					app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
+					app.model.dispatchThis();
+					}
+				return parentID;
 				}, //showPage
 
 
