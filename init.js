@@ -29,6 +29,17 @@ optionally also include:
 */
 app.vars.scripts = new Array();
 
+// example of how to add a non-essential extension after the initial load is done.
+app.vars.scripts.push({
+	'pass':5,
+	'location':app.vars.baseURL+'extensions/analytics_google.js',
+	'validator':function(){return (typeof analytics_google == 'function') ? true : false;},
+	'callback':function(){
+		app.ext.analytics_google = analytics_google();
+		app.ext.analytics_google.callbacks.addTriggers.onSuccess();
+		} //the app.u.initMVC callback is what instantiates the controller.
+	})
+
 app.vars.scripts.push({
 	'pass':1,
 	'location':app.vars.baseURL+'controller.js',

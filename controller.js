@@ -1801,7 +1801,8 @@ $('#'+safeTarget).replaceWith($tmp);
 				var namespace = v.split('(')[0];
 				
 				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
-app.u.dump(' -> namespace = '+namespace); app.u.dump(' -> attributeID = '+attributeID); app.u.dump(' -> typeof value = '+typeof value); app.u.dump(' -> value = '+value);
+//				app.u.dump(' -> namespace = '+namespace); app.u.dump(' -> attributeID = '+attributeID); 
+//				app.u.dump(' -> typeof value = '+typeof value); app.u.dump(' -> value = '+value);
 //This is an attempt to skip a lot of the code block below. It was added in 201239.
 				if(typeof value == 'string' || typeof value == 'number')	{}
 				else	{
@@ -1830,7 +1831,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 // need to verify object exists as well now (2012-20) because we're running translate over the same template more than once, specifically for admin_orders, but likely more.
 //and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
 					else if(namespace == 'order')	{
-						app.u.dump(' -> parsing order data. % attribute = '+attributeID);
+//						app.u.dump(' -> parsing order data. % attribute = '+attributeID);
 	
 	//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
 	//this is true for both adminorders and store orders.

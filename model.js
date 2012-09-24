@@ -1074,7 +1074,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 */
 		
 		fetchExtension : function(extObjItem)	{
-			app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
+//			app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
 			var errors = '';
 			var url = extObjItem.filename;
 			var namespace = extObjItem.namespace; //for easy reference.
@@ -1230,9 +1230,9 @@ This is checks for two things:
 //function gets executed in addExtensions. If the extensions are loaded, it'll execute the callbacks.
 // if not, it will re-execute itself.
 		executeCallbacksWhenExtensionsAreReady : function(extObj){
-			app.u.dump(" -> executeCallbacksWhenExtensionsAreReady");
+//			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady");
 			if(this.allExtensionsHaveLoaded(extObj))	{
-				app.u.dump("Woot! All extensions are loaded. execute callbacks.");
+				app.u.dump("All extensions are loaded. execute callbacks.");
 				var L = extObj.length;
 				for(var i = 0; i < L; i += 1) {
 //					app.u.dump(" -> i: "+i);

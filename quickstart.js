@@ -62,9 +62,7 @@ var myRIA = function() {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
 			"recentCategories" : []
-			},
-		"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-		"dependencies" : ['store_prodlist','store_navcats','store_product','store_search','store_cart','store_crm','convertSessionToOrder','store_checkout'] //a list of other extensions (just the namespace) that are required for this one to load
+			} //a list of other extensions (just the namespace) that are required for this one to load
 		},
 
 
@@ -262,7 +260,7 @@ else	{
 				},
 			onError : function(responseData,uuid)	{
 //				app.u.dump(responseData);
-				$('#mainContentArea').empty();
+//				$('#mainContentArea').empty();
 				app.u.throwMessage(responseData);
 				}
 			}, //showProd 
@@ -776,6 +774,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				//to avoid confusion, clear keywords when leaving a search page. cart opens a modal, so no need to clear.
 				if(pageType != 'search' || pageType != 'cart')	{$('.productSearchKeyword').val('');}
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
+				
+				
 
 				switch(pageType)	{
 
@@ -784,13 +784,13 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						if($.inArray(infoObj.pid,app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
 							app.ext.myRIA.vars.session.recentlyViewedItems.unshift(infoObj.pid);
 							}
-						app.ext.myRIA.u.showProd(infoObj);
+						infoObj.parentID = app.ext.myRIA.u.showProd(infoObj);
 						break;
 	
 					case 'homepage':
 						infoObj.pageType = 'homepage';
 						infoObj.navcat = '.'
-						app.ext.myRIA.u.showPage(infoObj);
+						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj);
 						break;
 
 					case 'category':
@@ -801,7 +801,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.ext.myRIA.vars.session.recentCategories.unshift(infoObj.navcat);
 							}
 						
-						app.ext.myRIA.u.showPage(infoObj);
+						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj);
 						break;
 	
 					case 'search':
@@ -872,7 +872,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
-						$('#mainContentArea').empty().append(app.renderFunctions.transmogrify('',infoObj.templateID,infoObj));
+						$('#mainContentArea').append(app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj));
 						
 						r.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
@@ -892,16 +892,27 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						window.location.hash = hash;
 						}
 					}
+				
+				
+				
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 					$('#appPreView').slideUp(1000,function(){
+						$('#'+infoObj.parentID).show(); //have to show content area here because the slideDown will only make the parent visible
 						$('#appView').slideDown(3000);
 						});
 					}
 //if user is not logged in, don't animate because the login modal won't appear on screen if you do.
 				else if(infoObj.performTransition == false)	{}
-				else	{
+				else if(infoObj.parentID)	{
+					app.u.dump("GOT HERE!!!!" +$("#mainContentArea :visible:first").attr('id'));
 					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
+					$("#mainContentArea :visible:first").slideUp(2000,function(){
+						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
+						}); //hide currently visible content area.
+					}
+				else	{
+					app.u.dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
 
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
@@ -1580,10 +1591,22 @@ return r;
 				else	{
 					P.templateID = 'productTemplate';
 					P.state = 'onInits'
+					P.parentID = P.templateID+"_"+pid
 					app.ext.myRIA.u.handleTemplateFunctions(P);
-	//				app.ext.store_product.u.prodDataInModal({'pid':pid,'templateID':'productTemplate',});
 
-					$('#mainContentArea').empty().append(app.renderFunctions.createTemplateInstance(P.templateID,"productViewer"));
+					if($('#'+P.parentID).length)	{
+						//product has already been rendered.
+						}
+					else	{
+						var $content = app.renderFunctions.createTemplateInstance(P.templateID,P.parentID)
+						$content.addClass('displayNone')
+						$('#mainContentArea').append($content);
+						}
+					
+					
+
+					
+					
 //					app.u.dump(" -> product template instance created.");
 
 //need to obtain the breadcrumb info pretty early in the process as well.
@@ -1592,10 +1615,10 @@ return r;
 						}
 					
 					app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
-					app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':'productViewer','templateID':'productTemplate'});
+					app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':P.parentID,'templateID':'productTemplate'});
 					app.model.dispatchThis();
 					}
-				
+				return P.parentID;
 				}, //showProd
 				
 				
@@ -1603,7 +1626,7 @@ return r;
 //handleTemplateFunctions gets executed in showContent, which should always be used to execute this function.
 			showCompany : function(P)	{
 				P.show = P.show ? P.show : 'about'; //what page to put into focus. default to 'about us' page
-				$('#mainContentArea').empty(); //clear Existing content.
+//				$('#mainContentArea').empty(); //clear Existing content.
 				
 				P.templateID = 'companyTemplate';
 				P.state = 'onInits';
@@ -1625,7 +1648,7 @@ return r;
 				P.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(P);
 				
-				$('#mainContentArea').empty().append(app.renderFunctions.createTemplateInstance(P.templateID,'mainContentArea_search'))
+				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,'mainContentArea_search'))
 
 //add item to recently viewed list IF it is not already in the list.
 				if($.inArray(P.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
@@ -1678,7 +1701,7 @@ return r;
 				else	{
 					P.show = 'newsletter'
 					}
-				$('#mainContentArea').empty();
+//				$('#mainContentArea').empty();
 //				app.u.dump(" -> P follows:"); app.u.dump(P);
 				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
 				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
@@ -1885,8 +1908,6 @@ buyer to 'take with them' as they move between  pages.
 
 //app.u.dump("BEGIN myRIA.u.showPage("+P.navcat+")");
 
-$('#mainContentArea').empty();
-
 var catSafeID = P.navcat;
 if(!catSafeID)	{
 	app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
@@ -1904,10 +1925,13 @@ else	{
 	P.state = 'onInits';
 	app.ext.myRIA.u.handleTemplateFunctions(P);
 	
-	var parentID = 'page_'+app.u.makeSafeHTMLId(catSafeID);
-	$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID}));
+	var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
+	var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
+	$content.addClass('displayNone');
+	$('#mainContentArea').append($content);
 	app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
 	app.model.dispatchThis();
+	return parentID;
 	}
 			
 				}, //showPage

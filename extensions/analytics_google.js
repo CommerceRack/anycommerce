@@ -25,10 +25,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 var analytics_google = function() {
 	var r = {
 		
-		vars : {
-			"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-			"dependencies" : ['myRIA'] //a list of other extensions (just the namespace) that are required for this one to load
-			},
+		vars : {},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
