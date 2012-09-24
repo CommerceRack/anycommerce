@@ -1,5 +1,5 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
-
+app.ext = app.ext || {};
 // A list of all the extensions that are going to be used.
 //if an extension is 'required' for any page within the store to load properly, the extension should be added as a dependency within quickstart.js
 app.vars.extensions = [
@@ -28,8 +28,6 @@ optionally also include:
 	callback -> a function to execute after the script is loaded.
 */
 app.vars.scripts = new Array();
-
-
 
 app.vars.scripts.push({
 	'pass':1,

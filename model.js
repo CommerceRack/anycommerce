@@ -81,7 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-		version : "201238",
+		version : "201239",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -320,10 +320,6 @@ app.globalAjax.overrideAttempts = 0;
 
 //IMPORTANT
 /*
-
-IE < 10 doesn't support xss. the check is done during the init. for xss in IE < 10, jsonp requests are used. !!! NOT WORKING. Need B to help solve. low priority.
-jsonp requests must use a GET. To keep the URL to a reasonable length, some fat is trimmed (_tag, specifically) and re-added in handleResponse
-
 the delete in the success AND error callbacks removes the ajax request from the requests array. 
 If this isn't done, attempts to see if an immutable or other request is in process will return inaccurate results. 
 must be run before handleResponse so that if handleresponse executes any requests as part of a callback, no conflicts arise.
@@ -360,58 +356,6 @@ can't be added to a 'complete' because the complete callback gets executed after
 		}, //dispatchThis
 	
 	
-	jsonpRequest : function(DISPATCH)	{
-		app.u.dump("BEGIN model.jsonpRequest ["+DISPATCH['_uuid']+"]");
-//		app.u.dump(DISPATCH);
-		var thisReq; //the request object. what is returned.
-		var UUID = DISPATCH['_uuid'];
-		var thisDispatch = $.extend(true,{},DISPATCH); //need a un-referenced copy (clone) so when attributes are deleted, the original is not modified.
-		var QID = this.whichQAmIFrom(UUID); //look this up instead of passing it in. the req is async so the val of a referenced var could be changed before the .complete
-		
-		thisDispatch['_zjsid'] = app.sessionId; // since each request is being sent individually, need to add the session id.
-		thisDispatch['_tag'] = ""; //need to keep the uri short. _rtag re-added during handleResponse
-		thisDispatch['_v'] = this.version; //need to keep the uri short.
-//		app.u.dump(thisDispatch);
-		var thisJsonURL = app.vars.jqurl+"?_callback=ieBlows&_json="+encodeURIComponent(JSON.stringify(thisDispatch));
-		app.u.dump(" -> jsonURL: "+thisJsonURL);
-//		app.u.dump(" -> length of url: "+thisJsonURL.length);
-		thisReq = $.ajax({
-			type: "GET",
-			url: thisJsonURL,
-			contentType : "text/json",
-			dataType:"jsonp",
-			jsonp : "callback",
-			jsonpCallback:"ieBlows"
-			});
-// thisReq.success is handled through the ieBlows function.
-		thisReq.error(function(j, textStatus, errorThrown)	{
-			app.u.dump(' -> REQUEST ERROR! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-			app.u.dump(" -> REQUEST ERROR DISPATCH DETAILS: uuid: "+UUID+" and QID: "+QID+" and _cmd: "+DISPATCH['_cmd']);
-//			app.u.dump(j);
-			delete app.globalAjax.requests[QID][UUID];
-			app.u.throwMessage("Well this is a bit embarrasing. Something very bad happened. You can try to continue, but our app may not work as intended. You can try refreshing/restarting and that may help.");
-			});
-
-	
-		return thisReq;
-		},
-	
-	
-		ieBlows : function(d) {
-			app.u.dump(" -> Yes, IE does blow. ["+d['_uuid']+"]");
-		//	app.u.dump(d);
-			if(!$.isEmptyObject(d))	{
-				var QID = app.model.whichQAmIFrom(d['_uuid']); 
-				delete app.globalAjax.requests[QID][d['_uuid']];
-				app.model.handleResponse(d);
-				}
-			else if(typeof d == 'object')	{
-				app.u.dump(" -> UH OH! ieBlows executed but with an empty object.");
-				}
-			else	{
-				app.u.dump(" -> UH OH! ieBlows executed but with an unknown paramter passed in.  d: "+d);
-				}
-			},
 	
 	/*
 	run when a high-level error occurs during the request (ise, pagenotfound, etc).
@@ -520,6 +464,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //a solo successful request
 				else {
 //_tag is stripped on jsonP requests to keep URL as short as possible. It is readded to the responseData here as _rtag (which is how it is handled on a normal request)
+// left this when stripping all the other jsonp code because there's been discussion about not passing _rtag anymore and just looking it up here anyway. smaller requests.
 					if($.isEmptyObject(responseData['_rtag']))	{
 //						app.u.dump(" -> no rtag. set. use qid ["+QID+"] and uuid ["+uuid+"]");
 						responseData['_rtag'] = app.q[QID][uuid]['_tag']
@@ -983,13 +928,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		addExtensions : function(extObj)	{
 //			app.u.dump('BEGIN model.addExtensions');
 			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
-			if(!extObj)	{
-				app.u.dump(' -> extObj not passed');
-				}
-			else if(typeof extObj != 'object')	{
-				app.u.dump(' -> extObj not a valid format');
-				}
-			else	{
+			if(typeof extObj == 'object')	{
+
 //				app.u.dump(' -> valid extension object containing '+extObj.length+' extensions');
 				var L = extObj.length;
 				r = L; //return the size of the extension object 
@@ -997,19 +937,25 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //					app.u.dump(" -> i: "+i);
 //namespace and filename are required for any extension.
 					if(!extObj[i].namespace || !extObj[i].filename)	{
-						
 						if(extObj.callback && typeof extObj.callback == 'string')	{
 							extObj[i].callback.onError("Extension did not load because namespace ["+extObj[i].namespace+"] and/or filename ["+extObj[i].filename+"]  not set",'')
 							}
 						app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") or filename ("+extObj[i].filename+") was left blank.");
 						continue; //go to next index in loop.
 						}
+					else if (typeof app.ext[extObj[i].namespace] == 'function')	{
+						//extension has already been imported. Here for cases where extensions are added as part of preloader (init.js)
+						}
 					else	{
 						app.model.fetchExtension(extObj[i],i);
 						}
 					} // end loop.
+				app.model.executeCallbacksWhenExtensionsAreReady(extObj); //reexecutes itself. will execute callbacks when all extensions are loaded.
 				}
-			app.model.executeCallbacksWhenExtensionsAreReady(extObj); //reexecutes itself. will execute callbacks when all extensions are loaded.
+			else	{
+				app.u.dump("CAUTION! no extensions were loaded. This may not be an error. there may not be any extensions. seems unlikely though.");
+				}
+			
 			return r;
 //			app.u.dump('END model.addExtension');
 			},	
@@ -1062,46 +1008,46 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //templates is an array of element id's that are present in the .html file.
 //an ajax request is made to load the .html file and, if successful, the templates are loaded into app.templates.
 
-	fetchNLoadTemplates : function(templateURL,templates)	{
-//		app.u.dump("BEGIN model.fetchNLoadTemplates");
-//		app.u.dump(" -> templateURL: "+templateURL);
-//		app.u.dump(" -> templates: "+templates);
-		var ajaxRequest = $.ajax({
-				type: "GET",
-				url: templateURL,
-				async: false,
-				dataType:"html"
-				});	//this.fetchFileViaAjax(templateURL);
-		
-		ajaxRequest.error(function(d,e,f){
-			//the templates not loading is pretty much a catastrophic issue.
-			app.u.throwMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)",true);			
-			app.u.dump("ERROR! unable to load remote templates");
-			app.u.dump("templateURL: "+templateURL);
-			app.u.dump(e);
-			app.u.dump(d.statusText);
-			});
-
-		ajaxRequest.success(function(data){
-//			app.u.dump("template file loaded successfully.");
-//remote templates are added to their own div so that .html() can be used without impacting any default templates that may not have loaded.
-//unique id's are needed so that it multiple extensions are loading remote templates, .html doesn't save over them.
-//can't use append because it'll treat content as text not html
-//so if the templateurl is /something/checkout/templates.html, the template id will be remoteTemplates_checkout
-			var templateContainerID = 'remoteTemplates_'+templateURL.split('/').splice(-2,1);
-			var $remoteTemps = $('#'+templateContainerID);
-			if($remoteTemps.length == 0)	{
-				$remoteTemps = $("<div />").attr('id',templateContainerID).hide().appendTo('body');
-				}
-			$remoteTemps.html(data);
-			var templateErrors = app.model.loadTemplates(templates);
-			if(templateErrors)	{
-				app.u.throwMessage(templateErrors,true);
-//				app.u.dump(templateErrors);
-				}
-			});
-		return ajaxRequest;
-		},
+		fetchNLoadTemplates : function(templateURL,templates)	{
+	//		app.u.dump("BEGIN model.fetchNLoadTemplates");
+	//		app.u.dump(" -> templateURL: "+templateURL);
+	//		app.u.dump(" -> templates: "+templates);
+			var ajaxRequest = $.ajax({
+					type: "GET",
+					url: templateURL,
+					async: false,
+					dataType:"html"
+					});	//this.fetchFileViaAjax(templateURL);
+			
+			ajaxRequest.error(function(d,e,f){
+				//the templates not loading is pretty much a catastrophic issue.
+				app.u.throwMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)",true);			
+				app.u.dump("ERROR! unable to load remote templates");
+				app.u.dump("templateURL: "+templateURL);
+				app.u.dump(e);
+				app.u.dump(d.statusText);
+				});
+	
+			ajaxRequest.success(function(data){
+	//			app.u.dump("template file loaded successfully.");
+	//remote templates are added to their own div so that .html() can be used without impacting any default templates that may not have loaded.
+	//unique id's are needed so that it multiple extensions are loading remote templates, .html doesn't save over them.
+	//can't use append because it'll treat content as text not html
+	//so if the templateurl is /something/checkout/templates.html, the template id will be remoteTemplates_checkout
+				var templateContainerID = 'remoteTemplates_'+templateURL.split('/').splice(-2,1);
+				var $remoteTemps = $('#'+templateContainerID);
+				if($remoteTemps.length == 0)	{
+					$remoteTemps = $("<div />").attr('id',templateContainerID).hide().appendTo('body');
+					}
+				$remoteTemps.html(data);
+				var templateErrors = app.model.loadTemplates(templates);
+				if(templateErrors)	{
+					app.u.throwMessage(templateErrors,true);
+	//				app.u.dump(templateErrors);
+					}
+				});
+			return ajaxRequest;
+			}, //fetchNLoadTemplates 
 
 /*
 extensions are like plugins. They are self-contained* objects that may include calls, callbacks, utitity functions and/or variables.
@@ -1128,8 +1074,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 */
 		
 		fetchExtension : function(extObjItem)	{
-//			app.u.dump('BEGIN model.fetchExtention');
-//			app.u.dump(' -> namespace: '+extObjItem.namespace);
+			app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
 			var errors = '';
 			var url = extObjItem.filename;
 			var namespace = extObjItem.namespace; //for easy reference.
@@ -1201,17 +1146,6 @@ respond accordingly.
 								app.ext[namespace].callbacks.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>",'');
 								}							
 							}
-//commented out in 201239 as part of load all extensions, then execute callback. gets rid of 'dependencies'.
-//						else if(callback)	{
-//							app.u.dump(" -> callback defined for namespace: "+namespace);
-//							if(app.ext[namespace].vars.dependencies || app.ext[namespace].vars.templates)	{
-//								app.u.dump(" -> extension ("+namespace+") has dependencies and/or templates. veryify they're loaded before executing callback");
-//								app.model.handleDependenciesFor(namespace,callback);
-//								}
-//							else	{
-//								app.model.executeExtensionCallback(namespace,callback);
-//								}
-//							}
 						else	{
 //							app.u.dump(" -> extension "+namespace+" loaded fine but contained no callback");
 							}
@@ -1242,7 +1176,7 @@ respond accordingly.
 			else	{
 				app.u.dump("WARNING!  either namespace ["+namespace+"] or callback ["+callback+"] was undefined in model.executeExtensionCallback");
 				}
-			},
+			}, //executeExtensionCallback
 
 
 //verifies that all the templates for a given extension/namespace have been loaded.
@@ -1270,8 +1204,7 @@ This is checks for two things:
 */
 
 		allExtensionsHaveLoaded : function(extObj)	{
-			app.u.dump("BEGIN model.allExtensionsHaveLoaded");
-			app.u.dump(extObj);
+//			app.u.dump("BEGIN model.allExtensionsHaveLoaded"); 	app.u.dump(extObj);
 
 			var r = true; //what is returned (whether or not all extensions have loaded.
 			var L = extObj.length;
@@ -1294,7 +1227,8 @@ This is checks for two things:
 			return r;
 			}, //allExtensionsHaveLoaded
 		
-		
+//function gets executed in addExtensions. If the extensions are loaded, it'll execute the callbacks.
+// if not, it will re-execute itself.
 		executeCallbacksWhenExtensionsAreReady : function(extObj){
 			app.u.dump(" -> executeCallbacksWhenExtensionsAreReady");
 			if(this.allExtensionsHaveLoaded(extObj))	{
@@ -1314,13 +1248,9 @@ This is checks for two things:
 			else	{
 				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj)},250);
 				}
-			
-			
 			}, //executeCallbacksWhenExtensionsAreReady
 		
 		}
 
-	
-	window.ieBlows = r.ieBlows; //global reference to JSONP callback function. a global is used to keep the url as short as possible for thejsonp req.
 	return r;
 	}
