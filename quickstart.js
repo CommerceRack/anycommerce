@@ -772,7 +772,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 
 				app.ext.myRIA.u.closeAllModals();  //close any open modal dialogs. important cuz a 'showpage' could get executed via wiki in a modal window.
 				//to avoid confusion, clear keywords when leaving a search page. cart opens a modal, so no need to clear.
-				if(pageType != 'search' || pageType != 'cart')	{$('.productSearchKeyword').val('');}
+				if(pageType != 'search' && pageType != 'cart')	{
+					$('.productSearchKeyword').each(function(){
+						var $this = $(this);
+						if($this[0].defaultValue != $this.val())	{$this.val($this[0].defaultValue)}
+						});
+					}
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				
 				
