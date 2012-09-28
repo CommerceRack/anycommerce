@@ -295,9 +295,9 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 				app.u.throwMessage(responseData,uuid);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.data.cartItemsList.cart['payment-pt'] = null;
-				app.data.cartItemsList.cart['payment-pi'] = null;
-				app.calls.cartSet.init({'payment-pt':null,'payment-pi':null}); 
+				app.data.cartItemsList.cart['payment.pt'] = null;
+				app.data.cartItemsList.cart['payment.pi'] = null;
+				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null}); 
 				app.calls.refreshCart.init({},'immutable');
 				app.model.dispatchThis('immutable');
 //### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
@@ -355,7 +355,7 @@ error would mean something was not complete.
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.finishedValidatingCheckout.onSuccess');
 //if paypal is selected but a valid token doesn't exist, route to paypal.
-				if($("#chkout-payby_PAYPALEC").is(':checked') && !app.data.cartItemsList.cart['payment-pt'])	{
+				if($("#chkout-payby_PAYPALEC").is(':checked') && !app.data.cartItemsList.cart['payment.pt'])	{
 					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
 					}
 				else	{
@@ -754,8 +754,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 //			app.u.dump("BEGIN convertSessionToCheckout.uities.thisSessionIsPayPal");
 				var r = false; //what is returned.  will be set to true if paypalEC approved.
 	//if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
-				token = app.data.cartItemsList.cart['payment-pt'];
-				payerid = app.data.cartItemsList.cart['payment-pi'];
+				token = app.data.cartItemsList.cart['payment.pt'];
+				payerid = app.data.cartItemsList.cart['payment.pi'];
 				app.u.dump("paypal -> token: "+token+" and payerid: "+payerid);
 				if(token && payerid)	{
 					r = true;
@@ -768,13 +768,14 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 once paypalEC has been approved by paypal, a lot of form fields lock down, but the user may decide to change
 payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this.
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
+note - !!! change this so that the vars only get set to null IF they are already set.
 */
 			nukePayPalEC : function() {
-				if(app.data.cartItemsList)	{
-					app.data.cartItemsList.cart['payment-pt'] = null;
-					app.data.cartItemsList.cart['payment-pi'] = null;
+				if(app.data && app.data.cartItemsList)	{
+					app.data.cartItemsList.cart['payment.pt'] = null;
+					app.data.cartItemsList.cart['payment.pi'] = null;
 					}
-				app.calls.cartSet.init({'payment-pt':null,'payment-pi':null,'chkout.payby':null}); //nuke vars
+				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null,'chkout.payby':null}); //nuke vars
 				return 1;//this is the # of dispatches added to the q.
 				},
 

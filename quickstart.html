@@ -17,8 +17,8 @@ var myCreole;
 var app = {vars:{
 	"release":"20120912074300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
-	"httpURL":"http://www.sporks.zoovy.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.downlitebedding.com/",
+	"httpURL":"http://www.downlitebedding.com/"
 	},u:{}};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -445,7 +445,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 		<li class='prodDescTab'><a href="#prodDesc" >Description</a></li>
 		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
 		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
-		<li class='prodReviewsTab displayNone'><a href="#prodReviews">Reviews</a></li>
+		<li class='prodReviewsTab'><a href="#prodReviews">Reviews</a></li>
 		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
 		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
 	</ul>
@@ -1470,7 +1470,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
 	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
 	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
-	<li><a href='#category?navcat=.subcategories.subcat_9' class='bindByAnchor'>.subcategories.subcat_9</a></li>
+
 </menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>

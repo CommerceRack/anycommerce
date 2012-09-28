@@ -98,6 +98,7 @@ obj.PATH = .cat.safe.id
 //formerly categoryDetail
 		appCategoryDetail : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //			app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetail.init ('+catSafeID+')');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -123,6 +124,7 @@ obj.PATH = .cat.safe.id
 
 		appCategoryDetailMore : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //				app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetailMore.init');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -158,6 +160,7 @@ obj.PATH = .cat.safe.id
 
 		appCategoryDetailMax : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //				app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetailMax.init');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -310,7 +313,9 @@ templateID - the template id used (from app.templates)
 				var o = '';
 				if(!$.isEmptyObject(subcatDetail))	{
 					var L = subcatDetail.length;
-					var size = L > 15 ? 15 : L; //don't show more than 15.
+					if(data.bindData.size == 'false')	{size = L}
+					else if(Number(data.bindData.size))	{size = Number(data.bindData.size)} //if size is valid, use it.
+					else	{size = L > 15 ? 15 : L; } //don't show more than 15 unless specified
 //!!! hhhmm.. needs fixin. need to compensate 'i' for hidden categories.
 					for(var i = 0; i < size; i +=1)	{
 						if(subcatDetail[i].pretty[0] != '!')	{

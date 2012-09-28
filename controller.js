@@ -99,7 +99,7 @@ copying the template into memory was done for two reasons:
 			numRequestsPerPipe : 50,
 			requests : {"mutable":{},"immutable":{},"passive":{}} //'holds' each ajax request. completed requests are removed.
 			}; //holds ajax related vars.
-		app.sessionId = false;
+		app.sessionId = null;
 		app.vars.extensions = app.vars.extensions || [];
 		app.onReady();
 

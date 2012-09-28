@@ -582,13 +582,11 @@ ul.zwarn li	{margin-left:15px;}
 
 
 .ddUlMenu li ul {
-	background:#efefef;
 	left: -999em;
 	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
 	position: absolute;
 	width: 160px;
 	z-index: 9999;
-	border:1px solid #cccccc;
 	}
 
 .ddUlMenu li:hover ul {

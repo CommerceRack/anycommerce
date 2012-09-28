@@ -1977,6 +1977,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //		app.u.dump(bindData);
 		var namespace = bindData['var'].split('(')[0];
 		var attribute = app.renderFunctions.parseDataVar(bindData['var']);
+		var tmpAttr; //recycled. used when a portion of the attribute is stipped (page.) and multiple references to trimmed var are needed.
 //these get used in prodlist and subcat elements (anywhere loadstemplate is used)
 		bindData.templateID = bindData.loadsTemplate;
 		bindData.parentID = $focusTag.attr('id');
@@ -2030,8 +2031,19 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 // this is a navcat in focus
 		else	{
 			if(namespace == 'category' &&  attribute.substring(0,5) === '%page')	{
-				app.u.dump(attribute.substring(6));
-				myAttributes.push(attribute.substring(6));  //set value to the actual value
+				tmpAttr = attribute.substring(6)
+				myAttributes.push(tmpAttr);  //set value to the actual value
+				if(app.data['appCategoryDetail|'+catSafeID] && app.data['appCategoryDetail|'+catSafeID]['%page'])	{
+					if(app.data['appCategoryDetail|'+catSafeID]['%page'][tmpAttr])	{}
+					else if(app.data['appCategoryDetail|'+catSafeID]['%page'][tmpAttr] === null){}
+					else	{
+						myAttributes.push(tmpAttr);  //set value to the actual value
+						}
+					}
+				else	{
+					myAttributes.push(tmpAttr);  //set value to the actual value
+					}				
+				
 				}
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
 	//			app.u.dump(" -> category(@subcategoryDetail) found");
@@ -2170,8 +2182,8 @@ else	{
 //handles inline validation
 			loginFrmSubmit : function(email,password)	{
 				var errors = '';
-				var $errorDiv = $("#loginMessaging").empty().toggle(false); //make sure error screen is hidden and empty.
-				
+				var $errorDiv = $("#loginMessaging").empty(); //make sure error screen is empty. do not hide or callback errors won't show up.
+
 				if(app.u.isValidEmail(email) == false){
 					errors += "Please provide a valid email address<br \/>";
 					}
@@ -2187,7 +2199,7 @@ else	{
 					app.model.dispatchThis('immutable');
 					}
 				else {
-					$errorDiv.toggle(true).append(app.u.formatMessage(errors));
+					$errorDiv.append(app.u.formatMessage(errors));
 					}
 				}, //loginFrmSubmit
 			
