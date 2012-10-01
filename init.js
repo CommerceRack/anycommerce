@@ -1,33 +1,40 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
-app.ext = app.ext || {};
-// A list of all the extensions that are going to be used.
-//if an extension is 'required' for any page within the store to load properly, the extension should be added as a dependency within quickstart.js
-app.vars.extensions = [
-	{"namespace":"store_prodlist","filename":"extensions/store_prodlist.js"},
-	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_passive/extension.js"},  /* checkout_passive does not require buyer to login */
-//	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_nice/extension.js"},	/* checkout_nice prompts buyer to login */
-	{"namespace":"store_checkout","filename":"extensions/store_checkout.js"},
-	{"namespace":"store_navcats","filename":"extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"extensions/store_search.js"},
-	{"namespace":"store_product","filename":"extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"extensions/store_cart.js"},
-//	{"namespace":"analytics_google","filename":"extensions/analytics_google.js","callback":"addTriggers"},
-//	{"namespace":"bonding_buysafe","filename":"extensions/bonding_buysafe.js","callback":"addTriggers"},
-	{"namespace":"store_crm","filename":"extensions/store_crm.js"},
-	{"namespace":"myRIA","filename":"quickstart.js","callback":"startMyProgram"}
-	];
+app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
-/*
-app.vars.scripts is an object containing a list of scripts that are required/desired.
-for each script, include:  
-	pass -> scripts are loaded in a loop. pass 1 is loaded before app gets initiated and should only include 'required' scripts. Use > 1 for other scripts.
-	location -> the location of the file. be sure to load a secure script on secure pages to avoid an ssl error.
-	validator -> a function returning true or false if the script is loaded. Used primarily on pass 1.
-optionally also include:
-	callback -> a function to execute after the script is loaded.
-*/
-app.vars.scripts = new Array();
+
+app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
+app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
+app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
+app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
+app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
+app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
+app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
+// app.ext.myRIA.template.productTemplate.onCompletes.push() 
+//app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
+//app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','addTriggers']);
+//app.rq.push(['extension',0,'','']);
+
+
+
+//add tabs to product data.
+app.rq.push(['templateFunction','onCompletes','productTemplate',function(P) {$( "#tabbedProductContent" ).tabs()}]);
+
+app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
+app.rq.push(['script',0,app.vars.baseURL+'controller.js',function(){app.u.initMVC()}]);
+app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
+app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
+
+
+
+//group any third party files together (regardless of pass) to make troubleshooting easier down the road and for the next guy.
+app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.js']);
+
+
 
 // example of how to add a non-essential extension after the initial load is done.
 /*
@@ -42,36 +49,6 @@ app.vars.scripts.push({
 	})
 */
 
-app.vars.scripts.push({
-	'pass':1,
-	'location':app.vars.baseURL+'controller.js',
-	'validator':function(){return (typeof zController == 'function') ? true : false;},
-	'callback':function(){app.u.initMVC()} //the app.u.initMVC callback is what instantiates the controller.
-	})
-
-
-app.vars.scripts.push({
-	'pass':1,
-	'location':(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.js',
-	'validator':function(){return (typeof $ == 'function' && jQuery.ui) ? true : false;}
-	})
-//The config.js file is 'never' local. it's a remote file, so...
-//when opening the app locally, always use the nonsecure config file. Makes testing easier.
-//when opening the app remotely, use app.vars.baseURL which will be http/https as needed.
-
-app.vars.scripts.push({
-	'pass':1,
-	'location':(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js',
-	'validator':function(){return (typeof zGlobals == 'object') ? true : false;}
-	})
-
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'model.js','validator':function(){return (typeof zoovyModel == 'function') ? true : false;}})
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'includes.js','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
-
-
-
-//used for making text editable (customer address). non-essential. loaded late.
-app.vars.scripts.push({'pass':8,'location':app.vars.baseURL+'jeditable.js','validator':function(){return (typeof $ == 'function' && jQuery().editable) ? true : false;}})
 
 
 
@@ -82,17 +59,19 @@ This will load all of the scripts in the app.vars.scripts object that have a mat
 
 */
 
-app.u.loadScriptsByPass = function(PASS,CONTINUE)	{
+app.u.handleRQ = function(PASS)	{
 //	app.u.dump("BEGIN app.u.loadScriptsByPass ["+PASS+"]");
-	var L = app.vars.scripts.length;
+	var L = app.rq.length;
+//	app.u.dump("rq.length: "+L+" and PASS: "+PASS);
 	var numIncludes = 0; //what is returned. The total number of includes for this pass.
 	for(var i = 0; i < L; i += 1)	{
-		if(app.vars.scripts[i].pass == PASS)	{
+//		app.u.dump("app.rq["+i+"][0]: "+app.rq[i][0]+" and app.rq["+i+"][1]: "+app.rq[i][1]);
+		if(app.rq[i][0] == 'script' && app.rq[i][1] === PASS)	{
 			numIncludes++
-			app.u.loadScript(app.vars.scripts[i].location,app.vars.scripts[i].callback);
+			app.u.loadScript(app.rq[i][2],app.rq[i][3]);
 			}
 		}
-	if(CONTINUE == true && PASS <= 10)	{app.u.loadScriptsByPass((PASS + 1),true)}
+//	app.u.dump("numIncludes: "+numIncludes);
 	return numIncludes;
 	}
 
@@ -106,17 +85,6 @@ app.u.throwMessage = function(m)	{
 	}
 
 
-//put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
-app.u.appInitComplete = function()	{
-	app.u.loadScriptsByPass(2,true); //loads the rest of the scripts.
-	app.u.dump("Executing myAppIsLoaded code...");
-//display product blob fields in tabbed format.
-	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) 
-//sample for adding a onInit
-	app.ext.myRIA.template.homepageTemplate.onInits.push(function(P) {
-		//do something.
-		}) //display product blob fields in tabbed format.
-	}
 
 //gets executed once controller.js is loaded.
 //check dependencies and make sure all other .js files are done, then init controller.
@@ -183,6 +151,11 @@ app.u.initMVC = function(attempts){
 
 
 
+//put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
+app.u.appInitComplete = function()	{
+	app.u.handleRQ(1); //loads the rest of the scripts.
+	app.u.dump("Executing myAppIsLoaded code...");
+	}
 
 
 
@@ -190,7 +163,7 @@ app.u.initMVC = function(attempts){
 var acScriptsInPass;
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
-	acScriptsInPass = app.u.loadScriptsByPass(1,false)
+	acScriptsInPass = app.u.handleRQ(0)
 	});
 
 
