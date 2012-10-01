@@ -17,8 +17,8 @@ var myCreole;
 var app = {vars:{
 	"release":"20120912074300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.downlitebedding.com/",
-	"httpURL":"http://www.downlitebedding.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
+	"httpURL":"http://www.sporks.zoovy.com/"
 	},u:{}};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -439,18 +439,21 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 <tr>
 	<td colspan='2' class="tabbedProductContentTD">
 
-<div id="tabbedProductContent">
+<div id="tabbedProductContent" class='prodTabs'>
 
 	<ul class='tabs'>
-		<li class='prodDescTab'><a href="#prodDesc" >Description</a></li>
+		<li class='prodDescTab'><a href="#prodDesc" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodDesc_;">Description</a></li>
 		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
 		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
 		<li class='prodReviewsTab'><a href="#prodReviews">Reviews</a></li>
 		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
 		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
 	</ul>
+	
 <!-- tab content -->
-	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodDesc_;">
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
 	
 	<div id="prodDetail" data-bind='var: product(zoovy:prod_detail);  format:wiki; wikiFormats:myRIA; '></div>
 	
@@ -1214,7 +1217,7 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 <!-- print icon -->
 
 
-<!-- <h2 data-bind='var:order(data.bill_firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 
 <h5 data-bind='var:order(data.order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
 <h5 data-bind='var:order(data.balance_due);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
@@ -1222,29 +1225,29 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 
 <address>
 <h4>
-	<span data-bind='var:order(data.bill_firstname);format:text; pretext:Bill To: ;'></span>
-	<span data-bind='var:order(data.bill_lastname);format:text;'></span>
+	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
 </h4>
-<div data-bind='var:order(data.bill_address);format:text;'></div>
-<div data-bind='var:order(data.bill_address2);format:text;'></div>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(data.bill_city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(data.bill_state);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(data.bill_zip);format:text; defaultVar:order(data.bill_int_zip);'></span>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/state);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/zip);format:text; defaultVar:order(data.bill_int_zip);'></span>
 </div>
 <div data-bind='var:order(data.bill_country);format:text;'></div>
 </address>
 
 <address>
 <h4>
-	<span data-bind='var:order(data.ship_firstname);format:text; pretext:Ship To: ;'></span>
-	<span data-bind='var:order(data.ship_lastname);format:text;'></span>
+	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
 </h4>
-<div data-bind='var:order(data.ship_address);format:text;'></div>
-<div data-bind='var:order(data.ship_address2);format:text;'></div>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(data.ship_city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(data.ship_state);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/state);format:text;posttext:. ;'></span>
 	<span data-bind='var:order(data.ship_zip);format:text; defaultVar:order(data.ship_int_zip);'></span>
 </div>
 <div data-bind='var:order(data.ship_country);format:text;'></div>
@@ -1412,7 +1415,7 @@ The 'data-action' attribute is used to assign an onclick.
 <!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
 
 
-<p id='loginMessaging' class='marginBottom'></p>
+<p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
 <form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
@@ -1429,7 +1432,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
 	</div>
 	
-	<div class='center'>
+	<div>
 	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
 	</div>
 	</fieldset>
@@ -1444,12 +1447,18 @@ The 'data-action' attribute is used to assign an onclick.
 <fieldset>
 <div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
 
-<div class='center'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
+<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
 
 </fieldset>
 </form>
 
 </div><!-- /recoverPasswordContainer -->
+
+<div>
+<hr />
+<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+</div>
+
 
 
 </div>

@@ -158,25 +158,25 @@ do NOT change any input names or id's or checkout will likely break.
 
 <ul id='checkoutTemplateBillAddress' class='noPadOrMargin listStyleNone'>
 
-	<li class='bill_firstname'><label for='data-bill_firstname'>First Name</label><input type='text' name='data.bill_firstname' id='data-bill_firstname' required='required' value='' data-bind='var: cart(data.bill_firstname); format:popVal;'  /></li>
+	<li class='bill_firstname'><label for='data-bill_firstname'>First Name</label><input type='text' name='bill/firstname' id='data-bill_firstname' required='required' value='' data-bind='var: cart(bill/firstname); format:popVal;'  /></li>
 
-	<li class='bill_lastname'><label for='data-bill_lastname'>Last Name</label><input type='text' name='data.bill_lastname' id='data-bill_lastname' required='required' value='' data-bind='var: cart(data.bill_lastname); format:popVal;'  /></li>
+	<li class='bill_lastname'><label for='data-bill_lastname'>Last Name</label><input type='text' name='bill/lastname' id='data-bill_lastname' required='required' value='' data-bind='var: cart(bill/lastname); format:popVal;'  /></li>
 
-	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='data.bill_company' id='data-bill_company' value='' data-bind='var: cart(data.bill_company); format:popVal;'  /></li>
+	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
 
-	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='data.bill_address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(data.bill_address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address11' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address11); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='data.bill_address2' id='data-bill_address2' value='' data-bind='var: cart(data.bill_address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='data.bill_city' id='data-bill_city' required='required' value='' data-bind='var: cart(data.bill_city); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='data.bill_state' id='data-bill_state' size='2' value='' data-bind='var: cart(data.bill_state); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='bill/state' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/state); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='data.bill_zip' id='data-bill_zip' size='10' value='' data-bind='var: cart(data.bill_zip); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/zip' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/zip); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
 	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='data.bill_country' id='data-bill_country' data-bind='var: cart(data.bill_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
 
-	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='data.bill_phone' id='data-bill_phone' value='' data-bind='var: cart(data.bill_phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
+	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
 
 	<li id='chkout-bill_to_ship_cb_container'>
 	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='chkout.bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
@@ -199,25 +199,25 @@ do NOT change any input names or id's or checkout will likely break.
 
 <ul id='checkoutTemplateShipAddress' class='noPadOrMargin listStyleNone'>
 
-	<li class='ship_firstname'><label for='data-ship_firstname'>First Name</label><input type='text' name='data.ship_firstname' id='data-ship_firstname' required='required' value='' data-bind='var: cart(data.ship_firstname); format:popVal;'  /></li>
+	<li class='ship_firstname'><label for='data-ship_firstname'>First Name</label><input type='text' name='ship/firstname' id='data-ship_firstname' required='required' value='' data-bind='var: cart(ship/firstname); format:popVal;'  /></li>
 
-	<li class='ship_lastname'><label for='data-ship_lastname'>Last Name</label><input type='text' name='data.ship_lastname' id='data-ship_lastname' required='required' value='' data-bind='var: cart(data.ship_lastname); format:popVal;'  /></li>
+	<li class='ship_lastname'><label for='data-ship_lastname'>Last Name</label><input type='text' name='ship/lastname' id='data-ship_lastname' required='required' value='' data-bind='var: cart(ship/lastname); format:popVal;'  /></li>
 
-	<li class='ship_company'><label for='data-ship_company'>Company</label><input type='text' name='data.ship_company' id='data-ship_company' value='' data-bind='var: cart(data.ship_company); format:popVal;'  /></li>
+	<li class='ship_company'><label for='data-ship_company'>Company</label><input type='text' name='ship/company' id='data-ship_company' value='' data-bind='var: cart(ship/company); format:popVal;'  /></li>
 
-	<li class='ship_address1'><label for='data-ship_address1'>Address</label><input type='text' name='data.ship_address1' id='data-ship_address1' required='required' value='' data-bind='var: cart(data.ship_address1); format:popVal;'   /></li>
+	<li class='ship_address1'><label for='data-ship_address1'>Address</label><input type='text' name='ship/address1' id='data-ship_address1' required='required' value='' data-bind='var: cart(ship/address1); format:popVal;'   /></li>
 
-	<li class='ship_address2'><label for='data-ship_address2'>Address 2</label><input type='text' name='data.ship_address2' id='data-ship_address2' value='' data-bind='var: cart(data.ship_address2); format:popVal;'  /></li>
+	<li class='ship_address2'><label for='data-ship_address2'>Address 2</label><input type='text' name='ship/address2' id='data-ship_address2' value='' data-bind='var: cart(ship/address2); format:popVal;'  /></li>
 
-	<li class='ship_city'><label for='data-ship_city'>City</label><input type='text' name='data.ship_city' id='data-ship_city' required='required' value='' data-bind='var: cart(data.ship_city); format:popVal;'  /></li>
+	<li class='ship_city'><label for='data-ship_city'>City</label><input type='text' name='ship/city' id='data-ship_city' required='required' value='' data-bind='var: cart(ship/city); format:popVal;'  /></li>
 	
-	<li class='ship_state'><label for='data-ship_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='data.ship_state' id='data-ship_state' size='2' value='' data-bind='var: cart(data.ship_state); format:popVal;' maxlength='10' required='required' /></li>
+	<li class='ship_state'><label for='data-ship_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='ship/state' id='data-ship_state' size='2' value='' data-bind='var: cart(ship/state); format:popVal;' maxlength='10' required='required' /></li>
 	
 	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='data.ship_zip' id='data-ship_zip' size='10' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></li>
 
 	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='data.ship_country' id='data-ship_country' data-bind='var: cart(data.ship_country); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('ship',this.value); app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></li>
 
-	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='data.ship_phone' id='data-ship_phone' value='' data-bind='var: cart(data.ship_phone); format:popVal;'  /></li>
+	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='ship/phone' id='data-ship_phone' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></li>
 	
 </ul>
 

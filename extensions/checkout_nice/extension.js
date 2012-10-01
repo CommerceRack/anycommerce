@@ -1040,7 +1040,7 @@ payment options, pricing, etc
 				var authState = app.u.determineAuthentication();
 				var email = '';
 				
-				if(app.data.cartItemsList.cart['data.bill_email'])	{email = app.data.cartItemsList.cart['data.bill_email'];}
+				if(app.data.cartItemsList.cart['bill/email'])	{email = app.data.cartItemsList.cart['bill/email'];}
 //username may not be an email address, so only use it if it passes validation.
 				else if(username && app.u.isValidEmail(username))	{email = username;}
 				
@@ -1056,13 +1056,13 @@ payment options, pricing, etc
 						app.u.dump(" -> Already Authenticated");
 						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin noListStyle'>";
 						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
-						o += "<input type='hidden'   name='data.bill_email' id='data-bill_email' value='"+email+"' /><\/ul>";
+						o += "<input type='hidden'   name='bill/email' id='data-bill_email' value='"+email+"' /><\/ul>";
 						}
 					else	{
 
 						app.u.dump(" -> Login Prompts (default panel behavior/else)");
-						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='data.bill_email'>Email<\/label>";
-						o += "<input type='email'   name='data.bill_email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
+						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='bill/email'>Email<\/label>";
+						o += "<input type='email'   name='bill/email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
 						o += "<button class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleGuestEmail($(\"#data-bill_email\").val());' id='guestCheckoutBtn'>"
 //once an email is obtained, 'next' could be confusing as the button text. so change text based on how far into the process the user is.
 //authstate will = none (or blank?) if no email has been obtained.
@@ -1085,7 +1085,7 @@ payment options, pricing, etc
 							className = 'displayNone'; //hide extra login info once authenticated as guest. a 'view' link will display.
 							
 						o += "<div id='preflightAccountInputs' class='"+className+" preflightInputContainer'><h2>Existing Users<\/h2>";
-						o += "<div><label for='data.bill_email2'>Email<\/label><input type='email'   name='data.bill_email' id='data-bill_email2' value='"+email+"' /><\/div>";
+						o += "<div><label for='bill/email2'>Email<\/label><input type='email'   name='bill/email' id='data-bill_email2' value='"+email+"' /><\/div>";
 						o += "<div><label for='chkout-password'>Password<\/label><input type='password'  name='password' id='chkout-password' value='' onkeypress='if (event.keyCode==13){$(\"#userLoginBtn\").click();}' />";
 						o += "<button  class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleUserLogin($(\"#data-bill_email2\").val(),$(\"#chkout-password\").val());' id='userLoginBtn'>Log in<\/button><\/div><\/div>";
 	
@@ -1483,7 +1483,7 @@ when checkout initially loads, the checkbox for 'create account' is present, but
 don't toggle the panel till after preflight has occured. preflight is done once an email address is obtained.
 */
 
-				if(app.data.cartItemsList.cart["data.bill_email"])	{
+				if(app.data.cartItemsList.cart["bill/email"])	{
 					X ? $('#chkoutAccountInfoFieldset').toggle(true) : $('#chkoutAccountInfoFieldset').toggle(false);
 					}
 //update session.
@@ -1503,7 +1503,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 			handleGuestEmail : function(email)	{
 				$("#chkoutPreflightFieldsetErrors").empty().toggle(false); //hide any previous errors.
 				if(app.u.isValidEmail(email) == true){
-					app.calls.cartSet.init({"data.bill_email":email}); //save email address to cart/session
+					app.calls.cartSet.init({"bill/email":email}); //save email address to cart/session
 					app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 					app.model.dispatchThis('immutable');
 					}

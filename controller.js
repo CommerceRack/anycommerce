@@ -184,7 +184,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 //					app.u.dump('BEGIN app.calls.authentication.zoovy.init ');
 //					app.u.dump(' -> username: '+obj.login);
 //email should be validated prior to call.  allows for more custom error handling based on use case (login form vs checkout login)
-					app.calls.cartSet.init({"data.bill_email":obj.login}) //whether the login succeeds or not, set data.bill_email in /session
+					app.calls.cartSet.init({"bill/email":obj.login}) //whether the login succeeds or not, set bill/email in /session
 					this.dispatch(obj,tagObj);
 					return 1;
 					},
@@ -835,7 +835,7 @@ commented out in 201238
 			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 			else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{r = 'facebook';}
 			else if(app.data.whoAmI && app.data.whoAmI.cid)	{r = 'soft'}
-			else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['data.bill_email'])	{r = 'guest';}
+			else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['bill/email'])	{r = 'guest';}
 			else{}
 			return r;
 			}, //whatAuthIsThisSession
@@ -861,13 +861,13 @@ commented out in 201238
 					r = 'authenticated';
 					app.vars.cid = app.data.cartItemsList.cart.cid;
 					}
-//need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
+//need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
 //and all third parties would get 'guest'
 				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
 					r = 'thirdPartyGuest';
 //					app.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['data.bill_email'])	{
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['bill/email'])	{
 					r = 'guest';
 					}
 				else	{
@@ -907,9 +907,9 @@ commented out in 201238
 				r = app.data.cartItemsList.cart['login'];
 //				app.u.dump(' -> login was set. email = '+r);
 				}
-			else if(app.u.isSet(app.data.cartItemsList.cart['data.bill_email'])){
-				r = app.data.cartItemsList.cart['data.bill_email'];
-//				app.u.dump(' -> data.bill_email was set. email = '+r);
+			else if(app.u.isSet(app.data.cartItemsList.cart['bill/email'])){
+				r = app.data.cartItemsList.cart['bill/email'];
+//				app.u.dump(' -> bill/email was set. email = '+r);
 				}
 			else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
 //				app.u.dump(' -> user is logged in via facebook');
@@ -2137,7 +2137,7 @@ $tmp.empty().remove();
 			if(data.bindData.valuePretext)	{
 				o += data.bindData.valuePretext;
 				}
-			if(data.bindData.attribute == 'id')
+			if(data.bindData.attribute == 'id' || data.bindData.makeSafe)
 				o += app.u.makeSafeHTMLId(data.value);
 			else
 				o += data.value
@@ -2288,7 +2288,7 @@ app.u.dump(" -> DELETED cookie "+c_name);
 							if(user != null) {
 //								app.u.dump(" -> FB.user is defined.");
 								app.vars.fbUser = user;
-								app.calls.cartSet.init({"data.bill_email":user.email});
+								app.calls.cartSet.init({"bill/email":user.email});
 
 //								app.u.dump(" -> user.gender = "+user.gender);
 

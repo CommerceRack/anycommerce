@@ -77,8 +77,8 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 		  order['data.order_total'],          // total - required
 		  order['data.tax_total'],           // tax
 		  order['ship.selected_price'],          // shipping
-		  order['data.ship_city'],       // city
-		  order['data.ship_state'],     // state or province
+		  order['ship/city'],       // city
+		  order['ship/state'],     // state or province
 		  order['data.ship_country']             // country
 	   ]);
 

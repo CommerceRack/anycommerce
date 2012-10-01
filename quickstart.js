@@ -580,7 +580,6 @@ need to be customized on a per-ria basis.
 				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
 				app.renderFormats.text($tag,data)
 				},
-
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
 			searchLink : function($tag,data){
 				var keywords = data.value.replace(/ /g,"+");
@@ -1070,7 +1069,7 @@ P.listID (buyer list id)
 					var parentID = 'listUpdateMsgContainer';
 					var $parent = $('#'+parentID)
 					if($parent.length == 0)	{
-						$parent = $("<div \/>").attr({'id':parentID,'title':'List Activity'}).appendTo('body');
+						$parent = $("<div><div class='appMessaging'></div></div>").attr({'id':parentID,'title':'List Activity'}).appendTo('body');
 						$parent.dialog({'autoOpen':false});
 						}
 					$parent.dialog('open');
@@ -1639,8 +1638,14 @@ return r;
 				app.ext.myRIA.u.handleTemplateFunctions(P);
 				
 				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
-				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,parentID));
-				
+
+//only create instance once.
+				if($('#mainContentArea_company').length)	{}
+				else	{
+					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,parentID));
+					app.ext.myRIA.u.bindNav('#sideline a');
+					}
+					
 				app.calls.appProfileInfo.init(app.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'mutable');
 				app.model.dispatchThis();
 
@@ -1653,8 +1658,14 @@ return r;
 				P.templateID = 'searchTemplate'
 				P.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(P);
+
+//only create instance once.
+				if($('#mainContentArea_search').length)	{}
+				else	{
+					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,'mainContentArea_search'))
+					}
+
 				
-				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,'mainContentArea_search'))
 
 //add item to recently viewed list IF it is not already in the list.
 				if($.inArray(P.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
@@ -1710,11 +1721,16 @@ return r;
 //				$('#mainContentArea').empty();
 //				app.u.dump(" -> P follows:"); app.u.dump(P);
 				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
-				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
-				app.ext.myRIA.u.bindNav('#sideline a');
-				var authState = app.u.determineAuthentication();
+//only create instance once.
+				if($('#mainContentArea_customer').length)	{}
+				else	{
+					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
+					app.ext.myRIA.u.bindNav('#sideline a');
+					}
 				
-				app.u.dump(" -> authState:"+authState);
+				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
+				var authState = app.u.determineAuthentication();
+//				app.u.dump(" -> authState:"+authState);
 				
 				P.templateID = 'customerTemplate';
 				P.state = 'onInits';
@@ -1864,7 +1880,7 @@ buyer to 'take with them' as they move between  pages.
 //articles should exist inside their respective pageInfo templates (companyTemplate or customerTemplate)
 //NOTE - as of version 201225, the parameter no longer has to be a string (subject), but can be an object. This allows for uri params or any other data to get passed in.
 			showArticle : function(P)	{
-//				app.u.dump("BEGIN myRIA.u.showArticle ("+subject+")");
+//				app.u.dump("BEGIN myRIA.u.showArticle"); app.u.dump(P);
 				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
 				
 				var subject;
@@ -1905,7 +1921,7 @@ buyer to 'take with them' as they move between  pages.
 						}
 //					app.u.dump(" -> adding "+keywords+" to list of recent searches");
 // 
-					o += "<li><a href='#' onClick=\"$('#headerKeywordsInput').val('"+keywords+"'); $('#headerSearchFrm').submit(); return false;\">"+keywords+count+"<\/a><\/li>";
+					o += "<li><a href='#' onClick=\"$('.productSearchKeyword').val('"+keywords+"'); showContent('search',{'KEYWORDS':'"+keywords+"'}); return false;\">"+keywords+count+"<\/a><\/li>";
 					}
 				$('#recentSearchesList').html(o);
 				},

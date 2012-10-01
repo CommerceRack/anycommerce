@@ -87,7 +87,7 @@ if(buySAFE.Hash.length > 0)	{
 	
 	   buySAFE.Guarantee.order = P.orderID;
 	   buySAFE.Guarantee.subtotal = order['data.order_subtotal']
-	   buySAFE.Guarantee.email = order['data.bill_email'];
+	   buySAFE.Guarantee.email = order['bill/email'];
 	   WriteBuySafeGuarantee("JavaScript");	
 	
 		}); // end .push					
