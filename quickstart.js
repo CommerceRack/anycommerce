@@ -1126,6 +1126,12 @@ P.listID (buyer list id)
 //sets a default behavior of loading homepage. Can be overridden by passing in P.
 			handleAppInit : function(P)	{
 //				app.u.dump("BEGIN myRIA.u.handleAppInit");
+				var L = app.rq.length-1;
+				for(var i = L; i >= 0; i -= 1)	{
+					this.handleRQ(app.rq[i]);
+					app.rq.splice(i, 1); //remove once handled.
+					}
+				app.rq.push = this.handleRQ;
 				if(typeof P != 'object')	{P = {}}
 				P = this.detectRelevantInfoToPage(window.location.href); 
 				P.back = 0; //skip adding a pushState on initial page load.
@@ -1139,6 +1145,30 @@ P.listID (buyer list id)
 				app.ext.myRIA.a.showContent('',P);
 				return P //returning this saves some additional looking up in the appInit
 				},
+/*
+when quickstart is added, it will go through app.rq and use this function to add all resources as needed.
+it'll then set app.rq.push to mirror this function.
+*/
+
+			handleRQ : function(arr)	{
+				
+				if(arr[0] == 'script')	{
+					app.u.loadScript(arr[2],arr[3]);
+					}
+				else if(arr[0] == 'extension')	{
+					app.vars.extensions.push({"namespace":arr[2],"filename":arr[3],"callback":arr[4]}); // keep the full list just in case.
+					app.u.loadScript(arr[3],arr[4]);
+					}
+				else if(arr[0] == 'templateFunction')	{
+					app.ext.myRIA.template[arr[1]][arr[2]].push(arr[3]);
+					}
+				else	{
+		//currently, this function is intended for pass 0 only, so if an item isn't pass 0,do nothing with it.
+					}
+
+				
+				},
+
 
 //obj is going to be the container around the img. probably a div.
 //the internal img tag gets nuked in favor of an ordered list.

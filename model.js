@@ -926,7 +926,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //Gets executed fairly early in the init process. Starts the process of adding the extension.
 
 		addExtensions : function(extObj)	{
-//			app.u.dump('BEGIN model.addExtensions');
+			app.u.dump('BEGIN model.addExtensions');
 			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
 			if(typeof extObj == 'object')	{
 
