@@ -1187,7 +1187,7 @@ respond accordingly.
 			if(app.ext[namespace].vars && app.ext[namespace].vars.templates)	{
 				var L = app.ext[namespace].vars.templates.length;
 //				app.u.dump(" -> L: "+L);
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					templateID = app.ext[namespace].vars.templates[i];
 					if(typeof app.templates[templateID] != 'object'){r = false}
 					}

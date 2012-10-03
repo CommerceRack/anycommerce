@@ -685,10 +685,10 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 //				app.u.dump(' -> address id = '+addressId);
 				
 				var L = app.data.buyerAddressList['@'+addressType].length
-				var a,i;
+				var a;
 				var r = false;
 //looks through predefined addresses till it finds a match for the address id. sets a to address object.
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					if(app.data.buyerAddressList['@'+addressType][i]['_id'] == addressId){
 						a = app.data.buyerAddressList['@'+addressType][i];
 						r = true;

@@ -485,7 +485,7 @@ see jquery/api webdoc for required/optional param
 				app.u.dump(" -> L = "+L);
 				var topicID;
 				if(L > 0)	{
-					for(i = 0; i < L; i += 1)	{
+					for(var i = 0; i < L; i += 1)	{
 						topicID = app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
 						app.u.dump(" -> TOPIC ID = "+topicID);
 						$parent.append(app.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
@@ -504,7 +504,7 @@ see jquery/api webdoc for required/optional param
 				var orderid;
 				var L = app.data[tagObj.datapointer]['@orders'].length;
 				if(L > 0)	{
-					for(i = 0; i < L; i += 1)	{
+					for(var i = 0; i < L; i += 1)	{
 						orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID;
 						$parent.append(app.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
 						app.renderFunctions.translateTemplate(app.data[tagObj.datapointer]['@orders'][i],"order_"+orderid);
@@ -594,7 +594,7 @@ see jquery/api webdoc for required/optional param
 //				app.u.dump('BEGIN app.ext.store_prodlist.renderFormats.mpPagesAsListItems');
 //				app.u.dump(data);
 				var o = "<ul class='subscriberLists'>";
-				for(index in data.value)	{
+				for(var index in data.value)	{
 					o += "<li title='"+data.value[index].EXEC_SUMMARY+"'>";
 					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' id='newsletter-"+data.value[index].ID+"' \/>";
 					o += "<label for='newsletter-"+data.value[index].ID+"'>"+data.value[index].NAME+"<\/label><\/li>";
@@ -610,7 +610,7 @@ see jquery/api webdoc for required/optional param
 				
 				var L = data.value.length;
 				var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					o += "<li><a href='"+app.ext.myRIA.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
 					if(app.u.isSet(data.value[i].cost))
 						o += " ("+app.u.formatMoney(data.value[i].cost,'$',2,true)+")";
@@ -738,7 +738,7 @@ return $r;
 				var L = app.data['buyerProductListDetail|'+listID]['@'+listID].length;
 				var csvArray = new Array(); //array of skus. What is returned.
 				
-				for(i = 0; i < L; i+=1)	{
+				for(var i = 0; i < L; i+=1)	{
 					csvArray.push(app.data['buyerProductListDetail|'+listID]['@'+listID][i].SKU);
 					}
 				csvArray = $.grep(csvArray,function(n){return(n);}); //remove blanks

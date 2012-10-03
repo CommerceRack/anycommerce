@@ -134,8 +134,12 @@ and offMenu is toggle off, hiding the change button.
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
 .appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
-/* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
-.sideline	{float:right; width:200px; margin:0 0 24px 24px;}
+
+
+/* pages like search results, company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
+
+.mainColumn	{width:75%;}
+.sideline	{float:right; width:20%; margin:0 0 24px 0px;}
 .sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
 
 
@@ -195,19 +199,19 @@ PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
 
-#prodViewerTable	{width:100%;}
+.prodViewerContainer	{width:100%;}
 
 .breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 
 /* primary image and thumbnails */
 .imageContainer	{width:10%; padding-right:24px;}
-#prodViewerTable .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+.prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
 
 
 .prodSummaryContainer	{width:90%;}
 
 
-#tabbedProductContent #prodReviewsTab	{display:block;} /* reviews tab always shows up */
+.tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
 
 /*
 the child list and loading graphic should only show up IF the product is a parent.
@@ -220,7 +224,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
 .prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
-#CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
+.CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
 
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
@@ -268,12 +272,12 @@ BREADCRUMB
 ***************************************************/
 
 
-#breadcrumb	{margin-bottom:12px;}
-#breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
-#breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
-#breadcrumb li:last-child:after	{content:"";}
+.breadcrumb	{margin-bottom:12px;}
+.breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
+.breadcrumb li:after	{content:" \00BB "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
+.breadcrumb li:last-child:after	{content:"";}
 
-#breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
+.breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
 
 
 
@@ -315,7 +319,6 @@ CUSTOMER PAGES
 
 /****** ORDER HISTORY AND INVOICE ******/
 
-#ordersArticle	{margin-right:250px;} /* w/out the margin, the sections lay over the sideline */
 #ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
 #ordersArticle .orderContentsTable	{width:100%}
 
@@ -338,11 +341,6 @@ CUSTOMER PAGES
 SEARCH RESULTS PAGE
 
 ***************************************************/
-
-#resultsProdlist {
-	float: left;
-	width: 760px;
-	}
 
 #searchNav a	{padding:2px 6px;}
 #recentSearchesList	{border-top:0;}

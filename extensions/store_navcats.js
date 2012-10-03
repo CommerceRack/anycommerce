@@ -355,7 +355,7 @@ if(path)	{
 // homepage has already been rendered. if path == ., likely we r on a product page, arriving from homepage. don't show bc.
 	if(path == '.'){}
 	else	{
-		for(i = 1; i < L; i += 1)	{
+		for(var i = 1; i < L; i += 1)	{
 			s += pathArray[i];
 		//	app.u.dump(" -> "+i+" s(path): "+s);
 			$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));

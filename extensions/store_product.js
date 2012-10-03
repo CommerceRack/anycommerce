@@ -317,7 +317,7 @@ addToCart : function (pid){
 				var templateID = data.bindData.loadsTemplate;
 //				app.u.dump(data.value)
 				var L = data.value.length;
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					$tag.append(app.renderFunctions.transmogrify({'id':'review_'+i},templateID,data.value[i]));
 					}
 				return L;
@@ -332,7 +332,7 @@ addToCart : function (pid){
 				var tmp,num;
 				var L = dArr.length;
 //## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					if(dArr[i].indexOf('=') > -1)	{
 //						app.u.dump(' -> treat as =');
 						tmp = dArr[i].split('=');
@@ -678,7 +678,7 @@ NOTES
 					}
 				else	{
 					L = app.data['appReviewsList|'+pid]['@reviews'].length;
-					for(i = 0; i < L; i += 1)	{
+					for(var i = 0; i < L; i += 1)	{
 						sum += Number(app.data['appReviewsList|'+pid]['@reviews'][i].RATING);
 						}
 					avg = Math.round(sum/L);

@@ -15,7 +15,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLO
 var myCreole;
 
 var app = {vars:{
-	"release":"20120912074300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121002113300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
 	"httpURL":"http://www.sporks.zoovy.com/"
@@ -138,7 +138,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 
 	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-	<ul id='homepageFeaturedItems' data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_multipage:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_multipage:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
@@ -161,7 +161,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 -->
 <div id='categoryTemplate' class='loadingBG'>
 
-	<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
@@ -356,9 +356,9 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate'>
 
-<ul id='breadcrumb' class='clearfix noPadOrMargin fluidList' data-bind='var: session(session.recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
-<table id='prodViewerTable' class='prodViewerContainer'>
+<table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
@@ -419,12 +419,12 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 
-	<section id='prodViewerReviewSummary' class='marginBottom'>
+	<section class='marginBottom'>
 		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 	
-	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' id='CRMButtonMenu'>
+	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 
 	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	| 
 
@@ -438,31 +438,38 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 <tr>
 	<td colspan='2' class="tabbedProductContentTD">
 
-<div id="tabbedProductContent" class='prodTabs'>
+<div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
 		<li class='prodDescTab'><a href="#prodDesc" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodDesc_;">Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
-		<li class='prodReviewsTab'><a href="#prodReviews">Reviews</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer">Accessories</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodDetail_;">Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodFeatures_;">Features</a></li>
+		<li class='prodReviewsTab'><a href="#prodReviews" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodReviews_;">Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodVideo_;">Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href="#prodlistAccessoriesContainer" data-bind="var:product(pid);format:assignAttribute; attribute:href; valuePretext:#prodAccessories_;">Accessories</a></li>
 	</ul>
 	
-<!-- tab content -->
+<!-- tab content. only 1 databind per element, so there's a container with a dynamically generated id (for tabs or other scripts) and child with the data. -->
 	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodDesc_;">
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
-	
-	<div id="prodDetail" data-bind='var: product(zoovy:prod_detail);  format:wiki; wikiFormats:myRIA; '></div>
-	
-	<div id="prodFeatures" data-bind='var: product(zoovy:prod_features);  format:wiki; wikiFormats:myRIA; '></div>
-	
-	<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'>
-	<div id="mediaplayer"></div>
+
+	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodDetail_;">
+		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
+
+	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodFeatures_;">
+		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+
+	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodVideo_;">
+		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+	</div>
+
 	
-	<div id="prodReviews">
+	
+	<div data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodReviews_;">
 		
 		<div class='clearfix alignRight'>
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
@@ -472,7 +479,7 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	</div>
 	
 	
-	<div id='prodlistAccessoriesContainer'>
+	<div  data-bind="var:product(pid);format:assignAttribute; attribute:id; valuePretext:prodAccessories_;">
 		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_multipage_controls:true;hide_multipage:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
 	</div>
 
@@ -486,12 +493,12 @@ you'll likely want to something MUCH more custom here. this just simply adds it 
 	</td>
 </tr>
 </table>
-<!-- must be outside table, otherwise width goes way wide -->
-<div id='prodlistRelatedContainer'>
-	<ul id='prodlistRelated' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+<!-- must be outside table, otherwise width goes way wide
+<div class='prodlistRelatedContainer'>
+	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_multipage_controls:true;hide_multipage:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
 </div>
 
-
+ -->
 </div><!-- productTemplate -->
 
 
@@ -612,7 +619,7 @@ adding classes is not likely to have any bad effects.
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='companyTemplate' class='clearfix loadingBG'>
 
-	<div class='sideline' id='sideline'>
+	<div class='sideline' >
 <nav id='companyNav'>
 <ul class='listStyleNone noPadOrMargin'>
 	<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
@@ -727,7 +734,7 @@ adding classes is not likely to have any bad effects.
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='customerTemplate' class='clearfix loadingBG'>
 
-	<div class='sideline' id='sideline'>
+	<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
@@ -821,7 +828,7 @@ adding classes is not likely to have any bad effects.
 
 <div id='searchTemplate' class='searchResultsPage clearfix'>
 
-	<div class='sideline' id='sideline'>
+	<div class='sideline' >
 	<nav id='searchNav'>
 	<ul class='listStyleNone noPadOrMargin'><!--
 		<li id='altSearchesContainer'>
@@ -838,9 +845,7 @@ adding classes is not likely to have any bad effects.
 	</div>
 	
 	<div class='mainColumn'>
-	<section id='resultsProdlist'>
-		<ul id='resultsProductListContainer' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>	
-	</section>
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>	
 	</div>
 </div>
 
@@ -1478,6 +1483,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
 	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
 	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
+	<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
 
 </menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>

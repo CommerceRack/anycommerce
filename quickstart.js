@@ -539,7 +539,11 @@ need to be customized on a per-ria basis.
 			}, //wiki
 
 
-
+		pageTransition : function($o,$n)	{
+			$n.slideDown(3000);
+			$o.slideUp(1000);
+			$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
+			},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -779,8 +783,16 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				
-				
-
+				var $old = $("#mainContentArea :visible:first"); //jquery object of the old div.
+//search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
+// or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
+				if(($old.data('templateid') == 'companyTemplate' && pageType == 'company') || ($old.data('templateid') == 'customerTemplate' && pageType == 'customer') || ($old.data('templateid') == 'searchTemplate' && pageType == 'search'))	{
+					if(infoObj.performTransition){
+						$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
+						}
+					infoObj.performTransition = false;
+					}
+//				app.u.dump("showContent.infoObj: "); app.u.dump(infoObj);
 				switch(pageType)	{
 
 					case 'product':
@@ -910,11 +922,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //if user is not logged in, don't animate because the login modal won't appear on screen if you do.
 				else if(infoObj.performTransition == false)	{}
 				else if(infoObj.parentID && typeof app.ext.myRIA.pageTransition == 'function')	{
-app.u.dump(" -> parentID: "+infoObj.parentID);
-var $old = $("#mainContentArea :visible:first");
+
 var $new = $('#'+infoObj.parentID);
-app.ext.myRIA.pageTransition($new,$old);
-//					$('html, body').animate({scrollTop : 0},200); //new page content loading. scroll to top.
+app.ext.myRIA.pageTransition($old,$new);
+//					
 //					$("#mainContentArea :visible:first").slideUp(2000,function(){
 //						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
 //						}); //hide currently visible content area.
@@ -1640,7 +1651,7 @@ return r;
 //no need to render template again.
 					if(!$('#'+parentID).length){
 						var $content = app.renderFunctions.createTemplateInstance(P.templateID,parentID)
-						$content.addClass('displayNone')
+						$content.addClass('displayNone'); //hidden by default for page transitions
 						$('#mainContentArea').append($content);
 						}
 
@@ -1942,7 +1953,7 @@ buyer to 'take with them' as they move between  pages.
 				var o = ''; //output. what's added to the recentSearchesList ul
 				var L = app.ext.myRIA.vars.session.recentSearches.length;
 				var keywords,count;
-				for(i = 0; i < L; i++)	{
+				for(var i = 0; i < L; i++)	{
 					keywords = app.ext.myRIA.vars.session.recentSearches[i];
 //					app.u.dump(" -> app.data['searchResult|"+keywords+"'] and typeof = "+typeof app.data['searchResult|'+keywords]);
 					count = $.isEmptyObject(app.data['appPublicSearch|'+keywords]) ? '' : app.data['appPublicSearch|'+keywords]['_count']
@@ -1981,7 +1992,7 @@ buyer to 'take with them' as they move between  pages.
 //only have to create the template instance once. Once created, just re-render as part of fetchPageContent.
 					if(!$('#'+parentID).length)	{
 						var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
-						$content.addClass('displayNone');
+						$content.addClass('displayNone'); //hidden by default for page transitions.
 						$('#mainContentArea').append($content);
 						}
 
@@ -2055,8 +2066,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //				app.u.dump(" -> "+attribute+": "+app.data['appProductGet|'+P.pid]['%attribs'][attribute]);
 				if(app.u.isSet(app.data['appProductGet|'+P.pid]['%attribs'][attribute]))	{ 
 //bindData is passed into buildProdlist so that any supported prodlistvar can be set within the data-bind. (ex: withInventory = 1)
-					bindData.csv = app.ext.store_prodlist.u.handleAttributeProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute]);
-					numRequests += app.ext.store_prodlist.u.buildProductList(bindData);
+					bindData.csv = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute]);
+					numRequests += app.ext.store_prodlist.u.getProductDataForList(bindData.csv);
 					}
 				}
 				
@@ -2103,18 +2114,13 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				numRequests += app.ext.store_navcats.u.addQueries4BreadcrumbToQ(catSafeID)
 				}
 			else if(namespace == 'category' && attribute == '@products' )	{
-				var itemsPerPage = bindData.items_per_page ? bindData.items_per_page : 15;
-				 
-	//			app.u.dump(" -> category(@products) found.");
 				if(typeof app.data['appCategoryDetail|'+catSafeID]['@products'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@products']))	{
-	//				app.u.dump("fetching product records");
-					bindData.parentID = app.u.isSet(bindData.parentID) ? bindData.parentID : eleid; //prodlists really want an id.
 					bindData.csv = app.data['appCategoryDetail|'+catSafeID]['@products']; // setProdlistVars wants a csv.
-					app.ext.store_prodlist.u.setProdlistVars(bindData); //build prodlist object
-					bindData.skipCreateInstance = true; //not implemented yet. prodlist needs substantial improvements.
-	//get the first page of product. The rest will be retrieved later in the process, but this lets us get as much in front of the user as quickly as possible.
-	//right now, this doesn't have good support for variations or inventory. ### planned improvement
-					numRequests += app.ext.store_prodlist.u.getProductDataForList(app.data['appCategoryDetail|'+catSafeID]['@products'].slice(0,itemsPerPage),eleid,'mutable');
+					if(bindData.csv.length > 0)	{
+						var plData = app.ext.store_prodlist.u.setProdlistVars(bindData); //build prodlist object
+//						app.u.dump(" -> plData: "); app.u.dump(plData);
+						numRequests += app.ext.store_prodlist.u.getProductDataForList(plData.csv.slice(0,plData.items_per_page));
+						}
 					}
 				}
 			else if(namespace == 'category')	{
@@ -2197,33 +2203,7 @@ else	{
 				}, //removeByValue
 
 
-
-
-
 			
-/*
-commented out on 2012-09-17.
-I believe this was updated to the add2buyerlist function but not deleted when it happened?
-			handleAddToList : function(pid,listID)	{
-
-//app.u.dump("BEGIN myRIA.u.handleAddToList ("+pid+")");
-var authState = app.u.determineAuthentication();
-if(authState == 'authenticated')	{
-	app.ext.store_crm.calls.addToCustomerList.init({"listid":listID,"sku":pid},{"parentID":"CRMButtonMenu","message":"Item has been added to your list","callback":"showMessaging"}); 
-	app.model.dispatchThis();
-	}
-else	{
-	app.ext.myRIA.u.showLoginModal();
-	$('#loginMessaging').append("This feature requires you to be logged in.");
-	$('#loginSuccessContainer').empty();
-	$('<button>').addClass('stdMargin ui-state-default ui-corner-all  ui-state-active').attr('id','modalLoginContinueButton').text('Continue').click(function(){
-		$('#loginFormForModal').dialog('close');
-		app.ext.myRIA.u.handleAddToList(pid,listID);
-		}).appendTo($('#loginSuccessContainer'));
-	}
-
-				}, //handleAddToList
-*/				
 //executed in checkout when 'next/submit' button is pushed for 'existing account' after adding an email/password. (preflight panel)
 //handles inline validation
 			loginFrmSubmit : function(email,password)	{

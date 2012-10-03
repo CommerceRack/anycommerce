@@ -45,7 +45,7 @@ jQuery.extend(zController.prototype, {
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nexted functions are preserved. If duplicates, 'this' will override P.
 		app.model = zoovyModel(); // will return model as object. so references are app.model.dispatchThis et all.
-		window.ieBlows = app.model.ieBlows; //global reference to JSONP callback function. a global is used to keep the url as short as possible for thejsonp req.
+
 		app.vars = app.vars || {};
 		app.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
 		app.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
@@ -1598,7 +1598,7 @@ if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 	}
 else if(typeof eleAttr == 'object')	{
 //	app.u.dump(' -> eleAttr is an object.');
-	for(index in eleAttr)	{
+	for(var index in eleAttr)	{
 		$r.attr('data-'+index,eleAttr[index]) //for now, this is being added via attr data-. later, it may use data( but I want it in the DOM for now.
 		}
 	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
