@@ -1570,6 +1570,7 @@ Then we'll be in a better place to use data() instead of attr().
 		transmogrify : function(eleAttr,templateID,data)	{
 //			app.u.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
 //			app.u.dump(eleAttr);
+
 //If a template ID is specified but does not exist, try to make one. added 2012-06-12
 			if(templateID && !app.templates[templateID])	{
 				var tmp = $('#'+templateID);
@@ -1757,22 +1758,20 @@ return $r;
 		var safeTarget = app.u.makeSafeHTMLId(target); //jquery doesn't like special characters in the id's.
 		
 		var $divObj = $('#'+safeTarget); //jquery object of the target tag. template was already rendered to screen using createTemplate.
+		if($divObj.length > 0)	{
+			var templateID = $divObj.attr('data-templateid'); //always use all lowercase for data- attributes. browser compatibility.
+			var dataObj = $divObj.data();
+//yes, i wish I'd commented why this is here. jt. appears to be for preserving data() already set prior to re-rendering a template.
+			if(dataObj)	{dataObj.id = safeTarget}
+			else	{dataObj = safeTarget;}
+
+			var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
+			$('#'+safeTarget).replaceWith($tmp);
+			}
+		else	{
+			app.u.dump("WARNING! attempted to translate an element that isn't on the DOM. ["+safeTarget+"]");
+			}
 		
-		var templateID = $divObj.attr('data-templateid'); //always use all lowercase for data- attributes. browser compatibility.
-		var dataObj = $divObj.data();
-// app.u.dump(' -> safeTarget: '+safeTarget);
-// app.u.dump(' -> $divObj.length: '+$divObj.length);
-// app.u.dump(' -> templateID: '+templateID);
-// app.u.dump(' -> dataObj: ');
-// app.u.dump(dataObj);
-
-//yes, i wish I'd commented why this is here. jt.
-		if(dataObj)	{dataObj.id = safeTarget}
-		else	{dataObj = safeTarget;}
-
-//app.u.dump(dataObj);
-var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
-$('#'+safeTarget).replaceWith($tmp);
 //		app.u.dump('END translateTemplate');
 		}, //translateTemplate
 		

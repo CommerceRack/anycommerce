@@ -251,6 +251,7 @@ else	{
 					tmp['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
 					}
 //				if(pid == 'AXA-TEST-B2')	{app.u.dump(tmp)}
+//				app.u.dump("Rendering product template for: "+pid);
 				app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
 				tagObj.pid = pid;
 				app.ext.myRIA.u.buildQueriesFromTemplate(tagObj);
@@ -540,9 +541,9 @@ need to be customized on a per-ria basis.
 
 
 		pageTransition : function($o,$n)	{
+			$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
 			$n.slideDown(3000);
 			$o.slideUp(1000);
-			$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
 			},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -764,34 +765,25 @@ if the onclick is set to return showContent(... then it will return false for br
 for legacy browsers. That means old browsers will use the anchor to retain 'back' button functionality.
 */
 				var r = false;
-				infoObj.performTransition = infoObj.performTransition || true; //set to true if the link should not tranisition (such as slide to top). used 'my account' in footer linked but login modal displayed. may b set for cart modal or other modals as well.
-				if(typeof infoObj != 'object')	{infoObj = {}} //infoObj could be empty for a cart or checkout
+				var $old = $("#mainContentArea :visible:first"); //used for transition (actual and validation).
+				app.ext.myRIA.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
+
+				if(typeof infoObj != 'object')	{infoObj = {}} //could be empty for a cart or checkout
 
 //if pageType isn't passed in, we're likely in a popState, so look in infoObj.
 				if(pageType){infoObj.pageType = pageType} //pageType
 				else if(pageType == '')	{pageType = infoObj.pageType}
-				
-				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
 
-				app.ext.myRIA.u.closeAllModals();  //close any open modal dialogs. important cuz a 'showpage' could get executed via wiki in a modal window.
-				//to avoid confusion, clear keywords when leaving a search page. cart opens a modal, so no need to clear.
-				if(pageType != 'search' && pageType != 'cart')	{
-					$('.productSearchKeyword').each(function(){
-						var $this = $(this);
-						if($this[0].defaultValue != $this.val())	{$this.val($this[0].defaultValue)}
-						});
-					}
+				app.ext.myRIA.u.handleSearchInput(pageType);
+
+//set some defaults.
+				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
+				infoObj.performTransition = infoObj.performTransition || app.ext.myRIA.u.showtransition(infoObj,$old); //specific instances skip transition.
+				infoObj.performJumpToTop = infoObj.performJumpToTop || true; //specific instances jump to top. these are passed in (usually related to modals).
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
-				
-				var $old = $("#mainContentArea :visible:first"); //jquery object of the old div.
-//search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
-// or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(($old.data('templateid') == 'companyTemplate' && pageType == 'company') || ($old.data('templateid') == 'customerTemplate' && pageType == 'customer') || ($old.data('templateid') == 'searchTemplate' && pageType == 'search'))	{
-					if(infoObj.performTransition){
-						$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
-						}
-					infoObj.performTransition = false;
-					}
+
+
+
 //				app.u.dump("showContent.infoObj: "); app.u.dump(infoObj);
 				switch(pageType)	{
 
@@ -828,8 +820,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'customer':
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
-							var showTransition = app.ext.myRIA.u.showCustomer(infoObj);
-							infoObj.performTransition = infoObj.performTransition || showTransition;
+							var performJumpToTop = app.ext.myRIA.u.showCustomer(infoObj);
+							infoObj.performJumpToTop = infoObj.performJumpToTop || performJumpToTop;
 							}
 						else	{
 							$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
@@ -876,7 +868,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					case 'cart':
 //						infoObj.mode = 'modal';
 						infoObj.back = 0; //no popstate or hash change since it's opening in a modal.
-						infoObj.performTransition = false; //dont jump to top.
+						infoObj.performJumpToTop = false; //dont jump to top.
 //						app.ext.myRIA.u.showPage('.'); //commented out.
 						app.ext.myRIA.u.showCart(infoObj);
 						break;
@@ -919,12 +911,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						$('#appView').slideDown(3000);
 						});
 					}
-//if user is not logged in, don't animate because the login modal won't appear on screen if you do.
-				else if(infoObj.performTransition == false)	{}
+				else if(infoObj.performTransition == false)	{
+					
+					}
 				else if(infoObj.parentID && typeof app.ext.myRIA.pageTransition == 'function')	{
 
-var $new = $('#'+infoObj.parentID);
-app.ext.myRIA.pageTransition($old,$new);
+app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //					
 //					$("#mainContentArea :visible:first").slideUp(2000,function(){
 //						$('#'+infoObj.parentID,'#mainContentArea').slideDown(2000); //hide currently visible content area.
@@ -938,6 +930,7 @@ app.ext.myRIA.pageTransition($old,$new);
 				else	{
 					app.u.dump("WARNING! in showContent and no parentID is set for the element being translated.");
 					}
+
 
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
@@ -1093,10 +1086,6 @@ P.listID (buyer list id)
 					}
 				},
 
-			saveAddressChange : function()	{
-				
-				},
-
 
 //assumes the faq are already in memory.
 			showFAQbyTopic : function(topicID)	{
@@ -1156,6 +1145,37 @@ P.listID (buyer list id)
 				app.ext.myRIA.a.showContent('',P);
 				return P //returning this saves some additional looking up in the appInit
 				},
+				
+			showtransition : function(P,$old)	{
+				var r = true; //what is returned.
+//				app.u.dump(" -> $old.data('templateid'): "+$old.data('templateid'));
+//				app.u.dump(" -> P.pageType: "+P.pageType);
+//				app.u.dump(" -> $old.data('catsafeid'): "+$old.data('catsafeid'));
+//				app.u.dump(" -> P.navcat: "+P.navcat);
+//search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
+// or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
+				if($old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false}
+				else if($old.data('templateid') == 'homepageTemplate' && P.pageType == 'homepageTemplate'){r = false}
+				else if($old.data('templateid') == 'productTemplate' && $old.data('pid') == P.navcat){r = false}
+				else if($old.data('templateid') == 'companyTemplate' && P.pageType == 'company')	{r = false}
+				else if($old.data('templateid') == 'customerTemplate' && P.pageType == 'customer')	{r = false}
+				else if($old.data('templateid') == 'searchTemplate' && P.pageType == 'search')	{r = false}
+				else	{
+
+					}
+//				app.u.dump(" -> R: "+r);
+				return r;
+				},
+//when changing pages, make sure keywords resets to the default to avoid confusion.
+			handleSearchInput : function(pageType)	{
+				if(pageType != 'search' && pageType != 'cart')	{
+					$('.productSearchKeyword').each(function(){
+						var $this = $(this);
+						if($this[0].defaultValue != $this.val())	{$this.val($this[0].defaultValue)}
+						});
+					}
+				},
+				
 /*
 when quickstart is added, it will go through app.rq and use this function to add all resources as needed.
 it'll then set app.rq.push to mirror this function.
@@ -1196,7 +1216,7 @@ it'll then set app.rq.push to mirror this function.
 				else	{
 					$obj.data('slider','rendered'); //used to determine if the ul contents have already been added.
 					var pid = $obj.attr('data-pid');
-					app.u.dump(" -> pid: "+pid);
+//					app.u.dump(" -> pid: "+pid);
 					var data = app.data['appProductGet|'+pid]['%attribs'];
 					var $img = $obj.find('img')
 					var width = $img.attr('width'); //using width() and height() here caused unusual results in the makeImage function below.
@@ -1974,7 +1994,7 @@ buyer to 'take with them' as they move between  pages.
 				var r = null; //what is returned. will be set to parent id, if all required data is present.
 				var catSafeID = P.navcat;
 				if(!catSafeID)	{
-					app.u.throwMessage('Oops!  It seems an error occured. You can retry whatever you just did and hopefully you will meet with more success. If error persists, please try again later or contact the site administrator. We apologize for any inconvenience.<br \/>[err: no navcat passed into myRIA.showPage]');
+					app.u.throwGMessage("no navcat passed into myRIA.showPage");
 					}
 				else	{
 					if(P.templateID){
@@ -1990,14 +2010,21 @@ buyer to 'take with them' as they move between  pages.
 					app.ext.myRIA.u.handleTemplateFunctions(P);
 					var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
 //only have to create the template instance once. Once created, just re-render as part of fetchPageContent.
-					if(!$('#'+parentID).length)	{
+					if($('#'+parentID).length > 0){
+//						app.u.dump(" -> "+parentID+" already exists. Use it");
+						P.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						app.ext.myRIA.u.handleTemplateFunctions(P);
+						}
+					else	{
+						
 						var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
 						$content.addClass('displayNone'); //hidden by default for page transitions.
 						$('#mainContentArea').append($content);
+						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
+						app.model.dispatchThis();
 						}
 
-					app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
-					app.model.dispatchThis();
+
 					}
 				return parentID;
 				}, //showPage
@@ -2025,7 +2052,6 @@ tagObj.extension = 'myRIA'
 app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 	var $focusTag = $(this);
-	var eleid = $focusTag.attr('id') ? $focusTag.attr('id') : ''; //element id. default to blank. used in prodlists.
 		
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
@@ -2063,12 +2089,9 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 // don't re-render entire layout. Inefficient AND will break some extensions, such as powerreviews.
 		else if(P.pid)	{
 			if(bindData.format == 'productList')	{
-//				app.u.dump(" -> "+attribute+": "+app.data['appProductGet|'+P.pid]['%attribs'][attribute]);
-				if(app.u.isSet(app.data['appProductGet|'+P.pid]['%attribs'][attribute]))	{ 
-//bindData is passed into buildProdlist so that any supported prodlistvar can be set within the data-bind. (ex: withInventory = 1)
-					bindData.csv = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute]);
-					numRequests += app.ext.store_prodlist.u.getProductDataForList(bindData.csv);
-					}
+//a product list takes care of getting all it's own data.
+//get the data for all the items in this attibutes list. no callback is executed because no parentID is set in params.
+//					numRequests += app.ext.store_prodlist.u.getProductDataForList({'csv':app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute])});
 				}
 				
 			else if(namespace == 'reviews')	{
@@ -2113,15 +2136,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{
 				numRequests += app.ext.store_navcats.u.addQueries4BreadcrumbToQ(catSafeID)
 				}
-			else if(namespace == 'category' && attribute == '@products' )	{
-				if(typeof app.data['appCategoryDetail|'+catSafeID]['@products'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@products']))	{
-					bindData.csv = app.data['appCategoryDetail|'+catSafeID]['@products']; // setProdlistVars wants a csv.
-					if(bindData.csv.length > 0)	{
-						var plData = app.ext.store_prodlist.u.setProdlistVars(bindData); //build prodlist object
-//						app.u.dump(" -> plData: "); app.u.dump(plData);
-						numRequests += app.ext.store_prodlist.u.getProductDataForList(plData.csv.slice(0,plData.items_per_page));
-						}
-					}
+			else if(namespace == 'category' && bindData.format == 'productList' )	{
+				//product lists take care of themselves. do nothing.
 				}
 			else if(namespace == 'category')	{
 				// do nothing. this would be hit for something like category(pretty), which is perfectly valid but needs no additional data.

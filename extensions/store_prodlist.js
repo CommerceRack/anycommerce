@@ -186,7 +186,7 @@ A special translate template for product so that reviews can be merged into the 
 //				app.u.dump("BEGIN app.ext.store_prodlist.callbacks.translateTemplate.onSuccess");
 //				app.u.dump(tagObj);
 //				app.u.dump(" -> tagObj.datapointer = "+tagObj.datapointer);
-//				app.u.dump(" -> tagObj.parentID = "+tagObj.parentID);
+//				app.u.dump(" -> tagObj.parentID = "+tagObj.parentID+" and $(#"+tagObj.parentID+").length: "+$('#'+tagObj.parentID).length);
 				var tmp = app.data[tagObj.datapointer];
 				var pid = app.data[tagObj.datapointer].pid;
 //				app.u.dump(" -> typeof app.data['appReviewsList|'+pid]:"+ typeof app.data['appReviewsList|'+pid]);
@@ -244,7 +244,7 @@ A special translate template for product so that reviews can be merged into the 
 			productList : function($tag,data)	{
 				app.u.dump("BEGIN store_prodlist.renderFormats.productList");
 //				app.u.dump(" -> data.value: "); app.u.dump(data.value);
-
+				data.bindData.csv = data.value;
 				app.ext.store_prodlist.u.buildProductList(data.bindData,$tag);
 
 				},//prodlist		
@@ -362,12 +362,12 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 //okay, now lets set up some defaults if none were passed and normalize the data.
 					obj.items_per_page = (Number(obj.items_per_page)) ? Number(obj.items_per_page) : 25; //the number of items per page before going to multipage (if enabled)
 					obj.page_in_focus = (Number(obj.page_in_focus)) ? Number(obj.page_in_focus) : 1; //in a multipage format, which page is in focus.
-					obj.hide_multipage = (obj.hide_multipage) ? true : false;
-					obj.hide_multipage_controls = (obj.hide_multipage_controls) ? true : false;
+					obj.hide_summary = (obj.hide_summary) ? true : false;
+					obj.hide_pagination = this.mpControlsShouldBeHidden(obj);
 					obj.withInventory = (obj.withInventory) ? 1 : 0;
 					obj.withVariations = (obj.withVariations) ? 1 : 0;
 					obj.withReviews = (obj.withReviews) ? 1 : 0;
-					obj.parentID = obj.parentID || 'pl_'+app.u.guidGenerator(); //gotta have an ID. really really wants a unique id.
+					obj.parentID = obj.parentID || 'pl_'+app.u.guidGenerator().substring(0,12); //gotta have an ID. really really wants a unique id.
 					
 					var firstProductOnPage = (obj.page_in_focus-1)*obj.items_per_page; //subtract 1 from page so that we start at the zero point in the array.
 					var lastProductOnPage = firstProductOnPage + obj.items_per_page; //last spot in csv for this page.
@@ -375,13 +375,13 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 
 
 //allows for just the mp controls to be turned off but will leave the rest of the header (summary, etc) enabled.
-					if(obj.hide_multipage == true){obj.hide_multipage_controls = true;}
-					else if(obj.items_per_page >= L || obj.hide_multipage_controls)	{obj.hide_multipage_controls = true;}
+					if(obj.hide_summary == true){obj.hide_pagination = true;}
+					else if(obj.items_per_page >= L || obj.hide_pagination)	{obj.hide_pagination = true;}
 					
 					obj.page_start_point = firstProductOnPage + 1; //what # in the list of product this 'page' starts on. +1 for customer-facing. (so it doesn't say items 0 - 29)
-					obj.page_end_point = lastProductOnPage
-					obj.page_product_count = lastProductOnPage - firstProductOnPage//# of items on this page. (there was duplicate of this for: items_on_this_page)
-					obj.total_product_count = L //total # of items in this list.
+					obj.page_end_point = lastProductOnPage;
+					obj.page_product_count = lastProductOnPage - firstProductOnPage; //# of items on this page. (there was duplicate of this for: items_on_this_page)
+					obj.total_product_count = L; //total # of items in this list.
 					obj.total_page_count = Math.ceil(L/obj.items_per_page) //total # of pages for this list.
 					
 					r = obj;
@@ -396,7 +396,14 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 
 
 
-
+			mpControlsShouldBeHidden : function(obj){
+				var r = false;
+				if(obj.hide_pagination){r = true}
+				else if(obj.hide_summary){r = true}
+				else if(obj.items_per_page < obj.csv.length){r = true}
+				else{} //catch
+				return r;
+				},
 
 
 //A product attribute for a list of items is stored as a string, not an array. (ex: products_related).
@@ -407,7 +414,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 				if(typeof csv == 'string')	{
 					csv = csv.split(',');
 					}
-				app.u.dump(" -> typeof csv: "+typeof csv);
+//				app.u.dump(" -> typeof csv: "+typeof csv);
 				csv = $.grep(csv,function(n){return(n);}); //remove blanks. commonly occurs in product attributes cuz of extra comma
 				return csv;
 				},
@@ -416,15 +423,20 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 			getProdlistPlaceholders : function(plObj)	{
 				var $r = $("<ul>"); //The children of this are what is returned.
 				if(plObj && plObj.csv)	{
-					var L = plObj.csv.length;
+					var pageCSV = this.getSkusForThisPage(plObj);
+					var L = pageCSV.length;
 					for(var i = 0; i < L; i += 1)	{
-						$r.append(app.renderFunctions.createTemplateInstance(plObj.templateID,{"id":parentID+"_"+csv[i],"pid":csv[i]})); //create a 'place' for this product in the list.
+						$r.append(app.renderFunctions.createTemplateInstance(plObj.loadsTemplate,{"id":this.getSkuSafeIdForList(plObj.parentID,pageCSV[i]),"pid":pageCSV[i]})); //create a 'place' for this product in the list.
 						}
 					}
+				app.u.dump("appending skus");
 				return $r.children();
 				},
-
-
+				
+//builds the safeID for the container of a product. unique per list/sku
+			getSkuSafeIdForList : function(parentID,sku)	{
+				return parentID+"_"+app.u.makeSafeHTMLId(sku);
+				},
 
 /*
 this will go get ALL product in the csv passed (if not in memory or local already).
@@ -439,31 +451,45 @@ if no parentID is set, then this function gets the data into memory for later us
  -> showContent for a product page DOES pass an id because the product data is displayed, then supplemental material (reviews, accessories, etc) is displayed once available.
 
 */
-			getProductDataForList : function(plObj,Q)	{
-//				app.u.dump("BEGIN app.ext.store_prodlist.u.getProductDataForList ["+parentID+"]");
-//				app.u.dump("csv = "+csv);
+			getProductDataForList : function(plObj,$tag,Q)	{
+				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
 
-				Q = Q || 'immutable';
+				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
 				if(plObj && plObj.csv)	{
-					var L = plObj.csv.length;
+//					app.u.dump(" -> csv defined. length: "+plObj.csv.length);
+					var pageCSV = this.getSkusForThisPage(plObj);
+					var L = pageCSV.length;
 					var call = 'appProductGet';  //this call is used unless variations or inventory are needed. this call is 'light' and just gets basic info.
 					if(Number(plObj.withVariations) + Number(plObj.withInventory) + Number(plObj.withReviews) > 0)	{
 						call = 'getDetailedProduct'
 						}
-	
+
 					for(var i = 0; i < L; i += 1)	{
+//						app.u.dump("rendering");
 						numRequests += app.ext.store_prodlist.calls[call].init({
-							"pid":csv[i],
+							"pid":pageCSV[i],
 							"withVariations":plObj.withVariations,
 							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
-							}, parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':parentID+"_"+csv[i]} : {});  //tagObj not passed if parentID not set. 
+							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {});  //tagObj not passed if parentID not set. 
 						}
 					}
+				if(numRequests > 0)	{app.model.dispatchThis()}
 				return numRequests;
 				}, //getProductDataForList
 
+
+			getSkusForThisPage : function(obj)	{
+				var csv = new Array(); //what is returned.
+				if(obj.items_per_page > obj.csv.length)	{
+					csv = obj.csv;
+					}
+				else	{
+					csv = obj.csv.slice(obj.page_start_point - 1,obj.page_end_point);
+					}
+				return csv;
+				},
 
 /*
 This is the function that gets executed to build a product list.
@@ -471,22 +497,41 @@ obj is most likely the databind object. It can be any params set in setProdlistV
 params that are missing will be auto-generated.
 */
 			buildProductList : function(obj,$tag)	{
+				app.u.dump("BEGIN store_prodlist.u.buildProductList()");
+				app.u.dump(" -> obj: "); app.u.dump(obj);
+
 //Need either the tag itself ($tag) or the parent id to build a list. recommend $tag to ensure unique parent id is created
 //also need a list of product (csv)
 				if(($tag || (obj && obj.parentID)) && obj.csv)	{
-					obj.csv = app.ext.store_prodlist.u.cleanUpProductList(data.value); //strip blanks and make sure this is an array. prod attributes are not, by default.
-					var r = 0; //what is returned. # of dispatches that need to be made.
+					app.u.dump(" -> required parameters exist. Proceed...");
+					obj.csv = app.ext.store_prodlist.u.cleanUpProductList(obj.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
+					
 					var plObj = this.setProdlistVars(obj); //full prodlist object now.
+					obj.pageCSV = this.getSkusForThisPage(obj);
 //need a jquery obj. to work with.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
 					else	{$tag = $('#'+plObj.parentID);}
 
-					$tag.append(this.getProdlistPlaceholders(plObj)).removeClass('loadingBG'); //adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
+					$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
+
+//adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
+//can't just transmogrify beccause sequence is important and if some data is local and some isn't, order will get messed up.
+					$tag.append(this.getProdlistPlaceholders(plObj)).removeClass('loadingBG');
+					app.u.dump("Skus appended to DOM");					
 					$tag.data('prodlist',plObj); //sets data object on parent
-					r = this.getProductDataForList(plObj.parentID); //will render individual product, if data already present or fetch data and render as part of response.
+					app.u.dump(" -> now get data/render list.");
+//!!! AAAAAA. when the product data is loaded from memory, it tries to render prior to the DOM being updated, which leaves behind a constant 'loading' gfx. 
+					setTimeout(function(){
+						app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
+						},1000);
+					 //will render individual product, if data already present or fetch data and render as part of response.
+
+					}
+				else	{
+					app.u.throwGMessage("WARNING: store_prodlist.u.buildProductList is missing some required fields. Obj follows: ");
+					app.u.dump(obj);
 					}
 //				app.u.dump(" -> r = "+r);
-				return r;
 				}, //buildProductList
 
 /*
@@ -494,7 +539,7 @@ This is executed when the page is changed in a prodlist.
 initially, this was how product lists were handled, the the productList renderFormat was introduced.
 need to remove duplicate code from this and the renderFormat. ###
 */
-
+/*
 			handleProductList : function(parentID)	{
 				var r = 0; //returns the number of requests.
 //				app.u.dump("BEGIN app.ext.store_prodlist.u.handleProductList");
@@ -509,7 +554,7 @@ need to remove duplicate code from this and the renderFormat. ###
 //in a multipage format, just request the pids of the page in focus.
 //					app.u.dump(' -> multi page product list.');
 					csvArray = app.ext.store_prodlist.vars[parentID].csv.slice(app.ext.store_prodlist.vars[parentID].page_start_point - 1,app.ext.store_prodlist.vars[parentID].page_end_point);
-					if(!app.ext.store_prodlist.vars[parentID].hide_multipage)	{
+					if(!app.ext.store_prodlist.vars[parentID].hide_summary)	{
 						$('.mpControlContainer').empty().remove();
 						$parent.before(app.ext.store_prodlist.u.showMPControls(parentID,'header'));
 						$parent.after(app.ext.store_prodlist.u.showMPControls(parentID,'footer'));
@@ -519,7 +564,7 @@ need to remove duplicate code from this and the renderFormat. ###
 				r = app.ext.store_prodlist.u.getProductDataForList(csvArray,parentID);
 				return r;
 				},
-
+*/
 			mpJumpToPage : function(parentID,page)	{
 /*
 //				app.u.dump("BEGIN app.ext.store_prodlist.u.mpJumpToPage");
@@ -533,15 +578,21 @@ need to remove duplicate code from this and the renderFormat. ###
 				if(app.ext.store_prodlist.u.handleProductList(parentID)){app.model.dispatchThis()}
 //				$('#mpControl_'+parentID).html(this.showMPControls(parentID)); //redo product list header to reflect changes (items 1-25 changes to 2-50)
 				*/},
-//the second var is location. header or footer are currently supported.
+			
+			showProdlistSummary : function(plObj,location){
+				location = location ? location : 'header';
+				var $output = app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+				return $output;
+				},
+
 			showMPControls : function(parentID,location)	{
 				/*
 //				app.u.dump("BEGIN store_prodlist.u.showMPControls ["+parentID+"]");
-				location = location ? location : 'header';
-//				var $parent = $('#'+parentID);
+				
+//				
 //remove any existing controls. this is important as the controls are re-rendered when 'page' chages and not removing it will cause duplicate controls to appear.
 //$output is the multipage header object.  It is what is returned.
-				var $output = app.renderFunctions.transmogrify({'id':'mpControl_'+parentID+'_'+location},'mpControlSpec',app.ext.store_prodlist.vars[parentID]);
+				
 				$output.find('.mpControlJumpToPage').click(function(){
 					app.ext.store_prodlist.u.mpJumpToPage(parentID,$(this).attr('data-page'))
 					})
@@ -562,7 +613,7 @@ $output.find('.paging').each(function(){
 		}
 	});
 //multipage may be turned off (but the header portion still enabled), such as when only 1 page of product is present.
-if(app.ext.store_prodlist.vars[parentID].hide_multipage_controls == true)	{
+if(app.ext.store_prodlist.vars[parentID].hide_pagination == true)	{
 	$output.find('.mpControlsPagination').addClass('displayNone');
 	}
 				
