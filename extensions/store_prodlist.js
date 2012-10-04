@@ -242,11 +242,10 @@ A special translate template for product so that reviews can be merged into the 
 //data.bindData will get passed into getProdlistVar and used for defaults on the list itself. That means any var supported in prodlistVars can be set in bindData.
 
 			productList : function($tag,data)	{
-				app.u.dump("BEGIN store_prodlist.renderFormats.productList");
-//				app.u.dump(" -> data.value: "); app.u.dump(data.value);
+//				app.u.dump("BEGIN store_prodlist.renderFormats.productList");
+//				app.u.dump(" -> data.bindData: "); app.u.dump(data.bindData);
 				data.bindData.csv = data.value;
 				app.ext.store_prodlist.u.buildProductList(data.bindData,$tag);
-
 				},//prodlist		
 			
 			mpPagesAsListItems : function($tag,data)	{
@@ -400,7 +399,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 				var r = false;
 				if(obj.hide_pagination){r = true}
 				else if(obj.hide_summary){r = true}
-				else if(obj.items_per_page < obj.csv.length){r = true}
+				else if(obj.items_per_page > obj.csv.length){r = true}
 				else{} //catch
 				return r;
 				},
@@ -497,29 +496,31 @@ obj is most likely the databind object. It can be any params set in setProdlistV
 params that are missing will be auto-generated.
 */
 			buildProductList : function(obj,$tag)	{
-				app.u.dump("BEGIN store_prodlist.u.buildProductList()");
-				app.u.dump(" -> obj: "); app.u.dump(obj);
+//				app.u.dump("BEGIN store_prodlist.u.buildProductList()");
+//				app.u.dump(" -> obj: "); app.u.dump(obj);
 
 //Need either the tag itself ($tag) or the parent id to build a list. recommend $tag to ensure unique parent id is created
 //also need a list of product (csv)
 				if(($tag || (obj && obj.parentID)) && obj.csv)	{
-					app.u.dump(" -> required parameters exist. Proceed...");
+//					app.u.dump(" -> required parameters exist. Proceed...");
 					obj.csv = app.ext.store_prodlist.u.cleanUpProductList(obj.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
 					
 					var plObj = this.setProdlistVars(obj); //full prodlist object now.
-					obj.pageCSV = this.getSkusForThisPage(obj);
+
 //need a jquery obj. to work with.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
 					else	{$tag = $('#'+plObj.parentID);}
-
-					$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
-
+//a wrapper around all the prodlist content is created just one. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
+					if($('#'+plObj.parentID+'_container').length == 0)	{$tag.wrap("<div id='"+plObj.parentID+"_container' />")}
 //adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
 //can't just transmogrify beccause sequence is important and if some data is local and some isn't, order will get messed up.
 					$tag.append(this.getProdlistPlaceholders(plObj)).removeClass('loadingBG');
-					app.u.dump("Skus appended to DOM");					
 					$tag.data('prodlist',plObj); //sets data object on parent
-					app.u.dump(" -> now get data/render list.");
+
+					if(!obj.hide_summary)	{
+						$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
+						$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
+						}
 //!!! AAAAAA. when the product data is loaded from memory, it tries to render prior to the DOM being updated, which leaves behind a constant 'loading' gfx. 
 					setTimeout(function(){
 						app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
@@ -565,61 +566,53 @@ need to remove duplicate code from this and the renderFormat. ###
 				return r;
 				},
 */
-			mpJumpToPage : function(parentID,page)	{
-/*
-//				app.u.dump("BEGIN app.ext.store_prodlist.u.mpJumpToPage");
-//				app.u.dump(" -> parentID = "+parentID);
-//				app.u.dump(" -> page = "+page);
 
-//update the vars object to reflect the new page that will be in focus.
-				app.ext.store_prodlist.vars[parentID].page_in_focus = page;
-//once page is set, setProdlistVars will automatically recompute the start and end points.
-				app.ext.store_prodlist.u.setProdlistVars(app.ext.store_prodlist.vars[parentID]);
-				if(app.ext.store_prodlist.u.handleProductList(parentID)){app.model.dispatchThis()}
-//				$('#mpControl_'+parentID).html(this.showMPControls(parentID)); //redo product list header to reflect changes (items 1-25 changes to 2-50)
-				*/},
+/*
+function is executed both from the next/previous buttons and list of page links.
+$pageTag is the jquery object of whatever was clicked. the data to be used is stored in data- tags on the element itself.
+
+*/
+
+			mpJumpToPage : function($pageTag)	{
+
+//				app.u.dump("BEGIN app.ext.store_prodlist.u.mpJumpToPage");
+				var targetList = $pageTag.closest('[data-targetlist]').attr('data-targetlist');
+				var plObj = $('#'+targetList).data('prodlist');
+
+//figure out what page to show next.
+//the multipage controls take care of enabling/disabling next/back buttons to ensure no 'next' appears/is clickable on last page.				
+				if($pageTag.attr('data-role') == 'next')	{plObj.page_in_focus += 1}
+				else if($pageTag.attr('data-role') == 'previous')	{plObj.page_in_focus -= 1}
+				else	{plObj.page_in_focus = $pageTag.attr('data-page')}
+
+				$('.mpControlContainer','#'+plObj.parentID+'_container').empty().remove(); //clear all summary/multipage for this prodlist.
+				$('#'+plObj.parentID).empty(); //empty prodlist so new page gets clean data.
+				this.buildProductList(plObj);
+				},
 			
 			showProdlistSummary : function(plObj,location){
 				location = location ? location : 'header';
 				var $output = app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
+				if(plObj.hide_pagination === true)	{
+					$output.find('.mpControlsPagination').addClass('displayNone');
+					}
+				else	{
+					$output.find('.mpControlJumpToPage, .paging').click(function(){
+						app.ext.store_prodlist.u.mpJumpToPage($(this))
+						})
+					$output.find('.paging').each(function(){
+						var $this = $(this)
+						if($this.attr('data-role') == 'next')	{
+							if(plObj.page_in_focus == plObj.total_page_count)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
+							}
+						else if($this.attr('data-role') == 'previous')	{
+							if(plObj.page_in_focus == 1)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
+							}
+						});
+					}
 				return $output;
 				},
 
-			showMPControls : function(parentID,location)	{
-				/*
-//				app.u.dump("BEGIN store_prodlist.u.showMPControls ["+parentID+"]");
-				
-//				
-//remove any existing controls. this is important as the controls are re-rendered when 'page' chages and not removing it will cause duplicate controls to appear.
-//$output is the multipage header object.  It is what is returned.
-				
-				$output.find('.mpControlJumpToPage').click(function(){
-					app.ext.store_prodlist.u.mpJumpToPage(parentID,$(this).attr('data-page'))
-					})
-
-$output.find('.paging').each(function(){
-	var $this = $(this)
-	if($this.attr('data-role') == 'next')	{
-		if(app.ext.store_prodlist.vars[parentID].page_in_focus == app.ext.store_prodlist.vars[parentID].total_page_count)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
-		else	{
-			$(this).click(function(){app.ext.store_prodlist.u.mpJumpToPage(parentID,app.ext.store_prodlist.vars[parentID].page_in_focus + 1)})
-			}
-		}
-	else if($this.attr('data-role') == 'previous')	{
-		if(app.ext.store_prodlist.vars[parentID].page_in_focus == 1)	{$this.attr('disabled','disabled').addClass('ui-state-disabled')}
-		else	{
-			$(this).click(function(){app.ext.store_prodlist.u.mpJumpToPage(parentID,app.ext.store_prodlist.vars[parentID].page_in_focus - 1)})
-			}
-		}
-	});
-//multipage may be turned off (but the header portion still enabled), such as when only 1 page of product is present.
-if(app.ext.store_prodlist.vars[parentID].hide_pagination == true)	{
-	$output.find('.mpControlsPagination').addClass('displayNone');
-	}
-				
-				return $output;
-				*/
-				}, //showMPControls
 
 //will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
 //data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.

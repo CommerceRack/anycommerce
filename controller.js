@@ -1892,7 +1892,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 			var rule = {};
 			if(data)	{
 				var declarations = data.split(';');
-				declarations.pop();
+				declarations.pop(); //the ending ; causes the last entry to be blank. this removes it. also means the data bind MUST end in a ;
 				var len = declarations.length;
 				for (var i = 0; i < len; i++)	{
 					var loc = declarations[i].indexOf(':'); //splits at first :. this may mean : in the values is okay. test.
