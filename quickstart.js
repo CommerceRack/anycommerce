@@ -758,7 +758,7 @@ fallback is to just output the value.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 			showContent : function(pageType,infoObj)	{
-//				app.u.dump("BEGIN showContent.");
+				app.u.dump("BEGIN showContent ["+pageType+"].");
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -1149,17 +1149,18 @@ P.listID (buyer list id)
 			showtransition : function(P,$old)	{
 				var r = true; //what is returned.
 //				app.u.dump(" -> $old.data('templateid'): "+$old.data('templateid'));
-//				app.u.dump(" -> P.pageType: "+P.pageType);
+//				app.u.dump(" -> P: "); app.u.dump(P);
 //				app.u.dump(" -> $old.data('catsafeid'): "+$old.data('catsafeid'));
 //				app.u.dump(" -> P.navcat: "+P.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if($old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false}
-				else if($old.data('templateid') == 'homepageTemplate' && P.pageType == 'homepageTemplate'){r = false}
-				else if($old.data('templateid') == 'productTemplate' && $old.data('pid') == P.navcat){r = false}
-				else if($old.data('templateid') == 'companyTemplate' && P.pageType == 'company')	{r = false}
-				else if($old.data('templateid') == 'customerTemplate' && P.pageType == 'customer')	{r = false}
-				else if($old.data('templateid') == 'searchTemplate' && P.pageType == 'search')	{r = false}
+				if(P.pageType == 'cart'){r = false; app.u.dump('fail 0');}
+				if(P.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 1");}
+				if(P.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 2");}
+				else if(P.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == P.pid){r = false; app.u.dump("fail 3");}
+				else if($old.data('templateid') == 'companyTemplate' && P.pageType == 'company')	{r = false; app.u.dump("fail 4");}
+				else if($old.data('templateid') == 'customerTemplate' && P.pageType == 'customer')	{r = false; app.u.dump("fail 5");}
+				else if($old.data('templateid') == 'searchTemplate' && P.pageType == 'search')	{r = false; app.u.dump("fail 6");}
 				else	{
 
 					}
@@ -1786,7 +1787,7 @@ return r;
 				if($('#mainContentArea_customer').length)	{}
 				else	{
 					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
-					app.ext.myRIA.u.bindNav('#sideline a');
+					app.ext.myRIA.u.bindNav('#customerNav a');
 					}
 				
 				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
