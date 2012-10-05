@@ -1799,10 +1799,8 @@ return $r;
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
-				
 				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
-//				app.u.dump(' -> namespace = '+namespace); app.u.dump(' -> attributeID = '+attributeID); 
-//				app.u.dump(' -> typeof value = '+typeof value); app.u.dump(' -> value = '+value);
+				
 //This is an attempt to skip a lot of the code block below. It was added in 201239.
 				if(typeof value == 'string' || typeof value == 'number')	{}
 				else	{
@@ -1881,6 +1879,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 					}
 //			app.u.dump(' -> value = '+value);
 				}
+
 			return value;
 			},
 

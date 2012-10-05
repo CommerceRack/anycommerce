@@ -1,6 +1,6 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
 app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
-app.vars.extensions = app.vars.extensions || []; //ensure array is defined. rq = resource queue.
+
 
 
 
@@ -15,7 +15,7 @@ app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
 // app.ext.myRIA.template.productTemplate.onCompletes.push() 
-//app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
+app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
 //app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','addTriggers']);
 //app.rq.push(['extension',0,'','']);
 
@@ -39,40 +39,23 @@ app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'ht
 
 
 
-// example of how to add a non-essential extension after the initial load is done.
-/*
-app.vars.scripts.push({
-	'pass':5,
-	'location':app.vars.baseURL+'extensions/analytics_google.js',
-	'validator':function(){return (typeof analytics_google == 'function') ? true : false;},
-	'callback':function(){
-		app.ext.analytics_google = analytics_google();
-		app.ext.analytics_google.callbacks.addTriggers.onSuccess();
-		} //the app.u.initMVC callback is what instantiates the controller.
-	})
-*/
-
-
-
-
 
 /*
 Will load all scripts and extenstions with pass = 0.
 pass with any other value (including blank,null, undefined, etc) will get loaded later.
-this function is nuked when the controller is instantiated. basically same thing, only ignores pass.
-will also remove
+this function is overwritten once the myRIA callback occurs with a very similar function (ignores pass).
+app.rq.push() = app.u.handleRQ so whatever the values in push() are get executed immediately.
 */
 
 app.u.handleRQ = function()	{
-//	app.u.dump("BEGIN app.u.loadScriptsByPass ");
-//items are going to be removed as we iterate, so to avoid an issue with items being added while iteration is occuring, save to new var.
-//nuke original to avoid duplicates.
-	app.vars.rq = new Array()
 
 	var numIncludes = 0; //what is returned. The total number of includes for this pass.
 	var L = app.rq.length - 1;
 
-//the callback added to the loadScript on type 'script' sets the last value of the array to true.
+	app.vars.extensions = app.vars.extensions || []; //ensure array is defined.
+	app.vars.rq = new Array(); //to avoid any duplication, as iteration occurs, items are moved from app.rq into this tmp array. 
+
+//the callback added to the loadScript on type 'script' sets the last value of the resource array to true.
 //another script will go through this array and make sure all values are true for validation. That script will execute the callback (once all scripts are loaded).
 	var callback = function(index){
 		app.vars.rq[index][app.vars.rq[index].length - 1] = true; //last index in array is for 'is loaded'. set to false in loop below.
@@ -96,7 +79,7 @@ app.u.handleRQ = function()	{
 //on pass 0, no callbacks added to extensions because the model already has a function for checking if extensions are loaded.
 // adding these extensions to the extensions array is necessary for this checker to work.
 			app.u.loadScript(app.rq[i][3],callback,(app.vars.rq.length - 1));
-			app.rq.splice(i, 1); //remove from new array to avoid dupes.
+			app.rq.splice(i, 1); //remove from old array to avoid dupes.
 			}
 		else	{
 //currently, this function is intended for pass 0 only, so if an item isn't pass 0,do nothing with it.
@@ -151,7 +134,7 @@ app.u.initMVC = function(attempts){
 //instantiate controller. handles all logic and communication between model and view.
 //passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
 //tmp is a throw away variable. app is what should be used as is referenced within the mvc.
-		app.vars.rq = null; //these are handled already, so nuke to keep DOM clean.
+		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication.
 		var tmp = new zController(app);
 //instantiate wiki parser.
 		myCreole = new Parse.Simple.Creole();
@@ -170,8 +153,9 @@ app.u.initMVC = function(attempts){
 
 
 
-//put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
-app.u.appInitComplete = function()	{
+//Any code that needs to be executed after the app init has occured should go here.
+//will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
+app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
 	}
 

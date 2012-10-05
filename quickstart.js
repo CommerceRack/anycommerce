@@ -133,20 +133,16 @@ else	{
 
 
 
-//get list of categories and append to DOM IF parent id exists
-				app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"},'passive');
-//get homepage info passively. do it later so that if it is already requested as part of another process, no double request occurs.
-//no need to dispatch it because passive dispatch runs on a setInterval.
-				setTimeout(function(){
-					app.ext.store_navcats.calls.appCategoryDetailMax.init('.',{},'passive');
-					},7000); //throw this into the q to have handy. do it later 
-				
-				if(app && app.u && typeof app.u.appInitComplete == 'function'){app.u.appInitComplete()}; //gets run prior to any page content so that it can be used to add renderformats of template functions.
+//The request for appCategoryList is needed early for both the homepage list of cats and tier1.
+//piggyback a few other necessary requests here to reduce # of requests
+				app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"},'mutable');
+				app.calls.appProfileInfo.init(app.vars.profile,{},'mutable');
+				app.model.dispatchThis(); //this dispatch needs to occur prior to handleAppInit being executed.
 
 				var page = app.ext.myRIA.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
 
 //get some info to have handy for when needed (cart, profile, etc)
-				app.calls.appProfileInfo.init(app.vars.profile,{},'passive');
+				
 
 				if(page.pageType == 'cart' || page.pageType == 'checkout')	{
 //if the page type is determined to be the cart or checkout onload, no need to request cart data. It'll be requested as part of showContent
@@ -158,7 +154,6 @@ else	{
 
 				app.model.dispatchThis('passive');
 
-
 //adds submit functionality to search form. keeps dom clean to do it here.
 				app.ext.myRIA.u.bindAppViewForms();
 				app.ext.myRIA.vars.mcSetInterval = setInterval(app.ext.myRIA.u.handleMinicartUpdate,4000,'cartItemsList')
@@ -166,14 +161,7 @@ else	{
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 				
 				app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
-//not sure why this was here. think it was to test something. commented out on 2012-09-13
-//app.ext.store_checkout.checkoutCompletes.push(function(P){
-//	app.u.dump("WOOT! to to checkoutComplete");
-//	app.u.dump(P);
-//	})
-				
-				$('.disableAtStart').removeAttr('disabled').removeAttr('disableAtStart'); //set disabledAtStart on elements that should be disabled prior to init completing.
-
+				if(typeof app.u.appInitComplete == 'function'){app.u.appInitComplete(page)}; //gets run after app has been init
 				}
 			}, //startMyProgram 
 
@@ -211,10 +199,10 @@ else	{
 				var tagObj = {};
 //we always get the tier 1 cats so they're handy, but we only do something with them out of the get if necessary (tier1categories is defined)
 				if($('#tier1categories').length)	{
-					tagObj = {'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'}
+					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
+					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+					app.model.dispatchThis();
 					}
-				app.ext.store_navcats.u.getChildDataOf('.',tagObj,'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
-				app.model.dispatchThis();
 				}
 			}, //showRootCategories
 
@@ -405,9 +393,10 @@ else	{
 			onSuccess : function(tagObj)	{
 //when translating a template, only 1 dataset can be passed in, so detail and page are merged and passed in together.
 				var tmp = {};
+
 //cat page handling.
 				if(tagObj.navcat)	{
-					app.u.dump("BEGIN myRIA.callbacks.showPageContent");
+					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
 					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
 						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
 						}
@@ -557,7 +546,7 @@ need to be customized on a per-ria basis.
 //data.value is the category object. data.bindData is the bindData obj.
 			subcategoryList : function($tag,data)	{
 //				app.u.dump("BEGIN control.renderFormats.subcats");
-//				app.u.dump(data.value);
+//				app.u.dump(data.value[0]);
 				var L = data.value.length;
 				var thisCatSafeID; //used in the loop below to store the cat id during each iteration
 	//			app.u.dump(data);
@@ -1125,7 +1114,6 @@ P.listID (buyer list id)
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in P.
 			handleAppInit : function(P)	{
-//				app.u.dump("BEGIN myRIA.u.handleAppInit");
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
 					this.handleRQ(app.rq[i]);
@@ -1183,13 +1171,14 @@ it'll then set app.rq.push to mirror this function.
 */
 
 			handleRQ : function(arr)	{
-				
 				if(arr[0] == 'script')	{
 					app.u.loadScript(arr[2],arr[3]);
 					}
 				else if(arr[0] == 'extension')	{
 					app.vars.extensions.push({"namespace":arr[2],"filename":arr[3],"callback":arr[4]}); // keep the full list just in case.
-					app.u.loadScript(arr[3],arr[4]);
+					app.u.loadScript(arr[3],function(){
+						app.model.fetchExtension({"namespace":arr[2],"filename":arr[3],"callback":arr[4]}); 
+						});
 					}
 				else if(arr[0] == 'templateFunction')	{
 					app.ext.myRIA.template[arr[1]][arr[2]].push(arr[3]);
@@ -2127,10 +2116,10 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				
 				}
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
-	//			app.u.dump(" -> category(@subcategoryDetail) found");
-	//check for the presence of subcats. if none are present, do nothing.
+				app.u.dump(" -> category(@subcategoryDetail) found");
+//check for the presence of subcats. if none are present, do nothing.
 				if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
-	//				app.u.dump(" -> subcats present");
+					app.u.dump(" -> subcats present ["+catSafeID+"]");
 					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,'appCategoryDetailMax');
 					}
 				}

@@ -332,7 +332,7 @@ templateID - the template id used (from app.templates)
 
 //pass in category safe id as value
 			breadcrumb : function($tag,data)	{
-//app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); app.u.dump(data);
+app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); app.u.dump(data);
 var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
 var TID = data.bindData.loadsTemplate; //Template ID
 //on a category page, the catsafeid is the value. on a product page, the value is an array of recent categories, where 0 is always the most recent category.
@@ -393,6 +393,9 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 							r.push(app.data.appCategoryList['@paths'][i]);
 							}
 						}
+					}
+				else	{
+					app.u.dump("WARNING! Attempted to run store_navcats.u.getRootCats before appCategoryList is in data/memory.");
 					}
 				return r;
 				}, //getRootCatsData

@@ -17,8 +17,8 @@ var myCreole;
 var app = {vars:{
 	"release":"20121002113300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.summitfashions.zoovy.com/",
-	"httpURL":"http://www.summitfashions.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
+	"httpURL":"http://www.sporks.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -356,7 +356,7 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate'>
 
-<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <table class='prodViewerContainer'>
 <tr>
