@@ -473,8 +473,8 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
 				var msg = app.u.successMsgObject(tagObj.message);
-//pass in tagObj as well, as that contains info for parentID.
-				app.u.throwMessage($.extend(msg,tagObj));
+				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
+				app.u.throwMessage(msg);
 				}
 			}, //showMessaging
 /*
@@ -488,7 +488,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 				},
 			onError : function(responseData,uuid)	{
 //dummy callback. do nothing.
-				app.u.dump("WARNING! response for uuid ["+uuid+"] contained errors but they were suppresed via suppressErrors callback.");
+				app.u.dump("CAUTION! response for uuid ["+uuid+"] contained errors but they were suppresed. This may be perfectly normal (passive requests) but should be investigated.");
 				}
 			} //suppressErrors
 			

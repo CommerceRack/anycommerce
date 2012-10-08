@@ -81,25 +81,22 @@ var store_product = function() {
 				}
 			}, //appProductGet
 
-		
-
-
 //sfo is serialized form object.
 		cartItemsAdd : {
 			init : function(sfo,tagObj)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+				tagObj = tagObj || {}; 
 				tagObj.datapointer = 'atc_'+app.u.unixNow(); //unique datapointer for callback to work off of, if need be.
 				this.dispatch(sfo,tagObj);
-				return 1;
+				return 2; //an add to cart always resets the paypal vars.
 				},
 			dispatch : function(sfo,tagObj)	{
-//				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
-//				app.u.dump(obj);
-				obj["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-				obj["_zjsid"] = app.sessionId; 
-				obj["_tag"] = tagObj;
+				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
+				sfo["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
+				sfo["_zjsid"] = app.sessionId; 
+				sfo["_tag"] = tagObj;
+//				app.u.dump("GOT HERE!"); app.u.dump(sfo); app.u.dump(tagObj);
 				app.model.addDispatchToQ(sfo,'immutable');
-				app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
+				app.calls.cartSet.init({'payment.pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			},//addToCart
 

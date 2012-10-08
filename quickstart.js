@@ -872,7 +872,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 
 						$('#mainContentArea').append(app.renderFunctions.transmogrify('page404',infoObj.templateID,infoObj));
 						
-						r.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					}
 //					app.u.dump("adding pushstate");
@@ -1126,7 +1126,7 @@ P.listID (buyer list id)
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
 				if(P.uriParams.meta)	{
-					app.calls.cartSet.init({'meta':P.uriParams.META},{},'passive');
+					app.calls.cartSet.init({'meta':P.uriParams.meta},{},'passive');
 					}
 //				app.u.dump(" -> P follows:");
 //				app.u.dump(P);
@@ -2250,7 +2250,7 @@ if($form && $form.length)	{
 	if(app.ext.store_product.validate.addToCart(pid))	{
 //this product call displays the messaging regardless, but the modal opens over it, so that's fine.
 		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
-		if(obj.action == 'modal')	{
+		if(obj.action && obj.action == 'modal')	{
 			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
 			app.ext.store_cart.u.showCartInModal({'showLoading':true});
 			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCart','templateID':'cartTemplate'},'immutable');

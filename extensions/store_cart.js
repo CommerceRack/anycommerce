@@ -435,7 +435,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				}, //handleCouponSubmit
 
 			updateCartSummary : function()	{
-				$('#cartTemplateCostSummary').empty().addClass('loadingBG');
+				$('#modalCartContents').replaceWith(app.renderFunctions.createTemplateInstance('cartTemplate','modalCartContents'));
 				app.calls.refreshCart.init({'callback':'translateTemplate','parentID':'modalCartContents'},'immutable');
 //don't set this up with a getShipping because we don't always need it.  Add it to parent functions when needed.
 				},
