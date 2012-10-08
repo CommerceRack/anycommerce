@@ -17,8 +17,8 @@ var myCreole;
 var app = {vars:{
 	"release":"20121002113300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
-	"httpURL":"http://www.sporks.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.summitfashions.com/",
+	"httpURL":"http://www.summitfashions.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -137,7 +137,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id='homepageTemplate'>
 
 
-	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
@@ -169,7 +170,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 	
-	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	
@@ -404,11 +405,8 @@ this will likely become more flexible in the future. ###
 <!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
 	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
 	
-<!--
-you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
--->	
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'});  return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this)); return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
@@ -1506,6 +1504,15 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 </div>
+
+
+
+Add to cart is broken. quickstart.js handleaddtocart and store_product add to cart functions. These are a mess. 
+
+navcat display is broken, but on it's way to being better. category template is set up to use new renderFormat for categoryList.
+ -> if detail not set (min,more,max) then no request is made and only the default data (id,pretty,@products) is available.
+ -> setting a detail "WILL" cause a request to be made. template instance gets generated right away and translation occurs in the callback.
+ 
 
 
 </body>

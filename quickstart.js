@@ -396,7 +396,7 @@ else	{
 
 //cat page handling.
 				if(tagObj.navcat)	{
-					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
+//					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
 					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
 						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
 						}
@@ -541,12 +541,12 @@ need to be customized on a per-ria basis.
 
 		renderFormats : {
 
-//This function works in conjuction with the fetchPageContent and showPageContent functions.
+//This function works in conjuction with the showContent/showPage and buildQueriesFromTemplate functions.
 //the parent and subcategory data (appCategoryDetail) must be in memory already for this to work right.
 //data.value is the category object. data.bindData is the bindData obj.
 			subcategoryList : function($tag,data)	{
 //				app.u.dump("BEGIN control.renderFormats.subcats");
-//				app.u.dump(data.value[0]);
+//				app.u.dump(data.value);
 				var L = data.value.length;
 				var thisCatSafeID; //used in the loop below to store the cat id during each iteration
 	//			app.u.dump(data);
@@ -747,7 +747,7 @@ fallback is to just output the value.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 			showContent : function(pageType,infoObj)	{
-				app.u.dump("BEGIN showContent ["+pageType+"].");
+//				app.u.dump("BEGIN showContent ["+pageType+"].");
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -2011,6 +2011,7 @@ buyer to 'take with them' as they move between  pages.
 						$content.addClass('displayNone'); //hidden by default for page transitions.
 						$('#mainContentArea').append($content);
 						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
+						
 						app.model.dispatchThis();
 						}
 
@@ -2116,11 +2117,10 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				
 				}
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
-				app.u.dump(" -> category(@subcategoryDetail) found");
+//				app.u.dump(" -> category(@subcategoryDetail) found");
 //check for the presence of subcats. if none are present, do nothing.
 				if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
-					app.u.dump(" -> subcats present ["+catSafeID+"]");
-					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,'appCategoryDetailMax');
+					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'appCategoryDetailMax');
 					}
 				}
 			else if(namespace == 'category' && bindData.format == 'breadcrumb')	{
@@ -2237,23 +2237,19 @@ else	{
 			
 			
 //obj currently supports one param w/ two values:  action: modal|message
-			handleAddToCart : function(formID,obj)	{
+			handleAddToCart : function($form,obj)	{
 
+app.u.dump("BEGIN store_product.calls.cartItemsAdd.init")
 
-if(typeof obj != 'object')	{
-	obj = {'action':'message'}
-	}
+obj = obj || {};
 
-//app.u.dump("BEGIN store_product.calls.cartItemsAdd.init")
-$('#'+formID+' .atcButton').addClass('disabled').attr('disabled','disabled');
-if(!formID)	{
-	//app error
-	}
-else	{
-	var pid = $('#'+formID+'_product_id').val();
+if($form && $form.length)	{
+	var sfo = $form.serializeJSON(); //Serialized Form Object.
+	var pid = sfo.product_id;  //shortcut
+	$('.atcButton',$form).addClass('disabled ui-disabled').attr('disabled','disabled');
 	if(app.ext.store_product.validate.addToCart(pid))	{
 //this product call displays the messaging regardless, but the modal opens over it, so that's fine.
-		app.ext.store_product.calls.cartItemsAdd.init(formID,{'callback':'itemAddedToCart','extension':'myRIA'});
+		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
 		if(obj.action == 'modal')	{
 			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
 			app.ext.store_cart.u.showCartInModal({'showLoading':true});
@@ -2265,14 +2261,12 @@ else	{
 		app.model.dispatchThis('immutable');
 		}
 	else	{
-		$('#'+formID+' .atcButton').removeClass('disabled').removeAttr('disabled');
+		$('.atcButton',$form).removeClass('disabled ui-disabled').removeAttr('disabled');
 		}
 	}
-return r;				
-
-
-
-
+else	{
+	app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+	}
 
 				}, //handleAddToCart
 				

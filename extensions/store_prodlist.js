@@ -428,7 +428,6 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 						$r.append(app.renderFunctions.createTemplateInstance(plObj.loadsTemplate,{"id":this.getSkuSafeIdForList(plObj.parentID,pageCSV[i]),"pid":pageCSV[i]})); //create a 'place' for this product in the list.
 						}
 					}
-				app.u.dump("appending skus");
 				return $r.children();
 				},
 				
@@ -451,7 +450,7 @@ if no parentID is set, then this function gets the data into memory for later us
 
 */
 			getProductDataForList : function(plObj,$tag,Q)	{
-				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
+//				app.u.dump("BEGIN store_prodlist.u.getProductDataForList ["+plObj.parentID+"]");
 
 				Q = Q || 'mutable';
 				var numRequests = 0; //# of requests that will b made. what is returned.
@@ -521,10 +520,11 @@ params that are missing will be auto-generated.
 						$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
 						$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
 						}
-//!!! AAAAAA. when the product data is loaded from memory, it tries to render prior to the DOM being updated, which leaves behind a constant 'loading' gfx. 
-					setTimeout(function(){
+//The timeout was here because of an issue where the placeholders were getting nuked. That issue was caused by translateTemplate doing a replace.
+//that code was changed in 201239 (as was this function) so the timeout was commented out. This comment is here in case the change to translateFunction is changed back.
+//					setTimeout(function(){
 						app.ext.store_prodlist.u.getProductDataForList(plObj,$tag,'mutable');
-						},1000);
+//						},1000);
 					 //will render individual product, if data already present or fetch data and render as part of response.
 
 					}

@@ -1764,9 +1764,10 @@ return $r;
 //yes, i wish I'd commented why this is here. jt. appears to be for preserving data() already set prior to re-rendering a template.
 			if(dataObj)	{dataObj.id = safeTarget}
 			else	{dataObj = safeTarget;}
-
-			var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
-			$('#'+safeTarget).replaceWith($tmp);
+//believe the 'replace' to be causing a lot of issues. changed in 201239 build
+//			var $tmp = app.renderFunctions.transmogrify(dataObj,templateID,data);
+//			$('#'+safeTarget).replaceWith($tmp);
+			this.handleTranslation($('#'+safeTarget),data)
 			}
 		else	{
 			app.u.dump("WARNING! attempted to translate an element that isn't on the DOM. ["+safeTarget+"]");
@@ -1799,30 +1800,25 @@ return $r;
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
+
+				if(namespace == 'product' && attributeID.indexOf(':') > -1)	{
+					attributeID = '%attribs.'+attributeID; //product data is nested, but to keep templates clean, %attribs isn't required.
+					}
+
 				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
-				
 //This is an attempt to skip a lot of the code block below. It was added in 201239.
+/*
 				if(typeof value == 'string' || typeof value == 'number')	{}
 				else	{
 
-					if(namespace == 'product')	{
-//						app.u.dump(' in translate product. attributeID: '+attributeID);
-						if(attributeID.indexOf(':') > -1)	{
-							attributeID = '%attribs.'+attributeID
-							}
-						else	{
-							//could get here for nested attrib that's undefined. ex: reviews.average when there's no reviews.	
-							}
-						value = app.u.getObjValFromDotString(attributeID,data)
-//						app.u.dump(' -> value: '+value);
-						}
 
-/*
-attributes are often stored as some.data.location where each dot is an object name and the last one is the pointer for the data.
-the getObjValFromDotString function takes the string (some.data.location) and uses that to find the value in the data object.
-wonderful... except in some cases (orders, cart, etc) some fields have periods in them. hopefully this is addressed in cart2
-#### may be able to lighten this up after cart2
-*/
+
+
+//attributes are often stored as some.data.location where each dot is an object name and the last one is the pointer for the data.
+//the getObjValFromDotString function takes the string (some.data.location) and uses that to find the value in the data object.
+//wonderful... except in some cases (orders, cart, etc) some fields have periods in them. hopefully this is addressed in cart2
+//#### may be able to lighten this up after cart2
+
 //In some cases, like categories, some data is in the root and some is in %meta.
 //pass %meta.cat_thumb, for instance.  currenlty, only %meta is supported. if/when another %var is needed, this'll need to be expanded. ###
 //just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
@@ -1878,7 +1874,7 @@ wonderful... except in some cases (orders, cart, etc) some fields have periods i
 						}
 					}
 //			app.u.dump(' -> value = '+value);
-				}
+*/				}
 
 			return value;
 			},
