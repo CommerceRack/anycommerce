@@ -232,8 +232,9 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 
 .reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
 .reviewSummaryContainer	.numReviews:after	{content:": "}
-.reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:inline-block;}
-.review_0 	{background-position:0 0;}
+
+.reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:none;} /* display none hides the reviews for the 'zero' reviews graphic */
+.review_1, .review_2, .review_3, .review_4, .review_5, .review_6, .review_7, .review_8, .review_9, .review_10	{display:inline-block;} /* show 1/2 - 10 stars */
 .review_1 	{background-position:0 -29px;}
 .review_2	{background-position:0 -61px;}
 .review_3	{background-position:0 -91px;}

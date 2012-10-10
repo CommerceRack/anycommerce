@@ -537,6 +537,30 @@ app.u.handleCallback(tagObj);
 				}
 			},
 			
+//filename is full path of .css file (or valid relative path)
+//domID is optional id to add to <link> allows for removal or changing later.
+//if you pass a domID that already exists, that file is 'saved over'.
+		loadCSSFile : function(filename,domID){
+			if(filename && domID && document.getElementById(domID))	{
+				document.getElementById(domID).href = filename; //overwrite existing .css file. effectively removes old in favor of new.
+				}
+			else if(filename)	{
+// Create element node - link object
+				var fileref=document.createElement('link');
+	
+// Set link object attributes like
+// <link rel="stylesheet" type="text/css" href="filename" />
+				fileref.setAttribute('rel', 'stylesheet');
+				fileref.setAttribute('type', 'text/css');
+				fileref.setAttribute('href', filename);
+				if(domID)	{fileref.setAttribute('id', domID);}
+// Append link object inside html's head
+				document.getElementsByTagName("head")[0].appendChild(fileref);
+				}
+			else	{
+				//doh! no filename.
+				}
+			},
 
 
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.

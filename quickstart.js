@@ -525,6 +525,9 @@ need to be customized on a per-ria basis.
 			":customer" : function(suffix,phrase){
 // ### this needs to get smarter. look at what the suffix is and handle cases. (for orders, link to orders, newsletter link to newsletter, etc)				
 				return "<a href='#customer?show="+suffix+"' onClick='return showContent({\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				},
+			":popup" : function(suffix,phrase)	{
+				return "<a href=\""+suffix+"\" target='popup' onClick=\"_gaq.push(['_trackEvent', 'outgoing_links', "+suffix.replace(/^http:\/\//i, '')+"]);\">"+phrase+"</a>";
 				}
 			}, //wiki
 

@@ -431,6 +431,12 @@ $display.appendTo($tag);
 				$tag.addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(app.ext.store_product.u.productIsPurchaseable(pid))	{
 //product is purchaseable. make sure button is visible and enabled.
+//					if(pData && pData['%attribs']['is:colorful'])	{
+//						$tag.addClass('colorfulButton').prop('value', 'Choose Color');
+//						}
+//					else if(pData && pData['%attribs']['is:sizeable'])	{
+//						$tag.addClass('sizeableButton').prop('value', 'Choose Size');
+//						}
 					if(pData && pData['%attribs']['is:preorder'])	{
 						$tag.addClass('preorderButton').prop('value', 'Preorder');
 						}

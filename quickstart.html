@@ -4,6 +4,13 @@
 <meta charset="utf-8">
 <title>QuickStart</title>
 
+<meta name="description" content="" id='metaDescription' />
+<meta name="keywords" content="" id='metaKeywords' />
+
+<!-- used for optional social media extensions -->
+<meta property="og:type" content="" id='ogType' />
+<meta property="og:image" content="" id='ogImage' />
+<meta property="og:description" content="" id='ogDescription' />
 
 
 <base href='' /><!-- leave blank so it works for a local file -->
@@ -11,14 +18,14 @@
 
 
 <script type="text/javascript">
-var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLOYMENT!
+var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 
 var app = {vars:{
 	"release":"20121002113300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.summitfashions.com/",
-	"httpURL":"http://www.summitfashions.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.sporktacular.com/",
+	"httpURL":"http://www.sporktacular.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -642,7 +649,7 @@ adding classes is not likely to have any bad effects.
 	
 		<div id='contactArticle' class='displayNone textContentArea'>
 			<h1>Contact Information</h1>
-			<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeArray(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); return false;" id='contactForm' name='contactForm'>
+			<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
 			<fieldset>
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>
@@ -1491,7 +1498,8 @@ The 'data-action' attribute is used to assign an onclick.
 </menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
-
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.loadCSSFile('examples/red.css','bg');">load red css</button>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.loadCSSFile('examples/blue.css','bg');">load blue css</button>
 
 <form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
 	<fieldset>
