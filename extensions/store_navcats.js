@@ -413,7 +413,7 @@ will return an object of id:safeid, which is how the categories are stored in a 
 the formatted is specific so that getChildDataOf can be used for a specific id or '.' so don't change the output without testing it in that function.
 */
 			getRootCats : function()	{
-				app.u.dump('BEGIN app.ext.store_navcats.u.getRootCats');
+//				app.u.dump('BEGIN app.ext.store_navcats.u.getRootCats');
 				var r = false;
 				if(app.data.appCategoryList)	{
 					var L = app.data.appCategoryList['@paths'].length;

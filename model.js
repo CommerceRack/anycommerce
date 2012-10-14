@@ -180,14 +180,15 @@ function zoovyModel() {
 //			app.u.dump("BEGIN: filterQ");
 //			app.u.dump(" -> QID = "+QID);
 			
-			var c = 0; //used to count how many dispatches are going into q. allows a 'break' if too many are present. not currently added.
+			var c = 0; //used to count how many dispatches are going into q. allows a 'break' if too many are present. is also 'index' of most recently added item in myQ.
 			var myQ = new Array();
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
 //				app.u.dump(" -> CMD: "+app.q[QID][index]['_cmd']);
 				if(app.q[QID][index].status == 'queued')	{
 					app.q[QID][index]['status'] = "requesting";
-					myQ.push(app.q[QID][index]);
+					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
+//					myQ[c]['_tag'] = null; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
 					c += 1;
 //added on 2012-02-23
 					if(c > app.globalAjax.numRequestsPerPipe){
@@ -495,8 +496,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-			
-//			app.u.dump(" -> uuid: "+uuid);
+			responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(responseData['_uuid']);
+//			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
 	//callback has been defined in the call/response.
@@ -819,6 +820,28 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //			app.u.dump('whichQAmIFrom = '+r+' and uuid = '+uuid );
 			return r;
 			}, //whichQAmIFrom
+//will get the _tag object from this request in it's original q. allows for _tag to NOT be pased in request, making for smaller requests.
+//this will also allow for the callback itself to be an anonymous function.
+		getRequestTag : function(uuid,qid){
+			var r = false; //what is retured. Either false (unable to get tag) or the tag object itself.
+			if(uuid)	{
+//try to figure out which qid request was in.
+				if(!qid)	{
+					qid = this.whichQAmIFrom(uuid)
+					}
+				
+				app.u.dump(" -> uuid: "+uuid+" and QID: "+qid);
+				
+				if(qid && app.q[qid][uuid])	{
+					app.u.dump(" -> app.q[qid][uuid]: "); app.u.dump(app.q[qid][uuid]);
+					r = app.q[qid][uuid]['_tag'] //will set r either to the object or undefined, if not set.
+					}
+				}
+			else	{
+				//uuid is required.
+				}
+			
+			},
 	
 	//gets session id. The session id is used a ton.  It is saved to app.sessionId as well as a cookie and, if supported, localStorage.
 	//Check to see if it's already set. If not, request a new session via ajax.

@@ -244,8 +244,10 @@ A special translate template for product so that reviews can be merged into the 
 			productList : function($tag,data)	{
 //				app.u.dump("BEGIN store_prodlist.renderFormats.productList");
 //				app.u.dump(" -> data.bindData: "); app.u.dump(data.bindData);
-				data.bindData.csv = data.value;
-				app.ext.store_prodlist.u.buildProductList(data.bindData,$tag);
+				if(app.u.isSet(data.value))	{
+					data.bindData.csv = data.value;
+					app.ext.store_prodlist.u.buildProductList(data.bindData,$tag);
+					}
 				},//prodlist		
 			
 			mpPagesAsListItems : function($tag,data)	{
