@@ -2277,7 +2277,7 @@ else	{
 			handleMinicartUpdate : function(tagObj)	{
 //				app.u.dump("BEGIN myRIA.u.handleMinicartUPdate");
 				var r = false; //what's returned. t for cart updated, f for no update.
-				if(app.data[tagObj.datapointer])	{
+				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].cart)	{
 					var $appView = $('#appView');
 					r = true;
 					var itemCount = app.u.isSet(app.data[tagObj.datapointer].cart['data.item_count']) ? app.data[tagObj.datapointer].cart['data.item_count'] : app.data[tagObj.datapointer].cart['data.add_item_count']

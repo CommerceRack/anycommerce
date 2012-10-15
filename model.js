@@ -448,9 +448,17 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				else if(responseData && responseData['_rcmd'] == 'pipeline')	{
 					
 //					app.u.dump(' -> pipelined request. size = '+responseData['@rcmds'].length);
-					
+
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
-					responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
+// _tag is reassociated early so that the data is available as quick as possible, including in any custom handleResponse_ functions
+//has to be called before writing to local because datapointer is in _tag
+						responseData['@rcmds'][i]['_rtag'] = responseData['@rcmds'][i]['_rtag'] || this.getRequestTag(responseData['_uuid']); 
+						this.writeToMemoryAndLocal(responseData['@rcmds'][i])
+						}
+
+//handle all the callbacks.
+					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
+						responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
 						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
 							this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']](responseData['@rcmds'][i])	//executes a function called handleResponse_X where X = _cmd, if it exists.
 	//						app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
@@ -462,14 +470,11 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 							}
 						}
 					}
-//a solo successful request
+//a solo successful request.
+//the logic for the order here is the same as in the pipelined response, where it is documented.
 				else {
-//_tag is stripped on jsonP requests to keep URL as short as possible. It is readded to the responseData here as _rtag (which is how it is handled on a normal request)
-// left this when stripping all the other jsonp code because there's been discussion about not passing _rtag anymore and just looking it up here anyway. smaller requests.
-					if($.isEmptyObject(responseData['_rtag']))	{
-//						app.u.dump(" -> no rtag. set. use qid ["+QID+"] and uuid ["+uuid+"]");
-						responseData['_rtag'] = app.q[QID][uuid]['_tag']
-						}
+					responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(responseData['_uuid']);
+					this.writeToMemoryAndLocal(responseData['@rcmds'][i])
 					if(responseData['_rcmd'] && typeof this['handleResponse_'+responseData['_rcmd']] == 'function')	{
 	//					app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
 						this['handleResponse_'+responseData['_rcmd']](responseData)	//executes a function called handleResponse_X where X = _cmd, if it exists.
@@ -485,7 +490,50 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					app.u.throwMessage("Uh oh! Something has gone very wrong with our app. We apologize for any inconvenience. Please try agian. If error persists, please contact the site administrator.");
 				}
 			}, //handleResponse
-	
+
+
+//this will write the respose both to localStorage and into app.data
+		writeToMemoryAndLocal : function(responseData)	{
+//			app.u.dump("BEGIN model.writeToMemoryAndLocal");
+//			app.u.dump(" -> responseData: "); app.u.dump( responseData );
+
+			var datapointer = false;
+			if(responseData['_rtag'])	{datapointer = responseData['_rtag']['datapointer']}
+
+//			app.u.dump(" -> datapointer: "+datapointer);
+//if datapointer is not set, data is automatically NOT saved to localstorage or memory.
+//however, there is (ping) already, and could be more, cases where datapointers are set, but we don't want the data locally or in memory.
+//so we have simple functions to check by command.
+			if(datapointer && !app.model.responseHasErrors(responseData))	{
+				if(this.thisGetsSavedToMemory(responseData['_rcmd']))	{
+					app.data[datapointer] = responseData;
+					}
+				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
+					app.storageFunctions.writeLocal(datapointer,responseData); //save to local storage, if feature is available.
+					}
+				}
+			else	{
+//catch. not writing to local. Either not necessary or an error occured.
+				}
+			
+			}, //writeToMemoryAndLocal
+
+		thisGetsSavedToMemory : function(cmd)	{
+			var r = true;
+			r = this.thisGetsSavedLocally(cmd); //anything not saved locally is automatically not saved to memory.
+//an appPageGet request extends the original page object. (in case two separate requests come in for different attributes for the same category.
+			if(cmd == 'appPageGet')	{r = false;}
+			return r;
+			},
+
+//some commands should not get saved locally.
+		thisGetsSavedLocally : function(cmd)	{
+			var r = true; //what is returned. is set to false if the cmd should not get saved to local storage.
+			if(cmd == 'cartSet')	{r = false} //changes to cart are saved in cart objects, not as individual changes.
+			else if(cmd == 'ping')	{r = false}
+			return r;
+			},
+
 	//gets called for each response in a pipelined request (or for the solo response in a non-pipelined request) in most cases. request-specific responses may opt to not run this, but most do.
 		handleResponse_defaultAction : function(responseData)	{
 //			app.u.dump('BEGIN handleResponse_defaultAction');
@@ -496,7 +544,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-			responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(responseData['_uuid']);
+			
 //			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
@@ -667,7 +715,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 //			app.u.dump("RESPONSE DATA:");
 //			app.u.dump(responseData);
 
-//ensure no cross-account data polution on shared domain. this only happens is cart is not valid. If valid, local data should be for account in focus.
+//ensure no cross-account data polution on shared domain. this only happens if cart is not valid. If valid, local data should be for account in focus.
 //the cart/session will immediately get added back to local storage below.
 			if(window.location.href.indexOf('ssl.zoovy') > -1)	{localStorage.clear();}
 

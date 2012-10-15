@@ -420,8 +420,6 @@ app.u.throwMessage(responseData); is the default error handler.
 					}
 				else	{
 					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
-//if using a shared ssl cert, nuke localstorage if session id is not valid. Could be session ID from another store.
-					if(document.location.href.indexOf('ssl.zoovy.com') > 0)	{localStorage.clear();}
 					app.calls.appCartCreate.init('handleNewSession');
 					app.model.dispatchThis('immutable');
 					}

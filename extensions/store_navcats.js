@@ -372,7 +372,7 @@ templateID - the template id used (from app.templates)
 //app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); 
 var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
 
-if(data.value)	{
+if(app.u.isSet(data.value))	{
 	var pathArray = data.value.split('.');
 	var L = pathArray.length;
 	var s = '.'
