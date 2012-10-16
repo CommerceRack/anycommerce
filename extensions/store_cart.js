@@ -375,23 +375,22 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 			showCartInModal : function(P)	{
 //				app.u.dump("BEGIN store_cart.u.showCartInModal");
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
-					P.parentID = P.parentID || "modalCartContents" //parent id for 'template' not modal.
-					var $parent = $('#modalCart');
+					var $modal = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
-					if($parent.length == 0)	{
-						$parent = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
-						$parent.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+//the cart messaging is OUTSIDE the template. That way if the template is re-rendered, existing messaging is not lost.
+					if($modal.length == 0)	{
+						$modal = $("<div><div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div><\/div>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
 						}
 					else	{
-						$parent.empty().dialog('open'); //empty to remove any previous content.
+						$modal.empty().dialog('open'); //empty to remove any previous content.
 						}
-
 					if(P.showLoading === true)	{
-						$parent.append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
+						$modal.append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
-						$parent.append(app.renderFunctions.transmogrify(P.parentID,P.templateID,app.data['cartItemsList'].cart));
+						$modal.append(app.renderFunctions.transmogrify('modalCartContents',P.templateID,app.data['cartItemsList']));
 						}
 					}
 				else	{

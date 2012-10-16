@@ -746,7 +746,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 				switch(responseData['_rcmd'])	{
 					case 'appProductGet':
 	//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
-						if(!responseData['%attribs']['db:id']) {
+						if(!responseData['%attribs'] || !responseData['%attribs']['db:id']) {
 	//						app.u.dump("GOT HERE!");
 							r = true;
 							responseData['errid'] = "MVC-M-100";

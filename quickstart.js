@@ -2254,6 +2254,7 @@ if($form && $form.length)	{
 //this product call displays the messaging regardless, but the modal opens over it, so that's fine.
 		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
 		if(obj.action && obj.action == 'modal')	{
+// ??? update to use showCart instead of handling templateFunctions here?			
 			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
 			app.ext.store_cart.u.showCartInModal({'showLoading':true});
 			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCart','templateID':'cartTemplate'},'immutable');

@@ -451,15 +451,15 @@ app.u.throwMessage(responseData); is the default error handler.
 //				app.u.dump("BEGIN callbacks.translateTemplate");
 				var dataSrc;
 //not all data is at the root level.
-// NOTE - This shouldn't be here, it should be in transmogrify !!!
-				if(tagObj.datapointer == 'cartItemsList')	{dataSrc = app.data[tagObj.datapointer].cart}
-				else if(tagObj.datapointer.indexOf('appPageGet') >= 0)	{
-					dataSrc = app.data[tagObj.datapointer]['%page']
-					}
-				else if(tagObj.datapointer.indexOf('adminOrderDetail') >= 0)	{
-					dataSrc = app.data[tagObj.datapointer]['order']
-					}
-				else {dataSrc = app.data[tagObj.datapointer]};
+//!! TEST - but this shouldn't be needed anymore because of the updates to the rendering engine.
+//				if(tagObj.datapointer == 'cartItemsList')	{dataSrc = app.data[tagObj.datapointer].cart}
+//				else if(tagObj.datapointer.indexOf('appPageGet') >= 0)	{
+//					dataSrc = app.data[tagObj.datapointer]['%page']
+//					}
+//				else if(tagObj.datapointer.indexOf('adminOrderDetail') >= 0)	{
+//					dataSrc = app.data[tagObj.datapointer]['order']
+//					}
+//				else {dataSrc = app.data[tagObj.datapointer]};
 //				app.u.dump(dataSrc);
 				app.renderFunctions.translateTemplate(dataSrc,tagObj.parentID);
 				}

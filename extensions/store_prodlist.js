@@ -601,6 +601,7 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 				else	{
 					$output.find('.mpControlJumpToPage, .paging').click(function(){
 						app.ext.store_prodlist.u.mpJumpToPage($(this))
+						app.u.jumpToAnchor('mpControl_'+plObj.parentID+'_header');
 						})
 					$output.find('.paging').each(function(){
 						var $this = $(this)
