@@ -184,11 +184,9 @@ else	{
 				},
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN app.ext.myRIA.callbacks.itemAddedToCart.onError');
-//				app.u.dump(responseData);
 				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //remove the disabling so users can push the button again, if need be.
-				responseData.parentID = 'atcMessaging_'+responseData.product1
 				app.u.throwMessage(responseData);
-				_gaq.push(['_trackEvent','Add to cart','User Event','fail',app.data[tagObj.datapointer].product1]);
+				_gaq.push(['_trackEvent','Add to cart','User Event','fail',responseData['_msg_1_txt']]);
 				}
 			}, //itemAddedToCart
 			
@@ -210,10 +208,11 @@ else	{
 //
 		handleCart : 	{
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN myRIA.callbacks.onSuccess.handleCart");
+				app.u.dump("BEGIN myRIA.callbacks.handleCart.onSuccess");
+//				app.u.dump(" -> tagObj: ");	app.u.dump(tagObj);
 				app.ext.myRIA.u.handleMinicartUpdate(tagObj);
 				//empty is to get rid of loading gfx.
-				$('#'+tagObj.parentID).empty().append(app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,app.data[tagObj.datapointer].cart));
+				$('#'+tagObj.parentID).empty().append(app.renderFunctions.transmogrify('modalCartContents',tagObj.templateID,app.data[tagObj.datapointer]));
 				tagObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(tagObj);
 				}
@@ -827,7 +826,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'checkout':
 //						app.u.dump("PROTOCOL: "+document.location.protocol);
-						infoObj.parentID = 'zCheckoutContainer';
+						infoObj.parentID = 'checkoutContainer'; //parent gets created within checkout. that id is hard coded in the checkout extensions.
 						infoObj.templateID = 'checkoutTemplate'
 						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
@@ -1178,13 +1177,19 @@ it'll then set app.rq.push to mirror this function.
 					app.u.loadScript(arr[2],arr[3]);
 					}
 				else if(arr[0] == 'extension')	{
-					app.vars.extensions.push({"namespace":arr[2],"filename":arr[3],"callback":arr[4]}); // keep the full list just in case.
+//					app.u.dump(" -> extension loading: "+arr[2]+" callback: "+arr[4]);
+					var tmpObj = {"namespace":arr[2],"filename":arr[3],"callback":arr[4]}; //
+					app.vars.extensions.push(tmpObj); // keep the full list just in case.
 					app.u.loadScript(arr[3],function(){
-						app.model.fetchExtension({"namespace":arr[2],"filename":arr[3],"callback":arr[4]}); 
+						app.model.fetchExtension(tmpObj); 
 						});
+					app.model.executeCallbacksWhenExtensionsAreReady([tmpObj]); //function wants an array of objects.
 					}
 				else if(arr[0] == 'templateFunction')	{
 					app.ext.myRIA.template[arr[1]][arr[2]].push(arr[3]);
+					}
+				else if(arr[0] == 'css')	{
+					app.u.loadCSSFile(arr[2],arr[3] || null);
 					}
 				else	{
 		//currently, this function is intended for pass 0 only, so if an item isn't pass 0,do nothing with it.
@@ -1666,16 +1671,23 @@ return r;
 						var $content = app.renderFunctions.createTemplateInstance(P.templateID,parentID)
 						$content.addClass('displayNone'); //hidden by default for page transitions
 						$('#mainContentArea').append($content);
-						}
 
 //need to obtain the breadcrumb info pretty early in the process as well.
-					if(app.ext.myRIA.vars.session.recentCategories.length > 0)	{
-						app.ext.store_navcats.u.addQueries4BreadcrumbToQ(app.ext.myRIA.vars.session.recentCategories[0])
+						if(app.ext.myRIA.vars.session.recentCategories.length > 0)	{
+							app.ext.store_navcats.u.addQueries4BreadcrumbToQ(app.ext.myRIA.vars.session.recentCategories[0])
+							}
+
+						app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
+						app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':parentID,'templateID':'productTemplate'});
+						app.model.dispatchThis();
+						}
+					else	{
+//typically, the onCompletes get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
+						P.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						app.ext.myRIA.u.handleTemplateFunctions(P);
 						}
 
-					app.ext.store_product.calls.appReviewsList.init(pid);  //store_product... appProductGet DOES get reviews. store_navcats...getProd does not.
-					app.ext.store_product.calls.appProductGet.init(pid,{'callback':'showProd','extension':'myRIA','parentID':parentID,'templateID':'productTemplate'});
-					app.model.dispatchThis();
+
 					}
 				return parentID;
 				}, //showProd
@@ -2002,7 +2014,7 @@ buyer to 'take with them' as they move between  pages.
 					P.state = 'onInits';
 					app.ext.myRIA.u.handleTemplateFunctions(P);
 					var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
-//only have to create the template instance once. Once created, just re-render as part of fetchPageContent.
+//only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
 //						app.u.dump(" -> "+parentID+" already exists. Use it");
 						P.state = 'onCompletes'; //needed for handleTemplateFunctions.
@@ -2242,7 +2254,7 @@ else	{
 //obj currently supports one param w/ two values:  action: modal|message
 			handleAddToCart : function($form,obj)	{
 
-app.u.dump("BEGIN store_product.calls.cartItemsAdd.init")
+app.u.dump("BEGIN myRIA.u.handleAddToCart")
 
 obj = obj || {};
 
@@ -2257,7 +2269,7 @@ if($form && $form.length)	{
 // ??? update to use showCart instead of handling templateFunctions here?			
 			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
 			app.ext.store_cart.u.showCartInModal({'showLoading':true});
-			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCart','templateID':'cartTemplate'},'immutable');
+			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
 			}
 		else	{
 			app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
@@ -2285,8 +2297,8 @@ else	{
 	//				app.u.dump(" -> itemCount: "+itemCount);
 	//used for updating minicarts.
 					$('.cartItemCount',$appView).text(itemCount);
-					var subtotal = app.u.isSet(app.data[tagObj.datapointer].cart['data.order_subtotal']) ? app.data[tagObj.datapointer].cart['data.order_subtotal'] : 0;
-					var total = app.u.isSet(app.data[tagObj.datapointer].cart['data.order_total']) ? app.data[tagObj.datapointer].cart['data.order_total'] : 0;
+					var subtotal = app.u.isSet(app.data[tagObj.datapointer].cart['sum/items_total']) ? app.data[tagObj.datapointer].cart['sum/items_total'] : 0;
+					var total = app.u.isSet(app.data[tagObj.datapointer].cart['sum/order_total']) ? app.data[tagObj.datapointer].cart['sum/order_total'] : 0;
 					$('.cartSubtotal',$appView).text(app.u.formatMoney(subtotal,'$',2,false));
 					$('.cartTotal',$appView).text(app.u.formatMoney(total,'$',2,false));
 					}

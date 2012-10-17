@@ -141,15 +141,15 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 				app.model.fetchData('cartItemsList'); //will make sure cart is loaded from localStorage (if present) if not in memory.
 				if(!$.isEmptyObject(app.data.cartItemsList))	{
-					total = app.data.cartItemsList.cart['data.balance_due'];
+					total = app.data.cartItemsList['sum/balance_due_total'];
 					}
 				if(country != "US")	{
 					// country is defaulted to the form value. If that value is NOT "US", then use it (a country has been selected).
 					// if the value is US, then it may be the default setting and the request should w/ country as cart/session value
 					// (country may have been set elsewhere) though the form 'should' default correctly, we don't rely on that.
 					}
-				else if(!$.isEmptyObject(app.data.cartItemsList) && app.data.cartItemsList['data.bill_country'])	{
-					country = app.data.cartItemsList['data.bill_country']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
+				else if(!$.isEmptyObject(app.data.cartItemsList) && app.data.cartItemsList['bill/countrycode'])	{
+					country = app.data.cartItemsList['bill/countrycode']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
 					}
 
 				app.model.addDispatchToQ({"_cmd":"appPaymentMethods","_tag": {"datapointer":"appPaymentMethods","callback":callback,"extension":"convertSessionToOrder"},"country":country,"ordertotal":total},'immutable');
@@ -158,21 +158,21 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 //formerly addGiftcardToCart
 		cartGiftcardAdd : {
-			init : function(giftcard,callback)	{
-				this.dispatch(giftcard,callback);
+			init : function(giftcard,tagObj)	{
+				this.dispatch(giftcard,tagObj);
 				},
-			dispatch : function(giftcard,callback)	{
-				app.model.addDispatchToQ({"_cmd":"cartGiftcardAdd","giftcard":giftcard,"_tag" : {"callback":callback,"extension":"convertSessionToOrder"}},'immutable');	
+			dispatch : function(giftcard,tagObj)	{
+				app.model.addDispatchToQ({"_cmd":"cartGiftcardAdd","giftcard":giftcard,"_tag" : tagObj},'immutable');	
 				}			
 			}, //cartGiftcardAdd
 			
 //formerly addCouponToCart
 		cartCouponAdd : {
-			init : function(coupon,callback)	{
-				this.dispatch(coupon,callback);
+			init : function(coupon,tagObj)	{
+				this.dispatch(coupon,tagObj);
 				},
-			dispatch : function(coupon,callback)	{
-				app.model.addDispatchToQ({"_cmd":"cartCouponAdd","coupon":coupon,"_tag" : {"callback":callback,"extension":"convertSessionToOrder"}},'immutable');	
+			dispatch : function(coupon,tagObj)	{
+				app.model.addDispatchToQ({"_cmd":"cartCouponAdd","coupon":coupon,"_tag" : tagObj},'immutable');	
 				}			
 			}, //cartCouponAdd
 
@@ -295,8 +295,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 				app.u.throwMessage(responseData,uuid);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.data.cartItemsList.cart['payment.pt'] = null;
-				app.data.cartItemsList.cart['payment.pi'] = null;
+				app.data.cartItemsList['payment.pt'] = null;
+				app.data.cartItemsList['payment.pi'] = null;
 				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null}); 
 				app.calls.refreshCart.init({},'immutable');
 				app.model.dispatchThis('immutable');
@@ -355,7 +355,7 @@ error would mean something was not complete.
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.finishedValidatingCheckout.onSuccess');
 //if paypal is selected but a valid token doesn't exist, route to paypal.
-				if($("#chkout-payby_PAYPALEC").is(':checked') && !app.data.cartItemsList.cart['payment.pt'])	{
+				if($("#chkout-payby_PAYPALEC").is(':checked') && !app.data.cartItemsList['payment.pt'])	{
 					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
 					}
 				else	{
@@ -438,8 +438,8 @@ var $a; //a paticular address, set once within the loop. shorter that app.data..
 var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
 			
 //if an address has already been selected, highlight it.  if not, use default.
-if(app.u.isSet(app.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id']))	{
-	selAddress = app.data.cartItemsList.cart['data.selected_'+TYPE.toLowerCase()+'_id'];								
+if(app.u.isSet(app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id']))	{
+	selAddress = app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id'];								
 	}
 else	{
 	selAddress = app.ext.store_checkout.u.determinePreferredAddress(TYPE);
@@ -493,13 +493,12 @@ r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); 
 //				app.u.dump('BEGIN convertSessionToOrder.uities.cartContentsAsLinks.');
 //				app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
-				var L = app.model.countProperties(app.data[datapointer].cart.stuff);
+				var L = app.model.countProperties(app.data.cartItemsList['@ITEMS']);
 //				app.u.dump(' -> # items in cart: '+L);
 				for(var i = 0; i < L; i += 1)	{
-//					app.u.dump(' -> sku = '+app.data[datapointer].cart.stuff[i].sku);
 //skip coupons.
-					if(app.data[datapointer].cart.stuff[i].sku[0] != '%')	{
-						r += "http://"+app.vars.sdomain+"/product/"+app.data[datapointer].cart.stuff[i].sku+"/\n";
+					if(app.data[datapointer].cart['@ITEMS'][i].sku[0] != '%')	{
+						r += "http://"+app.vars.sdomain+"/product/"+app.data[datapointer].cart['@ITEMS'][i].sku+"/\n";
 						}
 					}
 //				app.u.dump('links = '+r);
@@ -633,7 +632,7 @@ this function closely mirrors core logic.
 
 //copy the billing address from the ID into the form fields.
 				app.ext.store_checkout.u.setAddressFormFromPredefined(addressClass,$x.attr('data-addressId'));
-				$('#data-bill_email').val() == app.data.cartItemsList.cart['bill/email']; //for passive, need to make sure email is updated too.
+				$('#data-bill_email').val() == app.data.cartItemsList['bill/email']; //for passive, need to make sure email is updated too.
 //copy all the billing address fields to the shipping address fields, if appropriate.
 				if($('#chkout-bill_to_ship').val() == '1') {
 					app.ext.store_checkout.u.setShipAddressToBillAddress();
@@ -754,8 +753,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 //			app.u.dump("BEGIN convertSessionToCheckout.uities.thisSessionIsPayPal");
 				var r = false; //what is returned.  will be set to true if paypalEC approved.
 	//if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
-				token = app.data.cartItemsList.cart['payment.pt'];
-				payerid = app.data.cartItemsList.cart['payment.pi'];
+				token = app.data.cartItemsList['payment.pt'];
+				payerid = app.data.cartItemsList['payment.pi'];
 				app.u.dump("paypal -> token: "+token+" and payerid: "+payerid);
 				if(token && payerid)	{
 					r = true;
@@ -772,8 +771,8 @@ note - !!! change this so that the vars only get set to null IF they are already
 */
 			nukePayPalEC : function() {
 				if(app.data && app.data.cartItemsList)	{
-					app.data.cartItemsList.cart['payment.pt'] = null;
-					app.data.cartItemsList.cart['payment.pi'] = null;
+					app.data.cartItemsList['payment.pt'] = null;
+					app.data.cartItemsList['payment.pi'] = null;
 					}
 				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null,'chkout.payby':null}); //nuke vars
 				return 1;//this is the # of dispatches added to the q.
@@ -904,11 +903,11 @@ note - !!! change this so that the vars only get set to null IF they are already
 					id = data.value[i].id;
 
 //whether or not this iteration is for the selected method should only be determined once, but is used on a couple occasions, so save to a var.
-					if(id == app.data.cartItemsList.cart['ship.selected_id'])	{
+					if(id == app.data.cartItemsList['want/shipping_id'])	{
 						isSelectedMethod = true;
 						}
 
-//app.u.dump(' -> id = '+id+' and ship.selected_id = '+app.data.cartItemsList.cart['ship.selected_id']);
+//app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartItemsList['want/shipping_id']);
 					
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					

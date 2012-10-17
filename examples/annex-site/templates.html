@@ -56,10 +56,10 @@ So the cart template should contain these two elements and the extension should 
 
 			<div class='padMargBorderBottom'>
 			<label for='data-ship_zip'>Zip/Postal Code</label>
-			<input type='text' size='10'  name='data.ship_zip' id='data-ship_zip' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' onChange="myControl.calls.cartSet.init({'data.ship_zip':this.value});
-			myControl.ext.store_cart.util.updateCartSummary();
-			myControl.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-			myControl.model.dispatchThis('immutable');"  />
+			<input type='text' size='10'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
+			app.ext.store_cart.u.updateCartSummary();
+			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+			app.model.dispatchThis('immutable');"  />
 			</div>
 
 	
@@ -70,7 +70,7 @@ So the cart template should contain these two elements and the extension should 
 				<div id='couponFrmContainer'>
 					<label for='couponCode'>Coupon/Promo Code:</label>
 					<input type='text' name='coupon' id='couponCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
-					<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.ext.store_cart.util.handleCouponSubmit($('#couponCode').val(),'couponContainer'); myControl.model.dispatchThis('immutable'); return false;" id='addCouponBtn'>add</button>
+					<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_cart.u.handleCouponSubmit($('#couponCode').val(),'couponContainer'); app.model.dispatchThis('immutable'); return false;" id='addCouponBtn'>add</button>
 				</div>
 			</div>
 	
@@ -78,7 +78,7 @@ So the cart template should contain these two elements and the extension should 
 			<div id='giftcardContainer' class='padMargBorderBottom'>
 				<label for='giftcardCode'>Gift Certificate Code:</label>
 				<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
-				<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="myControl.ext.store_cart.util.handleGiftcardSubmit($('#giftcardCode').val(),'giftcardContainer'); myControl.model.dispatchThis('immutable'); return false;" id='addGiftcardBtn'>add</button>
+				<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_cart.u.handleGiftcardSubmit($('#giftcardCode').val(),'giftcardContainer'); app.model.dispatchThis('immutable'); return false;" id='addGiftcardBtn'>add</button>
 			</div>
 			
 
@@ -87,7 +87,7 @@ So the cart template should contain these two elements and the extension should 
 			
 			<div class='marginBottom clearfix'></div>
 
-			<span onClick="myControl.ext.myRIA.util.handlePageContent('checkout','');" class='pointer' title='proceed to secure checkout'><img src='hb3_checkout-123x44.png' width='123' height='44' alt='proceed to secure checkout' /></span>
+			<span onClick="app.ext.myRIA.u.handlePageContent('checkout','');" class='pointer' title='proceed to secure checkout'><img src='hb3_checkout-123x44.png' width='123' height='44' alt='proceed to secure checkout' /></span>
 			<span id='payPalHackButton' data-bind='var: cart(id); format:paypalECButton;'></span>
 			<span id='googleHackButton' data-bind='var: cart(id); format:googleCheckoutButton;'></span>
 
@@ -122,16 +122,16 @@ and what promotions are added.
 <div id='cartSummaryTemplate' class='loadingBG'>
 
 	<section class='padMargBorderBottom'>
-		<div data-bind="var: cart(data.order_subtotal); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 		
-		<div data-bind='var: cart(data.tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
-		<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+		<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
 		
-		<div data-bind='var: cart(data.order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+		<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 		
-		<div data-bind='var: cart(chkout.giftcard_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-		<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+		<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+		<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
 	
 	</section>
 
@@ -156,7 +156,7 @@ and what promotions are added.
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="myControl.ext.store_cart.util.updateCartQty($(this).attr('data-stid'),this.value); myControl.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this).attr('data-stid'),this.value); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' />
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 		<button class='ui-state-default ui-corner-all' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;'>
@@ -185,7 +185,7 @@ used for store_crm.js
 
 <div id='reviewFrmTemplate'>
 
-<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="myControl.ext.store_crm.util.handleReviews('reviewFrm'); return false;">
+<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
 <input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
 
 <label for='reviewsCustomerName'>Your Name:</label>
@@ -227,7 +227,7 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="myControl.ext.store_crm.util.handleSubscribe('subscribeFrm'); return false">
+<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
 
 <fieldset class='userInfo'>
 <div>
@@ -279,10 +279,10 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	<form id='zCheckoutFrm' name='zCheckoutFrm' action='#' onSubmit='return false;'>
 	
 <!-- this is outside the fieldsets so that it can be used to maintain state (fieldsets sometimes get regenerated) -->
-	<input type='hidden' value='1' name='chkout.create_customer' id='chkout-create_customer' /><!-- valid values are 1/0 -->
+	<input type='hidden' value='1' name='want/create_customer' id='chkout-create_customer' /><!-- valid values are 1/0 -->
 
 <!-- this is the actual value/input used. more reliable to handle here than in a checkbox.  -->
-	<input type='hidden' value='1' name='chkout.bill_to_ship' id='chkout-bill_to_ship' /><!-- valid values are 1/0 -->
+	<input type='hidden' value='1' name='want/bill_to_ship' id='chkout-bill_to_ship' /><!-- valid values are 1/0 -->
 	
 	</form>
 	
@@ -323,7 +323,7 @@ sanity: do not add callback to getCartContents.init to update panel (handled as 
 		<div id='couponFrmContainer'>
 			<label for='couponCode'>Coupon/Promo Code:</label>
 			<input type='text' name='coupon' id='couponCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
-			<button class='loadingButton ui-state-default ui-corner-all' onClick="myControl.ext.convertSessionToOrder.utilities.handleCouponSubmit(); return false;" id='addCouponBtn'><span></span>add</button>
+			<button class='loadingButton ui-state-default ui-corner-all' onClick="app.ext.convertSessionToOrder.utilities.handleCouponSubmit(); return false;" id='addCouponBtn'><span></span>add</button>
 		</div>
 	</div>
 
@@ -336,7 +336,7 @@ it should be in view when the place order button is pushed.
 			<div class='zwarn displayNone' id='chkoutSummaryErrors'></div>
 
 
-			<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-corner-all ui-state-highlight floatRight loadingButton' onClick="myControl.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); myControl.model.dispatchThis('immutable'); return false;"><span></span>Place Order</button>
+			<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;"><span></span>Place Order</button>
 							
 			<div class='clearAll'></div>
 
@@ -387,17 +387,17 @@ contains order summary (total, shipping, tax, gift card, etc)
 
 <div id='cartSummaryTotalsSpec'>
 	
-	<div data-bind="var: cart(data.order_subtotal); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	
-	<div data-bind='var: cart(data.tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 	
-	<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:convertSessionToOrder;'></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:convertSessionToOrder;'></div>
 	
-	<div data-bind='var: cart(data.order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	
-	<div data-bind='var: cart(chkout.giftcard_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
 	
-	<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:convertSessionToOrder;'></div>
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:convertSessionToOrder;'></div>
 	
 </div>
 
@@ -419,22 +419,22 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
 
-	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address11' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address11); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address11' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address11); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_state'><label for='data-bill_state'>State</label><input type='text'  name='bill/state' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/state); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_state'><label for='data-bill_state'>State</label><input type='text'  name='bill/region' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/zip' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/zip); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/postal' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='data.bill_country' id='data-bill_country' data-bind='var: cart(data.bill_country); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="myControl.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); myControl.model.dispatchThis('immutable');" ></select></li>
+	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='bill/countrycode' id='data-bill_country' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
 
 	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /></li>
 
 	<li id='chkout-bill_to_ship_cb_container'>
-	<div class='checkbox'><input type='checkbox' onClick='myControl.ext.convertSessionToOrder.utilities.toggleShipAddressPanel();' name='chkout.bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
+	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.utilities.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
 	<!--
 SANITY: under the form tag is a hidden var that is actually used for the value for bill_to_ship. checkboxes are unreliable.
 the hidden input is higher in the code to make sure it added to the DOM prior to the shipping panel code getting executed.
@@ -465,11 +465,11 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='ship_city'><label for='data-ship_city'>City</label><input type='text' name='ship/city' id='data-ship_city' required='required' value='' data-bind='var: cart(ship/city); format:popVal;'  /></li>
 	
-	<li class='ship_state'><label for='data-ship_state'>State</label><input type='text'  name='ship/state' id='data-ship_state' size='2' value='' data-bind='var: cart(ship/state); format:popVal;' maxlength='10' required='required' /></li>
+	<li class='ship_state'><label for='data-ship_state'>State</label><input type='text'  name='ship/region' id='data-ship_state' size='2' value='' data-bind='var: cart(ship/region); format:popVal;' maxlength='10' required='required' /></li>
 	
-	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='data.ship_zip' id='data-ship_zip' size='10' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' required='required' onChange="myControl.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); myControl.model.dispatchThis('immutable');" /></li>
+	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='ship/postal' id='data-ship_zip' size='10' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></li>
 
-	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='data.ship_country' id='data-ship_country' data-bind='var: cart(data.ship_country); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="myControl.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); myControl.model.dispatchThis('immutable');" ></select></li>
+	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='ship/countrycode' id='data-ship_country' data-bind='var: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="app.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></li>
 
 	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='ship/phone' id='data-ship_phone' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></li>
 	
@@ -495,7 +495,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 
 <!-- use this for shipping methods in a dropdown -->
 <!-- 
-	<label for='ship.selected_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='ship.selected_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension:convertSessionToOrder;' onChange="myControl.ext.convertSessionToOrder.utilities.updateShipMethod(this.value); myControl.model.dispatchThis('immutable');"></select>	
+	<label for='want/shipping_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='want/shipping_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension:convertSessionToOrder;' onChange="app.ext.convertSessionToOrder.utilities.updateShipMethod(this.value); app.model.dispatchThis('immutable');"></select>	
 -->
 
 </div>
@@ -518,7 +518,7 @@ do NOT change any div id's or messaging will not work properly.
 		<p id='giftcardMessaging'></p><!-- used to report success and fail messaging -->
 		<label for='giftcardCode'>Gift Certificate Code:</label>
 		<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
-		<button class='ui-state-default ui-corner-all loadingButton' onClick="myControl.ext.convertSessionToOrder.utilities.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
+		<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.utilities.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
 	</div>
 
 	<ul id='chkout-payOptions' class='noPadOrMargin noListStyle' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension:convertSessionToOrder;'></ul>
@@ -535,7 +535,7 @@ do NOT change the input name or id or checkout will likely break.
 
 <div id='chkout-orderNotesSpec'>
 <p>Please include any special instructions or comments here:</p>
-<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='chkout.order_notes' onChange='myControl.calls.cartSet.init({"chkout.order_notes":this.value}); myControl.model.dispatchThis("immutable");' data-bind='var: cart(chkout.order_notes); format:popVal;'></textarea>
+<textarea class='chkoutOrderNotes' id='chkout-order_notes' name='want/order_notes' onChange='app.calls.cartSet.init({"want/order_notes":this.value}); app.model.dispatchThis("immutable");' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
 </div>
 
 
@@ -638,7 +638,7 @@ do NOT change the input name or id or checkout will likely break.
 <table id='prodViewerTable' class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 <img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='350' height='350' />
 </div>
 	</td>
@@ -646,11 +646,11 @@ do NOT change the input name or id or checkout will likely break.
 	<td>
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
 	
-<div onClick='myControl.ext.store_product.util.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
 	
 	</div>
 	</td>
@@ -673,7 +673,7 @@ do NOT change the input name or id or checkout will likely break.
 you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
 -->	
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id);  return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id);  return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>

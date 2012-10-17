@@ -462,9 +462,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-//there are links in the UI that reference .action, so don't change this without updating the UI.
 		a : {
 /*
 to generate an instance of the finder, run: 

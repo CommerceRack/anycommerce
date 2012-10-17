@@ -389,6 +389,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 							callbackObj.onError({'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'},uuid)
 							}
 						else if(typeof app.u.throwMessage === 'function')	{
+							$('.loadingBG').removeClass('loadingBG'); //remove all loading to make sure user doesn't think something is still trying to load.
 							app.u.throwMessage({'errid':'ISE','skipAutoHide':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'});
 							}
 						else	{
@@ -628,7 +629,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
 		handleResponse_cartOrderCreate : function(responseData)	{
 	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
-//			app.u.dump("BEGIN model.handleResponse_createOrder");
+			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
 			var datapointer = "order|"+responseData.orderid;
 			app.storageFunctions.writeLocal(datapointer,app.data.cartItemsList);  //save order locally to make it available for upselling et all.
 			app.data[datapointer] = app.data.cartItemsList; //saved to object as well for easy access.
@@ -693,9 +694,8 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				}
 			},
 
-// formerly canIHaveSession
 		handleResponse_appCartExists : function(responseData)	{
-			if(responseData.exists == 1)	{
+			if(responseData.exists >= 1)	{
 				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				}
 			else	{
@@ -1080,8 +1080,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //an ajax request is made to load the .html file and, if successful, the templates are loaded into app.templates.
 
 		fetchNLoadTemplates : function(templateURL,templates)	{
-	//		app.u.dump("BEGIN model.fetchNLoadTemplates");
-	//		app.u.dump(" -> templateURL: "+templateURL);
+			app.u.dump("BEGIN model.fetchNLoadTemplates");
+			app.u.dump(" -> templateURL: "+templateURL);
 	//		app.u.dump(" -> templates: "+templates);
 			var ajaxRequest = $.ajax({
 					type: "GET",
@@ -1160,7 +1160,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 //					app.u.dump(" -> EXTCONTROL Got to success");
 					},
 				complete: function(data)	{
-//					app.u.dump(" -> EXTCONTROL got to complete");
+//					app.u.dump(" -> EXTCONTROL got to complete for "+namespace);
 //					app.u.dump(" -> status = "+data.statusText);
 //hhhhmmm... was originally just checking success. now it checks success and OK (2011-01-11). probably need to improve this at some point.
 					if(data.statusText == 'success' || data.statusText == 'OK')	{
@@ -1199,7 +1199,6 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 /*
 now we know whether the extension properly loaded, had and executed an init and has a callback.
 respond accordingly.
-
 */
 
 						if(initPassed == false)	{
@@ -1228,7 +1227,6 @@ respond accordingly.
 					app.u.dump(c);
 					}
 				});
-
 			},
 
 		executeExtensionCallback : function(namespace,callback)	{
@@ -1275,10 +1273,11 @@ This is checks for two things:
 */
 
 		allExtensionsHaveLoaded : function(extObj)	{
-//			app.u.dump("BEGIN model.allExtensionsHaveLoaded"); 	app.u.dump(extObj);
+//			app.u.dump("BEGIN model.allExtensionsHaveLoaded. extObj: "); app.u.dump(extObj);
 
 			var r = true; //what is returned (whether or not all extensions have loaded.
 			var L = extObj.length;
+//			app.u.dump(" -> L: "+L);
 			var namespace; //shortcut.
 			for(var i = 0; i < L; i += 1) {
 				namespace = extObj[i].namespace;
@@ -1301,9 +1300,9 @@ This is checks for two things:
 //function gets executed in addExtensions. If the extensions are loaded, it'll execute the callbacks.
 // if not, it will re-execute itself.
 		executeCallbacksWhenExtensionsAreReady : function(extObj){
-//			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady");
+//			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady [length: "+extObj.length+"]");
 			if(this.allExtensionsHaveLoaded(extObj))	{
-				app.u.dump("All extensions are loaded. execute callbacks.");
+//				app.u.dump("All extensions are loaded. execute callbacks.");
 				var L = extObj.length;
 				for(var i = 0; i < L; i += 1) {
 //					app.u.dump(" -> i: "+i);

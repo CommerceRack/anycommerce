@@ -126,7 +126,7 @@ A session ID could be passed in through vars, but app.sessionId isn't set until 
 			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.sessionId)	{
-			app.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.appCartExists.init(app.vars.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.model.dispatchThis('immutable');
 			}
 //if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
@@ -449,19 +449,7 @@ app.u.throwMessage(responseData); is the default error handler.
 		translateTemplate : 	{
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN callbacks.translateTemplate");
-				var dataSrc;
-//not all data is at the root level.
-//!! TEST - but this shouldn't be needed anymore because of the updates to the rendering engine.
-//				if(tagObj.datapointer == 'cartItemsList')	{dataSrc = app.data[tagObj.datapointer].cart}
-//				else if(tagObj.datapointer.indexOf('appPageGet') >= 0)	{
-//					dataSrc = app.data[tagObj.datapointer]['%page']
-//					}
-//				else if(tagObj.datapointer.indexOf('adminOrderDetail') >= 0)	{
-//					dataSrc = app.data[tagObj.datapointer]['order']
-//					}
-//				else {dataSrc = app.data[tagObj.datapointer]};
-//				app.u.dump(dataSrc);
-				app.renderFunctions.translateTemplate(dataSrc,tagObj.parentID);
+				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				}
 			
 			}, //translateTemplate
@@ -566,9 +554,9 @@ app.u.handleCallback(tagObj);
 //will be used in updates to translator.
 
 //http://stackoverflow.com/questions/5240785/split-abc/5240797#5240797
-		getObjValFromDotString : function (s,obj)	{
-
-			var o=obj, attrs=s.split(".");
+		getObjValFromString : function (s,obj,char)	{
+			cart = char || '.';
+			var o=obj, attrs=s.split(char);
 			while (attrs.length > 0) {
 				o = o[attrs.shift()];
 				if (!o) {o= null; break;}
@@ -858,7 +846,7 @@ commented out in 201238
 			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 			else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{r = 'facebook';}
 			else if(app.data.whoAmI && app.data.whoAmI.cid)	{r = 'soft'}
-			else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['bill/email'])	{r = 'guest';}
+			else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.bill.email)	{r = 'guest';}
 			else{}
 			return r;
 			}, //whatAuthIsThisSession
@@ -880,9 +868,9 @@ commented out in 201238
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
 				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
-				else if(app.model.fetchData('cartItemsList') && app.u.isSet(app.data.cartItemsList.cart.cid))	{
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.cid))	{
 					r = 'authenticated';
-					app.vars.cid = app.data.cartItemsList.cart.cid;
+					app.vars.cid = app.data.cartItemsList.customer.cid;
 					}
 //need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
 //and all third parties would get 'guest'
@@ -890,7 +878,7 @@ commented out in 201238
 					r = 'thirdPartyGuest';
 //					app.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['bill/email'])	{
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{
 					r = 'guest';
 					}
 				else	{
@@ -919,19 +907,18 @@ commented out in 201238
 			},
 
 
-
-//used in checkout to populate username: so either login or bill.email will work.
+//used in checkout to populate username: so either login or bill/email will work.
 //never use this to populate the value of an email form field because it may not be an email address.
 //later, this could be expanded to include a facebook id.
 		getUsernameFromCart : function()	{
 //			app.u.dump('BEGIN u.getUsernameFromCart');
 			var r = false;
-			if(app.u.isSet(app.data.cartItemsList.cart['login']))	{
-				r = app.data.cartItemsList.cart['login'];
+			if(app.u.isSet(app.data.cartItemsList.customer.login))	{
+				r = app.data.cartItemsList.customer.login;
 //				app.u.dump(' -> login was set. email = '+r);
 				}
-			else if(app.u.isSet(app.data.cartItemsList.cart['bill/email'])){
-				r = app.data.cartItemsList.cart['bill/email'];
+			else if(app.u.isSet(app.data.cartItemsList.bill.email)){
+				r = app.data.cartItemsList.bill.email;
 //				app.u.dump(' -> bill/email was set. email = '+r);
 				}
 			else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
@@ -1463,10 +1450,10 @@ later, it will handle other third party plugins as well.
 				obj.amazonpayment = true;
 				obj.googlecheckout = true;
 				
-				var L = app.data.cartItemsList.cart.stuff.length;
+				var L = app.data.cartItemsList['@ITEMS'].length;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartItemsList.cart.stuff[i].full_product['gc:blocked'])	{obj.googlecheckout = false}
-					if(app.data.cartItemsList.cart.stuff[i].full_product['paypalec:blocked'])	{obj.paypalec = false}
+					if(app.data.cartItemsList['@ITEMS'][i].full_product['gc:blocked'])	{obj.googlecheckout = false}
+					if(app.data.cartItemsList['@ITEMS'][i].full_product['paypalec:blocked'])	{obj.paypalec = false}
 					}
 
 				return obj;
@@ -1825,79 +1812,15 @@ return $r;
 
 				if(namespace == 'product' && attributeID.indexOf(':') > -1)	{
 					attributeID = '%attribs.'+attributeID; //product data is nested, but to keep templates clean, %attribs isn't required.
+					value = app.u.getObjValFromString(attributeID,data,'.') || data[attributeID]; //attempt to set value based on most common paths
 					}
-
-				value = app.u.getObjValFromDotString(attributeID,data) || data[attributeID]; //attempt to set value based on most common paths
-//This is an attempt to skip a lot of the code block below. It was added in 201239.
-/*
-				if(typeof value == 'string' || typeof value == 'number')	{}
+				else if(namespace == 'cart')	{
+					value = app.u.getObjValFromString(attributeID,data,'/') || data[attributeID]; //attempt to set value based on most common paths
+					}
 				else	{
-
-
-
-
-//attributes are often stored as some.data.location where each dot is an object name and the last one is the pointer for the data.
-//the getObjValFromDotString function takes the string (some.data.location) and uses that to find the value in the data object.
-//wonderful... except in some cases (orders, cart, etc) some fields have periods in them. hopefully this is addressed in cart2
-//#### may be able to lighten this up after cart2
-
-//In some cases, like categories, some data is in the root and some is in %meta.
-//pass %meta.cat_thumb, for instance.  currenlty, only %meta is supported. if/when another %var is needed, this'll need to be expanded. ###
-//just look for % to be the first character.  Technically, we could deal with prod info this way, but the method in place is fewer characters in the view.
-// need to verify object exists as well now (2012-20) because we're running translate over the same template more than once, specifically for admin_orders, but likely more.
-//and, of course, orders are nested. mostly, the data we'll need is in payments or data or the root level.
-					else if(namespace == 'order')	{
-//						app.u.dump(' -> parsing order data. % attribute = '+attributeID);
-	
-	//order data is nested, but to keep the databinds at data.something instead of order.data.something, we reference data.order here.
-	//this is true for both adminorders and store orders.
-	
-						if(typeof data.order == 'object')	{
-							data = data.order; 
-							}
-	
-						if(attributeID.substring(0,4) == 'data' && typeof data['data'] == 'object')	{
-							value = data['data'][attributeID.substr(5)];
-							}
-	//need to check for payments. because in and admin order view, payment is an array. in customer order view, it's an object.
-	// so var: order(payments) in admin order view would enter here by accident (it shouldn't)
-						else if(attributeID.substring(0,9) == 'payments.' && typeof data['payments'] == 'object')	{
-							value = data['payments'][attributeID.substr(9)];
-							}
-						else	{
-	//						app.u.dump(" -> GOT TO ELSE");
-							value = data[attributeID]
-							}
-						}
-						
-	
-	//this handles reviews in a reviews spec.
-					else if(namespace == 'reviews')	{
-						if(attributeID == '@reviews' && data.reviews)	{
-	//						app.u.dump(data);
-							value = data.reviews['@reviews']
-							}
-						else if(data.reviews)	{
-							value = data.reviews[attributeID];
-							}
-						else	{
-							value = data[attributeID];
-							}
-						}
-	// 'customer' namespace is used in orders and customer manager (appCustomerGet).
-					else if(namespace == 'customer' && typeof data['%CUSTOMER'] == 'object' && !$.isEmptyObject(data['%CUSTOMER']))	{
-						value = data['%CUSTOMER'][attributeID];
-						}
-
-	//it's assumed at this point in the history of time that if a product isn't in focus, the data is not in a sub node (like %attribs).
-	//if subnodes are used, they'll need to be added as an 'else if' above.
-					else	{
-						value = data[attributeID]
-						}
+					value = app.u.getObjValFromString(attributeID,data,'.') || data[attributeID]; //attempt to set value based on most common paths
 					}
-//			app.u.dump(' -> value = '+value);
-*/				}
-
+				}
 			return value;
 			},
 
@@ -1959,16 +1882,18 @@ return $r;
 
 
 		stuffList : function($tag,data)	{
+			app.u.dump("BEGIN renderFormat.stuffList");
 			var L = data.value.length;
 			var templateID = data.bindData.loadsTemplate;
 			var stid; //recycled. used as a short cut in the loop for each items stid when in focus.
 			var $o; // what is appended to tag.  saved to iterim var so changes can occur, if needed (locking form fields for coupons, for example)
+			var parentID = $tag.attr('id') || "stufflist_"+app.u.guidGenerator().substring(0,10)
 			for(var i = 0; i < L; i += 1)	{
 				stid = data.value[i].stid;
 //				app.u.dump(" -> STID: "+stid);
-				$o = app.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},templateID,data.value[i])
+				$o = app.renderFunctions.transmogrify({'id':parentID+'_'+stid,'stid':stid},templateID,data.value[i])
 //make any inputs for coupons disabled.
-				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'})}
+				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'}).addClass('disabled')}
 				$tag.append($o);
 				}
 			},

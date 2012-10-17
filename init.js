@@ -14,10 +14,11 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
-// app.ext.myRIA.template.productTemplate.onCompletes.push() 
-app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
+
+//app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
 //app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','addTriggers']);
-//app.rq.push(['extension',0,'','']);
+//app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
+//app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); (not working yet)
 
 
 
@@ -119,7 +120,7 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 //the 'attempts' var is incremented each time the function is executed.
 
 app.u.initMVC = function(attempts){
-	app.u.dump("app.u.initMVC activated ["+attempts+"]");
+//	app.u.dump("app.u.initMVC activated ["+attempts+"]");
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
@@ -153,7 +154,7 @@ app.u.initMVC = function(attempts){
 
 
 
-//Any code that needs to be executed after the app init has occured should go here.
+//Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");

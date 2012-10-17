@@ -48,7 +48,7 @@
 </ul>
 </section>
 
-<button class='ui-button ui-button-text ui-button-text ui-state-active ui-corner-all' onClick="myControl.ext.admin_orders.action.applyFilters()">Apply Filter</button>
+<button class='ui-button ui-button-text ui-button-text ui-state-active ui-corner-all' onClick="app.ext.admin_orders.a.applyFilters()">Apply Filter</button>
 
 	</div>
 	</td>
@@ -131,7 +131,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	<div class='floatLeft '>
-		<h2>Order Status: <select data-bind="var:order(data.pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); myControl.ext.admin_orders.util.updateOrderChangeCount();"></select></h2>
+		<h2>Order Status: <select data-bind="var:order(data.pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();"></select></h2>
 		<h3 data-bind="var:order(data.payment_status);format:paystatus; extension:admin_orders;"></h3>
 	</div>
 </div>
@@ -139,22 +139,22 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <div class='clearfix'>
 
 	<div class='orderDetailsStuff floatRight'>
-	<span class='floatRight'><a href='#'  onClick="myControl.ext.admin_orders.action.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
+	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
 	<h2>Order Contents</h2>
-	<table class='orderContentsTable' data-bind="var:order(stuff); format:stuffList; extension:admin_orders; loadsTemplate: orderStuffItemTemplate;"></table>
+	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:@ITEMSList; extension:admin_orders; loadsTemplate: orderStuffItemTemplate;"></table>
 	<ul class='clearfix alignRight floatRight'>
 		<li data-bind="var:order(data.buysafe_totalbondcost); format:money; currencySign: $; pretext:Bond Cost: ; hideZero:true;"></li>
 		<li data-bind="var:order(data.gfc_total); format:money; currencySign: $; pretext:Giftcart Total: ; hideZero:true;"></li>
 		<li data-bind="var:order(data.ins_total); format:money; currencySign: $; pretext:Insurance Total: ; hideZero:true;"></li>
-		<li data-bind="var:order(data.order_subtotal); format:money; currencySign: $; pretext:Order Total: ;"></li>
-		<li data-bind="var:order(data.balance_due); format:money; currencySign: $; pretext:Balance Due: ; "></li>
+		<li data-bind="var:order(sum/items_total); format:money; currencySign: $; pretext:Order Total: ;"></li>
+		<li data-bind="var:order(sum/balance_due_total); format:money; currencySign: $; pretext:Balance Due: ; "></li>
 	</ul>
 	</div>
 
 	<div class='orderAddresses floatLeft'>
 	
 		<address class='shipAddress editableParent' >
-		<h4>Shipping Address <a href='#'  onClick="myControl.ext.admin_orders.util.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
+		<h4>Shipping Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
 		<h6>
 			<span data-bind='var:order(ship/firstname);format:text;' class='editable' title='first name'></span>
 			<span data-bind='var:order(ship/lastname);format:text;' class='editable' title='last name'></span>
@@ -164,15 +164,15 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div data-bind='var:order(ship/address2);format:text;' class='editable' title='address 2'></div>
 		<div>
 			<span data-bind='var:order(ship/city);format:text;posttext:, ;' class='editable' title='city'></span>
-			<span data-bind='var:order(ship/state);format:text;posttext:. ;' class='editable' title='state'></span>
-			<span data-bind='var:order(data.ship_zip);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
+			<span data-bind='var:order(ship/region);format:text;posttext:. ;' class='editable' title='state'></span>
+			<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
 		</div>
-		<div data-bind='var:order(data.ship_country);format:text;'></div>
+		<div data-bind='var:order(ship/countrycode);format:text;'></div>
 		<div data-bind='var:order(ship/email);format:text;' class='editable' title='email address'></div>
 		</address>
 
 		<address class='billAddress editableParent'>
-		<h4>Billing Address <a href='#'  onClick="myControl.ext.admin_orders.util.makeEditable('.billAddress',{}); return false;" class='editTextLink'>edit</a></h4>
+		<h4>Billing Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.billAddress',{}); return false;" class='editTextLink'>edit</a></h4>
 		<h6>
 			<span data-bind='var:order(bill/firstname);format:text;' class='editable' title='first name'></span>
 			<span data-bind='var:order(bill/lastname);format:text;' class='editable' title='last name'></span>
@@ -182,10 +182,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div data-bind='var:order(bill/address2);format:text;' class='editable' title='address 2'></div>
 		<div>
 			<span data-bind='var:order(bill/city);format:text;posttext:, ;' class='editable' title='city'></span>
-			<span data-bind='var:order(bill/state);format:text;posttext:. ;' class='editable' title='state'></span>
-			<span data-bind='var:order(bill/zip);format:text; defaultVar:order(data.bill_int_zip);' class='editable' title='zip'></span>
+			<span data-bind='var:order(bill/region);format:text;posttext:. ;' class='editable' title='state'></span>
+			<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);' class='editable' title='zip'></span>
 		</div>
-		<div data-bind='var:order(data.bill_country);format:text;'></div>
+		<div data-bind='var:order(bill/countrycode);format:text;'></div>
 		<div data-bind='var:order(bill/email);format:text;' class='editable' title='email address'></div>
 		</address>
 
@@ -201,7 +201,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Print Invoice</button>
 	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Packing Slip</button>
 
-	<button class='floatRight ui-state-active ui-corner-all ui-button' onClick="myControl.ext.admin_orders.action.saveChangesToOrder();">Save <span id='changeCount'></span> Changes</button>
+	<button class='floatRight ui-state-active ui-corner-all ui-button' onClick="app.ext.admin_orders.a.saveChangesToOrder();">Save <span id='changeCount'></span> Changes</button>
 </div>
 
 
@@ -210,13 +210,13 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<h2>Notes</h2>
 	<section class='notes'>
 		<div class='floatRight customerNotes' id='customerInformation'><!--
-			<span class='floatRight'><a href='#'  onClick="myControl.ext.admin_orders.util.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
+			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
 			<h3>Customer Notes: </h3>
 			<ol class='note customerNotes' data-bind="var: customer(@NOTES); format: customerNote; extension:admin_orders;"></ol>
 		</div>
 		
 		<div class='floatLeft orderNotes'>
-			<span class='floatRight'><a href='#'  onClick="myControl.ext.admin_orders.util.makeEditable('.orderNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>
+			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>
 			
 			<h3>Public Order Notes</h3>
 			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;' title='public notes'></div>

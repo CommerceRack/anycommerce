@@ -369,6 +369,7 @@ this will likely become more flexible in the future. ###
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
+	
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
@@ -947,7 +948,7 @@ So the cart template should contain these two elements and the extension should 
 <table class='cartContainer'>
 <tr>
 	<td class='cartStuffContainer'>
-	<ul id='cartStuffList' data-bind="var: cart(stuff); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
+	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
 	</td>
 
 	<td class='cartSummaryTotalsContainer'>
@@ -957,16 +958,16 @@ So the cart template should contain these two elements and the extension should 
 		
 <section id='cartTemplateCostSummary' class='cartSummary'>
 
-	<div data-bind="var: cart(data.order_subtotal); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	
-	<div data-bind='var: cart(data.tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
-	<div data-bind='var: cart(ship.selected_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
 	
-	<div data-bind='var: cart(data.order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	
-	<div data-bind='var: cart(chkout.giftcard_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-	<div data-bind='var: cart(data.balance_due); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
 
 </section>
 
@@ -979,7 +980,7 @@ So the cart template should contain these two elements and the extension should 
 
 	<div class='cartZipCodeContainer'>
 	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='data.ship_zip' id='data-ship_zip' value='' data-bind='var: cart(data.ship_zip); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'data.ship_zip':this.value});
+	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(%ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
 	app.ext.store_cart.u.updateCartSummary();
 	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
 	app.model.dispatchThis('immutable');"  />
@@ -1230,8 +1231,8 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 
 <!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 
-<h5 data-bind='var:order(data.order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 data-bind='var:order(data.balance_due);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+<h5 data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 </hgroup>
 
 <address>
@@ -1243,10 +1244,10 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 <div data-bind='var:order(bill/address2);format:text;'></div>
 <div>
 	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(bill/state);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(bill/zip);format:text; defaultVar:order(data.bill_int_zip);'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
 </div>
-<div data-bind='var:order(data.bill_country);format:text;'></div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
 </address>
 
 <address>
@@ -1258,17 +1259,17 @@ likely, this will be used anywhere an invoice is shown. Potentially on the last 
 <div data-bind='var:order(ship/address2);format:text;'></div>
 <div>
 	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(ship/state);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(data.ship_zip);format:text; defaultVar:order(data.ship_int_zip);'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
 </div>
-<div data-bind='var:order(data.ship_country);format:text;'></div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
 </address>
 
 
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul id='cartStuffList' data-bind="var: order(stuff); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
+	<ul id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
 	</td>
 </tr>
 </table>
@@ -1509,15 +1510,6 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 </div>
-
-
-
-Add to cart is broken. quickstart.js handleaddtocart and store_product add to cart functions. These are a mess. 
-
-navcat display is broken, but on it's way to being better. category template is set up to use new renderFormat for categoryList.
- -> if detail not set (min,more,max) then no request is made and only the default data (id,pretty,@products) is available.
- -> setting a detail "WILL" cause a request to be made. template instance gets generated right away and translation occurs in the callback.
- 
 
 
 </body>

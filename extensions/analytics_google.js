@@ -50,10 +50,12 @@ The addTriggers will re-execute if this script isn't loaded until it has finishe
 
 			addTriggers : {
 				onSuccess : function(){
+app.u.dump("BEGIN analytics_google.callbacks.addTriggers.onSuccess");
+
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object')	{
 
-app.u.dump("BEGIN analytics_google.callbacks.addTriggers");
+app.u.dump(" -> adding triggers");
 app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/index.html']);})
 app.ext.myRIA.template.categoryTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]);})
 app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/product/'+P.pid]);})
@@ -74,26 +76,25 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 	_gaq.push(['_addTrans',
 		  P.orderID,           // order ID - required
 		  '', // affiliation or store name
-		  order['data.order_total'],          // total - required
-		  order['data.tax_total'],           // tax
-		  order['ship.selected_price'],          // shipping
+		  order['sum/order_total'],          // total - required
+		  order['sum/tax_total'],           // tax
+		  order['sum/ship_total'],          // shipping
 		  order['ship/city'],       // city
-		  order['ship/state'],     // state or province
-		  order['data.ship_country']             // country
+		  order['ship/region'],     // state or province
+		  order['ship/countrycode']             // country
 	   ]);
 
-	var L = order.stuff.length;
-	app.u.dump(" -> "+L+" items in stuff");
+	var L = order['@ITEMS'].length;
+	app.u.dump(" -> "+L+" items in @ITEMS");
 
 	for(var i = 0; i < L; i += 1)	{
-//		app.u.dump(" -> "+i+": stid = "+order.stuff[i].stid+" and qty = "+order.stuff[i]['qty']);
 		_gaq.push(['_addItem',
 			P.orderID,         // order ID - necessary to associate item with transaction
-			order.stuff[i].product,         // SKU/code - required
-			order.stuff[i].prod_name,      // product name - necessary to associate revenue with product
-			order.stuff[i].stid, // category or variation
-			order.stuff[i].base_price,        // unit price - required
-			order.stuff[i].qty             // quantity - required
+			order['@ITEMS'][i].product,         // SKU/code - required
+			order['@ITEMS'][i].prod_name,      // product name - necessary to associate revenue with product
+			order['@ITEMS'][i].stid, // category or variation
+			order['@ITEMS'][i].base_price,        // unit price - required
+			order['@ITEMS'][i].qty             // quantity - required
 			]);
 		}
 	_gaq.push(['_trackTrans']);

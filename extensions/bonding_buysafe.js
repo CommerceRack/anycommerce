@@ -86,7 +86,7 @@ if(buySAFE.Hash.length > 0)	{
 		var order = app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
-	   buySAFE.Guarantee.subtotal = order['data.order_subtotal']
+	   buySAFE.Guarantee.subtotal = order['sum/items_total']
 	   buySAFE.Guarantee.email = order['bill/email'];
 	   WriteBuySafeGuarantee("JavaScript");	
 	

@@ -37,7 +37,7 @@ the static path below will stop working 1 year after the deployment data (ex: 20
 
 -->
 <script type="text/javascript">
-var myControl;
+var app;
 var myCreole;
 var myExtensions = [
 	{"namespace":"store_prodlist","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201228/extensions/store_prodlist.js"},
@@ -50,16 +50,16 @@ var myExtensions = [
 var keywords4Search
 $(function() {
 //NOTE - special characters need to be stripped from elastic searches
-	myControl = new zController({
+	app = new zController({
 		"release":"20120712072100" //increment this with each change. should solve caching issues.
 		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
 	myCreole = new Parse.Simple.Creole();
 	});
 
 function myAppIsLoaded()	{
-	myControl.util.dump("BEGIN myAppIsLoaded.");
-	myControl.ext.myRIA.action.showCarousel({"parentID":"prodlistCarousel","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_PREORDER"}}}});
-	myControl.ext.myRIA.action.showCarousel({"parentID":"prodlistCarousel2","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}});
+	app.u.dump("BEGIN myAppIsLoaded.");
+	app.ext.myRIA.a.showCarousel({"parentID":"prodlistCarousel","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_PREORDER"}}}});
+	app.ext.myRIA.a.showCarousel({"parentID":"prodlistCarousel2","query":{"size":"10","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}});
 	}
 
 </script>
@@ -70,7 +70,7 @@ function myAppIsLoaded()	{
 
 
 <div class='ui-widget prodlistCarouselContainer'>
-	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='myControl.ext.myRIA.util.showCart();'>Checkout Now</div>
+	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='app.ext.myRIA.u.showCart();'>Checkout Now</div>
 	<ul id="prodlistCarousel" class="jcarousel-skin-proximus"></ul>
 </div>
 
@@ -78,7 +78,7 @@ function myAppIsLoaded()	{
 
 
 <div class='ui-widget prodlistCarouselContainer'>
-	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='myControl.ext.myRIA.util.showCart();'>Checkout Now</div>
+	<div class='checkoutNowButton ui-button-text ui-button ui-state-highlight' onClick='app.ext.myRIA.u.showCart();'>Checkout Now</div>
 	<ul id="prodlistCarousel2" class="jcarousel-skin-proximus"></ul>
 </div>
 
@@ -96,7 +96,7 @@ the loadingBG class is removed (must be that classname) when the template is tra
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
 <li id='productListTemplate' class='loadingBG fourColListItem fourColProdListItem' >
-	<div onClick="myControl.ext.myRIA.util.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+	<div onClick="app.ext.myRIA.u.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='250' height='160' />
 		</div>
@@ -106,7 +106,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
 	</div>
 
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="myControl.ext.myRIA.util.handleAddToCart(this.id); return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id); return false;">
 		<input type="hidden" data-bind='var: product(pid); format:atcFixedQuantity; extension:store_product;' name="quantity" value="1">
 		<div class='atcSuccessMessage' data-bind='var:product(pid);format:assignAttribute; attribute:id; valuePretext:atcMessaging_;'></div>
 		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>

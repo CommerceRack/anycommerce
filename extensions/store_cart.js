@@ -217,7 +217,7 @@ formerly showCart
 		displayCart :  {
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN app.ext.store_cart.callbacks.displayCart.onSuccess');
-				app.renderFunctions.translateTemplate(app.data.cartItemsList.cart,tagObj.parentID);
+				app.renderFunctions.translateTemplate(app.data.cartItemsList,tagObj.parentID);
 				}
 			},
 
@@ -229,7 +229,7 @@ formerly showCart
 				var stid = app.ext.store_cart.u.getStuffIndexBySTID($('#'+tagObj.parentID).attr('data-stid'));
 				app.u.dump(" -> stid: "+stid);
 				app.u.dump(" -> tagObj.parentID: "+tagObj.parentID);
-				app.renderFunctions.translateTemplate(app.data.cartItemsList.cart.stuff[stid],tagObj.parentID);
+				app.renderFunctions.translateTemplate(app.data.cartItemsList['@ITEMS'][stid],tagObj.parentID);
 				}
 			}
 		}, //callbacks
@@ -316,24 +316,17 @@ $tag.click(function(){
 
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.formats.shipMethodsAsRadioButtons');
+				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
-				var shipName;
+				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
 				var L = data.value.length;
-
-
-				var id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.
 				for(var i = 0; i < L; i += 1)	{
-					isSelectedMethod = false;
+					id = data.value[i].id; //shortcut of this shipping methods ID.
+					isSelectedMethod = (id == app.data.cartItemsList['want'].shipping_id) ? true : false; //is this iteration for the method selected.
 					safeid = app.u.makeSafeHTMLId(data.value[i].id);
-					id = data.value[i].id;
+					app.u.dump(" -> id: "+id+" and isSelected: "+isSelectedMethod);
 
-//whether or not this iteration is for the selected method should only be determined once, but is used on a couple occasions, so save to a var.
-					if(id == app.data.cartItemsList.cart['ship.selected_id'])	{
-						isSelectedMethod = true;
-						}
-
-//app.u.dump(' -> id = '+id+' and ship.selected_id = '+app.data.cartItemsList.cart['ship.selected_id']);
+//app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartItemsList['want/shipping_id']);
 					
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					
@@ -341,10 +334,10 @@ $tag.click(function(){
 					if(isSelectedMethod)
 						o+= ' selected ';
 					o += "shipcon_"+safeid; 
-					o += "'><input type='radio' name='ship.selected_id' id='ship-selected_id_"+safeid+"' value='"+id+"' onClick='app.ext.store_cart.u.shipMethodSelected(this.value,\""+safeid+"\"); app.model.dispatchThis(\"immutable\"); '";
+					o += "'><label><input type='radio' name='want/shipping_id' value='"+id+"' onClick='app.ext.store_cart.u.shipMethodSelected(this.value); app.model.dispatchThis(\"immutable\"); '";
 					if(isSelectedMethod)
 						o += " checked='checked' "
-					o += "/><label for='ship-selected_id_"+safeid+"'>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
+					o += "/>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
 					}
 				$tag.html(o);
 				} //shipMethodsAsRadioButtons
@@ -384,10 +377,12 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
 						}
 					else	{
-						$modal.empty().dialog('open'); //empty to remove any previous content.
+						$('#modalCartContents',$modal).empty(); //empty to remove any previous content.
+						$('.appMessaging',$modal).empty(); //errors are cleared because if the modal is closed before the default error animation occurs, errors become persistent.
+						$modal.dialog('open');
 						}
 					if(P.showLoading === true)	{
-						$modal.append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
+						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
 						$modal.append(app.renderFunctions.transmogrify('modalCartContents',P.templateID,app.data['cartItemsList']));
@@ -415,13 +410,10 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 
 //run when a shipping method is selected. updates cart/session and adds a class to the radio/label
 //the dispatch occurs where/when this function is executed, NOT as part of the function itself.
-			shipMethodSelected : function(shipID,safeID)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.uities.');	
-//				app.u.dump('value = '+shipID);	
-				app.calls.cartSet.init({'ship.selected_id':shipID});
+			shipMethodSelected : function(shipID)	{
+				app.calls.cartSet.init({'want/shipping_id':shipID});
 				app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init(); //updates shiping rates AND updates cart (though doesn't request cart).
 				this.updateCartSummary();
-//				app.u.dump('END app.checkoutFunctions.ShipMethod. shipID = '+shipID);			
 				}, //updateShipMethod
 
 
@@ -451,17 +443,15 @@ Parameters expected are:
 					}
 				else	{
 					var $parent = $('#'+P.parentID);
-					var L = app.data.cartItemsList.cart.stuff.length;
+					var L = app.data.cartItemsList['@ITEMS'].length;
 					var stid; //stid for item in loop.
 //					app.u.dump(" -> items in stuff = "+L);
 					
 					for(var i = 0; i < L; i += 1)	{
-						stid = app.data.cartItemsList.cart.stuff[i].stid;
+						stid = app.data.cartItemsList['@ITEMS'][i].stid;
 //						app.u.dump(" -> STID: "+stid);
-						$parent.append(app.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},P.templateID,app.data.cartItemsList.cart.stuff[i]));
+						$parent.append(app.renderFunctions.transmogrify({'id':'cartViewer_'+stid,'stid':stid},P.templateID,app.data.cartItemsList['@ITEMS'][i]));
 //						app.u.dump(" -> stid["+i+"] = "+stid);
-//						$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,{"id":"cartViewer_"+stid,"stid":stid}));
-//						app.renderFunctions.translateTemplate(app.data.cartItemsList.cart.stuff[i],"cartViewer_"+stid);
 //make any inputs for coupons disabled.
 						if(stid[0] == '%')	{$parent.find(':input').attr({'disabled':'disabled'})}
 							
@@ -472,10 +462,10 @@ Parameters expected are:
 //useful if you need to reference something in the cart and all you have is the stid.
 //returns the index so that you can point to it.
 			getStuffIndexBySTID : function(stid)	{
-				var L = app.data.cartItemsList.cart.stuff.length;
+				var L = app.data.cartItemsList['@ITEMS'].length;
 				var r = false;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartItemsList.cart.stuff[i].stid == stid)	{
+					if(app.data.cartItemsList['@ITEMS'][i].stid == stid)	{
 						r = i;
 						break; //once we have a match, kill the loop.
 						}
@@ -538,10 +528,10 @@ so if an accessory showed up on four items in the cart, it'd be higher in the li
 				var proda; //product accessories for the item in focus.
 				var prodArray = new Array();
 				var i,j,L,M; //used in the two loops below. yes, i know loops inside of loops are bad, but these are small datasets we're dealing with.
-				M = app.data.cartItemsList.cart['stuff'].length;
+				M = app.data.cartItemsList['@ITEMS'].length;
 //				app.u.dump(" -> items in cart = "+M);
 				for(j = 0; j < M; j += 1)	{
-					if(proda = app.data.cartItemsList.cart['stuff'][j]['full_product']['zoovy:accessory_products'])	{
+					if(proda = app.data.cartItemsList['@ITEMS'][j]['full_product']['zoovy:accessory_products'])	{
 //						app.u.dump(" -> item has accessories: "+proda);
 						prodArray = proda.split(',');
 						L = prodArray.length
