@@ -1222,7 +1222,9 @@ respond accordingly.
 						}
 					},
 				error: function(a,b,c) {
-					app.u.throwMessage("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")");
+					var msg = app.u.errMsgObject("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")",123);
+					msg.skipAutoHide = true;
+					app.u.throwMessage(msg);
 					app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					app.u.dump(c);
 					}
