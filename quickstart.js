@@ -533,8 +533,11 @@ need to be customized on a per-ria basis.
 
 		pageTransition : function($o,$n)	{
 			$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
-			$n.slideDown(3000);
-			$o.slideUp(1000);
+			$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
+
+//This is another example transition. old content slides out and new content slides in.
+//			$n.slideDown(3000);
+//			$o.slideUp(1000);
 			},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -757,6 +760,11 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 */
 				var r = false;
 				var $old = $("#mainContentArea :visible:first"); //used for transition (actual and validation).
+//clicking to links (two product, for example) in a short period of time was rendering both pages at the same time.
+//this will fix that and only show the last clicked item. state of the world render this code obsolete.
+				if($old.length)	{
+					$old.siblings().hide(); //make sure only one 'page' is visible.
+					}
 				app.ext.myRIA.u.closeAllModals();  //important cuz a 'showpage' could get executed via wiki in a modal window.
 
 				if(typeof infoObj != 'object')	{infoObj = {}} //could be empty for a cart or checkout
@@ -1145,12 +1153,15 @@ P.listID (buyer list id)
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
 				if(P.pageType == 'cart'){r = false; app.u.dump('fail 0');}
-				if(P.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 1");}
-				if(P.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 2");}
+				else if(P.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 1");}
+				else if(P.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 2");}
 				else if(P.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == P.pid){r = false; app.u.dump("fail 3");}
 				else if($old.data('templateid') == 'companyTemplate' && P.pageType == 'company')	{r = false; app.u.dump("fail 4");}
 				else if($old.data('templateid') == 'customerTemplate' && P.pageType == 'customer')	{r = false; app.u.dump("fail 5");}
 				else if($old.data('templateid') == 'searchTemplate' && P.pageType == 'search')	{r = false; app.u.dump("fail 6");}
+				else if(!app.u.determineAuthentication() && this.thisArticleRequiresLogin(P))	{
+					r = false; //if the login modal is displayed, don't animate or it may show up off screen.
+					}
 				else	{
 
 					}
@@ -2134,7 +2145,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
 //				app.u.dump(" -> category(@subcategoryDetail) found");
 //check for the presence of subcats. if none are present, do nothing.
-				if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
+//if detail isn't set on the subcat, fetching subcats isn't necessary anyway.
+				if(bindData.detail && typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
 					numRequests += app.ext.store_navcats.u.getChildDataOf(catSafeID,{},'appCategoryDetailMax');
 					}
 				}

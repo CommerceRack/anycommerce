@@ -44,8 +44,12 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
 
+
 <script type="text/javascript" src="jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
+
+
+
 
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"init.js");
@@ -369,6 +373,7 @@ this will likely become more flexible in the future. ###
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
+<!--	<img src='%PROJECT_URL%/blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox;' width='340' height='340' /> -->
 	
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
@@ -769,7 +774,7 @@ adding classes is not likely to have any bad effects.
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
 			<div id='logMessaging'></div>
-			<div><a href="#" onClick="app.u.logBuyerOut(); return false;">Log Out</a></div>
+			<div><a href="#" onClick="app.u.logBuyerOut(); showContent('category',{'navcat':'.'}); return false;">Log Out</a></div>
 			
 			<section id='buyerAddresses' class='clearfix'>
 

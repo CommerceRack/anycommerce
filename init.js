@@ -18,7 +18,7 @@ app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
 //app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
 //app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','addTriggers']);
 //app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
-//app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); (not working yet)
+//app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); // (not working yet)
 
 
 

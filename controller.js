@@ -815,8 +815,8 @@ AUTHENTICATION/USER
 
 //## allow for targetID to be passed in.
 		logBuyerOut : function()	{
-	
-			app.calls.authentication.zoovyLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out','targetID':'logMessaging'});
+// ,'targetID':'logMessaging' was removed from the line below in 201239 to give more flexibility to apps. add a class of appMessaging to your app and the log will appear there.
+			app.calls.authentication.zoovyLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 			app.calls.refreshCart.init({},'immutable');
 			app.vars.cid = null; //nuke cid as it's used in the soft auth.
 			app.model.dispatchThis('immutable');

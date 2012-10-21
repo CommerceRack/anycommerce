@@ -63,10 +63,12 @@ var magicToolBox = function() {
 			startExtension : {
 				onSuccess : function(){
 					app.u.dump("BEGIN magictoolbox.callbacks.startExtension");
-					app.rq.push(['css',0,'examples/magictoolbox/magiczoomplus.css','prBaseStylesheet']);
+					app.rq.push(['css',0,'examples/magictoolbox/magiczoomplus.css','mzpStylesheet']);
 					app.rq.push(['script',0,'examples/magictoolbox/magiczoomplus.js',function(){
-						app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {MagicZoomPlus.refresh();}]);
+						MagicZoomPlus.start();
+						app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {app.u.dump("Refreshing MZP."); setTimeout(function(){MagicZoomPlus.refresh();},2000)}]);
 						}]);
+//						app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {app.u.dump("Refreshing MZP."); MagicZoomPlus.refresh();}]);
 					
 					},
 				onError : function(d){}
@@ -86,7 +88,7 @@ var magicToolBox = function() {
 				var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
 				if(data.value)	{
 					var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
-					app.u.dump('IMGSRC => '+$tag.attr('id'));
+					app.u.dump('ID => '+$tag.attr('id'));
 					$tag.attr('src',imgSrc);
 					$tag.wrap("<a href='"+app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor})+"' class='MagicZoomPlus' id='"+$tag.attr('id')+"_href' />")
 					}
