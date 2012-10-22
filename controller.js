@@ -73,6 +73,9 @@ jQuery.extend(zController.prototype, {
 
 // += is used so that this is appended to anything passed in P.
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
+
+		app.u.dump("##### Release: "+app.model.version+"|"+app.vars.release);
+		app.u.dump(" -> info: "+app.vars.passInDispatchV);
 		
 		app.ext = app.ext || {}; //for holding extensions, including checkout.
 		app.data = {}; //used to hold all data retrieved from ajax requests.
