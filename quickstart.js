@@ -58,6 +58,8 @@ var myRIA = function() {
 			'faqQnATemplate',
 			'billAddressTemplate',
 			'shipAddressTemplate'],
+		"sotw" : {}, //state of the world. set to most recent page info object.
+		"hotw" : new Array(15), //history of the world. contains 15 most recent sotw objects.
 		"session" : {
 			"recentSearches" : [],
 			"recentlyViewedItems" : [],
@@ -781,7 +783,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				infoObj.performJumpToTop = infoObj.performJumpToTop || true; //specific instances jump to top. these are passed in (usually related to modals).
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 
-
+//if there's history (all pages loads after first, execute the onDeparts functions.
+//must be run before handleSandHOTW or history[0] will be this infoObj, not the last one.
+				if(!$.isEmptyObject(app.ext.myRIA.vars.hotw[0]))	{
+					app.ext.myRIA.u.handleTemplateFunctions($.extend(app.ext.myRIA.vars.hotw[0],{"state":"onDeparts"}))
+					}
+				app.ext.myRIA.u.handleSandHOTW(infoObj);
 
 //				app.u.dump("showContent.infoObj: "); app.u.dump(infoObj);
 				switch(pageType)	{
@@ -1124,6 +1131,10 @@ P.listID (buyer list id)
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in P.
 			handleAppInit : function(P)	{
+
+//!!! need to write/test this in IE7
+//				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
+				
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
 					this.handleRQ(app.rq[i]);
@@ -1143,7 +1154,16 @@ P.listID (buyer list id)
 				app.ext.myRIA.a.showContent('',P);
 				return P //returning this saves some additional looking up in the appInit
 				},
+//handle State and History Of The World.
+//will change what state of the world is (P) and add it to History of the world.
+//will make sure history keeps only last 15 states.
+			handleSandHOTW : function(P){
+				app.ext.myRIA.vars.sotw = P;
+				app.ext.myRIA.vars.hotw.unshift(P);
+				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
 				
+				},
+			
 			showtransition : function(P,$old)	{
 				var r = true; //what is returned.
 //				app.u.dump(" -> $old.data('templateid'): "+$old.data('templateid'));
@@ -2324,7 +2344,7 @@ else	{
 				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
-					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[]};
+					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[],"onDeparts":[]};
 //these will change the cursor to 'wait' and back to normal as each template loads/finishes loading.
 					app.ext.myRIA.template[pageTemplates[i]].onInits.push(function(){app.ext.myRIA.u.changeCursor('wait')});
 					app.ext.myRIA.template[pageTemplates[i]].onCompletes.push(function(P){

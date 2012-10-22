@@ -67,10 +67,7 @@ jQuery.extend(zController.prototype, {
 // default to blank, not 'null', or += below will start with 'undefined'.
 //vars should be passed as key:value;  _v will start with zmvc:version.release.
 		app.vars.passInDispatchV = '';  
-		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is defualt.
-
-//set after individual defaults so that what is passed in can override. Should give priority to vars set in P.
-//		app.vars = jQuery.extend(app.vars,P);
+		app.vars.release = app.vars.release || 'unspecified'; //will get overridden if set in P. this is default.
 
 // += is used so that this is appended to anything passed in P.
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
