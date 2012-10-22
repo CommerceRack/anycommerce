@@ -695,6 +695,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			},
 
 		handleResponse_appCartExists : function(responseData)	{
+
 			if(responseData.exists >= 1)	{
 				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				}

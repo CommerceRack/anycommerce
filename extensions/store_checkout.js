@@ -72,6 +72,22 @@ a callback was also added which just executes this call, so that checkout COULD 
 					},'immutable');
 				}
 			}, //cartGoogleCheckoutURL	
+			
+			
+//cmdObj - see http://www.zoovy.com/webdoc/?VERB=DOC&DOCID=51609 for details.
+		cartPaymentQ : 	{
+			init : function(cmdObj,tagObj)	{
+//make sure id is set for inserts.
+				if(cmdObj.cmd == 'insert' && !cmdObj.id)	{cmdObj.id = app.u.guidGenerator()}
+				cmdObj['_cmd'] = "cartPaymentQ"
+				this.dispatch(cmdObj,tagObj);
+				return 1;
+				},
+			dispatch : function(cmdObj,tagObj)	{
+				
+				app.model.addDispatchToQ(cmdObj,tagObj,'immutable');
+				}
+			}, //cartPaymentQ
 
 		cartPaypalSetExpressCheckout : {
 			init : function()	{
@@ -193,12 +209,12 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var payObj = {};
 
 _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
+//validation has already occured to make sure all the fields are populated and CC# passed checksum.
+				
+
 // initially, was serializing the payment panel only.  Issues here with safari.
 // cc info is saved in memory so that if payment panel is reloaded, cc# is available. so that reference is used for cc and cv.
-				payObj['payment.cc'] = $('#payment-cc').val();
-				payObj['payment.cv'] = $('#payment-cv').val();
-				payObj['payment.yy'] = $('#payment-yy').val();
-				payObj['payment.mm'] = $('#payment-mm').val();
+
 				payObj['_cmd'] = 'cartOrderCreate';
 				payObj['_tag'] = {"callback":callback,"extension":"convertSessionToOrder","datapointer":"cartOrderCreate"}
 				
@@ -359,6 +375,8 @@ error would mean something was not complete.
 					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
 					}
 				else	{
+//okay, now build the paymentQ. This will add 1 payment to the Q. Giftcards et all will be handled by now.
+					app.ext.store_checkout.u.buildPaymentQ();
 					app.ext.store_checkout.calls.cartOrderCreate.init("checkoutSuccess");
 					}
 				app.model.dispatchThis('immutable');
@@ -413,6 +431,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('#data-'+type+'_state').removeAttr('required').parent().removeClass('mandatory');
 					}
 				}, //countryChange
+
+//NOTE TO SELF:
+//use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
+//that way if a new payment type is added, it's handled (as long as there's no extra inputs).
+			buildPaymentQ : function()	{
+				
+				var payby = $("input:radio[name=checkout/payby]").val()
+				
+				if(payby == 'CREDIT')	{
+					app.ext.store_checkout.calls.addPaymentQ.init({"cmd":"insert","ID":"SETMETOGUID","tender":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
+					}
+				
+				
+				},
+
 
 //pass in either 'bill' or 'ship' to determine if any predefined addresses for that type exist.
 //buyerAddressList data should already have been retrieved by the time this is executed.
