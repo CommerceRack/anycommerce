@@ -9,9 +9,8 @@ body,html	{font-size:100%;}
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
 loadingBG classname is removed once template is rendered.
 note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
-note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
 */
-.loadingBG	{background-image:url(loading.gif); background-repeat: no-repeat; background-position: center center; min-height:100px; min-width:100px;}
+.loadingBG	{background:url(loading.gif) no-repeat center center; min-height:100px; min-width:100px;}
 li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center; min-height:20px; min-width:20px;}
 span.wait	{display:inline-block;}
 
@@ -119,7 +118,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 /* messaging css. some error css is defined in the jqueryui styles */
-.appMessage	{margin-bottom:3px; text-align:left;}
+.appMessage	{margin-bottom:3px;}
 .appMessage .ui-icon	{float:left; margin:4px 5px;}
 .appMessage {padding:5px;} /* add padding to children, not parent, that way we can empty the parent and no space is reserved */
 .appMessage ul	{margin-left:12px; font-size:.9em;}
@@ -134,7 +133,7 @@ and offMenu is toggle off, hiding the change button.
 
 /* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
 .sideline	{float:right; width:200px; margin:0 0 24px 24px;}
-.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+.sideline li a	{padding:5px 0; text-decoration:none;} /* recommend at least 5px vert padding for mobile/pad */
 
 
 
@@ -150,6 +149,7 @@ and override using classes or id's as needed.
 .listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
 .noPadOrMargin	{padding:0; margin:0;}
 .fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
 
 .quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 

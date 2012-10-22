@@ -387,7 +387,7 @@ see jquery/api webdoc for required/optional param
 
 		buyerPasswordUpdate : {
 			init : function(password,tagObj)	{
-				app.u.dump("BEGIN store_crm.calls.buyerPasswordUpdate.init");
+//				app.u.dump("BEGIN store_crm.calls.buyerPasswordUpdate.init");
 				this.dispatch(password,tagObj);
 				return 1;
 				},
@@ -396,7 +396,6 @@ see jquery/api webdoc for required/optional param
 				obj.password = password;
 				obj['_tag'] = tagObj;
 				obj['_cmd'] = "buyerPasswordUpdate";
-				app.u.dump(obj);
 				app.model.addDispatchToQ(obj,'immutable');	
 				}
 			},

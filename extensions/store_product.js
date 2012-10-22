@@ -651,7 +651,7 @@ NOTES
 //tagObj is optional and allows for custom callback to be used. the default is fairly ordinary.
 
 			handleAddToCart : function(formID,tagObj)	{
-				alert(formID);  //should stop the submit.
+//				alert(formID);  //should stop the submit.
 //some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
 //then create a callback that does nothing. IMHO, you should always let the user know the item was added.
 //this easily allows for an override to do something more elaborate.

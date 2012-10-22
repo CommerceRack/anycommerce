@@ -21,12 +21,12 @@
 
 
 var zController = function(params) {
-	this.u.dump('zController has been instantiated');
+	this.u.dump('zController has been initialized');
 	if(typeof Prototype == 'object')	{
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
 //zglobals is not required in the UI, but is for any
-	else if(typeof zGlobals != 'object' && !params.vars.noVerifyzGlobals)	{
+	else if(typeof zGlobals != 'object' && !params.noVerifyzGlobals)	{
 		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
 		}
 	else	{
@@ -40,7 +40,6 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
-		this.u.dump(" -> initialize executed.");
 //		app = this;
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nexted functions are preserved. If duplicates, 'this' will override P.
@@ -107,7 +106,6 @@ copying the template into memory was done for two reasons:
 
 
 	onReady : function()	{
-		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
 /*
 
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
@@ -119,14 +117,12 @@ A session ID could be passed in through vars, but app.sessionId isn't set until 
 		if(app.vars.noVerifyzjsid && app.vars.sessionId)	{
 //you'd get here in the UI.
 			app.sessionId = app.vars.sessionId
-			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.noVerifyzjsid)	{
 			//for now, do nothing.  this may change later.
-			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.sessionId)	{
-			app.calls.appCartExists.init(P.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.appCartExists.init(app.vars.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.model.dispatchThis('immutable');
 			}
 //if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
@@ -410,7 +406,7 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 				if(app.data.appCartExists.exists == 1)	{
-					app.u.dump(' -> valid session id.  Proceed.');
+//					app.u.dump(' -> valid session id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
@@ -473,8 +469,8 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
 				var msg = app.u.successMsgObject(tagObj.message);
-//pass in tagObj as well, as that contains info for parentID.
-				app.u.throwMessage($.extend(msg,tagObj));
+				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
+				app.u.throwMessage(msg);
 				}
 			}, //showMessaging
 /*
@@ -538,20 +534,6 @@ app.u.handleCallback(tagObj);
 			},
 			
 
-//pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
-//ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
-//will be used in updates to translator.
-		getObjValFromDotString : function (dotStr,obj)	{
-			function multiIndex(obj,is) {  // obj,[1,2,3] -> obj[1][2][3]
-				return is.length ? multiIndex(obj[is[0]],is.slice(1)) : obj
-				}
-			function pathIndex(is,obj) {       // obj,'1.2.3' -> obj[1][2][3]
-				return multiIndex(obj,is.split('.'))
-				}
-			return pathIndex(dotStr,obj);
-			},
-
-
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 		guidGenerator : function() {
 			var S4 = function() {
@@ -572,6 +554,7 @@ app.u.handleCallback(tagObj);
 			},
 			
 
+
 //jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
 		jumpToAnchor : function(id)	{
 			window.location.hash=id;
@@ -585,17 +568,14 @@ app.u.handleCallback(tagObj);
 			app.u.dump(err);
 			},
 /*
-msg could be a string or an object.
+err could be a string or an object.
 if an object, could be: {errid,errmsg,errtype}   OR   {msg_X_txt,msg_X_type,msg_X_id}
  -> if msg_X format, X will be an integer and _msgs will be set to indicate the # of messages.
 
 $target - a jquery object of the target/destination for the message itself. Will check err for parentID, targetID and if not present, check to see if globalMessaging is present AND visible.  If not visible, will open modal.
 returns the id of the message, so that an action can be easily added if needed (onclick or timeout w/ a hide, etc)
-
-skipAutoHide - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
-and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
-		throwMessage : function(msg,skipAutoHide){
+		throwMessage : function(msg){
 //			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
@@ -622,7 +602,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				$container.append(this.formatMessage(msg)).prependTo($target); //always put new messages at the top.
 				}
 			else if(typeof msg === 'object')	{
-				skipAutoHide = msg.skipAutoHide || false;
+//				app.u.dump("message is an object:"); app.u.dump(msg);
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
@@ -637,7 +617,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				app.u.dump("WARNING! - unknown type ["+typeof err+"] set on parameter passed into app.u.throwMessage");
 				r = false; //don't return an html id.
 				}
-			if(skipAutoHide !== true)	{
+			if(typeof msg == 'string' || (typeof msg == 'object' && !msg.skipAutoHide))	{
 				setTimeout(function(){
 					$('.'+messageClass).slideUp(2000);
 					},8000); //shrink message after a short display period
@@ -736,9 +716,9 @@ pass in additional information for more control, such as css class of 'error' an
 				}
 
 //the zMessage class is added so that these warning can be cleared (either universally or within a selector).
-			var r = "<div class='ui-widget appMessage clearfix'>";
+			var r = "<div class='ui-widget appMessage'>";
 			r += "<div class='ui-state-"+obj.uiClass+" ui-corner-all'>";
-			r += "<div class='clearfix stdMargin'><span class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/div>";
+			r += "<div class='clearfix'><span class='ui-icon ui-icon-"+obj.uiIcon+"'></span>"+obj.message+"<\/div>";
 			r += "<\/div><\/div>";
 			return r;
 			},
@@ -824,8 +804,8 @@ If the user has subscribed to email during this visit, then guest will be return
 if there was no login of any kind, they're not authenticated. false is returned.
 
 use this function to determine IF you need to make calls, do NOT add any calls if auth level isn't as high as needed.
+*/
 
-commented out in 201238
 		whatAuthIsThisSession : function()	{
 			var r = false; //what is returned.
 			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
@@ -835,46 +815,6 @@ commented out in 201238
 			else{}
 			return r;
 			}, //whatAuthIsThisSession
-
-*/
-
-
-//pretty straightforward. If a cid is set, the session has been authenticated.
-//if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
-//if no cid but email, they are a guest.
-//if logged in via facebook, they are a thirdPartyGuest.
-//this could easily become smarter to take into account the timestamp of when the session was authenticated.
-			
-			determineAuthentication : function(){
-				var r = 'none';
-				if(this.thisIsAnAdminSession())	{
-					r = 'admin';
-					}
-//was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
-				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
-				else if(app.model.fetchData('cartItemsList') && app.u.isSet(app.data.cartItemsList.cart.cid))	{
-					r = 'authenticated';
-					app.vars.cid = app.data.cartItemsList.cart.cid;
-					}
-//need to run third party checks prior to default 'guest' check because data.bill_email will get set for third parties
-//and all third parties would get 'guest'
-				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{
-					r = 'thirdPartyGuest';
-//					app.thirdParty.fb.saveUserDataToSession();
-					}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.cart['data.bill_email'])	{
-					r = 'guest';
-					}
-				else	{
-					//catch.
-					}
-//				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
-
-				return r;
-				},
-
-
 
 //pass in a simple array and all the duplicates will be removed.
 //handy for dealing with product lists created on the fly (like cart accessories)
@@ -923,6 +863,7 @@ BROWSER/OS
 
 
 // .browser returns an object of info about the browser (name and version).
+//this is a function because .browser is deprecated and will need to be replaced, but I need something now. !!! fix in next version.
 		getBrowserInfo : function()	{
 			var r;
 			var BI = jQuery.browser; //browser information. returns an object. will set 'true' for value of browser 
@@ -1001,13 +942,14 @@ VALIDATION
 //used for validating strings only. checks to see if value is defined, not null, no false etc.
 //returns value (s), if it has a value .
 		isSet : function(s)	{
-			var r;
-			if(s == null || s == 'undefined' || s == '')
-				r = false;
-			else if(typeof s != 'undefined')
-				r = s;
-			else
-				r = false;
+			var r = false;
+			if(s)	{
+				s = $.trim(s); //clear whitespace. added 2012-11-13. means ' ' now returns false.
+				if(s == null || s == 'undefined' || s == '' || s === 'undefined')
+					r = false;
+				else if(typeof s != 'undefined')
+					r = s;
+				}
 			return r;
 			}, //isSet
 
@@ -1681,6 +1623,7 @@ $r.find('[data-bind]').each(function()	{
 			value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
 			}
 		if(!app.u.isSet(value) && bindData.defaultVar)	{
+//			app.u.dump("GOT HERE!!!! - defaultVar: "+bindData.defaultVar);
 			value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
 //					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
 			}
@@ -1720,7 +1663,7 @@ $r.find('[data-bind]').each(function()	{
 				if(bindData.wrap) {$focusTag.wrap(bindData.wrap)}
 				}
 			else	{
-					app.u.throwMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)");
+					$('#globalMessaging').append(app.u.formatMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)"));
 					app.u.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
 //						app.u.dump(bindData);
 				}
@@ -1835,7 +1778,7 @@ $('#'+safeTarget).replaceWith($tmp);
 						value = data['payments'][attributeID.substr(9)];
 						}
 					else if(attributeID.substring(0,12) == 'full_product' && typeof data['full_product'] == 'object')	{
-//						app.u.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
+						app.u.dump(" -> full_product MATCH ("+attributeID.substr(13)+")");
 						value = data['full_product'][attributeID.substr(13)];
 						}
 					else	{
@@ -1955,7 +1898,7 @@ the first two cases below are to handle instances of this.
 				$tag.attr('src',imgSrc);
 				}
 			else	{
-				$tag.css('display','none'); //if there is no image, hide the src. 
+				$tag.css('display','none'); //if there is no image, hide the src.  !!! added 1/26/2012. this a good idea?
 				}
 			}, //imageURL
 
