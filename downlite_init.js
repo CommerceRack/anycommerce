@@ -119,6 +119,7 @@ app.u.appInitComplete = function()	{
 		$('#hotelListContainer').dialog({
 			'autoOpen':false,
 			'width':'60%',
+			'modal':'true',
 			'height':'500'
 			});
 		$('#hotelListContainer').dialog('open');

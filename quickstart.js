@@ -1731,11 +1731,11 @@ by closing modals only, we can use dialogs to show information that we want to a
 buyer to 'take with them' as they move between  pages.
 */
 			closeAllModals : function(){
-				app.u.dump("BEGIN myRIA.u.closeAllModals");
+//				app.u.dump("BEGIN myRIA.u.closeAllModals");
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
-///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));
-					if($dialog.dialog( "option", "modal" ) === true)	{
+//					app.u.dump(" -> id: "+$dialog.attr('id')+" and modal: "+ $dialog.dialog( "option", "modal" ));
+					if($dialog.dialog( "option", "modal" ))	{
 						$dialog.dialog("close"); //close all modal windows.
 						}
 					});
