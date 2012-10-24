@@ -408,7 +408,7 @@ app.u.throwMessage(responseData); is the default error handler.
 		handleTrySession : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
-				if(app.data.appCartExists.exists == 1)	{
+				if(app.data.appCartExists.exists >= 1)	{
 //					app.u.dump(' -> valid session id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
