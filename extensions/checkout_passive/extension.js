@@ -1446,7 +1446,7 @@ $('.addressListPrompt').hide(); //this text needs to be hidden if a user is logg
 
 //make sure paypal is selected payment option. this will trigger a request to select it as well.
 //disable all other payment optins.
-$('#chkout-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
+$('#want-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
 $('#chkoutPayOptionsFieldset input[type=radio]').attr('disabled','disabled');
 
 //disable all ship methods.
