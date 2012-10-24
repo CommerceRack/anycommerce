@@ -60,8 +60,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 //generates the checkout container div and FORM.
 //formerly hardcoded to zContent
 				app.ext.convertSessionToOrder.vars.containerID = containerID;
-				$('#'+containerID).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer'));
 				app.ext.convertSessionToOrder.u.createProcessCheckoutModal();
+
+				$('#'+containerID).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer'));
+
+				if(app.u.determineAuthentication() == 'authenticated')	{
+					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
+					$('#want-create_customer').val(0);
+					}
 				
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
@@ -73,26 +79,19 @@ a callback was also added which just executes this call, so that checkout COULD 
 					app.ext.convertSessionToOrder.vars['payment-pt'] = token;
 					app.ext.convertSessionToOrder.vars['payment-pi'] = payerid;
 					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"convertSessionToOrder","callback":"handlePayPalIntoPaymentQ"});
+					app.calls.refreshCart.init({},'immutable'); //need cart updated with paymentQ for callback on cartPaymentQ above.
 					app.model.dispatchThis('immutable');
 //					r += app.ext.store_checkout.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
 					}
-				else	{
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
-//need to reset paypal vars in case cart/session was manipulated.
-// ### NOTE - in an all RIA environment, this isnt needed. the add to cart functions should do this. however, in a hybrid (1PC) it is needed.
-					app.ext.store_checkout.u.nukePayPalEC();
+				else if(app.ext.store_checkout.u.thisSessionIsPayPal())	{
+					if(!app.ext.store_checkout.u.aValidPaypalTenderIsPresent())	{app.ext.store_checkout.u.nukePayPalEC();}
+					r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+					app.model.dispatchThis("immutable");
 					}
-
-
-//app.data is passed in because something needs to be, but this is generated prior to any ajax calls occuring (possibly) so the cart can't be passed in. !!! can we just pass in an empty object? seems better. test this.
-				app.renderFunctions.translateTemplate({},'checkoutContainer');
-
-				r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
-				app.model.dispatchThis("immutable");
-
-				if(app.u.determineAuthentication() == 'authenticated')	{
-					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
-					$('#want-create_customer').val(0);
+				else	{
+					r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+					app.model.dispatchThis("immutable");
 					}
 
 					
@@ -184,40 +183,37 @@ if server validation passes, the callback handles what to do next (callback is m
 				$('#returnFromThirdPartyPayment').hide(); //clear previous third party messaging.
 				$('#chkoutPlaceOrderBtn').attr('disabled','disabled').addClass('ui-state-disabled '); //disable the button to avoid double-click.
 //				return; //die here to test
-				var checkoutIsValid = app.ext.convertSessionToOrder.validate.isValid();
-				
-			
-				app.u.dump(' -> checkoutIsValid = '+checkoutIsValid);
-//adds dispatches regardless of validation.
-				var serializedCheckout = $('#zCheckoutFrm').serializeJSON()
-//for security reasons, cc info is removed from cart/session update if the local validation isn't successful.
-//they are saved in memory for panel updates. if a user leaves checkout and comes back, cc info will have to be re-entered.
-				if(!checkoutIsValid)	{
-					serializedCheckout['payment/cc'] = '';
-					serializedCheckout['payment/cv'] = '';
-					}
-//				app.u.dump(' -> SANITIZED serialized checkout object: ');
-//				app.u.dump(serializedCheckout);
+
+//the buyer could be directed away from the store at this point, so save everything to the session/cart.
+				var serializedCheckout = $('#zCheckoutFrm').serializeJSON();
+				serializedCheckout['want/bill_to_ship_cb'] = null;  //this isn't a valid checkout field. used only for some logic processing.
+				serializedCheckout['payment/cc'] = ''; //cc and cv should never go. They're added as part of cartPaymentQ
+				serializedCheckout['payment/cv'] = '';
 				app.calls.cartSet.init(serializedCheckout);
-				if(checkoutIsValid)	{
-					this.dispatch(callback);
-					app.u.dump(" -> !!! got to valid checkout and adding to dispatchQ. Why isn't there a dispatch here?");
+
+//if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
+				if($("#want-payby_PAYPALEC").is(':checked') && !app.ext.convertSessionToOrder.vars['payment-pt'])	{
+					$('#modalProcessCheckout').append("<h2>Redirecting to PayPal...</h2>");
+					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
 					}
 				else	{
-//					app.u.dump(' -> validation failed.');
+					var checkoutIsValid = app.ext.convertSessionToOrder.validate.isValid();
+					app.u.dump(' -> checkoutIsValid = '+checkoutIsValid);
+					if(checkoutIsValid)	{
+						this.dispatch(callback);
+						}
+					else	{
 //originally, instead of attr(disabled,false) i removed the disabled attribute. This didn't work in ios 5 safari.					
-					$('#chkoutPlaceOrderBtn').attr('disabled',false).removeClass('ui-state-disabled');
-					$('#modalProcessCheckout').dialog('close');
+						$('#chkoutPlaceOrderBtn').attr('disabled',false).removeClass('ui-state-disabled');
+						$('#modalProcessCheckout').dialog('close');
 //without this jump, the create order button jumps up slightly. 
 //this needs to be at the end so all the content above is manipulated BEFORE jumping to the id. otherwise, the up-jump still occurs.
-					app.u.jumpToAnchor('chkoutSummaryErrors');
-					
-//space separating two classes in remove class didn't play well with ipad.
+						app.u.jumpToAnchor('chkoutSummaryErrors');
+						}
 					}
 
 
-
-_gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (validated = '+checkoutIsValid+')']);
+_gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 				
 				return 1;
 				},
@@ -341,17 +337,20 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 //mostly used for the error handling.
 		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
-//do NOT execute handlePaypalFormManipulation here. It's run in panel view.
+				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
+				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+				app.model.dispatchThis('immutable');
 				},
 			onError : function(responseData,uuid)	{
-				responseData['_msg_1_type'] = "It appears something went wrong with PayPal. <br \/>err: "+responseData['_msg_1_type'];
+				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onError');
+				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
 				responseData.skipAutoHide = true;
 				app.u.throwMessage(responseData);
-				app.ext.convertSessionToOrder.u.handleChangeFromPayPalEC();
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
 				app.ext.store_checkout.u.nukePayPalEC();
+				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+				app.model.dispatchThis('immutable');
 				}
 			},		
 
@@ -497,23 +496,14 @@ success would mean the checkout has successfully validated.
 error would mean something was not complete. 
  -> In theory, we shouldn't get errors often because the client side validation should handle most, if not all, errors.
 */
-finishedValidatingCheckout : {
+		finishedValidatingCheckout : {
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.finishedValidatingCheckout.onSuccess');
-				
+			
 				$('#modalProcessCheckout').append("<h2>Creating Order...</h2>");
-				
-//if paypal is selected but a valid token doesn't exist, route to paypal.
-				if($("#want-payby_PAYPALEC").is(':checked') && !app.ext.convertSessionToOrder.vars['payment-pt'])	{
-					$('#modalProcessCheckout').append("<h2>Redirecting to PayPal...</h2>");
-					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
-					}
-				else	{
-					$('#modalProcessCheckout').append("<h2>Creating Order...</h2>");
 //okay, now build the paymentQ. This will add 1 payment to the Q. Giftcards et all will be handled by now.
-					app.ext.store_checkout.u.buildPaymentQ();
-					app.ext.store_checkout.calls.cartOrderCreate.init("checkoutSuccess");
-					}
+				app.ext.store_checkout.u.buildPaymentQ();
+				app.ext.store_checkout.calls.cartOrderCreate.init("checkoutSuccess");
 				app.model.dispatchThis('immutable');
 
 
@@ -538,19 +528,19 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 
 		loadPanelContent : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN convertSessionToOrder(nice).callbacks.loadPanelContent.onSuccess');
+//				app.u.dump('BEGIN convertSessionToOrder(nice).callbacks.loadPanelContent.onSuccess');
 //had some issues using length. these may have been due to localStorage/expired cart issue. countProperties is more reliable though, so still using that one.			
 				var itemsCount = app.model.countProperties(app.data.cartItemsList['@ITEMS']);
 
 				if(itemsCount > 0)	{
-					app.u.dump(" -> into itemsCount IF");
+//					app.u.dump(" -> into itemsCount IF");
 					app.ext.convertSessionToOrder.panelContent.preflight();
 //					app.u.dump(" -> GOT HERE!");
-					app.u.dump(" -> softAuth: "+app.u.determineAuthentication());
+//					app.u.dump(" -> softAuth: "+app.u.determineAuthentication());
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
 					if(app.u.determineAuthentication() != 'none')	{
-						app.u.dump(' -> authentication passed. Showing panels.');
-						app.u.dump(' -> want/bill_to_ship = '+app.data.cartItemsList['want/bill_to_ship']);
+//						app.u.dump(' -> authentication passed. Showing panels.');
+//						app.u.dump(' -> want/bill_to_ship = '+app.data.cartItemsList['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
 //ship address will make itself visible if user is authenticated.
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutAccountInfo');
@@ -627,9 +617,6 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				$('#modalProcessCheckout').dialog('close');
 
 /*
-right now, we're just displaying the payment_status_detail message.  
-v2 should/will be more sophicstiated and actually check the status and do better handling or the response.
-the checkoutSuccessPaymentFailure started to do this but for the sake of getting this out, we improvised. !!!
 note - the click prevent default is because the renderFormat adds an onclick that passes both order and cart id.
 */
 				$('.paymentRequired').append(app.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
@@ -725,8 +712,10 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 			chkoutPreflightFieldset : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.validation.chkoutPreflightFieldset');
 				var valid = 1; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
-				var $errorDiv = $('#chkoutPreflightFieldsetErrors').empty().toggle(false);
-//if the user is authenticated already (logged in) the email input may not even appear, so no need to validate.
+				var $errorDiv = $('#chkoutPreflightFieldsetErrors').empty().toggle(false); //clear all existing errors.
+
+					
+	//if the user is authenticated already (logged in) the email input may not even appear, so no need to validate.
 				if(app.u.determineAuthentication() != 'authenticated')	{
 //					app.u.dump(' -> validating');
 					var $email = $('#data-bill_email');
@@ -758,6 +747,9 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					
 					}
 //				app.u.dump('END app.ext.convertSessionToOrder.validation.chkoutPreflightFieldset');
+				
+
+				
 				return valid;
 				}, //chkoutPreflightFieldset
 
@@ -1048,7 +1040,8 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			preflight : function()	{
-				app.u.dump("BEGIN app.ext.convertSessionToOrder.panelContent.preflightPanel.");
+//				app.u.dump("BEGIN app.ext.convertSessionToOrder.panelContent.preflightPanel.");
+				app.ext.convertSessionToOrder.u.handlePanel('chkoutPreflight'); //reset contents to avoid any duplicate content.
 				var username = app.u.getUsernameFromCart();
 				var className = '';
 				var o; //output.
@@ -1059,23 +1052,23 @@ payment options, pricing, etc
 //username may not be an email address, so only use it if it passes validation.
 				else if(username && app.u.isValidEmail(username))	{email = username;}
 				
-				app.u.dump(" -> authState = "+authState);
-				app.u.dump(" -> username = "+username);
-				app.u.dump(" -> email = "+email);
+//				app.u.dump(" -> authState = "+authState);
+//				app.u.dump(" -> username = "+username);
+//				app.u.dump(" -> email = "+email);
 
 	
 
 //user is already logged in...
 
 					if(authState == 'authenticated')	{
-						app.u.dump(" -> Already Authenticated");
-						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin noListStyle'>";
+//						app.u.dump(" -> Already Authenticated");
+						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin listStyleNone'>";
 						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
 						o += "<input type='hidden'   name='bill/email' id='data-bill_email' value='"+email+"' /><\/ul>";
 						}
 					else	{
 
-						app.u.dump(" -> Login Prompts (default panel behavior/else)");
+//						app.u.dump(" -> Login Prompts (default panel behavior/else)");
 						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='bill/email'>Email<\/label>";
 						o += "<input type='email'   name='bill/email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
 						o += "<button class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleGuestEmail($(\"#data-bill_email\").val());' id='guestCheckoutBtn'>"
@@ -1287,7 +1280,7 @@ in these instances, the selected method in the cart/memory/local storage must ge
 
 //displays the cart contents in a non-editable format in the right column of checkout		
 			cartContents : function()	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.cartContents');
+//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.cartContents');
 				var $container = $('#chkoutCartSummaryContainer').toggle(true); //make sure panel is visible.
 
 /*
@@ -1396,7 +1389,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 
 			handleChangeFromPayPalEC : function()	{
-				app.ext.store_checkout.u.nukePayPalEC(); //kills all local and session paypal payment vars
+//				app.ext.store_checkout.u.nukePayPalEC(); //kills all local and session paypal payment vars
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress');
@@ -1542,7 +1535,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 //run when a payment method is selected. updates cart/session and adds a class to the radio/label.
 //will also display additional information based on the payment type (ex: purchase order will display PO# prompt and input)
 			updatePayDetails : function(paymentID)	{
-				app.u.dump(" -> PAYID = "+paymentID);
+//				app.u.dump(" -> PAYID = "+paymentID);
 //				var paymentID = $("[name='want/payby']:checked").val(), o = '';
 				$('#chkoutPayOptionsFieldsetErrors').empty().hide(); //clear any existing errors from previously selected payment method.
 				$('#chkout-payOptions li .paycon').removeClass('ui-state-active ui-corner-top ui-corner-bottom');
@@ -1553,12 +1546,12 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				var $selectedPayment = $('#paybySupplemental_'+paymentID);
 //only add the 'subcontents' once. if it has already been added, just display it (otherwise, toggling between payments will duplicate all the contents)
 				if($selectedPayment.length == 0)	{
-					app.u.dump(" -> supplemental is empty. add if needed.");
+//					app.u.dump(" -> supplemental is empty. add if needed.");
 					var supplementalOutput = app.u.getSupplementalPaymentInputs(paymentID,app.ext.convertSessionToOrder.vars); //this will either return false if no supplemental fields are required, or a jquery UL of the fields.
-					app.u.dump("typeof supplementalOutput: "+typeof supplementalOutput);
+//					app.u.dump("typeof supplementalOutput: "+typeof supplementalOutput);
 					if(typeof supplementalOutput == 'object')	{
-						app.u.dump(" -> getSupplementalPaymentInputs returned an object");
-						supplementalOutput.addClass(' noPadOrMargin noListStyle ui-widget-content ui-corner-bottom');
+//						app.u.dump(" -> getSupplementalPaymentInputs returned an object");
+						supplementalOutput.addClass(' noPadOrMargin listStyleNone ui-widget-content ui-corner-bottom');
 						$('#payment-mm, #payment-cc, #payment-yy, #payment-cv',supplementalOutput).change(function(){
 							app.ext.convertSessionToOrder.vars[$(this).attr('name')] = $(this).val(); //use name (which coforms to cart var, not id, which is websafe and slightly different 
 							})
@@ -1679,7 +1672,7 @@ note - predefined addresses are hidden and the form is shown so that if the user
 
 */
 			handlePaypalFormManipulation : function()	{
-//			app.u.dump("BEGIN convertSessionToOrder.u.handlePaypalFormManipulation ");
+			app.u.dump("BEGIN convertSessionToOrder.u.handlePaypalFormManipulation ");
 			if(app.data.cartPaypalGetExpressCheckoutDetails && app.data.cartPaypalGetExpressCheckoutDetails['_msgs'])	{
 				//an error occured. error message is displayed as part of callback.
 				}
@@ -1718,7 +1711,7 @@ $('.addressListPrompt').hide(); //this text needs to be hidden if a user is logg
 
 //make sure paypal is selected payment option. this will trigger a request to select it as well.
 //disable all other payment optins.
-$('#chkout-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
+$('#want-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
 $('#chkoutPayOptionsFieldset input[type=radio]').attr('disabled','disabled');
 
 //disable all ship methods.

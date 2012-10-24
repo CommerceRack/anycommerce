@@ -413,8 +413,7 @@ app.u.throwMessage(responseData); is the default error handler.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
 //
-					app.calls.whoAmI.init({'callback':'suppressErrors'},'passive');
-					app.model.dispatchThis('passive');
+					app.calls.whoAmI.init({'callback':'suppressErrors'},'passive'); //get this info when convenient.
 					}
 				else	{
 					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');

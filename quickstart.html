@@ -861,7 +861,7 @@ adding classes is not likely to have any bad effects.
 	</div>
 	
 	<div class='mainColumn'>
-		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>	
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul><!-- productListTemplateResults gets loaded into here -->
 	</div>
 </div>
 
@@ -1497,13 +1497,13 @@ The 'data-action' attribute is used to assign an onclick.
 	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
 	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
 	<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
-
 </menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.loadCSSFile('examples/red.css','bg');">load red css</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.loadCSSFile('examples/blue.css','bg');">load blue css</button>
-
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="alert(app.ext.store_checkout.u.thisSessionIsPayPal());">Alert isPaypal</button>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="alert(app.ext.store_checkout.u.aValidPaypalTenderIsPresent());">Alert aValidPaypalTenderIsPresent</button>
+	
 <form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
 	<fieldset>
 	<legend>Search</legend>

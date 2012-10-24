@@ -78,7 +78,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 		cartPaymentQ : 	{
 			init : function(cmdObj,tagObj)	{
 //make sure id is set for inserts.
-				if(cmdObj.cmd == 'insert' && !cmdObj.ID)	{cmdObj.ID = app.u.guidGenerator()}
+				if(cmdObj.cmd == 'insert' && !cmdObj.ID)	{cmdObj.ID = "201210"+app.u.guidGenerator().substring(0,8)}
 				cmdObj['_cmd'] = "cartPaymentQ";
 				cmdObj['_tag'] = tagObj;
 				this.dispatch(cmdObj);
@@ -723,56 +723,61 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 
 
 
-//only check the cart object. If the uri is checked here, then when 'nukepaypal' is executed and checkout is re-initiated, the uri vars will trigger the paypal code.
-//plus, the token is deleted from the cart when the cart is updated, so we should check there to make sure it is/is not set.
+//This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
-//			app.u.dump("BEGIN convertSessionToCheckout.uities.thisSessionIsPayPal");
-				var r = false; //what is returned.  will be set to true if paypalEC approved.
-	//if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
-				if(app.data.cartItemsList && app.data.cartItemsList.payment)	{
-					var token = app.data.cartItemsList.payment.pt;
-					var payerid = app.data.cartItemsList.payment.pi;
-					app.u.dump("paypal -> token: "+token+" and payerid: "+payerid);
-					if(token && payerid)	{
-						r = true;
-						}
-					}
-				return r;
+				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
 				},
-
-
+//Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
+//according to B, there will be only 1 paypal tender in the paymentQ.
+			aValidPaypalTenderIsPresent : function()	{
+				app.u.dump("BEGIN store_checkout.aValidPaypalTenderIsPresent");
+				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
+					return (Math.round(+new Date(PQI.TIMESTAMP)) > +new Date()) ? true : false;
+					});
+				},
 /*
 once paypalEC has been approved by paypal, a lot of form fields lock down, but the user may decide to change
 payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this if value returned is > 0.
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
 			nukePayPalEC : function() {
+//				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
+				$('#returnFromThirdPartyPayment').hide(); //used to display a 'welcome back' message. should be hidden if paypal is no longer active payment.
+				app.ext.convertSessionToOrder.vars['payment-pt'] = null;
+				app.ext.convertSessionToOrder.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
-					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','id':PQI.ID})
+					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
 
 //pass in a tender/TN [CASH, PAYPALEC, CREDIT] and an array of matching id's is returned.
 //used for when a paypal EC payment exists and has to be removed.
-//if someFunction is set AND it equals a function (typeof), then that function will get executed over each match.
-//the entire lineitem in the paymentQ is passed in.
+//if someFunction is set then that function will get executed over each match.
+//the value returned gets added to an array, which is returned by this function.
+//the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
-				var r = 0; //what is returned. # of items in paymentQ affected.
+//				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
+				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
+				var r = new Array(); //what is returned if someFunction returns anything.
 				if(tender && app.data.cartItemsList && app.data.cartItemsList['@PAYMENTQ'])	{
-					var L = app.data.cartItemsList['@PAYMENTQ'];
-					if(var i = 0; i < L; i += 1)	{
+//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
+					var L = app.data.cartItemsList['@PAYMENTQ'].length;
+//					app.u.dump(" -> paymentQ.length: "+L);
+					for(var i = 0; i < L; i += 1)	{
+//						app.u.dump(" -> "+i+" TN: "+app.data.cartItemsList['@PAYMENTQ'][i].TN);
 						if(app.data.cartItemsList['@PAYMENTQ'][i].TN == tender)	{
-							r += 1;
+							inc += 1;
 							if(typeof someFunction == 'function')	{
-								someFunction(app.data.cartItemsList['@PAYMENTQ'][i])
+								r.push(someFunction(app.data.cartItemsList['@PAYMENTQ'][i]))
 								}
 							}
 						}
 					}
 				else	{
-					app.u.dump("getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
+					app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
 					}
-				return r;
+//				app.u.dump(" -> num tender matches: "+r);
+				return (typeof someFunction == 'function') ? r : inc;
 				},
 
 //for tax to accurately be computed, several fields may be required.

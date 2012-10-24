@@ -11,8 +11,8 @@ loadingBG classname is removed once template is rendered.
 note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
 note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
 */
-.loadingBG	{background-image:url(loading.gif); background-repeat: no-repeat; background-position: center center; min-height:100px; min-width:100px;}
-li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center; min-height:20px; min-width:20px;}
+.loadingBG	{background-image:url(loading.gif) !important; background-repeat: no-repeat !important; background-position: center center; min-height:100px !important; min-width:100px;}
+li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
 span.wait	{display:inline-block;}
 
 /******* global styles - added for cross-browser uniformity or usability ******/
