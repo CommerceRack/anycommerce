@@ -1488,7 +1488,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					}
 //update session.
 				app.calls.cartSet.init({"want/create_customer":X});
-//				app.calls.cartSet.init({"want/create_customer_cb":X});
+				app.calls.cartSet.init({"want/create_customer_cb":X});
 				app.model.dispatchThis('immutable');
 				
 //				app.u.dump('END app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox');
