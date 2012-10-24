@@ -78,14 +78,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 		cartPaymentQ : 	{
 			init : function(cmdObj,tagObj)	{
 //make sure id is set for inserts.
-				if(cmdObj.cmd == 'insert' && !cmdObj.id)	{cmdObj.id = app.u.guidGenerator()}
-				cmdObj['_cmd'] = "cartPaymentQ"
-				this.dispatch(cmdObj,tagObj);
+				if(cmdObj.cmd == 'insert' && !cmdObj.ID)	{cmdObj.ID = app.u.guidGenerator()}
+				cmdObj['_cmd'] = "cartPaymentQ";
+				cmdObj['_tag'] = tagObj;
+				this.dispatch(cmdObj);
 				return 1;
 				},
-			dispatch : function(cmdObj,tagObj)	{
-				
-				app.model.addDispatchToQ(cmdObj,tagObj,'immutable');
+			dispatch : function(cmdObj)	{
+				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
 			}, //cartPaymentQ
 
@@ -311,93 +311,19 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 				app.u.throwMessage(responseData,uuid);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.data.cartItemsList['payment.pt'] = null;
-				app.data.cartItemsList['payment.pi'] = null;
-				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null}); 
+				app.data.cartItemsList.payment.pt = null;
+				app.data.cartItemsList.payment.pi = null;
+				app.calls.cartSet.init({'payment' : {'pt':null,'pi':null}}); 
 				app.calls.refreshCart.init({},'immutable');
 				app.model.dispatchThis('immutable');
 //### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
 				setTimeout("$('#paybySupplemental_PAYPALEC').empty().addClass('ui-state-highlight').append(\"It appears something went wrong with PayPal. Please <a href='#' onClick='app.ext.convertSessionToOrder.uities.handleChangeFromPayPalEC();'>Click Here</a> to choose an alternate payment method.\")",2000);
 				}
-			},		
-
-
-//executing this will not only return which items have had an inventory update (in a pretty format) but also create the dispatches
-// to update the cart and then to actually update it as well.
-// the individual cart update posts (there may be multiple) go without the callback. If callback is added, a ping to execute it is run.
-// !!! is this necessary? Doesn't the inventory check actually modify the cart? look in to this.
-		handleInventoryUpdate : {
-
-				onSuccess : function(tagObj)	{
-
-//					app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.handleInventoryUpdate.onSuccess');
-					var r = false; //if false is returned, then no inventory update occured.
-	//				var L = app.model.countProperties(app.data[tagObj.datapointer]);
-					if(!$.isEmptyObject(app.data[tagObj.datapointer]) && !$.isEmptyObject(app.data[tagObj.datapointer]['%changes']))	{
-						app.u.dump(' -> adjustments are present');
-						r = "<div id='inventoryErrors'>It appears that some inventory adjustments needed to be made:<ul>";
-						for(var key in app.data[tagObj.datapointer]['%changes']) {
-							r += "<li>sku: "+key+" was set to "+app.data[tagObj.datapointer]['%changes'][key]+" due to availability<\/li>";
-							app.ext.convertSessionToOrder.calls.cartItemUpdate.init({"stid":key,"quantity":app.data[tagObj.datapointer]['%changes'][key]});
-							}
-						r += "<\/ul><\/div>";
-						
-						app.u.throwMessage(app.u.youErrObject(r));
-//						$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':r,'uiIcon':'alert'}));
-
-						}
-
-
-_gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjusted to reflect availability']);
-
-					return r;
-					
-					},
-				onError : function(responseData,uuid)	{
-					app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.handleInventoryUpdate.onError - ERROR!');
-					app.ext.convertSessionToOrder.panelContent.paymentOptions();
-//global errors are emptied when 'complete order' is pushed, so do not empty in the responses or any other errors will be lost.
-					app.u.throwMessage(responseData,uuid);
-					}
-				},	//handleInventoryUpdate
-
-/*
-this gets executed after the server side validating is run.
-success would mean the checkout has successfully validated.
-error would mean something was not complete. 
- -> In theory, we shouldn't get errors often because the client side validation should handle most, if not all, errors.
-*/
-		finishedValidatingCheckout : {
-			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.finishedValidatingCheckout.onSuccess');
-//if paypal is selected but a valid token doesn't exist, route to paypal.
-				if($("#chkout-payby_PAYPALEC").is(':checked') && !app.data.cartItemsList['payment.pt'])	{
-					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
-					}
-				else	{
-//okay, now build the paymentQ. This will add 1 payment to the Q. Giftcards et all will be handled by now.
-					app.ext.store_checkout.u.buildPaymentQ();
-					app.ext.store_checkout.calls.cartOrderCreate.init("checkoutSuccess");
-					}
-				app.model.dispatchThis('immutable');
-
-
-_gaq.push(['_trackEvent','Checkout','App Event','Server side validation passed']);
-
-
-				},
-			onError : function(responseData,uuid)	{
-				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled loadingButtonBg'); //make place order button appear and be clickable.
-				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
-				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
-				app.u.throwMessage(responseData,uuid);
-//				app.ext.store_checkout.u.showServerErrors(responseData,uuid); //sends error messages to div b
-				
-_gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']);
-
-
-				}
 			}
+
+
+
+
 
 		}, //callbacks
 
@@ -436,14 +362,31 @@ note - the order object is available at app.data['order|'+P.orderID]
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
 			buildPaymentQ : function()	{
-				
-				var payby = $("input:radio[name=checkout/payby]").val()
-				
+				app.u.dump("BEGIN store_checkout.u.buildPaymentQ");
+				var payby = $('input:radio[name="want/payby"]:checked').val()
+				app.u.dump(" -> payby: "+payby);
 				if(payby == 'CREDIT')	{
-					app.ext.store_checkout.calls.addPaymentQ.init({"cmd":"insert","ID":"SETMETOGUID","tender":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
+					}				
+				else if(payby == 'PO')	{
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","po":$('#payment-po').val()});
+					}				
+				else if(payby == 'ECHECK')	{
+					app.ext.store_checkout.calls.cartPaymentQ.init({
+"cmd":"insert",
+"TN":"ECHECK",
+"ea":$('#paymentea').val(),
+"er":$('#paymenter').val(),
+"en":$('#paymenten').val(),
+"eb":$('#paymenteb').val(),
+"es":$('#paymentes').val(),
+"ei":$('#paymentei').val()
+						});
 					}
-				
-				
+				else	{
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
+					}
+
 				},
 
 
@@ -530,8 +473,8 @@ r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); 
 //				app.u.dump(' -> # items in cart: '+L);
 				for(var i = 0; i < L; i += 1)	{
 //skip coupons.
-					if(app.data[datapointer].cart['@ITEMS'][i].sku[0] != '%')	{
-						r += "http://"+app.vars.sdomain+"/product/"+app.data[datapointer].cart['@ITEMS'][i].sku+"/\n";
+					if(app.data[datapointer]['@ITEMS'][i].sku[0] != '%')	{
+						r += "http://"+app.vars.sdomain+"/product/"+app.data[datapointer]['@ITEMS'][i].sku+"/\n";
 						}
 					}
 //				app.u.dump('links = '+r);
@@ -592,7 +535,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 					var $errorDiv = responseData['_rtag'].targetID ? $('#'+responseData['_rtag'].targetID) : $('#chkoutSummaryErrors')
 					$errorDiv.empty();
 					if($errorDiv.length == 0)
-						$errorDiv = $("<p \/>").attr("id","chkoutSummaryErrors").addClass("zwarn displayNone").prependTo($('#zCheckoutFrm'));
+						$errorDiv = $("<p \/>").attr("id","chkoutSummaryErrors").prependTo($('#zCheckoutFrm'));
 					var o = "<ul>"; //responseData['_msg_1_txt']+
 					
 					for(var i = 0; i < L; i += 1)	{
@@ -602,7 +545,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 					$errorDiv.append(app.u.formatMessage({"message":o,"uiClass":"error","uiIcon":"alert"})).toggle(true);
 					}
 				else	{
-					app.u.handleErrors(responseData,uuid)
+					app.u.throwMessage(responseData);
 					}
 				}, //showServerErrors
 
@@ -667,7 +610,7 @@ this function closely mirrors core logic.
 				app.ext.store_checkout.u.setAddressFormFromPredefined(addressClass,$x.attr('data-addressId'));
 				$('#data-bill_email').val() == app.data.cartItemsList['bill/email']; //for passive, need to make sure email is updated too.
 //copy all the billing address fields to the shipping address fields, if appropriate.
-				if($('#chkout-bill_to_ship').val() == '1') {
+				if($('#want-bill_to_ship').val() == '1') {
 					app.ext.store_checkout.u.setShipAddressToBillAddress();
 					}
 /*
@@ -786,11 +729,13 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 //			app.u.dump("BEGIN convertSessionToCheckout.uities.thisSessionIsPayPal");
 				var r = false; //what is returned.  will be set to true if paypalEC approved.
 	//if token and payerid are set in cart, then likely the user returned from paypal and then browsed more.
-				token = app.data.cartItemsList['payment.pt'];
-				payerid = app.data.cartItemsList['payment.pi'];
-				app.u.dump("paypal -> token: "+token+" and payerid: "+payerid);
-				if(token && payerid)	{
-					r = true;
+				if(app.data.cartItemsList && app.data.cartItemsList.payment)	{
+					var token = app.data.cartItemsList.payment.pt;
+					var payerid = app.data.cartItemsList.payment.pi;
+					app.u.dump("paypal -> token: "+token+" and payerid: "+payerid);
+					if(token && payerid)	{
+						r = true;
+						}
 					}
 				return r;
 				},
@@ -803,11 +748,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 note - !!! change this so that the vars only get set to null IF they are already set.
 */
 			nukePayPalEC : function() {
-				if(app.data && app.data.cartItemsList)	{
-					app.data.cartItemsList['payment.pt'] = null;
-					app.data.cartItemsList['payment.pi'] = null;
+				if(app.data && app.data.cartItemsList && app.data.cartItemsList.payment)	{
+					app.data.cartItemsList.payment.pt = null;
+					app.data.cartItemsList.payment.pi = null;
 					}
-				app.calls.cartSet.init({'payment.pt':null,'payment.pi':null,'chkout.payby':null}); //nuke vars
+				app.calls.cartSet.init({'payment/pi':null,'payment/pt':null,'want/payby':null}); //nuke vars
 				return 1;//this is the # of dispatches added to the q.
 				},
 
@@ -816,28 +761,28 @@ note - !!! change this so that the vars only get set to null IF they are already
 //this function checks to see if they're populated and, if so, returns true.
 //also used in cartPaypalSetExpressCheckout call to determine whether or not address should be requested on paypal side or not.
 			taxShouldGetRecalculated : function()	{
-				app.u.dump("BEGIN app.ext.store_checkout.u.taxShouldGetRecalculated");
+//				app.u.dump("BEGIN app.ext.store_checkout.u.taxShouldGetRecalculated");
 				var r = true;//what is returned. set to false if errors > 0
 				var errors = 0; //used to track number of fields not populated.
 				
 				if(!$('#data-bill_address1').val())	{
-					app.u.dump(" -> address is blank");
+//					app.u.dump(" -> address is blank");
 					errors += 1;
 					}
 				if(!$('#data-bill_city').val()){
-					app.u.dump(" -> city is blank");
+//					app.u.dump(" -> city is blank");
 					errors += 1;
 					}
 				if(!$('#data-bill_state').val()){
-					app.u.dump(" -> state is blank");
+//					app.u.dump(" -> state is blank");
 					errors += 1;
 					}
 				if(!$('#data-bill_zip').val()){
-					app.u.dump(" -> zip is blank");
+//					app.u.dump(" -> zip is blank");
 					errors += 1;
 					}
 				if(!$('#data-bill_country').val()){
-					app.u.dump(" -> country is blank");
+//					app.u.dump(" -> country is blank");
 					errors += 1;
 					}
 				if(errors > 0)	{

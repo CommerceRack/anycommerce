@@ -25,10 +25,10 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	<form id='zCheckoutFrm' name='zCheckoutFrm' action='' onSubmit='return false;'>
 	
 <!-- this is outside the fieldsets so that it can be used to maintain state (fieldsets sometimes get regenerated) -->
-	<input type='hidden' value='1' name='want/create_customer' id='chkout-create_customer' /><!-- valid values are 1/0 -->
+	<input type='hidden' value='1' name='want/create_customer' id='want-create_customer' /><!-- valid values are 1/0 -->
 
 <!-- this is the actual value/input used. more reliable to handle here than in a checkbox.  -->
-	<input type='hidden' value='1' name='want/bill_to_ship' id='chkout-bill_to_ship' /><!-- valid values are 1/0 -->
+	<input type='hidden' value='1' name='want/bill_to_ship' id='want-bill_to_ship' /><!-- valid values are 1/0 -->
 	
 	</form>
 	
@@ -86,7 +86,7 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 							
 <div class='clearAll'></div>
 
-<div class='zwarn displayNone' id='chkoutSummaryErrors'></div>
+<div id='chkoutSummaryErrors'></div>
 
 <div class='checkoutMethods clearfix'>
 	<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;">
@@ -144,7 +144,7 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
 
-	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address11); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
 	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 
@@ -158,8 +158,8 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
 
-	<li id='chkout-bill_to_ship_cb_container'>
-	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='chkout-bill_to_ship_cb' checked='checked' /><label for='chkout-bill_to_ship_cb'>ship to billing address</label></div>
+	<li id='want-bill_to_ship_cb_container'>
+	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='want-bill_to_ship_cb' checked='checked' /><label for='want-bill_to_ship_cb'>ship to billing address</label></div>
 	<!--
 SANITY: under the form tag is a hidden var that is actually used for the value for bill_to_ship. checkboxes are unreliable.
 the hidden input is higher in the code to make sure it added to the DOM prior to the shipping panel code getting executed.

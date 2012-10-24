@@ -406,7 +406,8 @@ app.u.throwMessage(responseData); is the default error handler.
 		handleTrySession : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
-				if(app.data.appCartExists.exists == 1)	{
+//				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
+				if(app.data.appCartExists.exists >= 1)	{
 					app.u.dump(' -> valid session id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
@@ -865,7 +866,7 @@ commented out in 201238
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
 				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.cid))	{
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList && app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.cid))	{
 					r = 'authenticated';
 					app.vars.cid = app.data.cartItemsList.customer.cid;
 					}
@@ -1472,34 +1473,34 @@ later, it will handle other third party plugins as well.
 					//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
 						break;
 					case 'CREDIT':
-						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment.cc' id='payment-cc' class=' creditCard' value='";
-						if(data['payment.cc']){tmp += data['payment.cc']}
+						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment/cc' id='payment-cc' class=' creditCard' value='";
+						if(data['payment/cc']){tmp += data['payment/cc']}
 						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/li>";
 						
-						tmp += "<li><label>Expiration<\/label><select name='payment.mm' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
-						tmp += app.u.getCCExpMonths(data['payment.mm']);
+						tmp += "<li><label>Expiration<\/label><select name='payment/mm' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += app.u.getCCExpMonths(data['payment/mm']);
 						tmp += "<\/select>";
-						tmp += "<select name='payment.yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment.yy'])+"<\/select><\/li>";
+						tmp += "<select name='payment/yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/yy'])+"<\/select><\/li>";
 						
-						tmp += "<li><label for='payment.cv'>CVV/CID<\/label><input type='text' size='8' name='payment.cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
-						if(data['payment.cv']){tmp += data['payment.cv']}
+						tmp += "<li><label for='payment/cv'>CVV/CID<\/label><input type='text' size='8' name='payment/cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						if(data['payment/cv']){tmp += data['payment/cv']}
 						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
 						break;
 	
 					case 'PO':
-						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment.po' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment.po\":this.value});' value='";
-						if(data['payment.po'])
-								tmp += data['payment.po'];
+						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment/po' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/po\":this.value});' value='";
+						if(data['payment/po'])
+								tmp += data['payment/po'];
 						tmp += "' /><\/li>";
 						break;
 	
 					case 'ECHECK':
-						var echeckFields = {"payment.ea" : "Account #","payment.er" : "Routing #","payment.en" : "Account Name","payment.eb" : "Bank Name","payment.es" : "Bank State","payment.ei" : "Check #"}
+						var echeckFields = {"payment/ea" : "Account #","payment/er" : "Routing #","payment/en" : "Account Name","payment/eb" : "Bank Name","payment/es" : "Bank State","payment/ei" : "Check #"}
 						for(var key in echeckFields) {
 							safeid = app.u.makeSafeHTMLId(key);
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
 //The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input required='required' type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck'  value='";
+							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<\/label><input type='text' size='2' name='"+key+"' id='"+safeid+"' class=' echeck'  value='";
 //if the value for this field is set in the data object (cart or invoice), set it here.
 							if(data[key])
 								tmp += data[key];
@@ -1879,7 +1880,7 @@ return $r;
 
 
 		stuffList : function($tag,data)	{
-			app.u.dump("BEGIN renderFormat.stuffList");
+//			app.u.dump("BEGIN renderFormat.stuffList");
 			var L = data.value.length;
 			var templateID = data.bindData.loadsTemplate;
 			var stid; //recycled. used as a short cut in the loop for each items stid when in focus.

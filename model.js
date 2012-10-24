@@ -150,15 +150,14 @@ function zoovyModel() {
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				dispatch["_uuid"] = uuid;
 				dispatch["status"] = 'queued';
-//				dispatch["_v"] = 'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV;
 				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = dispatch;
 				r = uuid;
 				}
 			return r;
 			},// addDispatchToQ
-	
-	
+
+
 //if an error happens during request or is present in response, change items from requested back to queued and adjust attempts.
 //this is to make sure nothing gets left undispatched on critical errors.
 		changeDispatchStatusInQ: function(QID,UUID,STATUS)	{
@@ -176,7 +175,8 @@ function zoovyModel() {
 //returns items for the Q and sets status to 'requesting'.
 //returns items in reverse order, so the dispatches occur as FIFO.
 //in the actual DQ, the item id is the uuid. Here that gets dropped and the object id's start at zero (more friendly format for B).
-		filterQ : function(QID)	{
+//puuid is the parent/pipe uuid. it's added to the original dispatch for error handling
+		filterQ : function(QID,puuid)	{
 //			app.u.dump("BEGIN: filterQ");
 //			app.u.dump(" -> QID = "+QID);
 			
@@ -188,7 +188,11 @@ function zoovyModel() {
 				if(app.q[QID][index].status == 'queued')	{
 					app.q[QID][index]['status'] = "requesting";
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
+					if(puuid){app.q[QID][index]['pipeUUID'] = puuid}
+//the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
 //					myQ[c]['_tag'] = null; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
+					myQ[c]['status'] = null;
+					myQ[c]['attempts'] = null;
 					c += 1;
 //added on 2012-02-23
 					if(c > app.globalAjax.numRequestsPerPipe){
@@ -220,6 +224,8 @@ function zoovyModel() {
 //			app.globalAjax.requests.mutable = {}; //probably not needed since we're deleting these individually above. add back if needed.
 			return r;
 			},
+
+
 
 //if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid(s) in question.
 //function is also run when model.abortQ is executed.
@@ -267,11 +273,16 @@ QID = Queue ID.  Defaults to the general dispatchQ but allows for the PDQ to be 
 //			app.u.dump("'BEGIN model.dispatchThis ["+QID+"]");
 			var r = true; //set to false if no dispatch occurs. return value.
 			QID = QID === undefined ? 'mutable' : QID; //default to the general Q, but allow for priorityQ to be passed in.
+//used as the uuid on the 'parent' request (the one containing the pipelines).
+//set this early so that it can be added to each request in the Q as pipeUUID for error handling.
+//also used for ajax.requests[QID][UUID] which stores the ajax request itself (and is used for aborting later, if need be).
+			var pipeUUID = app.model.fetchUUID(); 			
+			
 //			app.u.dump(' -> Focus Q = '+QID);
 
 //by doing our filter first, we can see if there is even anything to BE dispatched before checking for conflicts.
 //this decreases the likelyhood well set a timeout when not needed.
-			var Q = app.model.filterQ(QID); //filters out all non-queued dispatches. may set a limit to the # of dispatches too. 
+			var Q = app.model.filterQ(QID,pipeUUID); //filters out all non-queued dispatches. may set a limit to the # of dispatches too. 
 			
 			
 			var immutableRequestInProgress = $.isEmptyObject(app.globalAjax.requests.immutable) ? false : true; //if empty, no request is in progress.
@@ -305,9 +316,7 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 */
 			
 			if(r)	{
-//used as the uuid on the 'parent' request (the one containing the pipelines).
-//also used for ajax.requests[QID][UUID] which stores the ajax request itself (and is used for aborting later, if need be).
-				var UUID = app.model.fetchUUID(); 
+
 				
 //only change the Qinuse var IF we are doing a dispatch. otherwise when the value is used later, it'll be pointing at the wrong Q.	
 //this var is used to reference whether the q in use is immutable or not. Never use this during handleResponse or anywhere else.
@@ -327,23 +336,24 @@ must be run before handleResponse so that if handleresponse executes any request
 can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
 */
 
-	app.globalAjax.requests[QID][UUID] = $.ajax({
+	app.globalAjax.requests[QID][pipeUUID] = $.ajax({
 		type: "POST",
 		url: app.vars.jqurl,
 		context : app,
 		async: true,
 		contentType : "text/json",
 		dataType:"json",
-		data: JSON.stringify({"_uuid":UUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q, "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV})
+//DO NOT CHANGE FORMAT OF _V, especially the zmvc/modelversion/release portion. contents of passindispatchV can be edited, if need be.
+		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q, "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV})
 		});
-	app.globalAjax.requests[QID][UUID].error(function(j, textStatus, errorThrown)	{
+	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-		delete app.globalAjax.requests[QID][UUID];
+		delete app.globalAjax.requests[QID][pipeUUID];
 		app.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
 		setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 		});
-	app.globalAjax.requests[QID][UUID].success(function(d)	{
-		delete app.globalAjax.requests[QID][UUID];
+	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
+		delete app.globalAjax.requests[QID][pipeUUID];
 		app.model.handleResponse(d);}
 		)
 
@@ -369,9 +379,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 	set adjustAttempts to true to increment by 1.
 	*/
 		handleReQ : function(Q,QID,adjustAttempts)	{
-//			app.u.dump('BEGIN model.handleReQ.');
-//			app.u.dump(' -> QID = '+QID);
-//			app.u.dump(' -> Q.length = '+Q.length);
+			app.u.dump('BEGIN model.handleReQ.');
+			app.u.dump(' -> QID = '+QID);
+			app.u.dump(' -> Q.length = '+Q.length);
 			var uuid,callbackObj;
 	//execute callback error for each dispatch, if set.
 			for(var index in Q) {
@@ -380,25 +390,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 				if(app.q[QID][uuid].attempts >= 1)	{
 					app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
 					//make sure a callback is defined.
-					if(Q[index]['_tag'] && Q[index]['_tag']['callback'])	{
-//						app.u.dump(' -> callback ='+Q[index]['_tag']['callback']);
-//executes the callback.onError and takes into account extension. saves entire callback object into callbackObj so that it can be easily validated and executed whether in an extension or root.
-						callbackObj = Q[index]['_tag']['extension'] ? app.ext[Q[index]['_tag']['extension']].callbacks[Q[index]['_tag']['callback']] : app.callbacks[Q[index]['_tag']['callback']];
-//skipautohide is NOT defined if a callback is defined. let the callback itself make that decision.
-						if(callbackObj && typeof callbackObj.onError == 'function'){
-							callbackObj.onError({'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'},uuid)
-							}
-						else if(typeof app.u.throwMessage === 'function')	{
-							$('.loadingBG').removeClass('loadingBG'); //remove all loading to make sure user doesn't think something is still trying to load.
-							app.u.throwMessage({'errid':'ISE','skipAutoHide':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'});
-							}
-						else	{
-							app.u.dump("no error handle (callback specific or otherwise) set for uuid: "+uuid);
-							}
-						}
-					else	{
-//						app.u.dump(' -> no callback defined');
-						}
+					this.handleErrorByUUID(uuid,QID,{'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
 					}
 				else	{
 					if(adjustAttempts)	{app.q[QID][uuid].attempts += 1; }
@@ -414,6 +406,46 @@ can't be added to a 'complete' because the complete callback gets executed after
 	
 	
 	
+	handleErrorByUUID : function(UUID,QID,responseData)	{
+		app.u.dump("BEGIN model.handleErrorByUUID ["+UUID+"]");
+		if(QID && UUID && responseData)	{
+			responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(UUID); //_tag is stripped at dispatch and readded. make sure it's present.
+			if(responseData['_rtag'])	{
+				var Q = app.q[QID];			
+				if(Q[UUID]['_tag'] && Q[UUID]['_tag']['callback'])	{
+	//executes the callback.onError and takes into account extension. saves entire callback object into callbackObj so that it can be easily validated and executed whether in an extension or root.
+					callbackObj = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
+	//skipautohide is NOT defined if a callback is defined. let the callback itself make that decision.
+					if(callbackObj && typeof callbackObj.onError == 'function'){
+						callbackObj.onError(responseData,UUID)
+						}
+//callback defined, but is not a function.
+					else	{
+						app.u.dump(" -> callback not a function");
+						app.u.throwMessage(responseData);
+						}
+					}
+//_rtag defined, but no callback.
+				else	{
+					app.u.dump(" -> callback not set");
+					app.u.throwMessage(responseData);
+					}
+				}
+//no callback is defined. throw generic messag
+			else	{
+				app.u.dump(" -> rtag not set");
+				app.u.throwMessage(responseData);
+				}			
+			
+			
+			}
+		else	{
+			app.u.dump("WARNING! required params for handleErrorByUUID not all present:");
+			app.u.dump(" -> UUID: "+UUID);
+			app.u.dump(" -> QID: "+QID);
+			app.u.dump(" -> typeof responseData: "+typeof responseData);
+			}
+		},
 	
 	/*
 	
@@ -438,11 +470,38 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				var uuid = responseData['_uuid'];
 				var QID = this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
 //				app.u.dump(" -> responseData is set. UUID: "+uuid);
-				
+//if the error is on the parent/piped request, no qid will be set.
 				if(responseData && responseData['_rcmd'] == 'err')	{
-					app.u.dump(' -> High Level Error in '+QID+' response!');
+					
+//QID will b set if this is a NON pipelined request.
+					if(QID)	{
+						app.u.dump(' -> High Level Error in '+QID+' response!');
 //					app.u.dump(responseData);
-					app.model.handleReQ(app.dispatchQ,QID,true)
+						this.handleErrorByUUID(responseData['_uuid'],QID,responseData);
+						}
+					else	{
+//most likely, a pipelined request that failed at a high level.
+						QID = this.getQIDFromPipeUUID(uuid) //will try to ascertain what QID to look into for error handling.
+						responseData.errmsg = "Something has gone wrong. please try again or refresh. If the error persists, please contact the site administrator. ["+responseData.errmsg+"]";
+						if(QID)	{
+							var uuids = this.getUUIDsbyQIDandPipeUUID(QID,responseData['_uuid']);
+//							app.u.dump(" -> uuids: "); app.u.dump(uuids);
+							var L = uuids.length
+							if(L)	{
+								app.u.dump(" -> # uuids in failed pipe: "+L);
+								for(var i = 0; i < L; i += 1)	{
+									this.handleErrorByUUID(app.q[QID][uuids[i]]['_uuid'],QID,responseData);
+									}
+								}
+							else	{app.u.throwMessage(responseData);} //don't suspect we'd get here, but best practice error handling would be to throw some error as opposed to nothing.
+							
+							}
+						else	{
+//still unable to determine Q. throw some generic error message along with response error.
+							app.u.dump("ERROR! a high level error occured and the Q ID was unable to be determined.");
+							app.u.throwMessage(responseData);
+							}
+						}
 					}
 
 //pipeline request
@@ -453,11 +512,11 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
 // _tag is reassociated early so that the data is available as quick as possible, including in any custom handleResponse_ functions
 //has to be called before writing to local because datapointer is in _tag
-						responseData['@rcmds'][i]['_rtag'] = responseData['@rcmds'][i]['_rtag'] || this.getRequestTag(responseData['_uuid']); 
-						this.writeToMemoryAndLocal(responseData['@rcmds'][i])
+						responseData['@rcmds'][i]['_rtag'] = responseData['@rcmds'][i]['_rtag'] || this.getRequestTag(responseData['@rcmds'][i]['_uuid']); 
+						this.writeToMemoryAndLocal(responseData['@rcmds'][i]);
 						}
 
-//handle all the callbacks.
+//handle all the call specific handlers.
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
 						responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
 						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
@@ -634,8 +693,8 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			app.storageFunctions.writeLocal(datapointer,app.data.cartItemsList);  //save order locally to make it available for upselling et all.
 			app.data[datapointer] = app.data.cartItemsList; //saved to object as well for easy access.
 	//nuke cc fields, if present.		
-			app.data[datapointer].cart['payment.cc'] = null;
-			app.data[datapointer].cart['payment.cv'] = null;
+			app.data[datapointer].cart['payment/cc'] = null;
+			app.data[datapointer].cart['payment/cv'] = null;
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			return responseData.orderid;
 			}, //handleResponse_cartOrderCreate
@@ -703,7 +762,6 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 /* nuke references to old, invalid session id. if this doesn't happen, the old session ID gets passed and will be re-issued. */				
 				app.sessionId = null;
 				app.storageFunctions.writeLocal('zjsid',null);
-				
 				app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 				}
 			},
@@ -748,7 +806,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 					case 'appProductGet':
 	//the API doesn't recognize doing a query for a sku and it not existing as being an error. handle it that way tho.
 						if(!responseData['%attribs'] || !responseData['%attribs']['db:id']) {
-	//						app.u.dump("GOT HERE!");
 							r = true;
 							responseData['errid'] = "MVC-M-100";
 							responseData['errtype'] = "apperr"; 
@@ -866,11 +923,49 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //not found in a matching q.  odd.
 				r = false;
 				}
+
 //			app.u.dump('whichQAmIFrom = '+r+' and uuid = '+uuid );
 			return r;
 			}, //whichQAmIFrom
+
+
+		getUUIDsbyQIDandPipeUUID : function(QID,pipeUUID)	{
+			var r = new Array();
+			for(index in app.q[QID])	{
+				if(app.q[QID][index]['pipeUUID'] == pipeUUID)	{
+					r.push(app.q[QID][index]['_uuid']);
+					}
+				}
+			return r;			
+			},
+
+		checkForPipeUUIDInQID : function(QID,pipeUUID)	{
+			var r = false;
+			for(index in app.q[QID])	{
+				if(app.q[QID][index]['pipeUUID'] == pipeUUID)	{
+					r = true;
+					break; //end once we have a match. pipeuuid is specific to one Q
+					}
+				}
+			return r;
+			},
+
+		getQIDFromPipeUUID : function(pipeUUID){
+			app.u.dump("BEGIN model.getQIDFromPipeUUID ["+pipeUUID+"]");
+			var r = false; //what is returned.
+			if(this.checkForPipeUUIDInQID('immutable',pipeUUID))	{r = 'immutable'}
+			else if(this.checkForPipeUUIDInQID('mutable',pipeUUID))	{r = 'mutable'}
+			else if(this.checkForPipeUUIDInQID('passive',pipeUUID))	{r = 'passive'}
+			else	{
+				//pipeUUID is not in any known Q
+				}
+			app.u.dump(" -> pipeUUID: "+pipeUUID+" and qid: "+r);
+			return r;
+			},
+
+
 //will get the _tag object from this request in it's original q. allows for _tag to NOT be pased in request, making for smaller requests.
-//this will also allow for the callback itself to be an anonymous function.
+//this will (eventually) allow for the callback itself to be an anonymous function.
 		getRequestTag : function(uuid,qid){
 			var r = false; //what is retured. Either false (unable to get tag) or the tag object itself.
 			if(uuid)	{
@@ -879,17 +974,17 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 					qid = this.whichQAmIFrom(uuid)
 					}
 				
-				app.u.dump(" -> uuid: "+uuid+" and QID: "+qid);
+//				app.u.dump(" -> uuid: "+uuid+" and QID: "+qid);
 				
 				if(qid && app.q[qid][uuid])	{
-					app.u.dump(" -> app.q[qid][uuid]: "); app.u.dump(app.q[qid][uuid]);
+//					app.u.dump(" -> app.q[qid][uuid]: "); app.u.dump(app.q[qid][uuid]);
 					r = app.q[qid][uuid]['_tag'] //will set r either to the object or undefined, if not set.
 					}
 				}
 			else	{
 				//uuid is required.
 				}
-			
+			return r;
 			},
 	
 	//gets session id. The session id is used a ton.  It is saved to app.sessionId as well as a cookie and, if supported, localStorage.
@@ -1081,8 +1176,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //an ajax request is made to load the .html file and, if successful, the templates are loaded into app.templates.
 
 		fetchNLoadTemplates : function(templateURL,templates)	{
-			app.u.dump("BEGIN model.fetchNLoadTemplates");
-			app.u.dump(" -> templateURL: "+templateURL);
+//			app.u.dump("BEGIN model.fetchNLoadTemplates");
+//			app.u.dump(" -> templateURL: "+templateURL);
 	//		app.u.dump(" -> templates: "+templates);
 			var ajaxRequest = $.ajax({
 					type: "GET",
