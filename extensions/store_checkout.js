@@ -743,19 +743,37 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 
 /*
 once paypalEC has been approved by paypal, a lot of form fields lock down, but the user may decide to change
-payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this.
+payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this if value returned is > 0.
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
-note - !!! change this so that the vars only get set to null IF they are already set.
 */
 			nukePayPalEC : function() {
-				if(app.data && app.data.cartItemsList && app.data.cartItemsList.payment)	{
-					app.data.cartItemsList.payment.pt = null;
-					app.data.cartItemsList.payment.pi = null;
-					}
-				app.calls.cartSet.init({'payment/pi':null,'payment/pt':null,'want/payby':null}); //nuke vars
-				return 1;//this is the # of dispatches added to the q.
+				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
+					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','id':PQI.ID})
+					});
 				},
 
+//pass in a tender/TN [CASH, PAYPALEC, CREDIT] and an array of matching id's is returned.
+//used for when a paypal EC payment exists and has to be removed.
+//if someFunction is set AND it equals a function (typeof), then that function will get executed over each match.
+//the entire lineitem in the paymentQ is passed in.
+			modifyPaymentQbyTender : function(tender,someFunction){
+				var r = 0; //what is returned. # of items in paymentQ affected.
+				if(tender && app.data.cartItemsList && app.data.cartItemsList['@PAYMENTQ'])	{
+					var L = app.data.cartItemsList['@PAYMENTQ'];
+					if(var i = 0; i < L; i += 1)	{
+						if(app.data.cartItemsList['@PAYMENTQ'][i].TN == tender)	{
+							r += 1;
+							if(typeof someFunction == 'function')	{
+								someFunction(app.data.cartItemsList['@PAYMENTQ'][i])
+								}
+							}
+						}
+					}
+				else	{
+					app.u.dump("getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
+					}
+				return r;
+				},
 
 //for tax to accurately be computed, several fields may be required.
 //this function checks to see if they're populated and, if so, returns true.

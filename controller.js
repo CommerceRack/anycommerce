@@ -876,7 +876,7 @@ commented out in 201238
 					r = 'thirdPartyGuest';
 //					app.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{
+				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList && app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{
 					r = 'guest';
 					}
 				else	{
@@ -911,11 +911,11 @@ commented out in 201238
 		getUsernameFromCart : function()	{
 //			app.u.dump('BEGIN u.getUsernameFromCart');
 			var r = false;
-			if(app.u.isSet(app.data.cartItemsList.customer.login))	{
+			if(app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.login))	{
 				r = app.data.cartItemsList.customer.login;
 //				app.u.dump(' -> login was set. email = '+r);
 				}
-			else if(app.u.isSet(app.data.cartItemsList.bill.email)){
+			else if(app.data.cartItemsList.bill && app.u.isSet(app.data.cartItemsList.bill.email)){
 				r = app.data.cartItemsList.bill.email;
 //				app.u.dump(' -> bill/email was set. email = '+r);
 				}

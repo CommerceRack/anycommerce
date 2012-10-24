@@ -379,9 +379,9 @@ can't be added to a 'complete' because the complete callback gets executed after
 	set adjustAttempts to true to increment by 1.
 	*/
 		handleReQ : function(Q,QID,adjustAttempts)	{
-			app.u.dump('BEGIN model.handleReQ.');
-			app.u.dump(' -> QID = '+QID);
-			app.u.dump(' -> Q.length = '+Q.length);
+//			app.u.dump('BEGIN model.handleReQ.');
+//			app.u.dump(' -> QID = '+QID);
+//			app.u.dump(' -> Q.length = '+Q.length);
 			var uuid,callbackObj;
 	//execute callback error for each dispatch, if set.
 			for(var index in Q) {

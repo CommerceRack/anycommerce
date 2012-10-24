@@ -71,7 +71,9 @@ a callback was also added which just executes this call, so that checkout COULD 
 				if(token && payerid)	{
 					app.ext.convertSessionToOrder.vars['payment-pt'] = token;
 					app.ext.convertSessionToOrder.vars['payment-pi'] = payerid;
-//					r += app.ext.store_checkout.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"convertSessionToOrder","callback":"IntoPaymentQ"});
+					app.model.dispatchThis('immutable');
+
 					}
 				else	{
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
@@ -349,23 +351,21 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 			},
 
 //mostly used for the error handling.
-		handleCartPaypalGetECDetails : {
+		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
+//				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
 //do NOT execute handlePaypalFormManipulation here. It's run in panel view.
 				},
 			onError : function(responseData,uuid)	{
+				responseData['_msg_1_type'] = "It appears something went wrong with PayPal. <br \/>err: "+responseData['_msg_1_type'];
+				responseData.skipAutoHide = true;
 				app.u.throwMessage(responseData);
+				app.ext.convertSessionToOrder.u.handleChangeFromPayPalEC();
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-
 				app.ext.store_checkout.u.nukePayPalEC();
-				app.calls.refreshCart.init({},'immutable');
-				app.model.dispatchThis('immutable');
-//### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
-				setTimeout("$('#paybySupplemental_PAYPALEC').empty().addClass('ui-state-highlight').append(\"It appears something went wrong with PayPal. Please <a href='#' onClick='app.ext.convertSessionToOrder.u.handleChangeFromPayPalEC();'>Click Here</a> to choose an alternate payment method.\")",2000);
 				}
-			},		
+			},			
 
 
 	
