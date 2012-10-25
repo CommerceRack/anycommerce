@@ -317,7 +317,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.updateCheckoutShipMethods.onError - ERROR!');
 				app.ext.convertSessionToOrder.panelContent.shipMethods(); //reload ship panel or just error shows and there is no way to continue.
 				responseData.parentID = 'chkoutShipMethodsFieldsetErrors'
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			},
 
@@ -392,7 +392,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added'
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.addGiftcardToCart.onError - ERROR!');
 				app.ext.convertSessionToOrder.panelContent.paymentOptions(); //regenerate the panel. need to show something or no payments can be selected.
 				responseData.parentID = 'chkoutPayOptionsFieldsetErrors'
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			},//addGiftcardToCart
 
@@ -415,7 +415,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added'])
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.addcouponToCart.onError');
 				$('#addCouponBtn').removeAttr('disabled').removeClass('ui-state-disabled');
 				responseData.parentID = 'couponMessaging'
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			},//addcouponToCart
 
@@ -455,7 +455,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 				onError : function(responseData,uuid)	{
 					app.ext.convertSessionToOrder.panelContent.paymentOptions();
 //global errors are emptied when 'complete order' is pushed, so do not empty in the responses or any other errors will be lost.
-					myConrol.util.throwMessage(responseData);
+					app.u.throwMessage(responseData);
 					}
 				},	//handleInventoryUpdate
 
@@ -468,7 +468,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 			onError : function(responseData,uuid)	{
 				app.ext.convertSessionToOrder.panelContent.paymentOptions();  //reload panel or just error shows and user can't proceed.
 				responseData.parentID = 'chkoutPayOptionsFieldsetErrors'
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			},
 
@@ -480,7 +480,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 			onError : function(responseData,uuid)	{
 				app.ext.convertSessionToOrder.panelContent.cartContents();  //reload panel so more than just error shows up and user can proceed/try again.
 				responseData.parentID = 'chkoutSummaryErrors'
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			},
 /*
@@ -584,7 +584,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 			onError : function(responseData,uuid)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.loadPanelContent.onError.');
 				$('#globalMessaging').append({"message":"It appears something has gone very wrong. Please try again. If error persists, please contact the site administrator.","uiClass":"error","uiIcon":"alert"})
-				myConrol.util.throwMessage(responseData);
+				app.u.throwMessage(responseData);
 				}
 			
 			},//loadPanelContent
