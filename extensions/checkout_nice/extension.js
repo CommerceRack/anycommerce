@@ -187,9 +187,16 @@ if server validation passes, the callback handles what to do next (callback is m
 
 //the buyer could be directed away from the store at this point, so save everything to the session/cart.
 				var serializedCheckout = $('#zCheckoutFrm').serializeJSON();
-				serializedCheckout['want/bill_to_ship_cb'] = null;  //this isn't a valid checkout field. used only for some logic processing.
-				serializedCheckout['payment/cc'] = ''; //cc and cv should never go. They're added as part of cartPaymentQ
-				serializedCheckout['payment/cv'] = '';
+//po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
+				if(app.ext.convertSessionToOrder.vars['want/payby'] != "PO" && serializedCheckout['want/reference_number'])	{
+					serializedCheckout['want/po_number'] = serializedCheckout['want/reference_number'];
+					}
+//these aren't valid checkout field. used only for some logic processing.
+				delete serializedCheckout['want/reference_number'];
+				delete serializedCheckout['want/bill_to_ship_cb'];
+//cc and cv should never go. They're added as part of cartPaymentQ
+				delete serializedCheckout['payment/cc'];
+				delete serializedCheckout['payment/cv'];
 				app.calls.cartSet.init(serializedCheckout);
 
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
@@ -1296,7 +1303,11 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 				$('#checkoutStuffList').empty(); //since the template isn't getting generated empty each time, the list must be manually emptied.
 //SANITY -> yes, the template only needs to be added once (above) but it needs to be translated each time this function is executed.
 				app.renderFunctions.translateTemplate(app.data.cartItemsList,'chkoutCartSummary');
-
+//use the payby var, not radio, because the radio button may not exist on the DOM at this point
+//also, don't show it till a payment method is selected. Then it is less likely to appear then disappear because PO was selected.
+				if($('#data-bill_company').val() && app.ext.convertSessionToOrder.vars['want/payby'] && app.ext.convertSessionToOrder.vars['want/payby'] != "PO")	{$('#referenceNumberContainer').show()}
+				else	{$('#referenceNumberContainer').hide()} //things to change tho, so this hide is here in case it was shown but now needs to be hidden.
+				
 				}, //cartContents
 
 
@@ -1310,11 +1321,24 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 //the ul for the tabs is hidden by default so that when no wallets are present, no tabs show up.
 				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
 					$('#paymentOptionsContainer ul').show();
-					$('#paymentOptionsContainer').tabs();
+//if a payment type not wallet has already been selected, be sure to open that tab when panel reloads.
+					$('#paymentOptionsContainer').tabs({
+						selected: ((app.ext.convertSessionToOrder.vars['want/payby'] && app.ext.convertSessionToOrder.vars['want/payby'].indexOf('WALLET') == 0) || !app.ext.convertSessionToOrder.vars['want/payby']) ? 0 : 1
+						});
 					app.renderFunctions.translateTemplate(app.data.buyerWalletList,'storedPaymentsContainer');
 					}
-				   
-				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
+				$('[type="radio"]',$panelFieldset).click(function(){
+					var val = $(this).val();
+					app.ext.convertSessionToOrder.u.updatePayDetails(val);
+					app.ext.convertSessionToOrder.vars["want/payby"] = val;
+					$("#chkoutPayOptionsFieldsetErrors").addClass("displayNone");
+					})
+				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
+				if(app.ext.convertSessionToOrder.vars['want/payby'])	{
+					$(":radio[value='"+app.ext.convertSessionToOrder.vars['want/payby']+"']",$panelFieldset).click();
+					}
+
+//				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
 				}, //paymentOptions
 		
 		
@@ -1498,9 +1522,11 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					if(typeof supplementalOutput == 'object')	{
 //						app.u.dump(" -> getSupplementalPaymentInputs returned an object");
 						supplementalOutput.addClass(' noPadOrMargin listStyleNone ui-widget-content ui-corner-bottom');
-						$('#payment-mm, #payment-cc, #payment-yy, #payment-cv',supplementalOutput).change(function(){
+//save values of inputs into memory so that when panel is reloaded, values can be populated.
+						$('input[type=text], select',supplementalOutput).change(function(){
 							app.ext.convertSessionToOrder.vars[$(this).attr('name')] = $(this).val(); //use name (which coforms to cart var, not id, which is websafe and slightly different 
 							})
+
 						$('#payby_'+paymentID).append(supplementalOutput);
 						}
 					}
@@ -1832,20 +1858,12 @@ the refreshCart call can come second because none of the following calls are upd
 				if(L > 0)	{
 					for(var i = 0; i < L; i += 1)	{
 						id = data.value[i].id;
-	//					app.u.dump(" -> i: "+i+" ["+id+"]");
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
-						
-						if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
-							isSelectedMethod = id;
-							}					
-						
-						o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+//onClick event is added through panelContent.paymentOptions
+//setting selected method to checked is also handled there.
+						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' /><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
 						}
 	
 					$tag.html(o);
-					if(app.ext.convertSessionToOrder.vars['want/payby'])	{
-						$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
-						}
 					}
 				else	{
 					app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.");

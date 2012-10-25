@@ -900,7 +900,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				},
 
 
-
+			walletName2Icon : function($tag,data)	{
+				$tag.addClass('paycon_'+data.value.substring(0,4).toLowerCase());
+				},
 
 //for displaying order balance in checkout order totals.
 //changes value to 0 for negative amounts. Yes, this can happen.			

@@ -87,7 +87,7 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 							
 <div class='clearAll'></div>
 
-<div class='zwarn displayNone' id='chkoutSummaryErrors'></div>
+<div class='zwarn displayNone floatRight' id='chkoutSummaryErrors'></div>
 
 <div class='checkoutMethods clearfix'>
 	<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;">
@@ -96,6 +96,10 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 	</button>
 </div>
 
+<div id='referenceNumberContainer' class='displayNone floatRight clearfix'>
+	<label>Purchase Order/Reference #: </label>
+	<input type'text' name='want/reference_number' id='orderReferenceNumber' size='12' />
+</div>
 
 
 </fieldset>
@@ -297,11 +301,6 @@ do NOT change any div id's or messaging will not work properly.
 		</div>
 	</div>
 	
-<!--
-	<div id='referenceNumberContainer' class='displayNone'>
-		<input type'text' name='want/reference_number' id='orderReferenceNumber' size='12' />
-	</div>
--->
 </div>
 
 
@@ -310,8 +309,7 @@ do NOT change any div id's or messaging will not work properly.
 	<tr id='buyerWalletsListItem'>
 		<td><input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" /></td>
 		<td data-bind="var: wallet(TD); format:text;"></td>
-		<td><span data-bind="var: wallet(ID); format:text;"></span></td>
-		<td>icon</td>
+		<td data-bind="var: wallet(TD); format: walletName2Icon; extension:store_checkout;"></td>
 	</tr>
 </table>
 
