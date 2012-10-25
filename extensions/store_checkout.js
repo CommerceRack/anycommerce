@@ -327,7 +327,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.u.dump(" -> payby: "+payby);
 				if(payby.indexOf('WALLET') == 0)	{
 					app.ext.store_checkout.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.store_checkout.u.getWalletByID(payby)));
-					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
+//					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
 					}
 				else if(payby == 'CREDIT')	{
 					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});

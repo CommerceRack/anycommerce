@@ -19,7 +19,7 @@ CHECOUT_PASSIVE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,

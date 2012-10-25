@@ -546,6 +546,26 @@ app.u.handleCallback(tagObj);
 			},
 
 
+
+		printByElementID : function(id)	{
+//				app.u.dump("BEGIN myRIA.a.printByElementID");
+			if(id && $('#'+id).length)	{
+				var html="<html><body style='font-family:sans-serif;'>";
+				html+= document.getElementById(id).innerHTML;
+				html+="</body></html>";
+				
+				var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
+				printWin.document.write(html);
+				printWin.document.close();
+				printWin.focus();
+				printWin.print();
+				printWin.close();
+				}
+			else	{
+				app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
+				}
+			},
+
 //pass in a string (my.string.has.dots) and a nested data object, and the dots in the string will map to the object and return the value.
 //ex:  ('a.b',obj) where obj = {a:{b:'go pack go'}} -> this would return 'go pack go'
 //will be used in updates to translator.
@@ -1677,6 +1697,8 @@ most likely, this will be expanded to support setting other data- attributes. ##
 				}
 			},
 
+
+
 //NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
 		handleTranslation : function($r,data)	{
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
@@ -1811,7 +1833,7 @@ return $r;
 					attributeID = '%attribs.'+attributeID; //product data is nested, but to keep templates clean, %attribs isn't required.
 					value = app.u.getObjValFromString(attributeID,data,'.') || data[attributeID]; //attempt to set value based on most common paths
 					}
-				else if(namespace == 'cart')	{
+				else if(namespace == 'cart' || namespace == 'order')	{
 					value = app.u.getObjValFromString(attributeID,data,'/') || data[attributeID]; //attempt to set value based on most common paths
 					}
 				else	{

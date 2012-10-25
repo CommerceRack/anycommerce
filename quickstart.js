@@ -52,8 +52,6 @@ var myRIA = function() {
 			'reviewFrmTemplate',
 			'subscribeFormTemplate',
 			'orderLineItemTemplate',
-			'orderContentsTemplate',
-			'productListTemplateInvoice',
 			'faqTopicTemplate',
 			'faqQnATemplate',
 			'billAddressTemplate',
@@ -1028,24 +1026,6 @@ P.listID (buyer list id)
 				
 				},
 
-			printByElementID : function(id)	{
-//				app.u.dump("BEGIN myRIA.a.printByElementID");
-				if(id && $('#'+id).length)	{
-					var html="<html><body style='font-family:sans-serif;'>";
-					html+= document.getElementById(id).innerHTML;
-					html+="</body></html>";
-					
-					var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
-					printWin.document.write(html);
-					printWin.document.close();
-					printWin.focus();
-					printWin.print();
-					printWin.close();
-					}
-				else	{
-					app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
-					}
-				},
 
 			showYoutubeInModal : function(videoid)	{
 				var $ele = $('#youtubeVideoModal');
@@ -1053,7 +1033,13 @@ P.listID (buyer list id)
 					$ele = $("<div />").attr('id','youtubeVideoModal').appendTo('body');
 					}
 				$ele.empty().append("<iframe style='z-index:1;' width='560' height='315' src='https://www.youtube.com/embed/"+videoid+"' frameborder='0' allowfullscreen></iframe>"); //clear any past videos.
-				$ele.dialog({modal:true,width:600,height:400,autoOpen:false});
+				$ele.dialog({
+					modal:true,
+					width:600,
+					height:400,
+					'close' : function(event, ui){$(this).dialog('destroy').remove()},
+					autoOpen:false
+					});
 				$ele.dialog('open');
 				return false;
 				},
@@ -1861,9 +1847,9 @@ return r;
 							var cartID = P.uriParams.cartid
 							var parentSafeID = 'orderContentsTable_'+app.u.makeSafeHTMLId(orderID);
 							var $invoice = $("<article />").attr('id','orderInvoiceSoloPage');
-							$invoice.append(app.renderFunctions.createTemplateInstance('orderContentsTemplate',parentSafeID));
+							$invoice.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',parentSafeID));
 							$invoice.appendTo($('#mainContentArea_customer .mainColumn'));
-							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'orderContentsTemplate','parentID':parentSafeID},'mutable');
+							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':parentSafeID},'mutable');
 							app.model.dispatchThis('mutable');
 						
 						
@@ -2220,9 +2206,9 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 //app.u.dump(" -> first time viewing order. go get it");
 $orderEle.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
-$orderEle.append(app.renderFunctions.createTemplateInstance('orderContentsTemplate','orderContentsTable_'+safeID))
+$orderEle.append(app.renderFunctions.createTemplateInstance('invoiceTemplate','orderContentsTable_'+safeID))
 $('#orderContentsTable_'+safeID).addClass('loadingBG');
-if(app.ext.store_crm.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'orderContentsTemplate','parentID':'orderContentsTable_'+safeID}))
+if(app.ext.store_crm.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':'orderContentsTable_'+safeID}))
 	app.model.dispatchThis();
 	
 $orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');

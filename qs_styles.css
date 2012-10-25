@@ -490,7 +490,7 @@ CHECKOUT
 
 #zCheckoutFrm address	{display:block; float:left; margin:12px; border:1px solid #cccccc; padding:10px; font-style:normal; text-align:left;} /* use a white border (if not colored) so elements don't shift when 'selected' class is added. */
 
-#zCheckoutFrm .paybySupplemental	{margin-bottom:6px;}
+#zCheckoutFrm .paybySupplemental, #shipAddressUL li, #billAddressUL li	{margin-bottom:6px;}
 
 /* the entry after the comma below handles 'supplemental' labels (under radio buttons, like in payment) */
 #zCheckoutFrm fieldset li label, #zCheckoutFrm fieldset li.paycon ul label	{text-align:right; padding-right:12px; display:inline-block;}
@@ -519,6 +519,12 @@ CHECKOUT
 .paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
 .paybySupplemental .zform_select {margin-right:12px;}
 
+
+
+/* for order confirmation page of checkout */
+
+#invoiceContainer .balanceDue	{display:none;} /* in checkout, the cart object is used to display invoice, not an actual invoice. hide balance due, it's reported elsewhere */
+#invoiceContainer .writeReview	{display:none;}
 
 .facebookSendLineItem	{float:left; margin:3px;}
 .facebookSendLineItem img	{height:65px; width:56px;}

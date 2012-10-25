@@ -4,10 +4,10 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
-app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
 app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
@@ -18,7 +18,7 @@ app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
 //app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']);
 //app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','addTriggers']);
 //app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
-//app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); // (not working yet)
+//app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); // (not working yet - ticket in to MTB)
 
 
 

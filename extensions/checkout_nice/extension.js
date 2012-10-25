@@ -19,7 +19,7 @@ CHECOUT_NICE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo","invoiceTemplate","productListTemplateInvoice");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,
@@ -661,6 +661,8 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 					}
 
 
+				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
+
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
 
@@ -1101,8 +1103,9 @@ payment options, pricing, etc
 							className = 'displayNone'; //hide extra login info once authenticated as guest. a 'view' link will display.
 							
 						o += "<div id='preflightAccountInputs' class='"+className+" preflightInputContainer'><h2>Existing Users<\/h2>";
-						o += "<div><label for='bill/email2'>Email<\/label><input type='email'   name='bill/email' id='data-bill_email2' value='"+email+"' /><\/div>";
-						o += "<div><label for='want-password'>Password<\/label><input type='password'  name='password' id='want-password' value='' onkeypress='if (event.keyCode==13){$(\"#userLoginBtn\").click();}' />";
+						o += "<div><label for='bill/email2'>Email<\/label><input type='email' name='bill/email' id='data-bill_email2' value='"+email+"' /><\/div>";
+//the preventDefault below stops the form from submitting on enter keypress.
+						o += "<div><label for='want-password'>Password<\/label><input type='password'  name='password' id='want-password' value='' onkeypress='if (event.keyCode==13){$(\"#userLoginBtn\").click(); event.preventDefault();}' />";
 						o += "<button  class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleUserLogin($(\"#data-bill_email2\").val(),$(\"#want-password\").val());' id='userLoginBtn'>Log in<\/button><\/div><\/div>";
 	
 	
