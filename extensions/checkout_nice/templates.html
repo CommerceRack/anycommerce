@@ -284,7 +284,19 @@ do NOT change any div id's or messaging will not work properly.
 		<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.u.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
 	</div>
 
-	<ul id='chkout-payOptions' class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+	<div id='paymentOptionsContainer'>
+		<ul class='displayNone'>
+			<li><a href="#storedPaymentsContainer">Existing Payments</a></li>
+			<li><a href="#nonStoredPaymentsContainer">More Options</a></li>
+		</ul>
+		<div id='storedPaymentsContainer'>
+			<table data-bind="var: buyerWalletList(@wallets); format:object2Template; loadsTemplate: buyerWalletsListItem;"></table>
+		</div>
+		<div id='nonStoredPaymentsContainer'>
+			<ul id='chkout-payOptions' class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+		</div>
+	</div>
+	
 <!--
 	<div id='referenceNumberContainer' class='displayNone'>
 		<input type'text' name='want/reference_number' id='orderReferenceNumber' size='12' />
@@ -292,6 +304,16 @@ do NOT change any div id's or messaging will not work properly.
 -->
 </div>
 
+
+<!-- radio name is same as rest of payments so that only 1 can be selected and form still easily passes validation -->
+<table>
+	<tr id='buyerWalletsListItem'>
+		<td><input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" /></td>
+		<td data-bind="var: wallet(TD); format:text;"></td>
+		<td><span data-bind="var: wallet(ID); format:text;"></span></td>
+		<td>icon</td>
+	</tr>
+</table>
 
 
 <!--

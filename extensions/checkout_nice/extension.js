@@ -157,6 +157,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 //only send the request for addresses if the user is logged in or the request will return an error.
 				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.ext.store_checkout.calls.buyerAddressList.init();
+					app.ext.store_checkout.calls.buyerWalletList.init({},'immutable');
 					}
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
 				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init();
@@ -1301,10 +1302,18 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 
 
 			paymentOptions : function()	{
-//				app.u.dump('app.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
+				app.u.dump('app.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
 				var $panelFieldset = $("#chkoutPayOptionsFieldset").toggle(true).removeClass("loadingBG")
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
-				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');	
+				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');
+//if wallets exist, then tabs are created, putting wallets in open panel and everything else hidden away in tab 2.
+//the ul for the tabs is hidden by default so that when no wallets are present, no tabs show up.
+				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
+					$('#paymentOptionsContainer ul').show();
+					$('#paymentOptionsContainer').tabs();
+					app.renderFunctions.translateTemplate(app.data.buyerWalletList,'storedPaymentsContainer');
+					}
+				   
 				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
 				}, //paymentOptions
 		
@@ -1400,69 +1409,6 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 
 
-//generate the list of existing addresses (for users that are logged in )
-//appends addresses to a fieldset based on TYPE (bill or ship)
-			addressListOptions : function(TYPE)	{
-//				app.u.dump("BEGIN store_checkout.u.addressListOptions ("+TYPE+")");
-				var r = '';  //used for what is returned
-				var a; //a paticular address, set once within the loop. shorter that app.data... each reference
-				var parentDivId = TYPE=="bill" ? 'chkoutBillAddressFieldset' : 'chkoutShipAddressFieldset'; //the div id where r will be put
-				
-				var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
-								
-				if(!TYPE) {r = false}
-				else if($.isEmptyObject(app.data.buyerAddressList) || $.isEmptyObject(app.data.buyerAddressList['@'+TYPE])) {
-					r = false
-					}
-				else	{
-//if an address has already been selected, highlight it.  if not, use default.
-					if(app.u.isSet(app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id']))	{
-//						app.u.dump(' -> address what previously selected.');
-						selAddress = app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id'];								
-						}
-					else	{
-						selAddress = app.ext.store_checkout.u.determinePreferredAddress(TYPE);
-						}
-					var L = app.data.buyerAddressList['@'+TYPE].length;
-
-//					app.u.dump(" -> selectedAddressID = "+selAddress);
-					for(var i = 0; i < L; i += 1)	{
-						a = app.data.buyerAddressList['@'+TYPE][i];
-//						app.u.dump(" -> ID = "+a['_id']);
-						r += "<address class='pointer ui-state-default ";
-//if an address has already been selected, add appropriate class.
-						if(selAddress == a['_id'])	{
-//							app.u.dump(" -> MATCH!");
-							r += ' ui-state-active';
-							}
-//if no predefined address is selected, add approriate class to account default address
-						else if(a['_is_default'] == 1 && selAddress == false)	{
-							r += ' ui-state-active ';
-//							app.u.dump(" -> no address selected. using default. ");
-							}
-							
-						r += "' data-addressClass='"+TYPE+"' data-addressId='"+a['_id']+"' onClick='app.ext.convertSessionToOrder.u.selectPredefinedAddress(this);' id='"+TYPE+"_address_"+a['_id']+"'>";
-						r +=a[TYPE+'_firstname']+" "+a[TYPE+'_lastname']+"<br \/>";
-						r +=a[TYPE+'_address1']+"<br \/>";
-						if(a[TYPE+'_address2'])
-							r +=a[TYPE+'_address2']+"<br \/>";
-						r += a[TYPE+'_city'];
-//state, zip and country may not be populated. check so 'undef' isn't written to screen.
-						if(a[TYPE+'_state'])
-							r += " "+a[TYPE+'_state']+", ";
-						if(a[TYPE+'_zip'])
-							r +=a[TYPE+'_zip']
-						if(app.u.isSet(a[TYPE+'_country']))
-							r += "<br \/>"+a[TYPE+'_country'];					
-						r += "<\/address>";
-						}
-					r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); app.ext.convertSessionToOrder.u.removeClassFromChildAddresses(\""+parentDivId+"\");'>Enter new address or edit selected address<\/address>";
-					r += "<div class='clearAll'><\/div>";
-					}
-				return r;
-				}, //addressListOptions
-
-
 //X will be a 1 or a 0 for checked/not checked, respectively
 			handleCreateAccountCheckbox : function(X)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox');
@@ -1513,7 +1459,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				var errors = '';
 				var $errorDiv = $("#chkoutPreflightFieldsetErrors").empty().toggle(false); //make sure error screen is hidden and empty.
 				
-				if(app.u.isValidEmail(email) == false){
+				if(!app.u.isValidEmail(email)){
 					errors += "<li>Please provide a valid email address<\/li>";
 					}
 				if(!password)	{
@@ -1532,7 +1478,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				}, //handleUserLogin
 
 
-//run when a payment method is selected. updates cart/session and adds a class to the radio/label.
+//run when a payment method is selected. updates memory and adds a class to the radio/label.
 //will also display additional information based on the payment type (ex: purchase order will display PO# prompt and input)
 			updatePayDetails : function(paymentID)	{
 //				app.u.dump(" -> PAYID = "+paymentID);

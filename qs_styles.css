@@ -490,7 +490,7 @@ CHECKOUT
 
 #zCheckoutFrm address	{display:block; float:left; margin:12px; border:1px solid #cccccc; padding:10px; font-style:normal; text-align:left;} /* use a white border (if not colored) so elements don't shift when 'selected' class is added. */
 
-#zCheckoutFrm fieldset li	{margin-bottom:12px;}
+/* #zCheckoutFrm fieldset li	{margin-bottom:12px;} */
 
 /* the entry after the comma below handles 'supplemental' labels (under radio buttons, like in payment) */
 #zCheckoutFrm fieldset li label, #zCheckoutFrm fieldset li.paycon ul label	{text-align:right; padding-right:12px; display:inline-block;}

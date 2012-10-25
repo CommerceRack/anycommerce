@@ -2101,8 +2101,16 @@ $tmp.empty().remove();
 //					app.u.dump(' -> r = '+r);
 				$tag.text(r)
 				}
-			} //money
+			}, //money
 
+		object2Template : function($tag,data)	{
+//			app.u.dump("BEGIN admin.renderFormats.array2Template");
+//			app.u.dump(data.value);
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
+				}
+			}
 			
 		},
 

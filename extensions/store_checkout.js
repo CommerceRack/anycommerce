@@ -50,7 +50,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				return 1;
 				},
 			dispatch : function(tagObj,Q)	{
-				if(!Q)	{Q = 'immutable'}
+				if(!Q)	{Q = 'mutable'}
 				if(typeof tagObj != 'object')	{tagObj = {}}
 				tagObj.datapointer = "buyerWalletList";
 				app.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag": tagObj},Q);
@@ -103,21 +103,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				}
 			}, //cartPaypalSetExpressCheckout	
 
-
-// obj.token and obj.payerid are required.
-//this gets executed after a user is returned to checkout from paypal
-		cartPaypalGetExpressCheckoutDetails : {
-			init : function(obj)	{
-//				app.u.dump("BEGIN store_checkout.calls.cartPaypalGetExpressCheckoutDetails.init");
-//				app.u.dump(obj);
-				this.dispatch(obj);
-				return 1;
-				},
-			dispatch : function(obj)	{
-				var tagObj = {"datapointer":"cartPaypalGetExpressCheckoutDetails","extension":"convertSessionToOrder","callback":"handleCartPaypalGetECDetails"};
-				app.model.addDispatchToQ({"_cmd":"cartPaypalGetExpressCheckoutDetails","token":obj.token,"payerid":obj.payerid,"_tag":tagObj},'immutable');
-				}
-			}, //cartPaypalGetExpressCheckoutDetails	
 
 //update will modify the cart. only run this when actually selecting a shipping method (like during checkout). heavier call.
 		cartShippingMethodsWithUpdate : {
@@ -299,32 +284,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on cart page.
 				app.u.throwMessage(responseData,uuid);
 				}
-			},
-
-//mostly used for the error handling.
-		handleCartPaypalGetECDetails : {
-			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalGetECDetails.onSuccess');
-//do NOT execute handlePaypalFormManipulation here. It's run in panel view.
-				},
-			onError : function(responseData,uuid)	{
-				app.u.throwMessage(responseData,uuid);
-//nuke vars so user MUST go thru paypal again or choose another method.
-//nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.data.cartItemsList.payment.pt = null;
-				app.data.cartItemsList.payment.pi = null;
-				app.calls.cartSet.init({'payment' : {'pt':null,'pi':null}}); 
-				app.calls.refreshCart.init({},'immutable');
-				app.model.dispatchThis('immutable');
-//### for expediency. this is a set timeout. Need to get this into the proper sequence. needed a quick fix for a production bug tho
-				setTimeout("$('#paybySupplemental_PAYPALEC').empty().addClass('ui-state-highlight').append(\"It appears something went wrong with PayPal. Please <a href='#' onClick='app.ext.convertSessionToOrder.uities.handleChangeFromPayPalEC();'>Click Here</a> to choose an alternate payment method.\")",2000);
-				}
 			}
-
-
-
-
-
 		}, //callbacks
 
 		
@@ -362,10 +322,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
 			buildPaymentQ : function()	{
-				app.u.dump("BEGIN store_checkout.u.buildPaymentQ");
+//				app.u.dump("BEGIN store_checkout.u.buildPaymentQ");
 				var payby = $('input:radio[name="want/payby"]:checked').val()
 				app.u.dump(" -> payby: "+payby);
-				if(payby == 'CREDIT')	{
+				if(payby.indexOf('WALLET') == 0)	{
+					app.ext.store_checkout.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.store_checkout.u.getWalletByID(payby)));
+					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
+					}
+				else if(payby == 'CREDIT')	{
 					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
 					}				
 				else if(payby == 'PO')	{
@@ -386,7 +350,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 				else	{
 					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
 					}
-
 				},
 
 
@@ -412,21 +375,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 var $a; //a paticular address, set once within the loop. shorter that app.data... each reference
 var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
-			
+var lctype = TYPE.toLowerCase();
 //if an address has already been selected, highlight it.  if not, use default.
-if(app.u.isSet(app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id']))	{
-	selAddress = app.data.cartItemsList['data.selected_'+TYPE.toLowerCase()+'_id'];								
+if(app.data.cartItemsList && app.data.cartItemsList[lctype] && app.data.cartItemsList[lctype].shortcut)	{
+	selAddress = app.data.cartItemsList[lctype].shortcut;								
 	}
 else	{
 	selAddress = app.ext.store_checkout.u.determinePreferredAddress(TYPE);
 	}
 
-var L = app.data.buyerAddressList['@'+TYPE].length;
+var L = app.data.buyerAddressList['@'+lctype].length;
 //app.u.dump(" -> # addresses: "+L);
 //app.u.dump(" -> selectedAddressID = "+selAddress);
 
 for(var i = 0; i < L; i += 1)	{
-	a = app.data.buyerAddressList['@'+TYPE][i];
+	a = app.data.buyerAddressList['@'+lctype][i];
 //	app.u.dump(" -> ID = "+a['_id']);
 	r += "<address class='pointer ui-state-default ";
 //if an address has already been selected, add appropriate class.
@@ -599,7 +562,7 @@ this function closely mirrors core logic.
 				$x.addClass('selected  ui-state-active ui-corner-all');
 //wtf? when attempting to pass {"data."+addressClass+"_id" : $x.attr('data-addressId')} directly into the setSession function, it barfed. creating the object then passing it in works tho. odd.
 				var idObj = {};
-				idObj["data.selected_"+addressClass+"_id"] = $x.attr('data-addressId');  //for whatever reason, using this as the key in the setsession function caused a js error. set data.bill_id/data.ship_id = DEFAULT (or whatever the address id is)
+				idObj[addressClass+"/shortcut"] = $x.attr('data-addressId');  //for whatever reason, using this as the key in the setsession function caused a js error. set data.bill_id/data.ship_id = DEFAULT (or whatever the address id is)
 				
 //				app.u.dump(" -> addressClass = "+addressClass);
 //				app.u.dump(" -> addressID = "+$x.attr('data-addressId'));
@@ -779,7 +742,23 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump(" -> num tender matches: "+r);
 				return (typeof someFunction == 'function') ? r : inc;
 				},
-
+			
+			
+			getWalletByID : function(ID)	{
+				var r = false;
+				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
+					var L = app.data.buyerWalletList['@wallets'].length;
+					for(var i = 0; i < L; i += 1)	{
+						if(ID == app.data.buyerWalletList['@wallets'][i].ID)	{
+							r = app.data.buyerWalletList['@wallets'][i];
+							break;
+							}
+						}
+					}
+				return r;
+				},
+			
+			
 //for tax to accurately be computed, several fields may be required.
 //this function checks to see if they're populated and, if so, returns true.
 //also used in cartPaypalSetExpressCheckout call to determine whether or not address should be requested on paypal side or not.
