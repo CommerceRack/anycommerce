@@ -560,7 +560,7 @@ NOTES
 					P.width = P.width ? P.width : 600;
 					P.height = P.height ? P.height : 660;
 					
-					var $parent = this.handleParentForModal(parentID)
+					var $parent = app.u.handleParentForDialog(parentID)
 
 					if(!P.parentID)	{$parent.empty()} //only empty the parent if no parent was passed in. 
 					if(P.templateID)	{
@@ -595,7 +595,7 @@ NOTES
 				if(P.pid && P.templateID)	{
 //					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
 					var parentID = "product-modal"
-					var $parent = this.handleParentForModal(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
+					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
 					
 					if(!P.parentID)	{
 						app.u.dump(" -> parent not specified. empty contents.");
@@ -627,22 +627,10 @@ NOTES
 				else	{
 					app.u.dump(" -> pid ("+P.pid+") or templateID ("+P.templateID+") not set for viewer. both are required.");
 					}
+				return P;
 				}, //prodDataInModal
 
-//used in prodDataInModal and imageInModal
-//if a parentid is not passed in, a new id is created and added to the dom.
 
-			handleParentForModal : function(parentID)	{
-				if(!parentID)	{
-					parentID = 'placeholder_'+Math.floor(Math.random()*10001)
-					}
-				var $parent = $('#'+parentID);
-//if the parent doesn't already exist, add it to the dom.
-				if($parent.length == 0)	{
-					$parent = $("<div \/>").attr({"id":parentID}).appendTo(document.body);
-					}
-				return $parent;
-				}, //handleParentForModal
 
 
 

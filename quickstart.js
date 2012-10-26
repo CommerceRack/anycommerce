@@ -155,7 +155,7 @@ else	{
 				app.model.dispatchThis('passive');
 
 //adds submit functionality to search form. keeps dom clean to do it here.
-				app.ext.myRIA.u.bindAppViewForms();
+				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
 				app.ext.myRIA.vars.mcSetInterval = setInterval(app.ext.myRIA.u.handleMinicartUpdate,4000,'cartItemsList')
 				showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
@@ -752,7 +752,7 @@ fallback is to just output the value.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 			showContent : function(pageType,infoObj)	{
-				app.u.dump("BEGIN showContent ["+pageType+"]."); app.u.dump(infoObj);
+//				app.u.dump("BEGIN showContent ["+pageType+"]."); app.u.dump(infoObj);
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -812,7 +812,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.ext.myRIA.vars.session.recentCategories.unshift(infoObj.navcat);
 							}
 						
-						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj);
+						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj); //### look into having showPage return infoObj instead of just parentID.
 						break;
 	
 					case 'search':
@@ -822,7 +822,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
-					app.u.dump(" -> customer infoObj.performJumpToTop: "+infoObj.performJumpToTop)
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
 							var performJumpToTop = app.ext.myRIA.u.showCustomer(infoObj);
 							infoObj.performJumpToTop = infoObj.performJumpToTop || performJumpToTop;
@@ -890,12 +889,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					}
-//					app.u.dump("adding pushstate");
-//					app.u.dump(infoObj);
-				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop === false ? false  : true; //specific instances jump to top. these are passed in (usually related to modals).
-				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
+
 				r = app.ext.myRIA.u.addPushState(infoObj);
 				
 //r will = true if pushState isn't working (IE or local). so the hash is updated instead.
@@ -909,7 +905,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						window.location.hash = hash;
 						}
 					}
-				
+
 				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : 0},1000)} //new page content loading. scroll to top.				
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
@@ -974,19 +970,28 @@ else	{
 //Required Params:  pageType, pid and templateID.
 //no defaulting on template id because that'll make expanding this to support other page types more difficult.
 //assumes data to be displayed is already in memory.
-			quickView : function(P){
-				if(P && P.pageType && P.templateID)	{
-					if(P.pageType == 'product' && P.pid)	{
+			quickView : function(pageType,P){
+
+				if(pageType && P && P.templateID)	{
+					if(pageType == 'product' && P.pid)	{
 						app.ext.store_product.u.prodDataInModal(P);
+						_gaq.push(['_trackEvent','Quickview','User Event','product',P.pid]);
 						}
+						
+					else if(pageType == 'category' && P.navcat)	{
+						app.ext.myRIA.u.showPageInDialog (P)
+						_gaq.push(['_trackEvent','Quickview','User Event','category',P.navcat]);
+						}
+						
 					else	{
 						app.u.throwGMessage("Based on pageType, some other variable is required (ex: pid for pageType = product). P follows: "); app.u.dump(P);
 						}
-					_gaq.push(['_trackEvent','Quickview','User Event','product',P.pid]);
+					
 					}
 				else	{
-					app.u.throwGMessage("P should contain pageType and templateID. "); app.u.dump(P);
+					app.u.throwGMessage("quickView was missing either a pageType ["+pageType+"] or P.templateID: "); app.u.dump(P);
 					}
+				return false;
 				},
 
 /*
@@ -2011,7 +2016,25 @@ buyer to 'take with them' as they move between  pages.
 					}
 				$('#recentSearchesList').html(o);
 				},
-				
+
+			showPageInDialog : function(P)	{
+				if(P.templateID && P.navcat)	{
+					P.dialogID = P.templateID+'_'+app.u.makeSafeHTMLId(P.navcat)+"_dialog";
+//dialog can be set to true and will use default settings or it can be set to an object of supported dialog parameters.
+					P.dialog = $.isEmptyObject(P.dialog) ? {modal: true,width:'86%',height:$(window).height() - 100} : P.dialog; 
+					P.dialog.autoOpen = false; //always set to false, then opened below. fixes some issues with re-opening the same id in a modal.
+					var $parent = app.u.handleParentForDialog(P.dialogID,P.title);
+					P.parentID = P.dialogID+"_content"; //the parentID passed in is the modal ID. this is for the contents and needs to be different so showPage knows whether it has been rendered before or not.
+					this.showPage(P);
+					$parent.dialog(P.dialog);
+					$parent.dialog('open');
+					}
+				else	{
+					app.u.dump("WARNING! either templateID ["+P.templateID+"] or navcat ["+P.navcat+"] not passed into showPageInDialog");
+					}
+				return P;
+				},
+
 //best practice would be to NOT call this function directly. call showContent.
 
 			showPage : function(P)	{
@@ -2033,20 +2056,26 @@ buyer to 'take with them' as they move between  pages.
 						}
 					P.state = 'onInits';
 					app.ext.myRIA.u.handleTemplateFunctions(P);
-					var parentID = P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
+					var parentID = P.parentID || P.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
+					app.u.dump(" -> parentID: "+parentID);
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
-//						app.u.dump(" -> "+parentID+" already exists. Use it");
+						app.u.dump(" -> "+parentID+" already exists. Use it");
 						P.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(P);
 						}
 					else	{
-						
 						var $content = app.renderFunctions.createTemplateInstance(P.templateID,{"id":parentID,"catsafeid":catSafeID});
-						$content.addClass('displayNone'); //hidden by default for page transitions.
-						$('#mainContentArea').append($content);
-						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
+//if dialog is set, we've entered this function through showPageInDialog.
+//content gets added immediately to the dialog.
+//otherwise, content is added to mainContentArea and hidden so that it can be displayed with a transition.
+						if(P.dialogID)	{$('#'+P.dialogID).append($content)}
+						else	{
+							$content.addClass('displayNone'); //hidden by default for page transitions.
+							$('#mainContentArea').append($content);
+							}
 						
+						app.ext.store_navcats.calls.appCategoryDetailMax.init(catSafeID,{'callback':'fetchPageContent','extension':'myRIA','templateID':P.templateID,'parentID':parentID});
 						app.model.dispatchThis();
 						}
 
