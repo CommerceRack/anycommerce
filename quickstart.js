@@ -532,7 +532,7 @@ need to be customized on a per-ria basis.
 
 
 		pageTransition : function($o,$n)	{
-			$('html, body').animate({scrollTop : 0},1000); //new page content loading. scroll to top.
+			
 			$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
 
 //This is another example transition. old content slides out and new content slides in.
@@ -752,7 +752,7 @@ fallback is to just output the value.
 // myria.vars.session is where some user experience data is stored, such as recent searches or recently viewed items.
 // -> unshift is used in the case of 'recent' so that the 0 spot always holds the most recent and also so the length can be maintained (kept to a reasonable #).
 			showContent : function(pageType,infoObj)	{
-//				app.u.dump("BEGIN showContent ["+pageType+"].");
+				app.u.dump("BEGIN showContent ["+pageType+"]."); app.u.dump(infoObj);
 /*
 what is returned. is set to true if pop/pushState NOT supported. 
 if the onclick is set to return showContent(... then it will return false for browser that support push/pop state but true
@@ -778,7 +778,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //set some defaults.
 				infoObj.back = infoObj.back == 0 ? infoObj.back : -1; //0 is no 'back' action. -1 will add a pushState or hash change.
 				infoObj.performTransition = infoObj.performTransition || app.ext.myRIA.u.showtransition(infoObj,$old); //specific instances skip transition.
-				infoObj.performJumpToTop = infoObj.performJumpToTop || true; //specific instances jump to top. these are passed in (usually related to modals).
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 
 //if there's history (all pages loads after first, execute the onDeparts functions.
@@ -823,6 +822,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						break;
 	
 					case 'customer':
+					app.u.dump(" -> customer infoObj.performJumpToTop: "+infoObj.performJumpToTop)
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
 							var performJumpToTop = app.ext.myRIA.u.showCustomer(infoObj);
 							infoObj.performJumpToTop = infoObj.performJumpToTop || performJumpToTop;
@@ -892,6 +892,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //					app.u.dump("adding pushstate");
 //					app.u.dump(infoObj);
+				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
+//this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
+				infoObj.performJumpToTop === false ? false  : true; //specific instances jump to top. these are passed in (usually related to modals).
+				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
 				r = app.ext.myRIA.u.addPushState(infoObj);
 				
 //r will = true if pushState isn't working (IE or local). so the hash is updated instead.
@@ -906,8 +910,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						}
 					}
 				
-				
-				
+				if(infoObj.performJumpToTop)	{$('html, body').animate({scrollTop : 0},1000)} //new page content loading. scroll to top.				
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 					$('#appPreView').slideUp(1000,function(){
@@ -1822,7 +1825,7 @@ return r;
 				
 				
 				if(authState != 'authenticated' && this.thisArticleRequiresLogin(P))	{
-					r = false;
+					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
 //this code is here instead of in showLoginModal (currently) because the 'showCustomer' code is bound to the 'close' on the modal.
