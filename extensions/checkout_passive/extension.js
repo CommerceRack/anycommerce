@@ -529,17 +529,17 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 //				app.u.dump('BEGIN convertSessionToOrder.callbacks.loadPanelContent.onSuccess');
 
 //had some issues using length. these may have been due to localStorage/expired cart issue. countProperties is more reliable though, so still using that one.			
-				var itemsCount = app.model.countProperties(app.data.cartItemsList['@ITEMS']);
+				var itemsCount = app.model.countProperties(app.data.cartDetail['@ITEMS']);
 				if(itemsCount > 0)	{
 					
 //						app.u.dump(' -> authentication passed. Showing panels.');
-//						app.u.dump(' -> want/bill_to_ship = '+app.data.cartItemsList['want/bill_to_ship']);
+//						app.u.dump(' -> want/bill_to_ship = '+app.data.cartDetail['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
 //ship address will make itself visible if user is authenticated.
 					app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
 
 //bill to ship will be set to zero if user has disabled it, otherwise it will be 1 or undef.
-					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress',Number(app.data.cartItemsList['want/bill_to_ship']) == 0 ? false : true)
+					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress',Number(app.data.cartDetail['want/bill_to_ship']) == 0 ? false : true)
 
 					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods'); 
 					app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
@@ -973,7 +973,7 @@ an existing user gets a list of previous addresses they've used and an option to
 */
 			billAddress : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.billAddress.  ');
-				var data = app.data.cartItemsList;
+				var data = app.data.cartDetail;
 //				app.u.dump(data);
 				var txt = '';
 				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
@@ -988,7 +988,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //troubleshooting IE issues, so saved to var instead of manipulating directly. may not need this, but test in IE if changed.
 				var $panelFieldset = $("#chkoutBillAddressFieldset").removeClass("loadingBG").append("<p>"+txt+"<\/p>");
 //				app.u.dump(" -> transmogrify billing address.");
-				$panelFieldset.append(app.renderFunctions.transmogrify({'id':'billAddressUL'},'checkoutTemplateBillAddress',app.data.cartItemsList))
+				$panelFieldset.append(app.renderFunctions.transmogrify({'id':'billAddressUL'},'checkoutTemplateBillAddress',app.data.cartDetail))
 				
 				$('#billAddressUL').addClass(cssClass);
 
@@ -999,13 +999,13 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("#want-bill_to_ship").val('0');
 					$("#want-bill_to_ship_cb_container").toggle(false);
 					}
-				else if(app.data.cartItemsList['want/bill_to_ship']*1 == 0)	{
-//					app.u.dump(' -> bill to ship is disabled ('+app.data.cartItemsList['want/bill_to_ship']+')');
+				else if(app.data.cartDetail['want/bill_to_ship']*1 == 0)	{
+//					app.u.dump(' -> bill to ship is disabled ('+app.data.cartDetail['want/bill_to_ship']+')');
 					$("#want-bill_to_ship_cb").removeAttr("checked");
 					$("#want-bill_to_ship").val('0');
 					}
 				else	{
-//					app.u.dump(' -> bill to ship is enabled ('+app.data.cartItemsList['want/bill_to_ship']+')');
+//					app.u.dump(' -> bill to ship is enabled ('+app.data.cartDetail['want/bill_to_ship']+')');
 					$("#want-bill_to_ship").val('1');
 					$("#want-bill_to_ship_cb").attr("checked","checked");
 					}
@@ -1034,7 +1034,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 
 				$panelFieldset.removeClass('loadingBG').append(txt);
-				$panelFieldset.append(app.renderFunctions.transmogrify({'id':'shipAddressUL'},'checkoutTemplateShipAddress',app.data.cartItemsList))
+				$panelFieldset.append(app.renderFunctions.transmogrify({'id':'shipAddressUL'},'checkoutTemplateShipAddress',app.data.cartDetail))
 				
 				$('#shipAddressUL').addClass(cssClass); //address form is hidden if user is logged in, in favor of clickable predefined addresses.
 
@@ -1068,7 +1068,7 @@ in these instances, the selected method in the cart/memory/local storage must ge
 				var foundMatchingShipMethodId = false; 
 				var L = app.data.cartShippingMethods['@methods'].length;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartShippingMethods['@methods'][i].id == app.data.cartItemsList['want/shipping_id'])	{
+					if(app.data.cartShippingMethods['@methods'][i].id == app.data.cartDetail['want/shipping_id'])	{
 						foundMatchingShipMethodId = true;
 						break; //once a match is found, no need to continue the loop.
 						}
@@ -1102,7 +1102,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					}
 				$('#checkoutStuffList').empty(); //since the template isn't getting generated empty each time, the item list must be manually emptied (or it will be appended to)
 //SANITY -> yes, the template only needs to be added once (above) but it needs to be translated each time this function is executed.
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'chkoutCartSummary');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'chkoutCartSummary');
 				
 
 
@@ -1127,7 +1127,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.orderNotes');
 				var $panelFieldset = $("#chkoutOrderNotesFieldset").toggle(true).removeClass("loadingBG")
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateOrderNotesPanel','orderNotesContainer'));
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'orderNotesContainer');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'orderNotesContainer');
 //				app.u.dump('END app.ext.convertSessionToOrder.panelContent.orderNotes');
 				} //orderNotes
 
@@ -1530,7 +1530,7 @@ the refreshCart call can come second because none of the following calls are upd
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					id = data.value[i].id; //shortcut of this shipping methods ID.
-					isSelectedMethod = (id == app.data.cartItemsList['want'].shipping_id) ? true : false; //is this iteration for the method selected.
+					isSelectedMethod = (id == app.data.cartDetail['want'].shipping_id) ? true : false; //is this iteration for the method selected.
 					safeid = app.u.makeSafeHTMLId(data.value[i].id);
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					o += "<li class='shipcon "

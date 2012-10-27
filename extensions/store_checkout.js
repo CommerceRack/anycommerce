@@ -140,17 +140,17 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var total; //send blank (NOT ZERO) by default.
 				var country = $('#data-bill_country').val();
 
-				app.model.fetchData('cartItemsList'); //will make sure cart is loaded from localStorage (if present) if not in memory.
-				if(!$.isEmptyObject(app.data.cartItemsList))	{
-					total = app.data.cartItemsList['sum/balance_due_total'];
+				app.model.fetchData('cartDetail'); //will make sure cart is loaded from localStorage (if present) if not in memory.
+				if(!$.isEmptyObject(app.data.cartDetail))	{
+					total = app.data.cartDetail['sum/balance_due_total'];
 					}
 				if(country != "US")	{
 					// country is defaulted to the form value. If that value is NOT "US", then use it (a country has been selected).
 					// if the value is US, then it may be the default setting and the request should w/ country as cart/session value
 					// (country may have been set elsewhere) though the form 'should' default correctly, we don't rely on that.
 					}
-				else if(!$.isEmptyObject(app.data.cartItemsList) && app.data.cartItemsList['bill/countrycode'])	{
-					country = app.data.cartItemsList['bill/countrycode']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
+				else if(!$.isEmptyObject(app.data.cartDetail) && app.data.cartDetail['bill/countrycode'])	{
+					country = app.data.cartDetail['bill/countrycode']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
 					}
 
 				app.model.addDispatchToQ({"_cmd":"appPaymentMethods","_tag": {"datapointer":"appPaymentMethods","callback":callback,"extension":"convertSessionToOrder"},"country":country,"ordertotal":total},'immutable');
@@ -377,8 +377,8 @@ var $a; //a paticular address, set once within the loop. shorter that app.data..
 var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
 var lctype = TYPE.toLowerCase();
 //if an address has already been selected, highlight it.  if not, use default.
-if(app.data.cartItemsList && app.data.cartItemsList[lctype] && app.data.cartItemsList[lctype].shortcut)	{
-	selAddress = app.data.cartItemsList[lctype].shortcut;								
+if(app.data.cartDetail && app.data.cartDetail[lctype] && app.data.cartDetail[lctype].shortcut)	{
+	selAddress = app.data.cartDetail[lctype].shortcut;								
 	}
 else	{
 	selAddress = app.ext.store_checkout.u.determinePreferredAddress(TYPE);
@@ -432,7 +432,7 @@ r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); 
 //				app.u.dump('BEGIN convertSessionToOrder.uities.cartContentsAsLinks.');
 //				app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
-				var L = app.model.countProperties(app.data.cartItemsList['@ITEMS']);
+				var L = app.model.countProperties(app.data.cartDetail['@ITEMS']);
 //				app.u.dump(' -> # items in cart: '+L);
 				for(var i = 0; i < L; i += 1)	{
 //skip coupons.
@@ -571,7 +571,7 @@ this function closely mirrors core logic.
 
 //copy the billing address from the ID into the form fields.
 				app.ext.store_checkout.u.setAddressFormFromPredefined(addressClass,$x.attr('data-addressId'));
-				$('#data-bill_email').val() == app.data.cartItemsList['bill/email']; //for passive, need to make sure email is updated too.
+				$('#data-bill_email').val() == app.data.cartDetail['bill/email']; //for passive, need to make sure email is updated too.
 //copy all the billing address fields to the shipping address fields, if appropriate.
 				if($('#want-bill_to_ship').val() == '1') {
 					app.ext.store_checkout.u.setShipAddressToBillAddress();
@@ -722,16 +722,16 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
 				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
 				var r = new Array(); //what is returned if someFunction returns anything.
-				if(tender && app.data.cartItemsList && app.data.cartItemsList['@PAYMENTQ'])	{
+				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
 //					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
-					var L = app.data.cartItemsList['@PAYMENTQ'].length;
+					var L = app.data.cartDetail['@PAYMENTQ'].length;
 //					app.u.dump(" -> paymentQ.length: "+L);
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+" TN: "+app.data.cartItemsList['@PAYMENTQ'][i].TN);
-						if(app.data.cartItemsList['@PAYMENTQ'][i].TN == tender)	{
+//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
+						if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
 							inc += 1;
 							if(typeof someFunction == 'function')	{
-								r.push(someFunction(app.data.cartItemsList['@PAYMENTQ'][i]))
+								r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
 								}
 							}
 						}
@@ -883,11 +883,11 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					id = data.value[i].id;
 
 //whether or not this iteration is for the selected method should only be determined once, but is used on a couple occasions, so save to a var.
-					if(id == app.data.cartItemsList['want/shipping_id'])	{
+					if(id == app.data.cartDetail['want/shipping_id'])	{
 						isSelectedMethod = true;
 						}
 
-//app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartItemsList['want/shipping_id']);
+//app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartDetail['want/shipping_id']);
 					
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					

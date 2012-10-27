@@ -156,7 +156,7 @@ else	{
 
 //adds submit functionality to search form. keeps dom clean to do it here.
 				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
-				app.ext.myRIA.vars.mcSetInterval = setInterval(app.ext.myRIA.u.handleMinicartUpdate,4000,'cartItemsList')
+				app.ext.myRIA.vars.mcSetInterval = setInterval(app.ext.myRIA.u.handleMinicartUpdate,4000,'cartDetail')
 				showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 				

@@ -538,7 +538,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 			onSuccess : function(tagObj)	{
 //				app.u.dump('BEGIN convertSessionToOrder(nice).callbacks.loadPanelContent.onSuccess');
 //had some issues using length. these may have been due to localStorage/expired cart issue. countProperties is more reliable though, so still using that one.			
-				var itemsCount = app.model.countProperties(app.data.cartItemsList['@ITEMS']);
+				var itemsCount = app.model.countProperties(app.data.cartDetail['@ITEMS']);
 
 				if(itemsCount > 0)	{
 //					app.u.dump(" -> into itemsCount IF");
@@ -548,14 +548,14 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
 					if(app.u.determineAuthentication() != 'none')	{
 //						app.u.dump(' -> authentication passed. Showing panels.');
-//						app.u.dump(' -> want/bill_to_ship = '+app.data.cartItemsList['want/bill_to_ship']);
+//						app.u.dump(' -> want/bill_to_ship = '+app.data.cartDetail['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
 //ship address will make itself visible if user is authenticated.
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutAccountInfo');
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
 
 //bill to ship will be set to zero if user has disabled it, otherwise it will be 1 or undef.
-						app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress',Number(app.data.cartItemsList['want/bill_to_ship']) == 0 ? false : true)
+						app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress',Number(app.data.cartDetail['want/bill_to_ship']) == 0 ? false : true)
 
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods'); 
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
@@ -1058,7 +1058,7 @@ payment options, pricing, etc
 				var authState = app.u.determineAuthentication();
 				var email = '';
 				
-				if(app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{email = app.data.cartItemsList.bill.email;}
+				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{email = app.data.cartDetail.bill.email;}
 //username may not be an email address, so only use it if it passes validation.
 				else if(username && app.u.isValidEmail(username))	{email = username;}
 				
@@ -1136,7 +1136,7 @@ payment options, pricing, etc
 			accountInfo : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.accountInfo.  ');
 				var authState = app.u.determineAuthentication();
-				var createCustomer = app.data.cartItemsList['want/create_customer'] ? app.data.cartItemsList['want/create_customer'] : 0;
+				var createCustomer = app.data.cartDetail['want/create_customer'] ? app.data.cartDetail['want/create_customer'] : 0;
 				
 //				app.u.dump(' -> createCustomer = '+createCustomer);
 
@@ -1163,7 +1163,7 @@ payment options, pricing, etc
 	
 					var $panelFieldset = $("#chkoutAccountInfoFieldset").removeClass("loadingBG")
 					$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateAccountInfo','accountInfoContainer'));
-					app.renderFunctions.translateTemplate(app.data.cartItemsList,'accountInfoContainer');	
+					app.renderFunctions.translateTemplate(app.data.cartDetail,'accountInfoContainer');	
 	
 					$('#want-create_customer').val(createCustomer); //set the hidden form input to appropriate value.
 					}
@@ -1176,7 +1176,7 @@ an existing user gets a list of previous addresses they've used and an option to
 */
 			billAddress : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.billAddress.  ');
-				var data = app.data.cartItemsList;
+				var data = app.data.cartDetail;
 				var txt = '';
 				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
 			 	var authState = app.u.determineAuthentication();
@@ -1190,7 +1190,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //troubleshooting IE issues, so saved to var instead of manipulating directly. may not need this, but test in IE if changed.
 				var $panelFieldset = $("#chkoutBillAddressFieldset").removeClass("loadingBG").append("<p>"+txt+"<\/p>");
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateBillAddress','billAddressUL'));
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'billAddressUL');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'billAddressUL');
 				$('#billAddressUL').addClass(cssClass);
 
 //update form elements based on cart object.
@@ -1200,13 +1200,13 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("#want-bill_to_ship").val('0');
 					$("#want-bill_to_ship_cb_container").toggle(false);
 					}
-				else if(app.data.cartItemsList['want/bill_to_ship']*1 == 0)	{
-//					app.u.dump(' -> bill to ship is disabled ('+app.data.cartItemsList['want/bill_to_ship']+')');
+				else if(app.data.cartDetail['want/bill_to_ship']*1 == 0)	{
+//					app.u.dump(' -> bill to ship is disabled ('+app.data.cartDetail['want/bill_to_ship']+')');
 					$("#want-bill_to_ship_cb").removeAttr("checked");
 					$("#want-bill_to_ship").val('0');
 					}
 				else	{
-//					app.u.dump(' -> bill to ship is enabled ('+app.data.cartItemsList['want/bill_to_ship']+')');
+//					app.u.dump(' -> bill to ship is enabled ('+app.data.cartDetail['want/bill_to_ship']+')');
 					$("#want-bill_to_ship").val('1');
 					$("#want-bill_to_ship_cb").attr("checked","checked");
 					}
@@ -1237,7 +1237,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				$panelFieldset.removeClass('loadingBG').append(txt);
 
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateShipAddress','shipAddressUL'));
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'shipAddressUL');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'shipAddressUL');
 				$('#shipAddressUL').addClass(cssClass);
 
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
@@ -1270,7 +1270,7 @@ in these instances, the selected method in the cart/memory/local storage must ge
 				var foundMatchingShipMethodId = false; 
 				var L = app.data.cartShippingMethods['@methods'].length;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartShippingMethods['@methods'][i].id == app.data.cartItemsList['want/shipping_id'])	{
+					if(app.data.cartShippingMethods['@methods'][i].id == app.data.cartDetail['want/shipping_id'])	{
 						foundMatchingShipMethodId = true;
 						break; //once a match is found, no need to continue the loop.
 						}
@@ -1305,7 +1305,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					}
 				$('#checkoutStuffList').empty(); //since the template isn't getting generated empty each time, the list must be manually emptied.
 //SANITY -> yes, the template only needs to be added once (above) but it needs to be translated each time this function is executed.
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'chkoutCartSummary');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'chkoutCartSummary');
 //use the payby var, not radio, because the radio button may not exist on the DOM at this point
 //also, don't show it till a payment method is selected. Then it is less likely to appear then disappear because PO was selected.
 				if($('#data-bill_company').val() && app.ext.convertSessionToOrder.vars['want/payby'] && app.ext.convertSessionToOrder.vars['want/payby'] != "PO")	{$('#referenceNumberContainer').show()}
@@ -1353,7 +1353,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.orderNotes');
 				var $panelFieldset = $("#chkoutOrderNotesFieldset").toggle(true).removeClass("loadingBG")
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateOrderNotesPanel','orderNotesContainer'));
-				app.renderFunctions.translateTemplate(app.data.cartItemsList,'orderNotesContainer');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'orderNotesContainer');
 //				app.u.dump('END app.ext.convertSessionToOrder.panelContent.orderNotes');
 				} //orderNotes
 
@@ -1449,7 +1449,7 @@ when checkout initially loads, the checkbox for 'create account' is present, but
 don't toggle the panel till after preflight has occured. preflight is done once an email address is obtained.
 */
 
-				if(app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{
+				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
 					X ? $('#chkoutAccountInfoFieldset').toggle(true) : $('#chkoutAccountInfoFieldset').toggle(false);
 					}
 //update session.
@@ -1831,7 +1831,7 @@ the refreshCart call can come second because none of the following calls are upd
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					id = data.value[i].id; //shortcut of this shipping methods ID.
-					isSelectedMethod = (id == app.data.cartItemsList['want'].shipping_id) ? true : false; //is this iteration for the method selected.
+					isSelectedMethod = (id == app.data.cartDetail['want'].shipping_id) ? true : false; //is this iteration for the method selected.
 					safeid = app.u.makeSafeHTMLId(data.value[i].id);
 					shipName = app.u.isSet(data.value[i].pretty) ? data.value[i].pretty : data.value[i].name
 					o += "<li class='shipcon "

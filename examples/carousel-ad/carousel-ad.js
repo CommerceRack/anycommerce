@@ -120,8 +120,8 @@ ajaxRequest.success(function(){
 //executed as part of init. shows checkout button if cart is populated.
 		handleCheckoutButton : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN myRIA.callbacks.handleCheckoutButton.onSuccess ["+app.data.cartItemsList['data.item_count']+"]");
-				if(app.data.cartItemsList['data.item_count'] >= 1)
+				app.u.dump("BEGIN myRIA.callbacks.handleCheckoutButton.onSuccess ["+app.data.cartDetail['data.item_count']+"]");
+				if(app.data.cartDetail['data.item_count'] >= 1)
 					$('.checkoutNowButton').show(); //make sure the link to checkout is visible.
 				},
 			onError : function(responseData,uuid)	{

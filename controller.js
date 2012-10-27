@@ -352,13 +352,13 @@ app.model.addDispatchToQ({
 				var r = 1;
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which will likely need datapointer to be set).
 				tagObj = jQuery.isEmptyObject(tagObj) ? {} : tagObj;
-				tagObj.datapointer = "cartItemsList";
+				tagObj.datapointer = "cartDetail";
 				this.dispatch(tagObj,Q);
 				return r;
 				},
 			dispatch : function(tagObj,Q)	{
-//				app.u.dump('BEGIN app.ext.store_cart.calls.cartItemsList.dispatch');
-				app.model.addDispatchToQ({"_cmd":"cartItemsList","_zjsid":app.sessionId,"_tag": tagObj},Q);
+//				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj},Q);
 				} 
 			} // refreshCart removed comma from here line 383
 		}, // calls
@@ -863,7 +863,7 @@ commented out in 201238
 			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 			else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{r = 'facebook';}
 			else if(app.data.whoAmI && app.data.whoAmI.cid)	{r = 'soft'}
-			else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList.bill.email)	{r = 'guest';}
+			else if(app.model.fetchData('cartDetail') && app.data.cartDetail.bill.email)	{r = 'guest';}
 			else{}
 			return r;
 			}, //whatAuthIsThisSession
@@ -885,9 +885,9 @@ commented out in 201238
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
 				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList && app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.cid))	{
+				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.cid))	{
 					r = 'authenticated';
-					app.vars.cid = app.data.cartItemsList.customer.cid;
+					app.vars.cid = app.data.cartDetail.customer.cid;
 					}
 //need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
 //and all third parties would get 'guest'
@@ -895,7 +895,7 @@ commented out in 201238
 					r = 'thirdPartyGuest';
 //					app.thirdParty.fb.saveUserDataToSession();
 					}
-				else if(app.model.fetchData('cartItemsList') && app.data.cartItemsList && app.data.cartItemsList.bill && app.data.cartItemsList.bill.email)	{
+				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
 					r = 'guest';
 					}
 				else	{
@@ -930,12 +930,12 @@ commented out in 201238
 		getUsernameFromCart : function()	{
 //			app.u.dump('BEGIN u.getUsernameFromCart');
 			var r = false;
-			if(app.data.cartItemsList.customer && app.u.isSet(app.data.cartItemsList.customer.login))	{
-				r = app.data.cartItemsList.customer.login;
+			if(app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
+				r = app.data.cartDetail.customer.login;
 //				app.u.dump(' -> login was set. email = '+r);
 				}
-			else if(app.data.cartItemsList.bill && app.u.isSet(app.data.cartItemsList.bill.email)){
-				r = app.data.cartItemsList.bill.email;
+			else if(app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
+				r = app.data.cartDetail.bill.email;
 //				app.u.dump(' -> bill/email was set. email = '+r);
 				}
 			else if(!jQuery.isEmptyObject(app.vars.fbUser))	{
@@ -1488,10 +1488,10 @@ later, it will handle other third party plugins as well.
 				obj.amazonpayment = true;
 				obj.googlecheckout = true;
 				
-				var L = app.data.cartItemsList['@ITEMS'].length;
+				var L = app.data.cartDetail['@ITEMS'].length;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartItemsList['@ITEMS'][i].full_product['gc:blocked'])	{obj.googlecheckout = false}
-					if(app.data.cartItemsList['@ITEMS'][i].full_product['paypalec:blocked'])	{obj.paypalec = false}
+					if(app.data.cartDetail['@ITEMS'][i].full_product['gc:blocked'])	{obj.googlecheckout = false}
+					if(app.data.cartDetail['@ITEMS'][i].full_product['paypalec:blocked'])	{obj.paypalec = false}
 					}
 
 				return obj;

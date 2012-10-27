@@ -690,8 +690,8 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
 			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
 			var datapointer = "order|"+responseData.orderid;
-			app.storageFunctions.writeLocal(datapointer,app.data.cartItemsList);  //save order locally to make it available for upselling et all.
-			app.data[datapointer] = app.data.cartItemsList; //saved to object as well for easy access.
+			app.storageFunctions.writeLocal(datapointer,app.data.cartDetail);  //save order locally to make it available for upselling et all.
+			app.data[datapointer] = app.data.cartDetail; //saved to object as well for easy access.
 	//nuke cc fields, if present.		
 			app.data[datapointer].cart['payment/cc'] = null;
 			app.data[datapointer].cart['payment/cv'] = null;

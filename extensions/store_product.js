@@ -96,7 +96,7 @@ var store_product = function() {
 				sfo["_tag"] = tagObj;
 //				app.u.dump("GOT HERE!"); app.u.dump(sfo); app.u.dump(tagObj);
 				app.model.addDispatchToQ(sfo,'immutable');
-				if(app.data.cartItemsList && app.data.cartItemsList.payment)
+				if(app.data.cartDetail && app.data.cartDetail.payment)
 					app.calls.cartSet.init({'payment':{'pt':null}}); //nuke paypal token anytime the cart is updated.
 				}
 			},//addToCart
