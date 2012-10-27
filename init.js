@@ -57,8 +57,20 @@ app.vars.scripts.push({
 app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'model.js','validator':function(){return (typeof zoovyModel == 'function') ? true : false;}})
 app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'includes.js','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 
-
-
+//slider
+app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'cycle.js','validator':function(){
+ app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
+ return (typeof jQuery().cycle == 'undefined') ? false : true;}
+ })
+//carousel
+app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'carousel.js','validator':function(){
+ app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
+ return (typeof jQuery().cycle == 'undefined') ? false : true;}
+ })
+ 
+ //basic_slider
+ 
+ 
 //used for making text editable (customer address). non-essential. loaded late.
 app.vars.scripts.push({'pass':8,'location':app.vars.baseURL+'jeditable.js','validator':function(){return (typeof $ == 'function' && jQuery().editable) ? true : false;}})
 
@@ -101,6 +113,54 @@ app.u.appInitComplete = function()	{
 	app.u.dump("Executing myAppIsLoaded code...");
 //display product blob fields in tabbed format.
 	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) 
+//cycler
+app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
+		 //slider
+		  var $target = $('#wideSlideshow');
+		  if($target.children().length > 1) {
+				
+			   $('#wideSlideshow').cycle({
+			   	fx:'fade',
+			   	speed:'slow',
+			   	timeout: 5000,
+			   	pager:'#slideshowNav',
+			   	pagerAnchorBuilder: function(index,el){
+			   		return '<a class="nav_but" href="#"><img src="img/circle_black.png"></a>';
+			   	},
+			   	slideExpr: 'li'			   
+			   });
+			 
+			   
+			};
+			
+			//carousel
+		//$('#BestItems').carousel();
+	
+		//$('#SalesItems').jcarousel();
+		//$('#NewItems').jcarousel();
+		$('#b1').click(function(){
+		$('#BestItems').animate({"left":"-=100px"},'slow');
+		
+		});
+		
+		$('#b2').click(function(){
+		$('#BestItems').animate({"left":"+=100px"},'slow');
+		});
+		
+		$('#v1').click(function(){
+		$('#NewItems').animate({"left":"-=100px"},'slow');
+		
+		});
+		
+		$('#v2').click(function(){
+		$('#NewItems').animate({"left":"+=100px"},'slow');
+		});
+		
+	})
+			 
+
+	
+	
 //sample for adding a onInit
 	app.ext.myRIA.template.homepageTemplate.onInits.push(function(P) {
 		//do something.

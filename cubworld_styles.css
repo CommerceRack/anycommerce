@@ -1,0 +1,1240 @@
+
+body,html	{font-size:100%; margin:0;font-family: Arial,Helvetica,sans-serif;}
+
+#appTemplates {display:none;} /* container for all templates. should be hidden */
+
+#appPreView	{width:550px; margin:0 auto;}
+
+
+/*
+loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
+loadingBG classname is removed once template is rendered.
+note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
+note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
+*/
+.loadingBG	{background-image:url(loading.gif); background-repeat: no-repeat; background-position: center center; min-height:100px; min-width:100px;}
+li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center; min-height:20px; min-width:20px;}
+span.wait	{display:inline-block;}
+
+/******* global styles - added for cross-browser uniformity or usability ******/
+
+img	{border:0; vertical-align: top; display:inline-block;} /* vertical-align: top; removes the whitespace sometimes added under an image.  */
+button {display:inline-block; margin: 0; padding: 0; cursor:pointer !important;}
+p	{margin-bottom:12px;}
+
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	}
+td	{vertical-align:top;}
+td.valignMiddle	{vertical-align: middle;}
+
+
+
+/* feel free to delete these or override in your own .css file */
+h1, h2, h3, h4, h6	{padding:0; margin:0;}
+h5{padding:0; margin:0;}
+p	{margin:0 0 12px 0;}
+
+/* chrome and safari add an outer border/glow to the input in focus. this removes it. */
+input:focus {
+	outline:none;
+	}
+
+button:focus	{outline:none;}
+button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default class doesn't handle padding for 'button' elements. */
+.zform_number	{width:50px;}
+
+/*
+classes used on menus that are toggled on/off. wrap offMenu around the default buttons and onMenu around buttons that get turned on.
+for example, in /customer/myaccount, a 'change' button is displayed (wrapped in offMenu) for each address. onClick, 'onMenu' is toggled on, revealing save and cancel
+and offMenu is toggle off, hiding the change button.
+*/
+.onMenu	{display:none;}
+.offMenu	{}
+
+
+.bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
+
+
+/* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
+
+
+
+/******* positioning *******/
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+
+.alignCenter	{text-align:center;}
+.alignLeft	{text-align:left;}
+.alignRight	{text-align:right;}
+
+.center	{margin:0 auto;}
+
+
+/****** aesthetics/usability ******/
+
+/* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
+.disabled	{
+	cursor:crosshair !important;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+.pointer	{cursor:pointer;}
+
+/* used when an element needs to start of hidden. this is used frequently. */
+.displayNone	{display:none;}
+
+.lineThrough	{text-decoration:line-through}
+.underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
+.borderNone	{border:none;}
+
+.clearfix	{clear:both;}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+	
+/* added to a piece of text once it becomed editable */
+.editable	{} /* put this on any editable field. */
+.editEnabled	{border:1px solid #ffcc00; min-width:25px; min-height:22px; width:200px; display:inline-block; padding:2px; margin-bottom:2px;} /* added to any editable field once editor is enabled. */
+.edited		{border:1px solid #390;} /* added if a field is changed */
+
+
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px;}
+.stdMargin	{margin:12px;}
+
+
+
+
+/****** APP specific styles ******/
+
+
+/* messaging css. some error css is defined in the jqueryui styles */
+.appMessage	{margin-bottom:3px; text-align:left;}
+.appMessage .ui-icon	{float:left; margin:4px 5px;}
+.appMessage {padding:5px;} /* add padding to children, not parent, that way we can empty the parent and no space is reserved */
+.appMessage ul	{margin-left:12px; font-size:.9em;}
+.appMessage ul li	{margin:0; padding:0;}
+
+.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae; background:#dff6df; color:#333333;}
+.ui-state-warning	{border:1px solid #f58d48; background:#ffdfc9; color:#333333;}
+
+
+/* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
+.appAccordianesque .ui-accordion-header {padding:3px 24px;}
+
+/* pages like search results, company and/or customer have a side column of links which can be placed/styled w/ this class */
+.sideline	{float:right; width:200px; margin:0 0 24px 24px;}
+.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+
+
+
+
+/***************************************************
+
+LISTS (product list and/or subcategory list)
+these get used just about everywhere. leave these fairly generic 
+and override using classes or id's as needed.
+
+***************************************************/
+
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
+.quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
+
+/* over rides - height and width ensure each row is the same height. percentages could be used for width */
+.productList li	{width:150px; height:250px; position:relative;}
+.lineItemProdlist li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
+
+.lineItemProdlist .prodThumb	{margin-right:12px;}
+
+.categoryList li	{width:150px; height:200px;}
+
+.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
+
+.productList li, categoryList li	{font-size:.8em;}
+
+.productList h4, .categoryList h4	{font-size:1em;}
+.productList h5, .categoryList h5	{font-size:.9em;}
+.productList h6, .categoryList h6	{font-size:.85em;}
+
+
+/* multpage header for lists (product list) - most styling handled by jqueryUI */
+
+.mpControls	{padding:2px 6px;}
+
+
+
+
+/* used for the picture slider mouse over effect in some product lists */
+
+.slideMe	{position:absolute; top:0px;}
+.slideMe, .slideMe li	{list-style:none; margin:0; padding:0;}
+.slideMe li	{float:left; margin-right:2px; border:0;}
+
+
+
+
+
+/***************************************************
+
+PRODUCT DETAIL PAGE (productTemplate)
+
+***************************************************/
+
+#prodViewerTable	{width:100%;}
+
+.breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
+
+/* primary image and thumbnails */
+.imageContainer	{width:10%; padding-right:24px;}
+#prodViewerTable .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+
+
+.prodSummaryContainer	{width:90%;}
+
+
+#tabbedProductContent #prodReviewsTab	{display:block;} /* reviews tab always shows up */
+
+/*
+the child list and loading graphic should only show up IF the product is a parent.
+so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
+*/
+.grpType_PARENT	{display:block; margin-bottom:12px;}
+#prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
+
+.prodViewerAddToCartForm	{margin-bottom:24px;}
+.prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
+.prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
+
+#CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
+
+.pogType_attribs	{display:none;} /* don't show finder attributes */
+
+/****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
+
+.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
+.reviewSummaryContainer	.numReviews:after	{content:": "}
+.reviewSprite	{background: url(qs_reviews_stars-124x324.png) no-repeat; width:124px; height:22px; display:inline-block;}
+.review_0 	{background-position:0 0;}
+.review_1 	{background-position:0 -29px;}
+.review_2	{background-position:0 -61px;}
+.review_3	{background-position:0 -91px;}
+.review_4	{background-position:0 -121px;}
+.review_4	{background-position:0 -151px;}
+.review_6	{background-position:0 -181px;}
+.review_7	{background-position:0 -211px;}
+.review_8	{background-position:0 -241px;}
+.review_9	{background-position:0 -271px;}
+.review_10	{background-position:0 -302px;}
+
+.prodlist .review_0	{display:none;} /* hide the stars for items with no reviews */
+
+
+/****** REVIEW LIST - on product detail page, used for product reviews. ******/
+#prodViewerReviews	{margin:0; padding:0;} /* parent ul containing all reviews, each review as an li */
+.reviewLineItem {margin:0 0 12px 0; padding:0 0 12px 0; display:block; clear:both; border-bottom:1px #cccccc dotted;} /* on the li of an individual review */
+.prodReviewInfo	{float:left; display:block; width:165px; list-style:none; margin:0 12px 0px 0; font-weight:normal; padding:0;} /* on the ul of the list containing the name, location, date, etc */
+.prodReviewInfo li	{display:block; clear:both;} /* applies to li for location, name, date, etc */
+.prodReviewTemplate li p	{font-weight:normal; margin:0; padding:0;}
+
+.reviewLineItem blockquote	{margin:0 0 0 185px; padding:0;}
+
+
+/****** WRITE REVIEW MODAL ******/
+#reviewFrm label	{display:block; text-align:right; float:left; width:150px;}
+#reviewsMessage		{width:250px; height:250px;}
+#reviewFrm input, #reviewFrm textarea, #reviewFrm select	{margin-bottom:5px;}
+#reviewFrm .ui-button	{float:right;}
+
+/***************************************************
+
+BREADCRUMB
+ -> used on product and category pages
+
+***************************************************/
+
+
+#breadcrumb	{margin-bottom:12px;}
+#breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
+#breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
+#breadcrumb li:last-child:after	{content:"";}
+
+#breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold; cursor:text;}
+
+
+
+/***************************************************
+
+cartTemplate
+
+***************************************************/
+
+
+
+
+.cartContainer	{width:100%;}
+
+
+
+/***************************************************
+
+CUSTOMER PAGES
+
+***************************************************/
+
+
+
+
+/****** LOGIN MODAL ******/
+#loginFormForModal fieldset	{border:0}
+.loginOption fieldset div	{margin-bottom:12px;}
+.loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
+.loginOption label:after	{margin-right:12px; content:":"}
+
+
+/****** NEWSLETTER SUBSCRIBE/ACCOUNT CREATE ******/
+#subscribeFormContainer .userInfo div	{margin-bottom:6px;}
+#subscribeFormContainer li	{list-style:none;}
+#subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
+.subscriberLists label	{width:300px;}
+
+
+/****** ORDER HISTORY AND INVOICE ******/
+
+#ordersArticle	{margin-right:250px;} /* w/out the margin, the sections lay over the sideline */
+#ordersArticle .ui-accordion-content	{padding:.4em} /* reduce padding here to make a little extra room */
+#ordersArticle .orderContentsTable	{width:100%}
+
+
+#orderInvoiceSoloPage table	{width:700px;}
+.orderContentsProdlistContainer	{width:500px;}
+.orderContentsProdlistContainer .prodThumbContainer	{float:left; margin:0 5px 5px 0;}
+
+
+/****** MY ACCOUNT ******/
+
+#buyerAddresses	{margin-bottom:12px;}
+#buyerAddresses h2	{margin:12px 0; clear:both;}
+#buyerAddresses address	{margin:0 0px 12px 0; float:left; width:90%; display:block; padding:5px;}
+
+
+
+/***************************************************
+
+SEARCH RESULTS PAGE
+
+***************************************************/
+
+#resultsProdlist {
+	margin:0 auto;
+	width: 100%;
+	}
+
+#searchNav a	{padding:2px 6px;}
+#recentSearchesList	{border-top:0;}
+
+
+
+/***************************************************
+
+HELP PAGES
+
+***************************************************/
+
+
+
+/***** CONTACT US ******/
+#contactForm { padding:0; margin: 0 auto; max-width:350px; width:100%;}
+#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
+#contactForm div	{margin-bottom:5px}
+#contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
+#contactForm input, #contactForm textarea	{width:150px;}
+#contactForm textarea	{height:125px;}
+
+
+
+
+
+
+
+
+
+
+/***************************************************
+
+CART
+NOTE - Some of these classes are also shared with the cart summary that appears during checkout.
+
+***************************************************/
+
+.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
+.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
+.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
+
+.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
+.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
+
+.checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
+
+.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
+
+.cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
+
+.checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
+
+
+
+
+
+/***************************************************
+
+CHECKOUT
+
+***************************************************/
+
+
+/* the padding is needed for buttons that use loadingButtonBG.  this is applied to all buttons for the sake of consistency */
+#zCheckoutContainer button	{padding:3px 20px;}
+.cartTotalLineItem .prodThumb	{margin:0 12px 12px 0;}
+
+
+#zCheckoutContainer h2	{font-size:1em; margin:0; padding:0;}
+
+#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
+
+#modalProcessCheckout .loadingBG	{width:100px; height:200px;}
+
+#returnFromThirdParty	{padding:5px;}
+#returnFromThirdParty .ui-icon	{margin-right: .3em;}
+
+
+
+/* -----------------> CHECKOUT  <----------------- */
+
+/* some global styles, within checkout. */
+
+#checkoutFrm label	{vertical-align:top}
+
+.checkoutFormContainer legend	{padding:3px 12px; margin-left:12px;}
+.checkoutFormContainer fieldset	{padding:12px; margin-bottom:12px;}
+
+
+/* these are the errors that appear next to the place order button, typically reporting validation errors */
+#chkoutSummaryErrors	{clear:both;}
+#chkoutSummaryErrors li	{text-align:right;}
+
+#zCheckoutContainer .ui-widget p	{margin:3px;}
+
+/* by defualt, gift card will appear in the payment choices panel, above the other payment options */
+#giftCardContainer	{padding:5px 0px 5px 0px; border-bottom:1px dashed #efefef; display:block; text-align:left;}
+#giftCardContainer	label	{padding-right:12px;}
+#giftCardContainer	button	{margin-left:12px;}
+
+
+#couponContainer	{clear:both; float:right;}
+#couponFrmContainer	{clear:both;}
+
+
+/* preflight panel is used in 'nice' checkout and shows login information */
+#chkoutPreflightFieldset	{width:auto;}
+#chkoutPreflightFieldset .preflightInputContainer	{float:left; margin-right:24px; padding-bottom:12px;}
+#chkoutPreflightFieldset .preflightInputContainer .h2	{margin-bottom:12px;}
+#chkoutPreflightFieldset div button	{margin-left:12px;}
+
+#preflightGuestInputs label,
+#preflightAccountInputs label,
+#preflightAuthenticatedInputs label	{width:140px; display:inline-block;}
+
+
+#checkoutTemplateCostSummary	{text-align:right;}
+
+#chkoutCartSummary #cartSummaryTotalsContainer	{width:auto;}
+.checkoutFormContainer fieldset, #chkoutCartSummary	{margin:0 0px 12px 0; min-height:50px;}
+.checkoutFormContainer fieldset textarea	{width:80%; height:100px;}
+
+#chkoutBillAddressFieldset label:after, 
+#chkoutAccountInfoFieldset label:after, 
+#chkoutPreflightFieldset label:after, 
+#chkoutShipAddressFieldset label:after,
+.paybySupplemental label:after { content: ":"; }
+
+#chkoutBillAddressFieldset label, 
+#chkoutAccountInfoFieldset label, 
+#chkoutShipAddressFieldset label, 
+.paybySupplemental label { width:140px; }
+
+#chkout-create_customerContainer label	{width:auto;}
+#chkout-create_customerContainer label:after	{content: ""}
+
+#chkoutSummaryTotalsContainer	{float:right; width:35%;}
+#checkoutStuffList	{float:left; width:60%}
+#checkoutStuffList .prodThumb	{float:left;}
+
+#chkoutPlaceOrderBtn	{font-size:1.5em; font-weight:bold; 
+	clear:both; margin:12px 0;
+	}
+
+
+#zCheckoutFrm address	{display:block; float:left; margin:12px; border:1px solid #cccccc; padding:10px; font-style:normal; text-align:left;} /* use a white border (if not colored) so elements don't shift when 'selected' class is added. */
+
+#zCheckoutFrm fieldset li	{margin-bottom:12px;}
+
+/* the entry after the comma below handles 'supplemental' labels (under radio buttons, like in payment) */
+#zCheckoutFrm fieldset li label, #zCheckoutFrm fieldset li.paycon ul label	{text-align:right; padding-right:12px; display:inline-block;}
+
+
+#zCheckoutFrm fieldset input[type=text], #zCheckoutFrm fieldset input[type=tel], #zCheckoutFrm fieldset input[type=password], #zCheckoutFrm fieldset input[type=email]	{width:220px;}
+#zCheckoutFrm .checkbox	label	{text-align:left; width:240px;}
+#zCheckoutFrm .checkbox	{ padding-left:120px; clear:both;}
+
+
+#zCheckoutFrm fieldset li.paycon, #zCheckoutFrm fieldset li.shipcon	{margin-top:10px; }
+#zCheckoutFrm fieldset li.paycon label, #zCheckoutFrm fieldset li.shipcon label	{text-align:left; line-height:1.4em;}
+
+
+#zCheckoutFrm fieldset li.bill_zip input, #zCheckoutFrm fieldset li.ship_zip input	{width:80px;}
+#zCheckoutFrm fieldset li.bill_state, #zCheckoutFrm fieldset li.ship_state	{float:left;}
+#zCheckoutFrm fieldset li.bill_state input, #zCheckoutFrm fieldset li.ship_state input, #zCheckoutFrm fieldset .bankState	{width:40px;}
+
+#zCheckoutFrm fieldset p	{clear:both;}
+
+.mandatory input[type=text], .mandatory input[type=tel], .mandatory select	{border:1px solid #990000}
+.mandatory label{color:#990000; font-weight:bold;}
+.mandatory span:after	{content: "*";}
+
+
+.paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
+.paybySupplemental .zform_select {margin-right:12px;}
+
+
+.facebookSendLineItem	{float:left; margin:3px;}
+.facebookSendLineItem img	{height:65px; width:56px;}
+
+
+/* error containers */
+p.zwarn, ul.zwarn	{border:1px solid #cc0000; padding:5px; margin:0 0 12px 0; background:#ffd6d6; clear:both; text-align:left;}
+ul.zwarn li	{margin-left:15px;}
+
+/* applied to fieldset once validated */
+.validatedFieldset	{} /* border:1px solid #006600 */
+.validatedFieldset legend	{} /* background-image:url(images/checkmark-25x26.png); background-position: top right; background-repeat: no-repeat; */
+
+
+
+/* -----------------> POST-CHECKOUT MARKETING PAGE  <----------------- */
+
+.checkoutSuccess	{padding:20px 0;} /* don't change this to margin. will F up sites */
+
+
+.ocmThirdParty	{ line-height:200%; width:300px;}
+.ocmThirdParty .ocm	{margin:0 5px 5px 0;  float:left;}
+
+
+
+
+
+
+
+
+
+/* Pure CSS3 Multi Level Drop Down Navigation Menu */
+/*             http://www.bloggermint.com/demos/darknavmenu/#            */
+
+
+/* menu container */
+.ddUlMenu {
+	overflow: hidden;
+	}
+.ddUlMenu ul {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier1 menu behavior */
+.ddUlMenu ul li {
+	margin:0;
+	padding:0;
+	list-style:none;
+	}
+
+/* tier 1 menu link style (ok to change this). will affect tier2 also */
+.ddUlMenu ul li a {
+	float: left;
+	text-decoration:none;
+	padding:0 12px;
+	cursor:pointer;
+	}
+
+
+.ddUlMenu li ul {
+	background:#efefef;
+	left: -999em;
+	margin: 14px 0px 0 -20px; /* top margin should = tier 1 line-height - 1px...ish */
+	position: absolute;
+	width: 160px;
+	z-index: 9999;
+	border:1px solid #cccccc;
+	}
+
+.ddUlMenu li:hover ul {
+	left: auto;
+	}
+
+/* tier 2 nav */
+.ddUlMenu li ul li	{cursor:pointer;} /* click is likely binded to li, so make it all a cursor */
+.ddUlMenu li ul a {
+	background: none;
+	line-height:24px;
+	font-weight:normal; font-size:.8em;
+	display:block;
+	border: 0 none;
+	width: 160px;
+	}
+
+
+
+
+
+
+
+
+/*
+###################################
+
+
+sportsworld styles
+
+
+
+###################################
+*/
+
+
+/**/
+
+.ui-grid-a > .ui-block-a.main { width: 20% }
+.ui-grid-a > .ui-block-b.side { width: 80%; } 
+/**/
+
+#breadcrumb{
+margin-top:10px;
+}
+
+/**/
+/*
+.myButton {
+
+-moz-box-shadow:inset 0px 1px 0px 0px #f5978e;
+-webkit-box-shadow:inset 0px 1px 0px 0px #f5978e;
+box-shadow:inset 0px 1px 0px 0px #f5978e;
+
+background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #f24537), color-stop(1, #c62d1f));
+background:-moz-linear-gradient(top, #f24537 5%, #c62d1f 100%);
+background:-webkit-linear-gradient(top, #f24537 5%, #c62d1f 100%);
+background:-o-linear-gradient(top, #f24537 5%, #c62d1f 100%);
+background:-ms-linear-gradient(top, #f24537 5%, #c62d1f 100%);
+background:linear-gradient(to bottom, #f24537 5%, #c62d1f 100%);
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#f24537', endColorstr='#c62d1f',GradientType=0);
+
+background-color:#f24537;
+
+-moz-border-radius:6px;
+-webkit-border-radius:6px;
+border-radius:6px;
+
+border:1px solid #d02718;
+
+display:inline-block;
+color:#ffffff;
+font-family:arial;
+font-size:15px;
+font-weight:bold;
+padding:6px 24px;
+text-decoration:none;
+
+text-shadow:0px 1px 0px #810e05;
+
+}
+
+.myButton:hover {
+
+background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #c62d1f), color-stop(1, #f24537));
+background:-moz-linear-gradient(top, #c62d1f 5%, #f24537 100%);
+background:-webkit-linear-gradient(top, #c62d1f 5%, #f24537 100%);
+background:-o-linear-gradient(top, #c62d1f 5%, #f24537 100%);
+background:-ms-linear-gradient(top, #c62d1f 5%, #f24537 100%);
+background:linear-gradient(to bottom, #c62d1f 5%, #f24537 100%);
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#c62d1f', endColorstr='#f24537',GradientType=0);
+
+background-color:#c62d1f;
+}
+.myButton:active {
+position:relative;
+top:1px;
+}
+*/
+
+.myButton{
+margin-top:50px;
+padding-top:10px;
+padding-bottom:10px;
+padding-left:30px;
+padding-right:30px;
+border-left:1px solid rgba(255,255,255,0.5);
+border-right:1px solid rgba(255,255,255,0.5);
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+-moz-box-shadow:    -1px 0px 4px 2px rgba(125,125,125,0.5);
+-webkit-box-shadow: -1px 0px 4px 2px rgba(125,125,125,0.5);
+box-shadow:         -1px 0px 4px 2px rgba(125,125,125,0.5);
+background: #4c4c4c; /* Old browsers */
+background: -moz-linear-gradient(top,  #4c4c4c 0%, #595959 12%, #666666 23%, #474747 36%, #2c2c2c 44%, #000000 47%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4c4c4c), color-stop(12%,#595959), color-stop(23%,#666666), color-stop(36%,#474747), color-stop(44%,#2c2c2c), color-stop(47%,#000000), color-stop(60%,#111111), color-stop(76%,#2b2b2b), color-stop(91%,#1c1c1c), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 23%,#474747 36%,#2c2c2c 44%,#000000 47%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 23%,#474747 36%,#2c2c2c 44%,#000000 47%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #4c4c4c 0%,#595959 12%,#666666 23%,#474747 36%,#2c2c2c 44%,#000000 47%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #4c4c4c 0%,#595959 12%,#666666 23%,#474747 36%,#2c2c2c 44%,#000000 47%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4c4c4c', endColorstr='#131313',GradientType=0 ); /* IE6-9 */
+
+}
+
+/* search input s*/
+.rounded{
+border: 1px solid #ccc;
+
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+
+-moz-box-shadow: 2px 2px 3px #666;
+-webkit-box-shadow: 2px 2px 3px #666;
+box-shadow: 2px 2px 3px #666;
+
+font-size:20px;
+padding: 4px 7px;
+
+outline:0;
+-webkit-appearance:none;
+}
+
+input .rounded:focus{
+border-color: #339933;
+}
+
+/* delete margin in header span*/
+#mpControl_prodlist_categoryproducts_header div span{
+margin:0;padding:0;
+}
+
+#mpControl_prodlist_categoryproducts_footer div span{
+margin:0; padding:0;
+}
+
+
+/**/
+#footer-bot ul{
+list-style:none;
+}
+
+#footer-bot h3{
+padding-left:5px;
+padding-top:5px;
+padding-bottom:5px;
+margin-left:2px;
+color:white;
+font-size:1.5em;
+font-weight:100;
+}
+
+/**/
+
+.blackGrad{
+background: #4e4e4e; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzRlNGU0ZSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzMwMzAzMCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iIzBhMGUwYSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMxNDE0MTQiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #4e4e4e 0%, #303030 50%, #0a0e0a 51%, #141414 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#4e4e4e), color-stop(50%,#303030), color-stop(51%,#0a0e0a), color-stop(100%,#141414)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #4e4e4e 0%,#303030 50%,#0a0e0a 51%,#141414 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #4e4e4e 0%,#303030 50%,#0a0e0a 51%,#141414 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #4e4e4e 0%,#303030 50%,#0a0e0a 51%,#141414 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #4e4e4e 0%,#303030 50%,#0a0e0a 51%,#141414 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4e4e4e', endColorstr='#141414',GradientType=0 ); /* IE6-8 */
+
+}
+
+.blueGrad{
+background: #7189d3; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iIzcxODlkMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iIzMzNGQ5YSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iIzI3MmM0NiIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiMyMDM3N2MiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #7189d3 0%, #334d9a 50%, #272c46 51%, #20377c 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7189d3), color-stop(50%,#334d9a), color-stop(51%,#272c46), color-stop(100%,#20377c)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #7189d3 0%,#334d9a 50%,#272c46 51%,#20377c 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #7189d3 0%,#334d9a 50%,#272c46 51%,#20377c 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #7189d3 0%,#334d9a 50%,#272c46 51%,#20377c 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #7189d3 0%,#334d9a 50%,#272c46 51%,#20377c 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7189d3', endColorstr='#20377c',GradientType=0 ); /* IE6-8 */
+
+
+
+}
+
+.redGrad{
+color:#ffffff;
+
+background: #ea5051; /* Old browsers */
+/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2VhNTA1MSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2UwMjMyNCIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUxJSIgc3RvcC1jb2xvcj0iIzY5MjAyMSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiM2ZjBmMTAiIHN0b3Atb3BhY2l0eT0iMSIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+background: -moz-linear-gradient(top,  #ea5051 0%, #e02324 50%, #692021 51%, #6f0f10 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ea5051), color-stop(50%,#e02324), color-stop(51%,#692021), color-stop(100%,#6f0f10)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #ea5051 0%,#e02324 50%,#692021 51%,#6f0f10 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #ea5051 0%,#e02324 50%,#692021 51%,#6f0f10 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #ea5051 0%,#e02324 50%,#692021 51%,#6f0f10 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #ea5051 0%,#e02324 50%,#692021 51%,#6f0f10 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ea5051', endColorstr='#6f0f10',GradientType=0 ); /* IE6-8 */
+}
+
+
+
+
+/**/
+
+.productList li{
+
+border:solid 1px rgba(0,0,0,0.2);
+-moz-box-shadow:    -1px 0px 4px 2px rgba(125,125,125,0.3);
+-webkit-box-shadow: -1px 0px 4px 2px rgba(125,125,125,0.3);
+box-shadow:         -1px 0px 4px 2px rgba(125,125,125,0.3);
+
+}
+
+.categoryList li{
+
+border:solid 1px rgba(0,0,0,0.2);
+-moz-box-shadow:    -1px 0px 4px 2px rgba(125,125,125,0.3);
+-webkit-box-shadow: -1px 0px 4px 2px rgba(125,125,125,0.3);
+box-shadow:         -1px 0px 4px 2px rgba(125,125,125,0.3);
+}
+
+.imageContainer img{
+
+border:solid 1px rgba(0,0,0,0.2);
+}
+
+.pointer{
+/*
+margin-top:15px;
+margin-left:5px;
+margin-right:5px;
+*/
+padding:15px;
+}
+
+.prodThumb{
+margin-bottom:20px;
+}
+.price{
+color:red;
+
+}
+
+
+.basePrice{
+color:red;
+
+}
+
+/*product list*/
+
+.productList li{
+border:solid 1px rgba(0,0,0,0.2);
+-moz-box-shadow:    -1px 0px 4px 2px rgba(125,125,125,0.3);
+-webkit-box-shadow: -1px 0px 4px 2px rgba(125,125,125,0.3);
+box-shadow:         -1px 0px 4px 2px rgba(125,125,125,0.3);
+
+}
+
+.productList li h5{
+font-size:9px;
+}
+/**/
+
+#mainDesc p{
+margin-left:5%;
+margin-right:5%;
+}
+
+/*slidershow*/
+
+	#slideshowContainer{
+	margin:0 auto;
+	width:590px;
+	height:220px;
+	padding-bottom:10px;
+	overflow: hidden;
+	padding-top:0px;
+	}
+	
+	#wideSlideshow{
+padding:0;
+margin:0;
+}
+
+.nav_but{
+position:relative;
+z-index:1001;
+left:100px;
+top:190px;
+padding-right:10px;
+}
+
+
+/*footer*/
+
+
+#footer{
+width:100%;
+max-width:1300px;
+min-width:750px;
+}
+
+#footer-banner{
+height:100px;
+
+max-width:1300px;
+
+}
+#banner-container{
+max-width:1100px;
+width:100%;
+margin: 0 auto;
+
+}
+
+#footer-bot{
+height:50px;
+
+}
+
+/*header*/
+#d1, #d2{
+
+border:solid 1px rgba(0,0,0,0.2);
+margin:0 auto;
+max-width:1200px;
+height:300px;
+overflow:hidden;
+
+
+}
+
+
+#BestItems,#NewItems{
+position:relative;
+background:white;
+width:3000px;
+height: 300px;
+left:-1000px;
+margin: 0 auto;
+}
+
+#b1c, #v1c{
+padding-top:100px;
+
+width:50px;
+height:200px;
+float:left;
+}
+
+#b2c, #v2c{
+padding-top:100px;
+
+width:50px;
+height:200px;
+float:right;
+}
+
+
+#b1, #v1{
+margin: 0 auto;
+
+
+}
+
+#b2, #v2{
+
+margin: 0 auto;
+}
+#e1, #e2{
+max-width:1300px;
+width:100%;
+
+}
+
+
+
+#header a	{text-decoration:none;}
+#header{
+width:100%;
+max-width:1300px;
+min-width:750px;
+height:120px;
+}
+
+#header-top{
+height:70px;
+
+}
+#logo{
+float: left;
+}
+
+#mainMenu{
+	float:right;
+	list-style-position: outside;
+	list-style-type:none;
+	margin:0px;
+	}
+
+#mainMenu li a{
+	color:white;
+	padding:0 20px;
+	font-weight: bold;
+	font-size:20px;
+	text-shadow: -1px -1px rgba(0,0,0,0.1), 1px 1px rgba(0,0,0,0.3);
+	}
+
+#mainMenu li{
+	overflow:hidden;
+	border-left:1px solid rgba(255,255,255,0.2);
+	line-height:63px;
+	float:left;
+	}
+
+
+
+
+
+a:link {
+color: #24305a;
+	}
+
+a:visited {
+	color: #5873c2;
+	}
+
+a:hover {
+	color:#cf1011;
+	text-decoration:underline;
+	} 
+
+
+
+
+
+#header-bot{
+height:50px;
+
+}
+
+#search-box{
+	float:right;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	background-color:#ffffff;
+	padding:1px 1px 1px 5px;
+	width:50%;
+	margin:6px 10px 0 0;
+	font-size:1.3em;
+	}
+
+#search-box .productSearchKeyword	{
+	border:0; padding:2px 0 0 0;
+	font-size:1.3em;
+	width:75%;
+	outline: none;
+	color:#666666;
+	}
+
+.searchButton	{
+	font-size:1em;
+	font-weight:bold;
+	font-style:italic;
+	text-shadow: 1px 1px 2px #000000;
+	filter: dropshadow(color=#000000, offx=1, offy=1);
+	padding:5px 10px;
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	border-radius: 6px;
+	border:0;
+	}
+
+
+#cat{
+float:left;
+text-align:center;
+margin-top:11px;
+margin-left:15px;
+padding-top:11px;
+padding-bottom:12px;
+padding-left:13px;
+padding-right:13px;
+background: #7db9e8;
+background:white;
+ font-family: Helvetica, Arial, sans-serif;
+text-shadow: 1px 1px rgba(20,20,20,0.15);
+
+ font-weight: bold;
+    font-size: 1.2em;
+    line-height: 1em;
+	border-top-right-radius: 10px; 
+	border-top-left-radius: 10px; 
+}
+
+.hm_text_desc{
+margin:30px;
+
+}
+/*popupmenu*/
+
+#popup-menu h3{
+color:white;
+border:solid 1px rgba(0,0,0,0.2);
+text-align:center;
+padding:3px;
+margin-top:4px;
+margin-bottom:4px;
+/*
+font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+font-weight: 500;
+*/
+font-size: 13px;
+
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+
+background: #7db9e8; /* Old browsers */
+background: -moz-linear-gradient(top,  #7db9e8 0%, #207cca 49%, #3145f7 50%, #0008f9 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7db9e8), color-stop(49%,#207cca), color-stop(50%,#3145f7), color-stop(100%,#0008f9)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#0008f9',GradientType=0 ); /* IE6-9 */
+
+}
+
+.sub-menu h3 a{
+color:white;
+}
+
+.sub-menu h3{
+color:white;
+border:solid 1px rgba(0,0,0,0.2);
+text-align:center;
+margin-top:5px;
+margin-bottom:5px;
+padding-top:3px;
+padding-bottom:3px;
+/*
+font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+font-weight: 500;
+*/
+font-size: 13px;
+
+-moz-border-radius: 10px;
+-webkit-border-radius: 10px;
+border-radius: 10px;
+background: #7db9e8; /* Old browsers */
+background: -moz-linear-gradient(top,  #7db9e8 0%, #207cca 49%, #3145f7 50%, #0008f9 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#7db9e8), color-stop(49%,#207cca), color-stop(50%,#3145f7), color-stop(100%,#0008f9)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #7db9e8 0%,#207cca 49%,#3145f7 50%,#0008f9 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#7db9e8', endColorstr='#0008f9',GradientType=0 ); /* IE6-9 */
+
+}
+
+#popup-menu{
+background:white;
+-moz-box-shadow:    -1px 0px 4px 4px rgba(125,125,125,0.7);
+-webkit-box-shadow: -1px 0px 4px 4px rgba(125,125,125,0.7);
+box-shadow:         -1px 0px 4px 4px rgba(125,125,125,0.7);
+
+text-shadow: 1px 1px rgba(20,20,20,0.15);
+
+padding:10px 6px 3px 10px;
+position:fixed;
+
+z-index: 9003;
+display:none;
+
+left:0;
+
+border-top-right-radius: 10px; 
+border-bottom-right-radius: 10px; 
+
+}
+
+.sub-menu{
+
+background:white;
+padding:3px 10px 3px 100px;
+position:fixed;
+
+z-index: 9001;
+display:none;
+left:0px;
+margin-top:20px;
+
+-moz-box-shadow:    -1px 0px 4px 2px rgba(125,125,125,0.7);
+-webkit-box-shadow: -1px 0px 4px 2px rgba(125,125,125,0.7);
+box-shadow:         -1px 0px 4px 2px rgba(125,125,125,0.7);
+
+text-shadow: 1px 1px rgba(20,20,20,0.15);
+-moz-border-radius: 5px;
+-webkit-border-radius: 5px;
+border-radius: 5px;
+}
+
+#cat_close{
+color:red;
+}
+/*popupmenu ends*/
+
+#mainContentArea{
+width:100%;
+max-width:1300px;
+min-width:750px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

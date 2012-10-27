@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+  
+    <title>Basic jQuery Slider - Demo</title>
+  
+    <!-- Google Web Fonts for the demo -->
+    <link href='http://fonts.googleapis.com/css?family=Carter+One' rel='stylesheet' type='text/css'>
+      
+    <!-- Basic Jquery Slider styles (This is the only essential css file) -->
+    <link rel="stylesheet" href="css/basic-jquery-slider.css">
+      
+  </head>
+  
+  <body>
+  
+    <div id="container">
+  
+      <!--  Outer wrapper for presentation only, this can be anything you like -->
+      <div id="banner">
+        <!-- start Basic Jquery Slider -->
+        <ul class="bjqs">
+          <li><img src="img/banner01.jpg" title="Automatically generated caption"></li>
+          <li><img src="img/banner02.jpg" title="Automatically generated caption"></li>
+          <li><img src="img/banner03.jpg" title="Automatically generated caption"></li>
+        </ul>
+        <!-- end Basic jQuery Slider -->
+      </div>
+      <!-- End outer wrapper -->
+      
+    </div>
+  
+    <!-- Load jQuery and the plug-in -->
+    <script src="js/libs/jquery-1.6.2.min.js"></script>
+    <script src="js/basic-jquery-slider.js"></script>
+    
+    <!--  Attach the plug-in to the slider parent element and adjust the settings as required -->
+    <script>
+      $(document).ready(function() {
+        
+        $('#banner').bjqs({
+          'animation' : 'slide',
+          'width' : 700,
+          'height' : 300
+        });
+        
+      });
+    </script>
+  
+  </body>
+</html>
