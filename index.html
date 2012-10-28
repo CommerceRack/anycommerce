@@ -17,9 +17,8 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REMOVE BEFORE DEPLO
 var myCreole;
 
 var app = {vars:{
-	"release":"20120912074300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121028062400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
-	"ada":"xyz",
 	"httpsURL":"https://ssl.zoovy.com/s=app.sportsworldchicago.com/",
 	"httpURL":"http://app.sportsworldchicago.com/"
 	},u:{}};
@@ -38,14 +37,10 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="cubworld_styles.css" />
-<link rel="stylesheet" type="text/css" href="css/custom-theme/jquery-ui-1.8.24.custom.css"/>
+<link rel="stylesheet" type="text/css" href="https://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css"/>
 
 
-<link rel="stylesheet" href="jquery.mobile.custom.min.css">
-<link rel="stylesheet" href="jquery.mobile.custom.structure.min.css">
-
-<script src="jquery.mobile.custom.min.js"></script>
-<script type="text/javascript" src="jquery-1.7.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -90,536 +85,94 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 
 <div id='appView' class='displayNone'>
 
+
 <div id="header" >
 
-<div id="header-top" class="blackGrad">
-
-	<h1><a href="#" onClick="return showContent('category',{'navcat':'.'});"><img id="logo" src="img/logo.png" width="370" height="63"></a></h1>
+	<div id="header-top" class="blackGrad">
 	
-	<ul id="mainMenu" class="nav-top">
-		<li id="menu1" class="top_menu"><a href="#" onClick="return showContent('cart',{});">Cart</a></li>
-		<li id="menu2" class="top_menu"><a href='#' onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
-		<li id="menu3" class="top_menu"><a href='#' onClick="return showContent('customer',{'show':'myaccount'});">Account</a></li>
-	</ul>
+		<h1><a href="#" onClick="return showContent('category',{'navcat':'.'});"><img id="logo" src="img/logo.png" width="370" height="63"></a></h1>
+		
+		<ul id="mainMenu" class="nav-top">
+			<li id="menu1" class="top_menu"><a href="#" onClick="return showContent('cart',{});">Cart</a></li>
+			<li id="menu2" class="top_menu"><a href='#' onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
+			<li id="menu3" class="top_menu"><a href='#' onClick="return showContent('customer',{'show':'myaccount'});">Account</a></li>
+		</ul>
+	
+	</div>
 
-</div>
+	<div id="header-bot" class="blueGrad">
+	<div id='cat'><a href="#">Browse</a></div>
 
-<div id="header-bot" class="blueGrad">
-	<a href="#" id="cat">Browse</a>
-					
-	<div id="search-box">
-		<div class="searchContainer">
-		<form id="headerSearchFrm" name="headerSearchFrm" action="#" class="productSearchForm" method="get">
-			<fieldset class="borderNone noPadOrMargin">
-			<input id="headerSearchSubmit" type="submit" class='floatRight redGrad searchButton' value="Search" />
-			<input type="search" name="KEYWORDS" value="" class="productSearchKeyword floatLeft" >
-			</fieldset>
-		</form>
+						
+		<div id="search-box">
+			<div class="searchContainer">
+<form id="headerSearchFrm" name="headerSearchFrm" action="#" class="productSearchForm" method="get">
+<fieldset class="borderNone noPadOrMargin">
+<input id="headerSearchSubmit" type="submit" class='floatRight redGrad searchButton' value="Search" />
+<input type="search" name="KEYWORDS" value="" class="productSearchKeyword floatLeft" >
+</fieldset>
+</form>
+			</div>
 		</div>
 	</div>
-</div>
+
+
+</div><!-- /header -->
 
 
 
-</div>
-
-<div id="browser">
-<div id="popup-menu">
-
-			
-			<h3><a class="main-menu" value="a1" href="#">New Arrivals</a></h3>	
-
-			<h3><a class="main-menu" value="a2" href="#">Shirts</a></h3>
-			
-			<h3><a class="main-menu" value="a3" href="#">Jersey</a></h3>
-				
-			<h3><a class="main-menu" value="a4" href="#">Sweatshirts</a></h3>
-		
-			<h3><a class="main-menu" value="a5" href="#">Hats</a></h3>
-		
-			<h3><a class="main-menu" value="a6" href="#">Accessories</a></h3>
-		
-			<h3><a class="main-menu" value="a7" href="#">Souvenirs</a></h3>
-			
-			<h3><a class="main-menu" value="a8" href="#">Wrigley Field</a></h3>
-			
-			<h3><a class="main-menu" value="a9" href="#">On Field Gear</a></h3>
-	
-			<h3><a class="main-menu" value="a10" href="#">Gift Cards</a></h3>
-		
-			<h3><a class="main-menu" value="a11" href="#">Chicago Teams</a></h3>
-
-		
-			<h3><a class="main-menu" value="a12" href="#">Clearance</a></h3>
-		
-			<h3><a class="main-menu" value="a13" href="#" onClick="return showContent('category',{'navcat':'.cubs_players'});">Shop by Player</a></h3>
-		
-			<h3><a class="main-menu" value="a14" href="#">Shop by MLB TEAM</a></h3>
-			
-			<h3><a class="main-menu" value="a15" href="#">Shop by NFL Team</a></h3>
-
-			<h3><a class="main-menu" value="a16" href="#">Shop by Brand</a></h3>
-
-
-	<a href="#" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" id="cat_close">Close</a>
-</div>
-
-<div id="a1" class="sub-menu">
-
-<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-accessories'});">    Accessories    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-hats-caps'});">    Hats & Caps    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-shirts'});">    Shirts    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-souvenirs'});">    Souvenirs    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-sweatshirts-track-jackets'});">    Sweatshirts & Jackets    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago_cubs-jerseys'});">    Jerseys    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.personalized-chicago-cubs-shirts-jerseys'});">    Personalized Gear    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.team-baseball-clothing-apparel'});">    Team Clothing & Apparel    </a>
-				</h3>
-</div>
-
-<div id="a2" class="sub-menu ">
-<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.infant-toddler-newborn'});">    Newborn / Infant / Toddler    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.kids'});">    Youth / Child    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.mens'});">    Men    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.mlb-shirts'});">    MLB Shirts    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.personalized'});">    Personalized    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.players'});">    Player Shirts    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.tank-tops'});">    Tank Top    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.vintage'});">    Vintage    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.womens'});">    Woman    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.wrigley-field'});">    Wrigley Field    </a>
-</h3>
-</div>
-
-<div id="a3" class="sub-menu">
-<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.2012-all-star-game-jerseys'});">   2012 All-Star Game    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.alternate'});">    Alternate    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.authentic'});">    Authentic     </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.batting-practice'});">    Batting Practice    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.blank'});">    Blank    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.clearance'});">    Clearance    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.cooperstown'});">    Cooperstown    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.custom'});">    Custom & Personalized    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.home'});">    Home    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.jersey-pants'});">    Baseball Pants    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.kids'});">    Kids    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.road'});">    Road    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.women'});">    Woman    </a>
-				</h3>
-</div>
-
-<div id="a4" class="sub-menu">
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.institutional-team-gear'});">   Institutional Team Geaer    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.jackets'});">    Jackets    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.kids'});">    Kids    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts'});">    Men    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.women'});">    Women    </a>
-				</h3>
-</div>
-
-
-
-<div id="a5" class="sub-menu ">
-<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.47-brand'});">   47 Brand    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.adjustable'});">    Adjustable    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.cooperstown-hats'});">    Cooperstown Collection     </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.fitted'});">    Fitted    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.flex-fit-stretch'});">    Flex Fit / Stretch    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.infant-toddler-caps'});">    Infant / Toddler    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.kids'});">    Kids    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.mlb-hats'});">    MLB Hats    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.new-era-59fifty'});">    New Era 59FIFTY    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.snapback'});">    Snapback    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.visor-fisherman'});">    Visors / Floppy Hats    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.winter'});">    Winter Items    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.wrigley-field-hats'});">    Wrigley Field    </a>
-				</h3>
-</div>
-
-<div id="a6" class="sub-menu">
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.kids'});">   Kids    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.men'});">    Men    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.women'});">    Woman     </a>
-				</h3>
-</div>
-
-<div id="a7" class="sub-menu">
-	
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.books-movies-music'});">   Books / Movies / Music    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.cubs-auto-acessories'});">    Auto    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.die-hard-cub-fan'});">    Die Hard Cub Fan     </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.display_cases'});">    Display Cases    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.dog-cat'});">    Pet Products    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.games'});">    Games    </a>
-				</h3>
-			
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.gifts-under-20-dollars'});">    Under $20    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.holiday'});">    Holiday    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.home-decor'});">    Home Decor    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.jewelry'});">    Watches, Jewelry & Keychains    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.lapel-pins'});">    Lapel Pins    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.pictures'});">    Pictures   </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.school-office-home'});">    School / Office / Home    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.signs-flags-banners'});">    Signs & Flags    </a>
-				</h3>
-</div>
-
-<div id="a8" class="sub-menu">
-
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.city-of-chicago-gear'});">   City of Chicago Player    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-apparel'});">    Apparel    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-hats'});">    Caps     </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-souvenirs'});">    Accessories & Souvenirs     </a>
-				</h3>
-</div>
-
-
-<div id="a9" class="sub-menu">
-
-</div>
-
-<div id="a10" class="sub-menu">
-<h3> <a href='#' onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs.shirts-mens'});">   Mens    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs.shirts-women'});">    Womens    </a>
-				</h3>
-</div>
-
-<div id="a11" class="sub-menu">
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-bears-apparel'});">   Chicago Bears    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-blackhawks-apparel'});">    Chicago Blackhawks    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-bulls-apparel'});">   Chicago Bulls    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-white-sox-apparel'});">    Chicago White Sox    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago_fire'});">    Chicago Fire    </a>
-				</h3>
-</div>
-
-<div id="a12" class="sub-menu">
-	
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.accessories'});">   Accessories    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.gifts-under-10-dollars'});">    Gifts Under $10    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.hats'});">   Hats    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.jackets-sweatshirts'});">    Jackets & Sweatshirts    </a>
-				</h3>
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.jerseys'});">    Jerseys    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.shirts'});">    Shirts    </a>
-				</h3>
-				
-			<h3> <a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.souvenirs'});">    Souvenirs    </a>
-				</h3>
-</div>
-
-<div id="a13" class="sub-menu">
-
-</div>
-
-<div id="a14" class="sub-menu">
-
- <div class="ui-grid-a">
- <div class="ui-block-a">
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.baltimore_orioles'});">Baltimore Orioles</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.boston_red_sox'});">Boston Red Sox</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.chicago_white_sox'});">Chicago White Sox</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.cleveland_indians'});">Cleveland Indians</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.detroit_tigers'});">Detroit Tigers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.kansas_city_royals'});">Kansas City Royals</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.los_angeles_angels'});">L.A. Angels of Anaheim</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.minnesota_twins'});">Minnesota Twins</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.new_york_yankees'});">New York Yankees</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.oakland_athletics'});">Oakland Athletics</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.seattle_mariners'});">Seattle Mariners</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.tampa_bay_rays'});">Tampa Bay Rays</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.texas_rangers'});">Texas Rangers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.toronto_blue_jays'});">Toronto Blue Jays</a> </h3>
-</div>
-
-<div class="ui-block-b">
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.arizona_diamondbacks'});">Arizona Diamondbacks</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.atlanta_braves'});">Atlanta Braves</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.cincinnati_reds'});">Cincinnati Reds</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.colorado_rockies'});">Colorado Rockies</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.houston_astros'});">Houston Astros</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.los_angeles_dodgers'});">Los Angeles Dodgers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.miami_marlins'});">Miami Marlins</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.milwaukee_brewers'});">Milwaukee Brewers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.new_york_mets'});">New York Mets</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.philadelphia_phillies'});">Philadelphia Phillies</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.pittsburgh_pirates'});">Pittsburgh Pirates</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.san_diego_padres'});">San Diego Padres</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.san_francisco_giants'});">San Francisco Giants</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.st_louis_cardinals'});">St. Louis Cardinals</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.washington_nationals'});">Washington Nationals</a> </h3>
-</div>
-</div>
-
-
-</div>
-
-<div id="a15" class="sub-menu">
-<div class="ui-grid-a">
-
-<div class="ui-block-a">
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.arizona_cardinals'});">Arizona Cardinals</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.atlanta_falcons'});">Atlanta Falcons</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.baltimore_ravens'});">Baltimore Ravens</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.buffalo_bills'});">Buffalo Bills</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.carolina_panthers'});">Carolina Panthers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.chicago_bears'});">Chicago Bears</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.cincinnati_bengals'});">Cincinnati Bengals</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.cleveland_browns'});">Cleveland Browns</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.dallas_cowboys'});">Dallas Cowboys</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.denver_broncos'});">Denver Broncos</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.detroit_lions'});">Detroit Lions</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.green_bay_packers'});">Green Bay Packers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.houston_texans'});">Houston Texans</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.indianapolis_colts'});">Indianapolis Colts</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.jacksonville_jaguars'});">Jacksonville Jaguars</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.kansas_city_chiefs'});">Kansas City Chiefs</a> </h3>
-</div>
-
-<div class="ui-block-b">
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.miami_dolphins'});">Miami Dolphins</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.minnesota_vikings'});">Minnesota Vikings</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_england_patriots'});">New England Patriots</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_orleans_saints'});">New Orleans Saints</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_york_giants'});">New York Giants</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_york_jets'});">New York Jets</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.oakland_raiders'});">Oakland Raiders</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.philadelphia_eagles'});">Philadelphia Eagles</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.pittsburgh_steelers'});">Pittsburgh Steelers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.san_diego_chargers'});">San Diego Chargers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.san_francisco_49ers'});">San Francisco 49ers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.seattle_seahawks'});">Seattle Seahawks</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.st_louis_rams'});">St. Louis Rams</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.tampa_bay_buccaneers'});">Tampa Bay Buccaneers</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.tennessee_titans'});">Tennessee Titans</a> </h3>
-<h3> <a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.washington_redskins'});">Washington Redskins</a> </h3>
-</div>
-</div>
-
-
-</div>
-<div id="a16" class="sub-menu"> </div>
-</div>
-<!-- header ends-->
-
-
-
-
-
-
-	<!-- 
-	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
-	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
-	-->
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 <div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 
-<!-- footer -->
+
 
 <div id="footer">
-
-<div id="footer-bot">
-<div class="ui-grid-b blackGrad">
-	<div class="ui-block-a">
-		<h3> Customer Service </h3>
-	</div>
-	
-	<div class="ui-block-b">
+	<div class='blackGrad'>
+		<h3>Customer Service </h3>
 		<h3>Sports World Chicago </h3>
 	</div>
-	<div class="ui-block-c">
-			<div class="pay_icons floatLeft"><img width="113" height="20" src="http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw09_usps-113x20.gif"><img width="177" border="0" height="21" alt="We accept all major forms of payment" src="http://static.zoovy.com/graphics/general/payment_icons-177x21.png"></div>
-	</div>
-
-</div>
-<div class="ui-grid-b">
-	<div class="ui-block-a">
-		
-		<div class="ui-grid-a">
-		<div class="ui-block-a">
-		
-			<ul>
-				<li><a href='#top' onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
-            	<li><a href="#top" onClick="window.open('http://www.sportsworldchicago.com/category/size_chart/?wrapper=%POPUP_THEME%','advice','status=no,width=500,height=500,menubar=no,scrollbars=yes'); return false;">Size Chart</a></li>
-           		 <li><a href='#top' onClick="return showContent('company',{'show':'about'});">Help Desk</a></li>
-            	<li><a href='#top' onClick="return showContent('customer',{'show':'myaccount'});">My Account</a></li>
-			</ul>
-		</div>
-		<div class="ui-block-b">
-			<ul>
-					<li><a href='#top' onClick="return showContent('company',{'show':'reward'});">Rewards</a></li>
-                    <li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=MSPQJJ9QFU3ptZfHL1rFA01FQ/s=www.sportsworldchicago.com/checkout.cgis">Checkout</a></li>
-                    <li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=MSPQJJ9QFU3ptZfHL1rFA01FQ/s=www.sportsworldchicago.com/customer/order/status/">Order Status</a></li>
-                    <li><a href='#top' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
-                    <li><a href='#top' onClick="return showContent('cart',{});">View Cart</a></li>
-			</ul>
-		</div>
-		</div>
-	</div>
 	
-	<div class="ui-block-b">
-		
-		<div class="ui-grid-a">
-		<div class="ui-block-a">
-			<ul>
-				<li><a href="#top" onClick="return showContent('customer',{'show':'newsletter'});">In the News</a></li>
-                    <li><a href="#category?navcat=.affiliates">Affiliates</a></li>
-                    <li><a href='#top' onClick="return showContent('company',{'show':'about'});">About</a></li>
-			</ul>
-		</div>
-		<div class="ui-block-b">
-			<ul>
-				 <li><a href="#category?navcat=.group_sales/">Group Sales</a></li>
-                    <li><a rel="nofollow" href="#category?navcat=.careers">Careers</a></li>
-                    <li><a rel="nofollow" href="http://www.sportsworldchicago.com/category/sitemap/">Site Map</a></li>
-			</ul>
-		</div>
-		</div>
-	</div>
-	
-	<div class="ui-block-c">
-	
+	<div class='footCol'>
+<a href='#top' onClick="return showContent('company',{'show':'contact'});">Contact</a>
+<a href="#top" onClick="return showContent('category',{'navcat':'.size_chart'});">Size Chart</a>
+<a href='#top' onClick="return showContent('category',{'navcat':'.help_desk'});">Help Desk</a>
+<a href='#top' onClick="return showContent('customer',{'show':'myaccount'});">My Account</a>
 	</div>
 
+	<div class='footCol'>
+<a href='#top' onClick="return showContent('category',{'navcat':'.rewards_program'});">Rewards</a>
+<a href='#top' onClick="return showContent('customer',{'show':'orders'});">Order Status</a>
+<a href='#top' onClick="return showContent('company',{'show':'privacy'});">Privacy</a>
+<a href='#top' onClick="return showContent('cart',{});">View Cart</a>
+	</div>
+
+	<div class='footCol'>
+<a href="#top" onClick="return showContent('category',{'navcat':'.in_the_news'});">In the News</a>
+<a href="#" onClick="return showContent('category',{'navcat':'.affiliates'});">Affiliates</a>
+<a href='#top' onClick="return showContent('company',{'show':'about'});">About</a>
+	</div>
+
+	<div>
+<a href="#" onClick="return showContent('category',{'navcat':'.group_sales'});">Group Sales</a>
+<a href="#" onClick="return showContent('category',{'navcat':'.careers'});">>Careers</a>
+<a href="#" onClick="return showContent('category',{'navcat':'.sitemap'});">Site Map</a>
+	</div>
+
+
+	<div class='floatRight'>
+	<img width="113" height="20" src="http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw09_usps-113x20.gif">
+	<img width="177" border="0" height="21" alt="We accept all major forms of payment" src="http://static.zoovy.com/graphics/general/payment_icons-177x21.png">
+	</div>
 
 </div>
 
 
+</div><!-- /footer -->
 
 
 
-</div>
-
-</div>
-
-<!--footer ends-->
-<!-- ... your html ends -->
-<!-- /VIEW CONTENT -->
-</div>
-
-
-
-
-
-
-
-
+</body>
+</html>
 
 
 <!-- 
@@ -2091,83 +1644,256 @@ The 'data-action' attribute is used to assign an onclick.
 
 <div class='debug displayNone'>
 
-<menu>
-	<li><a href='#' onClick="return showContent('category',{'navcat':'.'});">Homepage</a></li>
-	<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
-	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
-	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
-	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
-	<li><a href='#category?navcat=.subcategories.subcat_9' class='bindByAnchor'>.subcategories.subcat_9</a></li>
-</menu>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
-
-
-<form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
-	<fieldset>
-	<legend>Search</legend>
-	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
-	<input type='hidden' name='CATALOG' value='' class="productSearchCatalog" />
-	</fieldset>
-	<input class="search" type="submit" value="Search" />
-</form>
-
 
 </div>
 
 
 
-<!-- popup menu-->
 
-<!-- menu script -->
-<script>
+<div id='subcatContainer' class='displayNone nav'>
+<ul id='nav'>
+<li><a  class='topCat hasSubcats' href="#">New Arrivals</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-accessories'});">Accessories</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-hats-caps'});">Hats &amp; Caps</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-shirts'});">Shirts</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-souvenirs'});">Souvenirs</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago-cubs-sweatshirts-track-jackets'});">Sweatshirts & Jackets</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.chicago_cubs-jerseys'});">Jerseys</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.personalized-chicago-cubs-shirts-jerseys'});">Personalized Gear</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.new-arrivals.team-baseball-clothing-apparel'});">Team Clothing & Apparel</a></li>
+	</ul>
+	</div>
+</li>	
+<li><a class='topCat hasSubcats' href="#">Shirts</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.infant-toddler-newborn'});">Newborn / Infant / Toddler</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.kids'});">Youth / Child</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.mens'});">Men</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.mlb-shirts'});">MLB Shirts</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.personalized'});">Personalized</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.players'});">Player Shirts</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.tank-tops'});">Tank Top</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.vintage'});">Vintage</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.womens'});">Woman</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts.wrigley-field'});">Wrigley Field</a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Jersey</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.2012-all-star-game-jerseys'});">2012 All-Star Game </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.alternate'});"> Alternate </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.authentic'});"> Authentic  </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.batting-practice'});"> Batting Practice </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.blank'});"> Blank </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.clearance'});"> Clearance </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.cooperstown'});"> Cooperstown </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.custom'});"> Custom & Personalized </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.home'});"> Home </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.jersey-pants'});"> Baseball Pants </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.kids'});"> Kids </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.road'});"> Road </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.women'});"> Woman </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Sweatshirts</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.institutional-team-gear'});">Institutional Team Geaer </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.jackets'});"> Jackets </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.kids'});"> Kids </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts'});"> Men </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts.women'});"> Women </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Hats</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.47-brand'});">47 Brand </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.adjustable'});"> Adjustable </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.cooperstown-hats'});"> Cooperstown Collection  </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.fitted'});"> Fitted </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.flex-fit-stretch'});"> Flex Fit / Stretch </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.infant-toddler-caps'});"> Infant / Toddler </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.kids'});"> Kids </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.mlb-hats'});"> MLB Hats </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.new-era-59fifty'});"> New Era 59FIFTY </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.snapback'});"> Snapback </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.visor-fisherman'});"> Visors / Floppy Hats </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.winter'});"> Winter Items </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-hats.wrigley-field-hats'});"> Wrigley Field </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Accessories</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.kids'});">Kids </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.men'});"> Men </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories.women'});"> Woman  </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Souvenirs</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.books-movies-music'});">Books / Movies / Music </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.cubs-auto-acessories'});"> Auto </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.die-hard-cub-fan'});"> Die Hard Cub Fan  </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.display_cases'});"> Display Cases </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.dog-cat'});"> Pet Products </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.games'});"> Games </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.gifts-under-20-dollars'});"> Under $20 </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.holiday'});"> Holiday </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.home-decor'});"> Home Decor </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.jewelry'});"> Watches, Jewelry & Keychains </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.lapel-pins'});"> Lapel Pins </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.pictures'});"> Pictures</a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.school-office-home'});"> School / Office / Home </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs.signs-flags-banners'});"> Signs & Flags </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Wrigley Field</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.city-of-chicago-gear'});">City of Chicago Player </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-apparel'});"> Apparel </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-hats'});"> Caps  </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise.wrigley-field-souvenirs'});"> Accessories & Souvenirs  </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">On Field Gear</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs.shirts-mens'});">Mens </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs.shirts-women'});"> Womens </a></li>
+	</ul>
+	</div>
+</li>
 
-//$("button").button();
+<li><a class='topCat bindByAnchor' href="#category?navcat=.sports-world-gift-cards" onClick="toggleCatMenu()">Gift Cards</a></li>
 
+<li><a class='topCat hasSubcats' href="#">Chicago Teams</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-bears-apparel'});">Chicago Bears </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-blackhawks-apparel'});"> Chicago Blackhawks </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-bulls-apparel'});">Chicago Bulls </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago-white-sox-apparel'});"> Chicago White Sox </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel.chicago_fire'});"> Chicago Fire </a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Clearance</a>
+	<div class='subcatListContainer'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.accessories'});">Accessories </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.gifts-under-10-dollars'});"> Gifts Under $10 </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.hats'});">Hats </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.jackets-sweatshirts'});"> Jackets & Sweatshirts </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.jerseys'});"> Jerseys </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.shirts'});"> Shirts </a></li>
+	<li><a href='#' onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise.souvenirs'});"> Souvenirs </a></li>
+	</ul>
+	</div>
+</li>
 
-$('#cat').click(function() {
+<li><a class='topCat bindByAnchor' href="#" onClick="return showContent('category',{'navcat':'.cubs_players'}); toggleCatMenu()">Shop by Player</a></li>
+
+<li><a class='topCat hasSubcats' href="#">Shop by MLB TEAM</a>
+	<div class='subcatListContainer twoCols'>
 	
-	//$('#popup-menu').show('slow');
-	var $lefty = $('#popup-menu');
-	$('.main-menu').css("color","white");
-	$('.sub-menu').hide();
-	$lefty.show();
-	$lefty.animate({
-		left: parseInt($lefty.css('left'),10)==0 ?
-			-$lefty.outerWidth(): 0
-	});
+	<ul class='child_menu subcatContainer'>
 
-});
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.baltimore_orioles'});">Baltimore Orioles</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.boston_red_sox'});">Boston Red Sox</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.chicago_white_sox'});">Chicago White Sox</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.cleveland_indians'});">Cleveland Indians</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.detroit_tigers'});">Detroit Tigers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.kansas_city_royals'});">Kansas City Royals</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.los_angeles_angels'});">L.A. Angels of Anaheim</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.minnesota_twins'});">Minnesota Twins</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.new_york_yankees'});">New York Yankees</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.oakland_athletics'});">Oakland Athletics</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.seattle_mariners'});">Seattle Mariners</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.tampa_bay_rays'});">Tampa Bay Rays</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.texas_rangers'});">Texas Rangers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzd_american_league_teams.toronto_blue_jays'});">Toronto Blue Jays</a></li>
+	</ul>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.arizona_diamondbacks'});">Arizona Diamondbacks</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.atlanta_braves'});">Atlanta Braves</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.cincinnati_reds'});">Cincinnati Reds</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.colorado_rockies'});">Colorado Rockies</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.houston_astros'});">Houston Astros</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.los_angeles_dodgers'});">Los Angeles Dodgers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.miami_marlins'});">Miami Marlins</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.milwaukee_brewers'});">Milwaukee Brewers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.new_york_mets'});">New York Mets</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.philadelphia_phillies'});">Philadelphia Phillies</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.pittsburgh_pirates'});">Pittsburgh Pirates</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.san_diego_padres'});">San Diego Padres</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.san_francisco_giants'});">San Francisco Giants</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.st_louis_cardinals'});">St. Louis Cardinals</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.zzi_national_league_teams.washington_nationals'});">Washington Nationals</a></li>
 
-$('#cat_close').click(function() {
-	$('#popup-menu').hide('slow');
-	$('.sub-menu').hide();
-	$('.main-menu').css("color","white");
-});
+	</ul>
+	</div>
+</li>
+<li><a class='topCat hasSubcats' href="#">Shop by NFL Team</a>
+	<div class='subcatListContainer twoCols'>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.arizona_cardinals'});">Arizona Cardinals</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.atlanta_falcons'});">Atlanta Falcons</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.baltimore_ravens'});">Baltimore Ravens</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.buffalo_bills'});">Buffalo Bills</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.carolina_panthers'});">Carolina Panthers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.chicago_bears'});">Chicago Bears</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.cincinnati_bengals'});">Cincinnati Bengals</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.cleveland_browns'});">Cleveland Browns</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.dallas_cowboys'});">Dallas Cowboys</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.denver_broncos'});">Denver Broncos</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.detroit_lions'});">Detroit Lions</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.green_bay_packers'});">Green Bay Packers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.houston_texans'});">Houston Texans</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.indianapolis_colts'});">Indianapolis Colts</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.jacksonville_jaguars'});">Jacksonville Jaguars</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.kansas_city_chiefs'});">Kansas City Chiefs</a></li>
+	</ul>
+	<ul class='child_menu subcatContainer'>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.miami_dolphins'});">Miami Dolphins</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.minnesota_vikings'});">Minnesota Vikings</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_england_patriots'});">New England Patriots</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_orleans_saints'});">New Orleans Saints</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_york_giants'});">New York Giants</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.new_york_jets'});">New York Jets</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.oakland_raiders'});">Oakland Raiders</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.philadelphia_eagles'});">Philadelphia Eagles</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.pittsburgh_steelers'});">Pittsburgh Steelers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.san_diego_chargers'});">San Diego Chargers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.san_francisco_49ers'});">San Francisco 49ers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.seattle_seahawks'});">Seattle Seahawks</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.st_louis_rams'});">St. Louis Rams</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.tampa_bay_buccaneers'});">Tampa Bay Buccaneers</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.tennessee_titans'});">Tennessee Titans</a></li>
+	<li><a href='#'  onClick="return showContent('category',{'navcat':'.nfl_teams.washington_redskins'});">Washington Redskins</a></li>
+	</ul>
+	</div>
+</li>
+<li><a class='topCat' href="#" onClick="toggleCatMenu();">Shop by Brand</a></li>
+</ul>
+</div>
 
-
-$('.main-menu').click(function() {
-	$('.main-menu').css("color","white");
- 	$('.sub-menu').hide(); 
- 	$('.sub-menu').css("z-index",9000);
- 	$('.sub-menu').css("left",0);
-	var sub = $(this).attr('value');
-	$(this).css("color","red");
-	var $x = $('#'+sub);
-	$x.show('slow');
-	
-	$x.animate({"left":"+=60px"},function() {$('.sub-menu').css("z-index",9002);});	
-});
-
-$('.sub-menu').click(function() {
-
-$(this).hide('slow');
-$('#popup-menu').hide('slow');
-});
-
-
-
-</script>
 
 </body>
 </html>

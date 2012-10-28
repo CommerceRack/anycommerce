@@ -41,7 +41,7 @@ app.vars.scripts.push({
 
 app.vars.scripts.push({
 	'pass':1,
-	'location':(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.js',
+	'location':(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js',
 	'validator':function(){return (typeof $ == 'function' && jQuery.ui) ? true : false;}
 	})
 //The config.js file is 'never' local. it's a remote file, so...
@@ -59,15 +59,15 @@ app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'includes.js','valid
 
 //slider
 app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'cycle.js','validator':function(){
- app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
- return (typeof jQuery().cycle == 'undefined') ? false : true;}
- })
-//carousel
+	app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
+	return (typeof jQuery().cycle == 'undefined') ? false : true;}
+	})
+
+
 app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'carousel.js','validator':function(){
- app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
- return (typeof jQuery().cycle == 'undefined') ? false : true;}
- })
- 
+	app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
+	return (typeof jQuery().cycle == 'undefined') ? false : true;}
+	})
  //basic_slider
  
  
@@ -109,6 +109,8 @@ app.u.throwMessage = function(m)	{
 
 //put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
 app.u.appInitComplete = function()	{
+	
+
 	app.u.loadScriptsByPass(2,true); //loads the rest of the scripts.
 	app.u.dump("Executing myAppIsLoaded code...");
 //display product blob fields in tabbed format.
@@ -139,21 +141,20 @@ app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
 		//$('#SalesItems').jcarousel();
 		//$('#NewItems').jcarousel();
 		$('#b1').click(function(){
-		$('#BestItems').animate({"left":"-=100px"},'slow');
-		
+		$('#BestItems').animate({"left":"+=250px"},'slow');
 		});
 		
 		$('#b2').click(function(){
-		$('#BestItems').animate({"left":"+=100px"},'slow');
+		$('#BestItems').animate({"left":"-=250px"},'slow');
 		});
 		
 		$('#v1').click(function(){
-		$('#NewItems').animate({"left":"-=100px"},'slow');
+		$('#NewItems').animate({"left":"+=250px"},'slow');
 		
 		});
 		
 		$('#v2').click(function(){
-		$('#NewItems').animate({"left":"+=100px"},'slow');
+		$('#NewItems').animate({"left":"-=250px"},'slow');
 		});
 		
 	})
@@ -239,11 +240,40 @@ app.u.initMVC = function(attempts){
 var acScriptsInPass;
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
-	acScriptsInPass = app.u.loadScriptsByPass(1,false)
+	acScriptsInPass = app.u.loadScriptsByPass(1,false);
+
+	$('#cat a').click(function() {
+		toggleCatMenu();
+		});
+
+	$('.hasSubcats','#nav').click(function(){
+		app.u.dump("topCat Clicked");
+		$('.subcatListContainer').hide(); //hide all open subcategories.
+		$('.selected','#nav').removeClass('selected'); //turn off 'selected' from last viewed tier1.
+		$(this).addClass('selected'); //make this tier1 in focus.
+		$(this).parent().find('.subcatListContainer').show(); //shows this categories subcats.
+		})
+
+	$('a','.subcatContainer').click(function(){
+		toggleCatMenu();
+		});
+
 	});
 
 
-
+function toggleCatMenu()	{
+	var $cats = $('#subcatContainer');
+	if($cats.is(':visible'))	{
+		//hide the categories
+		app.u.dump("hide cats");
+		$cats.slideUp();
+		}
+	else	{
+		//show the categories
+		app.u.dump("show cats");
+		$cats.slideDown();
+		}
+	}
 
 
 
