@@ -214,7 +214,22 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</ul>
 	</div><!-- /slideshowContainer -->
 
-
+	<div class="list_carousel responsive marginBottom clearfix">
+		<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"20","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before: <h2>Best Sellers</h2>;'></ul>
+		
+		<a id="prev_best" class="prev" href="#">&lt;</a>
+		<a id="next_best" class="next" href="#">&gt;</a>
+		
+	</div>
+	
+	<div class="list_carousel responsive marginBottom clearfix">
+		<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"20","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before: <h2>This Just In...</h2>;'></ul>
+		
+		<a id="prev_new" class="prev" href="#">&lt;</a>
+		<a id="next_new" class="next" href="#">&gt;</a>
+		
+	</div>
+	
 	<div class='contentContainer' data-bind="var: page(description); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
 
 
@@ -387,15 +402,15 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id='productListTemplateResults' class='loadingBG  ' >
+<li id='productListTemplateResults' class='loadingBG prodResultsLineItem' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='180' height='125' />
 		</div>
 		
-		<h5 data-bind='var: product(prod_name); format:text;'></h5>
+		<h5 class='prodName' data-bind='var: product(prod_name); format:text;'></h5>
 	
-		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		<h6 class='basePrice' data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true;'></h6>
 	</div>
 </li>
 </ul>

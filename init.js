@@ -73,6 +73,7 @@ app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'carousel.js','valid
  
 //used for making text editable (customer address). non-essential. loaded late.
 app.vars.scripts.push({'pass':8,'location':app.vars.baseURL+'jeditable.js','validator':function(){return (typeof $ == 'function' && jQuery().editable) ? true : false;}})
+app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'js/jquery.carouFredSel-6.1.0-min.js','validator':function(){return true}})
 
 
 
@@ -131,9 +132,55 @@ app.u.appInitComplete = function()	{
 			   });
 			}
 		})
-	}
+//best sellers carousel.
+	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
+		var $target = $('#homeProdSearchBestSellers');
+//http://caroufredsel.dev7studios.com/configuration.php
+		setTimeout(function(){
+			app.u.dump("execute carousel");
+			$target.carouFredSel({
+				responsive: true,
+				auto: {play: false},
+				width: '100%',
+				prev: '#prev_best',
+				next: '#next_best',
+				items: {
+					width: 200,
+					visible: {min: 2,max: 5}
+					}
+				})
+			},1000)
+		})
+
+
+//best sellers carousel.
+	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
+		var $target = $('#homeProdSearchNewArrivals');
+//http://caroufredsel.dev7studios.com/configuration.php
+		setTimeout(function(){
+			app.u.dump("execute carousel");
+			$target.carouFredSel({
+				responsive: true,
+				auto: {play: false},
+				width: '100%',
+				prev: '#prev_new',
+				next: '#next_new',
+				items: {
+					width: 210,
+					visible: {min: 2,max: 5}
+					}
+				})
+			},1000)
+		})
+
+
+
+	} //appInitComplete
 	
 	
+	
+	
+
 	
 
 //start the app.
