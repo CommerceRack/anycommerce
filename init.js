@@ -107,6 +107,8 @@ app.u.throwMessage = function(m)	{
 	}
 
 
+
+
 //put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
 app.u.appInitComplete = function()	{
 	
@@ -115,63 +117,66 @@ app.u.appInitComplete = function()	{
 	app.u.dump("Executing myAppIsLoaded code...");
 //display product blob fields in tabbed format.
 	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) 
-//cycler
-app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-		 //slider
+
+//banner slideshow.
+	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
 		  var $target = $('#wideSlideshow');
 		  if($target.children().length > 1) {
-				
 			   $('#wideSlideshow').cycle({
-			   	fx:'fade',
-			   	speed:'slow',
-			   	timeout: 5000,
-			   	pager:'#slideshowNav',
-			   	pagerAnchorBuilder: function(index,el){
-			   		return '<a class="nav_but" href="#"><img src="img/circle_black.png"></a>';
-			   	},
-			   	slideExpr: 'li'			   
+				fx:'fade',
+				speed:'slow',
+				timeout: 5000,
+				pager:'#slideshowNav',
+				slideExpr: 'li'			   
 			   });
-			 
-			   
-			};
-			
-			//carousel
-		//$('#BestItems').carousel();
+			}
+		})
+	}
 	
-		//$('#SalesItems').jcarousel();
-		//$('#NewItems').jcarousel();
-		$('#b1').click(function(){
-		$('#BestItems').animate({"left":"+=250px"},'slow');
-		});
-		
-		$('#b2').click(function(){
-		$('#BestItems').animate({"left":"-=250px"},'slow');
-		});
-		
-		$('#v1').click(function(){
-		$('#NewItems').animate({"left":"+=250px"},'slow');
-		
-		});
-		
-		$('#v2').click(function(){
-		$('#NewItems').animate({"left":"-=250px"},'slow');
-		});
-		
-	})
-			 
+	
+	
 
-	
-	
-//sample for adding a onInit
-	app.ext.myRIA.template.homepageTemplate.onInits.push(function(P) {
-		//do something.
-		}) //display product blob fields in tabbed format.
+//start the app.
+var acScriptsInPass;
+//don't execute script till both jquery AND the dom are ready.
+$(document).ready(function(){
+	acScriptsInPass = app.u.loadScriptsByPass(1,false);
+
+	$('#cat a').click(function() {
+		toggleCatMenu();
+		});
+
+	$('.hasSubcats','#nav').click(function(){
+		app.u.dump("topCat Clicked");
+		$('.subcatListContainer').hide(); //hide all open subcategories.
+		$('.selected','#nav').removeClass('selected'); //turn off 'selected' from last viewed tier1.
+		$(this).addClass('selected'); //make this tier1 in focus.
+		$(this).parent().find('.subcatListContainer').show(); //shows this categories subcats.
+		})
+
+	$('a','.subcatContainer').click(function(){
+		toggleCatMenu();
+		});
+
+	});
+
+function toggleCatMenu()	{
+	var $cats = $('#subcatContainer');
+	if($cats.is(':visible'))	{
+		//hide the categories
+		app.u.dump("hide cats");
+		$cats.slideUp();
+		}
+	else	{
+		//show the categories
+		app.u.dump("show cats");
+		$cats.slideDown();
+		}
 	}
 
-//gets executed once controller.js is loaded.
-//check dependencies and make sure all other .js files are done, then init controller.
-//function will get re-executed if not all the scripts in app.vars.scripts pass 1 are done loading.
-//the 'attempts' var is incremented each time the function is executed.
+
+
+
 
 app.u.initMVC = function(attempts){
 //	app.u.dump("app.u.initMVC activated");
@@ -230,50 +235,3 @@ app.u.initMVC = function(attempts){
 		setTimeout("app.u.initMVC("+(attempts+1)+")",250);
 		}
 	}
-
-
-
-
-
-
-//start the app.
-var acScriptsInPass;
-//don't execute script till both jquery AND the dom are ready.
-$(document).ready(function(){
-	acScriptsInPass = app.u.loadScriptsByPass(1,false);
-
-	$('#cat a').click(function() {
-		toggleCatMenu();
-		});
-
-	$('.hasSubcats','#nav').click(function(){
-		app.u.dump("topCat Clicked");
-		$('.subcatListContainer').hide(); //hide all open subcategories.
-		$('.selected','#nav').removeClass('selected'); //turn off 'selected' from last viewed tier1.
-		$(this).addClass('selected'); //make this tier1 in focus.
-		$(this).parent().find('.subcatListContainer').show(); //shows this categories subcats.
-		})
-
-	$('a','.subcatContainer').click(function(){
-		toggleCatMenu();
-		});
-
-	});
-
-
-function toggleCatMenu()	{
-	var $cats = $('#subcatContainer');
-	if($cats.is(':visible'))	{
-		//hide the categories
-		app.u.dump("hide cats");
-		$cats.slideUp();
-		}
-	else	{
-		//show the categories
-		app.u.dump("show cats");
-		$cats.slideDown();
-		}
-	}
-
-
-

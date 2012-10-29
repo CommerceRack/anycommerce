@@ -60,21 +60,18 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-<table>
-<tr>
-	<td>
-	<img id="logo" src="img/logo.png" width="370" height="63">
-	<h3>One moment please.</h3>
-	
+	<br />
+	<img src="img/logo.png" width="370" height="63" />
+	<br /><br />
+	<h3>Loading App...</h3>
+	<br />
 	<div class='alignCenter'>
 	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
 	</div>
 	<div id='appPreViewProgressText'>0% Complete</div>
 	
 	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
+	<br />
 </div>
 <!--app preview ends-->
 
@@ -86,7 +83,7 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 <div id='appView' class='displayNone'>
 
 
-<div id="header" >
+<div id="header" class='clearfix' >
 
 	<div id="header-top" class="blackGrad">
 	
@@ -126,7 +123,7 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 
 
 
-<div id="footer">
+<div id="footer" class='clearfix'>
 	<div class='blackGrad'>
 		<h3>Customer Service </h3>
 		<h3>Sports World Chicago </h3>
@@ -152,9 +149,9 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 <a href='#top' onClick="return showContent('company',{'show':'about'});">About</a>
 	</div>
 
-	<div>
+	<div class='footCol'>
 <a href="#" onClick="return showContent('category',{'navcat':'.group_sales'});">Group Sales</a>
-<a href="#" onClick="return showContent('category',{'navcat':'.careers'});">>Careers</a>
+<a href="#" onClick="return showContent('category',{'navcat':'.careers'});">Careers</a>
 <a href="#" onClick="return showContent('category',{'navcat':'.sitemap'});">Site Map</a>
 	</div>
 
@@ -164,15 +161,13 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 	<img width="177" border="0" height="21" alt="We accept all major forms of payment" src="http://static.zoovy.com/graphics/general/payment_icons-177x21.png">
 	</div>
 
-</div>
-
-
 </div><!-- /footer -->
 
 
+</div><!-- /appView -->
 
-</body>
-</html>
+
+
 
 
 <!-- 
@@ -207,85 +202,22 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id='homepageTemplate'>
 
-<!--
-	<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: categoryListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-	<ul id='homepageFeaturedItems' data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_multipage:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-	<p data-bind="var: page(description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
--->
-	<div id="slideshowContainer" class='clearfix' style="margin-bottom:10px;">
-		 <div id="slideshowNav"></div>
-  			<ul id="wideSlideshow" class="pics slideshow" style="margin-top:0;">
-
-				<img src='images/blank.gif'  data-bind="var: page(banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-				<img src='images/blank.gif'  data-bind="var: page(banner_slideshow2); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-				<img src='images/blank.gif'  data-bind="var: page(banner_slideshow3); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-
-			
-				
-			</ul>
-			
-			
-	</div>
-
-		<div id="e1">
-			<div id="b1c">
-			<div id="b1" class="arrow-left">
-				<img src="img/arrow_left.png" width="50px" height="50px">
-			</div>
-			</div>
-			<div id="b2c">
-			<div id="b2" class="arrow-right">
-				<img src="img/arrow_right.png" width="50px" height="50px">
-			</div>
-			</div>
-
-		<h3>Best Sellers</h3>
-		<div id="d1">
-		<div id="c1">
-	
-		
-		<ul id='BestItems' data-bind='var: elastic-native({"size":"16","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='move listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-		</div>
-		
-		</div>
-	</div>
-	
-	<br><br>
-	
-	<div id="e2">
-		<div id="v1c">
-		<div id="v1" class="arrow-left"><img src="img/arrow_left.png" width="50px" height="50px"></div>
-			
-		</div>
-		<div id="v2c">
-		<div id="v2" class="arrow-right"><img src="img/arrow_right.png" width="50px" height="50px"></div>
-			
-		</div>
-	<h3>New Arrivals</h3>
-	<div id="d2">
-	<div id="c2">
-	<ul id='NewItems' data-bind='var: elastic-native({"size":"16","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-	</div>
-	</div>
-	
-	</div>
-
-	<br>
-	
-	<div id="mainDesc">
-	
-	
-			<div class="hm_text_desc"><div class="wiki_section"><h2>Your One Stop Shop For Chicago Cubs Gear in Wrigleyville</h2><br>
-&nbsp;&nbsp;SportsWorldChicago.com is the online home to Sports World, a Chicago Cubs, Wrigleyville, clothing and accessories supplier with a great selection and affordable prices. Our large selection of <a class="wikilink wikilink_category" title="Chicago Cubs shirts" href="http://www.sportsworldchicago.com/category/l_shirts/">Chicago Cubs shirts</a>, hats and <a class="wikilink wikilink_category" title="Chicago Cubs jerseys" href="http://www.sportsworldchicago.com/category/m_jerseys/">Chicago Cubs jerseys</a> is just what you need to show your support throughout the season or to proudly display your team`s colors year-round. As one of the most popular retailers of Chicago Cubs apparel, our website is designed to make sure that Cub fans everywhere can get their gear. SportsWorldChicago.com offers Chicago Cubs merchandise at low prices so you do not need to overspend in order to support your favorite team. Whether you`re looking for a <a class="wikilink wikilink_category" title="Cubs hat" href="http://www.sportsworldchicago.com/category/ww/">Cubs hat</a>, an <a class="wikilink wikilink_category" title="authentic Cubs jersey" href="http://www.sportsworldchicago.com/category/m_jerseys/">authentic Cubs jersey</a> or any other Cubs apparel, you`ll find it at SportsWorldChicago.com. And don`t forget our <a class="wikilink wikilink_category" title="Cubs baby clothing" href="http://www.sportsworldchicago.com/category/y/">Cubs baby clothing</a> for your little Cubs fans!
-<br />
-</div>
-<div class="wiki_section">In addition to great deals on Cubs merchandise, SportsWorldChicago.com is also your source for all other things Cubbie. We`ve also got your connection to MLB and <a class="wikilink wikilink_category" title="Cubs tickets" href="http://www.sportsworldchicago.com/category/aa.chicago_cubs_tickets/">Cubs tickets</a>, and when it`s game day, plan your trip or feel like your`re there with our <a class="wikilink wikilink_category" title="live Wrigley Field web cam" href="http://www.sportsworldchicago.com/category/a_SportsWorld_cam/">live Wrigley Field web cam</a>.
-</div></div>
+	<div id="slideshowContainer" class='clearfix marginBottom'>
+		<div id="slideshowNav"></div>
+		<ul id="wideSlideshow" class="pics slideshow">
+			<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+			<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow2); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+			<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow3); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+			<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow4); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+			<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow5); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		</ul>
+	</div><!-- /slideshowContainer -->
 
 
-	</div>
+	<div class='contentContainer' data-bind="var: page(description); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
+
+
 </div>
 
 
