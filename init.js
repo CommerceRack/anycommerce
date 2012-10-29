@@ -35,8 +35,8 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 
-//group any third party files together (regardless of pass) to make troubleshooting easier down the road and for the next guy.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.js']);
+//group any third party files together (regardless of pass) to make troubleshooting easier.
+app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js']);
 
 
 
