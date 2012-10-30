@@ -522,9 +522,28 @@ need to be customized on a per-ria basis.
 				return "<a href='#product?pid="+suffix+"' onClick='return showContent(\"product\",{\"pid\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 			":customer" : function(suffix,phrase){
-// ### this needs to get smarter. look at what the suffix is and handle cases. (for orders, link to orders, newsletter link to newsletter, etc)				
 				return "<a href='#customer?show="+suffix+"' onClick='return showContent({\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
+
+			":policy" : function(suffix,phrase){
+				return "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				},
+
+			":app" : function(suffix,phrase){
+				var output; //what is returned.
+				if(suffix == 'contact')	{
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					}
+				else if(suffix == 'contact')	{
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					}
+				else	{
+					//we'll want to do something fantastic here.
+					output = phrase;
+					}
+				return output;
+				},
+
 			":popup" : function(suffix,phrase)	{
 				return "<a href=\""+suffix+"\" target='popup' onClick=\"_gaq.push(['_trackEvent', 'outgoing_links', "+suffix.replace(/^http:\/\//i, '')+"]);\">"+phrase+"</a>";
 				}

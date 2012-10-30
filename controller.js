@@ -27,7 +27,7 @@ var zController = function(params) {
 		}
 //zglobals is not required in the UI, but is for any
 	else if(typeof zGlobals != 'object' && !params.vars.noVerifyzGlobals)	{
-		alert("Uh Oh! A required include (config.js) is not present. This document is required.");
+		alert("Uh Oh! A  required include (config.js) is not present. This document is required.");
 		}
 	else	{
 		this.initialize(params);

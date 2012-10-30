@@ -81,7 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-		version : "201239",
+		version : "201245",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -1446,8 +1446,9 @@ ADMIN/USER INTERFACE
 				}); //success
 
 			request.error(function(a,b){
-				app.u.dump("A: "); app.u.dump(a);
-				app.u.dump("B: "+b);
+				app.u.throwGMessage("UI request failure:");
+				app.u.dump(a);
+//				app.u.dump("B: "+b);
 				if(typeof viewObj.error == 'function'){viewObj.error()}
 				}) //error
 			}

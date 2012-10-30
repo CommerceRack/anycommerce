@@ -10,13 +10,14 @@
 
 
 <script type="text/javascript">
-var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+
 var myCreole;
 
 var app = {vars:{
 	"release":"20121030060700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
 	"noVerifyzGlobals":true,
+
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
 	"secureURL" : "https://www.zoovy.com",
 	"baseURL" : "", //set this to the base URL where the mvc is loaded from. leave blank for relative path.
@@ -34,8 +35,6 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
-
-
 
 
 <script type="text/javascript">

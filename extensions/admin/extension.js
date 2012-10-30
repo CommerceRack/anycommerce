@@ -26,8 +26,9 @@ finder -
 'safePath' is used for a jquery friendly id. ex: .safe.name gets converted to _safe_name and $mylistid to mylistid).
 
 
-NOTE - admin 'set' calls are hard coded to use the immutable Q so that a dispatch is not overridden.
-
+NOTE
+ - admin 'set' calls are hard coded to use the immutable Q so that a dispatch is not overridden.
+ - in the calls, 'dispatch' was removed and only init is present IF we never check local storage for the data.
 */
 
 
@@ -212,12 +213,25 @@ var admin = function() {
 			}, //finder
 
 
+
+			adminProductCreate  : {
+				init : function(pid,attribs,tagObj)	{
+					tagObj = tagObj || {};
+					tagObj.datapointer = "adminProductCreate|"+pid;
+					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
+					}
+				},
 			
 			adminUIProductPanelList : {
 				init : function(pid,tagObj,Q)	{
 					tagObj = tagObj || {};
 					tagObj.datapointer = "adminUIProductPanelList|"+pid;
-					this.dispatch(pid,tagObj,Q);
+					if(app.model.fetchData(tagObj.datapointer) == false)	{
+						this.dispatch(pid,tagObj,Q);
+						}
+					else	{
+						app.u.handleCallback(tagObj)
+						}
 					},
 				dispatch : function(pid,tagObj,Q)	{
 					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":tagObj,"pid":pid},Q);	
@@ -246,7 +260,12 @@ var admin = function() {
 				init : function(tagObj,Q)	{
 					tagObj = tagObj || {};
 					tagObj.datapointer = "adminProductManagementCategoryList";
-					this.dispatch(tagObj,Q);
+					if(app.model.fetchData(tagObj.datapointer) == false)	{
+						this.dispatch(tagObj,Q);
+						}
+					else	{
+						app.u.handleCallback(tagObj)
+						}
 					},
 				dispatch : function(tagObj,Q)	{
 					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":tagObj},Q);	
@@ -325,7 +344,7 @@ app.ext.admin.u.showProductTab(); //here for testing. This function will get cal
 
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
-				window.savePanel = app.ext.admin.a.savePanel; //for product editor.
+				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor.
 //				showUI('/biz/setup/analytics/index.cgi?VERB=GOOGLETS&PROFILE=DEFAULT');
 //				showUI('/biz/product/index.cgi');
 //				showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&&NS=DEFAULT&PG=aboutus&FS=A');  //loads a builder page.
@@ -359,7 +378,7 @@ app.ext.admin.u.showProductTab(); //here for testing. This function will get cal
 					app.ext.admin.u.filterFinderResults();
 					}
 				}
-			},
+			}, //handleElasticFinderResults
 
 
 
@@ -398,6 +417,7 @@ app.ext.admin.u.showProductTab(); //here for testing. This function will get cal
 			
 			}, //pidFinderChangesSaved
 //when a finder for a category/list/etc is executed...
+
 		finderChangesSaved : {
 			onSuccess : function(tagObj)	{
 
@@ -492,6 +512,17 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				}
 			}, //finderProductUpdate
 
+		showMangementCats : {
+			onSuccess : function(tagObj)	{
+				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
+				$results = $('#'+tagObj.targetID);
+				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
+					$results.append('<li>'+index+'</li>')	
+					}
+				}
+			}, //showManagementCats
+
+
 		filterFinderSearchResults : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
@@ -521,37 +552,38 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		
 		
-		renderFormats : {
-			
-			elastimage1URL : function($tag,data)	{
+	renderFormats : {
+		
+		elastimage1URL : function($tag,data)	{
 //				app.u.dump(data.value[0]);
 //				var L = data.bindData.numImages ? data.bindData.numImages : 1; //default to only showing 1 image.
 //				for(var i = 0; i < L; i += 1)	{
 //					}
-				$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
-				},
-			
-			array2ListItems : function($tag,data)	{
-				var L = data.value.length;
-				app.u.dump(" -> cleanValue for array2listItems");
-				app.u.dump(data.value);
-				var $o = $("<ul />"); //what is appended to tag. 
-				for(var i = 0; i < L; i += 1)	{
-					$o.append("<li>"+data.value[i]+"<\/li>");
-					}
-				$tag.append($o.children());
-				},
-			
-			array2Template : function($tag,data)	{
+			$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
+			},
+		
+	
+		array2ListItems : function($tag,data)	{
+			var L = data.value.length;
+			app.u.dump(" -> cleanValue for array2listItems");
+			app.u.dump(data.value);
+			var $o = $("<ul />"); //what is appended to tag. 
+			for(var i = 0; i < L; i += 1)	{
+				$o.append("<li>"+data.value[i]+"<\/li>");
+				}
+			$tag.append($o.children());
+			},
+		
+		array2Template : function($tag,data)	{
 //				app.u.dump("BEGIN admin.renderFormats.array2Template");
 //				app.u.dump(data.value);
-				var L = data.value.length;
-				for(var i = 0; i < L; i += 1)	{
-					$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
-					}
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
 				}
-			
-			}, //renderFormats
+			}
+		
+		}, //renderFormats
 
 
 
@@ -573,6 +605,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				else	{
 					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
 					}
+				return false;
 				},
 
 //this is a function that brian has in the UI on some buttons.
@@ -581,9 +614,18 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				this.showUI(path);
 				},
 
-			
+			showCreateProductDialog : function(){
+				var $modal = $('#createProductDialog');
+				if($modal.length < 1)	{
+					$modal = $("<div>").attr({'id':'createProductDialog','title':'Create a New Product'});
+					$modal.appendTo('body');
+					$modal.dialog({width:500,height:500,modal:true,autoOpen:false});
+					}
+				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
+				$modal.dialog('open');
+				},
 
-			savePanel : function(t,panelID,SUB){
+			saveProductPanel : function(t,panelID,SUB){
 
 				var formObj = $(t).closest("form").serializeJSON();
 				formObj.pid = 'OUTFIT';
@@ -608,6 +650,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
+				
+				
+				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(path,sku)	{
 				var $finderModal = $('#prodFinder');
@@ -640,7 +685,33 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			
 
 			showProductTab : function()	{
-				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('productTabTemplate'));
+
+$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('productTabTemplate'));
+
+app.ext.admin.calls.adminProductManagementCategoryList.init({'callback':'showMangementCats','extension':'admin','targetID':'manCats'},'mutable');
+app.model.dispatchThis('mutable');
+
+$('.tagFilterList li','#prodLeftCol').each(function(){
+	$(this).click(function(){
+		$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+		var tag = $(this).text();
+		app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
+		app.model.dispatchThis('mutable');
+		})
+	})
+
+
+$('.mktFilterList li','#prodLeftCol').each(function(){
+	$(this).click(function(){
+		$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+		var mktid = $(this).data('mktid')+'_on';
+		app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
+		app.model.dispatchThis('mutable');
+		})
+	})
+
+
+
 				},
 			
 			saveFinderChanges : function()	{
@@ -706,11 +777,15 @@ app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"find
 
 
 			handleCreateNewProduct : function(P)	{
-				alert('do something!');
-				app.u.dump("Here comes the P: "); app.u.dump(P);
+				var pid = P.pid;
+				delete P.pid;
+//				app.u.dump("Here comes the P ["+pid+"]: "); app.u.dump(P);
+				app.ext.admin.calls.adminProductCreate.init(pid,P,{'callback':'showMessaging','message':'Created!','parentID':'prodCreateMessaging'});
+				app.model.dispatchThis('immutable');
 				},
 
-			
+
+
 //onclick, pass in a jquery object of the list item
 			removePidFromFinder : function($listItem){
 //app.u.dump("BEGIN admin.u.removePidFromFinder");
