@@ -648,6 +648,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 					app.ext.store_checkout.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
 					}
 
+				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
 
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 

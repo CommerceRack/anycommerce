@@ -227,7 +227,7 @@ var admin = function() {
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
@@ -239,7 +239,28 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 				}
 			}, //init
 
-
+		initUserInterface : {
+			onSuccess : function()	{
+				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
+				var L = app.rq.length-1;
+				for(var i = L; i >= 0; i -= 1)	{
+					app.u.handleResourceQ(app.rq[i]);
+					app.rq.splice(i, 1); //remove once handled.
+					}
+				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+				
+				window.navigateTo = app.ext.admin.a.navigateTo;
+				window.showUI = app.ext.admin.a.showUI;
+				showUI('/biz/setup/analytics/index.cgi?VERB=GOOGLETS&PROFILE=DEFAULT');
+				
+				//yes, this is global.
+				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone').append("Brian is a Homo");
+				$loadingModal.dialog({'autoOpen':false}).appendTo('body');
+				},
+			onError : function(d)	{
+//init error handling handled by controller.				
+				}
+			},
 
 		handleElasticFinderResults : {
 			onSuccess : function(tagObj)	{
@@ -418,9 +439,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 		}, //callbacks
 
-		validate : {}, //validate
-		
-		
+	
 		
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		
@@ -463,6 +482,29 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
+
+			showUI : function(path,P)	{
+				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+//				$loadingModal.dialog('open');
+				P = P || {};
+				if(path)	{
+					P.targetID = P.targetID || 'mainContentArea'; //if target id is specified, we'll use it. otherwise, put content in to main area.
+//					P.success = function(){$loadingModal.dialog('close');}
+//					P.error = function(){$loadingModal.dialog('close');}
+					app.model.fetchAdminResource(path,P);
+					}
+				else	{
+					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
+					}
+				},
+
+			navigateTo : function(url)	{
+				this.showUI(url);
+				},
+
+
+
+
 /*
 to generate an instance of the finder, run: 
 app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
@@ -827,6 +869,7 @@ else	{
 
 
 				} //bindFinderButtons
+
 
 
 

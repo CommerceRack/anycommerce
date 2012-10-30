@@ -519,7 +519,40 @@ app.u.handleCallback(tagObj);
 //				app.u.dump(" -> no callback was defined.");
 				}
 			},
-			
+
+
+/*
+when quickstart is added, it will go through app.rq and use this function to add all resources as needed.
+it'll then set app.rq.push to mirror this function.
+*/
+
+			handleResourceQ : function(arr)	{
+				if(arr[0] == 'script')	{
+					app.u.loadScript(arr[2],arr[3]);
+					}
+				else if(arr[0] == 'extension')	{
+//					app.u.dump(" -> extension loading: "+arr[2]+" callback: "+arr[4]);
+					var tmpObj = {"namespace":arr[2],"filename":arr[3],"callback":arr[4]}; //
+					app.vars.extensions.push(tmpObj); // keep the full list just in case.
+					app.u.loadScript(arr[3],function(){
+						app.model.fetchExtension(tmpObj); 
+						});
+					app.model.executeCallbacksWhenExtensionsAreReady([tmpObj]); //function wants an array of objects.
+					}
+				else if(arr[0] == 'templateFunction')	{
+					app.ext.myRIA.template[arr[1]][arr[2]].push(arr[3]);
+					}
+				else if(arr[0] == 'css')	{
+					app.u.loadCSSFile(arr[2],arr[3] || null);
+					}
+				else	{
+		//currently, this function is intended for pass 0 only, so if an item isn't pass 0,do nothing with it.
+					}
+
+				
+				},
+
+
 //filename is full path of .css file (or valid relative path)
 //domID is optional id to add to <link> allows for removal or changing later.
 //if you pass a domID that already exists, that file is 'saved over'.

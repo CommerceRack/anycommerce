@@ -228,7 +228,7 @@ NOT SUPPORTED.
 				var r = 0;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "buyerWalletList";
-				if(app.model.fetchData('getNewsletters') == false)	{
+				if(app.model.fetchData('buyerWalletList') == false)	{
 					r = 1;
 					this.dispatch(tagObj,Q);
 					}

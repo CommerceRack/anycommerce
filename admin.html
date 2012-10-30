@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Admin - here for testing and sharing.</title>
+
+<link rel="alternate" title="Zoovy News RSS" href="https://www.zoovy.com/biz/rss/news.cgi/proshop.rss" type="application/rss+xml">
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/todo-list.css">
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/standard-20110317.css">
+
+
+<script type="text/javascript">
+var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+var myCreole;
+
+var app = {vars:{
+	"release":"201210270525",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
+	"noVerifyzGlobals":true,
+	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
+	"secureURL" : "https://www.zoovy.com",
+	"baseURL" : "", //set this to the base URL where the mvc is loaded from. leave blank for relative path.
+	"sdomain":"www.zoovy.com"
+	},u:{},rq:[]};
+
+</script>
+
+<!-- 
+all css includes need to be after the js that changes the base url. 
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+<link rel="stylesheet" type="text/css" href="qs_styles.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/redmond/jquery-ui.css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" src="loadscript.js"></script>
+
+
+
+
+<script type="text/javascript">
+app.u.loadScript(app.vars.baseURL+"admin_init.js");
+</script>
+
+
+
+
+
+
+
+</head>
+<body class="control"  bgcolor="FFFFFF" marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
+<!-- this div handles getting content to appear below the fixed header -->
+<div style='height:105px;' id='header'>
+
+<!-- gets the header to be persitent -->
+	<div style='position:absolute; height:105px; width:100%;'>
+
+<!-- used as a container for the elements within the header -->
+		<div style='height:105px; position:relative; background:url(/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
+	
+<!-- logo -->
+<div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;'>
+<img src="https://www.zoovy.com/biz/images/header/zoovy_logo-136x33.png" alt="zoovy is great" width='136' height='32' id='zoovyheaderlogo' />
+</div>
+
+
+
+<!-- contains the menu links and the search form -->
+<div style='position:absolute; right:20px; top:7px; text-align:right;'>
+
+	<div><a target='_top' href='/biz/downloads' onClick="JSgoTo();">downloads</a> | <a  target='_top' href='/biz/support/index.cgi' onClick="JSgoTo();">support</a> | <span class="menu"><a href='https://www.zoovy.com/biz/todo/index.cgi' target="_top" onClick="JSgoTo();">to do</a></span>
+	</div>
+	
+
+
+<div id='search'>
+
+
+<form action='' id='headerSearch' name='headerSearch' method='post' target='_top'>
+
+<table align='right' cellspacing='0' cellpadding='0' style='margin-top:2px;'>
+<tr>
+   <td><select style='font-size:11px;' name='FROM_HEADER' ID='FROM_HEADER' onChange="validateHeaderSearch(this.value);">
+<option selected disabled>search</option>
+<optgroup label="product by">
+   <option value='product:id'>id or keyword</option>
+   <option value='product:mkt'>ebay item #</option>
+</optgroup>
+<optgroup label="orders by">
+   <option value='order:orderid'>order id</option>
+   <option value='order:google'>google order #</option>
+   <option value='order:amazon'>amazon order #</option>
+
+</optgroup>
+<optgroup label="customers by">
+   <option value='customer:email'>email</option>
+   <option value='customer:orderid' >order #</option>
+   <option value='customer:lastname' >last name</option>
+</optgroup>
+<optgroup label="documentation">
+	<option value='help:webdoc'>webdoc</option>
+</optgroup>
+</select></td>
+
+    <td style='padding:0 4px;'><input type="text" style='width:120px; font-size:11px;' name='HEADER_VALUE' id='HEADER_VALUE' /></td>
+
+    <td><input type='submit' class='button2' value='Go' /></td>
+
+</tr>
+</table>
+</form>
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+<!-- username/id and partition info -->
+<div style='position:absolute; top:7px; left:180px;' id='userInfo'>
+You are Logged in as: 
+<a  target='_top' href='/biz/logout.cgi' onClick="JSgoTo();">logout</a>
+</div>
+
+
+
+
+	<div style='position:absolute; left:180px; top:28px;'>
+	<ul id='menutabs' >
+		<li class='off'><a href='/biz/setup/' target='_top' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
+		<li class='off'><a href='/biz/sites/' target='_top' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
+		<li class='off'><a href='/biz/product/' target='_top' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
+		<li class='off'><a href='/biz/orders' target='_top' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
+		<li class='off'><a href='/biz/crm/' target='_top' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
+		<li class='off'><a href='/biz/syndication/' target='_top' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
+		<li class='off'><a href='/biz/reports/' title='A plethora of reporting tools to help you analyze your sales' target='_top'><span>reports</span></a></li>
+		<li class='off'><a href='/biz/kpi/' title='View Key Performance Indicators' target='_top'><span>KPI</span></a></li>
+		<li class='off'><a href='/biz/utilities/' target='_top' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
+	</ul>
+	</div>
+
+
+<!-- sublinks or 'tabs' as brian refers to them. These are the links that appear below the main tabs -->
+<div style='position:absolute; left:0px; right:0px; top:49px; padding-left:10px;' class='sublinks' id='sublinks'>
+
+	<div style='float:right; padding-top:6px; padding-right:20px;' id='helpButton'><a target="webdoc" href="http://webdoc.zoovy.com/doc/50727" title='click here for webdoc help'><img src='/biz/images/header/ui_btn_help-67x22.gif' width='67' height='22' alt='click here for webdoc help' /></a></div>
+
+<a href="index.cgi?VERB=NEWS" class="header_sublink_active" ><span>Recent News</span></a>
+
+</div>
+
+
+<!-- breadcrumb -->
+<div style='position:absolute; left:0px; right:0px; bottom:0px; height:22px; line-height:22px; border-bottom:1px solid #cbcbcb; padding-left:20px;' id='breadcrumb'>
+<!-- bcbegin --><div class="breadcrumb">Home&nbsp;&#187;&nbsp;Recent News&nbsp;</div><!-- bcend -->
+
+</div>
+
+		</div>
+	</div>
+</div>
+<script type='text/javascript'>
+<!--
+function validateHeaderSearch(bob)  {
+   // alert(bob);
+   var fh = document.getElementById('FROM_HEADER');
+   fhsplit = fh.value.split(":");
+   if(fhsplit[0] == 'order')
+      document.headerSearch.action = '/biz/orders/index.cgi';
+   else if(fhsplit[0] == 'customer')
+      document.headerSearch.action = '/biz/manage/customer/index.cgi';
+   else if(fhsplit[0] == 'product') 
+      document.headerSearch.action = '/biz/product/index.cgi';
+	else if(fhsplit[0] == 'help') {
+		document.headerSearch.action = '/webdoc/index.cgi';
+		}
+	else {
+		alert('unknown type:'+fh);
+		}
+   }
+//-->
+</script>
+
+
+
+
+<div id='appView'>
+
+	<div id='globalMessaging' class='appMessaging'></div>
+	<div id='mainContentArea'></div>
+
+</div>
+
+
+</body>
+</html>
