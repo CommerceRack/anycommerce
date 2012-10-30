@@ -36,7 +36,9 @@ button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for butt
 
 
 
-
+/* some shared styles for layouts in the UI */
+/* for use in a two column format, like the product editor, where there's a left col with filters or whatever, and content in the much wider right col */
+.LeftColNav	{padding-right:25px; width:20%; min-width:240px; vertical-align:top; text-align:left; font-size:1em;}
 
 
 
@@ -190,7 +192,6 @@ PRODUCT EDITOR
 */
 
 
-.prodLeftColNav	{padding-right:25px; width:20%; min-width:240px; vertical-align:top; text-align:left; font-size:1em;}
 
 
 
