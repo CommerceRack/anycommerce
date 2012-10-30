@@ -3,6 +3,137 @@
 ########################################################
 
 
+PRODUCT TAB
+
+########################################################
+
+
+-->
+
+
+
+
+<div id='productTabTemplate'>
+
+<table>
+<tr>
+	<td class='prodLeftColNav'>
+
+New Product
+
+Filter Product
+
+Syndication
+
+Store Option Groups
+
+
+	</td>
+	<td>
+	
+	<div class='productContentContainer'>
+	
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+<div id='ProductCreateNewTemplate'>
+
+<div id='prodCreateMessaging' class='appMessaging'></div>
+
+<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin.u.handleCreateNewProduct($(this).serializeJSON); return false;">
+<table class="zoovytable" class="border_top border_right border_bottom border_left" cellpadding="5" cellspacing="0">
+	<tr>
+		<td class="zoovytableheader" colspan="2">Add Product</td>
+	</tr>
+	<tr>
+		<td class="divider bold" colspan="2">Required Fields:</td>
+	</tr>
+	<tr>
+		<td>
+		<div id="create!content">
+			
+			<table>
+			<tr>
+			<td class="data">Product ID/SKU:</td>
+			<td align="left"><input type="text" name="prod_id" SIZE="20" MAXLENGTH="20" VALUE="" required='required'></td>
+			</tr>			
+			
+			<tr>
+				<td class="data">Product Name:</td>
+				<td align="left">
+					<INPUT TYPE="text" NAME="prod_name" SIZE="55" maxlength="55" VALUE="" required='required'>
+				</td>
+			</tr>
+			<tr>
+				<td class="data">Sell For Price:</td>
+				<td align="left">$<INPUT TYPE="text" size=6 NAME="base_price" VALUE="" SIZE="15" required='required'></td>
+			</tr>
+			</table>		
+			
+		</div>
+		</td>
+	</tr>
+	<tr>
+		<td class="divider bold" colspan="2">Recommended Data:</td>
+	</tr>
+	<tr>
+		<td>
+		
+		<table>
+		<tr>
+			<td class="data">Your Cost:</td>
+			<td align="left">$<INPUT TYPE="text" size=6 NAME="base_cost" VALUE="" SIZE="15"></td>
+		</tr>
+		<tr>
+			<td valign='top' class="data">Inventory Qty:</td>
+			<td nowrap align="left">
+			<input type="textbox" name="INVENTORY" size="5" value=""> &nbsp; (<input type="checkbox" name="INV_UNLIMITED"> Unlimited Qty)
+			</td
+		</tr>
+		<tr>
+			<td valign='top' class="data">Product Description:</td>
+			<td align="left"><TEXTAREA NAME="prod_desc" COLS=40 ROWS=5></TEXTAREA></td>
+		</tr>
+		<tr>
+			<td class="data">Base Weight:</td>
+			<td align="left"><INPUT TYPE="text" NAME="base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</td>
+		</tr>
+		<tr>
+			<td class="data">Is product taxable?:</td>
+		 	<td align="left"><INPUT TYPE='radio' NAME='taxable' VALUE='Y' checked>&nbsp;Yes
+        <INPUT TYPE='radio' NAME='taxable' VALUE='N' >&nbsp;No</td>
+       </tr>
+		</table>
+		
+<center>
+<input type="hidden" name="VERB" value="CREATE-SAVE">
+<table cellpadding='5'>
+	<tr>
+	<td valign='bottom'><input type="button" value=" Save " class='savebutton' onClick='thisFrm.VERB.value="CREATE-SAVE"; thisFrm.submit();' border='0'></td>
+	</tr>
+</table>
+<br>
+		
+		</td>
+	</tr>		
+</table>
+
+</form>
+
+</div>
+
+
+<!--
+
+########################################################
+
+
 PRODUCT FINDER
 
 ########################################################

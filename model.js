@@ -370,8 +370,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 	
 	/*
 	run when a high-level error occurs during the request (ise, pagenotfound, etc).
-	 -> sets dispatch status back to queued.
-	 -> if attempts is already at 3, executed callback.onError code (if set).
+	 -> sets dispatch status back to error. originally, multiple attempts would be made. 201239 changed this behavior to failing after first fail.
 	 
 	the Q passed in is sometimes the 'already filtered' Q, not the entire dispatch Q. Makes for a smaller loop and only impacts these dispatches.
 	also, when dispatchThis is run again, any newly added dispatches WILL get dispatched (if in the same Q).
@@ -387,15 +386,15 @@ can't be added to a 'complete' because the complete callback gets executed after
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
 //currently, we're only giving one attempt. see integer below (>+ #) to a higher number to try multiple times (not recommended)
-				if(app.q[QID][uuid].attempts >= 1)	{
+//				if(app.q[QID][uuid].attempts >= 1)	{
 					app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
 					//make sure a callback is defined.
 					this.handleErrorByUUID(uuid,QID,{'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
-					}
-				else	{
-					if(adjustAttempts)	{app.q[QID][uuid].attempts += 1; }
-					app.model.changeDispatchStatusInQ(QID,uuid,'queued');
-					}
+//					}
+//				else	{
+//					if(adjustAttempts)	{app.q[QID][uuid].attempts += 1; }
+//					app.model.changeDispatchStatusInQ(QID,uuid,'queued');
+//					}
 				}
 			},
 	
@@ -1447,7 +1446,7 @@ ADMIN/USER INTERFACE
 				}); //success
 
 			request.error(function(a,b){
-				app.u.dump("a: "+a);
+				app.u.dump("A: "); app.u.dump(a);
 				app.u.dump("B: "+b);
 				if(typeof viewObj.error == 'function'){viewObj.error()}
 				}) //error

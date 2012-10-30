@@ -34,7 +34,7 @@ NOTE - admin 'set' calls are hard coded to use the immutable Q so that a dispatc
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','productTabTemplate'); 
 	var r = {
 		
 	vars : {
@@ -209,7 +209,66 @@ var admin = function() {
 					}
 				} //adminNavcatProductDelete
 			
-			} //finder
+			}, //finder
+
+
+			
+			adminUIProductPanelList : {
+				init : function(pid,tagObj,Q)	{
+					tagObj = tagObj || {};
+					tagObj.datapointer = "adminUIProductPanelList|"+pid;
+					this.dispatch(pid,tagObj,Q);
+					},
+				dispatch : function(pid,tagObj,Q)	{
+					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":tagObj,"pid":pid},Q);	
+					}
+				}, //adminUIProductPanelList
+
+
+//obj requires panel and productid and sub.  sub can be LOAD or SAVE
+			adminUIProductPanelExecute : {
+				init : function(obj,tagObj,Q)	{
+					tagObj = tagObj || {};
+					if(obj['sub'] == 'LOAD')	{
+						tagObj.datapointer = "adminUIProductPanelExecute|load|"+obj.panel+"|"+obj.pid;
+						}
+					this.dispatch(obj,tagObj,Q);
+					},
+				dispatch : function(obj,tagObj,Q)	{
+					obj['_cmd'] = "adminUIProductPanelExecute";
+					obj["_tag"] = tagObj;
+					app.model.addDispatchToQ(obj,Q);	
+					}
+				}, //adminUIProductPanelList
+
+//obj requires panel and productid and sub.  sub can be LOAD or SAVE
+			adminProductManagementCategoryList : {
+				init : function(tagObj,Q)	{
+					tagObj = tagObj || {};
+					tagObj.datapointer = "adminProductManagementCategoryList";
+					this.dispatch(tagObj,Q);
+					},
+				dispatch : function(tagObj,Q)	{
+					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":tagObj},Q);	
+					}
+				}, //adminUIProductPanelList
+
+//obj requires sub and sref.  sub can be LOAD or SAVE
+			adminUIBuilderPanelExecute : {
+				init : function(obj,tagObj,Q)	{
+					tagObj = tagObj || {};
+					if(obj['sub'] == 'EDIT')	{
+						tagObj.datapointer = "adminUIBuilderPanelExecute";
+						}
+					this.dispatch(obj,tagObj,Q);
+					},
+				dispatch : function(obj,tagObj,Q)	{
+					obj['_cmd'] = "adminUIBuilderPanelExecute";
+					obj['_SREF'] = "BAcEMTIzNAQEBAgZAAcAAAAKBFBBR0UCBgAAAEZPUk1BVAoBMQILAAAAX2lzX3ByZXZpZXcKAUECAgAAAEZTFwthYm91dF8zcGljcwIFAAAARE9DSUQKB2Fib3V0dXMCAgAAAFBHCgdERUZBVUxUAgIAAABOUwoBMAIDAAAAUFJU"; /// !!! DO NOT HARD CODE THIS
+					obj["_tag"] = tagObj;
+					app.model.addDispatchToQ(obj,Q);
+					}
+				} //adminUIProductPanelList
 
 		}, //calls
 
@@ -239,6 +298,15 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 				}
 			}, //init
 
+
+		showDataHTML : {
+			onSuccess : function(tagObj)	{
+				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
+				$('#'+tagObj.targetID).html(app.data[tagObj.datapointer].html).wrap("<form id='bob'>");
+				},
+			onError : function(responseData)	{app.u.dump(" -> UH OH!");}
+			}, //init
+
 		initUserInterface : {
 			onSuccess : function()	{
 				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
@@ -248,14 +316,23 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 					app.rq.splice(i, 1); //remove once handled.
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
-				
+
+//app.ext.admin.calls.adminUIProductPanelList.init('OUTFIT',{},'mutable');
+//app.ext.admin.calls.adminUIProductPanelExecute.init({'pid':'OUTFIT','panel':'flexedit','sub':'LOAD'},{'callback':'showDataHTML','extension':'admin','targetID':'mainContentArea'},'mutable');
+//app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':'BLURB'});
+//app.model.dispatchThis('mutable');
+app.ext.admin.u.showProductTab(); //here for testing. This function will get called in showUI.
+
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
-				showUI('/biz/setup/analytics/index.cgi?VERB=GOOGLETS&PROFILE=DEFAULT');
-				
+				window.savePanel = app.ext.admin.a.savePanel; //for product editor.
+//				showUI('/biz/setup/analytics/index.cgi?VERB=GOOGLETS&PROFILE=DEFAULT');
+//				showUI('/biz/product/index.cgi');
+//				showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&&NS=DEFAULT&PG=aboutus&FS=A');  //loads a builder page.
+
 				//yes, this is global.
-				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone').append("Brian is a Homo");
-				$loadingModal.dialog({'autoOpen':false}).appendTo('body');
+				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone');
+				$loadingModal.appendTo('body').dialog({'autoOpen':false});
 				},
 			onError : function(d)	{
 //init error handling handled by controller.				
@@ -474,7 +551,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					}
 				}
 			
-			},
+			}, //renderFormats
 
 
 
@@ -498,12 +575,23 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					}
 				},
 
-			navigateTo : function(url)	{
-				this.showUI(url);
+//this is a function that brian has in the UI on some buttons.
+//it's diferent than showUI so we can 
+			navigateTo : function(path)	{
+				this.showUI(path);
 				},
 
+			
 
+			savePanel : function(t,panelID,SUB){
 
+				var formObj = $(t).closest("form").serializeJSON();
+				formObj.pid = 'OUTFIT';
+				formObj['sub'] = (SUB) ? SUB : 'SAVE'
+				formObj.panel = 'flexedit'
+				app.ext.admin.calls.adminUIProductPanelExecute.init(formObj,{},'immutable');
+				app.model.dispatchThis('immutable');
+				},
 
 /*
 to generate an instance of the finder, run: 
@@ -551,6 +639,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 		u : {
 			
 
+			showProductTab : function()	{
+				$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('productTabTemplate'));
+				},
 			
 			saveFinderChanges : function()	{
 				app.u.dump("BEGIN admin.u.saveFinderChanges");
@@ -614,6 +705,10 @@ app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"find
 
 
 
+			handleCreateNewProduct : function(P)	{
+				alert('do something!');
+				app.u.dump("Here comes the P: "); app.u.dump(P);
+				},
 
 			
 //onclick, pass in a jquery object of the list item

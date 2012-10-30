@@ -14,7 +14,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201210270525",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121029193000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
 	"noVerifyzGlobals":true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
@@ -29,8 +29,8 @@ var app = {vars:{
 all css includes need to be after the js that changes the base url. 
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/redmond/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="extensions/admin/styles.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
@@ -69,7 +69,10 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 <!-- contains the menu links and the search form -->
 <div style='position:absolute; right:20px; top:7px; text-align:right;'>
 
-	<div><a target='_top' href='/biz/downloads' onClick="JSgoTo();">downloads</a> | <a  target='_top' href='/biz/support/index.cgi' onClick="JSgoTo();">support</a> | <span class="menu"><a href='https://www.zoovy.com/biz/todo/index.cgi' target="_top" onClick="JSgoTo();">to do</a></span>
+	<div>
+	<a target='_top' href='/biz/downloads' >downloads</a> | 
+	<a  target='_top' href='/biz/support/index.cgi' >support</a> | 
+	<span class="menu"><a href='https://www.zoovy.com/biz/todo/index.cgi' target="_top" >to do</a></span>
 	</div>
 	
 
@@ -126,7 +129,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 <!-- username/id and partition info -->
 <div style='position:absolute; top:7px; left:180px;' id='userInfo'>
 You are Logged in as: 
-<a  target='_top' href='/biz/logout.cgi' onClick="JSgoTo();">logout</a>
+<a  target='_top' href='/biz/logout.cgi' >logout</a>
 </div>
 
 

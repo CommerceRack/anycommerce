@@ -76,83 +76,6 @@ a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
 
 
 
-/*
-
-FINDER STYLES
-
-
-*/
-
-
-/*
-any div that is going to be the container for a product finder should have this class.
-the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
-*/
-
-.finderContainer	{width:100%; margin:12px 0;}
-.finderContainer .ui-widget-header	{padding:4px;}
-
-
-.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
-.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
-.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
-
-
-#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
-
-/*
-used in the template for a product finder.
-use only variable widths, so that the finder expands proportionally depending
-on it's container element.
-*/
-.finderTable	{width:96%; margin:0 auto;}
-.finderTable	td {padding:6px; width:50%;}
-
-
-
-/* for product lists in a finder. */
-
-/* scrolly-div for product lists */
-.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
-
-/*
-parent element for list (either ol or ul)
-min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
-*/
-.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
-
-/*
-a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
-the right padding is to accomodate the handle and removeProd elements.
- */
-.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
-.finderProdlist li:hover	{border-color: #cccccc;}
-
-.finderProdlist .prodThumb	{float:left; margin-right:12px;}
-.finderProdlist .pid	{font-size:.8em}
-.finderProdlist .prodName	{margin-right:55px;}
-
-
-/*
-styles for lists that are selectable
-a background on the target element may require an implicit override here.
-*/
-.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
-.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
-.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
-
-/* if a list is selectable and sortable, add an element with a handle class */
-.ui-selecting .handle { background: #ddd; }
-.ui-selected .handle { background: #cde; }
-
-
-.finderResults	{z-index:100;}
-.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
-
-/* the remove feature is only available on the target side */
-.finderResults .removeProd	{display:none;}
-
-
 /* a global 'handle' class for now. for consistency. 
 later if more variety is needed, we can either create exceptions or more rules to handle all cases.
 */
@@ -253,6 +176,108 @@ li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !importan
 	width: 160px;
 	}
 	
+
+
+
+/*
+
+########################################################
+
+PRODUCT EDITOR
+
+########################################################
+
+*/
+
+
+.prodLeftColNav	{padding-right:25px; width:20%; min-width:240px; vertical-align:top; text-align:left; font-size:1em;}
+
+
+
+
+
+/*
+
+########################################################
+
+FINDER
+
+########################################################
+
+*/
+
+
+/*
+any div that is going to be the container for a product finder should have this class.
+the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
+*/
+
+.finderContainer	{width:100%; margin:12px 0;}
+.finderContainer .ui-widget-header	{padding:4px;}
+
+
+.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
+.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+
+#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
+
+/*
+used in the template for a product finder.
+use only variable widths, so that the finder expands proportionally depending
+on it's container element.
+*/
+.finderTable	{width:96%; margin:0 auto;}
+.finderTable	td {padding:6px; width:50%;}
+
+
+
+/* for product lists in a finder. */
+
+/* scrolly-div for product lists */
+.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
+
+/*
+parent element for list (either ol or ul)
+min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
+*/
+.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
+
+/*
+a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
+the right padding is to accomodate the handle and removeProd elements.
+ */
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
+.finderProdlist li:hover	{border-color: #cccccc;}
+
+.finderProdlist .prodThumb	{float:left; margin-right:12px;}
+.finderProdlist .pid	{font-size:.8em}
+.finderProdlist .prodName	{margin-right:55px;}
+
+
+/*
+styles for lists that are selectable
+a background on the target element may require an implicit override here.
+*/
+.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
+.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
+
+/* if a list is selectable and sortable, add an element with a handle class */
+.ui-selecting .handle { background: #ddd; }
+.ui-selected .handle { background: #cde; }
+
+
+.finderResults	{z-index:100;}
+.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
+
+/* the remove feature is only available on the target side */
+.finderResults .removeProd	{display:none;}
+
+
+
+
 
 
 
