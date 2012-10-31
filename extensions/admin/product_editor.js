@@ -237,8 +237,10 @@ var admin_prodEdit = function() {
 				app.ext.admin_prodEdit.calls.adminProductManagementCategoryList.init({'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},'mutable');
 				app.model.dispatchThis('mutable');
 				
+				
+				
 				$('.tagFilterList li','#prodLeftCol').each(function(){
-					$(this).click(function(){
+					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var tag = $(this).text();
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
@@ -248,7 +250,7 @@ var admin_prodEdit = function() {
 				
 				
 				$('.mktFilterList li','#prodLeftCol').each(function(){
-					$(this).click(function(){
+					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var mktid = $(this).data('mktid')+'_on';
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
@@ -263,7 +265,7 @@ var admin_prodEdit = function() {
 path = path || "/biz/product/edit.cgi?VERB=WELCOME";
 P.targetID = "productTabMainContent";
 $('#'+P.targetID).empty().append("<div class='loadingBG'></div>");
-//app.model.fetchAdminResource(path,P);
+app.model.fetchAdminResource(path,P);
 
 
 				}, //showProductTab 

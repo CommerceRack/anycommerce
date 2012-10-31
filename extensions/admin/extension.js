@@ -522,6 +522,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+				$('html, body').animate({scrollTop : 0},1000)
 //				$loadingModal.dialog('open');
 				P = P || {};
 				if(path)	{
@@ -537,7 +538,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						alert('welcome to orders');
 						}
 					else	{
-						app.u.dump("got to the else");
+						app.u.dump(" -> open something wonderful...");
 						$('#mainContentArea').empty().append("<div class='loadingBG'></div>");
 						app.model.fetchAdminResource(path,P);
 						}
@@ -640,21 +641,28 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				},
 
-			uiHandleFormRewrites : function(data,viewObj)	{
+			uiHandleFormRewrites : function(path,data,viewObj)	{
+//				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
+//				app.u.dump(" -> data: "); app.u.dump(data);
+//				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
 				var $target = $('#'+viewObj.targetID)
 				$target.html(data.html);
 //any form elements in the response have their actions rewritten.
 				$('form',$target).submit(function(event){
+//					app.u.dump(" -> Executing custom form submit.");
 					event.preventDefault();
 					var jsonObj = $(this).serializeJSON();
+//					app.u.dump(" -> jsonObj: "); app.u.dump(jsonObj);
 					app.model.fetchAdminResource(path,{},jsonObj); //handles the save.
+					return false;
 					}); //submit
 				},
 			
-			uiHandleLinkRewrites : function(data,viewObj)	{
+			uiHandleLinkRewrites : function(path,data,viewObj)	{
 				var $target = $('#'+viewObj.targetID)
 				$('a',$target).click(function(event){
 					var href = $(this).attr('href');
+					$(this).attr('title',href); // HERE FOR TESTING
 					if(href.indexOf("/biz/") == 0)	{
 						event.preventDefault();
 						return showUI(href);

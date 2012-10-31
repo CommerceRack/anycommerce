@@ -1435,15 +1435,21 @@ function setHeader(xhr) {
 	xhr.setRequestHeader('X-Auth','sporks');
 	}
 			
+			var pathParts = path.split('?'); //pathParts[0] = /biz/setup and pathParts[1] = key=value&anotherkey=anothervalue (uri params);
+//make sure to pass data2pass last so that the contents of it get preference (duplicate vars will be overwritten by whats in data)
+//this is important because data is typically a form input and may have a verb or action set that is different than what's in the pathParts URI params
+			var data = $.extend(app.u.getParametersAsObject("?"+pathParts[1]),data2Pass); //getParamsfunction wants ? in string.
 			
-			var URL = 'https://www.zoovy.com'+path; //once live, won't need the full path, but necessary for testing purposes.
+			var URL = 'https://www.zoovy.com'+pathParts[0]; //once live, won't need the full path, but necessary for testing purposes.
+			
 			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
 				app.u.dump("request in progress. Aborting.");
 				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 				}
 			app.ext.admin.vars.uiRequest = $.ajax({
 				"url":URL,
-				"type":"GET",
+				"data":data,
+				"type":"POST", //changing to POST causes the URL params to get dropped, which means we may not get the right page (verb). so take that into account if changing.
 				"dataType": 'json',
 				error : function(a,b){
 					if(a.statusText == "abort")	{
@@ -1462,8 +1468,8 @@ function setHeader(xhr) {
 //so that display must have all the links and form submits modified.
 					app.ext.admin.u.uiHandleBreadcrumb(data.bc);
 					app.ext.admin.u.uiHandleNavTabs(data.tabs);
-					app.ext.admin.u.uiHandleFormRewrites(data,viewObj);
-					app.ext.admin.u.uiHandleLinkRewrites(data,viewObj);
+					app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
+					app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
 					if(typeof viewObj.success == 'function'){viewObj.success()}
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
 				},
