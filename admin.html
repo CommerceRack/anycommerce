@@ -14,7 +14,7 @@
 var myCreole;
 
 var app = {vars:{
-	"release":"20121030060700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"2012103124600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
 	"noVerifyzGlobals":true,
 	"sessionId":"**HMhDvOl6dUY55iJtYf82dPW8J?USERNAME=sporks|LUSER=ADMIN|PRT=0|DOMAIN=sporks.zoovy.com|PROFILE=DEFAULT|EXPIRES=0||318437fb481c9f83eb37d0703f7e90fe66f42025",
@@ -92,6 +92,7 @@ You are Logged in as: <span class='username'></span>
 	<ul id='menutabs' >
 		<li class='off'><a href='/biz/setup/index.cgi'  class='bindByAnchor' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
 		<li class='off'><a href='/biz/sites/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
+		<li class='off'><a href='/biz/jt/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>JT</span></a></li>
 		<li class='off'><a href='/biz/product/edit.cgi?VERB=WELCOME'  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
 		<li class='off'><a href='/biz/orders/index.cgi'  class='bindByAnchor' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
 		<li class='off'><a href='/biz/crm/index.cgi'  class='bindByAnchor' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
@@ -129,6 +130,18 @@ You are Logged in as: <span class='username'></span>
 <div id='appView'>
 
 	<div id='globalMessaging' class='appMessaging'></div>
+	
+	<div id='homeContent' class='displayNone tabContent'></div>
+	<div id='setupContent' class='displayNone tabContent'></div>
+	<div id='sitesContent' class='displayNone tabContent'></div>
+	<div id='productsContent' class='displayNone tabContent'></div>
+	<div id='ordersContent' class='displayNone tabContent'></div>
+	<div id='crmContent' class='displayNone tabContent'></div>
+	<div id='syndicationContent' class='displayNone tabContent'></div>
+	<div id='reportsContent' class='displayNone tabContent'></div>
+	<div id='kpiContent' class='displayNone tabContent'></div>
+	<div id='utilitiesContent' class='displayNone tabContent'></div>
+	
 	<div id='mainContentArea'></div>
 
 </div>

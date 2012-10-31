@@ -2000,6 +2000,7 @@ return $r;
 			},
 
 		paypalECButton : function($tag,data)	{
+app.u.dump("GOT HERE");
 if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
 	var payObj = app.u.which3PCAreAvailable();
 	if(payObj.paypalec)	{

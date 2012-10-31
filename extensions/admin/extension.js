@@ -39,8 +39,8 @@ var admin = function() {
 	var r = {
 		
 	vars : {
-		"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-//though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
+		tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
+		state : {},
 		templates : theseTemplates,
 		willFetchMyOwnTemplates : true,
 		"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
@@ -522,18 +522,23 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-				$('html, body').animate({scrollTop : 0},1000)
+				$('html, body').animate({scrollTop : 0},1000);
 //				$loadingModal.dialog('open');
 				P = P || {};
 				if(path)	{
+					$('title').text(path);
+					$(".tabContent",'#appView').hide(); //hide all tab contents
+					
+					var tab = app.ext.admin.u.getTabFromPath(path);
+					$('#'+tab+'Contents').show(); //show focus tab.
 					P.targetID = P.targetID || 'mainContentArea'; //if target id is specified, we'll use it. otherwise, put content in to main area.
 //					P.success = function(){$loadingModal.dialog('close');}
 //					P.error = function(){$loadingModal.dialog('close');}
-					if(path.indexOf('/biz/product') == 0)	{
+					if(tab == 'product')	{
 						app.u.dump(" -> open product editor");
 						app.ext.admin_prodEdit.u.showProductEditor(path,P);
 						}
-					else if(path.indexOf('/biz/orders') == 0)	{
+					else if(tab == 'orders')	{
 						app.u.dump(" -> open orders editor");
 						alert('welcome to orders');
 						}
@@ -542,6 +547,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						$('#mainContentArea').empty().append("<div class='loadingBG'></div>");
 						app.model.fetchAdminResource(path,P);
 						}
+					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 					}
 				else	{
 					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
@@ -550,7 +556,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 
 //this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can 
+//it's diferent than showUI so we can add extra functionality if needed.
 			navigateTo : function(path)	{
 				this.showUI(path);
 				},
@@ -606,6 +612,49 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 		u : {
+			
+			getTabFromPath : function(path)	{
+				return path.split("/")[2];
+				},
+			
+			uiHandleMessages : function(path,msg)	{
+				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+				var L = msg.length;
+				var msgType, msgObj; //recycled.
+				var tab = this.getTabFromPath(path);
+				app.u.dump(" -> tab: "+tab);
+				if(L)	{
+					for(var i = 0; i < L; i += 1)	{
+						msgType = msg[i].split('|')[0];
+						//SUCCESS, ERROR, HINT, TODO, LEGACY, ISE
+						switch(msgType)	{
+							case 'SUCCESS':
+							msgObj = app.u.successMsgObject(msg[i].split('|')[1]);
+							break;
+
+							case 'HINT':
+							msgObj = app.u.statusMsgObject(msg[i].split('|')[1]);
+							break;
+
+							case 'TODO':
+							msgObj = app.u.youErrObject(msg[i].split('|')[1],'#');
+							break;
+
+//defaults are treated as errors.
+							case 'ERROR':
+							default:
+								msgObj = app.u.errMsgObject(msg[i].split('|')[1],'#');
+							}
+							msgObj.skipAutoHide = true; //for testing, don't hide.
+							msgObj.targetID = tab+"Content"; //put messaging in tab specific area.
+							app.u.throwMessage(msgObj);
+
+						}
+					}
+				else	{
+					//no message. it happens sometimes.
+					}
+				},
 			
 			uiHandleBreadcrumb : function(bc)	{
 				$target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)

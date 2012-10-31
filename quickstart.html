@@ -25,7 +25,7 @@ var app = {vars:{
 	"release":"201210270525",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
-	"httpURL":"http://www.sporks.zoovy.com/"
+	"httpURL":"http://www.homebrewers.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -1004,11 +1004,11 @@ So the cart template should contain these two elements and the extension should 
 
 		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
 
-		<span id='paypalECButton' data-bind='var: cart(id); format:paypalECButton;'></span>
+		<span id='paypalECButton' data-bind='var: cart(cart.cartid); format:paypalECButton;'></span>
 
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(id); format:googleCheckoutButton;'></span>
+		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(cart.cartid); format:googleCheckoutButton;'></span>
 		
-		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(id); format:amazonCheckoutButton;'></span>
+		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart.cartid); format:amazonCheckoutButton;'></span>
 
 	</div>
 			

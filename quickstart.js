@@ -522,20 +522,20 @@ need to be customized on a per-ria basis.
 				return "<a href='#product?pid="+suffix+"' onClick='return showContent(\"product\",{\"pid\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 			":customer" : function(suffix,phrase){
-				return "<a href='#customer?show="+suffix+"' onClick='return showContent({\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#customer?show="+suffix+"' onClick='return showContent(\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 
 			":policy" : function(suffix,phrase){
-				return "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
 				},
 
 			":app" : function(suffix,phrase){
 				var output; //what is returned.
 				if(suffix == 'contact')	{
-					output = "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
 					}
 				else if(suffix == 'contact')	{
-					output = "<a href='#policy?show="+suffix+"' onClick='return showContent({\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
 					}
 				else	{
 					//we'll want to do something fantastic here.

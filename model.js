@@ -1470,6 +1470,7 @@ function setHeader(xhr) {
 					app.ext.admin.u.uiHandleNavTabs(data.tabs);
 					app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
 					app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
+					app.ext.admin.u.uiHandleMessages(path,data.msgs);
 					if(typeof viewObj.success == 'function'){viewObj.success()}
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
 				},
