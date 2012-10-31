@@ -1,0 +1,54 @@
+
+/*
+
+########################################################
+
+
+ORDER MANAGER
+
+########################################################
+
+*/
+
+/*
+order list
+*/
+
+#orderListMessaging	{max-height:220px; overflow:auto;}
+#orderList	{margin:0 auto;font-size:.8em;} /* the container. the margin will center it on the page */
+.orderListTable, #orderListTable	{width:100%;}
+
+
+.orderListTable	td.mainCol	{vertical-align:top;}
+.orderListTable	td.leftCol	{width:180px; vertical-align:top; height:100%;}
+.orderListTable	td.mainCol .ui-widget-header	{padding:2px 12px;}
+.orderListTable	td.leftCol .ui-widget-content	{border-right:none;}
+
+#orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
+#orderFilters h4	{margin:1px 6px;}
+#orderFilters ul	{margin-bottom:12px;}
+#orderFilters li	{padding:1px 12px;}
+
+.viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
+
+
+
+/*
+order detail
+*/
+.orderDetailHeader	{padding-bottom:12px; border-bottom:1px solid #efefef;}
+.orderDetailHeader,	.orderAddresses, .orderDetailsStuff{margin-bottom:12px;}
+.orderAddresses	{padding-right:24px; width:28%;}
+.orderDetailsStuff	{width:69%; text-align:left;}
+.orderAddresses address	{margin-bottom:12px;}
+
+.orderStuffItemRow td	{padding:0 12px 12px 0;}
+
+.orderDetailButtonBar	{margin-bottom:12px;}
+.orderDetailButtonBar button	{padding:2px 6px;}
+
+.customerNotes, .orderNotes	{width:49%; padding:12px 0;}
+.notes .note	{padding-bottom:24px;}
+.notes .editable	{display:block;}
+
+.notes textarea	{min-height:60px; width:100%;}

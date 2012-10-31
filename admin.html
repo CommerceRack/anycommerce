@@ -17,7 +17,7 @@ var app = {vars:{
 	"release":"20121030060700",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
 	"noVerifyzGlobals":true,
-
+	"sessionId":"**HMhDvOl6dUY55iJtYf82dPW8J?USERNAME=sporks|LUSER=ADMIN|PRT=0|DOMAIN=sporks.zoovy.com|PROFILE=DEFAULT|EXPIRES=0||318437fb481c9f83eb37d0703f7e90fe66f42025",
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
 	"secureURL" : "https://www.zoovy.com",
 	"baseURL" : "", //set this to the base URL where the mvc is loaded from. leave blank for relative path.
@@ -50,6 +50,9 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 </head>
 <body class="control"  bgcolor="FFFFFF" marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
 <!-- this div handles getting content to appear below the fixed header -->
+
+<div id='mastHead'>
+
 <div style='height:105px;' id='header'>
 
 <!-- gets the header to be persitent -->
@@ -69,17 +72,17 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 <div style='position:absolute; right:20px; top:7px; text-align:right;'>
 
 	<div>
-	<a target='_top' href='/biz/downloads' >downloads</a> | 
-	<a  target='_top' href='/biz/support/index.cgi' >support</a> | 
-	<span class="menu"><a href='https://www.zoovy.com/biz/todo/index.cgi' target="_top" >to do</a></span>
+	<a  href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> | 
+	<a   href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> | 
+	<a href='https://www.zoovy.com/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
 	</div>
 	
 
-
+<!--
 <div id='search'>
 
 
-<form action='' id='headerSearch' name='headerSearch' method='post' target='_top'>
+<form action='' id='headerSearch' name='headerSearch' method='post' >
 
 <table align='right' cellspacing='0' cellpadding='0' style='margin-top:2px;'>
 <tr>
@@ -113,7 +116,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 </table>
 </form>
 </div>
-
+-->
 
 
 
@@ -127,8 +130,8 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 <!-- username/id and partition info -->
 <div style='position:absolute; top:7px; left:180px;' id='userInfo'>
-You are Logged in as: 
-<a  target='_top' href='/biz/logout.cgi' >logout</a>
+You are Logged in as: {USERNAME]
+<a   href='/biz/logout.cgi' >logout [NOT WORKING}</a>
 </div>
 
 
@@ -136,15 +139,15 @@ You are Logged in as:
 
 	<div style='position:absolute; left:180px; top:28px;'>
 	<ul id='menutabs' >
-		<li class='off'><a href='/biz/setup/' target='_top' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
-		<li class='off'><a href='/biz/sites/' target='_top' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
-		<li class='off'><a href='/biz/product/' target='_top' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
-		<li class='off'><a href='/biz/orders' target='_top' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
-		<li class='off'><a href='/biz/crm/' target='_top' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
-		<li class='off'><a href='/biz/syndication/' target='_top' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
-		<li class='off'><a href='/biz/reports/' title='A plethora of reporting tools to help you analyze your sales' target='_top'><span>reports</span></a></li>
-		<li class='off'><a href='/biz/kpi/' title='View Key Performance Indicators' target='_top'><span>KPI</span></a></li>
-		<li class='off'><a href='/biz/utilities/' target='_top' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
+		<li class='off'><a href='/biz/setup/index.cgi'  class='bindByAnchor' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
+		<li class='off'><a href='/biz/sites/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
+		<li class='off'><a href='/biz/product/index.cgi'  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
+		<li class='off'><a href='/biz/orders/index.cgi'  class='bindByAnchor' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
+		<li class='off'><a href='/biz/crm/index.cgi'  class='bindByAnchor' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
+		<li class='off'><a href='/biz/syndication/index.cgi'  class='bindByAnchor' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
+		<li class='off'><a href='/biz/reports/index.cgi'  class='bindByAnchor' title='A plethora of reporting tools to help you analyze your sales' ><span>reports</span></a></li>
+		<li class='off'><a href='/biz/kpi/index.cgi'  class='bindByAnchor' title='View Key Performance Indicators' ><span>KPI</span></a></li>
+		<li class='off'><a href='/biz/utilities/index.cgi'  class='bindByAnchor' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
 	</ul>
 	</div>
 
@@ -152,44 +155,26 @@ You are Logged in as:
 <!-- sublinks or 'tabs' as brian refers to them. These are the links that appear below the main tabs -->
 <div style='position:absolute; left:0px; right:0px; top:49px; padding-left:10px;' class='sublinks' id='sublinks'>
 
-	<div style='float:right; padding-top:6px; padding-right:20px;' id='helpButton'><a target="webdoc" href="http://webdoc.zoovy.com/doc/50727" title='click here for webdoc help'><img src='/biz/images/header/ui_btn_help-67x22.gif' width='67' height='22' alt='click here for webdoc help' /></a></div>
+	<div style='float:right; padding-top:6px; padding-right:20px;' id='helpButton'><a target="webdoc" href="http://webdoc.zoovy.com/doc/50727" title='click here for webdoc help'><img src='https://www.zoovy.com/biz/images/header/ui_btn_help-67x22.gif' width='67' height='22' alt='click here for webdoc help' /></a></div>
 
-<a href="index.cgi?VERB=NEWS" class="header_sublink_active" ><span>Recent News</span></a>
+	<div id='navTabs'></div>
+	<!-- <a href="index.cgi?VERB=NEWS" class="header_sublink_active bindByAnchor"><span>Recent News</span></a> -->
 
 </div>
 
 
 <!-- breadcrumb -->
 <div style='position:absolute; left:0px; right:0px; bottom:0px; height:22px; line-height:22px; border-bottom:1px solid #cbcbcb; padding-left:20px;' id='breadcrumb'>
-<!-- bcbegin --><div class="breadcrumb">Home&nbsp;&#187;&nbsp;Recent News&nbsp;</div><!-- bcend -->
+<!-- bcbegin -->
 
+<!-- bcend -->
 </div>
 
 		</div>
 	</div>
 </div>
-<script type='text/javascript'>
-<!--
-function validateHeaderSearch(bob)  {
-   // alert(bob);
-   var fh = document.getElementById('FROM_HEADER');
-   fhsplit = fh.value.split(":");
-   if(fhsplit[0] == 'order')
-      document.headerSearch.action = '/biz/orders/index.cgi';
-   else if(fhsplit[0] == 'customer')
-      document.headerSearch.action = '/biz/manage/customer/index.cgi';
-   else if(fhsplit[0] == 'product') 
-      document.headerSearch.action = '/biz/product/index.cgi';
-	else if(fhsplit[0] == 'help') {
-		document.headerSearch.action = '/webdoc/index.cgi';
-		}
-	else {
-		alert('unknown type:'+fh);
-		}
-   }
-//-->
-</script>
 
+</div><!-- /mastHead -->
 
 
 

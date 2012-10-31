@@ -1418,6 +1418,7 @@ This is checks for two things:
 			}, //executeCallbacksWhenExtensionsAreReady
 		
 		
+
 /*
 ADMIN/USER INTERFACE
 */		
@@ -1428,29 +1429,37 @@ ADMIN/USER INTERFACE
 //viewObj.error can be a function to get executed on error.
 //data2Pass gets passed along on the request. it's optional.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
+			
+function setHeader(xhr) {
+	xhr.setRequestHeader('Foo','bar');
+	xhr.setRequestHeader('X-Auth','sporks');
+	}
+			
+			
 			var URL = 'https://www.zoovy.com'+path; //once live, won't need the full path, but necessary for testing purposes.
-			var request = $.getJSON(URL);
-			request.success(function(data){
-				var $target = $('#'+viewObj.targetID)
-				$target.html(data.html);
-				$('form',$target).submit(function(event){
-					event.preventDefault();
-					var jsonObj = $(this).serializeJSON();
-					app.model.fetchAdminResource(path,{},jsonObj); //handles the save.
-//					$.ajax({
-//						data:jsonObj,
-//						url : URL
-//						}); //ajax
-					}); //submit
-				if(typeof viewObj.success == 'function'){viewObj.success()}
-				}); //success
+			var request = $.ajax({
+				"url":URL,
+				"type":"GET",
+				"dataType": 'json',
+				error : function(a){
+					app.u.throwGMessage("UI request failure:");
+					app.u.dump(a);
+	//				app.u.dump("B: "+b);
+					if(typeof viewObj.error == 'function'){viewObj.error()}
+					},
+				success : function(data){
+//these get done each time. technically, the breadcrumb doesn't have to be.
+//The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
+//so that display must have all the links and form submits modified.
+					app.ext.admin.u.uiHandleBreadcrumb(data.bc);
+					app.ext.admin.u.uiHandleNavTabs(data.tabs);
+					app.ext.admin.u.uiHandleFormRewrites(data,viewObj);
+					app.ext.admin.u.uiHandleLinkRewrites(data,viewObj);
+					if(typeof viewObj.success == 'function'){viewObj.success()}
+				},
+				beforeSend: setHeader
+				});
 
-			request.error(function(a,b){
-				app.u.throwGMessage("UI request failure:");
-				app.u.dump(a);
-//				app.u.dump("B: "+b);
-				if(typeof viewObj.error == 'function'){viewObj.error()}
-				}) //error
 			}
 		
 		}

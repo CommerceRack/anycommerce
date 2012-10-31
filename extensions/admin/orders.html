@@ -1,0 +1,388 @@
+
+<div class='ui-widget' id='orderManagerTemplate'>
+	<div id='orderListMessaging'></div>
+<table class='orderListTable'>
+<tr>
+	<td class='leftCol'>
+	<div id='orderFilters' class='ui-corner-left ui-widget-content' >
+<section class='clearfix'>
+<h4>Order Status:</h4>
+<ul id='orderListFilterPool' class='plainList filterGroup' data-filter='POOL'>
+	<li data-filtervalue='RECENT'>Recent</li>
+	<li data-filtervalue='PENDING'>Pending</li>
+	<li data-filtervalue='REVIEW'>Review</li>
+	<li data-filtervalue='HOLD'>Hold</li>
+	<li data-filtervalue='APPROVED'>Approved</li>
+	<li data-filtervalue='PROCESS'>Process</li>
+	<li data-filtervalue='COMPLETED'>Completed</li>
+	<li data-filtervalue='CANCELLED'>Cancelled</li>
+</ul>
+</section>
+
+
+<section class='clearfix'>
+<h4>Payment Status:</h4>
+<ul id='orderListFilterPaymentStatus' class='plainList filterGroup' data-filter='PAYMENT_VERB'>
+	<li data-filtervalue='PAID'>Paid</li>
+	<li data-filtervalue='UNPAID'>Unpaid</li>
+	<li data-filtervalue='APPROVED'>Approved</li>
+</ul>
+</section>
+
+
+<section class='clearfix'>
+<h4>Payment Type:</h4>
+<ul id='orderListFilterPaymentType' class='plainList filterGroup' data-filter='PAYMENT_METHOD'>
+	<li data-filtervalue='PAYPAL'>PayPal</li>
+	<li data-filtervalue='CASH'>Cash</li>
+	<li data-filtervalue='CRED'>Credit</li>
+</ul>
+</section>
+
+
+<section class='clearfix'>
+<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
+<ul id='orderListFilterMarket' class='plainList filterGroup' data-filter='MKT'>
+	<li data-filtervalue='EBY'>eBay</li>
+	<li data-filtervalue='AMZ'>Amazon</li>
+</ul>
+</section>
+
+<button class='ui-button ui-button-text ui-button-text ui-state-active ui-corner-all' onClick="app.ext.admin_orders.a.applyFilters()">Apply Filter</button>
+
+	</div>
+	</td>
+	
+	<td class='mainCol'>
+	<div class='ui-state-default ui-widget-header ui-corner-tr alignRight'>
+		<label>Action:</label>
+		<select name='CMD' ID='CMD'>
+			<option value=''></option>
+			<optgroup label='change status to'>
+				<option value='POOL|PENDING'>Pending</option>
+				<option value='POOL|REVIEW'>Review</option>
+				<option value='POOL|HOLD'>Hold</option>
+				<option value='POOL|APPROVED'>Approved</option>
+				<option value='POOL|PROCESS'>Process</option>
+				<option value='POOL|COMPLETED'>Completed</option>
+				<option value='POOL|DELETED'>Cancelled</option>
+			</optgroup>
+			<optgroup label= 'contact'>
+				<option value='MAIL|BULKEMAIL'>Send Email</option>
+			</optgroup>
+			<optgroup label = 'pay'>
+				<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
+			</optgroup>
+		</select>
+		<button class='ui-button ui-button-text ui-state-active ui-corner-all' data-orderaction='bulkCMDOrders'>Proceed</button>
+	
+	</div>
+	<div id='orderListTableContainer' class='loadingBG'>
+	<table id="orderListTable" class='gridTable'>
+		<tbody id="orderListTableBody"></tbody>
+	</table>
+	</div>
+	<div class='ui-state-default ui-widget-header ui-corner-br alignRight'>
+		<button class='ui-button ui-button-text ui-state-default ui-corner-all' data-orderaction='selectAllOrders'>Select All</button>
+		<button class='ui-button ui-button-text ui-state-default ui-corner-all' data-orderaction='deselectAllOrders'>De-select All</button>
+	</div>
+	</td>
+</tr>
+</table>
+</div><!-- /orderManagerTemplate -->
+
+
+
+
+
+
+<!-- used for order lineitem in orderList template -->
+<table>
+<tr id='adminOrderLineItem' >
+	<td></td>
+	<td><span data-bind='var:order(ORDERID);format:text;'></span></td>
+	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
+	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
+	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
+	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
+	<td><span data-bind='var:order(ORDER_BILL_ZONE);format:billzone;extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(POOL);format:text;'></span></td>
+	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >view</button></td>
+</tr>
+</table>
+<!-- /adminOrderLineItem -->
+
+
+
+
+<!--
+WARNING! - In the order view template(s), avoid using any ID's.  
+That'll allow us to easily change the viewer from a modal to a plain dialog to allow multiple order views to be open at one time.
+-->
+
+<div id='orderDetailsTemplate' class='orderDetails loadingBG'>
+	
+
+<div class='orderDetailHeader clearfix'>
+	<div class='floatRight alignRight'>
+		<h5 data-bind="var:order(data.sdomain);format:text;"></h5>
+		<h5 data-bind="var:order(data.created); format:unix2mdy;"></h5>
+	</div>
+
+	<div class='floatLeft '>
+		<h2>Order Status: <select data-bind="var:order(data.pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();"></select></h2>
+		<h3 data-bind="var:order(data.payment_status);format:paystatus; extension:admin_orders;"></h3>
+	</div>
+</div>
+
+<div class='clearfix'>
+
+	<div class='orderDetailsStuff floatRight'>
+	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
+	<h2>Order Contents</h2>
+	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:@ITEMSList; extension:admin_orders; loadsTemplate: orderStuffItemTemplate;"></table>
+	<ul class='clearfix alignRight floatRight'>
+		<li data-bind="var:order(data.buysafe_totalbondcost); format:money; currencySign: $; pretext:Bond Cost: ; hideZero:true;"></li>
+		<li data-bind="var:order(data.gfc_total); format:money; currencySign: $; pretext:Giftcart Total: ; hideZero:true;"></li>
+		<li data-bind="var:order(data.ins_total); format:money; currencySign: $; pretext:Insurance Total: ; hideZero:true;"></li>
+		<li data-bind="var:order(sum/items_total); format:money; currencySign: $; pretext:Order Total: ;"></li>
+		<li data-bind="var:order(sum/balance_due_total); format:money; currencySign: $; pretext:Balance Due: ; "></li>
+	</ul>
+	</div>
+
+	<div class='orderAddresses floatLeft'>
+	
+		<address class='shipAddress editableParent' >
+		<h4>Shipping Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
+		<h6>
+			<span data-bind='var:order(ship/firstname);format:text;' class='editable' title='first name'></span>
+			<span data-bind='var:order(ship/lastname);format:text;' class='editable' title='last name'></span>
+		</h6>
+		<div data-bind='var:order(ship/company);format:text;' class='editable' title='company'></div>
+		<div data-bind='var:order(ship/address1);format:text;' class='editable' title='address'></div>
+		<div data-bind='var:order(ship/address2);format:text;' class='editable' title='address 2'></div>
+		<div>
+			<span data-bind='var:order(ship/city);format:text;posttext:, ;' class='editable' title='city'></span>
+			<span data-bind='var:order(ship/region);format:text;posttext:. ;' class='editable' title='state'></span>
+			<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
+		</div>
+		<div data-bind='var:order(ship/countrycode);format:text;'></div>
+		<div data-bind='var:order(ship/email);format:text;' class='editable' title='email address'></div>
+		</address>
+
+		<address class='billAddress editableParent'>
+		<h4>Billing Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.billAddress',{}); return false;" class='editTextLink'>edit</a></h4>
+		<h6>
+			<span data-bind='var:order(bill/firstname);format:text;' class='editable' title='first name'></span>
+			<span data-bind='var:order(bill/lastname);format:text;' class='editable' title='last name'></span>
+		</h6>
+		<div data-bind='var:order(bill/company);format:text;' class='editable' title='company'></div>
+		<div data-bind='var:order(bill/address1);format:text;' class='editable' title='address'></div>
+		<div data-bind='var:order(bill/address2);format:text;' class='editable' title='address 2'></div>
+		<div>
+			<span data-bind='var:order(bill/city);format:text;posttext:, ;' class='editable' title='city'></span>
+			<span data-bind='var:order(bill/region);format:text;posttext:. ;' class='editable' title='state'></span>
+			<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);' class='editable' title='zip'></span>
+		</div>
+		<div data-bind='var:order(bill/countrycode);format:text;'></div>
+		<div data-bind='var:order(bill/email);format:text;' class='editable' title='email address'></div>
+		</address>
+
+	
+	</div>
+
+</div>
+
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
+	<button class='floatLeft ui-state-default ui-corner-all ui-button' onClick="$ordersModal.dialog('close');">Cancel Changes</button>
+	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Send Email</button>
+	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Export</button>
+	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Print Invoice</button>
+	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Packing Slip</button>
+
+	<button class='floatRight ui-state-active ui-corner-all ui-button' onClick="app.ext.admin_orders.a.saveChangesToOrder();">Save <span id='changeCount'></span> Changes</button>
+</div>
+
+
+<div class='orderSupplementalInformation'>
+
+	<h2>Notes</h2>
+	<section class='notes'>
+		<div class='floatRight customerNotes' id='customerInformation'><!--
+			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
+			<h3>Customer Notes: </h3>
+			<ol class='note customerNotes' data-bind="var: customer(@NOTES); format: customerNote; extension:admin_orders;"></ol>
+		</div>
+		
+		<div class='floatLeft orderNotes'>
+			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>
+			
+			<h3>Public Order Notes</h3>
+			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;' title='public notes'></div>
+	
+			<h3>Private Order Notes:</h3>
+			<div class='note privateNotes editable' data-bind='var:order(data.private_notes);format:text;' title='private notes'></div>
+	
+		</div>
+	</section>
+	
+	<h2>Payment Information</h2>
+	<section class='paymentInformation'>
+	
+	<div class='floatRight'>
+		<h3>Add Payment:</h3>
+		<p>Something goes here</p>
+	</div>
+	<div class='floatLeft'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Action</th>
+		<th>Amt. Paid</th>
+		<th>Amt. Due</th>
+		<th>Tender</th>
+		<th title='Zoovy Transaction ID'>TID</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(payments); loadsTemplate: orderPaymentHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	</table>
+	</div>
+	
+	</section>
+	
+	<h2>Shipping/Tracking Information</h2>
+	<section class='trackingInformation'>
+	
+	<div class='floatRight'>
+		<h3>Add Ship Info:</h3>
+		<p>Something goes here</p>
+	</div>
+	<div class='floatLeft'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Carrier</th>
+		<th>Cost</th>
+		<th>Tracking</th>
+		<th>Weight</th>
+		<th>Notes</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(tracking); loadsTemplate: orderTrackingHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	</table>
+	</div>
+	
+	</section>
+	
+	<h2>Events</h2>
+	<section class='trackingInformation'>
+	
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>User</th>
+		<th>Message</th>
+		<th>Addl Info</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(events); loadsTemplate: orderEventHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	</table>
+	
+	</section>
+	
+</div>
+
+</div><!-- /order details template -->
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+The following three templates are used in the 'order detail' modal/view.
+
+-->
+
+<table>
+<tr id='orderPaymentHistoryTemplate'>
+	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
+	<td>Something</td>
+	<td><span data-bind='var: payment(amt); format:money;'></span></td>
+	<td><span data-bind='var: payment(due); format:money;'></span></td>
+	<td><span data-bind='var: payment(tender); format:text;'></span></td>
+	<td><span data-bind='var: payment(uuid); format:text;'></span></td>
+</tr>
+</table>
+
+<table>
+<tr id='orderTrackingHistoryTemplate'>
+	<td><time data-bind='var: payment(created); format:unix2mdy; showtime:true;'></time></td>
+	<td><span data-bind='var: payment(carrier); format:text;'></span></td>
+	<td><span data-bind='var: payment(cost); format:money;'></span></td>
+	<td><span data-bind='var: payment(track); format:text;'></span></td>
+	<td><span data-bind='var: payment(actualwt); format:text;'></span></td>
+	<td><span data-bind='var: payment(notes); format:text;'></span></td>
+</tr>
+</table>
+
+
+<table>
+<tr id='orderEventHistoryTemplate'>
+	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
+	<td><span data-bind='var: events(luser); format:text;'></span></td>
+	<td><span data-bind='var: events(content); format:text;'></span></td>
+	<td>
+	<div title='uuid' data-bind='var: events(uuid); format:text;'></div>
+	<div title='etype' data-bind='var: events(etype); format:text;'></div>
+	<div title='app'  data-bind='var: events(app); format:text;'></div>
+	</td>
+</tr>
+</table>
+
+
+
+
+<table>
+	<tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
+		<td><span data-bind='var: order(stid); format:text; className: stid;'></span></td>
+		<td><input type='text' data-bind="var: order(full_product.zoovy:prod_name); format:popVal;" size='20' class='prodName' /></td>
+		<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' class='prodQty' /></td>
+		<td><span></span></td>
+		<td>price</td>
+		<td>tax</td>
+		<td>weight</td>
+		<td>extended</td>
+	</tr>
+</table>
+
+
+
+
+<table>
+	<tr id='orderStuffItemTemplate' class='orderStuffItemRow'>
+
+	<td>
+		<h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; className: stid; pretext: Sku: ;'></h5>
+		<div data-bind='var: order(full_product.zoovy:prod_name); format:text; '></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(*options); format:selectedOptionsDisplay;'></div>
+	</td>
+	<td><span data-bind='var: order(qty); format:text; pretext:qty: ;'></span></td>
+	<td><span data-bind='var: order(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	
+	
+	</td>
+
+	</tr>
+</table> <!-- /orderStuffItemTemplate -->

@@ -35,7 +35,7 @@ NOTE
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','productTabTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage'); 
 	var r = {
 		
 	vars : {
@@ -124,7 +124,7 @@ var admin = function() {
 					app.model.addDispatchToQ(obj,Q);
 					}
 				},
-//app.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
+
 			adminCustomerSet : {
 				init : function(CID,setObj,tagObj)	{
 					this.dispatch(CID,setObj,tagObj)
@@ -133,7 +133,7 @@ var admin = function() {
 				dispatch : function(CID,setObj,tagObj)	{
 					var obj = {};
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-					obj["_cmd"] = "adminProductUpdate";
+					obj["_cmd"] = "adminCustomerSet";
 					obj["CID"] = CID;
 					obj['%set'] = setObj;
 					obj["_tag"] = tagObj;
@@ -214,63 +214,6 @@ var admin = function() {
 
 
 
-			adminProductCreate  : {
-				init : function(pid,attribs,tagObj)	{
-					tagObj = tagObj || {};
-					tagObj.datapointer = "adminProductCreate|"+pid;
-					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
-					}
-				},
-			
-			adminUIProductPanelList : {
-				init : function(pid,tagObj,Q)	{
-					tagObj = tagObj || {};
-					tagObj.datapointer = "adminUIProductPanelList|"+pid;
-					if(app.model.fetchData(tagObj.datapointer) == false)	{
-						this.dispatch(pid,tagObj,Q);
-						}
-					else	{
-						app.u.handleCallback(tagObj)
-						}
-					},
-				dispatch : function(pid,tagObj,Q)	{
-					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":tagObj,"pid":pid},Q);	
-					}
-				}, //adminUIProductPanelList
-
-
-//obj requires panel and productid and sub.  sub can be LOAD or SAVE
-			adminUIProductPanelExecute : {
-				init : function(obj,tagObj,Q)	{
-					tagObj = tagObj || {};
-					if(obj['sub'] == 'LOAD')	{
-						tagObj.datapointer = "adminUIProductPanelExecute|load|"+obj.panel+"|"+obj.pid;
-						}
-					this.dispatch(obj,tagObj,Q);
-					},
-				dispatch : function(obj,tagObj,Q)	{
-					obj['_cmd'] = "adminUIProductPanelExecute";
-					obj["_tag"] = tagObj;
-					app.model.addDispatchToQ(obj,Q);	
-					}
-				}, //adminUIProductPanelList
-
-//obj requires panel and productid and sub.  sub can be LOAD or SAVE
-			adminProductManagementCategoryList : {
-				init : function(tagObj,Q)	{
-					tagObj = tagObj || {};
-					tagObj.datapointer = "adminProductManagementCategoryList";
-					if(app.model.fetchData(tagObj.datapointer) == false)	{
-						this.dispatch(tagObj,Q);
-						}
-					else	{
-						app.u.handleCallback(tagObj)
-						}
-					},
-				dispatch : function(tagObj,Q)	{
-					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":tagObj},Q);	
-					}
-				}, //adminUIProductPanelList
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
 			adminUIBuilderPanelExecute : {
@@ -283,7 +226,7 @@ var admin = function() {
 					},
 				dispatch : function(obj,tagObj,Q)	{
 					obj['_cmd'] = "adminUIBuilderPanelExecute";
-					obj['_SREF'] = "BAcEMTIzNAQEBAgZAAcAAAAKBFBBR0UCBgAAAEZPUk1BVAoBMQILAAAAX2lzX3ByZXZpZXcKAUECAgAAAEZTFwthYm91dF8zcGljcwIFAAAARE9DSUQKB2Fib3V0dXMCAgAAAFBHCgdERUZBVUxUAgIAAABOUwoBMAIDAAAAUFJU"; /// !!! DO NOT HARD CODE THIS
+//					obj['_SREF'] = "BAcEMTIzNAQEBAgZAAcAAAAKBFBBR0UCBgAAAEZPUk1BVAoBMQILAAAAX2lzX3ByZXZpZXcKAUECAgAAAEZTFwthYm91dF8zcGljcwIFAAAARE9DSUQKB2Fib3V0dXMCAgAAAFBHCgdERUZBVUxUAgIAAABOUwoBMAIDAAAAUFJU"; /// !!! DO NOT HARD CODE THIS
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,Q);
 					}
@@ -336,25 +279,17 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
-//app.ext.admin.calls.adminUIProductPanelList.init('OUTFIT',{},'mutable');
-//app.ext.admin.calls.adminUIProductPanelExecute.init({'pid':'OUTFIT','panel':'flexedit','sub':'LOAD'},{'callback':'showDataHTML','extension':'admin','targetID':'mainContentArea'},'mutable');
-//app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':'BLURB'});
-//app.model.dispatchThis('mutable');
-app.ext.admin.u.showProductTab(); //here for testing. This function will get called in showUI.
+				$('.bindByAnchor','#mastHead').click(function(event){
+					event.preventDefault();
+					showUI($(this).attr('href'),{'targetID':'mainContentArea'});
+					})
+
 
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
-				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor.
-//				showUI('/biz/setup/analytics/index.cgi?VERB=GOOGLETS&PROFILE=DEFAULT');
-//				showUI('/biz/product/index.cgi');
-//				showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&&NS=DEFAULT&PG=aboutus&FS=A');  //loads a builder page.
-
 				//yes, this is global.
 				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone');
 				$loadingModal.appendTo('body').dialog({'autoOpen':false});
-				},
-			onError : function(d)	{
-//init error handling handled by controller.				
 				}
 			},
 
@@ -512,15 +447,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				}
 			}, //finderProductUpdate
 
-		showMangementCats : {
-			onSuccess : function(tagObj)	{
-				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
-				$results = $('#'+tagObj.targetID);
-				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
-					$results.append('<li>'+index+'</li>')	
-					}
-				}
-			}, //showManagementCats
+
 
 
 		filterFinderSearchResults : {
@@ -600,7 +527,18 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					P.targetID = P.targetID || 'mainContentArea'; //if target id is specified, we'll use it. otherwise, put content in to main area.
 //					P.success = function(){$loadingModal.dialog('close');}
 //					P.error = function(){$loadingModal.dialog('close');}
-					app.model.fetchAdminResource(path,P);
+					if(path.indexOf('/biz/product') == 0)	{
+						app.u.dump(" -> open product editor");
+						app.ext.admin_prodEdit.u.showProductEditor(path,P);
+						}
+					else if(path.indexOf('/biz/orders') == 0)	{
+						app.u.dump(" -> open orders editor");
+						alert('welcome to orders');
+						}
+					else	{
+						app.u.dump("got to the else");
+						app.model.fetchAdminResource(path,P);
+						}
 					}
 				else	{
 					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
@@ -614,26 +552,9 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				this.showUI(path);
 				},
 
-			showCreateProductDialog : function(){
-				var $modal = $('#createProductDialog');
-				if($modal.length < 1)	{
-					$modal = $("<div>").attr({'id':'createProductDialog','title':'Create a New Product'});
-					$modal.appendTo('body');
-					$modal.dialog({width:500,height:500,modal:true,autoOpen:false});
-					}
-				$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
-				$modal.dialog('open');
-				},
 
-			saveProductPanel : function(t,panelID,SUB){
 
-				var formObj = $(t).closest("form").serializeJSON();
-				formObj.pid = 'OUTFIT';
-				formObj['sub'] = (SUB) ? SUB : 'SAVE'
-				formObj.panel = 'flexedit'
-				app.ext.admin.calls.adminUIProductPanelExecute.init(formObj,{},'immutable');
-				app.model.dispatchThis('immutable');
-				},
+
 
 /*
 to generate an instance of the finder, run: 
@@ -683,35 +604,60 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 		u : {
 			
+			uiHandleBreadcrumb : function(bc)	{
+				$target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)
+				if(bc)	{
+					var L = bc.length;
+					for(var i = 0; i < L; i += 1)	{
+						if(i){$target.append(" &#187; ")}
+						if(bc[i]['link'])	{
+							$target.append("<a href='#' onClick='return showUI(\""+bc[i]['link']+"\");' title='"+bc[i].name+"'>"+bc[i].name+"<\/a>");
+							}
+						else	{
+							$target.append(bc[i].name);
+							}
+						}
+					}
+				else	{
+					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
+					}
+				},
 
-			showProductTab : function()	{
+			uiHandleNavTabs : function(tabs)	{
+				$target = $('#navTabs').empty(); //always empty to make sure the last set isn't displayed (the new page may not have tabs)
+				if(tabs)	{
+					var L = tabs.length;
+					var className; //recycled in loop.
+					for(var i = 0; i < L; i += 1)	{
+						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
+						$target.append("<a href='#' onClick='return showUI(\""+tabs[i]['link']+"\");' title='"+tabs[i].name+"' class='"+className+"'><span>"+tabs[i].name+"<\/span><\/a>");
+						}
+					}
+				else	{
+					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
+					}
+				},
 
-$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('productTabTemplate'));
-
-app.ext.admin.calls.adminProductManagementCategoryList.init({'callback':'showMangementCats','extension':'admin','targetID':'manCats'},'mutable');
-app.model.dispatchThis('mutable');
-
-$('.tagFilterList li','#prodLeftCol').each(function(){
-	$(this).click(function(){
-		$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
-		var tag = $(this).text();
-		app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
-		app.model.dispatchThis('mutable');
-		})
-	})
-
-
-$('.mktFilterList li','#prodLeftCol').each(function(){
-	$(this).click(function(){
-		$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
-		var mktid = $(this).data('mktid')+'_on';
-		app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
-		app.model.dispatchThis('mutable');
-		})
-	})
-
-
-
+			uiHandleFormRewrites : function(data,viewObj)	{
+				var $target = $('#'+viewObj.targetID)
+				$target.html(data.html);
+//any form elements in the response have their actions rewritten.
+				$('form',$target).submit(function(event){
+					event.preventDefault();
+					var jsonObj = $(this).serializeJSON();
+					app.model.fetchAdminResource(path,{},jsonObj); //handles the save.
+					}); //submit
+				},
+			
+			uiHandleLinkRewrites : function(data,viewObj)	{
+				var $target = $('#'+viewObj.targetID)
+				$('a',$target).click(function(event){
+					var href = $(this).attr('href');
+					if(href.indexOf("/biz/") == 0)	{
+						event.preventDefault();
+						showUI(href);
+						}
+					});
 				},
 			
 			saveFinderChanges : function()	{
@@ -776,13 +722,6 @@ app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"find
 
 
 
-			handleCreateNewProduct : function(P)	{
-				var pid = P.pid;
-				delete P.pid;
-//				app.u.dump("Here comes the P ["+pid+"]: "); app.u.dump(P);
-				app.ext.admin.calls.adminProductCreate.init(pid,P,{'callback':'showMessaging','message':'Created!','parentID':'prodCreateMessaging'});
-				app.model.dispatchThis('immutable');
-				},
 
 
 

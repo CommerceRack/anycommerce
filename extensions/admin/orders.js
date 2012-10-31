@@ -109,11 +109,8 @@ var admin_orders = function() {
 //				app.u.dump('BEGIN app.ext.store_navcats.init.onSuccess ');
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
-<<<<<<< HEAD
-				app.model.fetchNLoadTemplates('/biz/ajax/zmvc/201228/extensions/admin/order_templates.html',theseTemplates);
-=======
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/order_templates.html',theseTemplates);
->>>>>>> origin/201237-jt
 //				if(!app.u.thisIsAnAdminSession())	{
 //					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> This session is not an admin session and the app is trying to load an admin module (admin_orders.js).','uiClass':'error','uiIcon':'alert'}));
 //					r = false;
