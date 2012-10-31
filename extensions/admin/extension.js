@@ -263,10 +263,9 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				$('#'+tagObj.targetID).html(app.data[tagObj.datapointer].html).wrap("<form id='bob'>");
-				},
-			onError : function(responseData)	{app.u.dump(" -> UH OH!");}
+//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
+				$('#'+tagObj.targetID).removeClass('loadingBG').html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
+				}
 			}, //init
 
 		initUserInterface : {
@@ -537,6 +536,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						}
 					else	{
 						app.u.dump("got to the else");
+						$('#mainContentArea').empty().append("<div class='loadingBG'></div>");
 						app.model.fetchAdminResource(path,P);
 						}
 					}
@@ -655,7 +655,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					var href = $(this).attr('href');
 					if(href.indexOf("/biz/") == 0)	{
 						event.preventDefault();
-						showUI(href);
+						return showUI(href);
 						}
 					});
 				},

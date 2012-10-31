@@ -190,9 +190,9 @@ function zoovyModel() {
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
 					if(puuid){app.q[QID][index]['pipeUUID'] = puuid}
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
-//					myQ[c]['_tag'] = null; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
-					myQ[c]['status'] = null;
-					myQ[c]['attempts'] = null;
+//					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
+					delete myQ[c]['status'];
+					delete myQ[c]['attempts'];
 					c += 1;
 //added on 2012-02-23
 					if(c > app.globalAjax.numRequestsPerPipe){
@@ -207,7 +207,7 @@ function zoovyModel() {
 		
 //execute this function in the app itself when a request is/may be in progrees and the user changes course.
 //for instance, if the user does a search for 'sho' then corrects to 'shoe' prior to the request being completed,
-//you'd want to abort the request in favor of the new command (you would want a callback executed on 'sho', so cancel it).
+//you'd want to abort the request in favor of the new command (you would not want a callback executed on 'sho', so cancel it).
 //for this reason, the passive q requests should NEVER have callbacks on them.
 //and tho technically you 'could' pass immutable as the QID, you should never cancel an immutable request, as these should be saved for 'add to cart' or 'checkout' requests.
 		abortQ : function(QID)	{
@@ -1429,7 +1429,7 @@ ADMIN/USER INTERFACE
 //viewObj.error can be a function to get executed on error.
 //data2Pass gets passed along on the request. it's optional.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
-			
+		
 function setHeader(xhr) {
 	xhr.setRequestHeader('Foo','bar');
 	xhr.setRequestHeader('X-Auth','sporks');
@@ -1437,15 +1437,24 @@ function setHeader(xhr) {
 			
 			
 			var URL = 'https://www.zoovy.com'+path; //once live, won't need the full path, but necessary for testing purposes.
-			var request = $.ajax({
+			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
+				app.u.dump("request in progress. Aborting.");
+				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
+				}
+			app.ext.admin.vars.uiRequest = $.ajax({
 				"url":URL,
 				"type":"GET",
 				"dataType": 'json',
-				error : function(a){
-					app.u.throwGMessage("UI request failure:");
-					app.u.dump(a);
-	//				app.u.dump("B: "+b);
-					if(typeof viewObj.error == 'function'){viewObj.error()}
+				error : function(a,b){
+					if(a.statusText == "abort")	{
+						app.u.dump("UI request aborted. It would destroy such life in favor of its new matrix."); //most likely, this abort happened intentionally because another action was requested (a link was clicked)
+						}
+					else	{
+						app.u.throwGMessage("UI request failure: "+b);
+//						app.u.dump(a);
+						if(typeof viewObj.error == 'function'){viewObj.error()}
+						}
+					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
 					},
 				success : function(data){
 //these get done each time. technically, the breadcrumb doesn't have to be.
@@ -1456,10 +1465,11 @@ function setHeader(xhr) {
 					app.ext.admin.u.uiHandleFormRewrites(data,viewObj);
 					app.ext.admin.u.uiHandleLinkRewrites(data,viewObj);
 					if(typeof viewObj.success == 'function'){viewObj.success()}
+					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
 				},
 				beforeSend: setHeader
 				});
-
+//			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
 			}
 		
 		}

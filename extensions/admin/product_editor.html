@@ -53,13 +53,9 @@
 	</li>
 </ul>
 
-
-<ul data-bind="var: ui(@CATEGORIES); format:manageCategories; extension:admin; before:<h2>Mangement Categories</h2>; loadsTemplate:productManagementCatTemplate;"></ul>
-
-
 	</div>
 	</td>
-	<td>
+	<td class='mainColContent'>
 	
 	<div class='productContentContainer' id='productTabMainContent'>
 	
@@ -122,4 +118,28 @@
 
 </form>
 
+</div>
+
+
+
+
+<li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
+	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid'));">
+	<span data-bind='var: product(pid); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); format:text;'></span>
+	</a>
+</li>
+
+
+<div class='productPanel' id='productEditorPanelTemplate'>
+	
+	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-active ui-state-active ui-corner-top ui-accordion-icons pointer clearfix' onClick="$('.panelContents',$(this).parent()).toggle();">
+	<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+	<span data-bind="var: panel(title); format:text;"></span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">
+	<fieldset data-bind="var: panel(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
+	</form>
+	</div>	
+	
 </div>

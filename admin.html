@@ -19,9 +19,10 @@ var app = {vars:{
 	"noVerifyzGlobals":true,
 	"sessionId":"**HMhDvOl6dUY55iJtYf82dPW8J?USERNAME=sporks|LUSER=ADMIN|PRT=0|DOMAIN=sporks.zoovy.com|PROFILE=DEFAULT|EXPIRES=0||318437fb481c9f83eb37d0703f7e90fe66f42025",
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
-	"secureURL" : "https://www.zoovy.com",
-	"baseURL" : "", //set this to the base URL where the mvc is loaded from. leave blank for relative path.
-	"sdomain":"www.zoovy.com"
+//	"secureURL" : "https://www.zoovy.com",
+//	"sdomain":"www.zoovy.com",
+	"username": "sporks", //needs to be set for header and media library
+	"baseURL" : "" //set this to the base URL where the mvc is loaded from. leave blank for relative path.
 	},u:{},rq:[]};
 
 </script>
@@ -70,59 +71,9 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 <!-- contains the menu links and the search form -->
 <div style='position:absolute; right:20px; top:7px; text-align:right;'>
-
-	<div>
-	<a  href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> | 
-	<a   href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> | 
+	<a href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> | 
+	<a href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> | 
 	<a href='https://www.zoovy.com/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
-	</div>
-	
-
-<!--
-<div id='search'>
-
-
-<form action='' id='headerSearch' name='headerSearch' method='post' >
-
-<table align='right' cellspacing='0' cellpadding='0' style='margin-top:2px;'>
-<tr>
-   <td><select style='font-size:11px;' name='FROM_HEADER' ID='FROM_HEADER' onChange="validateHeaderSearch(this.value);">
-<option selected disabled>search</option>
-<optgroup label="product by">
-   <option value='product:id'>id or keyword</option>
-   <option value='product:mkt'>ebay item #</option>
-</optgroup>
-<optgroup label="orders by">
-   <option value='order:orderid'>order id</option>
-   <option value='order:google'>google order #</option>
-   <option value='order:amazon'>amazon order #</option>
-
-</optgroup>
-<optgroup label="customers by">
-   <option value='customer:email'>email</option>
-   <option value='customer:orderid' >order #</option>
-   <option value='customer:lastname' >last name</option>
-</optgroup>
-<optgroup label="documentation">
-	<option value='help:webdoc'>webdoc</option>
-</optgroup>
-</select></td>
-
-    <td style='padding:0 4px;'><input type="text" style='width:120px; font-size:11px;' name='HEADER_VALUE' id='HEADER_VALUE' /></td>
-
-    <td><input type='submit' class='button2' value='Go' /></td>
-
-</tr>
-</table>
-</form>
-</div>
--->
-
-
-
-
-
-
 </div>
 
 
@@ -141,7 +92,7 @@ You are Logged in as: {USERNAME]
 	<ul id='menutabs' >
 		<li class='off'><a href='/biz/setup/index.cgi'  class='bindByAnchor' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
 		<li class='off'><a href='/biz/sites/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
-		<li class='off'><a href='/biz/product/index.cgi'  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
+		<li class='off'><a href='/biz/product/edit.cgi?VERB=WELCOME'  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
 		<li class='off'><a href='/biz/orders/index.cgi'  class='bindByAnchor' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
 		<li class='off'><a href='/biz/crm/index.cgi'  class='bindByAnchor' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
 		<li class='off'><a href='/biz/syndication/index.cgi'  class='bindByAnchor' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
@@ -164,11 +115,8 @@ You are Logged in as: {USERNAME]
 
 
 <!-- breadcrumb -->
-<div style='position:absolute; left:0px; right:0px; bottom:0px; height:22px; line-height:22px; border-bottom:1px solid #cbcbcb; padding-left:20px;' id='breadcrumb'>
-<!-- bcbegin -->
+<div style='position:absolute; left:0px; right:0px; bottom:0px; height:22px; line-height:22px; border-bottom:1px solid #cbcbcb; padding-left:20px;' id='breadcrumb'></div>
 
-<!-- bcend -->
-</div>
 
 		</div>
 	</div>
@@ -184,6 +132,10 @@ You are Logged in as: {USERNAME]
 	<div id='mainContentArea'></div>
 
 </div>
+
+
+
+
 
 
 </body>
