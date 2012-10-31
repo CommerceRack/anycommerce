@@ -283,9 +283,11 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 					showUI($(this).attr('href'),{'targetID':'mainContentArea'});
 					})
 
-
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
+				
+				$('.username').text(app.vars.username);
+				
 				//yes, this is global.
 				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone');
 				$loadingModal.appendTo('body').dialog({'autoOpen':false});

@@ -8,6 +8,13 @@
 	<td class='leftColNav'>
 	<div id='prodLeftCol'>
 
+<form action='#' onSubmit="app.ext.admin_prodEdit.u.handleProductKeywordSearch($(this).serializeJSON()); return false">
+<fieldset>
+	<legend>Product Search</legend>
+	<input type='search' name='KEYWORDS' value='' />
+	<input type='submit' value='go' />
+</fieldset>
+</form>
 
 <ul>
 	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showCreateProductDialog(); return false;">New Product</a></li>
@@ -72,14 +79,17 @@
 <!-- used when a filter/search occurs to display the results -->
 <table>
 <tr id='productListTemplateTableResults'>
-	<td><button>Edit</button></td>	
+		
 	<td>
 	<div class='prodThumbContainer' data-bind='var:product(_id); format:addPicSlider; extension:myRIA;'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='35' height='35' />
 	</div>
 	</td>
-	<td data-bind='var: product(prod_name); format:text;'></td>
-	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
+	<td>
+	<div data-bind='var: product(prod_name); format:text;'></div>
+	<div data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></div>
+	</td>
+	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
 </tr>
 </table>
 
@@ -125,14 +135,14 @@
 
 <li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
 	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid'));">
-	<span data-bind='var: product(pid); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); format:text;'></span>
+	<span data-bind='var: product(pid); defaultVar: product(pid); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
 	</a>
 </li>
 
 
 <div class='productPanel' id='productEditorPanelTemplate'>
 	
-	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-active ui-state-active ui-corner-top ui-accordion-icons pointer clearfix' onClick="$('.panelContents',$(this).parent()).toggle();">
+	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="$('.panelContents',$(this).parent()).toggle();">
 	<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
 	<span data-bind="var: panel(title); format:text;"></span>
 	</h3>

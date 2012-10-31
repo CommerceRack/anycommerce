@@ -143,6 +143,7 @@ var admin_prodEdit = function() {
 					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+app.data[tagObj.datapointer]['@PANELS'][i].id,'panelid':app.data[tagObj.datapointer]['@PANELS'][i].id},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
 					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':'OUTFIT','sub':'LOAD','panel':app.data[tagObj.datapointer]['@PANELS'][i].id},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@PANELS'][i].id)},'mutable');
 					}
+				$('#panel_general .panelHeader').addClass('ui-accordion-header-active ui-state-active');
 				$('#panel_general .panelContents').show(); //make sure general tab is open (for now). this is where the logic for pre-opening any other panels will go.
 				app.model.dispatchThis('mutable');
 				}
@@ -238,7 +239,7 @@ var admin_prodEdit = function() {
 				
 				$('.tagFilterList li','#prodLeftCol').each(function(){
 					$(this).click(function(){
-						$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var tag = $(this).text();
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
 						app.model.dispatchThis('mutable');
@@ -248,7 +249,7 @@ var admin_prodEdit = function() {
 				
 				$('.mktFilterList li','#prodLeftCol').each(function(){
 					$(this).click(function(){
-						$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var mktid = $(this).data('mktid')+'_on';
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search','parentID':'prodEditorResultsTable'});
 						app.model.dispatchThis('mutable');
@@ -274,6 +275,22 @@ $('#'+P.targetID).empty().append("<div class='loadingBG'></div>");
 //				app.u.dump("Here comes the P ["+pid+"]: "); app.u.dump(P);
 			app.ext.admin_prodEdit.calls.adminProductCreate.init(pid,P,{'callback':'showMessaging','message':'Created!','parentID':'prodCreateMessaging'});
 			app.model.dispatchThis('immutable');
+			},
+//clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
+		prepContentArea4Results : function(){
+			$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+			},
+		
+		handleProductKeywordSearch : function(obj)	{
+			if(obj && obj.KEYWORDS)	{
+				app.ext.admin_prodEdit.u.prepContentArea4Results();
+				app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateTableResults','parentID':'prodEditorResultsTable'});
+				app.model.dispatchThis();
+				}
+			else	{
+				//keywords are required.
+				app.u.dump("Oops. no keywords specified.");
+				}
 			}
 
 		} //u
