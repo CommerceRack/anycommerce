@@ -280,7 +280,7 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 				$('.bindByAnchor','#mastHead').click(function(event){
 					event.preventDefault();
-					showUI($(this).attr('href'),{'targetID':'mainContentArea'});
+					showUI($(this).attr('href'));
 					})
 
 				window.navigateTo = app.ext.admin.a.navigateTo;
@@ -527,26 +527,32 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				P = P || {};
 				if(path)	{
 					$('title').text(path);
-					$(".tabContent",'#appView').hide(); //hide all tab contents
+					
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
-					$('#'+tab+'Contents').show(); //show focus tab.
-					P.targetID = P.targetID || 'mainContentArea'; //if target id is specified, we'll use it. otherwise, put content in to main area.
-//					P.success = function(){$loadingModal.dialog('close');}
-//					P.error = function(){$loadingModal.dialog('close');}
-					if(tab == 'product')	{
-						app.u.dump(" -> open product editor");
-						app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					P.targetID = app.ext.admin.u.getId4UIContent(path)
+					$target = $('#'+P.targetID);
+
+					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
+					
+					$(".tabContent",'#appView').hide(); //hide all tab contents
+					$target.show(); //show focus tab.
+						
+					if($target.children().length === 0)	{
+						//this means the section has NOT been opened before.
+						app.u.dump(" -> section has NOT been rendered before. Render it.");
+						app.ext.admin.u.handleShowSection(path,P);
 						}
-					else if(tab == 'orders')	{
-						app.u.dump(" -> open orders editor");
-						alert('welcome to orders');
+					else if(tab == app.ext.admin.vars.tab)	{
+						//we are moving within the same section.
+						app.u.dump(" -> Moving within same section, Render it.");
+						app.ext.admin.u.handleShowSection(path,P);
 						}
 					else	{
-						app.u.dump(" -> open something wonderful...");
-						$('#mainContentArea').empty().append("<div class='loadingBG'></div>");
-						app.model.fetchAdminResource(path,P);
+						//jumping between sections. content has already been displayed by here. do nothing.
+
 						}
+
 					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 					}
 				else	{
@@ -613,17 +619,35 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 		u : {
 			
+//executed from within showUI. probably never want to execute this function elsewhere.
+			handleShowSection : function(path,P)	{
+				var tab = app.ext.admin.u.getTabFromPath(path);
+				if(tab == 'product')	{
+					app.u.dump(" -> open product editor");
+					app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					}
+				else	{
+					app.u.dump(" -> open something wonderful...");
+					$target.empty().append("<div class='loadingBG'></div>");
+					app.model.fetchAdminResource(path,P);
+					}
+				},
+
+			getId4UIContent : function(path){
+				return this.getTabFromPath(path)+"Content";
+				},
+			
 			getTabFromPath : function(path)	{
 				return path.split("/")[2];
 				},
 			
 			uiHandleMessages : function(path,msg)	{
 				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
-				var L = msg.length;
-				var msgType, msgObj; //recycled.
-				var tab = this.getTabFromPath(path);
-				app.u.dump(" -> tab: "+tab);
-				if(L)	{
+				if(msg)	{
+					var L = msg.length;
+					var msgType, msgObj; //recycled.
+					var tab = this.getTabFromPath(path);
+					app.u.dump(" -> tab: "+tab);
 					for(var i = 0; i < L; i += 1)	{
 						msgType = msg[i].split('|')[0];
 						//SUCCESS, ERROR, HINT, TODO, LEGACY, ISE
@@ -646,7 +670,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 								msgObj = app.u.errMsgObject(msg[i].split('|')[1],'#');
 							}
 							msgObj.skipAutoHide = true; //for testing, don't hide.
-							msgObj.targetID = tab+"Content"; //put messaging in tab specific area.
+							msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
 							app.u.throwMessage(msgObj);
 
 						}

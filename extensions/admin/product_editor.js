@@ -222,6 +222,9 @@ var admin_prodEdit = function() {
 
 
 			showProductEditor : function(path,P)	{
+			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor");
+			app.u.dump(" -> P: "); app.u.dump(P);
+			
 			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  //always rewrite savePanel. another 'tab' may change the function.
 //kill any calls.
 // NOTE - if the product editor gets a default fetchAdmin call, then this code won't be necessary.
