@@ -135,17 +135,23 @@ var admin_prodEdit = function() {
 
 		loadAndShowPanels :	{
 			onSuccess : function(tagObj)	{
+				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
+				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
+				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
 				$target.empty(); //removes loadingBG div and any leftovers.
 				var L = app.data[tagObj.datapointer]['@PANELS'].length;
-				
+
 				for(var i = 0; i < L; i += 1)	{
-					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+app.data[tagObj.datapointer]['@PANELS'][i].id,'panelid':app.data[tagObj.datapointer]['@PANELS'][i].id},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
-					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':'OUTFIT','sub':'LOAD','panel':app.data[tagObj.datapointer]['@PANELS'][i].id},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@PANELS'][i].id)},'mutable');
+//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
+					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+app.data[tagObj.datapointer]['@PANELS'][i].id,'panelid':app.data[tagObj.datapointer]['@PANELS'][i].id,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
+					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':pid,'sub':'LOAD','panel':app.data[tagObj.datapointer]['@PANELS'][i].id},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@PANELS'][i].id)},'mutable');
 					}
-				$('#panel_general .panelHeader').addClass('ui-accordion-header-active ui-state-active');
-				$('#panel_general .panelContents').show(); //make sure general tab is open (for now). this is where the logic for pre-opening any other panels will go.
+				$('#panel_general h3').click(); //make sure general panel is open.
 				app.model.dispatchThis('mutable');
+				
+//				$( "#productTabMainContent" ).sortable();
+				
 				}
 			}
 		}, //callbacks
@@ -166,6 +172,22 @@ var admin_prodEdit = function() {
 				}
 			$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
 			$modal.dialog('open');
+			},
+
+//t is 'this' passed in from the h3 that contains the icon and link.
+		handlePanel : function(t)	{
+			var $header = $(t);
+			var $panel = $('.panelContents',$header.parent()) ;
+			$panel.toggle(); //will open or close panel.
+			if($panel.is(":visible"))	{
+//				$panel.empty().append("<div class='loadingBG' \/>");
+				$header.addClass('ui-accordion-header-active ui-state-active');
+				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s')
+				}
+			else	{
+				$header.removeClass('ui-accordion-header-active ui-state-active');
+				$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
+				}
 			},
 
 //t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.
@@ -194,14 +216,19 @@ var admin_prodEdit = function() {
 			var $form = $(t).closest("form");
 			var $fieldset = $('fieldset',$form); // a var because its used/modified more than once.
 			var formObj = $form.serializeJSON();
-			formObj.pid = 'OUTFIT';
+			formObj.pid = $form.closest('[data-pid]').attr('data-pid');
 			formObj['sub'] = (SUB) ? SUB : 'SAVE';
 			formObj.panel = panelID;
+			if(formObj.pid)	{
 //fieldset is where data is going to get added, so it gets the loading class.
 //be sure do this empty AFTER the form serialization occurs.
-			$fieldset.empty().addClass('loadingBG'); 
-			app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init(formObj,{'callback':'showDataHTML','extension':'admin','targetID':$fieldset.attr('id')},'immutable');
-			app.model.dispatchThis('immutable');
+				$fieldset.empty().addClass('loadingBG');
+				app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init(formObj,{'callback':'showDataHTML','extension':'admin','targetID':$fieldset.attr('id')},'immutable');
+				app.model.dispatchThis('immutable');
+				}
+			else	{
+				app.u.throwMessage("Uh oh. an error occured. could not determine what product to update.");
+				}
 			},
 		
 		showPanelsFor : function(pid)	{
@@ -222,8 +249,8 @@ var admin_prodEdit = function() {
 
 
 			showProductEditor : function(path,P)	{
-			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor");
-			app.u.dump(" -> P: "); app.u.dump(P);
+//			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor");
+//			app.u.dump(" -> P: "); app.u.dump(P);
 			
 			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  //always rewrite savePanel. another 'tab' may change the function.
 //kill any calls.
@@ -285,6 +312,7 @@ app.model.fetchAdminResource(path,P);
 		prepContentArea4Results : function(){
 			$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
 			},
+		
 		
 		handleProductKeywordSearch : function(obj)	{
 			if(obj && obj.KEYWORDS)	{

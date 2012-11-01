@@ -1004,11 +1004,11 @@ So the cart template should contain these two elements and the extension should 
 
 		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
 
-		<span id='paypalECButton' data-bind='var: cart(cart.cartid); format:paypalECButton;'></span>
+		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(cart.cartid); format:googleCheckoutButton;'></span>
+		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
 		
-		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart.cartid); format:amazonCheckoutButton;'></span>
+		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
 
 	</div>
 			

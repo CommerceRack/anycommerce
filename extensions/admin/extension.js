@@ -403,13 +403,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //callback is used for the product finder search results.
 		showProdlist : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN admin.callbacks.showProdlist");
+//				app.u.dump("BEGIN admin.callbacks.showProdlist");
 				if($.isEmptyObject(app.data[tagObj.datapointer]['@products']))	{
 					$('#'+tagObj.parentID).empty().removeClass('loadingBG').append('Your search returned zero results');
 					}
 				else	{
-				app.u.dump(" -> parentID: "+tagObj.parentID);
-				app.u.dump(" -> datapointer: "+tagObj.datapointer);
+//				app.u.dump(" -> parentID: "+tagObj.parentID);
+//				app.u.dump(" -> datapointer: "+tagObj.datapointer);
 				var numRequests = app.ext.store_prodlist.u.buildProductList({
 "templateID":"adminProdStdForList",
 "parentID":tagObj.parentID,
@@ -647,32 +647,11 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
 					var tab = this.getTabFromPath(path);
-					app.u.dump(" -> tab: "+tab);
 					for(var i = 0; i < L; i += 1)	{
-						msgType = msg[i].split('|')[0];
-						//SUCCESS, ERROR, HINT, TODO, LEGACY, ISE
-						switch(msgType)	{
-							case 'SUCCESS':
-							msgObj = app.u.successMsgObject(msg[i].split('|')[1]);
-							break;
-
-							case 'HINT':
-							msgObj = app.u.statusMsgObject(msg[i].split('|')[1]);
-							break;
-
-							case 'TODO':
-							msgObj = app.u.youErrObject(msg[i].split('|')[1],'#');
-							break;
-
-//defaults are treated as errors.
-							case 'ERROR':
-							default:
-								msgObj = app.u.errMsgObject(msg[i].split('|')[1],'#');
-							}
-							msgObj.skipAutoHide = true; //for testing, don't hide.
-							msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
-							app.u.throwMessage(msgObj);
-
+						msgObj = app.u.uiMsgObject(msg[i]);
+						msgObj.skipAutoHide = true; //for testing, don't hide.
+						msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
+						app.u.throwMessage(msgObj);
 						}
 					}
 				else	{
@@ -744,7 +723,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			saveFinderChanges : function()	{
-				app.u.dump("BEGIN admin.u.saveFinderChanges");
+//				app.u.dump("BEGIN admin.u.saveFinderChanges");
 				var myArray = new Array();
 				var $tmp;
 				var $finderModal = $('#prodFinder')
@@ -788,7 +767,7 @@ $('#finderRemovedList').find("li").each(function(){
 //concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
 $("#finderTargetList li").each(function(index){
 	$tmp = $(this);
-	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
+//	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
 	
 	if($tmp.attr('data-status') == 'changed')	{
 		$tmp.attr('data-status','queued')

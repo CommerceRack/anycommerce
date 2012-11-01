@@ -142,9 +142,13 @@
 
 <div class='productPanel' id='productEditorPanelTemplate'>
 	
-	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="$('.panelContents',$(this).parent()).toggle();">
-	<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
-	<span data-bind="var: panel(title); format:text;"></span>
+	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+	
+<!-- 		<span class="ui-icon ui-icon-arrow-4-diag floatRight"></span> -->
+		
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span data-bind="var: panel(title); format:text;"></span>
+	
 	</h3>
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
 	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">

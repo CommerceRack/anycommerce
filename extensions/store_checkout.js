@@ -261,13 +261,14 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 
 		proceedToGoogleCheckout : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN convertSessionToOrder[passive].callbacks.proceedToGoogleCheckout.onSuccess');
+				app.u.dump('BEGIN store_checkout.callbacks.proceedToGoogleCheckout.onSuccess');
+//code for tracking the google wallet payment in GA as a conversion.
 				_gaq.push(function() {
 					var pageTracker = _gaq._getAsyncTracker();
 					setUrchinInputCode(pageTracker);
 					});
-//				alert(app.data[tagObj.datapointer].URL+"?analyticsdata="+getUrchinFieldValue());
-				document.location= app.data[tagObj.datapointer].URL+"&analyticsdata="+getUrchinFieldValue();
+//getUrchinFieldValue is defined in the ga_post.js file. It's included as part of the google analytics plugin.
+				document.location= app.data[tagObj.datapointer].URL +"&analyticsdata="+getUrchinFieldValue();
 				},
 			onError : function(responseData,uuid)	{
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on checkout page.
@@ -277,7 +278,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
+				app.u.dump('BEGIN store_checkout.callbacks.handleCartPaypalSetECResponse.onSuccess');
 				window.location = app.data[tagObj.datapointer].URL
 				},
 			onError : function(responseData,uuid)	{

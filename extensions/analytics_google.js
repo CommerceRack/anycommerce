@@ -33,12 +33,17 @@ var analytics_google = function() {
 		callbacks : {
 			init : {
 				onSuccess : function()	{
+					
 /*
 To keep this extension as self-contained as possible, it loads it's own script.
 the callback is handled in the extension loader. It will handle sequencing for the most part.
 The addTriggers will re-execute if this script isn't loaded until it has finished loading.
 */
 					app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js');
+					if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
+						app.u.loadScript(('https:' == document.location.protocol ? 'https://' : 'http://') + 'checkout.google.com/files/digital/ga_post.js'); //needed 4 tracking google wallet orders in GA.
+						}
+
 					return true;
 					},
 				onError : function()	{

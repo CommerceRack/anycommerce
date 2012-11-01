@@ -1007,14 +1007,6 @@ this was necessary because otherwise the converted html was output as <a href...
             		suffix = phrase;
             		}
 
-            	// make sure category has a leading .
-            	if (operation != ":category") {
-            		}
-         		else if (suffix.substring(0,1) == ".") {
-            		}
-            	else {
-            		suffix = "."+suffix;
-            		}
 			
 				switch(operation) {
 					case ":url" :
@@ -1026,17 +1018,18 @@ this was necessary because otherwise the converted html was output as <a href...
 
 					case ":search" :
 						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":search"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase)
+							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase);
 						else
 							output = "<a href=\""+domain+"search.cgis?KEYWORDS="+suffix+"\">"+phrase+"</a>";
 						break;
 
 
 					case ":category" :
+						if(suffix.indexOf('.') != 0) {suffix = "."+suffix} //make sure category suffixes (safe id) start with .
 						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":category"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":category"](suffix,phrase)
+							output = app.ext[linkCmdPointer].wiki[":category"](suffix,phrase); 
 						else
-							output = "<a href=\""+domain+"/category/"+suffix+"/\">"+phrase+"</a>"
+							output = "<a href=\""+domain+"/category/"+suffix+"/\">"+phrase+"</a>";
 						break
 
 					

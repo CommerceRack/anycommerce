@@ -2,7 +2,7 @@ var app = app || {vars:{},u:{}}; //make sure app exists.
 
 //http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
 app.u.loadScript = function(url, callback, params){
-//	app.u.dump("load script: "+url);
+	app.u.dump("load script: "+url);
     var script = document.createElement("script");
     script.type = "text/javascript";
     if (script.readyState){  //IE
