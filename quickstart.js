@@ -1682,9 +1682,9 @@ return r;
 					app.u.dump("ERROR! showProd had no P.pid.  P:"); app.u.dump(P);
 					}
 				else	{
-					P.templateID = 'productTemplate';
+					P.templateID = P.templateID || 'productTemplate';
 					P.state = 'onInits'
-					parentID = P.templateID+"_"+pid
+					parentID = P.templateID+"_"+app.u.makeSafeHTMLId(pid);
 					app.ext.myRIA.u.handleTemplateFunctions(P);
 //no need to render template again.
 					if(!$('#'+parentID).length){
