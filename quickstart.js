@@ -551,8 +551,13 @@ need to be customized on a per-ria basis.
 
 
 		pageTransition : function($o,$n)	{
-			
-			$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
+//if $o doesn't exist, the animation doesn't run and the new element doesn't show up, so that needs to be accounted for.
+			if($o.length)	{
+				$o.fadeOut(1000, function(){$n.fadeIn(1000)}); //fade out old, fade in new.
+				}
+			else	{
+				$n.fadeIn(1000)
+				}
 
 //This is another example transition. old content slides out and new content slides in.
 //			$n.slideDown(3000);
