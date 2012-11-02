@@ -255,6 +255,9 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 
 app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/showLoading/css/showLoading.css']);
+app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/css/flexigrid.pack.css']);
+app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip.min.css']);
+app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.css']);
 
 				return r;
 				},
