@@ -55,12 +55,12 @@ The addTriggers will re-execute if this script isn't loaded until it has finishe
 
 			addTriggers : {
 				onSuccess : function(){
-app.u.dump("BEGIN analytics_google.callbacks.addTriggers.onSuccess");
+//					app.u.dump("BEGIN analytics_google.callbacks.addTriggers.onSuccess");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object')	{
 
-app.u.dump(" -> adding triggers");
+//app.u.dump(" -> adding triggers");
 app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/index.html']);})
 app.ext.myRIA.template.categoryTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]);})
 app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/product/'+P.pid]);})

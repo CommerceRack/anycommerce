@@ -7,18 +7,6 @@
 
 <script type='text/javascript'>
 
-resizeIt = function() {
-	var str = $('text-area').value;
-	var cols = $('text-area').cols;
-	
-	var linecount = 0;
-	$A(str.split("\n")).each( function(l) {
-	  linecount += Math.ceil( l.length / cols ); // take into account long lines
-	} )
-	$('text-area').rows = linecount + 1;
-	};
-
-
 $(function() {
 	$('code').each(function(){
 		var $this = $(this);
