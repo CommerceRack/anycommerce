@@ -14,65 +14,20 @@ app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initUserInte
 
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
-app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
+app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
+
+
+app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/showLoading/js/jquery.showLoading.min.js']);
+app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigrid.js']);
+app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip-1.0.0-rc3.min.js']);
+app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.js']);
+app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.popup/jquery.popupWindow.js']);
+
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
 app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js']);
 
-
-
-
-/*
-Will load all scripts and extenstions with pass = 0.
-pass with any other value (including blank,null, undefined, etc) will get loaded later.
-this function is overwritten once the myRIA callback occurs with a very similar function (ignores pass).
-app.rq.push() = app.u.handleRQ so whatever the values in push() are get executed immediately.
-*/
-
-app.u.handleRQ = function()	{
-
-	var numIncludes = 0; //what is returned. The total number of includes for this pass.
-	var L = app.rq.length - 1;
-
-	app.vars.extensions = app.vars.extensions || []; //ensure array is defined.
-	app.vars.rq = new Array(); //to avoid any duplication, as iteration occurs, items are moved from app.rq into this tmp array. 
-
-//the callback added to the loadScript on type 'script' sets the last value of the resource array to true.
-//another script will go through this array and make sure all values are true for validation. That script will execute the callback (once all scripts are loaded).
-	var callback = function(index){
-		app.vars.rq[index][app.vars.rq[index].length - 1] = true; //last index in array is for 'is loaded'. set to false in loop below.
-		}
-	
-	for(var i = L; i >= 0; i--)	{
-//		app.u.dump("app.rq["+i+"][0]: "+app.rq[i][0]+" and app.rq["+i+"][1]: "+app.rq[i][1]);
-		if(app.rq[i][0] == 'script' && app.rq[i][1] === 0)	{
-			numIncludes++;
-			app.rq[i][app.rq[i].length] = false; //will get set to true when script loads as part of callback.
-			app.vars.rq.push(app.rq[i]); //add to pass zero rq.
-			app.u.loadScript(app.rq[i][2],callback,(app.vars.rq.length - 1));
-			app.rq.splice(i, 1); //remove from new array to avoid dupes.
-			}
-		else if(app.rq[i][0] == 'extension' && app.rq[i][1] === 0)	{
-			numIncludes++;
-			app.vars.extensions.push({"namespace":app.rq[i][2],"filename":app.rq[i][3],"callback":app.rq[i][4]}); //add to extension Q.
-			app.rq[i][app.rq[i].length] = false; //will get set to true when script loads as part of callback.
-			app.vars.rq.push(app.rq[i]); //add to pass zero rq.
-
-//on pass 0, no callbacks added to extensions because the model already has a function for checking if extensions are loaded.
-// adding these extensions to the extensions array is necessary for this checker to work.
-			app.u.loadScript(app.rq[i][3],callback,(app.vars.rq.length - 1));
-			app.rq.splice(i, 1); //remove from old array to avoid dupes.
-			}
-		else	{
-//currently, this function is intended for pass 0 only, so if an item isn't pass 0,do nothing with it.
-			}
-		}
-//	app.u.dump("numIncludes: "+numIncludes);
-	app.u.initMVC(0);
-	return numIncludes;
-
-	}
 
 
 /*
@@ -108,7 +63,7 @@ app.u.initMVC = function(attempts){
 //instantiate controller. handles all logic and communication between model and view.
 //passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
 //tmp is a throw away variable. app is what should be used as is referenced within the mvc.
-		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication.
+		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication. note this is NOT app.rq
 		var tmp = new zController(app);
 //instantiate wiki parser.
 		myCreole = new Parse.Simple.Creole();

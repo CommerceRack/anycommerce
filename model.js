@@ -1092,7 +1092,8 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //Gets executed fairly early in the init process. Starts the process of adding the extension.
 
 		addExtensions : function(extObj)	{
-			app.u.dump('BEGIN model.addExtensions');
+//			app.u.dump('BEGIN model.addExtensions');
+//			app.u.dump(extObj);
 			var r = false; //what is returned. false if no extensions are loaded or the # of extensions
 			if(typeof extObj == 'object')	{
 
@@ -1109,10 +1110,13 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						app.u.dump(" -> extension did not load because namespace ("+extObj[i].namespace+") or filename ("+extObj[i].filename+") was left blank.");
 						continue; //go to next index in loop.
 						}
-					else if (typeof app.ext[extObj[i].namespace] == 'function')	{
+					else if (typeof window[extObj[i].namespace] == 'function')	{
+//						app.u.dump(" -> extension already loaded. namespace: "+extObj[i].namespace);
+						var errors = app.model.loadAndVerifyExtension(extObj[i]);
 						//extension has already been imported. Here for cases where extensions are added as part of preloader (init.js)
 						}
 					else	{
+//						app.u.dump(" -> fetch extension: "+extObj[i].namespace);
 						app.model.fetchExtension(extObj[i],i);
 						}
 					} // end loop.
@@ -1215,6 +1219,67 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return ajaxRequest;
 			}, //fetchNLoadTemplates 
 
+
+			loadAndVerifyExtension : function(extObjItem)	{
+				var url = extObjItem.filename;
+				var namespace = extObjItem.namespace; //for easy reference.
+				var errors = ""; // list of errors. what is returned
+//the .js file for the extension contains a function matching the namespace used.
+//the following line executes that function and saves the object returned to the control.
+//this is essentially what makes the extension available for use.
+//immediately after the data is loaded into the control, the extension.namespace.callbacks.init is run.  This is where any system settings should be checked/reported.
+//data is saved to the control prior to template/view verification because we need access to the object.
+//yes, technically we could have saved it to a var, accessed the templates param, validated and NOT saved, but this is lighter.
+//it means that a developer could use an extension that didn't load properly, but that is their perogative, since we told them its broke.
+				app.ext[namespace] = eval(namespace+'()'); //keep this as early in the process as possible so it's done before the next extension loads.
+
+				var callback = extObjItem.callback; //for easy reference.
+//						app.u.dump(" -> typeof callback: "+typeof callback);
+				if(typeof app.ext[namespace].callbacks.init === 'object')	{
+//							app.u.dump(" typeof === object");
+					var initPassed = app.ext[namespace].callbacks.init.onSuccess(); //returns t/f
+//							app.u.dump(" -> "+namespace+" onSuccess response = "+initPassed);
+					}
+				else	{
+//no init was set in extension.  Init handles dependencies and should be present. For now, we'll trust that the developer had a good reason for not having an init and continue.
+					app.u.dump("WARNING: extension "+namespace+" did NOT have an init. This is very bad.");
+					errors += "<li>init not set for extension "+namespace;
+					}
+//whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
+//						app.u.dump(" -> templates.length = "+app.ext[namespace].vars.templates.length);
+				if(app.ext[namespace].vars && app.ext[namespace].vars.templates && !app.ext[namespace].vars.willFetchMyOwnTemplates)	{
+					errors += app.model.loadTemplates(app.ext[namespace].vars.templates);
+					}
+				else	{
+//							app.u.dump("WARNING: extension "+namespace+" did not define any templates. This 'may' valid, as some extensions may have no templates.");
+					}
+
+/*
+now we know whether the extension properly loaded, had and executed an init and has a callback.
+respond accordingly.
+*/
+
+				if(initPassed == false)	{
+					app.u.throwMessage("Uh Oh! Something went wrong with our app. We apologize for any inconvenience. (err: "+namespace+" extension did not pass init)",true);
+					}
+//errors would be populated if, say, no init is set.
+				else if(errors)	{
+					app.u.dump(" -> extension contained errors. callback not executed yet.");
+					app.u.dump(" -> "+errors);
+					app.u.throwMessage("Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul>",true);
+
+//the line above handles the errors. however, in some cases a template may want additional error handling so the errors are passed in to the onError callback.
+					if(app.ext[namespace].callbacks.onError)	{
+//								app.u.dump(" -> executing callback.onError.");
+						app.ext[namespace].callbacks.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>",'');
+						}							
+					}
+				else	{
+//							app.u.dump(" -> extension "+namespace+" loaded fine but contained no callback");
+					}
+
+				},
+
 /*
 extensions are like plugins. They are self-contained* objects that may include calls, callbacks, utitity functions and/or variables.
 the extension object passed in looks like so:
@@ -1260,60 +1325,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 //hhhhmmm... was originally just checking success. now it checks success and OK (2011-01-11). probably need to improve this at some point.
 					if(data.statusText == 'success' || data.statusText == 'OK')	{
 //						app.u.dump(" -> adding extension to controller");
-						
-//the .js file for the extension contains a function matching the namespace used.
-//the following line executes that function and saves the object returned to the control.
-//this is essentially what makes the extension available for use.
-//immediately after the data is loaded into the control, the extension.namespace.callbacks.init is run.  This is where any system settings should be checked/reported.
-//data is saved to the control prior to template/view verification because we need access to the object.
-//yes, technically we could have saved it to a var, accessed the templates param, validated and NOT saved, but this is lighter.
-//it means that a developer could use an extension that didn't load properly, but that is their perogative, since we told them its broke.
-						app.ext[namespace] = eval(namespace+'()'); //keep this as early in the process as possible so it's done before the next extension loads.
-
-						var callback = extObjItem.callback; //for easy reference.
-//						app.u.dump(" -> typeof callback: "+typeof callback);
-						if(typeof app.ext[namespace].callbacks.init === 'object')	{
-//							app.u.dump(" typeof === object");
-							var initPassed = app.ext[namespace].callbacks.init.onSuccess(); //returns t/f
-//							app.u.dump(" -> "+namespace+" onSuccess response = "+initPassed);
-							}
-						else	{
-//no init was set in extension.  Init handles dependencies and should be present. For now, we'll trust that the developer had a good reason for not having an init and continue.
-							app.u.dump("WARNING: extension "+namespace+" did NOT have an init. This is very bad.");
-							errors += "<li>init not set for extension "+namespace;
-							}
-//whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
-//						app.u.dump(" -> templates.length = "+app.ext[namespace].vars.templates.length);
-						if(app.ext[namespace].vars && app.ext[namespace].vars.templates && !app.ext[namespace].vars.willFetchMyOwnTemplates)	{
-							errors += app.model.loadTemplates(app.ext[namespace].vars.templates);
-							}
-						else	{
-//							app.u.dump("WARNING: extension "+namespace+" did not define any templates. This 'may' valid, as some extensions may have no templates.");
-							}
-						
-/*
-now we know whether the extension properly loaded, had and executed an init and has a callback.
-respond accordingly.
-*/
-
-						if(initPassed == false)	{
-							app.u.throwMessage("Uh Oh! Something went wrong with our app. We apologize for any inconvenience. (err: "+namespace+" extension did not pass init)",true);
-							}
-//errors would be populated if, say, no init is set.
-						else if(errors)	{
-							app.u.dump(" -> extension contained errors. callback not executed yet.");
-							app.u.dump(" -> "+errors);
-							app.u.throwMessage("Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul>",true);
-
-//the line above handles the errors. however, in some cases a template may want additional error handling so the errors are passed in to the onError callback.
-							if(app.ext[namespace].callbacks.onError)	{
-//								app.u.dump(" -> executing callback.onError.");
-								app.ext[namespace].callbacks.onError("<div>Extension "+namespace+" contains the following error(s):<ul>"+errors+"<\/ul><\/div>",'');
-								}							
-							}
-						else	{
-//							app.u.dump(" -> extension "+namespace+" loaded fine but contained no callback");
-							}
+						errors = app.model.loadAndVerifyExtension(extObjItem);
 						}
 					},
 				error: function(a,b,c) {
@@ -1399,7 +1411,7 @@ This is checks for two things:
 		executeCallbacksWhenExtensionsAreReady : function(extObj){
 //			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady [length: "+extObj.length+"]");
 			if(this.allExtensionsHaveLoaded(extObj))	{
-//				app.u.dump("All extensions are loaded. execute callbacks.");
+				app.u.dump("All extensions are loaded. execute callbacks.");
 				var L = extObj.length;
 				for(var i = 0; i < L; i += 1) {
 //					app.u.dump(" -> i: "+i);

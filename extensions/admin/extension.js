@@ -253,6 +253,9 @@ var admin = function() {
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
+
+app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/showLoading/css/showLoading.css']);
+
 				return r;
 				},
 			onError : function(d)	{
@@ -272,6 +275,7 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 			onSuccess : function()	{
 				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
 				var L = app.rq.length-1;
+//				die();
 				for(var i = L; i >= 0; i -= 1)	{
 					app.u.handleResourceQ(app.rq[i]);
 					app.rq.splice(i, 1); //remove once handled.
