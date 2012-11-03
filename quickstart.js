@@ -916,8 +916,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
-				infoObj.performJumpToTop === false ? false  : true; //specific instances jump to top. these are passed in (usually related to modals).
-
+				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
+//				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
 				r = app.ext.myRIA.u.addPushState(infoObj);
 				
 //r will = true if pushState isn't working (IE or local). so the hash is updated instead.
@@ -1986,7 +1986,7 @@ buyer to 'take with them' as they move between  pages.
 					app.u.dump("WARNING - unknown type for 'P' ["+typeof P+"] in showArticle")
 					}
 				if(subject)	{
-					$('html, body').animate({scrollTop : 0},1000); //scroll up.
+//					$('html, body').animate({scrollTop : 0},1000); //scroll up.
 					$('#'+subject+'Article').show(); //only show content if page doesn't require authentication.
 					switch(subject)	{
 						case 'faq':
