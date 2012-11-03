@@ -1728,14 +1728,19 @@ return r;
 				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
 
 //only create instance once.
-				if($('#mainContentArea_company').length)	{}
+				if($('#mainContentArea_company').length)	{
+					app.ext.myRIA.u.showArticle(P);
+					P.state = 'onCompletes';
+					app.ext.myRIA.u.handleTemplateFunctions(P);
+					
+					}
 				else	{
 					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,parentID));
 					app.ext.myRIA.u.bindNav('#sideline a');
+					app.calls.appProfileInfo.init(app.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'mutable');
+					app.model.dispatchThis();
 					}
 					
-				app.calls.appProfileInfo.init(app.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'mutable');
-				app.model.dispatchThis();
 
 				}, //showCompany
 				
@@ -1974,13 +1979,14 @@ buyer to 'take with them' as they move between  pages.
 				var subject;
 				if(typeof P == 'object')	{
 					subject = P.show
-					$('.sideline .'+subject).addClass('ui-state-highlight');
+					$('.sideline .navLink_'+subject).addClass('ui-state-highlight');
 					}
 				else if(typeof P == 'string')	{subject = P}
 				else	{
 					app.u.dump("WARNING - unknown type for 'P' ["+typeof P+"] in showArticle")
 					}
 				if(subject)	{
+					$('html, body').animate({scrollTop : 0},1000); //scroll up.
 					$('#'+subject+'Article').show(); //only show content if page doesn't require authentication.
 					switch(subject)	{
 						case 'faq':
