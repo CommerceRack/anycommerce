@@ -646,14 +646,16 @@ need to be customized on a per-ria basis.
 				var L = data.value.hits.hits.length;
 				var templateID = data.bindData.loadsTemplate ? data.bindData.loadsTemplate : 'productListTemplateResults';
 				var pid;
-				for(var i = 0; i < L; i += 1)	{
-					pid = data.value.hits.hits[i]['_id'];
-					$tag.append(app.renderFunctions.transmogrify({'id':parentID+'_'+pid,'pid':pid},templateID,data.value.hits.hits[i]['_source']));
+				if(data.value.hits.total)	{
+					for(var i = 0; i < L; i += 1)	{
+						pid = data.value.hits.hits[i]['_id'];
+						$tag.append(app.renderFunctions.transmogrify({'id':parentID+'_'+pid,'pid':pid},templateID,data.value.hits.hits[i]['_source']));
+						}
+					
+					if(data.bindData.before) {$tag.before(data.bindData.before)} //used for html
+					if(data.bindData.after) {$tag.after(data.bindData.after)}
+					if(data.bindData.wrap) {$tag.wrap(data.bindData.wrap)}		
 					}
-				
-				if(data.bindData.before) {$tag.before(data.bindData.before)} //used for html
-				if(data.bindData.after) {$tag.after(data.bindData.after)}
-				if(data.bindData.wrap) {$tag.wrap(data.bindData.wrap)}		
 				},
 
 /*

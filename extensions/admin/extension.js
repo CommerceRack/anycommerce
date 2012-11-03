@@ -538,7 +538,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
-					$target = $('#'+P.targetID);
+					var $target = $('#'+P.targetID);
 
 					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
 					
@@ -548,12 +548,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if($target.children().length === 0)	{
 						//this means the section has NOT been opened before.
 						app.u.dump(" -> section has NOT been rendered before. Render it.");
-						app.ext.admin.u.handleShowSection(path,P);
+						app.ext.admin.u.handleShowSection(path,P,$target);
 						}
 					else if(tab == app.ext.admin.vars.tab)	{
 						//we are moving within the same section.
 						app.u.dump(" -> Moving within same section, Render it.");
-						app.ext.admin.u.handleShowSection(path,P);
+						app.ext.admin.u.handleShowSection(path,P,$target);
 						}
 					else	{
 						//jumping between sections. content has already been displayed by here. do nothing.
@@ -627,7 +627,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 		u : {
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
-			handleShowSection : function(path,P)	{
+			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
 				if(tab == 'product')	{
 					app.u.dump(" -> open product editor");
@@ -667,7 +667,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			uiHandleBreadcrumb : function(bc)	{
-				$target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)
+				var $target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)
 				if(bc)	{
 					var L = bc.length;
 					for(var i = 0; i < L; i += 1)	{
@@ -686,7 +686,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 
 			uiHandleNavTabs : function(tabs)	{
-				$target = $('#navTabs').empty(); //always empty to make sure the last set isn't displayed (the new page may not have tabs)
+				var $target = $('#navTabs').empty(); //always empty to make sure the last set isn't displayed (the new page may not have tabs)
 				if(tabs)	{
 					var L = tabs.length;
 					var className; //recycled in loop.
@@ -718,6 +718,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
+				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID)
 				$('a',$target).click(function(event){
 					var href = $(this).attr('href');
@@ -725,6 +726,14 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					if(href.indexOf("/biz/") == 0)	{
 						event.preventDefault();
 						return showUI(href);
+						}
+//this could happen in the website builder where the 'edit' links are not fully pathed.
+					else if(href.indexOf("index.cgi?") == 0)	{
+						event.preventDefault();
+						return showUI(path+'?'+href.split('?')[1]); //passes params to whatever the parent path was.
+						}
+					else	{
+						//no match.
 						}
 					});
 				},
@@ -839,7 +848,7 @@ var safePath = app.u.makeSafeHTMLId(path);
 app.u.dump(" -> safePath: "+safePath);
 var prodlist = new Array();
 
-$target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
+var $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
 
