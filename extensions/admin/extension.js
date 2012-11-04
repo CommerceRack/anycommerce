@@ -271,6 +271,7 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
 				$('#'+tagObj.targetID).removeClass('loadingBG').html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
+
 				}
 			}, //init
 
@@ -292,7 +293,8 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
-				
+				window.loadElement = app.ext.admin.a.loadElement;
+
 				$('.username').text(app.vars.username);
 				
 				//yes, this is global.
@@ -540,7 +542,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
 					var $target = $('#'+P.targetID);
 
-					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
+//					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
 					
 					$(".tabContent",'#appView').hide(); //hide all tab contents
 					$target.show(); //show focus tab.
@@ -575,7 +577,22 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 
 
+//used in the builder for when 'edit' is clicked on an element.
+//Params are set by B. This is for legacy support in the UI.
 
+			loadElement : function(type,eleID){
+				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':eleID},{'callback':'showDataHTML','extension':'admin','targetID':'elementEditor'});
+				app.model.dispatchThis();
+				var $editor = $('#elementEditor');
+				if($editor.length)	{
+					$editor.empty(); //modal already exists. empty previous content. Currently, one editor at a time.
+					} 
+				else	{
+					$editor = $("<div \/>").attr('id','elementEditor').appendTo('body');
+					$editor.dialog({autoOpen:false,dialog:true});
+					}
+				$editor.dialog('open').addClass('loadingBG');
+				},
 
 
 /*
@@ -634,7 +651,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
 				else	{
-					app.u.dump(" -> open something wonderful...");
+//					app.u.dump(" -> open something wonderful...");
 					$target.empty().append("<div class='loadingBG'></div>");
 					app.model.fetchAdminResource(path,P);
 					}
@@ -649,7 +666,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			uiHandleMessages : function(path,msg)	{
-				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+//				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 				if(msg)	{
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
@@ -718,7 +735,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
-				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
+//				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID)
 				$('a',$target).click(function(event){
 					var href = $(this).attr('href');

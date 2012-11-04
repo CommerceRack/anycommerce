@@ -721,7 +721,6 @@ and model that needed to be permanently displayed had to be converted into an ob
 			},
 
 		uiMsgObject : function(msg)	{
-			app.u.dump("WILL THIS HANDLE UI MESSAGING?");
 			var eType = msg.split('|')[0].toLowerCase();
 			return {'errid':'#','errmsg':msg.split('|')[1],'errtype':msg.split('|')[0],'uiIcon':'z-'+eType,'uiClass':'z-'+eType}
 			},

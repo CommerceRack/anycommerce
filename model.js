@@ -349,7 +349,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
 		delete app.globalAjax.requests[QID][pipeUUID];
-		app.model.handleReQ(Q,QID,true); //true will increment 'attempts' for the uuid so only three attempts are made.
+		app.model.handleCancellations(Q,QID);
 		setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 		});
 	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
@@ -369,36 +369,32 @@ can't be added to a 'complete' because the complete callback gets executed after
 	
 	
 	/*
-	run when a high-level error occurs during the request (ise, pagenotfound, etc).
-	 -> sets dispatch status back to error. originally, multiple attempts would be made. 201239 changed this behavior to failing after first fail.
-	 
-	the Q passed in is sometimes the 'already filtered' Q, not the entire dispatch Q. Makes for a smaller loop and only impacts these dispatches.
-	also, when dispatchThis is run again, any newly added dispatches WILL get dispatched (if in the same Q).
-	handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.uuid.attempts) so that you max out after three (such as when a server error is returned in the response) and sometimes you don't want to adjust (such as when the q is adjusted because a priority dispatch was in progress).
-	set adjustAttempts to true to increment by 1.
-	*/
+when an immutable request is in progress and another request comes in, the secondary requests are reset to queued.
+ 
+the Q passed in is sometimes the 'already filtered' Q, not the entire dispatch Q. Makes for a smaller loop and only impacts these dispatches.
+also, when dispatchThis is run again, any newly added dispatches WILL get dispatched (if in the same Q).
+handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.uuid.attempts) so that you max out after three (such as when a server error is returned in the response) and sometimes you don't want to adjust (such as when the q is adjusted because a priority dispatch was in progress).
+set adjustAttempts to true to increment by 1.
+*/
 		handleReQ : function(Q,QID,adjustAttempts)	{
-//			app.u.dump('BEGIN model.handleReQ.');
-//			app.u.dump(' -> QID = '+QID);
-//			app.u.dump(' -> Q.length = '+Q.length);
 			var uuid,callbackObj;
-	//execute callback error for each dispatch, if set.
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
-//currently, we're only giving one attempt. see integer below (>+ #) to a higher number to try multiple times (not recommended)
-//				if(app.q[QID][uuid].attempts >= 1)	{
-					app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
-					//make sure a callback is defined.
-					this.handleErrorByUUID(uuid,QID,{'errid':'ISE','errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
-//					}
-//				else	{
-//					if(adjustAttempts)	{app.q[QID][uuid].attempts += 1; }
-//					app.model.changeDispatchStatusInQ(QID,uuid,'queued');
-//					}
+				app.model.changeDispatchStatusInQ(QID,uuid,'queued');
 				}
 			},
-	
-	
+
+//run when a request fails, most likely due to an ISE
+
+		handleCancellations : function(Q,QID)	{
+			var uuid,callbackObj;
+			for(var index in Q) {
+				uuid = Q[index]['_uuid'];
+				app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
+//make sure a callback is defined.
+				this.handleErrorByUUID(uuid,QID,{'errid':'ISE','skipAutoHide':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
+				}
+			},
 	
 	
 	// --------------------------- HANDLERESPONSE FUNCTIONS --------------------------- \\
@@ -1468,7 +1464,8 @@ function setHeader(xhr) {
 						app.u.dump("UI request aborted. It would destroy such life in favor of its new matrix."); //most likely, this abort happened intentionally because another action was requested (a link was clicked)
 						}
 					else	{
-						app.u.throwGMessage("UI request failure: "+b);
+						app.u.throwGMessage("Error details = UI request failure: "+b);
+//						app.u.throwMessage("Uh Oh! Something terrible happened. We apologize for any inconvenience. If this error persists, please contact support.<br \/>Error details = UI request failure: "+b);
 //						app.u.dump(a);
 						if(typeof viewObj.error == 'function'){viewObj.error()}
 						}
@@ -1485,6 +1482,10 @@ function setHeader(xhr) {
 					app.ext.admin.u.uiHandleMessages(path,data.msgs);
 					if(typeof viewObj.success == 'function'){viewObj.success()}
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
+					
+					//here because builder > edit outputs a bunch of JS in the html returned. this is to compensate. may be able to remove later. ###
+					window.loadElement = app.ext.admin.a.loadElement;
+					
 				},
 				beforeSend: setHeader
 				});
