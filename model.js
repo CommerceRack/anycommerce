@@ -392,7 +392,7 @@ set adjustAttempts to true to increment by 1.
 				uuid = Q[index]['_uuid'];
 				app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
 //make sure a callback is defined.
-				this.handleErrorByUUID(uuid,QID,{'errid':'ISE','skipAutoHide':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
+				this.handleErrorByUUID(uuid,QID,{'errid':'ISE','persistant':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
 				}
 			},
 	
@@ -410,7 +410,7 @@ set adjustAttempts to true to increment by 1.
 				if(Q[UUID]['_tag'] && Q[UUID]['_tag']['callback'])	{
 	//executes the callback.onError and takes into account extension. saves entire callback object into callbackObj so that it can be easily validated and executed whether in an extension or root.
 					callbackObj = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
-	//skipautohide is NOT defined if a callback is defined. let the callback itself make that decision.
+	//persistant is NOT defined if a callback is defined. let the callback itself make that decision.
 					if(callbackObj && typeof callbackObj.onError == 'function'){
 						callbackObj.onError(responseData,UUID)
 						}
@@ -1326,7 +1326,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 					},
 				error: function(a,b,c) {
 					var msg = app.u.errMsgObject("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")",123);
-					msg.skipAutoHide = true;
+					msg.persistant = true;
 					app.u.throwMessage(msg);
 					app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					app.u.dump(c);

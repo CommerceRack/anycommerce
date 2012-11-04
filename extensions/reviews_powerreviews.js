@@ -86,7 +86,7 @@ var powerReviews = function() {
 						}
 					else	{
 						var msg = app.u.errMsgObject("Uh Oh! It seems an error occured on our app. PowerReviews may not load properly. We apologize for the inconvenience.");
-						msg.skipAutoHide = true;
+						msg.persistant = true;
 						app.u.throwMessage(msg);
 						app.u.dump("ERROR! powerReviews did not pass init. The following variables are all required:");
 						app.u.dump(" -> app.ext.powerReviews.vars.merchantID: "+app.ext.powerReviews.vars.merchantID);

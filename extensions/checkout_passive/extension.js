@@ -275,7 +275,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 
 //display any messaging.
 				if(msg)	{
-					msg.skipAutoHide = true;
+					msg.persistant = true;
 					app.u.throwMessage(msg);
 					}
 
@@ -361,7 +361,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onError');
 				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
-				responseData.skipAutoHide = true;
+				responseData.persistant = true;
 				app.u.throwMessage(responseData);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
@@ -662,7 +662,7 @@ setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.
 				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
 				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
 //				app.ext.store_checkout.u.showServerErrors(responseData,uuid);
-				responseData.skipAutoHide = true; //don't collapse these messages.
+				responseData.persistant = true; //don't collapse these messages.
 				app.u.throwMessage(responseData);
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+responseData['_msg_1_id']+')']);

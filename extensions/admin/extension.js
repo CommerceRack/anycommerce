@@ -673,7 +673,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					var tab = this.getTabFromPath(path);
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = app.u.uiMsgObject(msg[i]);
-						msgObj.skipAutoHide = true; //for testing, don't hide.
+						msgObj.persistant = true; //for testing, don't hide.
 						msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
 						app.u.throwMessage(msgObj);
 						}

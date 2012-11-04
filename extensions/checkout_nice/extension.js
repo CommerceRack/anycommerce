@@ -352,7 +352,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onError');
 				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
-				responseData.skipAutoHide = true;
+				responseData.persistant = true;
 				app.u.throwMessage(responseData);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
