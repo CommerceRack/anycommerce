@@ -40,7 +40,7 @@ var bonding_buysafe = function() {
 /*
 To keep this extension as self-contained as possible, it loads it's own script.
 the callback is handled in the extension loader. It will handle sequencing for the most part.
-The addTriggers will re-execute if this script isn't loaded until it has finished loading.
+The startExtension will re-execute if this script isn't loaded until it has finished loading.
 */
 					app.u.loadScript('https://seal.buysafe.com/private/rollover/rollover.js');
 					return true; //return false if extension won't load for some reason (account config, dependencies, etc).
@@ -52,10 +52,10 @@ The addTriggers will re-execute if this script isn't loaded until it has finishe
 					}
 				},
 
-			addTriggers : {
+			startExtension : {
 				onSuccess : function(){
 
-app.u.dump("BEGIN bonding_buysafe.addTriggers.onSuccess.");
+app.u.dump("BEGIN bonding_buysafe.startExtension.onSuccess.");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && app.ext.myRIA.template.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
@@ -65,7 +65,7 @@ app.u.dump("BEGIN bonding_buysafe.addTriggers.onSuccess.");
 buySAFE.Hash = ''; //ADD HASH HERE.
 
 if(buySAFE.Hash.length > 0)	{
-	//the showContent function may have already executed prior to addTriggers getting executed.
+	//the showContent function may have already executed prior to startExtension getting executed.
 	WriteBuySafeKickers();
 	
 	//app.u.dump("BEGIN analytics_google.callbacks.addGATriggers");
@@ -86,9 +86,9 @@ if(buySAFE.Hash.length > 0)	{
 		var order = app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
-	   buySAFE.Guarantee.subtotal = order['sum/items_total']
+	   buySAFE.Guarantee.subtotal = order['sum/items_total'];
 	   buySAFE.Guarantee.email = order['bill/email'];
-	   WriteBuySafeGuarantee("JavaScript");	
+	   WriteBuySafeGuarantee("JavaScript");
 	
 		}); // end .push					
 	}
@@ -97,7 +97,7 @@ else	{
 	}
 						}
 					else	{
-						setTimeout(function(){app.ext.bonding_buysafe.callbacks.addTriggers.onSuccess()},250);
+						setTimeout(function(){app.ext.bonding_buysafe.callbacks.startExtension.onSuccess()},250);
 						}
 
 					},

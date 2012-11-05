@@ -220,13 +220,19 @@ var admin = function() {
 				init : function(obj,tagObj,Q)	{
 					tagObj = tagObj || {};
 					if(obj['sub'] == 'EDIT')	{
-						tagObj.datapointer = "adminUIBuilderPanelExecute";
+						tagObj.datapointer = "adminUIBuilderPanelExecute|edit";
+						}
+					else if(obj['sub'] == 'SAVE')	{
+						tagObj.datapointer = "adminUIBuilderPanelExecute|save";
+						}
+					else	{
+						//catch. some new verb or a format that doesn't require localStorage.
 						}
 					this.dispatch(obj,tagObj,Q);
 					},
 				dispatch : function(obj,tagObj,Q)	{
 					obj['_cmd'] = "adminUIBuilderPanelExecute";
-//					obj['_SREF'] = "BAcEMTIzNAQEBAgZAAcAAAAKBFBBR0UCBgAAAEZPUk1BVAoBMQILAAAAX2lzX3ByZXZpZXcKAUECAgAAAEZTFwthYm91dF8zcGljcwIFAAAARE9DSUQKB2Fib3V0dXMCAgAAAFBHCgdERUZBVUxUAgIAAABOUwoBMAIDAAAAUFJU"; /// !!! DO NOT HARD CODE THIS
+					obj['_SREF'] = sref;
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,Q);
 					}
@@ -271,9 +277,43 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
 				$('#'+tagObj.targetID).removeClass('loadingBG').html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
-
 				}
 			}, //init
+
+
+		showElementEditorHTML : {
+			onSuccess : function(tagObj)	{
+//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
+				var $target = $('#'+tagObj.targetID)
+				$target.parent().find('.ui-dialog-title').text(app.data[tagObj.datapointer]['prompt']); //add title to dialog.
+				var $form = $("<form \/>").attr('id','editorForm'); //id used in product edit mode.
+				$form.submit(function(event){
+					event.preventDefault(); //do not post form.
+					app.ext.admin.u.uiSaveBuilderElement($form,app.data[tagObj.datapointer].id,{'callback':'handleElementSave','extension':'admin','targetID':'elementEditorMessaging'})
+					app.model.dispatchThis();
+					return false;
+					}).append(app.data[tagObj.datapointer].html);
+				$form.append("<div class='marginTop center'><input type='submit' class='ui-state-active' value='Save' \/><\/div>");
+				$target.removeClass('loadingBG').html($form);
+				}
+			}, //init
+
+
+//executed after a 'save' is pushed for a specific element while editing in the builder.
+		handleElementSave : {
+			
+			onSuccess : function(tagObj)	{
+//First, let the user know the changes are saved.
+				var msg = app.u.successMsgObject("Thank you, your changes are saved.");
+				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
+				app.u.throwMessage(msg);
+
+				if(app.ext.admin.vars.tab)	{
+					app.u.dump("GOT HERE!!!");
+					$('#'+app.ext.admin.vars.tab+'Content').empty().append(app.data[tagObj.datapointer].html)
+					}			
+				}
+			},
 
 		initUserInterface : {
 			onSuccess : function()	{
@@ -294,6 +334,8 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
+				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
+				window.showFinder = app.ext.admin.a.showUIFinder;
 
 				$('.username').text(app.vars.username);
 				
@@ -581,19 +623,38 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //Params are set by B. This is for legacy support in the UI.
 
 			loadElement : function(type,eleID){
-				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':eleID},{'callback':'showDataHTML','extension':'admin','targetID':'elementEditor'});
+				
+				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':eleID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
 				app.model.dispatchThis();
 				var $editor = $('#elementEditor');
 				if($editor.length)	{
-					$editor.empty(); //modal already exists. empty previous content. Currently, one editor at a time.
+					$('#elementEditorMessaging',$editor).empty(); //modal already exists. empty previous content. Currently, one editor at a time.
+					$('#elementEditorContent',$editor).empty().addClass('loadingBG');
 					} 
 				else	{
 					$editor = $("<div \/>").attr('id','elementEditor').appendTo('body');
-					$editor.dialog({autoOpen:false,dialog:true});
+//within the editor, separate messaging/content elements are created so that one can be updated without affecting the other.
+//especially impotant on a save where the messaging may get updated and the editor too, and you don't want to nuke the messaging on content update,
+// which would happen if only one div was present.
+					$editor.append("<div id='elementEditorMessaging'><\/div><div id='elementEditorContent' class='loadingBG'><\/div>").dialog({autoOpen:false,dialog:true, width: 500, height:500,modal:true});
 					}
-				$editor.dialog('open').addClass('loadingBG');
+				$editor.dialog('open');
 				},
 
+
+			
+//run on a select list inside 'edit' for a product list element.
+//various select lists change what other options are available.
+//t is 'this' from the select.
+//ID is the element ID
+
+			uiProdlistEditorUpdate : function(t,ID)	{
+				app.ext.admin.u.uiSaveBuilderElement($("#editorForm"),ID,{'callback':'showMessaging','targetID':'elementEditorMessaging','message':'Saved. Panel updated to reflect new choices.'});
+				app.ext.admin.calls.adminUIBuilderPanelExecute.init({'sub':'EDIT','id':ID},{'callback':'showElementEditorHTML','extension':'admin','targetID':'elementEditorContent'});
+				app.model.dispatchThis();
+				$('#elementEditorContent').empty().append("<div class='loadingBG'><\/div>");
+				
+				},
 
 /*
 to generate an instance of the finder, run: 
@@ -611,8 +672,15 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.model.dispatchThis();
 				}, //addFinderTo
 				
-				
-				
+//a stopgap for the legacy to app infrastructure. type will be navcat: or page: or list:
+			showUIFinder : function(type,path,sku)	{
+				if(type == "NAVCAT" || type == "PRODUCT" || type == "LIST")	{ 	
+					app.ext.admin.a.showFinderInModal(path,sku);
+					}
+				else	{
+					app.u.throwGMessage("WARNING! unknown type ["+type+"] passed into showUIFinder");
+					}
+				},
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(path,sku)	{
 				var $finderModal = $('#prodFinder');
@@ -630,7 +698,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else{$finderModal.removeAttr('data-sku')}
 				
 				$finderModal.attr({'data-path':path}).dialog({modal:true,width:'94%',height:650});
-				this.addFinderTo('prodFinder',path,sku);
+				app.ext.admin.a.addFinderTo('prodFinder',path,sku);
 				} //showFinderInModal
 
 			}, //action
@@ -754,6 +822,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						}
 					});
 				},
+			
+//used when an element in the builder is saved.
+//also used when a select is changed in the builder > edit page > edit product list
+			uiSaveBuilderElement : function($form,ID,tagObj)	{
+				var obj = $form.serializeJSON();
+				obj['sub'] = "SAVE";
+				obj.id = ID;
+				app.ext.admin.calls.adminUIBuilderPanelExecute.init(obj,tagObj);
+				},			
+			
+			
 			
 			saveFinderChanges : function()	{
 //				app.u.dump("BEGIN admin.u.saveFinderChanges");
@@ -881,23 +960,21 @@ if(pid)	{
 	}
 else	{
 	app.u.dump(" -> NON product attribute (no pid specified)");
-	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
+//	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
 	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
 
 //app.u.dump(" -> path: "+path);
 //app.u.dump(" -> prodlist: "+prodlist);
 
-var numRequests = app.ext.store_prodlist.u.buildProductList({
-	"templateID": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
+app.ext.store_prodlist.u.buildProductList({
+	"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
 	"items_per_page" : 500, //max out at 500 items
-	"hide_multipage" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
+	"hide_summary" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
 	"parentID":"finderTargetList",
 //	"items_per_page":100,
 	"csv":prodlist
-	});
-if(numRequests)
-	app.model.dispatchThis();
+	},$('#finderTargetList'))
 
 
 // connect the results and targetlist together by class for 'sortable'.

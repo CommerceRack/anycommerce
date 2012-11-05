@@ -366,7 +366,12 @@ HELP PAGES
 
 
 
+/**** FAQ *****/
+.faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
+.faqQuestion:before	{content:"Q: ";}
+.faqAnswer:before	{content:"A: ";}
 
+.faqAnswer	{margin-bottom:12px;}
 
 
 
