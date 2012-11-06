@@ -1128,7 +1128,7 @@ P.listID (buyer list id)
 					}
 				else	{
 					var $target = $('#faqDetails4Topic_'+topicID).toggle();
-					if($target.children().length)	{} //if children are present, this faq topic has been opened before. no need to re-render content.
+					if($target.children().length)	{} //if children are present, this faq topic has been opened before or is empty. no need to re-render content.
 					else	{
 						var L = app.data['appFAQs']['@detail'].length;
 						app.u.dump(" -> total #faq: "+L);
