@@ -9,6 +9,7 @@ app.rq.push(['extension',1,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',1,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',1,'admin_prodEdit','extensions/admin/product_editor.js']);
+app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']);
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initUserInterface']);
 
 
@@ -18,11 +19,11 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 
 
-app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/showLoading/js/jquery.showLoading.min.js']);
+//app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/showLoading/js/jquery.showLoading.min.js']);
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigrid.js']);
-app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip-1.0.0-rc3.min.js']);
-app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.js']);
-app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.popup/jquery.popupWindow.js']);
+//app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip-1.0.0-rc3.min.js']);
+//app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.js']);
+//app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.popup/jquery.popupWindow.js']);
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
 
 

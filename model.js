@@ -390,7 +390,7 @@ set adjustAttempts to true to increment by 1.
 				uuid = Q[index]['_uuid'];
 				app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
 //make sure a callback is defined.
-				this.handleErrorByUUID(uuid,QID,{'errid':'ISE','persistant':true,'errmsg':'It seems something went wrong. Please continue, refresh the page, or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure after multiple attempts [uuid = '+uuid+'])'})
+				this.handleErrorByUUID(uuid,QID,{'errid':'ISE','persistant':true,'errmsg':'It seems something went wrong. Please try again or contact the site administrator if error persists. Sorry for any inconvenience. (mvc error: most likely a request failure [uuid = '+uuid+'])'})
 				}
 			},
 	
