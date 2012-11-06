@@ -216,6 +216,7 @@ var admin = function() {
 
 
 //obj requires sub and sref.  sub can be LOAD or SAVE
+//reload is also supported.
 			adminUIBuilderPanelExecute : {
 				init : function(obj,tagObj,Q)	{
 					tagObj = tagObj || {};
