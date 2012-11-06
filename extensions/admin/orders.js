@@ -127,11 +127,7 @@ var admin_orders = function() {
 		initOrderManager : {
 			onSuccess : function()	{
 				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
-<<<<<<< HEAD
 				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"mainContentArea"});
-=======
-				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"mainContentArea"});
->>>>>>> origin/201237-jt
 				}
 			}, //initOrderManager
 
@@ -213,11 +209,7 @@ if(L)	{
 		$(this).click(function(){
 			var orderID = $(this).attr('data-orderid');
 			var CID = $(this).closest('tr').attr('data-cid');
-<<<<<<< HEAD
 			app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
-=======
-			app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
->>>>>>> origin/201237-jt
 			app.model.dispatchThis();
 			})
 		});

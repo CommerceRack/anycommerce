@@ -81,7 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-		version : "201245",
+		version : "201246",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -327,7 +327,6 @@ don't move this. if it goes before some other checks, it'll resed the Qinuse var
 app.globalAjax.lastDispatch = app.u.unixNow();
 app.globalAjax.overrideAttempts = 0;
 
-
 //IMPORTANT
 /*
 the delete in the success AND error callbacks removes the ajax request from the requests array. 
@@ -342,9 +341,11 @@ can't be added to a 'complete' because the complete callback gets executed after
 		context : app,
 		async: true,
 		contentType : "text/json",
+		beforeSend: app.model.setHeader,
 		dataType:"json",
 //DO NOT CHANGE FORMAT OF _V, especially the zmvc/modelversion/release portion. contents of passindispatchV can be edited, if need be.
-		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q, "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV})
+//_v removed in 201246 in favor of being passed in headers. , "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV
+		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q})
 		});
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
@@ -356,9 +357,6 @@ can't be added to a 'complete' because the complete callback gets executed after
 		delete app.globalAjax.requests[QID][pipeUUID];
 		app.model.handleResponse(d);}
 		)
-
-
-
 
 				}
 
@@ -732,6 +730,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			}, //handleResponse_appPageGet
 
 //admin session returns a zjsid if response	
+/*
 		handleResponse_appSessionStart: function(responseData)	{
 //			app.storageFunctions.deleteCookie('zjsid'); //nuke any previous zjsid cookie
 			app.u.dump("BEGIN model.handleResponse_appSessionStart . ("+responseData['_uuid']+")");
@@ -746,6 +745,18 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			else	{
 				app.model.handleResponse_defaultAction(responseData);
 				}
+			},
+*/
+
+
+//admin session returns a zjsid if response	
+		handleResponse_authAdminLogin: function(responseData)	{
+//			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); app.u.dump(responseData);
+			app.vars.deviceid = responseData.deviceid;
+			app.vars.authtoken = responseData.authtoken;
+			app.vars.userid = responseData.userid;
+			app.vars.thisSessionIsAdmin = true;
+			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
 
 		handleResponse_appCartExists : function(responseData)	{
@@ -1425,6 +1436,19 @@ This is checks for two things:
 				}
 			}, //executeCallbacksWhenExtensionsAreReady
 		
+//setHeader always gets run, but the admin headers are only added if the global admin var is true.
+// if set to true and in a non-admin mode, won't hurt anything, but is less clean.
+		setHeader : function(xhr){
+//			xhr.setRequestHeader('x-auth','sporks');
+			if(app.vars.thisSessionIsAdmin)	{
+				xhr.setRequestHeader('x-clientid','admin'); //set by app
+				xhr.setRequestHeader('x-domain','www.sporks.zoovy.com'); //what domain is in focus. set by app or user
+				xhr.setRequestHeader('x-userid',app.vars.userid); //what account is in focus. provided by user/ stored locally.
+				xhr.setRequestHeader('x-deviceid',app.vars.deviceid); //the specific device making the requests. stored locally.
+				xhr.setRequestHeader('x-authtoken',app.vars.authtoken); //returned by API
+				xhr.setRequestHeader('x-version',app.model.version); //set by app
+				}
+			},
 		
 
 /*
@@ -1438,11 +1462,7 @@ ADMIN/USER INTERFACE
 //data2Pass gets passed along on the request. it's optional.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
 		
-function setHeader(xhr) {
-	xhr.setRequestHeader('Foo','bar');
-	xhr.setRequestHeader('X-Auth','sporks');
-	}
-			
+		
 			var pathParts = path.split('?'); //pathParts[0] = /biz/setup and pathParts[1] = key=value&anotherkey=anothervalue (uri params);
 //make sure to pass data2pass last so that the contents of it get preference (duplicate vars will be overwritten by whats in data)
 //this is important because data is typically a form input and may have a verb or action set that is different than what's in the pathParts URI params
@@ -1487,7 +1507,7 @@ function setHeader(xhr) {
 					window.loadElement = app.ext.admin.a.loadElement;
 					
 				},
-				beforeSend: setHeader
+				beforeSend: app.model.setHeader
 				});
 //			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
 			}

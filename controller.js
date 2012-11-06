@@ -26,7 +26,8 @@ var zController = function(params) {
 		alert("Oh No! you appear to have the prototype ajax library installed. This library is not compatible. Please change to a non-prototype theme (2011 series).");
 		}
 //zglobals is not required in the UI, but is for any
-	else if(typeof zGlobals != 'object' && !params.vars.noVerifyzGlobals)	{
+	else if(typeof zGlobals != 'object' && !app.vars.thisSessionIsAdmin)	{
+//zGlobals not required in an admin session.
 		alert("Uh Oh! A  required include (config.js) is not present. This document is required.");
 		}
 	else	{
@@ -47,11 +48,15 @@ jQuery.extend(zController.prototype, {
 		app.model = zoovyModel(); // will return model as object. so references are app.model.dispatchThis et all.
 
 		app.vars = app.vars || {};
-		app.vars['_admin'] = null; //set to null. could get overwritten in 'P' or as part of appAdminInit.
 		app.vars.platform = P.platform ? P.platform : 'webapp'; //webapp, ios, android
 		app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
+		app.vars.deviceid = app.vars.deviceid || '';
+		app.vars.userid = app.vars.userid || '';
+		app.vars.authtoken = app.vars.authtoken || '';
+		app.vars.domain = app.vars.domain || '';
+		
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
 			app.vars.profile = zGlobals.appSettings.profile;
@@ -62,7 +67,7 @@ jQuery.extend(zController.prototype, {
 			if('https:' == app.vars.protocol)	{app.vars.jqurl = zGlobals.appSettings.https_api_url;}
 			else	{app.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
-
+		
 // can be used to pass additional variables on all request and that get logged for certain requests (like createOrder). 
 // default to blank, not 'null', or += below will start with 'undefined'.
 //vars should be passed as key:value;  _v will start with zmvc:version.release.
@@ -113,12 +118,12 @@ Exception - the controller is used for admin sessions too. if an admin session i
 
 A session ID could be passed in through vars, but app.sessionId isn't set until the session id has been verified OR the app is explicitly told to not validate the session.
 */
-		if(app.vars.noVerifyzjsid && app.vars.sessionId)	{
+		if(app.vars.thisSessionIsAdmin && app.vars.sessionId)	{
 //you'd get here in the UI.
 			app.sessionId = app.vars.sessionId
 			app.model.addExtensions(app.vars.extensions);
 			}
-		else if(app.vars.noVerifyzjsid)	{
+		else if(app.vars.thisSessionIsAdmin)	{
 			//for now, do nothing.  this may change later.
 			app.model.addExtensions(app.vars.extensions);
 			}
@@ -203,7 +208,25 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					app.model.addDispatchToQ({'_cmd':'buyerLogout',"_tag":tagObj},'immutable');
 					}
 				},
-
+			accountLogin : {
+				init : function(obj,tagObj)	{
+					this.dispatch(obj,tagObj);
+					return 1;
+					},
+				dispatch : function(obj,tagObj){
+					obj._cmd = 'authAdminLogin';
+					app.vars.userid = obj.userid;
+					obj.authtype = "md5";
+					obj.ts = app.u.ymdNow();
+					obj.security = app.u.guidGenerator();
+					obj.authid = Crypto.MD5(obj.password+obj.security+obj.ts);
+					obj._tag = tagObj || {};
+					obj.device_notes = "someplace";
+					delete obj.password;
+					app.model.addDispatchToQ(obj,'immutable');
+					}
+				}
+/*
 			appSessionStart : {
 				 init : function() {
 					$('#loginFormContainer button').attr('disabled','disabled').addClass('ui-state-disabled');
@@ -214,7 +237,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					return 1;
 					},
 				 dispatch : function()   {
-var security = app.u.guidGenerator().substring(0,10);
 var ts = app.u.unixNow();
 app.model.addDispatchToQ({
 	"_cmd" : "appSessionStart",
@@ -227,8 +249,21 @@ app.model.addDispatchToQ({
 },'immutable');
 					}
 				} //appSessionStart
-
+*/
 			}, //authentication
+
+		authAccountCreate : {
+			init : function(obj,tagObj){
+				this.dispatch(obj,tagObj);
+				},
+			dispatch : function(obj,tagObj){
+				obj._cmd = 'authUserRegister';
+				tagObj = tagObj || {};
+				obj['tag'] = tagObj;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			},
+
 
 //always uses immutable Q
 		getValidSessionID : {
@@ -374,16 +409,10 @@ app.u.throwMessage(responseData); is the default error handler.
 
 		handleSessionStartResponse : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("session ID from cookie (with timeout) "+app.storageFunctions.readCookie('zjsid'));
-//was having issues with the cookie setting/redir. added a short timeout so that the cookie/browser can catch up to our blazing speed.
-//				alert(app.sessionId);
-				setTimeout("window.location = '"+app.vars.secureURL+"/biz/?_zjsid="+app.sessionId+"'",2000);
+//				app.data[tagObj.datapointer]				
 				},
 			onError : function(responseData)	{
-				app.u.dump('BEGIN app.callbacks.handlePasswordResponse.onError');
 				app.u.throwMessage(responseData);
-				$('#loginFormContainer button').removeAttr('disabled').removeClass('ui-state-disabled');
-				$('#userLoginButton .loadingPlaceholder').empty();
 				}
 			},//handleSessionStartResponse
 
@@ -1021,8 +1050,20 @@ TIME/DATE
 
 */
 
-		
-//current time in unix format.
+		ymdNow : function()	{
+			function padStr(i) {
+				return (i < 10) ? "0" + i : "" + i;
+				}
+			var temp = new Date();
+			var dateStr = padStr(temp.getFullYear()) +
+			padStr(1 + temp.getMonth()) +
+			padStr(temp.getDate()) +
+			padStr(temp.getHours()) +
+			padStr(temp.getMinutes()) +
+			padStr(temp.getSeconds());
+			return dateStr;
+			},
+//current time in unix format. stop using this.
 		unixNow : function()	{
 			return Math.round(new Date().getTime()/1000.0)
 			}, //unixnow

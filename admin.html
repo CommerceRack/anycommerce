@@ -14,10 +14,8 @@
 var myCreole;
 
 var app = {vars:{
-	"release":"2012103124600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-	"noVerifyzjsid":true, //skip the verify session. should only do this on admin login page.
-	"noVerifyzGlobals":true,
-	"sessionId":"**HMhDvOl6dUY55iJtYf82dPW8J?USERNAME=sporks|LUSER=ADMIN|PRT=0|DOMAIN=sporks.zoovy.com|PROFILE=DEFAULT|EXPIRES=0||318437fb481c9f83eb37d0703f7e90fe66f42025",
+	"release":"20121106001300",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"thisSessionIsAdmin": true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
 //	"secureURL" : "https://www.zoovy.com",
 //	"sdomain":"www.zoovy.com",
@@ -149,9 +147,36 @@ You are Logged in as: <span class='username'></span>
 
 
 <hr />
-<a href="#" onClick="return showUI('/biz/setup/builder/index.cgi');" class='bindByAnchor'>builder</a> | 
+<button onClick="app.calls.getValidSessionID.init(); app.model.dispatchThis('immutable');">Call</button>
+<button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
+<button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
+<button onClick="app.ext.admin.calls.mediaLib.adminImageFolderList.init(); app.model.dispatchThis();">Admin Call</button>
 
-<a href="#" onClick="return showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');" class='bindByAnchor'>edit page</a>
+<hr />
+
+<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
+<fieldset>
+	<legend>Merchant Login</legend>
+	<label>Login: <input type='text' name='userid' value='' /></label>
+	<label>Password: <input type='password' name='password' value='' /></label>
+	<input type='submit' value='login' />
+</fieldset>
+</form>
+
+
+
+
+<form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
+<fieldset>
+	<legend>Create Account</legend>
+	<label>Domain: <input type='text' name='domain' value='' /></label>
+	<label>Email: <input type='email' name='email' value='' /></label>
+	<label>Phone: <input type='tel' name='phone' value='' /></label>
+	<input type='submit' value='create' />
+</fieldset>
+</form>
+
+
 
 </body>
 </html>

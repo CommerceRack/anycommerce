@@ -23,6 +23,8 @@ app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigr
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip-1.0.0-rc3.min.js']);
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.js']);
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.popup/jquery.popupWindow.js']);
+app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
+
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
