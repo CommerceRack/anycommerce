@@ -464,7 +464,8 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				var QID = this.whichQAmIFrom(uuid); //don't pass QID in. referenced var that could change before this block is executed.
 //				app.u.dump(" -> responseData is set. UUID: "+uuid);
 //if the error is on the parent/piped request, no qid will be set.
-				if(responseData && responseData['_rcmd'] == 'err')	{
+//if an iseerr occurs, than even in a pipelined request, errid will be returned on 'parent' and no individual responses are returned.
+				if(responseData && (responseData['_rcmd'] == 'err' || responseData.errid))	{
 					
 //QID will b set if this is a NON pipelined request.
 					if(QID)	{
@@ -527,7 +528,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //the logic for the order here is the same as in the pipelined response, where it is documented.
 				else {
 					responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(responseData['_uuid']);
-					this.writeToMemoryAndLocal(responseData['@rcmds'][i])
+					this.writeToMemoryAndLocal(responseData['@rcmds'])
 					if(responseData['_rcmd'] && typeof this['handleResponse_'+responseData['_rcmd']] == 'function')	{
 	//					app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
 						this['handleResponse_'+responseData['_rcmd']](responseData)	//executes a function called handleResponse_X where X = _cmd, if it exists.

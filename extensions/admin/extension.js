@@ -45,6 +45,7 @@ var admin = function() {
 		
 	vars : {
 		tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
+		tabs : ['setup','sites','jt','products','orders','crm','syndication','reports','utilities'],
 		state : {},
 		templates : theseTemplates,
 		willFetchMyOwnTemplates : true,
@@ -71,6 +72,18 @@ var admin = function() {
 			
 			}, 
 
+
+		adminDomainList : {
+			init : function(partition,tagObj,Q)	{
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminDomainList";
+				if(partition) { tagObj.datapointer += "|"+partition}
+				this.dispatch(partition,tagObj,Q);
+				},
+			dispatch : function(partition,tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminDomainList","partition":partition,"_tag" : tagObj},Q);	
+				}			
+			},
 
 		navcats : {
 //app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
@@ -254,10 +267,10 @@ var admin = function() {
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
 
-app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/showLoading/css/showLoading.css']);
+//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/showLoading/css/showLoading.css']);
 app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/css/flexigrid.pack.css']);
-app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip.min.css']);
-app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.css']);
+//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip.min.css']);
+//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.css']);
 
 				return r;
 				},
@@ -309,7 +322,14 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 				}
 			},
 
-		initUserInterface : {
+		showHeader : {
+			onSuccess : function(){
+				app.ext.admin.u.showHeader();
+				}
+			},
+
+//executed when the extension loads
+		initExtension : {
 			onSuccess : function()	{
 				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
 				var L = app.rq.length-1;
@@ -330,12 +350,17 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.c
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.showFinder = app.ext.admin.a.showUIFinder;
+app.u.dump("REMINDER!!! -> set username var from authAdmin ls in init and at login");
+//				$('.username').text(app.vars.username);
 
-				$('.username').text(app.vars.username);
-				
-				//yes, this is global.
-				$loadingModal = $('<div />').attr('id','loadingModal').addClass('loadingBG displayNone');
-				$loadingModal.appendTo('body').dialog({'autoOpen':false});
+//if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
+if(app.u.thisIsAnAdminSession())	{
+	app.ext.admin.u.showHeader();
+	}
+else	{
+	$('#appPreView').hide();
+	$('#appLogin').show();
+	}
 				}
 			},
 
@@ -576,6 +601,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
+					app.u.dump(" -> P.targetID: "+P.targetID);
 					var $target = $('#'+P.targetID);
 
 //					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
@@ -705,6 +731,13 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 		u : {
 			
+			showHeader : function(){
+				$('#appPreView').hide();
+				$('#appLogin').hide();
+				$('#appView').show();
+				app.ext.admin.a.showUI('/biz/index.cgi');
+				},
+			
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
@@ -724,7 +757,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 			
 			getTabFromPath : function(path)	{
-				return path.split("/")[2];
+				var r = path.split("/")[2]; //what is returned.
+				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
+					if(r == 'manage'){ r = 'utilities'} //symlinked
+					} 
+				else	{r = 'home'} //default
+				return r;
 				},
 			
 			uiHandleMessages : function(path,msg)	{

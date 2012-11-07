@@ -97,8 +97,18 @@ var admin_medialib = function() {
 				tagObj.datapointer = "adminImageFolderList"
 				app.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : tagObj},Q);	
 				}
-			} //adminImageFolderList
+			}, //adminImageFolderList
 
+
+		adminUIMediaLibraryExecute : {
+			init : function(tagObj)	{
+				this.dispatch(tagObj);
+				},
+			dispatch : function(tagObj)	{
+				tagObj = tagObj || {};
+				app.model.addDispatchToQ({"_cmd":"adminUIMediaLibraryExecute","_tag" : tagObj},'immutable');	
+				}
+			}
 
 		}, //calls
 
@@ -115,24 +125,20 @@ var admin_medialib = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-				app.rq.push(['css',0,'http://blueimp.github.com/cdn/css/bootstrap.min.css','blueimp_bootstrap']);
-				app.rq.push(['css',0,'http://blueimp.github.com/cdn/css/bootstrap-responsive.min.css','blueimp_bootstrap_responsive']);
-				app.rq.push(['css',0,'http://blueimp.github.com/Bootstrap-Image-Gallery/css/bootstrap-image-gallery.min.css','blueimp_bootstrap_imagegal']);
-				app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/css/jquery.fileupload-ui.css','blueimp_fileupload_ui']);
-				
-				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/vendor/jquery.ui.widget.js']); //
-				app.rq.push(['script',0,'http://blueimp.github.com/JavaScript-Templates/tmpl.min.js']); //The Templates plugin is included to render the upload/download listings
-				app.rq.push(['script',0,'http://blueimp.github.com/JavaScript-Load-Image/load-image.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
-				app.rq.push(['script',0,'http://blueimp.github.com/JavaScript-Canvas-to-Blob/canvas-to-blob.min.js']); //
-				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/jquery.iframe-transport.js']); //The Iframe Transport is required for browsers without support for XHR file uploads
-				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/jquery.fileupload.js']); //The basic File Upload plugin
-				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/jquery.fileupload-fp.js']); //The File Upload file processing plugin
-				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/jquery.fileupload-ui.js']); //The File Upload user interface plugin
-//				app.rq.push(['script',0,'https://www.zoovy.com/biz/ajax/jQuery-File-Upload-master/js/main.js']); //The main application script. replaced by u.convertFormToJQFU
-				
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','medialib']);
-				
-			
+
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','blueimp_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','blueimp_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','medialib']); //our native css for presentation.
+
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/canvas-to-blob.min.js']); //
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-fp.js']); //The File Upload file processing plugin
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.js']); //The File Upload user interface plugin
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.iframe-transport.js']); //The Iframe Transport is required for browsers without support for XHR file uploads
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/load-image.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/tmpl.min.js']); //The Templates plugin is included to render the upload/download listings
 				
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 				return r;
@@ -147,7 +153,8 @@ var admin_medialib = function() {
 		showMediaLibrary : {
 			
 			onSuccess : function(tagObj){
-				$('#'+tagObj.parentID).removeClass('loadingBG').append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
+				$('#'+tagObj.parentID).removeClass('loadingBG') //.append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
+				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');
 				}
 			}
@@ -173,7 +180,7 @@ var admin_medialib = function() {
 				else	{
 					$target = $("<div \/>").attr({'id':'mediaModal','title':'Media Library'}).addClass('loadingBG').appendTo('body');
 //by adding the template instance only once, the media lib will re-open showing last edited folder. 
-					
+					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
 					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 500});
 
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'mutable');
@@ -231,12 +238,12 @@ var admin_medialib = function() {
 			convertFormToJQFU : function(selector)	{
 				
     'use strict';
-	var postURL = document.location.protocol == 'https:' ? 'https:' : 'http:' + '//www.zoovy.com/webapi/jquery/fileupload.cgi/';
+
     // Initialize the jQuery File Upload widget:
     $(selector).fileupload({
         // Uncomment the following to send cross-domain cookies:
-        // xhrFields: {withCredentials: true},
-        url: postURL
+        //xhrFields: {withCredentials: true},
+        url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/'
     });
 
     // Enable iframe cross-domain access via redirect option:
@@ -249,19 +256,24 @@ var admin_medialib = function() {
         )
     );
 
-	 // Load existing files:
-	 $.ajax({
-			// Uncomment the following to send cross-domain cookies:
-			//xhrFields: {withCredentials: true},
-			url: $('#fileupload').fileupload('option', 'url'),
-			dataType: 'json',
-			context: $('#fileupload')[0]
-		}).done(function (result) {
-			if (result && result.length) {
-				$(this).fileupload('option', 'done')
-					.call(this, null, {result: result});
-			}
-		});				
+	$.ajax({
+		// Uncomment the following to send cross-domain cookies:
+		//xhrFields: {withCredentials: true},
+		url: $(selector).fileupload('option', 'url'),
+		dataType: 'json',
+		context: $(selector)[0]
+	}).done(function (result) {
+		app.u.dump("");
+		if (result && result.length) {
+			$(this).fileupload('option', 'done')
+				.call(this, null, {result: result});
+		}
+	});
+
+    // Initialize the Image Gallery widget:
+    $(selector + ' .files').imagegallery();
+
+		
 				
 				},
 			

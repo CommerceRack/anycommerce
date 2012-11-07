@@ -52,10 +52,8 @@ jQuery.extend(zController.prototype, {
 		app.vars.cid = null; //gets set on login. ??? I'm sure there's a reason why this is being saved outside the normal  object. Figure it out and document it.
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
-		app.vars.deviceid = app.vars.deviceid || '';
-		app.vars.userid = app.vars.userid || '';
-		app.vars.authtoken = app.vars.authtoken || '';
-		app.vars.domain = app.vars.domain || '';
+
+
 		
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
@@ -103,10 +101,35 @@ copying the template into memory was done for two reasons:
 			}; //holds ajax related vars.
 		app.sessionId = null;
 		app.vars.extensions = app.vars.extensions || [];
+		
+		app.handleAdminVars(); //needs to be late because it'll use some vars set above.
 		app.onReady();
 
 		}, //initialize
 
+	handleAdminVars : function(){
+		app.u.dump("BEGIN handleAdminVars");
+		var localVars = {}
+		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}
+
+		app.u.dump(" -> localVars: "); app.u.dump(localVars);
+		
+		function setVars(id){
+			if(app.vars[id])	{} //already set, do nothing.
+			else if(localVars[id])	{app.vars[id] = localVars[id]}
+			else	{app.vars[id] = ''}//set to blank by default.
+			}
+		
+		setVars('deviceid');
+		setVars('userid');
+		setVars('authtoken');
+		setVars('domain');
+		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
+			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
+			app.vars.username = app.vars.userid.split('@')[1];
+			}
+		
+		},
 
 	onReady : function()	{
 		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
@@ -222,34 +245,12 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					obj.authid = Crypto.MD5(obj.password+obj.security+obj.ts);
 					obj._tag = tagObj || {};
 					obj.device_notes = "someplace";
+					if(obj.persitentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true.
 					delete obj.password;
 					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}
-/*
-			appSessionStart : {
-				 init : function() {
-					$('#loginFormContainer button').attr('disabled','disabled').addClass('ui-state-disabled');
-					$('#loginFormContainer .zMessage').empty().remove(); //clear any existing error messages.
-					$('#userLoginButton .loadingPlaceholder').html("<img src='//static.zoovy.com/graphics/general/loading_orange_arrows-16x16.gif' width='16' height='16' />");
-					app.storageFunctions.writeLocal('zuser',$('#loginFormLogin').val()); //save username to local storage so we can pre-populate.
-					this.dispatch();
-					return 1;
-					},
-				 dispatch : function()   {
-var ts = app.u.unixNow();
-app.model.addDispatchToQ({
-	"_cmd" : "appSessionStart",
-	"security" : security,
-	"ts" : ts,
-	"login" : $('#loginFormLogin').val(),
-	"hashtype" : "md5",
-	"hashpass" : Crypto.MD5($('#loginFormPassword').val()+security+ts),
-	"_tag": {'callback':'handleSessionStartResponse'}
-},'immutable');
-					}
-				} //appSessionStart
-*/
+
 			}, //authentication
 
 		authAccountCreate : {
@@ -717,6 +718,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				}
 			else if(typeof msg === 'object')	{
 				persistant = msg.persistant || false;
+				msg.messageClass = messageClass;
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
@@ -732,9 +734,12 @@ and model that needed to be permanently displayed had to be converted into an ob
 				r = false; //don't return an html id.
 				}
 			if(persistant !== true)	{
+//the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
 				setTimeout(function(){
-					$('.'+messageClass).slideUp(2000);
-					},8000); //shrink message after a short display period
+					if($('.'+messageClass).is(':visible'))	{
+						$('.'+messageClass).slideUp(2000);
+						}
+					},10000); //shrink message after a short display period
 				}
 			return r;
 			},
@@ -788,7 +793,7 @@ This function will have both cases.
 						}
 					}
 				else if(d['errid'])	{
-					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+"<\/div>";
+					r += "<div class='"+d.errtype+" appMessageTxt'><button onClick='$(\"."+d.messageClass+"\").toggle();' class='ui-state-default ui-corner-all floatRight marginLeft marginBottom'><span class='ui-button ui-icon-circle-close'>X</span><\/button>"+d.errmsg+"<\/div>";
 //					app.u.dump("WARNGING! error occured. id: "+d.errid+" and type: "+d.errtype+" and msg: "+errmsg);
 					}
 //the validate order request returns a list of issues.
@@ -909,9 +914,7 @@ AUTHENTICATION/USER
 		
 		thisIsAnAdminSession : function()	{
 			var r = false; //what is returned.
-			if(app.sessionId && app.sessionId.substring(0,2) === '**')	{
-				r = true;
-				}
+			if(app.vars.deviceid && app.vars.userid && app.vars.authtoken) {r = true} //while technically this could be spoofed, the API wouldn't accept invalid values
 			return r;
 			},
 

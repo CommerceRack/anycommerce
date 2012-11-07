@@ -4,9 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <title>Admin - here for testing and sharing.</title>
 
-<link rel="alternate" title="Zoovy News RSS" href="https://www.zoovy.com/biz/rss/news.cgi/proshop.rss" type="application/rss+xml">
-<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/todo-list.css">
-<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/standard-20110317.css">
+
 
 
 <script type="text/javascript">
@@ -19,7 +17,7 @@ var app = {vars:{
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
 //	"secureURL" : "https://www.zoovy.com",
 //	"sdomain":"www.zoovy.com",
-	"username": "sporks", //needs to be set for header and media library
+	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : "" //set this to the base URL where the mvc is loaded from. leave blank for relative path.
 	},u:{},rq:[]};
 
@@ -30,7 +28,20 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/redmond/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="extensions/admin/styles.css" />
+<link rel="alternate" title="Zoovy News RSS" href="https://www.zoovy.com/biz/rss/news.cgi/proshop.rss" type="application/rss+xml" />
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/todo-list.css" />
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/standard-20110317.css" />
+
+
+<style type='text/css'>
+
+/* move these into standard.css */
+.displayNone, .debug	{display:none;}
+
+
+
+</style>
+
 
 <script src="jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
@@ -49,6 +60,43 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 </head>
 <body class="control"  bgcolor="FFFFFF" marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
 <!-- this div handles getting content to appear below the fixed header -->
+
+
+
+
+
+
+
+
+
+<div id='appPreView'>
+<table>
+<tr>
+	<td><img src='extensions/admin/images/appviewloading.gif' width='150' height='225' /></td>
+	<td>
+	<h3>One moment please....</h3>
+	
+	<div class='alignCenter'>
+	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+	</div>
+	<div id='appPreViewProgressText'>0% Complete</div>
+	
+	<div class='appMessaging'></div>
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+
+
+
+
+
+
+<div id='appView' class='displayNone'>
+
 
 <div id='mastHead'>
 
@@ -97,7 +145,7 @@ You are Logged in as: <span class='username'></span>
 		<li class='off'><a href='/biz/syndication/index.cgi'  class='bindByAnchor' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
 		<li class='off'><a href='/biz/reports/index.cgi'  class='bindByAnchor' title='A plethora of reporting tools to help you analyze your sales' ><span>reports</span></a></li>
 		<li class='off'><a href='/biz/kpi/index.cgi'  class='bindByAnchor' title='View Key Performance Indicators' ><span>KPI</span></a></li>
-		<li class='off'><a href='/biz/utilities/index.cgi'  class='bindByAnchor' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
+		<li class='off'><a href='/biz/utilities/index.pl'  class='bindByAnchor' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
 	</ul>
 	</div>
 
@@ -124,9 +172,6 @@ You are Logged in as: <span class='username'></span>
 </div><!-- /mastHead -->
 
 
-
-<div id='appView'>
-
 	<div id='globalMessaging' class='appMessaging'></div>
 	
 	<div id='homeContent' class='displayNone tabContent'></div>
@@ -146,27 +191,20 @@ You are Logged in as: <span class='username'></span>
 
 
 
-<hr />
 
-<button onClick="app.calls.getValidSessionID.init(); app.model.dispatchThis('immutable');">Call</button>
-<button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
-<button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
-<button onClick="app.ext.admin.calls.mediaLib.adminImageFolderList.init(); app.model.dispatchThis();">Admin Call</button>
 
-<button onClick="app.ext.admin_medialib.a.showMediaLib(); app.model.dispatchThis();">Media Library</button>
 
-<button onClick="localStorage.clear();">Nuke LocalStorage</button>
+<div id='appLogin' class='displayNone'>
 
-<button onClick="$('#mediaModal').removeClass('loadingBG').append(app.renderFunctions.transmogrify({},'mediaLibTemplate',{})); app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');">Translate MediaLibrary</button>
+<div class='appMessaging'></div>
 
-<hr />
-
-<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
+<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON(),{'callback':'showHeader','extension':'admin'}); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 	<legend>Merchant Login</legend>
 	<label>Login: <input type='text' name='userid' value='' /></label>
 	<label>Password: <input type='password' name='password' value='' /></label>
 	<input type='submit' value='login' />
+	<label><input type='checkbox' name='persitentAuth' value='1' /> Keep me logged in</label>
 </fieldset>
 </form>
 
@@ -176,12 +214,57 @@ You are Logged in as: <span class='username'></span>
 <form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 	<legend>Create Account</legend>
-	<label>Domain: <input type='text' name='domain' value='' /></label>
-	<label>Email: <input type='email' name='email' value='' /></label>
-	<label>Phone: <input type='tel' name='phone' value='' /></label>
+	
+	<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
+	<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
+	<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
+	<div><label>Last Name: <input type='text' name='lastname' value='' required='required' /></label></div>
+	<div><label>Company: <input type='text' name='company' value='' required='required' /></label></div>
+	<div><label>Phone: <input type='tel' name='phone' value='' required='required' /></label></div>
+	<div><label>Verify by: <select name='verification' required='required'>
+		<option value='sms'>SMS/Text Message</option>
+		<option value='voice'>Voice/phone call</option>
+	</select></label></div>
 	<input type='submit' value='create' />
 </fieldset>
 </form>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class='debug'>
+
+<hr />
+
+<button onClick="app.calls.getValidSessionID.init(); app.model.dispatchThis('immutable');">Call</button>
+<button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
+<button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
+<button onClick="app.ext.admin_medialib.a.showMediaLib(); app.model.dispatchThis();">Media Library</button>
+<button onClick="app.ext.admin.calls.adminDomainList.init(); app.model.dispatchThis();">adminDomainList</button>
+<button onClick="localStorage.clear();">Nuke LocalStorage</button>
+<button onClick="$('#mediaModal').removeClass('loadingBG').append(app.renderFunctions.transmogrify({},'mediaLibTemplate',{})); app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');">Translate MediaLibrary</button>
+
+<hr />
+
+</div>
+
+
+
+
+
+
 
 
 

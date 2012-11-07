@@ -10,7 +10,7 @@ app.rq.push(['extension',1,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',1,'admin_prodEdit','extensions/admin/product_editor.js']);
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']);
-app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initUserInterface']);
+app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 
 
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
@@ -61,7 +61,20 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 
 app.u.initMVC = function(attempts){
 	app.u.dump("app.u.initMVC activated ["+attempts+"]");
+
+
+//	app.u.dump("app.u.initMVC activated ["+attempts+"]");
+	var includesAreDone = true;
+
+//what percentage of completion a single include represents (if 10 includes, each is 10%).
+	var percentPerInclude = Math.round((100 / app.vars.rq.length));  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
+	var percentComplete = resourcesLoaded * percentPerInclude; //used to sum how many includes have successfully loaded.
+
+	$('#appPreViewProgressBar').val(percentComplete);
+	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+
+
 	if(resourcesLoaded == app.vars.rq.length)	{
 //instantiate controller. handles all logic and communication between model and view.
 //passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
@@ -70,6 +83,7 @@ app.u.initMVC = function(attempts){
 		var tmp = new zController(app);
 //instantiate wiki parser.
 		myCreole = new Parse.Simple.Creole();
+		
 		}
 	else if(attempts > 50)	{
 		app.u.dump("WARNING! something went wrong in init.js");

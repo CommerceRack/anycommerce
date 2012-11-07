@@ -5,3 +5,36 @@ table.mediaLibrary	{width:100%;}
 table.mediaLibrary td	{padding:0; vertical-align:top;}
 
 table.mediaLibrary .leftCol	{width:25%;}
+
+
+/*
+ * jQuery File Upload Plugin CSS Example 1.1.1
+ * https://github.com/blueimp/jQuery-File-Upload
+*/
+
+.fileUploadFormContainer .nav-collapse,
+.fileUploadFormContainer ul.nav,
+.fileUploadFormContainer ul.nav li {
+  display: inline-block;
+  margin-right: 10px;
+}
+.fileUploadFormContainer .navbar .brand {
+  font-size: 16px;
+}
+.fileUploadFormContainer .row {
+  zoom: 1;
+}
+.fileUploadFormContainer .row:before, .row:after {
+  display: table;
+  content: "";
+}
+.fileUploadFormContainer .row:after {
+  clear: both;
+}
+.fileUploadFormContainer .span5, .span7 {
+  width: auto;
+  float: left;
+}
+.fileUploadFormContainer td.delete {
+  white-space: nowrap;
+}
