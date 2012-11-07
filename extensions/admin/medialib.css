@@ -1,0 +1,7 @@
+@charset "utf-8";
+/* CSS Document */
+
+table.mediaLibrary	{width:100%;}
+table.mediaLibrary td	{padding:0; vertical-align:top;}
+
+table.mediaLibrary .leftCol	{width:25%;}

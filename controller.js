@@ -1708,11 +1708,9 @@ Then we'll be in a better place to use data() instead of attr().
 
 			if(!templateID || typeof data != 'object' || !app.templates[templateID])	{
 //product lists get rendered twice, the first time empty and always throw this error, which clutters up the console, so they're suppressed.
-				if(templateID && templateID.indexOf('productListTemplate') == -1)	{
-					app.u.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof app.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
-					if(typeof eleAttr == 'string'){app.u.dump(" -> ID: "+eleAttr)} else {app.u.dump(" -> ID: "+eleAttr.id)}
+				app.u.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof app.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
+				if(typeof eleAttr == 'string'){app.u.dump(" -> ID: "+eleAttr)} else {app.u.dump(" -> ID: "+eleAttr.id)}
 
-					}
 //				app.u.dump(eleAttr);
 				}
 			else	{
@@ -1806,6 +1804,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 $r.find('[data-bind]').each(function()	{
 										   
 	var $focusTag = $(this);
+	var value;
 
 //		app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
@@ -1821,7 +1820,7 @@ $r.find('[data-bind]').each(function()	{
 			}
 		if(!app.u.isSet(value) && bindData.defaultValue)	{
 			value = bindData['defaultValue']
-//					app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
+			app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 			}
 		}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
@@ -2207,6 +2206,11 @@ $tmp.empty().remove();
 
 			$tag.attr(data.bindData.attribute,o);
 			}, //text
+
+		loadsTemplate : function($tag,data)	{
+			app.u.dump("BEGIN renderFormats.loadsTemplate");
+			$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data));
+			},
 
 		elasticMoney :function($tag,data)	{
 			data.value = data.value / 100;

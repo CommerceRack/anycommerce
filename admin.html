@@ -58,7 +58,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	<div style='position:absolute; height:105px; width:100%;'>
 
 <!-- used as a container for the elements within the header -->
-		<div style='height:105px; position:relative; background:url(/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
+		<div style='height:105px; position:relative; background:url(https://www.zoovy.com/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
 	
 <!-- logo -->
 <div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;'>
@@ -147,10 +147,17 @@ You are Logged in as: <span class='username'></span>
 
 
 <hr />
+
 <button onClick="app.calls.getValidSessionID.init(); app.model.dispatchThis('immutable');">Call</button>
 <button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
 <button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
 <button onClick="app.ext.admin.calls.mediaLib.adminImageFolderList.init(); app.model.dispatchThis();">Admin Call</button>
+
+<button onClick="app.ext.admin_medialib.a.showMediaLib(); app.model.dispatchThis();">Media Library</button>
+
+<button onClick="localStorage.clear();">Nuke LocalStorage</button>
+
+<button onClick="$('#mediaModal').removeClass('loadingBG').append(app.renderFunctions.transmogrify({},'mediaLibTemplate',{})); app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');">Translate MediaLibrary</button>
 
 <hr />
 
@@ -177,81 +184,11 @@ You are Logged in as: <span class='username'></span>
 </form>
 
 
-<hr />
 
 
-
-    <form id="fileupload" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi" method="POST" enctype="multipart/form-data">
-        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-        <div class="row fileupload-buttonbar">
-            <div class="span7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="icon-plus icon-white"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
-                <button type="submit" class="btn btn-primary start">
-                    <i class="icon-upload icon-white"></i>
-                    <span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="icon-ban-circle icon-white"></i>
-                    <span>Cancel upload</span>
-                </button>
-                <button type="button" class="btn btn-danger delete">
-                    <i class="icon-trash icon-white"></i>
-                    <span>Delete</span>
-                </button>
-                <input type="checkbox" class="toggle">
-            </div>
-            <!-- The global progress information -->
-            <div class="span5 fileupload-progress fade">
-                <!-- The global progress bar -->
-                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                    <div class="bar" style="width:0%;"></div>
-                </div>
-                <!-- The extended global progress information -->
-                <div class="progress-extended">&nbsp;</div>
-            </div>
-        </div>
-        <!-- The loading indicator is shown during file processing -->
-        <div class="fileupload-loading"></div>
-        <br>
-        <!-- The table listing the files available for upload/download -->
-        <table role="presentation" class="table table-striped"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-    </form>
-
-
-
-
-<div id="modal-gallery" class="modal modal-gallery hide fade" data-filter=":odd" tabindex="-1">
-    <div class="modal-header">
-        <a class="close" data-dismiss="modal">&times;</a>
-        <h3 class="modal-title"></h3>
-    </div>
-    <div class="modal-body"><div class="modal-image"></div></div>
-    <div class="modal-footer">
-        <a class="btn modal-download" target="_blank">
-            <i class="icon-download"></i>
-            <span>Download</span>
-        </a>
-        <a class="btn btn-success modal-play modal-slideshow" data-slideshow="5000">
-            <i class="icon-play icon-white"></i>
-            <span>Slideshow</span>
-        </a>
-        <a class="btn btn-info modal-prev">
-            <i class="icon-arrow-left icon-white"></i>
-            <span>Previous</span>
-        </a>
-        <a class="btn btn-primary modal-next">
-            <span>Next</span>
-            <i class="icon-arrow-right icon-white"></i>
-        </a>
-    </div>
-</div>
-
+<!--
+Having these on the DOM seems to make the JQ File Upload plugin work better so they're here instead of within a template.
+-->
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -311,11 +248,6 @@ You are Logged in as: <span class='username'></span>
         </td>
     </tr>
 {% } %}
-
-
-
-
-
 </script>
 
 

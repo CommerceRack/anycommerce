@@ -29,6 +29,11 @@ finder -
 NOTE
  - admin 'set' calls are hard coded to use the immutable Q so that a dispatch is not overridden.
  - in the calls, 'dispatch' was removed and only init is present IF we never check local storage for the data.
+ 
+ 
+calls
+ -> init should contain any code necessary for checking localStorage or, when supported, local DB.
+ -> dispatch should contain everything needed for the dispatch, so that if it is executed instead of init, it works fine. 
 */
 
 
@@ -83,18 +88,6 @@ var admin = function() {
 			
 			}, //navcats
 
-		mediaLib : {
-
-			adminImageFolderList : {
-				init : function()	{
-					this.dispatch();
-					},
-				dispatch : function()	{
-					app.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : {"datapointer":"adminImageFolderList"}});	
-					}
-				} //adminImageFolderList
-			
-			}, //mediaLib
 			
 		customer : {
 

@@ -1415,7 +1415,7 @@ This is checks for two things:
 		
 //function gets executed in addExtensions. If the extensions are loaded, it'll execute the callbacks.
 // if not, it will re-execute itself.
-		executeCallbacksWhenExtensionsAreReady : function(extObj){
+		executeCallbacksWhenExtensionsAreReady : function(extObj,attempts){
 //			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady [length: "+extObj.length+"]");
 			if(this.allExtensionsHaveLoaded(extObj))	{
 				app.u.dump("extension(s) loaded. execute callbacks.");
@@ -1431,9 +1431,14 @@ This is checks for two things:
 						}
 					} // end loop.				
 				}
-			else	{
-				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj)},250);
+			else if(attempts > 40)	{
+				//that is a lot of tries.
+				throwGMessage(" some extensions took at least ten seconds to load. That's no good");
 				}
+			else	{
+				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj,attempts)},250);
+				}
+			attempts++;
 			}, //executeCallbacksWhenExtensionsAreReady
 		
 //setHeader always gets run, but the admin headers are only added if the global admin var is true.

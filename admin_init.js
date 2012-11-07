@@ -60,7 +60,7 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 //the 'attempts' var is incremented each time the function is executed.
 
 app.u.initMVC = function(attempts){
-//	app.u.dump("app.u.initMVC activated ["+attempts+"]");
+	app.u.dump("app.u.initMVC activated ["+attempts+"]");
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
 	if(resourcesLoaded == app.vars.rq.length)	{
 //instantiate controller. handles all logic and communication between model and view.
