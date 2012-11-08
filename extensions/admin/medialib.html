@@ -13,7 +13,9 @@
 	<div class='appMessaging' id='mediaLibMessaging'></div>
 	</td>
 <tr>
-	<td id='mediaLibFolderList'><ul data-bind="var: media(@folders); format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;"></ul></td>
+	<td id='mediaLibFolderList'>
+	<ul data-bind="var: media(@folders); format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate; parentName:/;"></ul>
+	</td>
 	<td id='mediaLibFileList'>
 	<ul data-bind="var: media(@images); format:array2ListItems; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone'></ul>
 
@@ -26,9 +28,9 @@
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
-	<span data-bind="var: media(name); format:text;"></span>
-	<span data-bind="var: media(imagecount); format:text; pretext:(;posttext:);"></span>
-	<ul data-bind="var: media(parentName); format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='displayNone'></ul>
+	<span data-bind="var: media(FName); format:text;"></span>
+	<span data-bind="var: media(ImageCount); format:text; pretext:(;posttext:);"></span>
+	<ul class='displayNone'></ul>
 	</li>
 	
 	

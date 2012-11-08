@@ -90,7 +90,16 @@ var admin_medialib = function() {
 
 		adminImageFolderList : {
 			init : function(tagObj,Q)	{
-				this.dispatch(tagObj,Q);
+
+tagObj = tagObj || {};
+tagObj.datapointer = 'adminImageFolderList';
+if(app.model.fetchData(tagObj.datapointer) == false)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
+else	{
+	app.u.handleCallback(tagObj);
+	}
 				},
 			dispatch : function(tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -223,7 +232,8 @@ var admin_medialib = function() {
 		renderFormats : {
 			
 			showChildFolders : function($tag,data){
-				$tag.append(app.ext.admin_medialib.u.showFoldersByParentName(data.value,data.bindData.loadsTemplate));
+//				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
+				$tag.append(app.ext.admin_medialib.u.showFoldersByParentName(data.bindData.parentName,data.bindData.loadsTemplate));
 				}
 			
 			},
@@ -278,18 +288,29 @@ var admin_medialib = function() {
 				},
 			
 			
-			showFoldersByParentName : function(parentFID,templateID){
-				var L = app.data.adminImageFolderList.length;
-				var $ul = $("<ul \/>"); //used to store the translated templates so that the dom can be updated just once.
-//loop through all the folders and translate a template for each where the parentName matches the value passed in (which is the parentFID).
-				for(var i = 0; i < L; i += 1)	{
-					if(app.data.adminImageFolderList[i].parentName == data.value)	{
-						$ul.append(app.renderFunctions.transmogrify({},templateID,app.data.adminImageFolderList[i]));
-						}
-					else	{
-						//no match. do nothing.
+			showFoldersByParentName : function(parentName,templateID){
+//				app.u.dump("BEGIN admin_medialib.u.showFoldersByParentName");
+				var $ul = $("<ul \/>"); //used to store the translated templates so that the dom can be updated just once. children are returned. 0 for none.
+				if(parentName && templateID)	{
+					var L = app.data.adminImageFolderList['@folders'].length;
+//					app.u.dump(" -> L: "+L);
+//					app.u.dump(" -> parentName: "+parentName);
+	//loop through all the folders and translate a template for each where the parentName matches the value passed in (which is the parentFID).
+					for(var i = 0; i < L; i += 1)	{
+						if(app.data.adminImageFolderList['@folders'][i].ParentName == parentName)	{
+							$ul.append(app.renderFunctions.transmogrify({},templateID,app.data.adminImageFolderList['@folders'][i]));
+							}
+						else	{
+							//no match. do nothing.
+							}
 						}
 					}
+				else	{
+					app.u.throwGMessage("WARNING! params required for admin_medialib.u.showFoldersByName not set.");
+					app.u.dump(" -> parentName: "+parentName);
+					app.u.dump(" -> templateID: "+templateID);
+					}
+				app.u.dump(" -> # children: "+$ul.children().length);
 				return $ul.children();
 				}
 			

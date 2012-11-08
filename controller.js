@@ -108,14 +108,17 @@ copying the template into memory was done for two reasons:
 		}, //initialize
 
 	handleAdminVars : function(){
-		app.u.dump("BEGIN handleAdminVars");
+//		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
+		
 		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}
 
-		app.u.dump(" -> localVars: "); app.u.dump(localVars);
+//		app.u.dump(" -> localVars: "); app.u.dump(localVars);
 		
 		function setVars(id){
 			if(app.vars[id])	{} //already set, do nothing.
+//check url. these get priority of local so admin/support can overwrite.
+			else if(app.u.getParameterByName(id))	{app.vars[id] = localVars[id];} 
 			else if(localVars[id])	{app.vars[id] = localVars[id]}
 			else	{app.vars[id] = ''}//set to blank by default.
 			}

@@ -261,7 +261,7 @@ var admin = function() {
 //the callback is auto-executed as part of the extensions loading process.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
@@ -350,8 +350,10 @@ app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/css/flexigrid
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.showFinder = app.ext.admin.a.showUIFinder;
-app.u.dump("REMINDER!!! -> set username var from authAdmin ls in init and at login");
-//				$('.username').text(app.vars.username);
+
+if(app.u.getParameterByName('debug'))	{
+	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	}
 
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 if(app.u.thisIsAnAdminSession())	{
@@ -735,6 +737,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appPreView').hide();
 				$('#appLogin').hide();
 				$('#appView').show();
+				$('.username').text(app.vars.username);
 				app.ext.admin.a.showUI('/biz/index.cgi');
 				},
 			

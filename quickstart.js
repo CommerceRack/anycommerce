@@ -104,13 +104,14 @@ var myRIA = function() {
 //This will create the arrays for the template[templateID].onCompletes and onInits
 			app.ext.myRIA.u.createTemplateFunctions(); //should happen early so that the myRIA.template object exists, specifically for app.u..appInitComplete
 				
-//attach an event to the window that will execute code on 'back' some history has been added to the history.
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	app.ext.myRIA.u.bindAppViewForms('.debug');
 	app.ext.myRIA.u.bindNav('.debug .bindByAnchor');
 	}
+
+//attach an event to the window that will execute code on 'back' some history has been added to the history.
 if(typeof window.onpopstate == 'object')	{
 	window.onpopstate = function(event) { 
 		app.ext.myRIA.u.handlePopState(event.state);
