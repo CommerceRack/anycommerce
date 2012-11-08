@@ -156,6 +156,9 @@ else	{
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 				
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
+				
+				window.mediaLibrary = app.ext.admin_medialib.a.uiShowMediaLib
+				
 				return r;
 				},
 			onError : function()	{
@@ -203,6 +206,13 @@ else	{
 
 					}
 				$target.dialog('open');
+				},
+
+//first param is thumbnail object
+//second param is string (mode in api call) or object (ref to text input, hidden, something). must determine
+//third param is The title.
+			uiShowMediaLib : function($image,strOrObj,title){
+				
 				},
 
 			showFoldersFor : function(P)	{

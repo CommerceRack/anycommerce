@@ -699,7 +699,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 			var $target; //where the app message will be appended.
 			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
 			var r = messageClass; //what is returned. set to false if no good error message found. set to htmlID is error found. 
-			var $container = $("<div \/>").addClass('appMessage').addClass(messageClass);
+			var $container = $("<div \/>").addClass('appMessage').addClass(messageClass).append("<button onClick='$(\"."+messageClass+"\").toggle();' class='ui-state-default ui-corner-all floatRight stdMargin'><span class='ui-button ui-icon-circle-close'>X</span><\/button>");
 //make sure the good-ole fallback destination for errors exists and is a modal.
 			var $globalDefault = $('#globalErrorMessaging')
 			if	($globalDefault.length == 0)	{
@@ -796,7 +796,7 @@ This function will have both cases.
 						}
 					}
 				else if(d['errid'])	{
-					r += "<div class='"+d.errtype+" appMessageTxt'><button onClick='$(\"."+d.messageClass+"\").toggle();' class='ui-state-default ui-corner-all floatRight marginLeft marginBottom'><span class='ui-button ui-icon-circle-close'>X</span><\/button>"+d.errmsg+"<\/div>";
+					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+"<\/div>";
 //					app.u.dump("WARNGING! error occured. id: "+d.errid+" and type: "+d.errtype+" and msg: "+errmsg);
 					}
 //the validate order request returns a list of issues.

@@ -144,7 +144,7 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
-<div id='homepageTemplate'>
+<div id='homepageTemplate' class='homeTemplate'>
 
 
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
@@ -170,7 +170,7 @@ used to organize content when a category is clicked.
 each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
-<div id='categoryTemplate' class='loadingBG'>
+<div id='categoryTemplate' class='loadingBG categoryTemplate'>
 
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
