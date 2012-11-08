@@ -738,7 +738,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username').text(app.vars.username);
-				app.ext.admin.a.showUI('/biz/index.cgi');
+				app.u.dump("REMINDER!!! showUI is commented out for showHeader.");
+//				app.ext.admin.a.showUI('/biz/index.cgi'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.

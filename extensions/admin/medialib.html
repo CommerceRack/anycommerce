@@ -1,7 +1,6 @@
 <table id='mediaLibTemplate' class='mediaLibrary'>
 <tr>
-	<td><h2>Media Library</h2></td>
-	<td>Commands: create folder. add image. delete checked images. search (eventually)</td>
+	<td colspan='2'>Commands: create folder. add image. delete checked images. search (eventually)</td>
 </tr>
 <tr>
 	<td colspan='2' class='alignRight'>
@@ -14,12 +13,10 @@
 	</td>
 <tr>
 	<td id='mediaLibFolderList'>
-	<ul data-bind="var: media(@folders); format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate; parentName:/;"></ul>
+	<ul data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin'></ul>
 	</td>
 	<td id='mediaLibFileList'>
-	<ul data-bind="var: media(@images); format:array2ListItems; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone'></ul>
-
-
+	<ul data-bind="var: media(@images); format:object2Template; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone'></ul>
 	</td>
 </tr>
 </table>
@@ -28,15 +25,17 @@
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
-	<span data-bind="var: media(FName); format:text;"></span>
-	<span data-bind="var: media(ImageCount); format:text; pretext:(;posttext:);"></span>
-	<ul class='displayNone'></ul>
+	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().attr('data-folderid')); return false;">
+		<span data-bind="var: media(FName); format:text;"></span>
+		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
+	</a>
+	<ul class='displayNone' data-bind="var: media(FID); format:assignAttribute; attribute:id; valuePretext:mediaChildren_;"></ul>
 	</li>
 	
 	
 	<li id='mediaFileTemplate'>
-	<img src='blank.gif' data-bind='var: media(name); format:imageURL;' width='100' height='100' />
-	<div data-bind='var: media(name); format:text;'></div>
+	<img src='blank.gif' data-bind='var: media(Name); format:imageURL;' width='100' height='100' />
+	<div data-bind='var: media(Name); format:text;'></div>
 	</li>
 	
 	

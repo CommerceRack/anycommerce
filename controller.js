@@ -2238,12 +2238,14 @@ $tmp.empty().remove();
 			}, //money
 
 		object2Template : function($tag,data)	{
-//			app.u.dump("BEGIN admin.renderFormats.array2Template");
+//			app.u.dump("BEGIN renderFormats.array2Template");
 //			app.u.dump(data.value);
 			var L = data.value.length;
+//			app.u.dump(" -> L: "+L);
 			for(var i = 0; i < L; i += 1)	{
-				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
+				$tag.append(app.renderFunctions.transmogrify({'id': $tag.attr('id') ? '02t_'+$tag.attr('id')+'_'+i : '02t_'+i},data.bindData.loadsTemplate,data.value[i])); 
 				}
+			$tag.removeClass('loadingBG');
 			}
 			
 		},

@@ -78,12 +78,18 @@ var admin_medialib = function() {
 //f is filename
 		adminImageFolderDetail : {
 			init : function(f,tagObj,Q)	{
-				this.dispatch(f,tagObj,Q);
-				},
-			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminImageFolderDetail|"+f
-				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","filename":f,"_tag" : tagObj},Q);	
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(f,tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					}
+				},
+			dispatch : function(f,tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","folder":f,"_tag" : tagObj},Q);	
 				}
 			}, //adminImageDetail
 
@@ -201,8 +207,8 @@ else	{
 
 			showFoldersFor : function(P)	{
 				if(P.targetID && P.templateID)	{
-					P.parentName = P.parentName || "|"; //default to showing root level folders.
-					$('#'+P.targetID).append(app.ext.admin_medialib.u.showFoldersByParentName(P.parentName,P.templateID))
+					P.parentFID = P.parentFID || "0"; //default to showing root level folders.
+					$('#'+P.targetID).append(app.ext.admin_medialib.u.showFoldersByParentFID(P.parentFID,P.templateID))
 					}
 				else	{
 					//required params missing.
@@ -210,32 +216,37 @@ else	{
 					app.u.dump(P);
 					}
 				},
+			showMediaAndSubs : function(FID){
+				$('#mediaLibFileList ul').empty().addClass('loadingBG');
+				var folderProperties = app.ext.admin_medialib.u.getFolderInfoFromPID(FID);
+				//show sub folders.
+				var $target = $('#mediaChildren_'+FID);
+				$target.toggle(); //allows folders to be opened and closed.
 
-			showMediaFor : function(P)	{
-				if(P.targetID && P.templateID && P.folder)	{
-					P.callback = 'translateSelector'
-					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.folder,P,'mutable');
-//					$('#'+P.targetID).append(app.ext.admin_medialib.u.showMediaForFolder(P.parentName,P.templateID))
+				if($target.children().length)	{} //children have already been added. don't duplicate.
+				else	{
+					$target.append(app.ext.admin_medialib.u.showFoldersByParentFID(FID,'mediaLibFolderTemplate'));
+					}
+				//show files.
+				if(folderProperties && folderProperties.FName)	{
+					app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.FName,'selector':'#mediaLibFileList'});
+					app.model.dispatchThis();
 					}
 				else	{
-					//required params missing.
-					app.u.throwGMessage("WARNING! some required params for admin_medialib.a.showMediaFor were missing. targetID, folder (folder ID) and templateID are required. Params follow:");
-					app.u.dump(P);
+					app.u.throwGMessage("WARNING! unable to determine FName from FID ["+FID+"] in admin_medialib.a.showMediaAndSubs.");
+					app.u.dump(folderProperties);
 					}
-				},
-
-
-			},
+				
+				}
+			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
-			
 			showChildFolders : function($tag,data){
-//				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
-				$tag.append(app.ext.admin_medialib.u.showFoldersByParentName(data.bindData.parentName,data.bindData.loadsTemplate));
+				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
+				$tag.append(app.ext.admin_medialib.u.showFoldersByParentFID(data.value,data.bindData.loadsTemplate));
 				}
-			
 			},
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -286,19 +297,46 @@ else	{
 		
 				
 				},
-			
-			
-			showFoldersByParentName : function(parentName,templateID){
-//				app.u.dump("BEGIN admin_medialib.u.showFoldersByParentName");
+
+			getFolderInfoFromPID : function(FID)	{
+				var r = false; //what is returned. Will be an object if FID is a valid folder id.
+				var L = app.data.adminImageFolderList['@folders'].length;
+				for(var i = 0; i < L; i += 1)	{
+					if(app.data.adminImageFolderList['@folders'][i].FID == FID){
+						r = app.data.adminImageFolderList['@folders'][i]
+						break
+						}
+					}
+				return r;
+				}, //getFolderInfoFromPID
+
+//Will show the images for a given folder. Handles requesting the data.
+// selector is a jquery selector (#something) of what gets translated. the entire selector gets translated.
+//FName is the folder name (pretty). FID won't work.
+			showMediaFor : function(P)	{
+				if(P.selector && P.FName)	{
+					P.callback = 'translateSelector'
+					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.FName,P,'mutable');
+//					$('#'+P.targetID).append(app.ext.admin_medialib.u.showMediaForFolder(P.parentName,P.templateID))
+					}
+				else	{
+					//required params missing.
+					app.u.throwGMessage("WARNING! some required params for admin_medialib.a.showMediaFor were missing. selector and FName are required. Params follow:");
+					app.u.dump(P);
+					}
+				}, //showMediaFor
+
+			showFoldersByParentFID : function(FID,templateID){
+//				app.u.dump("BEGIN admin_medialib.u.showFoldersByParentFID");
 				var $ul = $("<ul \/>"); //used to store the translated templates so that the dom can be updated just once. children are returned. 0 for none.
-				if(parentName && templateID)	{
+				if(FID && templateID)	{
 					var L = app.data.adminImageFolderList['@folders'].length;
-//					app.u.dump(" -> L: "+L);
-//					app.u.dump(" -> parentName: "+parentName);
+					app.u.dump(" -> L: "+L);
+					app.u.dump(" -> FID: "+FID);
 	//loop through all the folders and translate a template for each where the parentName matches the value passed in (which is the parentFID).
 					for(var i = 0; i < L; i += 1)	{
-						if(app.data.adminImageFolderList['@folders'][i].ParentName == parentName)	{
-							$ul.append(app.renderFunctions.transmogrify({},templateID,app.data.adminImageFolderList['@folders'][i]));
+						if(app.data.adminImageFolderList['@folders'][i].ParentFID == FID)	{
+							$ul.append(app.renderFunctions.transmogrify({'folderid':app.data.adminImageFolderList['@folders'][i].FID,'id':'mediaLibFolder_'+app.data.adminImageFolderList['@folders'][i].FID},templateID,app.data.adminImageFolderList['@folders'][i]));
 							}
 						else	{
 							//no match. do nothing.
@@ -307,7 +345,7 @@ else	{
 					}
 				else	{
 					app.u.throwGMessage("WARNING! params required for admin_medialib.u.showFoldersByName not set.");
-					app.u.dump(" -> parentName: "+parentName);
+					app.u.dump(" -> FID: "+FID);
 					app.u.dump(" -> templateID: "+templateID);
 					}
 				app.u.dump(" -> # children: "+$ul.children().length);
