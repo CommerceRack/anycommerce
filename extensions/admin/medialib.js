@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','fileUploadTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','fileUploadTemplate','mediaLibFolderTemplate','mediaFileTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -141,19 +141,19 @@ else	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','blueimp_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','blueimp_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
-				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','medialib']); //our native css for presentation.
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
 
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/canvas-to-blob.min.js']); //
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload.js']); //
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-fp.js']); //The File Upload file processing plugin
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.js']); //The File Upload user interface plugin
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.iframe-transport.js']); //The Iframe Transport is required for browsers without support for XHR file uploads
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/load-image.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/tmpl.min.js']); //The Templates plugin is included to render the upload/download listings
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/load-image.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
+//				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/tmpl.min.js']); //The Templates plugin is included to render the upload/download listings
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 				
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 				return r;
@@ -170,7 +170,7 @@ else	{
 			onSuccess : function(tagObj){
 				$('#'+tagObj.parentID).removeClass('loadingBG') //.append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
 				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
-				app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');
+				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm');
 				}
 			}
 
@@ -217,18 +217,19 @@ else	{
 					}
 				},
 			showMediaAndSubs : function(FID){
-				$('#mediaLibFileList ul').empty().addClass('loadingBG');
+				var $mediaTarget = $('#mediaLibFileList ul').empty()
 				var folderProperties = app.ext.admin_medialib.u.getFolderInfoFromPID(FID);
 				//show sub folders.
-				var $target = $('#mediaChildren_'+FID);
-				$target.toggle(); //allows folders to be opened and closed.
+				var $folderTarget = $('#mediaChildren_'+FID); //ul for folder children.
+				$folderTarget.toggle(); //allows folders to be opened and closed.
 
-				if($target.children().length)	{} //children have already been added. don't duplicate.
+				if($folderTarget.children().length)	{} //children have already been added. don't duplicate.
 				else	{
-					$target.append(app.ext.admin_medialib.u.showFoldersByParentFID(FID,'mediaLibFolderTemplate'));
+					$folderTarget.append(app.ext.admin_medialib.u.showFoldersByParentFID(FID,'mediaLibFolderTemplate'));
 					}
 				//show files.
 				if(folderProperties && folderProperties.FName)	{
+					$mediaTarget.addClass('loadingBG').attr({'data-fid':FID,'data-fname':folderProperties.FName});
 					app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.FName,'selector':'#mediaLibFileList'});
 					app.model.dispatchThis();
 					}
@@ -246,8 +247,29 @@ else	{
 			showChildFolders : function($tag,data){
 				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
 				$tag.append(app.ext.admin_medialib.u.showFoldersByParentFID(data.value,data.bindData.loadsTemplate));
-				}
-			},
+				}, //showChildFolders
+			mediaList : function($tag,data)	{
+
+//				app.u.dump("BEGIN renderFormats.array2Template");
+//				app.u.dump(data.value);
+				var L = data.value.length;
+//				app.u.dump(" -> L: "+L);
+				$tag.removeClass('loadingBG');
+
+				var val; //recycled. set to path/filename.
+				var FName = $tag.closest('[data-fname]').attr('data-fname');
+				if(FName && data.bindData.loadsTemplate)	{
+					for(var i = 0; i < L; i += 1)	{
+						val = FName+"/"+data.value[i].Name;
+						$tag.append(app.renderFunctions.transmogrify({'id': 'mediaFile_'+i,'name':data.value[i].Name,'path':val},data.bindData.loadsTemplate,{Name:data.value[i].Name,path:val})); 
+						}
+					$('li',$tag).addClass('pointer').click(function(){alert('select this! '+$(this).attr('data-path'))});
+					}
+				else	{
+					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
+					}
+				} //mediaList
+			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -258,25 +280,23 @@ else	{
 //JQFU = JQuery File Upload
 			convertFormToJQFU : function(selector)	{
 				
-    'use strict';
+'use strict';
 
-    // Initialize the jQuery File Upload widget:
-    $(selector).fileupload({
-        // Uncomment the following to send cross-domain cookies:
-        //xhrFields: {withCredentials: true},
-        url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/'
-    });
+// Initialize the jQuery File Upload widget:
+$(selector).fileupload({
+	// Uncomment the following to send cross-domain cookies:
+	//xhrFields: {withCredentials: true},
+	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/'
+	});
 
-    // Enable iframe cross-domain access via redirect option:
-    $(selector).fileupload(
-        'option',
-        'redirect',
-        window.location.href.replace(
-            /\/[^\/]*$/,
-            '/cors/result.html?%s'
-        )
-    );
+// Enable iframe cross-domain access via redirect option:
+$(selector).fileupload(
+	'option',
+	'redirect',
+	window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
+	);
 
+	// Load existing files:
 	$.ajax({
 		// Uncomment the following to send cross-domain cookies:
 		//xhrFields: {withCredentials: true},
@@ -284,17 +304,14 @@ else	{
 		dataType: 'json',
 		context: $(selector)[0]
 	}).done(function (result) {
-		app.u.dump("");
 		if (result && result.length) {
 			$(this).fileupload('option', 'done')
 				.call(this, null, {result: result});
 		}
 	});
 
-    // Initialize the Image Gallery widget:
-    $(selector + ' .files').imagegallery();
-
-		
+// Initialize the Image Gallery widget:
+$(selector + ' .files').imagegallery();
 				
 				},
 
@@ -350,7 +367,7 @@ else	{
 					}
 				app.u.dump(" -> # children: "+$ul.children().length);
 				return $ul.children();
-				}
+				} //showFoldersByParentFID
 			
 			} //u
 

@@ -33,6 +33,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/standard-20110317.css" />
 
 
+
 <style type='text/css'>
 
 /* move these into standard.css */
@@ -43,8 +44,13 @@ css files should be included before any .js file to ensure they are downloaded i
 </style>
 
 
-<script src="jquery-1.7.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
+
+<script src="extensions/admin/resources/tmpl.min.js"></script>
+<script src="extensions/admin/resources/load-image.min.js"></script>
+
+
 
 
 <script type="text/javascript">
@@ -254,7 +260,7 @@ You are Logged in as: <span class='username'></span>
 <button onClick="app.ext.admin_medialib.a.showMediaLib(); app.model.dispatchThis();">Media Library</button>
 <button onClick="app.ext.admin.calls.adminDomainList.init(); app.model.dispatchThis();">adminDomainList</button>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
-<button onClick="$('#mediaModal').removeClass('loadingBG').append(app.renderFunctions.transmogrify({},'mediaLibTemplate',{})); app.ext.admin_medialib.u.convertFormToJQFU('#fileUploadContainer form');">Translate MediaLibrary</button>
+<button onClick="app.ext.admin_medialib.u.convertFormToJQFU('#TMP');">JQFU TMP</button>
 
 <hr />
 
@@ -265,13 +271,10 @@ You are Logged in as: <span class='username'></span>
 
 
 
-
-
-
-
 <!--
 Having these on the DOM seems to make the JQ File Upload plugin work better so they're here instead of within a template.
 -->
+
 <!-- The template to display files available for upload -->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -332,6 +335,11 @@ Having these on the DOM seems to make the JQ File Upload plugin work better so t
     </tr>
 {% } %}
 </script>
+
+
+
+
+
 
 
 </body>
