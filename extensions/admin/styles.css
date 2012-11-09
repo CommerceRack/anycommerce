@@ -22,7 +22,7 @@ class can also be applied to a 1 item per row list.
 .displayNone	{display:none;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
-.plainList	{margin:0; padding:0; list-style:none;}
+/* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
 
 button.ui-button	{padding:2px 4px;} /* some default padding to add breathing room when text-only isn't used. keeps button small. */
 button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for buttons. i like buttons. this is to handle padding on text only buttons */
@@ -34,8 +34,37 @@ button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for butt
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-.lookLikeLink	{cursor:pointer; color:#0066CC;}
-.pointer	{cursor:pointer;}
+.lookLikeLink	{cursor:pointer; color:#0066CC;} /* apply to text that has an onCLick but needs to look like an href */
+.pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick.
+
+
+/*
+MARGIN CLASSES
+some standard margins that can be used for spacing between elements.
+In general, rule of thumb would be to apply bottom margin to stacked elements, not top. That way if the element order changes, there's no alignment issues on top.
+if extra spacing is needed between two elements, add a leftmargin to the right element and rightmargin to the left element. doubles the margin.
+using these shared margins will help make the UI more consistent.
+*/
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px;}
+.stdMargin	{margin:12px;}
+
+section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
+
+
+/* 
+LIST CLASSES
+apply liststylenone and nopadormargin to the UL to get an inline list.
+if you want the list responsive, apply the .fluidList class. 
+ -> In this case, you want a separate class to specify height and width of each LI to maintain a grid. ex: .mediaLib li	{...}
+*/
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.noPadOrMargin	{padding:0; margin:0;}
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
+
 
 
 .editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */

@@ -6,11 +6,28 @@ table.mediaLibrary td	{padding:0; vertical-align:top;}
 
 table.mediaLibrary .leftCol	{width:25%;}
 
+#mediaLibFolderList li	{display:block; clear:both; margin-bottom:5px;}
+#mediaLibFolderList ul ul	{padding:0;}
+
+.mediaFiles li	{float:left; margin:10px; width:120px; height:150px; overflow:hidden; text-align:center;}
+
+
+/*
+buttons are shown by default and turned off when not needed.
+buttons are disabled by adding a class to a parent container. That way, buttons can easily be turned on/off by adding/removing that class.
+*/ 
+
+.hideBtnDelete .btnDelete	{display:none;}
+.hideBtnSave .btnSave	{display:none;}
+.hideBtnDetails .btnDetails	{display:none;}
+.hideBtnDownload .btnDownload	{display:none;}
 
 /*
  * jQuery File Upload Plugin CSS Example 1.1.1
  * https://github.com/blueimp/jQuery-File-Upload
 */
+
+ /* .fileUploadButtonBar	{display:none;}hidden by default in some cases. shown after 'add files' button clicked */
 
 .fileUploadFormContainer .nav-collapse,
 .fileUploadFormContainer ul.nav,

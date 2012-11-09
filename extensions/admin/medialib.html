@@ -1,23 +1,33 @@
 <div id='mediaLibTemplate'>
+<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
-	<td colspan='2'>Commands: create folder. add image. delete checked images. search (eventually)</td>
+	<td colspan='2' id='mediaLibActionsBar'>
+<div class="row fileupload-buttonbar clearfix">
+	<div class="span7 clearfix">
+		<span class="btn btn-success fileinput-button">
+			<i class="icon-plus icon-white"></i>
+			<span>Add files...</span>
+			<input type="file" name="files[]" multiple>
+		</span>
+
+		<button data-btn-action="deleteSelected">Delete Selected</button>
+
+
+	</div>
+</div>
+	</td>
 </tr>
 <tr>
-	<td colspan='2' class='alignRight'>
+	<td colspan='2' class='alignRight fileUploadButtonBar'>
 
-   <form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+   
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
         <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar clearfix">
             <div class="span7 clearfix">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <span class="btn btn-success fileinput-button">
-                    <i class="icon-plus icon-white"></i>
-                    <span>Add files...</span>
-                    <input type="file" name="files[]" multiple>
-                </span>
                 <button type="submit" class="btn btn-primary start">
                     <i class="icon-upload icon-white"></i>
                     <span>Start upload</span>
@@ -30,7 +40,9 @@
                     <i class="icon-trash icon-white"></i>
                     <span>Delete</span>
                 </button>
+				<!-- I don't know what this is for - jt . was in demo.
                 <input type="checkbox" class="toggle">
+				-->
             </div>
             <!-- The global progress information -->
             <div class="span5 fileupload-progress fade">
@@ -47,7 +59,7 @@
 
         <!-- The table listing the files available for upload/download -->
         <table role="presentation" class="table table-striped clearfix"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
-    </form>
+    
 
 	</td>
 </tr>
@@ -61,26 +73,32 @@
 	<ul data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin'></ul>
 	</td>
 	<td id='mediaLibFileList'>
-	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone'></ul>
+	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles'></ul>
 	</td>
 </tr>
 </table>
+</form>
 </div>
 
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
 	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().attr('data-folderid')); return false;">
-		<span data-bind="var: media(FName); format:text;"></span>
+		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
+		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/;"></span>
 		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
 	</a>
-	<ul class='displayNone' data-bind="var: media(FID); format:assignAttribute; attribute:id; valuePretext:mediaChildren_;"></ul>
+	<ul class='displayNone marginLeft' data-bind="var: media(FID); format:assignAttribute; attribute:id; valuePretext:mediaChildren_;"></ul>
 	</li>
 	
 	
 	<li id='mediaFileTemplate'>
 	<img src='blank.gif' data-bind='var: media(path); format:imageURL;' width='100' height='100' />
 	<div data-bind='var: media(Name); format:text;'></div>
+	<button data-btn-action='delete'></button>
+	<button data-btn-action='select'></button>
+	<button data-btn-action='details'></button>
+	<button data-btn-action='download'></button>
 	</li>
 	
 	

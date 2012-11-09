@@ -341,11 +341,23 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
-				$('.bindByAnchor','#mastHead').click(function(event){
-					event.preventDefault();
-					showUI($(this).attr('href'));
+				$('.bindByAnchor','#mastHead').each(function(){
+					$(this).click(function(event){
+						event.preventDefault();
+						showUI($(this).attr('href'));
+						})
 					})
-
+//if supported, update hash while navigating.
+if("onhashchange" in window)	{ // does the browser support the hashchange event?
+app.u.dump("WOOT! browser supports hashchange");
+	_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
+	window.onhashchange = function () {
+		app.u.dump("Hash has changed.");
+		app.ext.admin.u.handleHashState();
+		}
+	}
+	
+//create shortcuts. these are used in backward compatibility areas where brian loads the content.
 				window.navigateTo = app.ext.admin.a.navigateTo;
 				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
@@ -582,8 +594,19 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
 				}
+			},
+//a value, such as media library folder name, may be a path (my/folder/name) and a specific value from that string may be needed.
+//set bindData.splitter and the value gets split on that character.
+//optionally, set bindData.index to get a specific indices value (0,1, etc). if index is not declared, the last index is returned.
+		getIndexOfSplit : function($tag, data){
+			var splitter = data.bindData['splitter'];
+			if(data.value.indexOf(splitter) > -1)	{
+				var splitVal = data.value.split(splitter);
+				data.value = splitVal[data.bindData.index || splitVal.length - 1]
+				}
+			else	{} //no split is occuring. do nothing.
+			app.renderFormats.text($tag, data)
 			}
-		
 		}, //renderFormats
 
 
@@ -598,14 +621,28 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				$('html, body').animate({scrollTop : 0},1000);
 //				$loadingModal.dialog('open');
 				P = P || {};
-				if(path)	{
+				var $target;
+				if(path  && P.dialog)	{
+//This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
+$target = $('#someDialog');
+P.targetID = 'someDialog';
+if($target.length){} //element exists, do nothing to it.
+else	{
+	$target = $("<div>").attr('id','someDialog').appendTo('body');
+	$target.dialog({modal:true,width:500,height:500,autoOpen:false})
+	}
+					$target.dialog('open');
+					app.ext.admin.u.handleShowSection(path,P,$target);
+					}
+				else if(path)	{
 					$('title').text(path);
+					$('html, body').animate({scrollTop : 0},1000)
 					
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
 					app.u.dump(" -> P.targetID: "+P.targetID);
-					var $target = $('#'+P.targetID);
+					$target = $('#'+P.targetID);
 
 //					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
 					
@@ -637,8 +674,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //this is a function that brian has in the UI on some buttons.
 //it's diferent than showUI so we can add extra functionality if needed.
-			navigateTo : function(path)	{
-				this.showUI(path);
+			navigateTo : function(path,P)	{
+				this.showUI(path,P);
 				},
 
 
@@ -1186,8 +1223,29 @@ else	{
 	}
 
 
-				} //bindFinderButtons
+				}, //bindFinderButtons
 
+
+/*
+CODE FOR URL MANAGEMENT
+*/
+
+// from the hash, formatted as #company?show=returns, it determines pageType (company)
+// a pageInfo (pio) object is created and validated (pageInfo will be set to false if invalid)
+//showcontent is NOT executed if pio is not valid (otherwise every anchor would execute a showContent - that would be bad.)
+// _ignoreHashChange is set to true if the hash is changed w/ js instead of an anchor or some other browser related event.
+// this keeps the code inside handleHashState from being triggered when no update desired.
+// ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
+
+			handleHashState : function()	{
+//				app.u.dump("BEGIN myRIA.u.handleHashState");
+				var hash = window.location.hash;
+				app.u.dump(" -> hash: "+hash);
+//				if(!$.isEmptyObject(pio) && _ignoreHashChange === false)	{
+//					showUI('',pio);
+//					}
+				_ignoreHashChange = false; //always return to false so it isn't "left on" by accident.
+				},
 
 
 
