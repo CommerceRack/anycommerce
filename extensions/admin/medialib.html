@@ -2,25 +2,40 @@
 <form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
-	<td colspan='2' id='mediaLibActionsBar'>
-<div class="row fileupload-buttonbar clearfix">
+	<td colspan='2' id='mediaLibActionsBar' class='alignRight'>
+	<span>
+	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
+	<button data-btn-action="addFolder">Add Folder</button>
+	<button data-btn-action="selectAddFolderDestination">Folder Location:</button>
+	<ul class='selectAddFolderChoices'>
+		<li class='ui-selected'>As new top level folder</li>
+		<li class='displayNone'>subfolder</li>
+	</ul>
+	</span>
+	<button data-btn-action="deleteSelected">Delete Selected</button>
+	<button data-btn-action="selectUploads">Add Files</button>
+	<button data-btn-action="deleteFolder" disabled='disabled'>Delete Folder []</button>
+
+
+<!--
+This is the code for the actual 'add files' button.
+It doesn't style the button quite right AND I need an additional onClick event to reveal the secondary buttons.
+so for now, the contents are hidden. later, we'll want to explore a better solution.
+the data-btn-action='selectUploads' triggers a click of the span btn-success below
+-->
+<div class="row fileupload-buttonbar clearfix displayNone">
 	<div class="span7 clearfix">
 		<span class="btn btn-success fileinput-button">
 			<i class="icon-plus icon-white"></i>
 			<span>Add files...</span>
 			<input type="file" name="files[]" multiple>
 		</span>
-
-		<button data-btn-action="deleteSelected">Delete Selected</button>
-
-
 	</div>
 </div>
 	</td>
 </tr>
 <tr>
-	<td colspan='2' class='alignRight fileUploadButtonBar'>
-
+	<td colspan='2' class='alignRight fileUploadButtonBar displayNone'>
    
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
         <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
@@ -30,16 +45,18 @@
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <button type="submit" class="btn btn-primary start">
                     <i class="icon-upload icon-white"></i>
-                    <span>Start upload</span>
+                    <span>Start upload(s)</span>
                 </button>
                 <button type="reset" class="btn btn-warning cancel">
                     <i class="icon-ban-circle icon-white"></i>
-                    <span>Cancel upload</span>
+                    <span>Cancel upload(s)</span>
                 </button>
+				<!-- don't need this
                 <button type="button" class="btn btn-danger delete">
                     <i class="icon-trash icon-white"></i>
                     <span>Delete</span>
                 </button>
+				-->
 				<!-- I don't know what this is for - jt . was in demo.
                 <input type="checkbox" class="toggle">
 				-->
@@ -70,10 +87,10 @@
 </tr>
 <tr>
 	<td id='mediaLibFolderList'>
-	<ul data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin'></ul>
+	<ul data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
 	</td>
 	<td id='mediaLibFileList'>
-	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles'></ul>
+	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight'></ul>
 	</td>
 </tr>
 </table>
@@ -103,6 +120,26 @@
 	
 	
 </ul>
+
+
+<div id='mediaLibFileDetailsTemplate' class='loadingBG'>
+	<table>
+	<tr>
+		<td>
+		<div class='marginRight'>
+		<img src='blank.gif' data-bind='var: media(file); format:imageURL;' width='250' height='250' alt='' />
+		</div>
+		</td>
+		<td>
+		<div data-bind='var: media(ImgName); format:text; pretext:Filename: ;'></div>
+		<div data-bind='var: media(ImgName); format:text; pretext:File format: ;'></div>
+		<div>Dimensions: <span data-bind='var: media(W); format:text;'></span> X <span data-bind='var: media(H); format:text;'></span></div>
+		<div data-bind='var: media(MasterSize); format:text; pretext:(;posttext:);'></div>
+		<div data-bind='var: media(TS); format:unix2mdy; pretext:Added on: ;'></div>
+		</div>
+	</td>
+</tr>
+</div>
 
 
 <div id='fileUploadTemplate' class='fileUploadFormContainer'>

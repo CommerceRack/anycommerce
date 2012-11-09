@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','fileUploadTemplate','mediaLibFolderTemplate','mediaFileTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','fileUploadTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -50,7 +50,7 @@ var admin_medialib = function() {
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminImageDetail|"+f
-				app.model.addDispatchToQ({"_cmd":"adminImageDetail","filename":f,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"adminImageDetail","file":f,"_tag" : tagObj},Q);	
 				}
 			}, //adminImageDetail
 
@@ -78,17 +78,28 @@ var admin_medialib = function() {
 //f is filename
 		adminImageFolderDetail : {
 			init : function(f,tagObj,Q)	{
+				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
+				app.u.dump(" -> Q: "+Q);
+//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminImageFolderDetail|"+f
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
+				if(tagObj.forceRequest)	{
+					app.u.dump(" -> force request is true");
+					r = 1;
+					this.dispatch(f,tagObj,Q);
+					}
+				else if(app.model.fetchData(tagObj.datapointer) == false)	{
+					app.u.dump(" -> data is NOT local");
 					r = 1;
 					this.dispatch(f,tagObj,Q);
 					}
 				else	{
+					app.u.dump(" -> data IS local");
 					app.u.handleCallback(tagObj);
 					}
 				},
 			dispatch : function(f,tagObj,Q)	{
+				app.u.dump(" -> adding dispatch to "+Q+" queue");
 				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","folder":f,"_tag" : tagObj},Q);	
 				}
 			}, //adminImageDetail
@@ -99,6 +110,10 @@ var admin_medialib = function() {
 
 tagObj = tagObj || {};
 tagObj.datapointer = 'adminImageFolderList';
+if(tagObj.forceRequest)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
 if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
 	this.dispatch(tagObj,Q);
@@ -177,7 +192,9 @@ else	{
 				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm');
 				}
+			
 			}, //showMediaLibrary
+			
 		handleMediaLibUpdate : {
 			onSuccess : function(tagObj){
 				$('#mediaModal').dialog('close');
@@ -206,22 +223,9 @@ else	{
 //by adding the template instance only once, the media lib will re-open showing last edited folder. 
 					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
 					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 500});
-					$('#mediaLibActionsBar button',$target).each(function(){
-
-var $button = $(this);
-if($button.data('btn-action') == 'deleteSelected')	{
-	$button.button({icons: {primary: "ui-icon-trash"}}).click(function(event){
-		event.preventDefault(); //keeps button from submitting the form.
-		app.u.dump("Deleting selected Images");
-		app.ext.admin_medialib.u.buildDeleteMediaRequests();
-		app.ext.admin_medialib.u.showMediaFor({'FName':$('#mediaLibFileList ul').attr('data-fname'),'selector':'#mediaLibFileList'},'immutable');
-		app.model.dispatchThis();
-		//also re-request this folder detail and reload and set ul to loadingBG.
-		//dispatch.
-		})
-	}
-
-						});
+					
+					app.ext.admin_medialib.u.handleMediaLibButtons($target)
+					
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'mutable');
 					app.model.dispatchThis();
 
@@ -229,7 +233,7 @@ if($button.data('btn-action') == 'deleteSelected')	{
 //				app.u.dump("Media library setting data: "); app.u.dump(P);
 				$target.data(P);
 				$target.dialog('open');
-				},
+				}, //showMediaLib
 
 //first param is thumbnail object
 //second param is string (mode in api call) or object (ref to text input, hidden, something). must determine
@@ -257,7 +261,7 @@ if($button.data('btn-action') == 'deleteSelected')	{
 					}
 				else if(typeof strOrObj == 'string')	{P.mode = strOrObj;}
 				app.ext.admin_medialib.a.showMediaLib(P);
-				},
+				}, //uiShowMediaLib
 
 //jquery object of image container. properties for data-fid and some others will be set.
 			selectThisMedia : function($obj){
@@ -297,7 +301,7 @@ if($button.data('btn-action') == 'deleteSelected')	{
 					app.u.dump(" -> imageID or eleSelector must be set:"); app.u.dump(mediaData);
 					app.u.dump(" -> path must be set. Name would be nice"); app.u.dump(fileInfo);
 					} //something is amiss. required params not avail.
-				},
+				}, //selectThisMedia
 
 			showFoldersFor : function(P)	{
 				if(P.targetID && P.templateID)	{
@@ -309,18 +313,44 @@ if($button.data('btn-action') == 'deleteSelected')	{
 					app.u.throwGMessage("WARNING! some required params for admin_medialib.a.showFoldersFor were missing. targetID and templateID are required. Params follow:");
 					app.u.dump(P);
 					}
-				},
+				}, //showFoldersFor
+			
+			showMediaDetailsInDialog : function(P){
+				if(P.name)	{
+					var safeID = 'mediaFileDetails_'+app.u.makeSafeHTMLId(P.name)
+					var $target = $('#'+safeID);
+					if($target.length){} //contents already created. do nothing.
+//contents not generated yet. Create them.
+					else	{
+						$target = $("<div \/>").attr({'id':safeID,'title':P.name}).appendTo('body');
+						$target.dialog({autoOpen:false,width:500,height:350,modal:true});
+						$target.append(app.renderFunctions.createTemplateInstance('mediaLibFileDetailsTemplate'));
+						app.ext.admin_medialib.calls.adminImageDetail.init(P.path,{'callback':'translateTemplate','parentID':safeID});
+						app.model.dispatchThis();
+						}
+					$target.dialog('open');
+					}
+				else	{
+					app.u.throwGMessage("WARNING! params required for admin_medialib.a.showMediaDetailsInDialog missing. name is required:");
+					app.u.dump(P);
+					}
+				}, //showMediaDetailsInDialog
+			
 			showMediaAndSubs : function(FID){
 				var $mediaTarget = $('#mediaLibFileList ul');
 				var folderProperties = app.ext.admin_medialib.u.getFolderInfoFromPID(FID);
 				//show sub folders.
 				var $folderTarget = $('#mediaChildren_'+FID); //ul for folder children.
 				$folderTarget.toggle(); //allows folders to be opened and closed.
+				
+				$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.FName).data('path',folderProperties.FName);
 
 				if($folderTarget.children().length)	{} //children have already been added. don't duplicate.
 				else	{
 					$folderTarget.append(app.ext.admin_medialib.u.showFoldersByParentFID(FID,'mediaLibFolderTemplate'));
 					}
+					
+				
 				//show files.
 				if(folderProperties && folderProperties.FName)	{
 					$mediaTarget.attr({'data-fid':FID,'data-fname':folderProperties.FName});
@@ -332,7 +362,8 @@ if($button.data('btn-action') == 'deleteSelected')	{
 					app.u.dump(folderProperties);
 					}
 				
-				}
+				} //showMediaAndSubs
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -372,16 +403,20 @@ if($button.data('btn-action') == 'deleteSelected')	{
 					$("li button",$tag).each(function(){
 var $button = $(this);
 if($button.data('btn-action') == 'delete')	{
-	$button.addClass('btnDelete').button({icons: {primary: "ui-icon-trash"}}).click(function(){$(this).toggleClass('ui-state-highlight'); })
+	$button.addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).click(function(){$(this).toggleClass('ui-state-highlight'); })
 	}
 else if($button.data('btn-action') == 'select')	{
-	$button.addClass('btnSelect').button({icons: {primary: "ui-icon-check"}}).click(function(){$(this).parent().find('img').click(); })
+	$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(){$(this).closest('li').find('img').click(); })
 	}
 else if($button.data('btn-action') == 'details')	{
-	$button.addClass('btnDetails').button({icons: {primary: "ui-icon-info"}}).click(function(){app.u.dump("open image details in modal. show instance.");})
+	$button.addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).click(function(){
+		app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('li').data())
+		})
 	}
 else if($button.data('btn-action') == 'download')	{
-	$button.addClass('btnDownload').button({icons: {primary: "ui-icon-image"}}).click(function(){app.u.dump("open original image in new window.");})
+	$button.addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).click(function(){
+		window.open(app.u.makeImage({'name':$(this).closest('li').data('path')}));
+		})
 	}
 else	{
 	//unknown type. do nothing to it (no .button) so it's easily identified.
@@ -399,15 +434,14 @@ else	{
 		u : {
 //P is the object/params that get passed into showMediaLib
 			handleFilesButtonDisplay : function(P)	{
-$parent = $('#mediaLibFileList')
-$parent.removeClass('hideBtnDelete').removeClass('hideBtnSave').removeClass('hideBtnDetails').removeClass('hideBtnDownload');
-
-//in 'manage' interface, no select button is needed.
-if(P.mode == 'manage'){
-	$parent.addClass('hideBtnSave');
-	}
-
-				},
+				$parent = $('#mediaLibFileList')
+				$parent.removeClass('hideBtnDelete').removeClass('hideBtnSave').removeClass('hideBtnDetails').removeClass('hideBtnDownload');
+				
+				//in 'manage' interface, no select button is needed.
+				if(P.mode == 'manage'){
+					$parent.addClass('hideBtnSave');
+					}
+				}, //handleFilesButtonDisplay
 			
 //this is what 'was' in main.js for jquery file upload. but it was too specific and I needed one where I could set the selector.
 //JQFU = JQuery File Upload
@@ -448,7 +482,7 @@ $(selector + ' .files').imagegallery();
 
 //$('.btn-success',$(selector)).on('click', function(){$(".fileUploadButtonBar").show()});
 				
-				},
+				}, //convertFormToJQFU
 
 			getFolderInfoFromPID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
@@ -505,18 +539,82 @@ $(selector + ' .files').imagegallery();
 				return $ul.children();
 				}, //showFoldersByParentFID
 			
-			
 			buildDeleteMediaRequests : function(){
 				$('#mediaLibFileList .btnDelete').each(function(){
 					if($(this).hasClass('ui-state-highlight'))	{
 						var data = $(this).closest('li').data();
 						app.u.dump(data);
-						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name});
+						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
 					else	{} //do nothing.
 					});
-				}
+				}, //buildDeleteMediaRequests
 			
+			handleMediaLibButtons : function($target){
+
+$('#mediaLibActionsBar button',$target).each(function(){
+
+	var $button = $(this);
+	if($button.data('btn-action') == 'deleteSelected')	{
+		$button.button({icons: {primary: "ui-icon-trash"}}).click(function(event){
+			event.preventDefault(); //keeps button from submitting the form.
+	//		app.u.dump("Deleting selected Images");
+			app.ext.admin_medialib.u.buildDeleteMediaRequests();
+			app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':$('#mediaLibFileList ul').attr('data-fname'),'selector':'#mediaLibFileList'},'immutable');
+			app.model.dispatchThis('immutable');
+			//also re-request this folder detail and reload and set ul to loadingBG.
+			//dispatch.
+			})
+		}
+	else if($button.data('btn-action') == 'selectUploads')	{
+		$button.button({icons: {primary: "ui-icon-plus"}}).click(function(event){
+			event.preventDefault(); //keeps button from submitting the form.
+	//		app.u.dump("Uploads Button Pushed.");
+			$('.fileUploadButtonBar',$target).show();
+			$('[type=file]',$target).click();
+			})
+		}
+	else if($button.data('btn-action') == 'addFolder')	{
+		$button.button({icons: {primary: "ui-icon-folder-collapsed"}}).click(function(event){
+			event.preventDefault(); //keeps button from submitting the form.
+	//		app.u.dump("Uploads Button Pushed.");
+			$button.parent().find('ul').hide();
+			if($('#mediaLibNewFolderName').val())	{
+				var folderName; //uses either the value of the text input or prepends a path to it.
+				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selectee').data('path') != '')	{
+					folderName = $('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').data('path')+'/'+$('#mediaLibNewFolderName').val()
+					} //create a sub level folder.
+				else	{folderName = $('#mediaLibNewFolderName').val()} //create a root level folder.
+				$('ul','#mediaLibFolderList').addClass('loadingBG').children().remove(); //folders will be re-added.
+
+				app.ext.admin_medialib.calls.adminImageFolderCreate.init(folderName,{},'immutable');
+				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'translateSelector','selector':'#mediaLibFolderList','forceRequest':true},'immutable');
+				app.model.dispatchThis('immutable');
+				}
+			else	{
+				app.u.throwMessage("please enter a folder name");
+				$('#mediaLibNewFolderName').focus();
+				}
+	
+			})
+		}
+	else if($button.data('btn-action') == 'selectAddFolderDestination')	{
+		$button.button({text:false, icons: {primary: "ui-icon-triangle-1-s"}}).click(function(event){
+		
+			event.preventDefault(); //keeps button from submitting the form.
+var menu = $(this).parent().find('ul').toggle().css({position:'absolute','z-index':'1000'}).position({
+	my: "right top",
+	at: "right bottom",
+	of: this
+	});
+			})
+		}
+	});
+//groups any buttons inside a span as a button set. this is specifically for the add folder feature.
+$('#mediaLibActionsBar span',$target).buttonset();
+//makes any ul's inside the spans a menu. THey'll appear on click as part of the btn-action code. used, but not limited to, for selectAddFolderDestination
+$('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
+				} //handleMediaLibButtons
 			
 			} //u
 
