@@ -1370,6 +1370,10 @@ a word */
 				}
 			return r;
 			}, //makeSafeHTMLId
+		
+		jqSelector : function(str){
+			return '#'+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+			},
 
 
 		isValidMonth : function(val)	{
