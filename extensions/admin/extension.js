@@ -631,6 +631,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						$target = $("<div>").attr('id','someDialog').appendTo('body');
 						$target.dialog({modal:true,width:500,height:500,autoOpen:false})
 						}
+					P.title = P.title || "Details"
+					$target.parent().find('.ui-dialog-title').text(P.title);
 					$target.dialog('open');
 					app.ext.admin.u.handleShowSection(path,P,$target);
 					}
@@ -641,10 +643,10 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
-					app.u.dump(" -> P.targetID: "+P.targetID);
 					$target = $('#'+P.targetID);
 
-//					app.u.dump(" -> tab: "+tab); app.u.dump(" -> targetid: "+P.targetID);
+//					app.u.dump(" -> tab: "+tab);
+//					app.u.dump(" -> P.targetID: "+P.targetID);
 					
 					$(".tabContent",'#appView').hide(); //hide all tab contents
 					$target.show(); //show focus tab.
@@ -660,7 +662,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						app.ext.admin.u.handleShowSection(path,P,$target);
 						}
 					else	{
-						//jumping between sections. content has already been displayed by here. do nothing.
+						app.u.dump(" -> Show last open content");
+						//jumping between sections. content has already been displayed by here. show last open content.
 
 						}
 
@@ -783,8 +786,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
-				app.u.dump(" -> tab: "+tab);
-				if(tab == 'product')	{
+//				app.u.dump(" -> tab: "+tab);
+				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
@@ -801,15 +804,16 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			
 			getTabFromPath : function(path)	{
 				var r = path.split("/")[2]; //what is returned.
-				app.u.dump(" -> R: "+r);
-				app.u.dump(" -> app.ext.admin.vars.tabs.indexOf(r): "+app.ext.admin.vars.tabs.indexOf(r));
+//				app.u.dump(" -> R: "+r);
+//				app.u.dump(" -> app.ext.admin.vars.tabs.indexOf(r): "+app.ext.admin.vars.tabs.indexOf(r));
+				if(r == 'manage'){ r = 'utilities'} //symlinked
 				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
-					if(r == 'manage'){ r = 'utilities'} //symlinked
 					} 
 				else	{r = 'home'} //default
 				return r;
 				},
-			
+//msg is an array returned from the ajax response. 
+//it may be empty, and that's not abnormal.
 			uiHandleMessages : function(path,msg)	{
 //				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 				if(msg)	{
@@ -827,7 +831,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					//no message. it happens sometimes.
 					}
 				},
-			
+//bc is an array returned from an ajax UI request.
+//being empty is not abnormal.
 			uiHandleBreadcrumb : function(bc)	{
 				var $target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)
 				if(bc)	{
@@ -861,7 +866,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
 					}
 				},
-
+// 'data' is the response from the server. includes data.html
+// viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleFormRewrites : function(path,data,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
 //				app.u.dump(" -> data: "); app.u.dump(data);
@@ -869,16 +875,18 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var $target = $('#'+viewObj.targetID)
 				$target.html(data.html);
 //any form elements in the response have their actions rewritten.
+//the form is serialized and sent via Ajax to the UI API. This is a temporary solution to the UI rewrite.
 				$('form',$target).submit(function(event){
 //					app.u.dump(" -> Executing custom form submit.");
 					event.preventDefault();
-					var jsonObj = $(this).serializeJSON();
+					var formObj = $(this).serializeJSON();
 //					app.u.dump(" -> jsonObj: "); app.u.dump(jsonObj);
-					app.model.fetchAdminResource(path,{},jsonObj); //handles the save.
+					app.model.fetchAdminResource(path,{},formObj); //handles the save.
 					return false;
 					}); //submit
 				},
-			
+// 'data' is the response from the server. includes data.html
+// viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID)

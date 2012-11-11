@@ -1461,11 +1461,11 @@ This is checks for two things:
 ADMIN/USER INTERFACE
 */		
 
-//path is a relative path (/biz/setup) for a page in the UI.
-//viewObj.targetID is required.
+//path is a relative path (/biz/setup/index.cgi) for a page in the UI.
+//viewObj.targetID is where the html gets placed.
 //viewObj.success can be a function to get executed on success.
 //viewObj.error can be a function to get executed on error.
-//data2Pass gets passed along on the request. it's optional.
+//data2Pass gets passed along on the request. it's optional. a serialized form object, for example.
 		fetchAdminResource : function(path,viewObj,data2Pass)	{
 		
 		
