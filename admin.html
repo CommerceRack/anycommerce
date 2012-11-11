@@ -39,8 +39,6 @@ css files should be included before any .js file to ensure they are downloaded i
 /* move these into standard.css */
 .displayNone, .debug	{display:none;}
 
-
-
 </style>
 
 
@@ -207,8 +205,8 @@ You are Logged in as: <span class='username'></span>
 <form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON(),{'callback':'showHeader','extension':'admin'}); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 	<legend>Merchant Login</legend>
-	<label>Login: <input type='text' name='userid' value='' /></label>
-	<label>Password: <input type='password' name='password' value='' /></label>
+	<label>Login: <input type='text' name='userid' value='' required='required' /></label>
+	<label>Password: <input type='password' name='password' value=''  required='required' /></label>
 	<input type='submit' value='login' />
 	<label><input type='checkbox' name='persitentAuth' value='1' /> Keep me logged in</label>
 </fieldset>

@@ -45,7 +45,7 @@ var admin = function() {
 		
 	vars : {
 		tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-		tabs : ['setup','sites','jt','products','orders','crm','syndication','reports','utilities'],
+		tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities'],
 		state : {},
 		templates : theseTemplates,
 		willFetchMyOwnTemplates : true,
@@ -624,13 +624,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var $target;
 				if(path  && P.dialog)	{
 //This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
-$target = $('#someDialog');
-P.targetID = 'someDialog';
-if($target.length){} //element exists, do nothing to it.
-else	{
-	$target = $("<div>").attr('id','someDialog').appendTo('body');
-	$target.dialog({modal:true,width:500,height:500,autoOpen:false})
-	}
+					$target = $('#someDialog');
+					P.targetID = 'someDialog';
+					if($target.length){} //element exists, do nothing to it.
+					else	{
+						$target = $("<div>").attr('id','someDialog').appendTo('body');
+						$target.dialog({modal:true,width:500,height:500,autoOpen:false})
+						}
 					$target.dialog('open');
 					app.ext.admin.u.handleShowSection(path,P,$target);
 					}
@@ -783,6 +783,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
+				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product')	{
 					app.u.dump(" -> open product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
@@ -800,6 +801,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			
 			getTabFromPath : function(path)	{
 				var r = path.split("/")[2]; //what is returned.
+				app.u.dump(" -> R: "+r);
+				app.u.dump(" -> app.ext.admin.vars.tabs.indexOf(r): "+app.ext.admin.vars.tabs.indexOf(r));
 				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
 					if(r == 'manage'){ r = 'utilities'} //symlinked
 					} 

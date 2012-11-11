@@ -240,6 +240,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					return 1;
 					},
 				dispatch : function(obj,tagObj){
+					app.u.dump("Attempting to log in");
 					obj._cmd = 'authAdminLogin';
 					app.vars.userid = obj.userid;
 					obj.authtype = "md5";

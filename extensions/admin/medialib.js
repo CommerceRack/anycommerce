@@ -343,7 +343,12 @@ else	{
 				var $folderTarget = $('#mediaChildren_'+FID); //ul for folder children.
 				$folderTarget.toggle(); //allows folders to be opened and closed.
 				
+//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
 				$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.FName).data('path',folderProperties.FName);
+
+//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
+				$('#mediaLibActionsBar .deleteFolderBtn').button('enable').data({'focus-folder-id':FID,'focus-folder-name':folderProperties.FName})
+				$('#mediaLibActionsBar .deleteFolderBtn .folderid').text(folderProperties.FName);
 
 				if($folderTarget.children().length)	{} //children have already been added. don't duplicate.
 				else	{
@@ -549,7 +554,7 @@ $(selector + ' .files').imagegallery();
 					else	{} //do nothing.
 					});
 				}, //buildDeleteMediaRequests
-			
+//these are the actions on the tool bar row of buttons, not the individual photo/media buttons.
 			handleMediaLibButtons : function($target){
 
 $('#mediaLibActionsBar button',$target).each(function(){
@@ -558,7 +563,6 @@ $('#mediaLibActionsBar button',$target).each(function(){
 	if($button.data('btn-action') == 'deleteSelected')	{
 		$button.button({icons: {primary: "ui-icon-trash"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
-	//		app.u.dump("Deleting selected Images");
 			app.ext.admin_medialib.u.buildDeleteMediaRequests();
 			app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':$('#mediaLibFileList ul').attr('data-fname'),'selector':'#mediaLibFileList'},'immutable');
 			app.model.dispatchThis('immutable');
@@ -572,6 +576,15 @@ $('#mediaLibActionsBar button',$target).each(function(){
 	//		app.u.dump("Uploads Button Pushed.");
 			$('.fileUploadButtonBar',$target).show();
 			$('[type=file]',$target).click();
+			})
+		}
+	else if($button.data('btn-action') == 'deleteFolder')	{
+		$button.addClass('deleteFolderBtn').button({icons: {primary: "ui-icon-trash"}}).click(function(event){
+			event.preventDefault(); //keeps button from submitting the form.
+			alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
+			app.u.dump("REMINDER: hide the second option in the add folder list and make sure it can't be selected. the folder wont exist so it won't support children.");
+			app.u.dump("REMINDER: probably will need to disable the delete button.");
+//			app.u.dump($button.data());
 			})
 		}
 	else if($button.data('btn-action') == 'addFolder')	{
