@@ -629,7 +629,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if($target.length){} //element exists, do nothing to it.
 					else	{
 						$target = $("<div>").attr('id','someDialog').appendTo('body');
-						$target.dialog({modal:true,width:500,height:500,autoOpen:false})
+						$target.dialog({modal:true,width:'90%',height:500,autoOpen:false})
 						}
 					P.title = P.title || "Details"
 					$target.parent().find('.ui-dialog-title').text(P.title);
@@ -812,6 +812,15 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{r = 'home'} //default
 				return r;
 				},
+	
+
+			uiHandleContentUpdate : function(path,data,viewObj){
+				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
+				app.u.dump("View Obj: "); app.u.dump(viewObj);
+				var $target = $('#'+viewObj.targetID)
+				$target.html(data.html);
+				},
+			
 //msg is an array returned from the ajax response. 
 //it may be empty, and that's not abnormal.
 			uiHandleMessages : function(path,msg)	{
@@ -851,15 +860,24 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
 					}
 				},
-
+//the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
 			uiHandleNavTabs : function(tabs)	{
 				var $target = $('#navTabs').empty(); //always empty to make sure the last set isn't displayed (the new page may not have tabs)
 				if(tabs)	{
 					var L = tabs.length;
 					var className; //recycled in loop.
+					var action; //recycled
 					for(var i = 0; i < L; i += 1)	{
 						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
+						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
+						
+//						$a = $("<a \/>").attr({'title':tabs[i].name,'href':'#'}).addClass(className).append("<span>"+tabs[i].name+"<\/span>");
+//						if(tabs[i]['jsexec'])	{$a.click(function(){tabs[i]['jsexec']})}
+//						else{$a.click(function(){showUI(tabs[i]['link'])})} //
 						$target.append("<a href='#' onClick='return showUI(\""+tabs[i]['link']+"\");' title='"+tabs[i].name+"' class='"+className+"'><span>"+tabs[i].name+"<\/span><\/a>");
+//						if(tabs[i]['jsexec']){action = "onClick='return "+tabs[i]['jsexec']+"'"}
+//						else{action = "onClick='return showUI(\""+tabs[i]['link']+"\");'"}
+//						$target.append("<a href='#' "+action+"  title='"+tabs[i].name+"' class='"+className+"'><span>"+tabs[i].name+"<\/span><\/a>");
 						}
 					}
 				else	{
@@ -869,11 +887,11 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleFormRewrites : function(path,data,viewObj)	{
-//				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
+				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
 //				app.u.dump(" -> data: "); app.u.dump(data);
-//				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
+				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
 				var $target = $('#'+viewObj.targetID)
-				$target.html(data.html);
+
 //any form elements in the response have their actions rewritten.
 //the form is serialized and sent via Ajax to the UI API. This is a temporary solution to the UI rewrite.
 				$('form',$target).submit(function(event){
@@ -881,7 +899,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					event.preventDefault();
 					var formObj = $(this).serializeJSON();
 //					app.u.dump(" -> jsonObj: "); app.u.dump(jsonObj);
-					app.model.fetchAdminResource(path,{},formObj); //handles the save.
+					app.model.fetchAdminResource(path,viewObj,formObj); //handles the save.
 					return false;
 					}); //submit
 				},

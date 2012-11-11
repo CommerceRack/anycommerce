@@ -1344,22 +1344,22 @@ a word */
 //used in prodDataInModal and imageInModal
 //if a parentid is not passed in, a new id is created and added to the dom.
 //ID is the element ID
-			handleParentForDialog : function(ID,title)	{
-				var $parent; //will either be a jquery object or false (if no parentID specified)
-				if(ID)	{
-					title = title || "";
-					$parent = $('#'+ID);
+		handleParentForDialog : function(ID,title)	{
+			var $parent; //will either be a jquery object or false (if no parentID specified)
+			if(ID)	{
+				title = title || "";
+				$parent = $('#'+ID);
 //if the parent doesn't already exist, add it to the dom.
-					if($parent.length == 0)	{
-						$parent = $("<div \/>").attr({"id":ID,"title":title}).appendTo(document.body);
-						}
+				if($parent.length == 0)	{
+					$parent = $("<div \/>").attr({"id":ID,"title":title}).appendTo(document.body);
 					}
-				else	{
-					app.u.dump("WARNING! no ID specified in handleParentForDialog");
-					$parent = false;
-					}
-				return $parent;
-				}, //handleParentForDialog
+				}
+			else	{
+				app.u.dump("WARNING! no ID specified in handleParentForDialog");
+				$parent = false;
+				}
+			return $parent;
+			}, //handleParentForDialog
 
 		makeSafeHTMLId : function(string)	{
 //			app.u.dump("BEGIN control.u.makesafehtmlid");

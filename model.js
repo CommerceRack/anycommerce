@@ -1498,6 +1498,7 @@ ADMIN/USER INTERFACE
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
 					},
 				success : function(data){
+					app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
 //these get done each time. technically, the breadcrumb doesn't have to be.
 //The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
 //so that display must have all the links and form submits modified.
