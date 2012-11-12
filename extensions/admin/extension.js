@@ -620,6 +620,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				$('html, body').animate({scrollTop : 0},1000);
 //				$loadingModal.dialog('open');
+
+//empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
+				$('#navTabs').empty();
+				$('#breadcrumb').empty();
+
+
 				P = P || {};
 				var $target;
 				if(path  && P.dialog)	{
@@ -843,7 +849,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //bc is an array returned from an ajax UI request.
 //being empty is not abnormal.
 			uiHandleBreadcrumb : function(bc)	{
-				var $target = $('#breadcrumb').empty(); //always empty to make sure the last set isn't displayed (the new page may not have bc)
+				var $target = $('#breadcrumb') //breadcrumb container.
 				if(bc)	{
 					var L = bc.length;
 					for(var i = 0; i < L; i += 1)	{
@@ -862,7 +868,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},
 //the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
 			uiHandleNavTabs : function(tabs)	{
-				var $target = $('#navTabs').empty(); //always empty to make sure the last set isn't displayed (the new page may not have tabs)
+				var $target = $('#navTabs')// tabs container
 				if(tabs)	{
 					var L = tabs.length;
 					var className; //recycled in loop.
