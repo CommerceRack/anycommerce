@@ -281,6 +281,57 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 			}, //init
 
 
+
+//executed when the extension loads
+		initExtension : {
+			onSuccess : function()	{
+				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
+				var L = app.rq.length-1;
+//load any remaining resources into the app.
+				for(var i = L; i >= 0; i -= 1)	{
+					app.u.handleResourceQ(app.rq[i]);
+					app.rq.splice(i, 1); //remove once handled.
+					}
+				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+
+				$('.bindByAnchor','#mastHead').each(function(){
+					$(this).click(function(event){
+						event.preventDefault();
+						showUI($(this).attr('href'));
+						})
+					})
+//if supported, update hash while navigating.
+				if("onhashchange" in window)	{ // does the browser support the hashchange event?
+					app.u.dump("WOOT! browser supports hashchange");
+					_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
+					window.onhashchange = function () {
+						app.u.dump("Hash has changed.");
+						app.ext.admin.u.handleHashState();
+						}
+					}
+	
+//create shortcuts. these are used in backward compatibility areas where brian loads the content.
+				window.navigateTo = app.ext.admin.a.navigateTo;
+				window.showUI = app.ext.admin.a.showUI;
+				window.loadElement = app.ext.admin.a.loadElement;
+				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
+				window.showFinder = app.ext.admin.a.showUIFinder;
+
+if(app.u.getParameterByName('debug'))	{
+	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	}
+
+//if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
+if(app.u.thisIsAnAdminSession())	{
+	app.ext.admin.u.showHeader();
+	}
+else	{
+	$('#appPreView').hide();
+	$('#appLogin').show();
+	}
+				}
+			},
+
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
@@ -329,55 +380,6 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 				}
 			},
 
-//executed when the extension loads
-		initExtension : {
-			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
-				var L = app.rq.length-1;
-//				die();
-				for(var i = L; i >= 0; i -= 1)	{
-					app.u.handleResourceQ(app.rq[i]);
-					app.rq.splice(i, 1); //remove once handled.
-					}
-				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
-
-				$('.bindByAnchor','#mastHead').each(function(){
-					$(this).click(function(event){
-						event.preventDefault();
-						showUI($(this).attr('href'));
-						})
-					})
-//if supported, update hash while navigating.
-if("onhashchange" in window)	{ // does the browser support the hashchange event?
-app.u.dump("WOOT! browser supports hashchange");
-	_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
-	window.onhashchange = function () {
-		app.u.dump("Hash has changed.");
-		app.ext.admin.u.handleHashState();
-		}
-	}
-	
-//create shortcuts. these are used in backward compatibility areas where brian loads the content.
-				window.navigateTo = app.ext.admin.a.navigateTo;
-				window.showUI = app.ext.admin.a.showUI;
-				window.loadElement = app.ext.admin.a.loadElement;
-				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
-				window.showFinder = app.ext.admin.a.showUIFinder;
-
-if(app.u.getParameterByName('debug'))	{
-	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
-	}
-
-//if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
-if(app.u.thisIsAnAdminSession())	{
-	app.ext.admin.u.showHeader();
-	}
-else	{
-	$('#appPreView').hide();
-	$('#appLogin').show();
-	}
-				}
-			},
 
 		handleElasticFinderResults : {
 			onSuccess : function(tagObj)	{
@@ -785,8 +787,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username').text(app.vars.username);
-				app.u.dump("REMINDER!!! showUI is commented out for showHeader.");
-//				app.ext.admin.a.showUI('/biz/index.cgi'); //commented out for testing.
+				app.ext.admin.a.showUI('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS=DEFAULT'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
