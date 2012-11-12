@@ -819,32 +819,44 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				return r;
 				},
 	
-
+//the following function gets executed as part of any fetchAdminResource request. 
+//it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
 			uiHandleContentUpdate : function(path,data,viewObj){
 				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
-				app.u.dump("View Obj: "); app.u.dump(viewObj);
-				var $target = $('#'+viewObj.targetID)
-				$target.html(data.html);
+//				app.u.dump("View Obj: "); app.u.dump(viewObj);
+				if(viewObj.targetID)	{
+					var $target = $('#'+viewObj.targetID)
+					$target.html(data.html);
+					}
+				else	{
+					app.u.throwGMessage("WARNING! no target ID passed into admin.u.uiHandleContentUpdate. This is bad. No content displayed because we don't know where to put it.");
+					app.u.dump(" -> path: "+path);
+					app.u.dump(" -> data: "); app.u.dump(data);
+					app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
+					}
 				},
-			
-//msg is an array returned from the ajax response. 
-//it may be empty, and that's not abnormal.
+
+//the following function gets executed as part of any fetchAdminResource request. 
+//it's used to output any content in the msgs array.
+//it may be empty, and that's fine.
 			uiHandleMessages : function(path,msg,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 				if(msg)	{
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
+					var target; //where the messaging is going to be put.
 //if the targetID isn't specified, attempt to determine where the message should be placed based on path.
 //checking targetID first instead of just using parent allows for more targeted messaging, such as in modals.
 					if(viewObj && viewObj.targetID)	{
-						msgObj.parentID = viewObj.targetID;
+						target = viewObj.targetID;
 						}
 					else	{
-						var tab = this.getTabFromPath(path);
-						msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
+						target = this.getTabFromPath(path)+"Content"; //put messaging in tab specific area.
 						}
+
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = app.u.uiMsgObject(msg[i]);
+						msgObj.targetID = target;
 						msgObj.persistant = true; //for testing, don't hide.
 						app.u.throwMessage(msgObj);
 						}
@@ -852,7 +864,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 					//no message. it happens sometimes.
 					}
-				},
+				}, //uiHandleMessages
+
+
 //bc is an array returned from an ajax UI request.
 //being empty is not abnormal.
 			uiHandleBreadcrumb : function(bc)	{
@@ -876,21 +890,26 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
 			uiHandleNavTabs : function(tabs)	{
 				var $target = $('#navTabs')// tabs container
+				
 				if(tabs)	{
 					var L = tabs.length;
 					var className; //recycled in loop.
 					var action; //recycled
+				
 					for(var i = 0; i < L; i += 1)	{
 						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
-						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
-						
-//						$a = $("<a \/>").attr({'title':tabs[i].name,'href':'#'}).addClass(className).append("<span>"+tabs[i].name+"<\/span>");
-//						if(tabs[i]['jsexec'])	{$a.click(function(){tabs[i]['jsexec']})}
-//						else{$a.click(function(){showUI(tabs[i]['link'])})} //
-						$target.append("<a href='#' onClick='return showUI(\""+tabs[i]['link']+"\");' title='"+tabs[i].name+"' class='"+className+"'><span>"+tabs[i].name+"<\/span><\/a>");
-//						if(tabs[i]['jsexec']){action = "onClick='return "+tabs[i]['jsexec']+"'"}
-//						else{action = "onClick='return showUI(\""+tabs[i]['link']+"\");'"}
-//						$target.append("<a href='#' "+action+"  title='"+tabs[i].name+"' class='"+className+"'><span>"+tabs[i].name+"<\/span><\/a>");
+						$a = $("<a \/>").attr({'title':tabs[i].name,'href':'#'}).addClass(className).append("<span>"+tabs[i].name+"<\/span>");
+//a tab may contain some javascript to execute instead of a link.
+//product editor -> edit web page -> back to editor is an example
+						if(tabs[i].jsexec)	{
+							$a.click(function(j){return function(){eval(j)}}(tabs[i]['jsexec']));
+							}
+						else	{
+//the extra anonymous function here and above is for support passing in a var.
+//see http://stackoverflow.com/questions/5540280/
+							$a.click(function(j){return function(){showUI(j);}}(tabs[i]['link']));
+							}
+						$target.append($a);
 						}
 					}
 				else	{
