@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -188,12 +188,32 @@ else	{
 		showMediaLibrary : {
 			
 			onSuccess : function(tagObj){
+				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
 				$('#'+tagObj.parentID).removeClass('loadingBG') //.append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
+//				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
+				var L = app.data[tagObj.datapointer]['@folders'].length;
+				var $template; //recycled. holds template till appended to parent.
+				app.u.dump(" -> @folders.length: "+L);
+				for(var i = 0; i < L; i += 1)	{
+//					app.u.dump(" -> FID: "+app.data[tagObj.datapointer]['@folders'][i].FID+" and parentFID: "+app.data[tagObj.datapointer]['@folders'][i].ParentFID);
+					app.data[tagObj.datapointer]['@folders'][i].id = '#mediaRootFolder_'+app.data[tagObj.datapointer]['@folders'][i].FName //the id given to each root folders.
+					$template = app.renderFunctions.transmogrify(app.data[tagObj.datapointer]['@folders'][i],'mediaLibFolderTemplate',app.data[tagObj.datapointer]['@folders'][i]);
+					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); //add either to the parent folders ul or to the root list.
+					}
 				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm');
 				}
 			
 			}, //showMediaLibrary
+			
+		handleMediaLibSrc : {
+			onSuccess : function(tagObj){
+				var img = app.data[tagObj.datapointer].IMG;
+				var $target = $('#mediaLibraryFocusMediaDetails');
+				$target.append(app.renderFunctions.transmogrify({'path':app.data[tagObj.datapointer].IMG,'name':app.data[tagObj.datapointer].IMG},'mediaLibSelectedFileTemplate',app.data[tagObj.datapointer]));
+				app.ext.admin_medialib.u.handleMediaFileButtons($target)
+
+				}
+			},//handleMediaLibUpdate, //showMediaLibrary
 			
 		handleMediaLibUpdate : {
 			onSuccess : function(tagObj){
@@ -226,18 +246,24 @@ else	{
 					
 					app.ext.admin_medialib.u.handleMediaLibButtons($target)
 					
-					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'mutable');
-					app.model.dispatchThis();
+					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');
 
 					}
+				if(P.src)	{
+					app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'LOAD','src':P.src},{'callback':'handleMediaLibSrc','extension':'admin_medialib'});
+					}
+				app.model.dispatchThis('immutable');
+
 //				app.u.dump("Media library setting data: "); app.u.dump(P);
 				$target.data(P);
 				$target.dialog('open');
 				}, //showMediaLib
 
-//first param is thumbnail object
-//second param is string (mode in api call) or object (ref to text input, hidden, something). must determine
+//first param is thumbnail object on page.
+//second param is string (src in api call) or object (ref to text input, hidden, something). must determine
 //third param is The title.
+//showMediaLib appends this info as data to the mediaLib object. didn't want two jq objects appended in this manner, so their id's are used. 
+// -> if no id's exist, they're assigned.
 			uiShowMediaLib : function($image,strOrObj,title){
 
 //P is added to media library instance using data, and I didn't want an entire jq object there (or two, potentially)
@@ -259,7 +285,7 @@ else	{
 						strOrObj.attr('id',P.eleSelector);
 						}
 					}
-				else if(typeof strOrObj == 'string')	{P.mode = strOrObj;}
+				else if(typeof strOrObj == 'string')	{P.src = strOrObj;}
 				app.ext.admin_medialib.a.showMediaLib(P);
 				}, //uiShowMediaLib
 
@@ -274,7 +300,7 @@ else	{
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
 //eleSelector just updates some form on the page.
 //mode requires an API call.
-				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.mode))	{
+				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src))	{
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 						var $image = $(mediaData.imageID);
@@ -291,7 +317,7 @@ else	{
 						}
 //selector OR mode WILL be set by the time we get here.
 					else	{
-						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.mode,'IMG':fileInfo.path},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
+						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':fileInfo.path},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
 						}
 					}
@@ -336,34 +362,40 @@ else	{
 					}
 				}, //showMediaDetailsInDialog
 			
-			showMediaAndSubs : function(FID){
-				var $mediaTarget = $('#mediaLibFileList ul');
-				var folderProperties = app.ext.admin_medialib.u.getFolderInfoFromPID(FID);
-				//show sub folders.
-				var $folderTarget = $('#mediaChildren_'+FID); //ul for folder children.
-				$folderTarget.toggle(); //allows folders to be opened and closed.
-				
-//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
-				$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.FName).data('path',folderProperties.FName);
-
-//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
-				$('#mediaLibActionsBar .deleteFolderBtn').button('enable').data({'focus-folder-id':FID,'focus-folder-name':folderProperties.FName})
-				$('#mediaLibActionsBar .deleteFolderBtn .folderid').text(folderProperties.FName);
-
-				if($folderTarget.children().length)	{} //children have already been added. don't duplicate.
-				else	{
-					$folderTarget.append(app.ext.admin_medialib.u.showFoldersByParentFID(FID,'mediaLibFolderTemplate'));
-					}
+			showMediaAndSubs : function(folderProperties){
+				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
+					var $mediaTarget = $('#mediaLibFileList ul');
+	
+//SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 					
-				
-				//show files.
-				if(folderProperties && folderProperties.FName)	{
-					$mediaTarget.attr({'data-fid':FID,'data-fname':folderProperties.FName});
-					app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.FName,'selector':'#mediaLibFileList'});
-					app.model.dispatchThis();
+					var $folderTarget = $('#mediaChildren_'+folderProperties.fid); //ul for folder children.
+					$folderTarget.toggle(); //allows folders to be opened and closed.
+
+	//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
+					$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.fname).data('path',folderProperties.fname);
+					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
+	//now handle the delete folder button. Folders with subfolders can not be deleted.
+	//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
+	//if children are present, lock the disable folder button.
+	//this code must be run after the subfolders have been added or children().length won't be accurate.
+					$('#mediaLibActionsBar .deleteFolderBtn .folderid').text(folderProperties.fname);
+	
+					if($folderTarget.children().length)	{
+						$('#mediaLibActionsBar .deleteFolderBtn').button('disable').attr('title','unable to delete because subfolders are present').data({'focus-folder-id':folderProperties.fid,'focus-folder-name':folderProperties.fname})
+						} 
+					else	{
+						$('#mediaLibActionsBar .deleteFolderBtn').button('enable').attr('title','delete folder '+folderProperties.fname).data({'focus-folder-id':folderProperties.fid,'focus-folder-name':folderProperties.fname})
+						}
+						
+					//show files.
+					if(folderProperties.fname)	{
+						$mediaTarget.attr({'data-fid':folderProperties.fid,'data-fname':folderProperties.fname});
+						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname,'selector':'#mediaLibFileList'});
+						app.model.dispatchThis();
+						}
 					}
 				else	{
-					app.u.throwGMessage("WARNING! unable to determine FName from FID ["+FID+"] in admin_medialib.a.showMediaAndSubs.");
+					app.u.throwGMessage("WARNING! admin_medialib.a.showMediaAndSubs folderProperties not set and/or folderproperties.fid not set.");
 					app.u.dump(folderProperties);
 					}
 				
@@ -378,7 +410,25 @@ else	{
 				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
 				$tag.append(app.ext.admin_medialib.u.showFoldersByParentFID(data.value,data.bindData.loadsTemplate));
 				}, //showChildFolders
-//the click event is added to the image, not the li. Otherwise, any elements added (such as the delete checkbox), the click event would trickle to.
+
+//used in the 'mediaLibSelectedFileTemplate'. shows the file name/path as a link and, when clicked, that folder is opened.
+			mediaFilePathAsLinks : function($tag,data)	{
+				var $a = $("<a \/>").attr('href','#').click(function(event){
+					event.preventDefault();
+					var imgPath = $(this).text().split('/');
+					var L = imgPath.length - 1; //last spot is filename, which isn't needed for this.
+//we only want to trigger the link on the last folder, otherwise each folder's info will get requested on the way down and most likely we'd end up with an unattractive popping in the files area.
+					for(i = 0; i < L; i += 1)	{
+						if(i == 0 && L == 1) {$('#mediaRootFolder_'+imgPath[i]+' a:first').click()} //there's only one folder and it's root level.
+						else if(i == 0)	{$('#mediaRootFolder_'+imgPath[i]).toggle()} //opens root folder so children can be displayed.
+						else if(i == L)	{$('#mediaChildren_'+imgPath[i]+' a:first').click()} //for last folder in path, trigger the click to get folder details.
+						else	{$('#mediaChildren_'+imgPath[i]).toggle()} //opens a sub folder that isn't the last folder in the path.
+						}
+					}).text(data.value);
+				$tag.append($a);
+				},
+			
+//the click event is added to the image, not the li. Otherwise, any elements added (such as the delete or details button), the click event would trickle to.
 //The data is set on the li though, so that any elements added, such as the checkbox, could look up that info easily through closest(li).data()
 			mediaList : function($tag,data)	{
 
@@ -405,28 +455,9 @@ else	{
 							app.ext.admin_medialib.a.selectThisMedia($(this));
 							});
 						}
-					$("li button",$tag).each(function(){
-var $button = $(this);
-if($button.data('btn-action') == 'delete')	{
-	$button.addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).click(function(){$(this).toggleClass('ui-state-highlight'); })
-	}
-else if($button.data('btn-action') == 'select')	{
-	$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(){$(this).closest('li').find('img').click(); })
-	}
-else if($button.data('btn-action') == 'details')	{
-	$button.addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).click(function(){
-		app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('li').data())
-		})
-	}
-else if($button.data('btn-action') == 'download')	{
-	$button.addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).click(function(){
-		window.open(app.u.makeImage({'name':$(this).closest('li').data('path')}));
-		})
-	}
-else	{
-	//unknown type. do nothing to it (no .button) so it's easily identified.
-	}
-						});
+
+					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
+
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
@@ -447,9 +478,10 @@ else	{
 					$parent.addClass('hideBtnSave');
 					}
 				}, //handleFilesButtonDisplay
-			
+
 //this is what 'was' in main.js for jquery file upload. but it was too specific and I needed one where I could set the selector.
-//JQFU = JQuery File Upload
+//JQFU = JQuery File Upload.
+//this turns the upload form into a jquery file upload.
 			convertFormToJQFU : function(selector)	{
 				
 'use strict';
@@ -489,7 +521,7 @@ $(selector + ' .files').imagegallery();
 				
 				}, //convertFormToJQFU
 
-			getFolderInfoFromPID : function(FID)	{
+			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
 				var L = app.data.adminImageFolderList['@folders'].length;
 				for(var i = 0; i < L; i += 1)	{
@@ -499,7 +531,7 @@ $(selector + ' .files').imagegallery();
 						}
 					}
 				return r;
-				}, //getFolderInfoFromPID
+				}, //getFolderInfoFromFID
 
 //Will show the images for a given folder. Handles requesting the data.
 // selector is a jquery selector (#something) of what gets translated. the entire selector gets translated.
@@ -548,12 +580,51 @@ $(selector + ' .files').imagegallery();
 				$('#mediaLibFileList .btnDelete').each(function(){
 					if($(this).hasClass('ui-state-highlight'))	{
 						var data = $(this).closest('li').data();
-						app.u.dump(data);
 						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
 					else	{} //do nothing.
 					});
 				}, //buildDeleteMediaRequests
+
+
+
+
+			handleMediaFileButtons : function($target)	{
+				$('button',$target).each(function(){
+					var $button = $(this);
+					if($button.data('btn-action') == 'delete')	{
+						$button.addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).click(function(event){
+							event.preventDefault(); //keeps button from submitting the form.
+							$(this).toggleClass('ui-state-highlight');
+							})
+						}
+					else if($button.data('btn-action') == 'select')	{
+						$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(event){
+							event.preventDefault(); //keeps button from submitting the form.
+							$(this).closest('li').find('img').click();
+							})
+						}
+					else if($button.data('btn-action') == 'details')	{
+						$button.addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).click(function(event){
+							event.preventDefault(); //keeps button from submitting the form.
+							app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data())
+							})
+						}
+					else if($button.data('btn-action') == 'download')	{
+						$button.addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).click(function(event){
+							event.preventDefault(); //keeps button from submitting the form.
+							window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
+							})
+						}
+					else	{
+						//unknown type. do nothing to it (no .button) so it's easily identified.
+						}
+					})
+				},
+
+
+
+
 //these are the actions on the tool bar row of buttons, not the individual photo/media buttons.
 			handleMediaLibButtons : function($target){
 
@@ -571,31 +642,75 @@ $('#mediaLibActionsBar button',$target).each(function(){
 			})
 		}
 	else if($button.data('btn-action') == 'selectUploads')	{
-		$button.button({icons: {primary: "ui-icon-plus"}}).click(function(event){
+		$button.attr('title','create and/or select a folder to add files to').button({icons: {primary: "ui-icon-plus"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
 	//		app.u.dump("Uploads Button Pushed.");
 			$('.fileUploadButtonBar',$target).show();
 			$('[type=file]',$target).click();
 			})
+		$button.button('disable');
 		}
 	else if($button.data('btn-action') == 'deleteFolder')	{
 		$button.addClass('deleteFolderBtn').button({icons: {primary: "ui-icon-trash"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
 			var numMediaFiles = $('#mediaLibFileList ul').children().length;
 			var folderInfo = $button.data();
-			
-			app.u.dump(folderInfo);
-			
+
+//There are two ways to get to the delete code within this function (has subfolders, has no subfolders) so a function is used.
+			function deleteFolder(numMF){
+//disable these buttons because the folder in focus will no longer exist in a moment.
+				$('#mediaLibActionsBar .addMediaFilesBtn').button('disable');
+				$('#mediaLibActionsBar .deleteFolderBtn').button('disable'); 
+				$('#mediaLibActionsBar .selectAddFolderChoices li:last').hide(); //hide the 'as child of...' option in the add folder menu. it is targeted to the folder being deleted, which is about to no longer exist.
+
+//now, add requests to the Q for all the media files to be deleted.
+				if(numMF > 0)	{
+					$('#mediaLibFileList .btnDelete').each(function(){$(this).click()});
+					app.ext.admin_medialib.u.buildDeleteMediaRequests();
+					}
+//if not a root folder, bring the parent folder into focus.
+				if(folderInfo['focus-folder-name'].indexOf('/') > -1 )	{
+					
+					app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':folderInfo['focus-folder-name'].substring(0,folderInfo['focus-folder-name'].lastIndexOf('/')),'selector':'#mediaLibFileList'},'immutable');
+					}
+				else	{} // a root folder is being deleted. There are no images in root, so don't show anything in the files area.
+//next, delete the folder.
+
+//				app.u.dump($('#mediaLibFolderListUL'));
+//				app.u.dump("$('#mediaLibFolderListUL').children().length: "+$('#mediaLibFolderListUL').children().length)
+				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove();  //remove the folders. new folder list w/ changes will be added.
+				//$('#mediaLibFolderListUL').children().each(function(index){app.u.dump(index); $(this).empty().remove()});
+//				$('#mediaLibFolderList ul').children().each(function(){$(this).empty().remove()}); //remove the folders. new folder list w/ changes will be added.
+				app.ext.admin_medialib.calls.adminImageFolderDelete.init(folderInfo['focus-folder-name'],{},'immutable');
+				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'translateSelector','selector':'#mediaLibFolderList','forceRequest':true},'immutable');
+//				app.model.dispatchThis('immutable');
+
+				} //deleteFolder
+				
+//If mediafiles are present in this folder, confirm with the user that they want to delete both the folder AND the media files.			
 			if(numMediaFiles > 0)	{
-//				alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
+
+
+var $newDialog = $('<div \/>').attr('id','mediaFolderDeleteConfirmDialog').append("<p>The folder you are about to delete contains "+numMediaFiles+" media files. Please confirm you want to delete the folder and all "+numMediaFiles+" media files within.<\/p><p>This action can not be undone<\/p>");
+$newDialog.dialog({
+	modal: true,
+	title: "title",
+	show: 'clip',
+	hide: 'clip',
+	buttons: [
+		{text: "Proceed", click: function() {
+			deleteFolder(numMediaFiles);
+			$(this).dialog("close");
+			}},
+		{text: "Cancel", click: function() {$(this).dialog("close")}}
+		]
+	});
+
+
 				}
 			else	{
-				app.ext.admin_medialib.calls.adminImageFolderDelete.init();
+				deleteFolder(numMediaFiles);
 				}
-			
-			app.u.dump("REMINDER: hide the second option in the add folder list and make sure it can't be selected. the folder wont exist so it won't support children.");
-			app.u.dump("REMINDER: probably will need to disable the delete button.");
-//			app.u.dump($button.data());
 			})
 		}
 	else if($button.data('btn-action') == 'addFolder')	{

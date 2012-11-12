@@ -2,7 +2,10 @@
 <form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 <table class='mediaLibrary'>
 <tr>
-	<td colspan='2' id='mediaLibActionsBar' class='alignRight'>
+	<td id='mediaLibraryFocusMediaDetails'>
+<!-- currently populated by media lib -->
+	</td>
+	<td id='mediaLibActionsBar' class='alignRight'>
 	<span>
 	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
 	<button data-btn-action="addFolder">Add Folder</button>
@@ -12,8 +15,9 @@
 		<li class='displayNone'>subfolder</li>
 	</ul>
 	</span>
+	<br />
 	<button data-btn-action="deleteSelected">Delete Selected</button>
-	<button data-btn-action="selectUploads">Add Files</button>
+	<button data-btn-action="selectUploads" class='addMediaFilesBtn'>Add Files</button>
 	<button data-btn-action="deleteFolder" disabled='disabled'>Delete Folder: <span class='folderid'></span></button>
 
 
@@ -87,7 +91,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </tr>
 <tr>
 	<td id='mediaLibFolderList'>
-	<ul data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+	<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
 	</td>
 	<td id='mediaLibFileList'>
 	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight'></ul>
@@ -100,7 +104,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 <ul>
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
-	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().attr('data-folderid')); return false;">
+	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
 		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
 		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/;"></span>
 		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
@@ -122,27 +126,47 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </ul>
 
 
+
+<!-- used when 'view details' is clicked for an image -->
 <div id='mediaLibFileDetailsTemplate' class='loadingBG'>
-	<table>
-	<tr>
-		<td>
-		<div class='marginRight'>
-		<img src='blank.gif' data-bind='var: media(file); format:imageURL;' width='250' height='250' alt='' />
-		</div>
-		</td>
-		<td>
-		<div data-bind='var: media(ImgName); format:text; pretext:Filename: ;'></div>
-		<div data-bind='var: media(ImgName); format:text; pretext:File format: ;'></div>
-		<div>Dimensions: <span data-bind='var: media(W); format:text;'></span> X <span data-bind='var: media(H); format:text;'></span></div>
-		<div data-bind='var: media(MasterSize); format:text; pretext:(;posttext:);'></div>
-		<div data-bind='var: media(TS); format:unix2mdy; pretext:Added on: ;'></div>
-		</div>
+<table>
+<tr>
+	<td>
+	<div class='marginRight'>
+	<img src='blank.gif' data-bind='var: media(file); format:imageURL;' width='250' height='250' alt='' />
+	</div>
+	</td>
+
+	<td>
+	<div data-bind='var: media(ImgName); format:text; pretext:Filename: ;'></div>
+	<div data-bind='var: media(ImgName); format:text; pretext:File format: ;'></div>
+	<div>Dimensions: <span data-bind='var: media(W); format:text;'></span> X <span data-bind='var: media(H); format:text;'></span></div>
+	<div data-bind='var: media(MasterSize); format:text; pretext:(;posttext:);'></div>
+	<div data-bind='var: media(TS); format:unix2mdy; pretext:Added on: ;'></div>
 	</td>
 </tr>
+</table>
 </div>
 
+<!-- appears at the top of the media library when choosing an image -->
+<div id='mediaLibSelectedFileTemplate' class='loadingBG'>
+<table>
+<tr>
+	<td>
+	<div class='marginRight'>
+	<img src='blank.gif' data-bind='var: media(IMG); format:imageURL;' width='75' height='75' alt='' />
+	</div>
+	</td>
 
-
+	<td>
+	<div data-bind='var: media(IMG); format:mediaFilePathAsLinks; extension:admin_medialib; pretext:Currently Selected: ;'></div>
+	<button data-btn-action='clearMedia'>Clear Image</button>
+	<button data-btn-action='details'></button>
+	<button data-btn-action='download'></button>
+	</td>
+</tr>
+</table>
+</div>
 
 
 <div id='folderDeleteWarningModal' class='displayNone'>
