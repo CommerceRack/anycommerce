@@ -503,7 +503,12 @@ else	{
 $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
 	//xhrFields: {withCredentials: true},
-	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/'
+	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/',
+	done : function(e,data){
+		$.each(data.files, function (index, file) {
+            app.u.dump(' -> file: ' + file);
+        });
+		}
 	});
 
 // Enable iframe cross-domain access via redirect option:
