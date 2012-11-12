@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','fileUploadTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -581,7 +581,18 @@ $('#mediaLibActionsBar button',$target).each(function(){
 	else if($button.data('btn-action') == 'deleteFolder')	{
 		$button.addClass('deleteFolderBtn').button({icons: {primary: "ui-icon-trash"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
-			alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
+			var numMediaFiles = $('#mediaLibFileList ul').children().length;
+			var folderInfo = $button.data();
+			
+			app.u.dump(folderInfo);
+			
+			if(numMediaFiles > 0)	{
+				alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
+				}
+			else	{
+				app.ext.admin_medialib.calls.adminImageFolderDelete.init();
+				}
+			
 			app.u.dump("REMINDER: hide the second option in the add folder list and make sure it can't be selected. the folder wont exist so it won't support children.");
 			app.u.dump("REMINDER: probably will need to disable the delete button.");
 //			app.u.dump($button.data());
