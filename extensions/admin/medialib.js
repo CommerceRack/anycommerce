@@ -587,7 +587,7 @@ $('#mediaLibActionsBar button',$target).each(function(){
 			app.u.dump(folderInfo);
 			
 			if(numMediaFiles > 0)	{
-				alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
+//				alert('if folder has images, display warning, then delete all images and folder on confirm (or abort). if no images, delete folder w/out warning.');
 				}
 			else	{
 				app.ext.admin_medialib.calls.adminImageFolderDelete.init();
