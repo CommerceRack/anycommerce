@@ -335,17 +335,17 @@ must be run before handleResponse so that if handleresponse executes any request
 can't be added to a 'complete' because the complete callback gets executed after the success or error callback.
 */
 
+
 	app.globalAjax.requests[QID][pipeUUID] = $.ajax({
 		type: "POST",
 		url: app.vars.jqurl,
 		context : app,
 		async: true,
 		contentType : "text/json",
-		beforeSend: app.model.setHeader,
+//		beforeSend: app.model.setHeader, //
 		dataType:"json",
-//DO NOT CHANGE FORMAT OF _V, especially the zmvc/modelversion/release portion. contents of passindispatchV can be edited, if need be.
-//_v removed in 201246 in favor of being passed in headers. , "_v":'zmvc:'+app.model.version+'.'+app.vars.release+';'+app.vars.passInDispatchV
-		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q})
+//ok to pass admin vars on non-admin session. They'll be ignored.
+		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":"admin","_domain":"www.sporks.zoovy.com","_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
@@ -1514,7 +1514,7 @@ ADMIN/USER INTERFACE
 					window.loadElement = app.ext.admin.a.loadElement;
 					
 				},
-				beforeSend: app.model.setHeader
+				beforeSend: app.model.setHeader //uses headers to pass authentication info to keep them  off the uri.
 				});
 //			app.u.dump(" admin.vars.uiRequest:"); app.u.dump(app.ext.admin.vars.uiRequest);
 			}

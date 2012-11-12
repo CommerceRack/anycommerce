@@ -114,7 +114,7 @@ if(tagObj.forceRequest)	{
 	r = 1;
 	this.dispatch(tagObj,Q);
 	}
-if(app.model.fetchData(tagObj.datapointer) == false)	{
+else if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
 	this.dispatch(tagObj,Q);
 	}
@@ -236,7 +236,13 @@ else	{
 
 			showMediaLib : function(P){
 				var $target = $('#mediaModal');
-				if($target.length)	{} //media lib has already been created.
+//mode typically isn't needed. It is added to the ul containing the 'list' and when that list is run through the templating engine, mode can be used to change behaviors.
+//for instance, mode = 'manage' will turn off the 'select' icons and not add an onclick to the images.
+				P.mode = P.mode || 'unset' 
+				if($target.length)	{
+//this is where the contents for what media is currently selected go. Needs to be emptied each time so old contents don't show up.
+					$('#mediaLibraryFocusMediaDetails').empty();
+					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{
 					$target = $("<div \/>").attr({'id':'mediaModal','title':'Media Library'}).addClass('loadingBG').appendTo('body');
@@ -244,7 +250,7 @@ else	{
 					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
 					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 500});
 					
-					app.ext.admin_medialib.u.handleMediaLibButtons($target)
+					app.ext.admin_medialib.u.handleMediaLibButtons($target);
 					
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');
 
@@ -253,7 +259,7 @@ else	{
 					app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'LOAD','src':P.src},{'callback':'handleMediaLibSrc','extension':'admin_medialib'});
 					}
 				app.model.dispatchThis('immutable');
-
+				$('#mediaLibFileList ul').data('mode',P.mode);
 //				app.u.dump("Media library setting data: "); app.u.dump(P);
 				$target.data(P);
 				$target.dialog('open');
@@ -365,12 +371,15 @@ else	{
 			showMediaAndSubs : function(folderProperties){
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
 					var $mediaTarget = $('#mediaLibFileList ul');
-	
+					
 //SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 					
 					var $folderTarget = $('#mediaChildren_'+folderProperties.fid); //ul for folder children.
-					$folderTarget.toggle(); //allows folders to be opened and closed.
 
+					$('.ui-selected','#mediaLibFolderList').removeClass('ui-selected');
+
+					$folderTarget.toggle(); //allows folders to be opened and closed.
+					$folderTarget.parent().find('a:first').addClass('ui-selected');
 	//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
 					$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.fname).data('path',folderProperties.fname);
 					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
@@ -449,8 +458,12 @@ else	{
 						data.value[i].id = 'mediaFile_'+i;
 						$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])); 
 						}
-//manage mode would be if you went straight into the media library, not trying to edit something (setup > media library).
-					if($tag.data('mode') != 'manage')	{
+//mode is set on the UL when the media library is initialized or reopened.
+					if($tag.data('mode') == 'manage')	{
+						$tag.addClass('hideBtnSave')
+						}
+					else	{
+						$tag.removeClass('hideBtnSave')
 						$('img',$tag).addClass('pointer').click(function(){
 							app.ext.admin_medialib.a.selectThisMedia($(this));
 							});
@@ -537,11 +550,11 @@ $(selector + ' .files').imagegallery();
 // selector is a jquery selector (#something) of what gets translated. the entire selector gets translated.
 //FName is the folder name (pretty). FID won't work.
 			showMediaFor : function(P,Q)	{
+				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
 				if(P.selector && P.FName)	{
 					$(P.selector + ' ul').empty().addClass('loadingBG');
 					P.callback = 'translateSelector'
 					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.FName,P,Q || 'mutable');
-//					$('#'+P.targetID).append(app.ext.admin_medialib.u.showMediaForFolder(P.parentName,P.templateID))
 					}
 				else	{
 					//required params missing.
@@ -658,6 +671,7 @@ $('#mediaLibActionsBar button',$target).each(function(){
 
 //There are two ways to get to the delete code within this function (has subfolders, has no subfolders) so a function is used.
 			function deleteFolder(numMF){
+//				app.u.dump(" -> folderInfo: "); app.u.dump(folderInfo);
 //disable these buttons because the folder in focus will no longer exist in a moment.
 				$('#mediaLibActionsBar .addMediaFilesBtn').button('disable');
 				$('#mediaLibActionsBar .deleteFolderBtn').button('disable'); 
@@ -669,44 +683,39 @@ $('#mediaLibActionsBar button',$target).each(function(){
 					app.ext.admin_medialib.u.buildDeleteMediaRequests();
 					}
 //if not a root folder, bring the parent folder into focus.
-				if(folderInfo['focus-folder-name'].indexOf('/') > -1 )	{
+//folderInfo['focus-folder-name'] can = 2, a number, in which case indexOf is barfing. If it IS a number, it's automatically a root folder so we can safely treat it so.
+				if(typeof folderInfo['focus-folder-name'] == 'string' && folderInfo['focus-folder-name'].indexOf('/') > -1 )	{
 					
 					app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':folderInfo['focus-folder-name'].substring(0,folderInfo['focus-folder-name'].lastIndexOf('/')),'selector':'#mediaLibFileList'},'immutable');
 					}
 				else	{} // a root folder is being deleted. There are no images in root, so don't show anything in the files area.
 //next, delete the folder.
 
-//				app.u.dump($('#mediaLibFolderListUL'));
-//				app.u.dump("$('#mediaLibFolderListUL').children().length: "+$('#mediaLibFolderListUL').children().length)
-				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove();  //remove the folders. new folder list w/ changes will be added.
-				//$('#mediaLibFolderListUL').children().each(function(index){app.u.dump(index); $(this).empty().remove()});
-//				$('#mediaLibFolderList ul').children().each(function(){$(this).empty().remove()}); //remove the folders. new folder list w/ changes will be added.
+
+				$('#mediaLibFolderListUL').addClass('loadingBG').empty();  //remove the folders. new folder list w/ changes will be added.
+				
 				app.ext.admin_medialib.calls.adminImageFolderDelete.init(folderInfo['focus-folder-name'],{},'immutable');
 				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'translateSelector','selector':'#mediaLibFolderList','forceRequest':true},'immutable');
-//				app.model.dispatchThis('immutable');
+				app.model.dispatchThis('immutable');
 
 				} //deleteFolder
 				
 //If mediafiles are present in this folder, confirm with the user that they want to delete both the folder AND the media files.			
 			if(numMediaFiles > 0)	{
-
-
-var $newDialog = $('<div \/>').attr('id','mediaFolderDeleteConfirmDialog').append("<p>The folder you are about to delete contains "+numMediaFiles+" media files. Please confirm you want to delete the folder and all "+numMediaFiles+" media files within.<\/p><p>This action can not be undone<\/p>");
-$newDialog.dialog({
-	modal: true,
-	title: "title",
-	show: 'clip',
-	hide: 'clip',
-	buttons: [
-		{text: "Proceed", click: function() {
-			deleteFolder(numMediaFiles);
-			$(this).dialog("close");
-			}},
-		{text: "Cancel", click: function() {$(this).dialog("close")}}
-		]
-	});
-
-
+				var $newDialog = $('<div \/>').attr('id','mediaFolderDeleteConfirmDialog').append("<p>The folder you are about to delete contains "+numMediaFiles+" media files. Please confirm you want to delete the folder and all "+numMediaFiles+" media files within.<\/p><p>This action can not be undone<\/p>");
+				$newDialog.dialog({
+					modal: true,
+					title: "title",
+					show: 'clip',
+					hide: 'clip',
+					buttons: [
+						{text: "Proceed", click: function() {
+							deleteFolder(numMediaFiles);
+							$(this).dialog("close");
+							}},
+						{text: "Cancel", click: function() {$(this).dialog("close")}}
+						]
+					});
 				}
 			else	{
 				deleteFolder(numMediaFiles);

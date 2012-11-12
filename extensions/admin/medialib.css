@@ -9,6 +9,7 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 #mediaLibFolderList	{width:25%;}
 #mediaLibFolderList li	{display:block; clear:both; margin-bottom:5px;}
+#mediaLibFolderList a	{display:block; padding:2px 0;}
 #mediaLibFolderList ul ul	{padding:0;}
 
 .mediaFiles li	{float:left; margin:10px; width:120px; height:150px; overflow:hidden; text-align:center;}
