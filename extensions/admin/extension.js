@@ -829,16 +829,23 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			
 //msg is an array returned from the ajax response. 
 //it may be empty, and that's not abnormal.
-			uiHandleMessages : function(path,msg)	{
+			uiHandleMessages : function(path,msg,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 				if(msg)	{
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
-					var tab = this.getTabFromPath(path);
+//if the targetID isn't specified, attempt to determine where the message should be placed based on path.
+//checking targetID first instead of just using parent allows for more targeted messaging, such as in modals.
+					if(viewObj && viewObj.targetID)	{
+						msgObj.parentID = viewObj.targetID;
+						}
+					else	{
+						var tab = this.getTabFromPath(path);
+						msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
+						}
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = app.u.uiMsgObject(msg[i]);
 						msgObj.persistant = true; //for testing, don't hide.
-						msgObj.parentID = tab+"Content"; //put messaging in tab specific area.
 						app.u.throwMessage(msgObj);
 						}
 					}
