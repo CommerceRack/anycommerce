@@ -646,8 +646,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				else if(path)	{
 					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
 					$('title').text(path);
-					$('html, body').animate({scrollTop : 0},1000)
-					
 					
 					var tab = app.ext.admin.u.getTabFromPath(path);
 					P.targetID = app.ext.admin.u.getId4UIContent(path)
@@ -787,7 +785,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username').text(app.vars.username);
-				app.ext.admin.a.showUI('/biz/orders/index.cgi'); //commented out for testing.
+//				app.ext.admin.a.showUI('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS=DEFAULT'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.

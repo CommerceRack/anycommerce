@@ -1,5 +1,6 @@
 <div id='mediaLibTemplate'>
 <form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+
 <table class='mediaLibrary'>
 <tr>
 	<td id='mediaLibraryFocusMediaDetails'>
@@ -79,7 +80,9 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
         <div class="fileupload-loading"></div>
 
         <!-- The table listing the files available for upload/download -->
+		<div id='mediaLibraryFileUploadTable'>
         <table role="presentation" class="table table-striped clearfix"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+		</div>
 		
 		<!-- The table above is updated prior to the success response. the ul below is stricly for a data storage purpose to save a filename/folder mapping -->    
 		<ul class='dataMap displayNone'></ul>
@@ -201,7 +204,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 
 <!-- used when 'view details' is clicked for an image -->
-<div id='mediaLibFileDetailsTemplate' class='loadingBG'>
+<div id='mediaLibFileDetailsTemplate'>
 <table>
 <tr>
 	<td>
