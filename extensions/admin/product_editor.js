@@ -136,26 +136,36 @@ var admin_prodEdit = function() {
 		loadAndShowPanels :	{
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
-				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
+//				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
 				
 				
-				
+				var panelData = app.storageFunctions.readLocal('session|productPanels'); //a list of panels as keys w/ value TFU for whether or not so load/show the panel content.
+				if(typeof panelData != 'object'){panelData = {}}; //readLocal returns false if no data local, but an object is needed for the ongoing changes.
+				panelData.general = true; //make sure general panel is open.
+//				app.u.dump(" -> panelData: "); app.u.dump(panelData);
 				
 				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
 				$target.empty(); //removes loadingBG div and any leftovers.
 				var L = app.data[tagObj.datapointer]['@PANELS'].length;
-
+				var panelID; //recycled. shortcut to keep code cleaner.
+				
 				for(var i = 0; i < L; i += 1)	{
-//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
-					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+app.data[tagObj.datapointer]['@PANELS'][i].id,'panelid':app.data[tagObj.datapointer]['@PANELS'][i].id,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
-					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':pid,'sub':'LOAD','panel':app.data[tagObj.datapointer]['@PANELS'][i].id},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@PANELS'][i].id)},'mutable');
+					panelID = app.data[tagObj.datapointer]['@PANELS'][i].id;
+					app.u.dump(i+") panelData["+panelID+"]: "+panelData[panelID]);
+
+					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
+					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelID,'panelid':panelID,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
+
+					if(panelData[panelID])	{
+						$('#panel_'+panelID+' h3').click(); //open panel. This function also adds the dispatch.
+						}
 					}
-				$('#panel_general h3').click(); //make sure general panel is open.
-				app.model.dispatchThis('mutable');
+				
+//				app.model.dispatchThis('mutable');
 				
 //				$( "#productTabMainContent" ).sortable();
-				
+				app.storageFunctions.writeLocal('session|productPanels',panelData); //update the localStorage session var.
 				}
 			}
 		}, //callbacks
@@ -181,18 +191,27 @@ var admin_prodEdit = function() {
 //t is 'this' passed in from the h3 that contains the icon and link.
 		handlePanel : function(t)	{
 			var $header = $(t);
-			var $panel = $('.panelContents',$header.parent()) ;
+			var $panel = $('.panelContents',$header.parent());
+			var panelID = $header.parent().data('panelid');
 			$panel.toggle(); //will open or close panel.
+			var panelData = app.storageFunctions.readLocal('session|productPanels'); //localStorage saves value as KVP, not object. get all panel data and save all panel data to avoid data-loss.
 			if($panel.is(":visible"))	{
-//				$panel.empty().append("<div class='loadingBG' \/>");
+				panelData[panelID] = true;
 				$header.addClass('ui-accordion-header-active ui-state-active');
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
-
+				if($('fieldset',$panel).children().length > 0)	{} //panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
+//default to getting the contents. better to take an API hit then to somehow accidentally load a blank panel.
+				else	{
+					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':$('#panel_'+panelID).data('pid'),'sub':'LOAD','panel':panelID},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(panelID)},'mutable');
+					app.model.dispatchThis('mutable');
+					}
 				}
 			else	{
+				panelData[panelID] = false;
 				$header.removeClass('ui-accordion-header-active ui-state-active');
 				$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
 				}
+			app.storageFunctions.writeLocal('session|productPanels',panelData); //update the localStorage session var.
 			},
 
 //t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.

@@ -249,9 +249,11 @@ You are Logged in as: <span class='username'></span>
 
 <hr />
 
-<button onClick="app.calls.getValidSessionID.init(); app.model.dispatchThis('immutable');">Call</button>
+<button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
 <button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
 <button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
+<button onClick="app.ext.admin_prodEdit.a.showPanelsFor('OUTFIT');">Edit PID OUTFIT</button>
+
 <button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
 <button onClick="app.ext.admin.calls.adminDomainList.init(); app.model.dispatchThis();">adminDomainList</button>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>

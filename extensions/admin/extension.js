@@ -827,7 +827,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //the following function gets executed as part of any fetchAdminResource request. 
 //it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
 			uiHandleContentUpdate : function(path,data,viewObj){
-				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
+//				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
 //				app.u.dump("View Obj: "); app.u.dump(viewObj);
 				if(viewObj.targetID)	{
 					var $target = $('#'+viewObj.targetID)
@@ -925,9 +925,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleFormRewrites : function(path,data,viewObj)	{
-				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
+//				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
 //				app.u.dump(" -> data: "); app.u.dump(data);
-				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
+//				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
 				var $target = $('#'+viewObj.targetID)
 
 //any form elements in the response have their actions rewritten.
