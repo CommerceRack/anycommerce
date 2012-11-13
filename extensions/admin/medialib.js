@@ -31,6 +31,17 @@ var admin_medialib = function() {
 
 	calls : {
 
+		adminCSVImport : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj._tag =  tagObj || {};
+				obj._cmd = "adminImageDelete"
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			},
+
 		adminImageDelete : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
@@ -128,6 +139,17 @@ else	{
 				app.model.addDispatchToQ({"_cmd":"adminImageFolderList","_tag" : tagObj},Q);	
 				}
 			}, //adminImageFolderList
+
+//This implementation of the call does not support a 'data' for the file itself, it's used with the jqueryUI plugin, 
+//which uploads the file to a location on the server where it is store temporarily, and returns a guid as part of that request.
+		adminImageUpload : {
+			init : function(obj,tagObj,Q){this.dispatch(obj,tagObj,Q);},
+			dispatch : function(obj,tagObj,Q){
+				obj._cmd = "adminImageUpload";
+				obj._tag = tagObj || {};
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
 
 //obj should contain verb and src. for save, should include IMG
 		adminUIMediaLibraryExecute : {
@@ -503,13 +525,29 @@ else	{
 $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
 	//xhrFields: {withCredentials: true},
-	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi/',
+	url: app.vars.jqurl+'fileupload.cgi',
+	success : function(data,textStatus){
+//		app.u.dump(" -> responseData: "); app.u.dump(data);
+
+var L = data.length;
+for(var i = 0; i < L; i += 1)	{
+	data[i].folder = '007';
+	app.u.dump("REMINDER!!! folder is hard coded right now.");
+	app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{},'passive'); //on a successful response, add the file to the media library.
+	}
+app.model.dispatchThis('passive');
+
+		},
 	done : function(e,data){
 		$.each(data.files, function (index, file) {
-            app.u.dump(' -> file: ' + file);
-        });
+            app.u.dump(' -> file: '); app.u.dump(file);
+			});
 		}
-	});
+	}).bind('fileuploadadd', function (e, data) {
+		app.u.dump(" -> FileUploadAdd executes"); // app.u.dump(e);
+//		app.u.dump("data:"); app.u.dump(data);
+		});
+
 
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
@@ -518,22 +556,6 @@ $(selector).fileupload(
 	window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
 	);
 
-	// Load existing files:
-	$.ajax({
-		// Uncomment the following to send cross-domain cookies:
-		//xhrFields: {withCredentials: true},
-		url: $(selector).fileupload('option', 'url'),
-		dataType: 'json',
-		context: $(selector)[0]
-	}).done(function (result) {
-		if (result && result.length) {
-			$(this).fileupload('option', 'done')
-				.call(this, null, {result: result});
-		}
-	});
-
-// Initialize the Image Gallery widget:
-$(selector + ' .files').imagegallery();
 
 //$('.btn-success',$(selector)).on('click', function(){$(".fileUploadButtonBar").show()});
 				

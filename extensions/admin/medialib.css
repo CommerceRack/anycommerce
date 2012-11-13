@@ -24,7 +24,7 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 */ 
 
 .hideBtnDelete .btnDelete	{display:none;}
-.hideBtnSave .btnSave	{display:none;}
+.hideBtnSave .btnSelect	{display:none;}
 .hideBtnDetails .btnDetails	{display:none;}
 .hideBtnDownload .btnDownload	{display:none;}
 

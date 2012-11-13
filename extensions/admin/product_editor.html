@@ -86,7 +86,7 @@
 	</div>
 	</td>
 	<td>
-	<div data-bind='var: product(prod_name); format:text;'></div>
+	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(prod_name); format:text;'></span></div>
 	<div data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></div>
 	</td>
 	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
@@ -132,10 +132,10 @@
 
 
 
-
+<!-- this template can be used for elastic or traditional product lists. defaultVar should be used for the elastic inputs -->
 <li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
 	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid'));">
-	<span data-bind='var: product(pid); defaultVar: product(pid); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
+	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
 	</a>
 </li>
 
