@@ -13,4 +13,4 @@
 .productEditorContainer .panelHeader	{margin-top:12px; padding:3px 12px;}
 .productEditorContainer .panelHeader span	{float:left; margin-right:6px;}
 
-.productEditorContainer	.panelContents fieldset	{border:none; margin:0; padding:0;}
+.productEditorContainer	.panelContents fieldset	{border:none; margin:0; padding:10px;} /* add a little padding inside the panel */

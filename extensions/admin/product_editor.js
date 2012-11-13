@@ -133,16 +133,18 @@ var admin_prodEdit = function() {
 				}
 			}, //showManagementCats
 
+//executed after the list of panels for a given product are received (in the product editor).
+//Uses local storage to determine which panels to open and retrieve content for.
+//panelData is an object with panel ids as keys and value TFU for whether or not so load/show the panel content.
 		loadAndShowPanels :	{
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
-//				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
+//				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
+				var panelData = app.storageFunctions.readLocal('session|productPanels');
 				
-				
-				var panelData = app.storageFunctions.readLocal('session|productPanels'); //a list of panels as keys w/ value TFU for whether or not so load/show the panel content.
-				if(typeof panelData != 'object'){panelData = {}}; //readLocal returns false if no data local, but an object is needed for the ongoing changes.
+//readLocal returns false if no data local, but an object is needed for the ongoing changes.
+//when attempting to do an if(panelData), it didn't work. think false may have been a string, not a boolean.
+				if(typeof panelData != 'object'){panelData = {}}; 
 				panelData.general = true; //make sure general panel is open.
-//				app.u.dump(" -> panelData: "); app.u.dump(panelData);
 				
 				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
