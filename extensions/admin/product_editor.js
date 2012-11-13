@@ -216,7 +216,9 @@ var admin_prodEdit = function() {
 			var $form = $(t).closest("form");
 			var $fieldset = $('fieldset',$form); // a var because its used/modified more than once.
 			var formObj = $form.serializeJSON();
-			formObj.pid = $form.closest('[data-pid]').attr('data-pid');
+//if pid is set as a input in the original form, use it. Otherwise, look for it in data on the container.
+			formObj.pid = formObj.pid || $form.closest('[data-pid]').attr('data-pid');
+			
 			formObj['sub'] = (SUB) ? SUB : 'SAVE';
 			formObj.panel = panelID;
 			if(formObj.pid)	{
