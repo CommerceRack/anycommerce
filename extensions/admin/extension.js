@@ -787,7 +787,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username').text(app.vars.username);
-//				app.ext.admin.a.showUI('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS=DEFAULT'); //commented out for testing.
+				app.ext.admin.a.showUI('/biz/orders/index.cgi'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
@@ -845,12 +845,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //it's used to output any content in the msgs array.
 //it may be empty, and that's fine.
 			uiHandleMessages : function(path,msg,viewObj)	{
-//				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+//				app.u.dump("viewObj: "); app.u.dump(viewObj);
 				if(msg)	{
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
 					var target; //where the messaging is going to be put.
-					app.u.dump(" -> viewObj.targetID: "+viewObj.targetID);
 //if the targetID isn't specified, attempt to determine where the message should be placed based on path.
 //checking targetID first instead of just using parent allows for more targeted messaging, such as in modals.
 					if(viewObj && viewObj.targetID)	{
@@ -859,11 +859,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					else	{
 						target = this.getTabFromPath(path)+"Content"; //put messaging in tab specific area.
 						}
-
+					app.u.dump(" -> target: "+target);
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = app.u.uiMsgObject(msg[i]);
-						msgObj.targetID = target;
+						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
 						msgObj.persistant = true; //for testing, don't hide.
+						app.u.dump(msgObj);
 						app.u.throwMessage(msgObj);
 						}
 					}

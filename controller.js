@@ -759,8 +759,15 @@ and model that needed to be permanently displayed had to be converted into an ob
 			},
 
 		uiMsgObject : function(msg)	{
-			var eType = msg.split('|')[0].toLowerCase();
-			return {'errid':'#','errmsg':msg.split('|')[1],'errtype':msg.split('|')[0],'uiIcon':'z-'+eType,'uiClass':'z-'+eType}
+			var obj; //what is returned.
+			if(typeof msg == 'string')	{
+				obj = app.u.statusMsgObject(msg); //sometimes, only a messages is returned in compat mode (edit order, tracking, for instance).
+				}
+			else	{
+				var eType = msg.split('|')[0].toLowerCase();
+				obj = {'errid':'#','errmsg':msg.split('|')[1],'errtype':msg.split('|')[0],'uiIcon':'z-'+eType,'uiClass':'z-'+eType}
+				}
+			return obj;
 			},
 
 		errMsgObject : function(msg,errid)	{

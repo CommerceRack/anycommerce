@@ -17,14 +17,13 @@
 ************************************************************** */
 
 /*
-An extension for acquiring and displaying 'lists' of categories.
-The functions here are designed to work with 'reasonable' size lists of categories.
+An extension for managing the media library in addition to ALL other file uploads,including, but not limited to: csv and zip.
 */
 
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate','fileUploadTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -222,7 +221,7 @@ else	{
 					$template = app.renderFunctions.transmogrify(app.data[tagObj.datapointer]['@folders'][i],'mediaLibFolderTemplate',app.data[tagObj.datapointer]['@folders'][i]);
 					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); //add either to the parent folders ul or to the root list.
 					}
-				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm');
+				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary');
 				}
 			
 			}, //showMediaLibrary
@@ -517,19 +516,15 @@ else	{
 //this is what 'was' in main.js for jquery file upload. but it was too specific and I needed one where I could set the selector.
 //JQFU = JQuery File Upload.
 //this turns the upload form into a jquery file upload.
-			convertFormToJQFU : function(selector)	{
+//currently supported modes are: mediaLibrary
+//the mode set will impact the success callback.
+
+			convertFormToJQFU : function(selector,mode)	{
 				
 'use strict';
 
-// Initialize the jQuery File Upload widget:
-$(selector).fileupload({
-	// Uncomment the following to send cross-domain cookies:
-	//xhrFields: {withCredentials: true},
-	url: app.vars.jqurl+'fileupload.cgi',
-
-	success : function(data,textStatus){
-//		app.u.dump(" -> responseData: "); app.u.dump(data);
-
+var successCallbacks = {
+	'mediaLibrary' : function(data,textStatus){
 var L = data.length;
 var $ul = $('.dataMap',$('#mediaLibUploadForm')); //container of data mapping (a ul). each li contains a filename and fname data attribute.
 var $li;
@@ -541,7 +536,19 @@ for(var i = 0; i < L; i += 1)	{
 	$li.empty().remove(); //remove this from list so future lookups are quicker.
 	}
 app.model.dispatchThis('passive');
+		},
+	'csvUploadToBatch' : function() {}
+	}
 
+// Initialize the jQuery File Upload widget:
+$(selector).fileupload({
+	// Uncomment the following to send cross-domain cookies:
+	//xhrFields: {withCredentials: true},
+	url: app.vars.jqurl+'fileupload.cgi',
+
+	success : function(data,textStatus){
+//		app.u.dump(" -> responseData: "); app.u.dump(data);
+		successCallbacks[mode](data,textStatus);
 		}
 	}).bind('fileuploadadd', function (e, data) {
 		var fname = $('#mediaLibFileList ul').data('fname'); //save var so that lookup only needs to occur once instead of in each iteration.
