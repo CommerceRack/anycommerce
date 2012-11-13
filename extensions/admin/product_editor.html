@@ -18,7 +18,7 @@
 
 <ul>
 	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showCreateProductDialog(); return false;">New Product</a></li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Filter Product</a>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();  return false;">Filter Product</a>
 	<ul class='displayNone tagFilterList'>
 		<li>IS_FRESH</li>
 		<li>IS_NEEDREVIEW</li>
@@ -47,14 +47,14 @@
 		<li>IS_USER9</li>
 	</ul>
 	</li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Syndication</a>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Syndication</a>
 	<ul class='displayNone mktFilterList'>
 		<li data-mktid="GOO">Google</li>
 		<li data-mktid="EBS">eBay Store</li>
 	</ul>
 	</li>
 	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
+	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
 		<ul id='manCats' class='displayNone'>
 		</ul>
 	</li>
@@ -134,7 +134,7 @@
 
 <!-- this template can be used for elastic or traditional product lists. defaultVar should be used for the elastic inputs -->
 <li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
-	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid'));">
+	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid')); return false;">
 	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
 	</a>
 </li>

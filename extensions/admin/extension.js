@@ -632,8 +632,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var $target;
 				if(path  && P.dialog)	{
 //This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
-					$target = $('#someDialog');
-					P.targetID = 'someDialog';
+					$target = $('#uiDialog');
+					P.targetID = 'uiDialog';
 					if($target.length){} //element exists, do nothing to it.
 					else	{
 						$target = $("<div>").attr('id','someDialog').appendTo('body');
@@ -797,6 +797,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					}
+				else if(tab == 'setup' && path.split('/')[3] == 'analytics')	{
+					app.u.dump(" -> open syndication editor");
+					app.model.fetchAdminResource(path,P);
 					}
 				else	{
 //					app.u.dump(" -> open something wonderful...");
