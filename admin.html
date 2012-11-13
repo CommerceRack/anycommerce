@@ -270,12 +270,20 @@ Having these on the DOM seems to make the JQ File Upload plugin work better so t
 -->
 
 <!-- The template to display files available for upload -->
+<!-- NOTES:
+template-upload modified from original. data-name added to tr.
+data-fid and data-fname will be added in the fileuploadadd
+These two pieces of data are used for mapping after the uploads to set what folder each file is saved to.
+-->
 <script id="template-upload" type="text/x-tmpl">
 {% for (var i=0, file; file=o.files[i]; i++) { %}
-    <tr class="template-upload fade">
+    <tr class="template-upload fade" data-filename="{%=file.name%}">
         <td class="preview"><span class="fade"></span></td>
-        <td class="name"><span>{%=file.name%}</span></td>
-        <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+        <td>
+			<div class="name">{%=file.name%}</div>
+			<div class="size">{%=o.formatFileSize(file.size)%}</div>
+			<div class="folder"></div>
+		</td>
         {% if (file.error) { %}
             <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
         {% } else if (o.files.valid && !i) { %}

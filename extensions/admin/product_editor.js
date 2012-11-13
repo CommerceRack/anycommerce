@@ -137,6 +137,10 @@ var admin_prodEdit = function() {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
 				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
+				
+				
+				
+				
 				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
 				$target.empty(); //removes loadingBG div and any leftovers.
@@ -182,7 +186,8 @@ var admin_prodEdit = function() {
 			if($panel.is(":visible"))	{
 //				$panel.empty().append("<div class='loadingBG' \/>");
 				$header.addClass('ui-accordion-header-active ui-state-active');
-				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s')
+				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
+
 				}
 			else	{
 				$header.removeClass('ui-accordion-header-active ui-state-active');

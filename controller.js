@@ -1370,9 +1370,9 @@ a word */
 				}
 			return r;
 			}, //makeSafeHTMLId
-		
-		jqSelector : function(str){
-			return '#'+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+//if bool === false, then no # in response. allows for this code to be used for more than just ID's (like data attributes)
+		jqSelector : function(str,bool){
+			return ((bool === false) ? '' : '#')+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 			},
 
 

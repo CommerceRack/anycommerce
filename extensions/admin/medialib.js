@@ -526,26 +526,35 @@ $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
 	//xhrFields: {withCredentials: true},
 	url: app.vars.jqurl+'fileupload.cgi',
+
 	success : function(data,textStatus){
 //		app.u.dump(" -> responseData: "); app.u.dump(data);
 
 var L = data.length;
+var $ul = $('.dataMap',$('#mediaLibUploadForm')); //container of data mapping (a ul). each li contains a filename and fname data attribute.
+var $li;
 for(var i = 0; i < L; i += 1)	{
-	data[i].folder = '007';
-	app.u.dump("REMINDER!!! folder is hard coded right now.");
+	$li = $("[data-filename="+app.u.jqSelector(data[i].filename,false)+"]",$ul);
+	data[i].folder = $li.attr('data-fname');
+//	app.u.dump("-> data[i]: "); app.u.dump(data[i]);
 	app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{},'passive'); //on a successful response, add the file to the media library.
+	$li.empty().remove(); //remove this from list so future lookups are quicker.
 	}
 app.model.dispatchThis('passive');
 
-		},
-	done : function(e,data){
-		$.each(data.files, function (index, file) {
-            app.u.dump(' -> file: '); app.u.dump(file);
-			});
 		}
 	}).bind('fileuploadadd', function (e, data) {
-		app.u.dump(" -> FileUploadAdd executes"); // app.u.dump(e);
-//		app.u.dump("data:"); app.u.dump(data);
+		var fname = $('#mediaLibFileList ul').data('fname'); //save var so that lookup only needs to occur once instead of in each iteration.
+		var $li; //recycled in loop. jq object of the row in the file table.
+		var L = data.files.length; //an array of the files just added.
+
+//this bind adds fname to an li in a ul that holds the list of uploads.
+//its used in the callback to set which folder should be used when moving the file from the tmp folder to the media lib.
+//can't use the table because the JQ file upload plugin rewrites that before the success response is executed and any data attribs are lost.
+		for(var i = 0; i < L; i += 1)	{
+			$li = $("<li \/>").attr({'data-filename':data.files[i].name,'data-fname':fname}).text(fname);
+			$('.dataMap',$(this)).append($li);
+			}
 		});
 
 
