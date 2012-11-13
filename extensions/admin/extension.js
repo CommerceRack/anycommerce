@@ -620,7 +620,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-				$('html, body').animate({scrollTop : 0},1000);
 //				$loadingModal.dialog('open');
 
 //empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
@@ -632,11 +631,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var $target;
 				if(path  && P.dialog)	{
 //This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
-					$target = $('#uiDialog');
 					P.targetID = 'uiDialog';
+					$target = $('#'+P.targetID);
 					if($target.length){} //element exists, do nothing to it.
 					else	{
-						$target = $("<div>").attr('id','someDialog').appendTo('body');
+						$target = $("<div>").attr('id',P.targetID).appendTo('body');
 						$target.dialog({modal:true,width:'90%',height:500,autoOpen:false})
 						}
 					P.title = P.title || "Details"
@@ -645,6 +644,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.ext.admin.u.handleShowSection(path,P,$target);
 					}
 				else if(path)	{
+					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
 					$('title').text(path);
 					$('html, body').animate({scrollTop : 0},1000)
 					
@@ -850,6 +850,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					var L = msg.length;
 					var msgType, msgObj; //recycled.
 					var target; //where the messaging is going to be put.
+					app.u.dump(" -> viewObj.targetID: "+viewObj.targetID);
 //if the targetID isn't specified, attempt to determine where the message should be placed based on path.
 //checking targetID first instead of just using parent allows for more targeted messaging, such as in modals.
 					if(viewObj && viewObj.targetID)	{
