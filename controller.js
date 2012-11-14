@@ -1378,8 +1378,8 @@ a word */
 			return r;
 			}, //makeSafeHTMLId
 //if bool === false, then no # in response. allows for this code to be used for more than just ID's (like data attributes)
-		jqSelector : function(str,bool){
-			return ((bool === false) ? '' : '#')+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
+		jqSelector : function(selector,str){
+			return ((selector) ? selector : '')+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 			},
 
 
@@ -1818,6 +1818,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 
 //NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
 		handleTranslation : function($r,data)	{
+//app.u.dump("BEGIN app.renderFunctions.handleTranslation");
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
 $r.find('[data-bind]').each(function()	{
 										   
@@ -1843,9 +1844,16 @@ $r.find('[data-bind]').each(function()	{
 		}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 //	app.u.dump(" -> value: "+value);
-	
+
 	if((value  == 0 || value == '0.00') && bindData.hideZero)	{
+//		app.u.dump(" -> got to zero section");
 //				app.u.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
+		}
+//in some cases, in the UI, we load another template that's shared, such as fileImport in admin_medialib extension
+//in this case, the original data is passed through and no format translation is done on the element itself.
+	else if(bindData.loadsTemplate && bindData.format == 'loadsTemplate')	{
+//		app.u.dump("NOTICE! - doing a loads template with no translation on the element itself (no var/val set)");
+		$focusTag.append(app.renderFunctions.transmogrify({},bindData.loadsTemplate,data));
 		}
 	else if(value)	{
 		if(app.u.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.

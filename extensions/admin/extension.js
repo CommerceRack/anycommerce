@@ -266,12 +266,11 @@ var admin = function() {
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
-
-//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/showLoading/css/showLoading.css']);
-app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/css/flexigrid.pack.css','flexigrid']);
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
-//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.qtip-1.0.0-rc3/jquery.qtip.min.css']);
-//app.rq.push(['css',0,'https://www.zoovy.com/biz/ajax/jquery.contextMenu/jquery.contextMenu.css']);
+
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showLoading.css']);
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
+
 
 				return r;
 				},
@@ -785,20 +784,23 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username').text(app.vars.username);
-//				app.ext.admin.a.showUI('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS=DEFAULT'); //commented out for testing.
+				app.ext.admin.a.showUI('/biz/setup/index.cgi?verb=PRODUCTS'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
+				
 //				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
-				else if(tab == 'setup' && path.split('/')[3] == 'analytics')	{
-					app.u.dump(" -> open syndication editor");
-					app.model.fetchAdminResource(path,P);
+				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
+					app.u.dump(" -> open import editor");
+					app.ext.admin_medialib.u.showFileUploadPage(path,P);
+					
+					//page-setup-import-upload-products
 					}
 				else	{
 //					app.u.dump(" -> open something wonderful...");

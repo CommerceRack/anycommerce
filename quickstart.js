@@ -2370,6 +2370,8 @@ else	{
 				return r;
 				},
 
+//This will create the arrays for each of the templates that support template functions (onCompletes, onInits and onDeparts).
+// 
 			createTemplateFunctions : function()	{
 
 				app.ext.myRIA.template = {};
