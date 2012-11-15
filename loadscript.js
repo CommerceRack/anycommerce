@@ -61,8 +61,10 @@ app.u.handleRQ = function()	{
 			app.rq[i][app.rq[i].length] = false; //will get set to true when script loads as part of callback.
 			app.vars.rq.push(app.rq[i]); //add to pass zero rq.
 
-//on pass 0, no callbacks added to extensions because the model already has a function for checking if extensions are loaded.
-// adding these extensions to the extensions array is necessary for this checker to work.
+//on pass 0, for extensions , their specific callback is not added (if there is one.)
+// because the model will execute it for all extensions once the controller is initiated.
+// so instead, a generic callback function is added to track if the extension is done loading.
+// which is why the extension is added to the extension Q (above).
 			app.u.loadScript(app.rq[i][3],callback,(app.vars.rq.length - 1));
 			app.rq.splice(i, 1); //remove from old array to avoid dupes.
 			}

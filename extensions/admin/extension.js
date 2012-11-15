@@ -78,7 +78,18 @@ var admin = function() {
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
 				if(partition) { tagObj.datapointer += "|"+partition}
-				this.dispatch(partition,tagObj,Q);
+if(tagObj.forceRequest)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
+else if(app.model.fetchData(tagObj.datapointer) == false)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
+else	{
+	app.u.handleCallback(tagObj);
+	}
+
 				},
 			dispatch : function(partition,tagObj,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","partition":partition,"_tag" : tagObj},Q);	
@@ -405,6 +416,12 @@ else	{
 						app.vars.domain = $(this).data('id');
 						$('.domain','#appView').text(" | "+$(this).data('id')+" ["+$(this).data('prt')+"]");
 						app.u.dump("REMINDER!!! need to update local storage with this value once testing is done.");
+//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
+//something here is causing session to not persist on reload.
+//						var localVars = app.model.fetchData('authAdminLogin');
+//						localVars.domain = app.vars.domain;
+//						app.storageFunctions.writeLocal('authAdminLogin',localVars);
+
 						$target.dialog('close');
 						}).appendTo($ul);
 					}
@@ -715,6 +732,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //this is a function that brian has in the UI on some buttons.
 //it's diferent than showUI so we can add extra functionality if needed.
+//the app itself should never use this function.
 			navigateTo : function(path,P)	{
 				this.showUI(path,P);
 				},
@@ -849,8 +867,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
 					app.u.dump(" -> open import editor");
 					app.ext.admin_medialib.u.showFileUploadPage(path,P);
-					
-					//page-setup-import-upload-products
+					}
+				else if(tab == 'setup' && path.split('/')[3] == 'customfiles')	{
+					app.u.dump(" -> open public files list");
+					app.ext.admin_medialib.u.showPublicFiles(path,P);
 					}
 				else	{
 //					app.u.dump(" -> open something wonderful...");
@@ -1385,7 +1405,7 @@ just lose the back button feature.
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 				app.u.dump(" -> hash: "+hash);
 				if(hash.indexOf("/biz/") == 0)	{
-					showUI(hash);
+//					showUI(hash);
 					}
 				else	{
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.

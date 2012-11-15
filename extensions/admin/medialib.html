@@ -247,12 +247,34 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 
 
 
+<div class='page pageSetup pageSetupPublicFiles'  id='page-setup-publicfiles'>
+<h1>Public Files</h1>
+
+<section>
+<h2>Upload new files</h2>
+<form name="publicFilesUploadForm" id="publicFilesUploadForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</section>
+
+
+
+<section>
+<h2>Existing files</h2>
+	<ul class='loadingBG' id='publicFilesList'></ul>
+</section>
+</div>
+
+
+
+
 
 <!--
 
 ##########################
 
-PAGE TEMPLATES FOR FILE UPLOAD AREA
+PAGE TEMPLATES FOR setup/import
 
 ##########################
 

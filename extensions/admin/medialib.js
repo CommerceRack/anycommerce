@@ -154,10 +154,23 @@ else	{
 
 		adminPublicFileList : {
 			init : function(tagObj,Q)	{
-				this.dispatch(tagObj,Q);
+tagObj = tagObj || {};
+tagObj.datapointer = 'adminPublicFileList';
+if(tagObj.forceRequest)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
+else if(app.model.fetchData(tagObj.datapointer) == false)	{
+	r = 1;
+	this.dispatch(tagObj,Q);
+	}
+else	{
+	app.u.handleCallback(tagObj);
+	}
 				},
 			dispatch : function(tagObj,Q)	{
-				obj._tag =  tagObj || {};
+				obj = {};
+				obj._tag =  tagObj;
 				obj._cmd = "adminPublicFileList"
 				app.model.addDispatchToQ(obj,Q);	
 				}
@@ -173,7 +186,7 @@ else	{
 				obj._cmd = "adminPublicFileUpload"
 				app.model.addDispatchToQ(obj,Q);	
 				}
-			}, //adminPublicFileList
+			}, //adminPublicFileUpload
 
 		adminPublicFileDelete : {
 			init : function(filename,tagObj,Q)	{
@@ -184,7 +197,7 @@ else	{
 				obj._cmd = "adminPublicFileUpload"
 				app.model.addDispatchToQ(obj,Q);	
 				}
-			}, //adminPublicFileList
+			}, //adminPublicFileDelete
 
 
 //obj should contain verb and src. for save, should include IMG
@@ -273,6 +286,20 @@ else	{
 
 				}
 			},//handleMediaLibUpdate, //showMediaLibrary
+			
+			
+		handlePublicFilesList : {
+			onSuccess: function(tagObj)	{
+				var data = app.data[tagObj.datapointer]['@files'];
+				$ul = $("<ul \/>");
+				var L = data.length;
+				for(var i = 0; i < L; i += 1)	{
+					$ul.append($("<li>").html("[ <a href='#' onClick=\"alert('empty and delte parent. execute delete call.'); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
+					}
+				 $('#publicFilesList').empty().removeClass('loadingBG').append($ul.children());
+				},
+			},	
+			
 		handleImageUpload : {
 			onSuccess : function(tagObj){
 				$("[data-filename='"+app.u.jqSelector('',tagObj.filename)+"']",$('#mediaLibraryFileUploadTable')).slideUp(1000,function(){$(this).empty().remove()})
@@ -919,6 +946,16 @@ $('#mediaLibActionsBar span',$target).buttonset();
 //makes any ul's inside the spans a menu. THey'll appear on click as part of the btn-action code. used, but not limited to, for selectAddFolderDestination
 $('#mediaLibActionsBar span ul',$target).hide().menu().selectable();
 				}, //handleMediaLibButtons
+			
+			
+			showPublicFiles : function(path,P){
+				var $target = $('#setupContent');
+				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-publicfiles',{})); //load the page template.
+				app.ext.admin_medialib.u.convertFormToJQFU('#publicFilesUploadForm','publicFileUpload');
+				app.ext.admin_medialib.calls.adminPublicFileList.init({'callback':'handlePublicFilesList','extension':'admin_medialib'});
+				app.model.dispatchThis();
+				},
+			
 			
 			showFileUploadPage : function(path,P)	{
 
