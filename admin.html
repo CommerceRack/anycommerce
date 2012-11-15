@@ -141,7 +141,7 @@ You are Logged in as: <span class='username'></span>
 	<ul id='menutabs' >
 		<li class='off'><a href='/biz/setup/index.cgi'  class='bindByAnchor' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
 		<li class='off'><a href='/biz/sites/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
-		<li class='off'><a href='/biz/jt/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>JT</span></a></li>
+		<li class='off displayNone' id='jtSectionTab'><a href='/biz/jt/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>JT</span></a></li>
 		<li class='off'><a href='/biz/product/edit.cgi?VERB=WELCOME'  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
 		<li class='off'><a href='/biz/orders/index.cgi'  class='bindByAnchor' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
 		<li class='off'><a href='/biz/crm/index.cgi'  class='bindByAnchor' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
@@ -177,17 +177,17 @@ You are Logged in as: <span class='username'></span>
 
 	<div id='globalMessaging' class='appMessaging'></div>
 	
-	<div id='homeContent' class='displayNone tabContent'></div>
-	<div id='setupContent' class='displayNone tabContent'></div>
-	<div id='sitesContent' class='displayNone tabContent'></div>
-	<div id='productContent' class='displayNone tabContent'></div>
-	<div id='ordersContent' class='displayNone tabContent'></div>
-	<div id='crmContent' class='displayNone tabContent'></div>
-	<div id='syndicationContent' class='displayNone tabContent'></div>
-	<div id='reportsContent' class='displayNone tabContent'></div>
-	<div id='kpiContent' class='displayNone tabContent'></div>
-	<div id='utilitiesContent' class='displayNone tabContent'></div>
-	<div id='jtContent' class='displayNone tabContent'></div>
+	<div id='homeContent' class='displayNone tabContent' data-section='home'></div><!-- home acts as a default as well -->
+	<div id='setupContent' class='displayNone tabContent' data-section='setup'></div>
+	<div id='sitesContent' class='displayNone tabContent' data-section='sites'></div>
+	<div id='productContent' class='displayNone tabContent' data-section='product'></div>
+	<div id='ordersContent' class='displayNone tabContent' data-section='orders'></div>
+	<div id='crmContent' class='displayNone tabContent' data-section='crm'></div>
+	<div id='syndicationContent' class='displayNone tabContent' data-section='syndication'></div>
+	<div id='reportsContent' class='displayNone tabContent' data-section='reports'></div>
+	<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
+	<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
+	<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
 	
 </div>
 
@@ -339,6 +339,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 </script>
 
 
-
+<div><a href='#top'>top</a></div>
 </body>
 </html>

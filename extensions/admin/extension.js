@@ -316,8 +316,11 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.showFinder = app.ext.admin.a.showUIFinder;
 
+				window._ignoreHashChange = false; // see handleHashState to see what this does.
+
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('#jtSectionTab').show();
 	}
 
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
@@ -619,8 +622,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-//				$loadingModal.dialog('open');
-
+				_ignoreHashChange = true; //see handleHashChange for details on what this does.
+				document.location.hash = path;
 //empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
 //these are also emptied in the functions that handle the display so that a save, which doesn't run through this block, doesn't cause duplicates
 				$('#navTabs').empty();
@@ -827,12 +830,24 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 	
 //the following function gets executed as part of any fetchAdminResource request. 
 //it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
+//it also handles updating the breadcrumb, forms, links etc.
 			uiHandleContentUpdate : function(path,data,viewObj){
 //				app.u.dump("BEGIN admin.u.uiHandleContentUpdate");
 //				app.u.dump("View Obj: "); app.u.dump(viewObj);
+
 				if(viewObj.targetID)	{
 					var $target = $('#'+viewObj.targetID)
 					$target.html(data.html);
+//The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
+//so that display must have all the links and form submits modified.
+					app.ext.admin.u.uiHandleBreadcrumb(data.bc);
+					app.ext.admin.u.uiHandleNavTabs(data.tabs);
+					app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
+					app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
+					app.ext.admin.u.uiHandleMessages(path,data.msgs,viewObj);
+
+					if(typeof viewObj.success == 'function'){viewObj.success()}
+					
 					}
 				else	{
 					app.u.throwGMessage("WARNING! no target ID passed into admin.u.uiHandleContentUpdate. This is bad. No content displayed because we don't know where to put it.");
@@ -840,6 +855,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.u.dump(" -> data: "); app.u.dump(data);
 					app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
 					}
+				$target.hideLoading();
 				},
 
 //the following function gets executed as part of any fetchAdminResource request. 
@@ -938,6 +954,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('form',$target).submit(function(event){
 //					app.u.dump(" -> Executing custom form submit.");
 					event.preventDefault();
+					$target.showLoading();
 					var formObj = $(this).serializeJSON();
 //					app.u.dump(" -> jsonObj: "); app.u.dump(jsonObj);
 					app.model.fetchAdminResource(path,viewObj,formObj); //handles the save.
@@ -1298,24 +1315,32 @@ else	{
 
 /*
 CODE FOR URL MANAGEMENT
+
+When a page change occurs, the hash is updated.
+This hash change triggers a 'state' in the browser so that the back button will work.
+when the browser detects a hash change, it will execute this code.
+Of course, if we change the hash with JS, it will also trigger this code.
+so, in our js for changing pages (showUI), we start by setting the global var _ignoreHashChange to true.
+Then this function will know to NOT perform a showUI of it's own.
+because this feature should be on most of the time, ignorehashchange is turned off each 
+time a hash change occurs.
+I didn't have this function actually trigger the page handler instead of toggling ignore... on/off because
+it relied to heavily on a feature of the browser and who knows how consistenly it's supported. If it isn't, we 
+just lose the back button feature.
 */
 
-// from the hash, formatted as #company?show=returns, it determines pageType (company)
-// a pageInfo (pio) object is created and validated (pageInfo will be set to false if invalid)
-//showcontent is NOT executed if pio is not valid (otherwise every anchor would execute a showContent - that would be bad.)
-// _ignoreHashChange is set to true if the hash is changed w/ js instead of an anchor or some other browser related event.
-// this keeps the code inside handleHashState from being triggered when no update desired.
-// ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
-
 			handleHashState : function()	{
-//				app.u.dump("BEGIN myRIA.u.handleHashState");
-				var hash = window.location.hash;
+				app.u.dump("BEGIN myRIA.u.handleHashState");
+				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 				app.u.dump(" -> hash: "+hash);
-//				if(!$.isEmptyObject(pio) && _ignoreHashChange === false)	{
-//					showUI('',pio);
-//					}
-				_ignoreHashChange = false; //always return to false so it isn't "left on" by accident.
-				},
+				if(hash.indexOf("/biz/") == 0)	{
+					showUI(hash);
+					}
+				else	{
+					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
+					}
+				_ignoreHashChange = false; //turned off again to re-engage this feature.
+				}
 
 
 
