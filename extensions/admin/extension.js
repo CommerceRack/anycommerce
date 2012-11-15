@@ -268,10 +268,6 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
 
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showLoading.css']);
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
-
-
 				return r;
 				},
 			onError : function(d)	{
@@ -293,6 +289,12 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
+//get list of domains and show chooser.
+				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
+				$domainChooser.dialog({'autoOpen':false, 'modal':true, 'width': '90%', 'height': 500});
+
+
+//make sure all the links in the header use the proper syntax.
 				$('.bindByAnchor','#mastHead').each(function(){
 					$(this).click(function(event){
 						event.preventDefault();
@@ -300,11 +302,12 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 						})
 					})
 //if supported, update hash while navigating.
+// see handleHashState function for what this is and how it works.
 				if("onhashchange" in window)	{ // does the browser support the hashchange event?
-					app.u.dump("WOOT! browser supports hashchange");
+//					app.u.dump("WOOT! browser supports hashchange");
 					_ignoreHashChange = false; //global var. when hash is changed from JS, set to true. see handleHashState for more info on this.
 					window.onhashchange = function () {
-						app.u.dump("Hash has changed.");
+//						app.u.dump("Hash has changed.");
 						app.ext.admin.u.handleHashState();
 						}
 					}
@@ -317,7 +320,7 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 				window.showFinder = app.ext.admin.a.showUIFinder;
 
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
-
+				
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	$('#jtSectionTab').show();
@@ -339,7 +342,7 @@ else	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
 				$('#'+tagObj.targetID).removeClass('loadingBG').html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
-			}, //init
+			}, //showDataHTML
 
 
 		showElementEditorHTML : {
@@ -357,7 +360,7 @@ else	{
 				$form.append("<div class='marginTop center'><input type='submit' class='ui-state-active' value='Save' \/><\/div>");
 				$target.removeClass('loadingBG').html($form);
 				}
-			}, //init
+			}, //showElementEditorHTML
 
 
 //executed after a 'save' is pushed for a specific element while editing in the builder.
@@ -370,25 +373,44 @@ else	{
 				app.u.throwMessage(msg);
 
 				if(app.ext.admin.vars.tab)	{
-					app.u.dump("GOT HERE!!!");
 					$('#'+app.ext.admin.vars.tab+'Content').empty().append(app.data[tagObj.datapointer].html)
 					}			
 				}
-			},
+			}, //handleElementSave
 
 		showHeader : {
 			onSuccess : function(){
 				app.ext.admin.u.showHeader();
 				}
-			},
+			}, //showHeader
 
+		handleDomainChooser : {
+			onSuccess : function(tagObj){
+				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
+				var data = app.data[tagObj.datapointer]['@DOMAINS'];
+				var $target = $('#'+tagObj.targetID);
+				app.u.dump("REMINDER!!! need to clear out the existing content, but reload list each time for when new domains are added.");
+				app.u.dump("REMINDER!!! when a new domain is added, be sure to rerun the adminDomain call");
+				var L = data.length;
+				var $ul = $("<ul \/>");
+				for(var i = 0; i < L; i += 1)	{
+					$("<li \/>").data(data[i]).addClass('lookLikeLink').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
+						app.vars.domain = $(this).data('id');
+						$('.domain','#appView').text(" &#187; "+$(this).data('id')+" ["+$(this).data('prt')+"]");
+						app.u.dump("REMINDER!!! need to update local storage with this value once testing is done.");
+						$target.dialog('close');
+						}).appendTo($ul);
+					}
+				$target.hideLoading().append($ul);
+				}
+			}, //handleDomainChooser
 
 		handleElasticFinderResults : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
+//				app.u.dump("BEGIN admin.callbacks.handleElasticFinderResults.onSuccess.");
 				var L = app.data[tagObj.datapointer]['_count'];
 				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
-				app.u.dump(" -> Number Results: "+L);
+//				app.u.dump(" -> Number Results: "+L);
 				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
 				if(L == 0)	{
 					$parent.append("Your query returned zero results.");
@@ -621,7 +643,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 		a : {
 
 			showUI : function(path,P)	{
-				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+//				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
 //empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
@@ -662,12 +684,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						
 					if($target.children().length === 0)	{
 						//this means the section has NOT been opened before.
-						app.u.dump(" -> section has NOT been rendered before. Render it.");
+//						app.u.dump(" -> section has NOT been rendered before. Render it.");
 						app.ext.admin.u.handleShowSection(path,P,$target);
 						}
 					else if(tab == app.ext.admin.vars.tab)	{
 						//we are moving within the same section.
-						app.u.dump(" -> Moving within same section, Render it.");
+//						app.u.dump(" -> Moving within same section, Render it.");
 						app.ext.admin.u.handleShowSection(path,P,$target);
 						}
 					else	{
@@ -753,6 +775,18 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.u.throwGMessage("WARNING! unknown type ["+type+"] passed into showUIFinder");
 					}
 				},
+
+//opens a dialog with a list of domains for selection.
+//a domain being selected for their UI experience is important, so the request is immutable.
+//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
+//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
+			showDomainChooser : function(){
+				app.u.dump("BEGIN admin.a.showDomainChooser");
+				$('#domainChooserDialog').dialog('open').showLoading();
+				app.ext.admin.calls.adminDomainList.init("0",{'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+				app.model.dispatchThis('immutable');
+				},	
+				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(path,sku)	{
 				var $finderModal = $('#prodFinder');
@@ -787,8 +821,13 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appPreView').hide();
 				$('#appLogin').hide();
 				$('#appView').show();
-				$('.username').text(app.vars.username);
-				app.ext.admin.a.showUI('/biz/setup/index.cgi?verb=PRODUCTS'); //commented out for testing.
+				$('.username','#appView').text(app.vars.username);
+
+//show the domain chooser if one is not set. see showDomainChooser function for more info on why.
+				if(app.vars.domain)	{$('.domain','#appView').text(app.vars.domain)}
+				else	{app.ext.admin.a.showDomainChooser();}
+				
+				app.ext.admin.a.showUI('/biz/setup/index.cgi'); //commented out for testing.
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
@@ -862,7 +901,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //it's used to output any content in the msgs array.
 //it may be empty, and that's fine.
 			uiHandleMessages : function(path,msg,viewObj)	{
-				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
+//				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 //				app.u.dump("viewObj: "); app.u.dump(viewObj);
 				if(msg)	{
 					var L = msg.length;
@@ -876,7 +915,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					else	{
 						target = this.getTabFromPath(path)+"Content"; //put messaging in tab specific area.
 						}
-					app.u.dump(" -> target: "+target);
+//					app.u.dump(" -> target: "+target);
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = app.u.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
@@ -909,7 +948,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						}
 					}
 				else	{
-					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
+//					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
 					}
 				},
 //the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
@@ -938,7 +977,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						}
 					}
 				else	{
-					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
+//					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
 					}
 				},
 // 'data' is the response from the server. includes data.html
@@ -1330,7 +1369,7 @@ just lose the back button feature.
 */
 
 			handleHashState : function()	{
-				app.u.dump("BEGIN myRIA.u.handleHashState");
+//				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 				app.u.dump(" -> hash: "+hash);
 				if(hash.indexOf("/biz/") == 0)	{

@@ -26,7 +26,9 @@ app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigr
 //app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/jquery.popup/jquery.popupWindow.js']);
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
 
-
+//have showLoading as early as possible. pretty handy feature.
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showLoading.css']);
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
 app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js']);
