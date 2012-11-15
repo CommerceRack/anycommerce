@@ -275,7 +275,7 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 				}
 			}, //init
 
-
+		
 
 //executed when the extension loads
 		initExtension : {
@@ -291,7 +291,14 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
-				$domainChooser.dialog({'autoOpen':false, 'modal':true, 'width': '90%', 'height': 500});
+				$domainChooser.dialog({
+					'autoOpen':false,
+					'modal':true,
+					'width': '90%',
+					'height': 500,
+					'closeOnEscape': false,
+					open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog || ui).hide()}
+					});
 
 
 //make sure all the links in the header use the proper syntax.
@@ -318,7 +325,7 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.showFinder = app.ext.admin.a.showUIFinder;
-
+				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 if(app.u.getParameterByName('debug'))	{
@@ -392,11 +399,11 @@ else	{
 				app.u.dump("REMINDER!!! need to clear out the existing content, but reload list each time for when new domains are added.");
 				app.u.dump("REMINDER!!! when a new domain is added, be sure to rerun the adminDomain call");
 				var L = data.length;
-				var $ul = $("<ul \/>");
+				var $ul = $("<ul \/>").attr('id','domainList');
 				for(var i = 0; i < L; i += 1)	{
 					$("<li \/>").data(data[i]).addClass('lookLikeLink').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
 						app.vars.domain = $(this).data('id');
-						$('.domain','#appView').text(" &#187; "+$(this).data('id')+" ["+$(this).data('prt')+"]");
+						$('.domain','#appView').text(" | "+$(this).data('id')+" ["+$(this).data('prt')+"]");
 						app.u.dump("REMINDER!!! need to update local storage with this value once testing is done.");
 						$target.dialog('close');
 						}).appendTo($ul);
@@ -1023,6 +1030,11 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					});
 				},
 			
+			
+			linkOffSite : function(url){
+				window.open(url);
+				},
+
 //used when an element in the builder is saved.
 //also used when a select is changed in the builder > edit page > edit product list
 			uiSaveBuilderElement : function($form,ID,tagObj)	{

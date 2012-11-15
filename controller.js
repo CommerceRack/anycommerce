@@ -695,7 +695,7 @@ persistant - this can be passed in as part of the msg object or a separate param
 and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
 		throwMessage : function(msg,persistant){
-//			app.u.dump("BEGIN app.u.throwMessage");
+			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
 			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
@@ -725,7 +725,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				msg.messageClass = messageClass;
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
-				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
+				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{app.u.dump("USING targetID for errors"); $target = $('#'+msg['_rtag'].targetID)}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
 				else	{
 					$target = $globalDefault;
@@ -745,6 +745,10 @@ and model that needed to be permanently displayed had to be converted into an ob
 						}
 					},10000); //shrink message after a short display period
 				}
+//get rid of all the loading gfx in the target so users know the process has stopped.
+			$target.removeClass('loadingBG');
+			if(typeof $.hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
+ 
 			return r;
 			},
 

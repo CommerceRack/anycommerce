@@ -36,10 +36,11 @@ var admin_medialib = function() {
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
-				obj._cmd = "adminImageDelete"
+				obj._cmd = "adminCSVImport"
 				app.model.addDispatchToQ(obj,Q);	
 				}
 			},
+
 
 		adminImageDelete : {
 			init : function(obj,tagObj,Q)	{
@@ -149,6 +150,42 @@ else	{
 				app.model.addDispatchToQ(obj,Q);
 				}
 			},
+
+
+		adminPublicFileList : {
+			init : function(tagObj,Q)	{
+				this.dispatch(tagObj,Q);
+				},
+			dispatch : function(tagObj,Q)	{
+				obj._tag =  tagObj || {};
+				obj._cmd = "adminPublicFileList"
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminPublicFileList
+
+
+		adminPublicFileUpload : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj._tag =  tagObj || {};
+				obj._cmd = "adminPublicFileUpload"
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminPublicFileList
+
+		adminPublicFileDelete : {
+			init : function(filename,tagObj,Q)	{
+				this.dispatch(filename,tagObj,Q);
+				},
+			dispatch : function(filename,tagObj,Q)	{
+				obj._tag =  tagObj || {};
+				obj._cmd = "adminPublicFileUpload"
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminPublicFileList
+
 
 //obj should contain verb and src. for save, should include IMG
 		adminUIMediaLibraryExecute : {
@@ -574,7 +611,7 @@ $(selector).fileupload({
 	url: app.vars.jqurl+'fileupload.cgi',
 	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 	success : function(data,textStatus){
-//		app.u.dump(" -> responseData: "); app.u.dump(data);
+		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 		successCallbacks[mode](data,textStatus);
 		}
 	}).bind('fileuploadadd', function (e, data) {
