@@ -760,8 +760,8 @@ and model that needed to be permanently displayed had to be converted into an ob
 
 		uiMsgObject : function(msg)	{
 			var obj; //what is returned.
-			if(typeof msg == 'string')	{
-				obj = app.u.statusMsgObject(msg); //sometimes, only a messages is returned in compat mode (edit order, tracking, for instance).
+			if(msg.indexOf('|') == -1)	{
+				obj = {'errid':'#','errmsg':msg,'errtype':'unknown','uiIcon':'ui-icon-z-ise','uiClass':'z-hint'} //some legacy messaging is pipeless (edit order, tracking, for instance).
 				}
 			else	{
 				var eType = msg.split('|')[0].toLowerCase();

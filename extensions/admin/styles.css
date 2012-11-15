@@ -67,23 +67,6 @@ if you want the list responsive, apply the .fluidList class.
 
 
 
-.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
-/*
-added to an editable element once edit is enabled.
-inline block and width are added so that elements that are empty will be more obviously editable.
-be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
-the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
-*/
-.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px;} 
-.editEnabled input	{border:0; padding:0; margin:0;}
-.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
-.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
-
-.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
-a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
-
-
-
 
 /* some generic styles for tables */
 
@@ -345,3 +328,21 @@ SHARED CLASSES FOR INLINE EDITING
 ########################################################
 
 */
+
+
+
+.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
+/*
+added to an editable element once edit is enabled.
+inline block and width are added so that elements that are empty will be more obviously editable.
+be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
+the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
+*/
+.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px;} 
+.editEnabled input	{border:0; padding:0; margin:0;}
+.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
+.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
+
+.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
+a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
+
