@@ -622,6 +622,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //				$loadingModal.dialog('open');
 
 //empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
+//these are also emptied in the functions that handle the display so that a save, which doesn't run through this block, doesn't cause duplicates
 				$('#navTabs').empty();
 				$('#breadcrumb').empty();
 
@@ -878,6 +879,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //being empty is not abnormal.
 			uiHandleBreadcrumb : function(bc)	{
 				var $target = $('#breadcrumb') //breadcrumb container.
+				$target.empty();
 				if(bc)	{
 					var L = bc.length;
 					for(var i = 0; i < L; i += 1)	{
@@ -897,7 +899,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
 			uiHandleNavTabs : function(tabs)	{
 				var $target = $('#navTabs')// tabs container
-				
+				$target.empty(); //emptied to make sure tabs aren't duplicated on save.
 				if(tabs)	{
 					var L = tabs.length;
 					var className; //recycled in loop.
