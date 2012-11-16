@@ -139,12 +139,12 @@ var admin_prodEdit = function() {
 		loadAndShowPanels :	{
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
-				var panelData = app.storageFunctions.readLocal('session|productPanels');
+				var sessionData =  app.storageFunctions.readLocal('session') || {};
 				
 //readLocal returns false if no data local, but an object is needed for the ongoing changes.
 //when attempting to do an if(panelData), it didn't work. think false may have been a string, not a boolean.
-				if(typeof panelData != 'object'){panelData = {}}; 
-				panelData.general = true; //make sure general panel is open.
+				if(typeof sessionData.productPanels != 'object'){sessionData.productPanels = {}}; 
+				sessionData.productPanels.general = true; //make sure general panel is open.
 				
 				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
@@ -154,12 +154,12 @@ var admin_prodEdit = function() {
 				
 				for(var i = 0; i < L; i += 1)	{
 					panelID = app.data[tagObj.datapointer]['@PANELS'][i].id;
-					app.u.dump(i+") panelData["+panelID+"]: "+panelData[panelID]);
+//					app.u.dump(i+") panelData["+panelID+"]: "+panelData[panelID]);
 
 					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
 					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelID,'panelid':panelID,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
 
-					if(panelData[panelID])	{
+					if(sessionData.productPanels[panelID])	{
 						$('#panel_'+panelID+' h3').click(); //open panel. This function also adds the dispatch.
 						}
 					}
@@ -167,7 +167,7 @@ var admin_prodEdit = function() {
 //				app.model.dispatchThis('mutable');
 				
 //				$( "#productTabMainContent" ).sortable();
-				app.storageFunctions.writeLocal('session|productPanels',panelData); //update the localStorage session var.
+				app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 				}
 			}
 		}, //callbacks
@@ -195,10 +195,18 @@ var admin_prodEdit = function() {
 			var $header = $(t);
 			var $panel = $('.panelContents',$header.parent());
 			var panelID = $header.parent().data('panelid');
+			var sessionData;
 			$panel.toggle(); //will open or close panel.
-			var panelData = app.storageFunctions.readLocal('session|productPanels'); //localStorage saves value as KVP, not object. get all panel data and save all panel data to avoid data-loss.
+			
+			if(app.model.fetchData('session'))	{
+				sessionData = app.storageFunctions.readLocal('session'); //localStorage saves value as KVP, not object. get all panel data and save all panel data to avoid data-loss.
+				sessionData.productPanels = sessionData.productPanels || {};
+				}
+			else	{
+				sessionData = {productPanels:{}};
+				}
 			if($panel.is(":visible"))	{
-				panelData[panelID] = true;
+				sessionData.productPanels[panelID] = true;
 				$header.addClass('ui-accordion-header-active ui-state-active');
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
 				if($('fieldset',$panel).children().length > 0)	{} //panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
@@ -209,11 +217,11 @@ var admin_prodEdit = function() {
 					}
 				}
 			else	{
-				panelData[panelID] = false;
+				sessionData.productPanels[panelID] = false;
 				$header.removeClass('ui-accordion-header-active ui-state-active');
 				$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
 				}
-			app.storageFunctions.writeLocal('session|productPanels',panelData); //update the localStorage session var.
+			app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 			},
 
 //t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.

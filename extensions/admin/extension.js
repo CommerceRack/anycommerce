@@ -779,7 +779,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
-					showUI(path || "/biz/index.cgi");
+					showUI(path || "/biz/setup/index.cgi");
 					}
 				else	{
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
@@ -898,7 +898,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 		u : {
-			
+//executed after preloader if device is logged in.
+//executed after login if a login is required.
+//If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
+//the entire UI experience revolves around having a domain.
 			showHeader : function(){
 				$('#appPreView').hide();
 				$('#appLogin').hide();
@@ -907,11 +910,18 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var domain = this.getDomain();
 				app.u.dump(" -> DOMAIN: ["+domain+"]");
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-				if(domain)	{$('.domain','#appView').text(domain)}
-				else	{app.ext.admin.a.showDomainChooser();}
-				
-				app.ext.admin.a.showUI('/biz/setup/index.cgi'); //commented out for testing.
-				},
+				if(domain)	{
+					$('.domain','#appView').text(domain)
+					app.ext.admin.a.showUI('/biz/setup/index.cgi'); //commented out for testing.
+					}
+				else	{
+					app.ext.admin.a.showDomainChooser(); //the selection of a domain name will load the page content.
+					}
+				}, //showHeader
+
+
+
+
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
 			getDomain : function(){
 				var domain = false;
@@ -926,7 +936,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(localVars.domain){domain = localVars.domain}
 				else {} //at this time, no other options.
 				return domain;
-				},
+				}, //getDomain
+
+
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
@@ -1456,6 +1468,18 @@ else	{
 
 				}, //bindFinderButtons
 
+//In some cases, we'll likely want to kill everything in local storage BUT save the login and session data.
+//login data will allow the user to return without logging in.
+//session data is panel disposition and order and things like that.
+			selectivelyNukeLocalStorage : function(){
+				var admin = {};
+				var session = {};
+				if(app.model.fetchData('authAdminLogin'))	{admin = app.storageFunctions.readLocal('authAdminLogin');}
+				if(app.model.fetchData('session'))	{session = app.storageFunctions.readLocal('session');}
+				localStorage.clear();
+				app.storageFunctions.writeLocal('authAdminLogin',admin);
+				app.storageFunctions.writeLocal('session',session);
+				},
 
 /*
 CODE FOR URL MANAGEMENT

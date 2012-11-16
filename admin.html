@@ -22,7 +22,7 @@ var app = {vars:{
 
 </script>
 
-<!-- 
+<!--
 all css includes need to be after the js that changes the base url. 
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
@@ -111,7 +111,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 		<div style='height:105px; position:relative; background:url(https://www.zoovy.com/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
 	
 <!-- logo -->
-<div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;'>
+<div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;' onClick="showUI('/biz/index.cgi');">
 <img src="https://www.zoovy.com/biz/images/header/zoovy_logo-136x33.png" alt="zoovy is great" width='136' height='32' id='zoovyheaderlogo' />
 </div>
 
@@ -121,7 +121,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 <div style='position:absolute; right:20px; top:7px; text-align:right;'>
 	<a href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> | 
 	<a href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> | 
-	<a href='https://www.zoovy.com/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
+	<a href='/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
 </div>
 
 
@@ -130,7 +130,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 <!-- username/id and partition info -->
 <div style='position:absolute; top:7px; left:180px;' id='userInfo'>
 You are Logged in as: <span class='username'></span> <span class='domain lookLikeLink' onClick='app.ext.admin.a.showDomainChooser(); return false;'></span> [ <span class='partition'></span> ]
-<a   href='/biz/logout.cgi' >logout [NOT WORKING}</a>
+<a href='/biz/logout.cgi' >logout [NOT WORKING}</a>
 </div>
 
 
