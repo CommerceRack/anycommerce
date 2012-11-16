@@ -365,6 +365,12 @@ else	{
 			}, //showDataHTML
 
 
+		handleLogout : {
+			onSuccess : function(tagObj)	{
+				document.location = 'logout.html'
+				}
+			},
+
 		showElementEditorHTML : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
@@ -888,11 +894,13 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //showFinderInModal
 
 			logout : function(){
+				$('body').showLoading();
+				app.calls.authentication.authAdminLogout.init({'callback':'handleLogout','extension':'admin'});//always immutable.
+				app.model.dispatchThis('immutable');
+//nuke all this after the request so that the dispatch has the info it needs.
 				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
 				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
-//				var localSession = app.model.readLocal
-				app.calls.authentication.authAdminLogout.init({});//always immutable.
-				app.model.dispatchThis('immutable');
+
 				}
 
 			}, //action
