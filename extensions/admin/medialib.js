@@ -36,6 +36,7 @@ var admin_medialib = function() {
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
+				obj._tag.datapointer = "adminCSVImport"
 				obj._cmd = "adminCSVImport"
 				app.model.addDispatchToQ(obj,Q);	
 				}
@@ -292,7 +293,8 @@ else	{
 		
 		handleFileUpload2Batch : {
 			onSuccess : function(tagObj){
-				$("<div \/>").attr('id','batchDialog_').append("I like Ike").dialog();
+				var jobID = app.data[tagObj.datapointer].JOBID;
+				$("<div \/>").attr({'id':'batchDialog_'+jobID,'title':'Job ID: '+jobID}).append("<p class='pointer' onClick='showUI(\"/biz/batch/index.cgi?VERB=LOAD&JOB="+jobID+"\")'>File uploaded. <span class='lookLikeLink'>click here</span> to see job status. job id: "+jobID+"<\/p>").dialog();
 				}
 			},
 		
@@ -643,7 +645,7 @@ var successCallbacks = {
 		app.u.dump("Got to csvUploadToBatch success.");
 //		app.u.dump(" -> data:"); app.u.dump(data);
 //		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
-		app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{},'immutable');
+		app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
 		app.model.dispatchThis('immutable');
 		}
 	}
@@ -652,7 +654,7 @@ var successCallbacks = {
 $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
 	//xhrFields: {withCredentials: true},
-	url: app.vars.jqurl+'fileupload.cgi',
+	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi',
 	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 	success : function(data,textStatus){
 //		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);

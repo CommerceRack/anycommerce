@@ -926,33 +926,9 @@ AUTHENTICATION/USER
 			},
 		
 		thisIsAnAdminSession : function()	{
-			var r = false; //what is returned.
-			if(app.vars.deviceid && app.vars.userid && app.vars.authtoken) {r = true} //while technically this could be spoofed, the API wouldn't accept invalid values
-			return r;
+			//while technically this could be spoofed, the API wouldn't accept invalid values
+			return (app.vars.deviceid && app.vars.userid && app.vars.authtoken) ? true : false;
 			},
-
-/*
-looks to see what level of authentication the session is at.
-If the user has logged in during this visit, they're fully authenticated.
-If they logged in via a third party login, that login name is returned (ex: facebook login returns facebook)
-If the user logged in a previous visit, they get a softauth.
-If the user has subscribed to email during this visit, then guest will be returned.
-if there was no login of any kind, they're not authenticated. false is returned.
-
-use this function to determine IF you need to make calls, do NOT add any calls if auth level isn't as high as needed.
-
-commented out in 201238
-		whatAuthIsThisSession : function()	{
-			var r = false; //what is returned.
-			if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
-			else if(typeof FB != 'undefined' && !jQuery.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{r = 'facebook';}
-			else if(app.data.whoAmI && app.data.whoAmI.cid)	{r = 'soft'}
-			else if(app.model.fetchData('cartDetail') && app.data.cartDetail.bill.email)	{r = 'guest';}
-			else{}
-			return r;
-			}, //whatAuthIsThisSession
-
-*/
 
 
 //pretty straightforward. If a cid is set, the session has been authenticated.
@@ -963,9 +939,7 @@ commented out in 201238
 			
 			determineAuthentication : function(){
 				var r = 'none';
-				if(this.thisIsAnAdminSession())	{
-					r = 'admin';
-					}
+				if(this.thisIsAnAdminSession())	{r = 'admin'}
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
 				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
 				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}

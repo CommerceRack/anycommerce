@@ -74,18 +74,17 @@ var admin = function() {
 
 
 		adminDomainList : {
-			init : function(partition,tagObj,Q)	{
+			init : function(tagObj,Q)	{
 				app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
-				if(partition) { tagObj.datapointer += "|"+partition}
 if(tagObj.forceRequest)	{
 	r = 1;
-	this.dispatch(partition,tagObj,Q);
+	this.dispatch(tagObj,Q);
 	}
 else if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
-	this.dispatch(partition,tagObj,Q);
+	this.dispatch(tagObj,Q);
 	}
 else	{
 	app.u.dump(" -> use local data.");
@@ -93,8 +92,8 @@ else	{
 	}
 
 				},
-			dispatch : function(partition,tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminDomainList","partition":partition,"_tag" : tagObj},Q);
+			dispatch : function(tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : tagObj},Q);
 				app.u.dump(" -> added dispatch to Q.");
 				}			
 			},
@@ -338,11 +337,13 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
+				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.showFinder = app.ext.admin.a.showUIFinder;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 if(app.u.getParameterByName('debug'))	{
+	$('button','.buttonset').button();
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	$('#jtSectionTab').show();
 	}
@@ -411,32 +412,34 @@ else	{
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $('#'+tagObj.targetID);
 				var L = data.length;
-				var $ul = $('#domainList'); //ul in modal.
-//modal has been opened on this visit.  Domain list still reloaded in case they've changed.
-				if($ul.length)	{$ul.empty()} //user is changing domains.
-//first time modal has been viewed.
+				if(L)	{
+					var $ul = $('#domainList'); //ul in modal.
+	//modal has been opened on this visit.  Domain list still reloaded in case they've changed.
+					if($ul.length)	{$ul.empty()} //user is changing domains.
+	//first time modal has been viewed.
+					else	{
+						$ul = $("<ul \/>").attr('id','domainList');
+						}
+					
+					for(var i = 0; i < L; i += 1)	{
+						$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].id == app.vars.domain ? 'ui-selected' : '').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
+							app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'))
+							$target.dialog('close');
+							}).appendTo($ul);
+						}
+					$target.hideLoading().append($ul);
+					}
 				else	{
-					$ul = $("<ul \/>").attr('id','domainList');
+//user has no domains on file. What to do?
 					}
-				
-				for(var i = 0; i < L; i += 1)	{
-					$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].id == app.vars.domain ? 'ui-selected' : '').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
-						app.vars.domain = $(this).data('id');
-						$('.domain','#appView').text($(this).data('id'));
-						$('.partition','#appView').text($(this).data('prt'));
-//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-//something here is causing session to not persist on reload.
-						if(app.model.fetchData('authAdminLogin'))	{
-							var localVars = app.storageFunctions.readLocal('authAdminLogin');
-							localVars.domain = app.vars.domain;
-							localVars.partition = $(this).data('prt');
-							app.storageFunctions.writeLocal('authAdminLogin',localVars);
-							}
-
-						$target.dialog('close');
-						}).appendTo($ul);
-					}
-				$target.hideLoading().append($ul);
+				},
+			onError: function(responseData)	{
+				var $target = $('#'+responseData._rtag.targetID);
+				$target.hideLoading();
+				responseData.persistant = true;
+				app.u.throwMessage(responseData);
+				$target.append("<P>Something has gone very wrong. We apologize, but we were unable to load your list of domains. A domain is required.</p>");
+				$("<button \/>").attr('title','Close Window').text('Close Window').click(function(){$target.dialog('close')}).button().appendTo($target);
 				}
 			}, //handleDomainChooser
 
@@ -677,6 +680,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
+	
+
 			showUI : function(path,P)	{
 //				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
@@ -739,6 +744,47 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
 					}
 				return false;
+				},
+//pass in a domain and an attr
+//ex: pass in prt and the partition is returned.
+			getDataForDomain : function(domain,attr)	{
+				var r = false; //what is returned. will be value, if available.
+				var data = app.data['adminDomainList']['@DOMAINS']; //shortcut
+				var L = data.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(data[i].id == domain){
+						r = data[i][attr];
+						break; //once a match is found, exit.
+						}
+					else{} //catch.
+					}
+				return r;
+				},
+//host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
+//changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
+			changeDomain : function(domain,partition,path){
+				if(domain)	{
+					app.vars.domain = domain;
+					$('.domain','#appView').text(domain);
+					if(partition){}
+					else	{
+						partition = this.getDataForDomain(domain,'prt');
+						}
+					$('.partition','#appView').text(partition || "");
+	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
+	//something here is causing session to not persist on reload.
+					if(app.model.fetchData('authAdminLogin'))	{
+						var localVars = app.storageFunctions.readLocal('authAdminLogin');
+						localVars.domain = domain;
+						localVars.partition = partition || null;
+						app.storageFunctions.writeLocal('authAdminLogin',localVars);
+						}
+					showUI(path || "/biz/index.cgi");
+					}
+				else	{
+					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
+					}
+
 				},
 
 //this is a function that brian has in the UI on some buttons.
@@ -819,7 +865,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			showDomainChooser : function(){
 				app.u.dump("BEGIN admin.a.showDomainChooser");
 				$('#domainChooserDialog').dialog('open').showLoading();
-				app.ext.admin.calls.adminDomainList.init("0",{'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
 				app.model.dispatchThis('immutable');
 				},	
 				

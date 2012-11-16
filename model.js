@@ -1472,12 +1472,8 @@ ADMIN/USER INTERFACE
 						app.u.dump("UI request aborted. It would destroy such life in favor of its new matrix."); //most likely, this abort happened intentionally because another action was requested (a link was clicked)
 						}
 					else	{
-//						app.u.dump("pathParts"); app.u.dump(pathParts[1].split('/')[2]);
-						$('#'+pathParts[1]+'Content').empty(); ///empty out loading div and any template placeholder.
+						$('#'+app.ext.admin.u.getTabFromPath(pathParts[0])+'Content').empty(); ///empty out loading div and any template placeholder.
 						app.u.throwGMessage("Error details = UI request failure: "+b);
-						app.u.dump(" -> pathParts"); app.u.dump(pathParts);
-//						app.u.throwMessage("Uh Oh! Something terrible happened. We apologize for any inconvenience. If this error persists, please contact support.<br \/>Error details = UI request failure: "+b);
-//						app.u.dump(a);
 						if(typeof viewObj.error == 'function'){viewObj.error()}
 						}
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
