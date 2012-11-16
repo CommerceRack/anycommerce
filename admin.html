@@ -23,7 +23,7 @@ var app = {vars:{
 </script>
 
 <!--
-all css includes need to be after the js that changes the base url. 
+all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" />
@@ -77,12 +77,12 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	<td><img src='extensions/admin/images/appviewloading.gif' width='150' height='225' /></td>
 	<td>
 	<h3>One moment please....</h3>
-	
+
 	<div class='alignCenter'>
 	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
 	</div>
 	<div id='appPreViewProgressText'>0% Complete</div>
-	
+
 	<div class='appMessaging'></div>
 	</td>
 </tr>
@@ -109,7 +109,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 <!-- used as a container for the elements within the header -->
 		<div style='height:105px; position:relative; background:url(https://www.zoovy.com/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
-	
+
 <!-- logo -->
 <div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;' onClick="showUI('/biz/index.cgi');">
 <img src="https://www.zoovy.com/biz/images/header/zoovy_logo-136x33.png" alt="zoovy is great" width='136' height='32' id='zoovyheaderlogo' />
@@ -119,8 +119,8 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 <!-- contains the menu links and the search form -->
 <div style='position:absolute; right:20px; top:7px; text-align:right;'>
-	<a href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> | 
-	<a href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> | 
+	<a href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> |
+	<a href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> |
 	<a href='/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
 </div>
 
@@ -175,7 +175,7 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 
 
 	<div id='globalMessaging' class='appMessaging'></div>
-	
+
 	<div id='homeContent' class='displayNone tabContent' data-section='home'></div><!-- home acts as a default as well -->
 	<div id='setupContent' class='displayNone tabContent' data-section='setup'></div>
 	<div id='sitesContent' class='displayNone tabContent' data-section='sites'></div>
@@ -187,7 +187,7 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 	<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
 	<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
 	<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
-	
+
 </div>
 
 
@@ -217,7 +217,7 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 <form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
 <fieldset>
 	<legend>Create Account</legend>
-	
+
 	<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
 	<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
 	<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
