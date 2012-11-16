@@ -255,6 +255,7 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 <button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
+<button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
 <hr />
 
 </div>

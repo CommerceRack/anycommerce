@@ -92,7 +92,6 @@ var store_product = function() {
 			dispatch : function(sfo,tagObj)	{
 				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
 				sfo["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-				sfo["_zjsid"] = app.sessionId; 
 				sfo["_tag"] = tagObj;
 //				app.u.dump("GOT HERE!"); app.u.dump(sfo); app.u.dump(tagObj);
 				app.model.addDispatchToQ(sfo,'immutable');

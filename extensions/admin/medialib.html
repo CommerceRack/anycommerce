@@ -346,7 +346,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-images'>
 <h1>Upload images from CSV file</h1>
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-IMAGES'>
+<input type='hidden' name='filetype' value='IMAGES'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
 </form>
@@ -357,7 +357,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-inventory'>
 <h1>Load inventory from a CSV file:</h1>
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-INVENTORY'>
+<input type='hidden' name='filetype' value='INVENTORY'>
 <fieldset>
 	<label><input type='radio' name='TYPE' value='inventory.simple'> Simple Inventory (%SKU,%INVENTORY,%LOCATION,%MIN_QTY)</label>
 	<label><input type='radio' name='TYPE' checked value='inventory'> Inventory (user specified header)</label>
@@ -379,7 +379,7 @@ account being billed for the time necessary to diagnose and repair the issue.
 
 <h1>Upload listings from a CSV file</h1>
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-LISTINGS'>
+<input type='hidden' name='filetype' value='LISTINGS'>
 <input type='hidden' name='TYPE' checked value='listings'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
@@ -401,7 +401,7 @@ to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/
 <h2>Import navigation categories from CSV file</h2>
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
 <fieldset>
-	<input type='hidden' name='VERB' value='UPLOAD-NAVCATS'>
+	<input type='hidden' name='filetype' value='NAVCATS'>
 	<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
 	<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
 	<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
@@ -434,7 +434,7 @@ or product page. That is because a rewrite lookup is only done immediately befor
 </p>
 
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-REWRITES'>
+<input type='hidden' name='filetype' value='REWRITES'>
 <input type='hidden' name='TYPE' checked value='rewrites'>
 <input type="checkbox" name="REWRITE_DESTRUCTIVE"> Destructive Overwrite (deletes all existing rewrites).<br>
 <!-- adds the file upload area -->
@@ -461,7 +461,7 @@ Columns headers are as follows:<br />
 
 <form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <fieldset>
-	<input type='hidden' name='VERB' value='UPLOAD-ORDERS'>
+	<input type='hidden' name='filetype' value='ORDERS'>
 	<label><input type="checkbox" name="SEP_CHAR" value='TAB'> Use TAB as the separator for this file (vs a comma)</label>
 	<input type='hidden' name='TYPE' value='ORDER'>
 </fieldset>
@@ -475,7 +475,7 @@ Columns headers are as follows:<br />
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-other'>
 <h1>Load 'Other' from CSV File</h1>
 <form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-OTHER'>
+<input type='hidden' name='filetype' value='OTHER'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
 </form>
@@ -488,7 +488,7 @@ Columns headers are as follows:<br />
 <h1>Load Products from CSV File</h1>
 
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-PRODUCTS'>
+<input type='hidden' name='filetype' value='PRODUCTS'>
 <fieldset>
 	<label><input type="checkbox" name="ALLOW_CRLF"> Allow CR/LF in file (WARNING: you must make sure all fields are properly escaped/quoted to use this).</label>
 	<label><input type="checkbox" name="RAWCATEGORIES"> Do not Encode Categories, they are already encoded as safe names (normally disabled).</label>
@@ -509,7 +509,7 @@ Columns headers are as follows:<br />
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-reviews'>
 <h1>Load reviews from a CSV file</h1>
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-REVIEW'>
+<input type='hidden' name='filetype' value='REVIEW'>
 <input type='hidden' name='TYPE' checked value='review'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
@@ -536,7 +536,7 @@ Columns headers are as follows:<br />
 </div>
 
 <form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-RULES'>
+<input type='hidden' name='filetype' value='RULES'>
 <input type='hidden' name='TYPE' checked value='rules'>
 <!-- adds the file upload area -->
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
@@ -560,7 +560,7 @@ Columns headers are as follows:<br />
 %ORDERID,%CARRIER,%TRACKING_NUMBER,%NOTES
 </p>
 <form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
-<input type='hidden' name='VERB' value='UPLOAD-TRACKING'>
+<input type='hidden' name='filetype' value='TRACKING'>
 <input type='hidden' name='TYPE' value='TRACKING'>
 <fieldset>
 	<label><input type="checkbox" name="SEP_CHAR" value='TAB'> Use TAB as the separator for this file (vs a comma)</label>

@@ -68,7 +68,7 @@ formerly showCart
 				},
 			dispatch : function(tagObj)	{
 //				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj});
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj});
 				}
 			},
 
@@ -83,7 +83,7 @@ formerly showCart
 				},
 			dispatch : function(tagObj,Q)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj},Q);
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj},Q);
 				}
 			},//getCartContents
 
@@ -105,7 +105,7 @@ formerly showCart
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":app.sessionId,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			 },

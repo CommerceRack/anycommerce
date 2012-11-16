@@ -140,7 +140,7 @@ copying the template into memory was done for two reasons:
 
 session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
 if no session id is passed, the getValidSessionID function will look to see if one is in local storage and use it or request a new one.
-Exception - the controller is used for admin sessions too. if an admin session is being instantiated, forget about session id (zjsid) for now.
+Exception - the controller is used for admin sessions too. if an admin session is being instantiated, forget about session id (cartid) for now.
 
 A session ID could be passed in through vars, but app.sessionId isn't set until the session id has been verified OR the app is explicitly told to not validate the session.
 */
@@ -283,16 +283,15 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 //always uses immutable Q
 //formerly canIHaveSession
 		appCartExists : {
-			init : function(zjsid,tagObj)	{
+			init : function(cartid,tagObj)	{
 //					app.u.dump('BEGIN app.calls.appCartExists');
-				app.sessionId = zjsid; //needed for the request. may get overwritten if not valid.
-				this.dispatch(zjsid,tagObj);
+				app.sessionId = cartid; //needed for the request. may get overwritten if not valid.
+				this.dispatch(cartid,tagObj);
 				return 1;
 				},
-			dispatch : function(zjsid,tagObj)	{
+			dispatch : function(cartid,tagObj)	{
 				var obj = {};
 				obj["_cmd"] = "appCartExists"; 
-				obj["_zjsid"] = zjsid; 
 				obj["_tag"] = tagObj;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
@@ -307,7 +306,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			dispatch : function(tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "whoAmI"
-				app.model.addDispatchToQ({"_cmd":"whoAmI","_zjsid":app.sessionId,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"whoAmI","_tag" : tagObj},Q);	
 				}
 			},//whoAmI
 
@@ -397,7 +396,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				},
 			dispatch : function(tagObj,Q)	{
 //				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_zjsid":app.sessionId,"_tag": tagObj},Q);
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj},Q);
 				} 
 			} // refreshCart removed comma from here line 383
 		}, // calls
@@ -694,7 +693,7 @@ persistant - this can be passed in as part of the msg object or a separate param
 and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
 		throwMessage : function(msg,persistant){
-			app.u.dump("BEGIN app.u.throwMessage");
+//			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
 			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.

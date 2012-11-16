@@ -411,7 +411,7 @@ see jquery/api webdoc for required/optional param
 				return r;
 				},
 			dispatch : function(tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_zjsid":app.sessionId,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_tag" : tagObj},Q);	
 				}			
 			}, //buyerPurchaseHistory
 
@@ -429,7 +429,7 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(orderid,tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_zjsid":app.sessionId,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_tag" : tagObj},Q);	
 				}			
 			}, //buyerPurchaseHistoryDetail
 		buyerAddressList : {

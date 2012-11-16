@@ -311,7 +311,7 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 					'width': '90%',
 					'height': 500,
 					'closeOnEscape': false,
-					open: function(event, ui) { $(".ui-dialog-titlebar-close", ui.dialog || ui).hide()}
+					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon.
 					});
 
 
@@ -407,10 +407,9 @@ else	{
 
 		handleDomainChooser : {
 			onSuccess : function(tagObj){
-				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
+//				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $('#'+tagObj.targetID);
-				app.u.dump("REMINDER!!! when a new domain is added, be sure to rerun the adminDomain call");
 				var L = data.length;
 				var $ul = $('#domainList'); //ul in modal.
 //modal has been opened on this visit.  Domain list still reloaded in case they've changed.
@@ -421,7 +420,7 @@ else	{
 					}
 				
 				for(var i = 0; i < L; i += 1)	{
-					$("<li \/>").data(data[i]).addClass('lookLikeLink').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
+					$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].id == app.vars.domain ? 'ui-selected' : '').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
 						app.vars.domain = $(this).data('id');
 						$('.domain','#appView').text($(this).data('id'));
 						$('.partition','#appView').text($(this).data('prt'));

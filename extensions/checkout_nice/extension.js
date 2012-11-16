@@ -120,7 +120,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_zjsid":app.sessionId,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.ext.store_checkout.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
 				}
 			 },

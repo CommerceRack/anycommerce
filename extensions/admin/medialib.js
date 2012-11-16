@@ -154,19 +154,19 @@ else	{
 
 		adminPublicFileList : {
 			init : function(tagObj,Q)	{
-tagObj = tagObj || {};
-tagObj.datapointer = 'adminPublicFileList';
-if(tagObj.forceRequest)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else if(app.model.fetchData(tagObj.datapointer) == false)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else	{
-	app.u.handleCallback(tagObj);
-	}
+				tagObj = tagObj || {};
+				tagObj.datapointer = 'adminPublicFileList';
+				if(tagObj.forceRequest)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					}
 				},
 			dispatch : function(tagObj,Q)	{
 				obj = {};
@@ -289,7 +289,13 @@ else	{
 				}
 			},//handleMediaLibUpdate, //showMediaLibrary
 			
-			
+		
+		handleFileUpload2Batch : {
+			onSuccess : function(tagObj){
+				$("<div \/>").attr('id','batchDialog_').append("I like Ike").dialog();
+				}
+			},
+		
 		handlePublicFilesList : {
 			onSuccess: function(tagObj)	{
 				var data = app.data[tagObj.datapointer]['@files'];
@@ -630,15 +636,14 @@ var successCallbacks = {
 		},
 	'publicFileUpload' : function(data,textStatus)	{
 		app.u.dump("Got to csvUploadToBatch success.");
-		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{},'immutable');
+		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
 		app.model.dispatchThis('immutable');
 		},
 	'csvUploadToBatch' : function(data,textStatus) {
 		app.u.dump("Got to csvUploadToBatch success.");
-		app.u.dump("REMINDER!!! needs to serialize the form and send that along too");
 //		app.u.dump(" -> data:"); app.u.dump(data);
-		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
-		app.ext.admin_medialib.calls.adminCSVImport.init(data[0],{},'immutable');
+//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
+		app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{},'immutable');
 		app.model.dispatchThis('immutable');
 		}
 	}
@@ -655,7 +660,7 @@ $(selector).fileupload({
 		}
 	})
 
-if(mode = 'mediaLibrary')	{
+if(mode == 'mediaLibrary')	{
 	$(selector).bind('fileuploadstopped',function(){
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');

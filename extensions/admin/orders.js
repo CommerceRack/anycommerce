@@ -110,11 +110,7 @@ var admin_orders = function() {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/order_templates.html',theseTemplates);
-//				if(!app.u.thisIsAnAdminSession())	{
-//					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> This session is not an admin session and the app is trying to load an admin module (admin_orders.js).','uiClass':'error','uiIcon':'alert'}));
-//					r = false;
-//					}
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
 				return r;
 				},
 			onError : function()	{
@@ -127,7 +123,7 @@ var admin_orders = function() {
 		initOrderManager : {
 			onSuccess : function()	{
 				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
-				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"mainContentArea"});
+				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});
 				}
 			}, //initOrderManager
 

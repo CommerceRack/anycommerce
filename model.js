@@ -345,7 +345,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 //		beforeSend: app.model.setHeader, //
 		dataType:"json",
 //ok to pass admin vars on non-admin session. They'll be ignored.
-		data: JSON.stringify({"_uuid":pipeUUID,"_zjsid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":"admin","_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
+		data: JSON.stringify({"_uuid":pipeUUID,"_cartid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":"admin","_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
@@ -443,7 +443,7 @@ set adjustAttempts to true to increment by 1.
 	/*
 	
 	handleResponse and you...
-	some high level errors, like no zjsid or invalid json or whatever get handled in handeResponse
+	some high level errors, like no cartid or invalid json or whatever get handled in handeResponse
 	lower level (_cmd specific) get handled inside their independent response functions or in responseHasErrors(), as they're specific to the _cmd
 	
 	if no high level errors are present, execute a response function specific to the request (ex: request of addToCart executed handleResponse_addToCart).
@@ -730,27 +730,9 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			app.model.handleResponse_defaultAction(responseData);
 			}, //handleResponse_appPageGet
 
-//admin session returns a zjsid if response	
-/*
-		handleResponse_appSessionStart: function(responseData)	{
-//			app.storageFunctions.deleteCookie('zjsid'); //nuke any previous zjsid cookie
-			app.u.dump("BEGIN model.handleResponse_appSessionStart . ("+responseData['_uuid']+")");
-			app.u.dump(" -> _zjsid = "+responseData['_zjsid']);
-			if(app.u.isSet(responseData['_zjsid']))	{
-				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
-				app.storageFunctions.writeLocal('zjsid',responseData['_zjsid']);
-//				app.storageFunctions.writeCookie('zjsid',responseData['_zjsid']); //the app doesn't use the cookie, so it doesn't leave one. any legacy code that needs cookies should handle it on their own.
-//				var date = new Date();
-//				document.cookie = "zjsid="++"; domain=.zoovy.com;path=/; expires="+date.setTime(date.getTime()+(1*24*60*60*1000));
-				}
-			else	{
-				app.model.handleResponse_defaultAction(responseData);
-				}
-			},
-*/
 
 
-//admin session returns a zjsid if response	
+
 		handleResponse_authAdminLogin: function(responseData)	{
 //			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); app.u.dump(responseData);
 			app.vars.deviceid = responseData.deviceid;
@@ -768,7 +750,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			else	{
 /* nuke references to old, invalid session id. if this doesn't happen, the old session ID gets passed and will be re-issued. */				
 				app.sessionId = null;
-				app.storageFunctions.writeLocal('zjsid',null);
+				app.storageFunctions.writeLocal('cartid',null);
 				app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 				}
 			},
@@ -787,12 +769,12 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
 //save session id locally to maintain session id throughout user experience.	
-			app.storageFunctions.writeLocal('sessionId',responseData['_zjsid']);
-//			app.storageFunctions.writeLocal(app.vars['username']+"-cartid",responseData['_zjsid']);  
-			app.sessionId = responseData['_zjsid']; //saved to object as well for easy access.
+			app.storageFunctions.writeLocal('sessionId',responseData['_cartid']);
+//			app.storageFunctions.writeLocal(app.vars['username']+"-cartid",responseData['_cartid']);  
+			app.sessionId = responseData['_cartid']; //saved to object as well for easy access.
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
-			app.u.dump("sessionID = "+responseData['_zjsid']);
-			return responseData['_zjsid'];
+			app.u.dump("sessionID = "+responseData['_cartid']);
+			return responseData['_cartid'];
 			}, //handleResponse_appCartCreate
 	
 /*
@@ -1490,7 +1472,10 @@ ADMIN/USER INTERFACE
 						app.u.dump("UI request aborted. It would destroy such life in favor of its new matrix."); //most likely, this abort happened intentionally because another action was requested (a link was clicked)
 						}
 					else	{
+//						app.u.dump("pathParts"); app.u.dump(pathParts[1].split('/')[2]);
+						$('#'+pathParts[1]+'Content').empty(); ///empty out loading div and any template placeholder.
 						app.u.throwGMessage("Error details = UI request failure: "+b);
+						app.u.dump(" -> pathParts"); app.u.dump(pathParts);
 //						app.u.throwMessage("Uh Oh! Something terrible happened. We apologize for any inconvenience. If this error persists, please contact support.<br \/>Error details = UI request failure: "+b);
 //						app.u.dump(a);
 						if(typeof viewObj.error == 'function'){viewObj.error()}
