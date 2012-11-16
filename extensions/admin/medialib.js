@@ -193,8 +193,10 @@ else	{
 				this.dispatch(filename,tagObj,Q);
 				},
 			dispatch : function(filename,tagObj,Q)	{
+				var obj = {};
+				obj.filename = filename;
 				obj._tag =  tagObj || {};
-				obj._cmd = "adminPublicFileUpload"
+				obj._cmd = "adminPublicFileDelete"
 				app.model.addDispatchToQ(obj,Q);	
 				}
 			}, //adminPublicFileDelete
@@ -227,6 +229,8 @@ else	{
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
+				
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
@@ -242,8 +246,6 @@ else	{
 //				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/load-image.min.js']); //The Canvas to Blob plugin is included for image resizing functionality
 //				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/tmpl.min.js']); //The Templates plugin is included to render the upload/download listings
 				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
-				
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 				
 				window.mediaLibrary = app.ext.admin_medialib.a.uiShowMediaLib
 				

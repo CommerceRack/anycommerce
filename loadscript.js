@@ -60,7 +60,7 @@ app.u.handleRQ = function()	{
 			app.vars.extensions.push({"namespace":app.rq[i][2],"filename":app.rq[i][3],"callback":app.rq[i][4]}); //add to extension Q.
 			app.rq[i][app.rq[i].length] = false; //will get set to true when script loads as part of callback.
 			app.vars.rq.push(app.rq[i]); //add to pass zero rq.
-
+			app.u.dump(" -> app.rq[i][2]: "+app.rq[i][2]);
 //on pass 0, for extensions , their specific callback is not added (if there is one.)
 // because the model will execute it for all extensions once the controller is initiated.
 // so instead, a generic callback function is added to track if the extension is done loading.

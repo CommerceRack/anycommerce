@@ -17,7 +17,7 @@ app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
-
+app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.1.9.js']);
 
 //app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/showLoading/js/jquery.showLoading.min.js']);
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigrid.js']);
@@ -27,7 +27,7 @@ app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigr
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
 
 //have showLoading as early as possible. pretty handy feature.
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showLoading.css']);
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showloading.css']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.

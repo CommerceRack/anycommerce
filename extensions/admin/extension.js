@@ -75,24 +75,27 @@ var admin = function() {
 
 		adminDomainList : {
 			init : function(partition,tagObj,Q)	{
+				app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
 				if(partition) { tagObj.datapointer += "|"+partition}
 if(tagObj.forceRequest)	{
 	r = 1;
-	this.dispatch(tagObj,Q);
+	this.dispatch(partition,tagObj,Q);
 	}
 else if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
-	this.dispatch(tagObj,Q);
+	this.dispatch(partition,tagObj,Q);
 	}
 else	{
+	app.u.dump(" -> use local data.");
 	app.u.handleCallback(tagObj);
 	}
 
 				},
 			dispatch : function(partition,tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminDomainList","partition":partition,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"adminDomainList","partition":partition,"_tag" : tagObj},Q);
+				app.u.dump(" -> added dispatch to Q.");
 				}			
 			},
 
@@ -407,7 +410,6 @@ else	{
 				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $('#'+tagObj.targetID);
-				app.u.dump("REMINDER!!! need to clear out the existing content, but reload list each time for when new domains are added.");
 				app.u.dump("REMINDER!!! when a new domain is added, be sure to rerun the adminDomain call");
 				var L = data.length;
 				var $ul = $('#domainList'); //ul in modal.
@@ -858,6 +860,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appView').show();
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
+				app.u.dump(" -> DOMAIN: ["+domain+"]");
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
 				if(domain)	{$('.domain','#appView').text(domain)}
 				else	{app.ext.admin.a.showDomainChooser();}
