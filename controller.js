@@ -41,7 +41,7 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
-		this.u.dump(" -> initialize executed.");
+//		this.u.dump(" -> initialize executed.");
 
 //		app = this;
 //		this.u.dump(P);
@@ -123,8 +123,8 @@ copying the template into memory was done for two reasons:
 //		app.u.dump(" -> localVars: "); app.u.dump(localVars);
 		
 		function setVars(id){
-			app.u.dump("GOT HERE!");
-			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
+//			app.u.dump("GOT HERE!");
+//			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
 			if(app.vars[id])	{} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
 			else if(app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
@@ -137,7 +137,7 @@ copying the template into memory was done for two reasons:
 		setVars('authtoken');
 		setVars('domain');
 
-		app.u.dump(" -> app.vars: "); app.u.dump(app.vars);
+//		app.u.dump(" -> app.vars: "); app.u.dump(app.vars);
 		
 		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
 			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
@@ -818,7 +818,7 @@ This function will have both cases.
 						}
 					}
 				else if(d['errid'])	{
-					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+"<\/div>";
+					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+"<br \/>Error ID: "+d.errid+"<\/div>";
 //					app.u.dump("WARNGING! error occured. id: "+d.errid+" and type: "+d.errtype+" and msg: "+errmsg);
 					}
 //the validate order request returns a list of issues.

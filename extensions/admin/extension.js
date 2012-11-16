@@ -75,7 +75,7 @@ var admin = function() {
 
 		adminDomainList : {
 			init : function(tagObj,Q)	{
-				app.u.dump("BEGIN admin.calls.adminDomainList");
+//				app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
 if(tagObj.forceRequest)	{
@@ -87,14 +87,12 @@ else if(app.model.fetchData(tagObj.datapointer) == false)	{
 	this.dispatch(tagObj,Q);
 	}
 else	{
-	app.u.dump(" -> use local data.");
 	app.u.handleCallback(tagObj);
 	}
 
 				},
 			dispatch : function(tagObj,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : tagObj},Q);
-				app.u.dump(" -> added dispatch to Q.");
 				}			
 			},
 
@@ -293,7 +291,7 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 //executed when the extension loads
 		initExtension : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
+//				app.u.dump('BEGIN app.ext.admin.initUserInterface.onSuccess ');
 				var L = app.rq.length-1;
 //load any remaining resources into the app.
 				for(var i = L; i >= 0; i -= 1)	{
@@ -351,11 +349,8 @@ if(uriParams.debug)	{
 	$('#jtSectionTab').show();
 	}
 
-//if(uriParams.AUTHTOKEN && uriParams.DEVICEID && uriParams.USERID && uriParams.flush)	{
-//	localStorage.clear();
-//	}
-
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
+//the code for handling the support login is in the thisisanadminsession function (looking at uri)
 if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
 	}
@@ -870,7 +865,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
 //though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
 			showDomainChooser : function(){
-				app.u.dump("BEGIN admin.a.showDomainChooser");
+//				app.u.dump("BEGIN admin.a.showDomainChooser");
 				$('#domainChooserDialog').dialog('open').showLoading();
 				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
 				app.model.dispatchThis('immutable');
@@ -915,7 +910,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appView').show();
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
-				app.u.dump(" -> DOMAIN: ["+domain+"]");
+//				app.u.dump(" -> DOMAIN: ["+domain+"]");
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
 				if(domain)	{
 					$('.domain','#appView').text(domain)
@@ -1511,9 +1506,9 @@ just lose the back button feature.
 			handleHashState : function()	{
 //				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
-				app.u.dump(" -> hash: "+hash);
+//				app.u.dump(" -> hash: "+hash);
 				if(hash.indexOf("/biz/") == 0)	{
-//					showUI(hash);
+					showUI(hash);
 					}
 				else	{
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.

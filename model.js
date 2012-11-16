@@ -1401,7 +1401,7 @@ This is checks for two things:
 		executeCallbacksWhenExtensionsAreReady : function(extObj,attempts){
 //			app.u.dump("BEGIN model.executeCallbacksWhenExtensionsAreReady [length: "+extObj.length+"]");
 			if(this.allExtensionsHaveLoaded(extObj))	{
-				app.u.dump("extension(s) loaded. execute callbacks.");
+//				app.u.dump("extension(s) loaded. execute callbacks.");
 				var L = extObj.length;
 				for(var i = 0; i < L; i += 1) {
 //					app.u.dump(" -> i: "+i);

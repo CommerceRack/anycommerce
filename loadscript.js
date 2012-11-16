@@ -44,7 +44,7 @@ app.u.handleRQ = function()	{
 	var callback = function(index){
 		app.vars.rq[index][app.vars.rq[index].length - 1] = true; //last index in array is for 'is loaded'. set to false in loop below.
 		}
-	
+
 	for(var i = L; i >= 0; i--)	{
 //		app.u.dump("app.rq["+i+"][0]: "+app.rq[i][0]+" pass: "+app.rq[i][1]);
 		if(app.rq[i][0] == 'script' && app.rq[i][1] === 0)	{
@@ -60,7 +60,7 @@ app.u.handleRQ = function()	{
 			app.vars.extensions.push({"namespace":app.rq[i][2],"filename":app.rq[i][3],"callback":app.rq[i][4]}); //add to extension Q.
 			app.rq[i][app.rq[i].length] = false; //will get set to true when script loads as part of callback.
 			app.vars.rq.push(app.rq[i]); //add to pass zero rq.
-			app.u.dump(" -> app.rq[i][2]: "+app.rq[i][2]);
+//			app.u.dump(" -> app.rq[i][2]: "+app.rq[i][2]);
 //on pass 0, for extensions , their specific callback is not added (if there is one.)
 // because the model will execute it for all extensions once the controller is initiated.
 // so instead, a generic callback function is added to track if the extension is done loading.
