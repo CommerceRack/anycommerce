@@ -237,14 +237,23 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}, //zoovy
-			zoovyLogout : {
+			authAdminLogout : {
 				init : function(tagObj)	{
 					this.dispatch(tagObj);
 					return 1;
 					},
 				dispatch : function(tagObj){
-					app.model.addDispatchToQ({'_cmd':'buyerLogout',"_tag":tagObj},'immutable');
+					app.model.addDispatchToQ({'_cmd':'authAdminLogout',"_tag":tagObj},'immutable');
 					}
+				}, //authAdminLogout
+			accountLogout : {
+				init : function(obj,tagObj)	{
+					this.dispatch(obj,tagObj);
+					return 1;
+					},
+				dispatch : function(obj,tagObj){
+
+					}				
 				},
 			accountLogin : {
 				init : function(obj,tagObj)	{

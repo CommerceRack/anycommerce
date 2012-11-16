@@ -274,7 +274,7 @@ else	{
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
-
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 				return r;
 				},
 			onError : function(d)	{
@@ -885,7 +885,15 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				
 				$finderModal.attr({'data-path':path}).dialog({modal:true,width:'94%',height:650});
 				app.ext.admin.a.addFinderTo('prodFinder',path,sku);
-				} //showFinderInModal
+				}, //showFinderInModal
+
+			logout : function(){
+				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
+				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
+//				var localSession = app.model.readLocal
+				app.calls.authentication.authAdminLogout.init({});//always immutable.
+				app.model.dispatchThis('immutable');
+				}
 
 			}, //action
 
@@ -1125,7 +1133,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					$(this).attr('title',href); // HERE FOR TESTING
 					if(href == '#mediaLibraryManageMode')	{
 						event.preventDefault();
-						mediaLibrary({'mode':'manage'});
+						app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 						return false;
 						}
 					else if(href.indexOf("/biz/") == 0)	{
