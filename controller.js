@@ -2266,8 +2266,6 @@ $tmp.empty().remove();
 					
 					
 	storageFunctions : {
-		
-		// SANITY -> readlocal does not work if testing locally in FF or IE, must be on a website. Safari does support local file local storage
 
 		writeLocal : function (key,value)	{
 		//	app.u.dump("WRITELOCAL: Key = "+key);

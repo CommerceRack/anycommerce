@@ -95,12 +95,7 @@ var admin_medialib = function() {
 //				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminImageFolderDetail|"+f
-				if(tagObj.forceRequest)	{
-					app.u.dump(" -> force request is true");
-					r = 1;
-					this.dispatch(f,tagObj,Q);
-					}
-				else if(app.model.fetchData(tagObj.datapointer) == false)	{
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
 					app.u.dump(" -> data is NOT local");
 					r = 1;
 					this.dispatch(f,tagObj,Q);
@@ -122,11 +117,7 @@ var admin_medialib = function() {
 
 tagObj = tagObj || {};
 tagObj.datapointer = 'adminImageFolderList';
-if(tagObj.forceRequest)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else if(app.model.fetchData(tagObj.datapointer) == false)	{
+if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
 	this.dispatch(tagObj,Q);
 	}
@@ -157,11 +148,7 @@ else	{
 			init : function(tagObj,Q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = 'adminPublicFileList';
-				if(tagObj.forceRequest)	{
-					r = 1;
-					this.dispatch(tagObj,Q);
-					}
-				else if(app.model.fetchData(tagObj.datapointer) == false)	{
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
 					r = 1;
 					this.dispatch(tagObj,Q);
 					}
@@ -632,7 +619,8 @@ var successCallbacks = {
 		//update memory/localStorage with folder contents.
 		for(var index in folders)	{
 			//no callback needed on any of the requests for updating the folders. A 'click' on the folder will get triggered on reload. to open it and it's new contents.
-			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folders[index],{'forceRequest':true},'immutable');
+			app.model.destroy('adminImageFolderDetail|'+folders[index]);
+			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folders[index],{},'immutable');
 			}
 
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
@@ -808,7 +796,8 @@ $(selector).fileupload(
 
 			resetAndGetMediaFolders : function(Q)	{
 				$('ul','#mediaLibFolderList').addClass('loadingBG').children().remove(); //folders will be re-added later.
-				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate','forceRequest':true},Q);
+				app.model.destroy('adminImageFolderList');
+				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},Q);
 				},
 
 //This gets run over individual media files (each image).
@@ -864,7 +853,9 @@ $('#mediaLibActionsBar button',$target).each(function(){
 		$button.button({icons: {primary: "ui-icon-trash"}}).click(function(event){
 			event.preventDefault(); //keeps button from submitting the form.
 			app.ext.admin_medialib.u.buildDeleteMediaRequests();
-			app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':app.ext.admin_medialib.u.getOpenFolderName(),'selector':'#mediaLibFileList'},'immutable');
+			var fname = app.ext.admin_medialib.u.getOpenFolderName();
+			app.model.destroy('adminImageFolderDetail|'+fname);
+			app.ext.admin_medialib.u.showMediaFor({'FName':fname,'selector':'#mediaLibFileList'},'immutable');
 			app.model.dispatchThis('immutable');
 			//also re-request this folder detail and reload and set ul to loadingBG.
 			//dispatch.
@@ -901,14 +892,13 @@ $('#mediaLibActionsBar button',$target).each(function(){
 //if not a root folder, bring the parent folder into focus.
 //folderInfo['focus-folder-name'] can = 2, a number, in which case indexOf is barfing. If it IS a number, it's automatically a root folder so we can safely treat it so.
 				if(typeof folderInfo['focus-folder-name'] == 'string' && folderInfo['focus-folder-name'].indexOf('/') > -1 )	{
-					
-					app.ext.admin_medialib.u.showMediaFor({'forceRequest':true,'FName':folderInfo['focus-folder-name'].substring(0,folderInfo['focus-folder-name'].lastIndexOf('/')),'selector':'#mediaLibFileList'},'immutable');
+					var fname = folderInfo['focus-folder-name'].substring(0,folderInfo['focus-folder-name'].lastIndexOf('/'));
+					app.model.destroy('adminImageFolderDetail|'+fname);
+					app.ext.admin_medialib.u.showMediaFor({'FName':fname,'selector':'#mediaLibFileList'},'immutable');
 					}
 				else	{} // a root folder is being deleted. There are no images in root, so don't show anything in the files area.
 //next, delete the folder.
 
-				
-				
 				app.ext.admin_medialib.calls.adminImageFolderDelete.init(folderInfo['focus-folder-name'],{},'immutable');
 				app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 				app.model.dispatchThis('immutable');

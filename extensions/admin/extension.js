@@ -78,11 +78,7 @@ var admin = function() {
 //				app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
-if(tagObj.forceRequest)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else if(app.model.fetchData(tagObj.datapointer) == false)	{
+if(app.model.fetchData(tagObj.datapointer) == false)	{
 	r = 1;
 	this.dispatch(tagObj,Q);
 	}
@@ -998,7 +994,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
 //so that display must have all the links and form submits modified.
 					app.ext.admin.u.uiHandleBreadcrumb(data.bc);
-					app.ext.admin.u.uiHandleNavTabs(data.tabs);
+					app.ext.admin.u.uiHandleNavTabs(data.navtabs);
 					app.ext.admin.u.uiHandleFormRewrites(path,data,viewObj);
 					app.ext.admin.u.uiHandleLinkRewrites(path,data,viewObj);
 					app.ext.admin.u.uiHandleMessages(path,data.msgs,viewObj);

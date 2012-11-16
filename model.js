@@ -546,6 +546,15 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			}, //handleResponse
 
 
+//this will remove data from both local storage AND memory.
+//execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
+//admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
+		destroy : function(key)	{
+			delete app.data[key];
+			localStorage.removeItem(key);
+			},
+
+
 //this will write the respose both to localStorage and into app.data
 		writeToMemoryAndLocal : function(responseData)	{
 //			app.u.dump("BEGIN model.writeToMemoryAndLocal");
