@@ -42,6 +42,7 @@ jQuery.extend(zController.prototype, {
 	
 	initialize: function(P) {
 		this.u.dump(" -> initialize executed.");
+
 //		app = this;
 //		this.u.dump(P);
 		app = $.extend(true,P,this); //deep extend to make sure nexted functions are preserved. If duplicates, 'this' will override P.
@@ -53,6 +54,12 @@ jQuery.extend(zController.prototype, {
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
+//used in conjunction with support/admin login. nukes entire local cache.
+		if(app.u.getParameterByName('flush'))	{
+			app.u.dump("uri param flush is true. CLEAR LOCAL STORAGE");
+			localStorage.clear();
+			}
+		
 
 		
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
@@ -116,9 +123,11 @@ copying the template into memory was done for two reasons:
 //		app.u.dump(" -> localVars: "); app.u.dump(localVars);
 		
 		function setVars(id){
+			app.u.dump("GOT HERE!");
+			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
 			if(app.vars[id])	{} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
-			else if(app.u.getParameterByName(id))	{app.vars[id] = localVars[id];} 
+			else if(app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
 			else if(localVars[id])	{app.vars[id] = localVars[id]}
 			else	{app.vars[id] = ''}//set to blank by default.
 			}
@@ -127,6 +136,9 @@ copying the template into memory was done for two reasons:
 		setVars('userid');
 		setVars('authtoken');
 		setVars('domain');
+
+		app.u.dump(" -> app.vars: "); app.u.dump(app.vars);
+		
 		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
 			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
 			app.vars.username = app.vars.userid.split('@')[1];

@@ -342,11 +342,18 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_style
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
-if(app.u.getParameterByName('debug'))	{
+
+var uriParams = app.u.getParametersAsObject();
+
+if(uriParams.debug)	{
 	$('button','.buttonset').button();
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	$('#jtSectionTab').show();
 	}
+
+//if(uriParams.AUTHTOKEN && uriParams.DEVICEID && uriParams.USERID && uriParams.flush)	{
+//	localStorage.clear();
+//	}
 
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 if(app.u.thisIsAnAdminSession())	{
@@ -941,7 +948,6 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 			handleTopTabs : function(tab){
 				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
-				app.u.dump(tab);
 				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
 				},
 			
