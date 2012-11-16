@@ -912,7 +912,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
 				if(domain)	{
 					$('.domain','#appView').text(domain)
-					app.ext.admin.a.showUI('/biz/setup/index.cgi'); //commented out for testing.
+					app.ext.admin.a.showUI('/biz/recent.cgi'); //commented out for testing.
 					}
 				else	{
 					app.ext.admin.a.showDomainChooser(); //the selection of a domain name will load the page content.
@@ -939,11 +939,16 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //getDomain
 
 
+			handleTopTabs : function(tab){
+				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
+				app.u.dump(tab);
+				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
+				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
-				
+				this.handleTopTabs(tab);
 //				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
