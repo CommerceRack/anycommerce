@@ -1118,11 +1118,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
-				var $target = $('#'+viewObj.targetID)
+				var $target = $('#'+viewObj.targetID);
 				$('a',$target).click(function(event){
 					var href = $(this).attr('href');
+					app.u.dump(" -> href: "+href);
 					$(this).attr('title',href); // HERE FOR TESTING
-					if(href.indexOf("/biz/") == 0)	{
+					if(href == '#mediaLibraryManageMode')	{
+						event.preventDefault();
+						mediaLibrary({'mode':'manage'});
+						return false;
+						}
+					else if(href.indexOf("/biz/") == 0)	{
 						event.preventDefault();
 						return showUI(href);
 						}

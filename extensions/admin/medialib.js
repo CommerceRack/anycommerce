@@ -90,23 +90,23 @@ var admin_medialib = function() {
 //f is filename
 		adminImageFolderDetail : {
 			init : function(f,tagObj,Q)	{
-				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
-				app.u.dump(" -> Q: "+Q);
+//				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
+//				app.u.dump(" -> Q: "+Q);
 //				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminImageFolderDetail|"+f
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					app.u.dump(" -> data is NOT local");
+//					app.u.dump(" -> data is NOT local");
 					r = 1;
 					this.dispatch(f,tagObj,Q);
 					}
 				else	{
-					app.u.dump(" -> data IS local");
+//					app.u.dump(" -> data IS local");
 					app.u.handleCallback(tagObj);
 					}
 				},
 			dispatch : function(f,tagObj,Q)	{
-				app.u.dump(" -> adding dispatch to "+Q+" queue");
+//				app.u.dump(" -> adding dispatch to "+Q+" queue");
 				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","folder":f,"_tag" : tagObj},Q);	
 				}
 			}, //adminImageDetail
@@ -237,8 +237,10 @@ else	{
 setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 },3000);
-				
-				window.mediaLibrary = app.ext.admin_medialib.a.uiShowMediaLib
+
+//mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
+//B may also trigger medialibrary by linking to #mediaLibModeManage. This case gets handled in admin.u.handleLinkRewrites.
+				window.mediaLibrary = app.ext.admin_medialib.a.uiShowMediaLib 
 				
 				return r;
 				},
@@ -272,8 +274,9 @@ setTimeout(function(){
 			
 		handleMediaLibSrc : {
 			onSuccess : function(tagObj){
+				app.u.dump("BEGIN admin_medialib.callbacks.handleMediaLibSrc.onSuccess");
 				var img = app.data[tagObj.datapointer].IMG;
-				var $target = $('#mediaLibraryFocusMediaDetails');
+				var $target = $('#mediaLibraryFocusMediaDetails').show();
 				$target.append(app.renderFunctions.transmogrify({'path':app.data[tagObj.datapointer].IMG,'name':app.data[tagObj.datapointer].IMG},'mediaLibSelectedFileTemplate',app.data[tagObj.datapointer]));
 				app.ext.admin_medialib.u.handleMediaFileButtons($target)
 
@@ -328,13 +331,15 @@ setTimeout(function(){
 
 			showMediaLib : function(P){
 				var $target = $('#mediaModal');
-				app.u.dump(" -> P: "); app.u.dump(P);
+//				app.u.dump(" -> P: "); app.u.dump(P);
+
 //mode typically isn't needed. It is added to the ul containing the 'list' and when that list is run through the templating engine, mode can be used to change behaviors.
 //for instance, mode = 'manage' will turn off the 'select' icons and not add an onclick to the images.
 				P.mode = P.mode || 'unset' 
 				if($target.length)	{
 //this is where the contents for what media is currently selected go. Needs to be emptied each time so old contents don't show up.
-					$('#mediaLibraryFocusMediaDetails').empty();
+//also hidden by default. will be set to visible if populated (keep buttons from showing up)
+					$('#mediaLibraryFocusMediaDetails').empty().hide();
 					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{
@@ -354,7 +359,7 @@ setTimeout(function(){
 				app.model.dispatchThis('immutable');
 				$('#mediaLibFileList ul').data('mode',P.mode);
 //				app.u.dump("Media library setting data: "); app.u.dump(P);
-				$target.data(P);
+				$target.data(P); //put all the params into the object's data for easy lookup later (when a file is selected, for instance)
 				$target.dialog('open');
 				}, //showMediaLib
 
@@ -404,7 +409,7 @@ setTimeout(function(){
 				var $medialib = $('#mediaModal');
 				$medialib.showLoading();
 				var mediaData = $medialib.data();
-				app.u.dump("mediaData: "); app.u.dump(mediaData);
+//				app.u.dump("mediaData: "); app.u.dump(mediaData);
 //				app.u.dump("fileInfo: "); app.u.dump(fileInfo);
 				var error = false;
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
@@ -414,7 +419,7 @@ setTimeout(function(){
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 						var $image = $(mediaData.imageID);
-						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
+//						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
 							'alt':fileInfo.Name
