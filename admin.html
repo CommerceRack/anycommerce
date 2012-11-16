@@ -36,7 +36,18 @@ css files should be included before any .js file to ensure they are downloaded i
 
 /* move these into standard.css */
 .displayNone, .debug	{display:none;}
+body	{margin:0px; padding:0; background-color:#ffffff; background:url(https://www.zoovy.com/includes/header-20120404/images/body_bg-8x8.gif);}
 
+.tabContent	{background-color:#ffffff;}
+
+#appLogin	{font-size:19px;}
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin label span	{display:inline-block; text-align:left; width:120px;}
+#appLogin .textbox	{width:250px; font-size:18px; font-weight:normal; color:#000000;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+#appLogin .loginbutton	{background:#000000; font-size:18px; padding:4px 10px; color:#ffffff; border:0;}
 </style>
 
 
@@ -60,22 +71,23 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 
 </head>
-<body class="control"  bgcolor="FFFFFF" marginwidth="0" marginheight="0" topmargin="0" leftmargin="0">
+<body class="control">
 <!-- this div handles getting content to appear below the fixed header -->
 
-
-
-
-
-
-
-
+<div style='position:relative; height:561px;' id='preloadAndLoginContainer'>
+	
+	<div style='position:absolute; top:149px; left:0; right:0; height:268px; z-index:1; background:url(https://www.zoovy.com/includes/header-20120404/images/body_bg_horgrad-1x268.jpg) repeat-x;' id='bgForPreAndLogin'></div><!-- background horizontal stripe -->
+	
+	<div style='position:relative; margin:0 auto; width:984px; height:561px; z-index:10;'>
+	
+		<div style='position:absolute; top:0; left:0; z-index:11;'><img src='extensions/admin/images/login_bg-984x561.png' width='984' height='561' alt='' /></div>
+	
+		<div style='position:absolute; top:35px; left:45px; z-index:15;'><img src='https://www.zoovy.com/includes/header-20120404/images/zoovy_logo-217x61.png' width='217' height='61' alt='Zoovy.com' /></div>
+	
+		<div style='position:absolute; top:180px; left:50px; right: 50px; z-index:100;'>
 
 <div id='appPreView'>
-<table>
-<tr>
-	<td><img src='extensions/admin/images/appviewloading.gif' width='150' height='225' /></td>
-	<td>
+
 	<h3>One moment please....</h3>
 
 	<div class='alignCenter'>
@@ -84,12 +96,61 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	<div id='appPreViewProgressText'>0% Complete</div>
 
 	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
+
 </div>
 
 
+<div id='appLogin' class='displayNone'>
+
+	<div class='appMessaging'></div>
+	
+	<div id='loginFormContainer'>
+		<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON(),{'callback':'showHeader','extension':'admin'}); app.model.dispatchThis('immutable'); return false;">
+		<fieldset>
+			<legend>Merchant Login</legend>
+			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
+			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
+			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
+			<input type='submit' value='login' class='loginbutton' />
+		</fieldset>
+		</form>
+	</div>
+	
+	<div id='createAccountContainer' class='displayNone'>
+	<form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
+	<fieldset>
+		<legend>Create Account</legend>
+	
+		<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
+		<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
+		<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
+		<div><label>Last Name: <input type='text' name='lastname' value='' required='required' /></label></div>
+		<div><label>Company: <input type='text' name='company' value='' required='required' /></label></div>
+		<div><label>Phone: <input type='tel' name='phone' value='' required='required' /></label></div>
+		<div><label>Verify by: <select name='verification' required='required'>
+			<option value='sms'>SMS/Text Message</option>
+			<option value='voice'>Voice/phone call</option>
+		</select></label></div>
+		<input type='submit' value='create' />
+	</fieldset>
+	</form>
+	</div>
+
+</div>
+
+	
+	</div>
+	
+	
+
+
+
+
+
+
+
+	</div>
+</div>
 
 
 
@@ -188,7 +249,7 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 	<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
 	<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
 
-</div>
+</div><!-- /appView -->
 
 
 
@@ -196,43 +257,6 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 
 
 
-
-<div id='appLogin' class='displayNone'>
-
-<div class='appMessaging'></div>
-
-<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON(),{'callback':'showHeader','extension':'admin'}); app.model.dispatchThis('immutable'); return false;">
-<fieldset>
-	<legend>Merchant Login</legend>
-	<label>Login: <input type='text' name='userid' value='' required='required' /></label>
-	<label>Password: <input type='password' name='password' value=''  required='required' /></label>
-	<input type='submit' value='login' />
-	<label><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
-</fieldset>
-</form>
-
-
-
-
-<form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
-<fieldset>
-	<legend>Create Account</legend>
-
-	<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
-	<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
-	<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
-	<div><label>Last Name: <input type='text' name='lastname' value='' required='required' /></label></div>
-	<div><label>Company: <input type='text' name='company' value='' required='required' /></label></div>
-	<div><label>Phone: <input type='tel' name='phone' value='' required='required' /></label></div>
-	<div><label>Verify by: <select name='verification' required='required'>
-		<option value='sms'>SMS/Text Message</option>
-		<option value='voice'>Voice/phone call</option>
-	</select></label></div>
-	<input type='submit' value='create' />
-</fieldset>
-</form>
-
-</div>
 
 
 

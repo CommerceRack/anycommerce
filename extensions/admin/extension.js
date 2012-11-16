@@ -917,9 +917,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
-				$('#appPreView').hide();
-				$('#appLogin').hide();
+//				$('#appPreView').hide();
+//				$('#appLogin').hide();
 				$('#appView').show();
+				$('#preloadAndLoginContainer').hide(); //hide all preView and login data.
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
