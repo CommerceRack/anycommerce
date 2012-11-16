@@ -346,3 +346,23 @@ the :before and :after handle the crop (for lack of a better word) lines on the 
 .edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
 a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
 
+
+
+
+/*
+
+########################################################
+
+
+PAGE STYLES
+
+########################################################
+
+*/
+
+
+
+/* styles for csv import pages */
+.page section	{display:block; padding:0; margin:0 0 24px 0}
+.page fieldset	{border:none; padding:0; margin-bottom:12px;}
+

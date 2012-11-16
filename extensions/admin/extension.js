@@ -410,17 +410,27 @@ else	{
 				app.u.dump("REMINDER!!! need to clear out the existing content, but reload list each time for when new domains are added.");
 				app.u.dump("REMINDER!!! when a new domain is added, be sure to rerun the adminDomain call");
 				var L = data.length;
-				var $ul = $("<ul \/>").attr('id','domainList');
+				var $ul = $('#domainList'); //ul in modal.
+//modal has been opened on this visit.  Domain list still reloaded in case they've changed.
+				if($ul.length)	{$ul.empty()} //user is changing domains.
+//first time modal has been viewed.
+				else	{
+					$ul = $("<ul \/>").attr('id','domainList');
+					}
+				
 				for(var i = 0; i < L; i += 1)	{
 					$("<li \/>").data(data[i]).addClass('lookLikeLink').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
 						app.vars.domain = $(this).data('id');
-						$('.domain','#appView').text(" | "+$(this).data('id')+" ["+$(this).data('prt')+"]");
-						app.u.dump("REMINDER!!! need to update local storage with this value once testing is done.");
+						$('.domain','#appView').text($(this).data('id'));
+						$('.partition','#appView').text($(this).data('prt'));
 //get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
 //something here is causing session to not persist on reload.
-//						var localVars = app.model.fetchData('authAdminLogin');
-//						localVars.domain = app.vars.domain;
-//						app.storageFunctions.writeLocal('authAdminLogin',localVars);
+						if(app.model.fetchData('authAdminLogin'))	{
+							var localVars = app.storageFunctions.readLocal('authAdminLogin');
+							localVars.domain = app.vars.domain;
+							localVars.partition = $(this).data('prt');
+							app.storageFunctions.writeLocal('authAdminLogin',localVars);
+							}
 
 						$target.dialog('close');
 						}).appendTo($ul);
@@ -847,12 +857,27 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#appLogin').hide();
 				$('#appView').show();
 				$('.username','#appView').text(app.vars.username);
-
+				var domain = this.getDomain();
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-				if(app.vars.domain)	{$('.domain','#appView').text(app.vars.domain)}
+				if(domain)	{$('.domain','#appView').text(domain)}
 				else	{app.ext.admin.a.showDomainChooser();}
 				
 				app.ext.admin.a.showUI('/biz/setup/index.cgi'); //commented out for testing.
+				},
+//used to determine what domain should be used. mostly in init, but could be used elsewhere.
+			getDomain : function(){
+				var domain = false;
+				var localVars = {};
+				
+				if(app.model.fetchData('authAdminLogin'))	{
+					localVars = app.storageFunctions.readLocal('authAdminLogin');
+					}
+				
+				if(domain = app.u.getParameterByName('domain')) {} //the single = here is intentional. sets the val during the if so the function doesn't have to be run twice.
+				else if(app.vars.domain)	{domain = app.vars.domain}
+				else if(localVars.domain){domain = localVars.domain}
+				else {} //at this time, no other options.
+				return domain;
 				},
 			
 //executed from within showUI. probably never want to execute this function elsewhere.

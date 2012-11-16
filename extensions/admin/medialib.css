@@ -64,8 +64,7 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 
 
 
-/* styles for csv import pages */
-.pageSetupImport section	{display:block; padding:0; margin:0 0 24px 0}
-#csvUploadToBatchForm fieldset	{border:none; padding:0; margin-bottom:12px;}
+
+/* file upload styles. mostly for import pages */
 #csvUploadToBatchForm label	{display:block; margin-bottom:6px;}
 #csvUploadToBatchForm .formFieldHelp	{margin-left:24px; margin-bottom:6px;}

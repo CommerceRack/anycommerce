@@ -245,10 +245,9 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					app.vars.userid = obj.userid;
 					obj.authtype = "md5";
 					obj.ts = app.u.ymdNow();
-					obj.security = app.u.guidGenerator();
-					obj.authid = Crypto.MD5(obj.password+obj.security+obj.ts);
+					obj.authid = Crypto.MD5(obj.password+obj.ts);
 					obj._tag = tagObj || {};
-					obj.device_notes = "someplace";
+					obj.device_notes = "";
 					if(obj.persitentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true.
 					delete obj.password;
 					app.model.addDispatchToQ(obj,'immutable');

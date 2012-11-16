@@ -16,7 +16,6 @@ var app = {vars:{
 	"thisSessionIsAdmin": true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/", //could be changed to zoovy.com/webapi...
 //	"secureURL" : "https://www.zoovy.com",
-//	"sdomain":"www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : "" //set this to the base URL where the mvc is loaded from. leave blank for relative path.
 	},u:{},rq:[]};
@@ -130,7 +129,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 <!-- username/id and partition info -->
 <div style='position:absolute; top:7px; left:180px;' id='userInfo'>
-You are Logged in as: <span class='username'></span> <span class='domain'></span>
+You are Logged in as: <span class='username'></span> <span class='domain lookLikeLink' onClick='app.ext.admin.a.showDomainChooser(); return false;'></span> [ <span class='partition'></span> ]
 <a   href='/biz/logout.cgi' >logout [NOT WORKING}</a>
 </div>
 
@@ -254,7 +253,6 @@ You are Logged in as: <span class='username'></span> <span class='domain'></span
 <button onClick="app.ext.admin_prodEdit.a.showPanelsFor('OUTFIT');">Edit PID OUTFIT</button>
 
 <button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
-<button onClick="app.ext.admin.calls.adminDomainList.init(); app.model.dispatchThis();">adminDomainList</button>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 <hr />
@@ -340,6 +338,5 @@ These two pieces of data are used for mapping after the uploads to set what fold
 </script>
 
 
-<div><a href='#top'>top</a></div>
 </body>
 </html>

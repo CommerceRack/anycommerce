@@ -293,8 +293,10 @@ else	{
 				var data = app.data[tagObj.datapointer]['@files'];
 				$ul = $("<ul \/>");
 				var L = data.length;
+// the delete below is a fairly benign delete. report errors, but no need updated the entire files list again, just remove the line from the dom.
+// errors will get reported and, if the file doesn't delete, it'll always be here next time for deletion.
 				for(var i = 0; i < L; i += 1)	{
-					$ul.append($("<li>").html("[ <a href='#' onClick=\"alert('empty and delte parent. execute delete call.'); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
+					$ul.append($("<li>").html("[ <a href='#' onClick=\"app.ext.admin_medialib.calls.adminPublicFileDelete.init('"+data[i].file+"',{},'passive');  $(this).parent().empty().remove(); return false;\">del<\/a> ] <a href='"+data[i]['link']+"' target='_blank' >"+data[i].file+"<\/a>"));
 					}
 				 $('#publicFilesList').empty().removeClass('loadingBG').append($ul.children());
 				},
@@ -592,7 +594,10 @@ else	{
 //the mode set will impact the success callback.
 
 			convertFormToJQFU : function(selector,mode)	{
-				
+
+
+
+
 'use strict';
 
 var successCallbacks = {
@@ -618,8 +623,13 @@ var successCallbacks = {
 			}
 
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
-		app.model.dispatchThis('immutable');
+		//dispatch occurs as part of the fileuploadstopped bind specific to the media lib.
 
+		},
+	'publicFileUpload' : function(data,textStatus)	{
+		app.u.dump("Got to csvUploadToBatch success.");
+		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{},'immutable');
+		app.model.dispatchThis('immutable');
 		},
 	'csvUploadToBatch' : function(data,textStatus) {
 		app.u.dump("Got to csvUploadToBatch success.");
@@ -638,10 +648,17 @@ $(selector).fileupload({
 	url: app.vars.jqurl+'fileupload.cgi',
 	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 	success : function(data,textStatus){
-		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
+//		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 		successCallbacks[mode](data,textStatus);
 		}
-	}).bind('fileuploadadd', function (e, data) {
+	})
+
+if(mode = 'mediaLibrary')	{
+	$(selector).bind('fileuploadstopped',function(){
+		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
+		app.model.dispatchThis('immutable');
+		app.u.dump("Gets run just once");
+		}).bind('fileuploadadd', function (e, data) {
 		var fname = app.ext.admin_medialib.u.getOpenFolderName(); //save var so that lookup only needs to occur once instead of in each iteration.
 		var $li; //recycled in loop. jq object of the row in the file table.
 		var L = data.files.length; //an array of the files just added.
@@ -654,7 +671,7 @@ $(selector).fileupload({
 			$('.dataMap',$(this)).append($li);
 			}
 		});
-
+	}
 
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
@@ -665,6 +682,9 @@ $(selector).fileupload(
 
 
 //$('.btn-success',$(selector)).on('click', function(){$(".fileUploadButtonBar").show()});
+
+
+
 				
 				}, //convertFormToJQFU
 
