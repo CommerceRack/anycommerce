@@ -40,7 +40,7 @@ calls
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate'); 
 	var r = {
 		
 	vars : {
@@ -91,6 +91,25 @@ else	{
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : tagObj},Q);
 				}			
 			},
+
+
+
+//obj requires panel and pid and sub.  sub can be LOAD or SAVE
+			adminUIDomainPanelExecute : {
+				init : function(obj,tagObj,Q)	{
+					tagObj = tagObj || {};
+//save and load 'should' always have the same data, so the datapointer is shared.
+					tagObj.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
+					this.dispatch(obj,tagObj,Q);
+					},
+				dispatch : function(obj,tagObj,Q)	{
+					obj['_cmd'] = "adminUIDomainPanelExecute";
+					obj["_tag"] = tagObj;
+					app.model.addDispatchToQ(obj,Q);	
+					}
+				}, //adminUIProductPanelList
+
+
 
 		navcats : {
 //app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{},'immutable');
@@ -343,6 +362,7 @@ if(uriParams.debug)	{
 				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.showFinder = app.ext.admin.a.showFinderInModal;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
+				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 
@@ -362,7 +382,7 @@ else	{
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				$('#'+tagObj.targetID).removeClass('loadingBG').html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
+				$('#'+tagObj.targetID).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
 
@@ -370,6 +390,12 @@ else	{
 		handleLogout : {
 			onSuccess : function(tagObj)	{
 				document.location = 'logout.html'
+				}
+			},
+
+		showDomainConfig : {
+			onSuccess : function(){
+				app.ext.admin.u.domainConfig();
 				}
 			},
 
@@ -689,7 +715,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 	
 
 			showUI : function(path,P)	{
-//				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
 //empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
@@ -715,42 +741,73 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.ext.admin.u.handleShowSection(path,P,$target);
 					}
 				else if(path)	{
+
 					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
 					$('title').text(path);
 					
-					var tab = app.ext.admin.u.getTabFromPath(path);
-					P.targetID = app.ext.admin.u.getId4UIContent(path)
-					$target = $('#'+P.targetID);
-
-//					app.u.dump(" -> tab: "+tab);
-//					app.u.dump(" -> P.targetID: "+P.targetID);
-					
-					$(".tabContent",'#appView').hide(); //hide all tab contents
-					$target.show(); //show focus tab.
+					if(path.substring(0,2) == '#!')	{
+						app.u.dump("Is a native app mode.");
+						//app based content always shows up in whatever tab is in focus.
 						
-					if($target.children().length === 0)	{
-						//this means the section has NOT been opened before.
-//						app.u.dump(" -> section has NOT been rendered before. Render it.");
-						app.ext.admin.u.handleShowSection(path,P,$target);
-						}
-					else if(tab == app.ext.admin.vars.tab)	{
-						//we are moving within the same section.
-//						app.u.dump(" -> Moving within same section, Render it.");
-						app.ext.admin.u.handleShowSection(path,P,$target);
+						
+						if(path == '#!mediaLibraryManageMode')	{
+							app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+							}
+						else if(path == '#!domainConfigPanel')	{
+							app.ext.admin.a.showDomainConfig();
+							}
+						
+						else	{
+							app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+							}
+
 						}
 					else	{
-						app.u.dump(" -> Show last open content");
-						//jumping between sections. content has already been displayed by here. show last open content.
-
+					
+						var tab = app.ext.admin.u.getTabFromPath(path);
+						P.targetID = app.ext.admin.u.getId4UIContent(path);
+						app.ext.admin.vars.focusTabID = P.targetID;
+						$target = $('#'+P.targetID);
+	
+	//					app.u.dump(" -> tab: "+tab);
+	//					app.u.dump(" -> P.targetID: "+P.targetID);
+						
+						$(".tabContent",'#appView').hide(); //hide all tab contents
+						$target.show(); //show focus tab.
+							
+						if($target.children().length === 0)	{
+							//this means the section has NOT been opened before.
+	//						app.u.dump(" -> section has NOT been rendered before. Render it.");
+							app.ext.admin.u.handleShowSection(path,P,$target);
+							}
+						else if(tab == app.ext.admin.vars.tab)	{
+							//we are moving within the same section.
+	//						app.u.dump(" -> Moving within same section, Render it.");
+							app.ext.admin.u.handleShowSection(path,P,$target);
+							}
+						else	{
+							app.u.dump(" -> Show last open content");
+							//jumping between sections. content has already been displayed by here. show last open content.
+	
+							}
+	
+						app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 						}
-
-					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 					}
 				else	{
 					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
 					}
 				return false;
 				},
+				
+				
+				
+			showDomainConfig : function(){
+				$('#'+app.ext.admin.vars.focusTabID).empty().showLoading();
+				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
+				app.model.dispatchThis('immutable')
+				},
+			
 //pass in a domain and an attr
 //ex: pass in prt and the partition is returned.
 			getDataForDomain : function(domain,attr)	{
@@ -1146,22 +1203,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID);
 				$('a',$target).click(function(event){
+					event.preventDefault();
 					var href = $(this).attr('href');
 					app.u.dump(" -> href: "+href);
 					$(this).attr('title',href); // HERE FOR TESTING
-					if(href == '#mediaLibraryManageMode')	{
-						event.preventDefault();
-						app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
-						return false;
-						}
-					else if(href.indexOf("/biz/") == 0)	{
-						event.preventDefault();
+					if(href.substring(0,2) == '#!' || href.indexOf("/biz/") == 0)	{
 						return showUI(href);
-						}
-//this could happen in the website builder where the 'edit' links are not fully pathed.
-					else if(href.indexOf("index.cgi?") == 0)	{
-						event.preventDefault();
-						return showUI(path+'?'+href.split('?')[1]); //passes params to whatever the parent path was.
 						}
 					else	{
 						//no match.
@@ -1513,6 +1560,48 @@ else	{
 				localStorage.clear();
 				app.storageFunctions.writeLocal('authAdminLogin',admin);
 				app.storageFunctions.writeLocal('session',session);
+				},
+
+
+
+//executed after the domain data is in memory and up to date.
+// note - empty should already be done.  There should be an a.showDomainConfig that executes a call and this is what gets executed in the call back.  
+// that 'a' should do a showloading
+			domainConfig : function(){
+				app.u.dump("BEGIN admin.u.domainConfig");
+				$target = $('#setupContent');
+				$target.hideLoading();
+				var data = app.data['adminDomainList']['@DOMAINS'];
+				var L = data.length;
+				for(var i = 0; i < L; i += 1)	{
+					$target.append(app.renderFunctions.transmogrify({},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
+					}
+				},
+
+//$t is 'this' which is the button.
+
+			adminUIDomainPanelExecute : function($t){
+				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
+				var data = $t.data();
+				if(data && data.verb && data.domain)	{
+					var obj = {};
+					var targetID = 'panelContents_'+app.u.makeSafeHTMLId(data.domain);
+					$('#'+targetID).showLoading();
+					$t.parent().find('.panelContents').show()
+					if(data.verb == 'LOAD')	{
+						//do nothing. data gets passed in as is.
+						}
+					else	{
+						data = $.extend(data,$t.closest('form').serializeJSON());
+						}
+					
+					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback':'showDataHTML','extension':'admin','targetID':targetID},'immutable');
+					app.model.dispatchThis('immutable')
+					}
+				else	{
+					app.u.throwGMessage("WARNING! required params for admin.u.showDomainPanel were not set. verb and domain are required: ");
+					app.u.dump(data);
+					}
 				},
 
 /*

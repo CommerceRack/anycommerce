@@ -275,11 +275,35 @@ click event is added at that time.
 
 
 
+<!--
+########################
+
+
+DOMAIN CONFIG
+
+
+########################
+-->
 
 
 
 
+<div id='domainPanelTemplate' class='panel domainPanel stackedPanels'>
+	<h3 data-bind="var: domain(id); format: assignAttribute; attribute:data-domain;" data-verb="LOAD" onClick="adminUIDomainPanelExecute($(this));" class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix'>
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span data-bind="var: domain(id); format:text;"></span>
+	</h3>
 
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom' >
+	
+	
+	<form action="#" onSubmit="return false;">
+	<fieldset data-bind="var: domain(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
+	</form>
+	
+	</div>	
+
+</div>
 
 
 
