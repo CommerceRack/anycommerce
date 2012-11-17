@@ -893,6 +893,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.a.addFinderTo('prodFinder',path,sku);
 				}, //showFinderInModal
 
+			login : function($form){
+				$('#preloadAndLoginContents').showLoading();
+				app.calls.authentication.accountLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
+				app.model.dispatchThis('immutable');
+				},
+
 			logout : function(){
 				$('body').showLoading();
 				app.calls.authentication.authAdminLogout.init({'callback':'handleLogout','extension':'admin'});//always immutable.
@@ -921,6 +927,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //				$('#appLogin').hide();
 				$('#appView').show();
 				$('#preloadAndLoginContainer').hide(); //hide all preView and login data.
+				$('#preloadAndLoginContents').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");

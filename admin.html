@@ -84,7 +84,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	
 		<div style='position:absolute; top:35px; left:45px; z-index:15;'><img src='https://www.zoovy.com/includes/header-20120404/images/zoovy_logo-217x61.png' width='217' height='61' alt='Zoovy.com' /></div>
 	
-		<div style='position:absolute; top:180px; left:50px; right: 50px; z-index:100;'>
+		<div style='position:absolute; top:180px; left:50px; right: 50px; z-index:100;' id='preloadAndLoginContents'>
 
 <div id='appPreView'>
 
@@ -105,7 +105,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	<div class='appMessaging'></div>
 	
 	<div id='loginFormContainer'>
-		<form name='merchantLogin' onSubmit="app.calls.authentication.accountLogin.init($(this).serializeJSON(),{'callback':'showHeader','extension':'admin'}); app.model.dispatchThis('immutable'); return false;">
+		<form name='merchantLogin' onSubmit="app.ext.admin.a.login($(this)); return false;">
 		<fieldset>
 			<legend>Merchant Login</legend>
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
