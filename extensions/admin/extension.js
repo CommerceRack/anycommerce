@@ -296,6 +296,15 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
+
+var uriParams = app.u.getParametersAsObject();
+app.u.dump("uriParams: "); app.u.dump(uriParams);
+if(uriParams.debug)	{
+	$('button','.buttonset').button();
+	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('#jtSectionTab').show();
+	}
+
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
 				$domainChooser.dialog({
@@ -337,13 +346,6 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 
-var uriParams = app.u.getParametersAsObject();
-
-if(uriParams.debug)	{
-	$('button','.buttonset').button();
-	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
-	$('#jtSectionTab').show();
-	}
 
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 //the code for handling the support login is in the thisisanadminsession function (looking at uri)
@@ -778,7 +780,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
 	//something here is causing session to not persist on reload.
 					if(app.model.fetchData('authAdminLogin'))	{
-						var localVars = app.storageFunctions.readLocal('authAdminLogin');
+						var localVars = app.data['authAdminLogin'];
 						localVars.domain = domain;
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
@@ -950,7 +952,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var localVars = {};
 				
 				if(app.model.fetchData('authAdminLogin'))	{
-					localVars = app.storageFunctions.readLocal('authAdminLogin');
+					localVars = app.data['authAdminLogin'];
 					}
 				
 				if(domain = app.u.getParameterByName('domain')) {} //the single = here is intentional. sets the val during the if so the function doesn't have to be run twice.
@@ -1506,8 +1508,8 @@ else	{
 			selectivelyNukeLocalStorage : function(){
 				var admin = {};
 				var session = {};
-				if(app.model.fetchData('authAdminLogin'))	{admin = app.storageFunctions.readLocal('authAdminLogin');}
-				if(app.model.fetchData('session'))	{session = app.storageFunctions.readLocal('session');}
+				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
+				if(app.model.fetchData('session'))	{session = app.data['session'];}
 				localStorage.clear();
 				app.storageFunctions.writeLocal('authAdminLogin',admin);
 				app.storageFunctions.writeLocal('session',session);

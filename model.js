@@ -1011,11 +1011,12 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return s;
 			}, //fetchSessionId
 	
-	/*
-	will check to see if the datapointer is already in the app.data.
-	if not, will check to see if data is in local storage and if so, save it to app.data IF the data isn't too old.
-	will return false if datapointer isn't in app.data or local (or if it's too old).
-	*/
+/*
+Returns T or F.
+will check to see if the datapointer is already in the app.data. (returns true)
+if not, will check to see if data is in local storage and if so, save it to app.data IF the data isn't too old. (returns true)
+will return false if datapointer isn't in app.data or local (or if it's too old).
+*/
 	
 	
 		fetchData : function(datapointer)	{
