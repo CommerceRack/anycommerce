@@ -99,10 +99,10 @@ later if more variety is needed, we can either create exceptions or more rules t
 li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
 
-/* each 'page' in the UI should have this class on the container. plus, it should possess a pathclass. ex: pageSetup and pageSetupAnalytics */
-.page	{margin:12px auto; width:90%;}
+/* This gets applied to the parent containers around each tabs content area.  */
+.tabContent	{margin:12px auto; width:90%; }
 
-
+#appView	{background:#ffffff;}
 
 
 /* multipage controls */

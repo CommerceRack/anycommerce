@@ -316,9 +316,8 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
 
-var uriParams = app.u.getParametersAsObject();
-app.u.dump("uriParams: "); app.u.dump(uriParams);
-if(uriParams.debug)	{
+
+if(app.u.getParameterByName('debug'))	{
 	$('button','.buttonset').button();
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
 	$('#jtSectionTab').show();
