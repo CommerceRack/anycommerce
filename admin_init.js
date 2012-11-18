@@ -9,7 +9,7 @@ app.rq.push(['extension',1,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',1,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',1,'admin_prodEdit','extensions/admin/product_editor.js']);
-// app.rq.push(['extension',1,'admin_orders','extensions/admin/orders.js']); //comment out before deploy. just seeing where this is at.
+app.rq.push(['extension',1,'admin_orders','extensions/admin/orders.js']); //comment out before deploy. just seeing where this is at.
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 

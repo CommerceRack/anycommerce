@@ -258,7 +258,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 				app.ext.admin_orders.u.bindOrderListButtons(P.targetID);
 				}
 			else	{
-				app.u.dump("ERROR! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
+				app.u.throwGMessge("WARNING! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
 				}
 			}, //initOrderManager
 		
@@ -341,8 +341,7 @@ else	{
 
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
-		
-			if(typeof filterObj == 'object' || !$.isEmptyObject(filterObj))	{
+			if(!$.isEmptyObject(filterObj))	{
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 5;
 				filterObj.LIMIT = 20; //for now, cap at 20 so test pool is small. ###
@@ -351,7 +350,7 @@ else	{
 				
 				}
 			else	{
-				app.u.dump("Warning - no filter object passed into showOrderList");
+				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
 				}
 	
 			},
@@ -386,11 +385,12 @@ else	{
 
 
 		selectAllOrders : function()	{
-			$('#orderListTable tr').each(function(){$(this).addClass('ui-selected')});
+			app.u.dump("GOT HERE");
+			$('#orderListTable .mainCol tr').each(function(){$(this).addClass('ui-selected')});
 			},
 			
 		deselectAllOrders : function()	{
-			$('#orderListTable tr').each(function(){$(this).removeClass('ui-selected')});
+			$('#orderListTable .mainCol tr').each(function(){$(this).removeClass('ui-selected')});
 			},
 
 
