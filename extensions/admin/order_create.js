@@ -78,6 +78,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 		adminOrderDetail : 	{
 			init : function(orderID, tagObj ,Q)	{
+				tagObj = tagObj || {}
+				tagObj.datapointer = 'adminOrderDetail|'+orderID;
 				this.dispatch(orderID, tagObj, Q);
 				return 1;
 				},
@@ -316,8 +318,7 @@ if server validation passes, the callback handles what to do next (callback is m
 		printById : {
 			
 			onSuccess : function(tagObj){
-
-$('#printContainer').append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
+$('#printContainer').append("<h1>Print Content</h1>").append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
 app.u.printByElementID('printContainer');
 				}
 			

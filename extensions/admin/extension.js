@@ -324,9 +324,6 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
-//have this at the ready. used in conjunction with printby id. used in order create (and will be recycled for any printing task)
-$('#printContainer').dialog({'autoOpen':false,'width':350,'height':350,'dialog':true});
-
 if(app.u.getParameterByName('debug'))	{
 	$('button','.buttonset').button();
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
