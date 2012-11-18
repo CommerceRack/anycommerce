@@ -75,8 +75,8 @@ var admin_orders = function() {
 				return 1;
 				},
 			dispatch : function(orderID,updates,tagObj)	{
-				app.u.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
-				app.u.dump(" -> orderID = "+orderID);
+//				app.u.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
+//				app.u.dump(" -> orderID = "+orderID);
 				cmdObj = {};
 				cmdObj['_cmd'] = 'adminOrderUpdate';
 				cmdObj.orderid = orderID;
@@ -122,7 +122,7 @@ var admin_orders = function() {
 // if the order manager is loaded as part of the controller init, this callback gets run
 		initOrderManager : {
 			onSuccess : function()	{
-				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
+//				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
 				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});
 				}
 			}, //initOrderManager
@@ -135,7 +135,7 @@ var admin_orders = function() {
 				},
 			onError : function(responseData)	{
 				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				responseData.parentID = 'orderListMessaging'
+				responseData._rtag.parentID = 'orderListMessaging'
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
@@ -189,7 +189,7 @@ var admin_orders = function() {
 		listOrders : {
 			onSuccess : function(tagObj)	{
 
-app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+//app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 
 var orderid,cid;
@@ -274,9 +274,9 @@ $('#orderListTableContainer').removeClass('loadingBG');
 			
 			
 		orderDetailsInDialog : function(orderID,CID)	{
-app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
-app.u.dump(" -> CID : "+CID);
-app.u.dump(" -> orderID : "+orderID);
+//app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
+//app.u.dump(" -> CID : "+CID);
+//app.u.dump(" -> orderID : "+orderID);
 if(orderID)	{
 
 	var safeID = app.u.makeSafeHTMLId(orderID);
@@ -314,7 +314,7 @@ if(orderID)	{
 		}
 	}
 else	{
-	app.u.dump("WARNING! - no orderID specificed for view order.");
+	app.u.throwGMessage("WARNING! - no orderID passed into admin_orders.u.orderDetailsInDialog.");
 	}
 			}, //orderDetailsInDialog
 		
@@ -334,7 +334,7 @@ else	{
 				$('#orderListMessaging').append(app.u.formatMessage('Please select at least one filter criteria'));
 				}
 			else	{
-				app.u.dump(obj);
+//				app.u.dump("Filter Obj: "); app.u.dump(obj);
 				app.ext.admin_orders.a.showOrderList(obj);
 				}
 			},
@@ -385,12 +385,11 @@ else	{
 
 
 		selectAllOrders : function()	{
-			app.u.dump("GOT HERE");
-			$('#orderListTable .mainCol tr').each(function(){$(this).addClass('ui-selected')});
+			$('#orderListTableBody tr').each(function(){$(this).addClass('ui-selected')});
 			},
 			
 		deselectAllOrders : function()	{
-			$('#orderListTable .mainCol tr').each(function(){$(this).removeClass('ui-selected')});
+			$('#orderListTableBody tr').each(function(){$(this).removeClass('ui-selected')});
 			},
 
 

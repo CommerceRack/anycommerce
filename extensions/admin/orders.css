@@ -52,3 +52,6 @@ order detail
 .notes .editable	{display:block;}
 
 .notes textarea	{min-height:60px; width:100%;}
+
+.ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
+.ui-selected .selectedIcon	{display:block !important;}

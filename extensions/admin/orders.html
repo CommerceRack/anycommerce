@@ -98,8 +98,8 @@
 
 <!-- used for order lineitem in orderList template -->
 <table>
-<tr id='adminOrderLineItem' >
-	<td></td>
+<tr id='adminOrderLineItem' class='adminOrderLineItem' >
+	<td><span class='selectedIcon'><span class="ui-icon ui-icon-circle-check"></span></span></td>
 	<td><span data-bind='var:order(ORDERID);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
