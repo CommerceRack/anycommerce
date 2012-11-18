@@ -263,6 +263,8 @@ $('#orderListTableContainer').removeClass('loadingBG');
 			}, //initOrderManager
 		
 		
+
+		
 		saveChangesToOrder : function()	{
 			app.u.dump("BEGIN admin_orders.a.saveChangesToOrder");
 			alert('not working yet');

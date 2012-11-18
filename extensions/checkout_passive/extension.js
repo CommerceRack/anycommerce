@@ -1051,10 +1051,11 @@ an existing user gets a list of previous addresses they've used and an option to
 
 				var $panelFieldset = $("#chkoutShipMethodsFieldset").removeClass("loadingBG");
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateShipMethods','shipMethodsContainer'));
-				app.renderFunctions.translateTemplate(app.data.cartShippingMethods,'shipMethodsContainer');
+				app.renderFunctions.translateTemplate(app.data.cartDetail,'shipMethodsContainer');
 
 //must appear after panel is loaded because otherwise the divs don't exist.
-				if(app.data.cartShippingMethods['@methods'].length == 0)	{
+//per brian, use shipping methods in cart, not in shipping call.
+				if(app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
 					$('#noShipMethodsAvailable').toggle(true);
 					}
 				else if(!$('#data-bill_zip').val() && !$('ship_zip').val()) {

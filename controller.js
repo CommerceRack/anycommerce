@@ -289,8 +289,19 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				}
 			},
 
+		appCartCreate : {
+			init : function(tagObj)	{
+				this.dispatch(tagObj); 
+				return 1;
+				},
+			dispatch : function(tagObj)	{
+				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":tagObj},'immutable');
+				}
+			},//getValidSessionID
+
 
 //always uses immutable Q
+// ### need to migrate anything using this to use appCartCreate.
 		getValidSessionID : {
 			init : function(callback)	{
 				this.dispatch(callback); 
@@ -366,17 +377,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				}
 			}, //ping
 
-//always uses immutable Q.
-// used when a new session id must be generated, such as post-checkout.
-		appCartCreate : {
-			init : function(callback)	{
-				this.dispatch(callback);
-				return 1;
-				},
-			dispatch : function(callback)	{
-				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":{"callback":callback}},'immutable'); //get new session id.
-				}
-			}, //appCartCreate
 			
 		appProfileInfo : {
 			init : function(profileID,tagObj,Q)	{
@@ -470,7 +470,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					}
 				else	{
 					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
-					app.calls.appCartCreate.init('handleNewSession');
+					app.calls.appCartCreate.init({'callback':'handleNewSession'});
 					app.model.dispatchThis('immutable');
 					}
 				}
@@ -513,6 +513,17 @@ app.u.throwMessage(responseData); is the default error handler.
 				app.u.throwMessage(msg);
 				}
 			}, //showMessaging
+		
+		disableLoading : {
+			onSuccess : function(tagObj)	{
+				$('#'+tagObj.targetID).hideLoading();
+				},
+			onError : function(responseData)	{
+				app.u.throwMessage(responseData);
+				$('#'+responseData.tagObj.targetID).hideLoading(); //even with the error, it's bad form to leave the loading bg.
+				}
+
+			},
 /*
 By default, error messaging is thrown to the appMessaging class. Sometimes, this needs to be suppressed. Add this callback and no errors will show.
 ex: whoAmI call executed during app init. Don't want "we have no idea who you are" displayed as an error.

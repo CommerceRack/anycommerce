@@ -72,6 +72,15 @@ var admin = function() {
 			
 			}, 
 
+//no local storage of this call. only 1 in memory. Will expand when using session storage if deemed necessary.
+		adminCustomerLookup : {
+			init : function(email,tagObj,Q)	{
+				this.dispatch(email,tagObj,Q);
+				},
+			dispatch : function(email,tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : tagObj});	
+				}			
+			},
 
 		adminDomainList : {
 			init : function(tagObj,Q)	{
@@ -315,7 +324,8 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
-
+//have this at the ready. used in conjunction with printby id. used in order create (and will be recycled for any printing task)
+$('#printContainer').dialog({'autoOpen':false,'width':350,'height':350,'dialog':true});
 
 if(app.u.getParameterByName('debug'))	{
 	$('button','.buttonset').button();
@@ -742,19 +752,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(path.substring(0,2) == '#!')	{
 						app.u.dump("Is a native app mode.");
 						//app based content always shows up in whatever tab is in focus.
-						
-						
-						if(path == '#!mediaLibraryManageMode')	{
-							app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
-							}
-						else if(path == '#!domainConfigPanel')	{
-							app.ext.admin.a.showDomainConfig();
-							}
-						
-						else	{
-							app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
-							}
-
+						app.ext.admin.u.loadNativeApp(path,P);
 						}
 					else	{
 					
@@ -794,7 +792,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				return false;
 				},
 				
-				
+
+//this is a function that brian has in the UI on some buttons.
+//it's diferent than showUI so we can add extra functionality if needed.
+//the app itself should never use this function.
+			navigateTo : function(path,$t)	{
+				this.showUI(path,$t ? $t.data() : {});
+				},
 				
 			showDomainConfig : function(){
 				$('#'+app.ext.admin.vars.focusTabID).empty().showLoading();
@@ -844,12 +848,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 				},
 
-//this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can add extra functionality if needed.
-//the app itself should never use this function.
-			navigateTo : function(path,P)	{
-				this.showUI(path,P);
-				},
 
 
 //used in the builder for when 'edit' is clicked on an element.
@@ -995,7 +993,27 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				}, //showHeader
 
+//This gets executed from within showUI.  It will load an app instead of compatibility mode content.
+			loadNativeApp : function(path,P){
 
+				if(path == '#!mediaLibraryManageMode')	{
+					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				else if(path == '#!orderPrint')	{
+					app.ext.convertSessionToOrder.a.printOrder(P.oid,P.type.toLowerCase());
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				
+				else	{
+					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+					}
+
+				},
 
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.

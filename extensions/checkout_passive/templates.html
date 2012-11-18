@@ -219,7 +219,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 <!-- shipping options will be displayed in one of the following two elements. use only one. -->
 
 <!-- ship options as radio buttons -->
-	<ul id='chkout-shipMethods' class='noPadOrMargin listStyleNone' data-bind='var: cartShippingMethods(@methods); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+	<ul id='chkout-shipMethods' class='noPadOrMargin listStyleNone' data-bind='var: cartShippingMethods(@shipmethod); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
 
 
 <!-- use this for shipping methods in a dropdown -->

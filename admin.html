@@ -260,14 +260,14 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 
 
 
+<div id='printContainer'></div><!-- used for printing. leave this here... and alone -->
 
 
 
 
 
 
-
-<div class='debug buttonset'>
+<div class='debug buttonset clearBoth clearAll clearfix'>
 
 <hr />
 
@@ -283,6 +283,12 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 <button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
+<button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
+
+
+
+<button onclick="navigateTo('#!orderPrint',$(this)); return false;" data-type="PACKSLIP" data-oid="2012-10-518">Print Packing Slip</button>
+
 <hr />
 
 </div>

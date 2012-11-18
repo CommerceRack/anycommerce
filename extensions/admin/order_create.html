@@ -7,16 +7,9 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
  -> do not change the chkoutCartSummaryContainer id. that is where the cart summary is generated (using other templates).
 -->
 <div id='checkoutTemplate' class='checkoutFormContainer'>
-
-
-<div id='returnFromThirdPartyPayment' class="ui-state-highlight ui-corner-all displayNone"> 
-	<p class='clearfix'>
-	<span class='floatLeft ui-icon ui-icon-info'></span>
-	<strong>Welcome back, you are nearly done!</strong> Just confirm your information below and then push the 'place order' button at the bottom.
-	</p>
-</div>
-
-
+	<table class='orderCreateTable'>
+	<tr>
+		<td>
 	<form id='zCheckoutFrm' name='zCheckoutFrm' action='' onSubmit='return false;'>
 	
 <!-- this is outside the fieldsets so that it can be used to maintain state (fieldsets sometimes get regenerated) -->
@@ -30,9 +23,27 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	<fieldset id="chkoutAccountInfoFieldset" class='displayNone'></fieldset>
 
 	</form>
-	
-	<div id='chkoutCartSummaryContainer'></div>
+		</td>
+		<td>
 
+<div class='marginBottom'>
+<form name='addPid2CartForm' action='#' onSubmit="return false">
+<fieldset class='ui-widget ui-widget-content ui-corner-all'>
+	<legend class='ui-widget-header ui-corner-all'>Add Item to Order</legend>
+	<input type="hidden" name="add" value="yes" />
+	<input type="hidden" name="override" value="1" />
+	
+	<label><span>Qty:</span><input type="text" name="quantity" size="5" value="1"  /></label>
+	<label><span>Product id:</span><input type='text' name='product_id'  /></label>
+	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())">Add</button>
+</fieldset>
+</form>
+</div>
+
+		<div id='chkoutCartSummaryContainer'></div>
+		</td>
+	</tr>
+	</table>
 </div>
 
 
@@ -48,7 +59,7 @@ spec for the 'order summary' panel that appears in checkout.
 cartSummaryTotalsContainer - will get loaded with the checkoutTemplateOrderSummary
 chkoutCartContents - will get loaded with the productListTemplateContentsSummary later (item list)
 -->
-<fieldset id='checkoutTemplateCartSummaryPanel' class='ui-widget ui-widget-content ui-corner-all'>
+<fieldset id='checkoutTemplateCartSummaryPanel' class='ui-widget ui-widget-content ui-corner-all displayNone'>
 	<legend class='ui-widget-header ui-corner-all'>Order Contents</legend>
 
 
@@ -115,15 +126,29 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 -->
 <ul>
 <li id='productListTemplateCheckout' class='cartTotalLineItem'>
-	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL; defaultVar: product(full_product.zoovy:prod_image1);' width='50' height='50' />
-	<div class='floatLeft '>
-		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
-		<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
-		<div class='prodLatency' data-bind='var:product(full_product.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
-		<div><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></div>
-		<div class='prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
-	</div>
-	<div class='clearAll'></div>
+
+
+		<span class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
+		<span class='ui-icon ui-icon-closethick'></span>
+		</span>
+		
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(full_product.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+	
+		<h4 data-bind='var: product(prod_name); format:text; '></h4>
+		
+		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+		
+		<div>
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
+		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+
+		</div>
+		
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+
+
 </li>
 </ul>
 
@@ -142,6 +167,8 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_lastname'><label for='data-bill_lastname'>Last Name</label><input type='text' name='bill/lastname' id='data-bill_lastname' required='required' value='' data-bind='var: cart(bill/lastname); format:popVal;'  /></li>
 
+	<li class='bill_email'><label for='data-bill_email'>Email</label><input type='text' name='bill/email' id='data-bill_email' required='required' value='' data-bind='var: cart(bill/email); format:popVal;'  /></li>
+
 	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
 
 	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
@@ -156,7 +183,7 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='bill/countrycode' id='data-bill_country' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
 
-	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
+	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /></li>
 
 	<li id='want-bill_to_ship_cb_container'>
 	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='want-bill_to_ship_cb' checked='checked' /><label for='want-bill_to_ship_cb'>ship to billing address</label></div>
@@ -236,7 +263,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 <!-- shipping options will be displayed in one of the following two elements. use only one. -->
 
 <!-- ship options as radio buttons -->
-	<ul id='chkout-shipMethods' class='noPadOrMargin listStyleNone' data-bind='var: cartShippingMethods(@shipmethod); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+	<ul id='chkout-shipMethods' class='noPadOrMargin listStyleNone' data-bind='var: cartShippingMethods(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
 
 
 <!-- use this for shipping methods in a dropdown -->
@@ -452,9 +479,6 @@ If this gets recycled, test in order history after making changes.
 	</div>
 
 	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
-
-<button class='ui-button-text ui-button ui-state-default ui-corner-all writeReview' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
-
 	
 </div>
 
@@ -466,3 +490,59 @@ If this gets recycled, test in order history after making changes.
 
 
 
+
+<table id='packslipTemplate' class='orderContentsTable'>
+<tr>
+	<td>
+
+<h3>Billing Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+</address>
+
+	</td>
+	<td>
+
+<h3>Shipping Address</h3>
+<address>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+</address>
+
+	</td>
+</tr>
+
+<tr>
+	<td colspan='2'>
+
+<h3 data-bind='var:order(data.pool);format:text; pretext:Order Status: ;'></h3>
+
+	</td>
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
+	<ul id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
+	</td>
+</tr>
+</table>
