@@ -717,11 +717,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
-//empty these containers early to avoid confusion and make sure they don't remain if new section/page doesn't have them.
-//these are also emptied in the functions that handle the display so that a save, which doesn't run through this block, doesn't cause duplicates
-				$('#navTabs').empty();
-				$('#breadcrumb').empty();
-
 
 				P = P || {};
 				var $target;
@@ -1623,7 +1618,7 @@ just lose the back button feature.
 //				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash.replace(/^#/, ''); //strips first character if a hash.
 //				app.u.dump(" -> hash: "+hash);
-				if(hash.indexOf("/biz/") == 0)	{
+				if(hash.substr(0,5) == "/biz/" && !_ignoreHashChange)	{
 					showUI(hash);
 					}
 				else	{
