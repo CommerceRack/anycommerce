@@ -823,11 +823,15 @@ This function will have both cases.
 				if(d['_msgs'])	{
 					for(var i = 1; i <= d['_msgs']; i += 1)	{
 //						app.u.dump(d['_msg_'+i+'_type']+": "+d['_msg_'+i+'_id']);
-						r += "<div class='"+d['_msg_'+i+'_type']+"'>"+d['_msg_'+i+'_txt']+" [id: "+d['_msg_'+i+'_id']+"]<\/div>";
+						r += "<div class='"+d['_msg_'+i+'_type']+"'>"+d['_msg_'+i+'_txt'];
+						if(d['_msg_'+i+'_id']) { r += "<br \/>Error ID: "+d['_msg_'+i+'_id']}
+						r += "<\/div>";
 						}
 					}
 				else if(d['errid'])	{
-					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+"<br \/>Error ID: "+d.errid+"<\/div>";
+					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg
+					if(d.errid && d.errid != "#") { r += "<br \/>Error ID: "+d.errid}
+					r += "<\/div>";
 //					app.u.dump("WARNGING! error occured. id: "+d.errid+" and type: "+d.errtype+" and msg: "+errmsg);
 					}
 //the validate order request returns a list of issues.
