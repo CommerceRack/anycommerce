@@ -105,7 +105,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	<div class='appMessaging'></div>
 	
 	<div id='loginFormContainer'>
-		<form name='merchantLogin' onSubmit="app.ext.admin.a.login($(this)); return false;">
+		<form name='merchantLogin' id='merchantLogin' onSubmit="app.ext.admin.a.login($(this)); return false;">
 		<fieldset>
 			<legend>Merchant Login</legend>
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
