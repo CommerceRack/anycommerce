@@ -1008,7 +1008,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(P.oid,P.type.toLowerCase());
 					}
-				else if(path == '#!createOrder')	{
+				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
 				else if(path == '#!domainConfigPanel')	{
