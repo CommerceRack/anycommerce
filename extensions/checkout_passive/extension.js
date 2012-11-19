@@ -1066,6 +1066,7 @@ an existing user gets a list of previous addresses they've used and an option to
 it's possible that a ship method is set in the cart that is no longer available.
 this could happen if 'local pickup' is selected, then country,zip,state, etc is changed to a destination where local pickup is not available.
 in these instances, the selected method in the cart/memory/local storage must get emptied.
+Of course, this should only happen IF a method was selected previously.
 */
 				var foundMatchingShipMethodId = false; 
 				var L = app.data.cartShippingMethods['@methods'].length;
@@ -1076,7 +1077,7 @@ in these instances, the selected method in the cart/memory/local storage must ge
 						}
 					}
 
-				if(foundMatchingShipMethodId == false)	{
+				if(foundMatchingShipMethodId == false && app.data.cartDetail['want/shipping_id'])	{
 					app.u.dump(' -> previously selected ship method is no longer available. update session with null value.');
 					app.calls.cartSet.init({"want/shipping_id":null});  //the set will update the method, session and local storage.
 					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');

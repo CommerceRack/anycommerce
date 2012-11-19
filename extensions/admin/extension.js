@@ -135,7 +135,7 @@ else	{
 //					app.u.dump("CID: "+CID);
 					var r = 0;
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+					tagObj = tagObj || tagObj;
 					tagObj.datapointer = "adminCustomerGet|"+CID;
 					if(app.model.fetchData(tagObj.datapointer) == false)	{
 						r = 1;
@@ -149,7 +149,7 @@ else	{
 				dispatch : function(CID,tagObj,Q)	{
 //					app.u.dump("CID: "+CID);
 					var obj = {};
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+					tagObj = tagObj || {};
 					obj["_cmd"] = "adminCustomerGet";
 					obj["CID"] = CID;
 					obj["_tag"] = tagObj;
@@ -160,6 +160,8 @@ else	{
 //no local storage of this call. only 1 in memory. Will expand when using session storage if deemed necessary.
 		adminCustomerLookup : {
 			init : function(email,tagObj,Q)	{
+				tagObj = tagObj || tagObj;
+				tagObj.datapointer = "adminCustomerLookup";
 				this.dispatch(email,tagObj,Q);
 				},
 			dispatch : function(email,tagObj,Q)	{
@@ -173,7 +175,7 @@ else	{
 					},
 				dispatch : function(CID,setObj,tagObj)	{
 					var obj = {};
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+					tagObj = tagObj || {};
 					obj["_cmd"] = "adminCustomerSet";
 					obj["CID"] = CID;
 					obj['%set'] = setObj;
@@ -191,7 +193,7 @@ else	{
 					},
 				dispatch : function(pid,tagObj,Q)	{
 					var obj = {};
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+					tagObj = tagObj || {};
 					tagObj["datapointer"] = "appProductGet|"+pid; 
 					obj["_cmd"] = "appProductGet";
 					obj["pid"] = pid;
@@ -207,7 +209,7 @@ else	{
 					},
 				dispatch : function(pid,attrObj,tagObj)	{
 					var obj = {};
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+					tagObj = tagObj || {};
 					obj["_cmd"] = "adminProductUpdate";
 					obj["product"] = pid;
 					obj['%attribs'] = attrObj;
@@ -323,6 +325,8 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 					app.rq.splice(i, 1); //remove once handled.
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+
+app.u.dump(" -> BROWSER INFO: "); app.u.dump(app.u.getBrowserInfo());
 
 if(app.u.getParameterByName('debug'))	{
 	$('button','.buttonset').button();
@@ -1002,6 +1006,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(P.oid,P.type.toLowerCase());
 					}
+				else if(path == '#!createOrder')	{
+					app.ext.convertSessionToOrder.a.openCreateOrderForm();
+					}
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
 					}
@@ -1127,7 +1134,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						msgObj = app.u.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
 						msgObj.persistant = true; //for testing, don't hide.
-						app.u.dump(msgObj);
+//						app.u.dump(msgObj);
 						app.u.throwMessage(msgObj);
 						}
 					}

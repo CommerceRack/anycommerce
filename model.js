@@ -58,7 +58,7 @@ Or if you have dispatches occur during your app init but are concerned they coul
 the passive q requests are never aborted.
 
 q.mutable - this is the bulk of your calls. Getting information and then doing something with it (executed from the callback). It is called mutable
-because it can be muted. aka aborted. if an immutable request is sent, it will cancel all mutable requests. Likewise, the app.model.abortQ() function
+because it can be muted by the app.model.abortQ() function
 will abort all mutable requests.  Use this when the users direction changes (they click page 1, then quickly click page 2 - you'd want to cancel the requests for 
 page 1 so their callbacks are not executed).
 
@@ -190,7 +190,7 @@ function zoovyModel() {
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
 					if(puuid){app.q[QID][index]['pipeUUID'] = puuid}
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
-//					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
+					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
 					delete myQ[c]['status'];
 					delete myQ[c]['attempts'];
 					c += 1;
@@ -348,10 +348,19 @@ can't be added to a 'complete' because the complete callback gets executed after
 		data: JSON.stringify({"_uuid":pipeUUID,"_cartid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":"admin","_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
-		app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
-		delete app.globalAjax.requests[QID][pipeUUID];
-		app.model.handleCancellations(Q,QID);
-		setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
+		if(textStatus == 'abort')	{
+			delete app.globalAjax.requests[QID][pipeUUID];
+			for(var index in Q) {
+				app.model.changeDispatchStatusInQ(QID,Q[index]['_uuid'],'abort');
+				}
+
+			}
+		else	{
+			app.u.dump(' -> REQUEST FAILURE! Request returned high-level errors or did not request: textStatus = '+textStatus+' errorThrown = '+errorThrown);
+			delete app.globalAjax.requests[QID][pipeUUID];
+			app.model.handleCancellations(Q,QID);
+			setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
+			}
 		});
 	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
 		delete app.globalAjax.requests[QID][pipeUUID];
@@ -375,7 +384,7 @@ handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.
 set adjustAttempts to true to increment by 1.
 */
 		handleReQ : function(Q,QID,adjustAttempts)	{
-			var uuid,callbackObj;
+			var uuid;
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
 				app.model.changeDispatchStatusInQ(QID,uuid,'queued');
@@ -385,7 +394,7 @@ set adjustAttempts to true to increment by 1.
 //run when a request fails, most likely due to an ISE
 
 		handleCancellations : function(Q,QID)	{
-			var uuid,callbackObj;
+			var uuid;
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
 				app.model.changeDispatchStatusInQ(QID,uuid,'cancelledDueToErrors');
@@ -404,18 +413,27 @@ set adjustAttempts to true to increment by 1.
 		if(QID && UUID && responseData)	{
 			responseData['_rtag'] = responseData['_rtag'] || this.getRequestTag(UUID); //_tag is stripped at dispatch and readded. make sure it's present.
 			if(responseData['_rtag'])	{
-				var Q = app.q[QID];			
+				var Q = app.q[QID];	
 				if(Q[UUID]['_tag'] && Q[UUID]['_tag']['callback'])	{
-	//executes the callback.onError and takes into account extension. saves entire callback object into callbackObj so that it can be easily validated and executed whether in an extension or root.
-					callbackObj = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
-	//persistant is NOT defined if a callback is defined. let the callback itself make that decision.
-					if(callbackObj && typeof callbackObj.onError == 'function'){
-						callbackObj.onError(responseData,UUID)
+					var callback = Q[UUID]['_tag']['callback'];
+//callback is an anonymous function. Execute it.
+					if(typeof callback == 'function')	{
+						callback(responseData,UUID)
 						}
-//callback defined, but is not a function.
+//callback is defined in extension or controller as object (with onSuccess and maybe onError)
+					else if(typeof callback == 'string')	{
+						callback = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
+						if(typeof callback.onError == 'function'){
+							callbackObj.onError(responseData,UUID)
+							}
+						else{
+							app.u.throwMessage(responseData);
+							}
+						}
 					else	{
-						app.u.dump(" -> callback not a function");
+						//unknown type for callback.
 						app.u.throwMessage(responseData);
+						
 						}
 					}
 //_rtag defined, but no callback.
@@ -612,15 +630,15 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
 	//callback has been defined in the call/response.
-				callback = responseData['_rtag']['callback'];
-//				app.u.dump(' -> callback: '+callback);
-				
-				if(responseData['_rtag']['extension'] && !$.isEmptyObject(app.ext[responseData['_rtag']['extension']].callbacks[callback]))	{
-					callbackObj = app.ext[responseData['_rtag']['extension']].callbacks[callback];
+				callback = responseData['_rtag']['callback']; //shortcut
+				app.u.dump(' -> callback: '+callback);
+				if(typeof callback == 'function'){} //do nothing to callback. will get executed later.
+				else if(responseData['_rtag']['extension'] && !$.isEmptyObject(app.ext[responseData['_rtag']['extension']].callbacks[callback]))	{
+					callback = app.ext[responseData['_rtag']['extension']].callbacks[callback];
 //					app.u.dump(' -> callback node exists in app.ext['+responseData['_rtag']['extension']+'].callbacks');
 					}
 				else if(!$.isEmptyObject(app.callbacks[callback]))	{
-					callbackObj = app.callbacks[callback];
+					callback = app.callbacks[callback];
 //					app.u.dump(' -> callback node exists in app.callbacks');
 					}
 				else	{
@@ -628,7 +646,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					app.u.dump(' -> WARNING! callback defined but does not exist.');
 					}
 				}
-	
+			else	{callback = false;} //no callback defined.
 	
 //if no datapointer is set, the response data is not saved to local storage or into the app. (add to cart, ping, etc)
 //effectively, a request occured but no data manipulation is required and/or available.
@@ -649,34 +667,41 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 	//			app.u.dump(' -> no datapointer set for uuid '+uuid);
 				}
 
-			if(hasErrors)	{
-				if(callback && !$.isEmptyObject(callbackObj) && typeof callbackObj.onError == 'function'){
-//					app.u.dump('WARNING response for uuid '+uuid+' had errors. callback defined and executed.');
+//errors present and a defined action for handling those errors is defined.
+			if(hasErrors && callback)	{
+				if(typeof callback == 'function')	{
+					callback(responseData,uuid); //if an anonymous function is passed in, it handles does it's own error handling.
+					}
+				else if(typeof callback == 'object' && typeof callback.onError == 'function'){
 /*
 below, responseData['_rtag'] was passed instead of uuid, but that's already available as part of the first var passed in.
 uuid is more useful because on a high level error, rtag isn't passed back in responseData. this way uuid can be used to look up originat _tag obj.
 */
-					callbackObj.onError(responseData,uuid);
-					}
-				else if(typeof app.u.throwMessage === 'function')	{
-					app.u.throwMessage(responseData);
+					callback.onError(responseData,uuid);
 					}
 				else{
 					app.u.dump('ERROR response for uuid '+uuid+'. callback defined but does not exist or is not valid type. callback = '+callback+' datapointer = '+datapointer)
 					}
 				status = 'error';
 				}
+//has errors but no error handler declared. use default
+			else if(hasErrors && typeof app.u.throwMessage === 'function')	{
+				app.u.throwMessage(responseData);
+				status = 'error';
+				}
+//no errors. no callback.
 			else if(callback == false)	{
 				status = 'completed';
 	//			app.u.dump(' --> no callback set in original dispatch. dq set to completed for uuid ('+uuid+')');
 				}
+//to get here, no errors are present AND a callback is defined.
 			else	{
-	//			app.u.dump(' -> got to success portion of handle resonse. callback = '+callback);
 				status = 'completed';
-				if(!$.isEmptyObject(callbackObj) && typeof callbackObj.onSuccess != undefined){
-//initially, only datapointer was passed back.
-//then, more data was getting passed on rtag and it made more sense to pass the entire object back
-					callbackObj.onSuccess(responseData['_rtag']); //executes the onSuccess for the callback
+				if(typeof callback == 'function')	{
+					callback(responseData._rtag);
+					}
+				else if(typeof callback == 'object' && typeof callback.onSuccess == 'function')	{
+					callback.onSuccess(responseData['_rtag']); //executes the onSuccess for the callback
 					}
 				else{
 					app.u.dump(' -> successful response for uuid '+uuid+'. callback defined ('+callback+') but does not exist or is not valid type.')

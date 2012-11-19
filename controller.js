@@ -711,7 +711,7 @@ it'll then set app.rq.push to mirror this function.
 			var msg = this.errMsgObject("Well this is embarrassing. Something bad happened. Please try that again. If this error persists, please contact the site administrator.","#");
 			if(parentID)	{msg.parentID = parentID}
 			this.throwMessage(msg);
-			app.u.dump(err);
+//			app.u.dump(err);
 			},
 /*
 msg could be a string or an object.
@@ -755,7 +755,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				msg.messageClass = messageClass;
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
-				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{app.u.dump("USING targetID for errors"); $target = $('#'+msg['_rtag'].targetID)}
+				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
 				else	{
 					$target = $globalDefault;

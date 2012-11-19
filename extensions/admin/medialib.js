@@ -482,7 +482,7 @@ setTimeout(function(){
 			showMediaAndSubs : function(folderProperties){
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
 					var $mediaTarget = $('#mediaLibFileList ul');
-					
+					app.model.abortQ('mutable'); //if folders are clicked in quick succession, incomplete requests should get cancelled so their results don't show up.
 //SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 					
 					var $folderTarget = $('#mediaChildren_'+folderProperties.fid); //ul for folder children.

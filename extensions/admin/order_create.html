@@ -35,7 +35,7 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	
 	<label><span>Qty:</span><input type="text" name="quantity" size="5" value="1"  /></label>
 	<label><span>Product id:</span><input type='text' name='product_id'  /></label>
-	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())">Add</button>
+	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())" class='ui-button ui-state-default ui-corner-all'>Add</button>
 </fieldset>
 </form>
 </div>
@@ -120,7 +120,18 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 
 
 
+
+
+
+
 <!--
+
+######################
+
+PRODUCT LIST TEMPLATE FOR ORDER CREATE
+
+######################
+
 used in checkout for 'order total' panel. this is the line-item spec for a cart item (product/coupon/etc)
 the defaultVar on prodName & image is for promotions, which have a 'description' attribute
 -->
@@ -128,7 +139,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 <li id='productListTemplateCheckout' class='cartTotalLineItem'>
 
 
-		<span class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
+		<span class='ui-state-default ui-corner-all floatRight removeButton' onClick="$(this).parent().find('.qtyInput').val('0').trigger('change');" >
 		<span class='ui-icon ui-icon-closethick'></span>
 		</span>
 		
@@ -139,7 +150,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.convertSessionToOrder.u.updateCartQty($(this),{'callback':'loadPanelContent','extension':'convertSessionToOrder'}); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -257,7 +268,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 
 <div id='checkoutTemplateShipMethods'>
 
-	<p class=' displayNone' id='noShipMethodsAvailable'>Shipping rates to be determined... (try entering a zip code)</p>
+	<p class=' displayNone' id='noShipMethodsAvailable'>Shipping rates to be determined.</p>
 	<p class=' displayNone' id='noZipShipMessage'>Enter a zip/postal code in the appropriate field above and additional shipping options may appear</p>
 
 <!-- shipping options will be displayed in one of the following two elements. use only one. -->
@@ -470,13 +481,21 @@ If this gets recycled, test in order history after making changes.
 </div>
 
 	</li>
+
+
+
 </ul>
 
 
 
 
 
+<!--
 
+NOTE
+This should get moved to orders when order is taken over 
+
+-->
 
 <table id='packslipTemplate' class='orderContentsTable'>
 <tr>
@@ -529,7 +548,24 @@ If this gets recycled, test in order history after making changes.
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
-	<ul id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></table>
 	</td>
+</tr>
+</table>
+
+
+
+<table>
+<tr id='productListTemplatePackslip' class='padMargBorderBottom'>
+	
+	<td>
+	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+	</td>
+	<td><div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div></td>
+	<td><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
+	<td><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+	<td><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+
 </tr>
 </table>

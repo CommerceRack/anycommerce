@@ -13,17 +13,18 @@
 	<td id='mediaLibActionsBar' class='alignRight'>
 	<span>
 	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
-	<button data-btn-action="addFolder">Add Folder</button>
-	<button data-btn-action="selectAddFolderDestination">Folder Location:</button>
+	<button data-btn-action="addFolder" title='Add a new media folder. Use the down arrow to choose location.'>Add Folder</button>
+	<button data-btn-action="selectAddFolderDestination" title='Select whether the new folder will be a top level or a sub folder. For subfolders, navigate to that directory first.'>Folder Location:</button>
 	<ul class='selectAddFolderChoices'>
 		<li class='ui-selected'>As new top level folder</li>
 		<li class='displayNone'>subfolder</li>
 	</ul>
+	<button data-btn-action="deleteFolder" class='marginLeft' disabled='disabled' title='Delete the folder in focus.'>Delete Folder: <span class='folderid'></span></button>
 	</span>
 	<br />
-	<button data-btn-action="deleteSelected">Delete Selected</button>
-	<button data-btn-action="selectUploads" class='addMediaFilesBtn'>Add Files</button>
-	<button data-btn-action="deleteFolder" disabled='disabled'>Delete Folder: <span class='folderid'></span></button>
+	<button data-btn-action="deleteSelected" title='Delete the selected images.'>Delete Selected</button>
+	<button data-btn-action="selectUploads" class='addMediaFilesBtn' title='Add new files to the folder that is open (a folder must be open first).'>Add Files</button>
+	
 
 
 <!--
@@ -52,11 +53,11 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
         <div class="row fileupload-buttonbar clearfix">
             <div class="span7 clearfix">
                 <!-- The fileinput-button span is used to style the file input field as button -->
-                <button type="submit" class="btn btn-primary start">
+                <button type="submit" class="btn btn-primary start" title='Start all the uploads.'>
                     <i class="icon-upload icon-white"></i>
                     <span>Start upload(s)</span>
                 </button>
-                <button type="reset" class="btn btn-warning cancel">
+                <button type="reset" class="btn btn-warning cancel" title='Cancel all of the uploads.'>
                     <i class="icon-ban-circle icon-white"></i>
                     <span>Cancel upload(s)</span>
                 </button>
@@ -134,11 +135,11 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 			<span>Add files...</span>
 			<input type="file" name="files[]" multiple>
 		</span>
-		<button type="submit" class="btn btn-primary start">
+		<button type="submit" class="btn btn-primary start" title='Start all of the uploads.'>
 			<i class="icon-upload icon-white"></i>
 			<span>Start upload</span>
 		</button>
-		<button type="reset" class="btn btn-warning cancel">
+		<button type="reset" class="btn btn-warning cancel" title='cancel all of the uploads.'>
 			<i class="icon-ban-circle icon-white"></i>
 			<span>Cancel upload</span>
 		</button><!--
@@ -191,10 +192,10 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	<li id='mediaFileTemplate'>
 	<img src='blank.gif' data-bind='var: media(path); format:imageURL;' width='100' height='100' />
 	<div data-bind='var: media(Name); format:text;'></div>
-	<button data-btn-action='delete'></button>
-	<button data-btn-action='select'></button>
-	<button data-btn-action='details'></button>
-	<button data-btn-action='download'></button>
+	<button data-btn-action='delete' title='Tag media for delete. click the delete selected button to remove all tagged media.'></button>
+	<button data-btn-action='select' title='Use this piece of media.'></button>
+	<button data-btn-action='details' title="More details."></button>
+	<button data-btn-action='download' title="Download file."></button>
 	</li>
 	
 	

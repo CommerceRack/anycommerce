@@ -100,7 +100,7 @@ li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !importan
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:12px auto; width:90%; }
+.tabContent	{margin:12px auto; width:90%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
 
 #appView	{background:#ffffff;}
 
