@@ -9,3 +9,5 @@
 #prodLeftCol li	{margin-left:10px;}
 #prodLeftCol li a	{padding:3px 0; display:block;}
 
+#prodEditorResultsTable tr:nth-child(odd)		{ background-color:#eee; }
+#prodEditorResultsTable tr:nth-child(even)		{ background-color:#fff; }
