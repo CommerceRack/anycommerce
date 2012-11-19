@@ -314,6 +314,27 @@ if server validation passes, the callback handles what to do next (callback is m
 				}
 			},
 
+//executed on the callback of a customer lookup.
+		useLookupForCustomerGet : {
+			onSuccess : function(tagObj)	{
+				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
+					//Match FOund.
+					app.ext.admin.customer.adminCustomerGet(app.data[tagObj.datapointer].CID,{'callback':'setCustomerRecord','extension':'convertSessionToOrder'});
+					app.model.dispatchThis();
+					}
+				else	{
+					//no match.
+					$('#createOrderButtonBar').show();
+					app.u.throwMessage("No record found for that email address.");
+					}
+				}
+			},
+
+		setCustomerRecord : {
+			onSuccess : function(tagObj)	{
+				app.data[tagObj.datapointer];
+				}
+			},
 
 		printById : {
 			
@@ -598,22 +619,9 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 */
 				$('.paymentRequired').append(app.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
 
-//				$('.paymentRequired').append(app.ext.store_checkout.u.checkoutSuccessPaymentFailure(app.data[tagObj.datapointer].payment_success,app.data['order|'+orderID].cart['want/payby']));
-				
-				
-				
-				var cartContentsAsLinks = encodeURI(app.ext.store_checkout.u.cartContentsAsLinks('order|'+orderID))
-				
-
 				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
 				app.calls.refreshCart.init({},'immutable'); //!IMPORTANT! will reset local cart object. 
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
-
-				var L = app.ext.store_checkout.checkoutCompletes.length;
-				for(var i = 0; i < L; i += 1)	{
-					app.ext.store_checkout.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
-					}
-
 
 				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
 
@@ -1186,7 +1194,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				$buttonBar.append($("<input \/>").attr({'type':'email','id':'customerLookupByEmail'}).val('email address').css('margin','0 5px 0 24px').click(function(){$(this).val('')}));
 				$buttonBar.append($("<button \/>").text("Find Customer").button().click(function(){
 					$buttonBar.hide();
-					app.ext.admin.calls.adminCustomerLookup.init($('#customerLookupByEmail').val(),{});
+					app.ext.admin.calls.customer.adminCustomerLookup.init($('#customerLookupByEmail').val(),{'callback':'useLookupForCustomerGet','extension':'convertSessionToOrder'});
 					app.model.dispatchThis();
 					}));
 				$buttonBar.appendTo($target);

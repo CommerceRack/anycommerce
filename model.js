@@ -686,6 +686,10 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			return status;
 		},
 	
+//after an order is created, the 'old' cart data gets saved into an order| for quick reference. 
+		handleResponse_adminOrderCreate : function(responseData)	{
+			this.handleResponse_cartOrderCreate(responseData); //share the same actions. append as needed.
+			},
 	
 	//this function gets executed upon a successful request for a create order.
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).

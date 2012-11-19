@@ -72,15 +72,6 @@ var admin = function() {
 			
 			}, 
 
-//no local storage of this call. only 1 in memory. Will expand when using session storage if deemed necessary.
-		adminCustomerLookup : {
-			init : function(email,tagObj,Q)	{
-				this.dispatch(email,tagObj,Q);
-				},
-			dispatch : function(email,tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : tagObj});	
-				}			
-			},
 
 		adminDomainList : {
 			init : function(tagObj,Q)	{
@@ -166,6 +157,15 @@ else	{
 					}
 				},
 
+//no local storage of this call. only 1 in memory. Will expand when using session storage if deemed necessary.
+		adminCustomerLookup : {
+			init : function(email,tagObj,Q)	{
+				this.dispatch(email,tagObj,Q);
+				},
+			dispatch : function(email,tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : tagObj});	
+				}			
+			},
 			adminCustomerSet : {
 				init : function(CID,setObj,tagObj)	{
 					this.dispatch(CID,setObj,tagObj)
