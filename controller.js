@@ -751,7 +751,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				$container.append(this.formatMessage(msg)).prependTo($target); //always put new messages at the top.
 				}
 			else if(typeof msg === 'object')	{
-				persistant = msg.persistant || false;
+				persistant = persistant || msg.persistant; //global persistence (within this context) gets priority.
 				msg.messageClass = messageClass;
 				if(msg.parentID){$target = $('#'+msg.parentID);}
 				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}

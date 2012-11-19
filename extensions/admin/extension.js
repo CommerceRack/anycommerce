@@ -326,7 +326,9 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_comp
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
 
-app.u.dump(" -> BROWSER INFO: "); app.u.dump(app.u.getBrowserInfo());
+if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
+	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework. You can continue using this version of IE, but will have a sub-optimal experience and our development team will not support your browser should you encounter any issues.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
+	}
 
 if(app.u.getParameterByName('debug'))	{
 	$('button','.buttonset').button();
