@@ -319,8 +319,8 @@ if server validation passes, the callback handles what to do next (callback is m
 			onSuccess : function(tagObj)	{
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
 					//Match FOund.
-					app.ext.admin.customer.adminCustomerGet(app.data[tagObj.datapointer].CID,{'callback':'setCustomerRecord','extension':'convertSessionToOrder'});
-					app.model.dispatchThis();
+					app.ext.admin.customer.adminCustomerGet(app.data[tagObj.datapointer].CID,{'callback':'setCustomerRecord','extension':'convertSessionToOrder'},'immutable');
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					//no match.
