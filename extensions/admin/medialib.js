@@ -943,7 +943,7 @@ $('#mediaLibActionsBar button',$target).each(function(){
 			$button.parent().find('ul').hide();
 			if($('#mediaLibNewFolderName').val())	{
 				var folderName; //uses either the value of the text input or prepends a path to it.
-				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selectee').data('path') != '')	{
+				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selectee').data('path'))	{
 					folderName = $('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').data('path')+'/'+$('#mediaLibNewFolderName').val()
 					} //create a sub level folder.
 				else	{folderName = $('#mediaLibNewFolderName').val()} //create a root level folder.
