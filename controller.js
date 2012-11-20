@@ -658,7 +658,7 @@ it'll then set app.rq.push to mirror this function.
 					printWin.document.close();
 					printWin.focus();
 					printWin.print();
-//					printWin.close();
+					printWin.close();
 					}
 				}
 			else	{

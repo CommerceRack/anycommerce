@@ -500,7 +500,7 @@ This should get moved to orders when order is taken over
 
 -->
 
-<table id='packslipTemplate' class='orderContentsTable' width='100%'>
+<table id='packslipTemplate' class='orderContentsTable' width='650'>
 <tr>
 	<td width='50%'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
@@ -557,7 +557,7 @@ This should get moved to orders when order is taken over
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
-	
+	<br /><h3>Contents</h3>
 	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
 	</table>
 	
@@ -571,14 +571,13 @@ This should get moved to orders when order is taken over
 <tr id='productListTemplatePackslip' class='padMargBorderBottom'>
 	
 	<td>
-	<h5 data-bind='var: product(prod_name); format:text; '></h5>
+	<div data-bind='var: product(prod_name); format:text; '></div>
 	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 	</td>
 
-	<td><div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div></td>
-	<td><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
-	<td><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
-	<td><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td width='1%' nowrap="nowrap"><div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div></td>
+	<td width='1%' nowrap="nowrap"><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
+
 </tr>
 
 </table>
