@@ -437,7 +437,8 @@ likely, this will be used anywhere an invoice is shown.
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
-	<ul id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'>
+	</table>
 	</td>
 </tr>
 <tr>
@@ -476,33 +477,17 @@ likely, this will be used anywhere an invoice is shown.
 
 <!--
 Used in 'print invoice' area of management.
+some legacy html tags to make this print friendly.
 -->
-<ul>
-	<li id='productListTemplateInvoice' class='padMargBorderBottom'>
-	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
-	</div>
-	
-<div class='infoContainer'>
-
-	<h5 data-bind='var: product(prod_name); format:text; '></h5>
-	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
-
-	<div>
-	<span data-bind='var: product(qty); format:text; pretext:qty: ;'></span>
-	<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-	</div>
-
-	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
-	
-</div>
-
-	</li>
-
-
-
-</ul>
+<table>
+	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
+		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span> - <span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+</td>
+		<td valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
+		<td valign='top'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+		<td valign='top'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	</tr>
+</table>
 
 
 
