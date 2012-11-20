@@ -62,7 +62,7 @@ var admin_prodEdit = function() {
 				init : function(obj,tagObj,Q)	{
 					tagObj = tagObj || {};
 //save and load 'should' always have the same data, so the datapointer is shared.
-					if(obj['sub'] == 'LOAD' || obj['sub'] == 'SAVE')	{
+					if(obj['sub'])	{
 						tagObj.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
 						}
 					this.dispatch(obj,tagObj,Q);
@@ -114,6 +114,7 @@ var admin_prodEdit = function() {
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/product_editor.css','product_editor_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/product_editor.html',theseTemplates);
 				window.savePanel = app.ext.admin.a.saveProductPanel; //for product editor.
+				window.editProduct = app.ext.admin_prodEdit.a.showPanelsFor;
 				return r;
 				},
 			onError : function()	{

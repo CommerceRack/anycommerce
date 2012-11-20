@@ -368,7 +368,6 @@ if(app.u.getParameterByName('debug'))	{
 				window.showUI = app.ext.admin.a.showUI;
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
-				window.editProduct = app.ext.admin_prodEdit.a.showPanelsFor
 				window.changeDomain = app.ext.admin.a.changeDomain;
 				window.showFinder = app.ext.admin.a.showFinderInModal;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
@@ -391,7 +390,7 @@ else	{
 
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
+				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
 				$('#'+tagObj.targetID).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
