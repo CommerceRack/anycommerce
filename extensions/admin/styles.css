@@ -51,7 +51,7 @@ using these shared margins will help make the UI more consistent.
 .marginTop	{margin-top:12px;}
 .marginBottom	{margin-bottom:12px;}
 .stdMargin	{margin:12px;}
-
+.stdPadding	{12px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 

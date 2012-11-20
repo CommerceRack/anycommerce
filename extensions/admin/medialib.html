@@ -1,7 +1,7 @@
 
 
 <div id='mediaLibTemplate'>
-<form id="mediaLibUploadForm" action="//www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 
 <table class='mediaLibrary'>
 <tr>
@@ -11,6 +11,7 @@
 	</div>
 	</td>
 	<td id='mediaLibActionsBar' class='alignRight'>
+	
 	<span>
 	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
 	<button data-btn-action="addFolder" title='Add a new media folder. Use the down arrow to choose location.'>Add Folder</button>
@@ -46,9 +47,10 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </tr>
 <tr>
 	<td colspan='2' class='alignRight fileUploadButtonBar displayNone'>
-   
+   	<div class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+	<h6 class='clearfix'>Drag your files here from your desktop</h6>
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="//www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
+        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar clearfix">
             <div class="span7 clearfix">
@@ -91,6 +93,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		
 		<!-- The table above is updated prior to the success response. the ul below is stricly for a data storage purpose to save a filename/folder mapping -->    
 		<ul class='dataMap displayNone'></ul>
+	</div>
 	</td>
 </tr>
 <tr>
