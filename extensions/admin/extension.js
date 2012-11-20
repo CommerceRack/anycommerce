@@ -390,7 +390,7 @@ else	{
 
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
+//				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
 				$('#'+tagObj.targetID).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML

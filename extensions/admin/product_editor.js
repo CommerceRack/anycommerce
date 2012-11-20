@@ -133,23 +133,23 @@ var admin_prodEdit = function() {
 					$a = $("<a \/>").attr('data-management-category',index).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized'));
 //In the app framework, it's not real practical to load several hundred product into memory at one time.
 //so if a management category has more than 100 items in it, the list is opened in the main product area in a multipage format.
-					if(app.data[tagObj.datapointer]['%CATEGORIES'].length < 101)	{
-						$a.click(function(){
-							app.ext.admin_prodEdit.a.toggleManagementCat(this,"'"+index+"'");
-							});
-						}
-					else	{
+//					if(app.data[tagObj.datapointer]['%CATEGORIES'][index].length < 101)	{
+//						$a.click(function(){
+//							app.ext.admin_prodEdit.a.toggleManagementCat(this,$(this).data('management-category'));
+//							});
+//						}
+//					else	{
 						$a.click(function(){
 							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
 							var $target = $('#productTabMainContent').empty().append($ul);
 							app.ext.store_prodlist.u.buildProductList({
-								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')],
+								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')].sort(),
 								'parentID':'manageCatProdlist',
 								'loadsTemplate' : 'productListTableListTemplate',
 								'items_per_page' : 100
 								},$ul);
 							});
-						}
+//						}
 					$a.wrap("<li>");
 					$results.append($a);
 					}
