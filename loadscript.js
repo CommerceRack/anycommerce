@@ -18,6 +18,10 @@ app.u.loadScript = function(url, callback, params){
 			script.onload = function(){callback(params)}
 			}
     	}
+//append release to the end of included files to reduce likelyhood of caching.
+	url += url.indexOf('?') ? '&' : '?';
+	url += app.vars.release;
+	
     script.src = url;
     document.getElementsByTagName("head")[0].appendChild(script);
 	}

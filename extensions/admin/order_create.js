@@ -330,6 +330,7 @@ if server validation passes, the callback handles what to do next (callback is m
 		printById : {
 			
 			onSuccess : function(tagObj){
+				
 				var tmpData = {};
 				if(tagObj.merge)	{
 					tmpData = $.extend(app.data[tagObj.datapointer],app.data[tagObj.merge]);
@@ -343,6 +344,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				if(app.u.getParameterByName('debug'))	{
 					$('#printContainer').show();
 					}
+				$('body').hideLoading();
 				}
 			
 			},
@@ -1231,6 +1233,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //currently supported types are packslip and invoice (case sensitive to match template ID's)
 			printOrder : function(orderID,P){
 				$('#printContainer').empty();
+				$('body').showLoading();
 				app.calls.appProfileInfo.init(P.profile,{},'immutable');				
 				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':'appProfileInfo|'+P.profile,'extension':'convertSessionToOrder','templateID':P.type.toLowerCase()+'Template'});
 				app.model.dispatchThis('immutable');

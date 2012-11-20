@@ -515,12 +515,12 @@ This should get moved to orders when order is taken over
 
 -->
 
-<table id='packslipTemplate' class='orderContentsTable'>
+<table id='packslipTemplate' class='orderContentsTable' width='100%'>
 <tr>
-	<td>
+	<td width='50%'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
 	</td>
-	<td><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
+	<td width='50%'><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
 </tr>
 <tr>
 	<td>
@@ -573,7 +573,7 @@ This should get moved to orders when order is taken over
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
 	
-	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist'>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist' width='100%'>
 	</table>
 	
 	</td>
