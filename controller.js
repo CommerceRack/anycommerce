@@ -2353,6 +2353,7 @@ $tmp.empty().remove();
 				}
 			return false;  //return false if not set.
 			},
+
 		writeCookie : function(c_name,value)	{
 var myDate = new Date();
 myDate.setTime(myDate.getTime()+(1*24*60*60*1000));

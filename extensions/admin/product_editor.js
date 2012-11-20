@@ -128,7 +128,7 @@ var admin_prodEdit = function() {
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
 				$results = $('#'+tagObj.targetID);
 				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
-					$results.append("<li><a href='#' onClick=\"app.ext.admin_prodEdit.a.toggleManagementCat(this,'"+index+"');\">"+(index || 'uncategorized')+"<\/a></li>");
+					$results.append("<li><a href='#' onClick=\"app.ext.admin_prodEdit.a.toggleManagementCat(this,'"+index+"');\"><span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized')+"<\/a></li>");
 					}
 				}
 			}, //showManagementCats
@@ -227,21 +227,20 @@ var admin_prodEdit = function() {
 //t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.
 		toggleManagementCat : function(t,manCatID){
 			var $parent = $(t).parent(); //used to append the new UL to.
+			
 			var targetID = 'manCats_'+app.u.makeSafeHTMLId(manCatID);
-			app.u.dump(" -> targetID: "+targetID);
 			var $target = $('#'+targetID);
-//if target already exists on the DOM, then this category has been opened previously.
-app.u.dump(" -> $target.children().length: "+$target.children().length);
-			if($target.children().length)	{
+//if target already exists on the DOM, then this category has been opened previously. The target is the UL containing the product list.
+			if($target.length)	{
 				$target.toggle();
 				}
 			else	{
-				$target = $("<ul \/>").addClass('loadingBG').attr('id',targetID).appendTo($parent);
-				$parent.append($target);
+				$target = $("<ul \/>").attr('id',targetID).appendTo($parent);
 //for a full list of what vars can/should be set in buildProductList, see store_prodlist.u.setProdlistVars
 				app.ext.store_prodlist.u.buildProductList({
 					'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][manCatID],
 					'hide_summary': true,
+					'parentID':targetID,
 					'loadsTemplate' : 'productListTemplateEditMe',
 					'items_per_page' : 100
 					},$target);
