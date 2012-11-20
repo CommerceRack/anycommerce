@@ -496,7 +496,7 @@ setTimeout(function(){
 					$folderTarget.toggle(); //allows folders to be opened and closed.
 					$folderTarget.parent().find('a:first').addClass('ui-selected');
 	//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
-					$('#mediaLibActionsBar .selectAddFolderChoices li:last').show().trigger('click').text("As child of "+folderProperties.fname).data('path',folderProperties.fname);
+					$('#mediaLibActionsBar .selectAddFolderChoices li:last').attr('data-fname',folderProperties.fname).show().trigger('click').text("As child of "+folderProperties.fname);
 					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
 	//now handle the delete folder button. Folders with subfolders can not be deleted.
 	//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
@@ -943,8 +943,9 @@ $('#mediaLibActionsBar button',$target).each(function(){
 			$button.parent().find('ul').hide();
 			if($('#mediaLibNewFolderName').val())	{
 				var folderName; //uses either the value of the text input or prepends a path to it.
-				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selectee').data('path'))	{
-					folderName = $('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').data('path')+'/'+$('#mediaLibNewFolderName').val()
+				app.u.dump(" -> FNAME: "+$('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname'));
+				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname'))	{
+					folderName = $('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname')+'/'+$('#mediaLibNewFolderName').val()
 					} //create a sub level folder.
 				else	{folderName = $('#mediaLibNewFolderName').val()} //create a root level folder.
 
