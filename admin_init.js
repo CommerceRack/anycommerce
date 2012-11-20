@@ -3,23 +3,28 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
+app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
+app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 
+//these can be loaded later because none of them are required for a page to load.
+//this will change going forward.
 app.rq.push(['extension',1,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',1,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',1,'store_search','extensions/store_search.js']);
-app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',1,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',1,'store_checkout','extensions/store_checkout.js']);
 app.rq.push(['extension',1,'admin_prodEdit','extensions/admin/product_editor.js']);
 // app.rq.push(['extension',1,'admin_orders','extensions/admin/orders.js']); 
 app.rq.push(['extension',1,'convertSessionToOrder','extensions/admin/order_create.js']); 
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
-app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 
 
+//required for init. don't change from 0.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
+
+
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.1.9.js']);
 
