@@ -422,9 +422,21 @@ to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/
 </form>
 </section>
 
+
+
 <section>
 <h2>Export navigation categories</h2>
-NOTE! -> need to bring over the export feature<!-- IMPORTANT !!! -->
+
+
+<label>Additional headers: <input type="textbox" name="headers" id='navcatExportHeader'></label>
+<div class="hint">
+Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
+However any field that is stored in page namespace can be accessed.
+</div>
+
+<button onClick="showUI('/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE'+($('#navcatExportHeader').val()) ? $('#navcatExportHeader').val() : '');"  class='ui-button ui-state-default ui-corner-all'>Export</button>
+
+
 </section>
 
 </div>
@@ -453,9 +465,12 @@ or product page. That is because a rewrite lookup is only done immediately befor
 
 <section>
 <h2>Export rewrites</h2>
-NOTE! -> need to bring over the export feature<!-- IMPORTANT !!! -->
+<button onClick="showUI('/biz/setup/import/rewriteexport.cgi/rewrites.csv');" class='ui-button ui-state-default ui-corner-all'>Export</button>
+
 </section>
 </div>
+
+
 
 
 
@@ -481,6 +496,9 @@ Columns headers are as follows:<br />
 
 
 
+
+
+
 <div class='page pageSetup pageSetupImport'  id='page-setup-import-other'>
 <h1>Load 'Other' from CSV File</h1>
 <form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
@@ -489,6 +507,9 @@ Columns headers are as follows:<br />
 <div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
 </form>
 </div>
+
+
+
 
 
 
@@ -512,6 +533,9 @@ Columns headers are as follows:<br />
 
 </form>
 </div>
+
+
+
 
 
 
@@ -555,7 +579,8 @@ Columns headers are as follows:<br />
 
 <section>
 <h2>Exporting rules</h2>
-Need to bring over export tool<!-- IMPORTANT !!! -->
+<button onClick="showUI('/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES');" class='ui-button ui-state-default ui-corner-all'>Export</button>
+
 </section>
 
 </div>

@@ -439,6 +439,7 @@ else	{
 				app.u.throwMessage(msg);
 
 				if(app.ext.admin.vars.tab)	{
+					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
 					$('#'+app.ext.admin.vars.tab+'Content').empty().append(app.data[tagObj.datapointer].html)
 					}			
 				}
