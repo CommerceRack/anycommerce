@@ -450,9 +450,9 @@ else	{
 				},
 			onError : function(responseData){
 				app.u.throwMessage(responseData);
-				if(responseData.errid == "100")	{
-					app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
-					} //this is the clock issue.
+//				if(responseData.errid == "100")	{
+//					app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
+//					} //this is the clock issue.
 				$('#preloadAndLoginContents').hideLoading();
 				}
 			}, //showHeader
