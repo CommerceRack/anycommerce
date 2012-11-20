@@ -652,7 +652,7 @@ var successCallbacks = {
 $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
 	//xhrFields: {withCredentials: true},
-	url: 'https://www.zoovy.com/webapi/jquery/fileupload.cgi',
+	url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
 	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 	success : function(data,textStatus){
 //		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
