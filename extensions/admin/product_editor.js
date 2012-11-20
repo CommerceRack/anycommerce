@@ -143,7 +143,7 @@ var admin_prodEdit = function() {
 							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
 							var $target = $('#productTabMainContent').empty().append($ul);
 							app.ext.store_prodlist.u.buildProductList({
-								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')].sort(),
+								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')],
 								'parentID':'manageCatProdlist',
 								'loadsTemplate' : 'productListTableListTemplate',
 								'items_per_page' : 100
