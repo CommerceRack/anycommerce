@@ -1605,6 +1605,12 @@ else	{
 					}
 				},
 
+
+
+			uiCompatAuthKVP : function()	{
+				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;
+				},
+
 //$t is 'this' which is the button.
 
 			adminUIDomainPanelExecute : function($t){

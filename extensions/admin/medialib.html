@@ -434,7 +434,7 @@ Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
 However any field that is stored in page namespace can be accessed.
 </div>
 
-<button onClick="showUI('/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE'+($('#navcatExportHeader').val()) ? $('#navcatExportHeader').val() : '');"  class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE&'+app.ext.admin.u.uiCompatAuthKVP()+'&headers='+$('#navcatExportHeader').val());"  class='ui-button ui-state-default ui-corner-all'>Export</button>
 
 
 </section>
@@ -465,7 +465,7 @@ or product page. That is because a rewrite lookup is only done immediately befor
 
 <section>
 <h2>Export rewrites</h2>
-<button onClick="showUI('/biz/setup/import/rewriteexport.cgi/rewrites.csv');" class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
 
 </section>
 </div>
@@ -579,7 +579,7 @@ Columns headers are as follows:<br />
 
 <section>
 <h2>Exporting rules</h2>
-<button onClick="showUI('/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES');" class='ui-button ui-state-default ui-corner-all'>Export</button>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
 
 </section>
 
