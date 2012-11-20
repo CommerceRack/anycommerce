@@ -19,7 +19,7 @@ app.u.loadScript = function(url, callback, params){
 			}
     	}
 //append release to the end of included files to reduce likelyhood of caching.
-	url += url.indexOf('?') ? '&' : '?';
+	url += (url.indexOf('?') > -1 ) ? '&' : '?'; //add as initial or additional param based on whether or not any params are already present.
 	url += app.vars.release;
 	
     script.src = url;
