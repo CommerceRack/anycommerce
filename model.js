@@ -679,6 +679,10 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 */
 					callback.onError(responseData,uuid);
 					}
+				else if(typeof callback == 'object' && typeof app.u.throwMessage === 'function')	{
+//callback defined but no error case defined. use default error handling.
+					app.u.throwMessage(responseData);					
+					}
 				else{
 					app.u.dump('ERROR response for uuid '+uuid+'. callback defined but does not exist or is not valid type. callback = '+callback+' datapointer = '+datapointer)
 					}
@@ -772,7 +776,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 
 
 		handleResponse_authAdminLogin: function(responseData)	{
-//			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); app.u.dump(responseData);
+			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); //app.u.dump(responseData);
 			app.vars.deviceid = responseData.deviceid;
 			app.vars.authtoken = responseData.authtoken;
 			app.vars.userid = responseData.userid;
