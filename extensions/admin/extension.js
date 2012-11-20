@@ -350,10 +350,7 @@ if(app.u.getParameterByName('debug'))	{
 
 //make sure all the links in the header use the proper syntax.
 				$('.bindByAnchor','#mastHead').each(function(){
-					$(this).click(function(event){
-						event.preventDefault();
-						showUI($(this).attr('href'));
-						})
+					app.ext.admin.u.rewriteLink($(this));
 					})
 //if supported, update hash while navigating.
 // see handleHashState function for what this is and how it works.
@@ -1229,20 +1226,24 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID);
-				$('a',$target).click(function(event){
-					event.preventDefault();
-					var href = $(this).attr('href');
-					app.u.dump(" -> href: "+href);
-					$(this).attr('title',href); // HERE FOR TESTING
-					if(href.substring(0,2) == '#!' || href.indexOf("/biz/") == 0)	{
-						return showUI(href);
-						}
-					else	{
-						//no match.
-						}
+				$('a',$target).each(function(){
+					app.ext.admin.u.rewriteLink($(this));
 					});
 				},
-			
+//a separate function from above because it's also used on the mastHead in init.
+
+			rewriteLink : function($a){
+				var href = $a.attr('href');
+				if(href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
+					var newHref = app.vars.baseURL;
+					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
+					$a.attr({'title':href,'href':newHref});
+					$a.click(function(event){
+						event.preventDefault();
+						return showUI(href);
+						});
+					}
+				},
 			
 			linkOffSite : function(url){
 				window.open(url);
