@@ -996,8 +996,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
 				if(domain)	{
 					$('.domain','#appView').text(domain);
-//window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi' //no bueno to use this. if the app loads directly on a product page, that extension isn't done by the time this extension is done initing itself.
-					app.ext.admin.a.showUI('/biz/recent.cgi'); //commented out for testing.
+// //no bueno to use this. if the app loads directly on a product page, that extension isn't done by the time this extension is done initing itself.
+					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); //commented out for testing.
 					}
 				else	{
 					app.ext.admin.a.showDomainChooser(); //the selection of a domain name will load the page content.
