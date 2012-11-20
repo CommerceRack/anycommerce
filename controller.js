@@ -652,11 +652,14 @@ it'll then set app.rq.push to mirror this function.
 				html+="</body></html>";
 				
 				var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
-				printWin.document.write(html);
-				printWin.document.close();
-				printWin.focus();
-				printWin.print();
-				printWin.close();
+//a browser could disallow the window.open, which results in printWin NOT being defined and that ends in a JS error, so 'if' added.
+				if(printWin)	{
+					printWin.document.write(html);
+					printWin.document.close();
+					printWin.focus();
+					printWin.print();
+//					printWin.close();
+					}
 				}
 			else	{
 				app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");

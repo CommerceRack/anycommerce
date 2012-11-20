@@ -338,13 +338,14 @@ if server validation passes, the callback handles what to do next (callback is m
 				else	{
 					tmpData =app.data[tagObj.datapointer];
 					}
-				$('#printContainer').append("<h1>Print Content</h1>").append(app.renderFunctions.transmogrify({},tagObj.templateID,tmpData));
-				app.u.printByElementID('printContainer');
-				
+				$('#printContainer').append(app.renderFunctions.transmogrify({},tagObj.templateID,tmpData));
+//in debug mode, show the print container. This is because in local, you can't print.
+//needs to be before the printElementByID because that element has a JS error for local printing.				
 				if(app.u.getParameterByName('debug'))	{
 					$('#printContainer').show();
 					}
 				$('body').hideLoading();
+				app.u.printByElementID('printContainer');
 				}
 			
 			},
