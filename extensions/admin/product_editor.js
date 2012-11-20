@@ -230,7 +230,7 @@ var admin_prodEdit = function() {
 			var $parent = $(t).parent(); //used to append the new UL to.
 			var $target = $('#'+targetID);
 //if target already exists on the DOM, then this category has been opened previously.
-			if($target.length)	{
+			if($target.children().length)	{
 				$target.toggle();
 				}
 			else	{
