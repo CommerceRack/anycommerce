@@ -943,7 +943,8 @@ $('#mediaLibActionsBar button',$target).each(function(){
 			$button.parent().find('ul').hide();
 			if($('#mediaLibNewFolderName').val())	{
 				var folderName; //uses either the value of the text input or prepends a path to it.
-				app.u.dump(" -> FNAME: "+$('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname'));
+//there's a ul near the 'select folder' and when a folder on the left is selected, it's added to this list as the last child with data-fname set to it's name (parent).
+//then, when the new folder button is clicked, if the subfolder option is selected, the fname is prepended to the new folder name and a child is created.
 				if($('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname'))	{
 					folderName = $('#mediaLibActionsBar .selectAddFolderChoices .ui-selected').attr('data-fname')+'/'+$('#mediaLibNewFolderName').val()
 					} //create a sub level folder.
