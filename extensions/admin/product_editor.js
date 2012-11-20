@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_prodEdit = function() {
-	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTemplateEditMe','productEditorPanelTemplate');
+	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTableListTemplate','productListTemplateEditMe','productEditorPanelTemplate','mpControlSpec');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -127,8 +127,30 @@ var admin_prodEdit = function() {
 			onSuccess : function(tagObj)	{
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
 				$results = $('#'+tagObj.targetID);
+				var $a; //recycled.
 				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
-					$results.append("<li><a href='#' onClick=\"app.ext.admin_prodEdit.a.toggleManagementCat(this,'"+index+"');\"><span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized')+"<\/a></li>");
+					$a = $("<a \/>").attr('data-management-category',index).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized'));
+//In the app framework, it's not real practical to load several hundred product into memory at one time.
+//so if a management category has more than 100 items in it, the list is opened in the main product area in a multipage format.
+					if(app.data[tagObj.datapointer]['%CATEGORIES'].length < 101)	{
+						$a.click(function(){
+							app.ext.admin_prodEdit.a.toggleManagementCat(this,"'"+index+"'");
+							});
+						}
+					else	{
+						$a.click(function(){
+							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
+							var $target = $('#productTabMainContent').empty().append($ul);
+							app.ext.store_prodlist.u.buildProductList({
+								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')],
+								'parentID':'manageCatProdlist',
+								'loadsTemplate' : 'productListTableListTemplate',
+								'items_per_page' : 100
+								},$ul);
+							});
+						}
+					$a.wrap("<li>");
+					$results.append($a);
 					}
 				}
 			}, //showManagementCats

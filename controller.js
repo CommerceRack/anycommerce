@@ -1892,8 +1892,8 @@ $r.find('[data-bind]').each(function()	{
 				if(bindData.wrap) {$focusTag.wrap(bindData.wrap)}
 				}
 			else	{
-					app.u.throwMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a valid format. (See console for more details.)");
-					app.u.dump(" -> "+bindData.format+" is not a valid format. extension = "+bindData.extension);
+				app.u.throwMessage("Uh Oh! An error occured. error: "+bindData.format+" is not a function. (See console for more details.)");
+				app.u.dump(" -> "+bindData.format+" is not a function. extension = "+bindData.extension);
 //						app.u.dump(bindData);
 				}
 //					app.u.dump(' -> custom display function "'+bindData.format+'" is defined');
@@ -2219,7 +2219,7 @@ $tmp.empty().remove();
 			else	{
 				o += data.value;
 				}
-			$tag.text(o);
+			$tag.html(o);
 			}, //text
 //for use on inputs. populates val() with the value
 		popVal : function($tag,data){
