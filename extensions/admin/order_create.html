@@ -35,7 +35,9 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	
 	<label><span>Qty:</span><input type="text" name="quantity" size="5" value="1"  /></label>
 	<label><span>Product id:</span><input type='text' name='product_id'  /></label>
+	<label><span>Price: </span><input type='number' class='price' size='6' name='price' /></label>
 	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())" class='ui-button ui-state-default ui-corner-all'>Add</button>
+	
 </fieldset>
 </form>
 </div>
@@ -154,7 +156,6 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-
 		</div>
 		
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>

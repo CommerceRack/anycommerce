@@ -1241,10 +1241,10 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				},
 			
 			addToCart : function(formObj){
+				app.ext.convertSessionToOrder.calls.cartItemsAdd.init(formObj,{}); //add the item first. now get data to update panels.
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
 				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
-				app.ext.convertSessionToOrder.calls.cartItemsAdd.init(formObj,{});
 				app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
 				app.model.dispatchThis('immutable');
 				}

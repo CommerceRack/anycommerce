@@ -87,7 +87,7 @@ var admin_medialib = function() {
 			}, //adminImageFolderDelete
 
 
-//f is filename
+//f is folder
 		adminImageFolderDetail : {
 			init : function(f,tagObj,Q)	{
 //				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
@@ -259,13 +259,17 @@ setTimeout(function(){
 				var L = app.data[tagObj.datapointer]['@folders'].length;
 				var $template; //recycled. holds template till appended to parent.
 //				app.u.dump(" -> @folders.length: "+L);
+//Generate the list of folders (on left);
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(" -> FID: "+app.data[tagObj.datapointer]['@folders'][i].FID+" and parentFID: "+app.data[tagObj.datapointer]['@folders'][i].ParentFID);
 					app.data[tagObj.datapointer]['@folders'][i].id = '#mediaRootFolder_'+app.data[tagObj.datapointer]['@folders'][i].FName //the id given to each root folders.
 					$template = app.renderFunctions.transmogrify(app.data[tagObj.datapointer]['@folders'][i],'mediaLibFolderTemplate',app.data[tagObj.datapointer]['@folders'][i]);
-					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); //add either to the parent folders ul or to the root list.
+					//number parentFID will return false for the root level categories, which are set to "0" (string);
+					//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
+					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
 					}
-				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary');
+				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+
 //in some cases, we may re-run this callback (such as after a file upload) and we need to open the folder on the left and in the media area opened for continuity.
 				if(app.ext.admin_medialib.u.getOpenFolderName())	{app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())}
 				}
