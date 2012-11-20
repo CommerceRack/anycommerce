@@ -1217,6 +1217,7 @@ VALIDATION
 					console.log(msg);
 				}
 			}, //dump
+
 //javascript doesn't have a great way of easily formatting a string as money.
 //top that off with each browser handles some of these functions a little differently. nice.
 	formatMoney : function(A, currencySign, decimalPlace,hideZero){

@@ -554,4 +554,7 @@ function getRadioValue(r) {
 	}
 
 
+function popupWindow(url)	{
+	window.open(url,'legacyPopup','height=500,width=500');
+	}
 
