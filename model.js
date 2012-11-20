@@ -424,7 +424,7 @@ set adjustAttempts to true to increment by 1.
 					else if(typeof callback == 'string')	{
 						callback = Q[UUID]['_tag']['extension'] ? app.ext[Q[UUID]['_tag']['extension']].callbacks[Q[UUID]['_tag']['callback']] : app.callbacks[Q[UUID]['_tag']['callback']];
 						if(typeof callback.onError == 'function'){
-							callbackObj.onError(responseData,UUID)
+							callback.onError(responseData,UUID);
 							}
 						else{
 							app.u.throwMessage(responseData);
@@ -619,7 +619,6 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 		handleResponse_defaultAction : function(responseData)	{
 //			app.u.dump('BEGIN handleResponse_defaultAction');
 //			app.u.dump(responseData);
-			var callbackObj = {}; //the callback object from the controller. saved into var to reduce lookups.
 			var callback = false; //the callback name.
 			var uuid = responseData['_uuid']; //referenced enough to justify saving to a var.
 			var datapointer = null; //a callback can be set with no datapointer.

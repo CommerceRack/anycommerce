@@ -23,7 +23,7 @@ An extension for managing the media library in addition to ALL other file upload
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate','fileUploadTemplate');
+	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate','fileUploadTemplate','page-setup-import-help','page-setup-publicfiles','page-setup-import-customers','page-setup-import-images','page-setup-import-inventory','page-setup-import-listings','page-setup-import-navcats','page-setup-import-rewrites','page-setup-import-orders','page-setup-import-other','page-setup-import-products','page-setup-import-reviews','page-setup-import-rules','page-setup-import-tracking');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

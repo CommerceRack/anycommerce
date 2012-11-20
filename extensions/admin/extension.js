@@ -1213,7 +1213,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 //any form elements in the response have their actions rewritten.
 //the form is serialized and sent via Ajax to the UI API. This is a temporary solution to the UI rewrite.
-				$('form',$target).submit(function(event){
+				$('form',$target).attr('data-jqueryoverride','true').submit(function(event){
 //					app.u.dump(" -> Executing custom form submit.");
 					event.preventDefault();
 					$target.showLoading();

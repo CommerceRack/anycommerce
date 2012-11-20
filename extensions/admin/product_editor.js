@@ -226,15 +226,17 @@ var admin_prodEdit = function() {
 
 //t = this, which is the a tag, not the li. don't link the li or the onCLick will get triggered when the children list items are clicked too, which would be bad.
 		toggleManagementCat : function(t,manCatID){
-			var targetID = 'manCats_'+app.u.makeSafeHTMLId(manCatID);
 			var $parent = $(t).parent(); //used to append the new UL to.
+			var targetID = 'manCats_'+app.u.makeSafeHTMLId(manCatID);
+			app.u.dump(" -> targetID: "+targetID);
 			var $target = $('#'+targetID);
 //if target already exists on the DOM, then this category has been opened previously.
+app.u.dump(" -> $target.children().length: "+$target.children().length);
 			if($target.children().length)	{
 				$target.toggle();
 				}
 			else	{
-				$target = $("<ul \/>").addClass('loadingBG').attr('id',targetID);
+				$target = $("<ul \/>").addClass('loadingBG').attr('id',targetID).appendTo($parent);
 				$parent.append($target);
 //for a full list of what vars can/should be set in buildProductList, see store_prodlist.u.setProdlistVars
 				app.ext.store_prodlist.u.buildProductList({
