@@ -485,7 +485,7 @@ Used in 'print invoice' area of management.
 	
 <div class='infoContainer'>
 
-	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
+	<h5 data-bind='var: product(prod_name); format:text; '></h5>
 	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 	<div>
@@ -586,7 +586,7 @@ This should get moved to orders when order is taken over
 <tr id='productListTemplatePackslip' class='padMargBorderBottom'>
 	
 	<td>
-	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
+	<h5 data-bind='var: product(prod_name); format:text; '></h5>
 	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 	</td>
 
