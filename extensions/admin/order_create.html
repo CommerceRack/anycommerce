@@ -509,7 +509,7 @@ This should get moved to orders when order is taken over
 	<td width='50%' valign='top'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
 	</td>
-	<td width='50%' valign='top'><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
+	<td width='50%' valign='middle'><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
 </tr>
 <tr>
 	<td valign='top'>
@@ -574,12 +574,13 @@ This should get moved to orders when order is taken over
 <table>
 <tr id='productListTemplatePackslip' class='padMargBorderBottom'>
 	
+	<td width='1%' nowrap="nowrap" valign='top'><div class='ztable_row_small stid' data-bind='var: product(sku); format:text;'></div></td>
+	
 	<td valign='top'>
 	<div data-bind='var: product(prod_name); format:text; '></div>
 	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 	</td>
 
-	<td width='1%' nowrap="nowrap" valign='top'><div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div></td>
 	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
 
 </tr>
