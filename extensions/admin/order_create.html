@@ -475,10 +475,7 @@ likely, this will be used anywhere an invoice is shown.
 
 
 <!--
-order line-item template used in order history.
-note - on the write review button, var:product(product) will use the pid, not the stid (which includes options).
-'product' is how the pid is stored in buyerPurchaseHistoryDetail.
-If this gets recycled, test in order history after making changes.
+Used in 'print invoice' area of management.
 -->
 <ul>
 	<li id='productListTemplateInvoice' class='padMargBorderBottom'>
@@ -503,24 +500,7 @@ If this gets recycled, test in order history after making changes.
 
 	</li>
 
-	<li id='productListTemplatePackslip' class='padMargBorderBottom'>
-	
-<div class='infoContainer'>
 
-	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
-	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
-
-	<div>
-	<span data-bind='var: product(qty); format:text; pretext:qty: ;'></span>
-	<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-	</div>
-
-	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
-	
-</div>
-
-	</li>
 
 </ul>
 
@@ -592,7 +572,10 @@ This should get moved to orders when order is taken over
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
-	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist'></table>
+	
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist'>
+	</table>
+	
 	</td>
 </tr>
 </table>
@@ -606,10 +589,11 @@ This should get moved to orders when order is taken over
 	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
 	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 	</td>
+
 	<td><div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div></td>
 	<td><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
 	<td><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
 	<td><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-
 </tr>
+
 </table>
