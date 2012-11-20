@@ -389,11 +389,12 @@ likely, this will be used anywhere an invoice is shown.
 <table id='invoiceTemplate' class='orderContentsTable'>
 <tr>
 	<td>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
+	</td>
+
+	<td>
 <h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
 <h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
-
-	</td>
-	<td>
 <!-- <h4 data-bind='var:order(flow.payment_status); format:text; pretext:Payment Status: ;'></h4> -->
 <h4 data-bind='var:order(flow.payment_method); format:text; pretext:Payment Method: ;'></h4>
 	</td>
@@ -454,6 +455,18 @@ likely, this will be used anywhere an invoice is shown.
 	<div dat-bind="var:order(want/order_notes); format:text;"></div>
 	</td>
 </tr>
+<tr>
+	<td colspan='2'>
+<h2 data-bind="var: profile(zoovy:company_name); format:text;"></h2>
+<div data-bind="var:profile(zoovy:company_address1); format:text;"></div>
+<div data-bind="var:profile(zoovy:company_address2); format:text;"></div>
+<div>
+	<span data-bind="var:profile(zoovy:company_city); format:text;"></span> 
+	<span data-bind="var:profile(zoovy:company_state); format:text; posttext:. ;"></span> 
+	<span data-bind="var:profile(zoovy:company_zip); format:text;"></span>
+</div>
+	</td>
+</tr>
 </table>
 
 
@@ -490,7 +503,24 @@ If this gets recycled, test in order history after making changes.
 
 	</li>
 
+	<li id='productListTemplatePackslip' class='padMargBorderBottom'>
+	
+<div class='infoContainer'>
 
+	<h5 data-bind='var: product(zoovy:prod_name); format:text; '></h5>
+	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+
+	<div>
+	<span data-bind='var: product(qty); format:text; pretext:qty: ;'></span>
+	<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+	</div>
+
+	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+	
+</div>
+
+	</li>
 
 </ul>
 
@@ -507,7 +537,9 @@ This should get moved to orders when order is taken over
 
 <table id='packslipTemplate' class='orderContentsTable'>
 <tr>
-	<td></td>
+	<td>
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
+	</td>
 	<td><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
 </tr>
 <tr>
@@ -560,7 +592,7 @@ This should get moved to orders when order is taken over
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
-	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></table>
+	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplatePackslip;" class='listStyleNone lineItemProdlist'></table>
 	</td>
 </tr>
 </table>

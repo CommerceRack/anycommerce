@@ -19,7 +19,7 @@ CHECKOUT_NICE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo","invoiceTemplate","productListTemplateInvoice","packslipTemplate");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo","invoiceTemplate","productListTemplateInvoice","packslipTemplate","productListTemplatePackslip");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,
@@ -330,8 +330,19 @@ if server validation passes, the callback handles what to do next (callback is m
 		printById : {
 			
 			onSuccess : function(tagObj){
-$('#printContainer').append("<h1>Print Content</h1>").append(app.renderFunctions.transmogrify({},tagObj.templateID,app.data[tagObj.datapointer]));
-app.u.printByElementID('printContainer');
+				var tmpData = {};
+				if(tagObj.merge)	{
+					tmpData = $.extend(app.data[tagObj.datapointer],app.data[tagObj.merge]);
+					}
+				else	{
+					tmpData =app.data[tagObj.datapointer];
+					}
+				$('#printContainer').append("<h1>Print Content</h1>").append(app.renderFunctions.transmogrify({},tagObj.templateID,tmpData));
+				app.u.printByElementID('printContainer');
+				
+				if(app.u.getParameterByName('debug'))	{
+					$('#printContainer').show();
+					}
 				}
 			
 			},
@@ -1221,7 +1232,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			printOrder : function(orderID,P){
 				$('#printContainer').empty();
 				app.calls.appProfileInfo.init(P.profile,{},'immutable');				
-				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','extension':'convertSessionToOrder','templateID':P.type.toLowerCase()+'Template'});
+				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':'appProfileInfo|'+P.profile,'extension':'convertSessionToOrder','templateID':P.type.toLowerCase()+'Template'});
 				app.model.dispatchThis('immutable');
 				},
 			
