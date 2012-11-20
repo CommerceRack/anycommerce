@@ -211,7 +211,7 @@ else	{
 					var obj = {};
 					tagObj = tagObj || {};
 					obj["_cmd"] = "adminProductUpdate";
-					obj["product"] = pid;
+					obj["pid"] = pid;
 					obj['%attribs'] = attrObj;
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,'immutable');
@@ -230,7 +230,7 @@ else	{
 					var obj = {};
 					obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 					obj['_cmd'] = "adminNavcatProductInsert";
-					obj.product = pid;
+					obj.pid = pid;
 					obj.path = path;
 					obj.position = position;
 					obj['_tag'].datapointer = "adminNavcatProductInsert|"+path+"|"+pid;
@@ -246,7 +246,7 @@ else	{
 					var obj = {};
 					obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 					obj['_cmd'] = "adminNavcatProductDelete";
-					obj.product = pid;
+					obj.pid = pid;
 					obj.path = path;
 					obj['_tag'].datapointer = "adminNavcatProductDelete|"+path+"|"+pid;
 					app.model.addDispatchToQ(obj,'immutable');	
@@ -1014,7 +1014,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin.a.showDomainConfig();
 					}
 				else if(path == '#!orderPrint')	{
-					app.ext.convertSessionToOrder.a.printOrder(P.oid,P.type.toLowerCase());
+					app.ext.convertSessionToOrder.a.printOrder(P.oid,P);
 					}
 				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
@@ -1381,7 +1381,7 @@ if(pid)	{
 	app.u.dump(" -> ATTRIBUTE: "+attribute);
 //	app.u.dump(" -> aattribute value = "+app.data['appProductGet|'+pid]['%attribs'][attribute]);
 	if(app.data['appProductGet|'+pid]['%attribs'][attribute])
-		prodlist = app.ext.store_prodlist.u.handleAttributeProductList(app.data['appProductGet|'+pid]['%attribs'][attribute]);
+		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+pid]['%attribs'][attribute]);
 	}
 else	{
 	app.u.dump(" -> NON product attribute (no pid specified)");

@@ -1218,10 +1218,11 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				$target.showLoading();
 				},
 //currently supported types are packslip and invoice (case sensitive to match template ID's)
-			printOrder : function(orderID,type){
-				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','extension':'convertSessionToOrder','templateID':type+'Template'});
-				app.model.dispatchThis('immutable');
+			printOrder : function(orderID,P){
 				$('#printContainer').empty();
+				app.calls.appProfileInfo.init(P.profile,{},'immutable');				
+				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','extension':'convertSessionToOrder','templateID':P.type.toLowerCase()+'Template'});
+				app.model.dispatchThis('immutable');
 				},
 			
 			addToCart : function(formObj){
