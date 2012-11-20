@@ -388,27 +388,18 @@ likely, this will be used anywhere an invoice is shown.
 
 <table id='invoiceTemplate' class='orderContentsTable'>
 <tr>
-	<td colspan='2'>
-<div class='floatRight ui-state-default ui-corner-all'>
-<a href='#' onClick="app.u.printByElementID($(this).closest('table').attr('id')); return false;"  class="ui-icon ui-icon-print">Print</a>
-</div>
+	<td>
+<h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
+<h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
 
-<h3 data-bind='var:order(data.pool);format:text; pretext:Order Status: ;'></h3>
-
+	</td>
+	<td>
+<!-- <h4 data-bind='var:order(flow.payment_status); format:text; pretext:Payment Status: ;'></h4> -->
+<h4 data-bind='var:order(flow.payment_method); format:text; pretext:Payment Method: ;'></h4>
 	</td>
 </tr>
 <tr>
 	<td>
-<hgroup>
-<!-- print icon -->
-
-
-<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
-
-<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
-</hgroup>
-
 <address>
 <h4>
 	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
@@ -424,6 +415,8 @@ likely, this will be used anywhere an invoice is shown.
 <div data-bind='var:order(bill/countrycode);format:text;'></div>
 </address>
 
+	</td>
+	<td>
 <address>
 <h4>
 	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
@@ -439,11 +432,26 @@ likely, this will be used anywhere an invoice is shown.
 <div data-bind='var:order(ship/countrycode);format:text;'></div>
 </address>
 
-
 	</td>
-	<td class='orderContentsProdlistContainer'>
-	<ul data-bind='var:order(tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+</tr>
+<tr>
+	<td class='orderContentsProdlistContainer' colspan='2'>
 	<ul id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'></ul>
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+<hgroup>
+<!-- print icon -->
+<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+</hgroup>
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+	<div dat-bind="var:order(want/order_notes); format:text;"></div>
 	</td>
 </tr>
 </table>
@@ -498,6 +506,10 @@ This should get moved to orders when order is taken over
 -->
 
 <table id='packslipTemplate' class='orderContentsTable'>
+<tr>
+	<td></td>
+	<td><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
+</tr>
 <tr>
 	<td>
 
