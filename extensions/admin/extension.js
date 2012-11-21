@@ -1234,7 +1234,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 			rewriteLink : function($a){
 				var href = $a.attr('href');
-				if(href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
+				if (href == undefined) {
+					// not sure what causes this, but it definitely happens, check the debug log.
+					app.u.dump('rewriteLink was called on a property without an href');
+					app.u.dump($a);
+					}
+				else if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
 					var newHref = app.vars.baseURL;
 					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
