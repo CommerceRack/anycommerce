@@ -25,7 +25,7 @@ else {
    }
 	
 var app = {vars:{
-	"release":"20121121183400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121122114100",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"thisSessionIsAdmin": true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
@@ -33,6 +33,7 @@ var app = {vars:{
 	"baseURL" : baseURL,
 	},u:{},rq:[]};
 
+	
 </script>
 
 <!--
@@ -73,10 +74,6 @@ these two need to be loaded here
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
-
-
-
-
 
 
 <script type="text/javascript">
@@ -133,6 +130,12 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 			<input type='submit' value='login' class='loginbutton' />
 		</fieldset>
 		</form>
+
+
+		<div class="hint">App Release #: <span id="appversion">??</div></div>		
+		<script type="text/javascript">
+		jQuery("#appversion").text(app.vars.release);
+		</script>
 	</div>
 	
 	<div id='createAccountContainer' class='displayNone'>

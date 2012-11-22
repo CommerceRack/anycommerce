@@ -521,12 +521,12 @@ Columns headers are as follows:<br />
 <form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
 <input type='hidden' name='filetype' value='PRODUCTS'>
 <fieldset>
-	<label><input type="checkbox" name="ALLOW_CRLF"> Allow CR/LF in file (WARNING: you must make sure all fields are properly escaped/quoted to use this).</label>
-	<label><input type="checkbox" name="RAWCATEGORIES"> Do not Encode Categories, they are already encoded as safe names (normally disabled).</label>
-	<label><input type="checkbox" name="PRODNAVCAT" CHECKED> Configure Management Categories using Navigation Categories schema.</label>
-	<label><input type='checkbox' name="REMOVEREST"> Remote System Synchronization: Delete products which were are not found in this import.</label>
-	<label><input type="checkbox" name="RESORT_NAVCATS"> Reorder navigation categories after import. (only necessary if updating category sort fields via update - VERY SLOW)</label>
-	<label><input type="checkbox" name="NONDESTRUCTIVE" CHECKED> Perform Non-Destructive Import - updates products, rather than doing a complete overwrite of a products data! (slower)</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="ALLOW_CRLF"> Allow CR/LF in file (WARNING: you must make sure all fields are properly escaped/quoted to use this).</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="RAWCATEGORIES"> Do not Encode Categories, they are already encoded as safe names (normally disabled).</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="PRODNAVCAT" CHECKED> Configure Management Categories using Navigation Categories schema.</label>
+	<label><input form="csvUploadToBatchForm" type='checkbox' name="REMOVEREST"> Remote System Synchronization: Delete products which were are not found in this import.</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="RESORT_NAVCATS"> Reorder navigation categories after import. (only necessary if updating category sort fields via update - VERY SLOW)</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="NONDESTRUCTIVE" CHECKED> Perform Non-Destructive Import - updates products, rather than doing a complete overwrite of a products data! (slower)</label>
 </fieldset>
 
 <!-- adds the file upload area -->
