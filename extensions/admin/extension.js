@@ -383,7 +383,7 @@ if(app.u.getParameterByName('debug'))	{
 
 //make sure all the links in the header use the proper syntax.
 				$('.bindByAnchor','#mastHead').each(function(){
-					app.u.dump("BEGIN #mastHead rewriteLink");
+					// app.u.dump("BEGIN #mastHead rewriteLink");
 					app.ext.admin.u.rewriteLink($(this));
 					})
 //if supported, update hash while navigating.
@@ -424,7 +424,7 @@ else	{
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				$('#'+tagObj.targetID).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
+				$(app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
 
@@ -444,7 +444,7 @@ else	{
 		showElementEditorHTML : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("SUCCESS!"); app.u.dump(tagObj);
-				var $target = $('#'+tagObj.targetID)
+				var $target = $(app.u.jqSelector('#',tagObj.targetID))
 				$target.parent().find('.ui-dialog-title').text(app.data[tagObj.datapointer]['prompt']); //add title to dialog.
 				var $form = $("<form \/>").attr('id','editorForm'); //id used in product edit mode.
 				$form.submit(function(event){
@@ -470,7 +470,7 @@ else	{
 
 				if(app.ext.admin.vars.tab)	{
 					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
-					$('#'+app.ext.admin.vars.tab+'Content').empty().append(app.data[tagObj.datapointer].html)
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.data[tagObj.datapointer].html)
 					}			
 				}
 			}, //handleElementSave
@@ -492,7 +492,7 @@ else	{
 			onSuccess : function(tagObj){
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
-				var $target = $('#'+tagObj.targetID);
+				var $target = $(app.u.jqSelector('#',tagObj.targetID));
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
@@ -516,7 +516,7 @@ else	{
 					}
 				},
 			onError: function(responseData)	{
-				var $target = $('#'+responseData._rtag.targetID);
+				var $target = $(app.u.jqSelector('#',responseData._rtag.targetID));
 				$target.hideLoading();
 				responseData.persistant = true;
 				app.u.throwMessage(responseData);
@@ -531,7 +531,7 @@ else	{
 				var L = app.data[tagObj.datapointer]['_count'];
 				$('#resultsKeyword').html(L+" results <span id='resultsListItemCount'></span>:");
 //				app.u.dump(" -> Number Results: "+L);
-				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
+				$parent = $(app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG')
 				if(L == 0)	{
 					$parent.append("Your query returned zero results.");
 					}
@@ -652,7 +652,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callbacks.showProdlist");
 				if($.isEmptyObject(app.data[tagObj.datapointer]['@products']))	{
-					$('#'+tagObj.parentID).empty().removeClass('loadingBG').append('Your search returned zero results');
+					$(app.u.jqSelector('#',tagObj.parentID)).empty().removeClass('loadingBG').append('Your search returned zero results');
 					}
 				else	{
 //				app.u.dump(" -> parentID: "+tagObj.parentID);
@@ -681,7 +681,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				targetID += "_"+tmp[2];
 //				app.u.dump(" -> targetID: "+targetID);
-				$('#'+targetID).attr('data-status','complete');
+				$(app.u.jqSelector('#',targetID)).attr('data-status','complete');
 				},
 			onError : function(d)	{
 //				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
@@ -690,7 +690,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				var targetID = tmp[0] == 'adminNavcatProductInsert' ? "finderTargetList" : "finderRemovedList";
 				
 				targetID += "_"+tmp[2];
-				$('#'+targetID).attr({'data-status':'error','data-pointer':tagObj.datapointer});
+				$(app.u.jqSelector('#',targetID)).attr({'data-status':'error','data-pointer':tagObj.datapointer});
 //				app.u.dump(d);
 				}
 			}, //finderProductUpdate
@@ -790,7 +790,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				if(path  && P.dialog)	{
 //This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
 					P.targetID = 'uiDialog';
-					$target = $('#'+P.targetID);
+					$target = $(app.u.jqSelector('#',P.targetID));
 					if($target.length){} //element exists, do nothing to it.
 					else	{
 						$target = $("<div>").attr('id',P.targetID).appendTo('body');
@@ -816,7 +816,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						var tab = app.ext.admin.u.getTabFromPath(path);
 						P.targetID = app.ext.admin.u.getId4UIContent(path);
 						app.ext.admin.vars.focusTabID = P.targetID;
-						$target = $('#'+P.targetID);
+						$target = $(app.u.jqSelector('#',P.targetID));
 	
 	//					app.u.dump(" -> tab: "+tab);
 	//					app.u.dump(" -> P.targetID: "+P.targetID);
@@ -858,7 +858,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 				
 			showDomainConfig : function(){
-				$('#'+app.ext.admin.vars.focusTabID).empty().showLoading();
+				$(app.u.jqSelector('#',app.ext.admin.vars.focusTabID)).empty().showLoading();
 				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
 				app.model.dispatchThis('immutable')
 				},
@@ -1159,7 +1159,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //				app.u.dump("View Obj: "); app.u.dump(viewObj);
 
 				if(viewObj.targetID)	{
-					var $target = $('#'+viewObj.targetID)
+					var $target = $(app.u.jqSelector('#',viewObj.targetID))
 					$target.html(data.html);
 //The form and anchor links must get run each time because a successful response, either to get page content or save it, returns the page content again for display.
 //so that display must have all the links and form submits modified.
@@ -1270,7 +1270,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //				app.u.dump("BEGIN admin.u.uiHandleFormRewrites");
 //				app.u.dump(" -> data: "); app.u.dump(data);
 //				app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
-				var $target = $('#'+viewObj.targetID)
+				var $target = $(app.u.jqSelector('#',viewObj.targetID))
 
 //any form elements in the response have their actions rewritten.
 //the form is serialized and sent via Ajax to the UI API. This is a temporary solution to the UI rewrite.
@@ -1287,8 +1287,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
-				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
-				var $target = $('#'+viewObj.targetID);
+				// app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
+				var $target = $(app.u.jqSelector('#',viewObj.targetID));
 				$('a',$target).each(function(){
 					app.ext.admin.u.rewriteLink($(this));
 					});
@@ -1299,10 +1299,16 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var href = $a.attr('href');
 				if (href == undefined) {
 					// not sure what causes this, but it definitely happens, check the debug log.
+					// this occurrs when <a> tag exists but has no href (ex. maybe just an onclick)
 					app.u.dump('rewriteLink was called on a property without an href');
-					app.u.dump($a);
+					app.u.dump("ERROR rewriteLink was called on a link that did not have an href, set to href='#' and css red for your enjoyment Please fix.");
+					$a.attr('href','#');
+					href = $a.attr('href');
+					$a.css('color','#FF0000');	// this should probably changed to a more obvious errorClass
+					// app.u.dump($a);
 					}
-				else if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
+
+				if (href.substring(0,5) == "/biz/" || href.substring(0,2) == '#!')	{
 					var newHref = app.vars.baseURL;
 					newHref += href.substring(0,2) == '#!' ? href :'#'+href; //for #! (native apps) links, don't add another hash.
 					$a.attr({'title':href,'href':newHref});
@@ -1421,9 +1427,9 @@ var path = $listItem.closest('[data-path]').attr('data-path');
 var newLiID = 'finderRemovedList_'+$listItem.attr('data-pid');
 //app.u.dump(" -> newLiID: "+newLiID);
 
-if($('#'+newLiID).length > 0)	{
+if($(app.u.jqSelector('#',newLiID)).length > 0)	{
 	//item is already in removed list.  set data-status to remove to ensure item is removed from list on save.
-	$('#'+newLiID).attr('data-status','remove');
+	$(app.u.jqSelector('#',newLiID)).attr('data-status','remove');
 	}
 else	{
 	var $copy = $listItem.clone();
@@ -1457,7 +1463,7 @@ app.u.dump("BEGIN admin.u.addFinder");
 var safePath = app.u.makeSafeHTMLId(path);
 var prodlist = new Array();
 
-var $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
+var $target = $(app.u.jqSelector('#',targetID)).empty(); //empty to make sure we don't get two instances of finder if clicked again.
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
 $('#finderTargetList').removeClass('loadingBG'); //bug in finder!!! if no items, stays in loading. hot fix.
@@ -1553,7 +1559,7 @@ $('#finderSearchForm').submit(function(event){
 				var r = new Array();
 				var L = app.ext.admin.vars.tags.length;
 				for(var i = 0; i < L; i += 1)	{
-					if($('#'+idprefix+app.ext.admin.vars.tags[i]).is(':checked')){r.push(app.ext.admin.vars.tags[i])};
+					if($(app.u.jqSelector('#',idprefix+app.ext.admin.vars.tags[i])).is(':checked')){r.push(app.ext.admin.vars.tags[i])};
 					}
 				return r;
 				},
@@ -1716,7 +1722,7 @@ else	{
 				if(data && data.verb && data.domain)	{
 					var obj = {};
 					var targetID = 'panelContents_'+app.u.makeSafeHTMLId(data.domain);
-					$('#'+targetID).showLoading();
+					$(app.u.jqSelector('#',targetID)).showLoading();
 					$t.parent().find('.panelContents').show()
 					if(data.verb == 'LOAD')	{
 						//do nothing. data gets passed in as is.

@@ -61,7 +61,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.ext.convertSessionToOrder.vars.containerID = containerID;
 				app.ext.convertSessionToOrder.u.createProcessCheckoutModal();
 
-				$('#'+containerID).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
+				$(app.u.jqSelector('#',containerID)).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
 
 				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
@@ -293,7 +293,7 @@ if server validation passes, the callback handles what to do next (callback is m
 			onError : function()	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.init.error');
 				//This would be reached if a templates was not defined in the view.
-				$('#'+app.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
+				$(app.u.jqSelector('#',app.ext.convertSessionToOrder.vars.containerID)).removeClass('loadingBG');
 				}
 			}, //init
 
@@ -320,7 +320,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				else	{
 					//no match.
 					$('#createOrderButtonBar').show();
-					$('#'+app.ext.admin.vars.tab+'Content').hideLoading();
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).hideLoading();
 					app.u.throwMessage("No record found for that email address.");
 					}
 				}
@@ -582,7 +582,7 @@ app.u.dump("REMINDER! order notes disabled because zglobals not avail. always sh
 //							$('#chkoutOrderNotes').toggle(true); 
 //							}
 
-				$('#'+app.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
+				$(app.u.jqSelector('#',app.ext.convertSessionToOrder.vars.containerID)).removeClass('loadingBG');
 				
 //will lock many input fields so they match the paypal response (ship address, shipping, etc).
 //needs to executed in here instead of in a callback for the payalget because the get is only run once per cart/session (unless cart is changed)
@@ -609,7 +609,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
-				var $zContent = $('#'+app.ext.convertSessionToOrder.vars.containerID).empty();
+				var $zContent = $(app.u.jqSelector('#',app.ext.convertSessionToOrder.vars.containerID)).empty();
 				var oldSession = app.sessionId;
 				var orderID = app.data[tagObj.datapointer].orderid;
 
@@ -1211,7 +1211,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			openCreateOrderForm : function(){
 				app.calls.appCartCreate.init({'callback':'disableLoading','targetID':app.ext.admin.vars.tab+'Content'},'immutable');
 				app.model.dispatchThis('immutable');
-				$target = $('#'+app.ext.admin.vars.tab+'Content').empty();
+				$target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty();
 				$target.append("<div id='appCreateOrderMessaging' \/><h1>Create order<\/h1>");
 				
 				var $buttonBar = $("<div \/>").attr('id','createOrderButtonBar');
@@ -1626,13 +1626,13 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				var o = "<legend id='"+panel+"Legend' class='ui-widget-header ui-corner-all'>"+app.ext.convertSessionToOrder.vars.legends[panel]+"<\/legend>";
 				o += "<div id='"+panel+"FieldsetErrors'><\/div>";
 //if the panel doesn't already exist, create it.
-				if(!$('#'+panel+'Fieldset').length > 0) {
+				if(!$(app.u.jqSelector('#',panel+'Fieldset')).length > 0) {
 //					app.u.dump(' -> panel does not exist');
 					$('#zCheckoutFrm').append("<fieldset id='"+panel+"Fieldset' class='ui-widget ui-widget-content ui-corner-all loadingBG "+cssClass+"'>"+o+"<\/fieldset>");
 					}
 				else{
 //					app.u.dump(' -> panel exists');
-					$('#'+panel+'Fieldset').empty().addClass(' ui-widget ui-widget-content ui-corner-all loadingBG '+cssClass).append(o);
+					$(app.u.jqSelector('#',panel+'Fieldset')).empty().addClass(' ui-widget ui-widget-content ui-corner-all loadingBG '+cssClass).append(o);
 					}
 //				app.u.dump('END app.ext.convertSessionToOrder.u.handlePanel.');				
 				}, //handlePanel
@@ -1865,7 +1865,7 @@ the refreshCart call can come second because none of the following calls are upd
 
 //will remove the selected and ui-state-active classes from all address elements within the passed parent div id.
 			removeClassFromChildAddresses : function(parentDivId)	{
-				$('#'+parentDivId+' address').each(function() {
+				$(app.u.jqSelector('#'+parentDivId+' address')).each(function() {
 					$(this).removeClass('selected  ui-state-active');
 					});				
 				} //removeClassFromChildAddresses

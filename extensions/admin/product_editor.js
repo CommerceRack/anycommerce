@@ -127,7 +127,7 @@ var admin_prodEdit = function() {
 		showMangementCats : {
 			onSuccess : function(tagObj)	{
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
-				$results = $('#'+tagObj.targetID);
+				$results = $(app.u.jqSelector('#',tagObj.targetID));
 				var $a; //recycled.
 				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
 					$a = $("<a \/>").attr('data-management-category',index).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized'));
@@ -252,7 +252,7 @@ var admin_prodEdit = function() {
 			var $parent = $(t).parent(); //used to append the new UL to.
 			
 			var targetID = 'manCats_'+app.u.makeSafeHTMLId(manCatID);
-			var $target = $('#'+targetID);
+			var $target = $(app.u.jqSelector('#',targetID));
 //if target already exists on the DOM, then this category has been opened previously. The target is the UL containing the product list.
 			if($target.length)	{
 				$target.toggle();
@@ -322,7 +322,7 @@ var admin_prodEdit = function() {
 				}
 
 			if(!$('#productEditorTemplate').length)	{
-				$('#'+P.targetID).empty().append(app.renderFunctions.createTemplateInstance('productEditorTemplate'));
+				$(app.u.jqSelector('#',P.targetID)).empty().append(app.renderFunctions.createTemplateInstance('productEditorTemplate'));
 				
 				app.ext.admin_prodEdit.calls.adminProductManagementCategoryList.init({'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},'mutable');
 				app.model.dispatchThis('mutable');
@@ -354,7 +354,7 @@ var admin_prodEdit = function() {
 
 path = path || "/biz/product/edit.cgi?VERB=WELCOME";
 P.targetID = "productTabMainContent";
-$('#'+P.targetID).empty().append("<div class='loadingBG'></div>");
+$(app.u.jqSelector('#',P.targetID)).empty().append("<div class='loadingBG'></div>");
 app.model.fetchAdminResource(path,P);
 
 

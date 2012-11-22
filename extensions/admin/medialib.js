@@ -23,7 +23,13 @@ An extension for managing the media library in addition to ALL other file upload
 
 
 var admin_medialib = function() {
-	var theseTemplates = new Array('mediaLibTemplate','mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate','mediaLibSelectedFileTemplate','fileUploadTemplate','page-setup-import-help','page-setup-publicfiles','page-setup-import-customers','page-setup-import-images','page-setup-import-inventory','page-setup-import-listings','page-setup-import-navcats','page-setup-import-rewrites','page-setup-import-orders','page-setup-import-other','page-setup-import-products','page-setup-import-reviews','page-setup-import-rules','page-setup-import-tracking');
+	var theseTemplates = new Array('mediaLibTemplate',
+	'mediaLibFolderTemplate','mediaFileTemplate','mediaLibFileDetailsTemplate',
+	'mediaLibSelectedFileTemplate','fileUploadTemplate','page-setup-import-help',
+	'page-setup-publicfiles','page-setup-import-customers','page-setup-import-images',
+	'page-setup-import-inventory','page-setup-import-listings','page-setup-import-navcats',
+	'page-setup-import-rewrites','page-setup-import-orders','page-setup-import-other','page-setup-import-products',
+	'page-setup-import-reviews','page-setup-import-rules','page-setup-import-tracking');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -255,7 +261,7 @@ setTimeout(function(){
 
 			onSuccess : function(tagObj){
 //				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
-				$('#'+tagObj.parentID).removeClass('loadingBG');
+				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG');
 				var L = app.data[tagObj.datapointer]['@folders'].length;
 				var $template; //recycled. holds template till appended to parent.
 //				app.u.dump(" -> @folders.length: "+L);
@@ -373,6 +379,7 @@ setTimeout(function(){
 //showMediaLib appends this info as data to the mediaLib object. didn't want two jq objects appended in this manner, so their id's are used.
 // -> if no id's exist, they're assigned.
 			uiShowMediaLib : function($image,strOrObj,title){
+
 //the first two params are required and the first must be a jquery object.
 				if(typeof $image == 'object' && strOrObj)		{
 //P is added to media library instance using data, and I didn't want an entire jq object there (or two, potentially)
@@ -383,12 +390,12 @@ setTimeout(function(){
 						$image.attr('id',imageID)
 						}
 
-					var P = {'imageID':'#'+imageID,'title':title};
+					var P = {'imageID':app.u.jqSelector('#',imageID),'title':title};
 	//see note about imageID on why this isn't being passed straight through.
 	//also, because this is passed into the media library as a string, the string or object distinction is done here and passed in with different keys.
 	//selector is passed instead of ID to be more versatile. The mediaLib itself may end up using a class.
 					if(typeof strOrObj == 'object')	{
-						if(strOrObj.attr('id'))	{P.eleSelector = '#'+strOrObj.attr('id')}
+						if(strOrObj.attr('id'))	{P.eleSelector = app.u.jqSelector('#',strOrObj.attr('id'))}
 						else	{
 							P.eleSelector = 'input_'+app.u.guidGenerator();
 							strOrObj.attr('id',P.eleSelector);
@@ -407,23 +414,25 @@ setTimeout(function(){
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
 
+
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
 				var newFilename = (set2Blank === true) ? '' : fileInfo.path; //set2Blank
 				var $medialib = $('#mediaModal');
 				$medialib.showLoading();
 				var mediaData = $medialib.data();
-//				app.u.dump("mediaData: "); app.u.dump(mediaData);
-//				app.u.dump("fileInfo: "); app.u.dump(fileInfo);
+				// app.u.dump("mediaData: "); app.u.dump(mediaData);
+				// app.u.dump("fileInfo: "); app.u.dump(fileInfo);
 				var error = false;
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
 //eleSelector just updates some form on the page.
 //mode requires an API call.
+
 				if(mediaData.imageID && ( mediaData.eleSelector ||  mediaData.src))	{
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 						var $image = $(mediaData.imageID);
-//						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
+						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
 							'alt':fileInfo.Name
@@ -431,11 +440,13 @@ setTimeout(function(){
 						}
 //update form element
 					if(mediaData.eleSelector){
+						// app.u.dump("took selector route");
 						$(mediaData.eleSelector).val(newFilename);
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
 					else	{
+						// app.u.dump("took mode route");
 						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':newFilename},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
 						}
@@ -452,7 +463,7 @@ setTimeout(function(){
 			showFoldersFor : function(P)	{
 				if(P.targetID && P.templateID)	{
 					P.parentFID = P.parentFID || "0"; //default to showing root level folders.
-					$('#'+P.targetID).append(app.ext.admin_medialib.u.showFoldersByParentFID(P.parentFID,P.templateID));
+					$(app.u.jqSelector('#',P.targetID)).append(app.ext.admin_medialib.u.showFoldersByParentFID(P.parentFID,P.templateID));
 					}
 				else	{
 					//required params missing.
@@ -465,7 +476,7 @@ setTimeout(function(){
 			showMediaDetailsInDialog : function(P){
 				if(P.name)	{
 					var safeID = 'mediaFileDetails_'+app.u.makeSafeHTMLId(P.name)
-					var $target = $('#'+safeID);
+					var $target = $(app.u.jqSelector('#',safeID));
 					if($target.length){} //contents already created. do nothing.
 //contents not generated yet. Create them.
 					else	{

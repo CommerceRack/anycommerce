@@ -131,10 +131,10 @@ var admin_orders = function() {
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump(" -> targetID: "+targetID);
-				$('#'+tagObj.targetID).empty().remove();
+				$(app.u.jqSelector('#',tagObj.targetID)).empty().remove();
 				},
 			onError : function(responseData)	{
-				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
+				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
 				responseData._rtag.parentID = 'orderListMessaging'
 				app.u.throwMessage(responseData);
 				}		
@@ -144,11 +144,11 @@ var admin_orders = function() {
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
 				app.u.dump(" -> targetID: "+tagObj.targetID);
-				$('#'+tagObj.targetID).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('ORDER_PAYMENT_STATUS')+')').text('Paid');
+				$(app.u.jqSelector('#',tagObj.targetID)).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('ORDER_PAYMENT_STATUS')+')').text('Paid');
 				},
 			onError : function(d)	{
 //				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				$('#'+tagObj.targetID).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
+				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
 				responseData.parentID = 'orderListMessaging'
 				app.u.throwMessage(responseData);
 				}		
@@ -241,7 +241,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 			if(P.pool && P.targetID)	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$('#'+P.targetID).append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				$(app.u.jqSelector('#',P.targetID)).append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
 				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
@@ -606,7 +606,7 @@ $(selector + ' .editable').each(function(){
 				
 			bindOrderListButtons : function(targetID)	{
 //				app.u.dump("BEGIN admin_orders.u.bindOrderListButtons");
-				$('#'+targetID+' [data-orderaction]').each(function(){
+				$(app.u.jqSelector('#',targetID)+' [data-orderaction]').each(function(){
 					var action = $(this).attr('data-orderaction');
 //					app.u.dump(" -> action: "+action);
 					$(this).click(function(){
