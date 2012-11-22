@@ -922,7 +922,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},	
 				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
-			showFinderInModal : function(type,path,sku)	{
+			showFinderInModal : function(findertype,path,attrib)	{
 				var $finderModal = $('#prodFinder');
 //a finder has already been opened. empty it.
 				if($finderModal.length > 0)	{
@@ -934,8 +934,14 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //if the finder is for a product attribute, then add a data-sku so we can easily get the sku at any point.
 //likewise, if it is NOT for a product, remove the data-pid (which may be present for a previously opened finder) to avoid any confusion down the road.
 //data-pid is not used to avoid confusion. it's used on the li items in all the lists to denote which product they contain.
-				if(sku){$finderModal.attr('data-sku',sku)}
-				else{$finderModal.removeAttr('data-sku')}
+				$finderModal.attr('data-findertype',findertype);
+				$finderModal.attr('data-path',path);
+				$finderModal.attr('data-attrib',attrib);
+				// if (type =='PRODUCT') {
+					// var sku = path; 
+					// if(sku){$finderModal.attr('data-sku',sku)}
+					// else{$finderModal.removeAttr('data-sku')}
+					// }
 				
 				$finderModal.attr({'data-path':path}).dialog({modal:true,width:'94%',height:650});
 				app.ext.admin.a.addFinderTo('prodFinder',path,sku);
@@ -1259,8 +1265,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var myArray = new Array();
 				var $tmp;
 				var $finderModal = $('#prodFinder')
+				var findertype = $finderModal.attr('data-findertype');
 				var path = $finderModal.attr('data-path');
-				var sku = $finderModal.attr('data-sku');
+				var attrib = $finderModal.attr('data-attrib');
+//				var sku = $finderModal.attr('data-sku');
 //				app.u.dump(" -> path: "+path);
 //				app.u.dump(" -> sku: "+sku);
 
@@ -1270,8 +1278,9 @@ for a product, everything goes up as one chunk as a comma separated list.
 for a category, each sku added or removed is a separate request.
 */
 
-				if(sku)	{
+				if (findertype == 'PRODUCT')	{
 //finder for product attribute.
+					var sku = path;	// we do this just to make the code clear-er
 					var list = '';
 					var attribute = app.renderFunctions.parseDataVar(path);
 					$('#finderTargetList').find("li").each(function(index){
@@ -1285,31 +1294,37 @@ for a category, each sku added or removed is a separate request.
 					app.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
 					app.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
 					}
-				else	{
-// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
-$('#finderRemovedList').find("li").each(function(){
-	$tmp = $(this);
-	if($tmp.attr('data-status') == 'remove')	{
-		app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
-		$tmp.attr('data-status','queued')
-		}
-	});
-
-//category/list based finder.
-//concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
-$("#finderTargetList li").each(function(index){
-	$tmp = $(this);
-//	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
+				else if (findertype == 'NAVCAT')	{
+					// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
+					$('#finderRemovedList').find("li").each(function(){
+						$tmp = $(this);
+						if($tmp.attr('data-status') == 'remove')	{
+							app.ext.admin.calls.finder.adminNavcatProductDelete.init($tmp.attr('data-pid'),path,{"callback":"finderProductUpdate","extension":"admin"});
+							$tmp.attr('data-status','queued')
+							}
+						});
+					
+					//category/list based finder.
+					//concat both lists (updates and removed) and loop through looking for what's changed or been removed.				
+					$("#finderTargetList li").each(function(index){
+						$tmp = $(this);
+						//	app.u.dump(" -> pid: "+$tmp.attr('data-pid')+"; status: "+$tmp.attr('data-status')+"; index: "+index+"; $tmp.index(): "+$tmp.index());
 	
-	if($tmp.attr('data-status') == 'changed')	{
-		$tmp.attr('data-status','queued')
-		app.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
-		}
-	else	{
-//datastatus set but not to a valid value. maybe queued?
-		}
-	});
-app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					if($tmp.attr('data-status') == 'changed')	{
+						$tmp.attr('data-status','queued')
+						app.ext.admin.calls.finder.adminNavcatProductInsert.init($tmp.attr('data-pid'),index,path,{"callback":"finderProductUpdate","extension":"admin"});
+						}
+					else	{
+						//datastatus set but not to a valid value. maybe queued?
+						}
+					});
+					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
+					}
+				else if (findertype == 'PAGE') {
+					
+					}
+				else {
+					app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');
 					}
 				//dispatch occurs on save button, not here.
 				}, //saveFinderChanges
