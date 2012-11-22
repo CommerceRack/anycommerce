@@ -552,7 +552,7 @@ merge these into one.
 JT - 2012-11-21 (on vaca)
 */
 
-//callback executed after the navcat data is retrieved. the u.addfinder does most of the work.
+//callback executed after the navcat data is retrieved. the u, does most of the work.
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addFinderToDom.success");
@@ -577,7 +577,7 @@ JT - 2012-11-21 (on vaca)
 		addPIDFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addPIDFinderToDom.success");
-				app.ext.admin.u.addFinder(tagObj.targetID,'PRODUCT',tagObj.path,tagObj.datapointer.split('|')[1]);
+				app.ext.admin.u.addFinder(tagObj.targetID,'PRODUCT',tagObj.path,tagObj.datapointer.split('|')[1],$('#prodFinder').attr('data-attrib'));
 				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']+" ("+app.renderFunctions.parseDataVar(tagObj.path)+")"); //updates modal title
 //				app.u.dump(tagObj);
 				}
@@ -1340,7 +1340,7 @@ for a category, each sku added or removed is a separate request.
 //finder for product attribute.
 					var sku = path;	// we do this just to make the code clear-er
 					var list = '';
-					var attribute = app.renderFunctions.parseDataVar(path);
+					var attribute = app.renderFunctions.parseDataVar(attrib);
 					$('#finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
@@ -1445,7 +1445,6 @@ if pid is passed into this function, the finder treats everything as though we'r
 app.u.dump("BEGIN admin.u.addFinder");
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(path);
-app.u.dump(" -> safePath: "+safePath);
 var prodlist = new Array();
 
 var $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
@@ -1454,14 +1453,13 @@ $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"
 $('#finderTargetList').removeClass('loadingBG'); //bug in finder!!! if no items, stays in loading. hot fix.
 app.u.dump(" -> got to if/else section. ");
 if(findertype == 'PRODUCT')	{
+	app.u.dump(" -> Product SKU: "+path);
+//for whatever reason, attrib passed in wasn't working. I plan on updating the finder so that attrib, type and passed are never passed back and forth on the api
+//they'll be retrieved using data-path or data-findertype when needed. this is a hot fix.  !!! JT 2012-11-21
 	app.renderFunctions.translateTemplate(app.data['appProductGet|'+path],"productFinder_"+safePath);
-// !!! need to add a check here to see if the field is populated before doing a split.
-//also need to look at path and get the actual field. this is hard coded for testing.
-	var attribute = app.renderFunctions.parseDataVar(path);
-	app.u.dump(" -> ATTRIBUTE: "+attribute);
-//	app.u.dump(" -> aattribute value = "+app.data['appProductGet|'+pid]['%attribs'][attribute]);
-	if(app.data['appProductGet|'+path]['%attribs'][attribute])
-		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+path]['%attribs'][attribute]);
+	attrib = $('#prodFinder').attr('data-attrib');
+	if(app.data['appProductGet|'+path]['%attribs'][attrib])
+		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+path]['%attribs'][attrib]);
 	}
 else if(findertype == 'NAVCAT')	{
 //	app.u.dump(" -> NON product attribute (no pid specified)");
