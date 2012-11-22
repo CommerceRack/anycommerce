@@ -650,6 +650,8 @@ var successCallbacks = {
 		}
 	}
 
+$(selector).append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
+
 // Initialize the jQuery File Upload widget:
 $(selector).fileupload({
 	// Uncomment the following to send cross-domain cookies:
