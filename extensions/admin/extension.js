@@ -565,8 +565,8 @@ JT - 2012-11-21 (on vaca)
 //callback executed after the navcat data is retrieved. the u.addfinder does most of the work.
 		addPageFinderToDom : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN admin.callback.addPageFinderToDom.success");
-				app.u.dump("app.data[tagObj.datapointer]"); app.u.dump(app.data[tagObj.datapointer]);
+				//app.u.dump("BEGIN admin.callback.addPageFinderToDom.success");
+				//app.u.dump("app.data[tagObj.datapointer]"); app.u.dump(app.data[tagObj.datapointer]);
 				app.ext.admin.u.addFinder(tagObj.targetID,'PAGE',app.data[tagObj.datapointer]._rtag.path,app.data[tagObj.datapointer]._rtag.attrib);
 //				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer].pretty); //updates modal title
 //				app.u.dump(tagObj);
@@ -1379,16 +1379,18 @@ for a category, each sku added or removed is a separate request.
 					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				else if (findertype == 'PAGE') {
-				var list;
-				var obj = {};
+					app.u.dump("SAVING findertype PAGE");
+					var list = ""; //set to empty string so += below doesn't start with empty stirng
+					var obj = {};
 //finder for product attribute.
 					$('#finderTargetList').find("li").each(function(index){
 //make sure data-pid is set so 'undefined' isn't saved into the record.
 						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
 						});
 					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
-					obj[path] = list;
-					app.ext.admin.calls.appPageSet.init(obj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+					obj.PATH = path;
+					obj[attrib] = list;
+					app.ext.admin.calls.appPageSet.init(obj,{'callback':'pidFinderChangesSaved','extension':'admin'},'immutable');
 					}
 				else {
 					app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');
@@ -1450,7 +1452,7 @@ var $target = $('#'+targetID).empty(); //empty to make sure we don't get two ins
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
 $('#finderTargetList').removeClass('loadingBG'); //bug in finder!!! if no items, stays in loading. hot fix.
-
+app.u.dump(" -> got to if/else section. ");
 if(findertype == 'PRODUCT')	{
 	app.renderFunctions.translateTemplate(app.data['appProductGet|'+path],"productFinder_"+safePath);
 // !!! need to add a check here to see if the field is populated before doing a split.
@@ -1462,13 +1464,15 @@ if(findertype == 'PRODUCT')	{
 		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+path]['%attribs'][attribute]);
 	}
 else if(findertype == 'NAVCAT')	{
-	app.u.dump(" -> NON product attribute (no pid specified)");
+//	app.u.dump(" -> NON product attribute (no pid specified)");
 //	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
 	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
 else if(findertype == 'PAGE')	{
-	prodlist = app.data['appPageGet|'+path][attrib] || ""; //default to blank not undefined for buildProductList
-	
+	app.u.dump(" -> is PAGE findertype");
+	if(app.data['appPageGet|'+path]['%page'][attrib])	{
+		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appPageGet|'+path]['%page'][attrib])
+		}	
 	}
 else	{
 	app.u.throwGMessage("WARNING! findertype not set.");
