@@ -72,10 +72,42 @@ var admin = function() {
 			
 			}, 
 
+			/*
+a typical 'fetchData' is done for a quick determination on whether or not ANY data for the category is local.
+if not, we're obviously missing what's needed.  If some data is local, check for the presence of the attributes
+requested and if even one isn't present, get all.
+datapointer needs to be defined early in the process so that it can be used in the handlecallback, which happens in INIT.
+obj.PATH = .cat.safe.id
+*/
+		appPageGet : {
+			init : function(obj,tagObj,Q)	{
+				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
+				obj['_tag'].datapointer = 'appPageGet|'+obj.PATH;  //no local storage of this. ### need to explore solutions.
+				
+				this.dispatch(obj,tagObj,Q);
+				r = 1;
+				return r;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj['_cmd'] = "appPageGet";
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //appPageGet
+			
+		appPageSet : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);				
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj._tag = tagObj;
+				obj._cmd = 'appPageSet';
+				app.model.addDispatchToQ(obj,Q);
+				}			
 
+			},
 		adminDomainList : {
 			init : function(tagObj,Q)	{
-//				app.u.dump("BEGIN admin.calls.adminDomainList");
+//			app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
 if(app.model.fetchData(tagObj.datapointer) == false)	{
@@ -899,13 +931,24 @@ to generate an instance of the finder, run:
 app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 
 */
-			addFinderTo : function(targetID,path,sku)	{
-				if(sku)	{
-					app.ext.store_product.calls.appProductGet.init(sku,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
+			addFinderTo : function(targetID,findertype,path,attrib)	{
+			app.u.dump("BEGIN admin.u.addFinderTo");
+			app.u.dump(" -> findertype: "+findertype);
+			app.u.dump(" -> path: "+path);
+			app.u.dump(" -> attrib: "+attrib);
+				if(findertype == 'product')	{
+					app.ext.store_product.calls.appProductGet.init(path,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
-				else	{
+				else if(findertype == 'navcat')	{
 //Too many f'ing issues with using a local copy of the cat data.
 					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
+					}
+				else if(findertype == 'page')	{
+				app.u.dump("GOT HERE");
+					app.ext.admin.calls.appPageGet.init({'PATH':path,'@GET':[attrib]},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
+					}
+				else	{
+					app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+findertype+"]");
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
@@ -943,8 +986,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					// else{$finderModal.removeAttr('data-sku')}
 					// }
 				
-				$finderModal.attr({'data-path':path}).dialog({modal:true,width:'94%',height:650});
-				app.ext.admin.a.addFinderTo('prodFinder',path,sku);
+				$finderModal.dialog({modal:true,width:'94%',height:650});
+				app.ext.admin.a.addFinderTo('prodFinder',findertype,path,attrib);
 				}, //showFinderInModal
 
 			login : function($form){
@@ -1321,7 +1364,16 @@ for a category, each sku added or removed is a separate request.
 					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"finderChangesSaved","extension":"admin"},'immutable');
 					}
 				else if (findertype == 'PAGE') {
-					
+				var list;
+				var obj = {};
+//finder for product attribute.
+					$('#finderTargetList').find("li").each(function(index){
+//make sure data-pid is set so 'undefined' isn't saved into the record.
+						if($(this).attr('data-pid'))	{list += ','+$(this).attr('data-pid')}
+						});
+					if(list.charAt(0) == ','){ list = list.substr(1)} //remove ',' from start of list string.
+					obj[path] = list;
+					app.ext.admin.calls.appPageSet.init(obj,{'callback':'pidFinderChangesSaved','extension':'admin'});
 					}
 				else {
 					app.u.throwGMessage('unknown findertype='+findertype+' in admin.a.saveFinderChanges');
@@ -1511,8 +1563,9 @@ $('#finderSearchForm').submit(function(event){
 //				app.u.dump("BEGIN admin.callbacks.filterFinderSearchResults");
 				var $tmp;
 //go through the results and if they are already in this category, disable drag n drop.
+//data-path will be the SKU of the item in focus (for a product attribute finder)
 				$results = $('#finderSearchResults');
-				var sku = $results.closest('[data-sku]').attr('data-sku');
+				var sku = $results.closest('[data-path]').attr('data-path');
 				$results.find('li').each(function(){
 					$tmp = $(this);
 					if($('#finderTargetList_'+$tmp.attr('data-pid')).length > 0 || $tmp.attr('data-pid') == sku)	{
