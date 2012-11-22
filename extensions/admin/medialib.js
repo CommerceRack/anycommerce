@@ -381,6 +381,7 @@ setTimeout(function(){
 			uiShowMediaLib : function($image,strOrObj,title){
 
 //the first two params are required and the first must be a jquery object.
+	
 				if(typeof $image == 'object' && strOrObj)		{
 //P is added to media library instance using data, and I didn't want an entire jq object there (or two, potentially)
 					var imageID;
@@ -413,7 +414,6 @@ setTimeout(function(){
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
-
 
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
@@ -850,6 +850,7 @@ $(selector).fileupload(
 					else if($button.data('btn-action') == 'select')	{
 						$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(event){
 							event.preventDefault(); //keeps button from submitting the form.
+							// where does an image get added?f
 							$(this).closest('li').find('img').click();
 							})
 						}
