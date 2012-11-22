@@ -383,6 +383,7 @@ if(app.u.getParameterByName('debug'))	{
 
 //make sure all the links in the header use the proper syntax.
 				$('.bindByAnchor','#mastHead').each(function(){
+					app.u.dump("BEGIN #mastHead rewriteLink");
 					app.ext.admin.u.rewriteLink($(this));
 					})
 //if supported, update hash while navigating.
@@ -1286,7 +1287,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
-//				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
+				app.u.dump("BEGIN admin.u.uiHandleLinkRewrites("+path+")");
 				var $target = $('#'+viewObj.targetID);
 				$('a',$target).each(function(){
 					app.ext.admin.u.rewriteLink($(this));
