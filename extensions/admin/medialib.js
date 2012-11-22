@@ -616,12 +616,16 @@ var successCallbacks = {
 		var $ul = $('.dataMap',$('#mediaLibUploadForm')); //container of data mapping (a ul). each li contains a filename and fname data attribute.
 		var $li,tagObj;
 		var folders = new Array(); //a list of folders that were updated. will be used to compile a list of
+//NOTE - files used to upload to whatever folder was when the file was selected.
+//caused some issues and JT is away from office. stop gap soltion.  !!!
+
+var folderID = $('#mediaLibFileList ul').attr('data-fid'); /// for now, uploads will go to whatever folder is currently open
+
 		for(var i = 0; i < L; i += 1)	{
 //fname is the foldername
 			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
-app.u.dump($li);
 
-			data[i].folder = $li.attr('data-fname');
+			data[i].folder = folderID;
 //			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);
 		//append to list of folders if not already there.
 			if($.inArray(data[i].folder,folders) == -1){folders.push(data[i].folder)}
