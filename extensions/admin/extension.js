@@ -369,7 +369,6 @@ if(app.u.getParameterByName('debug'))	{
 				window.loadElement = app.ext.admin.a.loadElement;
 				window.prodlistEditorUpdate = app.ext.admin.a.uiProdlistEditorUpdate;
 				window.changeDomain = app.ext.admin.a.changeDomain;
-				window.showFinder = app.ext.admin.a.showFinderInModal;
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
@@ -911,16 +910,6 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.model.dispatchThis();
 				}, //addFinderTo
 				
-//a stopgap for the legacy to app infrastructure. type will be navcat: or page: or list:
-			showUIFinder : function(type,path,sku)	{
-				if(type == "NAVCAT" || type == "PRODUCT" || type == "LIST")	{ 	
-					app.ext.admin.a.showFinderInModal(path,sku);
-					}
-				else	{
-					app.u.throwGMessage("WARNING! unknown type ["+type+"] passed into showUIFinder");
-					}
-				},
-
 //opens a dialog with a list of domains for selection.
 //a domain being selected for their UI experience is important, so the request is immutable.
 //a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
@@ -933,7 +922,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				},	
 				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
-			showFinderInModal : function(path,sku)	{
+			showFinderInModal : function(type,path,sku)	{
 				var $finderModal = $('#prodFinder');
 //a finder has already been opened. empty it.
 				if($finderModal.length > 0)	{
