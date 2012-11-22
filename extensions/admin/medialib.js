@@ -311,7 +311,7 @@ setTimeout(function(){
 
 		handleImageUpload : {
 			onSuccess : function(tagObj){
-				$("[data-filename="+app.u.jqSelector('',tagObj.filename)+"]",$('#mediaLibraryFileUploadTable')).slideUp(1000,function(){$(this).empty().remove()})
+				$("[data-filename='"+app.u.jqSelector('',tagObj.filename)+"']",$('#mediaLibraryFileUploadTable')).slideUp(1000,function(){$(this).empty().remove()})
 				}
 			},
 		handleMediaLibUpdate : {
@@ -617,7 +617,10 @@ var successCallbacks = {
 		var $li,tagObj;
 		var folders = new Array(); //a list of folders that were updated. will be used to compile a list of
 		for(var i = 0; i < L; i += 1)	{
+//fname is the foldername
 			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
+app.u.dump($li);
+
 			data[i].folder = $li.attr('data-fname');
 //			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);
 		//append to list of folders if not already there.
