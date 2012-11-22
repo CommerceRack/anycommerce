@@ -619,13 +619,13 @@ var successCallbacks = {
 //NOTE - files used to upload to whatever folder was when the file was selected.
 //caused some issues and JT is away from office. stop gap soltion.  !!!
 
-var folderID = $('#mediaLibFileList ul').attr('data-fid'); /// for now, uploads will go to whatever folder is currently open
+var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 		for(var i = 0; i < L; i += 1)	{
 //fname is the foldername
 			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
 
-			data[i].folder = folderID;
+			data[i].folder = folderName;
 //			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);
 		//append to list of folders if not already there.
 			if($.inArray(data[i].folder,folders) == -1){folders.push(data[i].folder)}
