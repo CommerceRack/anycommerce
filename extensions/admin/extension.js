@@ -545,14 +545,30 @@ else	{
 				}
 			}, //handleElasticFinderResults
 
-
+/*
+REMINDER!!!
+Now that we have three params, findertype, path and attrib, we don't need three callbacks.
+merge these into one.
+JT - 2012-11-21 (on vaca)
+*/
 
 //callback executed after the navcat data is retrieved. the u.addfinder does most of the work.
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addFinderToDom.success");
-				app.ext.admin.u.addFinder(tagObj.targetID,app.data[tagObj.datapointer].id);
+				app.ext.admin.u.addFinder(tagObj.targetID,'NAVCAT',app.data[tagObj.datapointer].id);
 				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer].pretty); //updates modal title
+//				app.u.dump(tagObj);
+				}
+			}, //addFinderToDom
+
+//callback executed after the navcat data is retrieved. the u.addfinder does most of the work.
+		addPageFinderToDom : {
+			onSuccess : function(tagObj)	{
+				app.u.dump("BEGIN admin.callback.addPageFinderToDom.success");
+				app.u.dump("app.data[tagObj.datapointer]"); app.u.dump(app.data[tagObj.datapointer]);
+				app.ext.admin.u.addFinder(tagObj.targetID,'PAGE',app.data[tagObj.datapointer]._rtag.path,app.data[tagObj.datapointer]._rtag.attrib);
+//				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer].pretty); //updates modal title
 //				app.u.dump(tagObj);
 				}
 			}, //addFinderToDom
@@ -561,7 +577,7 @@ else	{
 		addPIDFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addPIDFinderToDom.success");
-				app.ext.admin.u.addFinder(tagObj.targetID,tagObj.path,tagObj.datapointer.split('|')[1]);
+				app.ext.admin.u.addFinder(tagObj.targetID,'PRODUCT',tagObj.path,tagObj.datapointer.split('|')[1]);
 				$('#prodFinder').parent().find('.ui-dialog-title').text('Product Finder: '+app.data[tagObj.datapointer]['%attribs']['zoovy:prod_name']+" ("+app.renderFunctions.parseDataVar(tagObj.path)+")"); //updates modal title
 //				app.u.dump(tagObj);
 				}
@@ -936,16 +952,15 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			app.u.dump(" -> findertype: "+findertype);
 			app.u.dump(" -> path: "+path);
 			app.u.dump(" -> attrib: "+attrib);
-				if(findertype == 'product')	{
+				if(findertype == 'PRODUCT')	{
 					app.ext.store_product.calls.appProductGet.init(path,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
-				else if(findertype == 'navcat')	{
+				else if(findertype == 'NAVCAT')	{
 //Too many f'ing issues with using a local copy of the cat data.
 					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
-				else if(findertype == 'page')	{
-				app.u.dump("GOT HERE");
-					app.ext.admin.calls.appPageGet.init({'PATH':path,'@GET':[attrib]},{"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
+				else if(findertype == 'PAGE')	{
+					app.ext.admin.calls.appPageGet.init({'PATH':path,'@get':[attrib]},{"attrib":attrib,"path":path,"callback":"addPageFinderToDom","extension":"admin","targetID":targetID})			
 					}
 				else	{
 					app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+findertype+"]");
@@ -1423,7 +1438,7 @@ path is the list/category src (ex: .my.safe.id) or a product attribute [ex: prod
 if pid is passed into this function, the finder treats everything as though we're dealing with a product.
 */
 
-			addFinder : function(targetID,path,pid){
+			addFinder : function(targetID,findertype,path,attrib){
 
 app.u.dump("BEGIN admin.u.addFinder");
 //jquery likes id's with no special characters.
@@ -1434,23 +1449,30 @@ var prodlist = new Array();
 var $target = $('#'+targetID).empty(); //empty to make sure we don't get two instances of finder if clicked again.
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
+$('#finderTargetList').removeClass('loadingBG'); //bug in finder!!! if no items, stays in loading. hot fix.
 
-if(pid)	{
-	app.renderFunctions.translateTemplate(app.data['appProductGet|'+pid],"productFinder_"+safePath);
+if(findertype == 'PRODUCT')	{
+	app.renderFunctions.translateTemplate(app.data['appProductGet|'+path],"productFinder_"+safePath);
 // !!! need to add a check here to see if the field is populated before doing a split.
 //also need to look at path and get the actual field. this is hard coded for testing.
 	var attribute = app.renderFunctions.parseDataVar(path);
 	app.u.dump(" -> ATTRIBUTE: "+attribute);
 //	app.u.dump(" -> aattribute value = "+app.data['appProductGet|'+pid]['%attribs'][attribute]);
-	if(app.data['appProductGet|'+pid]['%attribs'][attribute])
-		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+pid]['%attribs'][attribute]);
+	if(app.data['appProductGet|'+path]['%attribs'][attribute])
+		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+path]['%attribs'][attribute]);
 	}
-else	{
+else if(findertype == 'NAVCAT')	{
 	app.u.dump(" -> NON product attribute (no pid specified)");
 //	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
 	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
-
+else if(findertype == 'PAGE')	{
+	prodlist = app.data['appPageGet|'+path][attrib] || ""; //default to blank not undefined for buildProductList
+	
+	}
+else	{
+	app.u.throwGMessage("WARNING! findertype not set.");
+	}
 //app.u.dump(" -> path: "+path);
 //app.u.dump(" -> prodlist: "+prodlist);
 
