@@ -30,6 +30,7 @@ app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-
 
 app.rq.push(['script',1,'https://www.zoovy.com/biz/ajax/flexigrid-1.1/js/flexigrid.js']);
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
+// app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.parsequery.min.js']); // parses window.location parameters
 
 //have showLoading as early as possible. pretty handy feature.
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showloading.css']);

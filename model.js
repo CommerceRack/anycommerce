@@ -1222,7 +1222,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 					});	//this.fetchFileViaAjax(templateURL);
 			
 			ajaxRequest.error(function(d,e,f){
-				//the templates not loading is pretty much a catastrophic issue.
+				// the templates not loading is pretty much a catastrophic issue.
 				app.u.throwMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)",true);			
 				app.u.dump("ERROR! unable to load remote templates");
 				app.u.dump("templateURL: "+templateURL);

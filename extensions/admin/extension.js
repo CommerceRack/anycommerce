@@ -333,6 +333,7 @@ else	{
 //				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
+
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
@@ -1044,19 +1045,27 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var domain = this.getDomain();
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-				if(domain)	{
+				
+				
+				// if (window.location.indexOf("#/",0)) {
+					// admin.html#/biz/xyz
+					// alert('hello');
+					// }
+				
+				if (! domain) {
+					//the selection of a domain name will load the page content. (but we'll still need to nav)
+					app.ext.admin.a.showDomainChooser(); 
+					}
+				else {
 					$('.domain','#appView').text(domain);
 // //no bueno to use this. if the app loads directly on a product page, that extension isn't done by the time this extension is done initing itself.
 					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); //commented out for testing.
 					}
-				else	{
-					app.ext.admin.a.showDomainChooser(); //the selection of a domain name will load the page content.
-					}
 				}, //showHeader
 
-//This gets executed from within showUI.  It will load an app instead of compatibility mode content.
+			//This gets executed from within showUI.  It will load an app instead of compatibility mode content.
 			loadNativeApp : function(path,P){
-
+		
 				if(path == '#!mediaLibraryManageMode')	{
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 					}
