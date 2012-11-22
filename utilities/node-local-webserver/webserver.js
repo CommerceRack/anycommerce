@@ -6,13 +6,20 @@
 //
 // this *should* let us test 
 
-var http = require("http"),
+// based on: https://gist.github.com/701407
+// based on: www.catonmat.net/http-proxy-in-nodejs/
+
+
+// setup a local proxy at port 8081
+// then we'll point our browser at that, and that will translate requests between production and our local server
+// this doesn't work because it requires https
+// 
+var http2 = require("http"),
     url = require("url"),
     path = require("path"),
     fs = require("fs")
     port = process.argv[2] || 8888;
-
-http.createServer(function(request, response) {
+http2.createServer(function(request, response) {
 
   var LOCAL_ROOT_DIR = process.cwd()+"/../../";
   
@@ -44,5 +51,7 @@ if (fs.statSync(filename).isDirectory()) filename += '/index.html';
     });
   });
 }).listen(parseInt(port, 10));
-
 console.log("Static file server running at\n => http://localhost:" + port + "/\nCTRL + C to shutdown");
+
+
+

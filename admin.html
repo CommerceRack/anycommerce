@@ -11,13 +11,26 @@
 
 var myCreole;
 
+var baseURL = '';
+//in admin, used for loading app-specific files. do NOT set the base href tho.
+if (document.location.protocol  == 'file:') { 
+	baseURL = ''; 
+	}
+else if (document.location.port == 8888) {
+	// local webserver (node.js?)
+	baseURL = '/';
+	}
+else {
+   baseURL = "//www.zoovy.com/biz/app/"
+   }
+	
 var app = {vars:{
 	"release":"20121121183400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"thisSessionIsAdmin": true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
-	"baseURL" : document.location.protocol == 'file:' ? "" : "//www.zoovy.com/biz/app/" //in admin, used for loading app-specific files. do NOT set the base href tho.
+	"baseURL" : baseURL,
 	},u:{},rq:[]};
 
 </script>
