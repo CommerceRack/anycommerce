@@ -634,7 +634,7 @@ var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uplo
 
 		for(var i = 0; i < L; i += 1)	{
 //fname is the foldername
-			//$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
+//			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
 
 			data[i].folder = folderName;
 //			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);

@@ -136,13 +136,15 @@ copying the template into memory was done for two reasons:
 		setVars('userid');
 		setVars('authtoken');
 		setVars('domain');
+		setVars('username');
 
+		app.vars.username = app.vars.username.toLowerCase();
 //		app.u.dump(" -> app.vars: "); app.u.dump(app.vars);
 		
-		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
-			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
-			app.vars.username = app.vars.userid.split('@')[1];
-			}
+//		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
+//			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
+//			app.vars.username = app.vars.userid.split('@')[1].toLowerCase();
+//			}
 		
 		},
 
