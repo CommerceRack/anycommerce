@@ -826,7 +826,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						app.ext.admin.a.showDomainConfig();
 						}
 					else if(path == '#!orderPrint')	{
-						app.ext.convertSessionToOrder.a.printOrder(P.oid,P);
+						app.ext.convertSessionToOrder.a.printOrder(P.data.oid,P);
 						}
 					else if(path == '#!orderCreate')	{
 						app.ext.convertSessionToOrder.a.openCreateOrderForm();
