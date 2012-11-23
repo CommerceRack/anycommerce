@@ -332,6 +332,8 @@ if server validation passes, the callback handles what to do next (callback is m
 			onSuccess : function(tagObj){
 				
 				var tmpData = {};
+				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
+				//this is because a template only wants to be parsed once.
 				if(tagObj.merge)	{
 					tmpData = $.extend(app.data[tagObj.datapointer],app.data[tagObj.merge]);
 					}
@@ -1233,6 +1235,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				},
 //currently supported types are packslip and invoice (case sensitive to match template ID's)
 			printOrder : function(orderID,P){
+				app.u.dump(" -> P: "); app.u.dump(P);
 				$('#printContainer').empty();
 				$('body').showLoading(); //indicate to client that button was pressed.
 				app.calls.appProfileInfo.init(P.profile,{},'immutable');				
