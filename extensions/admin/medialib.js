@@ -634,14 +634,14 @@ var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uplo
 
 		for(var i = 0; i < L; i += 1)	{
 //fname is the foldername
-			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
+			//$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
 
 			data[i].folder = folderName;
 //			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);
 		//append to list of folders if not already there.
 			if($.inArray(data[i].folder,folders) == -1){folders.push(data[i].folder)}
 			app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
-			$li.empty().remove(); //remove this from list so future lookups are quicker.
+//			$li.empty().remove(); //remove this from list so future lookups are quicker.
 			}
 		//update memory/localStorage with folder contents.
 		for(var index in folders)	{
