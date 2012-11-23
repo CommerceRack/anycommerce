@@ -1,0 +1,7 @@
+/* -------------------------------------------------------------------
+// markItUp!
+// By Jay Salvat - http://markitup.jaysalvat.com/
+// ------------------------------------------------------------------*/
+.markItUp .tablegenerator a {
+	background-image:url(extensions/admin/resources/markitup/plugin-wiki-tablegenerator/images/table.png);
+}
