@@ -1395,6 +1395,7 @@ a word */
 			}, //makeSafeHTMLId
 //if bool === false, then no # in response. allows for this code to be used for more than just ID's (like data attributes)
 		jqSelector : function(selector,str){
+			if (undefined == str) { str = new String(""); }	// fix undefined issue
 			return ((selector) ? selector : '')+str.replace(/([;&,\.\+\*\~':"\!\^#$%@\[\]\(\)=>\|])/g, '\\$1');
 			},
 

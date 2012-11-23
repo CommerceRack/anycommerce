@@ -854,7 +854,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //it's diferent than showUI so we can add extra functionality if needed.
 //the app itself should never use this function.
 			navigateTo : function(path,$t)	{
-				this.showUI(path,$t ? $t.data() : {});
+				this.showUI(path,$t ? $t : {});
 				},
 				
 			showDomainConfig : function(){

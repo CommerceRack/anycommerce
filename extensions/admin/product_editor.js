@@ -274,16 +274,21 @@ var admin_prodEdit = function() {
 			var $form = $(t).closest("form");
 			var $fieldset = $('fieldset',$form); // a var because its used/modified more than once.
 			var formObj = $form.serializeJSON();
-//if pid is set as a input in the original form, use it. Otherwise, look for it in data on the container.
+
+			//if pid is set as a input in the original form, use it. Otherwise, look for it in data on the container.
 			formObj.pid = formObj.pid || $form.closest('[data-pid]').attr('data-pid');
 			
 			formObj['sub'] = (SUB) ? SUB : 'SAVE';
 			formObj.panel = panelID;
+
 			if(formObj.pid)	{
-//fieldset is where data is going to get added, so it gets the loading class.
-//be sure do this empty AFTER the form serialization occurs.
+				// fieldset is where data is going to get added, so it gets the loading class.
+				// be sure do this empty AFTER the form serialization occurs.
 				$fieldset.empty().addClass('loadingBG');
-				app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init(formObj,{'callback':'showDataHTML','extension':'admin','targetID':$fieldset.attr('id')},'immutable');
+				app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init(
+					formObj,
+					{'callback':'showDataHTML','extension':'admin','targetID':$fieldset.attr('id')}
+					,'immutable');
 				app.model.dispatchThis('immutable');
 				}
 			else	{
@@ -312,19 +317,25 @@ var admin_prodEdit = function() {
 //			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor");
 //			app.u.dump(" -> P: "); app.u.dump(P);
 			
-			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  //always rewrite savePanel. another 'tab' may change the function.
+			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  
+//always rewrite savePanel. another 'tab' may change the function.
 //kill any calls.
 // NOTE - if the product editor gets a default fetchAdmin call, then this code won't be necessary.
 //it's here to cancel any calls in progress so that if setup then products are clicked quickly, setup doesn't get loaded.
+
 			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
 				app.u.dump("request in progress. Aborting.");
 				app.ext.admin.vars.uiRequest.abort(); //kill any exists requests. The nature of these calls is one at a time.
 				}
 
 			if(!$('#productEditorTemplate').length)	{
-				$(app.u.jqSelector('#',P.targetID)).empty().append(app.renderFunctions.createTemplateInstance('productEditorTemplate'));
+				$(app.u.jqSelector('#',P.targetID)).empty().append(
+					app.renderFunctions.createTemplateInstance('productEditorTemplate')
+					);
 				
-				app.ext.admin_prodEdit.calls.adminProductManagementCategoryList.init({'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},'mutable');
+				app.ext.admin_prodEdit.calls.adminProductManagementCategoryList.init(
+					{'callback':'showMangementCats','extension':'admin_prodEdit','targetID':'manCats'},
+					'mutable');
 				app.model.dispatchThis('mutable');
 				
 				

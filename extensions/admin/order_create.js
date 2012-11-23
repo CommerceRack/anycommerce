@@ -1865,7 +1865,7 @@ the refreshCart call can come second because none of the following calls are upd
 
 //will remove the selected and ui-state-active classes from all address elements within the passed parent div id.
 			removeClassFromChildAddresses : function(parentDivId)	{
-				$(app.u.jqSelector('#'+parentDivId+' address')).each(function() {
+				$(app.u.jqSelector('#',parentDivId+' address')).each(function() {
 					$(this).removeClass('selected  ui-state-active');
 					});				
 				} //removeClassFromChildAddresses
