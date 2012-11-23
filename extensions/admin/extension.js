@@ -876,10 +876,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						}
 //					app.u.dump(" -> tab: "+tab);
 //					app.u.dump(" -> P.targetID: "+P.targetID);
-						
-					$(".tabContent",'#appView').hide(); //hide all tab contents
-					$target.show(); //show focus tab.
-							
+
+					if (! P.dialog ) {						
+						// don't hide tabs on a dialog
+						$(".tabContent",'#appView').hide(); //hide all tab contents
+						$target.show(); //show focus tab.
+						}
+
 					// a force:1 on a navigateTo will always direct us here
 					// $target.attr('data-uri',path);
 					app.ext.admin.u.handleShowSection(path,P,$target);
