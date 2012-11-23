@@ -318,10 +318,10 @@ var admin_prodEdit = function() {
 //			app.u.dump(" -> P: "); app.u.dump(P);
 			
 			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  
-//always rewrite savePanel. another 'tab' may change the function.
-//kill any calls.
-// NOTE - if the product editor gets a default fetchAdmin call, then this code won't be necessary.
-//it's here to cancel any calls in progress so that if setup then products are clicked quickly, setup doesn't get loaded.
+			//always rewrite savePanel. another 'tab' may change the function.
+			//kill any calls.
+			// NOTE - if the product editor gets a default fetchAdmin call, then this code won't be necessary.
+			//it's here to cancel any calls in progress so that if setup then products are clicked quickly, setup doesn't get loaded.
 
 			if(!$.isEmptyObject(app.ext.admin.vars.uiRequest))	{
 				app.u.dump("request in progress. Aborting.");
@@ -360,16 +360,22 @@ var admin_prodEdit = function() {
 					})
 				}
 			else	{
-			//product editor is already on the dom. Right now, only one instance of the editor can be created at a time.
+				//product editor is already on the dom. Right now, only one instance of the editor can be created at a time.
 				}
 
-path = path || "/biz/product/edit.cgi?VERB=WELCOME";
-P.targetID = "productTabMainContent";
-$(app.u.jqSelector('#',P.targetID)).empty().append("<div class='loadingBG'></div>");
-app.model.fetchAdminResource(path,P);
+			// why the hell did it do a fetchAdminResource call ?
+			path = path || "/biz/product/edit.cgi?VERB=WELCOME";
+			P.targetID = "productTabMainContent";
+			$(app.u.jqSelector('#',P.targetID)).empty().append(
+				"<div class='loadingBG'></div>"
+				);
+			app.model.fetchAdminResource(path,P);
+			
+			//$("#productTabMainContent").empty().append(
+			//	app.renderFunctions.createTemplateInstance('productEditorWelcome')
+			//	);
 
-
-				}, //showProductTab 
+			}, //showProductTab 
 
 
 		handleCreateNewProduct : function(P)	{

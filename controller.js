@@ -64,8 +64,8 @@ jQuery.extend(zController.prototype, {
 		
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
-			app.vars.profile = zGlobals.appSettings.profile;
-			app.vars.username = zGlobals.appSettings.username;
+			app.vars.profile = zGlobals.appSettings.profile.toUpperCase();
+			app.vars.username = zGlobals.appSettings.username.toLowerCase();
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			app.vars.secureURL = zGlobals.appSettings.https_app_url;
 			app.vars.sdomain = zGlobals.appSettings.sdomain;
@@ -263,7 +263,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				dispatch : function(obj,tagObj){
 					app.u.dump("Attempting to log in");
 					obj._cmd = 'authAdminLogin';
-					app.vars.userid = obj.userid;
+					app.vars.userid = obj.userid.toLowerCase();	 // important!
 					obj.authtype = "md5";
 					obj.ts = app.u.ymdNow();
 					obj.authid = Crypto.MD5(obj.password+obj.ts);
@@ -1285,13 +1285,14 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 */
 		makeImage : function(a)	{
 		//	app.u.dump('W = '+a.w+' and H = '+a.h);
+
 			a.lib = app.u.isSet(a.lib) ? a.lib : app.vars.username;  //determine protocol
 			a.m = a.m ? 'M' : '';  //default to minimal mode off. If anything true value (not 0, false etc) is passed in as m, minimal is turned on.
-//			app.u.dump('library = '+a.lib);
-			if(a.name == null)
-				a.name = 'i/imagenotfound';
+			app.u.dump('library = '+a.lib);
+			if(a.name == null) { a.name = 'i/imagenotfound'; }
 			
 			var url, tag;
+			// alert(a.lib);		// uncomment then go into media library for some really wonky behavior 
 		
 		//default height and width to blank. setting it to zero or NaN is bad for IE.
 			if(a.h == null || a.h == 'undefined' || a.h == 0)

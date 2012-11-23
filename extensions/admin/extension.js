@@ -786,9 +786,11 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				document.location.hash = path;
 
 				P = P || {};
-				var $target;
-				if(path  && P.dialog)	{
-//This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
+				var $target = undefined;
+				if ( !path ) {
+					}
+				else if ( P.dialog )	{
+					//This isn't done yet. it does open the dialog, but the 'save' within that dialog doesn't work.
 					P.targetID = 'uiDialog';
 					$target = $(app.u.jqSelector('#',P.targetID));
 					if($target.length){} //element exists, do nothing to it.
@@ -801,51 +803,92 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					$target.dialog('open');
 					app.ext.admin.u.handleShowSection(path,P,$target);
 					}
-				else if(path)	{
-
+				else {
 					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
 					$('title').text(path);
-					
-					if(path.substring(0,2) == '#!')	{
-						app.u.dump("Is a native app mode.");
-						//app based content always shows up in whatever tab is in focus.
-						app.ext.admin.u.loadNativeApp(path,P);
+					}
+
+				// SANITY: at this point $target is where we should write to, OR undefined.
+
+				if (!path)	{
+					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
+					}
+				else if(path.substring(0,2) == '#!')	{
+					//app based content always shows up in whatever tab is in focus.
+					app.u.dump(" -> native appMode");
+					// app.ext.admin.u.loadNativeApp(path,P);
+					// loadNativeApp : function(path,P){
+
+					if(path == '#!mediaLibraryManageMode')	{
+						app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+						}
+					else if(path == '#!domainConfigPanel')	{
+						app.ext.admin.a.showDomainConfig();
+						}
+					else if(path == '#!orderPrint')	{
+						app.ext.convertSessionToOrder.a.printOrder(P.oid,P);
+						}
+					else if(path == '#!orderCreate')	{
+						app.ext.convertSessionToOrder.a.openCreateOrderForm();
+						}
+					else if(path == '#!domainConfigPanel')	{
+						app.ext.admin.a.showDomainConfig();
 						}
 					else	{
-					
-						var tab = app.ext.admin.u.getTabFromPath(path);
+						app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+						}
+				
+					}
+				else if(path.substring(0,2) == '#:')	{
+					// note: these IGNORE $target since they specifying a specific tab.
+					// #:setup #:product etc. are links to do 'return nav' which load the previous content
+					// these are the links used along the top bar, and *MIGHT* be used inside content as well
+					var tab = path.substring(2);
+					P.targetID = tab+"Content";	// ex: setupContent
+					// alert(P.targetID);
+					app.ext.admin.vars.focusTabID = P.targetID;
+					$target = $(app.u.jqSelector('#',P.targetID));
+					var reloadTab = 0;
+					if (tab == app.ext.admin.vars.tab)	{ reloadTab = 1; }
+					if ($target.children().length === 0)	{ reloadTab = 1; }
+					if (reloadTab) {
+						// we are moving within the same section - so reset
+						app.u.dump(" -> Moving within same section, Render it.");
+						path = "/biz/"+tab+"/index.cgi";
+						app.ext.admin.u.handleShowSection(path,P,$target);
+						}
+					else {
+						app.u.dump(" -> and the heavens command .. thou shalt not reset the tab.");
+						}
+					$(".tabContent",'#appView').hide(); //hide all tab contents
+					$target.show(); //show focus tab.
+					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.						
+					}
+				else if (path.substring(0,5) == '/biz/') {
+					// a standard compatibility navigateTo (no return nav)
+					app.u.dump("Legacy navigateTo: "+path);
+					var tab = app.ext.admin.u.getTabFromPath(path);
+	
+					if ($target === undefined) {
 						P.targetID = app.ext.admin.u.getId4UIContent(path);
 						app.ext.admin.vars.focusTabID = P.targetID;
 						$target = $(app.u.jqSelector('#',P.targetID));
-	
-	//					app.u.dump(" -> tab: "+tab);
-	//					app.u.dump(" -> P.targetID: "+P.targetID);
-						
-						$(".tabContent",'#appView').hide(); //hide all tab contents
-						$target.show(); //show focus tab.
-							
-						if($target.children().length === 0)	{
-							//this means the section has NOT been opened before.
-	//						app.u.dump(" -> section has NOT been rendered before. Render it.");
-							app.ext.admin.u.handleShowSection(path,P,$target);
-							}
-						else if(tab == app.ext.admin.vars.tab)	{
-							//we are moving within the same section.
-	//						app.u.dump(" -> Moving within same section, Render it.");
-							app.ext.admin.u.handleShowSection(path,P,$target);
-							}
-						else	{
-							app.u.dump(" -> Show last open content");
-							//jumping between sections. content has already been displayed by here. show last open content.
-	
-							}
-	
-						app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 						}
+//					app.u.dump(" -> tab: "+tab);
+//					app.u.dump(" -> P.targetID: "+P.targetID);
+						
+					$(".tabContent",'#appView').hide(); //hide all tab contents
+					$target.show(); //show focus tab.
+							
+					// a force:1 on a navigateTo will always direct us here
+					// $target.attr('data-uri',path);
+					app.ext.admin.u.handleShowSection(path,P,$target);
+					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 					}
 				else	{
-					app.u.throwMessage("Warning! a required param for showUI was not set. path: '"+path+"' and typeof "+obj);
+					app.u.throwMessage("Warning! an unknown path was sent to showUI path: '"+path+"' and typeof "+obj);
 					}
+
 				return false;
 				},
 				
@@ -1064,31 +1107,6 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				}, //showHeader
 
-			//This gets executed from within showUI.  It will load an app instead of compatibility mode content.
-			loadNativeApp : function(path,P){
-		
-				if(path == '#!mediaLibraryManageMode')	{
-					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
-					}
-				else if(path == '#!domainConfigPanel')	{
-					app.ext.admin.a.showDomainConfig();
-					}
-				else if(path == '#!orderPrint')	{
-					app.ext.convertSessionToOrder.a.printOrder(P.oid,P);
-					}
-				else if(path == '#!orderCreate')	{
-					app.ext.convertSessionToOrder.a.openCreateOrderForm();
-					}
-				else if(path == '#!domainConfigPanel')	{
-					app.ext.admin.a.showDomainConfig();
-					}
-				
-				else	{
-					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
-					}
-
-				},
-
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
 			getDomain : function(){
@@ -1130,8 +1148,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin_medialib.u.showPublicFiles(path,P);
 					}
 				else	{
-//					app.u.dump(" -> open something wonderful...");
+					app.u.dump(" -> open something wonderful .. "+path);
 					$target.empty().append("<div class='loadingBG'></div>");
+//					alert(path);
 					app.model.fetchAdminResource(path,P);
 					}
 				},
@@ -1139,15 +1158,23 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 			getId4UIContent : function(path){
 				return this.getTabFromPath(path)+"Content";
 				},
-			
+
+			// returns things like setup, crm, etc. if /biz/setup/whatever is selected			
 			getTabFromPath : function(path)	{
 				var r = path.split("/")[2]; //what is returned.
 //				app.u.dump(" -> R: "+r);
 //				app.u.dump(" -> app.ext.admin.vars.tabs.indexOf(r): "+app.ext.admin.vars.tabs.indexOf(r));
-				if(r == 'manage'){ r = 'utilities'} //symlinked
+				if (r == 'manage') { r = 'utilities'} //symlinked
+				if (r == 'batch') { r = 'reports'} //symlinked
+				if (r == 'download') { r = 'reports'} //symlinked
+				if (r == 'todo') { r = 'reports'} //symlinked
 				if(app.ext.admin.vars.tabs.indexOf(r) >= 0){ //is a supported tab.
+					// yay, we have a valid tab				
 					} 
-				else	{r = 'home'} //default
+				else	{
+					// default tab
+					r = 'home'
+					}
 				return r;
 				},
 	

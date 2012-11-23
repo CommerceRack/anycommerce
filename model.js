@@ -778,7 +778,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); //app.u.dump(responseData);
 			app.vars.deviceid = responseData.deviceid;
 			app.vars.authtoken = responseData.authtoken;
-			app.vars.userid = responseData.userid;
+			app.vars.userid = responseData.userid.toLowerCase();
 			app.vars.thisSessionIsAdmin = true;
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
