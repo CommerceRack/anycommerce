@@ -39,11 +39,14 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 
 // markitup is a combo wiki+html editor
 // http://markitup.jaysalvat.com/documentation/
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.markitup.js']);
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/set.js']);
-app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/style.css']);
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/set.js']);
-app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/style.css']);
+// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.markitup.js']);
+// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/set.js']);
+// app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/style.css']);
+// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/set.js']);
+// app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/style.css']);
+
+// jHTMLArea - http://jhtmlarea.codeplex.com/
+// app.rq.push(['script',1,app.vars.baseURL+'
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
@@ -128,7 +131,7 @@ $(document).ready(function(){
 // ----------------------------------------------------------------------------
 markItUpWikiSettings = {
     nameSpace:          "wiki", // Useful to prevent multi-instances CSS conflict
-    previewParserPath:  "~/sets/wiki/preview.php",
+    // previewParserPath:  "~/sets/wiki/preview.php",
     onShiftEnter:       {keepDefault:false, replaceWith:'\n\n'},
     markupSet:  [
         {name:'Heading 1', key:'1', openWith:'== ', closeWith:' ==', placeHolder:'Your title here...' },
