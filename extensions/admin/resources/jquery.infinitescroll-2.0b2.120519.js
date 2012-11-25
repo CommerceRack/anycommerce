@@ -294,7 +294,7 @@
 
         // Custom error
         _error: function infscr_error(xhr) {
-
+app.u.dump("REACHED ERROR SECTION");
             var opts = this.options;
 
             // if behavior is defined and this function is extended, call that instead of default
@@ -322,7 +322,7 @@
 
         // Load Callback
         _loadcallback: function infscr_loadcallback(box, data) {
-
+			app.u.dump(" In _loadcallback");
             var opts = this.options,
             callback = this.options.callback, // GLOBAL OBJECT FOR CALLBACK
             result = (opts.state.isDone) ? 'done' : (!opts.appendCallback) ? 'no-append' : 'append',
@@ -349,9 +349,10 @@
 				case 'append':
 					var children = box.children();
 					// if it didn't return anything
-					if (children.length === 0) {
+					//if local dataType (medialib), you must handle your own 'disable' for reaching the end. 
+					if (children.length === 0 && opts.dataType != 'local') {
 						return this._error('end');
-					}
+						}
 
 					// use a documentFragment because it works when content is going into a table or UL
 					frag = document.createDocumentFragment();
@@ -546,8 +547,8 @@
 					method += '+callback';
 					}
 				}
-			console.log(" -> opts.dataType: "+opts.dataType);
-			console.log(" -> METHOD: "+method);
+//			console.log(" -> opts.dataType: "+opts.dataType);
+//			console.log(" -> METHOD: "+method);
 			switch (method) {
 
 //added by JT.
@@ -555,17 +556,19 @@
 //but only a selection are shown at the outset.
 				case 'local':
 					instance._debug('Using local method');
-//					console.dir(box);
-//					instance._loadcallback(box, jqXHR.responseText);
 
-					var $tag = $('#mediaLibInfiniteScroller ul:first'); //target for adding media files to.
+					var $tag = $('#mediaFilesUL'); //target for adding media files to.
+					var dataBind = app.renderFunctions.parseDataBind($tag.data('bind'));
+					dataBind.startpoint = $tag.children().length;
+					app.u.dump(" -> dataBind: "); app.u.dump(dataBind);
+					
 					var fname = $tag.data('fname'); //folder name.
 					app.u.dump(" -> fname: "+fname);
 					app.ext.admin_medialib.renderFormats.mediaList($tag,{
 						value : app.data['adminImageFolderDetail|'+fname]['@images'],
-						bindData : {'startpoint' : $tag.children.length,'loadsTemplate':'mediaFileTemplate'}
+						bindData : dataBind
 						});
-					instance._loadcallback(box, 'success');
+					instance._loadcallback(box, 'done');
 					break;
 
 				case 'html+callback':

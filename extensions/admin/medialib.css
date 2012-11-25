@@ -20,7 +20,7 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 
 
-/* #mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:250px; overflow:auto;} /* actual height will get overwritten w/ JS. */
+#mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:350px; overflow:auto;} /* actual height will get overwritten w/ JS. */
 
 /*
 buttons are shown by default and turned off when not needed.
@@ -37,8 +37,10 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
  * https://github.com/blueimp/jQuery-File-Upload
 */
 
- /* .fileUploadButtonBar	{display:none;}hidden by default in some cases. shown after 'add files' button clicked */
+ /* .fileUploadButtonBar	{display:none;}hidden by default in some cases. shown after 'add files' button clicked
 
+#mediaLibraryFileUploadTable	{max-height:250px; overflow:auto;}
+ */
 .fileUploadFormContainer .nav-collapse,
 .fileUploadFormContainer ul.nav,
 .fileUploadFormContainer ul.nav li {

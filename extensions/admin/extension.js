@@ -889,7 +889,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					app.ext.admin.vars.tab = tab; //do this last so that the previously selected tab can be used.
 					}
 				else	{
-					app.u.throwMessage("Warning! an unknown path was sent to showUI path: '"+path+"' and typeof "+obj);
+					app.u.throwMessage("Warning! an unknown path was sent to showUI path: '"+path+"' and typeof "+typeof P);
 					}
 
 				return false;

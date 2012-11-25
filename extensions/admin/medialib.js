@@ -227,7 +227,6 @@ else	{
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.infinitescroll-2.0b2.120519.js']); //used for infinite scrolling
 
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
@@ -245,6 +244,8 @@ setTimeout(function(){
 	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-jui.js']); //The File Upload jqueryui plugin
 	},3000);
 
+
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.infinitescroll-2.0b2.120519.js']); //used for infinite scrolling
 
 //mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
 //B may also trigger medialibrary by linking to #mediaLibModeManage. This case gets handled in admin.u.handleLinkRewrites.
@@ -568,8 +569,8 @@ setTimeout(function(){
 //				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
 				var startpoint = data.bindData.startpoint || 0;
-				var itemsPerPage = 12;
-				var media = data.value //.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
+				var itemsPerPage = 20;
+				var media = data.value // .slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
 				$tag.removeClass('loadingBG');
@@ -600,33 +601,40 @@ setTimeout(function(){
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
 
-/*				
+/*
 				if(startpoint === 0)	{
-app.u.dump(" -> startpoint is zero. init infiniteZoom");
+var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
+//app.u.dump(" -> startpoint is zero. init infiniteZoom");
+
 //http://stackoverflow.com/questions/7936270/jquery-infinite-scroll-reset/11151931#11151931
-$('#mediaLibInfiniteScroller').infinitescroll('destroy'); $('#mediaLibInfiniteScroller').data('infinitescroll', null);//destroy existing so scroll starts afresh.
-	
-$('#mediaLibInfiniteScroller').infinitescroll({
+$scrollContainer.infinitescroll('destroy'); //when changing folders, start infinitescroll over to properly reflect files from the folder in focus.
+$scrollContainer.data('infinitescroll', null); //to truly destroy, data must be reset. (a bug in infinitescroll maybe?)
+$scrollContainer.scrollTop(0); //and move scrollbar to top. if bar at bottom, will initiate scroll behavior
+
+$scrollContainer.infinitescroll({
 	// callback		: function () { console.log('using opts.callback'); },
 	navSelector  	: "a#nextMediaFilesPage:last",
 	nextSelector 	: "a#nextMediaFilesPage:last",
 	itemSelector 	: "#mediaLibInfiniteScroller li",
-	debug		 	: true,
+	debug		 	: false,
+	bufferPx : 10,
+	extraScrollPx: 10,
 	behavior: "local",
 	binder: $("#mediaLibInfiniteScroller"),
 	dataType	 	: 'local',
-	appendCallback	: true // USE FOR PREPENDING
-})
+	appendCallback	: false // USE FOR PREPENDING
+	})
 
 					}
+
 //this is a request for a page beyond the # of pages for this folder.
-				else if(startpoint > data.value.length)	{
+				else if(startpoint >= data.value.length)	{
 app.u.dump(" -> Got to code to 'end' infinitescroll");
 $('#mediaLibInfiniteScroller').infinitescroll({                      
-state: {
-isDone: true
-}
-});
+	state: {
+		isDone: true
+		}
+	});
 	
 
 					}
