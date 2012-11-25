@@ -18,6 +18,10 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 .selectAddFolderChoices li	{margin: 3px; padding: 0.4em;}
 
+
+
+/* #mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:250px; overflow:auto;} /* actual height will get overwritten w/ JS. */
+
 /*
 buttons are shown by default and turned off when not needed.
 buttons are disabled by adding a class to a parent container. That way, buttons can easily be turned on/off by adding/removing that class.

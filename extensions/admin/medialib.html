@@ -104,7 +104,9 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 </tr>
 <tr>
 	<td id='mediaLibFolderList'>
-	<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+	<div id='mediaLibFolderContainer'>
+		<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+	</div>
 	</td>
 	<td id='mediaLibFileList'>
 	<div class='welcomeMessage'>
@@ -113,8 +115,12 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		<p>To delete a folder, open it and as long as it has no child-folders, you'll be able to delete it. If children are present, delete them first.</p>
 		<p>You can upload individual image files or zip files with multiple images. you can also drag from your desktop into the upload area.</p>
 	</div>
-	<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight'>
-	</ul>
+	<div id='mediaLibInfiniteScroller' class='displayNone'>
+		<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight'></ul>
+	</div>
+	<!-- infiniteScroll REALLY wants some sort of legacy next link. infinite scroll will break if you remove this. -->
+	<a id="nextMediaFilesPage" href="?page=2" class='displayNone'>next page?</a>
+
 	</td>
 </tr>
 </table>

@@ -227,6 +227,8 @@ else	{
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.infinitescroll-2.0b2.120519.js']); //used for infinite scrolling
+
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/medialib.css','admin_medialib']); //our native css for presentation.
@@ -558,11 +560,17 @@ setTimeout(function(){
 
 //the click event is added to the image, not the li. Otherwise, any elements added (such as the delete or details button), the click event would trickle to.
 //The data is set on the li though, so that any elements added, such as the checkbox, could look up that info easily through closest(li).data()
+//this function is executed in infinitscroll as well
+//infinitescroll is started, but not done. uncomment the second half of line 571 (var media) and the big chunk of commented code starting on 602.
+//plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
-
+				
 //				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
-				var L = data.value.length;
+				var startpoint = data.bindData.startpoint || 0;
+				var itemsPerPage = 12;
+				var media = data.value //.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
+				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
 				$tag.removeClass('loadingBG');
 
@@ -572,11 +580,13 @@ setTimeout(function(){
 					for(var i = 0; i < L; i += 1)	{
 //update data.value[i] with path and id, then pass this entire object into transmogrify so all the values are stored in data for use later on
 //SANITY - FName is set to be consistent when this data is passed for interpolation (transmogrify param 3), but when data- is set (param 1) lowercase is used for browser compatiblity.
-						data.value[i].path = FName+"/"+data.value[i].Name;
-						data.value[i].FName = FName;
-						data.value[i].id = 'mediaFile_'+i;
-						$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]));
+						media[i].path = FName+"/"+media[i].Name;
+						media[i].FName = FName;
+						media[i].id = 'mediaFile_'+(startpoint+i);
+						$tag.append(app.renderFunctions.transmogrify(media[i],data.bindData.loadsTemplate,media[i]));
 						}
+
+
 //mode is set on the UL when the media library is initialized or reopened.
 					if($tag.data('mode') == 'manage')	{
 						$tag.addClass('hideBtnSelect')
@@ -590,10 +600,44 @@ setTimeout(function(){
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
 
+/*				
+				if(startpoint === 0)	{
+app.u.dump(" -> startpoint is zero. init infiniteZoom");
+//http://stackoverflow.com/questions/7936270/jquery-infinite-scroll-reset/11151931#11151931
+$('#mediaLibInfiniteScroller').infinitescroll('destroy'); $('#mediaLibInfiniteScroller').data('infinitescroll', null);//destroy existing so scroll starts afresh.
+	
+$('#mediaLibInfiniteScroller').infinitescroll({
+	// callback		: function () { console.log('using opts.callback'); },
+	navSelector  	: "a#nextMediaFilesPage:last",
+	nextSelector 	: "a#nextMediaFilesPage:last",
+	itemSelector 	: "#mediaLibInfiniteScroller li",
+	debug		 	: true,
+	behavior: "local",
+	binder: $("#mediaLibInfiniteScroller"),
+	dataType	 	: 'local',
+	appendCallback	: true // USE FOR PREPENDING
+})
+
+					}
+//this is a request for a page beyond the # of pages for this folder.
+				else if(startpoint > data.value.length)	{
+app.u.dump(" -> Got to code to 'end' infinitescroll");
+$('#mediaLibInfiniteScroller').infinitescroll({                      
+state: {
+isDone: true
+}
+});
+	
+
+					}
+				else{}
+*/
+
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
 					}
+
 				} //mediaList
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -734,6 +778,7 @@ $(selector).fileupload(
 //FName is the folder name (pretty). FID won't work.
 			showMediaFor : function(P,Q)	{
 				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
+				$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
 				if(P.selector && P.FName)	{
 					$(P.selector + ' ul').empty().addClass('loadingBG');
 					P.callback = 'translateSelector'
