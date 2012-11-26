@@ -713,22 +713,19 @@ $(selector).fileupload({
 	});
 //$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
 
-function ajaxOnComplete() {
-	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
-	var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-
-	app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
-	app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
-	app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
-	app.model.dispatchThis('immutable');
-	}
-
-
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
-	$(selector).on('fileuploadstopped',ajaxOnComplete());
-	}
+	$(selector).bind('fileuploadstopped',function(){
+		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
+		app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
+		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
+		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
+		app.model.dispatchThis('immutable');
+		});
+
+	}
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
 	'option',
