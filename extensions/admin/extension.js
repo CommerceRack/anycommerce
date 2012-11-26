@@ -1143,7 +1143,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
-					$('#setupContent').append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
+					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
 					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
