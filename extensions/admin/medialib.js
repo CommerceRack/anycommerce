@@ -726,7 +726,7 @@ function fileuploadstopped() {
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
 	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
-	$(selector).on('fileuploadstopped.jqfu',fileuploadstopped())
+	$(selector).off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 	}
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
