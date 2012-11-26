@@ -570,7 +570,7 @@ setTimeout(function(){
 //				app.u.dump(data.value);
 				var startpoint = data.bindData.startpoint || 0;
 				var itemsPerPage = 20;
-				var media = data.value // .slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
+				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
 				$tag.removeClass('loadingBG');
@@ -601,7 +601,7 @@ setTimeout(function(){
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
 
-/*
+
 				if(startpoint === 0)	{
 var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
 //app.u.dump(" -> startpoint is zero. init infiniteZoom");
@@ -639,7 +639,7 @@ $('#mediaLibInfiniteScroller').infinitescroll({
 
 					}
 				else{}
-*/
+
 
 					}
 				else	{

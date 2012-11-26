@@ -117,6 +117,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	</div>
 	<div id='mediaLibInfiniteScroller' class='displayNone'>
 		<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight clearfix' id='mediaFilesUL'></ul>
+		<p></p><!-- here for infinite scroll. -->
 	</div>
 	<!-- infiniteScroll REALLY wants some sort of legacy next link. infinite scroll will break if you remove this. -->
 	<a id="nextMediaFilesPage" href="?page=2" class='displayNone'>next page?</a>

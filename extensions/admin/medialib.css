@@ -20,7 +20,7 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 
 
-/* #mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:350px; overflow:auto;} /* actual height will get overwritten w/ JS. */
+#mediaLibFolderContainer, #mediaLibInfiniteScroller	{height:350px; overflow:auto;} /* actual height will get overwritten w/ JS. */
 
 /*
 buttons are shown by default and turned off when not needed.
