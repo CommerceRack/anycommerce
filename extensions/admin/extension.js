@@ -40,7 +40,7 @@ calls
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate'); 
 	var r = {
 		
 	vars : {
@@ -1099,7 +1099,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					// alert('hello');
 					// }
 				
-				if (! domain) {
+				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); 
 					}
@@ -1141,6 +1141,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					}
+				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
+					$('#setupContent').append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
 					app.u.dump(" -> open import editor");

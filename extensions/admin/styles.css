@@ -34,7 +34,7 @@ button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for butt
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-.lookLikeLink	{cursor:pointer; color:#0066CC;} /* apply to text that has an onCLick but needs to look like an href */
+.lookLikeLink, .ui-widget-content a	{cursor:pointer; color:#0066CC;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick.
 
 
@@ -51,7 +51,7 @@ using these shared margins will help make the UI more consistent.
 .marginTop	{margin-top:12px;}
 .marginBottom	{margin-bottom:12px;}
 .stdMargin	{margin:12px;}
-.stdPadding	{12px;}
+.stdPadding	{padding:12px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
