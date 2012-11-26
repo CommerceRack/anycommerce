@@ -9,13 +9,16 @@ this is intended to provide a local http based webserver with proxy capabilities
 i tried valiently to get https working, but alas node.js support sucked at doing the "CONNECT"
 call I needed.
 
-the idea here to serve YOUR local files directly to the browser as if they were at www.domain.com
-currently the proxy is hardcoded to a predefined path ex: /biz/app to lookup files, but will pass
-on any other requests NOT at the path to the original host. Ex: api calls, graphics, etc.
+the idea here is to serve YOUR local files directly to the browser as if they were at 
+www.domain.com/pre/defined/path
 
-This creates a situation where the browser THINK's it's loading all the files off production, 
-but in reality it's loading local copies.  It stops the preflight/CORS situations.  This not only
-makes reloads smoking fast -- but also means there is no need to push to github and wait to see
+currently the proxy is hardcoded to a predefined path www.zoovy.com/biz/app/* for file lookup.
+anything other than the predefined path will be passed along to the actual www.zoovy.com 
+
+This creates a situation where the browser THINK's it's loading all the files off www.domain.com, 
+but in reality it's loading local copies.  Since the browser doesn't know any better - it prevents 
+the preflight/CORS situations.  
+It also makes reloads smoking fast -- and it means there is no need to push to github and wait to see
 how things look on production.
 
 TO SETUP (ON WINDOWS)
