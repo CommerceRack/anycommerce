@@ -678,19 +678,10 @@ var successCallbacks = {
 		var L = data.length;
 		var tagObj;
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-
 		for(var i = 0; i < L; i += 1)	{
 			data[i].folder = folderName;
 			app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 			}
-
-//update memory/localStorage with folder contents.
-//no callback needed on any of the requests for updating the folders. A 'click' on the folder will get triggered on reload. to open it and it's new contents.
-		app.model.destroy('adminImageFolderDetail|'+folderName);
-		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable');
-		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
-		//dispatch occurs as part of the fileuploadstopped bind specific to the media lib.
-
 		},
 	'publicFileUpload' : function(data,textStatus)	{
 		app.u.dump("Got to csvUploadToBatch success.");
@@ -720,19 +711,19 @@ $(selector).fileupload({
 		}
 	});
 //$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
-/* 
-action handled in success callback above. this redundant? commented out on 2012-11-26 by jt
 
+//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
 	$(selector).bind('fileuploadstopped',function(){
+		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+
+		app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
+		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
-		app.u.dump("Gets run just once");
 		});
 
 	}
-
-*/
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
 	'option',
