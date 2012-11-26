@@ -48,6 +48,12 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.show
 // jHTMLArea - http://jhtmlarea.codeplex.com/
 // app.rq.push(['script',1,app.vars.baseURL+'
 
+// jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/
+app.rq.push(['css',1,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.css']);
+app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.js']);
+app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ui.position.js']);
+
+
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
 app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.js']);

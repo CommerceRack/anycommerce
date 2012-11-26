@@ -62,17 +62,40 @@ var server = httpProxy.createServer(
   // performing async actions before proxying a request
   //
   
+
   
+ //  setTimeout(function () {
+
+	if (req.url.substr(0,29) == 'http://www.zoovy.com/biz/app/') {
+		/* local disk */
+		console.log('URL: ' + req.url);
+		req.url = req.url.substring(0,21)+"/"+req.url.substring(29);	// strip the /biz/app from url
+		proxy.proxyRequest(req, res, {
+			host: 'localhost',
+			port: HTTP_PROXY_PORT+2
+		});
+		}
+	else if (1) {
+		req.headers['user-agent'] = 'TeSTin';		/// special user agent that does not redirect to https
+		var proxy = new httpProxy.HttpProxy({ 
+		target: {
+			port : 80,
+			host : req.headers.host,
+			},
+		});
+		proxy.proxyRequest(req, res);
+		proxy.on('data', function() { console.log(data);});
+		}
+	else if (1) {
+		// debug data
+		proxy.proxyRequest(req, res, {
+			host: 'localhost',
+			port: HTTP_PROXY_PORT+1
+		});
+		}
+		
+//   }, SIMULATED_LATENCY);
   
-   // setTimeout(function () {
-     // proxy.proxyRequest(req, res, {
-      //host: '127.0.0.1',
-      //port: HTTP_PROXY_PORT+1, 
-	  // host: '192.168.99.12',
-	  // port: '80',
-      // buffer: buffer
-    // });      
-  // }, SIMULATED_LATENCY);
   // var options = {
   // router: {
 	// hostnameOnly: false,
@@ -82,23 +105,6 @@ var server = httpProxy.createServer(
   // }
 // };
 
-	console.log(req);
-	req.headers['user-agent'] = 'TeSTin';
-	var proxy = new httpProxy.HttpProxy({ 
-		target: {
-			// port : ip[0], host : ip[1]
-			// url : req.url
-			port : 80,
-			host : req.headers.host,
-			},
-		headers: {
-		'User-Agent': 'TeSTin'
-		},
-
-	});
-
-   proxy.proxyRequest(req, res);
-   proxy.on('data', function() { console.log(data);});
    
 }).listen(HTTP_PROXY_PORT);
 
@@ -156,12 +162,13 @@ var dirHTTPD = require("http"),
 dirHTTPD.createServer(function(request, response) {
 
   var LOCAL_ROOT_DIR = process.cwd()+"/../../";
-  
+ 
   var uri = url.parse(request.url).pathname
     , filename = path.join(LOCAL_ROOT_DIR, uri);
 
+  console.log("LOCAL FILE: "+filename);
 	
-  path.exists(filename, function(exists) {
+  fs.exists(filename, function(exists) {
     if(!exists) {
       response.writeHead(404, {"Content-Type": "text/plain"});
       response.write("404 Not Found\n");
