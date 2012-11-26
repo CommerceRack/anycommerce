@@ -562,7 +562,7 @@ setTimeout(function(){
 //the click event is added to the image, not the li. Otherwise, any elements added (such as the delete or details button), the click event would trickle to.
 //The data is set on the li though, so that any elements added, such as the checkbox, could look up that info easily through closest(li).data()
 //this function is executed in infinitscroll as well
-//infinitescroll is started, but not done. uncomment the second half of line 571 (var media) and the big chunk of commented code starting on 602.
+//infinitescroll is started, but not done. uncomment the second half of line 573 (var media) and the big chunk of commented code starting on 602.
 //plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
 				
@@ -570,7 +570,7 @@ setTimeout(function(){
 //				app.u.dump(data.value);
 				var startpoint = data.bindData.startpoint || 0;
 				var itemsPerPage = 20;
-				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
+				var media = data.value; //.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
 				$tag.removeClass('loadingBG');
@@ -600,7 +600,7 @@ setTimeout(function(){
 						}
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
-
+/*
 
 				if(startpoint === 0)	{
 var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
@@ -639,7 +639,7 @@ $('#mediaLibInfiniteScroller').infinitescroll({
 
 					}
 				else{}
-
+*/
 
 					}
 				else	{
