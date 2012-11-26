@@ -320,7 +320,7 @@ setTimeout(function(){
 
 		handleImageUpload : {
 			onSuccess : function(tagObj){
-				$("[data-filename='"+app.u.jqSelector('',tagObj.filename)+"']",$('#mediaLibraryFileUploadTable')).slideUp(1000,function(){$(this).empty().remove()})
+				$("[data-filename='"+app.u.jqSelector('',tagObj.filename)+"']",$('#mediaLibraryFileUploadTable')).slideUp(1000)
 				}
 			},
 		handleMediaLibUpdate : {
