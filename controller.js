@@ -114,6 +114,9 @@ copying the template into memory was done for two reasons:
 
 		}, //initialize
 
+
+//This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
+//after login, the admin vars are set in the model.
 	handleAdminVars : function(){
 //		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}

@@ -296,15 +296,12 @@ You are Logged in as: <span class='username'></span> <span class='domain lookLik
 <hr />
 
 
+<button onClick="localStorage.clear();">Nuke LocalStorage</button>
 <button onClick="app.ext.admin.a.showDomainConfig();">domainConfig</button>
 
 <button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
 <button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
-<button onClick="showUI('/biz/setup/builder/index.cgi?ACTION=INITEDIT&FORMAT=PAGE&PG=.1234&FS=C');">Edit Page .1234</button>
-<button onClick="app.ext.admin_prodEdit.a.showPanelsFor('OUTFIT');">Edit PID OUTFIT</button>
-
 <button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
-<button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 <button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
 <button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
