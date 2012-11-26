@@ -676,32 +676,18 @@ var successCallbacks = {
 //The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 	'mediaLibrary' : function(data,textStatus){
 		var L = data.length;
-		var $ul = $('.dataMap',$('#mediaLibUploadForm')); //container of data mapping (a ul). each li contains a filename and fname data attribute.
-		var $li,tagObj;
-		var folders = new Array(); //a list of folders that were updated. will be used to compile a list of
-//NOTE - files used to upload to whatever folder was when the file was selected.
-//caused some issues and JT is away from office. stop gap soltion.  !!!
-
-var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+		var tagObj;
+		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 		for(var i = 0; i < L; i += 1)	{
-//fname is the foldername
-//			$li = $("[data-filename="+app.u.jqSelector('',data[i].filename)+"]",$ul);
-
 			data[i].folder = folderName;
-//			app.u.dump(i+"). "+data[i].filename+" goes into: "+data[i].folder);
-		//append to list of folders if not already there.
-			if($.inArray(data[i].folder,folders) == -1){folders.push(data[i].folder)}
 			app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
-//			$li.empty().remove(); //remove this from list so future lookups are quicker.
-			}
-		//update memory/localStorage with folder contents.
-		for(var index in folders)	{
-			//no callback needed on any of the requests for updating the folders. A 'click' on the folder will get triggered on reload. to open it and it's new contents.
-			app.model.destroy('adminImageFolderDetail|'+folders[index]);
-			app.ext.admin_medialib.calls.adminImageFolderDetail.init(folders[index],{},'immutable');
 			}
 
+//update memory/localStorage with folder contents.
+//no callback needed on any of the requests for updating the folders. A 'click' on the folder will get triggered on reload. to open it and it's new contents.
+		app.model.destroy('adminImageFolderDetail|'+folderName);
+		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable');
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		//dispatch occurs as part of the fileuploadstopped bind specific to the media lib.
 
@@ -732,28 +718,21 @@ $(selector).fileupload({
 //		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 		successCallbacks[mode](data,textStatus);
 		}
-	})
+	});
+//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
+/* 
+action handled in success callback above. this redundant? commented out on 2012-11-26 by jt
 
 if(mode == 'mediaLibrary')	{
 	$(selector).bind('fileuploadstopped',function(){
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
 		app.u.dump("Gets run just once");
-		}).bind('fileuploadadd', function (e, data) {
-		var fname = app.ext.admin_medialib.u.getOpenFolderName(); //save var so that lookup only needs to occur once instead of in each iteration.
-		var $li; //recycled in loop. jq object of the row in the file table.
-		var L = data.files.length; //an array of the files just added.
-
-//this bind adds fname to an li in a ul that holds the list of uploads.
-//its used in the callback to set which folder should be used when moving the file from the tmp folder to the media lib.
-//can't use the table because the JQ file upload plugin rewrites that before the success response is executed and any data attribs are lost.
-		for(var i = 0; i < L; i += 1)	{
-			$li = $("<li \/>").attr({'data-filename':data.files[i].name,'data-fname':fname}).text(fname);
-			$('.dataMap',$(this)).append($li);
-			}
 		});
+
 	}
 
+*/
 // Enable iframe cross-domain access via redirect option:
 $(selector).fileupload(
 	'option',
