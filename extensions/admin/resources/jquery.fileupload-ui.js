@@ -83,6 +83,7 @@
             // widget (via file input selection, drag & drop or add API call).
             // See the basic file upload widget for more information:
             add: function (e, data) {
+				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
                 var that = $(this).data('fileupload'),
                     options = that.options,
                     files = data.files;
