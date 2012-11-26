@@ -667,7 +667,7 @@ $('#mediaLibInfiniteScroller').infinitescroll({
 
 			convertFormToJQFU : function(selector,mode)	{
 
-
+app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
 
 
 'use strict';
@@ -715,6 +715,7 @@ $(selector).fileupload({
 
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
+	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 	$(selector).bind('fileuploadstopped',function(){
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
