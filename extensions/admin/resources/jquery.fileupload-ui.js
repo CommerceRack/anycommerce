@@ -139,7 +139,7 @@
             },
             // Callback for successful uploads:
             done: function (e, data) {
-				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
+//				app.u.dump("jquery.fileupload-ui.js data.files: "); app.u.dump(data.files);
                 var that = $(this).data('fileupload'),
                     template;
                 if (data.context) {

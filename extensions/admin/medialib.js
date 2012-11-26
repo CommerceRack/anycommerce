@@ -697,6 +697,7 @@ var successCallbacks = {
 		}
 	}
 
+//add domain to form so that it gets passed along to fileupload.cgi
 $(selector).append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
 
 // Initialize the jQuery File Upload widget:
@@ -715,6 +716,7 @@ $(selector).fileupload({
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
 	$(selector).bind('fileuploadstopped',function(){
+		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 		app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
@@ -812,6 +814,7 @@ $(selector).fileupload(
 				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
 //if no slashes or periods, is a root category.
 				if(path && path.indexOf('/') == -1 && path.indexOf('.') == -1){
+					app.u.dump(" -> is a root folder.");
 					$('#mediaRootFolder_'+path+' a:first').click();
 					}
 				else if(path)	{
@@ -848,7 +851,7 @@ $(selector).fileupload(
 
 			resetAndGetMediaFolders : function(Q)	{
 				$('ul','#mediaLibFolderList').addClass('loadingBG').children().remove(); //folders will be re-added later.
-				app.model.destroy('adminImageFolderList');
+				app.model.destroy('adminImageFolderList'); //clear memory and local storage to ensure request is made.
 				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},Q);
 				},
 
