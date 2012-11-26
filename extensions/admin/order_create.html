@@ -407,6 +407,8 @@ likely, this will be used anywhere an invoice is shown.
 	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
 	<span data-bind='var:order(bill/lastname);format:text;'></span>
 </h4>
+<div data-bind='var:order(bill/email);format:text;'></div>
+<div data-bind='var:order(bill/phone);format:text;'></div>
 <div data-bind='var:order(bill/address1);format:text;'></div>
 <div data-bind='var:order(bill/address2);format:text;'></div>
 <div>
@@ -424,6 +426,8 @@ likely, this will be used anywhere an invoice is shown.
 	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
 	<span data-bind='var:order(ship/lastname);format:text;'></span>
 </h4>
+<div data-bind='var:order(ship/email);format:text;'></div>
+<div data-bind='var:order(ship/phone);format:text;'></div>
 <div data-bind='var:order(ship/address1);format:text;'></div>
 <div data-bind='var:order(ship/address2);format:text;'></div>
 <div>
@@ -452,13 +456,14 @@ likely, this will be used anywhere an invoice is shown.
 <!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 <h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
 <h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(sum/shp_method);format:text; pretext:Ship Method: ;'></h5>
 </hgroup>
 <br />
 	</td>
 </tr>
 <tr>
 	<td colspan='2'>
-	<div dat-bind="var:order(want/order_notes); format:text; before:<h2>Notes</h2>; after:<br>;"></div>
+	<div data-bind="var:order(want/order_notes); format:text; before:<h2>Notes</h2>; after:<br>;"></div>
 	</td>
 </tr>
 <tr>
