@@ -1144,6 +1144,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
 					$('#setupContent').append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
+					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
 					app.u.dump(" -> open import editor");
