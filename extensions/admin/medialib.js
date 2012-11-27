@@ -568,8 +568,8 @@ setTimeout(function(){
 				
 //				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
-				var startpoint = data.bindData.startpoint || 0;
-				var itemsPerPage = 20;
+				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
+				var itemsPerPage = 12;
 				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
@@ -601,45 +601,46 @@ setTimeout(function(){
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
 
-
-				if(startpoint === 0)	{
 var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
-//app.u.dump(" -> startpoint is zero. init infiniteZoom");
-
-//http://stackoverflow.com/questions/7936270/jquery-infinite-scroll-reset/11151931#11151931
-$scrollContainer.infinitescroll('destroy'); //when changing folders, start infinitescroll over to properly reflect files from the folder in focus.
-$scrollContainer.data('infinitescroll', null); //to truly destroy, data must be reset. (a bug in infinitescroll maybe?)
-$scrollContainer.scrollTop(0); //and move scrollbar to top. if bar at bottom, will initiate scroll behavior
-
-$scrollContainer.infinitescroll({
-	// callback		: function () { console.log('using opts.callback'); },
-	navSelector  	: "a#nextMediaFilesPage:last",
-	nextSelector 	: "a#nextMediaFilesPage:last",
-	itemSelector 	: "#mediaLibInfiniteScroller ul",
-	debug		 	: false,
-	bufferPx : 10,
-	extraScrollPx: 10,
-	behavior: "local",
-	binder: $("#mediaLibInfiniteScroller"),
-	dataType	 	: 'local',
-	appendCallback	: false // USE FOR PREPENDING
-	})
-
-					}
-
-//this is a request for a page beyond the # of pages for this folder.
-				else if(startpoint >= data.value.length)	{
-app.u.dump(" -> Got to code to 'end' infinitescroll");
-$('#mediaLibInfiniteScroller').infinitescroll({                      
-	state: {
-		isDone: true
-		}
-	});
+if(data.value.length > itemsPerPage)	{
+	if(startpoint === 0)	{
+	//folder was just loaded. add the infinite scroller.
+		app.u.dump("Init infiniteScroll");
+	//always jump to the top on a new instantiation. if it starts at bottom, will continually trigger more content.
+	//SANITY - don't put this into the 'on' event or scrolling is disabled.
+		$scrollContainer.scrollTop(0); 
+		
+		//remove any pre-existing infinite scroll instantiation (so scroll bind doesn't get added multiple times)
+		$scrollContainer.off('scroll.infinite').on('scroll.infinite',function() {
+			var $container = $(this);
+			var contentHeight = $("ul",$(this)).height(); //the height of the content within the scolling box.
+		
+	//the scrolltop() val is the number of pixels the scrollbar is from the top of containerHeight
+	// -> SANITY: scrollTop subtracts the value of (content height + scrollbarheight).  Ex below:
+	// 		If containerHeight is 250, contentHeight is 1000 and scrollbarheight is 10, at half way down, scrolltop will = 240.
+	//		scrollbar height is dependent on the theme used. typically 10-20.  70 is used as a precaution and to trigger load when 'close' to bottom
 	
-
-					}
-				else{}
-
+			if($(this).scrollTop() > (contentHeight - $container.height() - 70))	{
+	//			console.log('at or near the bottom');
+				var fname = $tag.data('fname'); //folder name.
+	//			app.u.dump(" -> fname: "+fname);
+				var $li = $("<li \/>").addClass('loadingBG'); //add temporary loading graphic as last lineitem. indicates something is happening.
+				app.ext.admin_medialib.renderFormats.mediaList($tag,data);
+				$li.empty().remove(); //remove temporary loading graphic.
+				}
+			}),($tag,data);
+		}
+	else if(startpoint >= data.value.length)	{
+		app.u.dump("The end is nigh! all content loaded. infinite scroll was killed.");
+		$scrollContainer.off('scroll.infinite'); //we've reached the bottom of the bottom. disable infinite scroll.
+		}
+	else{
+		//got here because more content was added but it wasn't the last page.
+		}
+	}
+else	{
+	//no infinite scroll because there aren't more images than items per page.
+	}
 
 					}
 				else	{
