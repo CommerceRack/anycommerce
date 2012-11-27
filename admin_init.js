@@ -15,6 +15,7 @@ app.rq.push(['extension',1,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',1,'store_checkout','extensions/store_checkout.js']);
 
 app.rq.push(['extension',1,'admin_support','extensions/admin/support.js']);
+app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
 app.rq.push(['extension',1,'admin_prodEdit','extensions/admin/product_editor.js']);
 // app.rq.push(['extension',1,'admin_orders','extensions/admin/orders.js']); 
 app.rq.push(['extension',1,'convertSessionToOrder','extensions/admin/order_create.js']); 

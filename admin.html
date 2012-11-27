@@ -375,12 +375,11 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 <div class='debug buttonset clearBoth clearAll clearfix'>
-<textarea id='bobWasHere2'></textarea>
 <hr />
-
 
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 <button onClick="app.ext.admin.a.showDomainConfig();">domainConfig</button>
+<button onClick="app.ext.admin_task.a.showTaskList();">taskList</button>
 <button onClick="app.ext.admin_support.a.showFileUploadInModal('169999');">showFileUploadInModal</button>
 
 <button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
@@ -390,7 +389,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
 <button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
 
-<button onClick="if(jQuery().htmlarea){$('#bobWasHere2').htmlarea();}">jhtmlarea</button>
 <hr />
 
 </div>

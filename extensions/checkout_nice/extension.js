@@ -544,9 +544,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 //					app.u.dump(" -> into itemsCount IF");
 					app.ext.convertSessionToOrder.panelContent.preflight();
 //					app.u.dump(" -> GOT HERE!");
-//					app.u.dump(" -> softAuth: "+app.u.determineAuthentication());
+					var auth = app.u.determineAuthentication();
+					app.u.dump(" -> auth: "+auth);
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
-					if(app.u.determineAuthentication() != 'none')	{
+//currently, admin during checkout isn't 'supported'. meaning nothing special happens but if we don't discount it, only passive checkout is avail
+					if(auth != 'none' && auth != 'admin')	{
 //						app.u.dump(' -> authentication passed. Showing panels.');
 //						app.u.dump(' -> want/bill_to_ship = '+app.data.cartDetail['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.

@@ -82,16 +82,16 @@ app.ext.myRIA.template.pageNotFoundTemplate.onCompletes.push(function(P) {_gaq.p
 app.ext.store_checkout.checkoutCompletes.push(function(P){
 	
 	app.u.dump("BEGIN analytics_google code pushed on store_checkout.checkoutCompletes");
-	var order = app.data['order|'+P.orderID].cart;
+	var order = app.data['order|'+P.orderID];
 	_gaq.push(['_addTrans',
 		  P.orderID,           // order ID - required
 		  '', // affiliation or store name
-		  order['sum/order_total'],          // total - required
-		  order['sum/tax_total'],           // tax
-		  order['sum/ship_total'],          // shipping
-		  order['ship/city'],       // city
-		  order['ship/region'],     // state or province
-		  order['ship/countrycode']             // country
+		  order.sum.order_total,          // total - required
+		  order.sum.tax_total,           // tax
+		  order.sum.ship_total,          // shipping
+		  order.sum.city,       // city
+		  order.sum.region,     // state or province
+		  order.sum.countrycode             // country
 	   ]);
 
 	var L = order['@ITEMS'].length;

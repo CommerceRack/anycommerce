@@ -2286,7 +2286,7 @@ $tmp.empty().remove();
 		processList : function($tag,data){
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
-				$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])); 
+				$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]));
 				}
 			$tag.removeClass('loadingBG');
 			},
