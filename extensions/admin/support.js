@@ -69,7 +69,7 @@ var admin_support = function() {
 				}
 			}, //init
 		
-		handleFileUpload2Ticket : {
+		handleAdminTicketFileAttach : {
 			onSuccess : function(tagObj){
 				app.u.dump("Got Here!");
 				}
@@ -83,18 +83,18 @@ var admin_support = function() {
 		a : {
 			showFileUploadInModal : function(ticketid){
 				if(ticketid)	{
-					var $target = $('#ticketFileUpload');
+					var $target = $('#ticketFileUploadModal');
 	//To avoid confusion (like showing uploads from a previously edited ticket) the file upload div is emptied and the entire contents regenerated afresh.
 					if($target.length){$target.empty();}
 					else	{
-						$target = $("<div \/>").attr('id','ticketFileUpload').appendTo('body');
+						$target = $("<div \/>").attr('id','ticketFileUploadModal').appendTo('body');
 						$target.dialog({'autoOpen':false,'width':'90%','height':550});
 						}
 					$target.attr('data-ticketid',ticketid);
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
 					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid})).dialog('open');
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
-					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','supportTicketFileUpload');
+					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
 					
 					}
 				else	{

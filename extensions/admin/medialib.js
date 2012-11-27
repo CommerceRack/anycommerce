@@ -688,9 +688,11 @@ var successCallbacks = {
 		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
 		app.model.dispatchThis('immutable');
 		},
-	'supportTicketFileUpload' : function(data,textStatus)	{
-		data[0].ticketid = $('#ticketFileUpload').attr('data-ticketid');
-		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleFileUpload2Ticket','extension':'admin_support'},'immutable');
+	'adminTicketFileAttach' : function(data,textStatus)	{
+		app.u.dump(" -> Got to adminTicketFileAttach success.");
+		data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
+		app.u.dump(" -> data[0].ticketid: "+data[0].ticketid)
+		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
 		app.model.dispatchThis('immutable');
 		},
 	'csvUploadToBatch' : function(data,textStatus) {
