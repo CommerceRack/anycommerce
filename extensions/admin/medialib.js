@@ -690,7 +690,7 @@ var successCallbacks = {
 		},
 	'supportTicketFileUpload' : function(data,textStatus)	{
 		data[0].ticket = $('#supportFileUploadTemplate').data('ticket');
-		app.ext.admin_medialib.calls.adminTicketFileAttach.init(data[0],{'callback':'handleFileUpload2Ticket','extension':'admin_support'},'immutable');
+		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleFileUpload2Ticket','extension':'admin_support'},'immutable');
 		app.model.dispatchThis('immutable');
 		},
 	'csvUploadToBatch' : function(data,textStatus) {
