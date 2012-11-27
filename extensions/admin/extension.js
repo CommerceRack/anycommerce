@@ -894,6 +894,32 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 				return false;
 				},
+/*
+A generic form handler. 
+$form is a jquery object of the form.
+set _cmd as a hidden input in the form.
+If you want to set any _tag attributes, set them as data-tag-key="value".
+ -> a good example of this would be data-_tag-callback and data-_tag-extension.
+Execute your own dispatch. This allows the function to be more versatile
+set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
+ -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
+*/
+				processForm : function($form)	{
+					var obj = $form.serializeJSON() || {};
+					if($form.length && obj._cmd)	{
+						var data = $form.data(); //obj of all data- attributes on the form tag. used to build tagObj. strips data- off of key.
+//use data-tag-... attributes on the form to build the _tag obj for the call.
+						obj._tag = {};
+						for(key in data)	{
+							if(i.substring(0,5) == "_tag-")	{obj._tag[i.slice(0,5)] = data[i];} //data- is stripped from key already. this slice pulls the tag- off.
+							else{}
+							}
+						app.model.addDispatchToQ(obj,data.q);
+						}
+					else	{
+						app.u.throwGMessage("Warning! $form was empty or _cmd not present within $form in admin.a.processForm");
+						}
+					},
 				
 
 //this is a function that brian has in the UI on some buttons.

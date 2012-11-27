@@ -2280,6 +2280,18 @@ $tmp.empty().remove();
 				}
 			}, //money
 
+//This should be used for all lists going forward. stuffList and object2Template should be upgraded to use this.
+//everthing that's in the data lineitem gets passed as first param in transmogrify, which will add each key/value as data-key="value"
+//at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.
+		processList : function($tag,data){
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])); 
+				}
+			$tag.removeClass('loadingBG');
+			},
+
+
 		object2Template : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormats.array2Template");
 //			app.u.dump(data.value);
