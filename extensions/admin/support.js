@@ -81,8 +81,8 @@ var admin_support = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-			showFileUploadInModal : function(ticket){
-				if(ticket)	{
+			showFileUploadInModal : function(ticketid){
+				if(ticketid)	{
 					var $target = $('#ticketFileUpload');
 	//To avoid confusion (like showing uploads from a previously edited ticket) the file upload div is emptied and the entire contents regenerated afresh.
 					if($target.length){$target.empty();}
@@ -90,13 +90,13 @@ var admin_support = function() {
 						$target = $("<div \/>").attr('id','ticketFileUpload').appendTo('body');
 						$target.dialog({'autoOpen':false,'width':'90%','height':550});
 						}
-					$target.append(app.renderFunctions.transmogrify({'ticket':ticket},'supportFileUploadTemplate',{'ticket':ticket})).dialog('open');
+					$target.append(app.renderFunctions.transmogrify({'ticketid':ticketid},'supportFileUploadTemplate',{'ticketid':ticketid})).dialog('open');
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
 					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','supportTicketFileUpload');
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! no ticket specified in admin_support.a.showFileUploadInModal");
+					app.u.throwGMessage("Warning! no ticketid specified in admin_support.a.showFileUploadInModal");
 					}
 				
 				}
