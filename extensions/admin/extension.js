@@ -434,7 +434,19 @@ else	{
 				document.location = 'logout.html'
 				}
 			},
-
+//in cases where the content needs to be reloaded after making an API call, but when a showUI directly won't do (because of sequencing, perhaps)
+//For example, after new files are added to a ticket (comatability mode), this is executed on a ping to update the page behind the modal.
+		showUI : {
+			onSuccess : function(tagObj)	{
+				if(tagObj && tagObj.path){showUI(tagObj.path)
+					}
+				else {
+					app.u.throwGMessage("Warning! Invalid path specified in _rtag on admin.callbacks.showUI.onSuccess.");
+					app.u.dump("admin.callbacks.showUI.onSuccess tagObj (_rtag)");
+					app.u.dump(tagObj);
+					}
+				}
+			}, //showUI
 		showDomainConfig : {
 			onSuccess : function(){
 				app.ext.admin.u.domainConfig();

@@ -693,6 +693,7 @@ var successCallbacks = {
 		data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
 		app.u.dump(" -> data[0].ticketid: "+data[0].ticketid)
 		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
+		app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 		app.model.dispatchThis('immutable');
 		},
 	'csvUploadToBatch' : function(data,textStatus) {
