@@ -1244,6 +1244,8 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				},
 			
 			addToCart : function(formObj){
+				if(formObj.price != ""){}
+				else{delete formObj.price} //if no price is, do not pass blank or the item will be added with a zero price.
 				app.ext.convertSessionToOrder.calls.cartItemsAdd.init(formObj,{}); //add the item first. now get data to update panels.
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
