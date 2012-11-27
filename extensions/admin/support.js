@@ -90,8 +90,9 @@ var admin_support = function() {
 						$target = $("<div \/>").attr('id','ticketFileUpload').appendTo('body');
 						$target.dialog({'autoOpen':false,'width':'90%','height':550});
 						}
-					$('ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
-					$target.append(app.renderFunctions.transmogrify({'ticketid':ticketid},'supportFileUploadTemplate',{'ticketid':ticketid})).dialog('open');
+					$target.attr('data-ticketid',ticketid);
+					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
+					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid})).dialog('open');
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
 					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','supportTicketFileUpload');
 					
