@@ -245,8 +245,6 @@ setTimeout(function(){
 	},3000);
 
 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.infinitescroll-2.0b2.120519.js']); //used for infinite scrolling
-
 //mediaLibrary shortcut is the function B executes from his content. his params are different than showMediaLib. don't change this shortcut.
 //B may also trigger medialibrary by linking to #mediaLibModeManage. This case gets handled in admin.u.handleLinkRewrites.
 				window.mediaLibrary = app.ext.admin_medialib.a.uiShowMediaLib
@@ -624,7 +622,7 @@ if(data.value.length > itemsPerPage)	{
 	//			console.log('at or near the bottom');
 				var fname = $tag.data('fname'); //folder name.
 	//			app.u.dump(" -> fname: "+fname);
-				var $li = $("<li \/>").addClass('loadingBG'); //add temporary loading graphic as last lineitem. indicates something is happening.
+				var $li = $("<li \/>").addClass('loadingBG').appendTo($tag); //add temporary loading graphic as last lineitem. indicates something is happening.
 				app.ext.admin_medialib.renderFormats.mediaList($tag,data);
 				$li.empty().remove(); //remove temporary loading graphic.
 				}

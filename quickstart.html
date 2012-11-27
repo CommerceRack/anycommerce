@@ -1038,7 +1038,7 @@ So the cart template should contain these two elements and the extension should 
 		<span class='ui-icon ui-icon-closethick'></span>
 		</span>
 		
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(full_product.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 		

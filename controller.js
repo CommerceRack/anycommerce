@@ -1611,8 +1611,8 @@ later, it will handle other third party plugins as well.
 				
 				var L = app.data.cartDetail['@ITEMS'].length;
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartDetail['@ITEMS'][i].full_product['gc:blocked'])	{obj.googlecheckout = false}
-					if(app.data.cartDetail['@ITEMS'][i].full_product['paypalec:blocked'])	{obj.paypalec = false}
+					if(app.data.cartDetail['@ITEMS'][i]['%attribs']['gc:blocked'])	{obj.googlecheckout = false}
+					if(app.data.cartDetail['@ITEMS'][i]['%attribs']['paypalec:blocked'])	{obj.paypalec = false}
 					}
 
 				return obj;

@@ -1901,6 +1901,7 @@ the refreshCart call can come second because none of the following calls are upd
 //data should be the order #, which is used to get the entire order object from memory.
 			marketPlaceOrderID : function($tag,data)	{
 				var order = app.data['adminOrderDetail|'+data.value];
+				var output = "";
 				if(order.flow.payment_method == 'AMAZON')	{output = order.mkt.amazon_orderid}
 				else if(order.flow.payment_method == 'EBAY')	{output = order.mkt.erefid.split('-')[0]}//splitting at dash shows just the ebay item #
 				else if(order.flow.payment_method == 'NEWEGG')	{output = order.mkt.erefid}

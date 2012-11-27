@@ -531,7 +531,7 @@ so if an accessory showed up on four items in the cart, it'd be higher in the li
 				M = app.data.cartDetail['@ITEMS'].length;
 //				app.u.dump(" -> items in cart = "+M);
 				for(j = 0; j < M; j += 1)	{
-					if(proda = app.data.cartDetail['@ITEMS'][j]['full_product']['zoovy:accessory_products'])	{
+					if(proda = app.data.cartDetail['@ITEMS'][j]['%attribs']['zoovy:accessory_products'])	{
 //						app.u.dump(" -> item has accessories: "+proda);
 						prodArray = proda.split(',');
 						L = prodArray.length
