@@ -282,7 +282,7 @@
             },
             // Callback for uploads stop, equivalent to the global ajaxStop event:
             stop: function (e) {
-				app.u.dump(" -> STOPPED! "); app.u.dump(e);
+//				app.u.dump(" -> STOPPED! "); app.u.dump(e);
                 var that = $(this).data('fileupload');
                 that._transition($(this).find('.fileupload-progress')).done(
                     function () {
