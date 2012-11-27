@@ -298,7 +298,7 @@ $tag.click(function(){
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var L = app.data.cartShippingMethods['@methods'].length;
+				var L = app.data.cartDetail['@METHODS'].length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
 					if(app.data.cartShippingMethods['@methods'][i].id == data.value)	{

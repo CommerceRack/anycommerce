@@ -384,6 +384,7 @@ do NOT change the input name or id or checkout will likely break.
 <!--
 This template is used in customer/orders in order list mode and also in invoice view mode (after checkout)	
 likely, this will be used anywhere an invoice is shown.
+because it's used in 'print' mode, some legacy attributes are used.
 -->
 
 
@@ -453,13 +454,22 @@ likely, this will be used anywhere an invoice is shown.
 </tr>
 <tr>
 	<td colspan='2'>
-<hgroup>
-<!-- print icon -->
-<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
-<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(sum/shp_method);format:text; pretext:Ship Method: ;'></h5>
-</hgroup>
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+	<div class='orderShipping'>
+	<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+	<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false;'></span>
+	</div>
+	
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+	
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></div>
 <br />
 	</td>
 </tr>
@@ -471,12 +481,12 @@ likely, this will be used anywhere an invoice is shown.
 <tr>
 	<td colspan='2'>
 <h2 data-bind="var: profile(zoovy:company_name); format:text;"></h2>
-<div data-bind="var:profile(zoovy:company_address1); format:text;"></div>
-<div data-bind="var:profile(zoovy:company_address2); format:text;"></div>
+<div data-bind="var: profile(zoovy:address1); format:text;"></div>
+<div data-bind="var: profile(zoovy:address2); format:text;"></div>
 <div>
-	<span data-bind="var:profile(zoovy:company_city); format:text;"></span> 
-	<span data-bind="var:profile(zoovy:company_state); format:text; posttext:. ;"></span> 
-	<span data-bind="var:profile(zoovy:company_zip); format:text;"></span>
+	<span data-bind="var: profile(zoovy:city); format:text;"></span> 
+	<span data-bind="var: profile(zoovy:state); format:text; posttext:. ;"></span> 
+	<span data-bind="var: profile(zoovy:zip); format:text;"></span>
 </div>
 	</td>
 </tr>
