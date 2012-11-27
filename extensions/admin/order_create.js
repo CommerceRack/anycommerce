@@ -1891,6 +1891,24 @@ the refreshCart call can come second because none of the following calls are upd
 
 
 		renderFormats : {
+//This will need to get expanded to support a full blown payment status function, using the resource for payments.
+//if the resource isn't loaded, then what's here now can be the fallback.
+			paymentStatus : function($tag,data)	{
+				if(Number(data.value[0]) === 0)	{$tag.append("Paid");}
+				else{$tag.append("Unpaid")}
+				},
+
+//data should be the order #, which is used to get the entire order object from memory.
+			marketPlaceOrderID : function($tag,data)	{
+				var order = app.data['adminOrderDetail|'+data.value];
+				if(order.flow.payment_method == 'AMAZON')	{output = order.mkt.amazon_orderid}
+				else if(order.flow.payment_method == 'EBAY')	{output = order.mkt.erefid.split('-')[0]}//splitting at dash shows just the ebay item #
+				else if(order.flow.payment_method == 'NEWEGG')	{output = order.mkt.erefid}
+				else if(order.flow.payment_method == 'BUY')	{output = order.mkt.erefid}
+				else if(order.flow.payment_method == 'SEARS')	{output = order.mkt.sears_orderid}
+				else{}
+				$tag.append(output);
+				},
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
 //				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
