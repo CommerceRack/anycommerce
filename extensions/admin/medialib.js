@@ -689,7 +689,7 @@ var successCallbacks = {
 		app.model.dispatchThis('immutable');
 		},
 	'supportTicketFileUpload' : function(data,textStatus)	{
-		data[0].ticketid = $('#ticketFileUpload').data('ticketid');
+		data[0].ticketid = $('#ticketFileUpload').attr('data-ticketid');
 		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleFileUpload2Ticket','extension':'admin_support'},'immutable');
 		app.model.dispatchThis('immutable');
 		},
