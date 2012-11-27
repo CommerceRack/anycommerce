@@ -35,7 +35,7 @@ var admin_support = function() {
 				this.dispatch(obj,tagObj);
 				},
 			dispatch : function(obj,tagObj)	{
-				var obj = {};
+				var obj = obj || {};
 				obj['_tag'] = tagObj || {};
 				obj._tag.datapointer = "adminTicketFileAttach|"+obj.ticket;
 				obj['_cmd'] = "adminTicketFileAttach";
