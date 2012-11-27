@@ -569,7 +569,7 @@ setTimeout(function(){
 //				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
-				var itemsPerPage = 12;
+				var itemsPerPage = 25;
 				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 //				app.u.dump(" -> L: "+L);
