@@ -129,27 +129,27 @@ var admin_prodEdit = function() {
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
 				$results = $(app.u.jqSelector('#',tagObj.targetID));
 				var $a; //recycled.
-				for(index in app.data[tagObj.datapointer]['%CATEGORIES'])	{
-					$a = $("<a \/>").attr('data-management-category',index).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(index || 'uncategorized'));
+//cats is an array of keys (management category names) used for sorting purposes.
+//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
+				var cats = Object.keys(app.data[tagObj.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+//				app.u.dump(cats);
+				for(index in cats)	{
+					$a = $("<a \/>").attr('data-management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized'));
 //In the app framework, it's not real practical to load several hundred product into memory at one time.
-//so if a management category has more than 100 items in it, the list is opened in the main product area in a multipage format.
-//					if(app.data[tagObj.datapointer]['%CATEGORIES'][index].length < 101)	{
-//						$a.click(function(){
-//							app.ext.admin_prodEdit.a.toggleManagementCat(this,$(this).data('management-category'));
-//							});
-//						}
-//					else	{
+//so the list is opened in the main product area in a multipage format.
 						$a.click(function(){
 							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
 							var $target = $('#productTabMainContent').empty().append($ul);
+//convert to array and clean up extra comma's, blanks, etc.
+//also, sort alphabetically.
+							var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')]).sort(); 
 							app.ext.store_prodlist.u.buildProductList({
-								'csv': app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')],
+								'csv': csv,
 								'parentID':'manageCatProdlist',
 								'loadsTemplate' : 'productListTableListTemplate',
 								'items_per_page' : 100
 								},$ul);
 							});
-//						}
 					$a.wrap("<li>");
 					$results.append($a);
 					}

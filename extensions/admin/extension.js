@@ -338,6 +338,22 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
+
+
+
+/* used for html editor. */
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.ColorPickerMenu.css','jHtmlArea_ColorPickerMenu']);
+app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/style/jHtmlArea.css','jHtmlArea']);
+//note - the editor.css file that comes with jhtmlarea is NOT needed. just sets the page bgcolor to black.
+
+// colorpicker isn't loaded until jhtmlarea is done to avoid a js error due to load order.
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea-0.7.5.min.js',function(){app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])}]);
+
+
+
+
 				return r;
 				},
 			onError : function(d)	{
