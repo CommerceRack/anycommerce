@@ -454,7 +454,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<td class='orderContentsProdlistContainer' colspan='2'>
 	<br />
 	<h2>Order Contents</h2>
-	<table id='cartStuffList' class='listStyleNone lineItemProdlist'>
+	<table id='cartStuffList' class='listStyleNone lineItemProdlist' width='100%'>
 	<thead>
 	<tr>
 		<th>SKU</th>
@@ -487,7 +487,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
 	
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></div>
+	<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 <br />
 	</td>
 </tr>
