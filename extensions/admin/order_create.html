@@ -394,7 +394,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='300' height='100' />
 	</td>
 
-	<td valign='top' width='50%'>
+	<td valign='top' width='50%' style='text-align:right'>
 <h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
 <h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
 <h4 data-bind='var:order(flow.payment_status); format:paymentStatus; extension:convertSessionToOrder;'>
@@ -403,7 +403,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:convertSessionToOrder;"></span>
 </h4>
 <div data-bind='var: order(our/order_ts); format:unix2mdy; pretext:Created on: ;'></div>
-<div data-bind='var: order(flow/paid_ts); format:unix2mdy; pretext:Paid on: ;'></div>
+<div data-bind='var: order(flow/paid_ts); format:unix2mdy; pretext:Paid on: ; hideZero:true;'></div>
 	</td>
 </tr>
 <tr>
@@ -461,7 +461,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 		<th>Description</th>
 		<th>Qty</th>
 		<th>Price</th>
-		<th>Ext</th>
+		<th align='right'>Ext</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;">
@@ -526,10 +526,10 @@ some legacy html tags to make this print friendly.
 <table>
 	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
 		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
-		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay; posttext: x ;'></div>
 </td>
 		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
-		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
 		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	</tr>
 </table>

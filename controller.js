@@ -1865,12 +1865,14 @@ $r.find('[data-bind]').each(function()	{
 			app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 			}
 		}
+	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 //	app.u.dump(" -> value: "+value);
 
-	if((value  == 0 || value == '0.00') && bindData.hideZero)	{
+	if(Number(value) == 0 && bindData.hideZero)	{
 //		app.u.dump(" -> got to zero section");
-//				app.u.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
+		app.u.dump(" -> $focusTag.data('bind'): "+$focusTag.data('bind'));
+		app.u.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
 		}
 //in some cases, in the UI, we load another template that's shared, such as fileImport in admin_medialib extension
 //in this case, the original data is passed through and no format translation is done on the element itself.
@@ -2219,9 +2221,7 @@ $tmp.empty().remove();
 			},
 
 		unix2mdy : function($tag,data)	{
-			var r;
-			r = app.u.unix2Pretty(data.value,data.bindData.showtime)
-			$tag.text(r)
+			$tag.text(app.u.unix2Pretty(data.value,data.bindData.showtime))
 			},
 	
 		text : function($tag,data){
