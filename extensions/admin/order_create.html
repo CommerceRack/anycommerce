@@ -478,7 +478,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 
 	<div class='orderShipping'>
 	<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
-	<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false;'></span>
+	<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
 	</div>
 	
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
@@ -507,6 +507,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<span data-bind="var: profile(zoovy:zip); format:text;"></span>
 </div>
 <div data-bind="var: profile(zoovy:website_url); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_phone); format:text;"></div>
 <div data-bind="var: profile(zoovy:support_email); format:text;"></div>
 
 	</td>
@@ -527,9 +528,9 @@ some legacy html tags to make this print friendly.
 		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
 		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 </td>
-		<td valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
-		<td valign='top' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
-		<td valign='top'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	</tr>
 </table>
 
