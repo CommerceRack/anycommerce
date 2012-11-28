@@ -391,7 +391,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 <table id='invoiceTemplate' class='orderContentsTable'>
 <tr>
 	<td valign='top' width='50%'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='300' height='100' />
 	</td>
 
 	<td valign='top' width='50%'>
@@ -402,14 +402,17 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
 	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:convertSessionToOrder;"></span>
 </h4>
+<div data-bind='var: order(our/order_ts); format:unix2mdy; pretext:Created on: ;'></div>
+<div data-bind='var: order(flow/paid_ts); format:unix2mdy; pretext:Paid on: ;'></div>
 	</td>
 </tr>
 <tr>
 
 	<td valign='top'>
+	<h3>Destination</h3>
 <address>
 <h4>
-	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/firstname);format:text;'></span>
 	<span data-bind='var:order(ship/lastname);format:text;'></span>
 </h4>
 <div data-bind='var:order(ship/email);format:text;'></div>
@@ -428,9 +431,10 @@ because it's used in 'print' mode, some legacy attributes are used.
 
 
 	<td valign='top'>
+	<h3>Bill To</h3>
 <address>
 <h4>
-	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/firstname);format:text;'></span>
 	<span data-bind='var:order(bill/lastname);format:text;'></span>
 </h4>
 <div data-bind='var:order(bill/email);format:text;'></div>
@@ -450,13 +454,24 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<td class='orderContentsProdlistContainer' colspan='2'>
 	<br />
 	<h2>Order Contents</h2>
-	<table id='cartStuffList' data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;" class='listStyleNone lineItemProdlist'>
+	<table id='cartStuffList' class='listStyleNone lineItemProdlist'>
+	<thead>
+	<tr>
+		<th>SKU</th>
+		<th>Description</th>
+		<th>Qty</th>
+		<th>Price</th>
+		<th>Ext</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:productListTemplateInvoice;">
+	</tbody>
 	</table>
 	<br />
 	</td>
 </tr>
 <tr>
-	<td colspan='2'>
+	<td colspan='2' style='text-align:right'>
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
@@ -491,6 +506,9 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<span data-bind="var: profile(zoovy:state); format:text; posttext:. ;"></span> 
 	<span data-bind="var: profile(zoovy:zip); format:text;"></span>
 </div>
+<div data-bind="var: profile(zoovy:website_url); format:text;"></div>
+<div data-bind="var: profile(zoovy:support_email); format:text;"></div>
+
 	</td>
 </tr>
 </table>
@@ -506,10 +524,11 @@ some legacy html tags to make this print friendly.
 -->
 <table>
 	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
-		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span> - <span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
 </td>
 		<td valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>
-		<td valign='top'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
+		<td valign='top' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
 		<td valign='top'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	</tr>
 </table>

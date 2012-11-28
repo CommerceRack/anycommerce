@@ -806,7 +806,76 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 
-	
+//tmp while in dev so pushes can occur without UI being impacted.
+//opts is options (options is a reserved JS name)
+// -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
+//    it's in opts to make debugging easier.
+
+			newShowUI : function(path,opts){
+//make sure path passed in conforms to standard naming conventions.
+
+				if(path && (path.substr(0,5) == "/biz/"  || path.substr(0,2) == "#!" || path.substr(0,2) == "#:")){
+					var isLegacy = path.substr(0,5) == "/biz/" ? true : false; //used as shortcut instead of doing substr everytime it's needed.
+					opts = opts || {};
+
+					_ignoreHashChange = true; //see handleHashChange for details on what this does.
+					
+					if(path.substr(0,2) == "#:"){
+						opts.tab = path.substring(2);
+						app.u.dump(" -> #: tab: "+opts.tab);
+						}
+					else if(opts.dialog)	{
+						opts.targetID = "uiDialog";
+						app.ext.admin.u.handleCompatModeDialog(opts); //creates and opens dialog.
+						}
+//in non dialog mode, figure out which, if any, tab to bring into focus.
+					else	{
+//in legacy compatibility non-dialog mode, use path to determine what tab to bring into focus.
+						if(!opts.tab && isLegacy) {
+							opts.tab = path.split('/')[1];
+							}
+						else {} //either in app or dialog mode and/or tab is forced.
+						$('html, body').animate({scrollTop : 0},1000); //scroll up. animation doesn't occur for modals.
+						$('title').text(path); //set browser title
+						}
+
+
+					
+					if(opts.tab == 'manage')	{opts.tab = 'utilities'} //manage and utilities are symlinked but for consistency, always use utilities.
+
+//set the targetID for the content.
+					if(opts.dialog){} //do nothing. targetID already set.
+					else if(tab)	{opts.targetID = opts.tab+"Content"} //load content into whatever tab is specified.
+					else if(app.ext.admin.vars.tab)	{opts.targetID = app.ext.admin.vars.tab+"Content"} //load into currently open tab. common for apps.
+					else	{}
+
+/*
+by here, the tab should be set, if needed. (dialog and/or app mode support no tab specification)
+the target will also be set (which is required.)
+*/
+
+
+					if(opts.targetID)	{
+						$target = $(app.u.jqSelector('#',opts.targetID));
+						if(opts.tab)	{
+							app.ext.admin.u.bringTabIntoFocus(opts.tab);
+							}
+						alert('handle content display in '+opts.targetID);
+						}
+					else	{
+						app.u.throwGMessage("Warning! something went wrong in showUI. targetID for content could not be obtained.<br \/>dev: see console for details");
+						app.u.dump("admin.a.showUI error! path = ["+path+"] and opts follows:");
+						app.u.dump(opts);
+						}
+					 
+					
+					if(tab)	{app.ext.admin.vars.tab = tab;} //do this last so that the previously selected tab can be referenced, if needed.
+					}
+				else	{
+					app.u.throwGMessage("Warning! invalid value for 'path' passed into showUI. path ["+path+"] must begin with /biz/ or #!");
+					}
+				return false;
+				},
 
 			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
@@ -829,7 +898,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					P.title = P.title || "Details"
 					$target.parent().find('.ui-dialog-title').text(P.title);
 					$target.dialog('open');
-					app.ext.admin.u.handleShowSection(path,P,$target);
+//commented out by JT on 11/27. beleive this is redunant as it's executed in each condition of the next if/else
+//					app.ext.admin.u.handleShowSection(path,P,$target); 
 					}
 				else {
 					$('html, body').animate({scrollTop : 0},1000); //animation doesn't occur for modals.
@@ -947,7 +1017,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					else	{
 						app.u.throwGMessage("Warning! $form was empty or _cmd not present within $form in admin.a.processForm");
 						}
-					},
+					}, //processForm
 				
 
 //this is a function that brian has in the UI on some buttons.
@@ -977,7 +1047,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					else{} //catch.
 					}
 				return r;
-				},
+				}, //getDataForDomain
+
 //host is www.zoovy.com.  domain is zoovy.com or m.zoovy.com.  This function wants a domain.
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
@@ -1003,7 +1074,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
 					}
 
-				},
+				}, //changeDomain
 
 
 
@@ -1027,7 +1098,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					$editor.append("<div id='elementEditorMessaging'><\/div><div id='elementEditorContent' class='loadingBG'><\/div>").dialog({autoOpen:false,dialog:true, width: 500, height:500,modal:true});
 					}
 				$editor.dialog('open');
-				},
+				}, //loadElement
 
 
 			
@@ -1042,7 +1113,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				app.model.dispatchThis();
 				$('#elementEditorContent').empty().append("<div class='loadingBG'><\/div>");
 				
-				},
+				}, //uiProdlistEditorUpdate
 
 /*
 to generate an instance of the finder, run: 
@@ -1050,10 +1121,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 */
 			addFinderTo : function(targetID,findertype,path,attrib)	{
-			app.u.dump("BEGIN admin.u.addFinderTo");
-			app.u.dump(" -> findertype: "+findertype);
-			app.u.dump(" -> path: "+path);
-			app.u.dump(" -> attrib: "+attrib);
+				app.u.dump("BEGIN admin.u.addFinderTo");
+				app.u.dump(" -> findertype: "+findertype);
+				app.u.dump(" -> path: "+path);
+				app.u.dump(" -> attrib: "+attrib);
 				if(findertype == 'PRODUCT')	{
 					app.ext.store_product.calls.appProductGet.init(path,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
@@ -1079,7 +1150,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#domainChooserDialog').dialog('open').showLoading();
 				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
 				app.model.dispatchThis('immutable');
-				},	
+				},	 //showDomainChooser
 				
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(findertype,path,attrib)	{
@@ -1111,7 +1182,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('#preloadAndLoginContents').showLoading();
 				app.calls.authentication.accountLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
 				app.model.dispatchThis('immutable');
-				},
+				}, //login
 
 			logout : function(){
 				$('body').showLoading();
@@ -1121,7 +1192,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
 				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
 
-				}
+				} //logout
 
 			}, //action
 
@@ -1145,22 +1216,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
+
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-				
-				
-				// if (window.location.indexOf("#/",0)) {
-					// admin.html#/biz/xyz
-					// alert('hello');
-					// }
-				
+
 				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); 
 					}
 				else {
 					$('.domain','#appView').text(domain);
-// //no bueno to use this. if the app loads directly on a product page, that extension isn't done by the time this extension is done initing itself.
-					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); //commented out for testing.
+// load whatever page is set on the hash onload. The product page being first needs some help.
+					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); 
 					}
 				}, //showHeader
 
@@ -1182,11 +1248,56 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //getDomain
 
 
+
+
+
+
+
+//used for bringing one of the top tabs into focus. does NOT impact content area.
 			handleTopTabs : function(tab){
 				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
 				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
 				},
-			
+
+
+
+
+
+
+//used for bringing one of the top tabs into focus. does NOT impact content area.
+			bringTabIntoFocus : function(tab){
+				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
+				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
+				},
+
+//should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
+//this will replace handleShowSection
+			bringTabContentIntoFocus : function($target){
+				$('.tabContent').hide();
+				$target.show();
+				},
+
+
+//will create the dialog if it doesn't already exist.
+//will also open the dialog. does not handle content population.
+			handleCompatModeDialog : function(P){
+				if(P.targetID)	{
+					$target = $(app.u.jqSelector('#',P.targetID));
+					if($target.length){} //element exists, do nothing to it.
+					else	{
+						$target = $("<div>").attr('id',P.targetID).appendTo('body');
+						$target.dialog({modal:true,width:'90%',height:500,autoOpen:false})
+						}
+					P.title = P.title || "Details"
+					$target.parent().find('.ui-dialog-title').text(P.title);
+					$target.dialog('open');
+					}
+				else	{
+					app.u.throwGMessage("Warning! no target ID passed into admin.u.handleCompatModeDialog.");
+					}
+				},
+
+
 //executed from within showUI. probably never want to execute this function elsewhere.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
