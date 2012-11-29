@@ -17,7 +17,18 @@
 ************************************************************** */
 
 /*
-An extension for managing the media library in addition to ALL other file uploads,including, but not limited to: csv and zip.
+TODO:
+mode = edit
+ -> Add icons to headers for collapse and close.
+ -> add save button and save functionality.
+ -> when a task edit is collapsed, change 'collapse' to 'expand'
+    -> if mode = list and 'expand' is clicked, switch to mode = edit.
+
+Change mode 'list' to 'manage'
+
+mode = manage
+ -> add 'add new' functionality.
+ -> modify selection section is not working yet.
 */
 
 
@@ -187,6 +198,7 @@ var admin_task = function() {
 					$('.ui-widget-content',$edit).slideDown(1000);
 					$list.animate({width:"49%"},1000); //shrink list side.
 					$edit.show().animate({width:"49%"},1000); //expand edit side.
+					$('.togglePanelResize').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will expand the panel
 					}
 //collapse the edit panel. show the active tasks panel.
 				else if(panelFocus == 'list'){
@@ -197,6 +209,7 @@ var admin_task = function() {
 					$('.ui-widget-content',$edit).slideUp(1000);
 					$list.animate({width:"80%"},1000);
 					$edit.animate({width:"18%"},1000);
+					$('.togglePanelResize').button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will shrink the panel
 					}
 				else	{
 					$list.data('mode','error');
@@ -209,7 +222,7 @@ var admin_task = function() {
 			addEditorFor : function(dataObj)	{
 //				app.u.dump("admin_task.u.addEditorFor dataObj: "); app.u.dump(dataObj);
 				//check to see if template is already rendered and, if so, just highlight it (maybe jump to it?)
-				$('#taskEditorContainer').append(app.renderFunctions.transmogrify(dataObj,'taskListEditTemplate',app.data.adminTaskList['@TASKS'][dataObj.obj_index]));
+				$('#taskEditorContainer').prepend(app.renderFunctions.transmogrify(dataObj,'taskListEditTemplate',app.data.adminTaskList['@TASKS'][dataObj.obj_index]));
 				},
 			
 			
@@ -226,15 +239,12 @@ $("button",$target).each(function(){
 			});
 		}
 	else if($btn.data('btn-action') == 'togglePanelResize')	{
-		$btn.button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will expand the panel. set here for initial button display.
 		$btn.on('click.task-action',function(){
 			var mode = $('#taskListContainer').data('mode');
 			if(mode == 'list'){
-				$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will shrink the panel
 				app.ext.admin_task.u.handlePanelResize('edit');
 				}
 			else if(mode == 'edit'){
-				$btn.button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will expand the panel
 				app.ext.admin_task.u.handlePanelResize('list');
 				}
 			else	{}

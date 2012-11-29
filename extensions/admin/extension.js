@@ -1107,7 +1107,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					$('.domain','#appView').text(domain);
 					if(partition){}
 					else	{
-						partition = this.getDataForDomain(domain,'prt');
+						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
 						}
 					$('.partition','#appView').text(partition || "");
 	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
@@ -1269,12 +1269,13 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
 
 //show the domain chooser if one is not set. see showDomainChooser function for more info on why.
-
+//if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
 				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); 
 					}
 				else {
+					app.ext.admin.calls.adminDomainList.init({},'passive');
 					$('.domain','#appView').text(domain);
 // load whatever page is set on the hash onload. The product page being first needs some help.
 					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); 
