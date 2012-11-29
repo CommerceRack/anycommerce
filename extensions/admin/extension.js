@@ -1317,6 +1317,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
+				else if(path == '#!tasks')	{
+					app.ext.admin_task.a.showTaskList();
+					}
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
 					}

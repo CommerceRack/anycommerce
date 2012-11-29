@@ -118,9 +118,15 @@ var admin_task = function() {
 		a : {
 			
 			showTaskList : function() {
+				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
 //generate some of the task list content right away so the user knows something is happening.
-				$(app.u.jqSelector('#',app.ext.admin.vars.focusTabID)).empty().append(app.renderFunctions.createTemplateInstance('taskListPageTemplate',{}));
-				app.ext.admin_task.calls.adminTaskList.init({'callback':'translateTemplate','parentID':app.ext.admin.vars.focusTabID},'immutable');
+				$target.empty().showLoading();
+				app.ext.admin_task.calls.adminTaskList.init({'callback':function(_tag){
+					$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',app.data[_tag.datapointer])); //populate content.
+					$target.hideLoading();
+					$("button",$target).each(function(){$(this).button()});
+					$('.taskListButtonRow .buttonSet').buttonset();
+					}},'immutable');
 				app.model.dispatchThis('immutable');
 				}
 			

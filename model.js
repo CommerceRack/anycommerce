@@ -190,7 +190,7 @@ function zoovyModel() {
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
 					if(puuid){app.q[QID][index]['pipeUUID'] = puuid}
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
-//					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
+					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
 					delete myQ[c]['status'];
 					delete myQ[c]['attempts'];
 					c += 1;

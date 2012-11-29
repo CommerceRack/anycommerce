@@ -7,13 +7,8 @@
 	<h3>Active Tasks</h3>
 	</div>
 	<div class='stdPadding ui-widget-content ui-corner-bottom'>
-	<form action='#' onSubmit='app.ext.admin.a.processForm($(this));'>
+	<form action='#'>
 	<input type='hidden' name='_cmd' value='adminTasksUpdate' />
-	<fieldset>
-	<select title='action for checked tasks'>
-		<option></option>
-	</select>
-	</fieldset>
 	<fieldset>
 	<table class='fullWidth gridTable'>
 	<thead>
@@ -31,6 +26,16 @@
 	</tbody>
 	</table>
 	</fieldset>
+	<fieldset class='taskListButtonRow'>
+	<button data-btn-action="addNewTask">Add New</button>
+	<span class='buttonSet'>
+		<input type='radio' name='action' value='assigntasks' title='Assign or reassign selected tasks'>Assign</button>
+		<input type='radio' name='action' value='prioritizetasks' title='Assign or reassign selected tasks'>Set Priority</button>
+		<input type='radio' name='action' value='prioritizetasks' title='Chagne the status of the selected tasks'>Change Status</button>
+		<input type='radio' name='action' value='scheduletasks' title='Add or change the due date of selected tasks'>Change Due Date</button>
+		<input type='radio' name='action' value='deletetasks' title='delete the selected tasks. There is no undo for this'>Delete</button>
+	</span>
+	</fieldset>
 	</form>
 	</div>
 </section>
@@ -43,7 +48,7 @@ reminder: you can't have a template for a tr without a parent table (same for li
 <table>
 <!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
 <tr id='taskListRowTemplate'>
-	<td><input type='checkbox' /></td>
+	<td><input type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
 	<td data-bind="var: task(CREATED_GMT); format:text;"></td>
 	<td data-bind="var: task(TITLE); format:text;"></td>
 	<td data-bind="var: task(DUE_GMT); format:text;"></td>
