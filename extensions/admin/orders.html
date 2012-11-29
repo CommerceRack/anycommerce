@@ -375,7 +375,7 @@ The following three templates are used in the 'order detail' modal/view.
 	<td>
 		<h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; className: stid; pretext: Sku: ;'></h5>
 		<div data-bind='var: order(full_product.zoovy:prod_name); format:text; '></div>
-		<div class='prodOptions stuffProdOptions' data-bind='var: order(*options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>
 	<td><span data-bind='var: order(qty); format:text; pretext:qty: ;'></span></td>
 	<td><span data-bind='var: order(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>

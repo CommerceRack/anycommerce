@@ -158,7 +158,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 		</div>
 		
-		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 
 
 </li>
@@ -526,7 +526,7 @@ some legacy html tags to make this print friendly.
 <table>
 	<tr id='productListTemplateInvoice' class='padMargBorderBottom'>
 		<td valign='top'><span class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></span></td>
-		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay; posttext: x ;'></div>
+		<td valign='top'><span data-bind='var: product(prod_name); format:text; '></span><div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
 </td>
 		<td valign='top' width='1%'><span data-bind='var: product(qty); format:text;'></span></td>
 		<td valign='top' width='1%' NOWRAP><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false;' ></span></td>
@@ -619,7 +619,7 @@ This should get moved to orders when order is taken over
 	
 	<td valign='top'>
 	<div data-bind='var: product(prod_name); format:text; '></div>
-	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
 	</td>
 
 	<td width='1%' nowrap="nowrap" valign='top'><span data-bind='var: product(qty); format:text; pretext:qty: ;'></span></td>

@@ -118,7 +118,7 @@ the defaultVar on prodName is for promotions, which have a 'description' attribu
 		<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
 		<div><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></div>
-		<div class='prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</div>
 	<div class='clearAll'></div>
 </li>
@@ -443,7 +443,7 @@ If this gets recycled, test in order history after making changes.
 	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 	</div>
 
-	<div class='ztable_row_small prodOptions' data-bind='var: product(*options); format:selectedOptionsDisplay;'></div>
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
 
 <button class='ui-button-text ui-button ui-state-default ui-corner-all writeReview' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 

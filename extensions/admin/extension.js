@@ -778,8 +778,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			},
 		
 		array2Template : function($tag,data)	{
-//				app.u.dump("BEGIN admin.renderFormats.array2Template");
-//				app.u.dump(data.value);
+//			app.u.dump("BEGIN admin.renderFormats.array2Template");
+//			app.u.dump(data.value);
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data.value[i])); 
@@ -811,73 +811,114 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 // -> opts.targetID is used within the function, but is not an accepted paramater (at this time) for being passed in.
 //    it's in opts to make debugging easier.
 
-			newShowUI : function(path,opts){
+			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
+app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 
-				if(path && (path.substr(0,5) == "/biz/"  || path.substr(0,2) == "#!" || path.substr(0,2) == "#:")){
-					var isLegacy = path.substr(0,5) == "/biz/" ? true : false; //used as shortcut instead of doing substr everytime it's needed.
-					opts = opts || {};
-
-					_ignoreHashChange = true; //see handleHashChange for details on what this does.
-					
-					if(path.substr(0,2) == "#:"){
-						opts.tab = path.substring(2);
-						app.u.dump(" -> #: tab: "+opts.tab);
-						}
-					else if(opts.dialog)	{
-						opts.targetID = "uiDialog";
-						app.ext.admin.u.handleCompatModeDialog(opts); //creates and opens dialog.
-						}
-//in non dialog mode, figure out which, if any, tab to bring into focus.
-					else	{
-//in legacy compatibility non-dialog mode, use path to determine what tab to bring into focus.
-						if(!opts.tab && isLegacy) {
-							opts.tab = path.split('/')[1];
-							}
-						else {} //either in app or dialog mode and/or tab is forced.
-						$('html, body').animate({scrollTop : 0},1000); //scroll up. animation doesn't occur for modals.
-						$('title').text(path); //set browser title
-						}
-
-
-					
-					if(opts.tab == 'manage')	{opts.tab = 'utilities'} //manage and utilities are symlinked but for consistency, always use utilities.
-
-//set the targetID for the content.
-					if(opts.dialog){} //do nothing. targetID already set.
-					else if(tab)	{opts.targetID = opts.tab+"Content"} //load content into whatever tab is specified.
-					else if(app.ext.admin.vars.tab)	{opts.targetID = app.ext.admin.vars.tab+"Content"} //load into currently open tab. common for apps.
+				if(path)	{
+//mode is either app or legacy. mode is required and generated based on path.
+					var mode = undefined;
+					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
+					else if(path.substr(0,2) == "#:")	{mode = 'tabClick'} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
+					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
-
-/*
-by here, the tab should be set, if needed. (dialog and/or app mode support no tab specification)
-the target will also be set (which is required.)
-*/
-
-
-					if(opts.targetID)	{
-						$target = $(app.u.jqSelector('#',opts.targetID));
-						if(opts.tab)	{
-							app.ext.admin.u.bringTabIntoFocus(opts.tab);
-							}
-						alert('handle content display in '+opts.targetID);
-						}
-					else	{
-						app.u.throwGMessage("Warning! something went wrong in showUI. targetID for content could not be obtained.<br \/>dev: see console for details");
-						app.u.dump("admin.a.showUI error! path = ["+path+"] and opts follows:");
-						app.u.dump(opts);
-						}
-					 
 					
-					if(tab)	{app.ext.admin.vars.tab = tab;} //do this last so that the previously selected tab can be referenced, if needed.
+					if(mode)	{
+
+if(path.substr(0,2) == "#:")	{
+	path = "/biz/"+path.substring(2)+"/index.cgi";
+	}
+
+app.u.dump(" -> mode: "+mode);
+app.u.dump(" -> path: "+path);
+
+var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
+var $target = undefined; //jquery object of content destination
+
+opts = opts || {}; //opts may b empty. treat as object.
+
+_ignoreHashChange = true; //see handleHashChange for details on what this does.
+document.location.hash = path; //update hash on URI.
+
+//app.u.dump(" -> opts: "); app.u.dump(opts);
+
+//if necessary get opt.tab defined. If at the end of code opt.tab is set, a tab will be brought into focus (in the header).
+if(opts.tab){} // if tab is specified, always use it.
+else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
+else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
+else if(mode == 'legacy' || mode == 'tabClick'){
+	opts.tab = app.ext.admin.u.getTabFromPath(path);
+	} //#: denotes to open a tab, but not refresh the content.
+else	{
+	//hhmm. how did we get here?
+	}
+
+if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab in the header is in focus.
+else	{} //do nothing. perfectly normal to not change what tab is in focus.
+
+
+app.u.dump(" -> tab: "+opts.tab);
+
+//set the targetID and $target for the content. 
+// By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
+//this is JUST setting targetID. it isn't showing content or opening modals.
+if(opts.dialog){
+	opts.targetID = 'uiDialog';
+	$target = app.ext.admin.u.handleCompatModeDialog(opts); //jquery object is returned by this function.
+	}
+//load content into whatever tab is specified.
+else if(opts.tab)	{
+	opts.targetID = opts.tab+"Content";
+	$target = $(app.u.jqSelector('#',opts.targetID));
+	} 
+else if(app.ext.admin.vars.tab)	{
+	opts.targetID = app.ext.admin.vars.tab+"Content";
+	$target = $(app.u.jqSelector('#',opts.targetID));
+	} //load into currently open tab. common for apps.
+else	{
+	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
+	}
+
+
+if($target && $target.length)	{
+	if(opts.dialog)	{
+		app.ext.admin.u.handleShowSection(path,opts,$target); 
+		}
+	else	{
+		app.ext.admin.u.bringTabContentIntoFocus($target); //will make sure $target is visible. if already visible, no harm.
+		if(mode == 'app')	{
+			app.ext.admin.u.loadNativeApp(path,opts);
+			}
+		else if(mode == 'legacy')	{
+			app.ext.admin.u.handleShowSection(path,opts,$target);
+			}
+		else if(mode == 'tabClick')	{
+//determine whether new content is needed or not. typically, #: is only run from a tab so that when returning to  the tab, the last open content shows up.
+			if(opts.tab == app.ext.admin.vars.tab)	{reloadTab = 1; } //tab clicked from a page within that tab. show new content.
+			if ($target.children().length === 0)	{ reloadTab = 1; } //no content presently in target. load it.
+			if(reloadTab)	{app.ext.admin.u.handleShowSection(path,opts,$target);}
+			else	{} //show existing content. content area is already visible thanks to bringTabContentIntoFocus
+			}
+		else	{}// should never get here. error case for mode not being set is already passed.
+		if(opts.tab)	{app.ext.admin.vars.tab = opts.tab;} //do this last so that the previously selected tab can be referenced, if needed.
+		}
+	}
+else	{
+	app.u.throwGMessage("Warning! target could not be found or does not exist on the DOM for admin.a.showUI.");
+	}
+						} //end 'if' for mode.
+					else	{
+						app.u.throwGMessage("Warning! unable to determine 'mode' in admin.a.showUI. path: "+path);	
+						}
+					
 					}
 				else	{
-					app.u.throwGMessage("Warning! invalid value for 'path' passed into showUI. path ["+path+"] must begin with /biz/ or #!");
+					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
 					}
 				return false;
 				},
 
-			showUI : function(path,P)	{
+			oldShowUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
@@ -1024,7 +1065,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //it's diferent than showUI so we can add extra functionality if needed.
 //the app itself should never use this function.
 			navigateTo : function(path,$t)	{
-				this.showUI(path,$t ? $t : {});
+				return this.showUI(path,$t ? $t : {});
 				},
 				
 			showDomainConfig : function(){
@@ -1199,6 +1240,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 
+
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -1254,12 +1296,34 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 //used for bringing one of the top tabs into focus. does NOT impact content area.
+// !!! NOTE - when the old showUI goes away, so can this function. it's replaced with bringTabIntoFocus
 			handleTopTabs : function(tab){
 				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
 				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
 				},
 
 
+
+			loadNativeApp : function(path,opts){
+				if(path == '#!mediaLibraryManageMode')	{
+					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				else if(path == '#!orderPrint')	{
+					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
+					}
+				else if(path == '#!orderCreate')	{
+					app.ext.convertSessionToOrder.a.openCreateOrderForm();
+					}
+				else if(path == '#!domainConfigPanel')	{
+					app.ext.admin.a.showDomainConfig();
+					}
+				else	{
+					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+					}
+				},
 
 
 
@@ -1273,14 +1337,20 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
 //this will replace handleShowSection
 			bringTabContentIntoFocus : function($target){
-				$('.tabContent').hide();
-				$target.show();
+				if($target.is('visible'))	{
+					//target is already visible. do nothing.
+					}
+				else	{
+					$('.tabContent').hide();
+					$target.show();
+					}
 				},
 
 
 //will create the dialog if it doesn't already exist.
 //will also open the dialog. does not handle content population.
 			handleCompatModeDialog : function(P){
+				var $target = false;
 				if(P.targetID)	{
 					$target = $(app.u.jqSelector('#',P.targetID));
 					if($target.length){} //element exists, do nothing to it.
@@ -1295,6 +1365,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 					app.u.throwGMessage("Warning! no target ID passed into admin.u.handleCompatModeDialog.");
 					}
+				return $target;
 				},
 
 
@@ -1326,7 +1397,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.model.fetchAdminResource(path,P);
 					}
 				},
-
+// !!! when the old showUI goes away, so can this function.
 			getId4UIContent : function(path){
 				return this.getTabFromPath(path)+"Content";
 				},

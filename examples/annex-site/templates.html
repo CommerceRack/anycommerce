@@ -164,7 +164,7 @@ and what promotions are added.
 		</button>
 		</div>
 		
-		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</li>
 </ul>
 
@@ -367,7 +367,7 @@ the defaultVar on prodName is for promotions, which have a 'description' attribu
 		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
 		<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		<div><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></div>
-		<div class='prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+		<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</div>
 	<div class='clearAll'></div>
 </li>
