@@ -117,19 +117,37 @@ var admin_task = function() {
 
 		a : {
 			
-			showTaskList : function() {
+			showTaskManager : function() {
 				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
 //generate some of the task list content right away so the user knows something is happening.
 				$target.empty().showLoading();
 				app.ext.admin_task.calls.adminTaskList.init({'callback':function(_tag){
-					$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',app.data[_tag.datapointer])); //populate content.
-					$target.hideLoading();
-					$("button",$target).each(function(){$(this).button()});
-					$('.taskListButtonRow .buttonSet').buttonset();
+					var data = app.data[_tag.datapointer]; //shortcut to data. the data saved is identical to the response w/ _tag/_rtag added back in.
+					if(app.model.responseHasErrors(data))	{
+						app.u.throwMessage(data);
+						}
+					else	{
+						$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',data)); //populate content.
+						$target.hideLoading();
+						app.ext.admin_task.u.handleButtons($target);
+						}
 					}},'immutable');
 				app.model.dispatchThis('immutable');
+				},
+
+//A function for showing just the tasks. template ID can be passed in. Think landing page or for some panel.
+//should return the content as a jquery object.
+			showTaskList : function(opts)	{
+				var $o = undefined; //output. what is returned.
+				if(opts && opts.templateID)	{
+					alert('do something'); //!! not done yet.
+					}
+				else	{
+					app.u.throwGMessage("Error: no template id passed into admin_task.a.showTaskList");
+					}
+				return $o;
 				}
-			
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -138,7 +156,69 @@ var admin_task = function() {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {} //u
+		u : {
+//panelFocus can = list or edit. if list, left column (list of tasks) gets bigger. if 'edit', right column (list of edits) gets bigger.
+			handlePanelResize : function(panelFocus)	{
+				app.u.dump("BEGIN admin_task.u.handlePanelResize. panelFocus: "+panelFocus);
+				$('.togglePanelResize').show(); //the toggle button is hidden by default. show once the panel sizes change.
+//collapse the active tasks panel. show the edit panel.
+				if(panelFocus == 'edit')	{
+					$('#taskManagerContainer').data('mode','edit');
+					$('#taskManagerContainer .hideInMinifyMode').hide();
+					$('#taskManagerContainer').animate({width:"250px"},1000);
+					$('.taskDetailsContainer').show({width:"500px"},1000);
+					}
+//collapse the edit panel. show the active tasks panel.
+				else if(panelFocus == 'list'){
+					$('#taskManagerContainer').data('mode','list');
+					$('.taskManagerListTable .hideInMinifyMode').show();
+					$('#taskManagerContainer').animate({width:"75%"},1000);
+					$('.taskDetailsContainer').show({width:"20%"},1000);
+					}
+				else	{
+					$('#taskManagerContainer').data('mode','error');
+					app.u.throwGMessage("Error: panelFocus ['"+panelFocus+"'] is not valid or undefined in admin_task.u.handleManagerResize");
+					}
+				},
+			
+			handleButtons : function($target){
+$("button",$target).each(function(){
+	var $btn = $(this);
+	$btn.button();
+	$btn.on('click.prevent',function(event){event.preventDefault();}); //precent default submit action
+
+	if($btn.data('btn-action') == 'editTask')	{
+		$btn.on('click.task-action',function(){
+			app.ext.admin_task.u.handlePanelResize('edit');
+			app.ext.admin_task.calls.adminTaskDetail.init(taskid,{},'mutable');
+			});
+		}
+	else if($btn.data('btn-action') == 'togglePanelResize')	{
+		$btn.button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will expand the panel. set here for initial button display.
+		$btn.on('click.task-action',function(){
+			var mode = $('#taskManagerContainer').data('mode');
+			if(mode == 'list'){
+				$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will shrink the panel
+				app.ext.admin_task.u.handlePanelResize('edit');
+				}
+			else if(mode == 'edit'){
+				$btn.button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will expand the panel
+				app.ext.admin_task.u.handlePanelResize('list');
+				}
+			else	{}
+			
+			});
+		}
+	else	{
+		app.u.throwGMessage("Error: unknown btn-action specified for button. admin_task.u.handleButtons");
+		}
+
+	});
+$('.taskListButtonRow .buttonSet').buttonset();
+
+				}
+			
+			} //u
 
 
 		} //r object.

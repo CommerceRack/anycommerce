@@ -2285,8 +2285,12 @@ $tmp.empty().remove();
 //at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.
 		processList : function($tag,data){
 			var L = data.value.length;
+			var $o; //recycled. what gets added to $tag for each iteration.
 			for(var i = 0; i < L; i += 1)	{
-				$tag.append(app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]));
+				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])
+				if(data.value[i].id){} //if an id was set, do nothing.
+				else	{$o.attr('id','')} //nuke the id. it's the template id and will be duplicated several times.
+				$tag.append($o);
 				}
 			$tag.removeClass('loadingBG');
 			},

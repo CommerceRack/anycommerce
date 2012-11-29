@@ -360,8 +360,9 @@ var admin_prodEdit = function() {
 			else	{
 				//product editor is already on the dom. Right now, only one instance of the editor can be created at a time.
 				}
-
-			if(!path || path == '/biz/product/index.cgi' || path == '/biz/product/edit.cgi?VERB=WELCOME')	{
+			
+			if(P.pid)	{app.ext.admin_prodEdit.a.showPanelsFor(P.pid)} //if a pid is specified, immediately show the editor for that pid.
+			else if(!path || path == '/biz/product/index.cgi' || path == '/biz/product/edit.cgi?VERB=WELCOME')	{
 				//do nothing. product page template has initial load content.
 				}
 			else	{

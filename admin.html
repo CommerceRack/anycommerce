@@ -26,7 +26,7 @@ else {
 	
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20121128.2",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121129.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"jqurl":"https://www.zoovy.com/webapi/jquery/index.cgi",
@@ -374,9 +374,9 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 
-<div class='debug buttonset clearBoth clearAll clearfix'>
-<hr />
-
+<div id='debugPanel' class='debug buttonset clearBoth clearAll clearfix'>
+	<div class='debugBG'></div>
+	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 <button onClick="app.ext.admin.a.showDomainConfig();">domainConfig</button>
 <button onClick="navigateTo('#!tasks');">taskList</button>
@@ -388,9 +388,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
 <button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
-
-<hr />
-
+	</div>
 </div>
 
 

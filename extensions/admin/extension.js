@@ -380,8 +380,10 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 	}
 
 if(app.u.getParameterByName('debug'))	{
-	$('button','.buttonset').button();
-	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('button','#debugPanel').button();
+	$('#debugPanel').show()
+	$('.debugContent','#debugPanel').append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('body').css('padding-bottom',125);
 	$('#jtSectionTab').show();
 	}
 
@@ -917,7 +919,7 @@ else	{
 					}
 				return false;
 				},
-
+/*
 			oldShowUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
@@ -955,6 +957,7 @@ else	{
 				else if(path.substring(0,2) == '#!')	{
 					//app based content always shows up in whatever tab is in focus.
 					app.u.dump(" -> native appMode");
+					app.u.dump(" -> path.substr(0,10): "+path.substr(0,10));
 					// app.ext.admin.u.loadNativeApp(path,P);
 					// loadNativeApp : function(path,P){
 
@@ -963,6 +966,9 @@ else	{
 						}
 					else if(path == '#!domainConfigPanel')	{
 						app.ext.admin.a.showDomainConfig();
+						}
+					else if(path.substr(0,10) == '#!products')	{
+						app.ext.admin_prodEdit.u.showProductEditor(path,P);
 						}
 					else if(path == '#!orderPrint')	{
 						app.ext.convertSessionToOrder.a.printOrder(P.data.oid,P);
@@ -1033,6 +1039,7 @@ else	{
 
 				return false;
 				},
+			*/
 /*
 A generic form handler. 
 $form is a jquery object of the form.
@@ -1317,8 +1324,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
+				else if(path == '#!products')	{
+					app.u.dump("Go to product editor");
+					app.ext.admin_prodEdit.u.showProductEditor(path,opts);
+					}
 				else if(path == '#!tasks')	{
-					app.ext.admin_task.a.showTaskList();
+					app.ext.admin_task.a.showTaskManager();
 					}
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
@@ -1373,6 +1384,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 //executed from within showUI. probably never want to execute this function elsewhere.
+//this is for handling legacy paths.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
 				this.handleTopTabs(tab);
