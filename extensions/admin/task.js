@@ -23,7 +23,7 @@ An extension for managing the media library in addition to ALL other file upload
 
 
 var admin_task = function() {
-	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate');
+	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditTemplate','taskListAddTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -72,18 +72,18 @@ var admin_task = function() {
 				tagObj.datapointer = "adminTaskUpdate";
 				app.model.addDispatchToQ({"_cmd":"adminTaskUpdate","_tag":tagObj},q);	
 				}
-			}, //adminTaskUpdate
-		adminTaskDetail : {
-			init : function(tagObj,q)	{
-				this.dispatch(tagObj,q);
+			} //adminTaskUpdate
+/*		adminTaskDetail : {
+			init : function(taskid,tagObj,q)	{
+				this.dispatch(taskid,tagObj,q);
 				},
-			dispatch : function(tagObj,q)	{
+			dispatch : function(taskid,tagObj,q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminTaskDetail";
-				app.model.addDispatchToQ({"_cmd":"adminTaskDetail","_tag":tagObj},q);	
+				app.model.addDispatchToQ({"_cmd":"adminTaskDetail","taskid":taskid,"_tag":tagObj},q);	
 				}
 			} //adminTaskDetail
-		
+*/		
 		}, //calls
 
 
@@ -135,6 +135,19 @@ var admin_task = function() {
 				app.model.dispatchThis('immutable');
 				},
 
+			showAddTaskModal : function(){
+				var $target = $('#taskLiskCreateModal');
+				if($target.length)	{
+					$target.empty();
+					}
+				else	{
+					$target = $("<div \/>").attr('id','taskLiskCreateModal').appendTo('body');
+					$target.dialog({'width': 500, 'height':500, 'autoOpen':false, 'modal':true});
+					}
+				$target.dialog('open');
+				$target.append(app.renderFunctions.transmogrify({'id':'addTaskFormContainer'},'taskListCreateEditTemplate',{}));
+				},
+
 //A function for showing just the tasks. template ID can be passed in. Think landing page or for some panel.
 //should return the content as a jquery object.
 			showTaskList : function(opts)	{
@@ -161,25 +174,44 @@ var admin_task = function() {
 			handlePanelResize : function(panelFocus)	{
 				app.u.dump("BEGIN admin_task.u.handlePanelResize. panelFocus: "+panelFocus);
 				$('.togglePanelResize').show(); //the toggle button is hidden by default. show once the panel sizes change.
+				var $list = $('#taskListContainer');
+				var $edit = $('#taskEditorContainer');
+				
+				if(panelFocus == $list.data('mode')){} //already in the correct state. do nothing.
 //collapse the active tasks panel. show the edit panel.
-				if(panelFocus == 'edit')	{
-					$('#taskManagerContainer').data('mode','edit');
-					$('#taskManagerContainer .hideInMinifyMode').hide();
-					$('#taskManagerContainer').animate({width:"250px"},1000);
-					$('.taskDetailsContainer').show({width:"500px"},1000);
+				else if(panelFocus == 'edit')	{
+					$list.data('mode','edit');
+//edit is getting big and list is getting small. show/hide elements accordingly.
+					$('.hideInMinifyMode',$list).hide(); //adjust list side for minification.
+					$('.hideInMinifyMode',$edit).show(); //adjust edit side for maxification.
+					$('.ui-widget-content',$edit).slideDown(1000);
+					$list.animate({width:"49%"},1000); //shrink list side.
+					$edit.show().animate({width:"49%"},1000); //expand edit side.
 					}
 //collapse the edit panel. show the active tasks panel.
 				else if(panelFocus == 'list'){
-					$('#taskManagerContainer').data('mode','list');
-					$('.taskManagerListTable .hideInMinifyMode').show();
-					$('#taskManagerContainer').animate({width:"75%"},1000);
-					$('.taskDetailsContainer').show({width:"20%"},1000);
+					$list.data('mode','list');
+//edit is getting small and list is getting big. show/hide elements accordingly.
+					$('.hideInMinifyMode',$list).show();
+					$('.hideInMinifyMode',$edit).hide();
+					$('.ui-widget-content',$edit).slideUp(1000);
+					$list.animate({width:"80%"},1000);
+					$edit.animate({width:"18%"},1000);
 					}
 				else	{
-					$('#taskManagerContainer').data('mode','error');
+					$list.data('mode','error');
 					app.u.throwGMessage("Error: panelFocus ['"+panelFocus+"'] is not valid or undefined in admin_task.u.handleManagerResize");
 					}
 				},
+			
+//dataObj will be info about the task. everything in the original task list object, however it gets lowercased so just use it to reference original data.
+//this allows the add and edit templates to be recycled (maintaining case).
+			addEditorFor : function(dataObj)	{
+//				app.u.dump("admin_task.u.addEditorFor dataObj: "); app.u.dump(dataObj);
+				//check to see if template is already rendered and, if so, just highlight it (maybe jump to it?)
+				$('#taskEditorContainer').append(app.renderFunctions.transmogrify(dataObj,'taskListEditTemplate',app.data.adminTaskList['@TASKS'][dataObj.obj_index]));
+				},
+			
 			
 			handleButtons : function($target){
 $("button",$target).each(function(){
@@ -190,13 +222,13 @@ $("button",$target).each(function(){
 	if($btn.data('btn-action') == 'editTask')	{
 		$btn.on('click.task-action',function(){
 			app.ext.admin_task.u.handlePanelResize('edit');
-			app.ext.admin_task.calls.adminTaskDetail.init(taskid,{},'mutable');
+			app.ext.admin_task.u.addEditorFor($btn.closest('tr').data());
 			});
 		}
 	else if($btn.data('btn-action') == 'togglePanelResize')	{
 		$btn.button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will expand the panel. set here for initial button display.
 		$btn.on('click.task-action',function(){
-			var mode = $('#taskManagerContainer').data('mode');
+			var mode = $('#taskListContainer').data('mode');
 			if(mode == 'list'){
 				$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will shrink the panel
 				app.ext.admin_task.u.handlePanelResize('edit');

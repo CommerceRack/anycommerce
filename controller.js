@@ -1871,8 +1871,8 @@ $r.find('[data-bind]').each(function()	{
 
 	if(Number(value) == 0 && bindData.hideZero)	{
 //		app.u.dump(" -> got to zero section");
-		app.u.dump(" -> $focusTag.data('bind'): "+$focusTag.data('bind'));
-		app.u.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
+//		app.u.dump(" -> $focusTag.data('bind'): "+$focusTag.data('bind'));
+//		app.u.dump(' -> no pretext/posttext or anything else done because value = 0 and hideZero = '+bindData.hideZero);			
 		}
 //in some cases, in the UI, we load another template that's shared, such as fileImport in admin_medialib extension
 //in this case, the original data is passed through and no format translation is done on the element itself.
@@ -2283,13 +2283,16 @@ $tmp.empty().remove();
 //This should be used for all lists going forward. stuffList and object2Template should be upgraded to use this.
 //everthing that's in the data lineitem gets passed as first param in transmogrify, which will add each key/value as data-key="value"
 //at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.
+//data-obj_index is set so that a quick lookup is available. ex: in tasks list, there's no detail call, so need to be able to find data quickly in orig object.
+// _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
+
 		processList : function($tag,data){
 			var L = data.value.length;
 			var $o; //recycled. what gets added to $tag for each iteration.
 			for(var i = 0; i < L; i += 1)	{
 				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])
 				if(data.value[i].id){} //if an id was set, do nothing.
-				else	{$o.attr('id','')} //nuke the id. it's the template id and will be duplicated several times.
+				else	{$o.removeAttr('id').attr('data-obj_index',i)} //nuke the id. it's the template id and will be duplicated several times. set index for easy lookup later.
 				$tag.append($o);
 				}
 			$tag.removeClass('loadingBG');

@@ -47,6 +47,7 @@ var admin = function() {
 		tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
 		tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities'],
 		state : {},
+		tab : 'home',
 		templates : theseTemplates,
 		willFetchMyOwnTemplates : true,
 		"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
@@ -920,7 +921,7 @@ else	{
 				return false;
 				},
 /*
-			oldShowUI : function(path,P)	{
+			showUI : function(path,P)	{
 				app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 				_ignoreHashChange = true; //see handleHashChange for details on what this does.
 				document.location.hash = path;
@@ -967,8 +968,9 @@ else	{
 					else if(path == '#!domainConfigPanel')	{
 						app.ext.admin.a.showDomainConfig();
 						}
-					else if(path.substr(0,10) == '#!products')	{
-						app.ext.admin_prodEdit.u.showProductEditor(path,P);
+					else if(path == '#!products')	{
+						app.u.dump("Go to product editor");
+						app.ext.admin_prodEdit.u.showProductEditor(path,opts);
 						}
 					else if(path == '#!orderPrint')	{
 						app.ext.convertSessionToOrder.a.printOrder(P.data.oid,P);
@@ -1039,7 +1041,7 @@ else	{
 
 				return false;
 				},
-			*/
+*/
 /*
 A generic form handler. 
 $form is a jquery object of the form.
@@ -1076,7 +1078,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				},
 				
 			showDomainConfig : function(){
-				$(app.u.jqSelector('#',app.ext.admin.vars.focusTabID)).empty().showLoading();
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading();
 				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
 				app.model.dispatchThis('immutable')
 				},
