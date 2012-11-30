@@ -1217,9 +1217,9 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 	//		app.u.dump(" -> templates: "+templates);
 			var ajaxRequest = $.ajax({
 					type: "GET",
-					url: templateURL+"?_v="+app.vars.release//,
-//					async: false,
-//					dataType:"html"
+					url: templateURL+"?_v="+app.vars.release,
+					async: false,
+					dataType:"html"
 					});	//this.fetchFileViaAjax(templateURL);
 			
 			ajaxRequest.error(function(d,e,f){
@@ -1228,7 +1228,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 				app.u.dump("ERROR! unable to load remote templates");
 				app.u.dump("templateURL: "+templateURL);
 				app.u.dump(e);
-				app.u.dump(d);
+				app.u.dump(d.statusText);
 				});
 	
 			ajaxRequest.success(function(data){
