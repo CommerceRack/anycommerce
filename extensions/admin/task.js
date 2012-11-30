@@ -64,13 +64,13 @@ var admin_task = function() {
 			}, //adminTaskCreate
 		
 		adminTaskRemove : {
-			init : function(tagObj,q)	{
-				this.dispatch(tagObj,q);
+			init : function(taskid, tagObj,q)	{
+				this.dispatch(taskid, tagObj,q);
 				},
-			dispatch : function(tagObj,q)	{
+			dispatch : function(taskid, tagObj,q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminTaskRemove";
-				app.model.addDispatchToQ({"_cmd":"adminTaskRemove","_tag":tagObj},q);	
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":tagObj},q);	
 				}
 			}, //adminTaskRemove
 		
@@ -112,12 +112,22 @@ var admin_task = function() {
 
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
 
+//used for the delete confirmation dialog.
+$('body').append("<div id='dialogTaskDeleteConfirm' class='displayNone' title='Please confirm delete'><p><span class='ui-icon ui-icon-alert floatLeft marginRight marginBottom'></span>These tasks will be permanently deleted and cannot be recovered. Are you sure?</p></div>");
+
 				return r;
 				},
 			onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
+				}
+			},
+		updateTaskList : {
+			onSuccess : function(tagObj){
+				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),app.data[tagObj.datapointer]); //populate content.
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
+				app.ext.admin_task.u.handleButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
 				}
 			}
 		}, //callbacks
@@ -129,20 +139,14 @@ var admin_task = function() {
 		a : {
 			
 			showTaskManager : function() {
+
 				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
 //generate some of the task list content right away so the user knows something is happening.
 				$target.empty().showLoading();
-				app.ext.admin_task.calls.adminTaskList.init({'callback':function(_tag){
-					var data = app.data[_tag.datapointer]; //shortcut to data. the data saved is identical to the response w/ _tag/_rtag added back in.
-					if(app.model.responseHasErrors(data))	{
-						app.u.throwMessage(data);
-						}
-					else	{
-						$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',data)); //populate content.
-						$target.hideLoading();
-						app.ext.admin_task.u.handleButtons($target);
-						}
-					}},'immutable');
+				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
+				app.ext.admin_task.u.handleButtons($target);
+//tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
+				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
 				},
 
@@ -157,9 +161,10 @@ var admin_task = function() {
 					}
 				$target.dialog('open');
 				$target.append(app.renderFunctions.transmogrify({'id':'addTaskFormContainer'},'taskListCreateEditTemplate',{}));
+				app.ext.admin_task.u.handleButtons($target);
 				},
 
-//A function for showing just the tasks. template ID can be passed in. Think landing page or for some panel.
+//A function for showing just the tasks. template ID can be passed in. Think landing page or for Pekonens messaging panel.
 //should return the content as a jquery object.
 			showTaskList : function(opts)	{
 				var $o = undefined; //output. what is returned.
@@ -198,7 +203,7 @@ var admin_task = function() {
 					$('.ui-widget-content',$edit).slideDown(1000);
 					$list.animate({width:"49%"},1000); //shrink list side.
 					$edit.show().animate({width:"49%"},1000); //expand edit side.
-					$('.togglePanelResize').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will expand the panel
+					$('.togglePanelResize').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will expand the panel
 					}
 //collapse the edit panel. show the active tasks panel.
 				else if(panelFocus == 'list'){
@@ -209,7 +214,7 @@ var admin_task = function() {
 					$('.ui-widget-content',$edit).slideUp(1000);
 					$list.animate({width:"80%"},1000);
 					$edit.animate({width:"18%"},1000);
-					$('.togglePanelResize').button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will shrink the panel
+					$('.togglePanelResize').button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will shrink the panel
 					}
 				else	{
 					$list.data('mode','error');
@@ -226,19 +231,76 @@ var admin_task = function() {
 				},
 			
 			
+			handleModifyTasks : function(t)	{
+app.u.dump("BEGIN admin_task.u.handleModifyTasks");
+var $radio = $(':radio:checked',$(t));
+var action = $radio.val();
+app.u.dump(" -> action: "+action);
+
+var numChecked = $('#taskListContainer .taskManagerListTable input:checkbox:checked').length
+app.u.dump(" -> num checked: "+numChecked);
+if(numChecked)	{
+	if(action == 'adminTaskRemove')	{
+		app.u.dump(" -> adminTaskRemove button clicked.");
+		var $dialog = $( "#dialogTaskDeleteConfirm" );
+		$dialog.dialog({
+			resizable: false,
+			height:200,
+			autoOpen:false,
+			modal: true,
+			buttons: {
+				"Delete selected tasks": function() {
+					$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
+						app.u.dump(" -> checked task ID: "+$(this).closest('[data-id]').data('id'));
+						app.ext.admin_task.calls.adminTaskRemove.init($(this).closest('[data-id]').data('id'),{},'immutable');
+						});
+					app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+					app.model.dispatchThis('immutable');
+					$('#taskListTbody').empty(); // clear out all the tasks.
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
+					$(this).dialog( "close" );
+					},
+				"Cancel" : function() {
+					$(this).dialog( "close" );
+					}
+				}
+			});
+		$dialog.dialog('open');
+		}
+	else if(action == 'adminTaskUpdate'){
+		alert('do something');
+		}
+	else	{
+		app.u.throwGMessage("Error: unknown action set in admin_task.u.handleModifyTasks");
+		}
+	}
+else	{
+	alert("Please select at least 1 task from the list.");
+	}
+//whether a success or failure, we always want the modify buttons to revert to their normal state so one doesn't look clicked.
+//also have to uncheck the radio buttons or they can't be enabled again till another selection is made.
+$('#taskListContainer .taskListButtonRow .ui-state-active').removeClass('ui-state-active');
+$('#taskListContainer .taskListButtonRow :radio').prop('checked',false);
+				},
+			
 			handleButtons : function($target){
 $("button",$target).each(function(){
 	var $btn = $(this);
 	$btn.button();
 	$btn.on('click.prevent',function(event){event.preventDefault();}); //precent default submit action
 
-	if($btn.data('btn-action') == 'editTask')	{
+	var btnAction = $btn.data('btn-action');
+
+	if(btnAction == 'editTask')	{
 		$btn.on('click.task-action',function(){
 			app.ext.admin_task.u.handlePanelResize('edit');
 			app.ext.admin_task.u.addEditorFor($btn.closest('tr').data());
 			});
 		}
-	else if($btn.data('btn-action') == 'togglePanelResize')	{
+	else if(btnAction == 'addNewTask')	{
+		$btn.button({icons:{primary: "ui-icon-circle-plus"}}); //add plus sign icon.
+		}
+	else if(btnAction == 'togglePanelResize')	{
 		$btn.on('click.task-action',function(){
 			var mode = $('#taskListContainer').data('mode');
 			if(mode == 'list'){
@@ -252,11 +314,15 @@ $("button",$target).each(function(){
 			});
 		}
 	else	{
-		app.u.throwGMessage("Error: unknown btn-action specified for button. admin_task.u.handleButtons");
+		app.u.throwGMessage("Unknown btn-action specified for button. admin_task.u.handleButtons ['"+btnAction+"']");
 		}
 
 	});
-$('.taskListButtonRow .buttonSet').buttonset();
+//don't use a click event here, it gets double executed. change worked properly.
+//run an off first to make sure action isn't double added if this function is re-run.
+$('.taskListButtonRow .buttonSet').buttonset().off('change.handleModifyTasks').on('change.handleModifyTasks',function(){
+	app.ext.admin_task.u.handleModifyTasks(this);
+	});
 
 				}
 			

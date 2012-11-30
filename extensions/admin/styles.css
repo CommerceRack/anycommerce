@@ -454,6 +454,6 @@ put the prompt into a span
 <label><span>prompt</span>input</label>
 */
 .labelsAsBreaks label	{display:block; margin:6px 0; vertical-align:top;}
-.labelsAsBreaks label span:first	{padding-right:12px; display:inline-block; width:150px;}
+.labelsAsBreaks label span	{padding-right:12px; display:inline-block; width:150px; vertical-align:top;}
 .labelsAsBreaks input	{width:250px;}
 .labelsAsBreaks textarea	{width:200px; height:250px;}

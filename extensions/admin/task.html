@@ -22,7 +22,7 @@
 		<th >Task</th>
 		<th class='hideInMinifyMode'>Due Date</th>
 		<th class='hideInMinifyMode'>Priority</th>
-		<th class='hideInMinifyMode'>Quick Link</th>
+<!--		<th class='hideInMinifyMode'>Quick Link</th> -->
 		<th class='hideInMinifyMode'>Assigned To</th>
 		<th >Actions</th>
 	</tr>
@@ -33,14 +33,11 @@
 	</fieldset>
 	<div class='hideInMinifyMode'><!-- this class didn't do what it is supposed to when on the fieldset -->
 	<fieldset class='taskListButtonRow'>
-	<button data-btn-action="addNewTask">Add New</button>
-	<span class='buttonSet floatRight'>
+	<button data-btn-action="addNewTask" class='floatRight'>Add New</button>
+	<span class='buttonSet'>
 		Modify Selected:
-		<label for='taskListActionAssignTasks'>Assign</label><input id='taskListActionAssignTasks' type='radio' name='action' value='assigntasks' title='Assign or reassign selected tasks' />
-		<label for='taskListActionPrioritizeTasks'>Prioritize</label><input id='taskListActionPrioritizeTasks' type='radio' name='action' value='prioritizetasks' title='Assign or reassign selected tasks' />
-		<label for='taskListActionStatusTasks'>Status</label><input id='taskListActionStatusTasks' type='radio' name='action' value='statustasks' title='Chagne the status of the selected tasks' />
-		<label for='taskListActionScheduleTasks'>Due Date</label><input id='taskListActionScheduleTasks' type='radio' name='action' value='scheduletasks' title='Add or change the due date of selected tasks' />
-		<label for='taskListActionDeleteTasks'>Delete</label><input id='taskListActionDeleteTasks' type='radio' name='action' value='deletetasks' title='delete the selected tasks. There is no undo for this' />
+		<label for='adminTaskUpdate'>Update</label><input id='adminTaskUpdate' type='radio' name='action' value='adminTaskUpdate' title='Update the selected tasks.' />
+		<label for='adminTaskRemove'>Delete</label><input id='adminTaskRemove' type='radio' name='action' value='adminTaskRemove' title='delete the selected tasks.' />
 	</span>
 	</fieldset>
 	</div>
@@ -64,7 +61,7 @@ reminder: you can't have a template for a tr without a parent table (same for li
 	<td data-bind="var: task(TITLE); format:text;"></td>
 	<td class='hideInMinifyMode' data-bind="var: task(DUE_GMT); format:unix2mdy; hideZero:true;"></td>
 	<td class='hideInMinifyMode' data-bind="var: task(PRIORITY); format:text;"></td>
-	<td class='hideInMinifyMode lookLikeLink' onClick="app.u.dump($(this).parent().data()); alert($(this).parent().data('link'))">Do it to it</td>
+<!--	<td class='hideInMinifyMode lookLikeLink' onClick="app.u.dump($(this).parent().data()); alert($(this).parent().data('link'))">Do it to it</td> -->
 	<td class='hideInMinifyMode' data-bind="var: task(LUSER); format:text;"></td>
 	<td >
 <button data-btn-action="editTask" ><span class="ui-icon ui-icon-pencil"></span></button>
@@ -80,8 +77,8 @@ reminder: you can't have a template for a tr without a parent table (same for li
 
 
 <div id='taskListEditTemplate' class='ui-widget marginBottom'>
-	<div class='ui-state-default stdPadding ui-corner-top'>
-	<h3 data-bind="var: task(ID); format:text; pretext: Edit: ;"></h3>
+	<div class='ui-state-default stdPadding ui-corner-top' data-bind="var: task(TITLE); format:assignAttribute; attribute:title;">
+	<h3 data-bind="var: task(ID); format:text;"><span class='hideInMinifyMode'>Edit: </span></h3>
 	</div>
 	<div class='stdPadding ui-widget-content ui-corner-bottom'>
 	<form>
@@ -119,10 +116,18 @@ this makes the template more versatile.
 		<option value='3'>3</option>
 	</select>
 	</label>
-	<label><span>Link</span> <input type='text' name='link' max="100" maxlength="100" required='required' data-bind="var: task(LINK); format:popVal;" /></label>
+<!--	<label><span>Link</span> <input type='text' name='link' max="100" maxlength="100" required='required' data-bind="var: task(LINK); format:popVal;" /></label> -->
 	<label><span>Detail</span> <textarea name='detail' data-bind="var: task(DETAIL); format:popVal;"></textarea></label>
 </fieldset>
 
 <input type='hidden' name='class' value='TODO' />
 </form>
+
+
+
+
+
+
+
+
 
