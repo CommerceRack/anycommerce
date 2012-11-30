@@ -254,7 +254,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 		init : {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
-				app.model.fetchNLoadTemplates('extensions/checkout_nice/templates.html',theseTemplates);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{

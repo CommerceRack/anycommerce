@@ -252,7 +252,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				var r =false; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 //start this process as early as possible. Errors will be reported independantly of init (result of ajax req. for templates).
-				app.model.fetchNLoadTemplates('extensions/checkout_passive/templates.html',theseTemplates);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
 				var msg = false
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					msg = app.u.errMsgObject("Uh Oh! It appears an error occured. Please try again. If error persists, please contact the site administrator.");
