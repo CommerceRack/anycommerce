@@ -94,9 +94,11 @@ reminder: you can't have a template for a tr without a parent table (same for li
 
 
 
-<div id='taskListAddTemplate'>
-	<form>
-	<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div>
+<div id='taskListCreateTemplate'>
+	<form action='#' onSubmit="return false;" data-tag_datapointer="adminTaskCreate">
+	<input type='hidden' name='_cmd' value='adminTaskCreate' />
+	<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div><!-- loads the create/update form -->
+	<button>Create Task</button>
 	</form>
 </div>
 
@@ -109,15 +111,17 @@ this makes the template more versatile.
 
 <form>
 <fieldset id='taskListCreateEditTemplate' class='labelsAsBreaks'>
-	<label><span>Title</span> <input type='text' name='title' max="100" maxlength="100" required='required' data-bind="var: task(TITLE); format:popVal;" /></label>
-	<label><span>Priority</span> <select name='priority' data-bind="var: task(PRIORITY); format:popVal;">
+	<label><span>Title</span> <input type='text' name='TITLE' max="100" maxlength="100" required='required' data-bind="var: task(TITLE); format:popVal;" /></label>
+	<label><span>Priority</span> <select name='PRIORITY' data-bind="var: task(PRIORITY); format:popVal;">
 		<option value='1'>1</option>
 		<option value='2'>2</option>
 		<option value='3'>3</option>
 	</select>
 	</label>
-<!--	<label><span>Link</span> <input type='text' name='link' max="100" maxlength="100" required='required' data-bind="var: task(LINK); format:popVal;" /></label> -->
-	<label><span>Detail</span> <textarea name='detail' data-bind="var: task(DETAIL); format:popVal;"></textarea></label>
+	<label><span>Assigned to:</span> <input type='text' name='LUSER' max="100" maxlength="100" data-bind="var: task(LUSER); format:popVal;" /></label>
+	<label><span>Due date:</span> <input type='text' name='DUE_GMT' max="100" maxlength="100" class='datepicker' data-bind="var: task(DUE_GNT); format:popVal;" /></label>
+<!--	<label><span>Link</span> <input type='text' name='LINK' max="100" maxlength="100" required='required' data-bind="var: task(LINK); format:popVal;" /></label> -->
+	<label><span>Detail</span> <textarea name='DETAIL' data-bind="var: task(DETAIL); format:popVal;"></textarea></label>
 </fieldset>
 
 <input type='hidden' name='class' value='TODO' />

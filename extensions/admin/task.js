@@ -34,7 +34,7 @@ mode = manage
 
 
 var admin_task = function() {
-	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditTemplate','taskListAddTemplate');
+	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditTemplate','taskListCreateTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -53,13 +53,14 @@ var admin_task = function() {
 			}, //adminTaskList
 		
 		adminTaskCreate : {
-			init : function(tagObj,q)	{
-				this.dispatch(tagObj,q);
+			init : function(obj,tagObj,q)	{
+				this.dispatch(obj,tagObj,q);
 				},
-			dispatch : function(tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskCreate";
-				app.model.addDispatchToQ({"_cmd":"adminTaskCreate","_tag":tagObj},q);	
+			dispatch : function(obj,tagObj,q)	{
+				obj._cmd = "adminTaskCreate"
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "adminTaskCreate";
+				app.model.addDispatchToQ(obj,q);	
 				}
 			}, //adminTaskCreate
 		
@@ -113,7 +114,14 @@ var admin_task = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/task.html',theseTemplates);
 
 //used for the delete confirmation dialog.
-$('body').append("<div id='dialogTaskDeleteConfirm' class='displayNone' title='Please confirm delete'><p><span class='ui-icon ui-icon-alert floatLeft marginRight marginBottom'></span>These tasks will be permanently deleted and cannot be recovered. Are you sure?</p></div>");
+$('body').append("<div id='removeTaskConfirmModal' class='displayNone' title='Please confirm delete'><p><span class='ui-icon ui-icon-alert floatLeft marginRight marginBottom'></span>These tasks will be permanently deleted and cannot be recovered. Are you sure?</p></div>");
+//used for the delete confirmation dialog.
+$('body').append("<div id='updateTaskModal' class='displayNone' title='Update selected tasks'><p><span class='ui-icon ui-icon-pencil floatLeft marginRight marginBottom'></span>Setting the fields below will update ALL of the selected tasks.</p></div>");
+$('#updateTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
+
+//used for the add new modal.
+$('body').append("<div id='createTaskModal' class='displayNone' title='Create a new task'></div>");
+$('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 
 				return r;
 				},
@@ -123,11 +131,23 @@ $('body').append("<div id='dialogTaskDeleteConfirm' class='displayNone' title='P
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			},
+
+		adminTaskCreate : {
+			onSuccess : function(tagObj){
+//hideLoading is handled by the updateTaskList call 
+				$('#createTaskModal').dialog('close');
+				app.u.throwMessage(app.data[tagObj.datapointer]);
+				}
+			},
 		updateTaskList : {
 			onSuccess : function(tagObj){
 				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),app.data[tagObj.datapointer]); //populate content.
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 				app.ext.admin_task.u.handleButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
+				},
+			onError : function(responseData, uuid)	{
+				app.u.throwMessage(responseData);
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 				}
 			}
 		}, //callbacks
@@ -150,18 +170,21 @@ $('body').append("<div id='dialogTaskDeleteConfirm' class='displayNone' title='P
 				app.model.dispatchThis('immutable');
 				},
 
-			showAddTaskModal : function(){
-				var $target = $('#taskLiskCreateModal');
-				if($target.length)	{
-					$target.empty();
-					}
-				else	{
-					$target = $("<div \/>").attr('id','taskLiskCreateModal').appendTo('body');
-					$target.dialog({'width': 500, 'height':500, 'autoOpen':false, 'modal':true});
-					}
+			showCreateTaskModal : function(){
+				var $target = $('#createTaskModal'); //created as part of init process.
+				$target.empty().append(app.renderFunctions.transmogrify({'id':'addTaskFormContainer'},'taskListCreateTemplate',{}));
+				$('button',$target).button(); //make the buttons look like jqueryui buttons.
+//apply the onsubmit action for the form.
+//processForm handles the request creation.
+				$('form',$target).on('submit.adminCreateTask',function(event){
+					event.preventDefault();
+					$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
+					app.ext.admin.a.processForm($(this).parent(),'immutable');
+					app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+					app.model.dispatchThis('immutable');
+					});
 				$target.dialog('open');
-				$target.append(app.renderFunctions.transmogrify({'id':'addTaskFormContainer'},'taskListCreateEditTemplate',{}));
-				app.ext.admin_task.u.handleButtons($target);
+//				app.ext.admin_task.u.handleButtons($target);
 				},
 
 //A function for showing just the tasks. template ID can be passed in. Think landing page or for Pekonens messaging panel.
@@ -242,7 +265,7 @@ app.u.dump(" -> num checked: "+numChecked);
 if(numChecked)	{
 	if(action == 'adminTaskRemove')	{
 		app.u.dump(" -> adminTaskRemove button clicked.");
-		var $dialog = $( "#dialogTaskDeleteConfirm" );
+		var $dialog = $( "#removeTaskConfirmModal" );
 		$dialog.dialog({
 			resizable: false,
 			height:200,
@@ -299,6 +322,9 @@ $("button",$target).each(function(){
 		}
 	else if(btnAction == 'addNewTask')	{
 		$btn.button({icons:{primary: "ui-icon-circle-plus"}}); //add plus sign icon.
+		$btn.on('click.task-action',function(){
+			app.ext.admin_task.a.showCreateTaskModal();
+			});
 		}
 	else if(btnAction == 'togglePanelResize')	{
 		$btn.on('click.task-action',function(){
