@@ -67,7 +67,18 @@ var admin_task = function() {
 				app.model.addDispatchToQ(obj,q);	
 				}
 			}, //adminTaskCreate
-		
+
+		adminTaskComplete : {
+			init : function(taskid, tagObj,q)	{
+				this.dispatch(taskid, tagObj,q);
+				},
+			dispatch : function(taskid, tagObj,q)	{
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminTaskComplete";
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":tagObj},q);	
+				}
+			}, //adminTaskComplete
+
 		adminTaskRemove : {
 			init : function(taskid, tagObj,q)	{
 				this.dispatch(taskid, tagObj,q);
@@ -140,7 +151,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 		adminTaskUpdate : {
 			onSuccess : function(tagObj){
 				app.u.dump("BEGIN admin_task.callbacks.adminTaskUpdate");
-				var msgObj = app.u.successMsgObject("Your changes have been made.");
+				var msgObj = app.u.successMsgObject("The task updates have been saved.");
 				msgObj.targetID = tagObj.targetID;
 				app.u.throwMessage(msgObj);
 				},
@@ -308,13 +319,13 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 			handleModifyTasks : function(t)	{
 app.u.dump("BEGIN admin_task.u.handleModifyTasks");
 var $radio = $(':radio:checked',$(t));
-var action = $radio.val();
+var cmd = $radio.val();
 var numChecked = $('#taskListContainer .taskManagerListTable input:checkbox:checked').length
 
-app.u.dump(" -> action: "+action+" and num checked: "+numChecked);
+app.u.dump(" -> cmd: "+cmd+" and num checked: "+numChecked);
 
 if(numChecked)	{
-	if(action == 'adminTaskRemove')	{
+	if(cmd == 'adminTaskRemove')	{
 		app.u.dump(" -> adminTaskRemove button clicked.");
 		var $dialog = $( "#removeTaskConfirmModal" );
 		$dialog.dialog({
@@ -339,11 +350,19 @@ if(numChecked)	{
 			});
 		$dialog.dialog('open');
 		}
-	else if(action == 'adminTaskUpdate'){
-		alert('do something');
+	else if(cmd == 'adminTaskComplete')	{
+		$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
+			app.ext.admin_task.calls.adminTaskComplete.init($(this).closest('[data-id]').data('id'),{},'immutable');
+			});
+		app.ext.admin_task.u.clearAndUpdateTasks();
+		app.model.dispatchThis('immutable');
 		}
+//not supported just yet
+//	else if(cmd == 'adminTaskUpdate'){
+//		alert('do something');
+//		}
 	else	{
-		app.u.throwGMessage("Error: unknown action set in admin_task.u.handleModifyTasks");
+		app.u.throwGMessage("Error: unknown cmd set in admin_task.u.handleModifyTasks");
 		}
 	}
 else	{

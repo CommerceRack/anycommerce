@@ -91,7 +91,7 @@ The form actions for the two templates below are added in the extension
 	<input type='hidden' name='call' value='admin_task/adminTaskUpdate' />
 	<input type='hidden' name='_tag/callback' value='adminTaskUpdate' />
 	<input type='hidden' name='_tag/extension' value='admin_task' />
-	<input type='hidden' name='_tag/targetID' value='' data-bind="var: task(id); format:popVal; valuePretext:taskUpdatePanel_;" />
+	<input type='hidden' name='_tag/targetID' value='' data-bind="var: task(id); format:assignAttribute; attribute:value; valuePretext:taskUpdatePanel_;" />
 	
 	<input type='hidden' name='taskid' value='' data-bind="var: task(id); format:popVal;" />
 		<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div>
