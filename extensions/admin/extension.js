@@ -1045,28 +1045,45 @@ else	{
 /*
 A generic form handler. 
 $form is a jquery object of the form.
-set _cmd as a hidden input in the form.
-If you want to set any _tag attributes, set them as data-tag-key="value".
- -> a good example of this would be data-_tag_callback and data-_tag-extension. use underscores because jquery data() strips dashes.
+Either _cmd or call must be set in the form data (as hidden, for instance).
+ -> _cmd will take the entire serialized form into a dispatch (see note on _tag below).
+ -> call should be formatted as extension/call (ex: admin_task/adminTaskUpdate)
+If you want to set any _tag attributes, set them as hidden inputs, like so:  <input type='hidden' name='_tag/something' value='someval'> 
+ -> these would get formatted as _tag : {'something':'someval'}
+
 Execute your own dispatch. This allows the function to be more versatile
 set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
 				processForm : function($form,q)	{
 					var obj = $form.serializeJSON() || {};
-					if($form.length && obj._cmd)	{
-						var data = $form.data(); //obj of all data- attributes on the form tag. used to build tagObj. strips data- off of key.
-						app.u.dump(" -> admin.a.processForm data attributes: "); app.u.dump(data);
-//use data-tag-... attributes on the form to build the _tag obj for the call.
-						obj._tag = {};
-						for(key in data)	{
-							if(key.substring(0,4) == "tag_")	{obj._tag[key.slice(0,4)] = data[key];} //data- is stripped from key already. this slice pulls the tag- off.
+					if($form.length && (obj._cmd || obj.call))	{
+//						app.u.dump(" -> admin.a.processForm data attributes: "); app.u.dump(data);
+						var _tag = {};
+//build the _tag obj.
+						for(key in obj)	{
+							if(key.substring(0,5) == "_tag/")	{
+								_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
+								delete obj[key]; //remove from object so it isn't part of query.
+								}
 							else{}
 							}
-						app.model.addDispatchToQ(obj,q);
+						app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
+						if(obj._cmd)	{
+							obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
+							app.model.addDispatchToQ(obj,q);
+							}
+						else if(obj.call)	{
+							var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
+							delete obj.call;
+							
+							app.ext[call.split('/')[0]].calls[call.split('/')[1]].init(obj,_tag,q)
+							}
+						else{} //can't get here. either cmd or call are set by now.
+						
 						}
 					else	{
-						app.u.throwGMessage("Warning! $form was empty or _cmd not present within $form in admin.a.processForm");
+						app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 						}
 					}, //processForm
 				

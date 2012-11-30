@@ -27,14 +27,18 @@ mode = edit
 Change mode 'list' to 'manage'
 
 mode = manage
- -> add 'add new' functionality.
  -> modify selection section is not working yet.
+
+
+Questions:
+ -> how should I pass date? epoch.
+ -> there was a start to a detail call, then nothing. not needed cuz everything is in list?
 */
 
 
 
 var admin_task = function() {
-	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditTemplate','taskListCreateTemplate');
+	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListUpdateTemplate','taskListCreateTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -76,13 +80,14 @@ var admin_task = function() {
 			}, //adminTaskRemove
 		
 		adminTaskUpdate : {
-			init : function(tagObj,q)	{
-				this.dispatch(tagObj,q);
+			init : function(obj,tagObj,q)	{
+				this.dispatch(obj,tagObj,q);
 				},
-			dispatch : function(tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskUpdate";
-				app.model.addDispatchToQ({"_cmd":"adminTaskUpdate","_tag":tagObj},q);	
+			dispatch : function(obj,tagObj,q)	{
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
+				obj._cmd = "adminTaskUpdate";
+				app.model.addDispatchToQ(obj,q);	
 				}
 			} //adminTaskUpdate
 /*		adminTaskDetail : {
@@ -132,18 +137,44 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				}
 			},
 
+		adminTaskUpdate : {
+			onSuccess : function(tagObj){
+				app.u.dump("BEGIN admin_task.callbacks.adminTaskUpdate");
+				var msgObj = app.u.successMsgObject("Your changes have been made.");
+				msgObj.targetID = tagObj.targetID;
+				app.u.throwMessage(msgObj);
+				},
+			onError : function(tagObj){
+//hideLoading is handled by the updateTaskList call 
+				tagObj.targetID = 'createTaskModal'; //sets where to put the error messages.
+				app.u.throwMessage(app.data[tagObj.datapointer]);
+				}
+			},
+
+
 		adminTaskCreate : {
 			onSuccess : function(tagObj){
 //hideLoading is handled by the updateTaskList call 
 				$('#createTaskModal').dialog('close');
+				app.u.throwMessage(app.u.successMsgObject("Your task has been created."));
+				},
+			onError : function(tagObj){
+//hideLoading is handled by the updateTaskList call 
+				tagObj.targetID = 'createTaskModal'; //sets where to put the error messages.
 				app.u.throwMessage(app.data[tagObj.datapointer]);
 				}
 			},
+//this callback gets used a lot, both on initial load AND when the list is updated.
+//after an update occurs, need to see if mode=edit and if so, hide the stuff that should be hidden.
 		updateTaskList : {
 			onSuccess : function(tagObj){
 				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),app.data[tagObj.datapointer]); //populate content.
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 				app.ext.admin_task.u.handleButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
+				var $list = $('#taskListContainer');
+				if($list.data('mode') == 'edit')	{
+					$('.hideInMinifyMode',$list).hide(); //adjust display for minification.
+					}
 				},
 			onError : function(responseData, uuid)	{
 				app.u.throwMessage(responseData);
@@ -174,13 +205,13 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				var $target = $('#createTaskModal'); //created as part of init process.
 				$target.empty().append(app.renderFunctions.transmogrify({'id':'addTaskFormContainer'},'taskListCreateTemplate',{}));
 				$('button',$target).button(); //make the buttons look like jqueryui buttons.
+				$('.datepicker',$target).datepicker({'dateFormat':'@'}); //@ sets the format to epoch.
 //apply the onsubmit action for the form.
 //processForm handles the request creation.
-				$('form',$target).on('submit.adminCreateTask',function(event){
+				$('form',$target).off('submit.adminTaskCreate').on('submit.adminTaskCreate',function(event){
 					event.preventDefault();
-					$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
-					app.ext.admin.a.processForm($(this).parent(),'immutable');
-					app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+					app.ext.admin.a.processForm($(this),'immutable');
+					app.ext.admin_task.u.clearAndUpdateTasks();
 					app.model.dispatchThis('immutable');
 					});
 				$target.dialog('open');
@@ -244,13 +275,33 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					app.u.throwGMessage("Error: panelFocus ['"+panelFocus+"'] is not valid or undefined in admin_task.u.handleManagerResize");
 					}
 				},
+
+//when an update, delete or save occurs, the manager is going to get updated. This function should be run.
+//it'll empty the tasks, create the call and add showLoading to the tab in focus.
+			clearAndUpdateTasks : function()	{
+				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
+				$('#taskListTbody').empty();
+				},
 			
 //dataObj will be info about the task. everything in the original task list object, however it gets lowercased so just use it to reference original data.
 //this allows the add and edit templates to be recycled (maintaining case).
 			addEditorFor : function(dataObj)	{
 //				app.u.dump("admin_task.u.addEditorFor dataObj: "); app.u.dump(dataObj);
 				//check to see if template is already rendered and, if so, just highlight it (maybe jump to it?)
-				$('#taskEditorContainer').prepend(app.renderFunctions.transmogrify(dataObj,'taskListEditTemplate',app.data.adminTaskList['@TASKS'][dataObj.obj_index]));
+//				dataObj.taskid = dataObj.id;
+//				dataObj.id = "taskEditor_"+dataObj.taskid;
+				var $updatePanel = app.renderFunctions.transmogrify(dataObj,'taskListUpdateTemplate',dataObj);
+				$updatePanel.attr('id','taskUpdatePanel_'+dataObj.id)
+				$('.datepicker',$updatePanel).datepicker({'dateFormat':'@'});
+				$('#taskEditorContainer').prepend($updatePanel);
+				$('button',$updatePanel).button(); //make the buttons look like jqueryui buttons.
+				$('form',$updatePanel).off('submit.adminTaskUpdate').on('submit.adminTaskUpdate',function(event){
+					event.preventDefault();
+					app.ext.admin.a.processForm($(this),'immutable');
+					app.ext.admin_task.u.clearAndUpdateTasks();
+					app.model.dispatchThis('immutable');
+					});
 				},
 			
 			
@@ -258,10 +309,10 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 app.u.dump("BEGIN admin_task.u.handleModifyTasks");
 var $radio = $(':radio:checked',$(t));
 var action = $radio.val();
-app.u.dump(" -> action: "+action);
-
 var numChecked = $('#taskListContainer .taskManagerListTable input:checkbox:checked').length
-app.u.dump(" -> num checked: "+numChecked);
+
+app.u.dump(" -> action: "+action+" and num checked: "+numChecked);
+
 if(numChecked)	{
 	if(action == 'adminTaskRemove')	{
 		app.u.dump(" -> adminTaskRemove button clicked.");
@@ -277,10 +328,8 @@ if(numChecked)	{
 						app.u.dump(" -> checked task ID: "+$(this).closest('[data-id]').data('id'));
 						app.ext.admin_task.calls.adminTaskRemove.init($(this).closest('[data-id]').data('id'),{},'immutable');
 						});
-					app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+					app.ext.admin_task.u.clearAndUpdateTasks();
 					app.model.dispatchThis('immutable');
-					$('#taskListTbody').empty(); // clear out all the tasks.
-					$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 					$(this).dialog( "close" );
 					},
 				"Cancel" : function() {
