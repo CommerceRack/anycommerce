@@ -1218,7 +1218,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			var ajaxRequest = $.ajax({
 					type: "GET",
 					url: templateURL+"?_v="+app.vars.release,
-					async: false,
+//					async: false,
 					dataType:"html"
 					});	//this.fetchFileViaAjax(templateURL);
 			
