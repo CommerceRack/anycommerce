@@ -1224,11 +1224,11 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			
 			ajaxRequest.error(function(d,e,f){
 				// the templates not loading is pretty much a catastrophic issue.
-				app.u.throwMessage("Uh oh! Something bad happened. If the error persists, please contact Zoovy technical support. error: could not load remote templates. (dev - see console for more details)",true);			
+				app.u.throwMessage("An error has occured.<br \/>Unable to load remote templates for extension (dev - see console for more details).<br \/>If the error persists, please contact Zoovy technical support.",true);			
 				app.u.dump("ERROR! unable to load remote templates");
 				app.u.dump("templateURL: "+templateURL);
 				app.u.dump(e);
-				app.u.dump(d.statusText);
+				app.u.dump(d);
 				});
 	
 			ajaxRequest.success(function(data){
@@ -1279,6 +1279,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 					errors += "<li>init not set for extension "+namespace;
 					}
 //whether init passed or failed, load the templates. That way any errors that occur as a result of missing templates are also displayed.
+//If the extension sets willfetchmyowntemplates, then no need to run template load code, the extension will handle adding it's own templates.
 //						app.u.dump(" -> templates.length = "+app.ext[namespace].vars.templates.length);
 				if(app.ext[namespace].vars && app.ext[namespace].vars.templates && !app.ext[namespace].vars.willFetchMyOwnTemplates)	{
 					errors += app.model.loadTemplates(app.ext[namespace].vars.templates);

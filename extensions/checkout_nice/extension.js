@@ -254,6 +254,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 		init : {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
+//SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');

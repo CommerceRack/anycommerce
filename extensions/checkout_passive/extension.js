@@ -252,6 +252,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				var r =false; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 //start this process as early as possible. Errors will be reported independantly of init (result of ajax req. for templates).
+//SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
 				var msg = false
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
