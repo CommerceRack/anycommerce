@@ -2,7 +2,7 @@
 
 <h1>Task Manager</h1>
 
-<section class='floatRight taskEditorContainer' id='taskEditorContainer'></section>
+<section class='floatRight taskEditPanelsContainer' id='taskEditPanelsContainer'></section>
 
 <section class='ui-widget marginBottom' id='taskListContainer'>
 
@@ -82,12 +82,14 @@ The form actions for the two templates below are added in the extension
 
 
 
-<div id='taskListUpdateTemplate' class='ui-widget marginBottom taskEditPanel'>
+<div id='taskListEditPanelTemplate' class='ui-widget marginBottom taskEditPanel'>
+	
 	<div class='ui-state-default stdPadding ui-corner-top' data-bind="var: task(title); format:assignAttribute; attribute:title;">
-	<button class='floatRight' data-btn-action='closeTaskEditor'></button>
-	<button class='floatRight' data-btn-action='toggleTaskEditor'></button>
+	<button class='floatRight' data-btn-action='closeTaskEditPanel'></button>
+	<button class='floatRight' data-btn-action='toggleTaskEditPanel'></button>
 	<h3 data-bind="var: task(id); format:text;">Edit: </h3>
 	</div>
+	
 	<div class='stdPadding ui-widget-content ui-corner-bottom'>
 	<form>
 	<input type='hidden' name='call' value='admin_task/adminTaskUpdate' />
@@ -98,7 +100,7 @@ The form actions for the two templates below are added in the extension
 	<input type='hidden' name='taskid' value='' data-bind="var: task(id); format:popVal;" />
 		<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div>
 	
-	<button data-btn-action='saveTaskChanges'>Save Changes</button>
+	<button data-btn-action='saveTaskEditPanel'>Save Changes</button>
 	</form>
 	</div>
 </div>

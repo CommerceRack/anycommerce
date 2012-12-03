@@ -16,29 +16,32 @@
 
 ************************************************************** */
 
+
+
 /*
-TODO:
-mode = edit
- -> Add icons to headers for collapse and close.
- -> add save button and save functionality.
- -> when a task edit is collapsed, change 'collapse' to 'expand'
-    -> if mode = list and 'expand' is clicked, switch to mode = edit.
+Task Manager overview and definition of 'terms'.
 
-Change mode 'list' to 'manage'
+TaskManager refers to the app, specifically the 'list' of tasks and the 'edit' panels.
+There are two modes:
+ 1: 'list', which is also the default. This mode puts the app emphasis on the list of tasks.
+ 2: 'edit', which is when the edit column is expanded. the list portion is still viewable, but in a minimal display.
+ -> individual task editors are referred to as a taskEditPanel.
 
-mode = manage
- -> modify selection section is not working yet.
+Create is supported, but opens a modal so there's no specific mode or mode change when it occurs.
 
+The 'modify' for create and delete also opens in a modal, so no specific mode change is needed.
 
 Questions:
- -> how should I pass date? epoch.
  -> there was a start to a detail call, then nothing. not needed cuz everything is in list?
+
+Features:
+ on taskEditPanel close, check # children and if zero, change mode to list.
 */
 
 
 
 var admin_task = function() {
-	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListUpdateTemplate','taskListCreateTemplate');
+	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditPanelTemplate','taskListCreateTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -47,11 +50,19 @@ var admin_task = function() {
 		
 		adminTaskList : {
 			init : function(status,tagObj,q)	{
-				this.dispatch(status,tagObj,q);
-				},
-			dispatch : function(status,tagObj,q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminTaskList";
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+//					app.u.dump(" -> data is NOT local");
+					r = 1;
+					this.dispatch(status,tagObj,q);
+					}
+				else	{
+//					app.u.dump(" -> data IS local");
+					app.u.handleCallback(tagObj);
+					}
+				},
+			dispatch : function(status,tagObj,q)	{
 				app.model.addDispatchToQ({"_cmd":"adminTaskList","status":status,"_tag":tagObj},q);	
 				}
 			}, //adminTaskList
@@ -160,7 +171,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				tagObj.targetID = 'createTaskModal'; //sets where to put the error messages.
 				app.u.throwMessage(app.data[tagObj.datapointer]);
 				}
-			},
+			}, //adminTaskUpdate
 
 
 		adminTaskCreate : {
@@ -174,14 +185,15 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				tagObj.targetID = 'createTaskModal'; //sets where to put the error messages.
 				app.u.throwMessage(app.data[tagObj.datapointer]);
 				}
-			},
+			}, //adminTaskCreate
 //this callback gets used a lot, both on initial load AND when the list is updated.
 //after an update occurs, need to see if mode=edit and if so, hide the stuff that should be hidden.
 		updateTaskList : {
 			onSuccess : function(tagObj){
+				app.u.dump("BEGIN admin_task.callbacks.updateTaskList.onSuccess");
 				app.renderFunctions.translateSelector(app.u.jqSelector('#',tagObj.targetID),app.data[tagObj.datapointer]); //populate content.
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
-				app.ext.admin_task.u.handleButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
+				app.ext.admin_task.u.handleListButtons($('#taskListTbody')); //buttons outside tbody already have actions, this is just for the tasks.
 				var $list = $('#taskListContainer');
 				if($list.data('mode') == 'edit')	{
 					$('.hideInMinifyMode',$list).hide(); //adjust display for minification.
@@ -191,7 +203,8 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				app.u.throwMessage(responseData);
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 				}
-			}
+			} //updateTaskList
+
 		}, //callbacks
 
 
@@ -199,18 +212,19 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-			
+//This is how the task manager is opened. Just execute this function.
+// later, we may add the ability to load directly into 'edit' mode and open a specific task. not supported just yet.
 			showTaskManager : function() {
 
 				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
 //generate some of the task list content right away so the user knows something is happening.
 				$target.empty().showLoading();
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
-				app.ext.admin_task.u.handleButtons($target);
+				app.ext.admin_task.u.handleListButtons($target);
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
 				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
-				},
+				}, //showTaskManager
 
 			showCreateTaskModal : function(){
 				var $target = $('#createTaskModal'); //created as part of init process.
@@ -222,12 +236,12 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$('form',$target).off('submit.adminTaskCreate').on('submit.adminTaskCreate',function(event){
 					event.preventDefault();
 					app.ext.admin.a.processForm($(this),'immutable');
-					app.ext.admin_task.u.clearAndUpdateTasks();
+					app.ext.admin_task.u.clearAndUpdateTaskManager();
 					app.model.dispatchThis('immutable');
 					});
 				$target.dialog('open');
-//				app.ext.admin_task.u.handleButtons($target);
-				},
+//				app.ext.admin_task.u.handleListButtons($target);
+				}, //showCreateTaskModal
 
 //A function for showing just the tasks. template ID can be passed in. Think landing page or for Pekonens messaging panel.
 //should return the content as a jquery object.
@@ -240,7 +254,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					app.u.throwGMessage("Error: no template id passed into admin_task.a.showTaskList");
 					}
 				return $o;
-				}
+				} //showTaskList
 
 			}, //Actions
 
@@ -252,12 +266,12 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 
 		u : {
 //panelFocus can = list or edit. if list, left column (list of tasks) gets bigger. if 'edit', right column (list of edits) gets bigger.
-			handlePanelResize : function(panelFocus)	{
-				app.u.dump("BEGIN admin_task.u.handlePanelResize. panelFocus: "+panelFocus);
+			handleTaskManagerModeChange : function(panelFocus)	{
+//				app.u.dump("BEGIN admin_task.u.handleTaskManagerModeChange. panelFocus: "+panelFocus);
 				$('.togglePanelResize').show(); //the toggle button is hidden by default. show once the panel sizes change.
 				var $list = $('#taskListContainer');
-				var $edit = $('#taskEditorContainer');
-				
+				var $edit = $('#taskEditPanelsContainer');
+				var numTaskEditPanels = $edit.children().length;
 				if(panelFocus == $list.data('mode')){} //already in the correct state. do nothing.
 //collapse the active tasks panel. show the edit panel.
 				else if(panelFocus == 'edit')	{
@@ -265,7 +279,17 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //edit is getting big and list is getting small. show/hide elements accordingly.
 					$('.hideInMinifyMode',$list).hide(); //adjust list side for minification.
 					$('.hideInMinifyMode',$edit).show(); //adjust edit side for maxification.
-					$('.ui-widget-content',$edit).slideDown(1000);
+					
+					if(numTaskEditPanels)	{
+						$('.taskEditPanel',$edit).each(function(){
+							var $panel = $(this);
+							if($panel.data('panel-state') == 'open' ){
+								app.ext.admin_task.u.toggleTaskEditPanel($panel,'open');
+								}
+							});
+						}
+					else	{} //no taskEditPanels exist so nothing needs to be opened.
+					
 					$list.animate({width:"49%"},1000); //shrink list side.
 					$edit.show().animate({width:"49%"},1000); //expand edit side.
 					$('.togglePanelResize').button({icons: {primary: "ui-icon-seek-next"},text: false}); //change icon to indicate a click will expand the panel
@@ -277,105 +301,123 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 					$('.hideInMinifyMode',$list).show();
 					$('.hideInMinifyMode',$edit).hide();
 					$('.ui-widget-content',$edit).slideUp(1000);
-					$list.animate({width:"80%"},1000);
-					$edit.animate({width:"18%"},1000);
+					$list.animate({width: (numTaskEditPanels) ? '80%': '98%'},1000); //if the edit column has children, leave some space for taskEditPanel headers.
+					$edit.animate({width: (numTaskEditPanels) ? '18%': '1%'},1000); //close right column if no taskEditPanels are present.
 					$('.togglePanelResize').button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false}); //change icon to indicate a click will shrink the panel
 					}
 				else	{
 					$list.data('mode','error');
 					app.u.throwGMessage("Error: panelFocus ['"+panelFocus+"'] is not valid or undefined in admin_task.u.handleManagerResize");
 					}
-				},
+				}, //handleTaskManagerModeChange
+
 
 //when an update, delete or save occurs, the manager is going to get updated. This function should be run.
 //it'll empty the tasks, create the call and add showLoading to the tab in focus.
-			clearAndUpdateTasks : function()	{
+			clearAndUpdateTaskManager : function()	{
+				app.model.destroy('adminTaskList'); //clear task list from localstorage and memory (forces request for new data)
 				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 				$('#taskListTbody').empty();
-				},
+				}, //clearAndUpdateTaskManager
 			
 /*
-not done yet.
-on click, determine if the panel is already open. if open:
- -> slide up the ui-widget-content div
- -> change icon in button from 'minimize' to 'expand'.
- -> tag state (data-panel-state) on ui-widget-content div.
-if closed:
- -> if page is in 'list' mode, change to 'edit'.
- -> slide down ui-widget-content div
- -> tag state on ui-widget-content div.
- -> change button icon from 'expand' to 'minimize'.
- 
-state is remebered so that if the view is changed from edit to list, when it goes back to edit the same panels can be opened again.
+
+
+panel-state is only set when the button is clicked.  That way, when toggle is run because switching to/from  list/edit mode, the panel-state can be used to restore the previous state.
 */
-			toggleTaskEditor : function($panel){
-				app.u.dump("BEGIN admin_task.u.toggleTaskEditor");
-				var $btn = $panel.find("[data-btn-action='toggleTaskEditor']");
+			toggleTaskEditPanel : function($panel,state){
+//				app.u.dump("BEGIN admin_task.u.toggleTaskEditPanel");
+				app.ext.admin_task.u.handleTaskManagerModeChange('edit'); //make sure manager is in edit mode.
+				var $btn = $panel.find("[data-btn-action='toggleTaskEditPanel']");
 				if($panel.length && $btn.length)	{
-					var state = $panel.data('panel-state') ? $panel.data('panel-state') : 'open'; //default to open on first pass so 
 //panel is visible, minimize it.
-					if(state == 'open')	{
-						app.u.dump(" -> Panel is visible. close it.");
-						$btn.attr('title','Maximize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-s"},text: false}); //change button icon.
-						$panel.slideUp(1000);
-						$('.ui-widget-content',$panel).data('panel-state','closed');
+					if(state == 'close')	{
+//						app.u.dump(" -> hide panel.");
+						$btn.attr('title','Maximize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-s"},text: false}).off('click.toggleTaskEditPanel').on('click.toggleTaskEditPanel',function(){
+							app.ext.admin_task.u.toggleTaskEditPanel($(this).closest('.taskEditPanel'),'open');
+							$($panel).data('panel-state','closed'); 
+							}); //change button icon.
+						$('.ui-widget-content',$panel).slideUp(1000);
 						}
-					else if (state == 'closed')	{
-						app.u.dump(" -> Panel is not visible. open it.");
-						$btn.attr('title','Minimize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}); //change button icon.
-						$panel.slideDown(1000);
-						$('.ui-widget-content',$panel).data('panel-state','open');
+					else if (state == 'open')	{
+//						app.u.dump(" -> show panel.");
+						$btn.attr('title','Minimize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}).off('click.toggleTaskEditPanel').on('click.toggleTaskEditPanel',function(){
+							app.ext.admin_task.u.toggleTaskEditPanel($(this).closest('.taskEditPanel'),'close');
+							$($panel).data('panel-state','open');
+							}); //change button icon.
+						$('.ui-widget-content',$panel).slideDown(1000);
 						}
 					else	{
-						app.u.throwGMessage("Error: invalid state["+state+"] for admin_task.u.toggleTaskEditor");
+						app.u.throwGMessage("Error: invalid state["+state+"] for admin_task.u.toggleTaskEditPanel");
 						}
 					}
 				else	{
-					app.u.throwGMessage("Error: no panel and/or button ["+$panel.length+"/"+$btn.length+"] for admin_task.u.toggleTaskEditor");
+					app.u.throwGMessage("Error: no panel and/or button ["+$panel.length+"/"+$btn.length+"] for admin_task.u.toggleTaskEditPanel");
 					}
-				},
-			
+				}, //toggleTaskEditPanel
+
 //dataObj will be info about the task. everything in the original task list object, however it gets lowercased so just use it to reference original data.
 //this allows the add and edit templates to be recycled (maintaining case).
-			addEditorFor : function(dataObj)	{
-//				app.u.dump("admin_task.u.addEditorFor dataObj: "); app.u.dump(dataObj);
+			addTaskEditPanel : function(dataObj)	{
+//				app.u.dump("admin_task.u.addTaskEditPanel dataObj: "); app.u.dump(dataObj);
 				//check to see if template is already rendered and, if so, just highlight it (maybe jump to it?)
 //				dataObj.taskid = dataObj.id;
 //				dataObj.id = "taskEditor_"+dataObj.taskid;
-				var $updatePanel = app.renderFunctions.transmogrify(dataObj,'taskListUpdateTemplate',dataObj);
-				$updatePanel.attr('id','taskUpdatePanel_'+dataObj.id)
-				$('.datepicker',$updatePanel).datepicker({'dateFormat':'@'});
-				$('#taskEditorContainer').prepend($updatePanel);
-				
-				$('button',$updatePanel).each(function(){
-					var $btn = $(this);
-					$btn.button(); //make the buttons look like jqueryui buttons.
-					var action = $btn.data('btn-action');
-					if(action == 'closeTaskEditor'){
-						$btn.attr('title','Close Panel').button({icons: {primary: "ui-icon-closethick"},text: false}).on('click',function(){
-							$(this).closest('.taskEditPanel').empty().remove()
-							}); //change button icon.
+				if(dataObj && dataObj.id)	{
+					var $panel = $('#taskUpdatePanel_'+dataObj.id);
+//if the panel already exists, make sure it' open.
+					if($panel.length)	{
+						$panel.data('panel-state','open')
+						app.ext.admin_task.u.toggleTaskEditPanel($panel,'open');
 						}
-					else if(action == 'saveTaskChanges'){} //the button submits the form, so no action is necessary. must be declared tho to avoid error.
-					else if(action == 'toggleTaskEditor'){
-						app.u.dump('got here');
-						$btn.attr('title','Minimize Panel').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}).on('click',function(){
-							app.ext.admin_task.u.toggleTaskEditor($(this).closest('.taskEditPanel'));
-							});
-						}
-					else	{app.u.throwGMessage('Error: invalid btn-action set in admin_task.u.addEditorFor. btn-action: ["+action+"] (blank is not a valid value)')}
-					});
-				
-				$('form',$updatePanel).off('submit.adminTaskUpdate').on('submit.adminTaskUpdate',function(event){
-					event.preventDefault();
-					app.ext.admin.a.processForm($(this),'immutable');
-					app.ext.admin_task.u.clearAndUpdateTasks();
-					app.model.dispatchThis('immutable');
-					});
-				},
+//the panel does not exist yet, create it.
+					else	{
+
+var $panel = app.renderFunctions.transmogrify(dataObj,'taskListEditPanelTemplate',dataObj);
+$panel.data('panel-state','open');
+$panel.attr('id','taskUpdatePanel_'+dataObj.id)
+$('.datepicker',$panel).datepicker({'dateFormat':'@'});
+$('#taskEditPanelsContainer').prepend($panel);
+
+$('button',$panel).each(function(){
+	var $btn = $(this);
+	$btn.button(); //make the buttons look like jqueryui buttons.
+	var action = $btn.data('btn-action');
+	if(action == 'closeTaskEditPanel'){
+		$btn.attr('title','Close Panel').button({icons: {primary: "ui-icon-closethick"},text: false}).on('click',function(){
+			$(this).closest('.taskEditPanel').empty().remove()
+			}); //change button icon.
+		}
+	else if(action == 'saveTaskEditPanel'){} //the button submits the form, so no action is necessary. must be declared tho to avoid error.
+	else if(action == 'toggleTaskEditPanel'){
+		$btn.attr('title','Minimize Panel').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}).off('click.toggleTaskEditPanel').on('click.toggleTaskEditPanel',function(){
+			$panel.data('panel-state','close')
+			app.ext.admin_task.u.toggleTaskEditPanel($(this).closest('.taskEditPanel'),'close'); //panels open by default, so first action will be to close it.
+			});
+		}
+	else	{app.u.throwGMessage('Error: invalid btn-action set in admin_task.u.addTaskEditPanel. btn-action: ["+action+"] (blank is not a valid value)')}
+	});
+
+$('form',$panel).off('submit.adminTaskUpdate').on('submit.adminTaskUpdate',function(event){
+	event.preventDefault();
+	app.ext.admin.a.processForm($(this),'immutable');
+	app.ext.admin_task.u.clearAndUpdateTaskManager();
+	app.model.dispatchThis('immutable');
+	});
+
+
+						
+						}			
+					}
+				else	{
+					app.u.throwGMessage("Error: invalid object or obj.id not specified in admin_task.a.addTaskEditPanel.");
+					app.u.dump("admin_task.a.addTaskEditPanel dataObj: "); app.u.dump(dataObj);
+					}
+
+				}, //addTaskEditPanel
 			
-			
+//run when 1 or more checkboxes are checked and one of the 'modify tasks' radios is changed (completed or delete are currently supported).
 			handleModifyTasks : function(t)	{
 app.u.dump("BEGIN admin_task.u.handleModifyTasks");
 var $radio = $(':radio:checked',$(t));
@@ -399,7 +441,7 @@ if(numChecked)	{
 						app.u.dump(" -> checked task ID: "+$(this).closest('[data-id]').data('id'));
 						app.ext.admin_task.calls.adminTaskRemove.init($(this).closest('[data-id]').data('id'),{},'immutable');
 						});
-					app.ext.admin_task.u.clearAndUpdateTasks();
+					app.ext.admin_task.u.clearAndUpdateTaskManager();
 					app.model.dispatchThis('immutable');
 					$(this).dialog( "close" );
 					},
@@ -414,7 +456,7 @@ if(numChecked)	{
 		$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
 			app.ext.admin_task.calls.adminTaskComplete.init($(this).closest('[data-id]').data('id'),{},'immutable');
 			});
-		app.ext.admin_task.u.clearAndUpdateTasks();
+		app.ext.admin_task.u.clearAndUpdateTaskManager();
 		app.model.dispatchThis('immutable');
 		}
 //not supported just yet
@@ -433,8 +475,9 @@ else	{
 $('#taskListContainer .taskListButtonRow .ui-state-active').removeClass('ui-state-active');
 $('#taskListContainer .taskListButtonRow :radio').prop('checked',false);
 				},
-			
-			handleButtons : function($target){
+
+
+			handleListButtons : function($target){
 $("button",$target).each(function(){
 	var $btn = $(this);
 	$btn.button();
@@ -444,8 +487,8 @@ $("button",$target).each(function(){
 
 	if(btnAction == 'editTask')	{
 		$btn.on('click.task-action',function(){
-			app.ext.admin_task.u.handlePanelResize('edit');
-			app.ext.admin_task.u.addEditorFor($btn.closest('tr').data());
+			app.ext.admin_task.u.handleTaskManagerModeChange('edit');
+			app.ext.admin_task.u.addTaskEditPanel($btn.closest('tr').data());
 			});
 		}
 	else if(btnAction == 'addNewTask')	{
@@ -458,17 +501,17 @@ $("button",$target).each(function(){
 		$btn.on('click.task-action',function(){
 			var mode = $('#taskListContainer').data('mode');
 			if(mode == 'list'){
-				app.ext.admin_task.u.handlePanelResize('edit');
+				app.ext.admin_task.u.handleTaskManagerModeChange('edit');
 				}
 			else if(mode == 'edit'){
-				app.ext.admin_task.u.handlePanelResize('list');
+				app.ext.admin_task.u.handleTaskManagerModeChange('list');
 				}
 			else	{}
 			
 			});
 		}
 	else	{
-		app.u.throwGMessage("Unknown btn-action specified for button. admin_task.u.handleButtons ['"+btnAction+"']");
+		app.u.throwGMessage("Unknown btn-action specified for button. admin_task.u.handleListButtons ['"+btnAction+"']");
 		}
 
 	});

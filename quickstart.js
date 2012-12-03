@@ -136,7 +136,7 @@ else	{
 
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
-				app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"},'mutable');
+				app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
 				app.calls.appProfileInfo.init(app.vars.profile,{},'mutable');
 				app.model.dispatchThis(); //this dispatch needs to occur prior to handleAppInit being executed.
 
@@ -2352,20 +2352,26 @@ else	{
 				
 //app.ext.myRIA.u.handleMinicartUpdate();			
 			handleMinicartUpdate : function(tagObj)	{
-//				app.u.dump("BEGIN myRIA.u.handleMinicartUPdate");
+//				app.u.dump("BEGIN myRIA.u.handleMinicartUPdate"); app.u.dump(tagObj);
 				var r = false; //what's returned. t for cart updated, f for no update.
-				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].cart)	{
-					var $appView = $('#appView');
+				var $appView = $('#appView');
+				var itemCount = 0;
+				var subtotal = 0;
+				var total = 0;
+				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].sum)	{
 					r = true;
-					var itemCount = app.u.isSet(app.data[tagObj.datapointer].cart['data.item_count']) ? app.data[tagObj.datapointer].cart['data.item_count'] : app.data[tagObj.datapointer].cart['data.add_item_count']
-	//				app.u.dump(" -> itemCount: "+itemCount);
-	//used for updating minicarts.
-					$('.cartItemCount',$appView).text(itemCount);
-					var subtotal = app.u.isSet(app.data[tagObj.datapointer].cart['sum/items_total']) ? app.data[tagObj.datapointer].cart['sum/items_total'] : 0;
-					var total = app.u.isSet(app.data[tagObj.datapointer].cart['sum/order_total']) ? app.data[tagObj.datapointer].cart['sum/order_total'] : 0;
-					$('.cartSubtotal',$appView).text(app.u.formatMoney(subtotal,'$',2,false));
-					$('.cartTotal',$appView).text(app.u.formatMoney(total,'$',2,false));
+					var itemCount = app.u.isSet(app.data[tagObj.datapointer].sum.items_count) || 0;
+					var subtotal = app.data[tagObj.datapointer].sum.items_total;
+					var total = app.data[tagObj.datapointer].sum.order_total;
 					}
+				else	{
+					//cart not in memory yet. use defaults.
+					}
+
+				$('.cartItemCount',$appView).text(itemCount);
+				$('.cartSubtotal',$appView).text(app.u.formatMoney(subtotal,'$',2,false));
+				$('.cartTotal',$appView).text(app.u.formatMoney(total,'$',2,false));
+
 				//no error for cart data not being present. It's a passive function.
 				return r;
 				},
