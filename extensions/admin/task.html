@@ -82,8 +82,10 @@ The form actions for the two templates below are added in the extension
 
 
 
-<div id='taskListUpdateTemplate' class='ui-widget marginBottom'>
+<div id='taskListUpdateTemplate' class='ui-widget marginBottom taskEditPanel'>
 	<div class='ui-state-default stdPadding ui-corner-top' data-bind="var: task(title); format:assignAttribute; attribute:title;">
+	<button class='floatRight' data-btn-action='closeTaskEditor'></button>
+	<button class='floatRight' data-btn-action='toggleTaskEditor'></button>
 	<h3 data-bind="var: task(id); format:text;">Edit: </h3>
 	</div>
 	<div class='stdPadding ui-widget-content ui-corner-bottom'>
@@ -96,7 +98,7 @@ The form actions for the two templates below are added in the extension
 	<input type='hidden' name='taskid' value='' data-bind="var: task(id); format:popVal;" />
 		<div data-bind="loadsTemplate: taskListCreateEditTemplate; format: loadsTemplate;"></div>
 	
-	<button>Save Changes</button>
+	<button data-btn-action='saveTaskChanges'>Save Changes</button>
 	</form>
 	</div>
 </div>

@@ -46,13 +46,13 @@ var admin_task = function() {
 	calls : {
 		
 		adminTaskList : {
-			init : function(tagObj,q)	{
-				this.dispatch(tagObj,q);
+			init : function(status,tagObj,q)	{
+				this.dispatch(status,tagObj,q);
 				},
-			dispatch : function(tagObj,q)	{
+			dispatch : function(status,tagObj,q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminTaskList";
-				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":tagObj},q);	
+				app.model.addDispatchToQ({"_cmd":"adminTaskList","status":status,"_tag":tagObj},q);	
 				}
 			}, //adminTaskList
 		
@@ -208,7 +208,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
 				app.ext.admin_task.u.handleButtons($target);
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
-				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
 				},
 
@@ -290,9 +290,50 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //when an update, delete or save occurs, the manager is going to get updated. This function should be run.
 //it'll empty the tasks, create the call and add showLoading to the tab in focus.
 			clearAndUpdateTasks : function()	{
-				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 				$('#taskListTbody').empty();
+				},
+			
+/*
+not done yet.
+on click, determine if the panel is already open. if open:
+ -> slide up the ui-widget-content div
+ -> change icon in button from 'minimize' to 'expand'.
+ -> tag state (data-panel-state) on ui-widget-content div.
+if closed:
+ -> if page is in 'list' mode, change to 'edit'.
+ -> slide down ui-widget-content div
+ -> tag state on ui-widget-content div.
+ -> change button icon from 'expand' to 'minimize'.
+ 
+state is remebered so that if the view is changed from edit to list, when it goes back to edit the same panels can be opened again.
+*/
+			toggleTaskEditor : function($panel){
+				app.u.dump("BEGIN admin_task.u.toggleTaskEditor");
+				var $btn = $panel.find("[data-btn-action='toggleTaskEditor']");
+				if($panel.length && $btn.length)	{
+					var state = $panel.data('panel-state') ? $panel.data('panel-state') : 'open'; //default to open on first pass so 
+//panel is visible, minimize it.
+					if(state == 'open')	{
+						app.u.dump(" -> Panel is visible. close it.");
+						$btn.attr('title','Maximize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-s"},text: false}); //change button icon.
+						$panel.slideUp(1000);
+						$('.ui-widget-content',$panel).data('panel-state','closed');
+						}
+					else if (state == 'closed')	{
+						app.u.dump(" -> Panel is not visible. open it.");
+						$btn.attr('title','Minimize Panel').button('destroy').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}); //change button icon.
+						$panel.slideDown(1000);
+						$('.ui-widget-content',$panel).data('panel-state','open');
+						}
+					else	{
+						app.u.throwGMessage("Error: invalid state["+state+"] for admin_task.u.toggleTaskEditor");
+						}
+					}
+				else	{
+					app.u.throwGMessage("Error: no panel and/or button ["+$panel.length+"/"+$btn.length+"] for admin_task.u.toggleTaskEditor");
+					}
 				},
 			
 //dataObj will be info about the task. everything in the original task list object, however it gets lowercased so just use it to reference original data.
@@ -306,7 +347,26 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$updatePanel.attr('id','taskUpdatePanel_'+dataObj.id)
 				$('.datepicker',$updatePanel).datepicker({'dateFormat':'@'});
 				$('#taskEditorContainer').prepend($updatePanel);
-				$('button',$updatePanel).button(); //make the buttons look like jqueryui buttons.
+				
+				$('button',$updatePanel).each(function(){
+					var $btn = $(this);
+					$btn.button(); //make the buttons look like jqueryui buttons.
+					var action = $btn.data('btn-action');
+					if(action == 'closeTaskEditor'){
+						$btn.attr('title','Close Panel').button({icons: {primary: "ui-icon-closethick"},text: false}).on('click',function(){
+							$(this).closest('.taskEditPanel').empty().remove()
+							}); //change button icon.
+						}
+					else if(action == 'saveTaskChanges'){} //the button submits the form, so no action is necessary. must be declared tho to avoid error.
+					else if(action == 'toggleTaskEditor'){
+						app.u.dump('got here');
+						$btn.attr('title','Minimize Panel').button({icons: {primary: "ui-icon-triangle-1-n"},text: false}).on('click',function(){
+							app.ext.admin_task.u.toggleTaskEditor($(this).closest('.taskEditPanel'));
+							});
+						}
+					else	{app.u.throwGMessage('Error: invalid btn-action set in admin_task.u.addEditorFor. btn-action: ["+action+"] (blank is not a valid value)')}
+					});
+				
 				$('form',$updatePanel).off('submit.adminTaskUpdate').on('submit.adminTaskUpdate',function(event){
 					event.preventDefault();
 					app.ext.admin.a.processForm($(this),'immutable');
