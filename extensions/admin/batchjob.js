@@ -18,7 +18,7 @@
 
 
 var admin_batchJob = function() {
-	var theseTemplates = new Array();
+	var theseTemplates = new Array('batchJobStatusTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -29,6 +29,7 @@ var admin_batchJob = function() {
 			init : function(status,tagObj,q)	{
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminBatchJobList|"+status;
+//comment out local storage for testing.
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
 					r = 1;
 					this.dispatch(status,tagObj,q);
@@ -44,13 +45,13 @@ var admin_batchJob = function() {
 
 
 		adminBatchJobStatus : {
-			init : function(guid,tagObj,q)	{
-				this.dispatch(guid,tagObj,q);
+			init : function(jobid,tagObj,q)	{
+				this.dispatch(jobid,tagObj,q);
 				},
-			dispatch : function(guid,tagObj,q)	{
+			dispatch : function(jobid,tagObj,q)	{
 				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobStatus|"+guid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":tagObj,"guid":guid},q);	
+				tagObj.datapointer = "adminBatchJobStatus|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":tagObj,"jobid":jobid},q);
 				}
 			}, //adminBatchJobStatus
 
@@ -65,21 +66,32 @@ var admin_batchJob = function() {
 				tagObj.datapointer = "adminBatchJobCreate|"+guid;
 				app.model.addDispatchToQ({"_cmd":"adminBatchJobCreate","_tag":tagObj,"guid":guid},q);	
 				}
+			}, //adminBatchJobCreate		
+		
+		adminBatchJobRemove : {
+			init : function(jobid,tagObj,q)	{
+				this.dispatch(jobid,tagObj,q);
+				},
+			dispatch : function(jobid,tagObj,q)	{
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminBatchJobRemove|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobRemove","_tag":tagObj,"jobid":jobid},q);	
+				}
 			}, //adminBatchJobCreate
 
 
 		adminBatchJobCleanup : {
-			init : function(guid,tagObj,q)	{
-				this.dispatch(status,tagObj,q);
+			init : function(jobid,tagObj,q)	{
+				this.dispatch(jobid,tagObj,q);
 				},
-			dispatch : function(guid,tagObj,q)	{
+			dispatch : function(jobid,tagObj,q)	{
 				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobCleanup|"+guid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":tagObj},q);	
+				tagObj.datapointer = "adminBatchJobCleanup|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","jobid":jobid,"_tag":tagObj},q);	
 				}
 			} //adminBatchJobStatus
 
-
+//341681
 
 		}, //calls
 
@@ -117,7 +129,20 @@ var admin_batchJob = function() {
 			showBatchJobManager : function(){},
 			
 			showBatchJobStatus : function(jobid,opts) {
-				if(jobid)	{}
+				if(jobid)	{
+					//get job details.
+					var $target = $('#batchJobStatusModal');
+					if($target.length)	{}
+					else	{
+						$target = $("<div \/>").attr('id','batchJobStatusModal').appendTo('body');
+						$target.dialog({'modal':true,'width':500,'height':500,'autoOpen':false});
+						}
+					$target.dialog('open').showLoading();
+					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':function(tagObj){
+						$target.hideLoading().append({},'batchJobStatusTemplate',app.data[tagObj.datapointer]);
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+					}
 				else	{
 					app.u.throwMessage("No jobid specified in admin_batchJob.a.showBatchJobStatus");
 					}

@@ -49,27 +49,30 @@ var admin_task = function() {
 	calls : {
 		
 		adminTaskList : {
-			init : function(status,tagObj,q)	{
+			init : function(tagObj,q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminTaskList";
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
 //					app.u.dump(" -> data is NOT local");
 					r = 1;
-					this.dispatch(status,tagObj,q);
+					this.dispatch(tagObj,q);
 					}
 				else	{
 //					app.u.dump(" -> data IS local");
 					app.u.handleCallback(tagObj);
 					}
+				return r;
 				},
-			dispatch : function(status,tagObj,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminTaskList","status":status,"_tag":tagObj},q);	
+			dispatch : function(tagObj,q)	{
+				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":tagObj},q);	
 				}
 			}, //adminTaskList
 		
 		adminTaskCreate : {
 			init : function(obj,tagObj,q)	{
 				this.dispatch(obj,tagObj,q);
+				return 1;
 				},
 			dispatch : function(obj,tagObj,q)	{
 				obj._cmd = "adminTaskCreate"
@@ -82,6 +85,7 @@ var admin_task = function() {
 		adminTaskComplete : {
 			init : function(taskid, tagObj,q)	{
 				this.dispatch(taskid, tagObj,q);
+				return 1;
 				},
 			dispatch : function(taskid, tagObj,q)	{
 				tagObj = tagObj || {};
@@ -93,6 +97,7 @@ var admin_task = function() {
 		adminTaskRemove : {
 			init : function(taskid, tagObj,q)	{
 				this.dispatch(taskid, tagObj,q);
+				return 1;
 				},
 			dispatch : function(taskid, tagObj,q)	{
 				tagObj = tagObj || {};
@@ -104,6 +109,7 @@ var admin_task = function() {
 		adminTaskUpdate : {
 			init : function(obj,tagObj,q)	{
 				this.dispatch(obj,tagObj,q);
+				return 1;
 				},
 			dispatch : function(obj,tagObj,q)	{
 				obj._tag = tagObj || {};
@@ -215,14 +221,14 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific task. not supported just yet.
 			showTaskManager : function() {
-
+				app.u.dump("BEGIN admin_task.a.showTaskManager");
 				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
 //generate some of the task list content right away so the user knows something is happening.
 				$target.empty().showLoading();
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
 				app.ext.admin_task.u.handleListButtons($target);
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
-				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //showTaskManager
 
@@ -316,7 +322,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //it'll empty the tasks, create the call and add showLoading to the tab in focus.
 			clearAndUpdateTaskManager : function()	{
 				app.model.destroy('adminTaskList'); //clear task list from localstorage and memory (forces request for new data)
-				app.ext.admin_task.calls.adminTaskList.init('active',{'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 				$('#taskListTbody').empty();
 				}, //clearAndUpdateTaskManager

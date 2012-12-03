@@ -1350,6 +1350,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin_prodEdit.u.showProductEditor(path,opts);
 					}
 				else if(path == '#!taskManager')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_task.a.showTaskManager();
 					}
 				else if(path == '#!domainConfigPanel')	{
