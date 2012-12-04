@@ -803,17 +803,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 			return {'errid':'#','errmsg':msg,'errtype':'success','uiIcon':'check','uiClass':'success'}
 			},
 
-		uiMsgObject : function(msg)	{
-			var obj; //what is returned.
-			if(msg.indexOf('|') == -1)	{
-				obj = {'errid':'#','errmsg':msg,'errtype':'unknown','uiIcon':'ui-icon-z-ise','uiClass':'z-hint'} //some legacy messaging is pipeless (edit order, tracking, for instance).
-				}
-			else	{
-				var eType = msg.split('|')[0].toLowerCase();
-				obj = {'errid':'#','errmsg':msg.split('|')[1],'errtype':msg.split('|')[0],'uiIcon':'z-'+eType,'uiClass':'z-'+eType}
-				}
-			return obj;
-			},
+
 
 		errMsgObject : function(msg,errid)	{
 			return {'errid':errid,'errmsg':msg,'errtype':'apperr','uiIcon':'alert','uiClass':'error'}

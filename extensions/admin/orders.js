@@ -30,23 +30,26 @@ var admin_orders = function() {
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	vars : {
 		"pools" : ['PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
-		"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-		"dependencies" : ['admin'] //a list of other extensions (just the namespace) that are required for this one to load
+		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
+		"markets" : {
+			'ebay' : 'eBay',
+			'amazon' : 'Amazon'
+			}
 		},
 	calls : {
 //never get from local or memory.
 //formerly getOrders
 		adminOrderList : {
-			init : function(cmdObj,tagObj,Q)	{
-				this.dispatch(cmdObj,tagObj,Q)
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q)
 				return 1;
 				},
-			dispatch : function(cmdObj,tagObj,Q)	{
+			dispatch : function(obj,tagObj,Q)	{
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
 				tagObj.datapointer = "adminOrderList";
-				cmdObj['_tag'] = tagObj;
-				cmdObj["_cmd"] = "adminOrderList"
-				app.model.addDispatchToQ(cmdObj,Q);
+				obj['_tag'] = tagObj;
+				obj["_cmd"] = "adminOrderList"
+				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //orderList
 
@@ -85,21 +88,12 @@ var admin_orders = function() {
 				cmdObj['_tag'] = tagObj;
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
-			} //orderList
-
-
+			} //adminOrderUpdate
 		}, //calls
 
 
 
-
-
-
-
-
-
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
 
 
 	callbacks : {
@@ -126,6 +120,7 @@ var admin_orders = function() {
 				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});
 				}
 			}, //initOrderManager
+
 
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
@@ -418,20 +413,6 @@ return $r;
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	renderFormats : {
-//a product list needs an ID for multipage to work right. will assign a random one if none is set.
-//that parent ID is prepended to the sku and used in the list item id to decrease likelyhood of duplicate id's
-		stuffList : function($tag,data)	{
-//			app.u.dump("BEGIN admin_orders.renderFormats['@ITEMS']List");
-			var L = data.value.length;
-			if(L > 0)	{
-				var thisSTID; //used as a shortcut in the loop below to store the pid during each iteration.
-				for(var i = 0; i < L; i += 1)	{
-					thisSTID = data.value[i].stid;
-					$tag.append(app.renderFunctions.transmogrify({'id':thisSTID,'pid':thisSTID},data.bindData.loadsTemplate,data.value[i]));
-					}
-				}
-			return true;
-			},//stuffList
 
 		orderPoolSelect : function($tag,data)	{
 			var $opt;

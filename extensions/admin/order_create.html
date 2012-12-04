@@ -397,7 +397,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	<td valign='top' width='50%' style='text-align:right'>
 <h3 data-bind='var: order(our/orderid); format:text; pretext:Invoice: ;'></h3>
 <h4 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h4>
-<h4 data-bind='var:order(flow.payment_status); format:paymentStatus; extension:convertSessionToOrder;'></h4>
+<h4 data-bind='var:order(flow/payment_status); format:paymentStatus; extension:convertSessionToOrder;'></h4>
 <h4>
 	<span data-bind='var:order(flow/payment_method); format:text; pretext:Payment Method: ;'></span>
 	<span data-bind="var:order(our/orderid); format:marketPlaceOrderID; extension:convertSessionToOrder;"></span>

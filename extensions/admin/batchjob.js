@@ -58,13 +58,15 @@ var admin_batchJob = function() {
 //Generate a unique guid per batch job.
 //if a request/job fails and needs to be resubmitted, use the same guid.
 		adminBatchJobCreate : {
-			init : function(guid,tagObj,q)	{
-				this.dispatch(guid,tagObj,q);
+			init : function(opts,tagObj,q)	{
+				this.dispatch(opts,tagObj,q);
 				},
-			dispatch : function(guid,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobCreate|"+guid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobCreate","_tag":tagObj,"guid":guid},q);	
+			dispatch : function(opts,tagObj,q)	{
+				opts = opts || {};
+				opts._tag = tagObj || {};
+				opts._cmd = "adminBatchJobCreate";
+				opts._tag.datapointer = opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate";
+				app.model.addDispatchToQ(opts,q);	
 				}
 			}, //adminBatchJobCreate		
 		
@@ -117,7 +119,20 @@ var admin_batchJob = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
-			}
+			},
+		
+		showBatchJobStatus : {
+			onSuccess : function(tagObj){
+				$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
+//error handling for no jobid is handled inside this function.
+				app.ext.admin_batchJob.a.showBatchJobStatus(app.data[tagObj.datapointer].jobid);
+				},
+			onError : function(responseData)	{
+				$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
+				app.u.throwMessage(responseData);
+				}
+			},
+		
 		}, //callbacks
 
 
@@ -127,6 +142,14 @@ var admin_batchJob = function() {
 		a : {
 			
 			showBatchJobManager : function(){},
+
+//called by brian in the legacy UI. creates a batch job and then opens the job status.
+			adminBatchJobCreate : function(opts){
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
+//parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
+				app.ext.admin_batchJob.calls.adminBatchJobCreate.init(opts,{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content"},'immutable');
+				app.model.dispatchThis('immutable');
+				},
 
 			showBatchJobStatus : function(jobid,opts) {
 				if(jobid)	{

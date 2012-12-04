@@ -1,7 +1,17 @@
 
 <div class='ui-widget' id='orderManagerTemplate'>
+	<h1>Order Manager</h1>
 	<div id='orderListMessaging'></div>
 <table class='orderListTable'>
+<tr>
+	<td>
+<h3>Filter: </h3>
+<select name='POOL'>
+
+</select>
+	</td>
+</tr>
+
 <tr>
 	<td class='leftCol'>
 	<div id='orderFilters' class='ui-corner-left ui-widget-content' >
@@ -24,8 +34,9 @@
 <h4>Payment Status:</h4>
 <ul id='orderListFilterPaymentStatus' class='plainList filterGroup' data-filter='PAYMENT_VERB'>
 	<li data-filtervalue='PAID'>Paid</li>
-	<li data-filtervalue='UNPAID'>Unpaid</li>
-	<li data-filtervalue='APPROVED'>Approved</li>
+	<li data-filtervalue='PENDING'>Pending</li>
+	<li data-filtervalue='DENIED'>Denied</li>
+	<li data-filtervalue='ERROR'>Error</li>
 </ul>
 </section>
 
@@ -127,12 +138,12 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <div class='orderDetailHeader clearfix'>
 	<div class='floatRight alignRight'>
 		<h5 data-bind="var:order(data.sdomain);format:text;"></h5>
-		<h5 data-bind="var:order(data.created); format:unix2mdy;"></h5>
+		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
 	</div>
 
 	<div class='floatLeft '>
-		<h2>Order Status: <select data-bind="var:order(data.pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();"></select></h2>
-		<h3 data-bind="var:order(data.payment_status);format:paystatus; extension:admin_orders;"></h3>
+		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();"></select></h2>
+		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders;"></h3>
 	</div>
 </div>
 
@@ -141,20 +152,32 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<div class='orderDetailsStuff floatRight'>
 	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
 	<h2>Order Contents</h2>
-	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:@ITEMSList; extension:admin_orders; loadsTemplate: orderStuffItemTemplate;"></table>
-	<ul class='clearfix alignRight floatRight'>
-		<li data-bind="var:order(data.buysafe_totalbondcost); format:money; currencySign: $; pretext:Bond Cost: ; hideZero:true;"></li>
-		<li data-bind="var:order(data.gfc_total); format:money; currencySign: $; pretext:Giftcart Total: ; hideZero:true;"></li>
-		<li data-bind="var:order(data.ins_total); format:money; currencySign: $; pretext:Insurance Total: ; hideZero:true;"></li>
-		<li data-bind="var:order(sum/items_total); format:money; currencySign: $; pretext:Order Total: ;"></li>
-		<li data-bind="var:order(sum/balance_due_total); format:money; currencySign: $; pretext:Balance Due: ; "></li>
-	</ul>
+	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
+	<section class='clearfix alignRight floatRight'>
+		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		
+		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	
+		<div class='orderShipping'>
+		<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+		<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+		</div>
+		
+		<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+		
+		<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+		<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+		<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+		
+		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+
+	</section>
 	</div>
 
 	<div class='orderAddresses floatLeft'>
 	
 		<address class='shipAddress editableParent' >
-		<h4>Shipping Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
+		<h4>Shipping Address <a href='#' onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
 		<h6>
 			<span data-bind='var:order(ship/firstname);format:text;' class='editable' title='first name'></span>
 			<span data-bind='var:order(ship/lastname);format:text;' class='editable' title='last name'></span>

@@ -22,7 +22,7 @@ var convertSessionToOrder = function() {
 	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","checkoutTemplateAccountInfo","invoiceTemplate","productListTemplateInvoice");
 	var r = {
 	vars : {
-		willFetchMyOwnTemplates : true,
+		willFetchMyOwnTemplates : app.vars._clientid == '1pc' ? false : true, //1pc loads it's templates locally to avoid XSS issue.
 		containerID : '',
 		legends : {
 			"chkoutPreflight" : "Contact Information",
@@ -254,8 +254,10 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 		init : {
 			onSuccess : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
-//SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+//1PC can't load the templates remotely. causes XSS issue.
+				if(app.vars._clientid == '1pc')	{
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+					}
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{

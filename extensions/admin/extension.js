@@ -1504,9 +1504,37 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$target.hideLoading();
 				},
 
+
+
+		uiMsgObject : function(msg)	{
+			var obj; //what is returned.
+			if(msg.indexOf('|') == -1)	{
+				obj = {'errid':'#','errmsg':msg,'errtype':'unknown','uiIcon':'ui-icon-z-ise','uiClass':'z-hint'} //some legacy messaging is pipeless (edit order, tracking, for instance).
+				}
+			else	{
+				var tmp = msg.split('|');
+				var message = tmp[tmp.length-1]; //the message is always the last part of the message object.
+				if(message.substring(0,1) == '+')	{message = message.substring(1)}
+				obj = {'errid':'#','errmsg':message,'errtype':tmp[0],'uiIcon':'z-'+tmp[0].toLowerCase(),'uiClass':'z-'+tmp[0].toLowerCase()}
+				if(tmp.length > 2)	{
+//				app.u.dump(' -> tmp.length: '+tmp.length); app.u.dump(tmp);
+					for(i = 1; i < (tmp.length -1); i += 1)	{ //ignore first and last entry which are type and message and are already handled.
+						obj[tmp[i].split(':')[0]] = tmp[i].split(/:(.+)?/)[1]; //the key is what appears before the first : and the value is everything after that. allows for : to be in value
+						}
+//					app.u.dump(" -> obj: "); app.u.dump(obj);
+					}
+				}
+			return obj;
+			},
+
+
 //the following function gets executed as part of any fetchAdminResource request. 
 //it's used to output any content in the msgs array.
 //it may be empty, and that's fine.
+// message splitting on | will result in spot 0 = message type (success, error, etc) and spot[last] == message. 
+// there 'may' be things between like 'batch:' or 'ticket:'. These are the 'type' and each are treated individually.
+// if an unrecognized 'type' is encountered, do NOT display an error message, but DO throw smething to the console.
+// also, if message starts with a +, strip that character.
 			uiHandleMessages : function(path,msg,viewObj)	{
 //				app.u.dump("BEGIN admin.u.uiHandleMessages ["+path+"]");
 //				app.u.dump("viewObj: "); app.u.dump(viewObj);
@@ -1524,11 +1552,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						}
 //					app.u.dump(" -> target: "+target);
 					for(var i = 0; i < L; i += 1)	{
-						msgObj = app.u.uiMsgObject(msg[i]);
+						msgObj = this.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
 						msgObj.persistant = true; //for testing, don't hide.
-//						app.u.dump(msgObj);
-						app.u.throwMessage(msgObj);
+						
+						if(msgObj.BATCH)	{
+							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchJob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
+							}
+						app.u.dump(msgObj);	
+						var r = app.u.throwMessage(msgObj);
+						$('.buttonify','.'+r).button();
+						app.u.dump("throwMessage response = "+r);
 						}
 					}
 				else	{
