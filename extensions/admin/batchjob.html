@@ -1,10 +1,18 @@
 
-<div id='batchJobStatusTemplate'>
 
-	<h2>Job: <span></span></h2>
+<section class='ui-widget marginBottom' id='batchJobStatusTemplate'>
+
+	<h3>Job ID: <span data-bind="var: batchjob(jobid); format:text;"></span></h3>
 	
-	<p>Some message</p>
+	<h4 data-bind="var: batchjob(status); format:text; pretext:Status: ;"></h4>
+	<div data-bind="var: batchjob(started); format:unix2mdy; pretext:Started: ;"></div>
+	<div><span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span> <span data-bind="var: batchjob(records_total); format:text; pretext:Status: ;"></span></div>
 	
-	<button data-btn-action="adminBatchJobCleanup">Clean Up/Remove</button>
+	<p data-bind="var: batchjob(status_msg); format:text;"></p>
+
+<!--	<button data-btn-action="adminBatchJobCleanup">Clean Up/Remove</button> -->
+
+	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;"></p>
 	
-</div>
+	
+</section>	

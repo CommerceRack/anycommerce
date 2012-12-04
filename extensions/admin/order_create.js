@@ -169,7 +169,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 
 //formerly createOrder
-// !!! this needs to be updated to pass in the formID.
 		adminOrderCreate : {
 			init : function(callback)	{
 //serializes just the payment panel, which is required for payment processing to occur (CC numbers can't be store anywhere, even in the session)
@@ -182,8 +181,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(callback)	{
 				var payObj = {};
-
-			
 
 // initially, was serializing the payment panel only.  Issues here with safari.
 // cc info is saved in memory so that if payment panel is reloaded, cc# is available. so that reference is used for cc and cv.
@@ -257,7 +254,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				return 1;
 				},
 			dispatch : function(callback)	{
-				app.model.addDispatchToQ({"_cmd":"cartCheckoutValidate","_tag" : {"callback":callback,"extension":"convertSessionToOrder"}},'immutable');
+				app.model.addDispatchToQ({"_cmd":"cartCheckoutValidate","sender":"ADMIN","_tag" : {"callback":callback,"extension":"convertSessionToOrder"}},'immutable');
 				}
 			}
 		}, //calls
@@ -841,7 +838,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 sometimes, a preexisting address may be selected but not have all required fields.
 in this case, toggle the address entry form on so that the corrections can be made in an obvious manner.
 */
-					$("#billAddressUL").toggle(true);
+					$("#billAddressUL").show();
 					}
 				return valid;
 				}, //chkoutBillAddressFieldset
@@ -870,7 +867,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 sometimes, a preexisting address may be selected but not have all required fields.
 in this case, toggle the address entry form on so that the corrections can be made in an obvious manner.
 */
-					$("#shipAddressUL").toggle(true);
+					$("#shipAddressUL").show();
 					}
 				return valid;
 				},
@@ -898,7 +895,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 					$state.parent().addClass('mandatory'); r = false;
 					}
 app.u.dump("REMINDER!!! phone number requirements are disabled because zglobals not available.");
-/*				
+/*
 				if(zGlobals.checkoutSettings.chkout_phone == 'REQUIRED'){
 //					app.u.dump(' -> phone number IS required');
 					var $phone = $('#data-'+TYPE+'_phone').removeClass('mandatory');
@@ -1016,7 +1013,8 @@ an existing user gets a list of previous addresses they've used and an option to
 					else{} //creating an order for a user, but no addresses on file.
 					}
 				else	{} //no cid set. most likely creating order for new user.
-				
+
+
 //troubleshooting IE issues, so saved to var instead of manipulating directly. may not need this, but test in IE if changed.
 				var $panelFieldset = $("#chkoutBillAddressFieldset").removeClass("loadingBG").append("<p>"+txt+"<\/p>");
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateBillAddress','billAddressUL'));
@@ -1044,7 +1042,11 @@ an existing user gets a list of previous addresses they've used and an option to
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
 				if(app.data.appCheckoutDestinations['@destinations'].length < 2)
 					$('#billCountryContainer').toggle(false);
-
+//if only one predefined address exists, trigger a click to 'select' it by default.
+				if(addresses.length == 1)	{
+					$("address:first","#chkoutBillAddressFieldset").trigger('click');
+					}
+				else	{}
 //				app.u.dump('END app.ext.convertSessionToOrder.panelContent.billAddress.');
 				}, //billAddress
 				
@@ -1079,7 +1081,10 @@ an existing user gets a list of previous addresses they've used and an option to
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
 				if(app.data.appCheckoutDestinations['@destinations'].length < 2)
 					$('#shipCountryContainer').toggle(false);
-				
+//if only one predefined address exists, trigger a click to 'select' it by default.
+				if(addresses.length == 1)	{
+					$("address:first","#chkoutShipAddressFieldset").trigger('click');
+					}
 				}, //shipAddress
 
 

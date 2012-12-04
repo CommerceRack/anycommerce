@@ -104,21 +104,31 @@ obj.PATH = .cat.safe.id
 				obj._cmd = 'appPageSet';
 				app.model.addDispatchToQ(obj,Q);
 				}			
-
 			},
+
+//the appSettings 'domains' in the response are hard coded to app.domain...
+//probably should avoid using the appSettings for now. rootcat is probably safe.
+		appConfig : {
+			init : function(tagObj,Q)	{
+				this.dispatch(tagObj,Q);				
+				},
+			dispatch : function(tagObj,Q)	{
+				app.model.addDispatchToQ({"_cmd":"appConfig","_tag" : tagObj},Q);
+				}			
+			},
+
 		adminDomainList : {
 			init : function(tagObj,Q)	{
 //			app.u.dump("BEGIN admin.calls.adminDomainList");
 				tagObj = tagObj || {};
 				tagObj.datapointer = "adminDomainList";
-if(app.model.fetchData(tagObj.datapointer) == false)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else	{
-	app.u.handleCallback(tagObj);
-	}
-
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					}
 				},
 			dispatch : function(tagObj,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : tagObj},Q);
@@ -1123,6 +1133,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				if(domain)	{
 					app.vars.domain = domain;
 					$('.domain','#appView').text(domain);
+//					app.rq.push(['script',0,'http://'+domain+'/jquery/config.js']); //load zGlobals. saves over existing values.
 					if(partition){}
 					else	{
 						partition = app.ext.admin.a.getDataForDomain(domain,'prt');

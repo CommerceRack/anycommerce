@@ -385,10 +385,10 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
 
+<button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
 
 
-<button onClick="app.ext.admin_batchJob.calls.adminBatchJobStatus.init('342679'); app.model.dispatchThis();">adminBatchJobStatus</button>
-<button onClick="app.ext.admin_batchJob.calls.adminBatchJobCleanup.init('342679'); app.model.dispatchThis();">adminBatchJobCleanup</button>
+<button onClick="app.ext.admin_batchJob.a.showBatchJobStatus('342679');">adminBatchJobStatus</button>
 <button onClick="app.ext.admin_batchJob.calls.adminBatchJobList.init(); app.model.dispatchThis();">adminBatchJobList</button>
 
 <!--  -->

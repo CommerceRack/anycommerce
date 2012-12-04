@@ -108,7 +108,7 @@ var admin_batchJob = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-//				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/batchjob.html',theseTemplates);
 
 				return r;
 				},
@@ -131,17 +131,18 @@ var admin_batchJob = function() {
 			showBatchJobStatus : function(jobid,opts) {
 				if(jobid)	{
 					//get job details.
-					var $target = $('#batchJobStatusModal');
+					var $target = $('#batchJobStatusModal'); //modal id.
+					var targetID = 'batchJobStatus_'+jobid; //content id. applied to template when it is added. needed for translate on callback.
 					if($target.length)	{}
 					else	{
-						$target = $("<div \/>").attr('id','batchJobStatusModal').appendTo('body');
+						$target = $("<div \/>").attr({'id':'batchJobStatusModal','title':'Batch Job Status'}).appendTo('body');
 						$target.dialog({'modal':true,'width':500,'height':500,'autoOpen':false});
 						}
-					$target.dialog('open').showLoading();
-					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':function(tagObj){
-						$target.hideLoading().append({},'batchJobStatusTemplate',app.data[tagObj.datapointer]);
-						}},'immutable');
+					$target.append(app.renderFunctions.createTemplateInstance('batchJobStatusTemplate',{'id':targetID,'jobid':jobid}));
+					$target.dialog('open');
+					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':'translateTemplate','targetID':targetID},'immutable');
 					app.model.dispatchThis('immutable');
+					$target.showLoading();
 					}
 				else	{
 					app.u.throwMessage("No jobid specified in admin_batchJob.a.showBatchJobStatus");
@@ -152,7 +153,23 @@ var admin_batchJob = function() {
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {}, //renderFormats
+		renderFormats : {
+//job status is passed in.
+//if status = error, finished or abort should show this button
+//button is hidden by default and shown if needed.
+			cleanUpButton : function($tag,data)	{
+				if(data.value == 'error' || data.value == 'finished' || data.value == 'abort')	{
+					$tag.show();
+					$tag.on('click',function(){
+						var jobid = $tag.closest('[data-jobid]').data('jobid');
+						app.ext.admin_batchJob.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up'},'immutable');
+						app.model.dispatchThis('immutable');
+						});
+					
+					}
+				else	{} //do nothing (do NOT show button.
+				}
+			}, //renderFormats
 
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
