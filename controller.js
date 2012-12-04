@@ -492,6 +492,7 @@ app.u.throwMessage(responseData); is the default error handler.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN callbacks.translateSelector");
+				if(typeof jQuery().hideLoading == 'function'){$(tagObj.selector).hideLoading();}
 				app.renderFunctions.translateSelector(tagObj.selector,app.data[tagObj.datapointer]);
 				}
 			},
@@ -503,11 +504,13 @@ app.u.throwMessage(responseData); is the default error handler.
 // the app.data.datapointer is what'll get passed in to the translate function as the data src. (ex: getProduct|PID)
 		translateTemplate : 	{
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateTemplate");
+//				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(tagObj);
+//				app.u.dump("typeof jQuery.hideLoading: "+typeof jQuery().hideLoading);
+				if(typeof jQuery().hideLoading == 'function'){$('#'+tagObj.parentID).hideLoading();}
 				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				}
-			
 			}, //translateTemplate
+
 // a generic callback to allow for success messaging to be added. 
 // pass message for what will be displayed.  For error messages, the system messaging is used.
 		showMessaging : {

@@ -132,15 +132,14 @@ var admin_batchJob = function() {
 				if(jobid)	{
 					//get job details.
 					var $target = $('#batchJobStatusModal'); //modal id.
-					var targetID = 'batchJobStatus_'+jobid; //content id. applied to template when it is added. needed for translate on callback.
-					if($target.length)	{}
+					if($target.length)	{$target.empty()}
 					else	{
 						$target = $("<div \/>").attr({'id':'batchJobStatusModal','title':'Batch Job Status'}).appendTo('body');
-						$target.dialog({'modal':true,'width':500,'height':500,'autoOpen':false});
+						$target.dialog({'modal':true,'width':500,'height':300,'autoOpen':false});
 						}
-					$target.append(app.renderFunctions.createTemplateInstance('batchJobStatusTemplate',{'id':targetID,'jobid':jobid}));
+					$target.append(app.renderFunctions.createTemplateInstance('batchJobStatusTemplate',{'jobid':jobid}));
 					$target.dialog('open');
-					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':'translateTemplate','targetID':targetID},'immutable');
+					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':'translateSelector','selector':'#batchJobStatusModal'},'immutable');
 					app.model.dispatchThis('immutable');
 					$target.showLoading();
 					}
@@ -158,14 +157,20 @@ var admin_batchJob = function() {
 //if status = error, finished or abort should show this button
 //button is hidden by default and shown if needed.
 			cleanUpButton : function($tag,data)	{
-				if(data.value == 'error' || data.value == 'finished' || data.value == 'abort')	{
+				if(data.value == 'ERROR' || data.value == 'finished' || data.value == 'abort')	{
 					$tag.show();
+					$tag.button(); //daisy-chaining the button on the show didn't work. button didn't get classes.
 					$tag.on('click',function(){
 						var jobid = $tag.closest('[data-jobid]').data('jobid');
-						app.ext.admin_batchJob.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up'},'immutable');
-						app.model.dispatchThis('immutable');
+						if(jobid)	{
+							$('#batchJobStatusModal').empty().addClass('loadingBG');
+							app.ext.admin_batchJob.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up','parentID':'batchJobStatus_'+jobid},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.dump("Unable to ascertain jobid for click action on button in admin_batch.renderFormats.cleanUpButton");
+							}
 						});
-					
 					}
 				else	{} //do nothing (do NOT show button.
 				}
