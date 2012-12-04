@@ -130,7 +130,7 @@ var admin_orders = function() {
 				},
 			onError : function(responseData)	{
 				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				responseData._rtag.parentID = 'orderListMessaging'
+				if(responseData._rtag)	{responseData._rtag.parentID = 'orderListMessaging'}
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged

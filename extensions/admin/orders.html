@@ -4,15 +4,6 @@
 	<div id='orderListMessaging'></div>
 <table class='orderListTable'>
 <tr>
-	<td>
-<h3>Filter: </h3>
-<select name='POOL'>
-
-</select>
-	</td>
-</tr>
-
-<tr>
 	<td class='leftCol'>
 	<div id='orderFilters' class='ui-corner-left ui-widget-content' >
 <section class='clearfix'>
@@ -77,10 +68,10 @@
 				<option value='POOL|PROCESS'>Process</option>
 				<option value='POOL|COMPLETED'>Completed</option>
 				<option value='POOL|DELETED'>Cancelled</option>
-			</optgroup>
+			</optgroup><!--
 			<optgroup label= 'contact'>
 				<option value='MAIL|BULKEMAIL'>Send Email</option>
-			</optgroup>
+			</optgroup>-->
 			<optgroup label = 'pay'>
 				<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
 			</optgroup>
@@ -119,7 +110,12 @@
 	<td><span data-bind='var:order(ORDER_BILL_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
-	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >view</button></td>
+<!-- legacy compat: -->
+	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'></button></td>
+<!--
+app:	
+	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >view</button></td> 
+	-->
 </tr>
 </table>
 <!-- /adminOrderLineItem -->

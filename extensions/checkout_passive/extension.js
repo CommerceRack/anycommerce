@@ -268,7 +268,8 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 					}
 //messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
-					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.")
+					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.");
+					r = true;
 					}
 				else	{
 					r = true;

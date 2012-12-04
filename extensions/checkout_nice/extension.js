@@ -288,6 +288,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 				else if(app.u.getParameterByName('_testharness'))	{
 					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'}));
 					$('#'+app.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG').append("");
+					r = true;
 					}
 				else	{
 					r = true;
