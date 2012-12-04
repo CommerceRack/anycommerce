@@ -1789,7 +1789,7 @@ the refreshCart call can come second because none of the following calls are upd
 //				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
 				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
-				data.value.push({'id':'','shipName':'Use custom shipping amount','amount':''})
+//				data.value.push({'id':'','shipName':'Use custom shipping amount','amount':''})
 				var L = data.value.length;
 				for(var i = 0; i < L; i += 1)	{
 					id = data.value[i].id; //shortcut of this shipping methods ID.
@@ -1806,17 +1806,20 @@ the refreshCart call can come second because none of the following calls are upd
 					o += "/>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
 					}
 
-
-//				o += "<li><label><input type='radio' name='want/shipping_id' value='' />Use custom shipping amount<\/label>";
-				o += "<li><div><label>Shipping id: <input type='text' name='cart/shipping_id' \/><\/label><\/div>";
-				o += "<div><label>Shipping Carrier: <input type='text' name='sum/shp_carrier' \/><\/label><\/div>";
-				o += "<div><label>Shipping Method: <input type='text' name='sum/shp_method' \/><\/label><\/div>";
-				o += "<div><label>Shipping Total: <input type='number' size='5' name='sum/shp_total' \/><\/label><\/div>";
-				o += "<div><label>Insurance Optional: <input type='checkbox' name='is/ins_optional' \/><\/label><\/div><\/li>";
+//not supported yet. eventually wll allow a merchant to set the shipping price, method, etc.
+//				o += "<li><label><input type='radio' name='want/shipping_id' value='' onChange=\"if($(this).is(':checked'){$('.customShippingAmountInputs').show()} else {$('.customShippingAmountInputs').hide()}\" />Use custom shipping amount<\/label>";
+//any time these inputs are changed, their values get added to the Q for update, but they don't get sent for immediate dispatch. not that urgent.
+//they're added to immutable so that they go prior to the next cart change (which always uses immutable in this environment)
+//				o += "<li class='customShippingAmountInputs'><div><label>Shipping id: <input type='text' name='cart/shipping_id' \/><\/label><\/div>";
+//				o += "<div><label>Shipping Carrier: <input type='text' name='sum/shp_carrier' onChange=\"app.calls.cartSet.init({'sum/sum/shp_carrier':$(this).val()},{},'immutable');\" \/><\/label><\/div>";
+//				o += "<div><label>Shipping Method: <input type='text' name='sum/shp_method' onChange=\"app.calls.cartSet.init({'sum/shp_method':$(this).val()},{},'immutable');\" \/><\/label><\/div>";
+//				o += "<div><label>Shipping Total: <input type='number' size='5' name='sum/shp_total' onChange=\"app.calls.cartSet.init({'sum/shp_total':$(this).val()},{},'immutable');\" \/><\/label><\/div>";
+//				o += "<div><label>Insurance Optional: <input type='checkbox' name='is/ins_optional' onChange=\"app.calls.cartSet.init({'is/ins_optional':$(this).val()},{},'immutable');\" \/><\/label><\/div><\/li>";
 
 				o += "<\/li>";
 					
 				$tag.html(o);
+
 				}, //shipMethodsAsRadioButtons
 			
 
