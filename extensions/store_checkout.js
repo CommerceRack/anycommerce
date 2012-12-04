@@ -142,14 +142,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 				app.model.fetchData('cartDetail'); //will make sure cart is loaded from localStorage (if present) if not in memory.
 				if(!$.isEmptyObject(app.data.cartDetail))	{
-					total = app.data.cartDetail['sum/balance_due_total'];
+					total = app.data.cartDetail.sum.balance_due_total;
 					}
 				if(country != "US")	{
 					// country is defaulted to the form value. If that value is NOT "US", then use it (a country has been selected).
 					// if the value is US, then it may be the default setting and the request should w/ country as cart/session value
 					// (country may have been set elsewhere) though the form 'should' default correctly, we don't rely on that.
 					}
-				else if(!$.isEmptyObject(app.data.cartDetail) && app.data.cartDetail['bill/countrycode'])	{
+				else if(!$.isEmptyObject(app.data.cartDetail) && app.data.cartDetail.bill && app.data.cartDetail.bill.countrycode)	{
 					country = app.data.cartDetail['bill/countrycode']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
 					}
 

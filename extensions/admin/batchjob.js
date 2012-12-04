@@ -127,7 +127,7 @@ var admin_batchJob = function() {
 		a : {
 			
 			showBatchJobManager : function(){},
-			
+
 			showBatchJobStatus : function(jobid,opts) {
 				if(jobid)	{
 					//get job details.

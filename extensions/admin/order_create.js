@@ -1938,7 +1938,7 @@ the refreshCart call can come second because none of the following calls are upd
 
 
 //				o += "<div><label><input type='checkbox' name='is/origin_marketplace' value='1' \/>use custom shipping amount<\/label><\/div>";
-//				o += "<div><input type='number' name='want/origin_marketplace' value='' \/><\/div>";
+//				o += "<div><input type='number' name='want/origin_marketplace' value='' size='5' \/><\/div>";
 
 					
 				$tag.html(o);
