@@ -189,7 +189,7 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
-	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='bill/region' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<li class='bill_state'><label for='data-bill_state'>State/Province</label><input type='text'  name='bill/region' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 	
 	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/postal' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
 

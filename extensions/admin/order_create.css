@@ -105,8 +105,12 @@
 
 
 #zCheckoutFrm fieldset li.bill_zip input, #zCheckoutFrm fieldset li.ship_zip input	{width:80px;}
+#zCheckoutFrm fieldset li.bill_state input, #zCheckoutFrm fieldset li.ship_state input, #zCheckoutFrm fieldset .bankState	{width:80px;}
+
+/*
+the state textbox could not be 'clicked' into (tab worked) and commenting this line out fixed the issue.
 #zCheckoutFrm fieldset li.bill_state, #zCheckoutFrm fieldset li.ship_state	{float:left;}
-#zCheckoutFrm fieldset li.bill_state input, #zCheckoutFrm fieldset li.ship_state input, #zCheckoutFrm fieldset .bankState	{width:40px;}
+*/
 
 #zCheckoutFrm fieldset p	{clear:both;}
 
