@@ -184,17 +184,41 @@ var admin_orders = function() {
 		listOrders : {
 			onSuccess : function(tagObj)	{
 
-//app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
+
+
+//var contextMenuCommands = "<command label='Tracking' ></command>"; 
+//contextMenuCommands += "<command label='Payment Status' onClick='navigateTo(\"/biz/orders/payment.cgi?ID=\"+$(this).parent().data('orderid')+'&ts=\"); return false;\" ></command>";
+//contextMenuCommands += "<command label='Payment Status' onClick='navigateTo(\"/biz/orders/edit.cgi?CMD=EDIT&OID=\"+$(this).parent().data('orderid')+\"&ts=\"); return false;' ></command>";
+//	<command label='Notes' ></command><command label='Edit Contents' ></command><command label='Email' ></command><command label='Ticket' ></command>"
 
 var orderid,cid;
 var L = app.data[tagObj.datapointer]['@orders'].length;
+var $cmenu; //recyled. stors the context menu for an order.
+
 if(L)	{
 	for(var i = 0; i < L; i += 1)	{
 		orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID; //used for fetching order record.
 		cid = app.data[tagObj.datapointer]['@orders'][i].CUSTOMER; //used for sending adminCustomerGet call.
 		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,app.data[tagObj.datapointer]['@orders'][i]))
 		}
+
+//adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
+//this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
+	$('.adminOrderLineItem').each(function(){
+		var rowID = $(this).attr('id');
+		var orderid = $(this).data('orderid');
+		var $cmenu = $("<menu \/>").attr({'type':'context','id':'contextMenuOrders_'+orderid}).addClass('showcase displayNone');
+		$("<command \/>").attr('label','Payment Status').on('click',function(){showUI('/biz/orders/payment.cgi?ID='+orderid+'&ts='); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Edit Contents').on('click',function(){showUI('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts='); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Ticket').on('click',function(){showUI('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=$email&phone=$phone'); return false;}).appendTo($cmenu);
+		$.contextMenu({
+			selector: "#"+rowID,
+			items: $.contextMenu.fromMenu($cmenu)
+			});
+		});
+	
 //assign a click event to the 'view order' button that appears in each row.
 	$target.find('.viewOrder').each(function(){
 		$(this).click(function(){

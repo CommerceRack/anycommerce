@@ -1356,6 +1356,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
+				else if(path == '#!orders')	{
+					app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":app.ext.admin.vars.tab+"Content"});
+					}
 				else if(path == '#!products')	{
 					app.u.dump("Go to product editor");
 					app.ext.admin_prodEdit.u.showProductEditor(path,opts);

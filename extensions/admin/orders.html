@@ -102,7 +102,7 @@
 <table>
 <tr id='adminOrderLineItem' class='adminOrderLineItem' >
 	<td><span class='selectedIcon'><span class="ui-icon ui-icon-circle-check"></span></span></td>
-	<td><span data-bind='var:order(ORDERID);format:text;'></span></td>
+	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
@@ -111,11 +111,8 @@
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 <!-- legacy compat: -->
-	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'></button></td>
-<!--
-app:	
-	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >view</button></td> 
-	-->
+	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Legacy</button></td>
+	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td> 
 </tr>
 </table>
 <!-- /adminOrderLineItem -->
