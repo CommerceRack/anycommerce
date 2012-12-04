@@ -38,6 +38,15 @@ button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for butt
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
+
+/*
+Generic text styles
+*/
+.lineThrough	{text-decoration:line-through}
+
+
+
+
 /*
 some global padding and margins.
 As often as practical, use margin or padding of 12px; this will give the UI a consistent look and feel.

@@ -141,7 +141,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var country = $('#data-bill_country').val();
 
 				app.model.fetchData('cartDetail'); //will make sure cart is loaded from localStorage (if present) if not in memory.
-				if(!$.isEmptyObject(app.data.cartDetail))	{
+				if(app.data.cartDetail && app.u.isSet(app.data.cartDetail.sum))	{
 					total = app.data.cartDetail.sum.balance_due_total;
 					}
 				if(country != "US")	{

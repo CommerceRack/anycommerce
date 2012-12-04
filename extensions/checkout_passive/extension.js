@@ -164,7 +164,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.ext.store_checkout.u.nukePayPalEC(); //require paypal re-authentication anytime the cart is updated.
 				}
 			 },
