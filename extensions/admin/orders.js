@@ -297,14 +297,20 @@ $('#orderListTableContainer').removeClass('loadingBG');
 		initOrderManager : function(P)	{
 //			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
-			P.filters = P.filters || app.ext.admin.u.devicePreferencesGet('admin_orders');
+			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
+			if(P.filters){} //used filters that are passed in.
+			else if(oldFilters != undefined)	{
+				P.filters = oldFilters.managerFilters;
+				}
+			else{}
+
 //if no filters are passed in and no 'last filter' is present, set some defaults.
 			if($.isEmptyObject(P.filters))	{
 				P.filters.POOL = 'RECENT';
 				}
 			else{}
 			
-			app.u.dump(" -> filters obtained via devicePreferencesGet"); app.u.dump(filters);
+			app.u.dump(" -> filters obtained via devicePreferencesGet"); app.u.dump(P.filters);
 
 			if(P.filters && P.targetID)	{
 //adds the order manager itself to the dom.
@@ -313,15 +319,20 @@ $('#orderListTableContainer').removeClass('loadingBG');
 				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
-				$(".filterGroup").children().addClass('pointer').click(function() {
-					var $this = $(this);
-					if($this.hasClass('ui-selected'))	{$this.removeClass('ui-selected')}
-					else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
+				$(".filterGroup").children().each(function(){
+					if($(this).data('filtervalue') == P.filters[$(this).parent().data('filter')]){
+						$(this).addClass('ui-selected');
+						}
+					else	{}
+					$(this).addClass('pointer').click(function() {
+						var $this = $(this);
+						if($this.hasClass('ui-selected'))	{$this.removeClass('ui-selected')}
+						else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
+						})
 					});
 //go get the list of orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
-//will add selected class to appropriate default filter in select list.
-				$("#orderListFilterPool [data-filtervalue="+P.pool+"]").addClass('ui-selected');
+
 //assigns all the button click events.
 				app.ext.admin_orders.u.bindOrderListButtons(P.targetID);
 				}
