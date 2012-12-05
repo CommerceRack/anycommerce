@@ -2133,7 +2133,43 @@ just lose the back button feature.
 					//the hash changed, but not to a 'page'. could be something like '#top' or just #.
 					}
 				_ignoreHashChange = false; //turned off again to re-engage this feature.
+				},
+
+
+//undefined is returned if there are no matchings session vars.
+//if no extension is passed, return the entire sesssion object (if it exists).
+//this allows for one extension to read anothers preferences and use/change them.
+			devicePreferencesGet : function(ext)	{
+				var obj = app.storageFunctions.readLocal('session') || undefined;
+				if(obj == undefined)	{
+					// if nothing is local, no work to do. this allows an early exit.
+					} 
+				else	{
+					if(ext && obj[ext])	{obj = obj[ext]} //an extension was passed and an object exists.
+					else if(!ext)	{} //return the global object. obj existing is already known by here.
+					else	{} //could get here if ext passed but obj.ext doesn't exist.
+					}
+				return obj;
+				},
+
+//For updating 'session' preferences, which are currently device specific.
+//for instance, in orders, what were the most recently selected filter criteria.
+//ext is required (currently). reduces likelyhood of nuking entire preferences object.
+			devicePreferencesSet : function(ext,varObj)	{
+				if(ext && varObj)	{
+					app.u.dump("device preferences for "+ext+" have just been updates");
+					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
+					if(typeof sessionData[ext] != 'object'){sessionData[ext] = {}}; //each ext gets it's own object so that no ext writes over anothers.
+					
+					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
+					
+					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
+					}
+				else	{
+					app.u.throwGMessage("either extension or varObj not passed into admin.u.updateDevicePreferences. ext: ["+ext+"] and typeof varObj: ["+typeof varObj+"]");
+					}
 				}
+
 
 
 

@@ -124,7 +124,7 @@ var admin_orders = function() {
 		initOrderManager : {
 			onSuccess : function()	{
 //				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
-				app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});
+				app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
 				}
 			}, //initOrderManager
 
@@ -297,7 +297,16 @@ $('#orderListTableContainer').removeClass('loadingBG');
 		initOrderManager : function(P)	{
 //			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
-			if(P.pool && P.targetID)	{
+			P.filters = P.filters || app.ext.admin.u.devicePreferencesGet('admin_orders');
+//if no filters are passed in and no 'last filter' is present, set some defaults.
+			if($.isEmptyObject(P.filters))	{
+				P.filters.POOL = 'RECENT';
+				}
+			else{}
+			
+			app.u.dump(" -> filters obtained via devicePreferencesGet"); app.u.dump(filters);
+
+			if(P.filters && P.targetID)	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$(app.u.jqSelector('#',P.targetID)).append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
@@ -310,7 +319,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 					else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
 					});
 //go get the list of orders.
-				app.ext.admin_orders.a.showOrderList({'POOL':P.pool});
+				app.ext.admin_orders.a.showOrderList(P.filters);
 //will add selected class to appropriate default filter in select list.
 				$("#orderListFilterPool [data-filtervalue="+P.pool+"]").addClass('ui-selected');
 //assigns all the button click events.
@@ -395,6 +404,7 @@ else	{
 				app.u.throwMessage('Please select at least one filter criteria');
 				}
 			else	{
+				app.ext.admin.u.devicePreferencesSet('admin_orders',{'managerFilters':obj});
 //				app.u.dump("Filter Obj: "); app.u.dump(obj);
 				app.model.destroy('adminOrderList'); //clear local storage to ensure request
 				app.ext.admin_orders.a.showOrderList(obj);
@@ -445,7 +455,6 @@ else	{
 				}
 			}, //bulkCMDOrders
 		
-
 
 		selectAllOrders : function()	{
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
