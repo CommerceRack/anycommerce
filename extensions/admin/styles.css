@@ -123,6 +123,9 @@ later if more variety is needed, we can either create exceptions or more rules t
 .loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:100px; min-width:100px;}
 li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
+.wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
+
+
 
 /* This gets applied to the parent containers around each tabs content area.  */
 .tabContent	{margin:12px auto; width:90%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */

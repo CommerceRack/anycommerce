@@ -140,6 +140,7 @@ var admin_orders = function() {
 				var $row = $(app.u.jqSelector('#',tagObj.targetID));
 				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
 				app.ext.admin_orders.u.unSelectRow($row);
+				delete responseData._rtag.targetID; //don't want the message here.
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
@@ -157,9 +158,11 @@ var admin_orders = function() {
 //				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
 //change the status icon to notify user something went wrong on this update.
 //also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
-				var $row = $(app.u.jqSelector('#',tagObj.targetID));
+				var $row = $(app.u.jqSelector('#',responseData._rtag.targetID));
 				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
 				app.ext.admin_orders.u.unSelectRow($row);
+
+				delete responseData._rtag.targetID; //don't want the message here.
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderFlagAsPaid
@@ -595,6 +598,7 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 			changeOrderPool : function($row,pool,statusColID){
 				$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 				$('td:eq('+statusColID+')',$row).empty().append("<span class='wait'><\/span>");
+				
 				app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
 				}, //changeOrderPool
 
@@ -625,7 +629,8 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 						}
 					else	{
 						$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-						$('td:eq('+statusColID+')',$row).empty().append("<span class='wait'><\/span>");
+						$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
+
 						app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
 						}
 					}
