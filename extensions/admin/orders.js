@@ -294,6 +294,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 //			app.u.dump(P);
 //this can be removed once this is deployed in full release instead of beta. !!!
 app.ext.admin.u.bringTabIntoFocus('orders2');
+
 			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
 			if(P.filters){} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
