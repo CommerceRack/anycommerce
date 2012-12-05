@@ -302,7 +302,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 			else if(oldFilters != undefined)	{
 				P.filters = oldFilters.managerFilters;
 				}
-			else{}
+			else{P.filters = {}}
 
 //if no filters are passed in and no 'last filter' is present, set some defaults.
 			if($.isEmptyObject(P.filters))	{
