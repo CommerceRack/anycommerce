@@ -1627,29 +1627,29 @@ later, it will handle other third party plugins as well.
 					//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
 						break;
 					case 'CREDIT':
-						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment/cc' id='payment-cc' class=' creditCard' value='";
-						if(data['payment/cc']){tmp += data['payment/cc']}
+						tmp += "<li><label for='payment-cc'>Credit Card #<\/label><input type='text' size='20' name='payment/CC' id='payment-cc' class=' creditCard' value='";
+						if(data['payment/CC']){tmp += data['payment/CC']}
 						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/li>";
 						
-						tmp += "<li><label>Expiration<\/label><select name='payment/mm' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
-						tmp += app.u.getCCExpMonths(data['payment/mm']);
+						tmp += "<li><label>Expiration<\/label><select name='payment/MM' id='payment-mm' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += app.u.getCCExpMonths(data['payment/MM']);
 						tmp += "<\/select>";
-						tmp += "<select name='payment/yy' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/yy'])+"<\/select><\/li>";
+						tmp += "<select name='payment/YY' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
 						
-						tmp += "<li><label for='payment/cv'>CVV/CID<\/label><input type='text' size='8' name='payment/cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
-						if(data['payment/cv']){tmp += data['payment/cv']}
+						tmp += "<li><label for='payment/CV'>CVV/CID<\/label><input type='text' size='8' name='payment/cv' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						if(data['payment/CV']){tmp += data['payment/CV']}
 						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
 						break;
 	
 					case 'PO':
-						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment/po' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/po\":this.value});' value='";
-						if(data['payment/po'])
-								tmp += data['payment/po'];
+						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+						if(data['payment/PO'])
+								tmp += data['payment/PO'];
 						tmp += "' /><\/li>";
 						break;
 	
 					case 'ECHECK':
-						var echeckFields = {"payment/ea" : "Account #","payment/er" : "Routing #","payment/en" : "Account Name","payment/eb" : "Bank Name","payment/es" : "Bank State","payment/ei" : "Check #"}
+						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
 						for(var key in echeckFields) {
 							safeid = app.u.makeSafeHTMLId(key);
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.

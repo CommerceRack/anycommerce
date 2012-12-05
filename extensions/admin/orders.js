@@ -212,6 +212,7 @@ for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
 	$poolMenu.append("<command label='"+app.ext.admin_orders.vars.pools[i]+"' onClick='alert(\"not working yet.\")'></command>");
 	}
 
+
 //adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
 	$('.adminOrderLineItem').each(function(){
@@ -245,7 +246,7 @@ for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
 		});
 
 	$target.selectable({filter: 'tr'});
-
+	$('.selectedIcon',$target).hide(); //after applyting a filter, all icons become visible, so hide them and as they're selected, the icons will show up.
 	
 	
 	}

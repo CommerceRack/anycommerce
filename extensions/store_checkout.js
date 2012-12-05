@@ -331,21 +331,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 //					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
 					}
 				else if(payby == 'CREDIT')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
 					}				
 				else if(payby == 'PO')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","po":$('#payment-po').val()});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
 					}				
 				else if(payby == 'ECHECK')	{
 					app.ext.store_checkout.calls.cartPaymentQ.init({
 "cmd":"insert",
 "TN":"ECHECK",
-"ea":$('#paymentea').val(),
-"er":$('#paymenter').val(),
-"en":$('#paymenten').val(),
-"eb":$('#paymenteb').val(),
-"es":$('#paymentes').val(),
-"ei":$('#paymentei').val()
+"EA":$('#paymentea').val(),
+"ER":$('#paymenter').val(),
+"EN":$('#paymenten').val(),
+"EB":$('#paymenteb').val(),
+"ES":$('#paymentes').val(),
+"EI":$('#paymentei').val()
 						});
 					}
 				else	{
