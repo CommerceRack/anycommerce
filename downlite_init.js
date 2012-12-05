@@ -72,7 +72,12 @@ app.vars.scripts.push({
 	'callback':function(){var addthis_config = {"data_track_clickback":false,"ui_click":true,"ui_use_image_picker": true};},
 	'validator':function(){return (typeof addthis == 'object') ? true : false;}
 	})
-
+	
+app.vars.scripts.push({
+	'pass':5,
+	'location':'https://www.googleadservices.com/pagead/conversion.js',
+	'validator':function(){return true;}
+	})
 
 
 /*
