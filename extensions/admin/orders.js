@@ -204,15 +204,30 @@ if(L)	{
 		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,app.data[tagObj.datapointer]['@orders'][i]))
 		}
 
+$('button',$target).button();
+
+
+var $poolMenu = $("<menu label='Change status to: '>");
+for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
+	$poolMenu.append("<command label='"+app.ext.admin_orders.vars.pools[i]+"' onClick='alert(\"not working yet.\")'></command>");
+	}
+
 //adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
 	$('.adminOrderLineItem').each(function(){
 		var rowID = $(this).attr('id');
 		var orderid = $(this).data('orderid');
 		var $cmenu = $("<menu \/>").attr({'type':'context','id':'contextMenuOrders_'+orderid}).addClass('showcase displayNone');
-		$("<command \/>").attr('label','Payment Status').on('click',function(){showUI('/biz/orders/payment.cgi?ID='+orderid+'&ts='); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Edit Contents').on('click',function(){showUI('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts='); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Ticket').on('click',function(){showUI('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=$email&phone=$phone'); return false;}).appendTo($cmenu);
+		$cmenu.append("<h3 style='margin:0; padding:0;'>"+orderid+"<\/h3><hr \/>");
+		$("<command \/>").attr('label','Payment Status').on('click',function(){showUI('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Edit Contents').on('click',function(){showUI('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Ticket').on('click',function(){showUI('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=&phone=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<hr \/>").appendTo($cmenu);
+		$("<command \/>").attr('label','Flag as Paid').on('click',function(){alert('not working yet.')}).appendTo($cmenu);
+		
+		$cmenu.append($poolMenu);
+//		$("<command \/>").attr('label','Change Status to:').append().appendTo($cmenu);
+		
 		$.contextMenu({
 			selector: "#"+rowID,
 			items: $.contextMenu.fromMenu($cmenu)
@@ -364,8 +379,8 @@ else	{
 		showOrderList : function(filterObj)	{
 			if(!$.isEmptyObject(filterObj))	{
 			//create instance of the template. currently, there's no data to populate.
-				filterObj.DETAIL = 5;
-				filterObj.LIMIT = 20; //for now, cap at 20 so test pool is small. ###
+				filterObj.DETAIL = 9;
+				filterObj.LIMIT = 30; //for now, cap at 20 so test pool is small. ###
 				app.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				app.model.dispatchThis();
 				
@@ -460,14 +475,33 @@ return $r;
 			}, //billzone
 			
 		customerNote : function($tag,data)	{
-				var L = data.value.length;
-				var $o = $("<ul />"); //what is appended to tag. 
-				for(var i = 0; i < L; i += 1)	{
-					$o.append("<li>"+app.u.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
-					}
-				$tag.append($o.children());
-				},
-			
+			var L = data.value.length;
+			var $o = $("<ul />"); //what is appended to tag. 
+			for(var i = 0; i < L; i += 1)	{
+				$o.append("<li>"+app.u.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
+				}
+			$tag.append($o.children());
+			},
+		
+		reviewStatus : function($tag,data)	{
+			var c = data.value[0]; //first character is a good indicator of the status.
+/*
+#Approved  AXX   (Green)
+#Review  RXX   (Yellow)
+#Escalated EXX   (Orange)
+#Declined  DXX   (Red)
+#Unknown   ''    (white/Not Set)
+*/
+			if(c == 'A')	{$tag.text('A').addClass('green')}
+			else if(c == 'R')	{$tag.text('R').addClass('yellow')}
+			else if(c == 'A')	{$tag.text('E').addClass('orange')}
+			else if(c == 'A')	{$tag.text('D').addClass('red')}
+			else if(c == '')	{} //supported, but no action/output.
+			else	{
+				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
+				}
+			},
+		
 		paystatus : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
 			var ps = data.value.substr(0,1); //first characer of pay status.
@@ -483,7 +517,7 @@ return $r;
 				case '9': pretty = 'Error'; break;
 				default: pretty = 'unknown'; break;
 				}
-			$tag.text("Payment Status: "+pretty).attr('title',data.value);
+			$tag.text(pretty).attr('title',data.value); //used in order list, so don't force any pre/posttext.
 			return true;
 			} //billzone
 		},
