@@ -120,14 +120,6 @@ var admin_orders = function() {
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}, //init
-// if the order manager is loaded as part of the controller init, this callback gets run
-		initOrderManager : {
-			onSuccess : function()	{
-//				app.u.dump("BEGIN admin_orders.callback.initOrderManager.onSuccess");
-				app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
-				}
-			}, //initOrderManager
-
 
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
@@ -278,7 +270,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 	
 	}
 else	{
-	$('#orderListTableContainer').append('There are no orders that match the current filter criteria.');
+	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
 	}
 //at end to ensure this is always removed (results or no results)
 //targets the parent container of the tab because the tbody won't show the bg image
@@ -300,6 +292,8 @@ $('#orderListTableContainer').removeClass('loadingBG');
 		initOrderManager : function(P)	{
 //			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
+//this can be removed once this is deployed in full release instead of beta. !!!
+app.ext.admin.u.bringTabIntoFocus('orders2');
 			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
 			if(P.filters){} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
@@ -312,17 +306,18 @@ $('#orderListTableContainer').removeClass('loadingBG');
 				P.filters.POOL = 'RECENT';
 				}
 			else{}
-			
-			app.u.dump(" -> filters obtained via devicePreferencesGet"); app.u.dump(P.filters);
 
 			if(P.filters && P.targetID)	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$(app.u.jqSelector('#',P.targetID)).append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				$(app.u.jqSelector('#',P.targetID)).empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				
+				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
 				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
 				$(".filterGroup").children().each(function(){
+//if the filter is already selected as part of P.filters, tag as selected.
 					if($(this).data('filtervalue') == P.filters[$(this).parent().data('filter')]){
 						$(this).addClass('ui-selected');
 						}
@@ -405,9 +400,10 @@ else	{
 	
 		applyFilters : function()	{
 			$('#orderListTableBody').empty(); //this is targeting the table body.
+			$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 			$('#orderListTableContainer').addClass('loadingBG'); //this is the container. tbody won't show the loading gfx.
 			var obj = {}
-			
+			obj.LIMIT = Number($('#filterLimit').val()) || 30;
 			$('#orderFilters ul').each(function(){
 				var val = $(this).find('.ui-selected').attr('data-filtervalue');
 				if(val){
@@ -430,10 +426,8 @@ else	{
 			if(!$.isEmptyObject(filterObj))	{
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
-				filterObj.LIMIT = 30; //for now, cap at 20 so test pool is small. ###
 				app.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				app.model.dispatchThis();
-				
 				}
 			else	{
 				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);

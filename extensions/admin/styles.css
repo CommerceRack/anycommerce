@@ -108,8 +108,6 @@ Use this in a table where you want clear separation between rows and cells. This
 
 
 
-
-
 /* a global 'handle' class for now. for consistency. 
 later if more variety is needed, we can either create exceptions or more rules to handle all cases.
 */
@@ -124,7 +122,6 @@ later if more variety is needed, we can either create exceptions or more rules t
 li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
 .wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
-
 
 
 /* This gets applied to the parent containers around each tabs content area.  */

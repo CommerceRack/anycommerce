@@ -842,8 +842,8 @@ if(path.substr(0,2) == "#:")	{
 	path = "/biz/"+path.substring(2)+"/index.cgi";
 	}
 
-app.u.dump(" -> mode: "+mode);
-app.u.dump(" -> path: "+path);
+//app.u.dump(" -> mode: "+mode);
+//app.u.dump(" -> path: "+path);
 
 var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
 var $target = undefined; //jquery object of content destination
@@ -1357,7 +1357,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
 				else if(path == '#!orders')	{
-					app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":app.ext.admin.vars.tab+"Content"});
+//					app.ext.admin.u.bringTabContentIntoFocus($("orders2Content"))
+					app.ext.admin_orders.a.initOrderManager({"targetID":app.ext.admin.vars.tab+"Content"});
 					}
 				else if(path == '#!products')	{
 					app.u.dump("Go to product editor");
@@ -1432,12 +1433,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
-				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$("#ordersContent").empty();
-					app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});
-					}
+//				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
+//					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+//					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+//					$("#ordersContent").empty();
+//					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
+//					}
 				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
