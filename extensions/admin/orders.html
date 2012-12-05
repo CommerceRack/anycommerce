@@ -1,6 +1,5 @@
 
 <div class='ui-widget' id='orderManagerTemplate'>
-	<div id='orderListMessaging'></div>
 <table class='orderListTable'>
 <tr>
 	<td class='leftCol'>
@@ -82,6 +81,22 @@
 	</div>
 	<div id='orderListTableContainer' class='loadingBG'>
 	<table id="orderListTable" class='gridTable'>
+	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+	<thead>
+	<tr>
+		<th></th>
+		<th data-name='ORDERID' title='order id'>order id</th>
+		<th data-name='ORDER_BILL_NAME' title='billing full name'>name</th>
+		<th data-name='ORDER_TOTAL' title='order total'>total</th>
+		<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
+		<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
+		<th data-name='CREATED_GMT' title='date order created'>created</th>
+		<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
+		<th data-name='REVIEW_STATUS' title='fraud review status'>review</th>
+		<th data-name='REVIEW_STATUS' title='order status'>pool</th>
+		<th></th>
+	</tr>
+	</thead>
 		<tbody id="orderListTableBody"></tbody>
 	</table>
 	</div>
@@ -107,10 +122,10 @@
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
+	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
 	<td><span data-bind='var:order(ORDER_BILL_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
-	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 <!-- legacy compat: -->
 	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>

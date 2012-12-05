@@ -126,11 +126,11 @@ var admin_orders = function() {
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump(" -> targetID: "+targetID);
-				$(app.u.jqSelector('#',tagObj.targetID)).empty().remove();
+				$(app.u.jqSelector('#',tagObj.targetID)).empty().remove(); //delete the row. the order list isn't re-requested to reflect the change.
 				},
 			onError : function(responseData)	{
-				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('status')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				if(responseData._rtag)	{responseData._rtag.parentID = 'orderListMessaging'}
+				app.u.dump("BEGIN admin_orders.callbacks.orderPoolChanged.onError. responseData: "); app.u.dump(responseData);
+				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('.selectedIcon').html("<span class='ui-icon ui-icon-alert'></span>");
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
@@ -139,12 +139,11 @@ var admin_orders = function() {
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
 				app.u.dump(" -> targetID: "+tagObj.targetID);
-				$(app.u.jqSelector('#',tagObj.targetID)).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('ORDER_PAYMENT_STATUS')+')').text('Paid');
+				$(app.u.jqSelector('#',tagObj.targetID)).find('td:eq('+app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS')+')').text('Paid');
 				},
 			onError : function(d)	{
-//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:nth-child('+app.ext.admin_orders.u.getFlexgridColIdByName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
-				responseData.parentID = 'orderListMessaging'
+				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
+				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:eq('+app.ext.admin_orders.u.getTableColIndexByDataName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderFlagAsPaid
@@ -173,12 +172,7 @@ var admin_orders = function() {
 				else	{
 //okay. everything went fine... now what???
 					}
-				},
-			onError : function(d)	{
-//				app.u.dump("BEGIN admin.callbacks.finderProductUpdate.onError");
-				responseData.parentID = 'orderListMessaging'
-				app.u.throwMessage(responseData);
-				}		
+				}	
 			}, //handleBulkUpdate
 
 		listOrders : {
@@ -368,7 +362,7 @@ else	{
 					}
 				});
 			if($.isEmptyObject(obj))	{
-				$('#orderListMessaging').append(app.u.formatMessage('Please select at least one filter criteria'));
+				app.u.throwMessage('Please select at least one filter criteria');
 				}
 			else	{
 //				app.u.dump("Filter Obj: "); app.u.dump(obj);
@@ -395,9 +389,8 @@ else	{
 			
 		bulkCMDOrders : function()	{
 			var command = $('#CMD').val().substring(0,4); //will = POOL or MAIL or PMNT
-			$('#orderListMessaging').empty(); //clear any existing messaging.
 			if(!command)	{
-				$('#orderListMessaging').append(app.u.formatMessage('Please select an action to perform'));
+				app.u.throwMessage('Please select an action to perform');
 				}
 			else	{
 				switch(command)	{
@@ -414,7 +407,7 @@ else	{
 					break;
 					
 					default:
-						$('#orderListMessaging').append(app.u.formatMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support."));
+						app.u.throwMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support.");
 					}
 				}
 			},
@@ -526,59 +519,66 @@ return $r;
 
 
 		u : {
-
-
+//run this to change the pool for a specific order.
+//this gets run over each order selected in the bulk function below.
+			changeOrderPool : function($row,pool){
+				$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
+				app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
+				}, //changeOrderPool
 
 			bulkChangeOrderPool : function(){
 
-var pool = $('#CMD').val().substr(5);
-var numRequests = 0; //the number of requests that need to be made.
-$('#orderListTable tr.ui-selected').each(function() {
-	$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-	numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$(this).attr('id')});
-	});
-if(numRequests)	{
-//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable'); //for now, don't do anything.
-	app.model.dispatchThis('immutable');
+var $selectedRows = $('#orderListTable tr.ui-selected');
+if($selectedRows.length)	{
+	var pool = $('#CMD').val().substr(5);
+	$selectedRows.each(function() {
+		app.ext.admin_orders.u.bulkChangeOrderPool($(this),pool);
+		});
+	app.model.dispatchThis('immutable'); //safe to run dispatch because if 
 	}
 else	{
-	$('#orderListMessaging').append(app.u.formatMessage('Please select at least one row.'));
+	app.u.throwMessage('Please select at least one row.');
 	}
 				}, //bulkChangeOrderPool
 
 			bulkFlagOrdersAsPaid : function()	{
-var numRequests = 0;
-var poolColID = app.ext.admin_orders.u.getFlexgridColIdByName('POOL');
-var statusColID = app.ext.admin_orders.u.getFlexgridColIdByName('status');
-
-$('#orderListTable tr.ui-selected').each(function() {
-	var $row = $(this);
-//	app.u.dump(" -> poolColID: "+poolColID);
-//	app.u.dump(" -> status: "+$row.find('td:nth-child('+poolColID+')').text().toLowerCase());
-	if($row.find('td:nth-child('+poolColID+')').text().toLowerCase() != 'pending')	{
-		$('#orderListMessaging').append(app.u.formatMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending'));
-		$row.attr({'data-status':'error'}).removeClass('ui-selected').find('td:nth-child('+statusColID+')').html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
+var $selectedRows = $('#orderListTable tr.ui-selected');
+//if no rows are selected, let the user know to select some rows.
+if($selectedRows.length)	{
+	var numRequests = 0;
+	var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
+	$selectedRows.each(function() {
+		var $row = $(this);
+		app.u.dump(" -> $row.find('td:eq('+statusColID+')').text().toLowerCase(): "+$row.find('td:eq('+statusColID+')').text().toLowerCase());
+		if($row.find('td:eq('+statusColID+')').text().toLowerCase() != 'pending')	{
+			app.u.throwMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending');
+			$row.attr({'data-status':'error'}).removeClass('ui-selected').find('.selectedIcon').show().html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
+			}
+		else	{
+			$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
+			numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
+			}
+		});
+	if(numRequests)	{
+	//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable');
+		app.model.dispatchThis('immutable');
 		}
 	else	{
-		$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-		numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGORDERASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
-		}
-	});
-if(numRequests)	{
-//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable');
-	app.model.dispatchThis('immutable');
+	//no dispatches. likely got here because items selected couldn't be dispatched
+		}	
 	}
 else	{
-	$('#orderListMessaging').append(app.u.formatMessage('Please select at least one row.'));
+	app.u.throwMessage('Please select at least one row.');
 	}
+
 				}, //bulkFlagOrdersAsPaid
+
 //for now, we are linking to the legacy email page. This dynamically builds a form and submits it.
 			bulkSendEmail : function()	{
 				var $dialog = $("<div id='emailDialog' />").attr('title','Send Email').appendTo('body');
 				$("<iframe src='/biz/orders3/email.cgi' class='bulkMailIframe'>").attr({'id':'bulkMailIframe','name':'bulkMailIframe'}).appendTo($dialog);
 				$dialog.dialog({modal:true,width:'90%',height:600});
 
-				
 				var $form = $("<form />").attr({"action":"/biz/orders3/email.cgi","method":"post","id":"tmpForm","target":"bulkMailIframe"});
 				$('#orderListTable tr.ui-selected').each(function(){
 					$('<input />').attr({"name":$(this).attr('data-orderid'),"value":"1","type":"hidden"}).appendTo($form);
@@ -594,13 +594,13 @@ else	{
 				return numEdits;
 				},
 
-			getFlexgridColIdByName : function(name)	{
-//				app.u.dump("BEGIN admin_orders.u.getFlexgridColIdByName");
+			getTableColIndexByDataName : function(name)	{
+//				app.u.dump("BEGIN admin_orders.u.getTableColIndexByDataName");
 //				app.u.dump(" -> name = "+name);
 				var colIndex = false; //what is returned. the column index.
 //SANITY - flexigrid creates a separate table for the header columns.
-				$('#orderList thead th').each(function(index){
-					if($(this).attr('data-name') == name)	{ colIndex = index+1} 
+				$('#orderListTable thead th').each(function(index){
+					if($(this).attr('data-name') == name)	{ colIndex = index;} 
 					});
 //				app.u.dump(" -> colIndex = "+colIndex);
 				return colIndex; //should only get here if there was no match
