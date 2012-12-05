@@ -1,6 +1,6 @@
 
 <div class='ui-widget' id='orderManagerTemplate'>
-<table class='orderListTable'>
+<table class='orderManagerTable'>
 <tr>
 	<td class='leftCol'>
 	<div id='orderFilters' class='ui-corner-left ui-widget-content' >
@@ -56,11 +56,19 @@
 	</td>
 	
 	<td class='mainCol'>
-	<div class='ui-state-default ui-widget-header ui-corner-tr alignRight'>
+	<div class='ui-state-default ui-widget-header ui-corner-tr clearfix'>
+		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatRight' onClick="navigateTo('#!orderCreate');">Create Order</button>
+	
+		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatLeft' data-orderaction='selectAllOrders'>Select All</button>
+		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatLeft' data-orderaction='deselectAllOrders'>De-select All</button>
+
+	
+		<div class=' floatLeft marginLeft'>
 		<label>Action:</label>
 		<select name='CMD' ID='CMD'>
 			<option value=''></option>
 			<optgroup label='change status to'>
+				<option value='POOL|RECENT'>Recent</option>
 				<option value='POOL|PENDING'>Pending</option>
 				<option value='POOL|REVIEW'>Review</option>
 				<option value='POOL|HOLD'>Hold</option>
@@ -77,9 +85,9 @@
 			</optgroup>
 		</select>
 		<button class='ui-button ui-button-text ui-state-active ui-corner-all' data-orderaction='bulkCMDOrders'>Proceed</button>
-	
+		</div>
 	</div>
-	<div id='orderListTableContainer' class='loadingBG'>
+	<div id='orderListTableContainer' class='ui-widget-content loadingBG'>
 	<table id="orderListTable" class='gridTable'>
 	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 	<thead>
@@ -92,7 +100,7 @@
 		<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
 		<th data-name='CREATED_GMT' title='date order created'>created</th>
 		<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
-		<th data-name='REVIEW_STATUS' title='fraud review status'>review</th>
+		<th data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
 		<th data-name='REVIEW_STATUS' title='order status'>pool</th>
 		<th></th>
 	</tr>
@@ -100,10 +108,7 @@
 		<tbody id="orderListTableBody"></tbody>
 	</table>
 	</div>
-	<div class='ui-state-default ui-widget-header ui-corner-br alignRight'>
-		<button class='ui-button ui-button-text ui-state-default ui-corner-all' data-orderaction='selectAllOrders'>Select All</button>
-		<button class='ui-button ui-button-text ui-state-default ui-corner-all' data-orderaction='deselectAllOrders'>De-select All</button>
-	</div>
+	<div class='ui-state-default ui-widget-header ui-corner-br'></div>
 	</td>
 </tr>
 </table>
@@ -117,7 +122,7 @@
 <!-- used for order lineitem in orderList template -->
 <table>
 <tr id='adminOrderLineItem' class='adminOrderLineItem' >
-	<td><span class='selectedIcon'><span class="ui-icon ui-icon-circle-check"></span></span></td>
+	<td class='statusIcon'></td>
 	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>

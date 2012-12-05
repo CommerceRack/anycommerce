@@ -29,7 +29,7 @@ var admin_orders = function() {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 	vars : {
-		"pools" : ['PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
+		"pools" : ['RECENT','PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
 		"markets" : {
 			'ebay' : 'eBay',
@@ -41,12 +41,19 @@ var admin_orders = function() {
 //formerly getOrders
 		adminOrderList : {
 			init : function(obj,tagObj,Q)	{
-				this.dispatch(obj,tagObj,Q)
+				app.u.dump("BEGIN admin_orders.calls.adminOrderList.init");
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminOrderList";
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(obj,tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					}
 				return 1;
 				},
 			dispatch : function(obj,tagObj,Q)	{
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-				tagObj.datapointer = "adminOrderList";
 				obj['_tag'] = tagObj;
 				obj["_cmd"] = "adminOrderList"
 				app.model.addDispatchToQ(obj,Q);
@@ -129,8 +136,10 @@ var admin_orders = function() {
 				$(app.u.jqSelector('#',tagObj.targetID)).empty().remove(); //delete the row. the order list isn't re-requested to reflect the change.
 				},
 			onError : function(responseData)	{
-				app.u.dump("BEGIN admin_orders.callbacks.orderPoolChanged.onError. responseData: "); app.u.dump(responseData);
-				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('.selectedIcon').html("<span class='ui-icon ui-icon-alert'></span>");
+//				app.u.dump("BEGIN admin_orders.callbacks.orderPoolChanged.onError. responseData: "); app.u.dump(responseData);
+				var $row = $(app.u.jqSelector('#',tagObj.targetID));
+				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
+				app.ext.admin_orders.u.unSelectRow($row);
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderPoolChanged
@@ -138,12 +147,19 @@ var admin_orders = function() {
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
-				app.u.dump(" -> targetID: "+tagObj.targetID);
 				$(app.u.jqSelector('#',tagObj.targetID)).find('td:eq('+app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS')+')').text('Paid');
+				var $td = $(app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)')
+//restore selected icon IF row is still selected.
+				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
+				else	{$td.html("")}
 				},
-			onError : function(d)	{
-				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
-				$(app.u.jqSelector('#',tagObj.targetID)).attr({'data-status':'error'}).find('td:eq('+app.ext.admin_orders.u.getTableColIndexByDataName('actions')+')').html("<span class='ui-icon ui-icon-alert'></span>");
+			onError : function(responseData)	{
+//				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
+//change the status icon to notify user something went wrong on this update.
+//also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
+				var $row = $(app.u.jqSelector('#',tagObj.targetID));
+				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
+				app.ext.admin_orders.u.unSelectRow($row);
 				app.u.throwMessage(responseData);
 				}		
 			}, //orderFlagAsPaid
@@ -178,14 +194,8 @@ var admin_orders = function() {
 		listOrders : {
 			onSuccess : function(tagObj)	{
 
-app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+//app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
-
-
-//var contextMenuCommands = "<command label='Tracking' ></command>"; 
-//contextMenuCommands += "<command label='Payment Status' onClick='navigateTo(\"/biz/orders/payment.cgi?ID=\"+$(this).parent().data('orderid')+'&ts=\"); return false;\" ></command>";
-//contextMenuCommands += "<command label='Payment Status' onClick='navigateTo(\"/biz/orders/edit.cgi?CMD=EDIT&OID=\"+$(this).parent().data('orderid')+\"&ts=\"); return false;' ></command>";
-//	<command label='Notes' ></command><command label='Edit Contents' ></command><command label='Email' ></command><command label='Ticket' ></command>"
 
 var orderid,cid;
 var L = app.data[tagObj.datapointer]['@orders'].length;
@@ -199,35 +209,40 @@ if(L)	{
 		}
 
 $('button',$target).button();
-
-
-var $poolMenu = $("<menu label='Change status to: '>");
-for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
-	$poolMenu.append("<command label='"+app.ext.admin_orders.vars.pools[i]+"' onClick='alert(\"not working yet.\")'></command>");
-	}
-
+var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS'); //index of payment status column. used in flagOrderAsPaid. here so lookup only occurs once.
 
 //adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
 	$('.adminOrderLineItem').each(function(){
-		var rowID = $(this).attr('id');
-		var orderid = $(this).data('orderid');
+		var $row = $(this);
+		var rowID = $row.attr('id');
+		var orderid = $row.data('orderid');
 		var $cmenu = $("<menu \/>").attr({'type':'context','id':'contextMenuOrders_'+orderid}).addClass('showcase displayNone');
 		$cmenu.append("<h3 style='margin:0; padding:0;'>"+orderid+"<\/h3><hr \/>");
-		$("<command \/>").attr('label','Payment Status').on('click',function(){showUI('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Edit Contents').on('click',function(){showUI('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Ticket').on('click',function(){showUI('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=&phone=',{'dialog':true}); return false;}).appendTo($cmenu);
+		
+		$("<command \/>").attr('label','Payment status').on('click',function(){showUI('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Edit contents').on('click',function(){showUI('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Create crm ticket').on('click',function(){showUI('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=&phone=',{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<hr \/>").appendTo($cmenu);
-		$("<command \/>").attr('label','Flag as Paid').on('click',function(){alert('not working yet.')}).appendTo($cmenu);
 		
+		var $poolMenu = $("<menu label='Change status to: '>");
+		for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
+			$("<command \/>").attr('label',app.ext.admin_orders.vars.pools[i]).on('click',function(){
+				app.ext.admin_orders.u.changeOrderPool($row,app.ext.admin_orders.vars.pools[i],statusColID);
+				app.model.dispatchThis('immutable');
+				}).appendTo($poolMenu);
+			}
 		$cmenu.append($poolMenu);
-//		$("<command \/>").attr('label','Change Status to:').append().appendTo($cmenu);
-		
+		$("<command \/>").attr('label','Flag as paid').on('click',function(){
+			app.ext.admin_orders.u.flagOrderAsPaid($row,statusColID);
+			app.model.dispatchThis('immutable');
+			}).appendTo($cmenu);
 		$.contextMenu({
 			selector: "#"+rowID,
 			items: $.contextMenu.fromMenu($cmenu)
 			});
-		});
+
+		}); //orderlineitem.each
 	
 //assign a click event to the 'view order' button that appears in each row.
 	$target.find('.viewOrder').each(function(){
@@ -239,8 +254,23 @@ for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
 			})
 		});
 
-	$target.selectable({filter: 'tr'});
-	$('.selectedIcon',$target).hide(); //after applyting a filter, all icons become visible, so hide them and as they're selected, the icons will show up.
+	$target.selectable({
+		filter: 'tr',
+		stop: function(){
+			$( "tr", this ).each(function() {
+				var $row = $(this);
+//handle the icon.
+				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
+				else if($row.hasClass('ui-selected'))	{
+					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>");
+					}
+				else	{
+					$('td:eq(0)',$row).html(""); //empty status icon container.
+					}
+				});
+			}
+		});
+//	app.ext.admin_orders.a.deselectAllOrders(); //after applying a filter, make sure all rows are unselected.
 	
 	
 	}
@@ -366,9 +396,10 @@ else	{
 				}
 			else	{
 //				app.u.dump("Filter Obj: "); app.u.dump(obj);
+				app.model.destroy('adminOrderList'); //clear local storage to ensure request
 				app.ext.admin_orders.a.showOrderList(obj);
 				}
-			},
+			}, //applyFilters
 
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
@@ -384,7 +415,7 @@ else	{
 				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
 				}
 	
-			},
+			}, //showOrderList
 			
 			
 		bulkCMDOrders : function()	{
@@ -396,10 +427,12 @@ else	{
 				switch(command)	{
 					case 'POOL':
 					app.ext.admin_orders.u.bulkChangeOrderPool();
+					app.model.dispatchThis('immutable');
 					break;
 					
 					case 'PMNT':
 					app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
+					app.model.dispatchThis('immutable');
 					break;
 					
 					case 'MAIL':
@@ -410,16 +443,25 @@ else	{
 						app.u.throwMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support.");
 					}
 				}
-			},
+			}, //bulkCMDOrders
 		
 
 
 		selectAllOrders : function()	{
-			$('#orderListTableBody tr').each(function(){$(this).addClass('ui-selected')});
+//if an item is being updated, this will still 'select' it, but will not change the wait icon.
+			$('#orderListTableBody tr').each(function() {
+				$(this).addClass("ui-selected").removeClass("ui-unselecting");
+				});
+			$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 			},
 			
 		deselectAllOrders : function()	{
-			$('#orderListTableBody tr').each(function(){$(this).removeClass('ui-selected')});
+//if an item is being updated, this will still 'unselect' it, but will not change the wait icon.
+//			$('#orderListTableBody tr').each(function(){$(this).removeClass('ui-selected')});
+			$('#orderListTableBody tr').each(function() {
+				$(this).removeClass("ui-selected").addClass("ui-unselecting");
+				});
+			$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 			},
 
 
@@ -430,16 +472,16 @@ P.orderID = the orderID to edit. the order should already be in memory.
 P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplate
 */
 			editOrderContents : function(P)	{
-var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
-var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
-var L = orderObj['@ITEMS'].length;
-var stid;
-for(var i = 0; i < L; i += 1)	{
-	stid = P.templateID,orderObj['@ITEMS'][i].stid
-	$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj['@ITEMS'][i]));
-	}
-return $r;
-				}
+				var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
+				var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
+				var L = orderObj['@ITEMS'].length;
+				var stid;
+				for(var i = 0; i < L; i += 1)	{
+					stid = P.templateID,orderObj['@ITEMS'][i].stid
+					$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj['@ITEMS'][i]));
+					}
+				return $r;
+				} //editOrderContents
 		
 		},
 
@@ -461,7 +503,7 @@ return $r;
 				$opt.appendTo($tag);
 				}
 			return true;
-			},
+			}, //orderPoolSelect
 
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
@@ -475,7 +517,7 @@ return $r;
 				$o.append("<li>"+app.u.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
 				}
 			$tag.append($o.children());
-			},
+			}, //customerNote
 		
 		reviewStatus : function($tag,data)	{
 			var c = data.value[0]; //first character is a good indicator of the status.
@@ -494,7 +536,7 @@ return $r;
 			else	{
 				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
 				}
-			},
+			}, //reviewStatus
 		
 		paystatus : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
@@ -513,59 +555,74 @@ return $r;
 				}
 			$tag.text(pretty).attr('title',data.value); //used in order list, so don't force any pre/posttext.
 			return true;
-			} //billzone
+			} //paystatus
 		},
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 		u : {
+//when an indivdual row needs to be unselected, execute this.
+//don't recycle this in the unselect all action, don't want the mouseStop triggered for each row.
+// app.ext.admin_orders.u.unSelectRow()
+			unSelectRow : function($row){
+				$row.removeClass("ui-selected").addClass("ui-unselecting");
+				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
+				},
+
 //run this to change the pool for a specific order.
-//this gets run over each order selected in the bulk function below.
-			changeOrderPool : function($row,pool){
+//this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
+// -> when executing this function, run showloading and dispatch on your own.
+			changeOrderPool : function($row,pool,statusColID){
 				$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
+				$('td:eq('+statusColID+')',$row).empty().append("<span class='wait'><\/span>");
 				app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
 				}, //changeOrderPool
 
+//Run the dispatch on your own.  That way a bulkChangeOrderPool can be run at the same time as other requests.
 			bulkChangeOrderPool : function(){
-
-var $selectedRows = $('#orderListTable tr.ui-selected');
-if($selectedRows.length)	{
-	var pool = $('#CMD').val().substr(5);
-	$selectedRows.each(function() {
-		app.ext.admin_orders.u.bulkChangeOrderPool($(this),pool);
-		});
-	app.model.dispatchThis('immutable'); //safe to run dispatch because if 
-	}
-else	{
-	app.u.throwMessage('Please select at least one row.');
-	}
+				var $selectedRows = $('#orderListTable tr.ui-selected');
+				var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
+				
+				if($selectedRows.length)	{
+					var pool = $('#CMD').val().substr(5);
+					$selectedRows.each(function() {
+						app.ext.admin_orders.u.changeOrderPool($(this),pool,statusColID);
+						});
+					}
+				else	{
+					app.u.throwMessage('Please select at least one row.');
+					}
 				}, //bulkChangeOrderPool
+
+
+
+			flagOrderAsPaid : function($row,statusColID){
+				if($row.length && statusColID)	{
+					if($row.find('td:eq('+statusColID+')').text().toLowerCase() != 'pending')	{
+						app.u.throwMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending.');
+						app.ext.admin_orders.u.unSelectRow($row);
+						$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
+						}
+					else	{
+						$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
+						$('td:eq('+statusColID+')',$row).empty().append("<span class='wait'><\/span>");
+						app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
+						}
+					}
+				else	{
+					app.u.throwGMessage("$row not passed/has no length OR statusColID not set in admin_orders.u.flagOrderAsPaid.<br \/>Dev: see console for details.");
+					app.u.dump("WARNING! admin_orders.u.flagOrderAsPaid statusColID not set ["+statusColID+"] OR $row has no length. $row:"); app.u.dump($row);
+					}
+				},
 
 			bulkFlagOrdersAsPaid : function()	{
 var $selectedRows = $('#orderListTable tr.ui-selected');
 //if no rows are selected, let the user know to select some rows.
 if($selectedRows.length)	{
-	var numRequests = 0;
 	var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
 	$selectedRows.each(function() {
-		var $row = $(this);
-		app.u.dump(" -> $row.find('td:eq('+statusColID+')').text().toLowerCase(): "+$row.find('td:eq('+statusColID+')').text().toLowerCase());
-		if($row.find('td:eq('+statusColID+')').text().toLowerCase() != 'pending')	{
-			app.u.throwMessage('Order '+$row.attr('data-orderid')+' not set to paid because order is not pending');
-			$row.attr({'data-status':'error'}).removeClass('ui-selected').find('.selectedIcon').show().html("<span class='ui-icon ui-icon-notice' title='could not flag as paid because status is not pending'></span>");
-			}
-		else	{
-			$(this).attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-			numRequests += app.ext.admin_orders.calls.adminOrderUpdate.init($(this).attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$(this).attr('id')}); 
-			}
+		app.ext.admin_orders.u.flagOrderAsPaid($(this),statusColID);
 		});
-	if(numRequests)	{
-	//	app.calls.ping.init({'callback':'handleBulkUpdate','extension':'admin_orders','pool':pool},'immutable');
-		app.model.dispatchThis('immutable');
-		}
-	else	{
-	//no dispatches. likely got here because items selected couldn't be dispatched
-		}	
 	}
 else	{
 	app.u.throwMessage('Please select at least one row.');

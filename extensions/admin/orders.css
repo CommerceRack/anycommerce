@@ -16,20 +16,27 @@ order list
 
 #orderListMessaging	{max-height:220px; overflow:auto;}
 #orderList	{margin:0 auto;font-size:.8em;} /* the container. the margin will center it on the page */
-.orderListTable, #orderListTable	{width:100%;}
+.orderManagerTable, #orderListTable	{width:100%;}
+
+table.orderManagerTable	{
+	border-spacing:0;
+	border-collapse:collapse;
+	}
 
 
-.orderListTable	td.mainCol	{vertical-align:top;}
-.orderListTable	td.leftCol	{width:180px; vertical-align:top; height:100%;}
-.orderListTable	td.mainCol .ui-widget-header	{padding:2px 12px;}
-.orderListTable	td.leftCol .ui-widget-content	{border-right:none;}
+.orderManagerTable	td.mainCol	{vertical-align:top; padding:0;}
+.orderManagerTable	td.leftCol	{width:180px; vertical-align:top; padding:0;}
+.orderManagerTable	td.mainCol .ui-widget-header	{padding:2px 12px; min-height:10px;} /* the min-height is for the footer w/ borders */
+.orderManagerTable	td.leftCol .ui-widget-content	{border-right:none;}
 
 #orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
 #orderFilters h4	{margin:1px 6px;}
-#orderFilters ul	{margin-bottom:12px;}
-#orderFilters li	{padding:1px 12px;}
+#orderFilters ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
+#orderFilters li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
 
 .viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
+
+
 
 
 
