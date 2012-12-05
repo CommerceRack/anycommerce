@@ -300,7 +300,7 @@ $('#orderListTableContainer').removeClass('loadingBG');
 			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
 			if(P.filters){} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
-				P.filters = oldFilters.managerFilters;
+				P.filters = oldFilters.managerFilters || {};
 				}
 			else{P.filters = {}}
 
