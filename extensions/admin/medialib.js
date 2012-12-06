@@ -502,7 +502,7 @@ setTimeout(function(){
 				}, //showMediaDetailsInDialog
 
 			showMediaAndSubs : function(folderProperties){
-				app.u.dump("BEGIN admin_medialib.a.showMediaAndSubs"); app.u.dump(folderProperties);
+//				app.u.dump("BEGIN admin_medialib.a.showMediaAndSubs"); app.u.dump(folderProperties);
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
 					app.u.dump("folderproperties.fid IS set.");
 					var $mediaTarget = $('#mediaLibFileList ul');
@@ -655,7 +655,7 @@ if(data.value.length > itemsPerPage)	{
 			}),($tag,data);
 		}
 	else if(startpoint >= data.value.length)	{
-		app.u.dump("The end is nigh! all content loaded. infinite scroll was killed.");
+		app.u.dump("The end is nigh! all content loaded. infinite scroll was killed (or it was never started).");
 		$scrollContainer.off('scroll.infinite'); //we've reached the bottom of the bottom. disable infinite scroll.
 		}
 	else{
@@ -693,7 +693,7 @@ else	{
 
 			convertFormToJQFU : function(selector,mode)	{
 
-app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
+//app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
 
 
 'use strict';
@@ -748,7 +748,7 @@ $(selector).fileupload({
 //$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
 
 function fileuploadstopped() {
-	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+//	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 	var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 	app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
@@ -759,7 +759,7 @@ function fileuploadstopped() {
 
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
-	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
+//	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 	$(selector).off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 	}
 // Enable iframe cross-domain access via redirect option:
@@ -848,10 +848,10 @@ $(selector).fileupload(
 //the root LI's contain UL's with their FID in the ID. (mediaChildren_FID) (arguably, should have been mediaChildrenOf_ to indicate better).
 //each of these UL's contain all the properties of the parent folder. fid, fname, etc
 			openMediaFolderByFilePath : function(path)	{
-				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
+//				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
 //if no slashes or periods, is a root category.
 				if(path && path.indexOf('/') == -1 && path.indexOf('.') == -1){
-					app.u.dump(" -> is a root folder.");
+//					app.u.dump(" -> is a root folder.");
 					$('#mediaRootFolder_'+path+' a:first').click();
 					}
 				else if(path)	{
@@ -859,7 +859,7 @@ $(selector).fileupload(
 					var pathArray = path.split('/');
 					var path2Now = pathArray[0]; //puts path back together again. each pass it adds a folder back, starting with the root and working down 2 the last.
 					var L = (path.indexOf('.') > -1) ? pathArray.length - 1 : pathArray.length; //if last spot is filename, ignore.
-					app.u.dump(" -> L: "+L);
+//					app.u.dump(" -> L: "+L);
 					var $rootCat = $('#mediaRootFolder_'+pathArray[0])
 					var fid = $rootCat.data('fid'); //root folder has fname in the id, but all properties in data.
 					var $tmp;

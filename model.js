@@ -1053,19 +1053,19 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 	
 	
 		fetchData : function(datapointer)	{
-			app.u.dump("BEGIN model.fetchData.");
-			app.u.dump(" -> datapointer = "+datapointer);
+//			app.u.dump("BEGIN model.fetchData.");
+//			app.u.dump(" -> datapointer = "+datapointer);
 			var local;
 			var r = false;
 			var expires = datapointer == 'authAdminLogin' ? (60*60*24*7) : (60*60*24); //how old the data can be before we fetch new.
 	//checks to see if the request is already in 'this'.
 			if(app.data && !$.isEmptyObject(app.data[datapointer]))	{
-				app.u.dump(' -> control already has data');
+//				app.u.dump(' -> control already has data');
 				r = true;
 				}
 //then check local storage and, if present, update the control object
 			else if (local = app.storageFunctions.readLocal(datapointer))	{
-				app.u.dump(' -> local does have data.');
+//				app.u.dump(' -> local does have data.');
 	//			app.u.dump(local);
 				if(local.ts)	{
 					if((app.u.unixNow() - local.ts) > expires)	{
@@ -1077,13 +1077,13 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 						}
 					}
 				else	{
-					app.u.dump(' -> data is local, but old.');
+//					app.u.dump(' -> data is local, but old.');
 	//hhhmmm... data is in local, but no ts is set. better get new data.
 					r = false;
 					}
 				}
 			else	{
-				app.u.dump(' -> data not in memory or local storage.');
+//				app.u.dump(' -> data not in memory or local storage.');
 				}
 
 //set app.globalAjax.checkForLocalJSON to true and the app will look for local copies (not local storage) of the json
