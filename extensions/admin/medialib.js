@@ -262,18 +262,24 @@ setTimeout(function(){
 
 			onSuccess : function(tagObj){
 //				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
-				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG');
+				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG'); //removes from main col.
+				$('.loadingBG','#mediaLibFolderList').removeClass('loadingBG'); //remove from left col.
+				
 				var L = app.data[tagObj.datapointer]['@folders'].length;
 				var $template; //recycled. holds template till appended to parent.
+				var fdata; //folder data. recycled. shortcut.
 //				app.u.dump(" -> @folders.length: "+L);
 //Generate the list of folders (on left);
 				for(var i = 0; i < L; i += 1)	{
-//					app.u.dump(" -> FID: "+app.data[tagObj.datapointer]['@folders'][i].FID+" and parentFID: "+app.data[tagObj.datapointer]['@folders'][i].ParentFID);
-					app.data[tagObj.datapointer]['@folders'][i].id = '#mediaRootFolder_'+app.data[tagObj.datapointer]['@folders'][i].FName //the id given to each root folders.
-					$template = app.renderFunctions.transmogrify(app.data[tagObj.datapointer]['@folders'][i],'mediaLibFolderTemplate',app.data[tagObj.datapointer]['@folders'][i]);
-					//number parentFID will return false for the root level categories, which are set to "0" (string);
-					//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
-					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
+					fdata = app.data[tagObj.datapointer]['@folders'][i];
+					if(fdata.FName.substring(0,7) == "_ticket")	{} //_ticket folders are skipped.
+					else	{
+						fdata.id = '#mediaRootFolder_'+fdata.FName //the id given to each root folders.
+						$template = app.renderFunctions.transmogrify(fdata,'mediaLibFolderTemplate',fdata);
+	//number(parentFID) will return false for the root level categories, which are set to "0" (string);
+	//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
+						Number(fdata.ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(fdata.ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
+						}
 					}
 				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
 
@@ -496,24 +502,26 @@ setTimeout(function(){
 				}, //showMediaDetailsInDialog
 
 			showMediaAndSubs : function(folderProperties){
+				app.u.dump("BEGIN admin_medialib.a.showMediaAndSubs"); app.u.dump(folderProperties);
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
+					app.u.dump("folderproperties.fid IS set.");
 					var $mediaTarget = $('#mediaLibFileList ul');
 					app.model.abortQ('mutable'); //if folders are clicked in quick succession, incomplete requests should get cancelled so their results don't show up.
 //SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 
+//what follows is folder related code.  Populates/displays the subfolders. updates 'add folder' dropdown.
 					var $folderTarget = $('#mediaChildren_'+folderProperties.fid); //ul for folder children.
-
 					$('.ui-selected','#mediaLibFolderList').removeClass('ui-selected');
 
 					$folderTarget.toggle(); //allows folders to be opened and closed.
 					$folderTarget.parent().find('a:first').addClass('ui-selected');
-	//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
+//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
 					$('#mediaLibActionsBar .selectAddFolderChoices li:last').attr('data-fname',folderProperties.fname).show().trigger('click').text("As child of "+folderProperties.fname);
 					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
-	//now handle the delete folder button. Folders with subfolders can not be deleted.
-	//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
-	//if children are present, lock the disable folder button.
-	//this code must be run after the subfolders have been added or children().length won't be accurate.
+//now handle the delete folder button. Folders with subfolders can not be deleted.
+//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
+//if children are present, lock the disable folder button.
+//this code must be run after the subfolders have been added or children().length won't be accurate.
 					$('#mediaLibActionsBar .deleteFolderBtn .folderid').text(folderProperties.fname);
 
 					if($folderTarget.children().length)	{
@@ -523,11 +531,19 @@ setTimeout(function(){
 						$('#mediaLibActionsBar .deleteFolderBtn').button('enable').attr('title','delete folder '+folderProperties.fname).data({'focus-folder-id':folderProperties.fid,'focus-folder-name':folderProperties.fname})
 						}
 
-					//show files.
-					if(folderProperties.fname)	{
+//THe following code is for the file display.
+//0 is, unfortunately, a valid folder name.
+					if(folderProperties.fname || folderProperties.fname === 0)	{
+//						app.u.dump(" -> folderProperties.fname IS set");
+//						app.u.dump("admin_medialib.a.showMediaAndSubs folderProperties follows: ");	app.u.dump(folderProperties);
 						$mediaTarget.attr({'data-fid':folderProperties.fid,'data-fname':folderProperties.fname});
 						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname,'selector':'#mediaLibFileList'});
 						app.model.dispatchThis();
+						}
+					else	{
+						app.u.throwGMessage("admin_medialib.a.showMediaAndSubs folderProperties.fname is NOT set.<br\/>DEV: see console for details.");
+						app.u.dump("WARNING! admin_medialib.a.showMediaAndSubs folderProperties.fname no set. folderproperties follows: ");
+						app.u.dump(folderProperties);
 						}
 					}
 				else	{
@@ -567,14 +583,24 @@ setTimeout(function(){
 //				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
-				var itemsPerPage = 25;
-				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
-				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
-//				app.u.dump(" -> L: "+L);
+				var itemsPerPage,media;
+				var pref = app.ext.admin.u.devicePreferencesGet('admin_medialib');
+				var val; //recycled. set to path/filename.
+				var FName = $tag.closest('[data-fname]').attr('data-fname'); //the name of the folder in focus.
+
 				$tag.removeClass('loadingBG');
 
-				var val; //recycled. set to path/filename.
-				var FName = $tag.closest('[data-fname]').attr('data-fname');
+				if(pref && pref.disableInfiniteScroll){
+					media = data.value
+					}
+				else	{
+//infinite scroll is turned on by default.
+					itemsPerPage = 25;
+					media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
+					}
+
+				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
+
 				if(FName && data.bindData.loadsTemplate)	{
 					for(var i = 0; i < L; i += 1)	{
 //update data.value[i] with path and id, then pass this entire object into transmogrify so all the values are stored in data for use later on
@@ -638,6 +664,7 @@ if(data.value.length > itemsPerPage)	{
 	}
 else	{
 	//no infinite scroll because there aren't more images than items per page.
+	//would also get here if infinite scroll is disabled.
 	}
 
 					}
@@ -765,10 +792,11 @@ $(selector).fileupload(
 //Will show the images for a given folder. Handles requesting the data.
 // selector is a jquery selector (#something) of what gets translated. the entire selector gets translated.
 //FName is the folder name (pretty). FID won't work.
+// SANITY -> 0 (zero) is a valid folder name.
 			showMediaFor : function(P,Q)	{
 				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
 				$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
-				if(P.selector && P.FName)	{
+				if(P.selector && (P.FName || P.FName === 0))	{
 					$(P.selector + ' ul').empty().addClass('loadingBG');
 					P.callback = 'translateSelector'
 					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.FName,P,Q || 'mutable');
