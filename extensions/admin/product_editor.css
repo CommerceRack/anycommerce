@@ -11,3 +11,5 @@
 
 #prodEditorResultsTable tr:nth-child(odd)		{ background-color:#eee; }
 #prodEditorResultsTable tr:nth-child(even)		{ background-color:#fff; }
+
+#panelContents_general textarea	{width:80%;} /* override brians cols='80' */
