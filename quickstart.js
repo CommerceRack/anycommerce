@@ -199,7 +199,7 @@ else	{
 //we always get the tier 1 cats so they're handy, but we only do something with them out of the get if necessary (tier1categories is defined)
 				if($('#tier1categories').length)	{
 					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
-					app.ext.store_navcats.u.getChildDataOf('.',{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
+					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 					app.model.dispatchThis();
 					}
 				}
@@ -827,7 +827,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'homepage':
 						infoObj.pageType = 'homepage';
-						infoObj.navcat = '.'
+						infoObj.navcat = zGlobals.appSettings.rootcat;
 						infoObj.parentID = app.ext.myRIA.u.showPage(infoObj);
 						break;
 
@@ -1187,7 +1187,6 @@ P.listID (buyer list id)
 				app.ext.myRIA.vars.sotw = P;
 				app.ext.myRIA.vars.hotw.unshift(P);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
-				
 				},
 			
 			showtransition : function(P,$old)	{
@@ -1320,7 +1319,7 @@ P.listID (buyer list id)
 //quickstart is here so a user doesn't see a page not found error by default.
 				else if(url.indexOf('index.html') > -1)	{
 					r.pageType = 'homepage'
-					r.navcat = '.'; //left with category.safe.id or category.safe.id/
+					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
 				else if(url.indexOf('quickstart.html') > -1)	{
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
@@ -1331,7 +1330,7 @@ P.listID (buyer list id)
 //the url in the domain may or may not have a slash at the end. Check for both
 				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url || url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
 					r.pageType = 'homepage'
-					r.navcat = '.'; //left with category.safe.id or category.safe.id/
+					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
 				else	{
 //					alert('Got to else case.');
@@ -1483,8 +1482,8 @@ P.listID (buyer list id)
 //				app.u.dump(P);
 				var r = false; //what is returned
 				if(P.pid)	{r = 'product'}
-				else if(P.catSafeID == '.'){r = 'homepage'}
-				else if(P.navcat == '.'){r = 'homepage'}
+				else if(P.catSafeID == zGlobals.appSettings.rootcat){r = 'homepage'}
+				else if(P.navcat == zGlobals.appSettings.rootcat){r = 'homepage'}
 				else if(P.catSafeID){r = 'category'}
 				else if(P.keywords || P.KEYWORDS){r = 'search'}
 				else if(P.navcat){r = 'category'}
@@ -1939,12 +1938,8 @@ return r;
 //					app.u.dump($this.attr('href'));
 					var P = app.ext.myRIA.u.parseAnchor($this.attr('href'));
 					if(P.pageType == 'category' && P.navcat && P.navcat != '.'){
-//for bindnavs, get info to have handy. the timeout is so that the app has time to load/init and this has no impact.
-//also to reduce # of mutliple requests (init may get this cat already because it's in focus, for instance).
-setTimeout(function(){
-	app.ext.store_navcats.calls.appCategoryDetailMax.init(P.navcat,{},'passive');
-	},7000); //throw this into the q to have handy. do it later 
-						
+//for bindnavs, get info to have handy. add to passive Q and It'll get dispatched by a setInterval.
+app.ext.store_navcats.calls.appCategoryDetailMax.init(P.navcat,{},'passive');
 						}
 					$this.click(function(event){
 //						event.preventDefault(); //cancels any action on the href. keeps anchor from jumping.
@@ -2062,7 +2057,8 @@ buyer to 'take with them' as they move between  pages.
 					if(P.templateID){
 						//templateID 'forced'. use it.
 						}
-					else if(catSafeID == '.' || P.pageType == 'homepage')	{
+						
+					else if(catSafeID == zGlobals.appSettings.rootcat || P.pageType == 'homepage')	{
 						P.templateID = 'homepageTemplate'
 						}
 					else	{
