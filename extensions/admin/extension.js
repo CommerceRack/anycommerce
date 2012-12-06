@@ -826,7 +826,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
-app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+// app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
@@ -870,7 +870,7 @@ if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab 
 else	{} //do nothing. perfectly normal to not change what tab is in focus.
 
 
-app.u.dump(" -> tab: "+opts.tab);
+//app.u.dump(" -> tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
@@ -2141,7 +2141,7 @@ just lose the back button feature.
 //if no extension is passed, return the entire sesssion object (if it exists).
 //this allows for one extension to read anothers preferences and use/change them.
 			devicePreferencesGet : function(ext)	{
-				var obj = app.storageFunctions.readLocal('session') || undefined;
+				var obj = app.storageFunctions.readLocal('session');
 				if(obj == undefined)	{
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
@@ -2157,8 +2157,9 @@ just lose the back button feature.
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			devicePreferencesSet : function(ext,varObj)	{
+//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
 				if(ext && varObj)	{
-					app.u.dump("device preferences for "+ext+" have just been updates");
+					app.u.dump("device preferences for "+ext+" have just been updated");
 					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
 					if(typeof sessionData[ext] != 'object'){sessionData[ext] = {}}; //each ext gets it's own object so that no ext writes over anothers.
 					
@@ -2167,7 +2168,7 @@ just lose the back button feature.
 					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 					}
 				else	{
-					app.u.throwGMessage("either extension or varObj not passed into admin.u.updateDevicePreferences. ext: ["+ext+"] and typeof varObj: ["+typeof varObj+"]");
+					app.u.throwGMessage("Either extension ["+ext+"] or varObj ["+typeof varObj+"] not passed into admin.u.devicePreferencesSet.");
 					}
 				}
 

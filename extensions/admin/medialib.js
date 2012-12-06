@@ -39,6 +39,7 @@ var admin_medialib = function() {
 		adminCSVImport : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -52,6 +53,7 @@ var admin_medialib = function() {
 		adminImageDelete : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -64,6 +66,7 @@ var admin_medialib = function() {
 		adminImageDetail : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -75,6 +78,7 @@ var admin_medialib = function() {
 		adminImageFolderCreate : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -85,6 +89,7 @@ var admin_medialib = function() {
 		adminImageFolderDelete : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -92,44 +97,61 @@ var admin_medialib = function() {
 				}
 			}, //adminImageFolderDelete
 
-
-//f is folder
-		adminImageFolderDetail : {
-			init : function(f,tagObj,Q)	{
-//				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
-//				app.u.dump(" -> Q: "+Q);
-//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminImageFolderDetail|"+f
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-//					app.u.dump(" -> data is NOT local");
-					r = 1;
-					this.dispatch(f,tagObj,Q);
-					}
-				else	{
-//					app.u.dump(" -> data IS local");
-					app.u.handleCallback(tagObj);
-					}
+// use adminImageFolderDetail call (which executes the same _cmd) for a simple folder list lookup. That way, the data is stored in localStorage for quick reference.
+//for folder detail, set detail:"FOLDER" on obj param
+		adminImageList : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1; //# of dispatches to occur.
 				},
-			dispatch : function(f,tagObj,Q)	{
-//				app.u.dump(" -> adding dispatch to "+Q+" queue");
-				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","folder":f,"_tag" : tagObj},Q);
+			dispatch : function(obj,tagObj,Q)	{
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "adminImageList"
+				obj._cmd = "adminImageList";
+				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminImageDetail
 
 
+//folderDetail call was deprecated, but to keep local storage maintainable, the folderDetail name is used as the datapointer.
+//f is folder
+		adminImageFolderDetail : {
+			init : function(f,tagObj,Q)	{
+				var r; //# of dispatches to occur.  what is returned.
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminImageFolderDetail|"+f
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(f,tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					r = 0;
+					}
+				return r;
+				},
+			dispatch : function(f,tagObj,Q)	{
+//				app.u.dump(" -> adding dispatch to "+Q+" queue");
+				app.model.addDispatchToQ({"_cmd":"adminImageList","folder":f,"detail":"NONE","_tag" : tagObj},Q);
+				}
+			}, //adminImageDetail
+
+
+//a list of all the folders.
 		adminImageFolderList : {
 			init : function(tagObj,Q)	{
-
-tagObj = tagObj || {};
-tagObj.datapointer = 'adminImageFolderList';
-if(app.model.fetchData(tagObj.datapointer) == false)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else	{
-	app.u.handleCallback(tagObj);
-	}
+				var r; 
+				tagObj = tagObj || {};
+				tagObj.datapointer = 'adminImageFolderList';
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+					r = 0;
+					app.u.handleCallback(tagObj);
+					}
+				return r;
 				},
 			dispatch : function(tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -141,7 +163,7 @@ else	{
 //This implementation of the call does not support a 'data' for the file itself, it's used with the jqueryUI plugin,
 //which uploads the file to a location on the server where it is store temporarily, and returns a guid as part of that request.
 		adminImageUpload : {
-			init : function(obj,tagObj,Q){this.dispatch(obj,tagObj,Q);},
+			init : function(obj,tagObj,Q){this.dispatch(obj,tagObj,Q); return 1},
 			dispatch : function(obj,tagObj,Q){
 				obj._cmd = "adminImageUpload";
 				obj._tag = tagObj || {};
@@ -152,6 +174,7 @@ else	{
 
 		adminPublicFileList : {
 			init : function(tagObj,Q)	{
+				var r;//# of dispatches to occur.
 				tagObj = tagObj || {};
 				tagObj.datapointer = 'adminPublicFileList';
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
@@ -159,8 +182,10 @@ else	{
 					this.dispatch(tagObj,Q);
 					}
 				else	{
+					r = 0
 					app.u.handleCallback(tagObj);
 					}
+				return r;
 				},
 			dispatch : function(tagObj,Q)	{
 				obj = {};
@@ -174,6 +199,7 @@ else	{
 		adminPublicFileUpload : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -185,6 +211,7 @@ else	{
 		adminPublicFileDelete : {
 			init : function(filename,tagObj,Q)	{
 				this.dispatch(filename,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(filename,tagObj,Q)	{
 				var obj = {};
@@ -200,6 +227,7 @@ else	{
 		adminUIMediaLibraryExecute : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj)	{
 				obj._cmd = "adminUIMediaLibraryExecute"
@@ -584,20 +612,21 @@ setTimeout(function(){
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
 				var itemsPerPage,media;
-				var pref = app.ext.admin.u.devicePreferencesGet('admin_medialib');
+//				var settings = app.ext.admin.u.devicePreferencesGet('admin_medialib');
 				var val; //recycled. set to path/filename.
 				var FName = $tag.closest('[data-fname]').attr('data-fname'); //the name of the folder in focus.
 
 				$tag.removeClass('loadingBG');
 
-				if(pref && pref.disableInfiniteScroll){
-					media = data.value
-					}
-				else	{
+//it was decided (before this was deployed) to not support this as a 'setting'.
+//				if(settings && settings.disableInfiniteScroll){
+//					media = data.value
+//					}
+//				else	{
 //infinite scroll is turned on by default.
 					itemsPerPage = 25;
 					media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
-					}
+//					}
 
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 

@@ -382,8 +382,11 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<div class='debugBG'></div>
 	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
-<button onClick="app.ext.admin.a.showDomainConfig();">domainConfig</button>
-<button onClick="navigateTo('#!taskManager');">taskList</button>
+
+
+
+<button onClick="app.model.addDispatchToQ({'_cmd':'adminImageList','keyword':'square','detail':'FOLDER'},'mutable'); app.model.dispatchThis('mutable');">media lib search</button>
+
 <button onClick="app.ext.admin_support.a.showFileUploadInModal('169999');">showFileUploadInModal</button>
 
 <button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
@@ -393,7 +396,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.ext.admin_batchJob.a.showBatchJobStatus('342679');">adminBatchJobStatus</button>
 <button onClick="app.ext.admin_batchJob.calls.adminBatchJobList.init(); app.model.dispatchThis();">adminBatchJobList</button>
-
 
 
 <button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
