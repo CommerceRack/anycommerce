@@ -1425,7 +1425,10 @@ This was done because it is:
 
 				var CID = app.ext.convertSessionToOrder.u.getCID();
 				var addresses = this.getAddressesByType(addressType,CID); //address object
-
+				var emailAddress = "";
+				if(CID && app.data['appCustomerGet|'+CID] && app.data['appCustomerGet|'+CID]['%CUSTOMER'])	{
+					emailAddress = app.data['appCustomerGet|'+CID]['%CUSTOMER']._EMAIL;
+					}
 				var L = addresses.length
 				var a;
 				var r = false;
@@ -1440,7 +1443,9 @@ This was done because it is:
 				
 //				app.u.dump(' -> a = ');
 //				app.u.dump(a);
+				$('#data-'+addressType+'_email').val(a[addressType+'_email'] || emailAddress);
 				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
+				$('#data-'+addressType+'_company').val(a[addressType+'_company']);
 				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
 				$('#data-'+addressType+'_city').val(a[addressType+'_city']);
 				$('#data-'+addressType+'_state').val(a[addressType+'_state']);
