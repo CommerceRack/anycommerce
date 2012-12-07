@@ -1,9 +1,9 @@
 
 
 <div id='mediaLibTemplate'>
-<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 
 <table class='mediaLibrary'>
+<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
 <tr>
 	<td>
 	<div id='mediaLibraryFocusMediaDetails' class='displayNone'>
@@ -43,6 +43,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		</span>
 	</div>
 </div>
+
 	</td>
 </tr>
 <tr>
@@ -102,10 +103,44 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	<div class='appMessaging' id='mediaLibMessaging'></div>
 	</td>
 </tr>
+</form>
 <tr>
 	<td id='mediaLibFolderList'>
-	<div id='mediaLibFolderContainer'>
-		<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+	
+	<div id='mediaLibControlsTabContainer' class=' marginRight'>
+		<ul>
+			<li><a href='#mediaLibFolderContainer'><img class="ui-icon ui-icon-folder-collapsed">Browse</a></li>
+			<li><a href='#mediaLibSearchContainer'><img class="ui-icon ui-icon-search">Search</a></li>
+		</ul>
+		
+		
+		<div id='mediaLibFolderContainer'>
+			<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+		</div>
+		
+		<div id='mediaLibSearchContainer'>
+		<form action='#'>
+		
+		<fieldset class='labelsAsBreaks'>
+<!--		<label><span>Order by: </span>
+		<select name='orderby'>
+			<option value="TS">upload date</option>
+			<option value="NAME">file name</option>
+			<option value="DISKSIZE">file size</option>
+			<option value="PIXEL"># pixels</option>
+		</select>
+		</label> -->
+		
+		<label><span>Keyword(s): </span>
+		<input type='search' name='keyword' value='' />
+		</label>
+		</fieldset>
+				
+		<input type='hidden' name='detail' value='FOLDER' />
+		<button data-btn-action='mediaLibSearch'>Search</button>
+		</form>
+		</div>
+
 	</div>
 	</td>
 	<td id='mediaLibFileList'>
@@ -124,7 +159,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	</td>
 </tr>
 </table>
-</form>
+
 </div>
 
 

@@ -97,7 +97,8 @@ var admin_medialib = function() {
 				}
 			}, //adminImageFolderDelete
 
-// use adminImageFolderDetail call (which executes the same _cmd) for a simple folder list lookup. That way, the data is stored in localStorage for quick reference.
+// use adminImageFolderDetail call (which executes the same _cmd) for a simple folder list lookup.
+//That way, the data is stored in localStorage for quick reference.
 //for folder detail, set detail:"FOLDER" on obj param
 		adminImageList : {
 			init : function(obj,tagObj,Q)	{
@@ -132,6 +133,7 @@ var admin_medialib = function() {
 				},
 			dispatch : function(f,tagObj,Q)	{
 //				app.u.dump(" -> adding dispatch to "+Q+" queue");
+//,"orderby":"NAME"
 				app.model.addDispatchToQ({"_cmd":"adminImageList","folder":f,"detail":"NONE","_tag" : tagObj},Q);
 				}
 			}, //adminImageDetail
@@ -289,7 +291,7 @@ setTimeout(function(){
 		showMediaLibrary : {
 
 			onSuccess : function(tagObj){
-//				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
+				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
 				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG'); //removes from main col.
 				$('.loadingBG','#mediaLibFolderList').removeClass('loadingBG'); //remove from left col.
 				
@@ -310,7 +312,7 @@ setTimeout(function(){
 						}
 					}
 				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
-
+				$('#mediaLibControlsTabContainer').tabs();
 //in some cases, we may re-run this callback (such as after a file upload) and we need to open the folder on the left and in the media area opened for continuity.
 				if(app.ext.admin_medialib.u.getOpenFolderName())	{app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())}
 				}
@@ -385,13 +387,14 @@ setTimeout(function(){
 //this is where the contents for what media is currently selected go. Needs to be emptied each time so old contents don't show up.
 //also hidden by default. will be set to visible if populated (keep buttons from showing up)
 					$('#mediaLibraryFocusMediaDetails').empty().hide();
+
 					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{
 					$target = $("<div \/>").attr({'id':'mediaModal','title':'Media Library'}).addClass('loadingBG').appendTo('body');
 //by adding the template instance only once, the media lib will re-open showing last edited folder.
 					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
-					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 500});
+					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 600});
 
 					app.ext.admin_medialib.u.handleMediaLibButtons($target);
 
@@ -534,6 +537,7 @@ setTimeout(function(){
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
 					app.u.dump("folderproperties.fid IS set.");
 					var $mediaTarget = $('#mediaLibFileList ul');
+					$mediaTarget.data('list-origin','folder');
 					app.model.abortQ('mutable'); //if folders are clicked in quick succession, incomplete requests should get cancelled so their results don't show up.
 //SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 
@@ -608,34 +612,37 @@ setTimeout(function(){
 //plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
 				
-//				app.u.dump("BEGIN renderFormats.array2Template");
+				app.u.dump("BEGIN renderFormats.array2Template");
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
 				var itemsPerPage,media;
 //				var settings = app.ext.admin.u.devicePreferencesGet('admin_medialib');
 				var val; //recycled. set to path/filename.
 				var FName = $tag.closest('[data-fname]').attr('data-fname'); //the name of the folder in focus.
-
+				var listOrigin = $tag.data('list-origin'); //will = search or folder. on a folder imageList req, no 'folder' info is requested (because we already know what folder we're in and the request is faster without requiring the folder lookup)
+				app.u.dump(" -> list-origin: "+listOrigin);
 				$tag.removeClass('loadingBG');
 
-//it was decided (before this was deployed) to not support this as a 'setting'.
-//				if(settings && settings.disableInfiniteScroll){
-//					media = data.value
-//					}
-//				else	{
-//infinite scroll is turned on by default.
-					itemsPerPage = 25;
-					media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
-//					}
+				itemsPerPage = 25;
+				media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
 
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 
-				if(FName && data.bindData.loadsTemplate)	{
+				if((FName || listOrigin == 'search') && data.bindData.loadsTemplate)	{
 					for(var i = 0; i < L; i += 1)	{
 //update data.value[i] with path and id, then pass this entire object into transmogrify so all the values are stored in data for use later on
 //SANITY - FName is set to be consistent when this data is passed for interpolation (transmogrify param 3), but when data- is set (param 1) lowercase is used for browser compatiblity.
-						media[i].path = FName+"/"+media[i].Name;
-						media[i].FName = FName;
+						if(FName && listOrigin == 'folder')	{
+							media[i].path = FName+"/"+media[i].Name;
+							media[i].FName = FName;
+							}
+						else if(listOrigin == 'search')	{
+							media[i].path = media[i].Folder+"/"+media[i].Name;
+							}
+						else	{
+							app.u.throwGMessage("Unsupported origin or FName could not be determined with origin = folder in admin_medialib.renderFormats.mediaList");
+							}
+
 						media[i].id = 'mediaFile_'+(startpoint+i);
 						$tag.append(app.renderFunctions.transmogrify(media[i],data.bindData.loadsTemplate,media[i]));
 						}
@@ -675,7 +682,7 @@ if(data.value.length > itemsPerPage)	{
 	
 			if($(this).scrollTop() > (contentHeight - $container.height() - 70))	{
 	//			console.log('at or near the bottom');
-				var fname = $tag.data('fname'); //folder name.
+//				var fname = $tag.data('fname'); //folder name.
 	//			app.u.dump(" -> fname: "+fname);
 				var $li = $("<li \/>").addClass('loadingBG').appendTo($tag); //add temporary loading graphic as last lineitem. indicates something is happening.
 				app.ext.admin_medialib.renderFormats.mediaList($tag,data);
@@ -968,6 +975,27 @@ $(selector).fileupload(
 //these are the actions on the tool bar row of buttons, not the individual photo/media buttons.
 			handleMediaLibButtons : function($target){
 
+
+$('#mediaLibSearchContainer button',$target).each(function(){
+	var $button = $(this);
+	$button.button();
+	if($button.data('btn-action') == 'mediaLibSearch')	{
+		$button.off('click.searchSubmit').on('click.searchSubmit',function(event){
+			event.preventDefault();
+			$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
+			$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
+			$('#mediaFilesUL').empty().addClass('loadingBG').data('list-origin','search');
+			$form = $(this).closest('form');
+			app.ext.admin_medialib.calls.adminImageList.init($form.serializeJSON(),{'callback':'translateSelector','selector':'#mediaLibFileList'},'immutable');
+			app.model.dispatchThis('immutable');
+			})
+		}
+	else	{
+		app.u.throwGMessage("In admin_medialib.u.handleMediaLibButtons, unknown button action ["+$button.data('btn-action')+"] declared in mediaLibSearch element");
+
+		}
+	});
+
 $('#mediaLibActionsBar button',$target).each(function(){
 
 	var $button = $(this);
@@ -1086,7 +1114,11 @@ var menu = $(this).parent().find('ul').toggle().css({position:'absolute','z-inde
 	});
 			})
 		}
+	else	{
+		app.u.throwGMessage("In admin_medialib.u.handleMediaLibButtons, unknown button action ["+$button.data('btn-action')+"] declared in mediaLibActionsBar element");
+		}
 	});
+	
 //groups any buttons inside a span as a button set. this is specifically for the add folder feature.
 $('#mediaLibActionsBar span',$target).buttonset();
 //makes any ul's inside the spans a menu. THey'll appear on click as part of the btn-action code. used, but not limited to, for selectAddFolderDestination

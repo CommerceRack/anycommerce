@@ -8,9 +8,9 @@ table.mediaLibrary .leftCol	{width:25%;}
 
 
 #mediaLibFolderList	{width:25%;}
-#mediaLibFolderList li	{display:block; clear:both; margin-bottom:5px;}
-#mediaLibFolderList a	{display:block; padding:2px 0;}
-#mediaLibFolderList ul ul	{padding:0;}
+#mediaLibFolderContainer li	{display:block; clear:both; margin-bottom:5px;}
+#mediaLibFolderContainer a	{display:block; padding:2px 0;}
+#mediaLibFolderContainer ul ul	{padding:0;}
 
 .mediaFiles li	{float:left; margin:10px; width:120px; height:150px; overflow:hidden; text-align:center;}
 
@@ -31,6 +31,14 @@ buttons are disabled by adding a class to a parent container. That way, buttons 
 .hideBtnSelect .btnSelect	{display:none;}
 .hideBtnDetails .btnDetails	{display:none;}
 .hideBtnDownload .btnDownload	{display:none;}
+
+
+
+
+
+#mediaLibControlsTabContainer .ui-icon { float: left; margin-right: 5px;}
+
+#mediaLibControlsTabContainer .labelsAsBreaks input	{width:150px;}
 
 /*
  * jQuery File Upload Plugin CSS Example 1.1.1
