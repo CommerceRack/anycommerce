@@ -135,7 +135,7 @@
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 <!-- legacy compat: -->
 	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
-<!-- app:	<td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td>  -->
+<!-- app:	  --><td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td>
 </tr>
 </table>
 <!-- /adminOrderLineItem -->
@@ -233,6 +233,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 </div>
 
+
+
+
+
+
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
 	<button class='floatLeft ui-state-default ui-corner-all ui-button' onClick="$ordersModal.dialog('close');">Cancel Changes</button>
 	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Send Email</button>
@@ -285,7 +290,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th title='Zoovy Transaction ID'>TID</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: order(payments); loadsTemplate: orderPaymentHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	<tbody data-bind="var: order(@PAYMENTS); loadsTemplate: orderPaymentHistoryTemplate; format:processList; extension: admin;"></tbody>
 	</table>
 	</div>
 	
@@ -412,16 +417,14 @@ The following three templates are used in the 'order detail' modal/view.
 	<tr id='orderStuffItemTemplate' class='orderStuffItemRow'>
 
 	<td>
-		<h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; className: stid; pretext: Sku: ;'></h5>
-		<div data-bind='var: order(full_product.zoovy:prod_name); format:text; '></div>
+		<h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5>
+		<div data-bind='var: order(prod_name); format:text; '></div>
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>
 	<td><span data-bind='var: order(qty); format:text; pretext:qty: ;'></span></td>
 	<td><span data-bind='var: order(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span></td>
 	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-	
-	
-	</td>
+
 
 	</tr>
 </table> <!-- /orderStuffItemTemplate -->

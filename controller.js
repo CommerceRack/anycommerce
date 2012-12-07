@@ -1738,8 +1738,9 @@ Then we'll be in a better place to use data() instead of attr().
 				if(tmp.length > 0)	{
 					app.model.makeTemplate(tmp,templateID);
 					}
+				else{} //do nothing. Error will get thrown later.
 				}
-
+//			app.u.dump(" -> got past templateID");
 			if(!templateID || typeof data != 'object' || !app.templates[templateID])	{
 //product lists get rendered twice, the first time empty and always throw this error, which clutters up the console, so they're suppressed.
 				app.u.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof app.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
@@ -1759,11 +1760,16 @@ if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 else if(typeof eleAttr == 'object')	{
 //	app.u.dump(' -> eleAttr is an object.');
 	for(var index in eleAttr)	{
-		$r.attr('data-'+index,eleAttr[index]) //for now, this is being added via attr data-. later, it may use data( but I want it in the DOM for now.
+		if(typeof eleAttr[index] == 'object')	{
+			//can't output an object as a string. later, if/when data() is used, this may be supported.
+			}
+		else	{
+			$r.attr('data-'+index,eleAttr[index]) //for now, this is being added via attr data-. later, it may use data( but I want it in the DOM for now.
+			} 
 		}
 	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
-
+//app.u.dump("GOT HERE");
 return this.handleTranslation($r,data);
 
 
@@ -1841,7 +1847,7 @@ $r.find('[data-bind]').each(function()	{
 	var $focusTag = $(this);
 	var value;
 
-//		app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
+//	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
@@ -2280,10 +2286,13 @@ $tmp.empty().remove();
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
 
 		processList : function($tag,data){
+//			app.u.dump("BEGIN renderFormats.processList");
 			var L = data.value.length;
 			var $o; //recycled. what gets added to $tag for each iteration.
 			for(var i = 0; i < L; i += 1)	{
-				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i])
+//				app.u.dump(i+") reached.");
+				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
+				app.u.dump(" ---> appended");
 				if(data.value[i].id){} //if an id was set, do nothing.
 				else	{$o.removeAttr('id').attr('data-obj_index',i)} //nuke the id. it's the template id and will be duplicated several times. set index for easy lookup later.
 				$tag.append($o);

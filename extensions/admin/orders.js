@@ -490,15 +490,23 @@ P.orderID = the orderID to edit. the order should already be in memory.
 P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplate
 */
 			editOrderContents : function(P)	{
-				var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
-				var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
-				var L = orderObj['@ITEMS'].length;
-				var stid;
-				for(var i = 0; i < L; i += 1)	{
-					stid = P.templateID,orderObj['@ITEMS'][i].stid
-					$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj['@ITEMS'][i]));
+				var $r; //what is returned.
+				if(P && P.orderID)	{
+					var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
+					var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
+					var L = orderObj['@ITEMS'].length;
+					var stid;
+					for(var i = 0; i < L; i += 1)	{
+						stid = P.templateID,orderObj['@ITEMS'][i].stid
+						$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj['@ITEMS'][i]));
+						}
 					}
-				return $r;
+				else	{
+					app.u.throwGMessage("admin_orders.a.editOrderContents did not receive required param orderID or params were blank.<br />DEV: see console for details.");
+					app.u.dump("ERROR! admin_orders.a.editOrderContents requires P.orderID: "); app.u.dump(P);
+					r = false
+					}
+					return $r;
 				} //editOrderContents
 		
 		},
