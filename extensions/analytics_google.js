@@ -64,7 +64,7 @@ app.ext.myRIA.template.companyTemplate.onCompletes.push(function(P) {_gaq.push([
 app.ext.myRIA.template.customerTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/customer/'+P.show]);}) 
 app.ext.myRIA.template.checkoutTemplate.onInits.push(function(P) {_gaq.push(['_trackPageview', '/checkout']);}) 
 app.ext.myRIA.template.pageNotFoundTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
-							
+/*						
 app.ext.store_checkout.checkoutCompletes.push(function(P){
 	
 	app.u.dump("BEGIN analytics_google code pushed on store_checkout.checkoutCompletes");
@@ -97,7 +97,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 	_gaq.push(['_trackTrans']);
 
 	}); // end .push					
-
+*/
 						}
 					else	{
 						setTimeout(function(){app.ext.analytics_google.callbacks.addTriggers.onSuccess()},250);
