@@ -127,7 +127,9 @@ else if ("onhashchange" in window)	{ // does the browser support the hashchange 
 else	{
 	app.u.throwMessage("You appear to be running a very old browser. Our app will run, but may not be an optimal experience.");
 	// wow. upgrade your browser. should only get here if older than:
-	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8 
+	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
+	
+	//NOTE: does not trigger in IE9 running IE7 or IE8 standards mode
 	}
 
 
