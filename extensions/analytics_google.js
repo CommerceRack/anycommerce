@@ -84,7 +84,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 	app.u.dump(" -> "+L+" items in stuff");
 
 	for(var i = 0; i < L; i += 1)	{
-//		app.u.dump(" -> "+i+": stid = "+order.stuff[i].stid+" and qty = "+order.stuff[i]['qty']);
+		app.u.dump(" -> "+i+": stid = "+order.stuff[i].stid+" and qty = "+order.stuff[i]['qty']);
 		_gaq.push(['_addItem',
 			P.orderID,         // order ID - necessary to associate item with transaction
 			order.stuff[i].product,         // SKU/code - required
