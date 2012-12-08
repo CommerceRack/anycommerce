@@ -1922,10 +1922,12 @@ return r;
 			parseAnchor : function(str)	{
 //					app.u.dump("GOT HERE");
 					var tmp1 = str.substring(1).split('?');
-					var tmp2 = tmp1[1].split('=');
 					var P = {};
 					P.pageType = tmp1[0];
-					P[tmp2[0]] = tmp2[1];
+					if(tmp1.length > 1){
+						var tmp2 = tmp1[1].split('=');
+						P[tmp2[0]] = tmp2[1];
+					}
 //					app.u.dump(P);
 					return P;
 				}, //parseAnchor
