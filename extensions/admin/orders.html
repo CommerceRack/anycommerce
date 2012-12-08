@@ -135,7 +135,7 @@
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 <!-- legacy compat: -->
 	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
-<!-- app:	  --><td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td>
+<!-- app:	 <td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td> -->
 </tr>
 </table>
 <!-- /adminOrderLineItem -->
@@ -276,7 +276,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 	<div class='floatRight'>
 		<h3>Add Payment:</h3>
-		<p>Something goes here</p>
+		<p>!!!Something goes here!!!</p>
 	</div>
 	<div class='floatLeft'>
 	<table class='gridTable'>
