@@ -50,18 +50,17 @@
 
 <div class='alignCenter stdPadding'>
 <label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
-<button class='ui-button ui-button-text ui-button-text ui-state-active ui-corner-all marginBottom' onClick="app.ext.admin_orders.a.applyFilters()">Show Results</button>
+<button class='marginBottom' data-btn-action="admin_orders|orderListUpdateFilters">Show Results</button>
 </div>
 
 	</div>
 	</td>
 	
 	<td class='mainCol'>
-	<div class='ui-state-default ui-widget-header ui-corner-tr clearfix'>
-		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatRight' onClick="navigateTo('#!orderCreate');">Create Order</button>
-	
-		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatLeft' data-orderaction='selectAllOrders'>Select All</button>
-		<button class='ui-button ui-button-text ui-state-default ui-corner-all floatLeft' data-orderaction='deselectAllOrders'>De-select All</button>
+	<div class='ui-widget-header ui-corner-tr clearfix'>
+		<button class='floatRight' data-btn-action="admin_orders|orderCreate">Create Order</button>
+		<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateSelectAll'>Select All</button>
+		<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 
 	
 		<div class=' floatLeft marginLeft'>
@@ -85,10 +84,10 @@
 				<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
 			</optgroup>
 		</select>
-		<button class='ui-button ui-button-text ui-state-active ui-corner-all' data-orderaction='bulkCMDOrders'>Proceed</button>
+		<button data-btn-action='admin_orders|orderListUpdateBulk'>Proceed</button>
 		</div>
 	</div>
-	<div id='orderListTableContainer' class='ui-widget-content loadingBG'>
+	<div id='orderListTableContainer' class='ui-widget-content '>
 	<table id="orderListTable" class='gridTable'>
 	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 	<thead>
@@ -106,10 +105,10 @@
 		<th></th>
 	</tr>
 	</thead>
-		<tbody id="orderListTableBody"></tbody>
+	<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
 	</table>
 	</div>
-	<div class='ui-state-default ui-widget-header ui-corner-br'></div>
+	<div class='ui-widget-header ui-corner-br'></div>
 	</td>
 </tr>
 </table>
@@ -133,12 +132,15 @@
 	<td><span data-bind='var:order(ORDER_BILL_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
-<!-- legacy compat: -->
-	<td><button onClick="showUI('/biz/orders/view.cgi?OID='+$(this).data('orderid')); return false;"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
-<!-- app:	 <td><button class='ui-button ui-state-default ui-corner-all viewOrder' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' >app</button></td> -->
+	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
 </tr>
 </table>
 <!-- /adminOrderLineItem -->
+
+
+
+
+
 
 
 
@@ -148,11 +150,12 @@ WARNING! - In the order view template(s), avoid using any ID's.
 That'll allow us to easily change the viewer from a modal to a plain dialog to allow multiple order views to be open at one time.
 -->
 
-<div id='orderDetailsTemplate' class='orderDetails loadingBG'>
-	
+<div id='orderDetailsTemplate' class='orderDetails '>
+
+<div class='appMessaging'></div><!-- messages will be logged here -->
 
 <div class='orderDetailHeader clearfix'>
-	<div class='floatRight alignRight'>
+	<div class='rightCol alignRight'>
 		<h5 data-bind="var:order(data.sdomain);format:text;"></h5>
 		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
 	</div>
@@ -165,32 +168,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div class='clearfix'>
 
-	<div class='orderDetailsStuff floatRight'>
-	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
-	<h2>Order Contents</h2>
-	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
-	<section class='clearfix alignRight floatRight'>
-		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
-		
-		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	
-		<div class='orderShipping'>
-		<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
-		<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
-		</div>
-		
-		<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
-		
-		<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-		<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
-		<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
-		
-		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 
-	</section>
-	</div>
-
-	<div class='orderAddresses floatLeft'>
+	<div class='orderAddresses rightCol'>
 	
 		<address class='shipAddress editableParent' >
 		<h4>Shipping Address <a href='#' onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
@@ -231,6 +210,35 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 	</div>
 
+
+
+	<div class='orderDetailsStuff leftCol'>
+	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
+	<h2>Order Contents</h2>
+	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
+	<section class='clearfix alignRight floatRight'>
+		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		
+		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	
+		<div class='orderShipping'>
+		<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+		<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+		</div>
+		
+		<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+		
+		<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+		<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+		<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+		
+		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+
+	</section>
+	</div>
+
+
+
 </div>
 
 
@@ -238,14 +246,14 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
-	<button class='floatLeft ui-state-default ui-corner-all ui-button' onClick="$ordersModal.dialog('close');">Cancel Changes</button>
-	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Send Email</button>
-	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Export</button>
-	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Print Invoice</button>
-	<button class='floatLeft ui-state-default ui-corner-all ui-button hide4Native'>Packing Slip</button>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel Changes</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderEmailSend">Send Email</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
 
-	<button class='floatRight ui-state-active ui-corner-all ui-button' onClick="app.ext.admin_orders.a.saveChangesToOrder();">Save <span id='changeCount'></span> Changes</button>
+	<button class='floatRight ui-state-highlight' data-btn-action="admin_orders|orderUpdateSave">Save <span id='changeCount'></span> Changes</button>
 </div>
 
 
@@ -253,6 +261,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<h2>Notes</h2>
 	<section class='notes'>
+	<form action='#'>
+	<fieldset>
 		<div class='floatRight customerNotes' id='customerInformation'><!--
 			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
 			<h3>Customer Notes: </h3>
@@ -269,16 +279,20 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 			<div class='note privateNotes editable' data-bind='var:order(data.private_notes);format:text;' title='private notes'></div>
 	
 		</div>
+		<button data-btn-action="admin_orders|customerUpdateNotes">Save Notes</button>
+	</fieldset>
+	</form>
 	</section>
 	
 	<h2>Payment Information</h2>
-	<section class='paymentInformation'>
+	<section class='paymentInformation clearfix'>
 	
-	<div class='floatRight'>
+	<div class='rightCol'>
 		<h3>Add Payment:</h3>
 		<p>!!!Something goes here!!!</p>
 	</div>
-	<div class='floatLeft'>
+
+	<div class='leftCol'>
 	<table class='gridTable'>
 	<thead>
 	<tr>
@@ -297,13 +311,39 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</section>
 	
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation'>
+	<section class='trackingInformation clearfix'>
 	
-	<div class='floatRight'>
-		<h3>Add Ship Info:</h3>
-		<p>Something goes here</p>
+	<div class='rightCol labelsAsBreaks'>
+		<h3>Add New Package</h3>
+
+<form>
+<fieldset>
+	<label><span>Carrier: </span> <select form="viewFrm" name="method">
+		<option value="UPS">UPS</option>
+		<option value="USPS">USPS</option>
+		<option value="FEDX">FEDEX</option>
+		<option value="DHL">DHL</option>
+		<option value="OTHR">Other Carrier</option>
+	</select>
+	</label>
+	
+	<label><span>Tracking #: </span><input name="value" type="text"></label>
+	
+	<label><span>Cost: </span> <input size="5" name="cost" type="number"></label>
+	<label><span>Actual Weight: </span> <input form="viewFrm" size="5" name="actualwt" type="text"></label>
+	<label><span>Notes: </span><textarea form="viewFrm" cols="80" rows="3" name="notes"></textarea></label>
+
+	<button data-btn-action="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
+
+</fieldset>
+</form>
+
+<div class='zhint'>HINT: When you use Zoovys Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
+
+
 	</div>
-	<div class='floatLeft'>
+
+	<div class='leftCol'>
 	<table class='gridTable'>
 	<thead>
 	<tr>
