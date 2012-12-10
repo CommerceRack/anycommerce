@@ -354,7 +354,8 @@ HELP PAGES
 
 ***************************************************/
 
-
+/* hides the company page by default so that it fades in gracefully */
+#mainContentArea_company {display:none;}
 
 /***** CONTACT US ******/
 #contactForm {float:right; margin: 0 0 12px 12px;}
