@@ -1364,7 +1364,7 @@ P.listID (buyer list id)
 				if(this.thisPageInfoIsValid(P))	{
 					if(P.pageType == 'product' && P.pid)	{r = '#product?pid='+P.pid}
 					else if(P.pageType == 'category' && P.navcat)	{r = '#category?navcat='+P.navcat}
-					else if(P.pageType == 'homepage')	{r = '#category?navcat=.'}
+					else if(P.pageType == 'homepage')	{r = ''}
 					else if(P.pageType == 'cart')	{r = '#cart?show='+P.show}
 					else if(P.pageType == 'checkout')	{r = '#checkout?show='+P.show}
 					else if(P.pageType == 'search' && P.KEYWORDS)	{r = '#search?KEYWORDS='+P.KEYWORDS}
