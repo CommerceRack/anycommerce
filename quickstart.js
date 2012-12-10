@@ -1440,6 +1440,9 @@ P.listID (buyer list id)
 			buildRelativePath : function(P)	{
 				var relativePath; //what is returned.
 				switch(P.pageType)	{
+				case 'homepage' :
+					relativePath = '';
+					break;
 				case 'product':
 					relativePath = 'product/'+P.pid+'/';
 					break;
