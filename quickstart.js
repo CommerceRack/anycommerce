@@ -1327,7 +1327,7 @@ P.listID (buyer list id)
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
 					msg.persistant = true;
 					app.u.throwMessage(msg);
-					r.pageType = '404';
+					r.pageType = 'homepage';
 					}
 //the url in the domain may or may not have a slash at the end. Check for both
 				else if(url == zGlobals.appSettings.http_app_url || url+"/" == zGlobals.appSettings.http_app_url || url == zGlobals.appSettings.https_app_url || url+"/" == zGlobals.appSettings.https_app_url)	{
@@ -1750,7 +1750,9 @@ return r;
 					
 					}
 				else	{
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(P.templateID,parentID));
+					var $content = app.renderFunctions.createTemplateInstance(P.templateID,parentID);
+					$content.addClass("displayNone");
+					$('#mainContentArea').append($content);
 					app.ext.myRIA.u.bindNav('#sideline a');
 					app.calls.appProfileInfo.init(app.vars.profile,{'callback':'showCompany','extension':'myRIA','infoObj':P,'parentID':parentID},'mutable');
 					app.model.dispatchThis();
