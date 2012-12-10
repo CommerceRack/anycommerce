@@ -161,8 +161,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	<div class='floatLeft '>
-		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();"></select></h2>
-		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders;"></h3>
+		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
+		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
 	</div>
 </div>
 
@@ -170,42 +170,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 	<div class='orderAddresses rightCol'>
-	
-		<address class='shipAddress editableParent' >
-		<h4>Shipping Address <a href='#' onClick="app.ext.admin_orders.u.makeEditable('.shipAddress',{}); return false;" class='editTextLink'>edit</a></h4>
-		<h6>
-			<span data-bind='var:order(ship/firstname);format:text;' class='editable' title='first name'></span>
-			<span data-bind='var:order(ship/lastname);format:text;' class='editable' title='last name'></span>
-		</h6>
-		<div data-bind='var:order(ship/company);format:text;' class='editable' title='company'></div>
-		<div data-bind='var:order(ship/address1);format:text;' class='editable' title='address'></div>
-		<div data-bind='var:order(ship/address2);format:text;' class='editable' title='address 2'></div>
-		<div>
-			<span data-bind='var:order(ship/city);format:text;posttext:, ;' class='editable' title='city'></span>
-			<span data-bind='var:order(ship/region);format:text;posttext:. ;' class='editable' title='state'></span>
-			<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
-		</div>
-		<div data-bind='var:order(ship/countrycode);format:text;'></div>
-		<div data-bind='var:order(ship/email);format:text;' class='editable' title='email address'></div>
-		</address>
+	<h4>Shipping Address</h4>
+<div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 
-		<address class='billAddress editableParent'>
-		<h4>Billing Address <a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.billAddress',{}); return false;" class='editTextLink'>edit</a></h4>
-		<h6>
-			<span data-bind='var:order(bill/firstname);format:text;' class='editable' title='first name'></span>
-			<span data-bind='var:order(bill/lastname);format:text;' class='editable' title='last name'></span>
-		</h6>
-		<div data-bind='var:order(bill/company);format:text;' class='editable' title='company'></div>
-		<div data-bind='var:order(bill/address1);format:text;' class='editable' title='address'></div>
-		<div data-bind='var:order(bill/address2);format:text;' class='editable' title='address 2'></div>
-		<div>
-			<span data-bind='var:order(bill/city);format:text;posttext:, ;' class='editable' title='city'></span>
-			<span data-bind='var:order(bill/region);format:text;posttext:. ;' class='editable' title='state'></span>
-			<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);' class='editable' title='zip'></span>
-		</div>
-		<div data-bind='var:order(bill/countrycode);format:text;'></div>
-		<div data-bind='var:order(bill/email);format:text;' class='editable' title='email address'></div>
-		</address>
+	<h4>Billing Address</h4>
+<div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 
 	
 	</div>
@@ -241,19 +210,15 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 </div>
 
-
-
-
-
-
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel Changes</button>
+	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderEmailSend">Send Email</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>-->
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Ticket</button>
 
-	<button class='floatRight ui-state-highlight' data-btn-action="admin_orders|orderUpdateSave">Save <span id='changeCount'></span> Changes</button>
+	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 </div>
 
 
@@ -270,7 +235,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		</div>
 		
 		<div class='floatLeft orderNotes'>
-			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>
+			<span class='floatRight'><!--<a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); $(this).hide(); return false;" class='editTextLink'>edit</a>--></span>
 			
 			<h3>Public Order Notes</h3>
 			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;' title='public notes'></div>
@@ -355,13 +320,13 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th>Notes</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: order(tracking); loadsTemplate: orderTrackingHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	<tbody data-bind="var: order(@SHIPMENTS); loadsTemplate: orderTrackingHistoryTemplate; format:processList; extension: admin;"></tbody>
 	</table>
 	</div>
 	
 	</section>
 	
-	<h2>Events</h2>
+	<h2>History</h2>
 	<section class='trackingInformation'>
 	
 	<table class='gridTable'>
@@ -373,7 +338,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th>Addl Info</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: order(events); loadsTemplate: orderEventHistoryTemplate; format:array2Template; extension: admin;"></tbody>
+	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
 	</table>
 	
 	</section>
@@ -394,7 +359,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <!--
 
-The following three templates are used in the 'order detail' modal/view.
+The following templates are used in the 'order detail' modal/view.
 
 -->
 
@@ -411,12 +376,12 @@ The following three templates are used in the 'order detail' modal/view.
 
 <table>
 <tr id='orderTrackingHistoryTemplate'>
-	<td><time data-bind='var: payment(created); format:unix2mdy; showtime:true;'></time></td>
-	<td><span data-bind='var: payment(carrier); format:text;'></span></td>
-	<td><span data-bind='var: payment(cost); format:money;'></span></td>
-	<td><span data-bind='var: payment(track); format:text;'></span></td>
-	<td><span data-bind='var: payment(actualwt); format:text;'></span></td>
-	<td><span data-bind='var: payment(notes); format:text;'></span></td>
+	<td><time data-bind='var: shipment(created); format:unix2mdy; showtime:true;'></time></td>
+	<td><span data-bind='var: shipment(carrier); format:text;'></span></td>
+	<td><span data-bind='var: shipment(cost); format:money;'></span></td>
+	<td><span data-bind='var: shipment(track); format:text;'></span></td>
+	<td><span data-bind='var: shipment(actualwt); format:text;'></span></td>
+	<td><span data-bind='var: shipment(notes); format:text;'></span></td>
 </tr>
 </table>
 
@@ -428,8 +393,8 @@ The following three templates are used in the 'order detail' modal/view.
 	<td><span data-bind='var: events(content); format:text;'></span></td>
 	<td>
 	<div title='uuid' data-bind='var: events(uuid); format:text;'></div>
-	<div title='etype' data-bind='var: events(etype); format:text;'></div>
-	<div title='app'  data-bind='var: events(app); format:text;'></div>
+	<div title='etype' data-bind='var: events(etype); format:text; pretext: error: ;'></div>
+	<div title='app'  data-bind='var: events(app); format:text; pretext: app: ;'></div>
 	</td>
 </tr>
 </table>
@@ -438,16 +403,16 @@ The following three templates are used in the 'order detail' modal/view.
 
 
 <table>
-	<tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
-		<td><span data-bind='var: order(stid); format:text; className: stid;'></span></td>
-		<td><input type='text' data-bind="var: order(full_product.zoovy:prod_name); format:popVal;" size='20' class='prodName' /></td>
-		<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' class='prodQty' /></td>
-		<td><span></span></td>
-		<td>price</td>
-		<td>tax</td>
-		<td>weight</td>
-		<td>extended</td>
-	</tr>
+<tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
+	<td><span data-bind='var: order(stid); format:text; className: stid;'></span></td>
+	<td><input type='text' data-bind="var: order(prod_name); format:popVal;" size='20' class='prodName' /></td>
+	<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' class='prodQty' /></td>
+	<td><span></span></td>
+	<td>price</td>
+	<td>tax</td>
+	<td>weight</td>
+	<td>extended</td>
+</tr>
 </table>
 
 
@@ -486,4 +451,28 @@ used in legacy compat mode (and probably full app mode as well)
 
 
 </div>
+
+
+
+
+
+
+
+
+<address class='shipAddress editableParent' id='orderAddressTemplate'>
+<h6>
+	<span data-bind='var:order(firstname);format:text;' class='editable' title='first name'></span>
+	<span data-bind='var:order(lastname);format:text;' class='editable' title='last name'></span>
+</h6>
+<div data-bind='var:order(company);format:text;' class='editable' title='company'></div>
+<div data-bind='var:order(address1);format:text;' class='editable' title='address'></div>
+<div data-bind='var:order(address2);format:text;' class='editable' title='address 2'></div>
+<div>
+	<span data-bind='var:order(city);format:text;' class='editable' title='city'></span>
+	<span data-bind='var:order(region);format:text;' class='editable' title='state'></span>
+	<span data-bind='var:order(postal);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
+</div>
+<div data-bind='var:order(countrycode);format:text;'></div>
+<div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
+</address>
 

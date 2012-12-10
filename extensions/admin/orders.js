@@ -17,14 +17,18 @@
 ************************************************************** */
 
 /*
-An extension for acquiring and displaying 'lists' of categories.
-The functions here are designed to work with 'reasonable' size lists of categories.
+DEV NOTES
+
+When updating an address on an order, always use the SETSHIPADDR and SETBILLADDR macros
+ -> if you use a 'set', then luser permissions may not allow a luser to make an update.
+
+For the list of supported payment methods, do an appPaymentMethods command and pass 'this' cartID.
 */
 
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemEditorTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemEditorTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -127,8 +131,8 @@ var admin_orders = function() {
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN callbacks.translateSelector");
-				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1));
-				app.u.dump(" -> selector: "+selector);
+				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
+//				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector)
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
@@ -355,10 +359,10 @@ app.ext.admin.u.bringTabIntoFocus('orders2');
 //app.u.dump(" -> orderID : "+orderID);
 if(orderID)	{
 
-	var safeID = app.u.makeSafeHTMLId(orderID);
+
 	//when a modal may be opened more than once, set autoOpen to false then execute a dialog('open'). Otherwise it won't open after the first time.
-	
-	var $ordersModal = $('#viewOrderDialog_'+safeID); //global so it can be easily closed.
+	safeID = 'viewOrderDialog_'+orderID;
+	var $ordersModal = $(app.u.jqSelector('#',safeID)); //global so it can be easily closed.
 	
 //if dialog is already open, bring it into focus.
 	if($ordersModal.dialog( "isOpen" ) === true)	{
@@ -368,16 +372,29 @@ if(orderID)	{
 	else	{
 //if dialog does not exist (not opened in this session yet), create it.
 		if($ordersModal.length == 0)	{
-			$ordersModal = $("<div />").attr({'id':'viewOrderDialog_'+safeID,'title':'Edit Order '+orderID}).appendTo('body');
-			$ordersModal.dialog({width:$(window).width() - 100,height:$(window).height() - 100,'autoOpen':false});
+			$ordersModal = $("<div />").attr({'id':safeID,'title':'Edit Order '+orderID}).data('orderid',orderID).appendTo('body');
+			$ordersModal.dialog({width:"90%",height:$(window).height() - 100,'autoOpen':false,modal:true});
 			}
 	
 		//be sure to empty the div or if it has already been loaded, duplicate content will show up.
 		$ordersModal.empty().dialog('open');
 		//create an instance of the invoice display so something is in front of the user quickly.
-		$ordersModal.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':'orderDetails_'+safeID,'data-orderid':orderID}));
+		$ordersModal.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':safeID,'orderid':orderID}));
+		
+		$ordersModal.showLoading();
+		
 		//go fetch order data. callback handles data population.
-		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','extension':'admin_orders','selector':'#orderDetails_'+safeID});
+		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(tagObj){
+			var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
+			var $target = $(selector);
+			$target.hideLoading();
+			app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
+			app.ext.admin_orders.u.handleButtonActions($target);
+//trigger the editable regions
+			app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
+			app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
+			app.ext.admin_orders.u.makeEditable(selector+' .orderNotes',{'inputType':'textarea'});
+			},'extension':'admin_orders','selector':'#'+safeID});
 		
 		if(CID)	{
 			app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
@@ -386,7 +403,7 @@ if(orderID)	{
 			app.u.dump("WARNING! - no CID set.");
 			}
 		//dispatch occurs outside this function.
-		$('#orderDetails_'+safeID+' .orderSupplementalInformation').accordion({
+		$('.orderSupplementalInformation',$ordersModal).accordion({
 			collapsible: true,
 			heightStyle: "content"
 			});
@@ -605,9 +622,23 @@ else	{
 				$form.submit();
 				},
 //used in the order editor. executed whenever a change is made to update the number of changes in the 'save' button.
-			updateOrderChangeCount : function()	{
-				var numEdits = $('.edited').length;
-				$('#changeCount').text(numEdits)
+			updateOrderChangeCount : function($t)	{
+				app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
+				var $dialog = $t.closest("[data-orderid]"); //container dialog.
+				if($dialog.length)	{
+					app.u.dump(" -> FOUND PARENT!");
+					var numEdits = $('.edited',$dialog).length;
+					app.u.dump(" -> numEdits: "+numEdits);
+					var $count = $('.changeCount',$dialog);
+					$count.text(numEdits);
+					//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
+					if(numEdits > 0)	{$dialog.find("[data-btn-action='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
+					else	{$dialog.find("[data-btn-action='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+					}
+				else	{
+					app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
+					}
+				
 				return numEdits;
 				},
 
@@ -648,7 +679,7 @@ $(selector + ' .editable').each(function(){
 			}
 		else	{
 			$(this).addClass('edited');
-			app.ext.admin_orders.u.updateOrderChangeCount();
+			app.ext.admin_orders.u.updateOrderChangeCount($(this));
 			}
 		return value;
 		}, {
@@ -770,7 +801,7 @@ $(selector + ' .editable').each(function(){
 			"admin_orders|orderPrintInvoice" : function($btn){
 				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
 					event.preventDefault();
-					var orderID = $btn.closest('[data-orderid]').data('orderid');
+					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 					if(orderID)	{
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'invoice','profile':app.data['adminOrderDetail|'+orderID].our.profile}});
 						}
@@ -783,7 +814,7 @@ $(selector + ' .editable').each(function(){
 			"admin_orders|orderPrintPackSlip" : function($btn){
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
-					var orderID = $btn.closest('[data-orderid]').data('orderid');
+					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 					if(orderID)	{
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'invoice','profile':app.data['adminOrderDetail|'+orderID].our.profile}});
 						}
@@ -801,6 +832,20 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){event.preventDefault(); alert('not working yet');});
 				}, //admin_orders|customerUpdateNotes **TODO
 
+			"admin_orders|orderTicketCreate" : function($btn)	{
+				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){
+					event.preventDefault();
+					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+					if(orderID)	{
+						navigateTo("/biz/crm/index.cgi?VERB=CREATE&orderid="+orderID);
+						$btn.closest('.ui-dialog-content').dialog('close'); //close the modal.
+						}
+					else	{
+						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderTicketCreate, unable to navigate to because order id could not be determined.");
+						}
+					});
+				},
+
 			"admin_orders|orderListUpdateSelectAll" : function($btn)	{
 				$btn.off('click.orderListUpdateSelectAll').on('click.orderListUpdateSelectAll',function(event){
 					event.preventDefault();
@@ -813,7 +858,62 @@ $(selector + ' .editable').each(function(){
 				}, //admin_orders|orderListUpdateSelectAll
 
 			"admin_orders|orderUpdateSave" : function($btn){
-				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){event.preventDefault(); alert('not working yet');});
+				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
+					event.preventDefault();
+
+					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+					if(orderID)	{
+						var $target = $(app.u.jqSelector('#','viewOrderDialog_'+orderID));
+						$target.showLoading();
+						
+
+//the changes are all maintained on one array and pushed onto 1 request (not 1 pipe, but one adminOrderUpdate _cmd).
+						var changeArray = new Array();
+
+//poolSelect is the dropdown for changing the pool.
+						var $poolSelect = $("[data-ui-role='admin_orders|orderUpdatePool']",$target);
+//						app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
+						if($poolSelect.hasClass('edited'))	{
+							changeArray.push('SETPOOL?pool='+$poolSelect.val());
+							}
+						delete $poolSelect; //not used anymore.
+
+//for address uses teh setSHIPADDR and/or SETSHIPADDR
+						var $address = $("[data-ui-role='admin_orders|orderUpdateShipAddress']",$target);
+						var kvp = ""; //URI formatted string of address key (address1) value (123 evergreen terrace) pairs.
+						app.u.dump(" -> $address.length: "+$address.length);
+						app.u.dump(" -> $('.edited',$address).length for shipping: "+$('.edited',$address).length);
+						
+						
+						if($('.edited',$address).length)	{
+							$('[data-bind]',$address).each(function(){
+								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
+								var attribute = app.renderFunctions.parseDataVar(bindData['var']);
+								kvp += "&"+attribute+"="+$(this).text();
+								});
+							changeArray.push('SETSHIPADDR?'+kvp);
+							}
+						$address,kvp = ""; //reset address.
+//no var declaration because the ship address var is recycled.
+						$address = $("[data-ui-role='admin_orders|orderUpdateBillAddrees']",$target);
+						if($('.edited',$address).length)	{
+							$('[data-bind]',$address).each(function(){
+								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
+								var attribute = app.renderFunctions.parseDataVar(bindData['var']);
+								kvp += "&"+attribute+"="+$(this).text();
+								});
+							changeArray.push('SETBILLADDR?'+kvp);
+							}
+						delete $address;   //not used anymore.
+
+//						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
+//						app.model.dispatchThis();
+						$target.hideLoading(); //here for testing. removed.
+						}
+					else	{
+						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderPrintInvoice, unable to print because order id could not be determined.");
+						}
+					});
 				}, //admin_orders|orderUpdateSave **TODO
 
 			"admin_orders|orderUpdateAddTracking" : function($btn){
