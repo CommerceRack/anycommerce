@@ -99,10 +99,38 @@ var admin_orders = function() {
 				cmdObj['_tag'] = tagObj;
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
-			} //adminOrderUpdate
-		
+			}, //adminOrderUpdate
 
-		
+		adminOrderSearch : {
+			init : function(elasticObj, tagObj, Q)	{
+				this.dispatch(elasticObj,tagObj,Q);
+				return 1;
+				},
+			dispatch : function(elasticObj,tagObj,Q){
+				var obj = {};
+				obj._cmd = "adminOrderSearch";
+				obj.DETAIL = '9';
+				obj.ELASTIC = elasticObj;
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "adminOrderSearch";
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			},
+
+//obj requires: cartid, countrycode and ordertotal
+		appPaymentMethods : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj = obj || {};
+				obj._cmd = "appPaymentMethods";
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "appPaymentMethods|"+cartid;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			} //appPaymentMethods
 		}, //calls
 
 
@@ -198,7 +226,7 @@ var admin_orders = function() {
 						numQd += 1;
 						}
 					});
-oa				}	
+				}	
 			}, //handleBulkUpdate
 
 		listOrders : {
@@ -209,14 +237,16 @@ var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 
 var orderid,cid;
-var L = app.data[tagObj.datapointer]['@orders'].length;
+var ordersData = app.data[tagObj.datapointer]['@orders'];
+
+var L = ordersData.length;
 var $cmenu; //recyled. stors the context menu for an order.
 
 if(L)	{
 	for(var i = 0; i < L; i += 1)	{
-		orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID; //used for fetching order record.
-		cid = app.data[tagObj.datapointer]['@orders'][i].CUSTOMER; //used for sending adminCustomerGet call.
-		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,app.data[tagObj.datapointer]['@orders'][i]))
+		orderid = ordersData[i].ORDERID; //used for fetching order record.
+		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
+		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,ordersData[i]))
 		}
 
 $('button',$target).button();
@@ -383,10 +413,16 @@ if(orderID)	{
 		
 		//go fetch order data. callback handles data population.
 		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(tagObj){
+//!!! add error handling here.
 			var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 			var $target = $(selector);
+			var orderData = app.data[tagObj.datapointer]
 			$target.hideLoading();
-			app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
+			app.renderFunctions.translateSelector(selector,orderData);
+			
+			app.ext.admin_orders.calls.appPaymentMethods.init({'cartid':orderData.cart.cartid,'ordertotal':orderData.sum.order_total,'countrycode':orderData.ship.countrycode || orderData.bill.countrycode},{'callback':'translateSelector','extension':'admin_orders','selector':'#adminOrdersPaymentMethodsContainer'},'immutable');
+			app.model.dispatchThis('immutable');
+			
 			app.ext.admin_orders.u.handleButtonActions($target);
 //trigger the editable regions
 			app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
@@ -861,7 +897,13 @@ $(selector + ' .editable').each(function(){
 					event.preventDefault();
 					var frmObj = $btn.closest('form').serializeJSON();
 					if(frmObj.keyword && frmObj.type)	{
-						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
+//						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
+						$('#orderListTableBody').empty();
+app.ext.admin_orders.calls.adminOrderSearch.init({'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : ['order/address']}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+
+
+
+
 						app.model.dispatchThis('immutable');
 						}
 					else	{

@@ -83,6 +83,8 @@
 	</select>
 	</label>
 
+	<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
+
 	<button data-btn-action="admin_orders|orderSearch">Show Results</button>
 
 </fieldset>
@@ -126,7 +128,7 @@
 			<button data-btn-action='admin_orders|orderListUpdateBulk'>Proceed</button>
 			</div>
 		</div>
-		<div id='orderListTableContainer' class='ui-widget-content '>
+		<div id='orderListTableContainer' class='ui-widget-content ui-corner-br'>
 		<table id="orderListTable" class='gridTable'>
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
@@ -173,6 +175,23 @@
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
 </tr>
+
+
+
+<tr id='adminElasticOrderLineItem' class='adminOrderLineItem' >
+	<td class='statusIcon'></td>
+	<td><span data-bind='var: order(_source/orderid); format:text;' class='orderid'></span></td>
+	<td><span data-bind='var: order(_source/fullname); format:text;'></span></td>
+	<td><span data-bind='var: order(_source/order_total); format:elasticMoney; currencySign: $; hideZero:false;'></span></td>
+	<td><span data-bind='var: order(_source/payment_method);format:text;'></span></td>
+	<td><span data-bind='var: order(_source/payment_status);format:paystatus;extension:admin_orders;'></span></td>
+	<td><time data-bind='var: order(_source/cart_order_ts);format:unix2mdy;'></time></td>
+	<td><span data-bind='var: order(_source/order_bill_zone);format:billzone;extension:admin_orders;'></span></td>
+	<td><span data-bind='var: order(_source/review_status); format:reviewStatus;extension:admin_orders;'></span></td>
+	<td><span data-bind='var: order(_source/pool); format:text;'></span></td>
+	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(_source/orderid);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
+</tr>
+
 </table>
 <!-- /adminOrderLineItem -->
 
@@ -290,11 +309,16 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</section>
 	
 	<h2>Payment Information</h2>
-	<section class='paymentInformation clearfix'>
+	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer'>
 	
 	<div class='rightCol'>
-		<h3>Add Payment:</h3>
-		<p>!!!Something goes here!!!</p>
+<form action='#'>
+	<fieldset>
+		<legend>Add Payment</legend>
+		<ul class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+	</fieldset>
+</form>
+		
 	</div>
 
 	<div class='leftCol'>
