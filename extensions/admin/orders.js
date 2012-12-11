@@ -355,7 +355,9 @@ else	{
 
 
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
-				$(".searchAndFilterContainer",$target).accordion();
+				$(".searchAndFilterContainer",$target).accordion({
+					heightStyle: "content"
+					});
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
 				$(".filterGroup",$target).children().each(function(){
@@ -899,7 +901,7 @@ $(selector + ' .editable').each(function(){
 					if(frmObj.keyword && frmObj.type)	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
-app.ext.admin_orders.calls.adminOrderSearch.init({'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}

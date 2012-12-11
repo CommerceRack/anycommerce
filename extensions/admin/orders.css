@@ -32,13 +32,14 @@ table.orderManagerTable	{
 .orderManagerTable	td.leftCol .fixedWidth	{width: 150px;} /* for use on inputs and selects */
 
 #orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
-#orderFilters h4	{margin:1px 6px;}
-#orderFilters ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
-#orderFilters li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
+.filterGroup ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
+.filterGroup li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
 
 .viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
 
-.orderManagerTable .leftCol .ui-widget-header, .orderManagerTable .leftCol .ui-widget-content	{
+/* turn bevel corners off on the right side of the left col and on the left side of the right col */
+.orderManagerTable .leftCol .ui-accordion-header,
+.orderManagerTable .leftCol .ui-widget-content	{
 	-webkit-border-top-right-radius: 0px;
 	-webkit-border-bottom-right-radius: 0px;
 	-moz-border-radius-topright: 0px;
@@ -46,6 +47,9 @@ table.orderManagerTable	{
 	border-top-right-radius: 0px;
 	border-bottom-right-radius: 0px;	
 	}
+
+
+.orderManagerTable .leftCol .ui-accordion .ui-accordion-header:first-child	{margin-top:0px;}
 
 /*
 order detail

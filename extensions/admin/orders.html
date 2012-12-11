@@ -10,7 +10,7 @@
 		<div>
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
-			<ul id='orderListFilterPool' class='plainList filterGroup' data-filter='POOL'>
+			<ul id='orderListFilterPool' class='noPadOrMargin filterGroup' data-filter='POOL'>
 				<li data-filtervalue='RECENT'>Recent</li>
 				<li data-filtervalue='PENDING'>Pending</li>
 				<li data-filtervalue='REVIEW'>Review</li>
@@ -25,7 +25,7 @@
 			
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
-			<ul id='orderListFilterPaymentStatus' class='plainList filterGroup' data-filter='PAYMENT_VERB'>
+			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin filterGroup' data-filter='PAYMENT_VERB'>
 				<li data-filtervalue='PAID'>Paid</li>
 				<li data-filtervalue='PENDING'>Pending</li>
 				<li data-filtervalue='DENIED'>Denied</li>
@@ -36,7 +36,7 @@
 			
 			<section class='clearfix'>
 			<h4>Payment Type:</h4>
-			<ul id='orderListFilterPaymentType' class='plainList filterGroup' data-filter='PAYMENT_METHOD'>
+			<ul id='orderListFilterPaymentType' class='noPadOrMargin filterGroup' data-filter='PAYMENT_METHOD'>
 				<li data-filtervalue='PAYPAL'>PayPal</li>
 				<li data-filtervalue='CASH'>Cash</li>
 				<li data-filtervalue='CRED'>Credit</li>
@@ -46,7 +46,7 @@
 			
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
-			<ul id='orderListFilterMarket' class='plainList filterGroup' data-filter='MKT'>
+			<ul id='orderListFilterMarket' class='noPadOrMargin filterGroup' data-filter='MKT'>
 				<li data-filtervalue='EBY'>eBay</li>
 				<li data-filtervalue='AMZ'>Amazon</li>
 			</ul>
@@ -81,7 +81,7 @@
 	</select>
 	</label>
 
-	<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
+	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
 
 	<button data-btn-action="admin_orders|orderSearch">Show Results</button>
 
@@ -175,21 +175,6 @@
 </tr>
 
 
-
-<tr id='adminElasticOrderLineItem' class='adminOrderLineItem' >
-	<td class='statusIcon'></td>
-	<td><span data-bind='var: order(_source/orderid); format:text;' class='orderid'></span></td>
-	<td><span data-bind='var: order(_source/fullname); format:text;'></span></td>
-	<td><span data-bind='var: order(_source/order_total); format:elasticMoney; currencySign: $; hideZero:false;'></span></td>
-	<td><span data-bind='var: order(_source/payment_method);format:text;'></span></td>
-	<td><span data-bind='var: order(_source/payment_status);format:paystatus;extension:admin_orders;'></span></td>
-	<td><time data-bind='var: order(_source/cart_order_ts);format:unix2mdy;'></time></td>
-	<td><span data-bind='var: order(_source/order_bill_zone);format:billzone;extension:admin_orders;'></span></td>
-	<td><span data-bind='var: order(_source/review_status); format:reviewStatus;extension:admin_orders;'></span></td>
-	<td><span data-bind='var: order(_source/pool); format:text;'></span></td>
-	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(_source/orderid);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
-</tr>
-
 </table>
 <!-- /adminOrderLineItem -->
 
@@ -212,28 +197,26 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div class='appMessaging'></div><!-- messages will be logged here -->
 
-<div class='orderDetailHeader clearfix'>
-	<div class='rightCol alignRight'>
-		<h5 data-bind="var:order(data.sdomain);format:text;"></h5>
-		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
-	</div>
+<div class='clearfix marginBottom'>
 
-	<div class='floatLeft '>
+
+	<div class='floatLeft marginRight'>
 		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
-	</div>
-</div>
+		<h5 data-bind="var:order(our/profile);format:text; pretext: profile: ;"></h5>
+		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
 
-<div class='clearfix'>
-
-	<div class='floatLeft '>
-	<h4>Shipping Address</h4>
-<div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
 
-	<div class='floatRight'>
+
+	<div class='floatRight marginLeft '>
 	<h4>Billing Address</h4>
 <div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
+	</div>
+
+	<div class='floatRight marginRight marginLeft '>
+	<h4>Shipping Address</h4>
+<div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
 
 </div>
