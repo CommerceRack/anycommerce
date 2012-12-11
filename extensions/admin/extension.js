@@ -1186,7 +1186,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin.calls.adminDomainList.init({},'passive');
 					$('.domain','#appView').text(domain);
 // load whatever page is set on the hash onload. The product page being first needs some help.
-					app.ext.admin.a.showUI(window.location.hash ? window.location.hash.replace(/^#/, '') : '/biz/recent.cgi'); 
+					var hash = window.location.hash || '/biz/recent.cgi';
+					if(hash.substring(0,2) == '#!' || hash.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
+					else	{
+						hash = hash.replace(/^#/, ''); //strip preceding # from hash.
+						}
+					app.ext.admin.a.showUI(hash); 
 					}
 				}, //showHeader
 
