@@ -25,9 +25,11 @@ table.orderManagerTable	{
 
 
 .orderManagerTable	td.mainCol	{vertical-align:top; padding:0;}
-.orderManagerTable	td.leftCol	{width:180px; vertical-align:top; padding:0;}
+.orderManagerTable	td.leftCol	{width:220px; vertical-align:top; padding:0;}
 .orderManagerTable	td.mainCol .ui-widget-header	{padding:2px 12px; min-height:10px;} /* the min-height is for the footer w/ borders */
 .orderManagerTable	td.leftCol .ui-widget-content	{border-right:none;}
+
+.orderManagerTable	td.leftCol .fixedWidth	{width: 150px;} /* for use on inputs and selects */
 
 #orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
 #orderFilters h4	{margin:1px 6px;}
@@ -36,7 +38,14 @@ table.orderManagerTable	{
 
 .viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
 
-
+.orderManagerTable .leftCol .ui-widget-header, .orderManagerTable .leftCol .ui-widget-content	{
+	-webkit-border-top-right-radius: 0px;
+	-webkit-border-bottom-right-radius: 0px;
+	-moz-border-radius-topright: 0px;
+	-moz-border-radius-bottomright: 0px;
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;	
+	}
 
 /*
 order detail

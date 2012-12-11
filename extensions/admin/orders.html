@@ -68,12 +68,12 @@
 
 	<label>
 	<span>Keyword: </span>
-	<input type='search' name='keyword' />
+	<input type='search' name='keyword' class='fixedWidth' />
 	</label>
 
 	<label>
 	<span>Type: </span>
-	<select name='type'>
+	<select name='type' class='fixedWidth'>
 		<option value='order'>all fields</option>
 		<optgroup label='refine'>
 			<option value='order/address'>buyer</option>
@@ -94,58 +94,60 @@
 	</td>
 	
 	<td class='mainCol'>
-	<div class='ui-widget-header ui-corner-tr clearfix'>
-		<button class='floatRight' data-btn-action="admin_orders|orderCreate">Create Order</button>
-		<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateSelectAll'>Select All</button>
-		<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+	<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 
+		<div class='ui-widget-header ui-corner-tr clearfix'>
+			<button class='floatRight' data-btn-action="admin_orders|orderCreate">Create Order</button>
+			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateSelectAll'>Select All</button>
+			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 	
-		<div class=' floatLeft marginLeft'>
-		<label>Action:</label>
-		<select name='CMD' ID='CMD'>
-			<option value=''></option>
-			<optgroup label='change status to'>
-				<option value='POOL|RECENT'>Recent</option>
-				<option value='POOL|PENDING'>Pending</option>
-				<option value='POOL|REVIEW'>Review</option>
-				<option value='POOL|HOLD'>Hold</option>
-				<option value='POOL|APPROVED'>Approved</option>
-				<option value='POOL|PROCESS'>Process</option>
-				<option value='POOL|COMPLETED'>Completed</option>
-				<option value='POOL|DELETED'>Cancelled</option>
-			</optgroup><!--
-			<optgroup label= 'contact'>
-				<option value='MAIL|BULKEMAIL'>Send Email</option>
-			</optgroup>-->
-			<optgroup label = 'pay'>
-				<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
-			</optgroup>
-		</select>
-		<button data-btn-action='admin_orders|orderListUpdateBulk'>Proceed</button>
+		
+			<div class=' floatLeft marginLeft'>
+			<label>Action:</label>
+			<select name='CMD' ID='CMD'>
+				<option value=''></option>
+				<optgroup label='change status to'>
+					<option value='POOL|RECENT'>Recent</option>
+					<option value='POOL|PENDING'>Pending</option>
+					<option value='POOL|REVIEW'>Review</option>
+					<option value='POOL|HOLD'>Hold</option>
+					<option value='POOL|APPROVED'>Approved</option>
+					<option value='POOL|PROCESS'>Process</option>
+					<option value='POOL|COMPLETED'>Completed</option>
+					<option value='POOL|DELETED'>Cancelled</option>
+				</optgroup><!--
+				<optgroup label= 'contact'>
+					<option value='MAIL|BULKEMAIL'>Send Email</option>
+				</optgroup>-->
+				<optgroup label = 'pay'>
+					<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
+				</optgroup>
+			</select>
+			<button data-btn-action='admin_orders|orderListUpdateBulk'>Proceed</button>
+			</div>
+		</div>
+		<div id='orderListTableContainer' class='ui-widget-content '>
+		<table id="orderListTable" class='gridTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th></th>
+			<th data-name='ORDERID' title='order id'>order id</th>
+			<th data-name='ORDER_BILL_NAME' title='billing full name'>name</th>
+			<th data-name='ORDER_TOTAL' title='order total'>total</th>
+			<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
+			<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
+			<th data-name='CREATED_GMT' title='date order created'>created</th>
+			<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
+			<th data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
+			<th data-name='REVIEW_STATUS' title='order status'>pool</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
+		</table>
 		</div>
 	</div>
-	<div id='orderListTableContainer' class='ui-widget-content '>
-	<table id="orderListTable" class='gridTable'>
-	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-	<thead>
-	<tr>
-		<th></th>
-		<th data-name='ORDERID' title='order id'>order id</th>
-		<th data-name='ORDER_BILL_NAME' title='billing full name'>name</th>
-		<th data-name='ORDER_TOTAL' title='order total'>total</th>
-		<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
-		<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
-		<th data-name='CREATED_GMT' title='date order created'>created</th>
-		<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
-		<th data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
-		<th data-name='REVIEW_STATUS' title='order status'>pool</th>
-		<th></th>
-	</tr>
-	</thead>
-	<tbody id="orderListTableBody" data-bind="var: order(@orders); format:processList;"></tbody>
-	</table>
-	</div>
-	<div class='ui-widget-header ui-corner-br'></div>
 	</td>
 </tr>
 </table>
