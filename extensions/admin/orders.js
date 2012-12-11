@@ -352,10 +352,10 @@ else	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$target.empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
-				$(".searchAndFilterContainer",$target).tabs();
+				
 				
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
-				
+				$(".searchAndFilterContainer",$target).accordion();
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
 				$(".filterGroup",$target).children().each(function(){
@@ -900,9 +900,6 @@ $(selector + ' .editable').each(function(){
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 app.ext.admin_orders.calls.adminOrderSearch.init({'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
-
-
-
 
 						app.model.dispatchThis('immutable');
 						}
