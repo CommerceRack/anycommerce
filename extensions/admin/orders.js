@@ -127,7 +127,7 @@ var admin_orders = function() {
 				obj = obj || {};
 				obj._cmd = "appPaymentMethods";
 				obj._tag = tagObj || {};
-				obj._tag.datapointer = "appPaymentMethods|"+cartid;
+				obj._tag.datapointer = "appPaymentMethods|"+obj.cartid;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			} //appPaymentMethods
@@ -352,8 +352,8 @@ else	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$target.empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
-				
-				
+
+
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
 				$(".searchAndFilterContainer",$target).accordion();
 //Make the list of filters selectable. (status, type, marketplace, etc)				
