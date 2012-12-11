@@ -99,7 +99,22 @@ var admin_orders = function() {
 				cmdObj['_tag'] = tagObj;
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
-			} //adminOrderUpdate
+			}, //adminOrderUpdate
+		
+		adminPrivateSearch : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj = obj || {};
+				obj._cmd = 'adminPrivateSearch';
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = 'adminPrivateSearch';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}
+		
 		}, //calls
 
 
