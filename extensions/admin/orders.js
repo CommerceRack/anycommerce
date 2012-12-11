@@ -99,21 +99,9 @@ var admin_orders = function() {
 				cmdObj['_tag'] = tagObj;
 				app.model.addDispatchToQ(cmdObj,'immutable');
 				}
-			}, //adminOrderUpdate
+			} //adminOrderUpdate
 		
-		adminPrivateSearch : {
-			init : function(obj,tagObj,Q)	{
-				this.dispatch(obj,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(obj,tagObj,Q)	{
-				obj = obj || {};
-				obj._cmd = 'adminPrivateSearch';
-				obj._tag = tagObj || {};
-				obj._tag.datapointer = 'adminPrivateSearch';
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}
+
 		
 		}, //calls
 
@@ -873,7 +861,8 @@ $(selector + ' .editable').each(function(){
 					event.preventDefault();
 					var frmObj = $btn.closest('form').serializeJSON();
 					if(frmObj.keyword && frmObj.type)	{
-						app.ext.admin.calls.appPrivateSearch.init({'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{},'immutable')
+						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
 						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderSearch, either keyword ["+frmObj.keyword+"] or type ["+frmObj.type+"] not specified.");

@@ -117,6 +117,22 @@ obj.PATH = .cat.safe.id
 				}			
 			},
 
+
+		adminPrivateSearch : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1;
+				},
+			dispatch : function(obj,tagObj,Q)	{
+				obj = obj || {};
+				obj._cmd = 'adminPrivateSearch';
+				obj.mode = 'elastic-native';
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = 'adminPrivateSearch';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
+
 		adminDomainList : {
 			init : function(tagObj,Q)	{
 //			app.u.dump("BEGIN admin.calls.adminDomainList");
