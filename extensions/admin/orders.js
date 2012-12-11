@@ -422,8 +422,8 @@ if(orderID)	{
 			$target.hideLoading();
 			app.renderFunctions.translateSelector(selector,orderData);
 			
-			app.ext.admin_orders.calls.appPaymentMethods.init({'cartid':orderData.cart.cartid,'ordertotal':orderData.sum.order_total,'countrycode':orderData.ship.countrycode || orderData.bill.countrycode},{'callback':'translateSelector','extension':'admin_orders','selector':'#adminOrdersPaymentMethodsContainer'},'immutable');
-			app.model.dispatchThis('immutable');
+//			app.ext.admin_orders.calls.appPaymentMethods.init({'cartid':orderData.cart.cartid,'ordertotal':orderData.sum.order_total,'countrycode':orderData.ship.countrycode || orderData.bill.countrycode},{'callback':'translateSelector','extension':'admin_orders','selector':'#adminOrdersPaymentMethodsContainer'},'immutable');
+//			app.model.dispatchThis('immutable');
 			
 			app.ext.admin_orders.u.handleButtonActions($target);
 //trigger the editable regions

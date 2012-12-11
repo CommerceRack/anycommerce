@@ -293,13 +293,15 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer'>
 	
 	<div class='rightCol'>
+<!--
 <form action='#'>
 	<fieldset>
 		<legend>Add Payment</legend>
 		<ul class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
 	</fieldset>
 </form>
-		
+-->
+<button onClick="navigateTo('/biz/orders/payment.cgi?ID='+$(this).closest('[data-orderid]').data('orderid')+'&ts=',{'dialog':true}); return false;">Add Payment</button>		
 	</div>
 
 	<div class='leftCol'>
