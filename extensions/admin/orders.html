@@ -3,55 +3,92 @@
 <table class='orderManagerTable'>
 <tr>
 	<td class='leftCol'>
-	<div id='orderFilters' class='ui-corner-left ui-widget-content' >
-<section class='clearfix'>
-<h4>Order Status:</h4>
-<ul id='orderListFilterPool' class='plainList filterGroup' data-filter='POOL'>
-	<li data-filtervalue='RECENT'>Recent</li>
-	<li data-filtervalue='PENDING'>Pending</li>
-	<li data-filtervalue='REVIEW'>Review</li>
-	<li data-filtervalue='HOLD'>Hold</li>
-	<li data-filtervalue='APPROVED'>Approved</li>
-	<li data-filtervalue='PROCESS'>Process</li>
-	<li data-filtervalue='COMPLETED'>Completed</li>
-	<li data-filtervalue='CANCELLED'>Cancelled</li>
+	
+<div class='searchAndFilterContainer'>
+<ul>
+	<li><a href='#orderFilters'>Filter</a></li>
+	<li><a href='#orderSearch'>Search</a></li>
 </ul>
-</section>
+	
+		<div id='orderFilters'>
+			<section class='clearfix'>
+			<h4>Order Status:</h4>
+			<ul id='orderListFilterPool' class='plainList filterGroup' data-filter='POOL'>
+				<li data-filtervalue='RECENT'>Recent</li>
+				<li data-filtervalue='PENDING'>Pending</li>
+				<li data-filtervalue='REVIEW'>Review</li>
+				<li data-filtervalue='HOLD'>Hold</li>
+				<li data-filtervalue='APPROVED'>Approved</li>
+				<li data-filtervalue='PROCESS'>Process</li>
+				<li data-filtervalue='COMPLETED'>Completed</li>
+				<li data-filtervalue='CANCELLED'>Cancelled</li>
+			</ul>
+			</section>
+			
+			
+			<section class='clearfix'>
+			<h4>Payment Status:</h4>
+			<ul id='orderListFilterPaymentStatus' class='plainList filterGroup' data-filter='PAYMENT_VERB'>
+				<li data-filtervalue='PAID'>Paid</li>
+				<li data-filtervalue='PENDING'>Pending</li>
+				<li data-filtervalue='DENIED'>Denied</li>
+				<li data-filtervalue='ERROR'>Error</li>
+			</ul>
+			</section>
+			
+			
+			<section class='clearfix'>
+			<h4>Payment Type:</h4>
+			<ul id='orderListFilterPaymentType' class='plainList filterGroup' data-filter='PAYMENT_METHOD'>
+				<li data-filtervalue='PAYPAL'>PayPal</li>
+				<li data-filtervalue='CASH'>Cash</li>
+				<li data-filtervalue='CRED'>Credit</li>
+			</ul>
+			</section>
+			
+			
+			<section class='clearfix'>
+			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
+			<ul id='orderListFilterMarket' class='plainList filterGroup' data-filter='MKT'>
+				<li data-filtervalue='EBY'>eBay</li>
+				<li data-filtervalue='AMZ'>Amazon</li>
+			</ul>
+			</section>
+			
+			<div class='alignCenter stdPadding'>
+			<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
+			<button class='marginBottom' data-btn-action="admin_orders|orderListUpdateFilters">Show Results</button>
+			</div>
+	
+		</div>
+	
+		<div id='orderSearch'>
+<form class='labelsAsBreaks'>
+<fieldset>
 
+	<label>
+	<span>Keyword: </span>
+	<input type='search' name='keyword' />
+	</label>
 
-<section class='clearfix'>
-<h4>Payment Status:</h4>
-<ul id='orderListFilterPaymentStatus' class='plainList filterGroup' data-filter='PAYMENT_VERB'>
-	<li data-filtervalue='PAID'>Paid</li>
-	<li data-filtervalue='PENDING'>Pending</li>
-	<li data-filtervalue='DENIED'>Denied</li>
-	<li data-filtervalue='ERROR'>Error</li>
-</ul>
-</section>
+	<label>
+	<span>Type: </span>
+	<select name='type'>
+		<option value='order'>all fields</option>
+		<optgroup label='refine'>
+			<option value='order/address'>buyer</option>
+			<option value='order/payment'>payment</option>
+			<option value='order/shipment'>shipment</option>
+		</optgroup>
+	</select>
+	</label>
 
+	<button data-btn-action="admin_orders|orderSearch"></button>
 
-<section class='clearfix'>
-<h4>Payment Type:</h4>
-<ul id='orderListFilterPaymentType' class='plainList filterGroup' data-filter='PAYMENT_METHOD'>
-	<li data-filtervalue='PAYPAL'>PayPal</li>
-	<li data-filtervalue='CASH'>Cash</li>
-	<li data-filtervalue='CRED'>Credit</li>
-</ul>
-</section>
-
-
-<section class='clearfix'>
-<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
-<ul id='orderListFilterMarket' class='plainList filterGroup' data-filter='MKT'>
-	<li data-filtervalue='EBY'>eBay</li>
-	<li data-filtervalue='AMZ'>Amazon</li>
-</ul>
-</section>
-
-<div class='alignCenter stdPadding'>
-<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
-<button class='marginBottom' data-btn-action="admin_orders|orderListUpdateFilters">Show Results</button>
-</div>
+</fieldset>
+</form>
+		</div>
+	
 
 	</div>
 	</td>
@@ -136,6 +173,8 @@
 </tr>
 </table>
 <!-- /adminOrderLineItem -->
+
+
 
 
 

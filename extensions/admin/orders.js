@@ -334,7 +334,7 @@ else	{
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$target.empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
-				
+				$(".searchAndFilterContainer",$target).tabs();
 				
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
 				
@@ -867,6 +867,21 @@ $(selector + ' .editable').each(function(){
 					$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 					});
 				}, //admin_orders|orderListUpdateSelectAll
+
+			"admin_orders|orderSearch" : function($btn)	{
+				$btn.off('click.orderSearch').on('click.orderSearch',function(event){
+					event.preventDefault();
+					var frmObj = $btn.closest('form').serializeJSON();
+					if(frmObj.keyword && frmObj.type)	{
+						app.ext.admin.calls.appPrivateSearch.init({'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{},'immutable')
+						}
+					else	{
+						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderSearch, either keyword ["+frmObj.keyword+"] or type ["+frmObj.type+"] not specified.");
+						}
+
+					});
+				}, //admin_orders|orderListUpdateSelectAll
+
 
 			"admin_orders|orderUpdateSave" : function($btn){
 				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
