@@ -168,24 +168,40 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div class='clearfix'>
 
-
-	<div class='orderAddresses rightCol'>
+	<div class='floatLeft '>
 	<h4>Shipping Address</h4>
 <div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
-
-	<h4>Billing Address</h4>
-<div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
-
-	
 	</div>
 
+	<div class='floatRight'>
+	<h4>Billing Address</h4>
+<div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
+	</div>
+
+</div>
 
 
-	<div class='orderDetailsStuff leftCol'>
-	<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.a.editOrderContents(); return false;" class='editTextLink'>edit</a></span>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderEmailSend">Send Email</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>-->
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Ticket</button>
+
+	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
+</div>
+
+
+<div class='orderSupplementalInformation'>
+
+
+
+
 	<h2>Order Contents</h2>
-	<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
-	<section class='clearfix alignRight floatRight'>
+	
+	<section>
+		<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
 		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 		
 		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
@@ -204,25 +220,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 
 	</section>
-	</div>
 
 
-
-</div>
-
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderEmailSend">Send Email</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>-->
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Ticket</button>
-
-	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
-</div>
-
-
-<div class='orderSupplementalInformation'>
 
 	<h2>Notes</h2>
 	<section class='notes'>
@@ -475,4 +474,5 @@ used in legacy compat mode (and probably full app mode as well)
 <div data-bind='var:order(countrycode);format:text;'></div>
 <div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
 </address>
+
 

@@ -308,7 +308,7 @@ setTimeout(function(){
 						$template = app.renderFunctions.transmogrify(fdata,'mediaLibFolderTemplate',fdata);
 	//number(parentFID) will return false for the root level categories, which are set to "0" (string);
 	//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
-						Number(fdata.ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(fdata.ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
+						Number(fdata.ParentFID) ? $(jqSelector('#','mediaChildren_'+fdata.ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
 						}
 					}
 				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
@@ -513,7 +513,7 @@ setTimeout(function(){
 //Executed when 'info' button is clicked for a piece of media. Opens details in a dialog.
 			showMediaDetailsInDialog : function(P){
 				if(P.name)	{
-					var safeID = 'mediaFileDetails_'+app.u.makeSafeHTMLId(P.name)
+					var safeID = 'mediaFileDetails_'+P.name
 					var $target = $(app.u.jqSelector('#',safeID));
 					if($target.length){} //contents already created. do nothing.
 //contents not generated yet. Create them.

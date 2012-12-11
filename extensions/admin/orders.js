@@ -195,14 +195,7 @@ var admin_orders = function() {
 						numQd += 1;
 						}
 					});
-				if(numErrors + numQd > 0)	{
-					//errors have been reported, if that's the case. Or the merchant has selected more items already and they'll need to move them.
-//					$('#orderListTable').flexReload(); //update table. makes sure rotating bg colors are right. !!! doesn't work.
-					}
-				else	{
-//okay. everything went fine... now what???
-					}
-				}	
+oa				}	
 			}, //handleBulkUpdate
 
 		listOrders : {
@@ -210,6 +203,7 @@ var admin_orders = function() {
 
 //app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
+$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 
 var orderid,cid;
 var L = app.data[tagObj.datapointer]['@orders'].length;
@@ -305,8 +299,6 @@ else	{
 		initOrderManager : function(P)	{
 //			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
-//this can be removed once this is deployed in full release instead of beta. !!!
-app.ext.admin.u.bringTabIntoFocus('orders2');
 
 			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
 			if(P.filters){} //used filters that are passed in.
@@ -322,22 +314,25 @@ app.ext.admin.u.bringTabIntoFocus('orders2');
 			else{}
 
 			if(P.filters && P.targetID)	{
+				var $target = $(app.u.jqSelector('#',P.targetID));
+
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$(app.u.jqSelector('#',P.targetID)).empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				$target.empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
+				
 				
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
 				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
-				$(".filterGroup").children().each(function(){
+				$(".filterGroup",$target).children().each(function(){
+					var $this = $(this);
 //if the filter is already selected as part of P.filters, tag as selected.
-					if($(this).data('filtervalue') == P.filters[$(this).parent().data('filter')]){
-						$(this).addClass('ui-selected');
+					if($this.data('filtervalue') == P.filters[$this.parent().data('filter')]){
+						$this.addClass('ui-selected');
 						}
 					else	{}
-					$(this).addClass('pointer').click(function() {
-						var $this = $(this);
+					$this.addClass('pointer').click(function() {
 						if($this.hasClass('ui-selected'))	{$this.removeClass('ui-selected')}
 						else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
 						})
@@ -346,7 +341,7 @@ app.ext.admin.u.bringTabIntoFocus('orders2');
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
 //assigns all the button click events.
-				app.ext.admin_orders.u.handleButtonActions($(app.u.jqSelector('#',P.targetID)));
+				app.ext.admin_orders.u.handleButtonActions($target);
 				}
 			else	{
 				app.u.throwGMessge("WARNING! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
@@ -418,6 +413,7 @@ else	{
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
 			if(!$.isEmptyObject(filterObj))	{
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
 				app.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
