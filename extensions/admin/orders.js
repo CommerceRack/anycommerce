@@ -763,7 +763,7 @@ $(selector + ' .editable').each(function(){
 			}, //u
 
 		buttonActions : {
-			"admin_orders|orderListUpdateFilters" : function($btn){
+			"admin_orders|orderListFiltersUpdate" : function($btn){
 //				$btn.addClass('ui-state-highlight');
 				$btn.off('click.orderListUpdateFilters').on('click.orderListUpdateFilters',function(event){
 					event.preventDefault();
@@ -771,7 +771,7 @@ $(selector + ' .editable').each(function(){
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					var obj = {}
 					obj.LIMIT = Number($('#filterLimit').val()) || 30;
-					$('#orderFilters ul').each(function(){
+					$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
 						var val = $(this).find('.ui-selected').attr('data-filtervalue');
 						if(val){
 							obj[$(this).attr('data-filter')]=val
@@ -914,6 +914,7 @@ $(selector + ' .editable').each(function(){
 					if(frmObj.keyword && frmObj.type)	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
+						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
 
 						app.model.dispatchThis('immutable');

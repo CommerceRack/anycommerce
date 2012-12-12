@@ -7,7 +7,7 @@
 <div class='searchAndFilterContainer'>
 
 		<h2>Filter</h2>	
-		<div>
+		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
 			<ul id='orderListFilterPool' class='noPadOrMargin filterGroup' data-filter='POOL'>
@@ -54,7 +54,7 @@
 			
 			<div class='alignCenter stdPadding'>
 			<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
-			<button class='marginBottom' data-btn-action="admin_orders|orderListUpdateFilters">Show Results</button>
+			<button class='marginBottom' data-btn-action="admin_orders|orderListFiltersUpdate">Show Results</button>
 			</div>
 	
 		</div>
