@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemEditorTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemEditorTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -433,6 +433,7 @@ if(orderID)	{
 			},'extension':'admin_orders','selector':'#'+safeID});
 		
 		if(CID)	{
+//			$ordersModal.find("[data-ui-role='orderUpdateNotesContainer']").attr('id')
 			app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
 			}
 		else	{
@@ -519,14 +520,6 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 			return true;
 			}, //billzone
 			
-		customerNote : function($tag,data)	{
-			var L = data.value.length;
-			var $o = $("<ul />"); //what is appended to tag. 
-			for(var i = 0; i < L; i += 1)	{
-				$o.append("<li>"+app.u.unix2Pretty(data.value[i].CREATED_GMT)+": "+data.value[i].NOTE+"<\/li>");
-				}
-			$tag.append($o.children());
-			}, //customerNote
 		
 		reviewStatus : function($tag,data)	{
 			var c = data.value[0]; //first character is a good indicator of the status.
@@ -958,13 +951,14 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 								var attribute = app.renderFunctions.parseDataVar(bindData['var']);
 								kvp += "&"+attribute+"="+$(this).text();
 								});
+							if(kvp.charAt(0) == '&')	{kvp.substring(0);} //strip starting ampersand.
 							changeArray.push('SETBILLADDR?'+kvp);
 							}
 						delete $address;   //not used anymore.
 
-//						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
-//						app.model.dispatchThis();
-						$target.hideLoading(); //here for testing. removed.
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
+						app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','extension':'admin_orders','selector':'#viewOrderDialog_'+orderID},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
 						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderPrintInvoice, unable to print because order id could not be determined.");

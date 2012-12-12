@@ -201,7 +201,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 	<div class='floatLeft marginRight'>
-		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount();" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
+		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
 		<h5 data-bind="var:order(our/profile);format:text; pretext: profile: ;"></h5>
 		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
@@ -265,23 +265,26 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 	<h2>Notes</h2>
-	<section class='notes'>
+	<section class='notes' data-ui-role='orderUpdateNotesContainer'>
 	<form action='#'>
 	<fieldset>
 		<div class='floatRight customerNotes' id='customerInformation'><!--
 			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
 			<h3>Customer Notes: </h3>
-			<ol class='note customerNotes' data-bind="var: customer(@NOTES); format: customerNote; extension:admin_orders;"></ol>
+			<table class='note customerNotes'>
+			<tbody data-bind="var: customer(@NOTES); format: processList; loadsTemplate:buyerNotesTemplate;">
+			</tbody>
+			</table>
 		</div>
 		
 		<div class='floatLeft orderNotes'>
 			<span class='floatRight'><!--<a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); $(this).hide(); return false;" class='editTextLink'>edit</a>--></span>
 			
 			<h3>Public Order Notes</h3>
-			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;' title='public notes'></div>
+			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;'></div>
 	
 			<h3>Private Order Notes:</h3>
-			<div class='note privateNotes editable' data-bind='var:order(data.private_notes);format:text;' title='private notes'></div>
+			<div class='note privateNotes editable' data-bind='var:order(data.private_notes);format:text;'></div>
 	
 		</div>
 		<button data-btn-action="admin_orders|customerUpdateNotes">Save Notes</button>
@@ -483,6 +486,15 @@ The following templates are used in the 'order detail' modal/view.
 
 
 
+<table>
+<tr id='buyerNotesTemplate'>
+	<td>
+	<div data-bind='var: note(CREATED_GMT); format:unix2mdy;'></div>
+	<div data-bind='var: note(LUSER); format:text; pretext:by ;'></div>
+	</td>
+	<td data-bind='var: note(NOTE); format:text;'></td>
+</tr>
+</table>
 
 
 
