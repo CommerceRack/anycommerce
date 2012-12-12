@@ -676,8 +676,8 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 							})
 						app.calls.ping.init({'callback':function(){
 							$('body').hideLoading();
-							$('#printContainer').show(); //here for troubleshooting.
-//							app.u.printByElementID('printContainer');
+//							$('#printContainer').show(); //here for troubleshooting.
+							app.u.printByElementID('printContainer');
 							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}
