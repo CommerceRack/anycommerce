@@ -343,6 +343,7 @@ else	{
 //if no filters are passed in and no 'last filter' is present, set some defaults.
 			if($.isEmptyObject(P.filters))	{
 				P.filters.POOL = 'RECENT';
+				P.filters.LIMIT = 30; //if no limit is set, all orders from this pool are returned (big and random order)
 				}
 			else{}
 
