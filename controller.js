@@ -655,7 +655,7 @@ it'll then set app.rq.push to mirror this function.
 		printByElementID : function(id)	{
 //				app.u.dump("BEGIN myRIA.a.printByElementID");
 			if(id && $('#'+id).length)	{
-				var html="<html><body style='font-family:sans-serif;'>";
+				var html="<html><style>@media print{.pageBreak {page-break-after:always}}</style><body style='font-family:sans-serif;'>";
 				html+= document.getElementById(id).innerHTML;
 				html+="</body></html>";
 				

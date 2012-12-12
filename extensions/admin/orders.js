@@ -64,6 +64,34 @@ var admin_orders = function() {
 				}
 			}, //orderList
 
+//!!! this call should get nuked. appProfileInfo in the controller should be set up to support either an sdomain OR a profile ID.
+//unfortunately, under the gun right now and that change involves updates to quickstart, which I don't have time for right this second.
+		appProfileInfoBySdomain : {
+			init : function(sdomain,tagObj,Q)	{
+//				app.u.dump("BEGIN app.calls.appProfileInfo.init");
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				tagObj = typeof tagObj == 'object' ? tagObj : {};
+				tagObj.datapointer = 'appProfileInfo|'+sdomain; //for now, override datapointer for consistency's sake.
+
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(sdomain,tagObj,Q);
+					}
+				else 	{
+					app.u.handleCallback(tagObj)
+					}
+
+				return r;
+				}, // init
+			dispatch : function(sdomain,tagObj,Q)	{
+				obj = {};
+				obj['_cmd'] = "appProfileInfo";
+				obj['sdomain'] = sdomain;
+				obj['_tag'] = tagObj;
+				app.model.addDispatchToQ(obj,Q);
+				} // dispatch
+			}, //appProfileInfoBySdomain
+
 //never look locally for data. Always make sure to load latest from server to ensure it's up to date.
 //order info is critial
 		adminOrderDetail : {
@@ -171,6 +199,42 @@ var admin_orders = function() {
 				}
 			},
 
+
+
+
+
+
+
+
+
+		mergeDataForBulkPrint : {
+			
+			onSuccess : function(tagObj){
+				
+				var tmpData = {};
+				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
+				//this is because a template only wants to be parsed once.
+				if(tagObj.merge)	{
+					tmpData = $.extend(app.data[tagObj.datapointer],app.data[tagObj.merge]);
+					}
+				else	{
+					tmpData =app.data[tagObj.datapointer];
+					}
+				var $print = app.renderFunctions.transmogrify({},tagObj.templateID,tmpData);
+				$print.addClass('pageBreak'); //ensures template is on it's own page.
+				$('#printContainer').append($print);
+				}
+			
+			},
+
+
+
+
+
+
+
+
+
 //executed per order lineitem on a bulk update.
 		orderPoolChanged : {
 			onSuccess : function(tagObj)	{
@@ -245,8 +309,8 @@ var $cmenu; //recyled. stors the context menu for an order.
 if(L)	{
 	for(var i = 0; i < L; i += 1)	{
 		orderid = ordersData[i].ORDERID; //used for fetching order record.
-		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
-		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"cid":cid},tagObj.templateID,ordersData[i]))
+//		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
+		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]))
 		}
 
 $('button',$target).button();
@@ -575,6 +639,56 @@ P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplat
 				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 				},
 
+//currently, this requires that the order_create extension has been added.
+			bulkOrdersPrint : function(templateID,orderArray)	{
+				var $orders = $('.ui-selected','#orderListTableBody'),
+				CMD = $('#CMD').val(), //type of printing to do (invoice or packslip)
+				templateID = undefined, //what template will be used.
+				sDomains = {}; //a list of the sdomains. each domain added once. done to optimize dispatches so each sdoamin/profile data only requested once.
+				
+				if($orders.length)	{
+					if(CMD == 'PRNT|INVOICE')	{
+						templateID = "invoiceTemplate";
+						}
+					else if(CMD == 'PRNT|PACKSLIP')	{
+						templateID = "packslipTemplate"
+						}
+					else	{app.u.throwGMessage("In admin_orders.u.bulkOrdersPrint, CMD value is unsupported.")} //unsupported CMD.
+					
+					if(templateID)	{
+						$('#printContainer').empty(); //clean out any previously printed content.
+						$('body').showLoading();
+						
+						app.calls.appProfileInfo.init('DEFAULT',{},'immutable'); //have this handy for any orders with no sdomain.
+						
+						$orders.each(function(){
+							var $order = $(this);
+							var sdomain = $order.data('sdomain');
+							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
+							else if(sdomain)	{
+								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
+								app.ext.admin_orders.calls.appProfileInfoBySdomain.init(sdomain,{},'immutable');
+								}
+							else	{
+								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
+								}
+							app.ext.admin_orders.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
+							})
+						app.calls.ping.init({'callback':function(){
+							$('body').hideLoading();
+							$('#printContainer').show(); //here for troubleshooting.
+//							app.u.printByElementID('printContainer');
+							}},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //error occured. no templateID defined. error message already displayed.
+					}
+				else	{
+					alert("Please select at least one order.");
+					}
+				},
+
+
 //run this to change the pool for a specific order.
 //this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
 // -> when executing this function, run showloading and dispatch on your own.
@@ -793,7 +907,7 @@ $(selector + ' .editable').each(function(){
 			"admin_orders|orderListUpdateBulk" : function($btn)	{
 				$btn.off('click.orderListUpdateBulk').on('click.orderListUpdateBulk',function(event){
 					event.preventDefault();
-					var command = $('#CMD').val().substring(0,4); //will = POOL or MAIL or PMNT
+					var command = $('#CMD').val().substring(0,4); //will = POOL or MAIL or PMNT or PRNT
 					if(!command)	{
 						app.u.throwMessage('Please select an action to perform');
 						}
@@ -811,6 +925,10 @@ $(selector + ' .editable').each(function(){
 							
 							case 'MAIL':
 							app.ext.admin_orders.u.bulkSendEmail();
+							break;
+							
+							case 'PRNT':
+							app.ext.admin_orders.u.bulkOrdersPrint();
 							break;
 							
 							default:
