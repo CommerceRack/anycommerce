@@ -70,7 +70,6 @@ var admin = function() {
 			dispatch : function(filename)	{
 				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : {"datapointer":"adminImageFolderList"}});	
 				}
-			
 			}, 
 
 			/*

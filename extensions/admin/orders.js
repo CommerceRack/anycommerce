@@ -309,8 +309,8 @@ var $cmenu; //recyled. stors the context menu for an order.
 if(L)	{
 	for(var i = 0; i < L; i += 1)	{
 		orderid = ordersData[i].ORDERID; //used for fetching order record.
-//		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
-		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]))
+		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
+		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]))
 		}
 
 $('button',$target).button();
@@ -459,8 +459,8 @@ if(orderID)	{
 	safeID = 'viewOrderDialog_'+orderID;
 	var $ordersModal = $(app.u.jqSelector('#',safeID)); //global so it can be easily closed.
 	
-//if dialog is already open, bring it into focus.
-	if($ordersModal.dialog( "isOpen" ) === true)	{
+//if dialog is already open and not empty, bring it into focus.
+	if($ordersModal.dialog( "isOpen" ) === true && $ordersModal.children().length)	{
 		$ordersModal.dialog('moveToTop').effect('highlight'); //.closest('.ui-dialog').effect('bounce'); to effect the entire dialog container
 		}
 // dialog is not open and/or does not exist. If the dialog was opened, then closed, we re-fetch the order info.
@@ -470,7 +470,7 @@ if(orderID)	{
 			$ordersModal = $("<div />").attr({'id':safeID,'title':'Edit Order '+orderID}).data('orderid',orderID).appendTo('body');
 			$ordersModal.dialog({width:"90%",height:$(window).height() - 100,'autoOpen':false,modal:true});
 			}
-	
+
 		//be sure to empty the div or if it has already been loaded, duplicate content will show up.
 		$ordersModal.empty().dialog('open');
 		//create an instance of the invoice display so something is in front of the user quickly.
@@ -494,11 +494,10 @@ if(orderID)	{
 //trigger the editable regions
 			app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
 			app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
-			app.ext.admin_orders.u.makeEditable(selector+' .orderNotes',{'inputType':'textarea'});
+			app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
 			},'extension':'admin_orders','selector':'#'+safeID});
 		
 		if(CID)	{
-//			$ordersModal.find("[data-ui-role='orderUpdateNotesContainer']").attr('id')
 			app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
 			}
 		else	{
@@ -530,33 +529,7 @@ else	{
 				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
 				}
 	
-			}, //showOrderList
-			
-/*
-required params for P:
-P.orderID = the orderID to edit. the order should already be in memory.
-P.templateID = the lineitem template to be used. ex: orderStuffItemEditorTemplate
-*/
-		editOrderContents : function(P)	{
-			var $r; //what is returned.
-			if(P && P.orderID)	{
-				var $r = $(); //empty jquery object. line-items are appended to this and then it's all returned.
-				var orderObj = app.data['adminOrderDetail|'+P.orderID].order;
-				var L = orderObj['@ITEMS'].length;
-				var stid;
-				for(var i = 0; i < L; i += 1)	{
-					stid = P.templateID,orderObj['@ITEMS'][i].stid
-					$r.append(app.u.transmogrify({'id':stid,'data-stid':stid},P.templateID,orderObj['@ITEMS'][i]));
-					}
-				}
-			else	{
-				app.u.throwGMessage("admin_orders.a.editOrderContents did not receive required param orderID or params were blank.");
-				app.u.dump("ERROR! admin_orders.a.editOrderContents requires P.orderID: "); app.u.dump(P);
-				r = false
-				}
-				return $r;
-			} //editOrderContents
-		
+			} //showOrderList
 		},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -1068,24 +1041,21 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						delete $poolSelect; //not used anymore.
 
 
-						var $privateNote = $("[data-ui-role='admin_orders|orderNotesPrivate']",$target);
-						if($privateNote.hasClass('edited'))	{}
-						else	{} //do nothing. note was not edited.
-						delete $privateNote;
 
-						var $publicNote = $("[data-ui-role='admin_orders|orderNotesPublic']",$target);
-						if($publicNote.hasClass('edited'))	{
-							changeArray.push('ADDNOTE?'+$publicNote.text());
+						handleNote = function(type){
+							var $note = $("[data-ui-role='admin_orders|"+type+"']",$target);
+							if($note.hasClass('edited'))	{changeArray.push(type+'?note='+$note.text());}
+							else	{} //do nothing. note was not edited.
 							}
-						else	{} //do nothing. note was not edited.
-						delete $publicNote;
+						handleNote('SETPRIVATENOTE');
+						handleNote('SETPUBLICNOTE');
+						handleNote('ADDCUSTOMERNOTE');
 
 
 //for address uses teh setSHIPADDR and/or SETSHIPADDR
 						var $address = $("[data-ui-role='admin_orders|orderUpdateShipAddress']",$target);
 						var kvp = ""; //URI formatted string of address key (address1) value (123 evergreen terrace) pairs.
-						app.u.dump(" -> $address.length: "+$address.length);
-						app.u.dump(" -> $('.edited',$address).length for shipping: "+$('.edited',$address).length);
+
 						
 						
 						if($('.edited',$address).length)	{
@@ -1098,7 +1068,11 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							}
 						$address,kvp = ""; //reset address.
 //no var declaration because the ship address var is recycled.
-						$address = $("[data-ui-role='admin_orders|orderUpdateBillAddrees']",$target);
+						$address = $("[data-ui-role='admin_orders|orderUpdateBillAddress']",$target);
+
+						app.u.dump(" -> $address.length: "+$address.length);
+						app.u.dump(" -> $('.edited',$address).length: "+$('.edited',$address).length);
+
 						if($('.edited',$address).length)	{
 							$('[data-bind]',$address).each(function(){
 								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
@@ -1110,8 +1084,15 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							}
 						delete $address;   //not used anymore.
 
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
-						app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','extension':'admin_orders','selector':'#viewOrderDialog_'+orderID},'immutable');
+//#### NOTE-> because orderDetailsInDialog contains the request/dispatch, this is a two step process. Change orderDetails in dialog so that it just opens/shows and 
+//handle the request of the data outside that function. Rookie Mistake. !!!
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{'callback':function(){
+							$target.empty();
+							$target.hideLoading();
+							app.ext.admin_orders.a.orderDetailsInDialog(orderID,app.data['adminOrderDetail|'+orderID].customer.cid);
+							app.model.dispatchThis();
+							}},'immutable');
+
 						app.model.dispatchThis('immutable');
 						}
 					else	{

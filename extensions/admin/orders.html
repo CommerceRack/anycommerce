@@ -263,6 +263,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		
 		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 
+		<button onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).closest(['data-orderid']).data('orderid')+'&amp;ts='); return false;" class="button">Edit Contents</button>
+
 	</section>
 
 
@@ -270,32 +272,25 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<h2>Notes</h2>
 	<section class='notes' data-ui-role='orderUpdateNotesContainer'>
 	
-	<div class='orderNotes clearfix'>
-		<div class='floatLeft marginRight'>
+	<div class='orderNotesContainer clearfix marginBottom'>
+	
+		<div class='floatLeft marginRight noteContainer'>
 			<h3>Public Order Notes</h3>
-			<div class='note publicNotes editable' data-bind='var:order(flow/order_notes);format:text;' data-ui-role='admin_orders|orderNotesPublic'></div>
+			<div class='editable' data-bind='var:order(want/order_notes);format:text;' data-ui-role='admin_orders|SETPUBLICNOTE'></div>
 		</div>
-		<div class='floatRight marginLeft'>
+
+		<div class='floatRight marginLeft noteContainer'>
 			<h3>Private Order Notes:</h3>
-			<div class='note privateNotes editable' data-bind='var:order(flow/private_notes);format:text;' data-ui-role='admin_orders|orderNotesPrivate'></div>
+			<div class='editable' data-bind='var:order(flow/private_notes);format:text;' data-ui-role='admin_orders|SETPRIVATENOTE'></div>
 		</div>
+	
 	</div>
 
-	<form action='#'>
-	<fieldset>
-		<div class='customerNotes' id='customerInformation'><!--
-			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
-			<h3>Customer Notes: </h3>
-			<table class='note customerNotes'>
-			<tbody data-bind="var: customer(@NOTES); format: processList; loadsTemplate:buyerNotesTemplate;">
-			</tbody>
-			</table>
-		<button data-btn-action="admin_orders|customerNoteAdd" disabled='disabled'>Add Customer Note</button>
-		</div>
-		
-		
-	</fieldset>
-	</form>
+	<div class='customerNotes' id='customerInformation'>
+		<h3>Customer Notes: </h3>
+		<div class='editable' data-bind='var:order(flow/customer_notes);format:text;' data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
+	</div>
+
 	</section>
 	
 	<h2>Payment Information</h2>
