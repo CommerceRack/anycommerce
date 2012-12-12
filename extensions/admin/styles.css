@@ -388,7 +388,7 @@ inline block and width are added so that elements that are empty will be more ob
 be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
 the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
 */
-.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px;} 
+.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px; min-height:12px;} 
 .editEnabled input	{border:0; padding:0; margin:0;}
 .editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
 .editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}

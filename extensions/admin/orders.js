@@ -694,7 +694,7 @@ if(!P.inputType)	{P.inputType == 'text'}
 //info on editable can be found here: https://github.com/tuupola/jquery_jeditable
 //app.u.dump("BEGIN admin.a.makeEditable ["+selector+" .editable]");
 $(selector + ' .editable').each(function(){
-	var $text = $(this)
+	var $text = $(this);
 //	app.u.dump(" -> making editable: "+$text.data('bind'));
 	if($text.attr('title'))	{
 		$text.before("<label>"+$text.attr('title')+": </label>");
@@ -716,9 +716,23 @@ $(selector + ' .editable').each(function(){
 		  indicator : 'loading...', //can be img tag
 		  onblur : 'submit',
 		  type : P.inputType,
+		  placeholder : '',
 		  style  : 'inherit'
 		  }); //editable
 	}); //each
+
+//handles tabbing between jeditable elements. only tabs between jeditables within selector.
+    $(selector + ' .editable').off('keydown.jeditable').on('keydown.jeditable', function(evt) {
+        if(evt.keyCode==9) {
+			var nextBox=$(selector + ' .editable').eq($(selector + ' .editable').index(this)+1);
+			$(this).find("input").trigger('blur');  //Go to assigned next box
+			$(nextBox).click();  //Go to assigned next box
+			return false;           //Suppress normal tab
+			}
+		});
+
+
+
 				},
 
 			
@@ -858,8 +872,14 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){event.preventDefault(); alert('not working yet');});
 				}, //admin_orders|saveCustomerNotes **TODO
 
-			"admin_orders|customerUpdateNotes" : function($btn){
-				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){event.preventDefault(); alert('not working yet');});
+
+
+
+			"admin_orders|customerNoteAdd" : function($btn){
+				$btn.off('click.customerNoteAdd').on('click.customerNoteAdd',function(event){
+					event.preventDefault();
+					alert('not working yet');
+					});
 				}, //admin_orders|customerUpdateNotes **TODO
 
 			"admin_orders|orderTicketCreate" : function($btn)	{
@@ -926,6 +946,20 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							changeArray.push('SETPOOL?pool='+$poolSelect.val());
 							}
 						delete $poolSelect; //not used anymore.
+
+
+						var $privateNote = $("[data-ui-role='admin_orders|orderNotesPrivate']",$target);
+						if($privateNote.hasClass('edited'))	{}
+						else	{} //do nothing. note was not edited.
+						delete $privateNote;
+
+						var $publicNote = $("[data-ui-role='admin_orders|orderNotesPublic']",$target);
+						if($publicNote.hasClass('edited'))	{
+							changeArray.push('ADDNOTE?'+$publicNote.text());
+							}
+						else	{} //do nothing. note was not edited.
+						delete $publicNote;
+
 
 //for address uses teh setSHIPADDR and/or SETSHIPADDR
 						var $address = $("[data-ui-role='admin_orders|orderUpdateShipAddress']",$target);

@@ -266,28 +266,31 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<h2>Notes</h2>
 	<section class='notes' data-ui-role='orderUpdateNotesContainer'>
+	
+	<div class='orderNotes clearfix'>
+		<div class='floatLeft marginRight'>
+			<h3>Public Order Notes</h3>
+			<div class='note publicNotes editable' data-bind='var:order(flow/order_notes);format:text;' data-ui-role='admin_orders|orderNotesPublic'></div>
+		</div>
+		<div class='floatRight marginLeft'>
+			<h3>Private Order Notes:</h3>
+			<div class='note privateNotes editable' data-bind='var:order(flow/private_notes);format:text;' data-ui-role='admin_orders|orderNotesPrivate'></div>
+		</div>
+	</div>
+
 	<form action='#'>
 	<fieldset>
-		<div class='floatRight customerNotes' id='customerInformation'><!--
+		<div class='customerNotes' id='customerInformation'><!--
 			<span class='floatRight'><a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.customerNotes',{'inputType':'textarea'}); return false;" class='editTextLink'>edit</a></span>-->
 			<h3>Customer Notes: </h3>
 			<table class='note customerNotes'>
 			<tbody data-bind="var: customer(@NOTES); format: processList; loadsTemplate:buyerNotesTemplate;">
 			</tbody>
 			</table>
+		<button data-btn-action="admin_orders|customerNoteAdd" disabled='disabled'>Add Customer Note</button>
 		</div>
 		
-		<div class='floatLeft orderNotes'>
-			<span class='floatRight'><!--<a href='#'  onClick="app.ext.admin_orders.u.makeEditable('.orderNotes',{'inputType':'textarea'}); $(this).hide(); return false;" class='editTextLink'>edit</a>--></span>
-			
-			<h3>Public Order Notes</h3>
-			<div class='note publicNotes editable' data-bind='var:order(data.order_notes);format:text;'></div>
-	
-			<h3>Private Order Notes:</h3>
-			<div class='note privateNotes editable' data-bind='var:order(data.private_notes);format:text;'></div>
-	
-		</div>
-		<button data-btn-action="admin_orders|customerUpdateNotes">Save Notes</button>
+		
 	</fieldset>
 	</form>
 	</section>
@@ -529,7 +532,7 @@ used in legacy compat mode (and probably full app mode as well)
 <div>
 	<span data-bind='var:order(city);format:text;' class='editable' title='city'></span>
 	<span data-bind='var:order(region);format:text;' class='editable' title='state'></span>
-	<span data-bind='var:order(postal);format:text; defaultVar:order(data.ship_int_zip);' class='editable' title='zip'></span>
+	<span data-bind='var:order(postal);format:text;' class='editable' title='zip'></span>
 </div>
 <div data-bind='var:order(countrycode);format:text;'></div>
 <div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
