@@ -1932,6 +1932,8 @@ return r;
 					if(tmp1.length > 1){
 						var tmp2 = tmp1[1].split('=');
 						P[tmp2[0]] = tmp2[1];
+					} else {
+						// Should reach here in case of href="#homepage" (or anything with no params, but #homepage is the only use-case
 					}
 //					app.u.dump(P);
 					return P;
