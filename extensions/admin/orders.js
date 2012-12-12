@@ -297,6 +297,8 @@ var admin_orders = function() {
 			onSuccess : function(tagObj)	{
 
 //app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
+//app.u.dump(' -> tagObj: '); app.u.dump(tagObj);
+
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).hideLoading();
 
@@ -307,6 +309,7 @@ var L = ordersData.length;
 var $cmenu; //recyled. stors the context menu for an order.
 
 if(L)	{
+	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		orderid = ordersData[i].ORDERID; //used for fetching order record.
 		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
@@ -450,8 +453,9 @@ else	{
 
 		orderDetailsInDialog : function(orderID,CID)	{
 //app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
-//app.u.dump(" -> CID : "+CID);
 //app.u.dump(" -> orderID : "+orderID);
+//app.u.dump(" -> CID : "+CID);
+
 if(orderID)	{
 
 
@@ -1007,6 +1011,7 @@ $(selector + ' .editable').each(function(){
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
+						$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
 
 						app.model.dispatchThis('immutable');

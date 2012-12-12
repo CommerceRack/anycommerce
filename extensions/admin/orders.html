@@ -263,7 +263,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		
 		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 
-		<button onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).closest(['data-orderid']).data('orderid')+'&amp;ts='); return false;" class="button">Edit Contents</button>
+		<button data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;' onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).data('orderid')+'&amp;ts=',{'dialog':true}); return false;" class="button">Edit Contents</button>
 
 	</section>
 
@@ -288,7 +288,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div class='customerNotes' id='customerInformation'>
 		<h3>Customer Notes: </h3>
-		<div class='editable' data-bind='var:order(flow/customer_notes);format:text;' data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
+		<div class='editable'  data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
+		<table class='gridTable'>
+		<tbody data-bind='var:order(%CUSTOMER/@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
+		</tbody>
+		</table>
 	</div>
 
 	</section>

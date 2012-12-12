@@ -577,15 +577,22 @@ app.u.handleCallback(tagObj);
 
 		handleCallback : function(tagObj)	{
 //			app.u.dump("BEGIN u.handleCallback");
-			var callback;
 			if(tagObj && tagObj.datapointer){app.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback.
 			if(tagObj && tagObj.callback){
-//				app.u.dump(" -> executing callback ("+tagObj.callback+") in extension ("+tagObj.extension+")");
+//				app.u.dump(" -> callback exists");
+//				app.u.dump(tagObj.callback);
+				if(typeof tagObj.callback == 'function')	{app.u.dump(" -> executing anonymous function."); tagObj.callback(tagObj);}
+				else	{
+//				app.u.dump(" -> callback is not an anonymous function.");
+					var callback;
 //most callbacks are likely in an extension, but support for 'root' callbacks is necessary.
 //save path to callback so that we can verify the onSuccess is a function before executing (reduce JS errors with this check)
-				callback = tagObj.extension ? app.ext[tagObj.extension].callbacks[tagObj.callback] : app.callbacks[tagObj.callback];
-				if(typeof callback.onSuccess == 'function')
-					callback.onSuccess(tagObj);
+					callback = tagObj.extension ? app.ext[tagObj.extension].callbacks[tagObj.callback] : app.callbacks[tagObj.callback];
+					if(typeof callback.onSuccess == 'function')	{
+						callback.onSuccess(tagObj);
+						}
+					else	{}//callback defined as string, but callback.onsuccess is not a function.
+					}
 				}
 			else	{
 //				app.u.dump(" -> no callback was defined.");

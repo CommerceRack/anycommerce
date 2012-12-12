@@ -1256,8 +1256,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
 				else if(path == '#!orders')	{
-//					app.ext.admin.u.bringTabContentIntoFocus($("orders2Content"))
-					app.ext.admin_orders.a.initOrderManager({"targetID":app.ext.admin.vars.tab+"Content"});
+					app.ext.admin.u.bringTabIntoFocus('orders2');
+					app.ext.admin.u.bringTabContentIntoFocus($("#orders2Content"));
+//					app.ext.admin.vars.tab = 'orders2';
+					app.ext.admin_orders.a.initOrderManager({"targetID":"orders2Content"});
 					}
 				else if(path == '#!products')	{
 					app.u.dump("Go to product editor");
