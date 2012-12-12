@@ -253,7 +253,14 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 //start this process as early as possible. Errors will be reported independantly of init (result of ajax req. for templates).
 //SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
-				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
+				
+				if(app.vars._clientid == '1pc')	{
+					//Do Nothing.  BAD 1pc, go home.
+				}
+				else {
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+				}
+				
 				var msg = false
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					msg = app.u.errMsgObject("Uh Oh! It appears an error occured. Please try again. If error persists, please contact the site administrator.");

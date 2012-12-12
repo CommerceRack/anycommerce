@@ -142,7 +142,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Checkout Initiated']);
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.calls.showCheckoutForm.init');
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPreflight');
 				$('#chkoutSummaryErrors').empty(); //clear any existing global errors.
-				return this.dispatch();; //at least 5 calls will be made here. maybe 6.
+				return this.dispatch(); //at least 5 calls will be made here. maybe 6.
 				},
 			dispatch : function()	{
 //r is set to 5 because five of these calls are fixed.
@@ -256,8 +256,11 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
 				if(app.vars._clientid == '1pc')	{
+					//Do Nothing.  BAD 1pc, go home.
+				}
+				else {
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
-					}
+				}
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
