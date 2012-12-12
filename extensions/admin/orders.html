@@ -323,14 +323,14 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</section>
 	
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation clearfix'>
+	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer'>
 	
 	<div class='rightCol labelsAsBreaks'>
 		<h3>Add New Package</h3>
 
 <form>
 <fieldset>
-	<label><span>Carrier: </span> <select form="viewFrm" name="method">
+	<label><span>Carrier: </span> <select  name="carrier">
 		<option value="UPS">UPS</option>
 		<option value="USPS">USPS</option>
 		<option value="FEDX">FEDEX</option>
@@ -339,11 +339,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</select>
 	</label>
 	
-	<label><span>Tracking #: </span><input name="value" type="text"></label>
+	<label><span>Tracking #: </span><input name="value" type="text" size='15' /></label>
 	
-	<label><span>Cost: </span> <input size="5" name="cost" type="number"></label>
-	<label><span>Actual Weight: </span> <input form="viewFrm" size="5" name="actualwt" type="text"></label>
-	<label><span>Notes: </span><textarea form="viewFrm" cols="80" rows="3" name="notes"></textarea></label>
+	<label><span>Cost: </span> <input size="5" name="cost" type="number" /></label>
+	<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" /></label>
+	<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
 
 	<button data-btn-action="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
 
@@ -374,7 +374,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</section>
 	
 	<h2>History</h2>
-	<section class='trackingInformation'>
+	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer'>
 	
 	<table class='gridTable'>
 	<thead>

@@ -975,11 +975,14 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 			"admin_orders|orderUpdateAddTracking" : function($btn){
 				$btn.off('click.orderUpdateAddTracking').on('click.orderUpdateAddTracking',function(event){
 					event.preventDefault();
+
+					var $parent = $btn.closest("[data-ui-role='orderUpdateAddTrackingContainer']");
+					$parent.showLoading();
 					var kvp = $btn.parents('form').serialize();
-					alert('test this. uncomment a few lines');
 					//The two lines below 'should' work. not tested yet.
-//					app.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),kvp,{},'immutable');
-//					app.model.dispatchThis('immutable');
+					app.ext.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
+					app.ext.admin_orders.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
+					app.model.dispatchThis('immutable');
 					});
 				}, //admin_orders|orderUpdateAddTracking **TODO
 

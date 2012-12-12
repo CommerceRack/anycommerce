@@ -57,7 +57,11 @@ order detail
 
 .orderDetails .rightCol	{float:right; width:32%; min-width:200px; max-width:300px; margin-left:12px; float:right;}
 .orderDetails .leftCol	{width:65%; min-width:300px; margin-right:12px;}
-.orderDetails .rightCol	select	{width:250px}
+
+.orderDetails .rightCol	textarea	{width:95%; height:80px;}
+
+.orderDetails .rightCol label span	{width:100px;}
+
 
 .orderDetailHeader	{padding-bottom:12px; border-bottom:1px solid #efefef;}
 .orderDetailHeader,	.orderAddresses, .orderDetailsStuff{margin-bottom:12px;}

@@ -322,6 +322,7 @@ setTimeout(function(){
 		handleMediaLibSrc : {
 			onSuccess : function(tagObj){
 				app.u.dump("BEGIN admin_medialib.callbacks.handleMediaLibSrc.onSuccess");
+				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var img = app.data[tagObj.datapointer].IMG;
 				var $target = $('#mediaLibraryFocusMediaDetails').show();
 				$target.append(app.renderFunctions.transmogrify({'path':app.data[tagObj.datapointer].IMG,'name':app.data[tagObj.datapointer].IMG},'mediaLibSelectedFileTemplate',app.data[tagObj.datapointer]));
