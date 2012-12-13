@@ -51,11 +51,9 @@
 				<li data-filtervalue='AMZ'>Amazon</li>
 			</ul>
 			</section>
-			
-			<div class='alignCenter stdPadding'>
-			<label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label>
+
+			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label></div>
 			<button class='marginBottom' data-btn-action="admin_orders|orderListFiltersUpdate">Show Results</button>
-			</div>
 	
 		</div>
 	
@@ -69,18 +67,6 @@
 	<input type='search' name='keyword' class='fixedWidth' />
 	</label>
 
-	<label>
-	<span>Type: </span>
-	<select name='type' class='fixedWidth'>
-		<option value='order'>all fields</option>
-		<optgroup label='refine'>
-			<option value='order/address'>buyer</option>
-			<option value='order/payment'>payment</option>
-			<option value='order/shipment'>shipment</option>
-		</optgroup>
-	</select>
-	</label>
-
 	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
 
 	<button data-btn-action="admin_orders|orderSearch">Show Results</button>
@@ -89,6 +75,8 @@
 </form>
 		</div>
 	
+		<h2>Report</h2>
+		<div>Coming Soon!</div>
 
 	</div>
 	</td>

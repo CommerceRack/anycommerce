@@ -1090,17 +1090,24 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderSearch').on('click.orderSearch',function(event){
 					event.preventDefault();
 					var frmObj = $btn.closest('form').serializeJSON();
-					if(frmObj.keyword && frmObj.type)	{
+					if(frmObj.keyword)	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 						$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
-app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {'or' : [{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword}},'type' : [frmObj.type]}},{'query' : {'query_string' : {'query' : frmObj.keyword}}}]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {
+	'or' : [
+	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/address']}},
+	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
+	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
+	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/item']}},
+	{'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}}}
+	]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderSearch, either keyword ["+frmObj.keyword+"] or type ["+frmObj.type+"] not specified.");
+						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderSearch, keyword ["+frmObj.keyword+"] not specified.");
 						}
 
 					});
