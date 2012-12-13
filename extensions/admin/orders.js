@@ -35,6 +35,31 @@ var admin_orders = function() {
 	vars : {
 		"pools" : ['RECENT','PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
+		"emailMessages" : {
+			'OCREATE':'Order Created',
+			'OCUSTOM1' : 'Order Custom 1',
+			'OCUSTOM2' : 'Order Custom 2',
+			'ODENIED' : 'Order Payment Denied',
+			'OFBAMAZON' : 'Amazon Feedback Request',
+			'OMERGE' : 'Your order has been merged',
+			'ORDER.ARRIVED.AMZ' : 'Order Arrived: Amazon Follow Up',
+			'ORDER.ARRIVED.BUY' : 'Order Arrived: Buy.com Follow Up',
+			'ORDER.ARRIVED.EBF' : 'Order Arrived: eBay Follow Up',
+			'ORDER.ARRIVED.WEB' : 'Order Arrived: Website Follow Up',
+			'ORDER.NOTE' : 'Order %ORDERID%',
+			'ORDER.SHIP.EBAY' : 'Your order has been shipped.',
+			'OSPLIT' : 'Changes to your order',
+			'PAYREMIND' : 'Payment Reminder',
+			'STATAPPR' : 'Order %ORDERID% Approved',
+			'STATBACK' : 'Order %ORDERID% Backordered',
+			'STATCOMP' : 'Order %ORDERID% shipped',
+			'STATKILL' : 'Order %ORDERID% Cancelled',
+			'STATPEND' : 'Order %ORDERID% Pending',
+			'STATPRE' : 'Order %ORDERID% Preordered',
+			'STATPROC' : 'Order %ORDERID% Processing',
+			'STATRECN' : 'Order %ORDERID% moved to Recent',
+			'TRACKING' : 'Order %ORDERID% shipped'
+			},
 		"markets" : {
 			'ebay' : 'eBay',
 			'amazon' : 'Amazon'
@@ -251,6 +276,33 @@ var admin_orders = function() {
 				}		
 			}, //orderPoolChanged
 
+
+
+//executed per order lineitem on a sendmail macro for order update.
+// on success, if the row is still selected, change the icon from loading back to selected. if not selected, drop icon
+//on error, show an error icon in the first column, but suppress the error message from being loaded in THAT column, which is a small spot to put a message.
+		handleSendEmail : {
+			onSuccess : function(tagObj)	{
+//				app.u.dump("BEGIN admin_orders.callsbacks.handleSendEmail.onSuccess"); app.u.dump(tagObj);
+				var $td = $(app.u.jqSelector('#',tagObj.targetID)).find('td:eq(0)');
+//restore selected icon IF row is still selected.
+				if($td.parent().hasClass('ui-selected')){$td.html("<span class='ui-icon ui-icon-circle-check'></span>")}
+				else	{$td.html("")}
+				},
+			onError : function(responseData)	{
+//				app.u.dump("BEGIN admin_orders.callbacks.orderFlagAsPaid.onError. responseData: "); app.u.dump(responseData);
+//change the status icon to notify user something went wrong on this update.
+//also, unselect the row so that the next click re-selects it and causes the error icon to disappear.
+				var $row = $(app.u.jqSelector('#',responseData._rtag.targetID));
+				$row.attr({'data-status':'error'}).find('td:eq(0)').html("<span class='ui-icon ui-icon-alert'></span>");
+				app.ext.admin_orders.u.unSelectRow($row);
+				delete responseData._rtag.targetID; //don't want the message here.
+				app.u.throwMessage(responseData);
+				}		
+			}, //handleSendEmail
+
+
+
 //executed per order lineitem on a flagOrderAsPaid update.
 		orderFlagAsPaid : {
 			onSuccess : function(tagObj)	{
@@ -330,13 +382,25 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		
 		$("<command \/>").attr('label','Payment status').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid+'&email=&phone=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<hr \/>").appendTo($cmenu);
 		
-		var $poolMenu = $("<menu label='Change status to: '>");
+		var $emailMenu = $("<menu label='Send email message '>");
+		for(key in app.ext.admin_orders.vars.emailMessages)	{
+			$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).on('click',function(){
+				app.ext.admin_orders.u.sendOrderMail(orderid,key,$row);
+				app.model.dispatchThis('immutable');
+				}).appendTo($emailMenu);
+			}
+		$cmenu.append($emailMenu);
+
+
+		$("<hr \/>").appendTo($cmenu);
+		
+		var $poolMenu = $("<menu label='Change pool to: '>");
 		for(var i = 0; i < app.ext.admin_orders.vars.pools.length; i += 1)	{
 			$("<command \/>").attr('label',app.ext.admin_orders.vars.pools[i]).on('click',function(){
-				app.ext.admin_orders.u.changeOrderPool($row,app.ext.admin_orders.vars.pools[i],statusColID);
+				app.ext.admin_orders.u.changeOrderPool($row,$(this).attr('label'),statusColID);
 				app.model.dispatchThis('immutable');
 				}).appendTo($poolMenu);
 			}
@@ -520,6 +584,8 @@ else	{
 	}
 			}, //orderDetailsInDialog
 
+
+
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
 			if(!$.isEmptyObject(filterObj))	{
@@ -534,6 +600,9 @@ else	{
 				}
 	
 			} //showOrderList
+		
+		
+		
 		},
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -616,7 +685,31 @@ else	{
 				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 				},
 
+			
+//orderid and msgID are required.
+			sendOrderMail : function(orderID,msgID,$row)	{
+				if(msgID && orderID && $row.length){
+					if($row)	{$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>")}
+					else	{}// see how this is used outside the list. may want to use this to trigger a showLoading.
+					app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
+					}
+				else	{
+					app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
+					}
+				},
+
+			bulkSendOrderMail : function()	{
+				var $orders = $('.ui-selected','#orderListTableBody');
+				var msgID = "OCREATE";
+				$orders.each(function(){
+					app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID)
+					});
+				app.model.dispatchThis('passive');
+				},
+
 //currently, this requires that the order_create extension has been added.
+//This groups all the invoices into 1 div and adds pagebreaks via css.
+//for this reason, the individual print functions for invoice/packslip are not recycled
 			bulkOrdersPrint : function(templateID,orderArray)	{
 				var $orders = $('.ui-selected','#orderListTableBody'),
 				CMD = $('#CMD').val(), //type of printing to do (invoice or packslip)
@@ -661,20 +754,23 @@ else	{
 					else	{} //error occured. no templateID defined. error message already displayed.
 					}
 				else	{
-					alert("Please select at least one order.");
+					app.u.throwMessage('Please select at least one row.');
 					}
-				},
+				}, //bulkOrdersPrint
 
 
 //run this to change the pool for a specific order.
 //this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
 // -> when executing this function, run showloading and dispatch on your own.
 			changeOrderPool : function($row,pool,statusColID){
-				$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
-				$('td:eq('+statusColID+')',$row).empty().append("<span class='wait'><\/span>");
-				
-				app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
+				if($row.length && pool)	{
+					$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
+					$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
+					app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
+					}
+				else	{app.u.throwGMessage("In admin_orders.u.changeOrderPool, either $row.length ["+$row.length+"] is empty or pool ["+pool+"] is blank")}
 				}, //changeOrderPool
+
 
 //Run the dispatch on your own.  That way a bulkChangeOrderPool can be run at the same time as other requests.
 			bulkChangeOrderPool : function(){
@@ -729,20 +825,7 @@ else	{
 
 				}, //bulkFlagOrdersAsPaid
 
-//for now, we are linking to the legacy email page. This dynamically builds a form and submits it.
-			bulkSendEmail : function()	{
-				var $dialog = $("<div id='emailDialog' />").attr('title','Send Email').appendTo('body');
-				$("<iframe src='/biz/orders3/email.cgi' class='bulkMailIframe'>").attr({'id':'bulkMailIframe','name':'bulkMailIframe'}).appendTo($dialog);
-				$dialog.dialog({modal:true,width:'90%',height:600});
 
-				var $form = $("<form />").attr({"action":"/biz/orders3/email.cgi","method":"post","id":"tmpForm","target":"bulkMailIframe"});
-				$('#orderListTable tr.ui-selected').each(function(){
-					$('<input />').attr({"name":$(this).attr('data-orderid'),"value":"1","type":"hidden"}).appendTo($form);
-					});
-				$('<input />').attr({"name":"CMD","value":"REVIEW","type":"hidden"}).appendTo($form);
-				$form.appendTo('body');
-				$form.submit();
-				},
 //used in the order editor. executed whenever a change is made to update the number of changes in the 'save' button.
 			updateOrderChangeCount : function($t)	{
 				app.u.dump("BEGIN admin_orders.u.updateOrderChangeCount");
@@ -901,7 +984,7 @@ $(selector + ' .editable').each(function(){
 							break;
 							
 							case 'MAIL':
-							app.ext.admin_orders.u.bulkSendEmail();
+							app.ext.admin_orders.u.bulkSendOrderMail();
 							break;
 							
 							case 'PRNT':
