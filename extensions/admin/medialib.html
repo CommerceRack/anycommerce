@@ -47,7 +47,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	</td>
 </tr>
 <tr>
-	<td colspan='2' class='alignRight fileUploadButtonBar'>
+	<td colspan='2' class='alignRight fileUploadButtonBar displayNone'>
    	<div class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 	<h6 class='clearfix'>Drag your files here from your desktop</h6>
         <!-- Redirect browsers with JavaScript disabled to the origin page -->
@@ -119,6 +119,28 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 		</div>
 		
 		<div id='mediaLibSearchContainer'>
+
+
+
+
+<fieldset class='labelsAsBreaks'>
+<label><span>Order by: </span>
+<select name='orderby'>
+	<option value="TS">upload date</option>
+	<option value="NAME">file name</option>
+	<option value="DISKSIZE">file size</option>
+	<option value="PIXEL"># pixels</option>
+</select>
+</label>
+
+<label><span>Keyword(s): </span>
+<input type='search' name='keyword' value='' />
+</label>
+</fieldset>
+		
+<input type='hidden' name='detail' value='FOLDER' />
+<button data-btn-action='mediaLibSearch'>Search</button>
+
 
 		</div>
 
