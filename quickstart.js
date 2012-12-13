@@ -399,11 +399,18 @@ else	{
 //cat page handling.
 				if(tagObj.navcat)	{
 //					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
+
 					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
 						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
 						}
 					if(typeof app.data['appPageGet|'+tagObj.navcat] == 'object' && typeof app.data['appPageGet|'+tagObj.navcat]['%page'] == 'object' && !$.isEmptyObject(app.data['appPageGet|'+tagObj.navcat]['%page']))	{
 						tmp['%page'] = app.data['appPageGet|'+tagObj.navcat]['%page'];
+						}
+					if(tagObj.lists.length)	{
+						var L = tagObj.lists.length;
+						for(var i = 0; i < L; i += 1)	{
+							tmp[tagObj.lists[i]] = app.data['appNavcatDetail|'+tagObj.lists[i]];
+							}
 						}
 					tmp.session = app.ext.myRIA.vars.session;
 //a category page gets translated. A product page does not because the bulk of the product data has already been output. prodlists are being handled via buildProdlist
@@ -2116,19 +2123,22 @@ buyer to 'take with them' as they move between  pages.
 
 var numRequests = 0; //will be incremented for # of requests needed. if zero, execute showPageContent directly instead of as part of ping. returned.
 var catSafeID = P.navcat;
+
 var myAttributes = new Array(); // used to hold all the 'page' attributes that will be needed. passed into appPageGet request.
 var elementID; //used as a shortcut for the tag ID, which is requied on a search element. recycled var.
 
 var tagObj = P;  //used for ping and in handleCallback if ping is skipped.
-tagObj.callback = 'showPageContent'
+tagObj.callback = 'showPageContent';
 tagObj.searchArray = new Array(); //an array of search datapointers. added to _tag so they can be translated in showPageContent
 tagObj.extension = 'myRIA'
+tagObj.lists = new Array(); // all the list id's needed.
+
 
 //goes through template.  Put together a list of all the data needed. Add appropriate calls to Q.
 app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 	var $focusTag = $(this);
-		
+	
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
 		
@@ -2200,6 +2210,16 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 					myAttributes.push(tmpAttr);  //set value to the actual value
 					}				
 				
+				}
+			else if(namespace == 'list' && attribute.charAt(0) == '$')	{
+				var listPath = attribute.split('.')[0]
+				tagObj.lists.push(listPath); //attribute formatted as $listname.@products
+				numRequests = app.ext.store_navcats.calls.appNavcatDetail.init(listPath);
+				}
+			else if(namespace == 'list')	{
+				// no src is set.
+				app.u.throwGMessage("In myRIA.u.buildQueriesByTemplate, namespace set to list but invalid SRC ["+attribute+"] is specified... so we don't know where to get the data.");
+				app.u.dump(bindData);
 				}
 			else if(namespace == 'category' && attribute == '@subcategoryDetail' )	{
 //				app.u.dump(" -> category(@subcategoryDetail) found");

@@ -192,7 +192,36 @@ obj.PATH = .cat.safe.id
 				tagObj.detail = 'max';
 				app.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":catSafeID,"detail":"max","_tag" : tagObj},Q);	
 				}
-			}//appCategoryDetailMax
+			},//appCategoryDetailMax
+
+
+
+		appNavcatDetail : {
+			init : function(path,tagObj,Q)	{
+				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+				Q = Q || 'mutable';
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
+//whether max, more or just detail, always save to same loc.
+//add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
+				tagObj.datapointer = 'appNavcatDetail|'+path;
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r += 1;
+					this.dispatch(path,tagObj,Q);
+					}
+				else {
+		// app.u.dump(' -> using local');
+					app.u.handleCallback(tagObj)
+					}
+				return r;
+				},
+			dispatch : function(path,tagObj,Q)	{
+		// app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.dispatch');
+				var path;
+				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":path,"_tag" : tagObj},Q);	
+				}
+			}//appNavcatDetail
+
 
 		}, //calls
 

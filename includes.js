@@ -1010,10 +1010,10 @@ this was necessary because otherwise the converted html was output as <a href...
 			
 				switch(operation) {
 					case ":url" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":search"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":url"] == 'function')
+							output = app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
 						else
-							output = "<a href=\""+suffix+"\">"+phrase+"</a>";
+							output = "<a href=\""+suffix+"\" target='_blank'>"+phrase+"</a>";
 						break;
 
 					case ":search" :
