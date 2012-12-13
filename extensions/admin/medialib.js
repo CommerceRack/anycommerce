@@ -133,8 +133,7 @@ var admin_medialib = function() {
 				},
 			dispatch : function(f,tagObj,Q)	{
 //				app.u.dump(" -> adding dispatch to "+Q+" queue");
-//,"orderby":"NAME"
-				app.model.addDispatchToQ({"_cmd":"adminImageList","folder":f,"detail":"NONE","_tag" : tagObj},Q);
+				app.model.addDispatchToQ({"_cmd":"adminImageList","orderby":"NAME","folder":f,"detail":"NONE","_tag" : tagObj},Q);
 				}
 			}, //adminImageDetail
 
@@ -311,10 +310,14 @@ setTimeout(function(){
 						Number(fdata.ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(fdata.ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
 						}
 					}
-				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+			
 				$('#mediaLibControlsTabContainer').tabs();
 //in some cases, we may re-run this callback (such as after a file upload) and we need to open the folder on the left and in the media area opened for continuity.
 				if(app.ext.admin_medialib.u.getOpenFolderName())	{app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())}
+//for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
+				setTimeout(function(){
+					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+					},2000);
 				}
 
 			}, //showMediaLibrary
@@ -731,86 +734,105 @@ else	{
 			convertFormToJQFU : function(selector,mode)	{
 
 app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
+app.u.dump(" -> selector: "+selector);
+app.u.dump(" -> mode: "+mode);
+
 //'use strict';
 
-var successCallbacks = {
-//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
-	'mediaLibrary' : function(data,textStatus){
-		var L = data.length;
-		var tagObj;
-		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-		for(var i = 0; i < L; i += 1)	{
-			data[i].folder = folderName;
-			app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
+//both a selector and a mode are required.
+if(selector && mode)	{
+	
+	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
+	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
+
+	var successCallbacks = {
+	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
+		'mediaLibrary' : function(data,textStatus){
+			var L = data.length;
+			var tagObj;
+			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+			for(var i = 0; i < L; i += 1)	{
+				data[i].folder = folderName;
+				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
+				}
+			},
+		'publicFileUpload' : function(data,textStatus)	{
+			app.u.dump("Got to csvUploadToBatch success.");
+			app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
+			app.model.dispatchThis('immutable');
+			},
+		'adminTicketFileAttach' : function(data,textStatus)	{
+			app.u.dump(" -> Got to adminTicketFileAttach success.");
+			data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
+			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid)
+			app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
+			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
+			app.model.dispatchThis('immutable');
+			},
+		'csvUploadToBatch' : function(data,textStatus) {
+			app.u.dump("Got to csvUploadToBatch success.");
+	//		app.u.dump(" -> data:"); app.u.dump(data);
+	//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
+			app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
+			app.model.dispatchThis('immutable');
 			}
-		},
-	'publicFileUpload' : function(data,textStatus)	{
-		app.u.dump("Got to csvUploadToBatch success.");
-		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
-		app.model.dispatchThis('immutable');
-		},
-	'adminTicketFileAttach' : function(data,textStatus)	{
-		app.u.dump(" -> Got to adminTicketFileAttach success.");
-		data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
-		app.u.dump(" -> data[0].ticketid: "+data[0].ticketid)
-		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
-		app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
-		app.model.dispatchThis('immutable');
-		},
-	'csvUploadToBatch' : function(data,textStatus) {
-		app.u.dump("Got to csvUploadToBatch success.");
-//		app.u.dump(" -> data:"); app.u.dump(data);
-//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
-		app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
+		}
+	
+	//add domain to form so that it gets passed along to fileupload.cgi
+	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
+	
+	// Initialize the jQuery File Upload widget:
+	$selector.fileupload({
+		// Uncomment the following to send cross-domain cookies:
+		//xhrFields: {withCredentials: true},
+		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
+		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
+		success : function(data,textStatus){
+			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
+			successCallbacks[mode](data,textStatus);
+			}
+		});
+	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
+	
+	function fileuploadstopped() {
+		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+	
+		app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
+		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
+		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
 		}
-	}
-
-//add domain to form so that it gets passed along to fileupload.cgi
-$(selector).append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
-
-// Initialize the jQuery File Upload widget:
-$(selector).fileupload({
-	// Uncomment the following to send cross-domain cookies:
-	//xhrFields: {withCredentials: true},
-	url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
-	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
-	success : function(data,textStatus){
-		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
-		successCallbacks[mode](data,textStatus);
+	
+	//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
+	if(mode == 'mediaLibrary')	{
+		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
+		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
-	});
-//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
+	// Enable iframe cross-domain access via redirect option:
+	$selector.fileupload(
+		'option',
+		'redirect',
+		window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
+		);
+	
+	
+	//$('.btn-success',$selector).on('click', function(){$(".fileUploadButtonBar").show()});
 
-function fileuploadstopped() {
-	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
-	var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
-	app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
-	app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
-	app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
-	app.model.dispatchThis('immutable');
 	}
-
-//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
-if(mode == 'mediaLibrary')	{
-	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
-	$(selector).off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
+else	{
+	app.u.throwGMessage("In admin_medialib.u.convertFormToJQFU, either selector ["+selector+"] or mode ["+mode+"] are not set.");
 	}
-// Enable iframe cross-domain access via redirect option:
-$(selector).fileupload(
-	'option',
-	'redirect',
-	window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
-	);
-
-
-//$('.btn-success',$(selector)).on('click', function(){$(".fileUploadButtonBar").show()});
-
-
 
 
 				}, //convertFormToJQFU
+
+
+
+
+
+
 
 			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
