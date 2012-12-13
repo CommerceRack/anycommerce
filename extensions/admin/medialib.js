@@ -730,10 +730,8 @@ else	{
 
 			convertFormToJQFU : function(selector,mode)	{
 
-//app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
-
-
-'use strict';
+app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
+//'use strict';
 
 var successCallbacks = {
 //The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
@@ -778,14 +776,14 @@ $(selector).fileupload({
 	url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
 	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
 	success : function(data,textStatus){
-//		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
+		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
 		successCallbacks[mode](data,textStatus);
 		}
 	});
 //$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
 
 function fileuploadstopped() {
-//	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 	var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
 	app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
@@ -796,7 +794,7 @@ function fileuploadstopped() {
 
 //this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
 if(mode == 'mediaLibrary')	{
-//	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
+	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
 	$(selector).off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 	}
 // Enable iframe cross-domain access via redirect option:

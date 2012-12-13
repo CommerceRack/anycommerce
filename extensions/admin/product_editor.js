@@ -72,7 +72,7 @@ var admin_prodEdit = function() {
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,Q);	
 					}
-				}, //adminUIProductPanelList
+				}, //adminUIProductPanelExecute
 
 			adminProductManagementCategoryList : {
 				init : function(tagObj,Q)	{
@@ -88,7 +88,7 @@ var admin_prodEdit = function() {
 				dispatch : function(tagObj,Q)	{
 					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":tagObj},Q);	
 					}
-				} //adminUIProductPanelList
+				} //adminProductManagementCategoryList
 
 
 
