@@ -944,7 +944,7 @@ else	{
 				},
 
 			resetAndGetMediaFolders : function(Q)	{
-				$('ul','#mediaLibFolderList').addClass('loadingBG').children().remove(); //folders will be re-added later.
+				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove(); //folders will be re-added later.
 				app.model.destroy('adminImageFolderList'); //clear memory and local storage to ensure request is made.
 				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},Q);
 				},
