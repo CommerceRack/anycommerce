@@ -594,11 +594,11 @@ NOTES
 				if(P.pid && P.templateID)	{
 //					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
 					var parentID = "product-modal"
-					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
+					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']);
 					
 					if(!P.parentID)	{
 						app.u.dump(" -> parent not specified. empty contents.");
-						$parent.empty()
+						$parent.empty();
 						} //if no parent is specified, this is a 'recycled' modal window. empty any old product data.
 					
 					$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"productViewer_"+parentID));
@@ -630,7 +630,28 @@ NOTES
 				}, //prodDataInModal
 
 
-
+			showProductDataIn : function(targetID,P)	{
+				if(targetID && P && P.pid && P.templateID)	{
+					var $target = $(app.u.jqSelector('#',targetID));
+					if($target.length)	{
+//make sure the ID is unique in case this function is used to add product to dom twice (in different locations)
+						P.id = 'prodView_'+P.pid+'_'+app.u.guidGenerator().substring(0,10);
+						$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,P));
+						P.callback = P.callback || 'translateTemplate'; //translateTemplate is part of controller, not an extension
+						P.extension = P.extension || ''; //translateTemplate is part of controller, not an extension
+						app.ext.store_product.calls.appProductGet.init(P.pid,P);
+						app.ext.store_product.calls.appReviewsList.init(P.pid);
+						app.model.dispatchThis();
+						}
+					else	{
+						app.u.throwGMessage("In store_product.u.showProductDataIn, $('#"+targetID+"') does not exist on the DOM");
+						}
+					}
+				else	{
+					app.u.throwGMessage("In store_product.u.showProductDatIn, targetID ["+targetID+"] not set or required params (pid,templateID) not set. see console for params obj.");
+					app.u.dump(P);
+					}
+				}, //showProductDataIn
 
 
 //F can be a form ID or a jquery object of the form

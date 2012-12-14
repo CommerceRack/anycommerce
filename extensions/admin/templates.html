@@ -1,140 +1,3 @@
-<!--
-
-########################################################
-
-
-PRODUCT TAB
-
-########################################################
-
-
--->
-
-
-
-
-<div id='productTabTemplate'>
-
-<table>
-<tr>
-	<td class='leftColNav'>
-	<div id='prodLeftCol'>
-
-
-<ul>
-	<li><a href='#' onClick="app.ext.admin.a.showCreateProductDialog(); return false;">New Product</a></li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Filter Product</a>
-	<ul class='displayNone tagFilterList'>
-		<li>IS_FRESH</li>
-		<li>IS_NEEDREVIEW</li>
-		<li>IS_HASERRORS</li>
-		<li>IS_CONFIGABLE</li>
-		<li>IS_COLORFUL</li>
-		<li>IS_SIZEABLE</li>
-		<li>IS_OPENBOX</li>
-		<li>IS_PREORDER</li>
-		<li>IS_DISCONTINUED</li>
-		<li>IS_SPECIALORDER</li>
-		<li>IS_BESTSELLER</li>
-		<li>IS_SALE</li>
-		<li>IS_SHIPFREE</li>
-		<li>IS_NEWARRIVAL</li>
-		<li>IS_CLEARANCE</li>
-		<li>IS_REFURB</li>
-		<li>IS_USER1</li>
-		<li>IS_USER2</li>
-		<li>IS_USER3</li>
-		<li>IS_USER4</li>
-		<li>IS_USER5</li>
-		<li>IS_USER6</li>
-		<li>IS_USER7</li>
-		<li>IS_USER8</li>
-		<li>IS_USER9</li>
-	</ul>
-	</li>
-	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Syndication</a>
-	<ul class='displayNone mktFilterList'>
-		<li data-mktid="GOO">Google</li>
-		<li data-mktid="EBS">eBay Store</li>
-	</ul>
-	</li>
-	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
-	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
-		<ul id='manCats' class='displayNone'>
-		</ul>
-	</li>
-</ul>
-
-
-<ul data-bind="var: ui(@CATEGORIES); format:manageCategories; extension:admin; before:<h2>Mangement Categories</h2>; loadsTemplate:productManagementCatTemplate;"></ul>
-
-
-	</div>
-	</td>
-	<td>
-	
-	<div class='productContentContainer' id='productTabMainContent'>
-	
-	</div>
-	
-	</td>
-</tr>
-</table>
-
-</div>
-
-
-
-
-<table>
-<tr id='productListTemplateTableResults'>
-	<td><button>Edit</button></td>	
-	<td>
-	<div class='prodThumbContainer' data-bind='var:product(_id); format:addPicSlider; extension:myRIA;'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
-	</div>
-	</td>
-	<td data-bind='var: product(prod_name); format:text;'></td>
-	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
-</tr>
-</table>
-
-
-
-
-
-<div id='ProductCreateNewTemplate'>
-
-<div id='prodCreateMessaging'></div>
-
-<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
-	
-<fieldset class='marginBottom'>
-	<legend>Required Fields</legend>
-
-	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
-			
-</fieldset>
-
-<fieldset>
-	<legend>Recommended Data</legend>
-	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="text" NAME="zoovy:base_cost" VALUE="" SIZE="15"></div>	
-	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
-	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
-	<div class='marginBottom'><label >Is product taxable?:</label> 
-		<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
-        <INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
-		</div>
-	
-</fieldset>		
-		
-<input type="submit" value=" Save " class='savebutton' border='0' />
-
-</form>
-
-</div>
 
 
 <!--
@@ -142,7 +5,7 @@ PRODUCT TAB
 ########################################################
 
 
-PRODUCT FINDER
+PRODUCT FINDER/CHOOSER
 
 ########################################################
 
@@ -172,6 +35,15 @@ PRODUCT FINDER
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
+
+
+
+	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="$('#chooserResultContainer').empty(); app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$(this).data('pid'),'templateID':'productTemplateChooser'});">
+	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
+	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
+	<div class='pid' data-bind='var:product(pid); format:text;'></div>
+	</li>
+
 </ul>
 
 
@@ -207,6 +79,7 @@ PRODUCT FINDER
 		<div class='finderProdlistContainer ui-widget-content'>
 		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList loadingBG'></ul>
 		<ul id='finderRemovedList' class='displayNone'></ul>
+		<div id='chooserResultContainer'></div>
 		</div>
 
 		</td>
@@ -241,6 +114,40 @@ PRODUCT FINDER
 	</table>
 </section>
 </div>
+
+
+
+
+<div id='productTemplateChooser' class='loadingBG'>
+<table>
+<tr>
+	<td>
+<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+</div>
+	</td>
+	<td>
+	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+	
+	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+	<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+	</td>
+</tr>
+</table>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+	
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<!--<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
+	
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />-->
+	</form>
+<button onClick="alert('now is the time on sprockets when we dance!');">click me</button>
+</div>
+
+
 
 
 
@@ -553,3 +460,146 @@ UTILITIES PAGE TEMPLATE
 </tbody>
 
 
+
+
+
+
+
+
+<!--
+
+########################################################
+
+
+PRODUCT TAB
+
+########################################################
+
+
+-->
+
+
+
+
+<div id='productTabTemplate'>
+
+<table>
+<tr>
+	<td class='leftColNav'>
+	<div id='prodLeftCol'>
+
+
+<ul>
+	<li><a href='#' onClick="app.ext.admin.a.showCreateProductDialog(); return false;">New Product</a></li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Filter Product</a>
+	<ul class='displayNone tagFilterList'>
+		<li>IS_FRESH</li>
+		<li>IS_NEEDREVIEW</li>
+		<li>IS_HASERRORS</li>
+		<li>IS_CONFIGABLE</li>
+		<li>IS_COLORFUL</li>
+		<li>IS_SIZEABLE</li>
+		<li>IS_OPENBOX</li>
+		<li>IS_PREORDER</li>
+		<li>IS_DISCONTINUED</li>
+		<li>IS_SPECIALORDER</li>
+		<li>IS_BESTSELLER</li>
+		<li>IS_SALE</li>
+		<li>IS_SHIPFREE</li>
+		<li>IS_NEWARRIVAL</li>
+		<li>IS_CLEARANCE</li>
+		<li>IS_REFURB</li>
+		<li>IS_USER1</li>
+		<li>IS_USER2</li>
+		<li>IS_USER3</li>
+		<li>IS_USER4</li>
+		<li>IS_USER5</li>
+		<li>IS_USER6</li>
+		<li>IS_USER7</li>
+		<li>IS_USER8</li>
+		<li>IS_USER9</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Syndication</a>
+	<ul class='displayNone mktFilterList'>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
+	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
+		<ul id='manCats' class='displayNone'>
+		</ul>
+	</li>
+</ul>
+
+
+<ul data-bind="var: ui(@CATEGORIES); format:manageCategories; extension:admin; before:<h2>Mangement Categories</h2>; loadsTemplate:productManagementCatTemplate;"></ul>
+
+
+	</div>
+	</td>
+	<td>
+	
+	<div class='productContentContainer' id='productTabMainContent'>
+	
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+
+
+<table>
+<tr id='productListTemplateTableResults'>
+	<td><button>Edit</button></td>	
+	<td>
+	<div class='prodThumbContainer' data-bind='var:product(_id); format:addPicSlider; extension:myRIA;'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+	</div>
+	</td>
+	<td data-bind='var: product(prod_name); format:text;'></td>
+	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
+</tr>
+</table>
+
+
+
+
+
+<div id='ProductCreateNewTemplate'>
+
+<div id='prodCreateMessaging'></div>
+
+<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
+	
+<fieldset class='marginBottom'>
+	<legend>Required Fields</legend>
+
+	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
+			
+</fieldset>
+
+<fieldset>
+	<legend>Recommended Data</legend>
+	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="text" NAME="zoovy:base_cost" VALUE="" SIZE="15"></div>	
+	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
+	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
+	<div class='marginBottom'><label >Is product taxable?:</label> 
+		<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
+        <INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
+		</div>
+	
+</fieldset>		
+		
+<input type="submit" value=" Save " class='savebutton' border='0' />
+
+</form>
+
+</div>

@@ -40,7 +40,7 @@ calls
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','adminChooserElasticResult'); 
 	var r = {
 		
 	vars : {
@@ -596,7 +596,7 @@ else	{
 					for(var i = 0; i < L; i += 1)	{
 						pid = app.data[tagObj.datapointer].hits.hits[i]['_id'];
 //						app.u.dump(" -> "+i+" pid: "+pid);
-						$parent.append(app.renderFunctions.transmogrify({'id':pid,'pid':pid},'adminElasticResult',app.data[tagObj.datapointer].hits.hits[i]['_source']));
+						$parent.append(app.renderFunctions.transmogrify({'id':pid,'pid':pid},tagObj.templateID,app.data[tagObj.datapointer].hits.hits[i]['_source']));
 						}
 					app.ext.admin.u.filterFinderResults();
 					}
@@ -943,7 +943,7 @@ else	{
 					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
 					}
 				return false;
-				},
+				}, //showUI
 
 /*
 A generic form handler. 
@@ -1087,11 +1087,22 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				
 				}, //uiProdlistEditorUpdate
 
+
+
+
+
+
 /*
+
+##############################    PRODUCT FINDER
+
 to generate an instance of the finder, run: 
 app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
 
 */
+
+
+
 			addFinderTo : function(targetID,findertype,path,attrib)	{
 				app.u.dump("BEGIN admin.u.addFinderTo");
 				app.u.dump(" -> findertype: "+findertype);
@@ -1104,6 +1115,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //Too many f'ing issues with using a local copy of the cat data.
 					app.ext.admin.calls.navcats.appCategoryDetailNoLocal.init(path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID})
 					}
+				else if(findertype == 'CHOOSER')	{
+					app.ext.admin.u.addFinder(targetID,'CHOOSER');
+					$('#prodFinder').parent().find('.ui-dialog-title').text('Product Chooser'); //updates modal title
+					}
 				else if(findertype == 'PAGE')	{
 					app.ext.admin.calls.appPageGet.init({'PATH':path,'@get':[attrib]},{"attrib":attrib,"path":path,"callback":"addPageFinderToDom","extension":"admin","targetID":targetID})			
 					}
@@ -1112,18 +1127,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
-				
-//opens a dialog with a list of domains for selection.
-//a domain being selected for their UI experience is important, so the request is immutable.
-//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
-//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
-			showDomainChooser : function(){
-//				app.u.dump("BEGIN admin.a.showDomainChooser");
-				$('#domainChooserDialog').dialog('open').showLoading();
-				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
-				app.model.dispatchThis('immutable');
-				},	 //showDomainChooser
-				
+
+
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 			showFinderInModal : function(findertype,path,attrib)	{
 				var $finderModal = $('#prodFinder');
@@ -1140,15 +1145,26 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$finderModal.attr('data-findertype',findertype);
 				$finderModal.attr('data-path',path);
 				$finderModal.attr('data-attrib',attrib);
-				// if (type =='PRODUCT') {
-					// var sku = path; 
-					// if(sku){$finderModal.attr('data-sku',sku)}
-					// else{$finderModal.removeAttr('data-sku')}
-					// }
 				
 				$finderModal.dialog({modal:true,width:'94%',height:650});
 				app.ext.admin.a.addFinderTo('prodFinder',findertype,path,attrib);
 				}, //showFinderInModal
+
+
+
+	
+//opens a dialog with a list of domains for selection.
+//a domain being selected for their UI experience is important, so the request is immutable.
+//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
+//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
+			showDomainChooser : function(){
+//				app.u.dump("BEGIN admin.a.showDomainChooser");
+				$('#domainChooserDialog').dialog('open').showLoading();
+				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+				app.model.dispatchThis('immutable');
+				},	 //showDomainChooser
+				
+
 
 			login : function($form){
 				$('#preloadAndLoginContents').showLoading();
@@ -1359,7 +1375,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //					alert(path);
 					app.model.fetchAdminResource(path,P);
 					}
-				},
+				}, //handleShowSection
+
 // !!! when the old showUI goes away, so can this function.
 			getId4UIContent : function(path){
 				return this.getTabFromPath(path)+"Content";
@@ -1382,7 +1399,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					r = 'home'
 					}
 				return r;
-				},
+				}, //getTabFromPath
 	
 //the following function gets executed as part of any fetchAdminResource request. 
 //it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
@@ -1412,30 +1429,30 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.u.dump(" -> viewObj: "); app.u.dump(viewObj);
 					}
 				$target.hideLoading();
-				},
+				}, //uiHandleContentUpdate
 
 
 
-		uiMsgObject : function(msg)	{
-			var obj; //what is returned.
-			if(msg.indexOf('|') == -1)	{
-				obj = {'errid':'#','errmsg':msg,'errtype':'unknown','uiIcon':'ui-icon-z-ise','uiClass':'z-hint'} //some legacy messaging is pipeless (edit order, tracking, for instance).
-				}
-			else	{
-				var tmp = msg.split('|');
-				var message = tmp[tmp.length-1]; //the message is always the last part of the message object.
-				if(message.substring(0,1) == '+')	{message = message.substring(1)}
-				obj = {'errid':'#','errmsg':message,'errtype':tmp[0],'uiIcon':'z-'+tmp[0].toLowerCase(),'uiClass':'z-'+tmp[0].toLowerCase()}
-				if(tmp.length > 2)	{
-//				app.u.dump(' -> tmp.length: '+tmp.length); app.u.dump(tmp);
-					for(i = 1; i < (tmp.length -1); i += 1)	{ //ignore first and last entry which are type and message and are already handled.
-						obj[tmp[i].split(':')[0]] = tmp[i].split(/:(.+)?/)[1]; //the key is what appears before the first : and the value is everything after that. allows for : to be in value
-						}
-//					app.u.dump(" -> obj: "); app.u.dump(obj);
+			uiMsgObject : function(msg)	{
+				var obj; //what is returned.
+				if(msg.indexOf('|') == -1)	{
+					obj = {'errid':'#','errmsg':msg,'errtype':'unknown','uiIcon':'ui-icon-z-ise','uiClass':'z-hint'} //some legacy messaging is pipeless (edit order, tracking, for instance).
 					}
-				}
-			return obj;
-			},
+				else	{
+					var tmp = msg.split('|');
+					var message = tmp[tmp.length-1]; //the message is always the last part of the message object.
+					if(message.substring(0,1) == '+')	{message = message.substring(1)}
+					obj = {'errid':'#','errmsg':message,'errtype':tmp[0],'uiIcon':'z-'+tmp[0].toLowerCase(),'uiClass':'z-'+tmp[0].toLowerCase()}
+					if(tmp.length > 2)	{
+	//				app.u.dump(' -> tmp.length: '+tmp.length); app.u.dump(tmp);
+						for(i = 1; i < (tmp.length -1); i += 1)	{ //ignore first and last entry which are type and message and are already handled.
+							obj[tmp[i].split(':')[0]] = tmp[i].split(/:(.+)?/)[1]; //the key is what appears before the first : and the value is everything after that. allows for : to be in value
+							}
+	//					app.u.dump(" -> obj: "); app.u.dump(obj);
+						}
+					}
+				return obj;
+				}, //uiMsgObject
 
 
 //the following function gets executed as part of any fetchAdminResource request. 
@@ -1501,7 +1518,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 //					app.u.dump("WARNING! admin.u.handleBreadcrumb bc is blank. this may be normal.");
 					}
-				},
+				}, //uiHandleBreadcrumb
+
+
 //the 'tabs' referred to here are not the primary nav tabs, but the subset that appears based on what page of the UI the user is in.
 			uiHandleNavTabs : function(tabs)	{
 				var $target = $('#navTabs')// tabs container
@@ -1530,7 +1549,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 //					app.u.dump("WARNING! admin.u.uiHandleNavTabs tabs is blank. this may be normal.");
 					}
-				},
+				}, //uiHandleNavTabs
+
+
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleFormRewrites : function(path,data,viewObj)	{
@@ -1550,7 +1571,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.model.fetchAdminResource(path,viewObj,formObj); //handles the save.
 					return false;
 					}); //submit
-				},
+				}, //uiHandleFormRewrites
+
 // 'data' is the response from the server. includes data.html
 // viewObj is what is passed into fetchAdminResource as the second parameter
 			uiHandleLinkRewrites : function(path,data,viewObj)	{
@@ -1559,7 +1581,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				$('a',$target).each(function(){
 					app.ext.admin.u.rewriteLink($(this));
 					});
-				},
+				}, //uiHandleLinkRewrites
+
+
 //a separate function from above because it's also used on the mastHead in init.
 
 			rewriteLink : function($a){
@@ -1584,8 +1608,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 						return showUI(href);
 						});
 					}
-				},
-			
+				}, //rewriteLink
+
 			linkOffSite : function(url){
 				window.open(url);
 				},
@@ -1764,11 +1788,19 @@ else	{
 //app.u.dump(" -> path: "+path);
 //app.u.dump(" -> prodlist: "+prodlist);
 
+//bind the action on the search form.
+$('#finderSearchForm').off('submit.search').on('submit.search',function(event){
+	event.preventDefault();
+	app.ext.admin.u.handleFinderSearch(findertype);
+	return false;
+	});
+
+
 if(findertype && findertype == 'CHOOSER')	{
 	
 	}
 else if (findertype)	{
-
+//build the product list for items that are already selected.
 	app.ext.store_prodlist.u.buildProductList({
 		"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
 		"items_per_page" : 500, //max out at 500 items
@@ -1816,11 +1848,6 @@ else if (findertype)	{
 		app.ext.admin.u.bindFinderButtons($(this),safePath);
 		});
 	
-	//bind the action on the search form.
-	$('#finderSearchForm').submit(function(event){
-		app.ext.admin.u.handleFinderSearch();
-		event.preventDefault();
-		return false})
 		app.ext.admin.u.updateFinderCurrentItemCount();
 
 	
@@ -1863,7 +1890,7 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				},
 
 //need to be careful about not passing in an empty filter object because elastic doesn't like it. same for query.
-			handleFinderSearch : function()	{
+			handleFinderSearch : function(findertype)	{
 				$('#finderSearchResults').empty().addClass('loadingBG');
 				var qObj = {}; //query object
 				var columnValue = $('#finderSearchQuery').val();
@@ -1873,7 +1900,7 @@ else	{} //findertype is not declared. The error handling for this has already ta
 				qObj.query =  {"query_string" : {"query" : columnValue}};
 			
 				//dispatch is handled by form submit binder
-				app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch"});
+				app.ext.store_search.calls.appPublicSearch.init(qObj,{"callback":"handleElasticFinderResults","extension":"admin","parentID":"finderSearchResults","datapointer":"elasticsearch","templateID": findertype == 'CHOOSER' ? 'adminChooserElasticResult' : 'adminElasticResult'});
 				app.model.dispatchThis();
 				},
 
