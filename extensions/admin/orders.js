@@ -1211,19 +1211,24 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 				}, //admin_orders|orderUpdateAddTracking **TODO
 
 			"admin_orders|orderUpdateShowEditor" : function($btn){
-				if(app.u.getParameterByName('debug'))	{
+//				if(app.u.getParameterByName('debug'))	{
 					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(event){
 						event.preventDefault();
-						app.u.dump("show order editor");
+//						app.u.dump("show order editor");
 						var orderID = $(this).attr('data-orderid');
-						var CID = $(this).closest('tr').attr('data-cid');
-						app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
-						app.model.dispatchThis();
+						var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
+						if(orderID)	{
+							app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
+							app.model.dispatchThis();
+							}
+						else	{
+							app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderUpdateShowEditor, unable to determine order id.");
+							}
 						})
-					}
-				else	{
-					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(){navigateTo('/biz/orders/view.cgi?OID='+$(this).data('orderid'));});
-					}
+//					}
+//				else	{
+//					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(){navigateTo('/biz/orders/view.cgi?OID='+$(this).data('orderid'));});
+//					}
 				} //admin_orders|orderUpdateShowEditor
 
 			} //buttonActions

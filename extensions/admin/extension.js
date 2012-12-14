@@ -796,7 +796,6 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 	
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
-			app.u.dump(" -> cleanValue for array2listItems");
 			app.u.dump(data.value);
 			var $o = $("<ul />"); //what is appended to tag. 
 			for(var i = 0; i < L; i += 1)	{
@@ -1750,6 +1749,9 @@ else if(findertype == 'NAVCAT')	{
 //	app.renderFunctions.translateTemplate(app.data['appCategoryDetail|'+path],"productFinder_"+safePath);
 	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
+else if (findertype == 'CHOOSER')	{
+	prodlist = []; //no items show up by default.
+	}
 else if(findertype == 'PAGE')	{
 	app.u.dump(" -> is PAGE findertype");
 	if(app.data['appPageGet|'+path]['%page'][attrib])	{
@@ -1757,64 +1759,74 @@ else if(findertype == 'PAGE')	{
 		}	
 	}
 else	{
-	app.u.throwGMessage("WARNING! findertype not set.");
+	app.u.throwGMessage("WARNING! findertype not set or is an unsupported value ["+findertype+"].");
 	}
 //app.u.dump(" -> path: "+path);
 //app.u.dump(" -> prodlist: "+prodlist);
 
-app.ext.store_prodlist.u.buildProductList({
-	"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
-	"items_per_page" : 500, //max out at 500 items
-	"hide_summary" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
-	"parentID":"finderTargetList",
-//	"items_per_page":100,
-	"csv":prodlist
-	},$('#finderTargetList'))
-
-
-// connect the results and targetlist together by class for 'sortable'.
-//sortable/selectable example found here:  http://jsbin.com/aweyo5
-$( "#finderTargetList , #finderSearchResults" ).sortable({
-	connectWith:".connectedSortable",
-	items: "li:not(.ui-state-disabled)",
-	handle: ".handle",
-/*
-the 'stop' below is run when an item is dropped.
-jquery automatically handles moving the item from one list to another, so all that needs to be done is changing some attributes.
-the attributes are only changed if the item is dropped into the target list (as opposed to picked up and dropped elsewhere [cancelled])
-this does NOT get executed when items are moved over via selectable and move buttons.
-*/
-	stop: function(event, ui) {
-		var parent = ui.item.parent().attr('id')
-//		app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
-		if(parent == 'finderTargetList')	{
-			ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
-			}
-		app.ext.admin.u.updateFinderCurrentItemCount();
-		} 
-	});
-
-//make results panel list items selectable. 
-//only 'li' is selectable otherwise clicking a child node will move just the child over.
-// .ui-state-disabled is added to items in the results list that are already in the category list.
-$("#finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
-//make category product list only draggable within itself. (can't drag items out).
-$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {app.u.dump($(this).attr('id'))});
+if(findertype && findertype == 'CHOOSER')	{
 	
+	}
+else if (findertype)	{
 
-//set a data-finderAction on an element with a value of save, moveToTop or moveToBottom.
-//save will save the changes. moveToTop will move selected product from the results over to the top of column the category list.
-//moveToBottom will do the same as moveToTop except put the product at the bottom of the category.
-$('#productFinder_'+safePath+' [data-finderAction]').each(function(){
-	app.ext.admin.u.bindFinderButtons($(this),safePath);
-	});
+	app.ext.store_prodlist.u.buildProductList({
+		"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",
+		"items_per_page" : 500, //max out at 500 items
+		"hide_summary" : true, //disable multipage. won't play well w/ sorting, drag, indexing, etc
+		"parentID":"finderTargetList",
+	//	"items_per_page":100,
+		"csv":prodlist
+		},$('#finderTargetList'))
+	
+	
+	// connect the results and targetlist together by class for 'sortable'.
+	//sortable/selectable example found here:  http://jsbin.com/aweyo5
+	$( "#finderTargetList , #finderSearchResults" ).sortable({
+		connectWith:".connectedSortable",
+		items: "li:not(.ui-state-disabled)",
+		handle: ".handle",
+	/*
+	the 'stop' below is run when an item is dropped.
+	jquery automatically handles moving the item from one list to another, so all that needs to be done is changing some attributes.
+	the attributes are only changed if the item is dropped into the target list (as opposed to picked up and dropped elsewhere [cancelled])
+	this does NOT get executed when items are moved over via selectable and move buttons.
+	*/
+		stop: function(event, ui) {
+			var parent = ui.item.parent().attr('id')
+	//		app.u.dump(" -> parent id of dropped item: "+ui.item.parent().attr('id'));
+			if(parent == 'finderTargetList')	{
+				ui.item.attr({'data-status':'changed','id':'finderTargetList_'+ui.item.attr('data-pid')});
+				}
+			app.ext.admin.u.updateFinderCurrentItemCount();
+			} 
+		});
+	
+	//make results panel list items selectable. 
+	//only 'li' is selectable otherwise clicking a child node will move just the child over.
+	// .ui-state-disabled is added to items in the results list that are already in the category list.
+	$("#finderSearchResults").selectable({ filter: 'li',filter: "li:not(.ui-state-disabled)" }); 
+	//make category product list only draggable within itself. (can't drag items out).
+	$("#finderTargetList").sortable( "option", "containment", 'parent' ); //.bind( "sortupdate", function(event, ui) {app.u.dump($(this).attr('id'))});
+		
+	
+	//set a data-finderAction on an element with a value of save, moveToTop or moveToBottom.
+	//save will save the changes. moveToTop will move selected product from the results over to the top of column the category list.
+	//moveToBottom will do the same as moveToTop except put the product at the bottom of the category.
+	$('#productFinder_'+safePath+' [data-finderAction]').each(function(){
+		app.ext.admin.u.bindFinderButtons($(this),safePath);
+		});
+	
+	//bind the action on the search form.
+	$('#finderSearchForm').submit(function(event){
+		app.ext.admin.u.handleFinderSearch();
+		event.preventDefault();
+		return false})
+		app.ext.admin.u.updateFinderCurrentItemCount();
 
-//bind the action on the search form.
-$('#finderSearchForm').submit(function(event){
-	app.ext.admin.u.handleFinderSearch();
-	event.preventDefault();
-	return false})
-	app.ext.admin.u.updateFinderCurrentItemCount();
+	
+	}
+else	{} //findertype is not declared. The error handling for this has already taken place.
+
 
 
 				
