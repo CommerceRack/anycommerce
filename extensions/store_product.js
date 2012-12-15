@@ -634,11 +634,13 @@ NOTES
 				if(targetID && P && P.pid && P.templateID)	{
 					var $target = $(app.u.jqSelector('#',targetID));
 					if($target.length)	{
+						app.u.dump("");
 //make sure the ID is unique in case this function is used to add product to dom twice (in different locations)
 						P.id = 'prodView_'+P.pid+'_'+app.u.guidGenerator().substring(0,10);
-						$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,P));
+						$target.append(app.renderFunctions.createTemplateInstance(P.templateID,P));
 						P.callback = P.callback || 'translateTemplate'; //translateTemplate is part of controller, not an extension
 						P.extension = P.extension || ''; //translateTemplate is part of controller, not an extension
+						P.parentID = targetID;
 						app.ext.store_product.calls.appProductGet.init(P.pid,P);
 						app.ext.store_product.calls.appReviewsList.init(P.pid);
 						app.model.dispatchThis();

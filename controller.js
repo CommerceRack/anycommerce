@@ -504,7 +504,7 @@ app.u.throwMessage(responseData); is the default error handler.
 // the app.data.datapointer is what'll get passed in to the translate function as the data src. (ex: getProduct|PID)
 		translateTemplate : 	{
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(tagObj);
+				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(tagObj);
 //				app.u.dump("typeof jQuery.hideLoading: "+typeof jQuery().hideLoading);
 				if(typeof jQuery().hideLoading == 'function'){$('#'+tagObj.parentID).hideLoading();}
 				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
