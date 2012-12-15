@@ -65,8 +65,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 		appPublicSearch : {
 			init : function(obj,tagObj,Q)	{
 				
-				app.u.dump("BEGIN app.ext.store_search.calls.appPublicSearch");
-				app.u.dump(obj);
+//				app.u.dump("BEGIN app.ext.store_search.calls.appPublicSearch");
+//				app.u.dump(obj);
 				
 				this.dispatch(obj,tagObj,Q)
 				return 1;

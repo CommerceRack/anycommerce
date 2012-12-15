@@ -1104,10 +1104,14 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 
 			addFinderTo : function(targetID,findertype,path,attrib)	{
-				app.u.dump("BEGIN admin.u.addFinderTo");
-				app.u.dump(" -> findertype: "+findertype);
-				app.u.dump(" -> path: "+path);
-				app.u.dump(" -> attrib: "+attrib);
+//				app.u.dump("BEGIN admin.u.addFinderTo");
+//				app.u.dump(" -> findertype: "+findertype);
+//				app.u.dump(" -> path: "+path);
+//				app.u.dump(" -> attrib: "+attrib);
+//hide the two containers used for showing content. based on use-case, one will be made visible again.
+
+
+
 				if(findertype == 'PRODUCT')	{
 					app.ext.store_product.calls.appProductGet.init(path,{"callback":"addPIDFinderToDom","extension":"admin","targetID":targetID,"path":path})
 					}
@@ -1120,6 +1124,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					$('#prodFinder').parent().find('.ui-dialog-title').text('Product Chooser'); //updates modal title
 					}
 				else if(findertype == 'PAGE')	{
+					$('#finderTargetList').show();
 					app.ext.admin.calls.appPageGet.init({'PATH':path,'@get':[attrib]},{"attrib":attrib,"path":path,"callback":"addPageFinderToDom","extension":"admin","targetID":targetID})			
 					}
 				else	{
@@ -1749,7 +1754,9 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,findertype,path,attrib){
 
-app.u.dump("BEGIN admin.u.addFinder");
+//app.u.dump("BEGIN admin.u.addFinder");
+//app.u.dump(" -> targetID: "+targetID);
+
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(path);
 var prodlist = new Array();
@@ -1757,8 +1764,12 @@ var prodlist = new Array();
 var $target = $(app.u.jqSelector('#',targetID)).empty(); //empty to make sure we don't get two instances of finder if clicked again.
 //create and translate the finder template. will populate any data-binds that are set that refrence the category namespace
 $target.append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinder_"+app.u.makeSafeHTMLId(path)));
-$('#finderTargetList').removeClass('loadingBG'); //bug in finder!!! if no items, stays in loading. hot fix.
-app.u.dump(" -> got to if/else section. ");
+
+$('#chooserResultContainer').hide();
+$('#adminFinderButtonBar').show();
+$('#finderTargetList').show();
+
+
 if(findertype == 'PRODUCT')	{
 	app.u.dump(" -> Product SKU: "+path);
 //for whatever reason, attrib passed in wasn't working. I plan on updating the finder so that attrib, type and passed are never passed back and forth on the api
@@ -1774,6 +1785,10 @@ else if(findertype == 'NAVCAT')	{
 	prodlist = app.data['appCategoryDetail|'+path]['@products'];
 	}
 else if (findertype == 'CHOOSER')	{
+	$('#chooserResultContainer').show();
+	$('#adminFinderButtonBar').hide();
+	$('#finderTargetList').hide();
+
 	prodlist = []; //no items show up by default.
 	}
 else if(findertype == 'PAGE')	{

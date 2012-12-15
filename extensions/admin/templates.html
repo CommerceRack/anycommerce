@@ -77,7 +77,7 @@ PRODUCT FINDER/CHOOSER
 		
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
-		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList loadingBG'></ul>
+		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList'></ul>
 		<ul id='finderRemovedList' class='displayNone'></ul>
 		<div id='chooserResultContainer'></div>
 		</div>
@@ -85,29 +85,30 @@ PRODUCT FINDER/CHOOSER
 		</td>
 	</tr>
 	<tr>
-		<td class='alignRight'>
-		
-		<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='selectAll'>
-		<span class='ui-button-text'>select all</span>
-		<span class='ui-icon ui-icon-arrow-1-n ui-button-icon-secondary'></span>
-		</button>
-
-		<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='moveToTop'>
-		<span class='ui-button-text'>move selected to top</span>
-		<span class='ui-icon ui-icon-arrow-1-ne ui-button-icon-secondary'></span>
-		</button>
-
-		<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='moveToBottom'>
-		<span class='ui-button-text'>move selected to bottom</span>
-		<span class='ui-icon ui-icon-arrow-1-se ui-button-icon-secondary'></span>
-		</button>
-		
-		</td>
-		<td class='alignRight'>
-		<div class='floatLeft finderMessaging' id='finderMessaging'></div>
-		<button data-bind='var:category(id);format:assignAttribute; attribute:data-path;' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-highlight ' data-finderAction='save'>
-		<span class='ui-button-text'>Save</span>
-		</button>
+		<td colspan='2'>
+		<div class='floatRight finderMessaging' id='finderMessaging'></div>
+		<div class='clearfix'></div>
+		<div id='adminFinderButtonBar'>
+			<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='selectAll'>
+			<span class='ui-button-text'>select all</span>
+			<span class='ui-icon ui-icon-arrow-1-n ui-button-icon-secondary'></span>
+			</button>
+	
+			<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='moveToTop'>
+			<span class='ui-button-text'>move selected to top</span>
+			<span class='ui-icon ui-icon-arrow-1-ne ui-button-icon-secondary'></span>
+			</button>
+	
+			<button class='ui-button ui-state-default ui-corner-all ui-button-text-icon-secondary' data-finderAction='moveToBottom'>
+			<span class='ui-button-text'>move selected to bottom</span>
+			<span class='ui-icon ui-icon-arrow-1-se ui-button-icon-secondary'></span>
+			</button>
+			
+			<button data-bind='var:category(id);format:assignAttribute; attribute:data-path;' class='ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only ui-state-highlight floatRight' data-finderAction='save'>
+			<span class='ui-button-text'>Save</span>
+			</button>		
+			
+		</div>
 		</td>
 	</tr>
 	</tbody>
@@ -118,26 +119,24 @@ PRODUCT FINDER/CHOOSER
 
 
 
-<div id='productTemplateChooser' class='loadingBG'>
+<div id='productTemplateChooser'>
 <table>
 <tr>
 	<td>
-<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 <img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
-</div>
 	</td>
 	<td>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 	
 	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+	<h5 data-bind='var: product(zoovy:prod_mfg); format:text; pretext: Mfg: ;'></h5>
 	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
 	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
 	</td>
 </tr>
 </table>
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<!--<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
@@ -558,9 +557,7 @@ PRODUCT TAB
 <tr id='productListTemplateTableResults'>
 	<td><button>Edit</button></td>	
 	<td>
-	<div class='prodThumbContainer' data-bind='var:product(_id); format:addPicSlider; extension:myRIA;'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
-	</div>
 	</td>
 	<td data-bind='var: product(prod_name); format:text;'></td>
 	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
