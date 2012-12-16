@@ -219,6 +219,7 @@ var admin_orders = function() {
 //				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector)
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
+				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
 				app.ext.admin_orders.u.handleButtonActions($target);
 				}
