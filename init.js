@@ -35,9 +35,9 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 					})
 				$(".tabs li a",$tabContainer).each(function (index) {
 					$(this).attr('id','href_'+safePID+"_" + index.toString());
-					$(this).attr("href", "#spec_"+safePID+"_" + index.toString());
+					$(this).attr("href", "app://#spec_"+safePID+"_" + index.toString());
 					});
-				$tabContainer.tabs();
+				$tabContainer.localtabs();
 				}
 			}
 		else	{} //couldn't find the tab to tabificate.
