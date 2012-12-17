@@ -30,16 +30,13 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		if($tabContainer.length)	{
 			if($tabContainer.data("tabs")){} //tabs have already been instantiated. no need to be redundant.
 			else	{
-				app.u.dump("GOT HERE AGAIn!");
-/*				
 				$("div.tabContent",$tabContainer).each(function (index) {
-					$(this).attr("id",safeID);
+					$(this).attr("id", "spec_"+safePID+"_" + index.toString());
 					})
 				$(".tabs li a",$tabContainer).each(function (index) {
 					$(this).attr('id','href_'+safePID+"_" + index.toString());
-					$(this).attr("href", "#spec_"+safePID+"_" + index.toString());					
+					$(this).attr("href", "#spec_"+safePID+"_" + index.toString());
 					});
-*/
 				$tabContainer.tabs();
 				}
 			}
