@@ -1529,32 +1529,46 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 
 //run when a payment method is selected. updates memory and adds a class to the radio/label.
 //will also display additional information based on the payment type (ex: purchase order will display PO# prompt and input)
-			updatePayDetails : function(paymentID)	{
-//				app.u.dump(" -> PAYID = "+paymentID);
-//				var paymentID = $("[name='want/payby']:checked").val(), o = '';
-				$('#chkoutPayOptionsFieldsetErrors').empty().hide(); //clear any existing errors from previously selected payment method.
-				$('#chkout-payOptions li .paycon').removeClass('ui-state-active ui-corner-top ui-corner-bottom');
-				$('#chkout-payOptions .paybySupplemental').hide(); //hide all other payment messages/fields.
-				$('#payby_'+paymentID+' .paycon').addClass('ui-state-active ui-corner-top');
-				$('#paybySupplemental_'+paymentID).show();
+			updatePayDetails : function($container)	{
+//				app.u.dump("BEGIN order_create.u.updatePayDetails.");
+				var paymentID = $("[name='want/payby']:checked",$container).val();
+//				app.u.dump(" -> paymentID: "+paymentID);
+//				app.u.dump(" -> $container.length: "+$container.length);
+
+				var o = '';
+				$('.ui-state-active',$container).removeClass('ui-state-active ui-corner-top ui-corner-all ui-corner-bottom');
+				$('.paybySupplemental', $container).hide(); //hide all other payment messages/fields.
+				var $radio = $("[name='want/payby']:checked",$container);
 				
-				var $selectedPayment = $('#paybySupplemental_'+paymentID);
+				
+//				app.u.dump(" -> $radio.length: "+$radio.length);
+				var $supplementalContainer = $("[data-ui-supplemental='"+paymentID+"']",$container);
 //only add the 'subcontents' once. if it has already been added, just display it (otherwise, toggling between payments will duplicate all the contents)
-				if($selectedPayment.length == 0)	{
-//					app.u.dump(" -> supplemental is empty. add if needed.");
-					var supplementalOutput = app.u.getSupplementalPaymentInputs(paymentID,app.ext.convertSessionToOrder.vars); //this will either return false if no supplemental fields are required, or a jquery UL of the fields.
+				if($supplementalContainer.length == 0)	{
+					app.u.dump(" -> supplemental is empty. add if needed.");
+					var supplementalOutput = app.u.getSupplementalPaymentInputs2(paymentID,app.ext.convertSessionToOrder.vars); //this will either return false if no supplemental fields are required, or a jquery UL of the fields.
 //					app.u.dump("typeof supplementalOutput: "+typeof supplementalOutput);
 					if(typeof supplementalOutput == 'object')	{
+						$radio.parent().addClass('ui-state-active ui-corner-top'); //supplemental content will have bottom corners
 //						app.u.dump(" -> getSupplementalPaymentInputs returned an object");
-						supplementalOutput.addClass(' noPadOrMargin listStyleNone ui-widget-content ui-corner-bottom');
+						supplementalOutput.addClass('ui-widget-content ui-corner-bottom');
 //save values of inputs into memory so that when panel is reloaded, values can be populated.
 						$('input[type=text], select',supplementalOutput).change(function(){
 							app.ext.convertSessionToOrder.vars[$(this).attr('name')] = $(this).val(); //use name (which coforms to cart var, not id, which is websafe and slightly different 
 							})
 
-						$('#payby_'+paymentID).append(supplementalOutput);
+						$radio.parent().after(supplementalOutput);
+						}
+					else	{
+						//no supplemental material.
+						$radio.parent().addClass('ui-state-active ui-corner-all');
 						}
 					}
+				else	{
+//supplemental material present and already generated once (switched back to it from another method)
+					$radio.parent().addClass('ui-state-active ui-corner-top'); //supplemental content will have bottom corners
+					$supplementalContainer.show();
+					} //supllemental content has already been added.
 
 				}, //updatePayDetails
 
@@ -1832,19 +1846,13 @@ the refreshCart call can come second because none of the following calls are upd
 
 
 			payMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.payOptionsAsRadioButtons');
-//				app.u.dump(data);
-				var L = data.value.length;
-				var o = "";
-				var id = '';
-				var isSelectedMethod = false;
-//				app.u.dump(" -> # payment options (L): "+L);
+				var L = data.value.length, o = "", id = ''; // o is the output, appended to $tag. id is a shortcut, recycled in the loop.
 				if(L > 0)	{
 					for(var i = 0; i < L; i += 1)	{
 						id = data.value[i].id;
 //onClick event is added through panelContent.paymentOptions
 //setting selected method to checked is also handled there.
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' /><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+						o += "<label><input type='radio' name='want/payby' value='"+id+"' /> "+data.value[i].pretty+"<\/label>";
 						}
 	
 					$tag.html(o);

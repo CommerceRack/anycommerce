@@ -18,11 +18,11 @@
 				<li data-filtervalue='APPROVED'>Approved</li>
 				<li data-filtervalue='PROCESS'>Process</li>
 				<li data-filtervalue='COMPLETED'>Completed</li>
-				<li data-filtervalue='CANCELLED'>Cancelled</li>
+				<li data-filtervalue='DELETED'>Cancelled</li>
 			</ul>
 			</section>
-			
-			
+
+
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
 			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin filterGroup' data-filter='PAYMENT_VERB'>
@@ -89,35 +89,42 @@
 			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateSelectAll'>Select All</button>
 			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 	
-		
-			<div class=' floatLeft marginLeft'>
-			<label>Action:</label>
-			<select name='CMD' ID='CMD'>
-				<option value=''></option>
-				<optgroup label='change pool to'>
-					<option value='POOL|RECENT'>Recent</option>
-					<option value='POOL|PENDING'>Pending</option>
-					<option value='POOL|REVIEW'>Review</option>
-					<option value='POOL|HOLD'>Hold</option>
-					<option value='POOL|APPROVED'>Approved</option>
-					<option value='POOL|PROCESS'>Process</option>
-					<option value='POOL|COMPLETED'>Completed</option>
-					<option value='POOL|DELETED'>Cancelled</option>
-				</optgroup>
-				<optgroup label= 'contact'>
-					<option value='MAIL|BULKEMAIL'>Send Email</option>
-				</optgroup>
-				<optgroup label = 'pay'>
-					<option value='PMNT|FLAGASPAID'>Flag as Paid</option>
-				</optgroup><!--
-				<optgroup label='print'>
-					<option value='PRNT|INVOICE'>Invoice</option>
-					<option value='PRNT|PACKSLIP'>Packing Slip</option>
-				</optgroup>	
-					-->
-			</select>
-			<button data-btn-action='admin_orders|orderListUpdateBulk'>Proceed</button>
+			
+			<div class='floatLeft marginLeft bulkEditMenu'>
+			<ul data-ui-role='admin_orders|orderUpdateBulkEditMenu'>
+				<li><a href='#'>Action</a>
+				<ul>
+					<li><a href='#'>Change pool to</a>
+					<ul>
+						<li><a href='#POOL|RECENT'>Recent</a></li>
+						<li><a href='#POOL|PENDING'>Pending</a></li>
+						<li><a href='#POOL|REVIEW'>Review</a></li>
+						<li><a href='#POOL|HOLD'>Hold</a></li>
+						<li><a href='#POOL|APPROVED'>Approved</a></li>
+						<li><a href='#POOL|PROCESS'>Process</a></li>
+						<li><a href='#POOL|COMPLETED'>Completed</a></li>
+						<li><a href='#POOL|DELETED'>Cancelled</a></li>
+					</ul></li>
+
+					<li><a href='#'>Print</a>
+					<ul>
+						<li><a href='#PRNT|INVOICE'>Invoices</a></li>
+						<li><a href='#PRNT|PACKSLIP'>Packing slips</a></li>
+					</ul>
+					</li>
+
+					<li><a href='#'>Send email</a>
+					<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
+					</ul>
+					</li>
+
+					<li><a href='#PMNT|FLAGASPAID'>Flag as paid</a></li>
+
+				</ul>
+				</li>
+			</ul>
 			</div>
+
 		</div>
 		<div id='orderListTableContainer' class='ui-widget-content ui-corner-br'>
 		<table id="orderListTable" class='gridTable'>
@@ -126,7 +133,7 @@
 		<tr>
 			<th></th>
 			<th data-name='ORDERID' title='order id'>order id</th>
-			<th data-name='ORDER_BILL_NAME' title='billing full name'>name</th>
+			<th data-name='ORDER_BILL_NAME' title='billing full name'>customer</th>
 			<th data-name='ORDER_TOTAL' title='order total'>total</th>
 			<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
 			<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
@@ -161,8 +168,8 @@
 	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
-	<td><span data-bind='var:order(ORDER_BILL_ZONE);format:billzone;extension:admin_orders;'></span></td>
-	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
+	<td class='reviewStatus'><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
 </tr>
@@ -253,7 +260,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		
 		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 
-		<button data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;' onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).data('orderid')+'&amp;ts=',{'dialog':true}); return false;" class="button">Edit Contents</button>
+		<button data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;' disabled='disabled' onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).data('orderid')+'&amp;ts=',{'dialog':true}); return false;" class="button">Edit Contents</button>
 
 	</section>
 
@@ -288,18 +295,23 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</section>
 	
 	<h2>Payment Information</h2>
-	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer'>
+	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-ui-role='orderUpdateAddPaymentContainer'>
 	
 	<div class='rightCol'>
-<!--
-<form action='#'>
+
+<form>
 	<fieldset>
 		<legend>Add Payment</legend>
-		<ul class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
+		<label>Amount: <input type='number' onKeyPress='return app.u.numbersOnly(event);' name='amount' /></label>
+		<label>Note: <input type='text' name='note' /></label>
+		<div><button data-btn-action="admin_orders|orderUpdateAddPayment" disabled='disabled'>Add Payment</button></div>
+		<b>coming soon</b>
 	</fieldset>
 </form>
--->
+<!--
 <button onClick="navigateTo('/biz/orders/payment.cgi?ID='+$(this).closest('[data-orderid]').data('orderid')+'&ts=',{'dialog':true}); return false;">Add Payment</button>		
+-->
 	</div>
 
 	<div class='leftCol'>

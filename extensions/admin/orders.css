@@ -50,10 +50,18 @@ table.orderManagerTable	{
 
 
 .orderManagerTable .leftCol .ui-accordion .ui-accordion-header:first-child	{margin-top:0px;}
-
+.orderManagerTable .bulkEditMenu li li	{width:150px;}
 
 .ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
 .ui-selected .selectedIcon	{display:block !important;}
+
+
+/* order list / line item */
+
+.reviewStatus .green	{color:#006600;}
+.reviewStatus .red		{color:#660000;}
+.reviewStatus .orange	{color:#F60;}
+.reviewStatus .yellow	{color:#CC0;}
 
 
 
@@ -92,4 +100,5 @@ order detail
 
 .notes textarea	{min-height:100px; width:90%;}
 
-
+/* payment panel */
+.paybySupplemental .ui-icon-help	{display:none;} /* don't need cvv help in the UI */

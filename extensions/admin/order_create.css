@@ -67,13 +67,11 @@
 #chkoutBillAddressFieldset label:after, 
 #chkoutAccountInfoFieldset label:after, 
 #chkoutPreflightFieldset label:after, 
-#chkoutShipAddressFieldset label:after,
-.paybySupplemental label:after { content: ":"; }
+#chkoutShipAddressFieldset label:after { content: ":"; }
 
 #chkoutBillAddressFieldset label, 
 #chkoutAccountInfoFieldset label, 
-#chkoutShipAddressFieldset label, 
-.paybySupplemental label { width:140px; }
+#chkoutShipAddressFieldset label { width:140px; }
 
 #chkout-create_customerContainer label	{width:auto;}
 #chkout-create_customerContainer label:after	{content: ""}

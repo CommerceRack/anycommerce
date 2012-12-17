@@ -484,8 +484,53 @@ else	{
 
 //adds the order manager itself to the dom.
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
-				$target.empty().append(app.renderFunctions.createTemplateInstance('orderManagerTemplate',{'id':'OM_'+P.targetID}));
-
+				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_'+P.targetID},'orderManagerTemplate',app.ext.admin_orders.vars));
+				
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu();
+// 1 item in the menu can be selected at a time, but the 'proceed' button is what actually makes the changes. the ui-selected class is used to determine action
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu'] a",$target).each(
+					function(){$(this).on('click',function(event){
+						event.preventDefault();
+						if($(this).children('ul').length == 1)	{
+//if the li has a child list, do nothing on click, the children contain the actions.
+//							app.u.dump(" -> selected command has children.");
+							} 
+						else	{
+							var command = $(this).attr('href').substring(1), //will = POOL|PENDING or  PRNT|INVOICE
+							actionType = command.substring(0,4); //will = PRNT or POOL. 4 chars
+							app.u.dump(" -> actionType: "+actionType);
+							app.u.dump(" -> command: "+command);
+							if(actionType)	{
+								switch(actionType)	{
+									case 'POOL':
+									app.ext.admin_orders.u.bulkChangeOrderPool(command);
+									app.model.dispatchThis('immutable');
+									break;
+									
+									case 'PMNT':
+									app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
+									app.model.dispatchThis('immutable');
+									break;
+									
+									case 'MAIL':
+									app.ext.admin_orders.u.bulkSendOrderMail(command);
+									break;
+									
+									case 'PRNT':
+									app.ext.admin_orders.u.bulkOrdersPrint(command);
+									break;
+									
+									default:
+										app.u.throwMessage("Unknown actionType selected ["+actionType+"]. Please try again. If error persists, please contact technical support.");
+									}
+	
+								}
+							else{
+//do nothing. parent menu was clicked. this easily happens by accident, so no warning message displayed.
+								}
+							}
+						})
+					});
 
 				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
 				$(".searchAndFilterContainer",$target).accordion({
@@ -556,8 +601,28 @@ if(orderID)	{
 			$target.hideLoading();
 			app.renderFunctions.translateSelector(selector,orderData);
 			
-//			app.ext.admin_orders.calls.appPaymentMethods.init({'cartid':orderData.cart.cartid,'ordertotal':orderData.sum.order_total,'countrycode':orderData.ship.countrycode || orderData.bill.countrycode},{'callback':'translateSelector','extension':'admin_orders','selector':'#adminOrdersPaymentMethodsContainer'},'immutable');
-//			app.model.dispatchThis('immutable');
+			app.ext.admin_orders.calls.appPaymentMethods.init({
+				'cartid':orderData.cart.cartid,
+				'ordertotal':orderData.sum.order_total,
+				'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
+				},{
+				'callback':function(responseData){
+					var $target = $('#adminOrdersPaymentMethodsContainer');
+					if(app.model.responseHasErrors(responseData)){
+						app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
+						}
+					else {
+//						app.u.dump("responseData: "); app.u.dump(responseData);
+						app.renderFunctions.translateSelector('#adminOrdersPaymentMethodsContainer',app.data[responseData.datapointer]);
+						$('input:radio',$target).each(function(){
+							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
+								app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
+								});
+							});
+						}
+					}
+				},'immutable');
+			app.model.dispatchThis('immutable');
 			
 			app.ext.admin_orders.u.handleButtonActions($target);
 //trigger the editable regions
@@ -626,6 +691,12 @@ else	{
 				}
 			return true;
 			}, //orderPoolSelect
+//used for adding email message types to the actions dropdown.
+		emailMessagesListItems : function($tag,data)	{
+			for(key in data.value)	{
+				$tag.append("<li><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
+				}
+			},
 
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
@@ -642,10 +713,10 @@ else	{
 #Declined  DXX   (Red)
 #Unknown   ''    (white/Not Set)
 */
-			if(c == 'A')	{$tag.text('A').addClass('green')}
-			else if(c == 'R')	{$tag.text('R').addClass('yellow')}
-			else if(c == 'A')	{$tag.text('E').addClass('orange')}
-			else if(c == 'A')	{$tag.text('D').addClass('red')}
+			if(c == 'A')	{$tag.text('A').attr('title','Approved').addClass('green')}
+			else if(c == 'R')	{$tag.text('R').attr('title','Review').addClass('yellow')}
+			else if(c == 'E')	{$tag.text('E').attr('title','Escalated').addClass('orange')}
+			else if(c == 'D')	{$tag.text('D').attr('title','Declined').addClass('red')}
 			else if(c == '')	{} //supported, but no action/output.
 			else	{
 				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
@@ -699,21 +770,29 @@ else	{
 					}
 				},
 
-			bulkSendOrderMail : function()	{
+			bulkSendOrderMail : function(CMD)	{
 				var $orders = $('.ui-selected','#orderListTableBody');
-				var msgID = "OCREATE";
-				$orders.each(function(){
-					app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID)
-					});
-				app.model.dispatchThis('passive');
+				var msgID = CMD.substring(5);
+				if(!$orders.length)	{
+					alert('please select at least 1 order');
+					}
+//msgID is set and exists.
+				else if(msgID && app.ext.admin_orders.vars.emailMessages[msgID])	{
+					$orders.each(function(){
+						app.ext.admin_orders.u.sendOrderMail($(this).data('orderid'),msgID,$(this));
+						});
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					app.u.throwGMessage("In admin_orders.u.bulkSendOrderMail, unable to ascertain msg type. command = "+command+" and msgID = "+msgID);
+					}
 				},
 
 //currently, this requires that the order_create extension has been added.
 //This groups all the invoices into 1 div and adds pagebreaks via css.
 //for this reason, the individual print functions for invoice/packslip are not recycled
-			bulkOrdersPrint : function(templateID,orderArray)	{
+			bulkOrdersPrint : function(CMD)	{
 				var $orders = $('.ui-selected','#orderListTableBody'),
-				CMD = $('#CMD').val(), //type of printing to do (invoice or packslip)
 				templateID = undefined, //what template will be used.
 				sDomains = {}; //a list of the sdomains. each domain added once. done to optimize dispatches so each sdoamin/profile data only requested once.
 				
@@ -774,12 +853,12 @@ else	{
 
 
 //Run the dispatch on your own.  That way a bulkChangeOrderPool can be run at the same time as other requests.
-			bulkChangeOrderPool : function(){
+			bulkChangeOrderPool : function(CMD){
 				var $selectedRows = $('#orderListTable tr.ui-selected');
 				var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
 				
 				if($selectedRows.length)	{
-					var pool = $('#CMD').val().substr(5);
+					var pool = CMD.substr(5);
 					$selectedRows.each(function() {
 						app.ext.admin_orders.u.changeOrderPool($(this),pool,statusColID);
 						});
@@ -965,39 +1044,6 @@ $(selector + ' .editable').each(function(){
 					});
 				}, //admin_orders|applyOrderFilters
 				
-			"admin_orders|orderListUpdateBulk" : function($btn)	{
-				$btn.off('click.orderListUpdateBulk').on('click.orderListUpdateBulk',function(event){
-					event.preventDefault();
-					var command = $('#CMD').val().substring(0,4); //will = POOL or MAIL or PMNT or PRNT
-					if(!command)	{
-						app.u.throwMessage('Please select an action to perform');
-						}
-					else	{
-						switch(command)	{
-							case 'POOL':
-							app.ext.admin_orders.u.bulkChangeOrderPool();
-							app.model.dispatchThis('immutable');
-							break;
-							
-							case 'PMNT':
-							app.ext.admin_orders.u.bulkFlagOrdersAsPaid();
-							app.model.dispatchThis('immutable');
-							break;
-							
-							case 'MAIL':
-							app.ext.admin_orders.u.bulkSendOrderMail();
-							break;
-							
-							case 'PRNT':
-							app.ext.admin_orders.u.bulkOrdersPrint();
-							break;
-							
-							default:
-								app.u.throwMessage("Unknown action selected ["+command+"]. Please try again. If error persists, please contact technical support.");
-							}
-						}
-					});
-				}, //admin_orders|orderListUpdateBulk
 
 			"admin_orders|orderCreate" : function($btn)	{
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
@@ -1197,6 +1243,19 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 					});
 				}, //admin_orders|orderUpdateSave **TODO
 
+			"admin_orders|orderUpdateAddPayment" : function($btn){
+				$btn.off('click.orderUpdateAddPayment').on('click.orderUpdateAddPayment',function(event){
+					event.preventDefault();
+
+					var $parent = $btn.closest("[data-ui-role='orderUpdateAddPaymentContainer']");
+					$parent.showLoading();
+					var kvp = $btn.parents('form').serialize();
+					//The two lines below 'should' work. not tested yet.
+//					app.ext.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
+//					app.ext.admin_orders.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+				}, //admin_orders|orderUpdateAddTracking **TODO
 			"admin_orders|orderUpdateAddTracking" : function($btn){
 				$btn.off('click.orderUpdateAddTracking').on('click.orderUpdateAddTracking',function(event){
 					event.preventDefault();

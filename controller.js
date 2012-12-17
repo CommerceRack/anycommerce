@@ -1618,6 +1618,68 @@ later, it will handle other third party plugins as well.
 
 				return obj;
 				},
+
+
+//Removing all ID's. Using this in UI. will update checkout to use this too.
+			getSupplementalPaymentInputs2 : function(paymentID,data)	{
+//				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
+//				app.u.dump(" -> data:"); app.u.dump(data);
+				var $o = $(); //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
+				$o = $("<div />").addClass("paybySupplemental").attr('data-ui-supplemental',paymentID);
+				var safeid = ''; //used in echeck loop. recycled in loop.
+				var tmp = ''; //tmp var used to put together string of html to append to $o
+				switch(paymentID)	{
+	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
+	//expiration is less of a concern
+					case 'PAYPALEC' :
+					//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
+						break;
+					case 'CREDIT':
+						tmp += "<label>Credit Card # <input type='text' size='20' name='payment/CC' value='";
+						if(data['payment/CC']){tmp += data['payment/CC']}
+						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/label>";
+//two selects inside a label behaved badly, so  div is used for the container on this row.
+						tmp += "<div>Expiration <select name='payment/MM' required='required'><option><\/option>";
+						tmp += app.u.getCCExpMonths(data['payment/MM']);
+						tmp += "<\/select>";
+						tmp += "<select name='payment/YY' required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
+						
+						tmp += "<label>CVV/CID <input type='text' size='8' name='payment/CV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						if(data['payment/CV']){tmp += data['payment/CV']}
+						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help pointer' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/label>";
+						break;
+	
+					case 'PO':
+						tmp += "<label>PO #<input type='text' size='15' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+						if(data['payment/PO'])
+								tmp += data['payment/PO'];
+						tmp += "' /><\/label>";
+						break;
+	
+					case 'ECHECK':
+						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
+						for(var key in echeckFields) {
+							safeid = app.u.makeSafeHTMLId(key);
+//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
+//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
+							tmp += "<label>"+echeckFields[key]+"<input type='text' size='15' name='"+key+"' value='";
+//if the value for this field is set in the data object (cart or invoice), set it here.
+							if(data[key])
+								tmp += data[key];
+							tmp += "' /><\/label>";
+							}
+						break;
+					default:
+//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
+						$o = false; //return false if there is no supplemental fields
+					}
+				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
+				return $o;
+//				app.u.dump(" -> $o:");
+//				app.u.dump($o);
+			},
+
+
 // This function is in the controller so that it can be kept fairly global. It's used in checkout, store_crm (buyer admin) and will likely be used in admin (orders) at some point.
 // ### NOTE! SANITY ! WHATEVER - app.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the app.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
 

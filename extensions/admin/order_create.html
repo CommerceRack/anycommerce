@@ -311,7 +311,7 @@ do NOT change any div id's or messaging will not work properly.
 			<table data-bind="var: buyerWalletList(@wallets); format:object2Template; loadsTemplate: buyerWalletsListItem;"></table>
 		</div>
 		<div id='nonStoredPaymentsContainer'>
-			<ul id='chkout-payOptions' class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
+			<div id='chkout-payOptions' class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
 		</div>
 	</div>
 	

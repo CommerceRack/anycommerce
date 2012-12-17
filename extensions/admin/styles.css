@@ -285,7 +285,7 @@ styles for lists that are selectable
 a background on the target element may require an implicit override here.
 */
 .ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
-.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def !important ;}
 .targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
 
 /* if a list is selectable and sortable, add an element with a handle class */
