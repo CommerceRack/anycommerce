@@ -30,7 +30,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		if($tabContainer.length)	{
 			if($tabContainer.data("tabs")){} //tabs have already been instantiated. no need to be redundant.
 			else	{
-
+				app.u.dump("GOT HERE!");
 				$("div.tabContent",$tabContainer).each(function (index) {
 					$(this).attr("id", "spec_"+safePID+"_" + index.toString());
 					})
