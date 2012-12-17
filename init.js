@@ -36,14 +36,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 					})
 				$(".tabs li a",$tabContainer).each(function (index) {
 					$(this).attr('id','href_'+safePID+"_" + index.toString());
-//jquery ui tabs and dynamic href's don't play well together. jquery will try to load index.html into the tab, which causes the page to continually reload itself.
-					if(typeof window.onpopstate == 'object'){
-						$(this).attr("href", "/product/"+P.pid+"/#spec_"+safePID+"_" + index.toString());
-						}
-					else	{
-						$(this).attr("href", "#spec_"+safePID+"_" + index.toString());
-						}
-					
+					$(this).attr("href", "#spec_"+safePID+"_" + index.toString());					
 					});
 
 				$tabContainer.tabs();

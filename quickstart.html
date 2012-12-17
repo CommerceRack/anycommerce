@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20121217124800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20121217125800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.sporks.zoovy.com/",
@@ -458,12 +458,12 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
-		<li class='prodDescTab'><a>Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a>Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a>Features</a></li>
-		<li class='prodReviewsTab'><a>Reviews</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a >Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a>Accessories</a></li>
+		<li class='prodDescTab'><a href='#'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#'>Accessories</a></li>
 	</ul>
 	
 	<div class='tabContent'>
