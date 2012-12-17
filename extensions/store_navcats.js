@@ -41,7 +41,7 @@ var store_navcats = function() {
 					this.dispatch(root,tagObj,Q);
 					}
 				else 	{
-					app.u.handleCallback(root,tagObj)
+					app.u.handleCallback(tagObj)
 					}
 				return r;
 				},
