@@ -315,7 +315,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	<div class='leftCol'>
-	<table class='gridTable'>
+	<table class='gridTable marginBottom'>
 	<thead>
 	<tr>
 		<th>Date</th>
@@ -423,7 +423,7 @@ The following templates are used in the 'order detail' modal/view.
 <table>
 <tr id='orderPaymentHistoryTemplate'>
 	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
-	<td>Something</td>
+	<td><div data-bind="format:paymentActions; extension:admin_orders; useParentData:true;"></div></td>
 	<td><span data-bind='var: payment(amt); format:money;'></span></td>
 	<td><span data-bind='var: payment(due); format:money;'></span></td>
 	<td><span data-bind='var: payment(tender); format:text;'></span></td>

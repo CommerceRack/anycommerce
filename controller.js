@@ -1922,17 +1922,26 @@ $r.find('[data-bind]').each(function()	{
 	if(app.u.isSet($focusTag.attr('data-bind'))){
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
 //		app.u.dump(" -> bindData.var: "+bindData['var']);
-		if(bindData['var'])	{
-			value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
+
+//in some cases, it's necessary to pass the entire data object into the renderFormat. admin_orders paymentActions renderFormat is a good example. Most likely this will be used frequently in admin, in conjunction with processList renderFormat.
+		if(bindData.useParentData)	{
+			value = data; 
 			}
-		if(!app.u.isSet(value) && bindData.defaultVar)	{
-			value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
-//					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
+		else	{
+			if(bindData['var'])	{
+				value = app.renderFunctions.getAttributeValue(bindData['var'],data);  //set value to the actual value
+				}
+			if(!app.u.isSet(value) && bindData.defaultVar)	{
+				value = app.renderFunctions.getAttributeValue(bindData['defaultVar'],data);
+	//					app.u.dump(' -> used defaultVar because var had no value. new value = '+value);
+				}
+			if(!app.u.isSet(value) && bindData.defaultValue)	{
+				value = bindData['defaultValue']
+				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
+				}
 			}
-		if(!app.u.isSet(value) && bindData.defaultValue)	{
-			value = bindData['defaultValue']
-			app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
-			}
+		
+		
 		}
 	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.

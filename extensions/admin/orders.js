@@ -691,6 +691,12 @@ else	{
 				}
 			return true;
 			}, //orderPoolSelect
+		
+		paymentActions : function($tag,data)	{
+			app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
+			app.ext.admin_orders.u.determinePaymentActions(data.value);
+			},
+		
 //used for adding email message types to the actions dropdown.
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
@@ -749,6 +755,111 @@ else	{
 
 
 		u : {
+//pref is PaymentReference. It's an object, like what would be returned in @payments per line
+			determinePaymentActions : function(pref)	{
+				var actions = new Array(); //what is returned. an array of actions.
+				if (pref['voided']) {
+					// if a transaction has been voided, nothing else can be done.
+					}
+				else if (pref['tender'] == 'AMAZON') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'AMZCBA') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'BUY') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'EBAY') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'SEARS') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'HSN') {
+					actions.push('marketplace-refund')
+					actions.push('marketplace-void')
+					}
+				else if (pref['tender'] == 'GOOGLE') {
+					if (pref['ps'] == '199') {	actions.push('capture') }			
+					if (pref['ps'] == '011') {
+						actions.push('refund') 
+						actions.push('void')
+						}
+					}
+				else if (pref['tender'] == 'PAYPALEC') {
+					// PAYPALEC is a separate tender type (but short term it's basically a credit card)
+					// long term it will have some specialized actions that are unique exclusively to paypal
+					if (pref['ps'] == '189') {	actions.push('capture') }
+					if (pref['ps'] == '199') {	actions.push('capture') }
+					if (pref['ps'] == '259') { actions.push('retry') }
+					if (pref['ps'].substring(0,1) == '0' || pref['ps'].substring(0,1) == '4') { 
+						actions.push('refund') 
+						actions.push('void')
+						}
+					}
+				else if (pref['tender'] == 'CREDIT') {
+					if (pref['ps'] == '109') {	actions.push('capture') }	// a special status where we have full CC in ACCT
+					else if (pref['ps'] == '199') {	actions.push('capture') }
+					else if (pref['ps'] == '499') {	actions.push('capture') }
+		
+					if (pref['ps'].substring(0,1) == '4' && pref['ps'] != '499') { 
+						actions.push('allow-payment')
+						}
+		
+					if (pref['ps'].substring(0,1) == '0' || pref['ps'].substring(0,1) == '4') { 
+						actions.push('refund') 
+						actions.push('void')
+						}
+					}
+				else if (pref['tender'] == 'GIFTCARD') {
+					if (pref['ps'] == '070') {
+						actions.push('refund') 
+						}
+					}
+				else if (pref['tender'] == /^(CASH|CHECK|PO|MO)$/) {
+					if (app.ext.admin_orders.u.ispsa(pref['ps'],[3])) {
+						// top level payment is a credit, so we can only perform voids.
+						actions.push('void') 
+						}
+					else if (pref['voided']==0) {
+						actions.push('refund') 
+						actions.push('set-paid') 
+						}
+					}
+				else if (pref['tender'] == 'LAYAWAY') {
+					actions.push('layaway')
+					actions.push('void')
+					}
+				else if (pref['tender'] == 'PAYPALEC') {
+					if (pref['ps'] == '199') { actions.push('capture') };
+					}
+				else{}
+				
+				if(app.ext.admin_orders.u.ispsa(pref['ps'],[9,2]))	{
+					actions.push('void');
+					}
+				else{}
+		
+				return actions;
+				},
+//IS Payment Status A...  pass in the ps and an array of ints to check for a match.
+//use this function instead of a direct check ONLY when the match/mismatch is going to have an impact on the view.
+			ispsa : function(ps,intArr)	{
+				app.u.dump("BEGIN admin_orders.u.ispsa"); app.u.dump(" -> ps = "+ps);
+				var r = false, //what is returned. t or f
+				L = intArr.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(Number(ps.substring(0)) === intArr[i])	{r = true; break;} //once a match is made, end the loop and return a true.
+					else {}
+					}
+				return r;
+				},
 //when an indivdual row needs to be unselected, execute this.
 //don't recycle this in the unselect all action, don't want the mouseStop triggered for each row.
 // app.ext.admin_orders.u.unSelectRow()
