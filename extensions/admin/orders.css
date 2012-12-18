@@ -84,6 +84,11 @@ order detail
 .orderDetails fieldset	{border:0; margin:0;padding:0;}
 
 
+/* payment panel */
+
+.actionInputs label, .actionInputs div, .actionInputs button	{display:inline-block; margin-left:12px;}
+
+
 
 /* order and customer notes area */
 

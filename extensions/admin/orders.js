@@ -669,9 +669,47 @@ else	{
 				app.u.throwGMessage("Warning! no filter object passed into admin_orders.calls.showOrderList."); app.u.dump(filterObj);
 				}
 	
-			} //showOrderList
-		
-		
+			}, //showOrderList
+
+
+		handlePaymentAction : function($frm)	{
+			var formJSON = $frm.serializeJSON(),
+			orderID = $frm.closest("[data-orderid]").data('orderid'),
+			err = false;
+			if(orderID)	{
+
+//make sure that an ammount is specified for those actions that offer an amount input.
+				if(!formJSON.uuid)	{
+					err = 'No valid transaction uuid found.';
+					}
+				else if(!formJSON.action)	{
+					err = 'No valid action found.';
+					}
+				else if(formJSON.action == formJSON.action.match(/capture|marketplace-refund|refund|set-paid|credit/))	{
+					if(!formJSON.amount)	{err = 'Please specify an amount';}
+					else if(formJSON.amount <= 0)	{err = 'Invalid amount specified. Must be a positive integer.';}
+					else if(!Number(formJSON.amount))	{err = 'Amount must be a number.';}
+					else	{}
+					}
+				else if(formJSON.action == 'override')	{
+					if(formJSON.paymentstatus)	{}
+					else	{err = 'Please specify a new payment status';}
+					//!!! need to verify the input is a valid payment status.
+					}
+				else	{}
+
+				if(err)	{
+					alert(err);
+					}
+				else	{
+					alert('woot!');
+					}
+				}
+			else	{
+				app.u.throwGMessage("In admin_orders.a.handlePaymentAction, unabled to ascertain orderID.");
+				}
+			return false;
+			}
 		
 		},
 
@@ -709,7 +747,9 @@ else	{
 	//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
 						if($tr.next().data('ui-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
 						else	{} //content hasn't been generated already, so do nothing.
-						$tr.after("<tr data-ui-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight labelsAsBreaks'>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/td><\/tr>");
+
+						$tr.after("<tr data-ui-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
+						$tr.next().find('button').button(); //buttonify the button
 						}
 					else	{
 //to get here. most likely the empty option was selected. do nothing.
@@ -996,77 +1036,80 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 	
 	
 			getActionInputs : function(action,pref)	{
-				var output = false;
+				var output = ""; //set to a blank val so += doesn't prepend 'false'.
 				if(action && pref)	{
 //these are vars so that they can be maintained easily.
-					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='reason' \/><\/label>"
-					var amountInput = "<label>Amount: $<input size='7' type='number' name='amount' value='"+pref.amt+"' \/><\/label>"
+					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='reason' \/><\/label>";
+					var amountInput = "<label>Amount: $<input size='7' type='number' name='amount' value='"+pref.amt+"' \/><\/label>";
+					output += "<input type='hidden' name='uuid' value='"+pref.uuid+"' \/>";
+					output += "<input type='hidden' name='action' value='"+action+"' \/>";
 					switch(action)	{
 						case 'allow-payment':
-							output = "Allow payment: "+pref.uuid;
+							output += "<div>Allow payment: "+pref.uuid+"<\/div>";
 							output += "<div class='hint'>This will flag a review transaction as 'reviewed', if you choose not to accept this payment you will likely need to perform a refund of some sort.</div>";
 							output += reasonInput;
-							output += "<button disabled='disabled'>Allow Payment</button>";
+							output += "<button>Allow Payment</button>";
 							break;
 						case 'capture':
-							output = "Capture: "+pref.uuid;
+							output += "<div>Capture: "+pref.uuid+"<\/div>";
 							output += amountInput;
-							output += "<button disabled='disabled'>Capture</button>";
+							output += "<button>Capture</button>";
 							break;
 						case 'layaway':
-							output = "Layaway: "+pref.uuid;
+							output += "<div>Layaway: "+pref.uuid;+"<\/div>";
 							output += "Coming soon.";
 							break;
 						case 'marketplace-refund':
-							output = "Marketplace partial refund: "+pref.uuid;
+							output += "<div>Marketplace partial refund: "+pref.uuid+"<\/div>";
 							output += "<div class='warning'>You will need to adjust the payment manually on the marketplace then update the records here. Zoovy does not have a way to automatically issue refunds on the marketplace.<\/div>";
 							output += amountInput;
 							output += reasonInput;
-							output += "<button disabled='disabled'>Refund</button>";
+							output += "<button>Refund</button>";
 							output += "<div class='zhint'>Hint1: Refund is for partial credits, use void to refund an entire payment.<br \/>Hint2: Since this amount is a refund you do not need to use a negative (-) sign.<\/div>";
 							break;
 						case 'marketplace-void':
-							output = "Marketplace void: "+pref.uuid;
+							output += "<div>Marketplace void: "+pref.uuid+"<\/div>";
 							output += "<div class='warning'>You will need to cancel the order on the marketplace then update the records here. Zoovy does not have a way to automatically update/process cancellations on the marketplace.<\/div>";
 							output += reasonInput;
-							output += "<button disabled='disabled'>Void</button>";
+							output += "<button>Void</button>";
 							break;
 						case 'override':
-							output = "Override: "+pref.uuid;
-							output += "<div class='warning'>This is an advanced interface intended for experts only.  <b>Do not use without the guidance of technical support.</b><\/div>";
-							output += "New payment status: <input type='textbox' size='3' name='paymentstatus' value='"+pref.ps+"' \/>";
+							output += "Override: "+pref.uuid;
+							output += "<div class='warning'>This is an advanced interface intended for experts only.  <b>Do not use without the guidance of technical support.</b><br \/><a target='webdoc' href='http://webdoc.zoovy.com/doc/50456'>WEBDOC #50456: Payment Status Codes</a><\/div>";
+							output += "New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='paymentstatus' value='"+pref.ps+"' \/>";
 							output += reasonInput;
-							output += "<button disabled='disabled'>Retry</button>";
+							output += "<button>Override</button>";
 							break;
 						case 'retry':
-							output = "Retry: "+pref.uuid;
-							output += "<button disabled='disabled'>Retry</button>";
+							output += "<div>Retry: "+pref.uuid+"<\/div>";
+							output += "<button>Retry</button>";
 							break;
 						case 'refund':
-							output = "Refund: "+pref.uuid;
+							output += "<div>Refund: "+pref.uuid+"<\/div>";
 							output += amountInput;
 							output += reasonInput;
-							output += "<button disabled='disabled'>Refund</button>";
+							output += "<button>Refund</button>";
 							break;
 						case 'set-paid':
-							output = "Set paid: "+pref.uuid;
+							output += "<div>Set paid: "+pref.uuid+"<\/div>";
 							output += amountInput;
 							output += reasonInput;
-							output += "<button disabled='disabled'>Set Paid</button>";
+							output += "<button>Set Paid</button>";
 							break;
 						case 'void':
-							output = "Void: "+pref.uuid;
+							output += "<div>Void: "+pref.uuid+"<\/div>";
 							output += "<div class='hint'>REMINDER: this will void a payment, void must be done before your settlement time (contact your merchant bank). If you are planning to cancel an order you will probably need to change the workflow status as well.<\/div>";
 							output += reasonInput;
-							output += "<button disabled='disabled'>Void</button>";
+							output += "<button>Void</button>";
 							break;
 	
 						default:
-							output = 'unknown action';
+							output += 'unknown action';
 							break;
 						}
 					}
 				else	{
+					output = false;
 					app.u.throwGMessage("in admin_orders.u.getActionInputs, no action specified");
 					}
 				return output;
