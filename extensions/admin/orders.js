@@ -1671,10 +1671,50 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 			"admin_orders|orderUpdateAddPayment" : function($btn){
 				$btn.off('click.orderUpdateAddPayment').on('click.orderUpdateAddPayment',function(event){
 					event.preventDefault();
+					var formJSON = $btn.parents('form').serializeJSON();
+					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
+					delete formJSON['want/payby'];
+					
+//					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+//					app.u.dump(" -> typeof validate[tender]: "+typeof app.ext.store_checkout.validate[formJSON.tender]);
+					
+					if(formJSON.tender)	{
+						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),
+						CMD, //the command for the cart update macro. set later.
+						errors = (typeof app.ext.store_checkout.validate[formJSON.tender] === 'function') ? app.ext.store_checkout.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
-					var $parent = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']");
-					$parent.showLoading();
-					var kvp = $btn.parents('form').serialize();
+						
+						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
+						
+
+//the mandatory class gets added to the parent of the input, so that the input, label and more get styled.
+						if(!formJSON.amt)	{
+							alert('please set an amount');
+							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
+							}
+						else if(errors)	{
+							alert('some required fields are missing or invalid.');
+							for(index in errors)	{
+								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
+								}
+							}
+						else	{
+							if(formJSON.tender == 'CREDIT')	{CMD = "ADDPROCESSPAYMENT"}
+							else	{CMD = "ADDPAYMENT"}
+							var $parent = $btn.closest("[data-order-view-parent]"),
+							orderID = $parent.data('order-view-parent');
+
+							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,CMD+"?"+decodeURIComponent($.param(formJSON)),{});
+							$parent.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'));
+							app.model.dispatchThis('immutable');
+							}
+						
+						}
+					else	{
+						alert('please choose a payment type');
+						}					
+					
 					//The two lines below 'should' work. not tested yet.
 //					app.ext.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
 //					app.ext.admin_orders.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');

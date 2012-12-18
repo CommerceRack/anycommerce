@@ -112,7 +112,7 @@ the state textbox could not be 'clicked' into (tab worked) and commenting this l
 
 #zCheckoutFrm fieldset p	{clear:both;}
 
-.mandatory input[type=text], .mandatory input[type=tel], .mandatory select	{border:1px solid #990000}
+.mandatory input[type=text], .mandatory input[type=number], .mandatory input[type=tel], .mandatory select	{border:1px solid #990000}
 .mandatory label{color:#990000; font-weight:bold;}
 .mandatory span:after	{content: "*";}
 
