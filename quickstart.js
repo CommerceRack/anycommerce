@@ -616,9 +616,19 @@ need to be customized on a per-ria basis.
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
 			searchLink : function($tag,data){
 				var keywords = data.value.replace(/ /g,"+");
-				$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
-					showContent('search',{'KEYWORDS':keywords})
-					});
+				if(data.bindData.elasticAttr){
+					app.u.dump(data.bindData.elasticAttr.split(" "));
+					var attributes = data.bindData.elasticAttr.split(" ");
+					
+					
+					$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
+						showContent('search',{'KEYWORDS':keywords, 'ATTRIBUTES' : attributes})
+						});
+				} else {
+					$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
+						showContent('search',{'KEYWORDS':keywords})
+						});
+				}
 				}, //searchLink
 
 
@@ -1787,11 +1797,18 @@ return r;
 				
 
 //add item to recently viewed list IF it is not already in the list.
+
+//I believe this should build datapointer and use fetchData?  Otherwise more complex queries will not be accessible.
 				if($.inArray(P.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(P.KEYWORDS);
 					}
 				app.ext.myRIA.u.showRecentSearches();
-				app.ext.store_search.u.handleElasticSimpleQuery(P.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
+				if(P.ATTRIBUTES) {
+					app.u.dump("GOT HERE");
+					app.ext.store_search.u.handleElasticQueryFilterByAttributes(P.KEYWORDS,P.ATTRIBUTES,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
+				} else {
+					app.ext.store_search.u.handleElasticSimpleQuery(P.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
+				}
 //legacy search.
 //				app.ext.store_search.calls.searchResult.init(P,{'callback':'showResults','extension':'myRIA'});
 				// DO NOT empty altSearchesLis here. wreaks havoc.
