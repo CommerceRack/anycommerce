@@ -593,42 +593,46 @@ if(orderID)	{
 		$ordersModal.showLoading();
 		
 		//go fetch order data. callback handles data population.
-		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(tagObj){
-//!!! add error handling here.
-			var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
+		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
+			var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)); //this val is needed in string form for translateSelector.
 			var $target = $(selector);
-			var orderData = app.data[tagObj.datapointer]
+			var orderData = app.data[responseData.datapointer]
 			$target.hideLoading();
-			app.renderFunctions.translateSelector(selector,orderData);
-			
-			app.ext.admin_orders.calls.appPaymentMethods.init({
-				'cartid':orderData.cart.cartid,
-				'ordertotal':orderData.sum.order_total,
-				'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
-				},{
-				'callback':function(responseData){
-					var $target = $('#adminOrdersPaymentMethodsContainer');
-					if(app.model.responseHasErrors(responseData)){
-						app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
-						}
-					else {
-//						app.u.dump("responseData: "); app.u.dump(responseData);
-						app.renderFunctions.translateSelector('#adminOrdersPaymentMethodsContainer',app.data[responseData.datapointer]);
-						$('input:radio',$target).each(function(){
-							$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
-								app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
+			if(app.model.responseHasErrors(responseData)){
+				app.u.throwMessage(responseData);
+				}
+			else	{
+				app.renderFunctions.translateSelector(selector,orderData);
+				
+				app.ext.admin_orders.calls.appPaymentMethods.init({
+					'cartid':orderData.cart.cartid,
+					'ordertotal':orderData.sum.order_total,
+					'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
+					},{
+					'callback':function(responseData){
+						if(app.model.responseHasErrors(responseData)){
+							app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
+							}
+						else {
+	//						app.u.dump("responseData: "); app.u.dump(responseData);
+	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
+							app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-ui-role='orderUpdateAddPaymentContainer']",app.data[responseData.datapointer]);
+							$('input:radio',$target).each(function(){
+								$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
+									app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
+									});
 								});
-							});
+							}
 						}
-					}
-				},'immutable');
-			app.model.dispatchThis('immutable');
-			
-			app.ext.admin_orders.u.handleButtonActions($target);
-//trigger the editable regions
-			app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
-			app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
-			app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
+					},'immutable');
+				app.model.dispatchThis('immutable');
+				
+				app.ext.admin_orders.u.handleButtonActions($target);
+	//trigger the editable regions
+				app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
+				app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
+				app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
+				}
 			},'extension':'admin_orders','selector':'#'+safeID});
 		
 		if(CID)	{
@@ -757,8 +761,13 @@ else	{
 		u : {
 //pref is PaymentReference. It's an object, like what would be returned in @payments per line
 			determinePaymentActions : function(pref)	{
+				app.u.dump("BEGIN admin_orders.u.determinePaymentActions");
+//				app.u.dump(" -> pref:"); app.u.dump(pref);
 				var actions = new Array(); //what is returned. an array of actions.
+
+				app.u.dump(" -> pref.match: ["+pref.tender.match(/CASH|CHECK|PO|MO/)+"]");
 				if (pref['voided']) {
+					app.u.dump(" -> transaction VOIDED. no actions.");
 					// if a transaction has been voided, nothing else can be done.
 					}
 				else if (pref['tender'] == 'AMAZON') {
@@ -822,7 +831,8 @@ else	{
 						actions.push('refund') 
 						}
 					}
-				else if (pref['tender'] == /^(CASH|CHECK|PO|MO)$/) {
+				else if (pref['tender'] == pref.tender.match(/CASH|CHECK|PO|MO/)) {
+					app.u.dump(" -> into tender regex else if");
 					if (app.ext.admin_orders.u.ispsa(pref['ps'],[3])) {
 						// top level payment is a credit, so we can only perform voids.
 						actions.push('void') 
@@ -839,19 +849,23 @@ else	{
 				else if (pref['tender'] == 'PAYPALEC') {
 					if (pref['ps'] == '199') { actions.push('capture') };
 					}
-				else{}
+				else{
+					app.u.dump(" -> no tender conditions met.");
+					}
 				
 				if(app.ext.admin_orders.u.ispsa(pref['ps'],[9,2]))	{
 					actions.push('void');
 					}
 				else{}
-		
+				app.u.dump(" -> actions: ");
+				app.u.dump(actions);
 				return actions;
 				},
 //IS Payment Status A...  pass in the ps and an array of ints to check for a match.
 //use this function instead of a direct check ONLY when the match/mismatch is going to have an impact on the view.
 			ispsa : function(ps,intArr)	{
-				app.u.dump("BEGIN admin_orders.u.ispsa"); app.u.dump(" -> ps = "+ps);
+				app.u.dump("BEGIN admin_orders.u.ispsa");
+				app.u.dump(" -> ps = "+ps);
 				var r = false, //what is returned. t or f
 				L = intArr.length;
 				for(var i = 0; i < L; i += 1)	{
@@ -935,10 +949,15 @@ else	{
 								}
 							app.ext.admin_orders.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
 							})
-						app.calls.ping.init({'callback':function(){
+						app.calls.ping.init({'callback':function(responseData){
 							$('body').hideLoading();
+							if(app.model.responseHasErrors(responseData)){
+								app.u.throwMessage(responseData);
+								}
+							else	{
 //							$('#printContainer').show(); //here for troubleshooting.
-							app.u.printByElementID('printContainer');
+								app.u.printByElementID('printContainer');
+								}
 							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}
@@ -1342,8 +1361,13 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{'callback':function(){
 							$target.empty();
 							$target.hideLoading();
-							app.ext.admin_orders.a.orderDetailsInDialog(orderID,app.data['adminOrderDetail|'+orderID].customer.cid);
-							app.model.dispatchThis();
+							if(app.model.responseHasErrors(responseData)){
+								app.u.throwMessage(responseData);
+								}
+							else	{
+								app.ext.admin_orders.a.orderDetailsInDialog(orderID,app.data['adminOrderDetail|'+orderID].customer.cid);
+								app.model.dispatchThis();
+								}
 							}},'immutable');
 
 						app.model.dispatchThis('immutable');
@@ -1358,7 +1382,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 				$btn.off('click.orderUpdateAddPayment').on('click.orderUpdateAddPayment',function(event){
 					event.preventDefault();
 
-					var $parent = $btn.closest("[data-ui-role='orderUpdateAddPaymentContainer']");
+					var $parent = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']");
 					$parent.showLoading();
 					var kvp = $btn.parents('form').serialize();
 					//The two lines below 'should' work. not tested yet.
