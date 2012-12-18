@@ -200,13 +200,12 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 <div class='clearfix marginBottom'>
 
 
-	<div class='floatLeft marginRight'>
+	<hgroup class='floatLeft marginRight'>
 		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
 		<h5 data-bind="var:order(our/profile);format:text; pretext: profile: ;"></h5>
 		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
-
-	</div>
+	</hgroup>
 
 
 	<div class='floatRight marginLeft '>
@@ -537,10 +536,10 @@ used in legacy compat mode (and probably full app mode as well)
 
 
 <address class='shipAddress editableParent' id='orderAddressTemplate'>
-<h6>
+<div>
 	<span data-bind='var:order(firstname);format:text;' class='editable' title='first name'></span>
 	<span data-bind='var:order(lastname);format:text;' class='editable' title='last name'></span>
-</h6>
+</div>
 <div data-bind='var:order(company);format:text;' class='editable' title='company'></div>
 <div data-bind='var:order(address1);format:text;' class='editable' title='address'></div>
 <div data-bind='var:order(address2);format:text;' class='editable' title='address 2'></div>

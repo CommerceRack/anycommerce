@@ -170,6 +170,20 @@ var admin_orders = function() {
 				}
 			},
 
+		adminOrderPaymentAction	: {
+			init : function(cmdObj,tagObj)	{
+				this.dispatch(cmdObj,tagObj)
+				return 1;
+				},
+			dispatch : function(cmdObj,tagObj)	{
+				cmdObj['_cmd'] = 'adminOrderPaymentAction';
+				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
+				cmdObj['_tag'] = tagObj;
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				}
+			
+			},
+
 //obj requires: cartid, countrycode and ordertotal
 		appPaymentMethods : {
 			init : function(obj,tagObj,Q)	{
@@ -383,7 +397,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		
 		$("<command \/>").attr('label','Payment status').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?VERB=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?ACTION=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<hr \/>").appendTo($cmenu);
 		
 		var $emailMenu = $("<menu label='Send email message '>");
@@ -561,6 +575,81 @@ else	{
 				}
 			}, //initOrderManager
 
+		showOrderView : function(orderID,CID,targetID)	{
+			if(orderID && targetID)	{
+
+//if you are reusing a targetID, do your own empty before running this.
+var $target = $(app.u.jqSelector('#',targetID));
+$target.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest this attrib and get id.
+
+//create an instance of the invoice display so something is in front of the user quickly.
+$target.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID,'orderid':orderID}));
+$target.showLoading();
+
+//go fetch order data. callback handles data population.
+app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
+	
+	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)); //this val is needed in string form for translateSelector.
+	var $target = $(selector);
+	var orderData = app.data[responseData.datapointer]
+	$target.hideLoading();
+	if(app.model.responseHasErrors(responseData)){
+		app.u.throwMessage(responseData);
+		}
+	else	{
+		app.renderFunctions.translateSelector(selector,orderData);
+		
+		app.ext.admin_orders.calls.appPaymentMethods.init({
+			'cartid':orderData.cart.cartid,
+			'ordertotal':orderData.sum.order_total,
+			'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
+			},{
+			'callback':function(responseData){
+				if(app.model.responseHasErrors(responseData)){
+					app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
+					}
+				else {
+//						app.u.dump("responseData: "); app.u.dump(responseData);
+//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
+					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-ui-role='orderUpdateAddPaymentContainer']",app.data[responseData.datapointer]);
+					$('input:radio',$target).each(function(){
+						$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
+							app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
+							});
+						});
+					}
+				}
+			},'immutable');
+		app.model.dispatchThis('immutable');
+		
+		app.ext.admin_orders.u.handleButtonActions($target);
+//trigger the editable regions
+		app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
+		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
+		app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
+		}
+	},'extension':'admin_orders','selector':'#'+targetID});
+
+if(CID)	{
+	app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
+	}
+else	{
+	app.u.dump("WARNING! - no CID set.");
+	}
+//dispatch occurs outside this function.
+$('.orderSupplementalInformation',$target).accordion({
+	collapsible: true,
+	heightStyle: "content"
+	});
+app.ext.admin_orders.u.handleButtonActions($target);
+
+
+				}
+			else	{
+				app.u.throwGMessage("In admin_orders.a.showOrderDetails, either orderID ["+orderID+"] or targetID ["+targetID+"] were left blank");
+				}
+			},
+
 		orderDetailsInDialog : function(orderID,CID)	{
 //app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
 //app.u.dump(" -> orderID : "+orderID);
@@ -586,67 +675,8 @@ if(orderID)	{
 			}
 
 		//be sure to empty the div or if it has already been loaded, duplicate content will show up.
-		$ordersModal.empty().dialog('open');
-		//create an instance of the invoice display so something is in front of the user quickly.
-		$ordersModal.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':safeID,'orderid':orderID}));
-		
-		$ordersModal.showLoading();
-		
-		//go fetch order data. callback handles data population.
-		app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
-			var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)); //this val is needed in string form for translateSelector.
-			var $target = $(selector);
-			var orderData = app.data[responseData.datapointer]
-			$target.hideLoading();
-			if(app.model.responseHasErrors(responseData)){
-				app.u.throwMessage(responseData);
-				}
-			else	{
-				app.renderFunctions.translateSelector(selector,orderData);
-				
-				app.ext.admin_orders.calls.appPaymentMethods.init({
-					'cartid':orderData.cart.cartid,
-					'ordertotal':orderData.sum.order_total,
-					'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
-					},{
-					'callback':function(responseData){
-						if(app.model.responseHasErrors(responseData)){
-							app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
-							}
-						else {
-	//						app.u.dump("responseData: "); app.u.dump(responseData);
-	//translate just the right col so the rest of the panel isn't double-tranlsated (different data src).
-							app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-ui-role='orderUpdateAddPaymentContainer']",app.data[responseData.datapointer]);
-							$('input:radio',$target).each(function(){
-								$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
-									app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
-									});
-								});
-							}
-						}
-					},'immutable');
-				app.model.dispatchThis('immutable');
-				
-				app.ext.admin_orders.u.handleButtonActions($target);
-	//trigger the editable regions
-				app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
-				app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
-				app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
-				}
-			},'extension':'admin_orders','selector':'#'+safeID});
-		
-		if(CID)	{
-			app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
-			}
-		else	{
-			app.u.dump("WARNING! - no CID set.");
-			}
-		//dispatch occurs outside this function.
-		$('.orderSupplementalInformation',$ordersModal).accordion({
-			collapsible: true,
-			heightStyle: "content"
-			});
-		app.ext.admin_orders.u.handleButtonActions($ordersModal);
+		$ordersModal.dialog('open');
+		this.showOrderView(orderID,CID,safeID);
 		}
 	}
 else	{
@@ -674,7 +704,8 @@ else	{
 
 		handlePaymentAction : function($frm)	{
 			var formJSON = $frm.serializeJSON(),
-			orderID = $frm.closest("[data-orderid]").data('orderid'),
+			$parent = $frm.closest("[data-order-view-parent]"),
+			orderID = $parent.data('order-view-parent'),
 			err = false;
 			if(orderID)	{
 
@@ -682,17 +713,17 @@ else	{
 				if(!formJSON.uuid)	{
 					err = 'No valid transaction uuid found.';
 					}
-				else if(!formJSON.action)	{
-					err = 'No valid action found.';
+				else if(!formJSON.ACTION)	{
+					err = 'No valid action/verb found.';
 					}
-				else if(formJSON.action == formJSON.action.match(/capture|marketplace-refund|refund|set-paid|credit/))	{
-					if(!formJSON.amount)	{err = 'Please specify an amount';}
-					else if(formJSON.amount <= 0)	{err = 'Invalid amount specified. Must be a positive integer.';}
-					else if(!Number(formJSON.amount))	{err = 'Amount must be a number.';}
+				else if(formJSON.ACTION == formJSON.ACTION.match(/capture|marketplace-refund|refund|set-paid|credit/))	{
+					if(!formJSON.amt)	{err = 'Please specify an amount';}
+					else if(formJSON.amt <= 0)	{err = 'Invalid amount specified. Must be a positive integer.';}
+					else if(!Number(formJSON.amt))	{err = 'Amount must be a number.';}
 					else	{}
 					}
 				else if(formJSON.action == 'override')	{
-					if(formJSON.paymentstatus)	{}
+					if(formJSON.ps)	{}
 					else	{err = 'Please specify a new payment status';}
 					//!!! need to verify the input is a valid payment status.
 					}
@@ -702,7 +733,11 @@ else	{
 					alert(err);
 					}
 				else	{
-					alert('woot!');
+					formJSON.orderid = orderID; //needed in obj for dispatch
+					app.ext.admin_orders.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
+					$parent.empty();
+					app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'));
+					app.model.dispatchThis('immutable');
 					}
 				}
 			else	{
@@ -736,30 +771,35 @@ else	{
 		
 		paymentActions : function($tag,data)	{
 //			app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
-			var actions = app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
-			L = actions.length;
-			if(L > 0)	{
-				$select = $("<select \/>").attr('name','action').data(data.value);
-				$select.off('change.showActionInputs').on('change.showActionInputs',function(){
-					var $tr = $(this).closest('tr');
-					if($(this).val())	{
-	//					app.u.dump("$tr.next().attr('data-ui-role'): "+$tr.next().attr('data-ui-role'));
-	//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
-						if($tr.next().data('ui-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
-						else	{} //content hasn't been generated already, so do nothing.
+			if(data.value.puuid)	{
+				$tag.append("[chained]"); //chained items get no actions.
+				}
+			else	{
+				var actions = app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
+				L = actions.length;
+				if(L > 0)	{
+					$select = $("<select \/>").attr('name','action').data(data.value);
+					$select.off('change.showActionInputs').on('change.showActionInputs',function(){
+						var $tr = $(this).closest('tr');
+						if($(this).val())	{
+		//					app.u.dump("$tr.next().attr('data-ui-role'): "+$tr.next().attr('data-ui-role'));
+		//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
+							if($tr.next().data('ui-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
+							else	{} //content hasn't been generated already, so do nothing.
 
-						$tr.after("<tr data-ui-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
-						$tr.next().find('button').button(); //buttonify the button
+							$tr.after("<tr data-ui-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight actionInputs'><form action='#' onSubmit='app.ext.admin_orders.a.handlePaymentAction($(this)); return false;'><fieldset>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/fieldset><\/form><\/td><\/tr>");
+							$tr.next().find('button').button(); //buttonify the button
+							}
+						else	{
+	//to get here. most likely the empty option was selected. do nothing.
+							}
+						});
+					$select.append($("<option \/>")); //add an empty option to the top so that a selection triggers the change event.
+					for(var i = 0; i < L; i += 1)	{
+						$select.append($("<option \/>").val(actions[i]).text(actions[i]))
 						}
-					else	{
-//to get here. most likely the empty option was selected. do nothing.
-						}
-					});
-				$select.append($("<option \/>")); //add an empty option to the top so that a selection triggers the change event.
-				for(var i = 0; i < L; i += 1)	{
-					$select.append($("<option \/>").val(actions[i]).text(actions[i]))
+					$tag.append($select);
 					}
-				$tag.append($select);
 				}
 			},
 		
@@ -1016,6 +1056,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					actions.push('void');
 					}
 				else{}
+
 //				app.u.dump(" -> actions: ");
 //				app.u.dump(actions);
 				return actions;
@@ -1028,21 +1069,22 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				var r = false, //what is returned. t or f
 				L = intArr.length;
 				for(var i = 0; i < L; i += 1)	{
+//					app.u.dump(i+") -> "+intArr[i]);
 					if(Number(ps.substring(0)) === intArr[i])	{r = true; break;} //once a match is made, end the loop and return a true.
 					else {}
 					}
 				return r;
 				},
-	
-	
+
+
 			getActionInputs : function(action,pref)	{
 				var output = ""; //set to a blank val so += doesn't prepend 'false'.
 				if(action && pref)	{
 //these are vars so that they can be maintained easily.
-					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='reason' \/><\/label>";
-					var amountInput = "<label>Amount: $<input size='7' type='number' name='amount' value='"+pref.amt+"' \/><\/label>";
+					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='note' \/><\/label>";
+					var amountInput = "<label>Amount: $<input size='7' type='number' name='amt' value='"+pref.amt+"' \/><\/label>";
 					output += "<input type='hidden' name='uuid' value='"+pref.uuid+"' \/>";
-					output += "<input type='hidden' name='action' value='"+action+"' \/>";
+					output += "<input type='hidden' name='ACTION' value='"+action+"' \/>";
 					switch(action)	{
 						case 'allow-payment':
 							output += "<div>Allow payment: "+pref.uuid+"<\/div>";
@@ -1076,7 +1118,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 						case 'override':
 							output += "Override: "+pref.uuid;
 							output += "<div class='warning'>This is an advanced interface intended for experts only.  <b>Do not use without the guidance of technical support.</b><br \/><a target='webdoc' href='http://webdoc.zoovy.com/doc/50456'>WEBDOC #50456: Payment Status Codes</a><\/div>";
-							output += "New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='paymentstatus' value='"+pref.ps+"' \/>";
+							output += "New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
 							output += reasonInput;
 							output += "<button>Override</button>";
 							break;
@@ -1491,7 +1533,7 @@ $(selector + ' .editable').each(function(){
 					event.preventDefault();
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 					if(orderID)	{
-						navigateTo("/biz/crm/index.cgi?VERB=CREATE&orderid="+orderID);
+						navigateTo("/biz/crm/index.cgi?ACTION=CREATE&orderid="+orderID);
 						$btn.closest('.ui-dialog-content').dialog('close'); //close the modal.
 						}
 					else	{
@@ -1661,7 +1703,8 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						var orderID = $(this).attr('data-orderid');
 						var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
 						if(orderID)	{
-							app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
+							$(app.u.jqSelector('#',"orders2Content")).empty();
+							app.ext.admin_orders.a.showOrderView(orderID,CID,"orders2Content");
 							app.model.dispatchThis();
 							}
 						else	{
