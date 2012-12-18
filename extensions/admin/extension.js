@@ -1117,7 +1117,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					if(path && !vars.path)	{vars.path = path} else {}
 					if(attrib && !vars.attrib)	{vars.attrib = attrib} else {}
 					if(findertype && !vars.findertype)	{vars.findertype = findertype} else {}
-					$finderModal.data(vars);
+//					for(index in vars)	{if(typeof vars[index] !== 'function'){$finderModal.data(index,vars[index]);}} //add all non function params as data() so 
 
 //set the following vars as attributes. at the time the finder was built, didn't have a good understanding of .data().
 //eventually, everything will get moved over to .data();
@@ -1746,9 +1746,10 @@ var $target = $(app.u.jqSelector('#',targetID));
 //empty to make sure we don't get two instances of finder if clicked again.
 $target.empty().append(app.renderFunctions.createTemplateInstance('adminProductFinder',"productFinderContents"));
 
-$('#chooserResultContainer').hide();
-$('#adminFinderButtonBar').show();
-$('#finderTargetList').show();
+$('#chooserResultContainer', $target).hide();
+$('#adminFinderButtonBar', $target).show();
+$('#adminChooserButtonBar', $target).hide().empty(); //chooser button(s) are reset each time a chooser is instantiated.
+$('#finderTargetList', $target).show();
 
 
 if(vars.findertype == 'PRODUCT')	{
@@ -1764,9 +1765,10 @@ else if(vars.findertype == 'NAVCAT')	{
 	prodlist = app.data['appCategoryDetail|'+vars.path]['@products'];
 	}
 else if (vars.findertype == 'CHOOSER')	{
-	$('#chooserResultContainer').show();
-	$('#adminFinderButtonBar').hide();
-	$('#finderTargetList').hide();
+	$('#chooserResultContainer', $target).show();
+	$('#adminFinderButtonBar', $target).hide();
+	$('#adminChooserButtonBar', $target).show();
+	$('#finderTargetList', $target).hide();
 	prodlist = []; //no items show up by default.
 	}
 else if(vars.findertype == 'PAGE')	{
@@ -1790,9 +1792,12 @@ $('#finderSearchForm').off('submit.search').on('submit.search',function(event){
 
 
 if(vars.findertype && vars.findertype == 'CHOOSER')	{
-	
+	if(vars['$buttons'])	{
+		$('#adminChooserButtonBar', $target).append(vars['$buttons']);
+		}
 	}
 else if (vars.findertype)	{
+	$("[data-btn-action='productFinder|chooser']",$target).hide();
 //build the product list for items that are already selected.
 	app.ext.store_prodlist.u.buildProductList({
 		"loadsTemplate": prodlist.length < 200 ? "adminProdStdForList" : "adminProdSimpleForList",

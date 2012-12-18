@@ -135,6 +135,7 @@ var admin_orders = function() {
 				}
 			}, //adminOrderDetail
 
+
 //updating an order is a critical function and should ALWAYS be immutable.
 		adminOrderUpdate : {
 			init : function(orderID,updates,tagObj)	{
@@ -1475,8 +1476,30 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
 				}, //admin_orders|orderCreate
 
+
+			"admin_orders|orderItemAdd" : function($btn)	{
+				$btn.off('click.orderItemAdd').on('click.orderItemAdd',function(){
+					var $btn = $("<button>").text("Add to Order").button().on('click',function(){
+						var $form = $('form','#chooserResultContainer');
+						var json = $form.serializeJSON();
+						var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"itemAddStructured?"+$form.serialize()+"&qty=1");
+						app.model.dispatchThis('immutable');
+						});
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $btn})
+					});
+				},
+
 			"admin_orders|orderUpdateCancel" : function($btn)	{
-				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(){$btn.closest('.ui-dialog-content').dialog('close')}); //the dialog-contentis the div the modal is executed on.
+				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(){
+//in a dialog.
+					if($btn.closest('.ui-dialog-content').length)	{
+						$btn.closest('.ui-dialog-content').dialog('close');
+						}
+					else	{
+						navigateTo("#!orders");
+						}
+					}); //the dialog-contentis the div the modal is executed on.
 				}, //admin_orders|orderUpdateCancel **TODO
 				
 			"admin_orders|orderListUpdateDeselectAll" : function($btn)	{
