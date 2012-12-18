@@ -575,12 +575,17 @@ else	{
 				}
 			}, //initOrderManager
 
-		showOrderView : function(orderID,CID,targetID)	{
-			if(orderID && targetID)	{
 
+
+
+		showOrderView : function(orderID,CID,targetID,Q)	{
+			var r = 1; //what is returned. # of dispatches that occur.
+			Q = Q || 'mutable'
+			if(orderID && targetID)	{
+app.u.dump(" -> targetID: "+targetID);
 //if you are reusing a targetID, do your own empty before running this.
 var $target = $(app.u.jqSelector('#',targetID));
-$target.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest this attrib and get id.
+$target.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID,'orderid':orderID}));
@@ -628,10 +633,10 @@ app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(re
 		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
 		app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
 		}
-	},'extension':'admin_orders','selector':'#'+targetID});
+	},'extension':'admin_orders','selector':'#'+targetID},Q);
 
 if(CID)	{
-	app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},'mutable'); //
+	r += app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},Q); //
 	}
 else	{
 	app.u.dump("WARNING! - no CID set.");
@@ -648,6 +653,7 @@ app.ext.admin_orders.u.handleButtonActions($target);
 			else	{
 				app.u.throwGMessage("In admin_orders.a.showOrderDetails, either orderID ["+orderID+"] or targetID ["+targetID+"] were left blank");
 				}
+			return r; //1 dispatch occurs
 			},
 
 		orderDetailsInDialog : function(orderID,CID)	{
@@ -734,9 +740,9 @@ else	{
 					}
 				else	{
 					formJSON.orderid = orderID; //needed in obj for dispatch
-					app.ext.admin_orders.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
 					$parent.empty();
-					app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'));
+					app.ext.admin_orders.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
+					app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable'); 
 					app.model.dispatchThis('immutable');
 					}
 				}
@@ -1704,9 +1710,9 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							var $parent = $btn.closest("[data-order-view-parent]"),
 							orderID = $parent.data('order-view-parent');
 
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,CMD+"?"+decodeURIComponent($.param(formJSON)),{});
+							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,[CMD+"?"+decodeURIComponent($.param(formJSON))],{});
 							$parent.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'));
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						
