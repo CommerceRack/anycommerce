@@ -697,8 +697,30 @@ else	{
 			}, //orderPoolSelect
 		
 		paymentActions : function($tag,data)	{
-			app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
-			app.ext.admin_orders.u.determinePaymentActions(data.value);
+//			app.u.dump("BEGIN admin_orders.renderFormats.paymentActions");
+			var actions = app.ext.admin_orders.u.determinePaymentActions(data.value), //returns actions as an array.
+			L = actions.length;
+			if(L > 0)	{
+				$select = $("<select \/>").attr('name','action').data(data.value);
+				$select.off('change.showActionInputs').on('change.showActionInputs',function(){
+					var $tr = $(this).closest('tr');
+					if($(this).val())	{
+	//					app.u.dump("$tr.next().attr('data-ui-role'): "+$tr.next().attr('data-ui-role'));
+	//if the select list has already been changed, empty and remove the tr so there's no duplicate content.
+						if($tr.next().data('ui-role') == 'admin_orders|actionInputs')	{$tr.next().empty().remove();}
+						else	{} //content hasn't been generated already, so do nothing.
+						$tr.after("<tr data-ui-role='admin_orders|actionInputs'><td colspan='"+$tr.children().length+"' class='alignRight labelsAsBreaks'>"+app.ext.admin_orders.u.getActionInputs($(this).val(),$(this).data())+"<\/td><\/tr>");
+						}
+					else	{
+//to get here. most likely the empty option was selected. do nothing.
+						}
+					});
+				$select.append($("<option \/>")); //add an empty option to the top so that a selection triggers the change event.
+				for(var i = 0; i < L; i += 1)	{
+					$select.append($("<option \/>").val(actions[i]).text(actions[i]))
+					}
+				$tag.append($select);
+				}
 			},
 		
 //used for adding email message types to the actions dropdown.
@@ -723,10 +745,10 @@ else	{
 #Declined  DXX   (Red)
 #Unknown   ''    (white/Not Set)
 */
-			if(c == 'A')	{$tag.text('A').attr('title','Approved').addClass('green')}
-			else if(c == 'R')	{$tag.text('R').attr('title','Review').addClass('yellow')}
-			else if(c == 'E')	{$tag.text('E').attr('title','Escalated').addClass('orange')}
-			else if(c == 'D')	{$tag.text('D').attr('title','Declined').addClass('red')}
+			if(c == 'A')	{$tag.attr('title','Approved').addClass('green').text('A')}
+			else if(c == 'R')	{$tag.attr('title','Review').addClass('yellow').text('R')}
+			else if(c == 'E')	{$tag.attr('title','Escalated').addClass('orange').text('E')}
+			else if(c == 'D')	{$tag.attr('title','Declined').addClass('red').text('D')}
 			else if(c == '')	{} //supported, but no action/output.
 			else	{
 				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
@@ -735,8 +757,9 @@ else	{
 		
 		paystatus : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
-			var ps = data.value.substr(0,1); //first characer of pay status.
-			var pretty;
+			var ps = data.value.substr(0,1), //first characer of pay status.
+			pretty;
+
 			switch(ps)	{
 				case '0': pretty = 'Paid'; break;
 				case '1': pretty = 'Pending'; break;
@@ -748,9 +771,94 @@ else	{
 				case '9': pretty = 'Error'; break;
 				default: pretty = 'unknown'; break;
 				}
+
 			$tag.text(pretty).attr('title',data.value); //used in order list, so don't force any pre/posttext.
 			return true;
+			}, //paystatus
+
+		
+		paystatusDetailed : function($tag,data){
+			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
+
+			var pref = data.value, //shortcut. used the common name so dev's would know exactly what data type we're dealing with.
+			ps = pref.ps.substr(0,1), //first characer of pay status.
+			output,
+			className = ''; //css class applied to tag. a color based on payment status
+
+			switch(ps)	{
+				case '0': output = 'Paid'; break;
+				case '1': output = 'Pending'; break;
+				case '2': output = 'Denied'; break;
+				case '3': output = 'Cancelled'; break;
+				case '4': output = 'Review'; break;
+				case '5': output = 'Processing'; break;
+				case '6': output = 'Voided'; break;
+				case '9': output = 'Error'; break;
+				default: output = 'unknown'; break;
+				}
+// ??? status '5' is not handled in this logic, which came directly from payment.cgi line 461
+			if(app.ext.admin_orders.u.ispsa(ps,[2,6,9]))	{className = 'lineThrough'}
+			else if	(app.ext.admin_orders.u.ispsa(ps,[3]))	{className = 'red'}
+			else if(app.ext.admin_orders.u.ispsa(ps,[0,4]))	{className = 'blue'}
+			else if (app.ext.admin_orders.u.ispsa(ps,[1]))	{className = 'green'}
+			else	{} //
+			output = "<div class='"+className+"'>"+output+" ("+pref.ps+")<\/div>"; //add the class just to the pretty payment status.
+			if (pref.tender == 'PAYPALEC') {
+				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"</div>";
+				}
+			else if (pref.tender == 'PAYPAL') {
+				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"</div>";
+				}
+			else if (pref.tender == 'GOOGLE') {
+				output += "<div class='hint'>Google Order ID: "+pref.txn+"</div>";
+				}
+			else if (pref.tender == 'EBAY') {
+				output += "<div class='hint'>eBay Payment Transaction ID: "+pref.txn+"</div>";
+				}
+			else if (pref.tender == 'GIFTCARD') {
+				output += "<div class='hint'>Giftcard: "+pref.acct+"</div>";			
+				}
+			else if (pref.tender == 'BUY') {
+				output += "<div class='hint'>Buy.com Order #: "+pref.acct+"</div>";
+				}
+			
+			else if (pref.tender == 'PO') {
+				output += "<div class='hint'>PO: "+pref.acct+"</div>";
+				// !!! neeed to display PO #.
+				}
+
+			else if (pref.tender == 'ECHECK') {
+				if (pref.auth || pref.txn) {
+					output += "<div class='hint'>Gateway Response: ";
+					if (pref.auth) {
+						output += "<span>auth = "+pref.auth+"<\/span> ";
+						}
+					if (pref.txn) {
+						output += "<span>Settlement = "+pref.txn+"<\/span>";
+						}
+					output += "</div>";
+					}
+				// !!! neeed to display echeck details.
+				}
+
+			else if (pref.tender == 'CREDIT') {
+				if (pref.auth || pref.txn) {
+					output += "<div class='hint'>Gateway Response: ";
+					if (pref.auth) {
+						output += "<span>Auth = "+pref.auth+"</span>";
+						}
+					if (pref.txn) {
+						output += "<span>Settlement = "+pref.txn+"</span>";
+						}
+					output += "</div>";
+					}
+				// !!! need to display card details
+				}
+
+			$tag.html(output); //used in order list, so don't force any pre/posttext.
+			return true;
 			} //paystatus
+
 		}, //renderFormats
 
 
@@ -759,14 +867,25 @@ else	{
 
 
 		u : {
+
+
+/*
+
+Utilities specifically for dealing with payment status and actions.
+actions refers to what action can be taken for a payment, based on it's payment status.
+payment status is a three number code, the first number of which is the most telling.
+see the renderformat paystatus for a quick breakdown of what the first integer represents.
+*/
+
 //pref is PaymentReference. It's an object, like what would be returned in @payments per line
 			determinePaymentActions : function(pref)	{
-				app.u.dump("BEGIN admin_orders.u.determinePaymentActions");
+//				app.u.dump("BEGIN admin_orders.u.determinePaymentActions");
 //				app.u.dump(" -> pref:"); app.u.dump(pref);
 				var actions = new Array(); //what is returned. an array of actions.
 
-				app.u.dump(" -> pref.match: ["+pref.tender.match(/CASH|CHECK|PO|MO/)+"]");
-				if (pref['voided']) {
+//				app.u.dump(" -> pref.match: ["+pref.tender.match(/CASH|CHECK|PO|MO/)+"]");
+				
+				if (Number(pref['voided'])) {
 					app.u.dump(" -> transaction VOIDED. no actions.");
 					// if a transaction has been voided, nothing else can be done.
 					}
@@ -857,15 +976,15 @@ else	{
 					actions.push('void');
 					}
 				else{}
-				app.u.dump(" -> actions: ");
-				app.u.dump(actions);
+//				app.u.dump(" -> actions: ");
+//				app.u.dump(actions);
 				return actions;
 				},
 //IS Payment Status A...  pass in the ps and an array of ints to check for a match.
 //use this function instead of a direct check ONLY when the match/mismatch is going to have an impact on the view.
 			ispsa : function(ps,intArr)	{
-				app.u.dump("BEGIN admin_orders.u.ispsa");
-				app.u.dump(" -> ps = "+ps);
+//				app.u.dump("BEGIN admin_orders.u.ispsa");
+//				app.u.dump(" -> ps = "+ps);
 				var r = false, //what is returned. t or f
 				L = intArr.length;
 				for(var i = 0; i < L; i += 1)	{
@@ -874,6 +993,92 @@ else	{
 					}
 				return r;
 				},
+	
+	
+			getActionInputs : function(action,pref)	{
+				var output = false;
+				if(action && pref)	{
+//these are vars so that they can be maintained easily.
+					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='reason' \/><\/label>"
+					var amountInput = "<label>Amount: $<input size='7' type='number' name='amount' value='"+pref.amt+"' \/><\/label>"
+					switch(action)	{
+						case 'allow-payment':
+							output = "Allow payment: "+pref.uuid;
+							output += "<div class='hint'>This will flag a review transaction as 'reviewed', if you choose not to accept this payment you will likely need to perform a refund of some sort.</div>";
+							output += reasonInput;
+							output += "<button disabled='disabled'>Allow Payment</button>";
+							break;
+						case 'capture':
+							output = "Capture: "+pref.uuid;
+							output += amountInput;
+							output += "<button disabled='disabled'>Capture</button>";
+							break;
+						case 'layaway':
+							output = "Layaway: "+pref.uuid;
+							output += "Coming soon.";
+							break;
+						case 'marketplace-refund':
+							output = "Marketplace partial refund: "+pref.uuid;
+							output += "<div class='warning'>You will need to adjust the payment manually on the marketplace then update the records here. Zoovy does not have a way to automatically issue refunds on the marketplace.<\/div>";
+							output += amountInput;
+							output += reasonInput;
+							output += "<button disabled='disabled'>Refund</button>";
+							output += "<div class='zhint'>Hint1: Refund is for partial credits, use void to refund an entire payment.<br \/>Hint2: Since this amount is a refund you do not need to use a negative (-) sign.<\/div>";
+							break;
+						case 'marketplace-void':
+							output = "Marketplace void: "+pref.uuid;
+							output += "<div class='warning'>You will need to cancel the order on the marketplace then update the records here. Zoovy does not have a way to automatically update/process cancellations on the marketplace.<\/div>";
+							output += reasonInput;
+							output += "<button disabled='disabled'>Void</button>";
+							break;
+						case 'override':
+							output = "Override: "+pref.uuid;
+							output += "<div class='warning'>This is an advanced interface intended for experts only.  <b>Do not use without the guidance of technical support.</b><\/div>";
+							output += "New payment status: <input type='textbox' size='3' name='paymentstatus' value='"+pref.ps+"' \/>";
+							output += reasonInput;
+							output += "<button disabled='disabled'>Retry</button>";
+							break;
+						case 'retry':
+							output = "Retry: "+pref.uuid;
+							output += "<button disabled='disabled'>Retry</button>";
+							break;
+						case 'refund':
+							output = "Refund: "+pref.uuid;
+							output += amountInput;
+							output += reasonInput;
+							output += "<button disabled='disabled'>Refund</button>";
+							break;
+						case 'set-paid':
+							output = "Set paid: "+pref.uuid;
+							output += amountInput;
+							output += reasonInput;
+							output += "<button disabled='disabled'>Set Paid</button>";
+							break;
+						case 'void':
+							output = "Void: "+pref.uuid;
+							output += "<div class='hint'>REMINDER: this will void a payment, void must be done before your settlement time (contact your merchant bank). If you are planning to cancel an order you will probably need to change the workflow status as well.<\/div>";
+							output += reasonInput;
+							output += "<button disabled='disabled'>Void</button>";
+							break;
+	
+						default:
+							output = 'unknown action';
+							break;
+						}
+					}
+				else	{
+					app.u.throwGMessage("in admin_orders.u.getActionInputs, no action specified");
+					}
+				return output;
+				},
+	
+
+
+
+
+
+
+
 //when an indivdual row needs to be unselected, execute this.
 //don't recycle this in the unselect all action, don't want the mouseStop triggered for each row.
 // app.ext.admin_orders.u.unSelectRow()

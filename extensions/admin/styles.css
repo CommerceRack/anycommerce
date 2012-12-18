@@ -44,6 +44,12 @@ Generic text styles
 */
 .lineThrough	{text-decoration:line-through}
 
+/* use these to indicate severity, where red is the highest alert state and green is the 'everything is dandy' state. */
+.red		{color:#660000;}
+.orange	{color:#F60;}
+.yellow	{color:#CC0;}
+.blue	{color:#000066;}
+.green	{color:#006600;}
 
 
 
@@ -442,6 +448,10 @@ DEBUGGER
 	background: linear-gradient(to bottom,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#59000000', endColorstr='#1a000000',GradientType=0 ); /* IE6-9 */
 	}
+
+
+
+
 
 
 

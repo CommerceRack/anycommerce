@@ -56,13 +56,6 @@ table.orderManagerTable	{
 .ui-selected .selectedIcon	{display:block !important;}
 
 
-/* order list / line item */
-
-.reviewStatus .green	{color:#006600;}
-.reviewStatus .red		{color:#660000;}
-.reviewStatus .orange	{color:#F60;}
-.reviewStatus .yellow	{color:#CC0;}
-
 
 
 /*

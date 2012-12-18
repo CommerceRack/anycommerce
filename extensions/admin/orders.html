@@ -169,7 +169,7 @@
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
 	<td><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
-	<td class='reviewStatus'><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
+	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
 </tr>
@@ -293,7 +293,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	</section>
-	
+
+
+
+
 	<h2>Payment Information</h2>
 	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-ui-role='orderUpdatePaymentMethodsContainer'>
 	
@@ -303,8 +306,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<fieldset>
 		<legend>Add Payment</legend>
 		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
-		<label>Amount: <input type='number' onKeyPress='return app.u.numbersOnly(event);' name='amount' /></label>
-		<label>Note: <input type='text' name='note' /></label>
+		<div><label>Amount: <input type='number' onKeyPress='return app.u.numbersOnly(event);' name='amount' /></label></div>
+		<div><label>Note: <input type='text' name='note' /></label></div>
 		<div><button data-btn-action="admin_orders|orderUpdateAddPayment" disabled='disabled'>Add Payment</button></div>
 		<b>coming soon</b>
 	</fieldset>
@@ -323,7 +326,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th>Amt. Paid</th>
 		<th>Amt. Due</th>
 		<th>Tender</th>
-		<th title='Zoovy Transaction ID'>TID</th>
+		<th title='Transaction ID'>TID</th>
+		<th>Notes</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: order(@PAYMENTS); loadsTemplate: orderPaymentHistoryTemplate; format:processList; extension: admin;"></tbody>
@@ -331,7 +335,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 	
 	</section>
-	
+
+
+
+
 	<h2>Shipping/Tracking Information</h2>
 	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer'>
 	
@@ -360,7 +367,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 </fieldset>
 </form>
 
-<div class='zhint'>HINT: When you use Zoovys Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
+<div class='zhint'>HINT: When you use Zoovy's Desktop Order Manager to print out USPS Postage, UPS Airbills, or FedEx Airbills and the tracking #'s and shipping costs are automatically imported. Never re-enter data again!</div>
 
 
 	</div>
@@ -428,6 +435,10 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span data-bind='var: payment(due); format:money;'></span></td>
 	<td><span data-bind='var: payment(tender); format:text;'></span></td>
 	<td><span data-bind='var: payment(uuid); format:text;'></span></td>
+	<td>
+	<div data-bind='format:paystatusDetailed; extension:admin_orders; useParentData:true;'></div>
+	<div data-bind='var: payment(note); format:text; pretext:note: ;'></div>
+	</td>
 </tr>
 </table>
 
