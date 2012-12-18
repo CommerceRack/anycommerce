@@ -411,18 +411,29 @@ if(app.u.isSet(data.value))	{
 //	if(!app.data['appCategoryDetail|.'] || !app.data['appCategoryDetail|.'].pretty)	{
 //		app.data['appCategoryDetail|.'].pretty = 'Home';
 //		}
-	
-	$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':'.'},data.bindData.loadsTemplate,app.data['appCategoryDetail|.']));
+
+//Checks the rootcat to ensure we don't add extra categories above our root to the breadcrumb.  Also runs in loop below.
+	var reachedRoot = (zGlobals.appSettings.rootcat === s);
+	if(reachedRoot){
+		$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':'.'},data.bindData.loadsTemplate,app.data['appCategoryDetail|.']));
+	}
 // homepage has already been rendered. if path == ., likely we r on a product page, arriving from homepage. don't show bc.
 	if(data.value == '.'){}
 	else	{
 		for(var i = 1; i < L; i += 1)	{
 			s += pathArray[i];
-		//	app.u.dump(" -> "+i+" s(path): "+s);
-			$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));
-			s += '.';
+			
+//Checks the rootcat to ensure we don't add extra categories above our root to the breadcrumb.  Once reachedRoot is triggered, add all categories below the root.
+			if(!reachedRoot) {
+				reachedRoot = (zGlobals.appSettings.rootcat === s);
 			}
+			if(reachedRoot) {
+			//	app.u.dump(" -> "+i+" s(path): "+s);
+				$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));
+			}
+			s += '.';
 		}
+	}
 	
 
 	
