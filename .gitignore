@@ -6,8 +6,9 @@
 .project
 .metadata
 bin/
+/utilities/proxy/node_modules/
 tmp/
-_notes/
+*_notes/
 *.tmp
 *.bak
 *.swp

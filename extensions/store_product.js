@@ -81,27 +81,22 @@ var store_product = function() {
 				}
 			}, //appProductGet
 
-		
-
-
-//formerly addToCart
-// early version of this had validation built into it, but that was inconsistent with how most other calls work
-// and made it harder to customize per RIA, if desired.
+//sfo is serialized form object.
 		cartItemsAdd : {
-			init : function(formID,tagObj)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
+			init : function(sfo,tagObj)	{
+				tagObj = tagObj || {}; 
 				tagObj.datapointer = 'atc_'+app.u.unixNow(); //unique datapointer for callback to work off of, if need be.
-				this.dispatch($('#'+formID).serializeJSON(),tagObj);
-				return 1;
+				this.dispatch(sfo,tagObj);
+				return 2; //an add to cart always resets the paypal vars.
 				},
-			dispatch : function(obj,tagObj)	{
-//				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
-//				app.u.dump(obj);
-				obj["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-				obj["_zjsid"] = app.sessionId; 
-				obj["_tag"] = tagObj;
-				app.model.addDispatchToQ(obj,'immutable');
-				app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
+			dispatch : function(sfo,tagObj)	{
+				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
+				sfo["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
+				sfo["_tag"] = tagObj;
+//				app.u.dump("GOT HERE!"); app.u.dump(sfo); app.u.dump(tagObj);
+				app.model.addDispatchToQ(sfo,'immutable');
+				if(app.data.cartDetail && app.data.cartDetail.payment)
+					app.calls.cartSet.init({'payment':{'pt':null}}); //nuke paypal token anytime the cart is updated.
 				}
 			},//addToCart
 
@@ -306,10 +301,7 @@ addToCart : function (pid){
 //the ID on the product_id input should NOT be changed without updating the addToCart call (which uses this id to obtain the pid).
 
 			atcForm : function($tag,data)	{
-//data.value = pid
-				var formID = $tag.attr('id')+'_'+data.value; //append the pid to the ID to give it a unique ID
-//				$tag.bind('submit',function(){return false;})
-				$tag.attr('id',formID).append("<input type='hidden' name='add' value='yes' /><input type='hidden' name='product_id' id='"+formID+"_product_id' value='"+data.value+"' />");
+				$tag.append("<input type='hidden' name='add' value='yes' /><input type='hidden' name='product_id' value='"+data.value+"' />");
 				},
 			
 			reviewList : function($tag,data)	{
@@ -317,7 +309,7 @@ addToCart : function (pid){
 				var templateID = data.bindData.loadsTemplate;
 //				app.u.dump(data.value)
 				var L = data.value.length;
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					$tag.append(app.renderFunctions.transmogrify({'id':'review_'+i},templateID,data.value[i]));
 					}
 				return L;
@@ -332,7 +324,7 @@ addToCart : function (pid){
 				var tmp,num;
 				var L = dArr.length;
 //## operator can be either / or =  (5=125 means buy 5 @ $125ea., 5/125 means buy 5 @ $25ea.)
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					if(dArr[i].indexOf('=') > -1)	{
 //						app.u.dump(' -> treat as =');
 						tmp = dArr[i].split('=');
@@ -436,9 +428,15 @@ $display.appendTo($tag);
 // add _pid to end of atc button to make sure it has a unique id.
 // add a success message div to be output before the button so that messaging can be added to it.
 // atcButton class is added as well, so that the addToCart call can disable and re-enable the buttons.
-				$tag.attr('id',$tag.attr('id')+'_'+pid).addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
+				$tag.addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(app.ext.store_product.u.productIsPurchaseable(pid))	{
 //product is purchaseable. make sure button is visible and enabled.
+//					if(pData && pData['%attribs']['is:colorful'])	{
+//						$tag.addClass('colorfulButton').prop('value', 'Choose Color');
+//						}
+//					else if(pData && pData['%attribs']['is:sizeable'])	{
+//						$tag.addClass('sizeableButton').prop('value', 'Choose Size');
+//						}
 					if(pData && pData['%attribs']['is:preorder'])	{
 						$tag.addClass('preorderButton').prop('value', 'Preorder');
 						}
@@ -561,7 +559,7 @@ NOTES
 					P.width = P.width ? P.width : 600;
 					P.height = P.height ? P.height : 660;
 					
-					var $parent = this.handleParentForModal(parentID)
+					var $parent = app.u.handleParentForDialog(parentID)
 
 					if(!P.parentID)	{$parent.empty()} //only empty the parent if no parent was passed in. 
 					if(P.templateID)	{
@@ -596,7 +594,7 @@ NOTES
 				if(P.pid && P.templateID)	{
 //					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
 					var parentID = "product-modal"
-					var $parent = this.handleParentForModal(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
+					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'])
 					
 					if(!P.parentID)	{
 						app.u.dump(" -> parent not specified. empty contents.");
@@ -628,42 +626,36 @@ NOTES
 				else	{
 					app.u.dump(" -> pid ("+P.pid+") or templateID ("+P.templateID+") not set for viewer. both are required.");
 					}
+				return P;
 				}, //prodDataInModal
 
-//used in prodDataInModal and imageInModal
-//if a parentid is not passed in, a new id is created and added to the dom.
-
-			handleParentForModal : function(parentID)	{
-				if(!parentID)	{
-					parentID = 'placeholder_'+Math.floor(Math.random()*10001)
-					}
-				var $parent = $('#'+parentID);
-//if the parent doesn't already exist, add it to the dom.
-				if($parent.length == 0)	{
-					$parent = $("<div \/>").attr({"id":parentID}).appendTo(document.body);
-					}
-				return $parent;
-				}, //handleParentForModal
 
 
 
-//formID is uses for the success/error messaging.
-//tagObj is optional and allows for custom callback to be used. the default is fairly ordinary.
 
-			handleAddToCart : function(formID,tagObj)	{
-//				alert(formID);  //should stop the submit.
+//F can be a form ID or a jquery object of the form
+			handleAddToCart : function(F,tagObj)	{
+			
+//by now, F is a jquery object or invalid.				
+				if(typeof F == 'object')	{
 //some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
 //then create a callback that does nothing. IMHO, you should always let the user know the item was added.
 //this easily allows for an override to do something more elaborate.
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
-				tagObj.callback = tagObj.callback ? tagObj.callback : 'itemAddedToCart';
-				tagObj.extension = tagObj.extension ? tagObj.extension : 'store_product';
-				
-				if (app.ext.store_product.calls.cartItemsAdd.init(formID,tagObj)){
+					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
+					tagObj.callback = tagObj.callback ? tagObj.callback : 'itemAddedToCart';
+					tagObj.extension = tagObj.extension ? tagObj.extension : 'store_product';
+					
+					app.ext.store_product.calls.cartItemsAdd.init(F,tagObj)
 					app.calls.refreshCart.init({},'immutable'); //piggyback an update cart so that next time 'view cart' is pushed, it's accurate.
 					app.model.dispatchThis('immutable');
+
 					}
 				
+				else	{
+					app.u.throwGMessage("WARNING! unknown type for F in handleAddToCart ["+typeof F+"]");
+					}
+
+
 				},
 //will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
 //data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
@@ -678,7 +670,7 @@ NOTES
 					}
 				else	{
 					L = app.data['appReviewsList|'+pid]['@reviews'].length;
-					for(i = 0; i < L; i += 1)	{
+					for(var i = 0; i < L; i += 1)	{
 						sum += Number(app.data['appReviewsList|'+pid]['@reviews'][i].RATING);
 						}
 					avg = Math.round(sum/L);

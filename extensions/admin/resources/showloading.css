@@ -1,0 +1,16 @@
+@charset "utf-8";
+/* CSS Document */
+
+.loading-indicator {
+	height: 100px;
+	width: 100px;
+	background: url( '../images/loading.gif' );
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.loading-indicator-overlay {
+	background-color: #FFFFFF;
+	opacity: 0.6;
+	filter: alpha(opacity = 60);
+}

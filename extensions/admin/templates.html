@@ -3,6 +3,145 @@
 ########################################################
 
 
+PRODUCT TAB
+
+########################################################
+
+
+-->
+
+
+
+
+<div id='productTabTemplate'>
+
+<table>
+<tr>
+	<td class='leftColNav'>
+	<div id='prodLeftCol'>
+
+
+<ul>
+	<li><a href='#' onClick="app.ext.admin.a.showCreateProductDialog(); return false;">New Product</a></li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Filter Product</a>
+	<ul class='displayNone tagFilterList'>
+		<li>IS_FRESH</li>
+		<li>IS_NEEDREVIEW</li>
+		<li>IS_HASERRORS</li>
+		<li>IS_CONFIGABLE</li>
+		<li>IS_COLORFUL</li>
+		<li>IS_SIZEABLE</li>
+		<li>IS_OPENBOX</li>
+		<li>IS_PREORDER</li>
+		<li>IS_DISCONTINUED</li>
+		<li>IS_SPECIALORDER</li>
+		<li>IS_BESTSELLER</li>
+		<li>IS_SALE</li>
+		<li>IS_SHIPFREE</li>
+		<li>IS_NEWARRIVAL</li>
+		<li>IS_CLEARANCE</li>
+		<li>IS_REFURB</li>
+		<li>IS_USER1</li>
+		<li>IS_USER2</li>
+		<li>IS_USER3</li>
+		<li>IS_USER4</li>
+		<li>IS_USER5</li>
+		<li>IS_USER6</li>
+		<li>IS_USER7</li>
+		<li>IS_USER8</li>
+		<li>IS_USER9</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();">Syndication</a>
+	<ul class='displayNone mktFilterList'>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
+	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle();">Management Categories:</a>
+		<ul id='manCats' class='displayNone'>
+		</ul>
+	</li>
+</ul>
+
+
+<ul data-bind="var: ui(@CATEGORIES); format:manageCategories; extension:admin; before:<h2>Mangement Categories</h2>; loadsTemplate:productManagementCatTemplate;"></ul>
+
+
+	</div>
+	</td>
+	<td>
+	
+	<div class='productContentContainer' id='productTabMainContent'>
+	
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+
+
+<table>
+<tr id='productListTemplateTableResults'>
+	<td><button>Edit</button></td>	
+	<td>
+	<div class='prodThumbContainer' data-bind='var:product(_id); format:addPicSlider; extension:myRIA;'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+	</div>
+	</td>
+	<td data-bind='var: product(prod_name); format:text;'></td>
+	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
+</tr>
+</table>
+
+
+
+
+
+<div id='ProductCreateNewTemplate'>
+
+<div id='prodCreateMessaging'></div>
+
+<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
+	
+<fieldset class='marginBottom'>
+	<legend>Required Fields</legend>
+
+	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
+			
+</fieldset>
+
+<fieldset>
+	<legend>Recommended Data</legend>
+	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="text" NAME="zoovy:base_cost" VALUE="" SIZE="15"></div>	
+	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
+	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
+	<div class='marginBottom'><label >Is product taxable?:</label> 
+		<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
+        <INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
+		</div>
+	
+</fieldset>		
+		
+<input type="submit" value=" Save " class='savebutton' border='0' />
+
+</form>
+
+</div>
+
+
+<!--
+
+########################################################
+
+
 PRODUCT FINDER
 
 ########################################################
@@ -12,7 +151,7 @@ PRODUCT FINDER
 
 <ul>
 	<li class='clearfix loadingBG stdListItem' id='adminProdStdForList'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='50' height='50' />
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
@@ -20,14 +159,14 @@ PRODUCT FINDER
 	</li>
 
 	<li class='clearfix loadingBG simpleListItem' id='adminProdSimpleForList'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<div data-bind='var:product(zoovy:prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
 
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
-	<div class='removeProd' onClick='myControl.ext.admin.util.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
+	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
 	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
@@ -38,9 +177,10 @@ PRODUCT FINDER
 
 
 
-<div class='loadingBG' id='adminProductFinder'>
+<div id='adminProductFinder'>
 	<section class='ui-corner-bottom ui-widget'>
 	<table class='finderTable'>
+	<tbody>
 	<tr>
 		<td colspan='2'>
 <form id='finderSearchForm' action='#' name='finderSearchForm' >
@@ -55,6 +195,7 @@ PRODUCT FINDER
 	<tr>
 		<td><h4><span id='resultsKeyword'></span><span id='resultsListItemCount' class='displayNone'></span></h4></td>
 		<td><h4>Current Items<span id='focusListItemCount'></span>:</h4></td>
+	</tr>
 	<tr>
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
@@ -64,7 +205,7 @@ PRODUCT FINDER
 		
 		<td>
 		<div class='finderProdlistContainer ui-widget-content'>
-		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList'></ul>
+		<ul id='finderTargetList' class='connectedSortable finderProdlist targetList loadingBG'></ul>
 		<ul id='finderRemovedList' class='displayNone'></ul>
 		</div>
 
@@ -96,6 +237,7 @@ PRODUCT FINDER
 		</button>
 		</td>
 	</tr>
+	</tbody>
 	</table>
 </section>
 </div>
@@ -132,5 +274,282 @@ click event is added at that time.
 
 
 
+
+
+
+
+<!--
+########################
+
+
+DOMAIN CONFIG
+
+
+########################
+-->
+
+
+
+
+<div id='domainPanelTemplate' class='panel domainPanel stackedPanels'>
+	<h3 data-bind="var: domain(id); format: assignAttribute; attribute:data-domain;" data-verb="LOAD" onClick="adminUIDomainPanelExecute($(this));" class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix'>
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span data-bind="var: domain(id); format:text;"></span>
+	</h3>
+
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom' >
+	
+	
+	<form action="#" onSubmit="return false;">
+	<fieldset data-bind="var: domain(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
+	</form>
+	
+	</div>	
+
+</div>
+
+
+
+
+
+
+
+<!--
+########################
+
+
+SETUP PAGE TEMPLATE
+
+
+########################
+-->
+
+
+
+
+<div id='pageSetupTemplate' class='page pageSetup'>
+
+
+<table class='noPadOrMargin fullWidth stdCellSpacing'>
+<tbody>
+<tr>
+
+	<td width="33%" valign="top">
+	
+	<div id="manage" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Manage Apps/Website</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/domain/index.cgi" title="/biz/setup/domain/index.cgi">Domain Hosting</a><br />
+			<div class="subtitle0">Register and Link Domains.</div>
+			<a href="#/biz/setup/projects/index.cgi"  title="/biz/setup/projects/index.cgi">App Hosting</a><br />
+			<div class="subtitle0">Manage Hosted Application Projects</div>
+			<a href="#/biz/setup/builder/index.cgi"  title="/biz/setup/builder/index.cgi">Site Builder</a><br />
+			<div class="subtitle0">Build the content for your storefront.  Select page layouts and add product to categories and lists.</div>
+			- <a href="#/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT"  title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
+			<div class="subtitle1">Put in Logo, Address, Policies, etc.</div>
+			- <a href="#/biz/setup/builder/themes/index.cgi?NS=DEFAULT"  title="/biz/setup/builder/themes/index.cgi?NS=DEFAULT">Pick Site Theme</a><br />
+			<div class="subtitle1">Select the graphics, buttons and navigation which will be used for this site.</div>
+			- <a href="#/biz/setup/builder/index.cgi?ACTION=EDIT-WRAPPER"  title="/biz/setup/builder/index.cgi?ACTION=EDIT-WRAPPER">Customize Site Theme</a><br />
+			<div class="subtitle1">Tune customizable features in the selected theme.</div>
+			- <a href="#/biz/setup/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT"  title="/biz/setup/builder/index.cgi?ACTION=DECALS&amp;NS=DEFAULT">Customize Site Decals</a><br />
+			<div class="subtitle1">Enhance your site with 3rd party logos.</div>
+			- <a href="#/biz/setup/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E"  title="/biz/setup/builder/themes/index.cgi?NS=DEFAULT&amp;SUBTYPE=E">Select Email Theme</a><br />
+			<div class="subtitle1">Pick a style for a header and footer for an email.</div>
+			- <a href="#/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT"  title="/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT">Edit Email Messages</a><br />
+			<div class="subtitle1">Customize the emails that are sent to customers.</div>
+			<a href="#!mediaLibraryManageMode"  title="#!mediaLibraryManageMode">Media Library</a><br />
+			<div class="subtitle0">Upload and manage your images, sounds, movies, documents and flash.</div>
+			- <a href="#!mediaLibraryManageMode"  title="#!mediaLibraryManageMode">Upload New Image</a><br />
+			- <a href="#/biz/setup/customfiles/index.cgi"  title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br /><br />
+			<a href="#/biz/setup/navcats/index.cgi"  title="/biz/setup/navcats/index.cgi">Categories &amp; Lists</a><br />
+			<div class="subtitle0">Build your store category tree or add product lists.</div>
+			<a href="#/biz/setup/analytics/index.cgi"  title="/biz/setup/analytics/index.cgi">Analytics &amp; Plugins</a><br />
+			<div class="subtitle0">Integrate approved 3rd party applications with your site.</div>
+			<a href="#/biz/setup/rss/index.cgi"  title="/biz/setup/rss/index.cgi">RSS Feeds</a><br />
+			<div class="subtitle0">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
+		</div>
+	</div><!-- /manage -->
+
+	
+	<div id="market" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Integrated Marketplaces</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/ebay/index.cgi"  title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
+			<div class="subtitle0">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
+
+			<a href="#/biz/syndication/amazon/index.cgi"  title="/biz/syndication/amazon/index.cgi">Amazon Configuration</a><br />
+			<div class="subtitle0">Manage Amazon Tokens and learn more about Zoovy's integration.</div>
+		</div>
+	</div><!-- /market -->
+	
+	</td>
+
+
+	<td width="33%" valign="top">
+
+	<div id="properties" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Store Properties</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/shipping/index.cgi"  title="/biz/setup/shipping/index.cgi">Shipping</a><br />
+			<div class="subtitle0">Determine how shipping will be calculated for your products.</div>
+			<a href="#/biz/setup/payment/index.cgi"  title="/biz/setup/payment/index.cgi">Payment Methods</a><br />
+			<div class="subtitle0">Configure which payment methods you will accept from customers.</div>
+			<a href="#/biz/setup/tax/index.cgi"  title="/biz/setup/tax/index.cgi">Sales Tax</a><br />
+			<div class="subtitle0">Configure state and local tax collection amounts.</div>
+			<a href="#/biz/setup/promotions/index.cgi"  title="/biz/setup/promotions/index.cgi">Coupons/Promotions</a><br />
+			<div class="subtitle0">Create discounts for special purchases</div>
+			<a href="#/biz/setup/checkout/index.cgi?MODE=GENERAL"  title="/biz/setup/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
+			<div class="subtitle0">Specify what info is optional/required during checkout.</div>
+			<a href="#/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN"  title="/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
+			<div class="subtitle0">Configure what options customers have when they login to their accounts on your store.</div>
+			<a href="#/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES"  title="/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
+			<div class="subtitle0">Customize System Messages used throughout the site</div>
+			<a href="#/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES"  title="/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
+			<div class="subtitle0">Customize Checkout Messaging used during checkout.</div>
+			<a href="#/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL"  title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
+			<div class="subtitle0">Configure which languages and currencies are available.</div>
+			<a href="#/biz/crm/index.cgi?VERB=CONFIG"  title="/biz/crm/index.cgi?VERB=CONFIG">CRM Behaviors</a><br />
+			<div class="subtitle0">Configure preferences in the CRM area.</div>
+		</div>
+	</div><!-- /properties -->
+	
+	<div id="utility" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Utility Features</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/import/index.cgi?verb=product"  title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
+			<div class="subtitle0">Import data from a variety of formats.</div>
+			<a href="#/biz/setup/search/index.cgi"  title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
+			<div class="subtitle0">Create custom searchable indexes of your product database.</div>
+		</div>
+	</div><!-- /utility -->
+	</td>
+
+	<td width="33%" valign="top">
+	<div id="account" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Account Settings</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/account/index.cgi"  title="/biz/setup/account/index.cgi">Contact Information</a><br />
+			<div class="subtitle0">Change Administrative/Billing Information</div>
+			<a href="#/biz/setup/global/index.cgi"  title="/biz/setup/global/index.cgi">Global Settings</a><br />
+			<div class="subtitle0">Inventory &amp; Order settings in this area affect all sites managed from this account.</div>
+			<a href="#/biz/setup/global/index.cgi?VERB=PARTITIONS"  title="/biz/setup/global/index.cgi?VERB=PARTITIONS">Partitions</a><br />
+			<div class="subtitle0">The ability to segment your settings, and databases for each site associated with this account.</div>
+			<a href="#/biz/setup/usermgr/index.cgi"  title="/biz/setup/usermgr/index.cgi">Manage Users/Devices</a><br />
+			<div class="subtitle0">Manage which users and devices can access your account.</div>
+			<a href="#/biz/setup/password/index.cgi"  title="/biz/setup/password/index.cgi">Change Password</a><br />
+			<div class="subtitle0">You should change your password every 60 days.</div>
+			<a href="#/biz/configurator/index.cgi"  title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
+			<div class="subtitle0">Manage feature bundles installed on this account.</div>
+			<a href="#/biz/setup/billing/index.cgi"  title="/biz/setup/billing/index.cgi">Billing History</a><br />
+			<div class="subtitle0">View your billing history, update payment information.</div>
+		</div>
+	</div><!-- /account -->
+
+
+
+
+	<div id="developer" class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Developer Tools</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#/biz/setup/private/index.cgi"  title="/biz/setup/private/index.cgi">Private Files</a><br />
+			<div class="subtitle0">Private files include diagnostic logs, reports, and ticket attachments.</div>
+			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/index.cgi" >Developer SDK</a><br />
+			<div class="subtitle0">Use this to easily custom integrations or apps</div>
+			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki/index.cgi" >Dev Wiki</a><br />
+			<div class="subtitle0">Learn more about what is possible, and what is included in the SDK.</div>
+			<a href="#/biz/setup/toxml/index.cgi?ACTION=HELP"  title="/biz/setup/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
+			<div class="subtitle0">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
+		</div>
+	</div><!-- /developer -->
+
+	</td>
+</tr>
+</tbody>
+</table>
+
+
+</div>
+
+
+
+
+
+
+<!--
+########################
+
+
+UTILITIES PAGE TEMPLATE
+
+
+########################
+-->
+
+
+<div id='pageSetupTemplate' class='page pageSetup'>
+
+
+<table class='noPadOrMargin fullWidth stdCellSpacing'>
+<tbody>
+<tr>
+
+	<td width="33%" valign="top">
+	
+	<div class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Customer Retention &amp; Management</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		
+		</div>
+	</div>
+	
+	</td>
+	
+	<td width="33%" valign="top">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Wholesale &amp; Warehouse</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		</div>
+	</div>
+	
+	</td>
+	
+	<td width="33%" valign="top">
+	<div class='ui-widget marginBottom'>
+		<div class='ui-state-default stdPadding ui-corner-top'>
+		<h3>Manage Apps/Website</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		</div>
+	</div>
+	
+	</td>
+
+</tr>
+</tbody>
 
 

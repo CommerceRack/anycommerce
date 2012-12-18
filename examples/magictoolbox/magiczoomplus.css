@@ -1,0 +1,200 @@
+/*
+
+
+   Magic Zoom Plus v4.0.29 
+   Copyright 2012 Magic Toolbox
+   Buy a license: www.magictoolbox.com/magiczoomplus/
+   License agreement: http://www.magictoolbox.com/license/
+
+
+*/
+
+
+/* Style of the small image link */
+.MagicZoomPlus, .MagicZoomPlus:hover {
+    display: inline-block;
+    cursor: url(graphics/zoomin.cur), pointer;
+    outline: 0 !important;
+}
+
+/* Style of the small image */
+.MagicZoomPlus img {
+    border: 0 !important;
+    margin: 0 !important;
+    outline: 0 !important;
+    padding: 0 !important;
+}
+
+/* Style of the span inside the small image link */
+.MagicZoomPlus span {
+    display: none !important;
+}
+
+/* Style of hint box */
+.MagicZoomPlusHint {
+    background: url(graphics/hint.gif) no-repeat 2px 50%;
+    color: #444;
+    font-family: sans-serif;
+    font-size: 8pt;
+    line-height: 24px;
+    margin: 0;
+    min-height: 24px;
+    padding: 2px 2px 2px 20px !important;
+    text-align: left;
+    text-decoration: none;
+}
+
+/* Style to hide external title or caption on a page. Only needed for #id method */
+.MagicZoomPlus-ExternalText {
+    display: none;
+}
+
+
+/* Style of the zoomed image */
+.MagicZoomBigImageCont {
+    background: #ffffff;
+    border: 1px solid #999;
+}
+
+.MagicZoomBigImageCont img {
+    max-width: none !important;
+    max-height: none !important;
+    height: auto !important;
+    width: auto !important;
+}
+
+/* Style of text on the zoomed image */
+.MagicZoomHeader {
+    background: #666;
+    color: #fff;
+    font-size: 10pt !important;
+    line-height: normal !important;
+    text-align: center !important;
+}
+
+/* Style of square magnify area under the cursor */
+.MagicZoomPup {
+    background: #fff;
+    border: 1px solid #aaa;
+    cursor:url(graphics/zoomin.cur),pointer;
+}
+
+/* Style of loading message and icon shown during load */
+.MagicZoomLoading {
+    background: #fff url(graphics/loader.gif) no-repeat 2px 50%;
+    border: 1px solid #ccc;
+    color: #444;
+    font-family: sans-serif;
+    font-size: 8pt;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 4px 4px 4px 24px !important;
+    text-align: left;
+    text-decoration: none;
+}
+
+/* Style of hotspots */
+.MagicHotspots {
+display: none;
+visibility: hidden;
+}
+.MagicHotspots a {
+border: 1px solid #ccc;
+display: block !important;
+position: absolute !important;
+}
+.MagicHotspots a:hover {
+border: 1px solid red;
+}
+
+/* Style of the small image when the large image is expanded */ 
+.MagicThumb-expanded-thumbnail {
+    cursor: default;
+}
+
+/* Style of the expanded image */
+.MagicThumb-expanded {
+    background: #ffffff;
+    border: 1px solid #ccc;
+    cursor: url(graphics/zoomout.cur), pointer;
+    outline: 0;
+    padding: 0;
+}
+
+.MagicThumb-expanded img {
+    background: #ffffff;
+}
+
+/* Style of the caption for the expanded image */
+.MagicThumb-caption {
+    background: #ccc;
+    border: 0 !important;
+    color: #333;
+    font: normal 10pt Verdana, Helvetica;
+    min-height: 18px !important;
+    padding: 8px;
+    outline: 0 !important;
+    text-align: left;
+}
+
+/* Style of the close/next/previous buttons */
+.MagicThumb-buttons {
+    background: transparent url(graphics/buttons1.png) no-repeat 0 0;
+    display: block;
+    height: 24px;
+}
+
+.MagicThumb-buttons a {
+    height: 24px;
+    margin: 0px 1px !important;
+    overflow: hidden;
+    width: 24px;
+}
+
+/* Style of the loading message box */
+.MagicThumb-loader {
+    background: #fff url(graphics/loader.gif) no-repeat 2px 50%;
+    border: 1px solid #000;
+    font: normal 12pt sans-serif;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 2px 2px 2px 22px;
+    text-align: left;
+    text-decoration: none;
+}
+
+.MagicThumb-expanded > div > div > div > img {
+    max-height: none !important;
+    max-width: none !important;
+    height: auto !important;
+    width: auto !important;
+}
+
+.magic-temporary-img img {
+    max-height: none !important;
+    max-width: none !important;
+}
+
+/* Style of shadow effect behind zoomed image */
+.MagicBoxShadow {
+-moz-box-shadow: 3px 3px 4px #888888;
+-webkit-box-shadow: 3px 3px 4px #888888;
+box-shadow: 3px 3px 4px #888888;
+border-collapse: separate;
+/* For IE 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#888888') !important;
+/* For IE 8 */
+-ms-filter: "progid:DXImageTransform.Microsoft.Shadow(Strength=4, Direction=135, Color='#888888')" !important;
+}
+
+/* Style of glow effect behind zoomed image */
+.MagicBoxGlow {
+-moz-box-shadow: 0px 0px 4px 4px #888888;
+-webkit-box-shadow: 0px 0px 4px 4px #888888;
+box-shadow: 0px 0px 4px 4px #888888;
+border-collapse: separate;
+/* For IE 5.5 - 7 */
+filter: progid:DXImageTransform.Microsoft.Glow(Strength=4, Color='#888888') !important;
+/* For IE 8 */
+-ms-filter: "progid:DXImageTransform.Microsoft.Glow(Strength=4, Color='#888888')" !important;
+}

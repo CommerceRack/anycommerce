@@ -1,0 +1,13 @@
+
+.productEditorContainer	{width:100%;}
+.mainColContent	{width:80%; }
+.productEditorContainer td 	{vertical-align:top; padding:0 24px;}
+.productEditorContainer .leftColNav	{border-right:1px solid #cccccc;}
+
+/* used in the left column */
+#prodLeftCol ul, #prodLeftCol li	{list-style:none; margin:0; padding:0;}
+#prodLeftCol li	{margin-left:10px;}
+#prodLeftCol li a	{padding:3px 0; display:block;}
+
+#prodEditorResultsTable tr:nth-child(odd)		{ background-color:#eee; }
+#prodEditorResultsTable tr:nth-child(even)		{ background-color:#fff; }

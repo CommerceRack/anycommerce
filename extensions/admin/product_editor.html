@@ -1,0 +1,288 @@
+
+
+
+<div id='productEditorTemplate' class='productEditor'>
+
+<table class='productEditorContainer'>
+<tr>
+	<td class='leftColNav'>
+	<div id='prodLeftCol'>
+
+<form action='#' onSubmit="app.ext.admin_prodEdit.u.handleProductKeywordSearch($(this).serializeJSON()); return false" class='marginBottom'>
+<fieldset>
+	<legend>Product Search</legend>
+	<input type='search' name='KEYWORDS' value='' />
+	<input type='submit' value='go' />
+</fieldset>
+</form>
+
+
+<ul>
+	<li><a href='#' onClick="app.ext.admin_prodEdit.a.showCreateProductDialog(); return false;">New Product</a></li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle();  return false;">Filter Product</a>
+	<ul class='displayNone tagFilterList'>
+		<li>IS_FRESH</li>
+		<li>IS_NEEDREVIEW</li>
+		<li>IS_HASERRORS</li>
+		<li>IS_CONFIGABLE</li>
+		<li>IS_COLORFUL</li>
+		<li>IS_SIZEABLE</li>
+		<li>IS_OPENBOX</li>
+		<li>IS_PREORDER</li>
+		<li>IS_DISCONTINUED</li>
+		<li>IS_SPECIALORDER</li>
+		<li>IS_BESTSELLER</li>
+		<li>IS_SALE</li>
+		<li>IS_SHIPFREE</li>
+		<li>IS_NEWARRIVAL</li>
+		<li>IS_CLEARANCE</li>
+		<li>IS_REFURB</li>
+		<li>IS_USER1</li>
+		<li>IS_USER2</li>
+		<li>IS_USER3</li>
+		<li>IS_USER4</li>
+		<li>IS_USER5</li>
+		<li>IS_USER6</li>
+		<li>IS_USER7</li>
+		<li>IS_USER8</li>
+		<li>IS_USER9</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Syndication</a>
+	<ul class='displayNone mktFilterList'>
+		<li data-mktid="GOO">Google</li>
+		<li data-mktid="EBS">eBay Store</li>
+	</ul>
+	</li>
+	<li><a href='#' onClick="return showUI('/biz/product/options2/index.cgi?product=',{'targetID':'productTabMainContent'});">Store Option Groups</a></li>
+	<li class='displayNone' id='manCatsParent'><a href='#' onClick="$(this).parent().find('ul').toggle(); return false;">Management Categories:</a>
+		<ul id='manCats' class='displayNone'>
+		</ul>
+	</li>
+</ul>
+
+	</div>
+	</td>
+	<td class='mainColContent stackedPanels'>
+	<!-- do not change this ID. used a lot -->
+	<div class='productContentContainer' id='productTabMainContent'>
+
+<h1>Online Product Manager</h1>
+
+<p>Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data. Here are some of the advantages:</p>
+
+<h2>Page Rendering</h2>
+<p>With our new app based solution, there are no frames to load and reload, it makes better use of your screen and browser capabilities. The app framework stays on the screen and only the information you want to view or manipulate changes. This makes for a smoother workflow and helps to increase productivity.</p>
+
+<h2>Extensible</h2>
+<p>Entering your product data is only the beginning. This interface will allow extensibility by developers so it is possible to create custom data input and management interfaces. From vendor management to drop shipping to complex supply chain strategies, our new Product Manager.</p>
+
+<h2>The World is Changing</h2>
+<p>The app-based structure is the future of technology. By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, we are convinced that this change will let our customers do more in less time. </p>
+
+
+	</div>
+	
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+
+<!-- used when a filter/search occurs to display the results -->
+<table>
+<tr id='productListTemplateTableResults'>
+		
+	<td>
+	<div class='prodThumbContainer'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL; bgcolor:ffffff;' width='35' height='35' />
+	</div>
+	</td>
+	<td>
+	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(prod_name); format:text;'></span></div>
+	<div data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></div>
+	</td>
+	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
+</tr>
+
+
+<tr id='productListTableListTemplate' class='loadingBG'>
+		
+	<td>
+	<div class='prodThumbContainer'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='35' height='35' />
+	</div>
+	</td>
+	<td>
+	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); format:text;'></span></div>
+	<div data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:false;'></div>
+	</td>
+	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
+</tr>
+
+</table>
+
+
+
+
+
+<div id='ProductCreateNewTemplate'>
+
+<div id='prodCreateMessaging'></div>
+
+<form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin_prodEdit.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
+	
+<fieldset class='marginBottom'>
+	<legend>Required Fields</legend>
+
+	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
+	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
+			
+</fieldset>
+
+<fieldset>
+	<legend>Recommended Data</legend>
+	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="text" NAME="zoovy:base_cost" VALUE="" SIZE="15"></div>	
+	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
+	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
+	<div class='marginBottom'><label >Is product taxable?:</label> 
+		<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
+        <INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
+		</div>
+	
+</fieldset>		
+		
+<input type="submit" value=" Save " class='savebutton' border='0' />
+
+</form>
+
+</div>
+
+
+
+<!-- this template can be used for elastic or traditional product lists. defaultVar should be used for the elastic inputs -->
+<li id='productListTemplateEditMe' class='loadingBG pointer editorProductListItem'  >
+	<a href='#' onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).parent().attr('data-pid')); return false;">
+	<span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(zoovy:prod_name); defaultVar: product(prod_name); format:text;'></span>
+	</a>
+</li>
+
+
+<div class='productPanel' id='productEditorPanelTemplate'>
+	
+	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+	
+<!-- 		<span class="ui-icon ui-icon-arrow-4-diag floatRight"></span> -->
+		
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span data-bind="var: panel(title); format:text;"></span>
+	
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+	<form action="#" onSubmit="return false;" data-bind="var: panel(id); format:assignAttribute; attribute:name;">
+	<fieldset data-bind="var: panel(id); format:assignAttribute; attribute:id; valuePretext:panelContents_;" class='loadingBG'></fieldset>
+	</form>
+	</div>	
+	
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+a template for multipage controls
+after this is generated, actions for going to last and next page will be added by the extension.
+to any element with a class of paging and a data-role of either 'next' or 'previous'
+onclicks are recursive, so only add it to the parent element.
+.mpControlsPagination is used to 'hide' the pagination portion of the header if pagination is disabled.
+-->
+
+<div id='mpControlSpec' class='mpControlContainer'>
+	<div class='mpControls ui-widget ui-state-default ui-corner-top'>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='next' title="next page">
+	<span class="ui-icon ui-icon-circle-triangle-e"></span>
+</span>
+
+<div class='floatRight ddUlMenu mpControlsPagination'>
+<ul>
+	<li>
+
+	<a href='#' onClick='return false;'>
+	<span data-bind='var:prodlistmeta(page_in_focus); format:text; pretext: page ;'></span>
+	<span data-bind='var:prodlistmeta(total_page_count); format:text; pretext: of ;'></span>	</a>
+	<ul data-bind='var:prodlistmeta(total_page_count); format:mpPagesAsListItems; extension:store_prodlist;' class='ui-widget-content ui-corner-bottom'></ul>
+	</li>
+</ul>
+</div>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='previous' title="previous page">
+	<span class="ui-icon ui-icon-circle-triangle-w"></span>
+</span>	
+
+
+<span data-bind='var:prodlistmeta(page_start_point); format:text; pretext:items ;'></span>
+<span data-bind='var:prodlistmeta(page_end_point); format:text; pretext: - ;'></span>
+<span data-bind='var:prodlistmeta(total_product_count); format:text; pretext: of ;'></span>
+
+	</div><!-- /.mpControls -->
+</div><!-- /#mpControlSpec -->
+
+
+
+<!-- 
+**
+** welcome content
+**
+-->
+<div id='productEditorWelcome' class='productEditor'>
+
+<table width="600" height="100%" border="0" cellspacing="0" cellpadding="0"><tr>
+<td valign="top" style="padding-left:20px;">
+<h1>Online Product Manager</h1>
+
+<p>
+Welcome to our new app-based Product Manager which will keep you seamlessly connected to your product data.
+Here are some of the advantages:
+</p>
+
+<p>
+<h2>Page Rendering</h2>  
+With our new app based solution, there are no frames to load and reload, it
+makes better use of your screen and browser capabilities. 
+The app framework stays on the screen and only the information you want to
+view or manipulate changes. This makes for a smoother workflow and helps to
+increase productivity.
+</p>
+
+<p>
+<h2>Extensible</h2>
+Entering your product data is only the beginning. 
+This interface will allow extensibility by developers so it is possible to
+create custom data input and management interfaces. 
+From vendor management to drop shipping to complex supply chain strategies, our
+new Product Manager.
+</p>
+
+<p>
+<h2>The World is Changing</h2>
+The app-based structure is the future of technology. 
+By providing an e-commerce solution that is better than the best traditional solution and providing it for less cost, 
+we are convinced that this change will let our customers do more in less
+time.
+</p>
+
+</td>
+</tr></table>
+
+</div>
+

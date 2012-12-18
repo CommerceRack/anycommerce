@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+</head>
+
+<body>
+
+<script src="../jquery-1.7.2.min.js"></script>
+
+<script type='text/javascript'>
+
+$(function() {
+	$('code').each(function(){
+		var $this = $(this);
+		var html = $this.html();
+		var str = html.split('\n');
+		$this.empty().append($("<textarea>").attr('rows',(str.length+1)).val(html));
+		})
+	});
+
+</script>
+
+<style type='text/css'>
+body, html	{font-size:100%; font-family:Verdana, Helvetica, sans-serif; color:#666666;}
+textarea	{width:90%; height:auto; font-size:.9em; line-height:1.3em; clear:both;}
+h1,h2,h3,h4,h5,h6	{margin:12px 0}
+h3	{color:#333333;}
+section	{margin:12px 0;}
+</style>
+
+
+<h2>This code requires cycle.js</h2>
+<br />
+<h3>put this into the homepage template:</h3>
+
+<code>
+
+<div id="slideshowContainer" class='clearfix marginBottom'>
+	<div id="slideshowNav"></div>
+	<ul id="wideSlideshow" class="pics slideshow">
+		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow2); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow3); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow4); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow5); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+	</ul>
+</div><!-- /slideshowContainer -->
+
+</code>
+
+<h3>Put the following code into your init file:</h3>
+
+<code>
+//cycle used for slideshow
+app.rq.push(['script',0,app.vars.baseURL+'cycle.js']);
+
+//add slideshow to homepage.
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	var $target = $('#wideSlideshow');
+	if($target.children().length > 1) {
+	   $('#wideSlideshow').cycle({
+		fx:'fade',
+		speed:'slow',
+		timeout: 5000,
+		pager:'#slideshowNav',
+		slideExpr: 'li'			   
+	   });
+	}
+	}]);
+</code>
+
+
+<h3>add this to your css file:</h3>
+
+<code>
+/*slideshow*/
+
+#slideshowContainer  {position:relative; z-index:10; height:300px; min-width:720px; max-width:900px; margin:0 auto; overflow:hidden; z-index:5; } /* setting height/width and overflow hidden eliminates popping (all banners showing then hiding) */
+#slideshowContainer  ul, .slideshow li	{list-style:none; margin:0; padding:0; display:inline; float:left; } /* the slides */
+
+#slideshowNav { z-index: 50; position: absolute; bottom: 10px; left: 10px; width:100%; text-align:left; }
+#slideshowNav a {
+	margin: 0 8px; font-size:.01em; 
+	text-decoration: none;
+	display:inline-block;
+	padding: 6px 8px;
+	border: 1px solid #c0b3ad;
+	color:#ffffff;
+	background: #ffffff;
+	cursor:pointer;
+	-webkit-border-radius: 8px;
+	border-radius: 8px;
+	}
+
+#slideshowNav a:hover, #slideshowNav a.activeSlide {
+	color:#bfd255;
+	background: #ea5051;
+	}
+#slideshowNav a:focus { outline: none; }
+</code>
+
+
+</body>
+</html>

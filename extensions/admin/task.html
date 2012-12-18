@@ -1,0 +1,56 @@
+<div id='taskListPageTemplate' class='page pageTask'>
+
+<h1>Task List</h1>
+
+<section class='ui-widget marginBottom'>
+	<div class='ui-state-default stdPadding ui-corner-top'>
+	<h3>Active Tasks</h3>
+	</div>
+	<div class='stdPadding ui-widget-content ui-corner-bottom'>
+	<form action='#' onSubmit='app.ext.admin.a.processForm($(this));'>
+	<input type='hidden' name='_cmd' value='adminTasksUpdate' />
+	<fieldset>
+	<select title='action for checked tasks'>
+		<option></option>
+	</select>
+	</fieldset>
+	<fieldset>
+	<table class='fullWidth gridTable'>
+	<thead>
+	<tr>
+		<th><input type='checkbox' onChange="$(this).closest('fieldset').find(':checkbox').attr('checked', this.checked);" /></th>
+		<th>Created</th>
+		<th>Task</th>
+		<th>Due Date</th>
+		<th>Priority</th>
+		<th>Quick Link</th>
+		<th>Assigned To</th>
+	</tr>
+	</thead>
+	<tbody id='taskListTbody' data-bind="var: task(@TASKS); format:processList; loadsTemplate:taskListRowTemplate;" class='loadingBG'>
+	</tbody>
+	</table>
+	</fieldset>
+	</form>
+	</div>
+</section>
+</div><!-- /pageTaskListTemplate -->
+
+
+<!--
+reminder: you can't have a template for a tr without a parent table (same for li and it's parent ul/ol) because when rendered, it causes some browser-specific randomness
+-->
+<table>
+<!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
+<tr id='taskListRowTemplate'>
+	<td><input type='checkbox' /></td>
+	<td data-bind="var: task(CREATED_GMT); format:text;"></td>
+	<td data-bind="var: task(TITLE); format:text;"></td>
+	<td data-bind="var: task(DUE_GMT); format:text;"></td>
+	<td data-bind="var: task(PRIORITY); format:text;"></td>
+	<td onClick="app.u.dump($(this).parent().data()); alert($(this).parent().data('link'))" class='lookLikeLink'>Do it to it</td>
+	<td data-bind="var: task(LUSER); format:text;"></td>
+	
+</tr>
+
+</table>

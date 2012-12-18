@@ -74,7 +74,7 @@ jQuery.noConflict(true);
 
 
 <script type="text/javascript">
-var myControl;
+var app;
 var myCreole;
 var myExtensions = [
 	// Standard extensions - comment these out if your app does not need them
@@ -87,7 +87,7 @@ var myExtensions = [
 $(function() {
 
 	$.support.cors = true;  //cross site scripting for non cors sites. will b needed for IE10. IE8 & 9 don't support xss well.
-	myControl = new zController({
+	app = new zController({
 		"release":"20120430075200" //increment this with each change. should solve caching issues.
 		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
 		

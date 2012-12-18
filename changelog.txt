@@ -1,0 +1,196 @@
+#
+# This file will be updated with each release (duh)
+#
+
+Any time you are upgrading to a new version of the MVC, you should create a local backup of the site, so that you can easily restore or refer back as necessary.
+
+2012.31 >  
+See git repository for changes. Individual branches contain change logs.
+
+2012.31 changes
+
+* controller.js
+ -> updated util.getSupplementalPaymentInputs (need to test PO and ECHECK in C/O)
+
+* store_crm.js
+ -> call added for buyerAddressAddUpdate
+
+* quickstart.js
+ -> callbacks for buyer to update address.
+ -> util for jeditable.
+ -> Fixed bug where uri params got nuked on landing page (were in memory, but not on URI which may be necessary for third party scripts)
+ -> moved the createTemplateFunctions to top of start. better for third party plugins that use templateFunctions.
+
+* store_product.js
+ -> fixed issue where prodlist vars were getting dropped when pagination was used (effected withReviews setting)
+
+
+2012.28 changes
+
+* model.js
+ -> added feature to allow for loading .json (flat files) of product data. Useful for native apps.
+ -> Changed the # of cmds in a pipelined request to a var instead of a fixed #. Will later allow a debug mode to excersize more control.
+ -> immutableQ no longer aborts mutable. Now, for a Q or request to get aborted, the app must do it.
+ -> added a supported param in _tag for 'forceError'. set to 1 and the 'onError' function (if a callback is specified) will get reached instead of onSuccess (even if call is successful).
+ -> started adding some support for planned debugger tool.
+
+* controller.js
+ -> youtube renderFormat now supports a height/width param (set in data-bind) for more control over appearance. default height/width set.
+
+* checkout_nice and checkout_passive
+ -> updated so that when the form validation and order creation is taking place, a loading modal appears w/ status updates.
+
+* store_checkout.js
+ -> fixed major bug where payment info (cc) was not being sent on buyerOrderCreate (bug introduced in 201225)
+
+* store_cart.js
+ -> added new call 'cartItemsInventoryVerify' to allow a check of the cart (prior to checkout) for inventory availability.
+
+* store_product.js
+ -> fixed bug in addToCart error that cause messaging to not consistently appear.
+
+* store_prodlist.js
+ -> finished adding support for reviews in a prodlist.
+
+* store_search.js
+ -> deprecated legacy search. keyword now uses a native elastic search.
+
+* quickstart.html
+A big change to the way the MVC is loaded.  Instead of directly including all the .js files, only two are included (jquery and loadscript). There is a new appPreView ID that contains a loader, some text, and the merchants logo (which needs to be hard coded and should be a fairly small file). The html5 progress bar is updated as the inlcudes are loaded.  
+
+There is a new file, init.js which is the first file included via loadscript.  It contains all the references to ALL the other files that need to be included, including any third party scripts. 
+
+ -> productListTemplateChildren to be clickable.
+ -> price/msrp/savings updated to use new render formats (see quickstart.js update)
+
+* quickstart.js
+ -> added new function for changing body/html cursor.
+ -> added onInit and onComplete functions to change cursor to 'wait' and 'auto' respectively.
+ -> new render formats for priceRetailSavingsPercentage and priceRetailSavingsDifference
+
+* qs_styles
+ -> adjusted loadingBG classes to reference new loading/wait animated gifs
+
+
+
+2012.25 changes
+
+Added a 'snippets.html' file to the examples directory. Contains some useful snippets for elements such as search and newsletter. More will be added...
+
+model.js
+ -> Bug fix in extensions loader. Will now check to make sure all dependencies templates have loaded before executing the init callback.
+
+* controller.renderFunctions
+ -> changed the way pre/post text work.  They are no longer added to the value before it is passed into the format function. Instead, they're handled afterwards. This means that bindData.cleanValue is no longer necessary (value is always 'clean' now) and has been removed. pre/post text should be used for text only (does not support html).
+ -> support for before, after and wrap have been added globally. These should be used for adding any html.
+ -> added myControl.vars.protocol which will = https: (if secure) or http: (if non-secure or local). This may change as native app support progresses.
+
+Checkouts
+ -> panels.chkoutPayOptionsFieldset had the supplemental payment information removed. It was added as a function in the controller so it could be more global (it'll be shared in checkout, admin orders and customer order updates.
+
+* store_prodlist
+ -> removed the 'getProductDataForLaterUse' function. Use getProductDataForList instead (they were very similar functions). 
+
+* store_crm
+ -> started support for buyerOrderMacro (ability for a buyer to update their order)
+
+* store_cart
+ -> started amazon payments integration
+
+* store_product
+ -> removed util.getXsellForPID (not necessary w/ buildQueriesFromTemplate code)
+ 
+* quickstart
+ -> change to addClass renderFormat (required because of changes to pre/posttext)
+ -> some changes to reviews, including new templates and bindData's (productTemplate). new reviews img with all 11 ratings.
+ -> broke changeNavTo out into separate functions, each called by showContent as needed:
+	showSearch
+	showCompany
+	showCustomer
+	This change was necessary because of a bug where landing on a company page resulted in an error because the profile data hadn't been loaded yet.  This is cleaner too.
+ -> as part of removing changeNavTo, added a function for util.thisArticleRequiresLogin(P) (article is what a 'show' value is internally referenced as (ex: return or myaccount is an article). will return true or false based on whether P.show is a secure article (ex: show=orders requires login).
+ -> removed some onSubmit and other events from the search and newsletter forms. added a function that gets executed on app init to add these.
+ -> orderContentsTemplate updated. specifically, the stuff list upgraded to use stuffList render format. No longer requires custom callback, can use translateTemplate.
+ -> orderProductLineItemTemplate renamed to productListTemplateInvoice (to be more consistent w/ naming convention)
+ -> added support for softauth order view if orderid and cartid are passed to /customer/orders
+ -> added pageNotFound template (gets used for 404 pages). app no longer defaults to homepage in these cases.
+ -> updated pushState code so setting back = 0 behaves as replaceState instead of doing nothing (this solves an issue where going back in history to first page of site didn't behave as expected)
+ -> better support for IE back button using hash (other browsers will read/load from hash as needed too)
+
+
+
+2012.20 changes
+* upgrade to jquery 1.7.2
+* upgrade to jqueryUI 1.8.20
+* model
+	- JSONP requests are now all individual (non-pipelined) to solve issue of URL being to long. (this only effect IE<8 if cross-domain)
+* Checkout
+	- the 'passive' and 'nice' checkouts were modified and moved into folders within extensions. a new extension 'store_checkout' was added which contains all of the shared calls, callbacks, utilities and renderFormats that are likely to be used with any checkout app.
+	- The templates for the 'nice' and 'passive' extensions were moved to separate .html files, stored with the extension in it's directory. This will make it much easier to change what checkout is loading in init without having to update the index.html/quickstart.html files. Those files will also be much smaller now.
+* store_prodlist
+	- fixed multipage header so pagination could be turned off (and will automatically be removed when only 1 page is present).
+	- added support for before, after and wrap to prodlist. (experiement - if it goes well, support for this will be added to all render formats)
+* store_navcats
+	- added new renderFormat for dual-level nav (subcategory2LevelList)
+* quickstart.js and quickstart.html
+	- added support for pageFunctions,  a page/template-specific function to get executed after that page/template is loaded. ex:
+	= pageFunctions.productTemplate(); would get executed after a product is loaded. (see in quickStart.html). Could be used to init tabs, carousels, slideshows, etc.
+	= pageFunctions.customerTemplate(); 
+* productTemplate upgraded to use loadsTemplate on prodlists and review elements. what was several templates is now four (productTemplate, productListTemplate [for accessories and related items], productListTemplateChildren and productReviewsTemplateDetail (for review list).
+* categoryTemplate now has a breadcrumb added to sample.
+* cartTemplate updated. uses loadsTemplate and what was three templates is now two (cartTemplate and productListTemplateCart)
+* removed renderFormat subcategory2LevelList (moved to store_navcats)
+* banner element will now only render if IMG is set in val (ALT=&IMG=&LINK=).
+* Changed the class 'itemCount' to 'cartItemCount' and added 'cartSubtotal' and 'cartTotal'. if there is a minicart in the theme and you need these values, set the class on an elemend. ex: <div>you have <span class='cartItemCount'></span> item(s) in your cart</div>
+
+
+
+2012.19
+* change to multipage prodlist code to support footer controls
+* upgraded homepage render to work more like category page.
+* fixed issue with globalMessaging emptying on appInit (which contained app load errors)
+* renamed handleLegacyURL to more appropriate handleAppInit in quickstart.js and also added  support for params
+* added renderFormat for display of product tag(s).
+* update model error handling which still referenced older API calls.
+* fixed bugs in handleErrors and getResponseErrors causing MVC generated errors to not always appear.
+* added 'breadcrumb' renderformat to store_navcats
+* added util.addQueries4BreadcrumbToQ 
+
+## renamed the following templates to be more inline w/ new template naming convention:
+* 'cartViewerTemplate' to 'cartTemplate'
+* 'productChildrenTemplate' to 'productListTemplateChildren'
+* 'cartViewerProductTemplate' to 'productListTemplateCart'
+
+
+2012.18
+* upgrade to category templates rendering so it's much simpler.
+
+## Checkout Specific upgrades (for both nice and passive)
+* support for PayPalEC in checkout.
+* support for PayPalEC and Google Checkout on cart.
+* selects shipping method if only 1 is available
+* selects payment method if only 1 is available
+* CC month dropdown changed to integers to more closely reflect what is on the card and reduce confusion
+* cvv/cid 'help' link added
+* if country is not US, state/province is no longer required
+* fixed bug in shipping where methods didn't always update when state/zip was changed (update view for shipping panel)
+
+
+2012.17
+* Add quickstart.html/quickstart.js in root project
+* created well known div id='appView' and div id='appTemplates' within file
+* added site-analyzer: an app which explores sites.
+* added annex-site: an app which can intercept add to cart + checkout on non-zoovy native store
+* added carousel-ad: an app which is suitable for adding dynamic content + checkout to a blog such as blogger or wordpress
+* changed myControl.ext.myRia.util.handlePageContent to myControl.ext.myRia.action.showContent
+* added 'showContent' alias
+* changed second/third pageInfo parameters to showContent from scalar+boolean to associative array with pageType specific params.
+* simplified up template naming convention
+
+2012.16
+* Updated the examples with better formatting, more in-line help
+* Added demo of accessing the API using Perl
+
+2012.15
+* This is rapidly approaching "near production" for building full blown shopping apps.
+

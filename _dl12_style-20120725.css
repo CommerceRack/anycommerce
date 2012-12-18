@@ -1343,7 +1343,7 @@ PRODUCT TEMPLATE
 
 	}
 	
-.addToCartButton	{ padding:0; margin-left:4px 0 0 24px; background: url(images/dl12_addtocart-170x35.jpg) no-repeat; width:170px; height:35px; text-indent:30000px;}
+#addToCartBtn	{ padding:0; margin-left:4px 0 0 24px; background: url(images/dl12_addtocart-170x35.jpg) no-repeat; width:170px; height:35px; text-indent:30000px;}
 .qtyInput	{font-size:10px; line-height:14px;}
 .qtyInput input	{display:block;}
 .atcSuccessMessage	{clear:both;}
@@ -1416,13 +1416,15 @@ CATEGORY TEMPLATE
 
 .mpControls	{padding:2px 6px;}
 
-.catMediaCol	{width:30%; padding-right:24px;}
-.catMediaContainer	{background:#e6e6e6; padding:8px;}
+.catMediaCol	{width:30%; padding-right:24px;display:table-cell;}
+.catMediaContainer	{background:#e6e6e6; padding:8px; margin-right:24px;float:left;width:482px;}
 .catBigImageContainer	{margin-bottom:8px; border:1px solid #bcc0c3;}
 .catVideoContainer	{border:1px solid #939393; background:#ffffff; padding:8px;}
 .catVideoContainer .vidThumb	{float:left; margin-right:8px;}
 .catVideoContainer h2	{color:#655e4e; font-size:16px; font-weight:normal; padding:0; margin:0;}
 .catVideoContainer P	{margin:2px 0; padding:0; font-size:13px;}
+/*.catDesc {float:left;}*/
+.textBlock {display:inline;}
 
 .categoryList li	{height:300px;}
 .productList li	{height:370px;}

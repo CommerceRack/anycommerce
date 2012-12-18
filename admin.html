@@ -1,0 +1,399 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<title>Zoovy.com - Administrative Interface Login (v201246)</title>
+
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache"><!-- don't cache this file. -->
+<META NAME="ROBOTS" CONTENT="NONE">
+
+<script type="text/javascript">
+
+var myCreole;
+
+var baseURL = '';
+//in admin, used for loading app-specific files. do NOT set the base href tho.
+if (document.location.protocol  == 'file:') { 
+	baseURL = ''; 
+	}
+else if (document.location.port == 8888) {
+	// local webserver (node.js?)
+	baseURL = '/';
+	}
+else {
+   baseURL = "//www.zoovy.com/biz/app/"
+   }
+	
+var app = {vars:{
+	/////////////////////////////////\
+	"release":"20121128.2",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	//////////////////////////////////
+	"thisSessionIsAdmin": true,
+	"jqurl":"https://www.zoovy.com/webapi/jquery/index.cgi",
+//	"secureURL" : "https://www.zoovy.com",
+	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
+	"baseURL" : baseURL,
+	},u:{},rq:[]};
+
+	
+</script>
+
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/themes/cupertino/jquery-ui.css" />
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/todo-list.css" />
+<link rel="STYLESHEET" type="text/css" href="https://www.zoovy.com/biz/standard-20110317.css" />
+
+
+
+<style type='text/css'>
+
+/* move these into standard.css */
+.displayNone, .debug	{display:none;}
+body	{margin:0px; padding:0; background-color:#ffffff; background:url(https://www.zoovy.com/includes/header-20120404/images/body_bg-8x8.gif);}
+
+.tabContent	{background-color:#ffffff;}
+
+#appLogin	{font-size:19px;}
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin label span	{display:inline-block; text-align:left; width:120px;}
+#appLogin .textbox	{width:250px; font-size:18px; font-weight:normal; color:#000000;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+#appLogin .loginbutton	{background:#000000; font-size:18px; padding:4px 10px; color:#ffffff; border:0;}
+</style>
+
+
+
+<!-- 
+these two need to be loaded here 
+-->
+<script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+<script src="extensions/admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type="text/javascript" src="loadscript.js"></script>
+
+
+<script type="text/javascript">
+app.u.loadScript(app.vars.baseURL+"admin_init.js");
+</script>
+
+
+
+
+
+
+
+</head>
+<body class="control">
+<!-- this div handles getting content to appear below the fixed header -->
+
+<div style='position:relative; height:561px;' id='preloadAndLoginContainer'>
+	
+	<div style='position:absolute; top:149px; left:0; right:0; height:268px; z-index:1; background:url(https://www.zoovy.com/includes/header-20120404/images/body_bg_horgrad-1x268.jpg) repeat-x;' id='bgForPreAndLogin'></div><!-- background horizontal stripe -->
+	
+	<div style='position:relative; margin:0 auto; width:984px; height:561px; z-index:10;'>
+	
+		<div style='position:absolute; top:0; left:0; z-index:11;'><img src='extensions/admin/images/login_bg-984x561.png' width='984' height='561' alt='' /></div>
+	
+		<div style='position:absolute; top:35px; left:45px; z-index:15;'><img src='https://www.zoovy.com/includes/header-20120404/images/zoovy_logo-217x61.png' width='217' height='61' alt='Zoovy.com' /></div>
+	
+		<div style='position:absolute; top:180px; left:50px; right: 50px; z-index:100;' id='preloadAndLoginContents'>
+
+<div id='appPreView'>
+
+	<h3>One moment please....</h3>
+
+	<div class='alignCenter'>
+	<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+	</div>
+	<div id='appPreViewProgressText'>0% Complete</div>
+
+	<div class='appMessaging'></div>
+
+</div>
+
+
+<div id='appLogin' class='displayNone'>
+
+	<div class='appMessaging'></div>
+	
+	<div id='loginFormContainer'>
+		<form name='merchantLogin' id='merchantLogin' onSubmit="app.ext.admin.a.login($(this)); return false;">
+		<fieldset>
+			<legend>Merchant Login</legend>
+			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
+			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
+			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
+			<input type='submit' value='login' class='loginbutton' />
+		</fieldset>
+		</form>
+
+
+		<div class="hint">App Release #: <span id="appversion">??</div></div>		
+		<script type="text/javascript">
+		jQuery("#appversion").text(app.vars.release);
+		</script>
+	</div>
+	
+	<div id='createAccountContainer' class='displayNone'>
+	<form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
+	<fieldset>
+		<legend>Create Account</legend>
+	
+		<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
+		<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
+		<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
+		<div><label>Last Name: <input type='text' name='lastname' value='' required='required' /></label></div>
+		<div><label>Company: <input type='text' name='company' value='' required='required' /></label></div>
+		<div><label>Phone: <input type='tel' name='phone' value='' required='required' /></label></div>
+		<div><label>Verify by: <select name='verification' required='required'>
+			<option value='sms'>SMS/Text Message</option>
+			<option value='voice'>Voice/phone call</option>
+		</select></label></div>
+		<input type='submit' value='create' />
+	</fieldset>
+	</form>
+	</div>
+
+</div>
+
+	
+	</div>
+	
+	
+
+
+
+
+
+
+
+	</div>
+</div>
+
+
+
+
+
+
+
+<div id='appView' class='displayNone'>
+
+
+<div id='mastHead'>
+
+<div style='height:105px;' id='header'>
+
+<!-- gets the header to be persitent -->
+	<div style='position:absolute; height:105px; width:100%;'>
+
+<!-- used as a container for the elements within the header -->
+		<div style='height:105px; position:relative; background:url(https://www.zoovy.com/biz/images/header/header_bg-1134x105.jpg) no-repeat left #e9e9e9;'>
+
+<!-- logo -->
+<div id='zoovyLogo' style='position:absolute; left:20px; top:10px; width:136px; height:33px; text-align:center; cursor:pointer;' onClick="showUI('/biz/recent.cgi');">
+<img src="https://www.zoovy.com/biz/images/header/zoovy_logo-136x33.png" alt="zoovy is great" width='136' height='32' id='zoovyheaderlogo' />
+</div>
+
+
+
+<!-- contains the menu links and the search form -->
+<div style='position:absolute; right:20px; top:7px; text-align:right;'>
+	<a href='/biz/downloads/index.cgi' class='bindByAnchor'>downloads</a> |
+	<a href='/biz/support/index.cgi'  class='bindByAnchor' >support</a> |
+	<a href='/biz/todo/index.cgi'  class='bindByAnchor' >to do</a>
+</div>
+
+
+
+
+<!-- username/id and partition info -->
+<div style='position:absolute; top:7px; left:180px;' id='userInfo'>
+You are Logged in as: <span class='username'></span> <span class='domain lookLikeLink' onClick='app.ext.admin.a.showDomainChooser(); return false;'></span> [ <span class='partition'></span> ]
+<a href='/biz/app/logout.html' onClick="app.ext.admin.a.logout(); return false;" >logout</a>
+</div>
+
+
+
+
+	<div style='position:absolute; left:180px; top:28px;'>
+	<ul id='menutabs' >
+		<li  class='off setupTab'><a href="#/biz/setup/index.cgi" onClick="return navigateTo('#:setup');"  class='bindByAnchor' title='All the tools you need to set up your store including; payment, shipping, categories, inventory, etc'><span>setup</span></a></li>
+		<li  class='off sitesTab'><a href="#/biz/sites/index.cgi" onClick="return navigateTo('#:sites');"  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>sites</span></a></li>
+		<li  class='off displayNone jtTab' id='jtSectionTab'><a href='/biz/jt/index.cgi'  class='bindByAnchor' title='List your stores by domain, profile or partition.  Handy.'><span>JT</span></a></li>
+		<li  class='off productTab'><a href="#/biz/product/" onClick="return navigateTo('#:product');"  class='bindByAnchor' title='Create, edit or syndicate your products. Manage options and other product related information.'><span>products</span></a></li>
+		<li  class='off ordersTab'><a href="#/biz/orders/index.cgi" onClick="return navigateTo('#:orders');"  class='bindByAnchor' title='You guessed it. Manage your orders here.'><span>orders</span></a></li>
+		<li  class='off crmTab'><a href="#/biz/crm/index.cgi" onClick="return navigateTo('#:crm');"  class='bindByAnchor' title='Manage customer requests and feedback submitted through your storefront'><span>crm</span></a></li>
+		<li  class='off syndicationTab'><a href="#/biz/syndication/index.cgi" onClick="return navigateTo('#:syndication');"  class='bindByAnchor' title='Launch and mangage your marketplace syndication feeds.'><span>syndication</span></a></li>
+		<li  class='off reportsTab'><a href="#/biz/reports/index.cgi" onClick="return navigateTo('#:reports');"  class='bindByAnchor' title='A plethora of reporting tools to help you analyze your sales' ><span>reports</span></a></li>
+		<li  class='off kpiTab'><a href="#/biz/kpi/index.cgi" onClick="return navigateTo('#:kpi');"  class='bindByAnchor' title='View Key Performance Indicators' ><span>KPI</span></a></li>
+		<li  class='off utilitiesTab'><a href="#/biz/utilities/index.cgi" onClick="return navigateTo('#:utilities');"  class='bindByAnchor' title='A handy set of tools. CSV and power tools, newsletter manager, customer manager, etc.'><span>utilities</span></a></li>
+	</ul>
+	</div>
+
+
+<!-- sublinks or 'tabs' as brian refers to them. These are the links that appear below the main tabs -->
+<div style='position:absolute; left:0px; right:0px; top:49px; padding-left:10px;' class='sublinks' id='sublinks'>
+
+	<div style='float:right; padding-top:6px; padding-right:20px;' id='helpButton'><a target="webdoc" href="http://webdoc.zoovy.com/doc/50727" title='click here for webdoc help'><img src='https://www.zoovy.com/biz/images/header/ui_btn_help-67x22.gif' width='67' height='22' alt='click here for webdoc help' /></a></div>
+
+	<div id='navTabs'></div>
+	<!-- <a href="index.cgi?VERB=NEWS" class="header_sublink_active bindByAnchor"><span>Recent News</span></a> -->
+
+</div>
+
+
+<!-- breadcrumb -->
+<div style='position:absolute; left:0px; right:0px; bottom:0px; height:22px; line-height:22px; border-bottom:1px solid #cbcbcb; padding-left:20px;' id='breadcrumb'></div>
+
+
+		</div>
+	</div>
+</div>
+
+</div><!-- /mastHead -->
+
+
+	<div id='globalMessaging' class='appMessaging'></div>
+
+	<div id='homeContent' class='displayNone tabContent' data-section='home'></div><!-- home acts as a default as well -->
+	<div id='setupContent' class='displayNone tabContent' data-section='setup'></div>
+	<div id='sitesContent' class='displayNone tabContent' data-section='sites'></div>
+	<div id='productContent' class='displayNone tabContent' data-section='product'></div>
+	<div id='ordersContent' class='displayNone tabContent' data-section='orders'></div>
+	<div id='crmContent' class='displayNone tabContent' data-section='crm'></div>
+	<div id='syndicationContent' class='displayNone tabContent' data-section='syndication'></div>
+	<div id='reportsContent' class='displayNone tabContent' data-section='reports'></div>
+	<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
+	<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
+	<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
+
+</div><!-- /appView -->
+
+
+
+
+
+
+
+
+
+
+<div id='printContainer' class='displayNone'></div><!-- used for printing. leave this here... and alone -->
+
+
+
+
+
+
+
+
+
+
+
+<!--
+Having these on the DOM seems to make the JQ File Upload plugin work better so they're here instead of within a template.
+-->
+
+<!-- The template to display files available for upload -->
+<!-- NOTES:
+template-upload modified from original. data-name added to tr.
+data-fid and data-fname will be added in the fileuploadadd
+These two pieces of data are used for mapping after the uploads to set what folder each file is saved to.
+-->
+<script id="template-upload" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-upload fade" data-filename="{%=file.name%}">
+        <td class="preview"><span class="fade"></span></td>
+        <td>
+			<div class="name">{%=file.name%}</div>
+			<div class="size">{%=o.formatFileSize(file.size)%}</div>
+			<div class="folder"></div>
+		</td>
+        {% if (file.error) { %}
+            <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+        {% } else if (o.files.valid && !i) { %}
+            <td>
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="bar" style="width:0%;"></div></div>
+            </td>
+            <td class="start">{% if (!o.options.autoUpload) { %}
+                <button class="btn btn-primary">
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start</span>
+                </button>
+            {% } %}</td>
+        {% } else { %}
+            <td colspan="2"></td>
+        {% } %}
+        <td class="cancel">{% if (!i) { %}
+            <button class="btn btn-warning">
+                <i class="icon-ban-circle icon-white"></i>
+                <span>Cancel</span>
+            </button>
+        {% } %}</td>
+    </tr>
+{% } %}
+</script>
+<!-- The template to display files available for download -->
+<script id="template-download" type="text/x-tmpl">
+{% for (var i=0, file; file=o.files[i]; i++) { %}
+    <tr class="template-download fade"  data-filename="{%=file.name%}">
+        {% if (file.error) { %}
+            <td></td>
+            <td class="name"><span>{%=file.name%}</span></td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+        {% } else { %}
+            <td class="preview">{% if (file.thumbnail_url) { %}
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="gallery" download="{%=file.name%}"><img src="{%=file.thumbnail_url%}"></a>
+            {% } %}</td>
+            <td class="name">
+                <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+            </td>
+            <td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+            <td colspan="2"></td>
+        {% } %}
+        <td class="delete">
+            <button class="btn btn-danger" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}"{% if (file.delete_with_credentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                <i class="icon-trash icon-white"></i>
+                <span>Delete</span>
+            </button>
+        </td>
+    </tr>
+{% } %}
+</script>
+
+
+
+
+
+
+
+<div class='debug buttonset clearBoth clearAll clearfix'>
+<hr />
+
+<button onClick="localStorage.clear();">Nuke LocalStorage</button>
+<button onClick="app.ext.admin.a.showDomainConfig();">domainConfig</button>
+<button onClick="app.ext.admin_task.a.showTaskList();">taskList</button>
+<button onClick="app.ext.admin_support.a.showFileUploadInModal('169999');">showFileUploadInModal</button>
+
+<button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
+<button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
+<button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
+
+<button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
+<button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
+
+<hr />
+
+</div>
+
+
+
+</body>
+</html>

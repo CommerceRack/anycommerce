@@ -1,0 +1,21 @@
+
+
+<section class='ui-widget marginBottom' id='batchJobStatusTemplate'>
+
+	<hgroup class='marginBottom'>
+		<h3><span data-bind="var: batchjob(jobid); format:text; pretext:Job ID: ;"></span></h3>
+		<h5 data-bind="var: batchjob(status); format:text; pretext:Status: ;"></h5>
+	</hgroup>
+
+	<div data-bind="var: batchjob(started); format:unix2mdy; showtime:1; pretext:Started: ;"></div>
+	<div><span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span> <span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span></div>
+
+	<p class='marginBottom' data-bind="var: batchjob(status_msg); format:text;"></p>
+
+
+	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
+	<button data-btn-action="adminBatchJobCleanup" class='displayNone' data-bind="var: batchjob(status); format:cleanUpButton; extension:admin_batchJob;">Clean Up/Remove</button>
+
+	<p>This panel will not update automatically. Please go to reports &#187; Batch Jobs for status</p>
+
+</section>

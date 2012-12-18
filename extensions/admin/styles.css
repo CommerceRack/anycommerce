@@ -22,7 +22,7 @@ class can also be applied to a 1 item per row list.
 .displayNone	{display:none;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
-.plainList	{margin:0; padding:0; list-style:none;}
+/* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
 
 button.ui-button	{padding:2px 4px;} /* some default padding to add breathing room when text-only isn't used. keeps button small. */
 button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for buttons. i like buttons. this is to handle padding on text only buttons */
@@ -34,27 +34,45 @@ button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for butt
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
+.lookLikeLink, .ui-widget-content a	{cursor:pointer; color:#0066CC;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+.pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
-
-
-
-
-
-.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
 /*
-added to an editable element once edit is enabled.
-inline block and width are added so that elements that are empty will be more obviously editable.
-be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
-the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
+some global padding and margins.
+As often as practical, use margin or padding of 12px; this will give the UI a consistent look and feel.
+If more is needed, jump up in increments of 12.
+If less is needed, use increments of 4
 */
-.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px;} 
-.editEnabled input	{border:0; padding:0; margin:0;}
-.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
-.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
 
-.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
-a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
+.noPadOrMargin	{padding:0; margin:0;}
+
+
+/*
+MARGIN CLASSES
+some standard margins that can be used for spacing between elements.
+In general, rule of thumb would be to apply bottom margin to stacked elements, not top. That way if the element order changes, there's no alignment issues on top.
+if extra spacing is needed between two elements, add a leftmargin to the right element and rightmargin to the left element. doubles the margin.
+using these shared margins will help make the UI more consistent.
+*/
+
+.marginLeft	{margin-left:12px;}
+.marginRight	{margin-right:12px;}
+.marginTop	{margin-top:12px;}
+.marginBottom	{margin-bottom:12px;}
+.stdMargin	{margin:12px;}
+.stdPadding	{padding:12px;}
+section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
+
+
+/* 
+LIST CLASSES
+apply liststylenone and nopadormargin to the UL to get an inline list.
+if you want the list responsive, apply the .fluidList class. 
+ -> In this case, you want a separate class to specify height and width of each LI to maintain a grid. ex: .mediaLib li	{...}
+*/
+.listStyleNone, .listStyleNone li	{list-style:none;} /* apply to a ul or ol */
+.fluidList li	{float:left; margin:12px; padding:0; display:inline-block;}
 
 
 
@@ -64,7 +82,14 @@ a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
 /* use paddedTable when you have a table where you need some small spacing between each td col and row */
 .paddedTable td, .paddedTable th, .paddedTable tf	{padding:2px 10px 2px 0;}
 
-/* Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set. */
+/* for non-datagrid tables. ex: setup page. */
+table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
+
+table.fullWidth	{width:100%;}
+
+/*
+Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set.
+*/
 .gridTable	{background:#cccccc; border-spacing:0 1px;}
 .gridTable td, .gridTable th, .gridTable tf	{padding:2px 10px 2px 2px; vertical-align:top;}
 .gridTable tr:nth-child(odd)	{background:#ffffff;}
@@ -74,83 +99,6 @@ a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
 
 
 
-
-
-/*
-
-FINDER STYLES
-
-
-*/
-
-
-/*
-any div that is going to be the container for a product finder should have this class.
-the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
-*/
-
-.finderContainer	{width:100%; margin:12px 0;}
-.finderContainer .ui-widget-header	{padding:4px;}
-
-
-.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
-.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
-.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
-
-
-#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
-
-/*
-used in the template for a product finder.
-use only variable widths, so that the finder expands proportionally depending
-on it's container element.
-*/
-.finderTable	{width:96%; margin:0 auto;}
-.finderTable	td {padding:6px; width:50%;}
-
-
-
-/* for product lists in a finder. */
-
-/* scrolly-div for product lists */
-.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
-
-/*
-parent element for list (either ol or ul)
-min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
-*/
-.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
-
-/*
-a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
-the right padding is to accomodate the handle and removeProd elements.
- */
-.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
-.finderProdlist li:hover	{border-color: #cccccc;}
-
-.finderProdlist .prodThumb	{float:left; margin-right:12px;}
-.finderProdlist .pid	{font-size:.8em}
-.finderProdlist .prodName	{margin-right:55px;}
-
-
-/*
-styles for lists that are selectable
-a background on the target element may require an implicit override here.
-*/
-.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
-.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
-.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
-
-/* if a list is selectable and sortable, add an element with a handle class */
-.ui-selecting .handle { background: #ddd; }
-.ui-selected .handle { background: #cde; }
-
-
-.finderResults	{z-index:100;}
-.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
-
-/* the remove feature is only available on the target side */
-.finderResults .removeProd	{display:none;}
 
 
 /* a global 'handle' class for now. for consistency. 
@@ -164,7 +112,13 @@ later if more variety is needed, we can either create exceptions or more rules t
 
 /* loading classes. do NOT change class name. change styling as needed */
 .loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:100px; min-width:100px;}
-li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
+li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
+
+
+/* This gets applied to the parent containers around each tabs content area.  */
+.tabContent	{margin:12px auto; width:90%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+
+#appView	{background:#ffffff;}
 
 
 /* multipage controls */
@@ -256,59 +210,154 @@ li.loadingBG	{background:url(images/wait.gif) no-repeat center center  !importan
 
 
 
+
+/*
+
+########################################################
+
+FINDER
+
+########################################################
+
+*/
+
+
+/*
+any div that is going to be the container for a product finder should have this class.
+the exception to this would be in a pad-specific environment or if opening the finder in a dialog/modal
+*/
+
+.finderContainer	{width:100%; margin:12px 0;}
+.finderContainer .ui-widget-header	{padding:4px;}
+
+
+.finderSearch	{border:1px solid #cccccc; width:300px;} /* search keyword input */
+.finderContainer .ui-button-text-icon-secondary	{font-size:.7em} /* search button */
+.finderContainer section.ui-widget-content	{border-top:0;} /* content area (below header). header has bottom border */
+
+
+#finderSearchFilters fieldset	{border-bottom:1px solid #cccccc; padding-bottom:12px; margin-bottom:12px;}
+
+/*
+used in the template for a product finder.
+use only variable widths, so that the finder expands proportionally depending
+on it's container element.
+*/
+.finderTable	{width:96%; margin:0 auto;}
+.finderTable	td {padding:6px; width:50%;}
+
+
+
+/* for product lists in a finder. */
+
+/* scrolly-div for product lists */
+.finderProdlistContainer	{height:350px; overflow-y:auto; overflow-x:hidden;}
+
+/*
+parent element for list (either ol or ul)
+min-height is there to make dropping easy for small/empty lists. min-height should match height of finderProdlistContainer
+*/
+.finderProdlist	{margin:0; padding:0; list-style:none; min-height:350px; font-size:.9em}
+
+/*
+a border is added 'on selected' so a white border is added by default to avoid 'jumping'.
+the right padding is to accomodate the handle and removeProd elements.
+ */
+.finderProdlist li	{clear:both; margin:6px 0; position:relative; list-style:none; border:1px solid #ffffff; border-left-width:0; border-right-width:0; position:relative; background:#ffffff; min-height:40px;}
+.finderProdlist li:hover	{border-color: #cccccc;}
+
+.finderProdlist .prodThumb	{float:left; margin-right:12px;}
+.finderProdlist .pid	{font-size:.8em}
+.finderProdlist .prodName	{margin-right:55px;}
+
+
+/*
+styles for lists that are selectable
+a background on the target element may require an implicit override here.
+*/
+.ui-selecting, .finderProdlist li.ui-selecting { background: #eee; }
+.ui-selected , .finderProdlist li.ui-selected{ background: #def; !important }
+.targetList .ui-selected { background: #none; } /* add a class of targetList around any drop point so that the 'selected' background goes away */
+
+/* if a list is selectable and sortable, add an element with a handle class */
+.ui-selecting .handle { background: #ddd; }
+.ui-selected .handle { background: #cde; }
+
+
+.finderResults	{z-index:100;}
+.removeProd	{background:#ffe7e7; position: absolute; right: 29px; top: 0; bottom: 0; padding:14px 6px 0 6px; border-right:1px solid #ffffff; cursor:pointer;}
+
+/* the remove feature is only available on the target side */
+.finderResults .removeProd	{display:none;}
+
+
+
+
+/*
+
+####################
+
+Collapseable panel (product editor, domains)
+
+####################
+
+
+note - the parent 'stackedPanels' was to compensate for legacy/compatability content class clashing.
+*/
+
+.stackedPanels .panelContents	{border-top: none; min-height:100px;} /* panels are collapsed by default. when opened, need min-height for loading while content is obtained */
+.stackedPanels .panelHeader	{margin-top:12px; padding:3px 12px;}
+.stackedPanels .panelHeader span	{float:left; margin-right:6px;}
+
+.stackedPanels	.panelContents fieldset	{border:none; margin:0; padding:10px;} /* add a little padding inside the panel */
+
+
+
+
+
+
+
 /*
 
 ########################################################
 
 
-ORDER MANAGER
+Messaging Styles
 
 ########################################################
 
 */
+.appMessage	{margin-bottom:12px;}
+.appMessage .stdMargin {padding:5px;}
 
-/*
-order list
-*/
+.appMessage .ui-icon	{float:left; margin-right:12px;}
 
-#orderListMessaging	{max-height:220px; overflow:auto;}
-#orderList	{margin:0 auto;font-size:.8em;} /* the container. the margin will center it on the page */
-.orderListTable, #orderListTable	{width:100%;}
+/* some messages have a red bg. add a white circle around the icon in these cases. */
+.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
 
+/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+.appMessage .appMessageTxt	{float:left;}
 
-.orderListTable	td.mainCol	{vertical-align:top;}
-.orderListTable	td.leftCol	{width:180px; vertical-align:top; height:100%;}
-.orderListTable	td.mainCol .ui-widget-header	{padding:2px 12px;}
-.orderListTable	td.leftCol .ui-widget-content	{border-right:none;}
+.ui-state-z-message	{border:1px solid #666666; background:#efefef; color:#333333;}
 
-#orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
-#orderFilters h4	{margin:1px 6px;}
-#orderFilters ul	{margin-bottom:12px;}
-#orderFilters li	{padding:1px 12px;}
+.ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
+.ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
 
-.viewOrderIframe, .bulkMailIframe	{width:94%; margin:0 auto; height:500px; border:0; text-align:center;}
+.ui-state-z-success .success	{background:none;} /* compensates for bg image for standard.css */
 
+.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center; width:29px; height:29px;}
 
-
-/*
-order detail
-*/
-.orderDetailHeader	{padding-bottom:12px; border-bottom:1px solid #efefef;}
-.orderDetailHeader,	.orderAddresses, .orderDetailsStuff{margin-bottom:12px;}
-.orderAddresses	{padding-right:24px; width:28%;}
-.orderDetailsStuff	{width:69%; text-align:left;}
-.orderAddresses address	{margin-bottom:12px;}
-
-.orderStuffItemRow td	{padding:0 12px 12px 0;}
-
-.orderDetailButtonBar	{margin-bottom:12px;}
-.orderDetailButtonBar button	{padding:2px 6px;}
-
-.customerNotes, .orderNotes	{width:49%; padding:12px 0;}
-.notes .note	{padding-bottom:24px;}
-.notes .editable	{display:block;}
-
-.notes textarea	{min-height:60px; width:100%;}
+.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat; width:25px; height:25px;}
+.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat; width:25px; height:29px;}
+.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat; width:25px; height:24px;}
+.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
 
 /*
 
@@ -320,3 +369,41 @@ SHARED CLASSES FOR INLINE EDITING
 ########################################################
 
 */
+
+
+
+.editable	{} /* empty class, but reserved. used w/ jeditable. added to any element that will be editable, once enabled. */
+/*
+added to an editable element once edit is enabled.
+inline block and width are added so that elements that are empty will be more obviously editable.
+be sure to put a title on any element that is editable, for usability (hints to use on an empty field)
+the :before and :after handle the crop (for lack of a better word) lines on the top left and bottom right corners.
+*/
+.editEnabled	{display:inline-block; min-width:50px; position:relative; padding:0px; margin:2px;} 
+.editEnabled input	{border:0; padding:0; margin:0;}
+.editEnabled:before	{content:''; width:8px; height:8px; position:absolute; border-left:1px solid #cccccc; border-top:1px solid #cccccc; top:-2px; left:-2px;}
+.editEnabled:after	{content:''; width:8px; height:8px; position:absolute; border-right:1px solid #cccccc; border-bottom:1px solid #cccccc; bottom:-2px; right:-2px;}
+
+.edited	{background:#FFCC99; border-color:#FFCC66;} /* used once a field is edited, but before changes are saved. */
+a.editTextLink, .editTextLink	{font-size:11px; color:#0066FF;}
+
+
+
+
+/*
+
+########################################################
+
+
+PAGE STYLES
+
+########################################################
+
+*/
+
+
+
+/* styles for csv import pages */
+.page section	{display:block; padding:0; margin:0 0 24px 0}
+.page fieldset	{border:none; padding:0; margin-bottom:12px;}
+

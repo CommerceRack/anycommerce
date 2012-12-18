@@ -32,7 +32,7 @@ var myRIA = function() {
 				onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-					myControl.util.dump('BEGIN myControl.ext.myRIA.callbacks.init.onError');
+					app.u.dump('BEGIN app.ext.myRIA.callbacks.init.onError');
 					}
 				},
 //this is the callback defined to run after extension loads.
@@ -42,18 +42,18 @@ var myRIA = function() {
 // note - you don't have to do it this way, but adding it before the request allows for a 'loading' graphic to easily be added
 // and for space to be reserved if several pieces of data are being requested (a prodlist for example).
 
-					myControl.util.dump("Create template Instance for profileTemplate"); // will write to console, if console is enabled.
-					$('#myContent').append(myControl.renderFunctions.createTemplateInstance('profileTemplate',"newID"));
+					app.u.dump("Create template Instance for profileTemplate"); // will write to console, if console is enabled.
+					$('#myContent').append(app.renderFunctions.createTemplateInstance('profileTemplate',"newID"));
 
 //request profile data (company name, logo, policies, etc)
-					myControl.calls.appProfileInfo.init('DEFAULT',{'callback':'translateTemplate','parentID':'newID'});
-					myControl.model.dispatchThis();
+					app.calls.appProfileInfo.init('DEFAULT',{'callback':'translateTemplate','parentID':'newID'});
+					app.model.dispatchThis();
 
 	
 					},
 				onError : function(responseData,uuid)	{
 //error handling is a case where the response is delivered (unlike success where datapointers are used for recycling purposes)
-					myControl.util.handleErrors(responseData,uuid); //a default error handling function that will try to put error message in correct spot or into a globalMessaging element, if set. Failing that, goes to modal.
+					app.u.handleErrors(responseData,uuid); //a default error handling function that will try to put error message in correct spot or into a globalMessaging element, if set. Failing that, goes to modal.
 					}
 				}
 			} //callbacks

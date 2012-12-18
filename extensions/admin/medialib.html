@@ -1,0 +1,612 @@
+
+
+<div id='mediaLibTemplate'>
+<form id="mediaLibUploadForm" action="https://www.zoovy.com/webapi/jquery/fileupload.cgi/" method="POST" enctype="multipart/form-data">
+
+<table class='mediaLibrary'>
+<tr>
+	<td>
+	<div id='mediaLibraryFocusMediaDetails' class='displayNone'>
+<!-- currently populated by media lib -->
+	</div>
+	</td>
+	<td id='mediaLibActionsBar' class='alignRight'>
+	
+	<span>
+	<input type='text' name='mediaLibNewFolderName' id='mediaLibNewFolderName' />
+	<button data-btn-action="addFolder" title='Add a new media folder. Use the down arrow to choose location.' class='marginRight'>Add Folder</button>
+	<button data-btn-action="selectAddFolderDestination" title='Select whether the new folder will be a top level or a sub folder. For subfolders, navigate to that directory first.' class='marginRight'>Folder Location:</button>
+	<ul class='selectAddFolderChoices'>
+		<li class='ui-selected'>As new top level folder</li>
+		<li class='displayNone'>subfolder</li>
+	</ul>
+	<button data-btn-action="deleteFolder" class='marginLeft' disabled='disabled' title='Delete the folder in focus.'>Delete Folder: <span class='folderid'></span></button>
+	</span>
+	<br />
+	<button data-btn-action="deleteSelected" title='Delete the selected images.' class='marginRight'>Delete Selected</button>
+	<button data-btn-action="selectUploads" class='addMediaFilesBtn' title='Add new files to the folder that is open (a folder must be open first).'>Add Files</button>
+	
+
+
+<!--
+This is the code for the actual 'add files' button.
+It doesn't style the button quite right AND I need an additional onClick event to reveal the secondary buttons.
+so for now, the contents are hidden. later, we'll want to explore a better solution.
+the data-btn-action='selectUploads' triggers a click of the span btn-success below
+-->
+<div class="row fileupload-buttonbar clearfix displayNone">
+	<div class="span7 clearfix">
+		<span class="btn btn-success fileinput-button">
+			<i class="icon-plus icon-white"></i>
+			<span>Add files...</span>
+			<input type="file" name="files[]" multiple>
+		</span>
+	</div>
+</div>
+	</td>
+</tr>
+<tr>
+	<td colspan='2' class='alignRight fileUploadButtonBar displayNone'>
+   	<div class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+	<h6 class='clearfix'>Drag your files here from your desktop</h6>
+        <!-- Redirect browsers with JavaScript disabled to the origin page -->
+        <noscript><input type="hidden" name="redirect" value="https://www.zoovy.com/webapi/jquery/fileupload.cgi/"></noscript>
+        <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+        <div class="row fileupload-buttonbar clearfix">
+            <div class="span7 clearfix">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <button type="submit" class="btn btn-primary start" title='Start all the uploads.'>
+                    <i class="icon-upload icon-white"></i>
+                    <span>Start upload(s)</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel" title='Cancel all of the uploads.'>
+                    <i class="icon-ban-circle icon-white"></i>
+                    <span>Cancel upload(s)</span>
+                </button>
+				<!-- don't need this
+                <button type="button" class="btn btn-danger delete">
+                    <i class="icon-trash icon-white"></i>
+                    <span>Delete</span>
+                </button>
+				-->
+				<!-- I don't know what this is for - jt . was in demo.
+                <input type="checkbox" class="toggle">
+				-->
+            </div>
+				<div class="hint">File uploads will begin immediately after files are selected.</div>
+            <!-- The global progress information -->
+            <div class="span5 fileupload-progress fade">
+                <!-- The global progress bar -->
+                <div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                    <div class="bar" style="width:0%;"></div>
+                </div>
+                <!-- The extended global progress information -->
+                <div class="progress-extended"></div>
+            </div>
+        </div>
+        <!-- The loading indicator is shown during file processing -->
+        <div class="fileupload-loading"></div>
+
+        <!-- The table listing the files available for upload/download -->
+		<div id='mediaLibraryFileUploadTable'>
+        <table role="presentation" class="table table-striped clearfix"><tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody></table>
+		</div>
+		
+		<!-- The table above is updated prior to the success response. the ul below is stricly for a data storage purpose to save a filename/folder mapping -->    
+		<ul class='dataMap displayNone'></ul>
+	</div>
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+	<div class='appMessaging' id='mediaLibMessaging'></div>
+	</td>
+</tr>
+<tr>
+	<td id='mediaLibFolderList'>
+	<div id='mediaLibFolderContainer'>
+		<ul id='mediaLibFolderListUL' data-bind="defaultValue: 0; format:showChildFolders; extension: admin_medialib; loadsTemplate:mediaLibFolderTemplate;" class='listStyleNone noPadOrMargin marginLeft'></ul>
+	</div>
+	</td>
+	<td id='mediaLibFileList'>
+	<div class='welcomeMessage'>
+		<h4>Welcome to the media library.</h4>
+		<p>Before you can add a new file, you need to create a folder</p>
+		<p>To delete a folder, open it and as long as it has no child-folders, you'll be able to delete it. If children are present, delete them first.</p>
+		<p>You can upload individual image files or zip files with multiple images. you can also drag from your desktop into the upload area.</p>
+	</div>
+	<div id='mediaLibInfiniteScroller' class='displayNone'>
+		<ul data-bind="var: media(@images); format:mediaList; extension:admin_medialib; loadsTemplate: mediaFileTemplate;" class='noPadOrMargin listStyleNone mediaFiles marginRight clearfix' id='mediaFilesUL'></ul>
+	</div>
+	<!-- infiniteScroll REALLY wants some sort of legacy next link. infinite scroll will break if you remove this. -->
+	<a id="nextMediaFilesPage" href="?page=2" class='displayNone'>next page?</a>
+
+	</td>
+</tr>
+</table>
+</form>
+</div>
+
+
+
+
+
+<div id='fileUploadTemplate'>
+
+<div id='fileUploadMessaging'></div>
+
+<!-- START JQFU CODE THAT SHOULD BE LOADED FROM DIV ABOVE -->
+<fieldset class='borderNone'>
+<div class="row fileupload-buttonbar clearfix">
+	<div class="span7 clearfix marginBottom">
+		<!-- The fileinput-button span is used to style the file input field as button -->
+		<span class="btn btn-success fileinput-button">
+			<i class="icon-plus icon-white"></i>
+			<span>Add files...</span>
+			<input type="file" name="files[]" multiple>
+		</span>
+		<button type="submit" class="btn btn-primary start" title='Start all of the uploads.'>
+			<i class="icon-upload icon-white"></i>
+			<span>Start upload</span>
+		</button>
+		<button type="reset" class="btn btn-warning cancel" title='cancel all of the uploads.'>
+			<i class="icon-ban-circle icon-white"></i>
+			<span>Cancel upload</span>
+		</button><!--
+		<button type="button" class="btn btn-danger delete">
+			<i class="icon-trash icon-white"></i>
+			<span>Delete</span>
+		</button>
+		<input type="checkbox" class="toggle">
+		-->
+	</div>
+	<!-- The global progress information -->
+	<div class="span5 fileupload-progress fade">
+		<!-- The global progress bar -->
+		<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+			<div class="bar" style="width:0%;"></div>
+		</div>
+		<!-- The extended global progress information -->
+		<div class="progress-extended"></div>
+	</div>
+</div>
+<!-- The loading indicator is shown during file processing -->
+<div class="fileupload-loading clearfix marginBottom"></div>
+
+<!-- The table listing the files available for upload/download -->
+<table role="presentation" class="table table-striped marginBottom clearfix">
+	<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
+</table>
+</fieldset>
+<!-- END JQFU CODE -->
+
+
+</div>
+
+
+
+
+
+
+<ul>
+	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
+	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
+		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
+		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/;"></span>
+		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
+	</a>
+	<ul class='displayNone marginLeft' data-bind="var: media(FID); format:assignAttribute; attribute:id; valuePretext:mediaChildren_;"></ul>
+	</li>
+	
+	
+	<li id='mediaFileTemplate'>
+	<img src='blank.gif' data-bind='var: media(path); format:imageURL;' width='100' height='100' />
+	<div data-bind='var: media(Name); format:text;'></div>
+	<button data-btn-action='delete' title='Tag media for delete. click the delete selected button to remove all tagged media.'></button>
+	<button data-btn-action='select' title='Use this piece of media.'></button>
+	<button data-btn-action='details' title="More details."></button>
+	<button data-btn-action='download' title="Download file."></button>
+	</li>
+	
+	
+</ul>
+
+
+
+<!-- used when 'view details' is clicked for an image -->
+<div id='mediaLibFileDetailsTemplate'>
+<table>
+<tr>
+	<td>
+	<div class='marginRight'>
+	<img src='blank.gif' data-bind='var: media(file); format:imageURL;' width='250' height='250' alt='' />
+	</div>
+	</td>
+
+	<td>
+	<div data-bind='var: media(ImgName); format:text; pretext:Filename: ;'></div>
+	<div data-bind='var: media(ImgName); format:text; pretext:File format: ;'></div>
+	<div>Dimensions: <span data-bind='var: media(W); format:text;'></span> X <span data-bind='var: media(H); format:text;'></span></div>
+	<div data-bind='var: media(MasterSize); format:text; pretext:(;posttext:);'></div>
+	<div data-bind='var: media(TS); format:unix2mdy; pretext:Added on: ;'></div>
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+
+<!-- appears at the top of the media library when choosing an image -->
+<div id='mediaLibSelectedFileTemplate' class='loadingBG'>
+<table>
+<tr>
+	<td>
+	<div class='marginRight'>
+	<img src='blank.gif' data-bind='var: media(IMG); format:imageURL;' width='75' height='75' alt='' />
+	</div>
+	</td>
+
+	<td>
+	<div data-bind='var: media(IMG); format:mediaFilePathAsLinks; extension:admin_medialib; pretext:Currently Selected: ;'></div>
+	<button data-btn-action='clearMedia'></button>
+	<button data-btn-action='details'></button>
+	<button data-btn-action='download'></button>
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupPublicFiles'  id='page-setup-publicfiles'>
+<h1>Public Files</h1>
+
+<section>
+<h2>Upload new files</h2>
+<form name="publicFilesUploadForm" id="publicFilesUploadForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</section>
+
+
+
+<section>
+<h2>Existing files</h2>
+	<ul class='loadingBG' id='publicFilesList'></ul>
+</section>
+</div>
+
+
+
+
+
+<!--
+
+##########################
+
+PAGE TEMPLATES FOR setup/import
+
+##########################
+
+
+-->
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-customers'>
+<h1>Load Customers from CSV File</h1>
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<fieldset>
+	<input type='hidden' name='VERB' value='UPLOAD-CUSTOMERS'>
+	<label><input type='radio' checked name='TYPE' value='customer'> CSV Customer Records (specify the header on the first line)</label>
+	<label><input type='radio' name='TYPE' value='customer.full'> Full Customer Records</label>
+	<div class='formFieldHelp'>Email, Billing Full Name, Billing Address 1, Billing Address 2, Billing City, Billing State/Province, Billing Zip/Postal Code, Billing Country, Billing Phone, Shipping Full Name, Shipping Address 1, Shipping Address 2, Shipping City, Shipping State/Province, Shipping Zip/Postal Code, Shipping Country, Shipping Phone</div>
+	<label><input type='radio' name='TYPE' value='customer.simple'> Simple Customer Records</label>
+	<div class='formFieldHelp'>Email, First Name, Last Name, Password, Newsletter</div>
+</fieldset>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+
+</form>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-help'>
+
+<h1>Welcome to the Comma Separated Value (CSV) Import utility.</h1>
+<Br>
+<span class="small">
+<b>Available Imports:</b>: <!-- IMPORT_LINKS -->
+</span>
+<br>
+<br>
+
+<span class="small">
+<b>Disclaimer:</b><br>
+<ul>
+<li> If you are unsure of what you are doing here, please consult our technical support group -
+we will be happy to assist you.
+<li> Using these tools improperly, on a live store - may impair your business.
+<li> Support that is related to an improper data load will result in your
+account being billed for the time necessary to diagnose and repair the issue.
+</ul>
+</span>
+<br>
+
+<span class="small">
+<b>Usage Notes:</b><br>
+<ul>
+<li> Use the tabs along the top to select the type of import you wish to perform.
+<li> In some instances this process can be *incredibly slow* please be patient.
+<li> Certain image hosts are *very* slow, this can significantly slow things down, try uploading the images by hand and removing them from your import file.
+<li> If you are using a large file, consider breaking the file into smaller batches.
+</ul>
+</span>
+
+</div>
+
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-images'>
+<h1>Upload images from CSV file</h1>
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='IMAGES'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-inventory'>
+<h1>Load inventory from a CSV file:</h1>
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='INVENTORY'>
+<fieldset>
+	<label><input type='radio' name='TYPE' value='inventory.simple'> Simple Inventory (%SKU,%INVENTORY,%LOCATION,%MIN_QTY)</label>
+	<label><input type='radio' name='TYPE' checked value='inventory'> Inventory (user specified header)</label>
+	<label><input type="checkbox" name="ENABLEINVENTORY"> Enable Inventory for each SKU imported</label>
+	<label><input type="checkbox" name="STRIPDASH"> Strip Dashes from SKU field.</label>
+	<label><input type="checkbox" name="CHECKSKU"> Check/Verify SKU's exist.</label>
+	<div class='formFieldHelp'>(define advanced variables in the header)</div>
+</fieldset>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+</form>
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-listings'>
+
+<h1>Upload listings from a CSV file</h1>
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='LISTINGS'>
+<input type='hidden' name='TYPE' checked value='listings'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+
+<div class="hint">
+to export ebay listings go to: <a href="#" onClick="showUI('/biz/utilities/ebay/index.cgi'); return false;">utilities &#187; ebay</a>
+</div>
+
+
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-navcats'>
+<h1>Navigation categories</h1>
+
+<section>
+<h2>Import navigation categories from CSV file</h2>
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<fieldset>
+	<input type='hidden' name='filetype' value='NAVCATS'>
+	<label><input type='hidden' name='TYPE' value='category'> Category - used to create navigation categories</label>
+	<label><input type="checkbox" name="CAT_RESORT_NAVCATS" checked='checked'> Reorder navigation categories after import.</label>
+	<div class='formFieldHelp'>(only necessary if updating category sort fields via update - VERY SLOW)</div>
+	<label><input type="checkbox" name="CAT_DESTRUCTIVE"> Destructive Overwrite (nukes all categories before running).</label>
+</fieldset>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</section>
+
+
+
+<section>
+<h2>Export navigation categories</h2>
+
+
+<label>Additional headers: <input type="textbox" name="headers" id='navcatExportHeader'></label>
+<div class="hint">
+Common headers include: PAGE_TITLE, META_DESCRIPTION, META_KEYWORDS<br>
+However any field that is stored in page namespace can be accessed.
+</div>
+
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/navcatexport.cgi/navcats.csv?VERB=DUMP_PAGE&'+app.ext.admin.u.uiCompatAuthKVP()+'&headers='+$('#navcatExportHeader').val());"  class='ui-button ui-state-default ui-corner-all'>Export</button>
+
+
+</section>
+
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-rewrites'>
+<h1>URL Rewrites</h1>
+
+<section>
+<h2>Import a url rewrite CSV</h2>
+
+<p class="hint">
+NOTE: You cannot rewrite/redirect a *valid* URL. For example you cannot redirect an existing category
+or product page. That is because a rewrite lookup is only done immediately before a 404 page is served.
+</p>
+
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='REWRITES'>
+<input type='hidden' name='TYPE' checked value='rewrites'>
+<input type="checkbox" name="REWRITE_DESTRUCTIVE"> Destructive Overwrite (deletes all existing rewrites).<br>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</section>
+
+<section>
+<h2>Export rewrites</h2>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
+
+</section>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupImport' id='page-setup-import-orders'>
+<h1>Load orders from a CSV file</h1>
+<p>
+Columns headers are as follows:<br />
+%ORDERID,%SHIPPING_METHOD,%SHIPPING_COST,bill_*,ship_*,%SKU,%DESCRIPTION,%QTY,%WEIGHT,%PRICE<br />
+ &#187; <a href='http://webdoc.zoovy.com/doc/50890' target='webdoc'>Advanced order import guide</a>
+</p>
+
+<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<fieldset>
+	<input type='hidden' name='filetype' value='ORDERS'>
+	<label><input type="checkbox" name="SEP_CHAR" value='TAB'> Use TAB as the separator for this file (vs a comma)</label>
+	<input type='hidden' name='TYPE' value='ORDER'>
+</fieldset>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-other'>
+<h1>Load 'Other' from CSV File</h1>
+<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='OTHER'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-products'>
+
+<h1>Load Products from CSV File</h1>
+
+<form name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='PRODUCTS'>
+<fieldset>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="ALLOW_CRLF"> Allow CR/LF in file (WARNING: you must make sure all fields are properly escaped/quoted to use this).</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="RAWCATEGORIES"> Do not Encode Categories, they are already encoded as safe names (normally disabled).</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="PRODNAVCAT" CHECKED> Configure Management Categories using Navigation Categories schema.</label>
+	<label><input form="csvUploadToBatchForm" type='checkbox' name="REMOVEREST"> Remote System Synchronization: Delete products which were are not found in this import.</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="RESORT_NAVCATS"> Reorder navigation categories after import. (only necessary if updating category sort fields via update - VERY SLOW)</label>
+	<label><input form="csvUploadToBatchForm" type="checkbox" name="NONDESTRUCTIVE" CHECKED> Perform Non-Destructive Import - updates products, rather than doing a complete overwrite of a products data! (slower)</label>
+</fieldset>
+
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+
+</form>
+</div>
+
+
+
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-reviews'>
+<h1>Load reviews from a CSV file</h1>
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='REVIEW'>
+<input type='hidden' name='TYPE' checked value='review'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-rules'>
+<h1>Importing/Exporting rules</h1>
+
+
+<section>
+<h2>Importing rules from a CSV</h2>
+<div class="hint">
+	<h4>Hints for importing rules:</h4>
+	<ul>
+		<li>Rules syntax is very specific - please review webdoc.</li>
+		<li>Always perform an EXPORT of your rules, prior to performing an import, be sure to keep a backup.</li>
+		<li>Minimal validation is done on rules, however if a critical error is detected then no import is performed.</li>
+		<li>All imports are fully destructive of existing data.</li>
+		<li>Review <a target="webdoc" href="http://webdoc.zoovy.com/doc/51515">webdoc 51515</a> for documentation.</li>
+	</ul>
+</div>
+
+<form id="csvUploadToBatchForm" class='clearfix marginBottom'  name="csvUploadToBatchForm" action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='RULES'>
+<input type='hidden' name='TYPE' checked value='rules'>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+
+</section>
+
+<section>
+<h2>Exporting rules</h2>
+<button onClick="linkOffSite('https://www.zoovy.com/biz/setup/import/rewriteexport.cgi/rewrites.csv?VERB=EXPORT-RULES&'+app.ext.admin.u.uiCompatAuthKVP());" class='ui-button ui-state-default ui-corner-all'>Export</button>
+
+</section>
+
+</div>
+
+
+
+<div class='page pageSetup pageSetupImport'  id='page-setup-import-tracking'>
+<h1>Load tracking from a CSV file</h1>
+<p>
+Columns headers are as follows:<br />
+%ORDERID,%CARRIER,%TRACKING_NUMBER,%NOTES
+</p>
+<form  name="csvUploadToBatchForm" id="csvUploadToBatchForm" class='clearfix marginBottom'  action='#' method='post' enctype='multipart/form-data'>
+<input type='hidden' name='filetype' value='TRACKING'>
+<input type='hidden' name='TYPE' value='TRACKING'>
+<fieldset>
+	<label><input type="checkbox" name="SEP_CHAR" value='TAB'> Use TAB as the separator for this file (vs a comma)</label>
+</fieldset>
+<!-- adds the file upload area -->
+<div data-bind="loadsTemplate: fileUploadTemplate; format: loadsTemplate;"></div>
+</form>
+</div>
