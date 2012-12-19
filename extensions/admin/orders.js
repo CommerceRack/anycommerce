@@ -229,11 +229,11 @@ var admin_orders = function() {
 //the selector also gets run through jqSelector
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN callbacks.translateSelector");
+//				app.u.dump("BEGIN callbacks.translateSelector");
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 //				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector)
-				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading(); $('body').hideLoading();}
+				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
 				app.ext.admin_orders.u.handleButtonActions($target);
@@ -596,18 +596,19 @@ else	{
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
-app.u.dump(" -> targetID: "+targetID);
+//app.u.dump(" -> targetID: "+targetID);
 //if you are reusing a targetID, do your own empty before running this.
 var $target = $(app.u.jqSelector('#',targetID));
 $target.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID,'orderid':orderID}));
+
 $('body').showLoading();
 
 //go fetch order data. callback handles data population.
 app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
-	
+	app.u.dump("Executing callback for adminOrderDetail");
 	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)), //this val is needed in string form for translateSelector.
 	$target = $(selector),
 	orderData = app.data[responseData.datapointer];
@@ -670,6 +671,7 @@ app.ext.admin_orders.u.handleButtonActions($target);
 				}
 			return r; //1 dispatch occurs
 			},
+
 
 		orderDetailsInDialog : function(orderID,CID)	{
 //app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
@@ -1490,7 +1492,32 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
 				}, //admin_orders|orderCreate
 
+				
+
+			"admin_orders|orderItemUpdate" : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
+				$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
+					var $parent = $btn.closest("[data-order-view-parent]"),
+					orderID = $parent.data('order-view-parent'),
+					$row = $btn.closest('tr'),
+					uuid = $row.data('uuid'),
+					qty = $("[name='qty']",$row).val(),
+					price = $("[name='price']",$row).val();
+					
+					if(uuid && orderID && qty && price)	{
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"qty="+qty+"&price="+price]);
+						$parent.empty();
+						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemRemove, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+						}
+					});
+				}, //admin_orders|orderCreate
+
 			"admin_orders|orderItemRemove" : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
 					var $parent = $btn.closest("[data-order-view-parent]"),
 					orderID = $parent.data('order-view-parent'),

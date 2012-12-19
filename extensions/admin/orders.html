@@ -270,7 +270,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 			</div>
 
-			<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
+			<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
 		</div>
 		
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
@@ -495,10 +495,11 @@ The following templates are used in the 'order detail' modal/view.
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>	
 	
-	<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' /></td>
-	<td><input type='number' data-bind="var: order(base_price); format:popVal;" size='7' /></td>
+	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
+	<td><input type='number' name='price' data-bind="var: order(base_price); format:popVal;" size='7' /></td>
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-	<td><button data-btn-action="admin_orders|orderItemRemove">X</button></td>
+	<td><button data-btn-action="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
+	<td><button data-btn-action="admin_orders|orderItemRemove">Remove From Order</button></td>
 </tr>
 </table>
 
