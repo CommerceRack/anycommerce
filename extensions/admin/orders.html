@@ -140,6 +140,7 @@
 			<th data-name='CREATED_GMT' title='date order created'>created</th>
 			<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
 			<th data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
+			<th data-name='FLAGS' title='fraud review status'>flags</th>
 			<th data-name='REVIEW_STATUS' title='order status'>pool</th>
 			<th></th>
 		</tr>
@@ -171,6 +172,7 @@
 	<td><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
+	<td><span data-bind='var:order(FLAGS);format:text;'></span></td>
 	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
 </tr>
 

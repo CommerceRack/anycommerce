@@ -242,6 +242,20 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}, //zoovy
+			
+			appBuyerLogout : {
+				init : function(obj,tagObj)	{
+					this.dispatch(obj,tagObj);
+					return 1;
+					},
+				dispatch : function(obj,tagObj)	{
+					obj["_cmd"] = "appBuyerLogout";
+					obj["_tag"] = tagObj;
+					obj["_tag"]["datapointer"] = "appBuyerLogout";
+					app.model.addDispatchToQ(obj,'immutable');
+					}
+				}, //appBuyerLogout
+			
 			authAdminLogout : {
 				init : function(tagObj)	{
 					this.dispatch(tagObj);
@@ -251,15 +265,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					app.model.addDispatchToQ({'_cmd':'authAdminLogout',"_tag":tagObj},'immutable');
 					}
 				}, //authAdminLogout
-			accountLogout : {
-				init : function(obj,tagObj)	{
-					this.dispatch(obj,tagObj);
-					return 1;
-					},
-				dispatch : function(obj,tagObj){
 
-					}				
-				},
 			accountLogin : {
 				init : function(obj,tagObj)	{
 					this.dispatch(obj,tagObj);

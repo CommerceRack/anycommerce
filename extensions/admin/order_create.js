@@ -715,7 +715,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 					}
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
-				
+
 //in addition to selecting a pay option, certain extra fields may be present and must be checked for.
 			chkoutPayOptionsFieldset : function()	{
 				var valid = 1;
@@ -726,7 +726,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 				var safeid,$holder;
 				if($payMethod.val())	{
 					switch($payMethod.val())	{
-						
+
 						case 'CREDIT':
 							var $paymentCC = $("[name='CC']").removeClass('mandatory');
 							var $paymentMM = $("[name='MM']").removeClass('mandatory');
@@ -737,10 +737,10 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 							if(!app.u.isValidCCYear($paymentYY.val())){$paymentYY.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please select an expiration year<\/li>'}
 							if($paymentCV.val().length < 3){$paymentCV.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please enter a cvv/cid #<\/li>'}
 							break;
-						
+
 //eCheck has required=required on it, so the browser will validate. if this causes no issues, we'll start moving all forms over to this instead of 
 //js validation. browser based validation is new at this point. (2012-06-22)
-						
+
 						case 'PO':
 							var $paymentPO = $('#payment-po').removeClass('mandatory');
 							if(!app.u.isSet($paymentPO.val())){$paymentPO.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please enter a PO #<\/li>'}
@@ -770,7 +770,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 //				app.u.dump('END app.ext.convertSessionToOrder.validate.chkoutPayOptionsFieldset. paymethod = '+$payMethod.val()+' and valid = '+valid);
 				return valid;
 				}, //chkoutPayOptionsFieldset
-				
+
 			chkoutBillAddressFieldset: function()	{
 				var valid = 1;
 				var r = true;
@@ -794,7 +794,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 					}
 				return valid;
 				}, //chkoutBillAddressFieldset
-				
+
 			chkoutShipAddressFieldset : function()	{
 				var valid = 1;
 				var r = true;
@@ -823,6 +823,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 					}
 				return valid;
 				},
+
 //type = ship or bill/ will validate the respective address entered in checkout.
 			addressIsPopulated : function(TYPE)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.validate.address');
@@ -1301,8 +1302,7 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					app.ext.store_checkout.calls.appPaymentMethods.init("updateCheckoutPayOptions");
 
 					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');  //updates cart object and reloads order contents panel.
-					
-					
+	
 //lineitem template only gets updated if qty > 1 (less than 1 would be a 'remove').
 					if(qty >= 1)	{
 						app.calls.ping.init(tagObj,'immutable');
@@ -1414,7 +1414,7 @@ This was done because it is:
 				app.model.dispatchThis('immutable');
 
 				}, //selectPredefinedAddress
-				
+
 
 //allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
 			setAddressFormFromPredefined : function(addressType,addressId)	{
@@ -1478,6 +1478,7 @@ This was done because it is:
 			
 				},
 
+
 //executed when a coupon is submitted. handles ajax call for coupon and also updates cart.
 			handleCouponSubmit : function()	{
 				$('#chkoutSummaryErrors').empty(); //remove any existing errors.
@@ -1485,6 +1486,7 @@ This was done because it is:
 				app.ext.store_checkout.calls.cartCouponAdd.init($('#couponCode').val(),{"callback":'addCouponToCart',"extension":"convertSessionToOrder"}); 
 				app.model.dispatchThis('immutable');
 				}, //handleCouponSubmit
+
 
 //executed when a giftcard is submitted. handles ajax call for giftcard and also updates cart.
 //no 'loadingbg' is needed on button because entire panel goes to loading onsubmit.
@@ -1495,8 +1497,6 @@ This was done because it is:
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
 				app.model.dispatchThis('immutable');
 				}, //handleGiftcardSubmit
-
-
 
 
 //X will be a 1 or a 0 for checked/not checked, respectively
@@ -1522,7 +1522,6 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				
 //				app.u.dump('END app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox');
 				}, //handleCreateAccountCheckbox
-
 
 
 
@@ -1570,7 +1569,6 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					} //supllemental content has already been added.
 
 				}, //updatePayDetails
-
 
 
 
