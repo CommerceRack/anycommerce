@@ -1512,7 +1512,7 @@ $(selector + ' .editable').each(function(){
 						var formJSON = $form.serializeJSON();
 						var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 						
-						if(formJSON.pid && orderID)	{
+						if(formJSON.sku && orderID)	{
 						
 						for(index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
@@ -1522,12 +1522,12 @@ $(selector + ' .editable').each(function(){
 								formJSON[index] = "~"+formJSON[index];
 								}
 							}
-							
+
 							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.pid+"]");
+							app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
 							}
 						});
 					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
