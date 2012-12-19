@@ -1523,7 +1523,7 @@ $(selector + ' .editable').each(function(){
 								}
 							}
 							
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON)));
+							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
 							app.model.dispatchThis('immutable');
 							}
 						else	{
@@ -1548,7 +1548,7 @@ $(selector + ' .editable').each(function(){
 					$form.on('submit',function(event){
 						event.preventDefault();
 						if(orderID)	{
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"ITEMADDBASIC?"+$(this).serialize(),{},'immutable');
+							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDBASIC?"+$(this).serialize()],{},'immutable');
 							$modal.dialog('close');
 							$parent.empty();
 							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
