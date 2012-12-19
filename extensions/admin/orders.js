@@ -1496,7 +1496,7 @@ $(selector + ' .editable').each(function(){
 					$row = $(this).closest('tr'),
 					stid = $row.data('stid');
 					if(stid && orderID)	{
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"itemItemRemove?stid="+stid);
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["itemItemRemove?stid="+stid]);
 						app.model.dispatchThis('immutable');
 						}
 					else	{
