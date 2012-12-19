@@ -1492,11 +1492,14 @@ $(selector + ' .editable').each(function(){
 
 			"admin_orders|orderItemRemove" : function($btn)	{
 				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
-					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
+					var $parent = $btn.closest("[data-order-view-parent]"),
+					orderID = $parent.data('order-view-parent'),
 					$row = $(this).closest('tr'),
 					stid = $row.data('stid');
 					if(stid && orderID)	{
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["itemItemRemove?stid="+stid]);
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
+						$parent.empty();
+						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -1508,7 +1511,10 @@ $(selector + ' .editable').each(function(){
 			"admin_orders|orderItemAddStructured" : function($btn)	{
 				$btn.off('click.orderItemAddStructured').on('click.orderItemAddStructured',function(){
 					var $button = $("<button>").text("Add to Order").button().on('click',function(){
-						var $form = $('form','#chooserResultContainer');
+						
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent'),
+						$form = $('form','#chooserResultContainer');
 						var formJSON = $form.serializeJSON();
 						var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 						
@@ -1522,17 +1528,18 @@ $(selector + ' .editable').each(function(){
 								formJSON[index] = "~"+formJSON[index];
 								}
 							}
-
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
-							}
-						});
-					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
+						$parent.empty();
+						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
+						}
 					});
-				},
+				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+				});
+			},
 
 
 
@@ -1721,8 +1728,6 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 					orderID = $target.data('order-view-parent');
 						
 					if(orderID)	{
-						$('body').showLoading();
-						
 
 //the changes are all maintained on one array and pushed onto 1 request (not 1 pipe, but one adminOrderUpdate _cmd).
 						var changeArray = new Array();
@@ -1781,7 +1786,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 
 						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
 						$target.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable');
+						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable'); //adds a showloading
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -1850,7 +1855,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 					event.preventDefault();
 
 					var $parent = $btn.closest("[data-ui-role='orderUpdateAddTrackingContainer']");
-					$parent.showLoading();
+					$parent.showLoading(); //run just on payment panel
 					var kvp = $btn.parents('form').serialize();
 					//The two lines below 'should' work. not tested yet.
 					app.ext.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
@@ -1868,9 +1873,8 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						var orderID = $(this).attr('data-orderid');
 						var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
 						if(orderID)	{
-							$('body').showLoading();
 							$(app.u.jqSelector('#',"orders2Content")).empty();
-							app.ext.admin_orders.a.showOrderView(orderID,CID,"orders2Content");
+							app.ext.admin_orders.a.showOrderView(orderID,CID,"orders2Content"); //adds a showLoading
 							app.model.dispatchThis();
 							}
 						else	{
