@@ -195,26 +195,26 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div id='orderDetailsTemplate' class='orderDetails '>
 
-<div class='appMessaging'></div><!-- messages will be logged here -->
-
-<div class='clearfix marginBottom'>
+<div class='clearfix marginBottom topCol'>
 
 
 	<hgroup class='floatLeft marginRight'>
 		<h1 data-bind="var:order(our/orderid);format:text;"></h1>
-		<h2>Order Status: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
+		<h2>Order Pool: <select data-bind="var:order(flow/pool); format:orderPoolSelect; extension:admin_orders;" onChange="$(this).addClass('edited'); app.ext.admin_orders.u.updateOrderChangeCount($(this));" data-ui-role="admin_orders|orderUpdatePool"></select></h2>
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
-		<h5 data-bind="var:order(our/profile);format:text; pretext: profile: ;"></h5>
-		<h5 data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></h5>
+		<div data-bind="var:order(our/profile);format:text; pretext: profile: ;"></div>
+		<div data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></div>
+		<div data-bind='var: cart(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
+		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 	</hgroup>
 
 
-	<div class='floatRight marginLeft '>
+	<div class='floatRight marginLeft  topCol'>
 	<h4>Billing Address</h4>
 <div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
 
-	<div class='floatRight marginRight marginLeft '>
+	<div class='floatRight marginRight marginLeft  topCol'>
 	<h4>Shipping Address</h4>
 <div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
@@ -228,7 +228,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>-->
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Ticket</button>
+	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Create CRM Ticket</button>
 
 	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 </div>
@@ -243,28 +243,33 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 	<section>
 
-		<div class='floatRight marginLeft'>
-			<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		<div class='clearfix marginBottom'>
+			<div class='floatRight marginLeft'>
+				<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+				
+				<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 			
-			<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-		
-			<div class='orderShipping'>
-			<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
-			<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+				<div class='orderShipping'>
+				<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
+				<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+				</div>
+				
+				<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+				
+				<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+				<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+				<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+				
+				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 			</div>
-			
-			<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
-			
-			<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-			<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
-			<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
-			
-			<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+
+			<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
 		</div>
 		
-		<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
-		<div>
-		<button data-btn-action="admin_orders|orderItemAdd">Add Item To Order</button>
+		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
+		<h2 class='floatLeft marginLeft'>Add item(s) to order:</h2>
+		<button class='marginLeft' data-btn-action="admin_orders|orderItemAddStructured" title="Use the chooser to add an item to the order.">Use Chooser</button>
+		<button data-btn-action="admin_orders|orderItemAddBasic" title="Use simple inputs to add an item to the order.">Use Inputs</button>
 		</div>
 	
 <!--		
@@ -293,8 +298,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	<div class='customerNotes' id='customerInformation'>
 		<h3>Customer Notes: </h3>
-		<div class='editable'  data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
-		<table class='gridTable'>
+		<div class='editable marginBottom'  data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
+		<table class='gridTable marginTop'>
 		<tbody data-bind='var:order(%CUSTOMER/@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
 		</tbody>
 		</table>
@@ -506,6 +511,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
 	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
 	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td><button data-btn-action="admin_orders|orderItemRemove">X</button></td>
 	
 
 
