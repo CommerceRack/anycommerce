@@ -820,7 +820,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 
 
 		errMsgObject : function(msg,errid)	{
-			return {'errid':errid,'errmsg':msg,'errtype':'apperr','uiIcon':'alert','uiClass':'error'}
+			return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','uiIcon':'alert','uiClass':'error'}
 			},
 		statusMsgObject : function(msg)	{
 			return {'errid':'#','errmsg':msg,'errtype':'statusupdate','uiIcon':'transferthick-e-w','uiClass':'statusupdate'}

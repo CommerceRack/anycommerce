@@ -748,12 +748,13 @@ else	{
 				else if(formJSON.action == 'override')	{
 					if(formJSON.ps)	{}
 					else	{err = 'Please specify a new payment status';}
-					//!!! need to verify the input is a valid payment status.
 					}
 				else	{}
 
 				if(err)	{
-					alert(err);
+					var msgObj = app.u.errMsgObject(err);
+					msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+					app.u.throwMessage(msgObj);
 					}
 				else	{
 					formJSON.orderid = orderID; //needed in obj for dispatch
@@ -1212,7 +1213,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				var $orders = $('.ui-selected','#orderListTableBody');
 				var msgID = CMD.substring(5);
 				if(!$orders.length)	{
-					alert('please select at least 1 order');
+					app.u.throwMessage("Please select at least 1 order");
 					}
 //msgID is set and exists.
 				else if(msgID && app.ext.admin_orders.vars.emailMessages[msgID])	{
@@ -1663,9 +1664,9 @@ $(selector + ' .editable').each(function(){
 			"admin_orders|orderEmailShowMessageList" : function($btn){
 
 				$btn.button({text: false,icons: {primary: "ui-icon-triangle-1-s"}})
-				$btn.css('margin','0 4px 0 -12px'); //buttonset is jacking things up. need to get that working. i think it's getting double run. !!!
+
 				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-				var menu = $btn.next('ul').menu().hide();
+				var menu = $btn.parent().next('ul').menu().hide();
 				menu.css({'position':'absolute','width':'200px','z-index':'10000'}).parent().css('position','relative');
 				
 				menu.find('li a').each(function(){
@@ -1690,7 +1691,7 @@ $(selector + ' .editable').each(function(){
 					setTimeout(function(){$(document).one( "click", function() {menu.hide();});},1000);
 					});
 
-//				$btn.parent().buttonset();
+				$btn.parent().buttonset();
 
 				}, //admin_orders|saveCustomerNotes **TODO
 
@@ -1843,11 +1844,15 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 
 //the mandatory class gets added to the parent of the input, so that the input, label and more get styled.
 						if(!formJSON.amt)	{
-							alert('please set an amount');
+							var msgObj = app.u.errMsgObject("Please set an amount");
+							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+							app.u.throwMessage(msgObj);
 							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
 							}
 						else if(errors)	{
-							alert('some required fields are missing or invalid.');
+							var msgObj = app.u.errMsgObject("Some required field (indicated in red) are missing or invalid.");
+							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+							app.u.throwMessage(msgObj);
 							for(index in errors)	{
 								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
 								}
@@ -1866,7 +1871,9 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						
 						}
 					else	{
-						alert('please choose a payment type');
+						var msgObj = app.u.errMsgObject("Please choose a payment method.");
+						msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
+						app.u.throwMessage(msgObj);
 						}					
 					
 					//The two lines below 'should' work. not tested yet.
