@@ -229,6 +229,11 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
 	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Create CRM Ticket</button>
+	<div class='floatLeft hide4Native'>
+	<button data-btn-action="admin_orders|orderEmailSend">Send Email</button>
+	<button data-btn-action="admin_orders|orderEmailShowMessageList">Message List</button>
+	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;"></ul>
+	</div>
 
 	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 </div>
@@ -324,9 +329,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div><button data-btn-action="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
 	</fieldset>
 </form>
-<!--
-<button onClick="navigateTo('/biz/orders/payment.cgi?ID='+$(this).closest('[data-orderid]').data('orderid')+'&ts=',{'dialog':true}); return false;">Add Payment</button>		
--->
+
 	</div>
 
 	<div class='leftCol'>

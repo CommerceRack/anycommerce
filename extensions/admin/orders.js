@@ -317,6 +317,17 @@ var admin_orders = function() {
 				app.u.throwMessage(responseData);
 				}		
 			}, //handleSendEmail
+			
+			
+
+
+		handleSendEmailFromEdit : {
+			onSuccess : function(tagObj)	{
+				$('body').hideLoading();
+				app.u.throwMessage(app.u.successMsgObject("Your email has been sent."));
+				}
+			}, //handleSendEmail
+			
 
 
 
@@ -398,8 +409,8 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		var $cmenu = $("<menu \/>").attr({'type':'context','id':'contextMenuOrders_'+orderid}).addClass('showcase displayNone');
 		$cmenu.append("<h3 style='margin:0; padding:0;'>"+orderid+"<\/h3><hr \/>");
 		
-		$("<command \/>").attr('label','Payment details').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
-		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+//		$("<command \/>").attr('label','Payment details').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+//		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?ACTION=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<hr \/>").appendTo($cmenu);
 		
@@ -597,9 +608,10 @@ $('body').showLoading();
 //go fetch order data. callback handles data population.
 app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	
-	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)); //this val is needed in string form for translateSelector.
-	var $target = $(selector);
-	var orderData = app.data[responseData.datapointer]
+	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)), //this val is needed in string form for translateSelector.
+	$target = $(selector),
+	orderData = app.data[responseData.datapointer];
+	orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 	$('body').hideLoading();
 	if(app.model.responseHasErrors(responseData)){
 		app.u.throwMessage(responseData);
@@ -1603,11 +1615,50 @@ $(selector + ' .editable').each(function(){
 				}, //admin_orders|orderPrintPackSlip
 
 			"admin_orders|orderEmailSend" : function($btn){
+//simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
-					event.preventDefault(); alert('not working yet');});
+					app.u.dump(" -> admin_orders|orderEmailSend clicked.");
+					event.preventDefault();
+					$btn.parent().find("[data-btn-action='admin_orders|orderEmailShowMessageList']").click();
+					});
+
+
 				}, //admin_orders|saveCustomerNotes **TODO
 
+//
+			"admin_orders|orderEmailShowMessageList" : function($btn){
 
+				$btn.button({text: false,icons: {primary: "ui-icon-triangle-1-s"}})
+				$btn.css('margin','0 4px 0 -12px'); //buttonset is jacking things up. need to get that working. i think it's getting double run. !!!
+				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+				var menu = $btn.next('ul').menu().hide();
+				menu.css({'position':'absolute','width':'200px','z-index':'10000'}).parent().css('position','relative');
+				
+				menu.find('li a').each(function(){
+					$(this).on('click',function(event){
+						event.preventDefault();
+						$('body').showLoading();
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(1)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
+						app.model.dispatchThis('immutable');
+						});
+					});
+
+//simply trigger the dropdown on the next button in the set.
+				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){
+					app.u.dump(" -> admin_orders|orderEmailShowMessageList clicked.");
+					event.preventDefault();
+                    menu.show().position({
+                        my: "right top",
+                        at: "right bottom",
+                        of: this
+	                    });
+//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
+					setTimeout(function(){$(document).one( "click", function() {menu.hide();});},1000);
+					});
+
+//				$btn.parent().buttonset();
+
+				}, //admin_orders|saveCustomerNotes **TODO
 
 			"admin_orders|orderTicketCreate" : function($btn)	{
 				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){
