@@ -243,15 +243,15 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					}
 				}, //zoovy
 			
-			appBuyerLogout : {
+			buyerLogout : {
 				init : function(obj,tagObj)	{
 					this.dispatch(obj,tagObj);
 					return 1;
 					},
 				dispatch : function(obj,tagObj)	{
-					obj["_cmd"] = "appBuyerLogout";
+					obj["_cmd"] = "buyerLogout";
 					obj["_tag"] = tagObj;
-					obj["_tag"]["datapointer"] = "appBuyerLogout";
+					obj["_tag"]["datapointer"] = "buyerLogout";
 					app.model.addDispatchToQ(obj,'immutable');
 					}
 				}, //appBuyerLogout
@@ -970,7 +970,7 @@ AUTHENTICATION/USER
 //## allow for targetID to be passed in.
 		logBuyerOut : function()	{
 // ,'targetID':'logMessaging' was removed from the line below in 201239 to give more flexibility to apps. add a class of appMessaging to your app and the log will appear there.
-			app.calls.authentication.zoovyLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
+			app.calls.authentication.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 			app.calls.refreshCart.init({},'immutable');
 			app.vars.cid = null; //nuke cid as it's used in the soft auth.
 			app.model.dispatchThis('immutable');
