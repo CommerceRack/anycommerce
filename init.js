@@ -88,14 +88,20 @@ app.u.initMVC = function(attempts){
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	var percentPerInclude = Math.round((100 / app.vars.rq.length));  
+	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
-	var percentComplete = resourcesLoaded * percentPerInclude; //used to sum how many includes have successfully loaded.
-
+	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
+	
+	if(percentComplete > 100 )
+		percentComplete = 100;
+	
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
+		percentComplete = 100;
+		$('#appPreViewProgressBar').val(percentComplete);
+		$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 //instantiate controller. handles all logic and communication between model and view.
 //passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
 //tmp is a throw away variable. app is what should be used as is referenced within the mvc.
