@@ -262,14 +262,14 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 			<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
 		</div>
 		
-		<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemTemplate;"></table>
-<!--		<div>
+		<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
+		<div>
 		<button data-btn-action="admin_orders|orderItemAdd">Add Item To Order</button>
 		</div>
--->		
-		
+	
+<!--		
 		<button data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;' disabled='disabled' onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).data('orderid')+'&amp;ts=',{'dialog':true}); return false;" class="button">Edit Contents</button>
-
+-->	
 	</section>
 
 
@@ -480,13 +480,15 @@ The following templates are used in the 'order detail' modal/view.
 <table>
 <tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
 	<td><span data-bind='var: order(stid); format:text; className: stid;'></span></td>
-	<td><input type='text' data-bind="var: order(prod_name); format:popVal;" size='20' class='prodName' /></td>
-	<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' class='prodQty' /></td>
-	<td><span></span></td>
-	<td>price</td>
-	<td>tax</td>
-	<td>weight</td>
-	<td>extended</td>
+	<td>
+		<div data-bind='var: order(prod_name); format:text; '></div>
+		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
+	</td>	
+	
+	<td><input type='number' data-bind="var: order(qty); format:popVal;" size='3' /></td>
+	<td><input type='number' data-bind="var: order(base_price); format:popVal;" size='7' /></td>
+	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td><button data-btn-action="admin_orders|orderItemRemove">X</button></td>
 </tr>
 </table>
 
@@ -504,7 +506,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
 	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
 	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-	<td><button>X</button></td>
+	
 
 
 	</tr>

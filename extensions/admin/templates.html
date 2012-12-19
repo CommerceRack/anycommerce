@@ -109,8 +109,8 @@ PRODUCT FINDER/CHOOSER
 			</button>		
 		</div>
 
-		<div id='adminChooserButtonBar'>
-			<button class='chooser' data-btn-action='productFinder|chooser'>Do Something</button>	
+		<div id='adminChooserButtonBar' class='alignRight'>
+<!-- contents created when the CHOOSER finder is instantiated -->	
 		</div>
 
 		</td>
@@ -140,12 +140,15 @@ PRODUCT FINDER/CHOOSER
 	</td>
 </tr>
 </table>
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="return false;">
-	
+	<form action='#' onSubmit="return false;">
+	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='pid' />
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
-		<!--<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
+		
+		<fieldset class='labelsAsBreaks'>
+			<label>Quantity: <input type='number' value='1' name='qty' /></label>
+			<label>Price: <input type='number' name='price' data-bind='var: product(zoovy:base_price); format:popVal;' /></label>
+		</fieldset>
 	
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />-->
 	</form>
 
 </div>

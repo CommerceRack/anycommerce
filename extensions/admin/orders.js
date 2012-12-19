@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemEditorTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -1476,17 +1476,36 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
 				}, //admin_orders|orderCreate
 
+			"admin_orders|orderItemRemove" : function($btn)	{
+				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
+					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
+					$row = $(this).closest('tr'),
+					stid = $row.data('stid');
+					if(stid && orderID)	{
+						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"itemItemRemove?stid="+stid);
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAdd, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+						}
+					});
+				},
 
 			"admin_orders|orderItemAdd" : function($btn)	{
 				$btn.off('click.orderItemAdd').on('click.orderItemAdd',function(){
-					var $btn = $("<button>").text("Add to Order").button().on('click',function(){
+					var $button = $("<button>").text("Add to Order").button().on('click',function(){
 						var $form = $('form','#chooserResultContainer');
 						var json = $form.serializeJSON();
 						var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"itemAddStructured?"+$form.serialize()+"&qty=1");
-						app.model.dispatchThis('immutable');
+						if(json.pid && orderID)	{
+							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,"itemAddStructured?"+$form.serialize());
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAdd, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+							}
 						});
-					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $btn})
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
 					});
 				},
 
