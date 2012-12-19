@@ -728,10 +728,10 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 					switch($payMethod.val())	{
 						
 						case 'CREDIT':
-							var $paymentCC = $('#payment-cc').removeClass('mandatory');
-							var $paymentMM = $('#payment-mm').removeClass('mandatory');
-							var $paymentYY = $('#payment-yy').removeClass('mandatory');
-							var $paymentCV = $('#payment-cv').removeClass('mandatory');
+							var $paymentCC = $("[name='CC']").removeClass('mandatory');
+							var $paymentMM = $("[name='MM']").removeClass('mandatory');
+							var $paymentYY = $("[name='YY']").removeClass('mandatory');
+							var $paymentCV = $("[name='CV']").removeClass('mandatory');
 							if(!app.u.isValidCC($paymentCC.val())){$paymentCC.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please enter a valid credit card #<\/li>'}
 							if(!app.u.isValidMonth($paymentMM.val())){$paymentMM.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please select an exipration month<\/li>'}
 							if(!app.u.isValidCCYear($paymentYY.val())){$paymentYY.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please select an expiration year<\/li>'}
@@ -1135,9 +1135,8 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					app.renderFunctions.translateTemplate(app.data.buyerWalletList,'storedPaymentsContainer');
 					}
 				$('[type="radio"]',$panelFieldset).click(function(){
-					var val = $(this).val();
-					app.ext.convertSessionToOrder.u.updatePayDetails(val);
-					app.ext.convertSessionToOrder.vars["want/payby"] = val;
+					app.ext.convertSessionToOrder.u.updatePayDetails($panelFieldset);
+					app.ext.convertSessionToOrder.vars["want/payby"] = $(this).val();
 					$("#chkoutPayOptionsFieldsetErrors").addClass("displayNone");
 					})
 				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
