@@ -505,9 +505,8 @@ The following templates are used in the 'order detail' modal/view.
 
 <table>
 	<tr id='orderStuffItemTemplate' class='orderStuffItemRow'>
-
+	<td><h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5></td>
 	<td>
-		<h5 class='ztable_row_small stid' data-bind='var: order(stid); format:text; pretext: Sku: ;'></h5>
 		<div data-bind='var: order(prod_name); format:text; '></div>
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>
