@@ -1639,6 +1639,7 @@ for a category, each sku added or removed is a separate request.
 					app.u.dump(" -> "+attribute+" = "+list);
 					var attribObj = {};
 					attribObj[attribute] = list;
+					app.model.destroy('appProductGet|'+sku); //remove product from memory and localStorage
 					app.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
 					app.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
 					}
@@ -1732,9 +1733,9 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,vars){
 
-app.u.dump("BEGIN admin.u.addFinder");
+//app.u.dump("BEGIN admin.u.addFinder");
 // app.u.dump(" -> targetID: "+targetID);
-app.u.dump(vars);
+//app.u.dump(vars);
 
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(vars.path);
