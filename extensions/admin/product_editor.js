@@ -24,7 +24,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_prodEdit = function() {
-	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTableListTemplate','productListTemplateEditMe','productEditorPanelTemplate','mpControlSpec');
+	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTableListTemplate','productListTemplateEditMe','productEditorPanelTemplate','mpControlSpec','productEditorPanelGeneralTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -42,14 +42,17 @@ var admin_prodEdit = function() {
 			
 			adminUIProductPanelList : {
 				init : function(pid,tagObj,Q)	{
+					var r = 0;
 					tagObj = tagObj || {};
 					tagObj.datapointer = "adminUIProductPanelList|"+pid;
 					if(app.model.fetchData(tagObj.datapointer) == false)	{
+						r = 1;
 						this.dispatch(pid,tagObj,Q);
 						}
 					else	{
 						app.u.handleCallback(tagObj)
 						}
+					return r;
 					},
 				dispatch : function(pid,tagObj,Q)	{
 					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":tagObj,"pid":pid},Q);	
@@ -162,11 +165,10 @@ var admin_prodEdit = function() {
 		loadAndShowPanels :	{
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
+//the device preferences are how panels are open/closed by default.
 				var settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
-//				app.u.dump(" -> settings before extend: "); app.u.dump(settings);
 				settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
-//				app.u.dump(" -> settings after extend: "); app.u.dump(settings);
-				
+
 				var pid = app.data[tagObj.datapointer].pid;
 				var $target = $('#productTabMainContent');
 				$target.empty(); //removes loadingBG div and any leftovers.
@@ -175,11 +177,14 @@ var admin_prodEdit = function() {
 				
 				for(var i = 0; i < L; i += 1)	{
 					panelID = app.data[tagObj.datapointer]['@PANELS'][i].id;
-//					app.u.dump(i+") panelData["+panelID+"]: "+panelData[panelID]);
-
+//					app.u.dump(" -> panelID: "+panelID);
+					if(panelID == 'general')	{
+						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelID,'panelid':panelID,'pid':pid},'productEditorPanelGeneralTemplate',app.data['appProductGet|'+pid]));
+						} //this/these panels are now all app-based.
+					else	{
 					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
-					$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelID,'panelid':panelID,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
-
+						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelID,'panelid':panelID,'pid':pid},'productEditorPanelTemplate',app.data[tagObj.datapointer]['@PANELS'][i]));
+						}
 					if(settings && settings.openPanel[panelID])	{
 						$('#panel_'+panelID+' h3').click(); //open panel. This function also adds the dispatch.
 						}
@@ -211,10 +216,13 @@ var admin_prodEdit = function() {
 //run when a panel header is clicked. a 'click' may be triggered by the app when the list of panels appears.
 		handlePanel : function(t)	{
 			app.u.dump("BEGIN admin_prodEdit.a.handlePanel");
-			var $header = $(t);
-			var $panel = $('.panelContents',$header.parent());
-			var panelID = $header.parent().data('panelid');
-			var settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
+			
+			var $header = $(t),
+			$panel = $('.panelContents',$header.parent()),
+			pid = $panel.data('pid'),
+			panelID = $header.parent().data('panelid'),
+			settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
+			
 			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.			
 			$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
 			
@@ -224,6 +232,9 @@ var admin_prodEdit = function() {
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
 				if($('fieldset',$panel).children().length > 0)	{} //panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
 //default to getting the contents. better to take an API hit then to somehow accidentally load a blank panel.
+				else if(panelID == 'general')	{
+//do nothing.
+					}
 				else	{
 					app.ext.admin_prodEdit.calls.adminUIProductPanelExecute.init({'pid':$('#panel_'+panelID).data('pid'),'sub':'LOAD','panel':panelID},{'callback':'showDataHTML','extension':'admin','targetID':'panelContents_'+app.u.makeSafeHTMLId(panelID)},'mutable');
 					app.model.dispatchThis('mutable');
@@ -286,11 +297,23 @@ var admin_prodEdit = function() {
 				app.u.throwMessage("Uh oh. an error occured. could not determine what product to update.");
 				}
 			},
-		
+//call executed to open the editor for a given pid.
+//legacy call for panel list is needed (for now). productGet is used for panels as they're upgraded to full-app 
 		showPanelsFor : function(pid)	{
 			$('#productTabMainContent').empty().append("<div class='loadingBG'></div>");
-			app.ext.admin_prodEdit.calls.adminUIProductPanelList.init(pid,{'callback':'loadAndShowPanels','extension':'admin_prodEdit'},'mutable');
-			app.model.dispatchThis();
+			var numRequests = 0,
+			callback = {'callback':'loadAndShowPanels','extension':'admin_prodEdit','datapointer':'adminUIProductPanelList|'+pid};
+//the data for BOTH these requests is needed before the panel list can correctly load.
+			numRequests += app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{},'mutable'); //get into memory for app-based panels.
+			numRequests += app.ext.admin_prodEdit.calls.adminUIProductPanelList.init(pid,{},'mutable');
+			if(numRequests)	{
+				app.calls.ping.init(callback);
+				app.model.dispatchThis();
+				}
+			else	{
+				app.u.handleCallback(callback);
+				}
+			
 			}
 		
 		},

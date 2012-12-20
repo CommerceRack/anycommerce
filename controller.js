@@ -311,6 +311,48 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			},//getValidSessionID
 
 
+
+//get a product record.
+//required params: obj.pid.
+//optional params: obj.withInventory and obj.withVariations
+		appProductGet : {
+			init : function(obj,_tag,Q)	{
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				if(obj && obj.pid)	{
+					obj.pid = obj.pid.toUpperCase();
+					_tag = _tag || {};
+					_tag.datapointer = "appProductGet|"+obj.pid;
+//The fetchData will put the data into memory if present, so safe to check app.data... after here.
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(obj,_tag,Q)
+						}
+//if variations or options are requested, check to see if they've been retrieved before proceeding.
+					else if((obj.withVariations && app.data[_tag.datapointer]['@variations'] === undefined) || (obj.withInventory && app.data[_tag.datapointer]['@inventory'] === undefined))	{
+						r = 1;
+						this.dispatch(obj,_tag,Q);
+						}
+					else 	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					app.u.throwGMessage("In calls.appProductGet, required parameter pid was not passed");
+					app.u.dump(obj);
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj["_cmd"] = "appProductGet";
+ 				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //appProductGet
+
+
+
+
+
 //always uses immutable Q
 // ### need to migrate anything using this to use appCartCreate.
 		getValidSessionID : {
@@ -583,7 +625,7 @@ app.u.handleCallback(tagObj);
 
 		handleCallback : function(tagObj)	{
 //			app.u.dump("BEGIN u.handleCallback");
-			if(tagObj && tagObj.datapointer){app.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback.
+//			if(tagObj && tagObj.datapointer && ){app.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback. -> commented out 2012-12-21. this shouldn't be needed in data.
 			if(tagObj && tagObj.callback){
 //				app.u.dump(" -> callback exists");
 //				app.u.dump(tagObj.callback);
@@ -2313,12 +2355,17 @@ $tmp.empty().remove();
 				}
 			$tag.html(o);
 			}, //text
+
 //for use on inputs. populates val() with the value
 		popVal : function($tag,data){
 			$tag.val(data.value);
 			}, //text
 
-
+		
+		popCheckbox : function($tag,data){
+			if(data.value)	{$tag.attr('checked',true);}
+			else{} //shouldn't get here if data.value isn't populated.
+			},
 
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag

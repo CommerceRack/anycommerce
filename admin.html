@@ -21,12 +21,12 @@ else if (document.location.port == 8888) {
 	baseURL = '/';
 	}
 else {
-   baseURL = "//www.zoovy.com/biz/app/"
+   baseURL = "//www.zoovy.com/biz/app/";
    }
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20121219.4",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"20121220.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -391,7 +391,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<div class='debugBG'></div>
 	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
-
+<button onClick="app.calls.appProductGet.init({'pid':'OUTFIT','withVariations':true,'withInventory':true},{},'immutable'); app.model.dispatchThis('immutable');">Call Test</button>
 <button onClick="app.ext.admin.a.showFinderInModal('CHOOSER',{callback:function(){alert('bob')}});">Add Chooser</button>
 
 <button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'review_status.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>
