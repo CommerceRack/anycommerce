@@ -473,9 +473,13 @@ put the prompt into a span
 <label><span>prompt</span>input</label>
 */
 .labelsAsBreaks label	{display:block; margin:6px 0; vertical-align:top;}
-.labelsAsBreaks label span	{padding-right:12px; display:inline-block; width:150px; vertical-align:top;}
-/*
-horrible idea to set defaults/globals. set as needed within an extension's css file.
-.labelsAsBreaks input	{width:250px;}
-.labelsAsBreaks textarea	{width:200px; height:250px;}
-*/
+.labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
+
+/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+.alignedLabels label span	{width:30%;}
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=text]	{width:65%;}
+
+.alignedInputs input[type=number], 
+.alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
