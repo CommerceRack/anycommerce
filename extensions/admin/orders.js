@@ -1432,33 +1432,7 @@ $(selector + ' .editable').each(function(){
 
 
 
-				},
-
-			
-			
-			handleButtonActions : function($target)	{
-//				app.u.dump("BEGIN admin_orders.u.handleButtonActions");
-				if($target && $target.length && typeof($target) == 'object')	{
-					$("button",$target).each(function(){
-						var $btn = $(this);
-						var action = $btn.data('btn-action');
-						if(!action){} //no action specified. do nothing. button may have it's own event actions specified inline.
-						else if(typeof app.ext.admin_orders.buttonActions[action] == 'function')	{
-//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
-//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							$btn.button();
-							app.ext.admin_orders.buttonActions[action]($btn); //execute button action.
-							}
-						else	{
-							app.u.throwGMessage("Unsupported action ["+action+"] on button in admin_orders.u.handleButtonActions");
-							}
-						})
-					}
-				else	{
-					app.u.throwGMessage("In admin_orders.u.handleButtonActions, target was either not specified, not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
-					}
-				
-				} //handleButtonActions
+				}
 			}, //u
 
 		buttonActions : {
