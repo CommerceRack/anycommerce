@@ -19,21 +19,6 @@
 
 /*
 An extension for working within the Zoovy UI.
-
-
-finder -
-'path' refers to either a category safe id (.safe.name) or a list safe id ($mylistid)
-'safePath' is used for a jquery friendly id. ex: .safe.name gets converted to _safe_name and $mylistid to mylistid).
-
-
-NOTE
- - admin 'set' calls are hard coded to use the immutable Q so that a dispatch is not overridden.
- - in the calls, 'dispatch' was removed and only init is present IF we never check local storage for the data.
- 
- 
-calls
- -> init should contain any code necessary for checking localStorage or, when supported, local DB.
- -> dispatch should contain everything needed for the dispatch, so that if it is executed instead of init, it works fine. 
 */
 
 
@@ -187,6 +172,115 @@ obj.PATH = .cat.safe.id
 
 
 
+
+
+
+
+			adminProductCreate  : {
+				init : function(pid,attribs,tagObj)	{
+					tagObj = tagObj || {};
+					tagObj.datapointer = "adminProductCreate|"+pid;
+					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
+					}
+				},
+
+
+/*
+
+PRODUCT
+
+*/
+
+
+//app.ext.admin.calls.adminProductUpdate.init(pid,attrObj,tagObj,Q)
+			adminProductUpdate : {
+				init : function(pid,attrObj,_tag)	{
+					var r = 0;
+					if(pid && !$.isEmptyObject(attrObj))	{
+						this.dispatch(pid,attrObj,_tag)
+						r = 1;
+						}
+					else	{
+						app.u.throwGMessage("In admin.calls.adminProductUpdate, either pid ["+pid+"] not set of attrObj is empty.");
+						app.u.dump(attrObj);
+						}
+					return r;
+					},
+				dispatch : function(pid,attrObj,_tag)	{
+					var obj = {};
+					obj._cmd = "adminProductUpdate";
+					obj._tag = _tag || {};
+					obj.pid = pid;
+					obj['%attribs'] = attrObj;
+					app.model.addDispatchToQ(obj,'immutable');
+					}
+				},
+
+
+			adminUIProductPanelList : {
+				init : function(pid,_tag,Q)	{
+					var r = 0;
+					if(pid)	{
+						_tag = _tag || {};
+						_tag.datapointer = "adminUIProductPanelList|"+pid;
+						if(app.model.fetchData(_tag.datapointer) == false)	{
+							r = 1;
+							this.dispatch(pid,_tag,Q);
+							}
+						else	{
+							app.u.handleCallback(_tag)
+							}
+						}
+					else	{app.u.throwGMessage("In admin.calls.adminUIProductPanelList, no pid passed.")}
+					return r;
+					},
+				dispatch : function(pid,_tag,Q)	{
+					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":_tag,"pid":pid},Q);	
+					}
+				}, //adminUIProductPanelList
+
+
+//obj requires panel and pid and sub.  sub can be LOAD or SAVE
+			adminUIProductPanelExecute : {
+				init : function(obj,_tag,Q)	{
+					if(obj && obj.panel && obj.pid && obj.sub)	{
+						_tag = _tag || {};
+	//save and load 'should' always have the same data, so the datapointer is shared.
+						if(obj['sub'])	{
+							_tag.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
+							}
+						this.dispatch(obj,_tag,Q);
+						}
+					else	{
+						app.u.throwGMessage("In admin.calls.adminUIProductPanelExecute, required param (panel, pid or sub) left blank. see console."); app.u.dump(obj);
+						}
+					},
+				dispatch : function(obj,_tag,Q)	{
+					obj['_cmd'] = "adminUIProductPanelExecute";
+					obj["_tag"] = _tag;
+					app.model.addDispatchToQ(obj,Q);	
+					}
+				}, //adminUIProductPanelExecute
+
+			adminProductManagementCategoryList : {
+				init : function(_tag,Q)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminProductManagementCategoryList";
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						this.dispatch(_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag)
+						}
+					},
+				dispatch : function(_tag,Q)	{
+					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
+					}
+				}, //adminProductManagementCategoryList
+
+
+
+
 	
 		customer : {
 
@@ -244,48 +338,7 @@ obj.PATH = .cat.safe.id
 					}
 				}
 			},
-			
-		product : {
-			appProductGetNoLocal : {
-				init : function(pid,tagObj,Q)	{
-					this.dispatch(pid,tagObj,Q)
-					return 1;
-					},
-				dispatch : function(pid,tagObj,Q)	{
-					var obj = {};
-					tagObj = tagObj || {};
-					tagObj["datapointer"] = "appProductGet|"+pid; 
-					obj["_cmd"] = "appProductGet";
-					obj["pid"] = pid;
-					obj["_tag"] = tagObj;
-					app.model.addDispatchToQ(obj,Q);
-					}
-				},//appProductGetNoLocal
-//app.ext.admin.calls.product.adminProductUpdate.init(pid,attrObj,tagObj,Q)
-			adminProductUpdate : {
-				init : function(pid,attrObj,_tag)	{
-					var r = 0;
-					if(pid && !$.isEmptyObject(attrObj))	{
-						this.dispatch(pid,attrObj,_tag)
-						r = 1;
-						}
-					else	{
-						app.u.throwGMessage("In admin.calls.adminProductUpdate, either pid ["+pid+"] not set of attrObj is empty.");
-						app.u.dump(attrObj);
-						}
-					return r;
-					},
-				dispatch : function(pid,attrObj,_tag)	{
-					var obj = {};
-					obj._cmd = "adminProductUpdate";
-					obj._tag = _tag || {};
-					obj.pid = pid;
-					obj['%attribs'] = attrObj;
-					app.model.addDispatchToQ(obj,'immutable');
-					}
-				}
-				
-			}, //product
+
 		finder : {
 			
 			adminNavcatProductInsert : {
@@ -1650,8 +1703,8 @@ for a category, each sku added or removed is a separate request.
 					var attribObj = {};
 					attribObj[attribute] = list;
 					app.model.destroy('appProductGet|'+sku); //remove product from memory and localStorage
-					app.ext.admin.calls.product.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
-					app.ext.admin.calls.product.appProductGetNoLocal.init(sku,{},'immutable');
+					app.ext.admin.calls.adminProductUpdate.init(sku,attribObj,{'callback':'pidFinderChangesSaved','extension':'admin'});
+					app.calls.appProductGet.init(sku,{},'immutable');
 					}
 				else if (findertype == 'NAVCAT')	{
 					// items removed need to go into the Q first so they're out of the remote list when updates start occuring. helps keep position correct.
@@ -2128,20 +2181,20 @@ just lose the back button feature.
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
 			handleUIActions : function($target)	{
-//				app.u.dump("BEGIN admin_orders.u.handleButtonActions");
+				app.u.dump("BEGIN admin_orders.u.handleButtonActions");
 				if($target && $target.length && typeof($target) == 'object')	{
 					$("[data-ui-action]",$target).each(function(){
 						var $ele = $(this),
-						extension = $ele.data('btn-action').split("|")[0],
-						action = $ele.data('btn-action').split("|")[1];
-						if(action && extension && typeof app.ext[extension].buttonActions[action] == 'function'){
+						extension = $ele.data('ui-action').split("|")[0],
+						action = $ele.data('ui-action').split("|")[1];
+						if(action && extension && typeof app.ext[extension].uiActions[action] == 'function'){
 							$ele.button();
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].buttonActions[action]($ele);
+							app.ext[extension].uiActions[action]($ele);
 							} //no action specified. do nothing. element may have it's own event actions specified inline.
 						else	{
-							app.u.throwGMessage("In admin.u.handleUIActions, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function ["+typeof app.ext[extension].buttonActions[action]+"]");
+							app.u.throwGMessage("In admin.u.handleUIActions, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function ["+typeof app.ext[extension].uiActions[action]+"]");
 							}
 						})
 					}

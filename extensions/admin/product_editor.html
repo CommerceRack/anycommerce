@@ -173,7 +173,7 @@
 
 <div class='productPanel' id='productEditorPanelTemplate'>
 	
-	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 	
 	
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
@@ -194,8 +194,8 @@
 
 
 
-<div id='productEditorPanelGeneralTemplate' class='productPanel'>
-	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+<div id='productEditorPanelTemplate_general' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
 		<span>Generial Product Information</span>
 	
@@ -238,7 +238,7 @@
 	<tr>
 		<td colspan='2'>
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-<button class='floatRight'>save</button>
+<button class='floatRight' data-ui-action="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 <button onClick="navigateTo('/biz/product/options2/index.cgi?product=JEWELRY'); ">Config Options</button>
 <button onClick="navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU=JEWELRY');" >Web Page Editor</button>
 <button onClick="alert('go to website. use profile in focus');" >Preview</button>
