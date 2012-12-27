@@ -2176,24 +2176,24 @@ just lose the back button feature.
 				},
 
 
-//a UI Action should have a databind of data-ui-action (this replaces data-btn-action).
+//a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
-			handleUIActions : function($target)	{
-				app.u.dump("BEGIN admin_orders.u.handleButtonActions");
+			handleAppEvents : function($target)	{
+				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{
-					$("[data-ui-action]",$target).each(function(){
+					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
-						extension = $ele.data('ui-action').split("|")[0],
-						action = $ele.data('ui-action').split("|")[1];
-						if(action && extension && typeof app.ext[extension].uiActions[action] == 'function'){
+						extension = $ele.data('app-event').split("|")[0],
+						action = $ele.data('app-event').split("|")[1];
+						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].uiActions[action]($ele);
+							app.ext[extension].e[action]($ele);
 							} //no action specified. do nothing. element may have it's own event actions specified inline.
 						else	{
-							app.u.throwGMessage("In admin.u.handleUIActions, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
+							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
 							}
 						})
 					}
@@ -2208,7 +2208,7 @@ just lose the back button feature.
 
 			},	//util
 
-		uiActions : {}
+		e : {}
 
 		} //r object.
 	return r;

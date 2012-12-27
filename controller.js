@@ -2404,9 +2404,12 @@ $tmp.empty().remove();
 			$tag.val(data.value);
 			}, //text
 
-		
+//only use this on fields where the value is b
 		popCheckbox : function($tag,data){
-			if(data.value)	{$tag.attr('checked',true);}
+//			app.u.dump(" -> data.value: "+data.value);
+			if(Number(data.value))	{$tag.attr('checked',true);}
+			else if(data.value === 'on')	{$tag.attr('checked',true);}
+			else if(data.value == true)	{$tag.attr('checked',true);}
 			else{} //shouldn't get here if data.value isn't populated.
 			},
 

@@ -272,7 +272,7 @@ var admin_prodEdit = function() {
 				var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
 				if(pid && panelid)	{
 					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
-					app.ext.admin.u.handleUIActions(r);
+					app.ext.admin.u.handleAppEvents(r);
 					}
 				else	{
 					r = false;
@@ -370,8 +370,8 @@ var admin_prodEdit = function() {
 
 		}, //u
 
-
-		uiActions : {
+//e is for 'events'. This are used in handleAppEvents.
+		e : {
 
 			"configOptions" : function($t)	{
 				$t.button();
@@ -464,6 +464,19 @@ var admin_prodEdit = function() {
 					$panel = $btn.closest("[data-panelid]")
 					panelid = $panel.data('panelid'),
 					formJSON = $btn.parents('form').serializeJSON();
+//regularize checkbox values (1/0 instead of on/off). also set values for items NOT checked so that if unchecked, it gets updated.
+					$(":checkbox",$panel).each(function(){
+						var $input = $(this),
+						index = $input.attr('name');
+
+						if($input.is(':checkbox') && index)	{ //if index isn't set (name attribute) do nothing with data.
+							app.u.dump(" -> "+index+" is a checkbox");
+							if($input.is(':checked'))	{formJSON[index] = 1} //set val to 1 instead of 'on'.
+							else	{formJSON[index] = 0} //default to zero (not off). this handles items that were checked and now are not.
+							}
+						else	{} //the rest of the data is passed along as is.
+						
+						});			
 					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
 						$panel.showLoading();

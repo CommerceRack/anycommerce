@@ -225,113 +225,120 @@
 
 <tr>
 	<td><label><input type="checkbox" name="gbase:ts" data-bind="var: product(gbase:ts); format:popCheckbox;"> GoogleBase:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='googlebase'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='googlebase'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="gbase:note" maxlength="60" size="60" data-bind="var: product(gbase:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="bizrate:ts" data-bind="var: product(bizrate:ts); format:popCheckbox;"> BizRate:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='bizrate'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='bizrate'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="bizrate:note" maxlength="60" size="60" data-bind="var: product(bizrate:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popCheckbox;"> eBay:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='ebay'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='ebay'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="ebay:note" maxlength="60" size="60" data-bind="var: product(ebay:note); format:popVal;"></td>
 </tr>
-
+<!--
 <tr>
 	<td><label><input type="checkbox" name="yshop:ts" data-bind="var: product(yshop:ts); format:popCheckbox;"> Yahoo Shopping:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='yshop'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='yshop'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="yshop:note" maxlength="60" size="60" data-bind="var: product(yshop:note); format:popVal;"></td>
 </tr>
-
+-->
 <tr>
 	<td><label><input type="checkbox" name="pricegrabber:ts" data-bind="var: product(pricegrabber:ts); format:popCheckbox;"> PriceGrabber:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='pricegrabber'>Enter Specifics</button></td>
-	<td></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='pricegrabber'>Enter Specifics</button></td>
+	<td>Qty: <input size=4 type="textbox" name="pricegrabber:quantity" data-bind="var: product(pricegrabber:quantity); format:popVal;"></td>
 	<td><input type="textbox" value="" name="pricegrabber:note" maxlength="60" size="60" data-bind="var: product(pricegrabber:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="shopping:ts" data-bind="var: product(shopping:ts); format:popCheckbox;"> Shopping.com:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='shopping'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='shopping'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="shopping:note" maxlength="60" size="60" data-bind="var: product(shopping:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="nextag:ts" data-bind="var: product(nextag:ts); format:popCheckbox;"> NextTag:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='nextag'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='nextag'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="nextag:note" maxlength="60" size="60" data-bind="var: product(nextag:note); format:popVal;"></td>
 </tr>
-
+<!--
 <tr>
 	<td><label><input type="checkbox" name="mysimon:ts" data-bind="var: product(mysimon:ts); format:popCheckbox;"> MySimon:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='mysimon'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='mysimon'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="mysimon:note" maxlength="60" size="60" data-bind="var: product(mysimon:note); format:popVal;"></td>
 </tr>
-
+-->
 <tr>
 	<td><label><input type="checkbox" name="pronto:ts" data-bind="var: product(pronto:ts); format:popCheckbox;"> Pronto:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='pronto'>Enter Specifics</button></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='~pronto'>Enter Specifics</button></td>
 	<td></td>
 	<td><input type="textbox" value="" name="pronto:note" maxlength="60" size="60" data-bind="var: product(pronto:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="thefind:ts" data-bind="var: product(thefind:ts); format:popCheckbox;"> theFind:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='thefind'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="thefind:note" maxlength="60" size="60" data-bind="var: product(thefind:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="become:ts" data-bind="var: product(become:ts); format:popCheckbox;"> Become:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='become'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="become:note" maxlength="60" size="60" data-bind="var: product(become:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="smarter:ts" data-bind="var: product(smarter:ts); format:popCheckbox;"> Smarter:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='smarter'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="smarter:note" maxlength="60" size="60" data-bind="var: product(smarter:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="dijipop:ts" data-bind="var: product(dijipop:ts); format:popCheckbox;"> DijiPop:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='dijipop'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="dijipop:note" maxlength="60" size="60" data-bind="var: product(dijipop:note); format:popVal;"></td>
 </tr>
 
 <tr>
 	<td><label><input type="checkbox" name="linkshare:ts" data-bind="var: product(linkshare:ts); format:popCheckbox;"> LinkShare:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='linkshare'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="linkshare:note" maxlength="60" size="60" data-bind="var: product(linkshare:note); format:popVal;"></td>
 </tr>
 
 <tr>
+	<td><label><input type="checkbox" name="amzpa:ts" data-bind="var: product(amzpa:ts); format:popCheckbox;"> Amazon Product Ads:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="amzpa:note" maxlength="60" size="60" data-bind="var: product(amzpa:note); format:popVal;"></td>
+</tr>
+
+<tr>
 	<td><label><input type="checkbox" name="overstock:ts" data-bind="var: product(overstock:ts); format:popCheckbox;"> OverStock:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='overstock'>Enter Specifics</button></td>
-	<td>qty: <input size=4 type="hidden" name="overstock:quantity" value="1"></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='overstock'>Enter Specifics</button></td>
+	<td><input size=4 type="hidden" name="overstock:quantity" value="1"></td>
 	<td><input type="textbox" value="" name="overstock:note" maxlength="60" size="60" data-bind="var: product(overstock:note); format:popVal;"></td>
 </tr>
 
 
 <tr>
 	<td><label><input type="checkbox" name="bing:ts" data-bind="var: product(bing:ts); format:popCheckbox;"> Bing:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='bing'>Enter Specifics</button></td>
+	<td></td>
 	<td>Commission: <input size=4 type="number" name="bing:commission" data-bind="var: product(bing:commission); format:popVal;">%</td>
 	<td><input type="textbox" value="" name="bing:note" maxlength="60" size="60" data-bind="var: product(bing:note); format:popVal;"></td>
 </tr>
@@ -339,9 +346,16 @@
 
 <tr>
 	<td><label><input type="checkbox" name="sears:ts" data-bind="var: product(sears:ts); format:popCheckbox;"> Sears:</label></td>
-	<td><button data-ui-action='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='sears'>Enter Specifics</button></td>
+	<td></td>
 	<td></td>
 	<td><input type="textbox" value="" name="sears:note" maxlength="60" size="60" data-bind="var: product(sears:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="arp:ts" data-bind="var: product(arp:ts); format:popCheckbox;"> Amazon Repricing:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="arp:note" maxlength="60" size="60" data-bind="var: product(arp:note); format:popVal;"></td>
 </tr>
 </tbody>
 </table>
@@ -353,7 +367,7 @@
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-<button class='floatRight' data-ui-action="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 </div>
 </fieldset>
 </form>
@@ -376,7 +390,7 @@
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
 <form action='#' class='labelsAsBreaks alignedLabels alignedInputs'>
 <fieldset>
-
+ 
 
 <label><span>SEO page title:</span><input type='number' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
 
@@ -390,7 +404,7 @@
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-<button class='floatRight' data-ui-action="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 </div>
 </fieldset>
 </form>
@@ -478,7 +492,7 @@
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-<button class='floatRight' data-ui-action="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
 </div>
 </fieldset>
 </form>
@@ -541,20 +555,23 @@ If you continue - you are acknowledging that you understand that HTML4 is not co
 shopping applications or any future technologies that will be introduced.  
 We strongly recommend you stop immediately, turn off HTML editing and use Wiki Creole formatting instead.
 This HTML Editor option will be removed altogether in the future. 
+
 </div>
 
 
-<label><span>Product description:</span><textarea name='zoovy:prod_desc' data-bind="var: product(zoovy:prod_desc); format:popVal;" rows='10'></textarea></label>
+<label><span>Product description:</span><textarea name='zoovy:prod_desc' onFocus=" 	jQuery(this).prop('rows',25); 	if(jQuery().htmlarea && jQuery('#use_html').is(':checked')){	 		jQuery(this).htmlarea({ 			'toolbar':[ 		'bold', 'italic', 'p', '|','h1', 'h2', 'h3', 'h4', '|', 'indent', 'outdent', 'orderedList', 'unorderedList', '|',  		'justifyleft', 'justifycenter','justifyright','|', 		'forecolor','link', 'unlink', 'image'	 		]});	 		} 		" data-bind="var: product(zoovy:prod_desc); format:popVal;" rows='10'></textarea></label>
+<div class='alignRight'><input type='checkbox' onChange="$('#html_you_have_been_warned').show();" id='use_html'> Use HTML Editor</div>
 
+<!--
 <div class='clearfix alignRight'>
-	<div data-ui-action="admin_prodEdit|textareaEditorMode" data-ui-target-name="zoovy:prod_desc" class='ui-corner-bottom floatRight'>
+	<div data-app-event="admin_prodEdit|textareaEditorMode" data-ui-target-name="zoovy:prod_desc" class='ui-corner-bottom floatRight'>
 		<h4 class='floatLeft marginRight paddingRight'>Editor: </h4>
 		<button data-ui-edit-mode='text' >Text</button>
 		<button data-ui-edit-mode='wiki' >Wiki</button>
 		<button data-ui-edit-mode='html' >HTML</button>
 	</div>
 </div>
-
+-->
 <label><span>Product detailed description:</span><textarea name='zoovy:prod_detail' data-bind="var: product(zoovy:prod_detail); format:popVal;" rows='10'></textarea></label>
 
 
@@ -564,10 +581,10 @@ This HTML Editor option will be removed altogether in the future.
 	</tr>
 	</table>
 	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
-	<button class='floatRight' data-ui-action="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
-	<button data-ui-action="admin_prodEdit|configOptions">Config Options</button>
-	<button data-ui-action="admin_prodEdit|webPageEditor">Web Page Editor</button>
-	<button data-ui-action="admin_prodEdit|viewProductOnWebsite">Preview</button>
+	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+	<button data-app-event="admin_prodEdit|configOptions">Config Options</button>
+	<button data-app-event="admin_prodEdit|webPageEditor">Web Page Editor</button>
+	<button data-app-event="admin_prodEdit|viewProductOnWebsite">Preview</button>
 	</div>
 	</fieldset>
 	</form>

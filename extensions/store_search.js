@@ -244,7 +244,7 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				app.u.dump(" --> datapointer for filterByAttributes query: "+tagObj.datapointer);
 				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
 				app.model.dispatchThis();
-			}
+				}
 				
 			} //util
 
