@@ -105,7 +105,7 @@ app.u.initMVC = function(attempts){
 		var clickToLoad = false;
 		if(clickToLoad){
 			$('#loader').fadeOut(1000);
-			$('#tenFourGoodBuddy').delay(1000).fadeIn(1000).click(function() {
+			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
 				app.u.loadApp();
 			});
 		} else {
