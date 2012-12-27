@@ -24,8 +24,10 @@ class can also be applied to a 1 item per row list.
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
 
-button.ui-button	{padding:2px 4px;} /* some default padding to add breathing room when text-only isn't used. keeps button small. */
-button.ui-button-text	{padding:2px 4px;} /*jqueryui uses a lot of spans for buttons. i like buttons. this is to handle padding on text only buttons */
+
+/* for small buttons */
+.smallButton .ui-button-text	{padding:2px 4px !important; line-height:normal !important; font-size:.85em;}
+
 .ui-selectee	{cursor:pointer;}
 
 .appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
@@ -472,8 +474,17 @@ for use in forms where the label is the row container.
 put the prompt into a span
 <label><span>prompt</span>input</label>
 */
-.labelsAsBreaks label	{display:block; margin:6px 0; vertical-align:top;}
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
 .labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
+
+/* 
+within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
+add floatleft to each label inside the div
+see shipping panel in product editor for example
+*/
+
+.labelsAsBreaks div.label h4	{margin:0; padding-right:24px; float:left; width:160px;}
+.labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
 .alignedLabels label span	{width:30%;}
@@ -483,3 +494,4 @@ put the prompt into a span
 
 .alignedInputs input[type=number], 
 .alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
+

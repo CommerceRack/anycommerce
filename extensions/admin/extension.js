@@ -2188,13 +2188,12 @@ just lose the back button feature.
 						extension = $ele.data('ui-action').split("|")[0],
 						action = $ele.data('ui-action').split("|")[1];
 						if(action && extension && typeof app.ext[extension].uiActions[action] == 'function'){
-							$ele.button();
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
 							app.ext[extension].uiActions[action]($ele);
 							} //no action specified. do nothing. element may have it's own event actions specified inline.
 						else	{
-							app.u.throwGMessage("In admin.u.handleUIActions, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function ["+typeof app.ext[extension].uiActions[action]+"]");
+							app.u.throwGMessage("In admin.u.handleUIActions, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
 							}
 						})
 					}
@@ -2207,7 +2206,9 @@ just lose the back button feature.
 
 
 
-			}	//util
+			},	//util
+
+		uiActions : {}
 
 		} //r object.
 	return r;

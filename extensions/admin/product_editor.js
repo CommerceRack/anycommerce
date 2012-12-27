@@ -24,12 +24,12 @@ The functions here are designed to work with 'reasonable' size lists of categori
 
 
 var admin_prodEdit = function() {
-	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTableListTemplate','productListTemplateEditMe','productEditorPanelTemplate','mpControlSpec','productEditorPanelTemplate_general');
+	var theseTemplates = new Array('productEditorTemplate','ProductCreateNewTemplate','productListTemplateTableResults','productListTableListTemplate','productListTemplateEditMe','productEditorPanelTemplate','mpControlSpec','productEditorPanelTemplate_general','productEditorPanelTemplate_shipping','productEditorPanelTemplate_rss','productEditorPanelTemplate_syndication');
 	var r = {
 
 	vars : {
 //when a panel is converted to app, add it here and add a template. 
-		appPanels : ['general'] //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
+		appPanels : ['general','shipping','rss','syndication'] //a list of which panels do NOT use compatibility mode. used when loading panels. won't be needed when all app based.
 		},
 
 
@@ -373,6 +373,86 @@ var admin_prodEdit = function() {
 
 		uiActions : {
 
+			"configOptions" : function($t)	{
+				$t.button();
+				$t.off('click.configOptions').on('click.configOptions',function(event){
+					event.preventDefault();
+					var pid = $(this).closest("[data-pid]").data('pid');
+					if(pid)	{navigateTo('/biz/product/options2/index.cgi?product='+pid);}
+					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
+					});
+				},
+			"enterSyndicationSpecifics" : function($t)	{
+				$t.button().addClass('smallButton');
+				$t.off('click.configOptions').on('click.configOptions',function(event){
+					event.preventDefault();
+					var pid = $(this).closest("[data-pid]").data('pid'),
+					syndicateTo = $(this).data('ui-syndicateto');
+					if(pid && syndicateTo)	{navigateTo("/biz/product/definition.cgi?_PRODUCT="+pid+"&amp;_DOCID="+syndicateTo+".listing",{dialog:true});}
+					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
+					});
+				},
+				
+			"textareaEditorMode" : function($t)	{
+//				$t.addClass('ui-widget-header ui-corner-bottom');
+				$("button :first",$t).addClass('ui-corner-left');
+				$("button :last",$t).addClass('ui-corner-right');
+				$("button",$t).each(function(){
+
+					var $btn = $(this),
+					jhtmlVars = {
+						toolbar: [["bold", "italic", "underline"],["h1", "h2", "h3", "h4", "h5", "h6"],["link", "unlink"]]
+						}
+					
+					$btn.button().removeClass('ui-corner-all'); //only the first and last buttons should have corners.
+					$btn.css({'margin':'0 -2px'}).addClass('smallButton');  //reduce margins so buttons 'merge'.
+
+					$btn.off('click.textareaEditorMode').on('click.textareaEditorMode',function(event){
+						app.u.dump(" -> a click occured.");
+						event.preventDefault();
+						var mode = $btn.data('ui-edit-mode');
+						$('#html_you_have_been_warned').hide();
+						$('.ui-state-active',$t).removeClass('ui-state-active');
+						if(mode == 'wiki')	{
+							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
+							$(this).addClass('ui-state-active');
+							}
+						else if(mode == 'html')	{
+						$('#html_you_have_been_warned').show();
+							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
+							$(this).addClass('ui-state-active');
+							}
+						else if(mode == 'text')	{
+							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea();
+							$(this).addClass('ui-state-active');
+							}
+						else	{
+							app.u.throwGMessage("In admin_prodEdit.buttonActions.textareaEditorMode, unsupported or blank mode ["+mode+"]");
+							}
+						});
+					});
+				},
+			
+			"viewProductOnWebsite" : function($t)	{
+				$t.button();
+				$t.off('click.configOptions').on('click.configOptions',function(event){
+					event.preventDefault();
+					var pid = $(this).closest("[data-pid]").data('pid');
+					if(pid)	{window.open("http://"+app.vars.domain+"/product/"+pid+"/")}
+					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
+					});
+				},
+
+			"webPageEditor" : function($t)	{
+				$t.button();
+				$t.off('click.webPageEditor').on('click.webPageEditor',function(event){
+					event.preventDefault();
+					var pid = $(this).closest("[data-pid]").data('pid');
+					if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
+					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
+					});
+				},
+
 			"serializeAndAdminProductUpdate" : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
 				$t.button();
@@ -384,10 +464,6 @@ var admin_prodEdit = function() {
 					$panel = $btn.closest("[data-panelid]")
 					panelid = $panel.data('panelid'),
 					formJSON = $btn.parents('form').serializeJSON();
-					
-//					app.u.dump(" -> pid: "+pid);
-//					app.u.dump(" -> panelid: "+panelid);
-//					app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
 					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
 						$panel.showLoading();
