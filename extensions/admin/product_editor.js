@@ -143,21 +143,27 @@ var admin_prodEdit = function() {
 
 //t is 'this' passed in from the h3 that contains the icon and link.
 //run when a panel header is clicked. a 'click' may be triggered by the app when the list of panels appears.
+//view can equal 'show' or 'hide'. This is to force a panel open or closed. if blank, panel will toggle.
 		handlePanel : function(t)	{
 			app.u.dump("BEGIN admin_prodEdit.a.handlePanel");
 			
-			var $header = $(t),
+			var $header = $(t), //if not already a jquery object
 			$panel = $('.panelContents',$header.parent()),
 			pid = $panel.data('pid'),
 			panelid = $header.parent().data('panelid'),
 			settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
 			
 			app.u.dump(" -> panelid: "+panelid);
-			
+			app.u.dump(" -> $panel.length: "+$panel.length);
+			app.u.dump(" -> $panel.children().length: "+$panel.children().length);
+			app.u.dump(" -> $panel.is(:visible) [before toggle]: "+$panel.is(":visible"));
+					
 			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.			
 			$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
-			app.u.dump(" -> $panel.is(:visible): "+$panel.is(":visible"));
+			app.u.dump(" -> $panel.is(:visible) [after toggle]: "+$panel.is(":visible"));
+
 			if($panel.is(":visible"))	{
+				app.u.dump(" -> into the code to show the panel");
 				settings.openPanel[panelid] = true;
 				$header.addClass('ui-accordion-header-active ui-state-active').removeClass('ui-corner-bottom');
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
@@ -206,7 +212,7 @@ var admin_prodEdit = function() {
 			}, //toggleManagementCat
 			
 			
-//used for saving compatibility mode panels. app panels will have a ui-action
+//used for saving compatibility mode panels. app panels have a ui-event
 		saveProductPanel : function(t,panelid,SUB){
 			var $form = $(t).closest("form");
 			var $fieldset = $('fieldset',$form); // a var because its used/modified more than once.
@@ -392,7 +398,7 @@ var admin_prodEdit = function() {
 					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
 					});
 				},
-				
+//not currently in use. planned for when html4/5, wiki and text editors are available.
 			"textareaEditorMode" : function($t)	{
 //				$t.addClass('ui-widget-header ui-corner-bottom');
 				$("button :first",$t).addClass('ui-corner-left');
@@ -432,7 +438,7 @@ var admin_prodEdit = function() {
 						});
 					});
 				},
-			
+
 			"viewProductOnWebsite" : function($t)	{
 				$t.button();
 				$t.off('click.configOptions').on('click.configOptions',function(event){
@@ -470,7 +476,7 @@ var admin_prodEdit = function() {
 						index = $input.attr('name');
 
 						if($input.is(':checkbox') && index)	{ //if index isn't set (name attribute) do nothing with data.
-							app.u.dump(" -> "+index+" is a checkbox");
+//							app.u.dump(" -> "+index+" is a checkbox");
 							if($input.is(':checked'))	{formJSON[index] = 1} //set val to 1 instead of 'on'.
 							else	{formJSON[index] = 0} //default to zero (not off). this handles items that were checked and now are not.
 							}
@@ -487,8 +493,8 @@ var admin_prodEdit = function() {
 								app.u.throwMessage(responseData);
 								}
 							else	{
-								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 								$panel.hideLoading();
+								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 								$('.panelHeader',$panel).click();
 								}
 							}},'immutable');
