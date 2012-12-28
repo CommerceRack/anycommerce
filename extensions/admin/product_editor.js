@@ -59,22 +59,23 @@ var admin_prodEdit = function() {
 		showMangementCats : {
 			onSuccess : function(_rtag)	{
 				$('#manCatsParent').show(); //make sure parent is visible. hidden by default in case there's no mancats
-				$results = $(app.u.jqSelector('#',_rtag.targetID));
-				var $a; //recycled.
+				var $results = $(app.u.jqSelector('#',_rtag.targetID)),
+				$a, //recycled.
 //cats is an array of keys (management category names) used for sorting purposes.
 //regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
-				var cats = Object.keys(app.data[_rtag.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+				cats = Object.keys(app.data[_rtag.datapointer]['%CATEGORIES']).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
 //				app.u.dump(cats);
-				for(index in cats)	{
+				for(var index in cats)	{
 					$a = $("<a \/>").attr('data-management-category',cats[index]).html("<span class='ui-icon ui-icon-folder-collapsed floatLeft'></span> "+(cats[index] || 'uncategorized'));
 //In the app framework, it's not real practical to load several hundred product into memory at one time.
 //so the list is opened in the main product area in a multipage format.
 						$a.click(function(){
-							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')});
-							var $target = $('#productTabMainContent').empty().append($ul);
+							var $ul = $("<ul \/>").attr({'id':'manageCatProdlist','data-management-category':$(this).data('management-category')}),
+							$target = $('#productTabMainContent').empty().append($ul),
 //convert to array and clean up extra comma's, blanks, etc.
 //also, sort alphabetically.
-							var csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')]).sort(); 
+							csv = app.ext.store_prodlist.u.cleanUpProductList(app.data.adminProductManagementCategoryList['%CATEGORIES'][$(this).data('management-category')]).sort();
+
 							app.ext.store_prodlist.u.buildProductList({
 								'csv': csv,
 								'parentID':'manageCatProdlist',

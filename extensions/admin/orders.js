@@ -69,21 +69,20 @@ var admin_orders = function() {
 //never get from local or memory.
 //formerly getOrders
 		adminOrderList : {
-			init : function(obj,tagObj,Q)	{
-				app.u.dump("BEGIN admin_orders.calls.adminOrderList.init");
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminOrderList";
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminOrderList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
-					this.dispatch(obj,tagObj,Q);
+					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					app.u.handleCallback(tagObj);
+					app.u.handleCallback(_tag);
 					}
 				return 1;
 				},
-			dispatch : function(obj,tagObj,Q)	{
-				obj['_tag'] = tagObj;
+			dispatch : function(obj,_tag,Q)	{
+				obj['_tag'] = _tag;
 				obj["_cmd"] = "adminOrderList"
 				app.model.addDispatchToQ(obj,Q);
 				}

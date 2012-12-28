@@ -47,22 +47,260 @@ var admin = function() {
 
 	calls : {
 
-//??? should this be saved in local storage?
-		appResource : {
-			init : function(filename,_tag,Q)	{
+		adminDomainList : {
+			init : function(_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = "appResource|"+filename;
-				this.dispatch(filename,_tag,Q);
+				_tag.datapointer = "adminDomainList";
+				var r = 0;
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r; 
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
+				}			
+			},
+
+		adminPrivateSearch : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(!$isEmptyObject(obj))	{this.dispatch(obj,_tag,Q); r = 1;}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminPrivateSearch, no query object passed.");
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminPrivateSearch';
+				obj.mode = 'elastic-native';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminPrivateSearch';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //adminPrivateSearch
+
+
+
+		adminProductCreate  : {
+			init : function(pid,attribs,tagObj)	{
+				if(pid && !$.isEmptyObject(attribs))	{
+					tagObj = tagObj || {};
+					tagObj.datapointer = "adminProductCreate|"+pid;
+					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminProductCreate, either pid ["+pid+"] not set of attribs is empty.");
+					}
+				}
+			}, //adminProductCreate
+		adminProductManagementCategoryList : {
+			init : function(_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminProductManagementCategoryList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag)
+					}
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
+				}
+			}, //adminProductManagementCategoryList
+		adminProductUpdate : {
+			init : function(pid,attribs,_tag)	{
+				var r = 0;
+				if(pid && !$.isEmptyObject(attribs))	{
+					this.dispatch(pid,attribs,_tag)
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminProductUpdate, either pid ["+pid+"] not set of attribs is empty.");
+					app.u.dump(attribs);
+					}
+				return r;
+				},
+			dispatch : function(pid,attribs,_tag)	{
+				var obj = {};
+				obj._cmd = "adminProductUpdate";
+				obj._tag = _tag || {};
+				obj.pid = pid;
+				obj['%attribs'] = attribs;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //adminProductUpdate
+
+
+
+		adminTaskList : {
+			init : function(_tag,q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,q)	{
+				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":_tag},q);	
+				}
+			}, //adminTaskList
+		adminTaskCreate : {
+			init : function(obj,_tag,q)	{
+				this.dispatch(obj,_tag,q);
 				return 1;
 				},
-			dispatch : function(filename,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : _tag},Q);
+			dispatch : function(obj,_tag,q)	{
+				obj._cmd = "adminTaskCreate"
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTaskCreate";
+				app.model.addDispatchToQ(obj,q);	
 				}
-			}, 
+			}, //adminTaskCreate
+		adminTaskComplete : {
+			init : function(taskid, _tag,q)	{
+				this.dispatch(taskid, _tag,q);
+				return 1;
+				},
+			dispatch : function(taskid, _tag,q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskComplete";
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":_tag},q);	
+				}
+			}, //adminTaskComplete
+		adminTaskRemove : {
+			init : function(taskid, _tag,q)	{
+				this.dispatch(taskid, _tag,q);
+				return 1;
+				},
+			dispatch : function(taskid, _tag,q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskRemove";
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":_tag},q);	
+				}
+			}, //adminTaskRemove
+		adminTaskUpdate : {
+			init : function(obj,_tag,q)	{
+				this.dispatch(obj,_tag,q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
+				obj._cmd = "adminTaskUpdate";
+				app.model.addDispatchToQ(obj,q);	
+				}
+			}, //adminTaskUpdate
 
-/*
-obj.PATH = .cat.safe.id
-*/
+
+//obj requires panel and pid and sub.  sub can be LOAD or SAVE
+		adminUIDomainPanelExecute : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {};
+//save and load 'should' always have the same data, so the datapointer is shared.
+				_tag.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
+				this.dispatch(obj,_tag,Q);
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = "adminUIDomainPanelExecute";
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminUIProductPanelList
+
+		adminUIProductPanelList : {
+			init : function(pid,_tag,Q)	{
+				var r = 0;
+				if(pid)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminUIProductPanelList|"+pid;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(pid,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag)
+						}
+					}
+				else	{app.u.throwGMessage("In admin.calls.adminUIProductPanelList, no pid passed.")}
+				return r;
+				},
+			dispatch : function(pid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":_tag,"pid":pid},Q);	
+				}
+			}, //adminUIProductPanelList
+//obj requires sub and sref.  sub can be LOAD or SAVE
+//reload is also supported.
+		adminUIBuilderPanelExecute : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {};
+				if(obj['sub'] == 'EDIT')	{
+					_tag.datapointer = "adminUIBuilderPanelExecute|edit";
+					}
+				else if(obj['sub'] == 'SAVE')	{
+					_tag.datapointer = "adminUIBuilderPanelExecute|save";
+					}
+				else	{
+					//catch. some new verb or a format that doesn't require localStorage.
+					}
+				this.dispatch(obj,_tag,Q);
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = "adminUIBuilderPanelExecute";
+				obj['_SREF'] = sref;
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //adminUIProductPanelList
+
+//obj requires panel and pid and sub.  sub can be LOAD or SAVE
+		adminUIProductPanelExecute : {
+			init : function(obj,_tag,Q)	{
+				if(obj && obj.panel && obj.pid && obj.sub)	{
+					_tag = _tag || {};
+//save and load 'should' always have the same data, so the datapointer is shared.
+					if(obj['sub'])	{
+						_tag.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
+						}
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminUIProductPanelExecute, required param (panel, pid or sub) left blank. see console."); app.u.dump(obj);
+					}
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = "adminUIProductPanelExecute";
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminUIProductPanelExecute
+
+
+
+//This will get a copy of the config.js file.
+		appConfig : {
+			init : function(_tag,Q)	{
+				this.dispatch(_tag,Q);
+				return 1;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"appConfig","_tag" : _tag},Q);
+				}			
+			}, //appConfig
+
+
+//obj.PATH = .cat.safe.id
 		appPageGet : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -102,257 +340,21 @@ obj.PATH = .cat.safe.id
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				}			
-			},
+			}, //appPageSet
 
-//This will get a copy of the config.js file.
-		appConfig : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
+
+//??? should this be saved in local storage?
+		appResource : {
+			init : function(filename,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "appResource|"+filename;
+				this.dispatch(filename,_tag,Q);
 				return 1;
 				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"appConfig","_tag" : _tag},Q);
-				}			
-			},
-
-
-		adminPrivateSearch : {
-			init : function(obj,_tag,Q)	{
-				var r = 0;
-				if(!$isEmptyObject(obj))	{this.dispatch(obj,_tag,Q); r = 1;}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminPrivateSearch, no query object passed.");
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = 'adminPrivateSearch';
-				obj.mode = 'elastic-native';
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminPrivateSearch';
-				app.model.addDispatchToQ(obj,Q);
+			dispatch : function(filename,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : _tag},Q);
 				}
-			},
-
-		adminDomainList : {
-			init : function(_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminDomainList";
-				var r = 0;
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r; 
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
-				}			
-			},
-
-
-
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-		adminUIDomainPanelExecute : {
-			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-//save and load 'should' always have the same data, so the datapointer is shared.
-				_tag.datapointer = "adminUIDomainPanelExecute|"+obj.domain+"|"+obj.verb;
-				this.dispatch(obj,_tag,Q);
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIDomainPanelExecute";
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			}, //adminUIProductPanelList
-
-
-
-
-
-
-
-			adminProductCreate  : {
-				init : function(pid,attribs,tagObj)	{
-					tagObj = tagObj || {};
-					tagObj.datapointer = "adminProductCreate|"+pid;
-					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
-					}
-				},
-
-
-/*
-
-PRODUCT
-
-*/
-
-
-//app.ext.admin.calls.adminProductUpdate.init(pid,attrObj,tagObj,Q)
-			adminProductUpdate : {
-				init : function(pid,attrObj,_tag)	{
-					var r = 0;
-					if(pid && !$.isEmptyObject(attrObj))	{
-						this.dispatch(pid,attrObj,_tag)
-						r = 1;
-						}
-					else	{
-						app.u.throwGMessage("In admin.calls.adminProductUpdate, either pid ["+pid+"] not set of attrObj is empty.");
-						app.u.dump(attrObj);
-						}
-					return r;
-					},
-				dispatch : function(pid,attrObj,_tag)	{
-					var obj = {};
-					obj._cmd = "adminProductUpdate";
-					obj._tag = _tag || {};
-					obj.pid = pid;
-					obj['%attribs'] = attrObj;
-					app.model.addDispatchToQ(obj,'immutable');
-					}
-				},
-
-
-
-
-		adminTaskList : {
-			init : function(_tag,q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(_tag,q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
-				return r;
-				},
-			dispatch : function(_tag,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":_tag},q);	
-				}
-			}, //adminTaskList
-		
-		adminTaskCreate : {
-			init : function(obj,_tag,q)	{
-				this.dispatch(obj,_tag,q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,q)	{
-				obj._cmd = "adminTaskCreate"
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTaskCreate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			}, //adminTaskCreate
-
-		adminTaskComplete : {
-			init : function(taskid, _tag,q)	{
-				this.dispatch(taskid, _tag,q);
-				return 1;
-				},
-			dispatch : function(taskid, _tag,q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskComplete";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":_tag},q);	
-				}
-			}, //adminTaskComplete
-
-		adminTaskRemove : {
-			init : function(taskid, _tag,q)	{
-				this.dispatch(taskid, _tag,q);
-				return 1;
-				},
-			dispatch : function(taskid, _tag,q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminTaskRemove";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":_tag},q);	
-				}
-			}, //adminTaskRemove
-		
-		adminTaskUpdate : {
-			init : function(obj,_tag,q)	{
-				this.dispatch(obj,_tag,q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,q)	{
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
-				obj._cmd = "adminTaskUpdate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			}, //adminTaskUpdate
-
-
-
-
-
-			adminUIProductPanelList : {
-				init : function(pid,_tag,Q)	{
-					var r = 0;
-					if(pid)	{
-						_tag = _tag || {};
-						_tag.datapointer = "adminUIProductPanelList|"+pid;
-						if(app.model.fetchData(_tag.datapointer) == false)	{
-							r = 1;
-							this.dispatch(pid,_tag,Q);
-							}
-						else	{
-							app.u.handleCallback(_tag)
-							}
-						}
-					else	{app.u.throwGMessage("In admin.calls.adminUIProductPanelList, no pid passed.")}
-					return r;
-					},
-				dispatch : function(pid,_tag,Q)	{
-					app.model.addDispatchToQ({"_cmd":"adminUIProductPanelList","_tag":_tag,"pid":pid},Q);	
-					}
-				}, //adminUIProductPanelList
-
-
-//obj requires panel and pid and sub.  sub can be LOAD or SAVE
-			adminUIProductPanelExecute : {
-				init : function(obj,_tag,Q)	{
-					if(obj && obj.panel && obj.pid && obj.sub)	{
-						_tag = _tag || {};
-	//save and load 'should' always have the same data, so the datapointer is shared.
-						if(obj['sub'])	{
-							_tag.datapointer = "adminUIProductPanelExecute|"+obj.pid+"|load|"+obj.panel;
-							}
-						this.dispatch(obj,_tag,Q);
-						}
-					else	{
-						app.u.throwGMessage("In admin.calls.adminUIProductPanelExecute, required param (panel, pid or sub) left blank. see console."); app.u.dump(obj);
-						}
-					},
-				dispatch : function(obj,_tag,Q)	{
-					obj['_cmd'] = "adminUIProductPanelExecute";
-					obj["_tag"] = _tag;
-					app.model.addDispatchToQ(obj,Q);	
-					}
-				}, //adminUIProductPanelExecute
-
-			adminProductManagementCategoryList : {
-				init : function(_tag,Q)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminProductManagementCategoryList";
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						this.dispatch(_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag)
-						}
-					},
-				dispatch : function(_tag,Q)	{
-					app.model.addDispatchToQ({"_cmd":"adminProductManagementCategoriesComplete","_tag":_tag},Q);	
-					}
-				}, //adminProductManagementCategoryList
-
+			}, //appResource
 
 
 
@@ -448,34 +450,11 @@ PRODUCT
 					}
 				} //adminNavcatProductDelete
 			
-			}, //finder
+			} //finder
 
 
 
 
-//obj requires sub and sref.  sub can be LOAD or SAVE
-//reload is also supported.
-			adminUIBuilderPanelExecute : {
-				init : function(obj,tagObj,Q)	{
-					tagObj = tagObj || {};
-					if(obj['sub'] == 'EDIT')	{
-						tagObj.datapointer = "adminUIBuilderPanelExecute|edit";
-						}
-					else if(obj['sub'] == 'SAVE')	{
-						tagObj.datapointer = "adminUIBuilderPanelExecute|save";
-						}
-					else	{
-						//catch. some new verb or a format that doesn't require localStorage.
-						}
-					this.dispatch(obj,tagObj,Q);
-					},
-				dispatch : function(obj,tagObj,Q)	{
-					obj['_cmd'] = "adminUIBuilderPanelExecute";
-					obj['_SREF'] = sref;
-					obj["_tag"] = tagObj;
-					app.model.addDispatchToQ(obj,Q);
-					}
-				} //adminUIProductPanelList
 
 		}, //calls
 

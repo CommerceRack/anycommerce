@@ -23,18 +23,18 @@ Task Manager overview and definition of 'terms'.
 
 TaskManager refers to the app, specifically the 'list' of tasks and the 'edit' panels.
 There are two modes:
- 1: 'list', which is also the default. This mode puts the app emphasis on the list of tasks.
+ 1: 'list', which is the default. This mode puts the app emphasis on the list of tasks.
  2: 'edit', which is when the edit column is expanded. the list portion is still viewable, but in a minimal display.
  -> individual task editors are referred to as a taskEditPanel.
 
 Create is supported, but opens a modal so there's no specific mode or mode change when it occurs.
 
-The 'modify' for create and delete also opens in a modal, so no specific mode change is needed.
+The 'modify' for tag or delete also opens in a modal, so no specific mode change is needed.
 
 Questions:
  -> there was a start to a detail call, then nothing. not needed cuz everything is in list?
 
-Features:
+Planned Features/UI enhancements:
  on taskEditPanel close, check # children and if zero, change mode to list.
 */
 
