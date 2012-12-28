@@ -225,8 +225,8 @@ var admin_orders = function() {
 			}, //init
 
 //very similar to the original translate selector in the control and intented to replace it. 
-//This executes the handleButtonActions in addition to the normal translation.
-//the selector also gets run through jqSelector
+//This executes the handleAppEvents in addition to the normal translation.
+//the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN callbacks.translateSelector");
@@ -236,7 +236,7 @@ var admin_orders = function() {
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
-				app.ext.admin_orders.u.handleButtonActions($target);
+				app.ext.admin.u.handleAppEvents($target);
 				}
 			},
 
@@ -442,7 +442,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 			selector: "#"+rowID,
 			items: $.contextMenu.fromMenu($cmenu)
 			});
-		app.ext.admin_orders.u.handleButtonActions($row);
+		app.ext.admin.u.handleAppEvents($row);
 		}); //orderlineitem.each
 	
 //assign a click event to the 'view order' button that appears in each row.
@@ -582,7 +582,7 @@ else	{
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
 //assigns all the button click events.
-				app.ext.admin_orders.u.handleButtonActions($target);
+				app.ext.admin.u.handleAppEvents($target);
 				}
 			else	{
 				app.u.throwGMessge("WARNING! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
@@ -643,7 +643,7 @@ app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(re
 			},'immutable');
 		app.model.dispatchThis('immutable');
 		
-		app.ext.admin_orders.u.handleButtonActions($target);
+		app.ext.admin.u.handleAppEvents($target);
 //trigger the editable regions
 		app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
 		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
@@ -662,7 +662,7 @@ $('.orderSupplementalInformation',$target).accordion({
 	collapsible: true,
 	heightStyle: "content"
 	});
-app.ext.admin_orders.u.handleButtonActions($target);
+app.ext.admin.u.handleAppEvents($target);
 
 
 				}
@@ -1361,8 +1361,8 @@ else	{
 					var $count = $('.changeCount',$dialog);
 					$count.text(numEdits);
 					//enable or disable the save button based on whether or not any changes have been made. count is the span, parent is the button around it.
-					if(numEdits > 0)	{$dialog.find("[data-btn-action='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
-					else	{$dialog.find("[data-btn-action='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
+					if(numEdits > 0)	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled',false).addClass('ui-state-highlight')}
+					else	{$dialog.find("[data-app-event='admin_orders|orderUpdateSave']").prop('disabled','disabled').removeClass('ui-state-highlight')}
 					}
 				else	{
 					app.u.throwGMessage("In admin_orders.u.updateOrderChangeCount, unable to determine orderID for display logic. Edit and save features 'may' not be impacted.");
@@ -1435,10 +1435,11 @@ $(selector + ' .editable').each(function(){
 				}
 			}, //u
 
-		buttonActions : {
-			"admin_orders|orderListFiltersUpdate" : function($btn){
+		e : {
+			"orderListFiltersUpdate" : function($btn){
 //				$btn.addClass('ui-state-highlight');
-				$btn.off('click.orderListUpdateFilters').on('click.orderListUpdateFilters',function(event){
+				$btn.button();
+				$btn.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
 					event.preventDefault();
 					$('#orderListTableBody').empty(); //this is targeting the table body.
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
@@ -1460,16 +1461,18 @@ $(selector + ' .editable').each(function(){
 						app.ext.admin_orders.a.showOrderList(obj);
 						}
 					});
-				}, //admin_orders|applyOrderFilters
+				}, //applyOrderFilters
 				
 
-			"admin_orders|orderCreate" : function($btn)	{
+			"orderCreate" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
-				}, //admin_orders|orderCreate
+				}, //orderCreate
 
 				
 
-			"admin_orders|orderItemUpdate" : function($btn)	{
+			"orderItemUpdate" : function($btn)	{
+				$btn.button();
 				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
 				$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
 					var $parent = $btn.closest("[data-order-view-parent]"),
@@ -1486,12 +1489,13 @@ $(selector + ' .editable').each(function(){
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemRemove, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+						app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
 						}
 					});
-				}, //admin_orders|orderCreate
+				}, //orderCreate
 
-			"admin_orders|orderItemRemove" : function($btn)	{
+			"orderItemRemove" : function($btn)	{
+				$btn.button();
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
 					var $parent = $btn.closest("[data-order-view-parent]"),
@@ -1505,12 +1509,13 @@ $(selector + ' .editable').each(function(){
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+						app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
 						}
 					});
 				},
 
-			"admin_orders|orderItemAddStructured" : function($btn)	{
+			"orderItemAddStructured" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderItemAddStructured').on('click.orderItemAddStructured',function(){
 					var $button = $("<button>").text("Add to Order").button().on('click',function(){
 						
@@ -1536,7 +1541,7 @@ $(selector + ' .editable').each(function(){
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
+						app.u.throwGMessage("in admin_orders.buttonActions.orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
 						}
 					});
 				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
@@ -1545,7 +1550,8 @@ $(selector + ' .editable').each(function(){
 
 
 
-			"admin_orders|orderItemAddBasic" : function($btn)	{
+			"orderItemAddBasic" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderItemAddBasic').on('click.orderItemAddBasic',function(){
 					app.u.dump("BEGIN admin_orders.buttonActions.orderItemAddBasic.click");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
@@ -1564,7 +1570,7 @@ $(selector + ' .editable').each(function(){
 							app.model.dispatchThis('immutable');
 							}
 						else	{
-							app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderItemAddBasic, unable to determine order id.");
+							app.u.throwGMessage("In admin_orders.buttonActions.orderItemAddBasic, unable to determine order id.");
 							}
 						})
 					$modal.dialog({'modal':true,'width':500});
@@ -1573,7 +1579,8 @@ $(selector + ' .editable').each(function(){
 				},
 
 
-			"admin_orders|orderUpdateCancel" : function($btn)	{
+			"orderUpdateCancel" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(){
 //in a dialog.
 					if($btn.closest('.ui-dialog-content').length)	{
@@ -1583,9 +1590,10 @@ $(selector + ' .editable').each(function(){
 						navigateTo("#!orders");
 						}
 					}); //the dialog-contentis the div the modal is executed on.
-				}, //admin_orders|orderUpdateCancel
+				}, //orderUpdateCancel
 				
-			"admin_orders|orderListUpdateDeselectAll" : function($btn)	{
+			"orderListUpdateDeselectAll" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(event){
 					event.preventDefault();
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
@@ -1594,10 +1602,11 @@ $(selector + ' .editable').each(function(){
 						});
 					$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 					});
-				}, //admin_orders|orderListUpdateDeselectAll
+				}, //orderListUpdateDeselectAll
 
 
-			"admin_orders|orderPrintInvoice" : function($btn){
+			"orderPrintInvoice" : function($btn){
+				$btn.button();
 				$btn.off('click.orderPrintInvoice').on('click.orderPrintInvoice',function(event){
 					event.preventDefault();
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
@@ -1605,12 +1614,13 @@ $(selector + ' .editable').each(function(){
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'invoice','profile':app.data['adminOrderDetail|'+orderID].our.profile}});
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderPrintInvoice, unable to print because order id could not be determined.");
+						app.u.throwGMessage("In admin_orders.buttonActions.orderPrintInvoice, unable to print because order id could not be determined.");
 						}
 					});
-				}, //admin_orders|orderPrintInvoice
+				}, //orderPrintInvoice
 
-			"admin_orders|orderPrintPackSlip" : function($btn){
+			"orderPrintPackSlip" : function($btn){
+				$btn.button();
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
@@ -1618,25 +1628,26 @@ $(selector + ' .editable').each(function(){
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'invoice','profile':app.data['adminOrderDetail|'+orderID].our.profile}});
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderPrintPackSlip, unable to print because order id could not be determined.");
+						app.u.throwGMessage("In admin_orders.buttonActions.orderPrintPackSlip, unable to print because order id could not be determined.");
 						}
 					});
-				}, //admin_orders|orderPrintPackSlip
+				}, //orderPrintPackSlip
 
-			"admin_orders|orderEmailSend" : function($btn){
+			"orderEmailSend" : function($btn){
+				$btn.button();
 //simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
-					app.u.dump(" -> admin_orders|orderEmailSend clicked.");
+					app.u.dump(" -> orderEmailSend clicked.");
 					event.preventDefault();
-					$btn.parent().find("[data-btn-action='admin_orders|orderEmailShowMessageList']").click();
+					$btn.parent().find("[data-app-event='orderEmailShowMessageList']").click();
 					});
 
 
-				}, //admin_orders|saveCustomerNotes **TODO
+				}, //saveCustomerNotes **TODO
 
 //
-			"admin_orders|orderEmailShowMessageList" : function($btn){
-
+			"orderEmailShowMessageList" : function($btn){
+				
 				$btn.button({text: false,icons: {primary: "ui-icon-triangle-1-s"}})
 
 				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
@@ -1654,7 +1665,8 @@ $(selector + ' .editable').each(function(){
 
 //simply trigger the dropdown on the next button in the set.
 				$btn.off('click.orderEmailShowMessageList').on('click.orderEmailShowMessageList',function(event){
-					app.u.dump(" -> admin_orders|orderEmailShowMessageList clicked.");
+					app.u.dump(" -> orderEmailShowMessageList clicked.");
+					$btn.button();
 					event.preventDefault();
                     menu.show().position({
                         my: "right top",
@@ -1667,9 +1679,10 @@ $(selector + ' .editable').each(function(){
 
 				$btn.parent().buttonset();
 
-				}, //admin_orders|saveCustomerNotes **TODO
+				}, //saveCustomerNotes **TODO
 
-			"admin_orders|orderTicketCreate" : function($btn)	{
+			"orderTicketCreate" : function($btn)	{
+				$btn.button();
 				$btn.off('click.customerUpdateNotes').on('click.customerUpdateNotes',function(event){
 					event.preventDefault();
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
@@ -1678,12 +1691,13 @@ $(selector + ' .editable').each(function(){
 						$btn.closest('.ui-dialog-content').dialog('close'); //close the modal, if in a modal.
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderTicketCreate, unable to navigate to because order id could not be determined.");
+						app.u.throwGMessage("In admin_orders.buttonActions.orderTicketCreate, unable to navigate to because order id could not be determined.");
 						}
 					});
 				},
 
-			"admin_orders|orderListUpdateSelectAll" : function($btn)	{
+			"orderListUpdateSelectAll" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderListUpdateSelectAll').on('click.orderListUpdateSelectAll',function(event){
 					event.preventDefault();
 //if an item is being updated, this will still 'select' it, but will not change the wait icon.
@@ -1692,9 +1706,10 @@ $(selector + ' .editable').each(function(){
 						});
 					$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 					});
-				}, //admin_orders|orderListUpdateSelectAll
+				}, //orderListUpdateSelectAll
 
-			"admin_orders|orderSearch" : function($btn)	{
+			"orderSearch" : function($btn)	{
+				$btn.button();
 				$btn.off('click.orderSearch').on('click.orderSearch',function(event){
 					event.preventDefault();
 					var frmObj = $btn.closest('form').serializeJSON();
@@ -1715,14 +1730,15 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.admin_orders|orderSearch, keyword ["+frmObj.keyword+"] not specified.");
+						app.u.throwGMessage("in admin_orders.buttonActions.orderSearch, keyword ["+frmObj.keyword+"] not specified.");
 						}
 
 					});
-				}, //admin_orders|orderListUpdateSelectAll
+				}, //orderListUpdateSelectAll
 
 
-			"admin_orders|orderUpdateSave" : function($btn){
+			"orderUpdateSave" : function($btn){
+				$btn.button();
 				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
 					event.preventDefault();
 
@@ -1735,7 +1751,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						var changeArray = new Array();
 
 //poolSelect is the dropdown for changing the pool.
-						var $poolSelect = $("[data-ui-role='admin_orders|orderUpdatePool']",$target);
+						var $poolSelect = $("[data-ui-role='orderUpdatePool']",$target);
 //						app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
 						if($poolSelect.hasClass('edited'))	{
 							changeArray.push('SETPOOL?pool='+$poolSelect.val());
@@ -1792,12 +1808,13 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderUpdateSave, unable to determine order id.");
+						app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateSave, unable to determine order id.");
 						}
 					});
-				}, //admin_orders|orderUpdateSave
+				}, //orderUpdateSave
 
-			"admin_orders|orderUpdateAddPayment" : function($btn){
+			"orderUpdateAddPayment" : function($btn){
+				$btn.button();
 				$btn.off('click.orderUpdateAddPayment').on('click.orderUpdateAddPayment',function(event){
 					event.preventDefault();
 					var formJSON = $btn.parents('form').serializeJSON();
@@ -1853,10 +1870,11 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 
 					app.model.dispatchThis('immutable');
 					});
-				}, //admin_orders|orderUpdateAddPayment 
+				}, //orderUpdateAddPayment 
 
 
-			"admin_orders|orderUpdateAddTracking" : function($btn){
+			"orderUpdateAddTracking" : function($btn){
+				$btn.button();
 				$btn.off('click.orderUpdateAddTracking').on('click.orderUpdateAddTracking',function(event){
 					event.preventDefault();
 
@@ -1868,10 +1886,11 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 					app.ext.admin_orders.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
 					app.model.dispatchThis('immutable');
 					});
-				}, //admin_orders|orderUpdateAddTracking
+				}, //orderUpdateAddTracking
 
 
-			"admin_orders|orderUpdateShowEditor" : function($btn){
+			"orderUpdateShowEditor" : function($btn){
+				$btn.button();
 //				if(app.u.getParameterByName('debug'))	{
 					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(event){
 						event.preventDefault();
@@ -1884,14 +1903,14 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							app.model.dispatchThis();
 							}
 						else	{
-							app.u.throwGMessage("In admin_orders.buttonActions.admin_orders|orderUpdateShowEditor, unable to determine order id.");
+							app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateShowEditor, unable to determine order id.");
 							}
 						})
 //					}
 //				else	{
 //					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(){navigateTo('/biz/orders/view.cgi?OID='+$(this).data('orderid'));});
 //					}
-				} //admin_orders|orderUpdateShowEditor
+				} //orderUpdateShowEditor
 
 			} //buttonActions
 		

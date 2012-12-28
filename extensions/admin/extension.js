@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','adminChooserElasticResult','productTemplateChooser'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser'); 
 	var r = {
 		
 	vars : {
@@ -215,6 +215,81 @@ PRODUCT
 					app.model.addDispatchToQ(obj,'immutable');
 					}
 				},
+
+
+
+
+		adminTaskList : {
+			init : function(_tag,q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,q)	{
+				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":_tag},q);	
+				}
+			}, //adminTaskList
+		
+		adminTaskCreate : {
+			init : function(obj,_tag,q)	{
+				this.dispatch(obj,_tag,q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,q)	{
+				obj._cmd = "adminTaskCreate"
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTaskCreate";
+				app.model.addDispatchToQ(obj,q);	
+				}
+			}, //adminTaskCreate
+
+		adminTaskComplete : {
+			init : function(taskid, _tag,q)	{
+				this.dispatch(taskid, _tag,q);
+				return 1;
+				},
+			dispatch : function(taskid, _tag,q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskComplete";
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":_tag},q);	
+				}
+			}, //adminTaskComplete
+
+		adminTaskRemove : {
+			init : function(taskid, _tag,q)	{
+				this.dispatch(taskid, _tag,q);
+				return 1;
+				},
+			dispatch : function(taskid, _tag,q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminTaskRemove";
+				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":_tag},q);	
+				}
+			}, //adminTaskRemove
+		
+		adminTaskUpdate : {
+			init : function(obj,_tag,q)	{
+				this.dispatch(obj,_tag,q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
+				obj._cmd = "adminTaskUpdate";
+				app.model.addDispatchToQ(obj,q);	
+				}
+			}, //adminTaskUpdate
+
+
+
 
 
 			adminUIProductPanelList : {
@@ -1404,6 +1479,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
 					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});
 					}
+				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					$('#utilitiesContent').empty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
+					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'});
+					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{
 					app.u.dump(" -> open import editor");
 					app.ext.admin_medialib.u.showFileUploadPage(path,P);
@@ -2178,12 +2259,14 @@ just lose the back button feature.
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
 			handleAppEvents : function($target)	{
-				app.u.dump("BEGIN admin.u.handleAppEvents");
+//				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{
+//					app.u.dump(" -> target exists");
 					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
 						extension = $ele.data('app-event').split("|")[0],
 						action = $ele.data('app-event').split("|")[1];
+//						app.u.dump(" -> action: "+action);
 						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.

@@ -53,7 +53,7 @@
 			</section>
 
 			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label></div>
-			<button class='marginBottom' data-btn-action="admin_orders|orderListFiltersUpdate">Show Results</button>
+			<button class='marginBottom' data-app-event="admin_orders|orderListFiltersUpdate">Show Results</button>
 	
 		</div>
 	
@@ -69,7 +69,7 @@
 
 	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
 
-	<button data-btn-action="admin_orders|orderSearch">Show Results</button>
+	<button data-app-event="admin_orders|orderSearch">Show Results</button>
 
 </fieldset>
 </form>
@@ -85,9 +85,9 @@
 	<div class='ui-tabs ui-widget ui-widget-content ui-corner-tr ui-corner-br'>
 
 		<div class='ui-widget-header ui-corner-tr clearfix'>
-			<button class='floatRight' data-btn-action="admin_orders|orderCreate">Create Order</button>
-			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateSelectAll'>Select All</button>
-			<button class='floatLeft' data-btn-action='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
+			<button class='floatRight' data-app-event="admin_orders|orderCreate">Create Order</button>
+			<button class='floatLeft' data-app-event='admin_orders|orderListUpdateSelectAll'>Select All</button>
+			<button class='floatLeft' data-app-event='admin_orders|orderListUpdateDeselectAll'>De-select All</button>
 	
 			
 			<div class='floatLeft marginLeft bulkEditMenu'>
@@ -173,7 +173,7 @@
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(FLAGS);format:text;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
-	<td><button data-btn-action="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button></td>
+	<td><button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' class='smallButton'>Edit</button></td>
 </tr>
 
 
@@ -226,18 +226,18 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft' data-btn-action="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderEmailSend">Send Email</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderExport">Export</button>-->
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintInvoice">Print Invoice</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderPrintPackSlip">Packing Slip</button>
-	<button class='floatLeft hide4Native' data-btn-action="admin_orders|orderTicketCreate">Create CRM Ticket</button>
+	<button class='floatLeft' data-app-event="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderEmailSend">Send Email</button>
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderExport">Export</button>-->
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice">Print Invoice</button>
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintPackSlip">Packing Slip</button>
+	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderTicketCreate">Create CRM Ticket</button>
 	<div class='floatLeft hide4Native'>
-	<button data-btn-action="admin_orders|orderEmailSend">Send Email</button>
-	<button data-btn-action="admin_orders|orderEmailShowMessageList">Message List</button>
+	<button data-app-event="admin_orders|orderEmailSend">Send Email</button>
+	<button data-app-event="admin_orders|orderEmailShowMessageList">Message List</button>
 	</div>
 	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;"></ul>
-	<button class='floatRight' data-btn-action="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
+	<button class='floatRight' data-app-event="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 </div>
 
 
@@ -275,8 +275,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
 		<h2 class='floatLeft marginLeft'>Add item(s) to order:</h2>
-		<button class='marginLeft' data-btn-action="admin_orders|orderItemAddStructured" title="Use the chooser to add an item to the order.">Use Chooser</button>
-		<button data-btn-action="admin_orders|orderItemAddBasic" title="Use simple inputs to add an item to the order.">Use Inputs</button>
+		<button class='marginLeft' data-app-event="admin_orders|orderItemAddStructured" title="Use the chooser to add an item to the order.">Use Chooser</button>
+		<button data-app-event="admin_orders|orderItemAddBasic" title="Use simple inputs to add an item to the order.">Use Inputs</button>
 		</div>
 	
 <!--		
@@ -328,7 +328,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
 		<div><label>Amount: <input type='number'  name='amt' /></label></div>
 		<div><label>Note: <input type='text' name='note' /></label></div>
-		<div><button data-btn-action="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
+		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
 	</fieldset>
 </form>
 
@@ -379,7 +379,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<label><span>Actual Weight: </span> <input  size="5" name="actualwt" type="text" /></label>
 	<label><span>Notes: </span><textarea  cols="80" rows="3" name="notes"></textarea></label>
 
-	<button data-btn-action="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
+	<button data-app-event="admin_orders|orderUpdateAddTracking" data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>Add Tracking</button>
 
 </fieldset>
 </form>
@@ -497,8 +497,8 @@ The following templates are used in the 'order detail' modal/view.
 	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
 	<td><input type='number' name='price' data-bind="var: order(base_price); format:popVal;" size='7' /></td>
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-	<td><button data-btn-action="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
-	<td><button data-btn-action="admin_orders|orderItemRemove">Remove From Order</button></td>
+	<td><button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
+	<td><button data-app-event="admin_orders|orderItemRemove">Remove From Order</button></td>
 </tr>
 </table>
 
@@ -515,7 +515,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><span class='editable' title='quantity' data-bind='var: order(qty); format:text;'></span></td>
 	<td><span class='editable' title='price' data-bind='var: order(price); format:money; hideZero:false;'></span></td>
 	<td><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
-	<td><button data-btn-action="admin_orders|orderItemRemove">X</button></td>
+	<td><button data-app-event="admin_orders|orderItemRemove">X</button></td>
 	
 
 
