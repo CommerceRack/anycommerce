@@ -19,6 +19,10 @@ class can also be applied to a 1 item per row list.
 .alignLeft	{text-align:left;}
 .alignCenter	{text-align:center;}
 
+
+.valignMiddle	{vertical-align:middle;}
+
+
 .displayNone	{display:none;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */

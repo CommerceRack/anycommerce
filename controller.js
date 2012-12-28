@@ -2207,12 +2207,15 @@ return $r;
 
 		imageURL : function($tag,data){
 //				app.u.dump('got into displayFunctions.image: "'+data.value+'"');
-			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
+			data.bindData.bgcolor = data.bindData.bgcolor || 'ffffff'
 //			app.u.dump(" -> width: "+$tag.width());
 			if(data.value)	{
-				var imgSrc = app.u.makeImage({'tag':0,'w':$tag.attr('width'),'h':$tag.attr('height'),'name':data.value,'b':bgcolor});
-//				app.u.dump('IMGSRC => '+imgSrc);
-				$tag.attr('src',imgSrc);
+//set some recommended/required params.
+				data.bindData.name = data.value;
+				data.bindData.w = $tag.attr('width');
+				data.bindData.h = $tag.attr('height');
+				data.bindData.tag = 0;
+				$tag.attr('src',app.u.makeImage(data.bindData)); //passing in bindData allows for using
 				}
 			else	{
 				$tag.css('display','none'); //if there is no image, hide the src. 
