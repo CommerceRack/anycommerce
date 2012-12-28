@@ -130,7 +130,8 @@ copying the template into memory was done for two reasons:
 //			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
 			if(app.vars[id])	{} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
-			else if(app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
+//uri ONLY gets checked for support. This is so that on redirects back to our UI from a partner interface don't update auth vars.
+			else if(app.u.getParameterByName('trigger') == 'support' && app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
 			else if(localVars[id])	{app.vars[id] = localVars[id]}
 			else	{app.vars[id] = ''}//set to blank by default.
 			}
@@ -2129,8 +2130,8 @@ return $r;
 			r = v.replace(/.*\(|\)/gi,'');
 			return r;
 			},
-		
-		
+
+
 //as part of the data-bind is a var: for the data location (product: or cart:).
 //this is used to parse that to get to the data.
 //if no namespace is passed (zoovy: or user:) then the 'root' of the object is used.
