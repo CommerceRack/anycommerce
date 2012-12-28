@@ -83,7 +83,7 @@ var admin_orders = function() {
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj['_tag'] = _tag;
-				obj["_cmd"] = "adminOrderList"
+				obj["_cmd"] = "adminOrderList";
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //orderList
@@ -102,7 +102,7 @@ var admin_orders = function() {
 					this.dispatch(sdomain,tagObj,Q);
 					}
 				else 	{
-					app.u.handleCallback(tagObj)
+					app.u.handleCallback(tagObj);
 					}
 
 				return r;
@@ -120,7 +120,7 @@ var admin_orders = function() {
 //order info is critial
 		adminOrderDetail : {
 			init : function(orderID,tagObj,Q)	{
-				this.dispatch(orderID,tagObj,Q)
+				this.dispatch(orderID,tagObj,Q);
 				return 1;
 				},
 			dispatch : function(orderID,tagObj,Q)	{
