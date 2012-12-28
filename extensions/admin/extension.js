@@ -266,12 +266,22 @@ var admin = function() {
 
 
 
+		adminPartnerSet : {
+			init : function(obj,_tag)	{
+				obj._cmd = 'adminPartnerSet'
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminPartnerSet";
+				app.model.addDispatchToQ(obj,'immutable');	
+				}
+			},
+
+
 		adminProductCreate  : {
-			init : function(pid,attribs,tagObj)	{
+			init : function(pid,attribs,_tag)	{
 				if(pid && !$.isEmptyObject(attribs))	{
-					tagObj = tagObj || {};
-					tagObj.datapointer = "adminProductCreate|"+pid;
-					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":tagObj,"pid":pid,'%attribs':attribs},'immutable');	
+					_tag = _tag || {};
+					_tag.datapointer = "adminProductCreate|"+pid;
+					app.model.addDispatchToQ({"_cmd":"adminProductCreate","_tag":_tag,"pid":pid,'%attribs':attribs},'immutable');	
 					}
 				else	{
 					app.u.throwGMessage("In admin.calls.adminProductCreate, either pid ["+pid+"] not set of attribs is empty.");
@@ -745,10 +755,15 @@ if(app.u.getParameterByName('debug'))	{
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 
-
+uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
+if(uriParams.trigger == 'adminPartnerSet')	{
+	//Merchant is most likely returning to the app from a partner site for some sort of verification
+	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
+	app.model.dispatchThis('immutable');
+	}
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 //the code for handling the support login is in the thisisanadminsession function (looking at uri)
-if(app.u.thisIsAnAdminSession())	{
+else if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
 	}
 else	{
@@ -1228,7 +1243,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //						app.u.dump(" -> admin.a.processForm data attributes: "); app.u.dump(data);
 						var _tag = {};
 //build the _tag obj.
-						for(key in obj)	{
+						for(var key in obj)	{
 							if(key.substring(0,5) == "_tag/")	{
 								_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
 								delete obj[key]; //remove from object so it isn't part of query.
@@ -1243,8 +1258,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						else if(obj.call)	{
 							var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
 							delete obj.call;
-							
-							app.ext[call.split('/')[0]].calls[call.split('/')[1]].init(obj,_tag,q)
+							app.u.dump(" -> call: "+call);
+							app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
 							}
 						else{} //can't get here. either cmd or call are set by now.
 						
@@ -1304,7 +1319,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
-					showUI(path || "/biz/setup/index.cgi");
+					showUI(app.ext.admin.u.whatPageToShow(path));
 					}
 				else	{
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
@@ -1492,15 +1507,24 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else {
 					app.ext.admin.calls.adminDomainList.init({},'passive');
 					$('.domain','#appView').text(domain);
-// load whatever page is set on the hash onload. The product page being first needs some help.
-					var hash = window.location.hash || '/biz/recent.cgi';
-					if(hash.substring(0,2) == '#!' || hash.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
-					else	{
-						hash = hash.replace(/^#/, ''); //strip preceding # from hash.
-						}
-					app.ext.admin.a.showUI(hash); 
+					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('/biz/recent.cgi'));
 					}
 				}, //showHeader
+
+//used to determine what page to show when app inits and after the user changes the domain.
+			whatPageToShow : function(defaultPage)	{
+				var page = window.location.hash || defaultPage;
+				if(page)	{
+					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
+					else	{
+						page = page.replace(/^#/, ''); //strip preceding # from hash.
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin.u.whatPageToShow, unable to determine 'page'");
+					}
+				return page;
+				}, //whatPageToShow
 
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
