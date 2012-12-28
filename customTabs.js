@@ -20,7 +20,10 @@ var tabId = 0,
 function getNextTabId() {
 	return ++tabId;
 }
-console.warn("WARNING: Find long term solution for localtabs problem");
+if(typeof console.warn == "function")
+	console.warn("WARNING: Find long term solution for localtabs problem");
+else{/*do nothing, can't warn if console.warn isn't defined*/}
+
 function isLocal( anchor ) {
 	//alert(anchor.href.replace( rhash, "" )+".."+location.href.replace( rhash, "" ).replace( /\s/g, "%20" ));
 	if(anchor.href.replace( rhash, "" ) === "app://"){
