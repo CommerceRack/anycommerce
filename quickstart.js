@@ -1194,8 +1194,13 @@ P.listID (buyer list id)
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
 				if(P.uriParams.meta)	{
-					app.calls.cartSet.init({'meta':P.uriParams.meta},{},'passive');
+					app.calls.cartSet.init({'cart/refer':P.uriParams.meta},{},'passive');
 					}
+
+				if(P.uriParams.meta_src)	{
+					app.calls.cartSet.init({'cart/refer_src':P.uriParams.meta_src},{},'passive');
+					}
+
 //				app.u.dump(" -> P follows:");
 //				app.u.dump(P);
 				app.ext.myRIA.a.showContent('',P);
