@@ -66,138 +66,25 @@ var admin_orders = function() {
 			}
 		},
 	calls : {
-//never get from local or memory.
-//formerly getOrders
-		adminOrderList : {
+
+
+//obj requires: cartid, countrycode and ordertotal
+//This call was left here intentionally.  The call is also in store_checkout and it's a bit different there.
+//The two calls will need to eventually get merged.
+		appPaymentMethods : {
 			init : function(obj,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = "adminOrderList";
-				if(app.model.fetchData(_tag.datapointer) == false)	{
-					r = 1;
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					app.u.handleCallback(_tag);
-					}
+				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				obj['_tag'] = _tag;
-				obj["_cmd"] = "adminOrderList";
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //orderList
-
-//!!! this call should get nuked. appProfileInfo in the controller should be set up to support either an sdomain OR a profile ID.
-//unfortunately, under the gun right now and that change involves updates to quickstart, which I don't have time for right this second.
-		appProfileInfoBySdomain : {
-			init : function(sdomain,tagObj,Q)	{
-//				app.u.dump("BEGIN app.calls.appProfileInfo.init");
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				tagObj = typeof tagObj == 'object' ? tagObj : {};
-				tagObj.datapointer = 'appProfileInfo|'+sdomain; //for now, override datapointer for consistency's sake.
-
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					r = 1;
-					this.dispatch(sdomain,tagObj,Q);
-					}
-				else 	{
-					app.u.handleCallback(tagObj);
-					}
-
-				return r;
-				}, // init
-			dispatch : function(sdomain,tagObj,Q)	{
-				obj = {};
-				obj['_cmd'] = "appProfileInfo";
-				obj['sdomain'] = sdomain;
-				obj['_tag'] = tagObj;
-				app.model.addDispatchToQ(obj,Q);
-				} // dispatch
-			}, //appProfileInfoBySdomain
-
-//never look locally for data. Always make sure to load latest from server to ensure it's up to date.
-//order info is critial
-		adminOrderDetail : {
-			init : function(orderID,tagObj,Q)	{
-				this.dispatch(orderID,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(orderID,tagObj,Q)	{
-				var cmdObj = {};
-				cmdObj.orderid = orderID;
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-				tagObj.datapointer = "adminOrderDetail|"+orderID;
-				cmdObj['_tag'] = tagObj;
-				cmdObj["_cmd"] = "adminOrderDetail"
-				app.model.addDispatchToQ(cmdObj,Q);
-				}
-			}, //adminOrderDetail
-
-
-//updating an order is a critical function and should ALWAYS be immutable.
-		adminOrderUpdate : {
-			init : function(orderID,updates,tagObj)	{
-				this.dispatch(orderID,updates,tagObj)
-				return 1;
-				},
-			dispatch : function(orderID,updates,tagObj)	{
-//				app.u.dump("BEGIN admin_orders.calls.adminOrderUpdate.dispatch");
-//				app.u.dump(" -> orderID = "+orderID);
-				cmdObj = {};
-				cmdObj['_cmd'] = 'adminOrderUpdate';
-				cmdObj.orderid = orderID;
-				cmdObj['@updates'] = updates;
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-				cmdObj['_tag'] = tagObj;
-				app.model.addDispatchToQ(cmdObj,'immutable');
-				}
-			}, //adminOrderUpdate
-
-		adminOrderSearch : {
-			init : function(elasticObj, tagObj, Q)	{
-				this.dispatch(elasticObj,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(elasticObj,tagObj,Q){
-				var obj = {};
-				obj._cmd = "adminOrderSearch";
-				obj.DETAIL = '9';
-				obj.ELASTIC = elasticObj;
-				obj._tag = tagObj || {};
-				obj._tag.datapointer = "adminOrderSearch";
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			},
-
-		adminOrderPaymentAction	: {
-			init : function(cmdObj,tagObj)	{
-				this.dispatch(cmdObj,tagObj)
-				return 1;
-				},
-			dispatch : function(cmdObj,tagObj)	{
-				cmdObj['_cmd'] = 'adminOrderPaymentAction';
-				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
-				cmdObj['_tag'] = tagObj;
-				app.model.addDispatchToQ(cmdObj,'immutable');
-				}
-			
-			},
-
-//obj requires: cartid, countrycode and ordertotal
-		appPaymentMethods : {
-			init : function(obj,tagObj,Q)	{
-				this.dispatch(obj,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(obj,tagObj,Q)	{
 				obj = obj || {};
 				obj._cmd = "appPaymentMethods";
-				obj._tag = tagObj || {};
+				obj._tag = _tag || {};
 				obj._tag.datapointer = "appPaymentMethods|"+obj.cartid;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			} //appPaymentMethods
+
 		}, //calls
 
 
@@ -606,7 +493,7 @@ $target.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate'
 $('body').showLoading();
 
 //go fetch order data. callback handles data population.
-app.ext.admin_orders.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
+app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	app.u.dump("Executing callback for adminOrderDetail");
 	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)), //this val is needed in string form for translateSelector.
 	$target = $(selector),
@@ -714,7 +601,7 @@ else	{
 				$('body').showLoading();
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
-				app.ext.admin_orders.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
+				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				app.model.dispatchThis();
 				}
 			else	{
@@ -758,7 +645,7 @@ else	{
 				else	{
 					formJSON.orderid = orderID; //needed in obj for dispatch
 					$parent.empty();
-					app.ext.admin_orders.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
+					app.ext.admin.calls.adminOrderPaymentAction.init(formJSON,{}); //always immutable.
 					app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable'); 
 					app.model.dispatchThis('immutable');
 					}
@@ -1201,7 +1088,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if(msgID && orderID && $row.length){
 					if($row)	{$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>")}
 					else	{}// see how this is used outside the list. may want to use this to trigger a showLoading.
-					app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
+					app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+msgID],{'callback':'handleSendEmail','extension':'admin_orders','targetID':$row.attr('id')});
 					}
 				else	{
 					app.u.throwGMessage("In admin_orders.u.sendOrderMail, either orderID ["+orderArray.length+"] or msgID["+msgID+"] are not set.");
@@ -1255,12 +1142,12 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
 							else if(sdomain)	{
 								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								app.ext.admin_orders.calls.appProfileInfoBySdomain.init({'profile':sdomain},{},'immutable');
+								app.calls.appProfileInfo.init({'sdomain':sdomain},{},'immutable');
 								}
 							else	{
 								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
 								}
-							app.ext.admin_orders.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
+							app.ext.admin.calls.adminOrderDetail.init($order.data('orderid'),{'callback':'mergeDataForBulkPrint','extension':'admin_orders','templateID':templateID,'merge':'appProfileInfo|'+sdomain},'immutable');
 							})
 						app.calls.ping.init({'callback':function(responseData){
 							$('body').hideLoading();
@@ -1289,7 +1176,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if($row.length && pool)	{
 					$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 					$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
-					app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
+					app.ext.admin.calls.adminOrderUpdate.init($row.attr('data-orderid'),['SETPOOL?pool='+pool],{"callback":"orderPoolChanged","extension":"admin_orders","targetID":$row.attr('id')}); //the request will return a 1.
 					}
 				else	{app.u.throwGMessage("In admin_orders.u.changeOrderPool, either $row.length ["+$row.length+"] is empty or pool ["+pool+"] is blank")}
 				}, //changeOrderPool
@@ -1324,7 +1211,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 						$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 						$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
 
-						app.ext.admin_orders.calls.adminOrderUpdate.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
+						app.ext.admin.calls.adminOrderUpdate.init($row.attr('data-orderid'),['FLAGASPAID'],{"callback":"orderFlagAsPaid","extension":"admin_orders","targetID":$row.attr('id')}); 
 						}
 					}
 				else	{
@@ -1482,7 +1369,7 @@ $(selector + ' .editable').each(function(){
 					price = $("[name='price']",$row).val();
 					
 					if(uuid && orderID && qty && price)	{
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"qty="+qty+"&price="+price]);
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"qty="+qty+"&price="+price]);
 						$parent.empty();
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');
@@ -1502,7 +1389,7 @@ $(selector + ' .editable').each(function(){
 					$row = $(this).closest('tr'),
 					stid = $row.data('stid');
 					if(stid && orderID)	{
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
 						$parent.empty();
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');
@@ -1534,7 +1421,7 @@ $(selector + ' .editable').each(function(){
 								formJSON[index] = "~"+formJSON[index];
 								}
 							}
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
 						$parent.empty();
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');
@@ -1562,7 +1449,7 @@ $(selector + ' .editable').each(function(){
 					$form.on('submit',function(event){
 						event.preventDefault();
 						if(orderID)	{
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["ITEMADDBASIC?"+$(this).serialize()],{},'immutable');
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMADDBASIC?"+$(this).serialize()],{},'immutable');
 							$modal.dialog('close');
 							$parent.empty();
 							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
@@ -1657,7 +1544,7 @@ $(selector + ' .editable').each(function(){
 					$(this).on('click',function(event){
 						event.preventDefault();
 						$('body').showLoading();
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(1)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(1)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
 						app.model.dispatchThis('immutable');
 						});
 					});
@@ -1717,7 +1604,7 @@ $(selector + ' .editable').each(function(){
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 						$('body').showLoading();
-app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {
+app.ext.admin.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {
 	'or' : [
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/address']}},
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
@@ -1801,7 +1688,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							}
 						delete $address;   //not used anymore.
 
-						app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
 						$target.empty();
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable'); //adds a showloading
 						app.model.dispatchThis('immutable');
@@ -1853,7 +1740,7 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 							var $parent = $btn.closest("[data-order-view-parent]"),
 							orderID = $parent.data('order-view-parent');
 
-							app.ext.admin_orders.calls.adminOrderUpdate.init(orderID,[CMD+"?"+decodeURIComponent($.param(formJSON))],{});
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,[CMD+"?"+decodeURIComponent($.param(formJSON))],{});
 							$parent.empty();
 							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 							app.model.dispatchThis('immutable');
@@ -1881,8 +1768,8 @@ app.ext.admin_orders.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 
 					$parent.showLoading(); //run just on payment panel
 					var kvp = $btn.parents('form').serialize();
 					//The two lines below 'should' work. not tested yet.
-					app.ext.admin_orders.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
-					app.ext.admin_orders.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
+					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
+					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				}, //orderUpdateAddTracking

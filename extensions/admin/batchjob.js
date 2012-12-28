@@ -21,84 +21,6 @@ var admin_batchJob = function() {
 	var theseTemplates = new Array('batchJobStatusTemplate');
 	var r = {
 
-////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-	calls : {
-		
-		adminBatchJobList : {
-			init : function(status,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobList|"+status;
-//comment out local storage for testing.
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					r = 1;
-					this.dispatch(status,tagObj,q);
-					}
-				else	{
-					app.u.handleCallback(tagObj);
-					}
-				},
-			dispatch : function(status,tagObj,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobList","status":status,"_tag":tagObj},q);	
-				}
-			}, //adminBatchJobList
-
-
-		adminBatchJobStatus : {
-			init : function(jobid,tagObj,q)	{
-				this.dispatch(jobid,tagObj,q);
-				},
-			dispatch : function(jobid,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobStatus|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":tagObj,"jobid":jobid},q);
-				}
-			}, //adminBatchJobStatus
-
-//Generate a unique guid per batch job.
-//if a request/job fails and needs to be resubmitted, use the same guid.
-		adminBatchJobCreate : {
-			init : function(opts,tagObj,q)	{
-				this.dispatch(opts,tagObj,q);
-				},
-			dispatch : function(opts,tagObj,q)	{
-				opts = opts || {};
-				opts._tag = tagObj || {};
-				opts._cmd = "adminBatchJobCreate";
-				opts._tag.datapointer = opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate";
-				app.model.addDispatchToQ(opts,q);	
-				}
-			}, //adminBatchJobCreate		
-		
-		adminBatchJobRemove : {
-			init : function(jobid,tagObj,q)	{
-				this.dispatch(jobid,tagObj,q);
-				},
-			dispatch : function(jobid,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobRemove|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobRemove","_tag":tagObj,"jobid":jobid},q);	
-				}
-			}, //adminBatchJobCreate
-
-
-		adminBatchJobCleanup : {
-			init : function(jobid,tagObj,q)	{
-				this.dispatch(jobid,tagObj,q);
-				},
-			dispatch : function(jobid,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminBatchJobCleanup|"+jobid;
-				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","jobid":jobid,"_tag":tagObj},q);	
-				}
-			} //adminBatchJobStatus
-
-//341681
-
-		}, //calls
-
-
-
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -147,7 +69,7 @@ var admin_batchJob = function() {
 			adminBatchJobCreate : function(opts){
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
-				app.ext.admin_batchJob.calls.adminBatchJobCreate.init(opts,{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content"},'immutable');
+				app.ext.admin.calls.adminBatchJobCreate.init(opts,{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content"},'immutable');
 				app.model.dispatchThis('immutable');
 				},
 
@@ -162,7 +84,7 @@ var admin_batchJob = function() {
 						}
 					$target.append(app.renderFunctions.createTemplateInstance('batchJobStatusTemplate',{'jobid':jobid}));
 					$target.dialog('open');
-					app.ext.admin_batchJob.calls.adminBatchJobStatus.init(jobid,{'callback':'translateSelector','selector':'#batchJobStatusModal'},'immutable');
+					app.ext.admin.calls.adminBatchJobStatus.init(jobid,{'callback':'translateSelector','selector':'#batchJobStatusModal'},'immutable');
 					app.model.dispatchThis('immutable');
 					$target.showLoading();
 					}
@@ -187,7 +109,7 @@ var admin_batchJob = function() {
 						var jobid = $tag.closest('[data-jobid]').data('jobid');
 						if(jobid)	{
 							$('#batchJobStatusModal').empty().addClass('loadingBG');
-							app.ext.admin_batchJob.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up','parentID':'batchJobStatus_'+jobid},'immutable');
+							app.ext.admin.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up','parentID':'batchJobStatus_'+jobid},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{

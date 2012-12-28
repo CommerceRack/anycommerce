@@ -47,6 +47,90 @@ var admin = function() {
 
 	calls : {
 
+
+		adminBatchJobList : {
+			init : function(status,_tag,Q)	{
+				var r = 0;
+				if(status)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminBatchJobList|"+status;
+	//comment out local storage for testing.
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(status,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminBatchJobList, no status defined.");
+					}
+				return r;
+				},
+			dispatch : function(status,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobList","status":status,"_tag":_tag},Q);	
+				}
+			}, //adminBatchJobList
+		adminBatchJobStatus : {
+			init : function(jobid,_tag,Q)	{
+				var r = 0;
+				if(jobid)	{
+					r = 1;
+					this.dispatch(jobid,_tag,Q);
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminBatchJobStatus, jobid not passed.");
+					}
+				return r;
+				},
+			dispatch : function(jobid,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminBatchJobStatus|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobStatus","_tag":_tag,"jobid":jobid},Q);
+				}
+			}, //adminBatchJobStatus
+//Generate a unique guid per batch job.
+//if a request/job fails and needs to be resubmitted, use the same guid.
+		adminBatchJobCreate : {
+			init : function(opts,_tag,Q)	{
+				this.dispatch(opts,_tag,Q);
+				return 1;
+				},
+			dispatch : function(opts,_tag,Q)	{
+				opts = opts || {};
+				opts._tag = _tag || {};
+				opts._cmd = "adminBatchJobCreate";
+				opts._tag.datapointer = opts.guid ? "adminBatchJobCreate|"+opts.guid : "adminBatchJobCreate";
+				app.model.addDispatchToQ(opts,Q);	
+				}
+			}, //adminBatchJobCreate		
+		adminBatchJobRemove : {
+			init : function(jobid,_tag,Q)	{
+				var r = 0;
+				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
+				else	{app.u.throwGMessage("In admin.calls.adminBatchJobRemove, jobid not passed.");}
+				return r;
+				},
+			dispatch : function(jobid,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminBatchJobRemove|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobRemove","_tag":_tag,"jobid":jobid},Q);	
+				}
+			}, //adminBatchJobRemove
+		adminBatchJobCleanup : {
+			init : function(jobid,_tag,Q)	{
+				var r = 0;
+				if(jobid)	{this.dispatch(jobid,_tag,Q); r = 1;}
+				else	{app.u.throwGMessage("In admin.calls.adminBatchJobCleanup, jobid not passed.");}
+				return r;
+				},
+			dispatch : function(jobid,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminBatchJobCleanup|"+jobid;
+				app.model.addDispatchToQ({"_cmd":"adminBatchJobCleanup","jobid":jobid,"_tag":_tag},Q);	
+				}
+			}, //adminBatchJobStatus
 		adminDomainList : {
 			init : function(_tag,Q)	{
 				_tag = _tag || {};
@@ -66,6 +150,8 @@ var admin = function() {
 				}			
 			},
 
+
+
 		adminPrivateSearch : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -83,6 +169,100 @@ var admin = function() {
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminPrivateSearch
+
+
+
+//never get from local or memory.
+		adminOrderList : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminOrderList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag;
+				obj._cmd = "adminOrderList";
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //adminOrderList
+//never look locally for data. Always make sure to load latest from server to ensure it's up to date.
+//order info is critial
+		adminOrderDetail : {
+			init : function(orderID,_tag,Q)	{
+				var r = 0;
+				if(orderID)	{
+					this.dispatch(orderID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminOrderDetail, orderID not passed.");
+					}
+				return r;
+				},
+			dispatch : function(orderID,_tag,Q)	{
+				var cmdObj = {};
+				cmdObj.orderid = orderID;
+				cmdObj._tag = _tag || {};
+				cmdObj._tag.datapointer = "adminOrderDetail|"+orderID;
+				cmdObj._cmd = "adminOrderDetail";
+				app.model.addDispatchToQ(cmdObj,Q);
+				}
+			}, //adminOrderDetail
+//updating an order is a critical function and should ALWAYS be immutable.
+		adminOrderUpdate : {
+			init : function(orderID,updates,_tag)	{
+				var r = 0;
+				if(orderID)	{
+					this.dispatch(orderID,updates,_tag);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminOrderUpdate, orderID not passed.");
+					}
+				return r;
+				},
+			dispatch : function(orderID,updates,_tag)	{
+				cmdObj = {};
+				cmdObj._cmd = 'adminOrderUpdate';
+				cmdObj.orderid = orderID;
+				cmdObj['@updates'] = updates;
+				cmdObj._tag = _tag || {};
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				}
+			}, //adminOrderUpdate
+		adminOrderSearch : {
+			init : function(elasticObj, _tag, Q)	{
+				this.dispatch(elasticObj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(elasticObj,_tag,Q){
+				var obj = {};
+				obj._cmd = "adminOrderSearch";
+				obj.DETAIL = '9';
+				obj.ELASTIC = elasticObj;
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminOrderSearch";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminOrderSearch
+		adminOrderPaymentAction	: {
+			init : function(cmdObj,_tag)	{
+				this.dispatch(cmdObj,_tag)
+				return 1;
+				},
+			dispatch : function(cmdObj,_tag)	{
+				cmdObj._cmd = 'adminOrderPaymentAction';
+				cmdObj._tag = _tag || {};
+				app.model.addDispatchToQ(cmdObj,'immutable');
+				}
+			}, //adminOrderPaymentAction
 
 
 
