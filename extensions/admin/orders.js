@@ -1247,7 +1247,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 						$('#printContainer').empty(); //clean out any previously printed content.
 						$('body').showLoading();
 						
-						app.calls.appProfileInfo.init('DEFAULT',{},'immutable'); //have this handy for any orders with no sdomain.
+						app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
 						
 						$orders.each(function(){
 							var $order = $(this);
@@ -1255,7 +1255,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
 							else if(sdomain)	{
 								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								app.ext.admin_orders.calls.appProfileInfoBySdomain.init(sdomain,{},'immutable');
+								app.ext.admin_orders.calls.appProfileInfoBySdomain.init({'profile':sdomain},{},'immutable');
 								}
 							else	{
 								sdomain = "DEFAULT"; //use default profile if no sdomain is available.

@@ -72,7 +72,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 
 					app.ext.myRIA.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'myRIA'});
 //request profile data (company name, logo, policies, etc)
-					app.calls.appProfileInfo.init(zGlobals.appSettings.profile,{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
+					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
 					app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"});
 					app.model.dispatchThis();
 					

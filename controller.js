@@ -475,27 +475,30 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 
 			
 		appProfileInfo : {
-			init : function(profileID,tagObj,Q)	{
-//				app.u.dump("BEGIN app.calls.appProfileInfo.init");
+			init : function(obj,_tag,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				tagObj = typeof tagObj == 'object' ? tagObj : {};
-				tagObj.datapointer = 'appProfileInfo|'+profileID; //for now, override datapointer for consistency's sake.
+				if(typeof obj == 'object' && (obj.profile || obj.sdomain))	{
+					_tag = _tag || {};
+					_tag.datapointer = 'appProfileInfo|'+(obj.profile || obj.sdomain);
 
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					r = 1;
-					this.dispatch(profileID,tagObj,Q);
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(obj,_tag,Q);
+						}
+					else 	{
+						app.u.handleCallback(_tag)
+						}
 					}
-				else 	{
-					app.u.handleCallback(tagObj)
+				else	{
+					app.u.throwGMessage("In calls.appProfileGet, obj either missing or missing profile or sdomain var.");
+					app.u.dump(obj);
 					}
 
 				return r;
 				}, // init
-			dispatch : function(profileID,tagObj,Q)	{
-				obj = {};
+			dispatch : function(obj,_tag,Q)	{
 				obj['_cmd'] = "appProfileInfo";
-				obj['profile'] = profileID;
-				obj['_tag'] = tagObj;
+				obj['_tag'] = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				} // dispatch
 			}, //appProfileInfo
