@@ -152,15 +152,10 @@ var admin_prodEdit = function() {
 			pid = $panel.data('pid'),
 			panelid = $header.parent().data('panelid'),
 			settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
-			
-			app.u.dump(" -> panelid: "+panelid);
-			app.u.dump(" -> $panel.length: "+$panel.length);
-			app.u.dump(" -> $panel.children().length: "+$panel.children().length);
-			app.u.dump(" -> $panel.is(:visible) [before toggle]: "+$panel.is(":visible"));
-					
-			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.			
+
+			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
+
 			$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
-			app.u.dump(" -> $panel.is(:visible) [after toggle]: "+$panel.is(":visible"));
 
 			if($panel.is(":visible"))	{
 				app.u.dump(" -> into the code to show the panel");
@@ -495,7 +490,8 @@ var admin_prodEdit = function() {
 							else	{
 								$panel.hideLoading();
 								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
-								$('.panelHeader',$panel).click();
+//								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
+								$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.
 								}
 							}},'immutable');
 						app.model.dispatchThis('immutable');
