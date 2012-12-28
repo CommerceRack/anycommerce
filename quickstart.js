@@ -1019,26 +1019,26 @@ else	{
 //Required Params:  pageType, pid and templateID.
 //no defaulting on template id because that'll make expanding this to support other page types more difficult.
 //assumes data to be displayed is already in memory.
-			quickView : function(pageType,P){
+			quickView : function(pageType,infoObj){
 
-				if(pageType && P && P.templateID)	{
-					if(pageType == 'product' && P.pid)	{
-						app.ext.store_product.u.prodDataInModal(P);
-						_gaq.push(['_trackEvent','Quickview','User Event','product',P.pid]);
+				if(pageType && infoObj && infoObj.templateID)	{
+					if(pageType == 'product' && infoObj.pid)	{
+						app.ext.store_product.u.prodDataInModal(infoObj);
+						_gaq.push(['_trackEvent','Quickview','User Event','product',infoObj.pid]);
 						}
 						
-					else if(pageType == 'category' && P.navcat)	{
-						app.ext.myRIA.u.showPageInDialog (P)
-						_gaq.push(['_trackEvent','Quickview','User Event','category',P.navcat]);
+					else if(pageType == 'category' && infoObj.navcat)	{
+						app.ext.myRIA.u.showPageInDialog (infoObj)
+						_gaq.push(['_trackEvent','Quickview','User Event','category',infoObj.navcat]);
 						}
 						
 					else	{
-						app.u.throwGMessage("Based on pageType, some other variable is required (ex: pid for pageType = product). P follows: "); app.u.dump(P);
+						app.u.throwGMessage("Based on pageType, some other variable is required (ex: pid for pageType = product). infoObj follows: "); app.u.dump(infoObj);
 						}
 					
 					}
 				else	{
-					app.u.throwGMessage("quickView was missing either a pageType ["+pageType+"] or P.templateID: "); app.u.dump(P);
+					app.u.throwGMessage("quickView was missing either a pageType ["+pageType+"] or infoObj.templateID: "); app.u.dump(infoObj);
 					}
 				return false;
 				},
@@ -1176,8 +1176,8 @@ P.listID (buyer list id)
 		u : {
 
 //executed when the app loads.  
-//sets a default behavior of loading homepage. Can be overridden by passing in P.
-			handleAppInit : function(P)	{
+//sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
+			handleAppInit : function(infoObj)	{
 
 //!!! need to write/test this in IE7
 //				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
@@ -1188,49 +1188,49 @@ P.listID (buyer list id)
 					app.rq.splice(i, 1); //remove once handled.
 					}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
-				if(typeof P != 'object')	{P = {}}
-				P = this.detectRelevantInfoToPage(window.location.href); 
-				P.back = 0; //skip adding a pushState on initial page load.
+				if(typeof infoObj != 'object')	{infoObj = {}}
+				infoObj = this.detectRelevantInfoToPage(window.location.href); 
+				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
-				if(P.uriParams.meta)	{
-					app.calls.cartSet.init({'cart/refer':P.uriParams.meta},{},'passive');
+				infoObj.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
+				if(infoObj.uriParams.meta)	{
+					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
 					}
 
-				if(P.uriParams.meta_src)	{
-					app.calls.cartSet.init({'cart/refer_src':P.uriParams.meta_src},{},'passive');
+				if(infoObj.uriParams.meta_src)	{
+					app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
-//				app.u.dump(" -> P follows:");
-//				app.u.dump(P);
-				app.ext.myRIA.a.showContent('',P);
-				return P //returning this saves some additional looking up in the appInit
+//				app.u.dump(" -> infoObj follows:");
+//				app.u.dump(infoObj);
+				app.ext.myRIA.a.showContent('',infoObj);
+				return infoObj //returning this saves some additional looking up in the appInit
 				},
 //handle State and History Of The World.
-//will change what state of the world is (P) and add it to History of the world.
+//will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
-			handleSandHOTW : function(P){
-				app.ext.myRIA.vars.sotw = P;
-				app.ext.myRIA.vars.hotw.unshift(P);
+			handleSandHOTW : function(infoObj){
+				app.ext.myRIA.vars.sotw = infoObj;
+				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
 				},
 			
-			showtransition : function(P,$old)	{
+			showtransition : function(infoObj,$old)	{
 				var r = true; //what is returned.
 //				app.u.dump(" -> $old.data('templateid'): "+$old.data('templateid'));
-//				app.u.dump(" -> P: "); app.u.dump(P);
+//				app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
 //				app.u.dump(" -> $old.data('catsafeid'): "+$old.data('catsafeid'));
-//				app.u.dump(" -> P.navcat: "+P.navcat);
+//				app.u.dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(P.pageType == 'cart'){r = false; app.u.dump('fail 0');}
-				else if(P.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 1");}
-				else if(P.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == P.navcat){r = false; app.u.dump("fail 2");}
-				else if(P.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == P.pid){r = false; app.u.dump("fail 3");}
-				else if($old.data('templateid') == 'companyTemplate' && P.pageType == 'company')	{r = false; app.u.dump("fail 4");}
-				else if($old.data('templateid') == 'customerTemplate' && P.pageType == 'customer')	{r = false; app.u.dump("fail 5");}
-				else if($old.data('templateid') == 'searchTemplate' && P.pageType == 'search')	{r = false; app.u.dump("fail 6");}
-				else if(!app.u.determineAuthentication() && this.thisArticleRequiresLogin(P))	{
+				if(infoObj.pageType == 'cart'){r = false; app.u.dump('fail 0');}
+				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("fail 1");}
+				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("fail 2");}
+				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("fail 3");}
+				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; app.u.dump("fail 4");}
+				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; app.u.dump("fail 5");}
+				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; app.u.dump("fail 6");}
+				else if(!app.u.determineAuthentication() && this.thisArticleRequiresLogin(infoObj))	{
 					r = false; //if the login modal is displayed, don't animate or it may show up off screen.
 					}
 				else	{
@@ -1382,50 +1382,50 @@ P.listID (buyer list id)
 // EX:  pass: {pageType:product,pid:TEST} and return: #product?pid=TEST
 // if a valid hash can't be built, false is returned.
 
-			getHashFromPageInfo : function(P)	{
+			getHashFromPageInfo : function(infoObj)	{
 //				app.u.dump("BEGIN myRIA.u.getHashFromPageInfo");
 				var r = false; //what is returned. either false if no match or hash (#company?show=contact)
-				if(this.thisPageInfoIsValid(P))	{
-					if(P.pageType == 'product' && P.pid)	{r = '#product?pid='+P.pid}
-					else if(P.pageType == 'category' && P.navcat)	{r = '#category?navcat='+P.navcat}
-					else if(P.pageType == 'homepage')	{r = ''}
-					else if(P.pageType == 'cart')	{r = '#cart?show='+P.show}
-					else if(P.pageType == 'checkout')	{r = '#checkout?show='+P.show}
-					else if(P.pageType == 'search' && P.KEYWORDS)	{r = '#search?KEYWORDS='+P.KEYWORDS}
-					else if(P.pageType && P.show)	{r = '#'+P.pageType+'?show='+P.show}
+				if(this.thisPageInfoIsValid(infoObj))	{
+					if(infoObj.pageType == 'product' && infoObj.pid)	{r = '#product?pid='+infoObj.pid}
+					else if(infoObj.pageType == 'category' && infoObj.navcat)	{r = '#category?navcat='+infoObj.navcat}
+					else if(infoObj.pageType == 'homepage')	{r = ''}
+					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
+					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
+					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = '#search?KEYWORDS='+infoObj.KEYWORDS}
+					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
 						//shouldn't get here because pageInfo was already validated. but just in case...
 						app.u.dump("WARNING! invalid pageInfo object passed into getHashFromPageInfo. infoObj: ");
-						app.u.dump(P);
+						app.u.dump(infoObj);
 						}
 					}
 				else	{
 					app.u.dump("WARNING! invalid pageInfo object passed into getHashFromPageInfo. infoObj: ");
-					app.u.dump(P);
+					app.u.dump(infoObj);
 					}
 				return r;
 				},
 
 //will return a t/f based on whether or not the object passed in is a valid pageInfo object.
 //ex: category requires navcat. company requires show.
-			thisPageInfoIsValid : function(P)	{
+			thisPageInfoIsValid : function(infoObj)	{
 				var r = false; //what is returned. boolean.
-				if($.isEmptyObject(P))	{
+				if($.isEmptyObject(infoObj))	{
 					//can't have an empty object.
 					app.u.dump("WARNING! thisPageInfoIsValid did not receive a valid object.");
 					}
-				else if(P.pageType)	{
-					if(P.pageType == 'product' && P.pid)	{r = true}
-					else if(P.pageType == 'category' && P.navcat)	{r = true}
-					else if(P.pageType == 'homepage')	{r = true}
-					else if(P.pageType == 'cart')	{r = true}
-					else if(P.pageType == 'checkout')	{r = true}
-					else if(P.pageType == 'search' && P.KEYWORDS)	{r = true}
-					else if(P.pageType == 'customer' && P.show)	{r = true}
-					else if(P.pageType == 'company' && P.show)	{r = true}
+				else if(infoObj.pageType)	{
+					if(infoObj.pageType == 'product' && infoObj.pid)	{r = true}
+					else if(infoObj.pageType == 'category' && infoObj.navcat)	{r = true}
+					else if(infoObj.pageType == 'homepage')	{r = true}
+					else if(infoObj.pageType == 'cart')	{r = true}
+					else if(infoObj.pageType == 'checkout')	{r = true}
+					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = true}
+					else if(infoObj.pageType == 'customer' && infoObj.show)	{r = true}
+					else if(infoObj.pageType == 'company' && infoObj.show)	{r = true}
 					else	{
 						//no matching params for specified pageType
-						app.u.dump("WARNING! thisPageInfoIsValid had no matching params for specified pageType ["+P.pageType+"]");
+						app.u.dump("WARNING! thisPageInfoIsValid had no matching params for specified pageType ["+infoObj.pageType+"]");
 						}
 					}
 				else{
@@ -1445,14 +1445,14 @@ P.listID (buyer list id)
 				var myHash = HASH;
 //make sure first character isn't a #. location.hash is used a lot and ie8 (maybe more) include # in value.
 				if(myHash.indexOf('#') == 0)	{myHash = myHash.substring(1);}
-				var P = {}; //what is returned. P.pageType and based on value of page type, p.show or p.pid or p.navcat, etc
+				var infoObj = {}; //what is returned. infoObj.pageType and based on value of page type, infoObj.show or infoObj.pid or infoObj.navcat, etc
 				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
-				P = app.u.getParametersAsObject(splits[1]); //will set P.show=something or P.pid=PID
-				P.pageType = splits[0];
-				if(!P.pageType || !this.thisPageInfoIsValid(P))	{
-					P = false;
+				infoObj = app.u.getParametersAsObject(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
+				infoObj.pageType = splits[0];
+				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
+					infoObj = false;
 					}
-				return P;
+				return infoObj;
 				},
 
 
@@ -1461,24 +1461,24 @@ P.listID (buyer list id)
 //EX:  pass: {pageType:category,navcat:.something} 		return: /category/something/
 //used in add push state and also for addthis.
 // ### should be renamed getURLFromPageInfo
-			buildRelativePath : function(P)	{
+			buildRelativePath : function(infoObj)	{
 				var relativePath; //what is returned.
-				switch(P.pageType)	{
+				switch(infoObj.pageType)	{
 				case 'homepage' :
 					relativePath = '';
 					break;
 				case 'product':
-					relativePath = 'product/'+P.pid+'/';
+					relativePath = 'product/'+infoObj.pid+'/';
 					break;
 				case 'category':
 
 //don't want /category/.something, wants /category/something
 //but the period is needed for passing into the pushstate.
-					var noPrePeriod = P.navcat.charAt(0) == '.' ? P.navcat.substr(1) : P.navcat; 
+					var noPrePeriod = infoObj.navcat.charAt(0) == '.' ? infoObj.navcat.substr(1) : infoObj.navcat; 
 					relativePath = 'category/'+noPrePeriod+'/';
 					break;
 				case 'customer':
-					relativePath = 'customer/'+P.show+'/';
+					relativePath = 'customer/'+infoObj.show+'/';
 					break;
 
 				case 'checkout':
@@ -1489,16 +1489,16 @@ P.listID (buyer list id)
 					break;
 
 				case 'search':
-					relativePath = '#search?KEYWORDS='+P.KEYWORDS
+					relativePath = '#search?KEYWORDS='+infoObj.KEYWORDS
 					break;
 
 				case 'company':
-					relativePath = '#company?show='+P.show;
+					relativePath = '#company?show='+infoObj.show;
 					break;
 
 				default:
 					//uh oh. what are we?
-					relativePath = P.show;
+					relativePath = infoObj.show;
 					}
 				return relativePath;
 				},
@@ -1506,24 +1506,24 @@ P.listID (buyer list id)
 
 
 //a generic function for guessing what type of object is being dealt with. Check for common params.  
-			whatAmIFor : function(P)	{
+			whatAmIFor : function(infoObj)	{
 //				app.u.dump("BEGIN myRIA.u.whatAmIFor");
-//				app.u.dump(P);
+//				app.u.dump(infoObj);
 				var r = false; //what is returned
-				if(P.pid)	{r = 'product'}
-				else if(P.catSafeID == zGlobals.appSettings.rootcat){r = 'homepage'}
-				else if(P.navcat == zGlobals.appSettings.rootcat){r = 'homepage'}
-				else if(P.catSafeID){r = 'category'}
-				else if(P.keywords || P.KEYWORDS){r = 'search'}
-				else if(P.navcat){r = 'category'}
-				else if(P.path){ r = 'category'}
-				else if(P.page && P.page.indexOf('/customer/') > 0)	{r = 'customer'}
-				else if(P.page)	{r = 'company'}
-				else if(P.pageType == 'cart')	{r = 'cart'}
-				else if(P.show == 'cart')	{r = 'cart'}
-				else if(P.pageType == 'checkout')	{r = 'checkout'}
-				else if(P.show == 'checkout')	{r = 'checkout'}
-				else if(P.page)	{r = 'company'}
+				if(infoObj.pid)	{r = 'product'}
+				else if(infoObj.catSafeID == zGlobals.appSettings.rootcat){r = 'homepage'}
+				else if(infoObj.navcat == zGlobals.appSettings.rootcat){r = 'homepage'}
+				else if(infoObj.catSafeID){r = 'category'}
+				else if(infoObj.keywords || infoObj.KEYWORDS){r = 'search'}
+				else if(infoObj.navcat){r = 'category'}
+				else if(infoObj.path){ r = 'category'}
+				else if(infoObj.page && infoObj.page.indexOf('/customer/') > 0)	{r = 'customer'}
+				else if(infoObj.page)	{r = 'company'}
+				else if(infoObj.pageType == 'cart')	{r = 'cart'}
+				else if(infoObj.show == 'cart')	{r = 'cart'}
+				else if(infoObj.pageType == 'checkout')	{r = 'checkout'}
+				else if(infoObj.show == 'checkout')	{r = 'checkout'}
+				else if(infoObj.page)	{r = 'company'}
 				return r;
 				},
 				
@@ -1556,20 +1556,20 @@ P.listID (buyer list id)
 				_ignoreHashChange = false; //always return to false so it isn't "left on" by accident.
 				},
 
-//p is an object that gets passed into a pushState in 'addPushState'.  pageType and pageInfo are the only two params currently.
+//infoObj is an object that gets passed into a pushState in 'addPushState'.  pageType and pageInfo are the only two params currently.
 //https://developer.mozilla.org/en/DOM/window.onpopstate
-			handlePopState : function(P)	{
+			handlePopState : function(infoObj)	{
 //				app.u.dump("BEGIN handlePopState");
-//				app.u.dump(P);
+//				app.u.dump(infoObj);
 
-//on initial load, P will be blank.
-				if(P)	{
-					P.back = 0;
-					app.ext.myRIA.a.showContent('',P);
-//					app.u.dump("POPSTATE Executed.  pageType = "+P.pageType+" and pageInfo = "+P.pageInfo);
+//on initial load, infoObj will be blank.
+				if(infoObj)	{
+					infoObj.back = 0;
+					app.ext.myRIA.a.showContent('',infoObj);
+//					app.u.dump("POPSTATE Executed.  pageType = "+infoObj.pageType+" and pageInfo = "+infoObj.pageInfo);
 					}
 				else	{
-//					app.u.dump(" -> no event.state (P) defined.");
+//					app.u.dump(" -> no event.state (infoObj) defined.");
 					}
 				},
 
