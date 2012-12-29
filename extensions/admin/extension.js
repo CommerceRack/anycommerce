@@ -1319,7 +1319,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
-					app.u.dump(" -> path: "+path);
+//					app.u.dump(" -> path: "+path);
 					showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
 					}
 				else	{
@@ -1513,8 +1513,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //showHeader
 
 //used to determine what page to show when app inits and after the user changes the domain.
+//uses whats in the hash first, then the default page passed in.
+//if you want to target a specific page, change the hash before executing this function.
 			whatPageToShow : function(defaultPage)	{
-				app.u.dump("BEGIN admin.u.whatPageToShow");
+//				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
 					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
@@ -1525,7 +1527,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 					app.u.throwGMessage("In admin.u.whatPageToShow, unable to determine 'page'");
 					}
-				app.u.dump(" -> page: "+page);
+//				app.u.dump(" -> page: "+page);
 				return page;
 				}, //whatPageToShow
 

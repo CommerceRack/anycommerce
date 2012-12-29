@@ -2018,7 +2018,7 @@ $r.find('[data-bind]').each(function()	{
 				}
 			if(!app.u.isSet(value) && bindData.defaultValue)	{
 				value = bindData['defaultValue']
-				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
+//				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 				}
 			}
 		
