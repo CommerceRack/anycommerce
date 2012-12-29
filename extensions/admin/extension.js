@@ -1319,7 +1319,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
-					showUI(app.ext.admin.u.whatPageToShow(path));
+					app.u.dump(" -> path: "+path);
+					showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
 					}
 				else	{
 					app.u.throwGMessage("WARNING! admin.a.changeDomain required param 'domain' not passed. Yeah, can't change the domain without a domain.");
@@ -1513,6 +1514,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 //used to determine what page to show when app inits and after the user changes the domain.
 			whatPageToShow : function(defaultPage)	{
+				app.u.dump("BEGIN admin.u.whatPageToShow");
 				var page = window.location.hash || defaultPage;
 				if(page)	{
 					if(page.substring(0,2) == '#!' || page.substring(0,2) == '#:')	{}  //app hashes. leave them alone cuz showUI wants #.
@@ -1523,6 +1525,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else	{
 					app.u.throwGMessage("In admin.u.whatPageToShow, unable to determine 'page'");
 					}
+				app.u.dump(" -> page: "+page);
 				return page;
 				}, //whatPageToShow
 
