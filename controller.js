@@ -317,7 +317,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 
 		appCategoryDetail : {
 			init : function(obj,_tag,Q)	{
-				if(obj && obj.path)	{
+				if(obj && obj.safe)	{
 					var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 					_tag = _tag || {};
 					_tag.datapointer = 'appCategoryDetail|'+obj.safe;
@@ -330,10 +330,10 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 						app.u.handleCallback(_tag)
 						}
 //max is the highest level, so if we have that already, just use it.
-					else if(app.data[_tag.datapointer].detail == 'max')	{
+					else if(app.data[_tag.datapointer] && app.data[_tag.datapointer].detail == 'max')	{
 						app.u.handleCallback(_tag);
 						}
-					else if (obj.detail == 'more' && (!app.data[_tag.datapointer].detail == 'more' || app.data[_tag.datapointer].detail == 'max'))	{
+					else if (obj.detail == 'more' && (app.data[_tag.datapointer] && (!app.data[_tag.datapointer].detail == 'more' || app.data[_tag.datapointer].detail == 'max')))	{
 						app.u.handleCallback(_tag);
 						}
 					else 	{
@@ -342,7 +342,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 						}
 					}
 				else	{
-					app.u.throwGMessage("In calls.appCategoryDetail, obj.path not passed.");
+					app.u.throwGMessage("In calls.appCategoryDetail, obj.safe not passed.");
 					app.u.dump(obj);
 					}
 				return r;
