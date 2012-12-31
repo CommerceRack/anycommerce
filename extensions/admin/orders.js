@@ -1359,7 +1359,7 @@ $(selector + ' .editable').each(function(){
 
 				}
 			}, //u
-
+//e is 'Events'. these are assigned to buttons/links via appEvents.
 		e : {
 			"orderListFiltersUpdate" : function($btn){
 //				$btn.addClass('ui-state-highlight');
