@@ -212,12 +212,12 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</hgroup>
 
 
-	<div class='floatRight marginLeft  topCol'>
+	<div class='floatRight marginLeft billAddressContainer topCol'>
 	<h4>Billing Address</h4>
 <div data-ui-role='admin_orders|orderUpdateBillAddress' data-bind="var: order(bill); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
 
-	<div class='floatRight marginRight marginLeft  topCol'>
+	<div class='floatRight marginRight marginLeft shipAddressContainer topCol'>
 	<h4>Shipping Address</h4>
 <div data-ui-role='admin_orders|orderUpdateShipAddress' data-bind="var: order(ship); format: loadsTemplate; loadsTemplate:orderAddressTemplate;"></div>
 	</div>
@@ -564,6 +564,7 @@ used in legacy compat mode (and probably full app mode as well)
 	<span data-bind='var:order(lastname);format:text;' class='editable' title='last name'></span>
 </div>
 <div data-bind='var:order(company);format:text;' class='editable' title='company'></div>
+<div data-bind='var:order(phone);format:text;' class='editable' title='phone'></div>
 <div data-bind='var:order(address1);format:text;' class='editable' title='address'></div>
 <div data-bind='var:order(address2);format:text;' class='editable' title='address 2'></div>
 <div>
@@ -572,7 +573,9 @@ used in legacy compat mode (and probably full app mode as well)
 	<span data-bind='var:order(postal);format:text;' class='editable' title='zip'></span>
 </div>
 <div data-bind='var:order(countrycode);format:text;'></div>
-<div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
+<div class='email'><!-- outside of child so can be hidden w/ css for ship based addresses -->
+	<div data-bind='var:order(email);format:text;' class='editable' title='email address'></div>
+</div>
 </address>
 
 
