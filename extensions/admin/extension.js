@@ -1401,7 +1401,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				else if(vars.findertype == 'PAGE')	{
 					$('#finderTargetList').show();
-					app.ext.admin.calls.appPageGet.init({'PATH':vars.path,'@get':[attrib]},{"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
+					app.ext.admin.calls.appPageGet.init({'PATH':vars.path,'@get':[vars.attrib]},{"attrib":vars.attrib,"path":vars.path,"callback":"addFinderToDom","extension":"admin","targetID":targetID})			
 					}
 				else	{
 					app.u.throwGMessage("Warning! Type param for admin.a.addFinderTo is invalid. ["+vars.findertype+"]");
