@@ -297,7 +297,9 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		
 //		$("<command \/>").attr('label','Payment details').on('click',function(){navigateTo('/biz/orders/payment.cgi?ID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
 //		$("<command \/>").attr('label','Edit contents').on('click',function(){navigateTo('/biz/orders/edit.cgi?CMD=EDIT&OID='+orderid+'&ts=',{'dialog':true}); return false;}).appendTo($cmenu);
+		$("<command \/>").attr('label','Edit customer').on('click',function(){navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+$row.data('cid'),{'dialog':true}); return false;}).appendTo($cmenu);
 		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?ACTION=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
+		
 		$("<hr \/>").appendTo($cmenu);
 		
 		var $emailMenu = $("<menu label='Send email message '>");
@@ -989,6 +991,8 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					app.u.dump(" -> no tender conditions met.");
 					}
 				
+				actions.push('override');
+				
 				if(app.ext.admin_orders.u.ispsa(pref['ps'],[9,2]))	{
 					actions.push('void');
 					}
@@ -1382,6 +1386,20 @@ $(selector + ' .editable').each(function(){
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){navigateTo('#!orderCreate')});
 				}, //orderCreate
 
+
+			"orderCustomerEdit" : function($btn)	{
+				$btn.button();
+				$btn.off('click.orderCreate').on('click.orderCreate',function(){
+					var $parent = $btn.closest("[data-order-view-parent]"),
+					orderID = $parent.data('order-view-parent');
+					if(orderID)	{
+						navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+app.data['adminOrderDetail|'+orderID].customer.cid,{'dialog':true});
+						}
+					else	{
+						app.u.throwGMessage("in admin_orders.buttonActions.orderCustomerEdit, unable to determine orderID ["+orderID+"]");
+						}
+					});
+				},
 				
 
 			"orderItemUpdate" : function($btn)	{
