@@ -2340,7 +2340,7 @@ else	{
 // note - empty should already be done.  There should be an a.showDomainConfig that executes a call and this is what gets executed in the call back.  
 // that 'a' should do a showloading
 			domainConfig : function(){
-				app.u.dump("BEGIN admin.u.domainConfig");
+//				app.u.dump("BEGIN admin.u.domainConfig");
 				$target = $('#setupContent');
 				$target.hideLoading();
 				var data = app.data['adminDomainList']['@DOMAINS'];
@@ -2359,7 +2359,7 @@ else	{
 //$t is 'this' which is the button.
 
 			adminUIDomainPanelExecute : function($t){
-				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
+//				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
 				var data = $t.data();
 				if(data && data.verb && data.domain)	{
 					var obj = {};

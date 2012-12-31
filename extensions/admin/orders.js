@@ -276,7 +276,7 @@ var L = ordersData.length;
 var $cmenu; //recyled. stors the context menu for an order.
 
 if(L)	{
-	app.u.dump(" -> ordersData.length (L): "+L);
+//	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		orderid = ordersData[i].ORDERID; //used for fetching order record.
 		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
