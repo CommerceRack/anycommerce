@@ -295,6 +295,8 @@ var $panel = app.renderFunctions.transmogrify(dataObj,'taskListEditPanelTemplate
 $panel.data('panel-state','open');
 $panel.attr('id','taskUpdatePanel_'+dataObj.id)
 $('.datepicker',$panel).datepicker({'dateFormat':'@'});
+$('.datepicker',$panel).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
+	
 $('#taskEditPanelsContainer').prepend($panel);
 
 $('button',$panel).each(function(){
