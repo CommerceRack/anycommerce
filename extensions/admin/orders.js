@@ -865,6 +865,7 @@ else	{
 
 		u : {
 
+//https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Bitwise_Operators
 
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 		getOrderFlagsAsArray : function(flagint)	{
