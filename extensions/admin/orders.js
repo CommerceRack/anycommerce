@@ -523,7 +523,14 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-ui-role='orderUpdateAddPaymentContainer']",app.data[responseData.datapointer]);
 					$('input:radio',$target).each(function(){
 						$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
-							app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'))
+							app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'));
+							if($(this).val() == 'CREDIT')	{
+								var $addlInputs = $("<div \/>");
+								$("<label \/>").text('authorize').prepend($("<input \/>").val('AUTHORIZE').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
+								$("<label \/>").text('charge').prepend($("<input \/>").val('CHARGE').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
+								$("<label \/>").text('refund').prepend($("<input \/>").val('REFUND').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
+								$(this).parent().next().append($addlInputs);
+								}
 							});
 						});
 					}
@@ -798,31 +805,32 @@ else	{
 // ??? status '5' is not handled in this logic, which came directly from payment.cgi line 461
 			if(app.ext.admin_orders.u.ispsa(ps,[2,6,9]))	{className = 'lineThrough'}
 			else if	(app.ext.admin_orders.u.ispsa(ps,[3]))	{className = 'red'}
-			else if(app.ext.admin_orders.u.ispsa(ps,[0,4]))	{className = 'blue'}
-			else if (app.ext.admin_orders.u.ispsa(ps,[1]))	{className = 'green'}
+			else if	(app.ext.admin_orders.u.ispsa(ps,[4]))	{className = 'orange'}
+			else if(app.ext.admin_orders.u.ispsa(ps,[0]))	{className = 'green'}
+			else if (app.ext.admin_orders.u.ispsa(ps,[1]))	{className = 'blue'}
 			else	{} //
-			output = "<div class='"+className+"'>"+output+" ("+pref.ps+")<\/div>"; //add the class just to the pretty payment status.
+			output = "<div class='"+className+"'><b>"+output+"<\/b> ("+pref.ps+")<\/div>"; //add the class just to the pretty payment status.
 			if (pref.tender == 'PAYPALEC') {
-				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"</div>";
+				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"<\/div>";
 				}
 			else if (pref.tender == 'PAYPAL') {
-				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"</div>";
+				output += "<div class='hint'>Paypal Transaction ID: "+pref.auth+"<\/div>";
 				}
 			else if (pref.tender == 'GOOGLE') {
-				output += "<div class='hint'>Google Order ID: "+pref.txn+"</div>";
+				output += "<div class='hint'>Google Order ID: "+pref.txn+"<\/div>";
 				}
 			else if (pref.tender == 'EBAY') {
-				output += "<div class='hint'>eBay Payment Transaction ID: "+pref.txn+"</div>";
+				output += "<div class='hint'>eBay Payment Transaction ID: "+pref.txn+"<\/div>";
 				}
 			else if (pref.tender == 'GIFTCARD') {
-				output += "<div class='hint'>Giftcard: "+pref.acct+"</div>";			
+				output += "<div class='hint'>Giftcard: "+pref.acct+"<\/div>";			
 				}
 			else if (pref.tender == 'BUY') {
-				output += "<div class='hint'>Buy.com Order #: "+pref.acct+"</div>";
+				output += "<div class='hint'>Buy.com Order #: "+pref.acct+"<\/div>";
 				}
 			
 			else if (pref.tender == 'PO') {
-				output += "<div class='hint'>PO: "+pref.acct+"</div>";
+				output += "<div class='hint'>PO: "+pref.acct+"<\/div>";
 				// !!! neeed to display PO #.
 				}
 
@@ -844,10 +852,10 @@ else	{
 				if (pref.auth || pref.txn) {
 					output += "<div class='hint'>Gateway Response: ";
 					if (pref.auth) {
-						output += "<span>Auth = "+pref.auth+"</span>";
+						output += "<span>Auth = "+pref.auth+"<\/span>";
 						}
 					if (pref.txn) {
-						output += "<span>Settlement = "+pref.txn+"</span>";
+						output += "<span>Settlement = "+pref.txn+"<\/span>";
 						}
 					output += "</div>";
 					}
@@ -1780,7 +1788,9 @@ app.ext.admin.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'fil
 								}
 							}
 						else	{
-							if(formJSON.tender == 'CREDIT')	{CMD = "ADDPROCESSPAYMENT"}
+							if(formJSON.tender == 'CREDIT')	{
+								CMD = "ADDPROCESSPAYMENT";
+								}
 							else	{CMD = "ADDPAYMENT"}
 							var $parent = $btn.closest("[data-order-view-parent]"),
 							orderID = $parent.data('order-view-parent');

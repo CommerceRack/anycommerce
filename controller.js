@@ -1210,7 +1210,8 @@ TIME/DATE
 			if(showtime)	{
 				r += " ";
 				r += date.getHours();
-				r += ':'+date.getMinutes();
+				r += ':'
+				r += (date.getMinutes() < 10) ? "0"+date.getMinutes()  : date.getMinutes();
 				}
 			return r;
 			},
