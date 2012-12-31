@@ -1651,20 +1651,34 @@ $(selector + ' .editable').each(function(){
 				$btn.button();
 				$btn.off('click.orderSearch').on('click.orderSearch',function(event){
 					event.preventDefault();
-					var frmObj = $btn.closest('form').serializeJSON();
+					var frmObj = $btn.closest('form').serializeJSON(),
+					query;
 					if(frmObj.keyword)	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 						$('body').showLoading();
-app.ext.admin.calls.adminOrderSearch.init({'size':Number(frmObj.size) || 30,'filter' : {
+if(frmObj.isDetailedSearch == 'on')	{
+	query = {'size':Number(frmObj.size) || 30,'filter' : {
 	'or' : [
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/address']}},
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/payment']}},
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/shipment']}},
 	{'has_child' : {'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}},'type' : ['order/item']}},
 	{'query' : {'query_string' : {'query' : frmObj.keyword,'default_operator':'AND'}}}
-	]},'type' : ['order'],'explain' : 1},{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+	]},'type' : ['order'],'explain' : 1}
+	}
+else	{
+	query = { 'filter' : {
+      'or' : [
+         { 'term': { 'references': frmObj.keyword  } },
+         { 'term' : { 'email': frmObj.keyword } },
+         { 'term' : { 'orderid': frmObj.keyword } }
+         ]
+      }}
+	}
+
+app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}
