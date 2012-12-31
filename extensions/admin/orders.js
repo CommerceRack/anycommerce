@@ -662,7 +662,14 @@ else	{
 
 
 	renderFormats : {
-
+		orderFlagsAsSpans : function($tag,data)	{
+			var flags = app.ext.admin_orders.u.getOrderFlagsAsArray(data.value),
+			L = flags.length;
+//			app.u.dump(" -> flags: "); app.u.dump(flags);
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append($("<span \/>").addClass(flags[i].toLowerCase()));
+				}
+			}, //orderFlagsAsSpans
 		orderPoolSelect : function($tag,data)	{
 			var $opt;
 			var pools = app.ext.admin_orders.vars.pools;
@@ -861,19 +868,19 @@ else	{
 
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 		getOrderFlagsAsArray : function(flagint)	{
-			var flags = new Array();
-			var B = flagint.toString(2); //binary
-			
-			charAt(0) == 1 ? flags.push('SINGLE_ITEM') : flags.push('MULTI_ITEM'); //1
-			charAt(1) == 1 ? flags.push('SHIP_EXPEDITED') : flags.push('SHIP_GROUND'); //2
-			charAt(2) == 1 ? flags.push('CUSTOMER_NEW') : flags.push('CUSTOMER_REPEAT'); //4
-			charAt(3) == 1 ? flags.push('WAS_SPLIT') : flags.push('NOT_SPLIT'); //8
-			charAt(4) == 1 ? flags.push('SPLIT_RESULT') : flags.push(''); //16
-			charAt(5) == 1 ? flags.push('PAYMENT_SINGLE') : flags.push('PAYMENT_MULTIPLE'); //32
-			charAt(6) == 1 ? flags.push('IS_SUPPLYCHAIN') : flags.push(''); //64
-			charAt(7) == 1 ? flags.push('IS_MULTIBOX') : flags.push('IS_SINGLEBOX'); //128
-			charAt(8) == 1 ? flags.push('HAS_RMA') : flags.push('NOT_RMA');  //256
-			charAt(9) == 1 ? flags.push('HAS_EDIT') : flags.push('NOT_EDIT');  //512
+			var flags = new Array(),
+			B = Number(flagint).toString(2); //binary
+//			app.u.dump(" -> Binary of flags: "+B);
+			B.charAt(0) == 1 ? flags.push('SINGLE_ITEM') : flags.push('MULTI_ITEM'); //1
+			B.charAt(1) == 1 ? flags.push('SHIP_EXPEDITED') : flags.push('SHIP_GROUND'); //2
+			B.charAt(2) == 1 ? flags.push('CUSTOMER_NEW') : flags.push('CUSTOMER_REPEAT'); //4
+			B.charAt(3) == 1 ? flags.push('WAS_SPLIT') : flags.push('NOT_SPLIT'); //8
+			B.charAt(4) == 1 ? flags.push('SPLIT_RESULT') : flags.push(''); //16
+			B.charAt(5) == 1 ? flags.push('PAYMENT_SINGLE') : flags.push('PAYMENT_MULTIPLE'); //32
+			B.charAt(6) == 1 ? flags.push('IS_SUPPLYCHAIN') : flags.push(''); //64
+			B.charAt(7) == 1 ? flags.push('IS_MULTIBOX') : flags.push('IS_SINGLEBOX'); //128
+			B.charAt(8) == 1 ? flags.push('HAS_RMA') : flags.push('NOT_RMA');  //256
+			B.charAt(9) == 1 ? flags.push('HAS_EDIT') : flags.push('NOT_EDIT');  //512
 			
 			return flags;
 			},

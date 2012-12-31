@@ -171,7 +171,7 @@
 	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
 	<td><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
-	<td><span data-bind='var:order(FLAGS);format:text;'></span></td>
+	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td><button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' class='smallButton'>Edit</button></td>
 </tr>

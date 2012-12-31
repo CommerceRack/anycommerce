@@ -55,7 +55,8 @@ table.orderManagerTable	{
 .ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
 .ui-selected .selectedIcon	{display:block !important;}
 
-
+/* for order flags */
+.adminOrderLineItem span.ship_expedited	{display:inline-block; background:url(images/exp_shipping-20x25.png) no-repeat; width:25px; height:20px;}
 
 
 /*
