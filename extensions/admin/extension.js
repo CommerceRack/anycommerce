@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser'); 
 	var r = {
 		
 	vars : {
@@ -41,6 +41,31 @@ var admin = function() {
 
 
 
+//////////// PAGES \\\\\\\\\\\\\
+
+/*
+Planned enhancement.  inline page handler. supports same params as legacy compat mode.
+if no handler is in place, then the app would use legacy compatibility mode.
+	pages : {
+		
+		"/biz/setup/index.cgi" : {
+			messages : [], //array of strings. TYPE|MESSAGE
+			bc : [], //array of objects. link and name in order left to right. zero is leftmost in array.
+			help : "", //webdoc ID.
+			navtabs : {}, //array of objects. link, name and selected (boolean)
+			title : {},
+			exec : function(){}  //executes the code to render the page.
+			},
+		"/biz/syndication/index.cgi" : {
+			exec : function(){
+				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+				$('#syndicationContent').empty().append(app.renderFunctions.transmogrify('','pageSyndicationTemplate',{}));
+
+				}
+			}
+		},
+*/
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 
 
@@ -668,7 +693,7 @@ var admin = function() {
 
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
-app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
+//app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 
 
@@ -1576,6 +1601,11 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!orderCreate')	{
 					app.ext.convertSessionToOrder.a.openCreateOrderForm();
 					}
+				else if (path == '#!appChooser')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin.u.showAppChooser();
+					}
 				else if(path == '#!orders')	{
 					app.ext.admin.u.bringTabIntoFocus('orders2');
 					app.ext.admin.u.bringTabContentIntoFocus($("#orders2Content"));
@@ -1665,6 +1695,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
+					app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});  //navigateTo's hard coded on 2012/30
 					}
 				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
@@ -1718,6 +1749,14 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				return r;
 				}, //getTabFromPath
+	
+	
+			handlePermissions : function($target,permissions)	{
+				app.u.dump("Permissions: "); app.u.dump(permissions);
+				if(permissions.isVstore)	{app.u.dump(" isVstore"); $(".showForVstoreOnly",$target).show();}
+				else	{$(".showForAppOnly",$target).show();}
+				},
+	
 	
 //the following function gets executed as part of any fetchAdminResource request. 
 //it's used to output the content in 'html' (part of the response). It uses the targetID passed in the original request.
@@ -2448,6 +2487,12 @@ just lose the back button feature.
 				},
 
 
+
+			showAppChooser : function()	{
+				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
+				$('button',$target).button();
+				},
 
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
