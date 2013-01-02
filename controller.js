@@ -363,7 +363,9 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			init : function(obj,_tag,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				if(obj && obj.pid)	{
-					obj.pid = obj.pid.toUpperCase();
+//					app.u.dump(" -> typeof obj.pid: "+typeof obj.pid);
+					if(typeof obj.pid === 'string')	{obj.pid = obj.pid.toUpperCase();} //will error if obj.pid is a number.
+					
 					_tag = _tag || {};
 					_tag.datapointer = "appProductGet|"+obj.pid;
 //The fetchData will put the data into memory if present, so safe to check app.data... after here.
