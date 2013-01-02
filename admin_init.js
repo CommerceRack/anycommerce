@@ -82,9 +82,9 @@ app.u.initMVC = function(attempts){
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	var percentPerInclude = Math.round((100 / app.vars.rq.length));  
+	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
-	var percentComplete = resourcesLoaded * percentPerInclude; //used to sum how many includes have successfully loaded.
+	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
 
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
