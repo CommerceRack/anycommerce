@@ -2109,9 +2109,9 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,vars){
 
-app.u.dump("BEGIN admin.u.addFinder");
+//app.u.dump("BEGIN admin.u.addFinder");
 // app.u.dump(" -> targetID: "+targetID);
-app.u.dump(vars);
+//app.u.dump(vars);
 
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(vars.path);
@@ -2149,7 +2149,12 @@ else if (vars.findertype == 'CHOOSER')	{
 	prodlist = []; //no items show up by default.
 	}
 else if(vars.findertype == 'PAGE')	{
-	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appCategoryDetail|'+vars.path].pretty); //updates modal title
+	if(vars.path.charAt(0) === '@')	{
+		$target.parent().find('.ui-dialog-title').text('Product Finder: Newsletter');
+		}
+	else	{
+		$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appCategoryDetail|'+vars.path].pretty); //updates modal title
+		}
 	if(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])	{
 		prodlist = app.ext.store_prodlist.u.cleanUpProductList(app.data['appPageGet|'+vars.path]['%page'][vars.attrib])
 		}	
