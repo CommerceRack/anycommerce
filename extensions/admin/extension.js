@@ -940,7 +940,9 @@ else	{
 		addFinderToDom : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN admin.callback.addFinderToDom.success");
-				app.ext.admin.u.addFinder(tagObj.targetID,$(app.u.jqSelector('#',tagObj.targetID)).data());
+				var $target = $(app.u.jqSelector('#',tagObj.targetID));
+//have to use attribs here to we make the switch to all data, otherwise 'data' gets set once, but not when attribs change. so the second instantiation of the finder will open the first product.
+				app.ext.admin.u.addFinder(tagObj.targetID,{'findertype':$target.attr('data-findertype'),'path':$target.attr('data-path'),'attrib':$target.attr('data-attrib')});
 				}
 			}, //addFinderToDom
 
@@ -1410,7 +1412,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //currently, executing this function directly is not supported. use the showFinderInModal.
 //once multiple instances of the finder can be opened at one time, this will get used more.
 			addFinderTo : function(targetID,vars)	{
-//				app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); app.u.dump(vars);
+				app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); app.u.dump(vars);
 				$(app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('loading...'); //empty the title early to avoid confusion.
 				if(vars.findertype == 'PRODUCT')	{
 					app.ext.store_product.calls.appProductGet.init(vars.path,{"callback":"addFinderToDom","extension":"admin","targetID":targetID,"path":vars.path})
@@ -1440,10 +1442,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //vars will be used to contain all the 'chooser' variables.
 			showFinderInModal : function(findertype,path,attrib,vars)	{
 				if(findertype)	{
-					var $finderModal = $('#prodFinder'), vars = vars || {};
+					var $finderModal = $('#prodFinder'),
+					vars = vars || {};
 //a finder has already been opened. empty it.
 					if($finderModal.length > 0)	{
 						$finderModal.empty();
+						$finderModal.attr({'data-findertype':'','data-path':'','data-attrib':''}); //make sure settings from last product are not used.
 						}
 					else	{
 						$finderModal = $('<div \/>').attr({'id':'prodFinder','title':'Product Finder'}).appendTo('body');
@@ -1452,13 +1456,10 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					if(path && !vars.path)	{vars.path = path} else {}
 					if(attrib && !vars.attrib)	{vars.attrib = attrib} else {}
 					if(findertype && !vars.findertype)	{vars.findertype = findertype} else {}
-//					for(index in vars)	{if(typeof vars[index] !== 'function'){$finderModal.data(index,vars[index]);}} //add all non function params as data() so 
 
 //set the following vars as attributes. at the time the finder was built, didn't have a good understanding of .data().
 //eventually, everything will get moved over to .data();
-					$finderModal.attr('data-findertype',findertype);
-					$finderModal.attr('data-path',path);
-					$finderModal.attr('data-attrib',attrib);
+					$finderModal.attr({'data-findertype':findertype,'data-path':path,'data-attrib':attrib});
 					
 					$finderModal.dialog({modal:true,width:'94%',height:650});
 					app.ext.admin.a.addFinderTo('prodFinder',vars);
@@ -2108,9 +2109,9 @@ if pid is passed into this function, the finder treats everything as though we'r
 
 			addFinder : function(targetID,vars){
 
-//app.u.dump("BEGIN admin.u.addFinder");
+app.u.dump("BEGIN admin.u.addFinder");
 // app.u.dump(" -> targetID: "+targetID);
-//app.u.dump(vars);
+app.u.dump(vars);
 
 //jquery likes id's with no special characters.
 var safePath = app.u.makeSafeHTMLId(vars.path);
@@ -2129,7 +2130,7 @@ $('#finderTargetList', $target).show();
 
 
 if(vars.findertype == 'PRODUCT')	{
-//	app.u.dump(" -> Product SKU: "+path);
+	app.u.dump(" -> Product SKU: "+vars.path);
 	$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appProductGet|'+vars.path]['%attribs']['zoovy:prod_name']); //updates modal title
 	app.renderFunctions.translateTemplate(app.data['appProductGet|'+vars.path],"productFinderContents");
 	attrib = $('#prodFinder').attr('data-attrib');

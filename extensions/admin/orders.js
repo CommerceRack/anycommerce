@@ -479,18 +479,20 @@ else	{
 
 
 
-
+//targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
+//otherwise, it could be possible to load new content into the tab but NOT have the data attributes cleaned out.
 		showOrderView : function(orderID,CID,targetID,Q)	{
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
 //app.u.dump(" -> targetID: "+targetID);
 //if you are reusing a targetID, do your own empty before running this.
-var $target = $(app.u.jqSelector('#',targetID));
-$target.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
+var $target = $(app.u.jqSelector('#',targetID)),
+$order = $(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID+"_order",'orderid':orderID}));
+$order.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
-$target.append(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID,'orderid':orderID}));
+$target.append($order);
 
 $('body').showLoading();
 
@@ -544,7 +546,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
 		app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
 		}
-	},'extension':'admin_orders','selector':'#'+targetID},Q);
+	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 
 if(CID)	{
 	r += app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},Q); //
@@ -1428,7 +1430,7 @@ $(selector + ' .editable').each(function(){
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+						app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
 						}
 					});
 				}, //orderCreate
