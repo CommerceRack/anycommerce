@@ -60,8 +60,10 @@ a callback was also added which just executes this call, so that checkout COULD 
 //formerly hardcoded to zContent
 				app.ext.convertSessionToOrder.vars.containerID = containerID;
 				app.ext.convertSessionToOrder.u.createProcessCheckoutModal();
-
-				$(app.u.jqSelector('#',containerID)).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
+				var $target = $(app.u.jqSelector('#',containerID));
+				$target.append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
+				
+				app.ext.admin.u.handleAppEvents($target)
 
 				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
@@ -1872,9 +1874,20 @@ the refreshCart call can come second because none of the following calls are upd
 						}
 					}
 				} //payMethodsAsRadioButtons
-			}
+			}, //renderFomrats
 
-		
+		e : {
+			
+			"cartItemAdd" : function($btn)	{
+				$btn.button();
+				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(){
+					var $button = $("<button>").text("Add to Order").button().on('click',function(){
+						$form = $('form','#chooserResultContainer');
+						});
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+					});
+				}
+			}
 		}
 	return r;
 	}
