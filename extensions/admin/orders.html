@@ -225,7 +225,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 </div>
 
 
-<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
 	<button class='floatLeft' data-app-event="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderEmailSend">Send Email</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderExport">Export</button>-->
@@ -244,22 +244,28 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div class='orderSupplementalInformation'>
 
-
-
-
 	<h2>Order Contents</h2>
 	
 	<section>
-
+		<form action='#'>
 		<div class='clearfix marginBottom'>
-			<div class='floatRight marginLeft'>
+			<fieldset class='floatRight marginLeft'>
+				<legend>Order Summary</legend>
 				<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 				
 				<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 			
 				<div class='orderShipping'>
+				<select name='sum/shp_carrier' data-bind='var:order(sum/shp_carrier);format:popVal;'>
+					<option value='SLOW'>slow</option>
+					<option value='FAST'>fast</option>
+					<option value='CPU'>customer pickup</option>
+					<option value='ELSE'>other</option>
+				</select>
+				<input type='text' name='sum/shp_method' size='10' data-bind='var:order(sum/shp_method);format:popVal;' />
+				<input type='number' name='sum/shp_total' size='7' data-bind='var: cart(sum/shp_total); format:popVal;' /><!--
 				<span data-bind='var:order(sum/shp_method);format:text; posttext:: ;'></span> 
-				<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>
+				<span data-bind='var: cart(sum/shp_total); format:money; hideZero:false; currencySign: $;'></span>-->
 				</div>
 				
 				<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
@@ -269,12 +275,13 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 				<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
 				
 				<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
-			</div>
+			</fieldset>
 
 			<table class='orderContentsTable' data-bind="var:order(@ITEMS); format:processList; loadsTemplate: orderStuffItemEditorTemplate;"></table>
 		</div>
 		
 		<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar">
+		<button data-app-event="admin_orders|orderSummarySave" title="Save shipping changes" class='floatRight'>Save Summary</button>
 		<h2 class='floatLeft marginLeft'>Add item(s) to order:</h2>
 		<button class='marginLeft' data-app-event="admin_orders|orderItemAddStructured" title="Use the chooser to add an item to the order.">Use Chooser</button>
 		<button data-app-event="admin_orders|orderItemAddBasic" title="Use simple inputs to add an item to the order.">Use Inputs</button>
@@ -282,7 +289,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	
 <!--		
 		<button data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;' disabled='disabled' onclick="navigateTo('/biz/orders/edit.cgi?CMD=EDIT&amp;OID='+$(this).data('orderid')+'&amp;ts=',{'dialog':true}); return false;" class="button">Edit Contents</button>
--->	
+-->
+	</form>
 	</section>
 
 

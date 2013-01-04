@@ -1692,6 +1692,24 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 				}, //orderListUpdateSelectAll
 
 
+			"orderSummarySave" : function($btn)	{
+				$btn.button();
+				$btn.off('click.orderSummarySave').on('click.orderSummarySave',function(event){
+					event.preventDefault();
+					var frmObj = $btn.closest('form').serializeJSON();
+					if(frmObj['sum/shp_method'] && frmObj['sum/shp_total'])	{
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent');
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier=SLOW&sum/shp_method="+frmObj['sum/shp_method']],{});
+						$parent.empty();
+						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{app.u.throwGMessage("It appears that either ship method ["+frmObj['sum/shp_method']+"] or ship total ["+frmObj['sum/shp_total']+"]  was left blank.");}
+					});
+				},
+
+
 			"orderUpdateSave" : function($btn){
 				$btn.button();
 				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
