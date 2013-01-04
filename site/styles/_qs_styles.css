@@ -1,0 +1,766 @@
+*{padding: 0; margin: 0;}
+.pointer
+{
+	cursor: pointer;
+}
+body
+{
+	background-color: #b7a58b
+}
+	div#container
+	{
+		position: relative;
+	}
+		div#container div#topNav
+		{
+			background: url("../images/background-top-nav.png") repeat-x;
+			height: 30px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#topNav div#topNavContent
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				height: 30px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+			div#container div#topNav div#topNavContent img,	div#container div#topNav div#topNavContent p
+			{
+				float: left;
+				position: relative;
+			}
+			div#container div#topNav div#topNavContent img
+			{
+				margin-top: 7px;
+				padding-right: 11px;
+			}
+			div#container div#topNav div#topNavContent img:first-child
+			{
+				margin-left: 12px;
+			}
+			div#container div#topNav div#topNavContent p
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				font-size: 12px;
+				margin-top: 10px;
+			}
+			div#container div#topNav div#topNavContent p:not(:last-child)
+			{
+				padding-right: 51px;
+			}
+				div#container div#topNav div#topNavContent p a
+				{
+					color: #FFFFFF;
+				}
+		div#container div#header
+		{
+			background: url("../images/background-header.png") repeat-x;
+			height: 124px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#header div#headerContent
+			{
+				height: 124px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div#header div#headerContent img#logo
+				{
+					cursor: pointer;
+					left: 10px;
+					position: relative;
+					top: 11px;
+				}
+				div#container div#header div#headerContent input#txtSearch
+				{
+					height: 18px;
+					left: 470px;
+					position: absolute;
+					top: 45px;
+					width: 145px;
+				}
+				div#container div#header div#headerContent img#btnTopNavSearch
+				{	
+					cursor: pointer;
+					height: 25px;
+					left: 617px;
+					position: absolute;
+					top: 45px;
+					width: 25px;
+				}
+				div#container div#header div#headerContent img#headerFreeShipping
+				{
+					left: 730px;
+					position: absolute;
+					top: 10px;
+				}
+				div#container div#header div#headerContent a#btnSocialFacebook
+				{
+					cursor: pointer;
+					left: 776px;
+					position: absolute;
+					top: 94px; /* visible 90px */
+				}
+				div#container div#header div#headerContent a#btnSocialTwitter
+				{
+					cursor: pointer;
+					left: 823px;
+					position: absolute;
+					top: 94px;
+				}
+				div#container div#header div#headerContent a#btnSocialYoutube
+				{
+					cursor: pointer;
+					left: 869px;
+					position: absolute;
+					top: 94px;
+				}				
+				div#container div#header div#headerContent a#btnSocialMail
+				{
+					cursor: pointer;
+					left: 916px;
+					position: absolute;
+					top: 94px;
+				}
+		div#container div#content
+		{
+			position: relative;
+		}
+			div#container div#content div#homepageTemplate_
+			{	
+				position: relative;			
+			}
+				div#container div#content div#featuredItems
+				{
+					margin: 0px auto;
+					width: 960px;
+				}
+				div#container div#content div#homepageTemplate_ div#featuredCategories
+				{
+					background: url("../images/background-featured-categories.png");						
+					position: relative;				
+				}
+					div#container div#content div#homepageTemplate_ div#featuredCategories div#catNav
+					{
+						background: url("../images/background-homepage-category-navigation.png") repeat-x;
+						height: 62px;
+						position: relative;	
+						width: 100%;	
+							
+						-moz-box-shadow:    1px 1px 5px 1px #222222;
+						-webkit-box-shadow: 1px 1px 5px 1px #222222;
+						box-shadow:         1px 1px 5px 1px #222222;							
+					}
+					div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent
+					{
+						height: 62px;
+						margin: 0px auto;
+						position: relative;	
+						width: 360px;					
+					}	
+						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p.navCats
+						{	
+							color: #FFFFFF;
+							float: left;
+							font-family: Helvetica;
+							font-size: 20px;
+							padding-right: 18px;
+							position: relative;
+							top: 22px;							
+						}	
+						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p#currentCat
+						{	
+							color: #FFFFFF;
+							float: left;
+							font-family: Helvetica;
+							font-size: 30px;
+							position: relative;
+							top: 16px;
+						}	
+						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p:not(:last-child)
+						{	
+							padding-right: 18px;
+						}											
+						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent img.catButton
+						{	
+							cursor: pointer;						
+							float: left;
+							padding-right: 18px;
+							position: relative;
+							top: 14px;
+						}
+						
+						ul.categoryList
+						{
+							margin: 0px auto;
+							width: 960px;
+						}
+						ul.categoryList li
+						{
+							background-color: #FFFFFF;
+							border: 1px solid #FFFFFF;
+							height: 138px;
+							margin-left: 0;
+							margin-right: 20px;
+							position: relative;
+							width: 138px;
+							
+							-moz-box-shadow:    1px 1px 5px 1px #222222;
+							-webkit-box-shadow: 1px 1px 5px 1px #222222;
+							box-shadow:         1px 1px 5px 1px #222222;							
+						}	
+						/*ul.categoryList li:not(:first-child), ul.categoryList li:not(:nth-child(7)) 
+						{
+							margin-left: 20px;
+						}*/	
+							ul.categoryList div.thumbContainer
+							{
+								text-align: center;
+							} 
+							ul.categoryList div.thumbContainer img
+							{
+								height: 93px;
+								margin-top: 1px;
+								width: 136px;
+							}
+							ul.categoryList li div.catName
+							{
+								background: url("../images/background-homepage-category-list-name.png");
+								border: 1px solid #FFFFFF;
+								bottom: 0px;
+								color: #000000;
+								height: 41px;
+								left: 0px;
+								line-height: 12px;
+								overflow: hidden;
+								position: absolute;
+								text-align: center;
+								width: 136px;
+							}
+								ul.categoryList li div.catName span
+								{
+									font-family: Helvetica;
+									font-size: 14px;		
+									font-weight: bold;	
+									position: relative;
+									top: 16px;													
+								}										
+			div#container div#content div.categoryTemplate div ul.fluidList
+			{
+				margin: 0px auto;
+				width: 750px;	
+			}
+				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li
+				{
+					background-color: #FFFFFF;
+					border: 2px solid #FFFFFF;
+					height: 216px;
+					margin-left: 0;
+					margin-right: 20px;
+					position: relative;
+					width: 216px;	
+					text-align: center;	
+					
+					box-shadow: 1px 1px 5px 1px #222222;							
+				}
+				/*div#container div#content div.categoryTemplate div ul.fluidList li:not(:first-child),li:not(:nth-child(4))
+				{
+					margin-left: 20px;	
+				}*/
+				.prodThumbDesc
+				{	
+					height: 87px;
+					left: 0px;
+					position: absolute;
+					width: 216px;
+					top: 129px;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground
+				{
+					background-color: #FFFFFF;
+					height: 100%;
+					left: 0px;
+					opacity: .75;
+					position: absolute;
+					top: 0px;
+					width: 100%;
+					z-index: 999;
+				}	
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5
+				{
+					font-family: Helvetica;
+					font-size: 12px;
+					left: 0px;
+					position: absolute;
+					text-align: center;
+					top: 10px;
+					width: 216px;
+					z-index: 1000;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6
+				{
+					font-family: Helvetica;
+					font-size: 18px;
+					font-weight: bold;
+					left: 10px;
+					position: absolute;
+					bottom: 2px;
+					z-index: 1000;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc img
+, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img				
+				{
+					bottom: 3px;
+					cursor: pointer;
+					position: absolute;
+					right: 6px;
+					z-index: 1000;
+										
+					box-shadow: 1px 1px 5px 1px #777777;
+				}																
+							
+		div#container div#nav
+		{
+			background: url("../images/background-nav.png") repeat-x;
+			height: 50px;
+			position: relative;
+			width: 100%;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;				
+		}
+			div#container div#nav div#navContent
+			{
+				height: 50px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div#nav div#navContent ul
+				{
+					height: 50px;
+					margin: 0px auto;
+					/*position: relative;*/
+					width: 910px;
+				}
+					div#container div#nav div#navContent ul li
+					{
+						cursor: pointer;
+						float: left;
+						height: 50px;
+						list-style: none;
+						/*padding-left: 20px;
+						padding-right: 20px;*/
+						padding-left: 10px;
+						padding-right: 10px;
+						/*position: relative;*/
+					}				
+						div#container div#nav div#navContent ul li a
+						{
+							color: #FFFFFF;
+							font-family: Helvetica;
+							font-size: 15px;
+							font-weight: bold;
+							position: relative;
+							text-decoration: none;
+							top: 17px;
+						}
+							div#container div#nav div#navContent ul li a:hover
+							{
+								
+							}
+						div#container div#nav div#navContent ul li div.subMenu
+						{
+							background-color: #FFFFFF;
+							display: none;
+							height: 379px;
+							left: 25px;
+							position: absolute;
+							top: 50px;
+							width: 905px;
+							z-index: 2000;
+						}
+						
+		div#container div#footer
+		{
+			background: url("../images/background-footer.png");
+			height: 358px;
+			width: 100%;
+		}
+			div#container div#footer div#footerContent
+			{
+				height: 358px;
+				margin: 0px auto;
+				width: 960px;
+			}
+				div#container div#footer div#footerContent div#footerLinks
+				{
+					height: 290px;
+					width: 960px;
+				}	
+					div#container div#footer div#footerContent div#footerLinks > ul
+					{
+						float: left;
+						padding-right: 102px;
+						margin-top: 70px;
+						width: 150px;
+					}
+						div#container div#footer div#footerContent div#footerLinks > ul li
+						{
+							color: #FFFFFF;
+							font-family: Helvetica;
+							font-size: 14px;
+							list-style: none;
+						}		
+						div#container div#footer div#footerContent div#footerLinks > ul li:not(:first-child)
+						{
+							padding-top: 12px;
+						}			
+							div#container div#footer div#footerContent div#footerLinks > ul li a
+							{
+								color: #FFFFFF;
+								text-decoration: none;
+							}
+								div#container div#footer div#footerContent div#footerLinks > ul li a:hover
+								{
+									text-decoration: underline;
+								}
+						div#container div#footer div#footerContent div#footerLinks > ul li:first-child, div#container div#footer div#footerContent div#footerSubscribe table tr td:first-child
+						{
+							color: #666666;
+							font-family: Helvetica;
+							font-size: 20px;
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe 
+						{
+							float: left;
+							position: relative;
+							top: 70px;
+						}						
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table
+						{
+							/*position: relative;
+							top: 70px;*/
+						}					
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td
+						{
+							
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td
+						{
+							padding-top: 10px;
+						}						
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input
+							{
+								height: 20px;
+								width: 194px;
+							}
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe
+							{
+								cursor: pointer;
+							}
+					div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage
+					{
+						left: 1px;
+						opacity: 1;
+						position: absolute;
+						top: 9px;
+						width: 312px;
+						z-index: 1000;
+					}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin
+						{
+							left: 280px;
+							position: absolute;
+							top: 10px;
+							z-index: 1001;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					color: #FFFFFF;
+					width: 960px;
+				}
+					div#container div#footer div#footerContent div#copyright p
+					{
+						font-family: Helvetica;
+						font-size: 12px;
+						margin-top: 27px;
+						text-align: center;
+					}
+					div#container div#footer div#footerContent div#copyright p a
+					{
+						font-weight: bold;
+						text-decoration: none;
+					}					
+						div#container div#footer div#footerContent div#copyright p a:hover
+						{
+							text-decoration: underline;
+						}					
+						div#container div#footer div#footerContent div#copyright p a:visited
+						{
+							color: #FFFFFF;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					height: 68px;
+					width: 960px;
+				}
+				
+.prodDetailView
+{
+	height: 585px;
+	margin: 0px auto;
+	position: relative;
+	width: 960px;
+}
+.prodDetailView .prodImages
+{
+	height: 337px;
+	position: absolute;
+	width: 300px;
+	z-index: 1000;
+
+	-moz-box-shadow:    1px 1px 5px 1px #222222;
+	-webkit-box-shadow: 1px 1px 5px 1px #222222;
+	box-shadow:         1px 1px 5px 1px #222222;	
+}
+.prodDetailView .prodImages > img
+{
+	height: 337px;
+	width: 300px;
+}
+.prodDetailView .prodImages .prodThumbs
+{
+	bottom: 0px;
+	height: 70px; 
+	left: 0px;
+	position: absolute;
+	width: 300px; 
+	z-index: 1000;
+}
+.prodDetailView .prodImages .prodThumbs .prodThumbsBG
+{
+	background-color: #000000;
+	height: 100%;
+	opacity: .75;
+	position: absolute;
+	width: 100%;	
+	z-index: 999;
+}
+.prodDetailView .prodImages .prodThumbs .prodThumbBackButton
+{
+	height: 70px;
+	left: 0px;
+	position: absolute;
+	top: 0px;
+	width: 20px;
+	z-index: 1000;
+}
+.prodDetailView .prodImages .prodThumbs .prodThumbBackButton img
+{
+	cursor: pointer;
+	left: 3px;
+	position: absolute;
+	top: 17px;
+	z-index: 1000;
+}
+.prodDetailView .prodImages .prodThumbs .prodThumbNextButton
+{
+	right: 0px;
+	height: 70px;
+	position: absolute;
+	top: 0px;
+	width: 20px;
+	z-index: 1000;
+}
+.prodDetailView .prodImages .prodThumbs .prodThumbNextButton img
+{
+	cursor: pointer;
+	right: 3px;
+	position: absolute;
+	top: 17px;
+	z-index: 1000;
+}
+
+.prodLikeItems
+{
+	background-color: #FFFFFF;
+	height: 230px;
+	left: 0px;
+	position: absolute;
+	width: 300px;
+	top: 356px;
+}
+
+.prodDetailDesc
+{
+	background-color: #c9bca8;
+	height: 585px;
+	left: 330px;
+	overflow: hidden;
+	position: absolute;
+	top: 0px;
+	width: 380px;
+}
+
+	.prodDetailDesc h1
+	{
+		font-family: Helvetica;
+		font-size: 18px;
+		font-weight: bold;
+		margin-left: 20px;
+		margin-top: 20px;
+		width: 300px;
+	}
+	
+	.prodDetailDesc h3
+	{
+		font-family: Helvetica;
+		font-size: 13px;
+		margin-left: 20px;
+	}
+	
+	.prodDetailDesc p
+	{
+		font-family: Helvetica;
+		font-size: 13px;
+		margin-left: 20px;
+		margin-top: 20px;
+		width: 340px;
+	}
+
+.prodBuyDetails
+{
+	background-color: #FFFFFF;
+	height: 585px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 220px;
+}
+
+.prodBuyDetails div.prodBuyDetailsPrices
+{
+	border-bottom: 1px solid #999999;
+	height: 55px;
+	margin-left: 20px;
+	margin-top: 20px;
+	position: relative;
+	width: 180px;
+}
+.prodBuyDetails div.prodBuyDetailsPrices span
+{
+	font-family: Helvetica;
+	font-size: 12px;
+}
+	.prodBuyDetails div.prodBuyDetailsPrices span.prodMSRP
+	{
+		color: #999999;
+		left: 25px;
+		position: absolute;
+		top: 0px;
+	}
+		.prodBuyDetails div.prodBuyDetailsPrices span.prodMSRP span
+		{
+			color: #999999;
+			left: -15px;
+			font-family: Helvetica;
+			font-size: 20px;
+			position: absolute;
+			text-decoration: line-through;
+			top: 13px;
+		}	
+	.prodBuyDetails div.prodBuyDetailsPrices span.basePrice
+	{
+		color: #000000;
+		left: 130px;
+		position: absolute;
+		top: 0px;
+	}		
+		.prodBuyDetails div.prodBuyDetailsPrices span.basePrice span
+		{
+			color: #000000;
+			font-family: Helvetica;
+			font-size: 20px;
+			left: -15px;
+			position: absolute;
+			top: 13px;
+		}
+	.prodBuyDetails div.prodBuyDetailsReviews
+	{
+		border-bottom: 1px solid #999999;
+		height: 95px;
+		margin-left: 20px;
+		position: relative;
+		width: 180px;
+	}
+	
+	.prodBuyDetails div.prodBuyDetailsReviews a.writeReview
+	{
+		color: #770000;
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 25px;
+		position: absolute;
+		top: 58px;
+	}
+	
+	.prodBuyDetails div.prodBuyDetailsOptions
+	{
+		border-bottom: 1px solid #999999;
+		height: 207px;
+		margin-left: 20px;
+		position: relative;
+		width: 180px;
+	}
+		.prodBuyDetails div.prodBuyDetailsOptions select#ddlOptions
+		{
+			margin-top: 20px;
+			width: 180px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions input#txtQuantity
+		{
+			margin-top: 10px;
+			width: 20px;
+		}		
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnAddToCart
+		{
+			cursor: pointer;
+			margin-top: 10px;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;				
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnProdShare
+		{
+			margin-top: 10px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnProdAddToWishlist
+		{
+			margin-left: 10px;	
+			margin-top: 10px;
+		}		
+		.prodBuyDetails div.prodBuyDetailsOptions .prodBuyDetailsOptionsSharing
+		{
+			height: 45px;
+			margin-top: 10px;
+			position: relative;
+			width: 180px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions .prodBuyDetailsOptionsSharing img
+		{
+			cursor: pointer;
+			float: left;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;			
+		}			
