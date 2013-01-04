@@ -256,7 +256,7 @@ body
 				margin: 0px auto;
 				width: 750px;	
 			}
-				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li
+				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li
 				{
 					background-color: #FFFFFF;
 					border: 2px solid #FFFFFF;
@@ -281,7 +281,7 @@ body
 					width: 216px;
 					top: 129px;
 				}
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc .prodThumbBackground
 				{
 					background-color: #FFFFFF;
 					height: 100%;
@@ -292,7 +292,7 @@ body
 					width: 100%;
 					z-index: 999;
 				}	
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h5
 				{
 					font-family: Helvetica;
 					font-size: 12px;
@@ -303,7 +303,7 @@ body
 					width: 216px;
 					z-index: 1000;
 				}
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h6
 				{
 					font-family: Helvetica;
 					font-size: 18px;
@@ -314,7 +314,7 @@ body
 					z-index: 1000;
 				}
 				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc img
-, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img				
+, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img,  div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc img				
 				{
 					bottom: 3px;
 					cursor: pointer;
@@ -764,3 +764,10 @@ body
 			-webkit-box-shadow: 1px 1px 5px 1px #222222;
 			box-shadow:         1px 1px 5px 1px #222222;			
 		}			
+		
+/* search */
+.mainColumn
+{
+	margin-left: 30px;
+	width: 960px;
+}
