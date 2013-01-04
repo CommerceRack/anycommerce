@@ -183,7 +183,7 @@ A session ID could be passed in through vars, but app.sessionId isn't set until 
 //check localStorage
 		else if(app.model.fetchSessionId())	{
 			app.calls.appCartExists.init(app.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
-			app.model.dispatchThis('immutable');			
+			app.model.dispatchThis('immutable');
 			}
 		else	{
 			app.calls.getValidSessionID.init('handleNewSession');
@@ -1658,14 +1658,14 @@ name Mod 10 or Modulus 10. */
 
 		//found here: http://www.blog.zahidur.com/usa-and-canada-zip-code-validation-using-javascript/
 		 isValidPostalCode : function(postalCode,countryCode) {
+			 app.u.dump("BEGIN app.u.isValidPostalCode. countryCode: "+countryCode);
 			var postalCodeRegex;
 			switch (countryCode) {
 				case "US":
 					postalCodeRegex = /^([0-9]{5})(?:[-\s]*([0-9]{4}))?$/;
 					break;
 				case "CA":
-			/* postalCodeRegex = /^([A-Z][0-9][A-Z])\s*([0-9][A-Z][0-9])$/; */
-					postalCodeRegex = /^([a-zA-Z][0-9][a-zA-Z])\s*([0-9][a-zA-Z][0-9])$/
+					postalCodeRegex = /^([a-zA-Z][0-9][a-zA-Z])\s*([0-9][a-zA-Z][0-9])?$/;
 					break;
 				default:
 					postalCodeRegex = /^(?:[A-Z0-9]+([- ]?[A-Z0-9]+)*)?$/;
