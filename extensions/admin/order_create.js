@@ -199,8 +199,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 
 
-
-			
 /*
 Run once checkout form has been filled out (or is thought to be filled out).
 add all form fields to the session/cart (whether form validates or not)
@@ -230,6 +228,7 @@ if server validation passes, the callback handles what to do next (callback is m
 //cc and cv should never go. They're added as part of cartPaymentQ
 				delete serializedCheckout['payment/cc'];
 				delete serializedCheckout['payment/cv'];
+
 /* these fields are in checkout/order create but not 'supported' fields. don't send them */				
 				delete serializedCheckout['giftcard'];
 				delete serializedCheckout['want/bill_to_ship_cb'];
