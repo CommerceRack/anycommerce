@@ -1,0 +1,30 @@
+<div id='userManagerPageTemplate' class='page pageUser ui-widget ui-corner-all'>
+
+	<div class='ui-widget-header ui-corner-top clearfix'>
+		<h1>User Manager</h1>
+		<div class='floatRight'>Create</div>
+	</div>
+	
+	<div class='ui-widget-content ui-corner-bottom'>
+	<table class='gridTable'>
+	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+	<thead>
+	<tr>
+		<th></th>
+		<th data-name='USERNAME' title='username'>username</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@users); format:processList; loadsTemplate:userListTemplate"></tbody>
+	</table>
+	</div>
+</div>
+
+
+
+
+<table>
+	<tr id='userListTemplate'>
+		<td>name</td>
+	</tr>
+</table>

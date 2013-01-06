@@ -311,7 +311,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
 					//Match FOund.
 					app.calls.cartSet.init({"customer/cid":app.data[tagObj.datapointer].CID});
-					app.ext.admin.calls.customer.adminCustomerGet.init(app.data[tagObj.datapointer].CID,{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
+					app.ext.admin.calls.adminCustomerGet.init(app.data[tagObj.datapointer].CID,{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -1191,7 +1191,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				$buttonBar.append($("<button \/>").text("Find Customer").button().click(function(){
 					$buttonBar.hide();
 					$target.showLoading();
-					app.ext.admin.calls.customer.adminCustomerLookup.init($('#customerLookupByEmail').val(),{'callback':'useLookupForCustomerGet','extension':'convertSessionToOrder'});
+					app.ext.admin.calls.adminCustomerLookup.init($('#customerLookupByEmail').val(),{'callback':'useLookupForCustomerGet','extension':'convertSessionToOrder'});
 					app.model.dispatchThis();
 					}));
 				$buttonBar.appendTo($target);

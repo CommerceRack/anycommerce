@@ -392,19 +392,17 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<div class='debugBG'></div>
 	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
-<button onClick="app.calls.appProductGet.init({'pid':'OUTFIT','withVariations':true,'withInventory':true},{},'immutable'); app.model.dispatchThis('immutable');">Call Test</button>
-<button onClick="app.ext.admin.a.showFinderInModal('CHOOSER',{callback:function(){alert('bob')}});">Add Chooser</button>
+
+
+<button onClick="app.ext.admin.calls.bossUserCreate.init({},{},'immutable'); app.model.dispatchThis('immutable');">BossUserCreate</button>
+<button onClick="app.ext.admin.calls.bossRoleList.init({},'immutable'); app.model.dispatchThis('immutable');">BossRoleList</button>
+
+
+
 
 <button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'review_status.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>
 
-<button onClick="app.model.addDispatchToQ({'_cmd':'adminImageList','keyword':'square','detail':'FOLDER'},'mutable'); app.model.dispatchThis('mutable');">media lib search</button>
-
-<button onClick="app.ext.admin_support.a.showFileUploadInModal('169999');">showFileUploadInModal</button>
-
-<button onClick="app.u.dump($('#productTabMainContent').data());">$('#productTabMainContent').data()</button>
-
 <button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
-
 
 <button onClick="app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})">handlePermssions</button>
 

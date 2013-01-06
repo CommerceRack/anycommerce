@@ -549,7 +549,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 
 if(CID)	{
-	r += app.ext.admin.calls.customer.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},Q); //
+	r += app.ext.admin.calls.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},Q); //
 	}
 else	{
 	app.u.dump("WARNING! - no CID set.");

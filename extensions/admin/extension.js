@@ -156,6 +156,87 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminBatchJobCleanup","jobid":jobid,"_tag":_tag},Q);	
 				}
 			}, //adminBatchJobStatus
+			
+
+
+
+
+		adminCustomerGet : {
+			init : function(CID,_tag,Q)	{
+				var r = 0;
+				if(CID)	{
+//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
+					_tag = _tag || {};
+					_tag.datapointer = "adminCustomerGet|"+CID;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(CID,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerGet, no CID specified.");
+					}
+				return r;
+				},
+			dispatch : function(CID,_tag,Q)	{
+//					app.u.dump("CID: "+CID);
+				var obj = {};
+				obj._cmd = "adminCustomerGet";
+				obj.CID = CID;
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //adminCustomerGet
+//no local storage to ensure latest data always present. 
+		adminCustomerLookup : {
+			init : function(email,_tag,Q)	{
+				var r = 0;
+				if(email)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminCustomerLookup"; //if changed, test order create for existing customer
+					this.dispatch(email,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerLookup, no email specified.");
+					}
+				return r;
+				},
+			dispatch : function(email,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : _tag});	
+				}
+			}, //adminCustomerLookup
+		adminCustomerSet : {
+			init : function(CID,setObj,_tag)	{
+				var r = 0;
+				if(CID && !$.isEmptyObject(setObj))	{
+					this.dispatch(CID,setObj,_tag)
+					r= 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerSet, CID ["+CID+"] not set or setObj was empty");
+					app.u.dump("setObj follows: "); app.u.dump(setObj);
+					}
+				return r;
+				},
+			dispatch : function(CID,setObj,_tag)	{
+				var obj = {};
+				_tag = _tag || {};
+				obj._cmd = "adminCustomerSet";
+				obj.CID = CID;
+				obj['%set'] = setObj;
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //adminCustomerSet
+
+
+			
+			
+			
 		adminDomainList : {
 			init : function(_tag,Q)	{
 				_tag = _tag || {};
@@ -173,7 +254,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"adminDomainList","_tag" : _tag},Q);
 				}			
-			},
+			}, //adminDomainList
 
 
 
@@ -194,6 +275,8 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminPrivateSearch
+
+
 
 
 
@@ -536,7 +619,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appPageGet
-
 		appPageSet : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -573,64 +655,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 
-	
-		customer : {
-
-			adminCustomerGet : {
-				init : function(CID,tagObj,Q)	{
-//					app.u.dump("CID: "+CID);
-					var r = 0;
-//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
-					tagObj = tagObj || tagObj;
-					tagObj.datapointer = "adminCustomerGet|"+CID;
-					if(app.model.fetchData(tagObj.datapointer) == false)	{
-						r = 1;
-						this.dispatch(CID,tagObj,Q);
-						}
-					else	{
-						app.u.handleCallback(tagObj);
-						}
-					return r;
-					},
-				dispatch : function(CID,tagObj,Q)	{
-//					app.u.dump("CID: "+CID);
-					var obj = {};
-					tagObj = tagObj || {};
-					obj["_cmd"] = "adminCustomerGet";
-					obj["CID"] = CID;
-					obj["_tag"] = tagObj;
-					app.model.addDispatchToQ(obj,Q);
-					}
-				},
-
-//no local storage of this call. only 1 in memory. Will expand when using session storage if deemed necessary.
-			adminCustomerLookup : {
-				init : function(email,tagObj,Q)	{
-					tagObj = tagObj || tagObj;
-					tagObj.datapointer = "adminCustomerLookup";
-					this.dispatch(email,tagObj,Q);
-					},
-				dispatch : function(email,tagObj,Q)	{
-					app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : tagObj});	
-					}			
-				},
-			adminCustomerSet : {
-				init : function(CID,setObj,tagObj)	{
-					this.dispatch(CID,setObj,tagObj)
-					return 1;
-					},
-				dispatch : function(CID,setObj,tagObj)	{
-					var obj = {};
-					tagObj = tagObj || {};
-					obj["_cmd"] = "adminCustomerSet";
-					obj["CID"] = CID;
-					obj['%set'] = setObj;
-					obj["_tag"] = tagObj;
-					app.model.addDispatchToQ(obj,'immutable');
-					}
-				}
-			},
-
 		finder : {
 			
 			adminNavcatProductInsert : {
@@ -665,10 +689,50 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				} //adminNavcatProductDelete
 			
-			} //finder
+			}, //finder
 
 
+		bossUserCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				Q = Q || 'immutable';
+				if(!$isEmptyObject(obj))	{
+					this.dispatch(obj,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.bossUserCreate, obj is empty.");
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'bossUserCreate';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'bossUserCreate';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
 
+		bossUserList : {},
+		bossUserUpdate : {},
+		bossUserDelete : {},
+
+		bossRoleCreate : {},
+		bossRoleList : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(_tag,Q)	{
+				Q = Q || 'immutable';
+				var obj = {_cmd : 'bossRoleList'};
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'bossRoleList';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //bossRoleList
+		bossRoleUpdate : {},
+		bossRoleDelete : {}
 
 
 		}, //calls
