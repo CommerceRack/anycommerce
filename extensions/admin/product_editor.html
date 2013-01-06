@@ -139,13 +139,13 @@
 
 	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
 	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required'></div>
+	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></div>
 			
 </fieldset>
 
 <fieldset>
 	<legend>Recommended Data</legend>
-	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="text" NAME="zoovy:base_cost" VALUE="" SIZE="15"></div>	
+	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="number" NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></div>	
 	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
 	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
 	<div class='marginBottom'><label >Is product taxable?:</label> 
@@ -173,10 +173,9 @@
 
 <div class='productPanel' id='productEditorPanelTemplate'>
 	
-	<h3 class='panelHeader ui-accordion-header ui-helper-reset ui-state-default ui-accordion-header-default ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
 	
-<!-- 		<span class="ui-icon ui-icon-arrow-4-diag floatRight"></span> -->
-		
+	
 		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
 		<span data-bind="var: panel(title); format:text;"></span>
 	
@@ -190,6 +189,407 @@
 </div>
 
 
+
+
+
+
+
+<div id='productEditorPanelTemplate_syndication' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Syndication</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+<form action='#'>
+
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+
+<label><span>Manufacturer:</span><input type='text' name='zoovy:prod_mfg' value='' data-bind="var: product(zoovy:prod_mfg); format:popVal;" /></label>
+<label><span>Manufacturer ID:</span><input type='text' name='zoovy:prod_mfgid' value='' data-bind="var: product(zoovy:prod_mfgid); format:popVal;" /></label>
+<label><span>UPC:</span><input type='text' name='zoovy:prod_upc' value='' data-bind="var: product(zoovy:prod_upc); format:popVal;" /></label>
+<label><span>Condition:</span><input type='text' name='zoovy:prod_condition' value='' data-bind="var: product(zoovy:prod_condition); format:popVal;" /></label>
+
+</fieldset>
+
+<fieldset>		
+<table class='fullWidth marginBottom'>
+<thead>
+<tr>
+	<th>Syndication to</th>
+	<th>Configure</th>
+	<th></th>
+	<th>Note/Reason</th>
+</tr>
+</thead>
+<tbody>
+
+<tr>
+	<td><label><input type="checkbox" name="gbase:ts" data-bind="var: product(gbase:ts); format:popCheckbox;"> GoogleBase:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='googlebase'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="gbase:note" maxlength="60" size="60" data-bind="var: product(gbase:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="bizrate:ts" data-bind="var: product(bizrate:ts); format:popCheckbox;"> BizRate:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='bizrate'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="bizrate:note" maxlength="60" size="60" data-bind="var: product(bizrate:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="ebay:ts" data-bind="var: product(ebay:ts); format:popCheckbox;"> eBay:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='ebay'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="ebay:note" maxlength="60" size="60" data-bind="var: product(ebay:note); format:popVal;"></td>
+</tr>
+<!--
+<tr>
+	<td><label><input type="checkbox" name="yshop:ts" data-bind="var: product(yshop:ts); format:popCheckbox;"> Yahoo Shopping:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='yshop'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="yshop:note" maxlength="60" size="60" data-bind="var: product(yshop:note); format:popVal;"></td>
+</tr>
+-->
+<tr>
+	<td><label><input type="checkbox" name="pricegrabber:ts" data-bind="var: product(pricegrabber:ts); format:popCheckbox;"> PriceGrabber:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='pricegrabber'>Enter Specifics</button></td>
+	<td>Qty: <input size=4 type="textbox" name="pricegrabber:quantity" data-bind="var: product(pricegrabber:quantity); format:popVal;"></td>
+	<td><input type="textbox" value="" name="pricegrabber:note" maxlength="60" size="60" data-bind="var: product(pricegrabber:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="shopping:ts" data-bind="var: product(shopping:ts); format:popCheckbox;"> Shopping.com:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='shopping'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="shopping:note" maxlength="60" size="60" data-bind="var: product(shopping:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="nextag:ts" data-bind="var: product(nextag:ts); format:popCheckbox;"> NextTag:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='nextag'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="nextag:note" maxlength="60" size="60" data-bind="var: product(nextag:note); format:popVal;"></td>
+</tr>
+<!--
+<tr>
+	<td><label><input type="checkbox" name="mysimon:ts" data-bind="var: product(mysimon:ts); format:popCheckbox;"> MySimon:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='mysimon'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="mysimon:note" maxlength="60" size="60" data-bind="var: product(mysimon:note); format:popVal;"></td>
+</tr>
+-->
+<tr>
+	<td><label><input type="checkbox" name="pronto:ts" data-bind="var: product(pronto:ts); format:popCheckbox;"> Pronto:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='~pronto'>Enter Specifics</button></td>
+	<td></td>
+	<td><input type="textbox" value="" name="pronto:note" maxlength="60" size="60" data-bind="var: product(pronto:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="thefind:ts" data-bind="var: product(thefind:ts); format:popCheckbox;"> theFind:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="thefind:note" maxlength="60" size="60" data-bind="var: product(thefind:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="become:ts" data-bind="var: product(become:ts); format:popCheckbox;"> Become:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="become:note" maxlength="60" size="60" data-bind="var: product(become:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="smarter:ts" data-bind="var: product(smarter:ts); format:popCheckbox;"> Smarter:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="smarter:note" maxlength="60" size="60" data-bind="var: product(smarter:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="dijipop:ts" data-bind="var: product(dijipop:ts); format:popCheckbox;"> DijiPop:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="dijipop:note" maxlength="60" size="60" data-bind="var: product(dijipop:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="linkshare:ts" data-bind="var: product(linkshare:ts); format:popCheckbox;"> LinkShare:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="linkshare:note" maxlength="60" size="60" data-bind="var: product(linkshare:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="amzpa:ts" data-bind="var: product(amzpa:ts); format:popCheckbox;"> Amazon Product Ads:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="amzpa:note" maxlength="60" size="60" data-bind="var: product(amzpa:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="overstock:ts" data-bind="var: product(overstock:ts); format:popCheckbox;"> OverStock:</label></td>
+	<td><button data-app-event='admin_prodEdit|enterSyndicationSpecifics' data-ui-syndicateto='overstock'>Enter Specifics</button></td>
+	<td><input size=4 type="hidden" name="overstock:quantity" value="1"></td>
+	<td><input type="textbox" value="" name="overstock:note" maxlength="60" size="60" data-bind="var: product(overstock:note); format:popVal;"></td>
+</tr>
+
+
+<tr>
+	<td><label><input type="checkbox" name="bing:ts" data-bind="var: product(bing:ts); format:popCheckbox;"> Bing:</label></td>
+	<td></td>
+	<td>Commission: <input size=4 type="number" name="bing:commission" data-bind="var: product(bing:commission); format:popVal;" step='0.01' min='0'>%</td>
+	<td><input type="textbox" value="" name="bing:note" maxlength="60" size="60" data-bind="var: product(bing:note); format:popVal;"></td>
+</tr>
+
+
+<tr>
+	<td><label><input type="checkbox" name="sears:ts" data-bind="var: product(sears:ts); format:popCheckbox;"> Sears:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="sears:note" maxlength="60" size="60" data-bind="var: product(sears:note); format:popVal;"></td>
+</tr>
+
+<tr>
+	<td><label><input type="checkbox" name="arp:ts" data-bind="var: product(arp:ts); format:popCheckbox;"> Amazon Repricing:</label></td>
+	<td></td>
+	<td></td>
+	<td><input type="textbox" value="" name="arp:note" maxlength="60" size="60" data-bind="var: product(arp:note); format:popVal;"></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+</div>
+</fieldset>
+</form>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id='productEditorPanelTemplate_rss' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>SEO and RSS Tools</span>
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+<form action='#' class='labelsAsBreaks alignedLabels alignedInputs'>
+<fieldset>
+ 
+
+<label><span>SEO page title:</span><input type='text' name='zoovy:prod_seo_title' value='' data-bind="var: product(zoovy:prod_seo_title); format:popVal;" size='100' /></label>
+
+<label><span>RSS feed title:</span><input type='text' name='zoovy:prod_rss_title' value='' data-bind="var: product(zoovy:prod_rss_title); format:popVal;" size='100' /></label>
+
+<label><span>RSS/Meta short description:</span><textarea name='zoovy:meta_desc' data-bind="var: product(zoovy:meta_desc); format:popVal;" maxlength='256' rows='6' /></label>
+
+<label><span>RSS/SEO keywords:</span><textarea name='zoovy:keywords' data-bind="var: product(zoovy:keywords); format:popVal;" maxlength='256' rows='6' /></label>
+
+<p class='hint'>Many people feel the need to go overboard and put in as many keywords as possible. SEO professionals agree that is much more important to have <b>quality over quantity</b>. Put the most important words first, separated by commas. Avoid listing the same words repeatedly - it will hurt your ranking.</p>
+
+
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+</div>
+</fieldset>
+</form>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div id='productEditorPanelTemplate_shipping' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Shipping</span>
+	
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+<form action='#' class='labelsAsBreaks'>
+<fieldset>
+<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;" size='15' /> ounces (use # for pounds)</label>
+<!-- webdb:ship_fixed -->
+<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
+
+<label><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popCheckbox;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
+
+<div class='label clearfix'>
+<h4>Ship Dimensions</h4>
+
+<label class='floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal;" size='15' /></label>
+<label class='floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal;" size='15' /></label>
+<label class='floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal;" size='15' /></label>
+</div>
+
+<div class='label clearfix'>
+<h4>Domestic Shipping</h4>
+
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal;" size='6' /></label>
+</div>
+
+<div class='label clearfix'>
+<h4>Canadian Shipping</h4>
+
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal;" size='6' /></label>
+</div>
+
+<div class='label clearfix'>
+<h4>International Shipping</h4>
+
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal;" size='6' /></label>
+</div>
+
+
+
+<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal;" size='6' /></label>
+
+<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal;" size='6' /></label>
+
+<div class='label clearfix'>
+<h4>Export Declaration [SED]</h4>
+
+<label class='floatLeft'><span>Country of origin [ISO Code]:</span><input type='text' name='zoovy:ship_nmfccode' value='' data-bind="var: product(zoovy:ship_nmfccode); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>ATS/harmonized code:</span><input type='text' name='zoovy:ship_harmoncode' value='' data-bind="var: product(zoovy:ship_harmoncode); format:popVal;" size='6' /></label>
+</div>
+
+
+<div class='label clearfix'>
+<h4>Freight Options</h4>
+
+<label class='floatLeft'><span>NMFC commodity code:</span><input type='text' name='zoovy:ship_mfgcountry' value='' data-bind="var: product(zoovy:ship_mfgcountry); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>Sorting class:</span><input type='text' name='zoovy:ship_sortclass' value='' data-bind="var: product(zoovy:ship_sortclass); format:popVal;" size='6' /></label>
+</div>
+
+
+<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+</div>
+</fieldset>
+</form>
+	</div>
+</div>
+
+
+
+
+
+
+
+
+
+<div id='productEditorPanelTemplate_general' class='productPanel'>
+	<h3 class='panelHeader ui-widget-header ui-state-default ui-corner-top ui-accordion-icons pointer clearfix' onClick="app.ext.admin_prodEdit.a.handlePanel(this);">
+		<span class="ui-accordion-header-icon ui-icon ui-icon-circle-arrow-e"></span>
+		<span>Generial Product Information</span>
+	
+	</h3>
+	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
+	<form action='#'>
+	<fieldset>
+	<table class='fullWidth'>
+	<tr>
+		
+		<td class='labelsAsBreaks prodEditGeneralPanelLeftCol'>
+
+<img src='images/blank.gif' width='150' height='150' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;'  />
+
+<label><span>Cost:</span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal;" size='7' /></label>
+<label><span>MSRP:</span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal;" size='7' /></label>
+<label><span>Sale price:</span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal;" size='7' /></label>
+
+<label><input type='checkbox' name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popCheckbox;"> Taxable</label>
+<label><input type='checkbox' name='is:fresh' data-bind="var: product(is:fresh); format:popCheckbox;"> Fresh</label>
+<label><input type='checkbox' name='is:needreview' data-bind="var: product(is:needreview); format:popCheckbox;"> Need review</label>
+<label><input type='checkbox' name='is:openbox' data-bind="var: product(is:openbox); format:popCheckbox;"> Open box</label>
+<label><input type='checkbox' name='is:refurb' data-bind="var: product(is:refurb); format:popCheckbox;"> Refurbished</label>
+
+	</td>
+
+	<td class='labelsAsBreaks alignedLabels alignedInputs'>
+<h1 data-bind="var: product(pid); format:text; pretext:SKU: ;"></h1>
+
+<label><span>Product name:</span><input type='text' name='zoovy:prod_name' value='' data-bind="var: product(zoovy:prod_name); format:popVal;" /></label>
+
+
+<div id="html_you_have_been_warned" class="displayNone warning marginBottom">
+<b>***COMPATIBILITY ALERT*** HTML Editing is *NOT* Recommended</b>
+HTML Editors (such as this one) create HTML4 markup code which embed formatting with text content. 
+The Internet (collectively) is in the process of upgrading to HTML5 which uses a technology known as CSS3 
+(cascading style sheets) to control layout and formatting (and has been since mid 2007).
+Sites which use older style HTML4 markup will see slower pages (resulting in lower SEO rankings), 
+in addition most marketplaces such as Amazon explicitly prohibit any HTML4 markup code.
+HTML4 is not optimized for mobile and does not scale well to different screen sizes.
+As part of our ongoing commitment to our clients success Zoovy has (since 2009) 
+been recommending WikiCreole instead of HTML because of it's portability and ease to learn.
+If you continue - you are acknowledging that you understand that HTML4 is not compatible with any 
+shopping applications or any future technologies that will be introduced.  
+We strongly recommend you stop immediately, turn off HTML editing and use Wiki Creole formatting instead.
+This HTML Editor option will be removed altogether in the future. 
+
+</div>
+
+
+<label><span>Product description:</span><textarea name='zoovy:prod_desc' onFocus=" 	jQuery(this).prop('rows',25); 	if(jQuery().htmlarea && jQuery('#use_html').is(':checked')){	 		jQuery(this).htmlarea({ 			'toolbar':[ 		'bold', 'italic', 'p', '|','h1', 'h2', 'h3', 'h4', '|', 'indent', 'outdent', 'orderedList', 'unorderedList', '|',  		'justifyleft', 'justifycenter','justifyright','|', 		'forecolor','link', 'unlink', 'image'	 		]});	 		} 		" data-bind="var: product(zoovy:prod_desc); format:popVal;" rows='10'></textarea></label>
+<div class='alignRight'><input type='checkbox' onChange="$('#html_you_have_been_warned').show();" id='use_html'> Use HTML Editor</div>
+
+<!--
+<div class='clearfix alignRight'>
+	<div data-app-event="admin_prodEdit|textareaEditorMode" data-ui-target-name="zoovy:prod_desc" class='ui-corner-bottom floatRight'>
+		<h4 class='floatLeft marginRight paddingRight'>Editor: </h4>
+		<button data-ui-edit-mode='text' >Text</button>
+		<button data-ui-edit-mode='wiki' >Wiki</button>
+		<button data-ui-edit-mode='html' >HTML</button>
+	</div>
+</div>
+-->
+<label><span>Product detailed description:</span><textarea name='zoovy:prod_detail' data-bind="var: product(zoovy:prod_detail); format:popVal;" rows='10'></textarea></label>
+
+
+
+
+		</td>
+	</tr>
+	</table>
+	<div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix buttonBar">
+	<button class='floatRight' data-app-event="admin_prodEdit|serializeAndAdminProductUpdate" title='Save the changes made within this panel'>Save <span class='changeCount'></span> Changes</button>
+	<button data-app-event="admin_prodEdit|configOptions">Config Options</button>
+	<button data-app-event="admin_prodEdit|webPageEditor">Web Page Editor</button>
+	<button data-app-event="admin_prodEdit|viewProductOnWebsite">Preview</button>
+	</div>
+	</fieldset>
+	</form>
+	</div>
+</div>
 
 
 

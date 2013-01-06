@@ -20,6 +20,9 @@ var tabId = 0,
 function getNextTabId() {
 	return ++tabId;
 }
+if(typeof console.warn == "function")
+	console.warn("WARNING: Find long term solution for localtabs problem");
+else{/*do nothing, can't warn if console.warn isn't defined*/}
 
 function isLocal( anchor ) {
 	//alert(anchor.href.replace( rhash, "" )+".."+location.href.replace( rhash, "" ).replace( /\s/g, "%20" ));
@@ -861,7 +864,7 @@ $.widget( "ui.localtabs", {
 if ( $.uiBackCompat !== false ) {
 
 	// helper method for a lot of the back compat extensions
-	$.ui.tabs.prototype._ui = function( tab, panel ) {
+	$.ui.localtabs.prototype._ui = function( tab, panel ) {
 		return {
 			tab: tab,
 			panel: panel,
@@ -870,7 +873,7 @@ if ( $.uiBackCompat !== false ) {
 	};
 
 	// url method
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		url: function( index, url ) {
 			this.anchors.eq( index ).attr( "href", url );
 		}
@@ -878,7 +881,7 @@ if ( $.uiBackCompat !== false ) {
 
 	// TODO: Remove _ajaxSettings() method when removing this extension
 	// ajaxOptions and cache options
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			ajaxOptions: null,
 			cache: false
@@ -941,7 +944,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// abort method
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		abort: function() {
 			if ( this.xhr ) {
 				this.xhr.abort();
@@ -950,7 +953,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// spinner
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			spinner: "<em>Loading&#8230;</em>"
 		},
@@ -976,7 +979,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// enable/disable events
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			enable: null,
 			disable: null
@@ -1016,7 +1019,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// add/remove methods and events
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			add: null,
 			remove: null,
@@ -1108,14 +1111,14 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// length method
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		length: function() {
 			return this.anchors.length;
 		}
 	});
 
 	// panel ids (idPrefix option + title attribute)
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			idPrefix: "ui-tabs-"
 		},
@@ -1130,7 +1133,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// _createPanel method
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			panelTemplate: "<div></div>"
 		},
@@ -1144,7 +1147,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// selected option
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		_create: function() {
 			var options = this.options;
 			if ( options.active === null && options.selected !== undefined ) {
@@ -1180,7 +1183,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// show and select event
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			show: null,
 			select: null
@@ -1221,7 +1224,7 @@ if ( $.uiBackCompat !== false ) {
 	});
 
 	// select method
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		select: function( index ) {
 			index = this._getIndex( index );
 			if ( index === -1 ) {
@@ -1240,7 +1243,7 @@ if ( $.uiBackCompat !== false ) {
 
 	var listId = 0;
 
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			cookie: null // e.g. { expires: 7, path: '/', domain: 'jquery.com', secure: true }
 		},
@@ -1288,7 +1291,7 @@ if ( $.uiBackCompat !== false ) {
 	})();
 
 	// load event
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		_trigger: function( type, event, data ) {
 			var _data = $.extend( {}, data );
 			if ( type === "load" ) {
@@ -1303,7 +1306,7 @@ if ( $.uiBackCompat !== false ) {
 	// The new animation options (show, hide) conflict with the old show callback.
 	// The old fx option wins over show/hide anyway (always favor back-compat).
 	// If a user wants to use the new animation API, they must give up the old API.
-	$.widget( "ui.tabs", $.ui.tabs, {
+	$.widget( "ui.localtabs", $.ui.localtabs, {
 		options: {
 			fx: null // e.g. { height: "toggle", opacity: "toggle", duration: 200 }
 		},

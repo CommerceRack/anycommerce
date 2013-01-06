@@ -91,27 +91,25 @@ app.u.initMVC = function(attempts){
 	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
 	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
-	
-	if(percentComplete > 100 )
+	//make sure precentage is never over 100
+	if(percentComplete > 100 )	{
 		percentComplete = 100;
+		}
 	
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
-		percentComplete = 100;
-		$('#appPreViewProgressBar').val(percentComplete);
-		$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+
 		var clickToLoad = false;
 		if(clickToLoad){
 			$('#loader').fadeOut(1000);
-			$('#tenFourGoodBuddy').delay(1000).fadeIn(1000).click(function() {
+			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
 				app.u.loadApp();
 			});
 		} else {
 			app.u.loadApp();
-		}
-		
+			}
 		}
 	else if(attempts > 50)	{
 		app.u.dump("WARNING! something went wrong in init.js");

@@ -35,12 +35,15 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	
 	<label><span>Qty:</span><input type="text" name="quantity" size="3" value="1"  /></label>
 	<label><span>Product id:</span><input type='text' name='product_id'  /></label>
-	<label><span>Price: </span><input type='number' class='price' size='5' name='price' /></label>
+	<label><span>Price: </span><input type='number' class='price' size='5' name='price' step='0.01' min='0' /></label>
 	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())" class='ui-button ui-state-default ui-corner-all'>Add</button>
 <!--	<button onClick="app.ext.admin.a.showFinderInModal('CHOOSER');" class='ui-button ui-state-default ui-corner-all'>Find</button> -->
 	
 </fieldset>
-</form>
+</form><!--
+<hr />
+<button data-app-event="convertSessionToOrder|cartItemAdd">Use Chooser</button> <span class='hint'>use this for an easier method to select items with variations</span>
+-->
 </div>
 
 		<div id='chkoutCartSummaryContainer'></div>
@@ -392,7 +395,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 <table id='invoiceTemplate' class='orderContentsTable'>
 <tr>
 	<td valign='top' width='50%'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='300' height='100' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL; b:ffffff;' width='300' height='100' />
 	</td>
 
 	<td valign='top' width='50%' style='text-align:right'>
@@ -549,7 +552,7 @@ This should get moved to orders when order is taken over
 <table id='packslipTemplate' class='orderContentsTable' width='650'>
 <tr>
 	<td width='50%' valign='top'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;' width='200' height='85' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;  b:ffffff;' width='200' height='85' />
 	</td>
 	<td width='50%' valign='middle'><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
 </tr>

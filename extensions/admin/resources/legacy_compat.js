@@ -62,25 +62,6 @@ function PFGetResults(id,btn,txt) {
 	}
 
 
-//
-//
-function ProductFinder(src,div) {
-//	alert('productfinder: '+div+' src:'+src);
-//	alert(jQuery('#'+selectorEscapeExpression('PF/'+src)).val());
-//	alert(jQuery('#'+selectorEscapeExpression(div)));
-
-	if (jQuery('#'+selectorEscapeExpression('PF/'+src)).val() == 1) {
-		// products are already displayed, so go hide them.
-		jQuery('#'+selectorEscapeExpression(div)).html('');
-		}
-	else {
-		//
-		var postBody = 'm=PRODFINDER/New&src='+src+'&div='+div;
-		jQuery.ajax(prototypePLURL+'/PRODFINDER/New', { dataType:"text",data: postBody,async: 1,success: function(data, textStatus, jqXHR){ jHandleResponse(data);} } ) ;
-		}
-
-	}
-
 
 function showNavcatProducts(safe) {
 
