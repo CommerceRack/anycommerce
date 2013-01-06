@@ -1,21 +1,26 @@
 <div id='userManagerPageTemplate' class='page pageUser ui-widget ui-corner-all'>
 
 	<div class='ui-widget-header ui-corner-top clearfix'>
-		<h1>User Manager</h1>
-		<div class='floatRight'>Create</div>
+		<div class='floatRight'>
+			<button data-app-event="admin_user|bossUserCreate">Create A New User</button>
+		</div>
+		<h3>User List</h3>
 	</div>
 	
 	<div class='ui-widget-content ui-corner-bottom'>
-	<table class='gridTable'>
+	<table class='gridTable fullWidth'>
 	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 	<thead>
 	<tr>
-		<th></th>
-		<th data-name='USERNAME' title='username'>username</th>
-		<th></th>
+		<th>ID</th>
+		<th>Username</th>
+		<th>Name</th>
+		<th>Email</th>
+		<th>Permissions</th>
+		<th>Created</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: order(@users); format:processList; loadsTemplate:userListTemplate"></tbody>
+	<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;"></tbody>
 	</table>
 	</div>
 </div>
@@ -24,7 +29,79 @@
 
 
 <table>
-	<tr id='userListTemplate'>
-		<td>name</td>
+
+	<tr id='userManagerUserRowTemplate'>
+		<td data-bind="var: user(uid); format:text;"></td>
+		<td data-bind="var: user(username); format:text;"></td>
+		<td data-bind="var: user(luser); format:text;"></td>
+		<td data-bind="var: user(email); format:text;"></td>
+		<td data-bind="var: user(permissions); format:text;"></td>
+		<td data-bind="var: user(created_gmt); format:unix2mdy;"></td>
+		<td>
+		<button>edit</button>
+		</td>
 	</tr>
+
+	<tr id='userManagerRoleRowTemplate'>
+		<td><input type='checkbox' name='' data-bind='var:role(id);format:assignAttribute; attribute:name;' /></td>
+		<td data-bind="var: role(title); format:text;"></td>
+		<td data-bind="var: role(detail); format:text;"></td>
+		<td data-bind="var: role(id); format:text;"></td>
+		<td>
+<div class="handle"><span class="ui-icon ui-icon-grip-dotted-vertical"></span></div>
+		</td>
+	</tr>
+
 </table>
+
+
+
+
+
+
+
+<div id='userManagerUserCreateUpdateTemplate' title='User'>
+
+<form action='#'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+	<legend>User Information</legend>
+	
+	<label><span>Full Name:</span> <input type='text' name='fullname' value='' /></label>
+	<label><span>Email:</span> <input type='email' name='email' value='' /></label>
+	<label><span>Login:</span> <input type='text' name='login' value='' required='required' /></label>
+	<label><span>Job Title:</span> <input type='text' name='jobtitle' value='' /></label>
+	<label><span>Phone:</span> <input type='tel' name='phone' value='' /></label>
+	<label><span>Password:</span> <input type='password' name='password' required='required' value='' /></label>
+	
+</fieldset>
+
+<fieldset class='labelsAsBreaks marginBottom roles'>
+	<legend>Roles</legend>
+	<table class='gridTable fullWidth'>
+	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+	<thead>
+	<tr>
+		<th></th>
+		<th>Title</th>
+		<th>Detail</th>
+		<th>ID</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: roles(@ROLES); format:processList; loadsTemplate:userManagerRoleRowTemplate;" data-app-event="admin_user|roleListEdit"></tbody>
+	</table>
+	<p>Use drag handles to sort role list in order of priority for this user.</p>
+</fieldset>
+
+<!--
+<fieldset class='verifiers marginBottom'>
+	<legend>Verifiers</legend>
+	<p>Choose up to three methods that allow this user to verify who they are. Out of band (text/voice) will offer you the most security</p>
+	
+</fieldset>
+-->
+<div class='alignCenter'>
+	<button data-app-event="admin_user|bossUserCreateUpdateSave">Save</button>
+</div>
+</form>
+
+</div>

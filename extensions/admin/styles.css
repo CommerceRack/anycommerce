@@ -138,7 +138,8 @@ Use this in a table where you want clear separation between rows and cells. This
 /* a global 'handle' class for now. for consistency. 
 later if more variety is needed, we can either create exceptions or more rules to handle all cases.
 */
-.handle { background: #f8f8f8; position: absolute; right: 0; top: 0; bottom: 0; padding:14px 6px 0 6px; cursor:pointer; }
+.finderProdlistContainer .handle	{position: absolute; right: 0; top: 0; bottom: 0;background: #f8f8f8; padding:14px 6px 0 6px;}
+.handle { padding:6px; cursor:pointer; }
 
 .simpleListItem .removeProd, .simpleListItem .handle	{padding-top:3px;} /* less padding on top because lineitem is shorter (no image) */
 
@@ -509,6 +510,7 @@ see shipping panel in product editor for example
 .alignedLabels label span	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
+.alignedInputs input[type=password],
 .alignedInputs input[type=text]	{width:65%;}
 
 .alignedInputs input[type=number], 

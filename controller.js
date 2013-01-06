@@ -840,12 +840,12 @@ persistant - this can be passed in as part of the msg object or a separate param
 and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
 		throwMessage : function(msg,persistant){
-//			app.u.dump("BEGIN app.u.throwMessage");
-//			app.u.dump(" -> msg follows: "); app.u.dump(msg);
+			app.u.dump("BEGIN app.u.throwMessage");
+			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
 			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
 			var r = messageClass; //what is returned. set to false if no good error message found. set to htmlID is error found. 
-			var $container = $("<div \/>").addClass('appMessage').addClass(messageClass).append("<button onClick='$(\"."+messageClass+"\").toggle(); return false;' class='ui-state-default ui-corner-all floatRight stdMargin'><span class='ui-button ui-icon-circle-close'>X</span><\/button>");
+			var $container = $("<div \/>").addClass('appMessage clearfix').addClass(messageClass).append("<button onClick='$(\"."+messageClass+"\").toggle(); return false;' class='ui-state-default ui-corner-all floatRight stdMargin'><span class='ui-button ui-icon-circle-close'>X</span><\/button>");
 //make sure the good-ole fallback destination for errors exists and is a modal.
 			var $globalDefault = $('#globalErrorMessaging')
 			if	($globalDefault.length == 0)	{
@@ -868,9 +868,17 @@ and model that needed to be permanently displayed had to be converted into an ob
 			else if(typeof msg === 'object')	{
 				persistant = persistant || msg.persistant; //global persistence (within this context) gets priority.
 				msg.messageClass = messageClass;
-				if(msg.parentID){$target = $('#'+msg.parentID);}
-				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].parentID && $('#'+msg['_rtag'].parentID).length)	{$target = $('#'+msg['_rtag'].parentID);}
-				else if(typeof msg['_rtag'] == 'object' && msg['_rtag'].targetID && $('#'+msg['_rtag'].targetID).length)	{$target = $('#'+msg['_rtag'].targetID)}
+				var selector = undefined; //used if parentID isn't passed in to attempt to find a location for the message
+				if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
+					if(msg._rtag.parentID)	{selector = app.u.jqSelector('#',msg._rtag.parentID)}
+					else if(msg._rtag.targetID)	{selector = app.u.jqSelector('#',msg._rtag.targetID)}
+					else	{
+						selector = app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector);
+						}
+					}
+				
+				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
+				else if(selector && $(selector).length)	{$target = $(selector);}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
 				else	{
 					$target = $globalDefault;
@@ -893,7 +901,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 //get rid of all the loading gfx in the target so users know the process has stopped.
 			$target.removeClass('loadingBG');
 			if(typeof $.hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
- 
+// 			app.u.dump(" -> $target in error handling: "); app.u.dump($target);
 			return r;
 			},
 
@@ -2470,7 +2478,7 @@ $tmp.empty().remove();
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
 
 		processList : function($tag,data){
-//			app.u.dump("BEGIN renderFormats.processList");
+			app.u.dump("BEGIN renderFormats.processList");
 			var L = data.value.length;
 			var $o; //recycled. what gets added to $tag for each iteration.
 			for(var i = 0; i < L; i += 1)	{

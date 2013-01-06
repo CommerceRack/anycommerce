@@ -110,27 +110,6 @@ var admin_orders = function() {
 				}
 			}, //init
 
-//very similar to the original translate selector in the control and intented to replace it. 
-//This executes the handleAppEvents in addition to the normal translation.
-//the selector also gets run through jqSelector and hideLoading (if declared) is run.
-		translateSelector : {
-			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateSelector");
-				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
-//				app.u.dump(" -> selector: "+selector);
-				var $target = $(selector)
-				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
-				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
-				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
-				app.ext.admin.u.handleAppEvents($target);
-				}
-			},
-
-
-
-
-
-
 
 
 
@@ -549,7 +528,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 
 if(CID)	{
-	r += app.ext.admin.calls.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin_orders','selector':'#customerInformation'},Q); //
+	r += app.ext.admin.calls.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
 	app.u.dump("WARNING! - no CID set.");
@@ -1858,7 +1837,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					var kvp = $btn.parents('form').serialize();
 					//The two lines below 'should' work. not tested yet.
 					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
-					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin_orders','selector':'#'+$parent.attr('id')},'immutable');
+					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin','selector':'#'+$parent.attr('id')},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				}, //orderUpdateAddTracking

@@ -696,7 +696,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				Q = Q || 'immutable';
-				if(!$isEmptyObject(obj))	{
+				if(!$.isEmptyObject(obj))	{
 					this.dispatch(obj,_tag,Q);
 					r = 1;
 					}
@@ -713,21 +713,49 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			},
 
-		bossUserList : {},
+		bossUserList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {};
+				_tag.datapointer = 'bossUserList';
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					this.dispatch(_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				Q = Q || 'immutable';
+				var obj = {_cmd : 'bossUserList'};
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'bossUserList';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //bossUserList
 		bossUserUpdate : {},
 		bossUserDelete : {},
 
 		bossRoleCreate : {},
 		bossRoleList : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {};
+				_tag.datapointer = 'bossRoleList';
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					this.dispatch(_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
 				},
 			dispatch : function(_tag,Q)	{
 				Q = Q || 'immutable';
 				var obj = {_cmd : 'bossRoleList'};
-				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossRoleList';
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //bossRoleList
@@ -861,6 +889,27 @@ else	{
 	}
 				}
 			}, //initExtension
+
+
+
+
+//very similar to the original translate selector in the control and intented to replace it. 
+//This executes the handleAppEvents in addition to the normal translation.
+//the selector also gets run through jqSelector and hideLoading (if declared) is run.
+		translateSelector : {
+			onSuccess : function(tagObj)	{
+//				app.u.dump("BEGIN callbacks.translateSelector");
+				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
+//				app.u.dump(" -> selector: "+selector);
+				var $target = $(selector)
+				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
+				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
+				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
+				app.ext.admin.u.handleAppEvents($target);
+				}
+			}, //translateSelector
+
+
 
 		showDataHTML : {
 			onSuccess : function(tagObj)	{
@@ -1659,6 +1708,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
+					}
+				else if(path == '#!userManager')	{
+					app.ext.admin_user.a.showUserManager();
 					}
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
