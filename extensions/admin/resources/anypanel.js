@@ -27,8 +27,8 @@
 				if(o.title)	{$header = $("<h2 \/>").text(o.title).appendTo($t)}
 				else	{$header = $t.children(":first")}
 				
-				$header.css({'fontSize':'.85em','lineHeight':'1.6em','textIndent':'.75em'});
-				$header.wrap($("<div \/>").addClass('ui-widget-header ui-accordion-header ui-corner-top ')).css({'padding':'0px;','minHeight':'24px'});
+				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'});
+				$header.wrap($("<div \/>").addClass('ui-widget-header ui-accordion-header ui-corner-top ').css({'padding':'0px;','minHeight':'24px'}));
 				
 				$header.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').css(buttonStyles).text('Settings')
 					.button({text: false,icons : {primary : 'ui-icon-power'}})
@@ -58,7 +58,7 @@
 				
 				if($content.length)	{}
 				else	{$content = $("<div \/>"); $content.appendTo($t);}
-				$content.addClass('ui-widget-content ui-corner-bottom dragbox-content').css('borderTop','0'); //content area.
+				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
 //				if(this.data && this.templateID)	{transmogrify}
 //				else if(this.call && this.tempateID)	{}		
 //				else if(this.tempateID)	{$content.append(app.renderFunctions.createTemplateInstance('',templateID))} !!! finish and test.
@@ -107,7 +107,7 @@
 //the corner bottom class is added/removed to the header as the panel is closed/opened, respectively, for aeshtetic reasons.
 		close : function(){
 			$("[data-btn-action='toggle']",this.element).button({icons : {primary : 'ui-icon-triangle-1-s'},'text':false});
-			$('.dragbox-content',this.element).hide();
+			$('.ui-widget-content',this.element).slideUp();
 			$('.ui-widget-header',this.element).addClass('ui-corner-bottom');
 			this.options.state = 'close';
 			this.handlePreferencesStateUpdate('close');
@@ -115,7 +115,7 @@
 
 		open : function(){
 			$("[data-btn-action='toggle']",this.element).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false});
-			$('.dragbox-content',this.element).show();
+			$('.ui-widget-content',this.element).show();
 			$('.ui-widget-header',this.element).removeClass('ui-corner-bottom');
 			this.options.state = 'open';
 			this.handlePreferencesStateUpdate('open');
