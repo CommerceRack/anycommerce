@@ -657,10 +657,10 @@ else	{
 	renderFormats : {
 		
 		etypeAsClass : function($tag,data)	{
-			app.u.dump("BEGIN admin_orders.renderformats.etypeAsClass. ");
-			app.u.dump(" -> this bit ["+data.value+"] is on: "+app.u.isThisBitOn(2,data.value));
-			if(	app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
-			else if(app.u.isThisBitOn(8,data.value))	{$tag.addClass('red')}
+//			app.u.dump("BEGIN admin_orders.renderformats.etypeAsClass. ");
+//			app.u.dump(" -> this bit ["+data.value+"] is on: "+app.u.isThisBitOn(2,data.value));
+			if(data.value == 8 || app.u.isThisBitOn(8,data.value))	{$tag.addClass('red')}
+			else if(data.value == 2 || app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
 			else	{} //do nothing.
 			},
 		
