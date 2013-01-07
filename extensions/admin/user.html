@@ -1,9 +1,9 @@
-<div id='userManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer'>
+<div id='userManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
 
 	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
-	<section class='dualModeListContainer' data-app-role='dualModeList' data-app-mode='list'>
-		<div class='ui-widget-header ui-corner-top clearfix'>
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
 				<button data-app-event='admin_user|bossUserCreate'>Create A New User</button>
 				<button data-app-event='admin_user|toggleDualMode'>Toggle between list and detail view</button>
@@ -20,7 +20,7 @@
 			<th>Username</th>
 			<th class='hideInDetailMode'>Name</th>
 			<th class='hideInDetailMode'>Email</th>
-			<th>Permissions</th>
+			<th>Roles</th>
 			<th class='hideInDetailMode'>Created</th>
 			<th></th>
 		</tr>

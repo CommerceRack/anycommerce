@@ -478,15 +478,18 @@ $('body').showLoading();
 //go fetch order data. callback handles data population.
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	app.u.dump("Executing callback for adminOrderDetail");
-	var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)), //this val is needed in string form for translateSelector.
-	$target = $(selector),
-	orderData = app.data[responseData.datapointer];
-	orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
+	
 	$('body').hideLoading();
 	if(app.model.responseHasErrors(responseData)){
 		app.u.throwMessage(responseData);
 		}
 	else	{
+
+		var selector = app.u.jqSelector(responseData.selector[0],responseData.selector.substring(1)), //this val is needed in string form for translateSelector.
+		$target = $(selector),
+		orderData = app.data[responseData.datapointer];
+		orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
+
 		app.renderFunctions.translateSelector(selector,orderData);
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
 		app.ext.admin_orders.calls.appPaymentMethods.init({
@@ -1012,7 +1015,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				if(action && pref)	{
 //these are vars so that they can be maintained easily.
 					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='note' \/><\/label>";
-					var amountInput = "<label>Amount: $<input size='7' type='number' name='amt' value='"+pref.amt+"' \/><\/label>";
+					var amountInput = "<label>Amount: $<input size='7' type='number' name='amt' step='0.01' min='0' value='"+pref.amt+"' \/><\/label>";
 					output += "<input type='hidden' name='uuid' value='"+pref.uuid+"' \/>";
 					output += "<input type='hidden' name='ACTION' value='"+action+"' \/>";
 					switch(action)	{
@@ -1403,7 +1406,7 @@ $(selector + ' .editable').each(function(){
 					price = $("[name='price']",$row).val();
 					
 					if(uuid && orderID && qty && price)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"qty="+qty+"&price="+price]);
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
 						$parent.empty();
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');

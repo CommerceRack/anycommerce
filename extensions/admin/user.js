@@ -84,33 +84,40 @@ var admin_user = function() {
 				numDetailPanels = $D.children().length,
 				$btn = $("[data-app-event='admin_user|toggleDualMode']",$parent);
 				
-				if(!mode || mode == 'list' || mode == 'detail')	{
+				if(mode)	{}
+				else if($parent.data('app-mode') == 'list')	{mode = 'detail'}
+				else if($parent.data('app-mode') == 'detail')	{mode = 'list'}
+				else	{} //invalid mode. error handled below.
+
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
-					if(mode == 'detail' || $L.data('app-mode') == 'list')	{
-						$L.animate({width:"49%"},1000); //shrink list side.
-						$D.show().animate({width:"49%"},1000); //expand detail side.
-						$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
-						$L.data('app-mode','detail');
-						$('.hideInDetailMode',$L).hide(); //adjust list for minification.
-						}
-					else	{
-						$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false});
+				
+				app.u.dump(" -> mode: "+mode);
+				
+				if(mode == 'detail')	{
+					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
+					$parent.data('app-mode','detail');
+					$L.animate({width:"49%"},1000); //shrink list side.
+					$D.show().animate({width:"49%"},1000); //expand detail side.
+					$('.hideInDetailMode',$L).hide(); //adjust list for minification.
+					}
+				else if (mode == 'list')	{
+					$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false});
+					$parent.data('app-mode','list');
 //if there are detail panels open, shrink them down but show the headers.
-						if(numDetailPanels)	{
-							$L.animate({width:"84%"},1000); //shrink list side.
-							$D.show().animate({width:"14%"},1000); //expand detail side.
-							$btn.show();
-							}
-//there are no panels open in the detail column, so expand list to 100%.
-						else	{
-							$L.animate({width:"100%"},1000); //shrink list side.
-							$D.show().animate({width:0},1000); //expand detail side.
-							$btn.hide();
-							}
-						
-						$('.hideInDetailMode',$L).show(); //adjust list for minification.
+					if(numDetailPanels)	{
+						$L.animate({width:"84%"},1000); //shrink list side.
+						$D.show().animate({width:"14%"},1000); //expand detail side.
+						$btn.show();
 						}
+//there are no panels open in the detail column, so expand list to 100%.
+					else	{
+						$L.animate({width:"100%"},1000); //shrink list side.
+						$D.show().animate({width:0},1000); //expand detail side.
+						$btn.hide();
+						}
+					
+					$('.hideInDetailMode',$L).show(); //adjust list for minification.
 					}
 				else	{
 					app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
@@ -182,17 +189,29 @@ Whether it's a create or update is based on the data-usermode on the parent.
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
 				$btn.off('click.bossUserUpdate').on('click.bossUserUpdate',function(event){
 					event.preventDefault();
-					var $target = $('#bossUserUpdateModal');
-					if($target.length)	{$target.empty();}
-					else	{
-						$target = $("<div \/>").attr('id','bossUserUpdateModal');
-						$target.appendTo("body");
-						$target.dialog({width:'90%',height:600,autoOpen:false,modal:true});
-						}
-					$target.dialog('open');
+//					app.u.dump("BEGIN admin_user.e.bossUserUpdate click event");
+
+					var $target = $("[data-app-role='dualModeDetail']","#userManagerContent"),
+					index = $(this).closest('tr').data('obj_index');
+					user = app.data.bossUserList['@USERS'][index];
+
+//					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
+					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
-					$target.append(app.renderFunctions.transmogrify('userManagerUserCreateUpdateTemplate',{'id':'bossUserUpdateContent','usermode':'update'})); //populate content.
-					app.ext.admin.u.handleAppEvents($target);
+						
+var $panel = $("<div\/>").anypanel({
+	'title':'Edit: '+user.uid,
+	'templateID':'userManagerUserCreateUpdateTemplate',
+	'data':user,
+	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid}
+	}).appendTo($target);
+						
+//						$target.append(app.renderFunctions.transmogrify(,,));
+//						app.ext.admin.u.handleAppEvents($target);
+						}
+//append detail children before changing modes. descreases 'popping'.
+					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
+
 					});
 				},
 			
