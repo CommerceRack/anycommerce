@@ -26,7 +26,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201212171530",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201301071337",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.downlitebedding.com/",
@@ -52,6 +52,8 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery.ui.widget.min.js"></script> 
+<script src="customTabs.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -571,8 +573,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		-->
 		
-<!--		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> -->
-<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+<!--		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span> -->
+<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 </li>
 
@@ -592,7 +594,7 @@ container ul should have lineItemProdlist class on it instead of productList
 	
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 
 		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'}); return false;">
 		
@@ -635,7 +637,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				</div>
 			</div>
 		</div>
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
 
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 	
@@ -747,16 +749,30 @@ this will likely become more flexible in the future. ###
 
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+		
+	<div class='floatRight'>
+	<a href="http://messenger.providesupport.com/messenger/1jz93amcu7bu108sbhe3gwkhul.html" target="_blank">
+	<img src='images/livechat-140x50.jpg' width='140' height='50' alt='click here for live chat' />
+	</a>
+	</div>
 	
-	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
-	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+	<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Item #: ;'></h5>
+	<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Manufacturer: ;'></h5>
+	<!-- <h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5> -->
 	
+	<section id='prodViewerReviewSummary'>
+		<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Review This Item</a> <span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+	</section>
+
 	
-	<div class='priceContainer'>
-		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
-		<span class='savings'>
+	<div class='priceContainer pricing marginTop marginBottom'>
+		<div class='basePrice' >
+			<span class='value' data-bind="var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt pricePrompt'>Our Price: </span>;"></span>
+		</div>
+		<div>
+			<span class='retailPrice prodMSRP' data-bind="var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt retailPricePrompt'>MSRP: </span> ;"></span>
+		</div>
+		<span class='savings marginLeft'>
 			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
 			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
 		</span>
@@ -782,8 +798,8 @@ this will likely become more flexible in the future. ###
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 
 	<section class='marginBottom'>
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 	
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
@@ -807,12 +823,12 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
-		<li class='prodDescTab'><a>Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a>Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a>Features</a></li>
-		<li class='prodReviewsTab'><a>Reviews</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a >Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a>Accessories</a></li>
+		<li class='prodDescTab'><a href='#'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#'>Accessories</a></li>
 	</ul>
 	
 	<div class='tabContent'>
@@ -829,13 +845,10 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 
 	<div  class='tabContent'>
-
 		<div class='clearfix alignRight'>
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 		</div>
-		
-		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
-
+		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
 	</div>
 	
 	<div class='tabContent'>
@@ -844,7 +857,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<div class='tabContent'>
 		<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
-	</div>
+	</div>	
 </div>
 </td>
 </tr>
@@ -1647,9 +1660,9 @@ The 'data-action' attribute is used to assign an onclick.
 		<div data-bind="var: address(bill_address2);format:text;" class='editable' title='address 2'></div>
 		
 		<span data-bind="var: address(bill_city);format:text;" class='editable' title='city'></span>, 
-		<span data-bind="var: address(bill_state);format:text;" class='editable' title='state'></span>. 
-		<span data-bind="var: address(bill_zip);format:text;" class='editable' title='zip'></span>
-		<div data-bind="var: address(bill_country);format:text;" title='country'></div>
+		<span data-bind="var: address(bill_region);format:text;" class='editable' title='state'></span>. 
+		<span data-bind="var: address(bill_postal);format:text;" class='editable' title='zip'></span>
+		<div data-bind="var: address(bill_countrycode);format:text;" title='country'></div>
 
 	</div>
 
@@ -1674,9 +1687,9 @@ The 'data-action' attribute is used to assign an onclick.
 		<div data-bind="var: address(ship_address2);format:text;" class='editable' title='address 2'></div>
 		
 		<span data-bind="var: address(ship_city);format:text;" class='editable' title='city'></span>, 
-		<span data-bind="var: address(ship_state);format:text;" class='editable' title='state'></span>. 
-		<span data-bind="var: address(ship_zip);format:text;" class='editable' title='zip'></span>
-		<div data-bind="var: address(ship_country);format:text;" title='country'></div>
+		<span data-bind="var: address(ship_region);format:text;" class='editable' title='state'></span>. 
+		<span data-bind="var: address(ship_postal);format:text;" class='editable' title='zip'></span>
+		<div data-bind="var: address(ship_countrycode);format:text;" title='country'></div>
 
 	</div>
 </address>

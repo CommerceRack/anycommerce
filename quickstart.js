@@ -299,7 +299,7 @@ else	{
 //				app.u.dump("BEGIN myRIA.callbacks.showAddresses.onSuccess");
 //clean the workspace.
 				var authState = app.u.determineAuthentication();
-				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses, ').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
+				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
 				var $buyerAddresses; //recycled. use as target for bill and ship addresses. the target of this changes in the loop below
 //only show addresses if user is logged in.
 				if(authState == 'authenticated')	{
@@ -1157,29 +1157,35 @@ P.listID (buyer list id)
 
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in P.
-			handleAppInit : function(P)	{
+			handleAppInit : function(infoObj)	{
 
 //!!! need to write/test this in IE7
 //				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
 				
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
-					app.u.handleResourceQ(app.rq[i]);
-					app.rq.splice(i, 1); //remove once handled.
-					}
+				app.u.handleResourceQ(app.rq[i]);
+				app.rq.splice(i, 1); //remove once handled.
+				}
 				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
-				if(typeof P != 'object')	{P = {}}
-				P = this.detectRelevantInfoToPage(window.location.href); 
-				P.back = 0; //skip adding a pushState on initial page load.
+				if(typeof infoObj != 'object')	{infoObj = {}}
+				infoObj = this.detectRelevantInfoToPage(window.location.href);
+				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-				P.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
-				if(P.uriParams.meta)	{
-					app.calls.cartSet.init({'meta':P.uriParams.meta},{},'passive');
-					}
+				infoObj.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
+				if(infoObj.uriParams.meta)	{
+				app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
+				}
+
+				if(infoObj.uriParams.meta_src)	{
+				app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
+				}
+
+
 //				app.u.dump(" -> P follows:");
 //				app.u.dump(P);
-				app.ext.myRIA.a.showContent('',P);
-				return P //returning this saves some additional looking up in the appInit
+				app.ext.myRIA.a.showContent('',infoObj);
+				return infoObj //returning this saves some additional looking up in the appInit
 				},
 //handle State and History Of The World.
 //will change what state of the world is (P) and add it to History of the world.

@@ -141,15 +141,15 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var country = $('#data-bill_country').val();
 
 				app.model.fetchData('cartDetail'); //will make sure cart is loaded from localStorage (if present) if not in memory.
-				if(!$.isEmptyObject(app.data.cartDetail))	{
-					total = app.data.cartDetail['sum/balance_due_total'];
+				if(app.data.cartDetail && app.u.isSet(app.data.cartDetail.sum))	{
+					total = app.data.cartDetail.sum.balance_due_total;
 					}
 				if(country != "US")	{
 					// country is defaulted to the form value. If that value is NOT "US", then use it (a country has been selected).
 					// if the value is US, then it may be the default setting and the request should w/ country as cart/session value
 					// (country may have been set elsewhere) though the form 'should' default correctly, we don't rely on that.
 					}
-				else if(!$.isEmptyObject(app.data.cartDetail) && app.data.cartDetail['bill/countrycode'])	{
+				else if(!$.isEmptyObject(app.data.cartDetail) && app.data.cartDetail.bill && app.data.cartDetail.bill.countrycode)	{
 					country = app.data.cartDetail['bill/countrycode']; //use the cart, NOT the form. the form defaults to US. Better to send blank.
 					}
 
@@ -302,6 +302,40 @@ note - the order object is available at app.data['order|'+P.orderID]
 		checkoutCompletes : [],
 
 
+//Pass in an object (typically based on $form.serializeJSON) and 
+//this will make sure that specific fields are populated based on tender type.
+//rather than returning specific error messages (which may need to change based on where this is used, an array of which fields are missing is returned
+//plus, this allows for the attribute/fields to be modified w/ css, whereas returning messages wouldn't allow for that.
+		validate : {
+			
+			CREDIT : function(vars)	{
+				var errors = new Array(); // what is returned. an array of the payment fields that are not correct. 
+				if(vars.CC && app.u.isValidCC(vars.CC))	{} else	{errors.push("CC");}
+				if(vars.MM && app.u.isValidMonth(vars.MM))	{} else {errors.push("MM");}
+				if(vars.YY && app.u.isValidCCYear(vars.YY))	{} else {errors.push("YY");}
+				if(vars.CV && vars.CV.length > 2){} else {errors.push("CV")}
+				return (errors.length) ? errors : false;
+				},
+			
+			ECHECK : function(vars) {
+				var errors = new Array(), // what is returned. an array of the payment fields that are not correct. 
+				echeckFields = new Array("EA","ER","EN","EB","ES","EI"),
+				L = echeckFields.length;
+				for(var i = 0; i < L; i += 1)	{
+					if(vars[echeckFields[i]])	{} else {errors.push(echeckFields[i]);}
+					}
+				return (errors.length) ? errors : false;
+				},
+			
+			PO : function(vars)	{
+				var errors = new Array(); // what is returned. an array of the payment fields that are not correct. 
+				if(vars.PO){} else	{errors.push("PO")}
+				return (errors.length) ? errors : false;
+				}
+			
+			}, //validate
+
+
 ////////////////////////////////////   						util [u]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -331,21 +365,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 //					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
 					}
 				else if(payby == 'CREDIT')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","cc":$('#payment-cc').val(),"cv":$('#payment-cv').val(),"yy":$('#payment-yy').val(),"mm":$('#payment-mm').val()});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
 					}				
 				else if(payby == 'PO')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","po":$('#payment-po').val()});
+					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
 					}				
 				else if(payby == 'ECHECK')	{
 					app.ext.store_checkout.calls.cartPaymentQ.init({
 "cmd":"insert",
 "TN":"ECHECK",
-"ea":$('#paymentea').val(),
-"er":$('#paymenter').val(),
-"en":$('#paymenten').val(),
-"eb":$('#paymenteb').val(),
-"es":$('#paymentes').val(),
-"ei":$('#paymentei').val()
+"EA":$('#paymentea').val(),
+"ER":$('#paymenter').val(),
+"EN":$('#paymenten').val(),
+"EB":$('#paymenteb').val(),
+"ES":$('#paymentes').val(),
+"EI":$('#paymentei').val()
 						});
 					}
 				else	{
@@ -410,9 +444,9 @@ for(var i = 0; i < L; i += 1)	{
 	if(a[TYPE+'_address2'])	{r +=a[TYPE+'_address2']+"<br \/>"}
 	r += a[TYPE+'_city'];
 //state, zip and country may not be populated. check so 'undef' isn't written to screen.
-	if(a[TYPE+'_state']) {r += " "+a[TYPE+'_state']+", "}
-	if(a[TYPE+'_zip'])	{r +=a[TYPE+'_zip']}
-	if(app.u.isSet(a[TYPE+'_country']))	{r += "<br \/>"+a[TYPE+'_country']}
+	if(a[TYPE+'_region']) {r += " "+a[TYPE+'_region']+", "}
+	if(a[TYPE+'_postal'])	{r +=a[TYPE+'_postal']}
+	if(app.u.isSet(a[TYPE+'_countrycode']))	{r += "<br \/>"+a[TYPE+'_countrycode']}
 	r += "<\/address>";
 	}
 var parentID = (TYPE == 'ship') ? 'chkoutShipAddressFieldset' : 'chkoutBillAddressFieldset';
@@ -844,9 +878,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 			orderStatusLink : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.orderStatusLink');
-				var orderSessionID = app.data['order|'+data.value].cart.id;
+				var orderCartID = app.data['order|'+data.value].cart.cartid;
 //				https://ssl.zoovy.com/s=sporks.zoovy.com/customer/order/status?cartid=SESSION&orderid=data.value
-				$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+"customer/order/status?cartid="+orderSessionID+"&orderid="+data.value,'orderStatus'});
+				$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+"customer/order/status?cartid="+orderCartID+"&orderid="+data.value,'orderStatus'});
 				
 				},
 
