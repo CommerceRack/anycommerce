@@ -36,6 +36,7 @@ var admin_user = function() {
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/user.html',theseTemplates);
+				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/user.css','user_styles']);
 
 				return r;
 				},
@@ -74,9 +75,53 @@ var admin_user = function() {
 
 
 		u : {
+//mode is optional.  If not passed, it'll toggle. valid modes are list and detail.
+//list mode will toggle the detail column OFF and expand the list column to 100%.
+//detail mode will toggle the detail column ON and shrink the list column to 65%.
+			toggleDualMode : function($parent,mode)	{
+				var $L = $("[data-app-role='dualModeList']",$parent), //List column
+				$D = $("[data-app-role='dualModeDetail']",$parent), //detail column
+				numDetailPanels = $D.children().length,
+				$btn = $("[data-app-event='admin_user|toggleDualMode']",$parent);
+				
+				if(mode && (mode == 'list' || mode == 'detail'))	{
+//go into detail mode. This expands the detail column and shrinks the list col. 
+//this also toggles a specific class in the list column off
+					if(mode == 'detail' || $L.data('app-mode') == 'list')	{
+						$L.animate({width:"49%"},1000); //shrink list side.
+						$D.show().animate({width:"49%"},1000); //expand detail side.
+						$btn.show();
+						$L.data('app-mode') = 'detail';
+						$('.hideInDetailMode',$L).hide(); //adjust list for minification.
+						}
+					else	{
+//if there are detail panels open, shrink them down but show the headers.
+						if(numDetailPanels)	{
+							$L.animate({width:"84%"},1000); //shrink list side.
+							$D.show().animate({width:"14%"},1000); //expand detail side.
+							}
+//there are no panels open in the detail column, so expand list to 100%.
+						else	{
+							$L.animate({width:"100%"},1000); //shrink list side.
+							$D.show().animate({width:0},1000); //expand detail side.
+							$btn.hide();
+							}
+						$('.hideInDetailMode',$L).show(); //adjust list for minification.
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
+					}
+				
+				}
 			}, //u
 
 		e : {
+			
+			
+			"toggleDualMode" : function($btn)	{
+				$btn.button();
+				},
 			
 			"roleListEdit" : function($this)	{
 				app.u.dump("BEGIN admin_users.e.roleListEdit");

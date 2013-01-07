@@ -1,0 +1,6 @@
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .heading	{text-indent:12px; line-height:35px;}
+.dualModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}

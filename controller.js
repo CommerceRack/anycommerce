@@ -56,7 +56,7 @@ jQuery.extend(zController.prototype, {
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush'))	{
-			app.u.dump("uri param flush is true. CLEAR LOCAL STORAGE");
+			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
 			localStorage.clear();
 			}
 		
@@ -479,28 +479,28 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 		appProfileInfo : {
 			init : function(obj,_tag,Q)	{
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				if(typeof obj == 'object' && (obj.profile || obj.sdomain))	{
+				if(typeof obj == 'object' && (obj.profile || obj.domain))	{
 					_tag = _tag || {};
-					_tag.datapointer = 'appProfileInfo|'+(obj.profile || obj.sdomain);
+					_tag.datapointer = 'appProfileInfo|'+(obj.profile || obj.domain);
 
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
 						this.dispatch(obj,_tag,Q);
 						}
 					else 	{
-						app.u.handleCallback(_tag)
+						app.u.handleCallback(_tag);
 						}
 					}
 				else	{
-					app.u.throwGMessage("In calls.appProfileGet, obj either missing or missing profile or sdomain var.");
+					app.u.throwGMessage("In calls.appProfileGet, obj either missing or missing profile ["+obj.profile+"] or domain ["+obj.domain+"] var.");
 					app.u.dump(obj);
 					}
 
 				return r;
 				}, // init
 			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "appProfileInfo";
-				obj['_tag'] = _tag;
+				obj._cmd = "appProfileInfo";
+				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				} // dispatch
 			}, //appProfileInfo
@@ -840,8 +840,8 @@ persistant - this can be passed in as part of the msg object or a separate param
 and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
 		throwMessage : function(msg,persistant){
-			app.u.dump("BEGIN app.u.throwMessage");
-			app.u.dump(" -> msg follows: "); app.u.dump(msg);
+//			app.u.dump("BEGIN app.u.throwMessage");
+//			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 			var $target; //where the app message will be appended.
 			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
 			var r = messageClass; //what is returned. set to false if no good error message found. set to htmlID is error found. 

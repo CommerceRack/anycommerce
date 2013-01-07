@@ -1,28 +1,33 @@
-<div id='userManagerPageTemplate' class='page pageUser ui-widget ui-corner-all'>
+<div id='userManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer'>
 
-	<div class='ui-widget-header ui-corner-top clearfix'>
-		<div class='floatRight'>
-			<button data-app-event="admin_user|bossUserCreate">Create A New User</button>
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList' data-app-mode='list'>
+		<div class='ui-widget-header ui-corner-top clearfix'>
+			<div class='buttonSet'>
+				<button data-app-event='admin_user|bossUserCreate'>Create A New User</button>
+				<button data-app-event='admin_user|toggleDualMode'>Toggle between list and detail view</button>
+			</div>
+			<h3 class='heading'>User List</h3>
 		</div>
-		<h3>User List</h3>
-	</div>
-	
-	<div class='ui-widget-content ui-corner-bottom'>
-	<table class='gridTable fullWidth'>
-	<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-	<thead>
-	<tr>
-		<th>ID</th>
-		<th>Username</th>
-		<th>Name</th>
-		<th>Email</th>
-		<th>Permissions</th>
-		<th>Created</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;"></tbody>
-	</table>
-	</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<table class='gridTable fullWidth'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Username</th>
+			<th>Name</th>
+			<th>Email</th>
+			<th>Permissions</th>
+			<th>Created</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;" class='dualModeList'></tbody>
+		</table>
+		</div>
+	</section>
 </div>
 
 
