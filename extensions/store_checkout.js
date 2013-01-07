@@ -444,9 +444,9 @@ for(var i = 0; i < L; i += 1)	{
 	if(a[TYPE+'_address2'])	{r +=a[TYPE+'_address2']+"<br \/>"}
 	r += a[TYPE+'_city'];
 //state, zip and country may not be populated. check so 'undef' isn't written to screen.
-	if(a[TYPE+'_region']) {r += " "+a[TYPE+'_state']+", "}
-	if(a[TYPE+'_postal'])	{r +=a[TYPE+'_zip']}
-	if(app.u.isSet(a[TYPE+'_country']))	{r += "<br \/>"+a[TYPE+'_country']}
+	if(a[TYPE+'_region']) {r += " "+a[TYPE+'_region']+", "}
+	if(a[TYPE+'_postal'])	{r +=a[TYPE+'_postal']}
+	if(app.u.isSet(a[TYPE+'_countrycode']))	{r += "<br \/>"+a[TYPE+'_countrycode']}
 	r += "<\/address>";
 	}
 var parentID = (TYPE == 'ship') ? 'chkoutShipAddressFieldset' : 'chkoutBillAddressFieldset';
