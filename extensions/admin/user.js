@@ -84,21 +84,23 @@ var admin_user = function() {
 				numDetailPanels = $D.children().length,
 				$btn = $("[data-app-event='admin_user|toggleDualMode']",$parent);
 				
-				if(mode && (mode == 'list' || mode == 'detail'))	{
+				if(!mode || mode == 'list' || mode == 'detail')	{
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
 					if(mode == 'detail' || $L.data('app-mode') == 'list')	{
 						$L.animate({width:"49%"},1000); //shrink list side.
 						$D.show().animate({width:"49%"},1000); //expand detail side.
-						$btn.show();
-						$L.data('app-mode') = 'detail';
+						$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
+						$L.data('app-mode','detail');
 						$('.hideInDetailMode',$L).hide(); //adjust list for minification.
 						}
 					else	{
+						$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false});
 //if there are detail panels open, shrink them down but show the headers.
 						if(numDetailPanels)	{
 							$L.animate({width:"84%"},1000); //shrink list side.
 							$D.show().animate({width:"14%"},1000); //expand detail side.
+							$btn.show();
 							}
 //there are no panels open in the detail column, so expand list to 100%.
 						else	{
@@ -106,6 +108,7 @@ var admin_user = function() {
 							$D.show().animate({width:0},1000); //expand detail side.
 							$btn.hide();
 							}
+						
 						$('.hideInDetailMode',$L).show(); //adjust list for minification.
 						}
 					}
@@ -120,13 +123,17 @@ var admin_user = function() {
 			
 			
 			"toggleDualMode" : function($btn)	{
-				$btn.button();
-				},
+				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
+				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
+					event.preventDefault();
+					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'));
+					});
+				}, //toggleDualMode
 			
 			"roleListEdit" : function($this)	{
 				app.u.dump("BEGIN admin_users.e.roleListEdit");
 				$this.sortable({ handle: ".handle" });
-				},
+				}, //roleListEdit
 
 /*
 the create and update template is recycled. the button has the same app event, but performs a different action based on whether or not a save or update is being perfomed.
@@ -169,10 +176,10 @@ Whether it's a create or update is based on the data-usermode on the parent.
 						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to determine mode.');
 						}
 					});
-				},
+				}, //bossUserCreateUpdateSave
 			
 			"bossUserUpdate" : function($btn){
-				$btn.button();
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
 				$btn.off('click.bossUserUpdate').on('click.bossUserUpdate',function(event){
 					event.preventDefault();
 					var $target = $('#bossUserUpdateModal');

@@ -18,10 +18,11 @@
 		<tr>
 			<th>ID</th>
 			<th>Username</th>
-			<th>Name</th>
-			<th>Email</th>
+			<th class='hideInDetailMode'>Name</th>
+			<th class='hideInDetailMode'>Email</th>
 			<th>Permissions</th>
-			<th>Created</th>
+			<th class='hideInDetailMode'>Created</th>
+			<th></th>
 		</tr>
 		</thead>
 		<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;" class='dualModeList'></tbody>
@@ -38,12 +39,12 @@
 	<tr id='userManagerUserRowTemplate'>
 		<td data-bind="var: user(uid); format:text;"></td>
 		<td data-bind="var: user(username); format:text;"></td>
-		<td data-bind="var: user(luser); format:text;"></td>
-		<td data-bind="var: user(email); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: user(luser); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
 		<td data-bind="var: user(permissions); format:text;"></td>
-		<td data-bind="var: user(created_gmt); format:unix2mdy;"></td>
+		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
 		<td>
-		<button>edit</button>
+		<button data-app-event="admin_user|bossUserUpdate">edit</button>
 		</td>
 	</tr>
 

@@ -735,6 +735,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //bossUserList
+
 		bossUserUpdate : {},
 		bossUserDelete : {},
 
