@@ -81,8 +81,8 @@ var admin_support = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
-			showFileUploadInModal : function(ticketid){
-				if(ticketid)	{
+			showFileUploadInModal : function(ticketid,uuid){
+				if(ticketid && uuid)	{
 					var $target = $('#ticketFileUploadModal');
 	//To avoid confusion (like showing uploads from a previously edited ticket) the file upload div is emptied and the entire contents regenerated afresh.
 					if($target.length){$target.empty();}
@@ -92,13 +92,13 @@ var admin_support = function() {
 						}
 					$target.attr('data-ticketid',ticketid);
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
-					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid})).dialog('open');
+					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid})).dialog('open');
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
 					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! no ticketid specified in admin_support.a.showFileUploadInModal");
+					app.u.throwGMessage("Warning! Either ticketid ["+ticketid+"] or uuid ["+uuid+"] specified in admin_support.a.showFileUploadInModal. Both are required.");
 					}
 				
 				}

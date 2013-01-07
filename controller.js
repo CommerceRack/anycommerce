@@ -794,6 +794,16 @@ it'll then set app.rq.push to mirror this function.
 			},
 
 
+		isThisBitOn : function(bit,int)	{
+			//The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
+			var B = Number(int).toString(2); //binary
+			app.u.dump(" -> bit: "+bit+" and int: "+int+" B: "+B);
+//			app.u.dump(" -> B.charAt("+bit+"): "+B.charAt(bit));
+//			app.u.dump(" -> B.charAt("+bit+"-1): "+B.charAt(bit-1));
+			return (B.charAt(bit) == 1) ? true : false; //1
+
+			},
+
 
 //http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
 		guidGenerator : function() {
@@ -2401,6 +2411,11 @@ $tmp.empty().remove();
 				o += "<div><span class='prompt'>"+data.value[key]['prompt']+"<\/span>: <span class='value'>"+data.value[key].data+"<\/span><\/div>";
 				}
 			$tag.html(o);
+			},
+
+		epoch2pretty : function($tag,data)	{
+			var myDate = new Date( data.value*1000);
+			$tag.append(myDate.getFullYear()+"/"+myDate.getMonth()+"/"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
 			},
 
 		unix2mdy : function($tag,data)	{

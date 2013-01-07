@@ -655,6 +655,15 @@ else	{
 
 
 	renderFormats : {
+		
+		etypeAsClass : function($tag,data)	{
+			app.u.dump("BEGIN admin_orders.renderformats.etypeAsClass. ");
+			app.u.dump(" -> this bit ["+data.value+"] is on: "+app.u.isThisBitOn(2,data.value));
+			if(	app.u.isThisBitOn(2,data.value))	{$tag.addClass('green')}
+			else if(app.u.isThisBitOn(8,data.value))	{$tag.addClass('red')}
+			else	{} //do nothing.
+			},
+		
 		orderFlagsAsSpans : function($tag,data)	{
 			var flags = app.ext.admin_orders.u.getOrderFlagsAsArray(data.value),
 			L = flags.length;

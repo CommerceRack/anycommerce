@@ -71,7 +71,7 @@ Generic text styles
 .blue	{color:#000066;}
 .green	{color:#006600;}
 
-
+.smallTxt	{font-size:.75em;}
 
 /*
 some global padding and margins.

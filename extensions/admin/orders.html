@@ -486,12 +486,11 @@ The following templates are used in the 'order detail' modal/view.
 
 <table>
 <tr id='orderEventHistoryTemplate'>
-	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
+	<td class='smallTxt'><time data-bind='var: payment(ts); format:epoch2pretty;'></time></td>
 	<td><span data-bind='var: events(luser); format:text;'></span></td>
-	<td><span data-bind='var: events(content); format:text;'></span></td>
+	<td data-bind='var: events(etype); format:etypeAsClass; extension:admin_orders;' ><span data-bind='var: events(content); format:text;'></span></td>
 	<td>
-	<div title='uuid' data-bind='var: events(uuid); format:text;'></div>
-	<div title='etype' data-bind='var: events(etype); format:text; pretext: error: ;'></div>
+	<div title='etype' data-bind='var: events(etype); format:text; pretext: etype: ;'></div>
 	<div title='app'  data-bind='var: events(app); format:text; pretext: app: ;'></div>
 	</td>
 </tr>
