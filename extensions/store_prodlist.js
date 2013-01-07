@@ -509,6 +509,8 @@ params that are missing will be auto-generated.
 					
 					var plObj = this.setProdlistVars(obj); //full prodlist object now.
 
+//					app.u.dump(" -> plObj: "); app.u.dump(plObj);
+
 //need a jquery obj. to work with.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
 					else	{$tag = $('#'+plObj.parentID);}
@@ -594,6 +596,7 @@ $pageTag is the jquery object of whatever was clicked. the data to be used is st
 				},
 			
 			showProdlistSummary : function(plObj,location){
+				
 				location = location ? location : 'header';
 				var $output = app.renderFunctions.transmogrify({'id':'mpControl_'+plObj.parentID+'_'+location,'targetList':plObj.parentID},'mpControlSpec',plObj);
 				if(plObj.hide_pagination === true)	{
