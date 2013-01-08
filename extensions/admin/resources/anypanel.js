@@ -31,8 +31,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 			templateID : null, //what any commerce template to use to populate the panel.
 			data : {}, //what data to use to translate the panel.
 			dataAttribs : {}, //optional set of params to set as data on content. currently, only used if content is generated from templateID.
-			call : null, //optional admin call used to populate content
+			dispatch : null, // a dispatch that'll be added directly to the Q. _tag will be added to it.
 			showClose : true, //set to false to disable close (X) button.
+			content : null, //a jquery object of content to use.
 			header : null, //if set, will create an h2 around this and NOT use firstchild.
 			q : 'mutable', //which q to use.
 			extension : '', //used in conjunction w/ persist.
@@ -65,7 +66,13 @@ Additional a settings button can be added which will contain a dropdown of selec
 				else if(o.title)	{$content = $t.children(":first");}
 				else	{$content = $t.children(":nth-child(2)");}
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
+				
+				if(o.dispatch && typeof o.dispatch == 'object')	{
+					$content.showLoading();
+					app.model.addDispatchToQ(o.dispatch,'mutable');
+					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
+				//they'll get executed as part of the callback if a call is specified.
 				}
 			}, //_init
 
@@ -92,6 +99,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_anyContent : function()	{
 			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
+			if(o.content)	{
+				$content = o.content;
+				}
 //templateid and data are both specified, so add and translate.
 			if(o.templateID && o.data)	{
 //				app.u.dump(" -> o.data: "); app.u.dump(o.data);

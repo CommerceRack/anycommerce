@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','recentNewsItemTemplate'); 
 	var r = {
 		
 	vars : {
@@ -940,9 +940,9 @@ else	{
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateSelector");
+				app.u.dump("BEGIN callbacks.translateSelector");
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
-//				app.u.dump(" -> selector: "+selector);
+				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector)
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
@@ -1656,8 +1656,21 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.u.selectivelyNukeLocalStorage(); //get rid of most local storage content. This will reduce issues for users with multiple accounts.
 				app.model.destroy('authAdminLogin'); //clears this out of memory and local storage. This would get used during the controller init to validate the session.
 
-				} //logout
+				}, //logout
 
+			showLandingPage : function()	{
+				var $content = $("#homeContent").empty();
+				app.ext.admin.u.bringTabIntoFocus();
+				app.ext.admin.u.bringTabContentIntoFocus($content);
+				
+				var $div = $("<div \/>").attr('id','recentNewsPanel').anypanel({
+					'title' : 'recentNews',
+					'content' :$("<table \/>").attr('data-bind','var:news(content); format:processList; loadsTemplate:recentNewsItemTemplate;'),
+					'dispatch' : {'_cmd':'appResource','filename':'recentnews.json','_tag':{'datapointer':'recentnews.json','callback':'translateSelector','extension':'admin','selector':'#recentNewsPanel'}}
+					});
+				$content.append($div);
+				app.model.dispatchThis('mutable');
+				}
 			}, //action
 
 
@@ -1796,7 +1809,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //used for bringing one of the top tabs into focus. does NOT impact content area.
 			bringTabIntoFocus : function(tab){
 				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
-				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
+				if(tab)	{$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on')}
+				else	{} //perfectly to have no tab in focus (home, support, etc)
 				},
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
