@@ -298,15 +298,15 @@ $tag.click(function(){
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var L = app.data.cartShippingMethods['@methods'].length;
+				var L = app.data.cartDetail['@SHIPMETHODS'].length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(app.data.cartShippingMethods['@methods'][i].id == data.value)	{
-						var pretty = app.u.isSet(app.data.cartShippingMethods['@methods'][i]['pretty']) ? app.data.cartShippingMethods['@methods'][i]['pretty'] : app.data.cartShippingMethods['@methods'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+					if(app.data.cartDetail['@SHIPMETHODS'][i].id == data.value)	{
+						var pretty = app.u.isSet(app.data.cartDetail['@SHIPMETHODS'][i]['pretty']) ? app.data.cartDetail['@SHIPMETHODS'][i]['pretty'] : app.data.cartDetail['@SHIPMETHODS'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
 						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
 //only show amount if not blank.
-						if(app.data.cartShippingMethods['@methods'][i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartShippingMethods['@methods'][i].amount,' $',2,false)+"<\/span>";
+						if(app.data.cartDetail['@SHIPMETHODS'][i].amount)	{
+							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartDetail['@SHIPMETHODS'][i].amount,' $',2,false)+"<\/span>";
 							}
 						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
