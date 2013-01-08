@@ -141,12 +141,14 @@ body
 					margin: 0px auto;
 					width: 960px;
 				}
-				div#container div#content div#homepageTemplate_ div#featuredCategories
+				div#container div#content div.featuredCategories
 				{
-					background: url("../images/background-featured-categories.png");						
-					position: relative;				
+					background: url("../images/background-featured-categories.png");	
+					clear: both;					
+					position: relative;
+					text-align: center;		
 				}
-					div#container div#content div#homepageTemplate_ div#featuredCategories div#catNav
+					div#container div#content div.featuredCategories div.catNav
 					{
 						background: url("../images/background-homepage-category-navigation.png") repeat-x;
 						height: 62px;
@@ -157,14 +159,14 @@ body
 						-webkit-box-shadow: 1px 1px 5px 1px #222222;
 						box-shadow:         1px 1px 5px 1px #222222;							
 					}
-					div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent
+					div#container div#content .featuredCategories div.catNavContent
 					{
 						height: 62px;
 						margin: 0px auto;
 						position: relative;	
 						width: 360px;					
 					}	
-						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p.navCats
+						div#container div#content div.featuredCategories div.catNavContent p.navCats
 						{	
 							color: #FFFFFF;
 							float: left;
@@ -174,7 +176,7 @@ body
 							position: relative;
 							top: 22px;							
 						}	
-						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p#currentCat
+						div#container div#content div.featuredCategories div.catNavContent p.currentCat
 						{	
 							color: #FFFFFF;
 							float: left;
@@ -183,17 +185,23 @@ body
 							position: relative;
 							top: 16px;
 						}	
-						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent p:not(:last-child)
+						div#container div#content div.featuredCategories div.catNavContent p:not(:last-child)
 						{	
 							padding-right: 18px;
 						}											
-						div#container div#content div#homepageTemplate_ div#featuredCategories div#catNavContent img.catButton
+						div#container div#content div.featuredCategories div.catNavContent img.catButton
 						{	
 							cursor: pointer;						
 							float: left;
 							padding-right: 18px;
 							position: relative;
 							top: 14px;
+						}
+						div#container div#content div.featuredCategories img.btnViewAllCategories
+						{
+							cursor: pointer;
+							padding-bottom: 30px;
+							padding-top: 8px;
 						}
 						
 						ul.categoryList
@@ -545,59 +553,133 @@ body
 	width: 300px; 
 	z-index: 1000;
 }
-.prodDetailView .prodImages .prodThumbs .prodThumbsBG
-{
-	background-color: #000000;
-	height: 100%;
-	opacity: .75;
-	position: absolute;
-	width: 100%;	
-	z-index: 999;
-}
-.prodDetailView .prodImages .prodThumbs .prodThumbBackButton
-{
-	height: 70px;
-	left: 0px;
-	position: absolute;
-	top: 0px;
-	width: 20px;
-	z-index: 1000;
-}
-.prodDetailView .prodImages .prodThumbs .prodThumbBackButton img
-{
-	cursor: pointer;
-	left: 3px;
-	position: absolute;
-	top: 17px;
-	z-index: 1000;
-}
-.prodDetailView .prodImages .prodThumbs .prodThumbNextButton
-{
-	right: 0px;
-	height: 70px;
-	position: absolute;
-	top: 0px;
-	width: 20px;
-	z-index: 1000;
-}
-.prodDetailView .prodImages .prodThumbs .prodThumbNextButton img
-{
-	cursor: pointer;
-	right: 3px;
-	position: absolute;
-	top: 17px;
-	z-index: 1000;
-}
+	.prodDetailView .prodImages .prodThumbs .prodThumbsBG
+	{
+		background-color: #000000;
+		height: 100%;
+		opacity: .75;
+		position: absolute;
+		width: 100%;	
+		z-index: 999;
+	}
+		.prodDetailView .prodImages .prodThumbs div.prodThumb
+		{
+			float: left;
+			height: 46px;
+			margin: 10px 0px 0px 37px;
+			position: relative;
+			width: 46px;
+			z-index: 1000;
+		}
+			.prodDetailView .prodImages .prodThumbs div.prodThumb img
+			{
+				border: 2px solid #FFFFFF;
+				height: 46px;
+				width: 46px;
+			}
+	.prodDetailView .prodImages .prodThumbs .prodThumbBackButton
+	{
+		height: 70px;
+		left: 0px;
+		position: absolute;
+		top: 0px;
+		width: 20px;
+		z-index: 1000;
+	}
+		.prodDetailView .prodImages .prodThumbs .prodThumbBackButton img
+		{
+			cursor: pointer;
+			left: 3px;
+			position: absolute;
+			top: 17px;
+			z-index: 1000;
+		}
+	.prodDetailView .prodImages .prodThumbs .prodThumbNextButton
+	{
+		right: 0px;
+		height: 70px;
+		position: absolute;
+		top: 0px;
+		width: 20px;
+		z-index: 1000;
+	}
+		.prodDetailView .prodImages .prodThumbs .prodThumbNextButton img
+		{
+			cursor: pointer;
+			right: 3px;
+			position: absolute;
+			top: 17px;
+			z-index: 1000;
+		}
 
-.prodLikeItems
+div.prodRelatedItems
 {
 	background-color: #FFFFFF;
-	height: 230px;
+	/*height: 230px;*/
 	left: 0px;
+	overflow: hidden;
 	position: absolute;
 	width: 300px;
 	top: 356px;
 }
+	div.prodRelatedItems ul.relatedItems
+	{
+		width: 100%;
+	}
+		div.prodRelatedItems ul.relatedItems li
+		{
+			border-bottom: 1px solid #cccccc;
+			height: auto;
+			margin: 0;
+			padding: 0;
+			width: 300px;
+		}			
+			div.prodRelatedItems ul.relatedItems li img.pointer
+			{
+				/*bottom: 5px;
+				position: absolute;
+				right: 5px;*/
+				display: none;
+			}
+			div.prodRelatedItems ul.relatedItems li img.prodThumb
+			{
+				height: 55px;
+				left: 5px;
+				position: absolute;
+				top: 10%;
+				width: 55px;
+			}
+			div.prodRelatedItems ul.relatedItems li div.prodThumbContainer ul.slideMe
+			{
+				height: 55px;
+				width: 55px;
+			}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbContainer ul.slideMe img
+				{
+					height: 55px;
+					width: 55px;
+				}
+			div.prodRelatedItems ul.relatedItems li div.prodThumbDesc
+			{
+				height: auto;
+				left: 0px;
+				position: relative;
+				top: 0px;
+				width: 300px;
+			}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h5
+				{
+					cursor: pointer;
+					font-family: Helvetica;
+					font-size: 13px;
+					font-weight: normal;
+					padding: 25px 0 25px 70px;
+					width: 220px;
+				}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h6
+				{
+					display: none;
+				}
 
 .prodDetailDesc
 {
@@ -771,3 +853,59 @@ body
 	margin-left: 30px;
 	width: 960px;
 }
+
+/* content pages */
+div.contentPage
+{
+	margin-top: 30px;
+	position: relative;
+}
+	div.contentPage div.sideline
+	{
+		margin-right: 10px;
+		position: relative;
+		width: 220px;
+	}
+		div.contentPage div.sideline nav
+		{
+			background-color: #c9bca8;
+			margin-bottom: 30px;
+			position: relative;
+			width: 220px;
+		}
+			div.contentPage div.sideline nav p
+			{
+				color: #770000;
+				font-family: Helvetica;
+				font-size: 22px;
+				margin-bottom: 0px;
+				padding-left: 30px;
+				padding-top: 30px;
+			}
+			div.contentPage div.sideline nav ul
+			{
+				margin-top: 3px;
+				padding-bottom: 25px;
+				padding-left: 30px;
+				position: relative;
+			}
+				div.contentPage div.sideline nav ul li
+				{
+				}
+					div.contentPage div.sideline nav ul li a
+					{
+						color: #000000;
+						font-family: Helvetica;
+						font-size: 14px;
+						text-decoration: underline;
+					}
+						div.contentPage div.sideline nav ul li a:hover
+						{
+							color: #FFFFFF;
+						}
+	div.contentPage div.mainColumn
+	{
+		padding-left: 10px;
+		position: relative;
+		width: 620px;
+	}
