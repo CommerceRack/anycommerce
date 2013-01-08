@@ -81,8 +81,17 @@ var admin_support = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			addSupportFileUploadToID : function(id,ticketid,uuid)	{
+				var $target = $(app.u.jqSelector('#',id));
+				$target.attr('data-ticketid',ticketid);
+				$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid}));
+				$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
+				app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
+				},
+			
 			showFileUploadInModal : function(ticketid,uuid){
-				if(ticketid && uuid)	{
+				if((ticketid === 0 || ticketid) && uuid)	{
 					var $target = $('#ticketFileUploadModal');
 	//To avoid confusion (like showing uploads from a previously edited ticket) the file upload div is emptied and the entire contents regenerated afresh.
 					if($target.length){$target.empty();}
@@ -98,7 +107,7 @@ var admin_support = function() {
 					
 					}
 				else	{
-					app.u.throwGMessage("Warning! Either ticketid ["+ticketid+"] or uuid ["+uuid+"] specified in admin_support.a.showFileUploadInModal. Both are required.");
+					app.u.throwGMessage("Warning! Either ticketid ["+ticketid+"] or uuid ["+uuid+"] not specified in admin_support.a.showFileUploadInModal. Both are required.");
 					}
 				
 				}

@@ -194,13 +194,14 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					var $target = $("[data-app-role='dualModeDetail']","#userManagerContent"),
 					index = $(this).closest('tr').data('obj_index');
 					user = app.data.bossUserList['@USERS'][index];
+					user['@ROLES'] = {};
 
-					user.roles = $.extend(user.roles,app.data.bossRolesList);
+					$.extend(user['@ROLES'],app.data.bossRoleList['@ROLES']);
 
-//					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
+					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
-						
+
 var $panel = $("<div\/>").hide().anypanel({
 	'title':'Edit: '+user.uid,
 	'templateID':'userManagerUserCreateUpdateTemplate',
@@ -208,7 +209,12 @@ var $panel = $("<div\/>").hide().anypanel({
 	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid}
 	}).prependTo($target);
 $panel.slideDown('slow');
-
+$("[data-app-role='roleList']",$panel).sortable({ handle: ".handle" });
+$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
+	$(this).addClass('edited');
+	$('.numChanges',$panel).text($(".edited",$panel).length);
+	$('.numChanges',$panel).parent().addClass('ui-state-highlight');
+	})
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');

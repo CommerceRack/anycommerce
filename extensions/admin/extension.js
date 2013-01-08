@@ -757,6 +757,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(_tag,Q)	{
 				Q = Q || 'immutable';
 				var obj = {_cmd : 'bossRoleList'};
+				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //bossRoleList
@@ -2624,7 +2625,7 @@ just lose the back button feature.
 			handleAppEvents : function($target)	{
 //				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{
-//					app.u.dump(" -> target exists");
+//					app.u.dump(" -> target exists"); app.u.dump($target);
 					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
 						extension = $ele.data('app-event').split("|")[0],
@@ -2638,7 +2639,7 @@ just lose the back button feature.
 						else	{
 							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
 							}
-						})
+						});
 					}
 				else	{
 					app.u.throwGMessage("In admin_orders.u.handleButtonActions, target was either not specified, not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");

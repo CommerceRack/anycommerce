@@ -65,7 +65,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				else if(o.title)	{$content = $t.children(":first");}
 				else	{$content = $t.children(":nth-child(2)");}
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
-
+				app.ext.admin.u.handleAppEvents(this.element);
 				}
 			}, //_init
 
@@ -95,12 +95,10 @@ Additional a settings button can be added which will contain a dropdown of selec
 //templateid and data are both specified, so add and translate.
 			if(o.templateID && o.data)	{
 				$content = app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data);
-				app.ext.admin.u.handleAppEvents(this.element);
 				}
 			//templateid and call are specified, so create instance. dispatch occurs OUTSIDE this plugin.
 			else if(o.templateID && o.call)	{
 				$content = app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs);
-				
 // !!! need a 'call' here with a translateSelector callback (admin extension)
 				}
 			//a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
@@ -135,9 +133,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
 			$header.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(){self.toggle()})); //settings button
-			
-
-
 			},
 
 		_handleInitialState : function()	{
