@@ -84,8 +84,10 @@ var admin_support = function() {
 			
 			addSupportFileUploadToID : function(id,ticketid,uuid)	{
 				var $target = $(app.u.jqSelector('#',id));
+				$target.empty(); //clear any previous instantiations of the uploader. (in case of doubleclick)
 				$target.attr('data-ticketid',ticketid);
-				$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid}));
+				$target.attr('data-uuid',uuid);
+				$target.append(app.renderFunctions.transmogrify({'ticketid':ticketid,'uuid':uuid},'supportFileUploadTemplate',{}));
 				$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
 				app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
 				},
