@@ -784,7 +784,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 //				app.u.dump('BEGIN app.ext.admin.init.onSuccess ');
 				var r = true; //return false if extension can't load. (no permissions, wrong type of session, etc)
 //app.u.dump("DEBUG - template url is changed for local testing. add: ");
-
+$('title').append(" - release: "+app.vars.release);
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
 //app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
