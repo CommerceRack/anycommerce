@@ -1037,6 +1037,7 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
+				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><img src='extensions/admin/images/zoovy_live-375x238.gif' width='375' height='238' alt='' /><\/td><\/tr><\/table>");
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
@@ -1053,7 +1054,8 @@ else	{
 							$target.dialog('close');
 							}).appendTo($ul);
 						}
-					$target.hideLoading().append($ul);
+					$target.hideLoading();
+					$('.domainList',$target).append($ul);
 					}
 				else	{
 //user has no domains on file. What to do?
