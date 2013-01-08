@@ -195,19 +195,20 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					index = $(this).closest('tr').data('obj_index');
 					user = app.data.bossUserList['@USERS'][index];
 
+					user.roles = $.extend(user.roles,app.data.bossRolesList);
+
 //					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 						
-var $panel = $("<div\/>").anypanel({
+var $panel = $("<div\/>").hide().anypanel({
 	'title':'Edit: '+user.uid,
 	'templateID':'userManagerUserCreateUpdateTemplate',
 	'data':user,
 	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid}
-	}).appendTo($target);
-						
-//						$target.append(app.renderFunctions.transmogrify(,,));
-//						app.ext.admin.u.handleAppEvents($target);
+	}).prependTo($target);
+$panel.slideDown('slow');
+
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
