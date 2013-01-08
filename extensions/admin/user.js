@@ -127,8 +127,7 @@ var admin_user = function() {
 			}, //u
 
 		e : {
-			
-			
+
 			"toggleDualMode" : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
 				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
@@ -136,7 +135,7 @@ var admin_user = function() {
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'));
 					});
 				}, //toggleDualMode
-			
+
 			"roleListEdit" : function($this)	{
 				app.u.dump("BEGIN admin_users.e.roleListEdit");
 				$this.sortable({ handle: ".handle" });
