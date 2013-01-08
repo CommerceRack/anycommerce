@@ -743,7 +743,7 @@ app.u.dump(" -> mode: "+mode);
 if(selector && mode)	{
 	
 	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
-	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
+//	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
 
 	var successCallbacks = {
 	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
@@ -763,11 +763,12 @@ if(selector && mode)	{
 			},
 		'adminTicketFileAttach' : function(data,textStatus)	{
 			app.u.dump(" -> Got to adminTicketFileAttach success.");
-			data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
-			data[0].uuid = $('#ticketFileUploadModal').attr('data-uuid');
+			data[0].ticketid = $(selector).attr('data-ticketid');
+			data[0].uuid = $(selector).attr('data-uuid');
 			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
+			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
 			app.ext.admin_support.calls.adminTicketFileAttach.init({ticketid:data[0].ticketid,uuid:data[0].uuid},{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
-			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
+//			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},
 		'csvUploadToBatch' : function(data,textStatus) {

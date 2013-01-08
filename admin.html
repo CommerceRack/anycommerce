@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20130108.2",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"20130108.3",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -400,7 +400,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.ext.admin_support.a.addSupportFileUploadToID('TICKET_ATTACHED_FILES',353055,1234);">add file upload</button>
 
-<button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'review_status.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>
+<button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'recentnews.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>
 
 <button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
 
