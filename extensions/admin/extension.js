@@ -736,10 +736,48 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //bossUserList
 
-		bossUserUpdate : {},
-		bossUserDelete : {},
+		bossUserDelete : {
+			init : function(uid,_tag,Q)	{
+				var r = 0;
+				Q = Q || 'immutable';
+				if(uid)	{
+					this.dispatch(uid,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.bossUserDelete, uid is undefined and required.");
+					}
+				return r;
+				},
+			dispatch : function(uid,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = 'bossUserDelete|'+uid;
+				app.model.addDispatchToQ({"_cmd":"bossUserDelete","uid":uid,"_tag" : _tag},Q);
+				}
+			}, //bossUserDelete
+		bossUserUpdate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				Q = Q || 'immutable';
+				if(!$.isEmptyObject(obj) && obj.uid)	{
+					this.dispatch(obj,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.bossUserUpdate, obj is empty or obj.uid is not set.");
+					app.u.dump(obj);
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'bossUserUpdate';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'bossUserUpdate|'+obj.uid;
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
 
-		bossRoleCreate : {},
+		
 		bossRoleList : {
 			init : function(_tag,Q)	{
 				var r = 0;
@@ -760,9 +798,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				}
-			}, //bossRoleList
-		bossRoleUpdate : {},
-		bossRoleDelete : {}
+			} //bossRoleList
+//calls not supported yet.
+//		bossRoleCreate : {},
+//		bossRoleUpdate : {},
+//		bossRoleDelete : {}
 
 
 		}, //calls

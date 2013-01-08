@@ -54,7 +54,7 @@ var admin_user = function() {
 
 		a : {
 //This is how the task manager is opened. Just execute this function.
-// later, we may add the ability to load directly into 'edit' mode and open a specific task. not supported just yet.
+// later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
 			showUserManager : function() {
 				app.u.dump("BEGIN admin_user.a.showUserManager");
 				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
@@ -100,6 +100,14 @@ var admin_user = function() {
 					$L.animate({width:"49%"},1000); //shrink list side.
 					$D.show().animate({width:"49%"},1000); //expand detail side.
 					$('.hideInDetailMode',$L).hide(); //adjust list for minification.
+//when switching from detail to list mode, the detail panels collapse. re-open them IF they were open when the switch to list mode occured.
+					if(numDetailPanels)	{
+						$('.ui-widget-anypanel',$D).each(function(){
+							if($(this).anypanel('option','state') == 'expand' && !$('.ui-widget-content',$(this)).is(':visible')){
+								$(this).anypanel('expand');
+								}
+							});						
+						}
 					}
 				else if (mode == 'list')	{
 					$btn.button('destroy').button({icons: {primary: "ui-icon-seek-next"},text: false});
@@ -109,6 +117,9 @@ var admin_user = function() {
 						$L.animate({width:"84%"},1000); //shrink list side.
 						$D.show().animate({width:"14%"},1000); //expand detail side.
 						$btn.show();
+						$('.ui-widget-anypanel',$D).each(function(){
+							$(this).anypanel('collapse',true)
+							});
 						}
 //there are no panels open in the detail column, so expand list to 100%.
 					else	{
@@ -123,6 +134,26 @@ var admin_user = function() {
 					app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
 					}
 				
+				}, //toggleDualMode
+
+			emptyUsersTable : function()	{
+				$("[data-app-role='dualModeListContents']","#userManagerContent").empty();
+				},
+
+			getRoleCheckboxesAsArray : function($parent)	{
+				var roles = new Array();
+				if($parent && $parent.length)	{
+					$(":checkbox",$parent).each(function(){
+						var $cb = $(this);
+						if($cb.is(':checked'))	{roles.push($cb.attr('name'))}
+						else	{} //not checked. do nothing.
+						});
+					}
+				else	{
+					roles = false;
+					app.u.throwGMessage("In admin_users,u.getRoleCheckboxesAsArray, $parent not specified or does not exist on the DOM.");					
+					}
+				return roles;
 				}
 			}, //u
 
@@ -130,6 +161,7 @@ var admin_user = function() {
 
 			"toggleDualMode" : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});
+				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
 				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
 					event.preventDefault();
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'));
@@ -141,45 +173,70 @@ var admin_user = function() {
 				$this.sortable({ handle: ".handle" });
 				}, //roleListEdit
 
+
+			"bossUserUpdateSave" : function($btn)	{
+				$btn.button();
+				$btn.off('click.bossUserUpdateSave').on('click.bossUserUpdateSave',function(event){
+					event.preventDefault();
+					app.u.dump("BEGIN admin_user.e.bossUserUpdateSave");
+					var $panel = $(this).closest('.ui-widget-anypanel'),
+					updateObject = {'uid':$panel.data('uid'),'roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)}
+//add all CHANGED attributes to the update object.
+					$(".edited",$panel).each(function(){
+						app.u.dump(" -> $(this).attr('name'): "+$(this).attr('name'));
+						updateObject[$(this).attr('name')] = $(this).val();
+						});
+					app.u.dump(" -> updateObject: "); app.u.dump(updateObject);
+					$("#userDetail_"+uid).showLoading();
+					app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
+					app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+					app.ext.admin.calls.bossUserUpdate.init(updateObject,{'callback':'translateSelector','extension':'admin','selector':"#userDetail_"+uid},'immutable');
+					app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+				},
+
 /*
 the create and update template is recycled. the button has the same app event, but performs a different action based on whether or not a save or update is being perfomed.
 Whether it's a create or update is based on the data-usermode on the parent.
 */
-			"bossUserCreateUpdateSave" : function($btn){
+			"bossUserCreateSave" : function($btn){
 				$btn.button();
 				$btn.off('click.bossUserCreateUpdateSave').on('click.bossUserCreateUpdateSave',function(event){
 					event.preventDefault();
 					app.u.dump("BEGIN admin_user.e.bossUserCreateUpdateSave");
-					var $parent = $(this).closest("[data-usermode]"),
-					mode = $parent.data('usermode'),
-					frmObj = $(this).closest("form").serializeJSON();
+					var $parent = $('#bossUserCreateModal'),
+					frmObj = $(this).closest("form").serializeJSON(); //used to generate roles array and also sent directly as part of create. not used in update.
 					
-					frmObj.roles = new Array();
+					$parent.showLoading();
+//build an array of the roles that are checked. order is important.
+					frmObj.roles = app.ext.admin_user.u.getRoleCheckboxesAsArray($parent);
 					$(":checkbox",$parent).each(function(){
-						var $cb = $(this);
-						if($cb.is(':checked'))	{frmObj.roles.push($cb.attr('name'))}
-						else	{} //not checked. do nothing.
-
-						delete frmObj[$cb.attr('name')]; //remove from serialized form object. params are/may be whitelisted.
+						delete frmObj[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
 						});
-
-					app.u.dump(" -> mode: "+mode);
 
 					if($.isEmptyObject(frmObj))	{
 						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to locate form object for serialization or serialized object is empty.');
 						}
-					else if(mode == 'update')	{
-						app.ext.admin.calls.bossUserUpdate.init(frmObj,{},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else if(mode == 'create')	{
+					else {
 						app.model.destroy('bossUserList');
-						app.ext.admin.calls.bossUserCreate.init(frmObj,{},'immutable');
-						app.ext.admin.calls.bossUserList.init({},'immutable');
+						app.ext.admin.calls.bossUserCreate.init(frmObj,{'callback':function(rd){ //rd is responseData.
+							if(app.model.responseHasErrors(rd)){
+								$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
+								rd.parentID = 'bossUserCreateModal';
+								app.u.throwMessage(rd);
+								}
+							else	{
+								var msg = app.u.successMsgObject("User has been created!");
+								msg.parentID = 'bossUserCreateModal';
+								$parent.empty(); //only empty if no error occurs. That way user can correct and re-submit.
+								app.u.throwMessage(msg);
+								$( ".selector" ).dialog( "option", "buttons", [ { text: "Close", click: function() { $( this ).dialog( "close" ); }} ] );
+								}
+							$parent.hideLoading();
+							}},'immutable');
+						app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
 						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to determine mode.');
 						}
 					});
 				}, //bossUserCreateUpdateSave
@@ -197,28 +254,57 @@ Whether it's a create or update is based on the data-usermode on the parent.
 
 					$.extend(user['@ROLES'],app.data.bossRoleList['@ROLES']);
 
-					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
+//					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-var $panel = $("<div\/>").hide().anypanel({
+var $panel = $("<div\/>").data('uid',user.uid).hide().anypanel({
 	'title':'Edit: '+user.uid,
 	'templateID':'userManagerUserCreateUpdateTemplate',
 	'data':user,
-	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid}
+	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid,'usermode':'update'}
 	}).prependTo($target);
+//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
+var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpdateSave').html("Save <span class='numChanges'></span> Changes").button({'disabled':true});
+$('form',$panel).append($saveButton);
+app.ext.admin.u.handleAppEvents($panel);
 $panel.slideDown('slow');
 $("[data-app-role='roleList']",$panel).sortable({ handle: ".handle" });
 $(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
 	$(this).addClass('edited');
 	$('.numChanges',$panel).text($(".edited",$panel).length);
-	$('.numChanges',$panel).parent().addClass('ui-state-highlight');
-	})
+	$saveButton.button('enable').addClass('ui-state-highlight');
+	});
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
 
 					});
+				},
+			
+			"bossUserDelete" : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.bossUserCreate').on('click.bossUserCreate',function(event){
+					event.preventDefault();
+					var data = $(this).closest('tr').data(),
+					$D = $("<div \/>").attr('title','Delete User').append("Are you sure you want to delete user <b>"+(data.fullname || data.luser)+"<\/b>? This action can not be undone.");
+
+					$D.dialog({
+resizable: false,
+modal: true,
+buttons: {
+	"Delete User": function() {
+		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
+		app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+		app.ext.admin.calls.bossUserDelete.init(data.uid,{},'immutable');
+		app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
+		app.model.dispatchThis('immutable');
+		},
+	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}
+	}
+        });
+					});
+				
 				},
 			
 			"bossUserCreate" : function($btn){
@@ -235,6 +321,9 @@ $(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
 					$target.dialog('open');
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 					$target.append(app.renderFunctions.transmogrify({'id':'bossUserCreateContent','usermode':'create'},'userManagerUserCreateUpdateTemplate',app.data.bossRoleList)); //populate content.
+					//adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
+					$('form',$target).append("<button data-app-event='admin_user|bossUserCreateSave' class='alignCenter'>Create User</button>");
+
 					app.ext.admin.u.handleAppEvents($target);
 					});
 				}

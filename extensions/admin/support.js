@@ -71,7 +71,7 @@ var admin_support = function() {
 		
 		handleAdminTicketFileAttach : {
 			onSuccess : function(tagObj){
-				app.u.dump("Got Here!");
+				//the media uploader handles showing a successful upload. however, if any additional actions are needed, add them here.
 				}
 			}
 		}, //callbacks

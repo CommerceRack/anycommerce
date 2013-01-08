@@ -65,7 +65,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				else if(o.title)	{$content = $t.children(":first");}
 				else	{$content = $t.children(":nth-child(2)");}
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
-				app.ext.admin.u.handleAppEvents(this.element);
+				//appevents should happen outside this so that any other manipulation can occur prior to running them.
 				}
 			}, //_init
 
@@ -94,6 +94,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			o = this.options;
 //templateid and data are both specified, so add and translate.
 			if(o.templateID && o.data)	{
+//				app.u.dump(" -> o.data: "); app.u.dump(o.data);
 				$content = app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data);
 				}
 			//templateid and call are specified, so create instance. dispatch occurs OUTSIDE this plugin.

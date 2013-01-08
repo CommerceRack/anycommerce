@@ -2486,12 +2486,11 @@ $tmp.empty().remove();
 //at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.
 //data-obj_index is set so that a quick lookup is available. ex: in tasks list, there's no detail call, so need to be able to find data quickly in orig object.
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
-
+//doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
 			app.u.dump("BEGIN renderFormats.processList");
-			var L = data.value.length;
 			var $o; //recycled. what gets added to $tag for each iteration.
-			for(var i = 0; i < L; i += 1)	{
+			for(i in data.value)	{
 //				app.u.dump(i+") reached.");
 				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 //				app.u.dump(" ---> appended");

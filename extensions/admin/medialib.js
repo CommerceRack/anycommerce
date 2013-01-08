@@ -744,7 +744,7 @@ if(selector && mode)	{
 	
 	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
 //	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
-	app.u.dump(" -> $selector: "); app.u.dump($selector);
+//	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
 	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 		'mediaLibrary' : function(data,textStatus){
@@ -767,7 +767,7 @@ if(selector && mode)	{
 			data[0].uuid = $("[name='uuid']",$selector).val();
 			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
 			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
-			app.ext.admin_support.calls.adminTicketFileAttach.init({ticketid:data[0].ticketid,uuid:data[0].uuid},{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
+			app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
 			},

@@ -394,11 +394,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 
-<button onClick="app.ext.admin.calls.bossUserCreate.init({},{},'immutable'); app.model.dispatchThis('immutable');">BossUserCreate</button>
-<button onClick="app.ext.admin.calls.bossRoleList.init({},'immutable'); app.model.dispatchThis('immutable');">BossRoleList</button>
-
-
-<button onClick="app.ext.admin_support.a.addSupportFileUploadToID('TICKET_ATTACHED_FILES',353055,1234);">add file upload</button>
+<button onClick="$('#userManagerContent [data-app-role=\'dualModeList\'] td').css('background','red')">Selector Test</button>
 
 <button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'recentnews.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>
 

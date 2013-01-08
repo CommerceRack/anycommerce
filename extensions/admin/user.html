@@ -12,7 +12,7 @@
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth'>
+		<table class='gridTable fullWidth' >
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
@@ -25,7 +25,7 @@
 			<th></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;" class='dualModeList'></tbody>
+		<tbody data-bind="var: users(@USERS); format:processList; loadsTemplate:userManagerUserRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 		</table>
 		</div>
 	</section>
@@ -38,13 +38,14 @@
 
 	<tr id='userManagerUserRowTemplate'>
 		<td data-bind="var: user(uid); format:text;"></td>
-		<td data-bind="var: user(username); format:text;"></td>
-		<td class='hideInDetailMode' data-bind="var: user(luser); format:text;"></td>
+		<td data-bind="var: user(luser); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: user(fullname); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
-		<td data-bind="var: user(permissions); format:text;"></td>
+		<td data-bind="var: user(roles); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
 		<td>
 		<button data-app-event="admin_user|bossUserUpdate">edit</button>
+		<button data-app-event="admin_user|bossUserDelete" class='marginLeft'>delete</button>
 		</td>
 	</tr>
 
@@ -66,7 +67,7 @@
 
 
 
-<div id='userManagerUserCreateUpdateTemplate' title='User'>
+<div id='userManagerUserCreateUpdateTemplate' title='User' class='createUpdateUserContainer'>
 
 <form action='#'>
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
@@ -105,9 +106,7 @@
 	
 </fieldset>
 -->
-<div class='alignCenter'>
-	<button data-app-event='admin_user|bossUserCreateUpdateSave'>Save <span class='numChanges'></span> Changes</button>
-</div>
+
 </form>
 
 </div>
