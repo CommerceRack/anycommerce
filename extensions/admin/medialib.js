@@ -744,7 +744,7 @@ if(selector && mode)	{
 	
 	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
 //	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
-
+	app.u.dump(" -> $selector: "); app.u.dump($selector);
 	var successCallbacks = {
 	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
 		'mediaLibrary' : function(data,textStatus){
@@ -763,8 +763,8 @@ if(selector && mode)	{
 			},
 		'adminTicketFileAttach' : function(data,textStatus)	{
 			app.u.dump(" -> Got to adminTicketFileAttach success.");
-			data[0].ticketid = $(selector).attr('data-ticketid');
-			data[0].uuid = $(selector).attr('data-uuid');
+			data[0].ticketid = $("[name='ticketid']",$selector).val();
+			data[0].uuid = $("[name='uuid']",$selector).val();
 			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
 			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
 			app.ext.admin_support.calls.adminTicketFileAttach.init({ticketid:data[0].ticketid,uuid:data[0].uuid},{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
