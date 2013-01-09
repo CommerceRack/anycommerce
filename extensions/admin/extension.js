@@ -1800,9 +1800,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
 					}
-				else if(path == '#!userManager')	{
-					app.ext.admin_user.a.showUserManager();
-					}
+//				else if(path == '#!userManager')	{
+//					app.ext.admin_user.a.showUserManager();
+//					}
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
 					}
