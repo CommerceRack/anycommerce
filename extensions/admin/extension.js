@@ -944,7 +944,7 @@ else	{
 				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 				app.u.dump(" -> selector: "+selector);
-				var $target = $(selector)
+				var $target = $(selector);
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);

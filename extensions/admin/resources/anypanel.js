@@ -68,7 +68,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
 				
 				if(o.dispatch && typeof o.dispatch == 'object')	{
-					$content.showLoading();
+//					$content.showLoading();
 					app.model.addDispatchToQ(o.dispatch,'mutable');
 					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
