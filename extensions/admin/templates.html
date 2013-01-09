@@ -205,6 +205,11 @@ click event is added at that time.
 	<div class="column" id="landingPageColumn3"></div>
 </div>
 
+<div id='quickstatReportTemplate'>
+	<div data-bind="var:news(contents.count); format:text; pretext:Total orders: ;"></div>
+	<div data-bind="var:news(contents.gms); format:text; pretext:Gross sales: ;"></div>
+	<div data-bind="var:news(contents.units); format:text; pretext:Items sold: ;"></div>
+</div>
 
 
 <!--

@@ -2488,7 +2488,7 @@ $tmp.empty().remove();
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
 //doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
-			app.u.dump("BEGIN renderFormats.processList");
+//			app.u.dump("BEGIN renderFormats.processList");
 			var $o; //recycled. what gets added to $tag for each iteration.
 			for(i in data.value)	{
 //				app.u.dump(i+") reached.");

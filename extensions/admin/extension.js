@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate'); 
 	var r = {
 		
 	vars : {
@@ -940,7 +940,7 @@ else	{
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN callbacks.translateSelector");
+//				app.u.dump("BEGIN callbacks.translateSelector");
 //				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 //				app.u.dump(" -> selector: "+selector);
@@ -1679,31 +1679,30 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 //quickstats ogms.
 				$('#landingPageColumn2',$content)
 				.append($("<div \/>").attr('id','landingPageOGMSPanel').anypanel({
-					'title' : 'OGMS',
+					'title' : 'Overall Sales Since Midnight',
 					'showClose' : false,
 					'call' : 'appResource',
 					'callParams' : 'quickstats/OGMS.json',
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOGMSPanel'},
-					'content' :$("<div \/>")
+					'templateID' :'quickstatReportTemplate'
 					}))
 				.append($("<div \/>").attr('id','landingPageOWEBPanel').anypanel({
-					'title' : 'OWEB',
+					'title' : 'Web Sales Since Midnight',
 					'showClose' : false,
 					'call' : 'appResource',
 					'callParams' : 'quickstats/OWEB.json',
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOWEBPanel'},
-					'content' :$("<div \/>")
+					'templateID' :'quickstatReportTemplate'
 					}))
 				.append($("<div \/>").attr('id','landingPageORPTPanel').anypanel({
-					'title' : 'ORPT',
+					'title' : 'Repeat Customer Sales Since Midnight',
 					'showClose' : false,
 					'call' : 'appResource',
 					'callParams' : 'quickstats/ORPT.json',
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageORPTPanel'},
-					'content' :$("<div \/>")
+					'templateID' :'quickstatReportTemplate'
 					}));
-
-
+		
 				app.model.dispatchThis('mutable');
 				}
 			}, //action

@@ -519,7 +519,7 @@ see shipping panel in product editor for example
 
 /* landing page (aka recent news) */
 
-.pageLanding .ui-widget-content	{max-height:400px; overflow:auto;} /* if/when browsers support it, check out  overflow-style */
+.pageLanding .ui-widget-content	{max-height:400px; overflow:auto; min-height:75px;} /* if/when browsers support it, check out  overflow-style */
 
 .pageLanding h2 .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
 

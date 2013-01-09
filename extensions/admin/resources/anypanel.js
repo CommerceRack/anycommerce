@@ -64,14 +64,14 @@ Additional a settings button can be added which will contain a dropdown of selec
 				self._handleButtons($header);
 			
 				$content = self._anyContent();
-//if content hasn't been created, then use the second child present.
-				if($content.length)	{$content.appendTo($t);}
-				else if(o.title)	{$content = $t.children(":first");}
-				else	{$content = $t.children(":nth-child(2)");}
+
+				if($content.length)	{$content.appendTo($t);} //content generated via template of some kind.
+				else if(o.title)	{$content = $t.children(":first");} //no content yet, title specified. use first child.
+				else	{$content = $t.children(":nth-child(2)");} //no content. first child is title. second child is content.
+				
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
 				
 				if(o.call && typeof app.ext.admin.calls[o.call] == 'object')	{
-//					$content.showLoading();
 					if(o.callParams)	{
 						app.ext.admin.calls[o.call].init(o.callParams,o._tag,o.Q);
 						}
@@ -108,11 +108,13 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_anyContent : function()	{
 			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
+//			app.u.dump("anypanel._anyContent");
 			if(o.content)	{
+				
 				$content = o.content;
 				}
 //templateid and data are both specified, so add and translate.
-			if(o.templateID && o.data)	{
+			else if(o.templateID && o.data)	{
 //				app.u.dump(" -> o.data: "); app.u.dump(o.data);
 				$content = app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data);
 				}
