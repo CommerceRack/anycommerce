@@ -56,7 +56,7 @@ This file is included in an iFrame for 'write review'
 */
 
 
-var powerReviews = function() {
+var powerReviews_reviews = function() {
 	return {
 		
 
@@ -81,17 +81,17 @@ var powerReviews = function() {
 				onSuccess : function()	{
 //					app.u.dump('BEGIN app.ext.store_crm.init.onSuccess ');
 					var r;
-					if(app.ext.powerReviews.vars.merchantID && app.ext.powerReviews.vars.groupID)	{
+					if(app.ext.powerReviews_reviews.vars.merchantID && app.ext.powerReviews_reviews.vars.groupID)	{
 						r = true;
 						}
 					else	{
 						var msg = app.u.errMsgObject("Uh Oh! It seems an error occured on our app. PowerReviews may not load properly. We apologize for the inconvenience.");
 						msg.persistant = true;
 						app.u.throwMessage(msg);
-						app.u.dump("ERROR! powerReviews did not pass init. The following variables are all required:");
-						app.u.dump(" -> app.ext.powerReviews.vars.merchantID: "+app.ext.powerReviews.vars.merchantID);
-						app.u.dump(" -> app.ext.powerReviews.vars.groupID: "+app.ext.powerReviews.vars.groupID);
-						app.u.dump(" -> app.ext.powerReviews.vars.hash: "+app.ext.powerReviews.vars.hash);
+						app.u.dump("ERROR! powerReviews_reviews did not pass init. The following variables are all required:");
+						app.u.dump(" -> app.ext.powerReviews_reviews.vars.merchantID: "+app.ext.powerReviews_reviews.vars.merchantID);
+						app.u.dump(" -> app.ext.powerReviews_reviews.vars.groupID: "+app.ext.powerReviews_reviews.vars.groupID);
+						app.u.dump(" -> app.ext.powerReviews_reviews.vars.hash: "+app.ext.powerReviews_reviews.vars.hash);
 						r = false;
 						}
 					return r;
@@ -104,10 +104,10 @@ var powerReviews = function() {
 
 			startExtension : {
 				onSuccess : function(){
-					app.u.dump("BEGIN powerReviews.callbacks.startExtension");
-					app.rq.push(['script',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews.vars.merchantID+'/pr/pwr/engine/js/full.js']);
-					app.rq.push(['css',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews.vars.merchantID+'/pr/pwr/engine/pr_styles_review.css','prBaseStylesheet']);
-					app.rq.push(['css',0,'http://cdn.powerreviews.com/aux/'+app.ext.powerReviews.vars.merchantID+'/'+app.ext.powerReviews.vars.groupID+'/css/powerreviews_express.css','prMerchantOverrideStylesheet']);
+					app.u.dump("BEGIN powerReviews_reviews.callbacks.startExtension");
+					app.rq.push(['script',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/js/full.js']);
+					app.rq.push(['css',0,'http://cdn.powerreviews.com/repos/'+app.ext.powerReviews_reviews.vars.merchantID+'/pr/pwr/engine/pr_styles_review.css','prBaseStylesheet']);
+					app.rq.push(['css',0,'http://cdn.powerreviews.com/aux/'+app.ext.powerReviews_reviews.vars.merchantID+'/'+app.ext.powerReviews_reviews.vars.groupID+'/css/powerreviews_express.css','prMerchantOverrideStylesheet']);
 					},
 				onError : function(d){}
 				}
@@ -125,7 +125,7 @@ var powerReviews = function() {
 				if(document.location.protocol != 'https:')	{
 					POWERREVIEWS.display.snippet({ write : function(content) { $tag.append(content); } }, {
 						pr_page_id : data.value,
-						pr_write_review : "javascript:app.ext.powerReviews.a.writeReview('"+data.value+"');"
+						pr_write_review : "javascript:app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
 						})
 					}
 				}, //reviewSnippet
@@ -139,7 +139,7 @@ var powerReviews = function() {
 	//						app.u.dump(content);
 							}},{
 						pr_page_id : data.value,
-						pr_write_review : "javascript:app.ext.powerReviews.a.writeReview('"+data.value+"');"
+						pr_write_review : "javascript:app.ext.powerReviews_reviews.a.writeReview('"+data.value+"');"
 						});
 					}
 				}
@@ -166,7 +166,7 @@ var powerReviews = function() {
 					$div.dialog('open');
 */					}
 				else	{
-					app.u.dump("WARNING! - no pid was specified for powerReviews.a.writeReview");
+					app.u.dump("WARNING! - no pid was specified for powerReviews_reviews.a.writeReview");
 					}
 				} //writeReview
 			}, //action

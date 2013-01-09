@@ -22,7 +22,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 */
 
 
-var bonding_buysafe = function() {
+var buysafe_guarantee = function() {
 	var r = {
 		
 		vars : {
@@ -36,7 +36,7 @@ var bonding_buysafe = function() {
 		callbacks : {
 			init : {
 				onSuccess : function()	{
-					app.u.dump('BEGIN app.ext.bonding_buysafe.onSuccess');
+					app.u.dump('BEGIN app.ext.buysafe_guarantee.onSuccess');
 /*
 To keep this extension as self-contained as possible, it loads it's own script.
 the callback is handled in the extension loader. It will handle sequencing for the most part.
@@ -55,7 +55,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 			startExtension : {
 				onSuccess : function(){
 
-app.u.dump("BEGIN bonding_buysafe.startExtension.onSuccess.");
+app.u.dump("BEGIN buysafe_guarantee.startExtension.onSuccess.");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && app.ext.myRIA.template.productTemplate && typeof WriteBuySafeKickers == 'function' && typeof buySAFE == 'object')	{
@@ -67,8 +67,7 @@ buySAFE.Hash = ''; //ADD HASH HERE.
 if(buySAFE.Hash.length > 0)	{
 	//the showContent function may have already executed prior to startExtension getting executed.
 	WriteBuySafeKickers();
-	
-	//app.u.dump("BEGIN analytics_google.callbacks.addGATriggers");
+
 	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {
 //		app.u.dump("Execute WriteBuySafeKicker");
 		//buysafe trigger goes here.
@@ -82,7 +81,7 @@ if(buySAFE.Hash.length > 0)	{
 								
 	app.ext.store_checkout.checkoutCompletes.push(function(P){
 		
-		app.u.dump("BEGIN bonding_buysafe code pushed on store_checkout.checkoutCompletes");
+		app.u.dump("BEGIN buysafe_guarantee code pushed on store_checkout.checkoutCompletes");
 		var order = app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
@@ -97,7 +96,7 @@ else	{
 	}
 						}
 					else	{
-						setTimeout(function(){app.ext.bonding_buysafe.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){app.ext.buysafe_guarantee.callbacks.startExtension.onSuccess()},250);
 						}
 
 					},

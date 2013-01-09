@@ -22,7 +22,7 @@ The functions here are designed to work with 'reasonable' size lists of categori
 */
 
 
-var analytics_google = function() {
+var google_analytics = function() {
 	var r = {
 		
 		vars : {
@@ -59,29 +59,29 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 
 			startExtension : {
 				onSuccess : function(){
-//					app.u.dump("BEGIN analytics_google.callbacks.startExtension.onSuccess");
+//					app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object')	{
 
 //app.u.dump(" -> adding triggers");
-app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/index.html']); app.ext.analytics_google.u.handleAntiBounceEvent(P);})
-app.ext.myRIA.template.categoryTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); app.ext.analytics_google.u.handleAntiBounceEvent(P);})
-app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); app.ext.analytics_google.u.handleAntiBounceEvent(P);})
-app.ext.myRIA.template.companyTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/company/'+P.show]); app.ext.analytics_google.u.handleAntiBounceEvent(P);})
-app.ext.myRIA.template.customerTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); app.ext.analytics_google.u.handleAntiBounceEvent(P);}) 
-app.ext.myRIA.template.checkoutTemplate.onInits.push(function(P) {_gaq.push(['_trackPageview', '/checkout']); app.ext.analytics_google.u.handleAntiBounceEvent(P);}) 
+app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/index.html']); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+app.ext.myRIA.template.categoryTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/category/'+P.navcat]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/product/'+P.pid]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+app.ext.myRIA.template.companyTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/company/'+P.show]); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
+app.ext.myRIA.template.customerTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/customer/'+P.show]); app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
+app.ext.myRIA.template.checkoutTemplate.onInits.push(function(P) {_gaq.push(['_trackPageview', '/checkout']); app.ext.google_analytics.u.handleAntiBounceEvent(P);}) 
 
 app.ext.myRIA.template.searchTemplate.onInits.push(function(P) {
 	_gaq.push('_trackPageview','/search?KEYWORDS='+P.KEYWORDS);
-	app.ext.analytics_google.u.handleAntiBounceEvent(P);
+	app.ext.google_analytics.u.handleAntiBounceEvent(P);
 	}) 
 //404's don't execute the anti-bounce event because if you go homepage then 404 and leave, it should register as a bounce.
 app.ext.myRIA.template.pageNotFoundTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
 							
 app.ext.store_checkout.checkoutCompletes.push(function(P){
 	
-	app.u.dump("BEGIN analytics_google code pushed on store_checkout.checkoutCompletes");
+	app.u.dump("BEGIN google_analytics code pushed on store_checkout.checkoutCompletes");
 	var order = app.data['order|'+P.orderID];
 	_gaq.push(['_addTrans',
 		  P.orderID,           // order ID - required
@@ -113,7 +113,7 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 
 						}
 					else	{
-						setTimeout(function(){app.ext.analytics_google.callbacks.startExtension.onSuccess()},250);
+						setTimeout(function(){app.ext.google_analytics.callbacks.startExtension.onSuccess()},250);
 						}
 
 					},
@@ -123,9 +123,9 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 			u : {
 				handleAntiBounceEvent : function(P)	{
 //see comment up by var triggerBounceCode for what this is for.
-					if(!app.ext.analytics_google.vars.triggeredBounceCode)	{
+					if(!app.ext.google_analytics.vars.triggeredBounceCode)	{
 						_gaq.push(['_trackEvent','pageView','navigate','','',false]);
-						app.ext.analytics_google.vars.triggeredBounceCode = true;
+						app.ext.google_analytics.vars.triggeredBounceCode = true;
 						}
 					else	{
 						//catch. 

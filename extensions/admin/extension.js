@@ -1039,7 +1039,7 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><img src='extensions/admin/images/zoovy_live-375x238.gif' width='375' height='238' alt='' /><\/td><\/tr><\/table>");
+				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><img src='extensions/admin/images/zoovy_live-300x250.gif' width='300' height='250' alt='' /><\/td><\/tr><\/table>");
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
