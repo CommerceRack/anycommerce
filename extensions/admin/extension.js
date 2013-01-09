@@ -941,6 +941,7 @@ else	{
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN callbacks.translateSelector");
+				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector)
@@ -1665,8 +1666,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				
 				var $div = $("<div \/>").attr('id','recentNewsPanel').anypanel({
 					'title' : 'recentNews',
-					'content' :$("<table \/>").attr('data-bind','var:news(content); format:processList; loadsTemplate:recentNewsItemTemplate;'),
-					'dispatch' : {'_cmd':'appResource','filename':'recentnews.json','_tag':{'datapointer':'recentnews.json','callback':'translateSelector','extension':'admin','selector':'#recentNewsPanel'}}
+					'content' :$("<table \/>").attr('data-bind','var:news(content); format:processList; loadsTemplate:recentNewsItemTemplate;').append("<tr><td>poop<\/td><\/tr>"),
+					'dispatch' : {'_cmd':'appResource','filename':'recentnews.json','_tag':{'datapointer':'recentnews','callback':'translateSelector','extension':'admin','selector':'#recentNewsPanel'}}
 					});
 				$content.append($div);
 				app.model.dispatchThis('mutable');
