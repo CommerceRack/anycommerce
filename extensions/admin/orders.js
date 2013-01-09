@@ -247,7 +247,8 @@ var admin_orders = function() {
 
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 $('body').hideLoading();
-
+app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
+$("[data-app-event='admin_orders|orderListFiltersUpdate']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
 var orderid,cid;
 var ordersData = app.data[tagObj.datapointer]['@orders'];
 
@@ -307,6 +308,15 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 			}).appendTo($cmenu);
 		$.contextMenu({
 			selector: "#"+rowID,
+//the events change the row bg color on right click init. helps indicate which row is hightlighted AND that only that row will be affected.
+			events : {
+				show : function(){
+					$(this).addClass('ui-state-highlight');
+					},
+				hide : function(){
+					$(this).removeClass('ui-state-highlight');
+					}
+				},
 			items: $.contextMenu.fromMenu($cmenu)
 			});
 		app.ext.admin.u.handleAppEvents($row);
@@ -443,7 +453,8 @@ else	{
 					$this.addClass('pointer').click(function() {
 						if($this.hasClass('ui-selected'))	{$this.removeClass('ui-selected')}
 						else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
-						})
+						$("[data-app-event='admin_orders|orderListFiltersUpdate']",$target).addClass('ui-state-highlight');
+						});
 					});
 //go get the list of orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
@@ -867,6 +878,12 @@ else	{
 
 
 		u : {
+
+// gets run after a filter is run. never on filter click unless click submits.
+		handleFilterCheckmarks : function($target)	{
+			$(".ui-icon-check",$target).empty().remove(); //clear all checkmarks.
+			$(".ui-selected").append("<span class='floatRight ui-icon ui-icon-check'><\/span>"); //add to selected items.
+			},
 
 //https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Bitwise_Operators
 
@@ -1512,7 +1529,7 @@ $(selector + ' .editable').each(function(){
 
 
 			"orderUpdateCancel" : function($btn)	{
-				$btn.button();
+				$btn.button({text:true, icons: {primary: "ui-icon-circle-arrow-w"}});
 				$btn.off('click.orderUpdateCancel').on('click.orderUpdateCancel',function(){
 //in a dialog.
 					if($btn.closest('.ui-dialog-content').length)	{

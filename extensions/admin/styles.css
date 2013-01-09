@@ -32,7 +32,7 @@ class can also be applied to a 1 item per row list.
 
 
 /* for small buttons */
-.smallButton .ui-button-text	{padding:2px 4px !important; line-height:normal !important; font-size:.85em;}
+.smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
 
 .ui-selectee	{cursor:pointer;}
 
@@ -130,6 +130,10 @@ Use this in a table where you want clear separation between rows and cells. This
 .gridTable td, .gridTable th, .gridTable tf	{padding:2px 10px 2px 2px; vertical-align:top;}
 .gridTable tr:nth-child(odd)	{background:#ffffff;}
 .gridTable tr:nth-child(even)	{background:#f0f0f0;}
+
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+
 .gridTable th, .gridTable .tf	{background:#cccccc;}
 
 

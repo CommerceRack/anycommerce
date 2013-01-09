@@ -53,7 +53,7 @@
 			</section>
 
 			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label></div>
-			<button class='marginBottom' data-app-event="admin_orders|orderListFiltersUpdate">Show Results</button>
+			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdate'>Show Results</button>
 	
 		</div>
 	
@@ -226,7 +226,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 <div class="ui-tabs ui-widget ui-widget-content ui-corner-all clearfix orderDetailButtonBar smallButton"  data-bind='var:order(our/orderid);format:assignAttribute; attribute:data-orderid;'>
-	<button class='floatLeft' data-app-event="admin_orders|orderUpdateCancel">Cancel/Close</button><!--
+	<!--
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderEmailSend">Send Email</button>
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderExport">Export</button>-->
 	<button class='floatLeft hide4Native' data-app-event="admin_orders|orderPrintInvoice">Print Invoice</button>
@@ -239,6 +239,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;"></ul>
 	<button class='floatRight' data-app-event="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
+	<button class='floatRight' data-app-event="admin_orders|orderUpdateCancel">Back to Order List</button>
 </div>
 
 
