@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','recentNewsItemTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate'); 
 	var r = {
 		
 	vars : {
@@ -941,10 +941,11 @@ else	{
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN callbacks.translateSelector");
-				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
+//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
-				app.u.dump(" -> selector: "+selector);
+//				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector);
+//				app.u.dump(" -> $target.length: "+$target.length);
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
@@ -1660,16 +1661,49 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //logout
 
 			showLandingPage : function()	{
-				var $content = $("#homeContent").empty();
+				var $content = $("#homeContent");
+				$content.empty().append(app.renderFunctions.createTemplateInstance('landingPageTemplate',{}));
 				app.ext.admin.u.bringTabIntoFocus();
 				app.ext.admin.u.bringTabContentIntoFocus($content);
 				
-				var $div = $("<div \/>").attr('id','recentNewsPanel').anypanel({
-					'title' : 'recentNews',
-					'content' :$("<table \/>").attr('data-bind','var:news(content); format:processList; loadsTemplate:recentNewsItemTemplate;').append("<tr><td>poop<\/td><\/tr>"),
-					'dispatch' : {'_cmd':'appResource','filename':'recentnews.json','_tag':{'datapointer':'recentnews','callback':'translateSelector','extension':'admin','selector':'#recentNewsPanel'}}
-					});
-				$content.append($div);
+//recent news panel.
+				$('#landingPageColumn1',$content).append($("<div \/>").attr('id','landingPageRecentNewsPanel').anypanel({
+					'title' : 'Recent News',
+					'showClose' : false,
+					'call' : 'appResource',
+					'callParams' : 'recentnews.json',
+					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageRecentNewsPanel'},
+					'content' : $("<div data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;' \/>")
+					}));
+
+//quickstats ogms.
+				$('#landingPageColumn2',$content)
+				.append($("<div \/>").attr('id','landingPageOGMSPanel').anypanel({
+					'title' : 'OGMS',
+					'showClose' : false,
+					'call' : 'appResource',
+					'callParams' : 'quickstats/OGMS.json',
+					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOGMSPanel'},
+					'content' :$("<div \/>")
+					}))
+				.append($("<div \/>").attr('id','landingPageOWEBPanel').anypanel({
+					'title' : 'OWEB',
+					'showClose' : false,
+					'call' : 'appResource',
+					'callParams' : 'quickstats/OWEB.json',
+					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOWEBPanel'},
+					'content' :$("<div \/>")
+					}))
+				.append($("<div \/>").attr('id','landingPageORPTPanel').anypanel({
+					'title' : 'ORPT',
+					'showClose' : false,
+					'call' : 'appResource',
+					'callParams' : 'quickstats/ORPT.json',
+					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageORPTPanel'},
+					'content' :$("<div \/>")
+					}));
+
+
 				app.model.dispatchThis('mutable');
 				}
 			}, //action

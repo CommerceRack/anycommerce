@@ -31,6 +31,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 			templateID : null, //what any commerce template to use to populate the panel.
 			data : {}, //what data to use to translate the panel.
 			dataAttribs : {}, //optional set of params to set as data on content. currently, only used if content is generated from templateID.
+			call : null,
+			callParams : null,
+			_tag : {},
 			dispatch : null, // a dispatch that'll be added directly to the Q. _tag will be added to it.
 			showClose : true, //set to false to disable close (X) button.
 			content : null, //a jquery object of content to use.
@@ -67,9 +70,15 @@ Additional a settings button can be added which will contain a dropdown of selec
 				else	{$content = $t.children(":nth-child(2)");}
 				$content.addClass('ui-widget-content ui-corner-bottom stdPadding').css('borderTop','0'); //content area.
 				
-				if(o.dispatch && typeof o.dispatch == 'object')	{
+				if(o.call && typeof app.ext.admin.calls[o.call] == 'object')	{
 //					$content.showLoading();
-					app.model.addDispatchToQ(o.dispatch,'mutable');
+					if(o.callParams)	{
+						app.ext.admin.calls[o.call].init(o.callParams,o._tag,o.Q);
+						}
+					else	{
+						app.ext.admin.calls[o.call].init(o._tag,o.Q);
+						}
+					$t.showLoading();
 					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
 				//they'll get executed as part of the callback if a call is specified.

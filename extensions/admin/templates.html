@@ -191,13 +191,19 @@ click event is added at that time.
 ####################### landing page 
 -->
 
-<table>
-<tr id='recentNewsItemTemplate'>
-	<td data-bind="var:news(MESSAGE); format:text;"></td>
-</tr>
-</table>
+<article id='recentNewsItemTemplate'>
+	<div class='floatLeft marginRight marginBottom'><img src='blank.gif' data-bind="var: news(TOPIC); valuePretext:newsicons/; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="40"  src="blank.gif" /></div>
+	<h3 data-bind="var:news(TITLE); format:text;"></h3>
+	<h4 data-bind="var:news(SUBTITLE); format:text;"></h4>
+	<time data-bind="var:news(CREATED); format:text;"></time>
+	<div data-bind="var:news(MESSAGE); format:text;"></div>
+</article>
 
-
+<div id='landingPageTemplate' class='page pageLanding'>
+	<div class="column" id="landingPageColumn1"></div>  
+	<div class="column" id="landingPageColumn2"></div> 
+	<div class="column" id="landingPageColumn3"></div>
+</div>
 
 
 

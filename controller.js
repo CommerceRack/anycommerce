@@ -2226,7 +2226,7 @@ return $r;
 //			app.u.dump(" -> width: "+$tag.width());
 			if(data.value)	{
 //set some recommended/required params.
-				data.bindData.name = data.value;
+				data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
 				data.bindData.w = $tag.attr('width');
 				data.bindData.h = $tag.attr('height');
 				data.bindData.tag = 0;
