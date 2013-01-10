@@ -1,0 +1,89 @@
++ on the PSD files indicate a toggle state or similar.
+
+** THIS MIGHT HELP! I try to stick to the same animation sets throughout an entire project so I wonder if there's a way you can make a jQuery class for that type of animation to make your build easier. If I was to change one thing, it would be replicated on all **
+
+
+
+1-HOME -------------------------------------------------------------
+
+- The "Free Shipping" icon should automatically fade into the other "Free Shipping" icons I have created. They are hidden layers in the PSD and can be activated. They should probably fade in and out every 5-seconds. Also, the icon is to be randomized per page load.
+
+- Hovering over the main nav (All Categories, What's Hot) is a quick slide down, but slows down as it opens up fully, and reverse when closing (slow at first, then speeds up as it draws to a close). The total animation time should be 1-second out and 1-second in.
+
+- Is there anyway to smooth the animation on the Social Icons popping up and down? You've got the right timing, just needs to be smoother. (Then again, this could be my laggy Firefox browser).
+
+- Stay Up-to-date in the footer will have a pop-up confirmation (same design as the ones found on the shopping cart page etc.) confirming that they have been added to the mailing list.
+
+- The pop-ups in this page (and throughout the site) pop in and out at 0-seconds, no animation. It should feel more like an "alert" and should make the site appear responsive.
+
+
+2-PRODUCTS LISTING -------------------------------------------------
+
+- Can you automatically load all products in the search, then when the person uses the pagination below the sorting box, the products can just fade out and fade in the next page in place without loading time? The fades should be .5-seconds out and .5-seconds in.
+
+- This same animation (fade in and out at .5-seconds) is to be used on the Category Selector Below (What's Hot < Actions Figures > New Arrivals).
+
+
+
+4-PRODUCT DETAIL ---------------------------------------------------
+
+- The same animation mentioned (fade in and out at .5-seconds) is to be used on the Suggested Items Selector below ( Previously Viewed Items < Suggested Items > Items in the same category).
+
+- Selecting the Checkbox on various product options should load that product in via the same fade-in / fade-out timing.
+
+- Thumbnails used for the sharing functionality is that of the product thumbnails.
+
+
+
+5-STATIC PAGE ------------------------------------------------------
+
+- The same animation for switching pages across the site. To indicate the person is leaving and entering a different state of the site. (I'm under the impression that pages pretty much do not exist and the site is seamless).
+
+
+
+6-SHOPPING CART ----------------------------------------------------
+
+- The pop-ups in this page (and throughout the site) pop in and out at 0-seconds, no animation. It should feel more like an "alert" and should make the site appear responsive.
+
+- Adding the discount code should reflect the change in price and the discount code form field should be grayed out (unless Stephen specifies that multiple discount codes can apply to a purchase order, but with most sites, I am to assume that you can't stack coupons).
+
+
+
+
+7-USER LOGIN REGISTER ---------------------------------------------
+
+- This page is a temporary setup for the next page. The user can login if they have an account, which directs them back to the page they were last at before being asked to log in.
+
+- Should the user click "Create An Account", the "Got An Account?" box will slide to the right and fade to 0% opacity, the "First Timer?" box will fade to 0% opacity and the next page should be loaded. (8-createAnAccount.jpg)
+
+
+
+10-CONFIRMATION AFTER PURCHASE ------------------------------------
+
+- The share button will pop-up the necessary social icons in which the user can share their purchase (also available on wishlist). I believe Facebook and Twitter are the ones available to Stephen at the moment.
+
+- Thumbnails used on the share are that of the product images.
+
+
+
+11-READ WRITE REVIEW ----------------------------------------------
+
+- Hovering over the stars should highlight it, selecting the star should automatically highlight the field below (Enter Review Title).
+
+
+
+13-CONTACT US -----------------------------------------------------
+
+- Clicking "Send A Message" generates a pop-up that indicates a successful send.
+
+
+
+14-ORDER TRACKING -------------------------------------------------
+
+- "Track My Order" button generates the results below, otherwise it will be blank area if the user has not yet submitted the tracking number. The form field remains highlighted should the user decide to track another order.
+
+
+
+15-SEARCH RESULTS ------------------------------------------------
+
+- Same as products listing page, but added pages to the search results should the user be looking for something in a page.
