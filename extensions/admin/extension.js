@@ -1718,22 +1718,46 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
 $('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
 var chart = new Highcharts.Chart({
-        chart: {
-            renderTo: 'container',
-            type: 'pie'
-        },
-        xAxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-        },
-        plotOptions: {
-            series: {
-                allowPointSelect: true
-            }
-        },
-        series: [{
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]        
-        }]
-    });
+            chart: {
+                renderTo: 'container',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Browser market shares at a specific website, 2010'
+            },
+            tooltip: {
+        	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+            	percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    ['Firefox',   45.0],
+                    ['IE',       26.8],
+                    ['chrome',       12.8],
+                    ['Safari',    8.5],
+                    ['Opera',     6.2],
+                    ['Others',   0.7]
+                ]
+            }]
+        });
 
 
 					}},'mutable'); //buy
