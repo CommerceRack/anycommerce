@@ -1702,7 +1702,43 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageORPTPanel'},
 					'templateID' :'quickstatReportTemplate'
 					}));
-		
+
+				$('#landingPageColumn2',$content).append($("<div \/>").attr('id','landingPageMktplacePanel').anypanel({
+					'title' : 'Popular Marketplace Summary',
+					'showClose' : false,
+					'content' : $("<div \/>")
+					}));
+
+//recent news panel.
+				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{},'mutable'); //amazon
+				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{},'mutable'); //ebay auction
+				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{},'mutable'); //ebay fixed price
+				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
+				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
+				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
+$('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
+var chart = new Highcharts.Chart({
+        chart: {
+            renderTo: 'container',
+            type: 'pie'
+        },
+        xAxis: {
+            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        },
+        plotOptions: {
+            series: {
+                allowPointSelect: true
+            }
+        },
+        series: [{
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]        
+        }]
+    });
+
+
+					}},'mutable'); //buy
+
+
 				app.model.dispatchThis('mutable');
 				}
 			}, //action

@@ -31,7 +31,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.1.9.js']); //used for KPI
+app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.3.5.js']); //used for KPI
 
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication.
 
