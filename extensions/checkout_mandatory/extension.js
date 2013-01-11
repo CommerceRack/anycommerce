@@ -63,11 +63,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 				$('#'+containerID).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer'));
 
-				if(app.u.determineAuthentication() == 'authenticated')	{
-					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
-					$('#want-create_customer').val(0);
-					}
-				
+			
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -256,27 +252,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_active/templates.html',theseTemplates);
 					}
 				var r; //returns false if checkout can't load due to account config conflict.
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
-/*				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
-					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> It appears an error occured. Please try again. If error persists, please contact the site administrator.','uiClass':'error','uiIcon':'alert'}));
-					r = false;
-					}
-//user is not logged in. store requires login to checkout.
-//sometimes two email fields show up at the same time (default behavior).  so data-bill_email2 id is used for 'login' and data-bill_email id is used for guest.
-				else if(zGlobals.checkoutSettings.preference_require_login == 1)	{
-//					app.u.dump(" -> zGlobals.checkoutSettings.preference_require_login == 1");
-//require login is enabled but this checkout is for 'nice'. go nuclear.
-					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> There appears to be an issue with the store configuration. Please change your checkout setting to \'nice\' if you wish to use this layout.','uiClass':'error','uiIcon':'alert'}));
-					// we should fire off some error tracking event here. %%%
-					r = false;
-					}
-//user is not logged in. store does not prompt for login.
-				else if(zGlobals.checkoutSettings.preference_request_login == 0)	{
-//					app.u.dump(" -> zGlobals.checkoutSettings.preference_request_login == 0");
-					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> There appears to be an issue with the store configuration. Please change your checkout setting to \'nice\' if you wish to use this layout.','uiClass':'error','uiIcon':'alert'}));
-					r = false;
-					}
-*/					
+				
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'}));
@@ -482,8 +458,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 				},
 			onError : function(responseData)	{
 				app.u.throwMessage(responseData);
-//login attempt failed, but show checkout form anyway so user can proceed.
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+				app.ext.convertSessionToOrder.calls.showCheckoutForm.init(); //will show login panel but not the rest of checkout
 				app.model.dispatchThis('immutable');
 				}
 			},
@@ -550,7 +525,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 					app.u.dump(" -> auth: "+auth);
 //until it's determined whether shopper is a registered user or a guest, only show the preflight panel.
 //currently, admin during checkout isn't 'supported'. meaning nothing special happens but if we don't discount it, only passive checkout is avail
-					if(auth != 'none' && auth != 'admin')	{
+					if(auth == 'authenticated' || auth == 'admin')	{
 //						app.u.dump(' -> authentication passed. Showing panels.');
 //						app.u.dump(' -> want/bill_to_ship = '+app.data.cartDetail['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
@@ -1017,8 +992,7 @@ payment options, pricing, etc
 //				app.u.dump("BEGIN app.ext.convertSessionToOrder.panelContent.preflightPanel.");
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPreflight'); //reset contents to avoid any duplicate content.
 				var username = app.u.getUsernameFromCart();
-				var className = '';
-				var o; //output.
+				var o = ""; //output. empty, not undefined or null so no += complications.
 				var authState = app.u.determineAuthentication();
 				var email = '';
 				
@@ -1026,68 +1000,28 @@ payment options, pricing, etc
 //username may not be an email address, so only use it if it passes validation.
 				else if(username && app.u.isValidEmail(username))	{email = username;}
 				
-//				app.u.dump(" -> authState = "+authState);
-//				app.u.dump(" -> username = "+username);
-//				app.u.dump(" -> email = "+email);
-
-	
-
 //user is already logged in...
 
 					if(authState == 'authenticated')	{
 //						app.u.dump(" -> Already Authenticated");
-						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin listStyleNone'>";
-						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
-						o += "<input type='hidden'   name='bill/email' id='data-bill_email' value='"+email+"' /><\/ul>";
+						o += "<div>Username: "+username+"<\/div>";
+						o += "<input type='hidden' name='bill/email' id='data-bill_email' value='"+email+"' \/>";
 						}
 					else	{
-
-//						app.u.dump(" -> Login Prompts (default panel behavior/else)");
-						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='bill/email'>Email<\/label>";
-						o += "<input type='email'   name='bill/email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
-						o += "<button class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleGuestEmail($(\"#data-bill_email\").val());' id='guestCheckoutBtn'>"
-//once an email is obtained, 'next' could be confusing as the button text. so change text based on how far into the process the user is.
-//authstate will = none (or blank?) if no email has been obtained.
-						o += authState == 'guest' || authState == 'thirdPartyGuest' ? 'Update Email' : 'Next';
-						o += "<\/button><\/div>";
-	
-//no need to show this for thirdPartyGuest (confusing) or 'none' (login form already shows up).
-						if(authState == 'guest')	{
-							o += "<div class='floatRight'><a href='#' onClick='$(\"#preflightAccountInputs\").toggle(true); return false;' class='login'>Click here to log in<\/a><\/div>";
-//NOTE - IE prefers onClick not onChange on checkboxes.
-							o += "<div id='chkout-create_customerContainer'><input  type='checkbox' checked='checked' value='1' onClick=\"app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox(this.checked?1:0);\" name='want/create_customer_cb' id='want-create_customer_cb' \/> <label for='want-create_customer_cb'>Create Customer Account<\/label><\/div>"
 						
-						
-							}
-
-						o += "<\/div>"; // closes preflightGuestInputs div
-						
-	//for guests and thirdPartyCheckin, the native login form is hidden. it's still rendered so we can toggle it as needed.
-						if(authState != 'none')
-							className = 'displayNone'; //hide extra login info once authenticated as guest. a 'view' link will display.
-							
-						o += "<div id='preflightAccountInputs' class='"+className+" preflightInputContainer'><h2>Existing Users<\/h2>";
+						o += "<div id='preflightAccountInputs' class='preflightInputContainer'><h2>Please log in to continue<\/h2>";
 						o += "<div><label for='bill/email2'>Email<\/label><input type='email' name='bill/email' id='data-bill_email2' value='"+email+"' /><\/div>";
 //the preventDefault below stops the form from submitting on enter keypress.
 						o += "<div><label for='want-password'>Password<\/label><input type='password'  name='password' id='want-password' value='' onkeypress='if (event.keyCode==13){$(\"#userLoginBtn\").click(); event.preventDefault();}' />";
 						o += "<button  class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleUserLogin($(\"#data-bill_email2\").val(),$(\"#want-password\").val());' id='userLoginBtn'>Log in<\/button><\/div><\/div>";
 	
-	
-	//only show the third party logins IF user isn't already logged in to one and they're enabled
-						if(authState != 'thirdPartyGuest' && zGlobals.thirdParty.facebook.appId)
-								o+= "<div id='preflightThirdParty' class='"+className+" preflightInputContainer'><h2>Third Party Login<\/h2><fb:login-button onlogin='app.calls.authentication.facebook.init({\"callback\":\"authenticateThirdParty\",\"extension\":\"convertSessionToOrder\"}); app.model.dispatchThis(\"immutable\");'>Login with Facebook</fb:login-button><\/div>";
 						}
 
-
-
 // if fieldset is removed, opting instead to use the jquery element object directly, test in IE. it was changed to this while testing a bug.
-				var $fieldset = $("#chkoutPreflightFieldset").toggle(true);
+				var $fieldset = $("#chkoutPreflightFieldset").show();
 //				app.u.dump(" -> GOT HERE. $fieldset.length = "+$fieldset.length);
 				$fieldset.removeClass("loadingBG").append(o);
-				
-				if(typeof FB == 'object')	{
-					FB.init({appId:zGlobals.thirdParty.facebook.appId, cookie:true, status:true, xfbml:true}); //must come after the <fb:... code is added to the dom.
-					}
+
 //				app.u.dump('END app.ext.convertSessionToOrder.panelContent.preflighPanel.');
 				}, //preflight
 
@@ -1261,8 +1195,8 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					app.ext.convertSessionToOrder.u.updatePayDetails(val);
 					app.ext.convertSessionToOrder.vars["want/payby"] = val;
 					$("#chkoutPayOptionsFieldsetErrors").addClass("displayNone");
-					})
-				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
+					});
+//				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
 				if(app.ext.convertSessionToOrder.vars['want/payby'])	{
 					$(":radio[value='"+app.ext.convertSessionToOrder.vars['want/payby']+"']",$panelFieldset).click();
 					}
