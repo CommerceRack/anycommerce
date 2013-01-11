@@ -249,7 +249,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 					}
 				else {
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_active/templates.html',theseTemplates);
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_required/templates.html',theseTemplates);
 					}
 				var r; //returns false if checkout can't load due to account config conflict.
 				
