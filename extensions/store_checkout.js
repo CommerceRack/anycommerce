@@ -251,7 +251,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 
 	callbacks : {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
-//no templates or significant checks should occur in this init. templates are app specific (checkout_nice has different templates than checkout_passive)
+//no templates or significant checks should occur in this init. templates are app specific (checkout_active has different templates than checkout_passive)
 		init : {
 			onSuccess : function()	{
 				var r; //returns false if checkout can't load due to account config conflict.

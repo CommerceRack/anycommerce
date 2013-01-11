@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-CHECOUT_NICE.JS (just here to make it easier to know which extension is open)
+CHECOUT_MANDATORY.JS (just here to make it easier to know which extension is open)
 
 ************************************************************** */
 
@@ -26,7 +26,6 @@ var convertSessionToOrder = function() {
 		containerID : '',
 		legends : {
 			"chkoutPreflight" : "Contact Information",
-			"chkoutAccountInfo" : "Account Information",
 			"chkoutBillAddress" : "Billing Address",
 			"chkoutShipAddress" : "Shipping Address",
 			"chkoutShipMethods" : "Shipping Options",
@@ -254,7 +253,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 					}
 				else {
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_active/templates.html',theseTemplates);
 					}
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
@@ -556,7 +555,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 //						app.u.dump(' -> want/bill_to_ship = '+app.data.cartDetail['want/bill_to_ship']);
 //create panels. notes and ship address are hidden by default.
 //ship address will make itself visible if user is authenticated.
-						app.ext.convertSessionToOrder.u.handlePanel('chkoutAccountInfo');
+
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
 
 //bill to ship will be set to zero if user has disabled it, otherwise it will be 1 or undef.
@@ -568,7 +567,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 //populate panels.						
 						app.ext.convertSessionToOrder.panelContent.cartContents();
 						app.ext.convertSessionToOrder.panelContent.billAddress();
-						app.ext.convertSessionToOrder.panelContent.accountInfo();
+
 						app.ext.convertSessionToOrder.panelContent.shipAddress();
 						app.ext.convertSessionToOrder.panelContent.shipMethods();
 						app.ext.convertSessionToOrder.panelContent.paymentOptions();
@@ -717,7 +716,6 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				sum += this.chkoutPayOptionsFieldset(); //app.u.dump('pay options done. sum = '+sum);
 				sum += this.chkoutBillAddressFieldset(); //app.u.dump('bill address done. sum = '+sum);
 				sum += this.chkoutShipAddressFieldset(); //app.u.dump('ship address done. sum = '+sum);
-				sum += this.chkoutAccountInfoFieldset(); //app.u.dump('chkoutAccountInfo address done. sum = '+sum);
 
 //				app.u.dump('END app.ext.convertSessionToOrder.validate.isValid. sum = '+sum);
 				if(sum != 6)	{
@@ -778,63 +776,6 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				
 				},
 
-			chkoutAccountInfoFieldset : function()	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.validation.chkoutAccountInfoFieldset');
-				var valid = 1;
-				var $fieldsetErrors = $('#chkoutAccountInfoFieldsetErrors').empty().toggle(false);
-				
-				var authState = app.u.determineAuthentication();
-				app.u.dump('authState = '+authState);
-				if(authState == 'authenticated' || authState == 'thirdPartyGuest')	{
-					app.u.dump(' -> user is logged in, authentication not needed.');
-					$('#want-create_customer').val("0"); //make sure 'create account' is disabled.
-					}
-				else if($('#want-create_customer').val() == 0)	{
-					//do nothing.
-					app.u.dump(' -> create account disabled or not available.');
-					}
-				else	{
-					app.u.dump(' -> create account enabled. validating...');
-					var errMsg = "";
-					var $pass = $('#want-new_password')
-					var $pass2 = $('#want-new_password2');
-					var $hintQ = $('#want-recovery_hint');
-					var $hintA = $('#want-recovery_answer');
-
-					$pass.parent().removeClass('mandatory');
-					$pass2.parent().removeClass('mandatory');
-					$hintQ.parent().removeClass('mandatory');
-					$hintA.parent().removeClass('mandatory');
-//IE7 wants pass.val to have a value before checking length.
-					if(!$pass.val() || $pass.val().length < 8)	{
-						valid = 0;
-						$pass.parent().addClass('mandatory');
-						$pass2.parent().addClass('mandatory');
-						errMsg += '<li>Please enter a password of at least 8 characters<\/li>';
-						}
-					else if($pass.val() != $pass2.val())	{
-						valid = 0;
-						errMsg += '<li>Your password and verify password do not match<\/li>';
-						}
-					
-					if(!$hintQ.val())	{
-						valid = 0;
-						$hintQ.parent().addClass('mandatory');
-						errMsg += '<li>Please select a recovery question <span class="zhint">(in case you need to recover your password)<\/span><\/li>';
-						}
-					if(!$hintA.val())	{
-						valid = 0;
-						$hintA.parent().addClass('mandatory');
-						errMsg += '<li>Please select a recovery answer <\/li>';
-						}
-
-					if(valid == 0)	{
-						$fieldsetErrors.toggle(true).append(app.u.formatMessage("<ul>"+errMsg+"<\/ul>"));
-						}
-					}
-//				app.u.dump(' -> accountInfo valid = '+valid);
-				return valid;
-				}, //validate.chkoutAccountInfoFieldset
 				
 //make sure a shipping method is selected
 			chkoutShipMethodsFieldset : function()	{
@@ -1152,46 +1093,6 @@ payment options, pricing, etc
 
 
 
-
-
-
-
-			accountInfo : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.accountInfo.  ');
-				var authState = app.u.determineAuthentication();
-				var createCustomer = app.data.cartDetail['want/create_customer'] ? app.data.cartDetail['want/create_customer'] : 0;
-				
-//				app.u.dump(' -> createCustomer = '+createCustomer);
-
-
-				if(authState == 'authenticated' || authState == 'thirdPartyGuest')	{
-//in this case, the account creation panel isn't even rendered.
-					createCustomer = 0; //make sure create account is turned off.
-					$('#chkoutAccountInfoFieldset').toggle(false); //make sure panel is hidden
-//					app.u.dump(' -> user is already logged via zoovy or third party. create account panel not shown.');
-					}
-				else {
-//though it may not be visible, the panel is still rendered and then toggled on/off based on the create account checkbox.
-					if(createCustomer == 0)	{
-						$("#want-create_customer_cb").removeAttr('checked');  //make sure checkbox is not checked.
-						$('#chkoutAccountInfoFieldset').toggle(false); //make sure panel is hidden
-//						app.u.dump(' -> createCustomer == 0 (effectively, the create account checkbox is NOT checked). create account panel not shown.');
-						}
-					else	{
-						$('#chkoutAccountInfoFieldset').toggle(true);
-//						app.u.dump(' -> createCustomer == 1. Show the panel.');
-						}
-	
-					var o = "";
-	
-					var $panelFieldset = $("#chkoutAccountInfoFieldset").removeClass("loadingBG")
-					$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateAccountInfo','accountInfoContainer'));
-					app.renderFunctions.translateTemplate(app.data.cartDetail,'accountInfoContainer');	
-	
-					$('#want-create_customer').val(createCustomer); //set the hidden form input to appropriate value.
-					}
-					
-				},
 				
 /*
 a guest checkout gets just a standard address entry. 
