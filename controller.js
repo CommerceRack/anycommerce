@@ -2048,11 +2048,13 @@ $r.find('[data-bind]').each(function()	{
 		
 		}
 	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
+	else	{bindData.hideZero = true}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
 //	app.u.dump(" -> value: "+value);
 
 	if(Number(value) == 0 && bindData.hideZero)	{
 //do nothing. value is zero and zero should be skipped.
+//		app.u.dump(" -> value is 0 but was skipped: "+bindData['var']);
 		}
 // ### NOTE - at some point, see if this code can be moved inot the render format itself so that no special handler needs to exist.
 //did a quick try on this that failed. Need to revisit this when time permits.
@@ -2071,7 +2073,7 @@ $r.find('[data-bind]').each(function()	{
 			}
 		
 		}
-	else if(value)	{
+	else if(value || (Number(value) == 0 && bindData.hideZero === false))	{
 		if(app.u.isSet(bindData.className)){$focusTag.addClass(bindData.className)} //css class added if the field is populated. If the class should always be there, add it to the template.
 
 		if(app.u.isSet(bindData.format)){
@@ -2106,7 +2108,7 @@ $r.find('[data-bind]').each(function()	{
 		}
 	else	{
 		// attribute has no value.
-//				app.u.dump(' -> data-bind is set, but it has no/invalid value.');
+		app.u.dump(' -> data-bind is set, but it has no/invalid value: '+bindData['var']+" Number(value): "+Number(value)+" and bindData.hideZero: "+bindData.hideZero);
 		if($focusTag.prop('tagName') == 'IMG'){$focusTag.remove()} //remove empty/blank images from dom. necessary for IE.
 
 		}

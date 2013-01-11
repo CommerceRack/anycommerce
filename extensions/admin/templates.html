@@ -209,9 +209,9 @@ click event is added at that time.
 <table>
 <tr id='quickstatReportTemplate'>
 	<td data-bind="var:news(contents.id); format:reportID2Pretty; extension:admin;"></td>
-	<td data-bind="var:news(contents.count); format:text; hideZero:false;"></td>
+	<td data-bind="var:news(contents.count); format:text; hideZero:false; defaultValue: 0;"></td>
 	<td data-bind="var:news(contents.gms); format:money; currencySign: $;  hideZero:false;"></td>
-	<td data-bind="var:news(contents.units); format:text; hideZero:false;"></td>
+	<td data-bind="var:news(contents.units); format:text; hideZero:false; defaultValue: 0;"></td>
 </tr>
 </table>
 

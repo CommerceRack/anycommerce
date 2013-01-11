@@ -1689,7 +1689,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var $salesReportPanel = $("<div \/>").anypanel({
 					'title' : 'Sales Report',
 					'showClose' : false,
-					'content' : $("<div><table><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are since midnight<\/p><\/div>")
+					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are since midnight<\/p><\/div>")
 					});
 				$('#landingPageColumn2',$content).append($salesReportPanel);
 				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
@@ -1724,6 +1724,16 @@ $('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").
 
 var totalOrders = app.data['appResource|quickstats/SAMZ.json'].contents.count + app.data['appResource|quickstats/SEBA.json'].contents.count + app.data['appResource|quickstats/SABF.json'].contents.count + app.data['appResource|quickstats/SSRS.json'].contents.count + app.data['appResource|quickstats/SBYS.json'].contents.count;
 
+var chartData = new Array();
+
+if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Amazon', app.data['appResource|quickstats/SAMZ.json'].contents.count / totalOrders])}
+if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{chartData.push(['eBay Auction', app.data['appResource|quickstats/SEBA.json'].contents.count / totalOrders]);}
+if(app.data['appResource|quickstats/SABF.json'].contents.count)	{chartData.push(['eBay Store', app.data['appResource|quickstats/SABF.json'].contents.count / totalOrders]);}
+
+if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{chartData.push(['Sears', app.data['appResource|quickstats/SSRS.json'].contents.count / totalOrders]);}
+if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Buy.com', app.data['appResource|quickstats/SAMZ.json'].contents.count / totalOrders]);}
+
+app.u.dump("chartData"); app.u.dump(chartData);
 var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
@@ -1732,7 +1742,7 @@ var chart = new Highcharts.Chart({
                 plotShadow: false
             },
             title: {
-                text: 'Popular Marketplace Sales Since Midnight'
+                text: 'Sales Since Midnight'
             },
             tooltip: {
         	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
