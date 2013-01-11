@@ -266,6 +266,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				}
 				
 				var msg = false
+/*
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					msg = app.u.errMsgObject("Uh Oh! It appears an error occured. Please try again. If error persists, please contact the site administrator.");
 					}
@@ -274,10 +275,12 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				else if(zGlobals.checkoutSettings.preference_require_login == 1 || zGlobals.checkoutSettings.preference_request_login == 1)	{
 					msg = app.u.errMsgObject("Uh Oh! There appears to be an issue with the store configuration. Please change your checkout setting to 'passive' if you wish to use this layout.","MVC-INIT-CHECKOUT_PASSIVE_1000");
 					}
-				else if(typeof _gaq == 'undefined')	{
+
+//messaging for the test harness 'success'.
+*/
+				if(typeof _gaq == 'undefined')	{
 					msg = app.u.errMsgObject("Uh Oh! It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.","MVC-INIT-CHECKOUT_PASSIVE_1001");
 					}
-//messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
 					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.");
 					r = true;

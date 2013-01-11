@@ -268,7 +268,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 				}
 				var r; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
-				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
+/*				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> It appears an error occured. Please try again. If error persists, please contact the site administrator.','uiClass':'error','uiIcon':'alert'}));
 					r = false;
 					}
@@ -287,7 +287,8 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> There appears to be an issue with the store configuration. Please change your checkout setting to \'nice\' if you wish to use this layout.','uiClass':'error','uiIcon':'alert'}));
 					r = false;
 					}
-				else if(typeof _gaq === 'undefined')	{
+*/					
+				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'}));
 					r = false;					
