@@ -1724,6 +1724,8 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 				$btn.button();
 				$btn.off('click.orderUpdateSave').on('click.orderUpdateSave',function(event){
 					event.preventDefault();
+//this item may be in the order list which would make that list innacurate. this triggers a data reload next time order view is displayed.
+					app.model.destroy('adminOrderList');
 
 					var $target = $btn.closest("[data-order-view-parent]"),
 					orderID = $target.data('order-view-parent');
@@ -1735,7 +1737,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 
 //poolSelect is the dropdown for changing the pool.
 						var $poolSelect = $("[data-ui-role='orderUpdatePool']",$target);
-//						app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
+						app.u.dump(" -> $poolSelect.length = "+$poolSelect.length);
 						if($poolSelect.hasClass('edited'))	{
 							changeArray.push('SETPOOL?pool='+$poolSelect.val());
 							}
