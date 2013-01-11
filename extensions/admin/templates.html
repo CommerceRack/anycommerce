@@ -199,18 +199,21 @@ click event is added at that time.
 	<div data-bind="var:news(MESSAGE); format:text;"></div>
 </article>
 
-<div id='landingPageTemplate' class='page pageLanding'>
-	<div class="column" id="landingPageColumn1"></div>  
-	<div class="column" id="landingPageColumn2"></div> 
-	<div class="column" id="landingPageColumn3"><a href='https://plus.google.com/communities/108928399105730273026' target="_blank"><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /></a></div>
+<div id='landingPageTemplate' class='page pageLanding clearfix'>
+	<div class="lpColumn" id="landingPageColumn1"></div>  
+	<div class="lpColumn" id="landingPageColumn2">
+		<div class='marginBottom alignCenter'><a href='https://plus.google.com/communities/108928399105730273026' target="_blank"><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /></a></div>
+	</div>
 </div>
 
-<div id='quickstatReportTemplate'>
-	<div data-bind="var:news(contents.count); format:text; pretext:Total orders: ;"></div>
-	<div data-bind="var:news(contents.gms); format:text; pretext:Gross sales: ;"></div>
-	<div data-bind="var:news(contents.units); format:text; pretext:Items sold: ;"></div>
-</div>
-
+<table>
+<tr id='quickstatReportTemplate'>
+	<td data-bind="var:news(contents.id); format:reportID2Pretty; extension:admin;"></td>
+	<td data-bind="var:news(contents.count); format:text; hideZero:false;"></td>
+	<td data-bind="var:news(contents.gms); format:money; currencySign: $;  hideZero:false;"></td>
+	<td data-bind="var:news(contents.units); format:text; hideZero:false;"></td>
+</tr>
+</table>
 
 <!--
 ########################

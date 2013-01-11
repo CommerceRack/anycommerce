@@ -1039,7 +1039,7 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><a href='https://plus.google.com/communities/108928399105730273026' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
+				$target.append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td><a href='https://plus.google.com/communities/108928399105730273026' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
@@ -1258,6 +1258,15 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
 			},
 		
+		reportID2Pretty : function($tag,data)	{
+			var lookupTable = {
+				OGMS : 'Total sales',
+				OWEB : 'Web sales',
+				OGRT : 'Return customers',
+				OEXP : 'Expedited'
+				}
+			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
+			},
 	
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
@@ -1677,7 +1686,17 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}));
 
 //quickstats ogms.
-				$('#landingPageColumn2',$content)
+				var $salesReportPanel = $("<div \/>").anypanel({
+					'title' : 'Sales Report',
+					'showClose' : false,
+					'content' : $("<div><table><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are since midnight<\/p><\/div>")
+					});
+				$('#landingPageColumn2',$content).append($salesReportPanel);
+				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
+				app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
+				app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
+				app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+/*
 				.append($("<div \/>").attr('id','landingPageOGMSPanel').anypanel({
 					'title' : 'Overall Sales Since Midnight',
 					'showClose' : false,
@@ -1686,22 +1705,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOGMSPanel'},
 					'templateID' :'quickstatReportTemplate'
 					}))
-				.append($("<div \/>").attr('id','landingPageOWEBPanel').anypanel({
-					'title' : 'Web Sales Since Midnight',
-					'showClose' : false,
-					'call' : 'appResource',
-					'callParams' : 'quickstats/OWEB.json',
-					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOWEBPanel'},
-					'templateID' :'quickstatReportTemplate'
-					}))
-				.append($("<div \/>").attr('id','landingPageORPTPanel').anypanel({
-					'title' : 'Repeat Customer Sales Since Midnight',
-					'showClose' : false,
-					'call' : 'appResource',
-					'callParams' : 'quickstats/ORPT.json',
-					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageORPTPanel'},
-					'templateID' :'quickstatReportTemplate'
-					}));
+*/
 
 				$('#landingPageColumn2',$content).append($("<div \/>").attr('id','landingPageMktplacePanel').anypanel({
 					'title' : 'Popular Marketplace Summary',

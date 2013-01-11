@@ -593,6 +593,14 @@ app.u.throwMessage(responseData); is the default error handler.
 				}
 			},
 	
+		transmogrify : 	{
+			onSuccess : function(tagObj)	{
+				var $parent = $(app.u.jqSelector('#',tagObj.parentID));
+				if(typeof jQuery().hideLoading == 'function'){$parent.hideLoading();}
+				$parent.append(app.renderFunctions.transmogrify({'id':tagObj.parentID+"_"+tagObj.datapointer},tagObj.templateID,app.data[tagObj.datapointer]));
+				}
+			}, //translateTemplate
+
 		
 //pass the following on _tag:
 // parentID is the container id that the template instance is already in (should be created before call)
@@ -602,7 +610,7 @@ app.u.throwMessage(responseData); is the default error handler.
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(tagObj);
 //				app.u.dump("typeof jQuery.hideLoading: "+typeof jQuery().hideLoading);
-				if(typeof jQuery().hideLoading == 'function'){$('#'+tagObj.parentID).hideLoading();}
+				if(typeof jQuery().hideLoading == 'function'){$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();}
 				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				}
 			}, //translateTemplate
