@@ -19,7 +19,7 @@ CHECOUT_PASSIVE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice","cartPaymentQTemplate");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,
@@ -28,7 +28,7 @@ var convertSessionToOrder = function() {
 			"chkoutBillAddress" : "Billing Address",
 			"chkoutShipAddress" : "Shipping Address",
 			"chkoutShipMethods" : "Shipping Options",
-			"chkoutPayOptions" : "Payment Choices",
+			"chkoutPayOptions" : "Payment",
 			"chkoutOrderNotes" : "Order Notes"
 			},
 //though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
@@ -1135,6 +1135,8 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');	
 				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
+				
+				app.renderFunctions.translateSelector('#paymentQContainer',app.data.cartDetail);  //used for translating paymentQ
 				}, //paymentOptions
 		
 		
@@ -1577,21 +1579,29 @@ the refreshCart call can come second because none of the following calls are upd
 				var isSelectedMethod = false;
 //				app.u.dump(" -> # payment options (L): "+L);
 				if(L > 0)	{
-					for(var i = 0; i < L; i += 1)	{
-						id = data.value[i].id;
-	//					app.u.dump(" -> i: "+i+" ["+id+"]");
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
-						
-						if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
-							isSelectedMethod = id;
-							}					
-						
-						o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
+					if(data.value[0].id == 'ZERO')	{
+						$tag.hide(); //hide payment options.
+						$tag.append("<li><input type='radio' name='want/payby' id='want-payby_ZERO' value='ZERO' checked='checked' \/><\/li>");
 						}
-	
-					$tag.html(o);
-					if(app.ext.convertSessionToOrder.vars['want/payby'])	{
-						$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+					else	{
+						$tag.show(); //make sure visible. could be hidden as part of paypal, then paypal could be cancelled.
+						for(var i = 0; i < L; i += 1)	{
+							id = data.value[i].id;
+		//					app.u.dump(" -> i: "+i+" ["+id+"]");
+							o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
+							
+							if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
+								isSelectedMethod = id;
+								}					
+							
+							o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+							}
+		
+						$tag.html(o);
+						if(app.ext.convertSessionToOrder.vars['want/payby'])	{
+							$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+							}
 						}
 					}
 				else	{

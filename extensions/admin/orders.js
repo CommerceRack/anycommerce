@@ -1870,7 +1870,11 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					var kvp = $btn.parents('form').serialize();
 					//The two lines below 'should' work. not tested yet.
 					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
-					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{'callback':'translateSelector','extension':'admin','selector':'#'+$parent.attr('id')},'immutable');
+					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{
+						'callback':'translateSelector',
+						'extension':'admin',
+						'selector':'#'+$parent.attr('id')
+						},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				}, //orderUpdateAddTracking

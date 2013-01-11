@@ -62,12 +62,14 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
 	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_checkout;'></div>
+	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
 
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 
-	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
-	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
-	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; currencySign: $; pretext:Returns Credit: ; '></div>
+	<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
 
 	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_checkout;'></div>
 
@@ -272,12 +274,24 @@ do NOT change any div id's or messaging will not work properly.
 		<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.u.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
 	</div>
 
+	<div id='paymentQContainer marginBottom'>
+		<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@PAYMENTQ); format:processList; loadsTemplate:cartPaymentQTemplate;'></ul>
+	</div>
+
 	<ul id='chkout-payOptions' class='noPadOrMargin listStyleNone' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
 
 
+	
 </div>
 
 
+<ul>
+	<li id='cartPaymentQTemplate'>
+	<span data-bind="var:payment(TN); format:text;"></span>
+	<span class='marginLeft' data-bind="var:payment($$); format:money; currencySign: $;  hideZero:false;"></span><span data-bind="var:payment($#); format:money; currencySign: $; pretext:/;"></span>
+<!--	<button class='marginLeft' title='Remove this payment method'>X</button> -->
+	</li>
+</ul>
 
 <!--
 order notes panel spec
