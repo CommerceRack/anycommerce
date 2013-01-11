@@ -693,7 +693,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				sum += this.chkoutShipAddressFieldset(); //app.u.dump('ship address done. sum = '+sum);
 
 //				app.u.dump('END app.ext.convertSessionToOrder.validate.isValid. sum = '+sum);
-				if(sum != 6)	{
+				if(sum != 5)	{
 					r = false;
 					$globalErrors.append(app.u.formatMessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"})).toggle(true);
 					}
