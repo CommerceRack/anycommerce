@@ -1039,7 +1039,7 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><a href='https://plus.google.com/communities/108928399105730273026' target='blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
+				$target.append("<table class='fullWidth'><tr><td class='domainList'><\/td><td><a href='https://plus.google.com/communities/108928399105730273026' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
@@ -1714,9 +1714,12 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{},'mutable'); //ebay auction
 				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
-				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
+//				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
 $('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
+
+var totalOrders = app.data['appResource|quickstats/SAMZ.json'].contents.count + app.data['appResource|quickstats/SEBA.json'].contents.count + app.data['appResource|quickstats/SABF.json'].contents.count + app.data['appResource|quickstats/SSRS.json'].contents.count + app.data['appResource|quickstats/SBYS.json'].contents.count;
+
 var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',
@@ -1725,7 +1728,7 @@ var chart = new Highcharts.Chart({
                 plotShadow: false
             },
             title: {
-                text: 'Browser market shares at a specific website, 2010'
+                text: 'Popular Marketplace Sales Since Midnight'
             },
             tooltip: {
         	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
@@ -1747,14 +1750,13 @@ var chart = new Highcharts.Chart({
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Popular Marketplaces',
                 data: [
-                    ['Firefox',   45.0],
-                    ['IE',       26.8],
-                    ['chrome',       12.8],
-                    ['Safari',    8.5],
-                    ['Opera',     6.2],
-                    ['Others',   0.7]
+                    ['Amazon', app.data['appResource|quickstats/SAMZ.json'].contents.count / totalOrders],
+                    ['eBay Auction', app.data['appResource|quickstats/SEBA.json'].contents.count / totalOrders],
+                    ['eBay Store', app.data['appResource|quickstats/SABF.json'].contents.count / totalOrders],
+                    ['Sears', app.data['appResource|quickstats/SSRS.json'].contents.count / totalOrders],
+                    ['Buy.com', app.data['appResource|quickstats/SAMZ.json'].contents.count / totalOrders]
                 ]
             }]
         });
