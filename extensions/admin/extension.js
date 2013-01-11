@@ -1689,7 +1689,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var $salesReportPanel = $("<div \/>").anypanel({
 					'title' : 'Sales Report',
 					'showClose' : false,
-					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are since midnight<\/p><\/div>")
+					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
 					});
 				$('#landingPageColumn2',$content).append($salesReportPanel);
 				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
@@ -1722,49 +1722,27 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
 $('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
 
-var totalOrders = 0, chartData = new Array();
+
 
 //compute total # of orders.
-if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{
-	app.u.dump(" -> amazon: "+app.data['appResource|quickstats/SAMZ.json'].contents.count);
-	totalOrders += Number(app.data['appResource|quickstats/SAMZ.json'].contents.count);
-	}
-if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{
-	totalOrders += Number(app.data['appResource|quickstats/SEBA.json'].contents.count);
-	}
-if(app.data['appResource|quickstats/SABF.json'].contents.count)	{
-	totalOrders += Number(app.data['appResource|quickstats/SABF.json'].contents.count);
-	}
-if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{
-	app.u.dump(" -> sears: "+app.data['appResource|quickstats/SSRS.json'].contents.count);
-	totalOrders += Number(app.data['appResource|quickstats/SSRS.json'].contents.count);
-	}
-if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{
-	app.u.dump(" -> buy: "+app.data['appResource|quickstats/SBYS.json'].contents.count);
-	totalOrders += Number(app.data['appResource|quickstats/SBYS.json'].contents.count);
-	}
-
-//build chart data arrray.
-if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{
-	chartData.push(['Amazon', Number(app.data['appResource|quickstats/SAMZ.json'].contents.count) / totalOrders])
-	}
-if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{
-	chartData.push(['eBay Auction', Number(app.data['appResource|quickstats/SEBA.json'].contents.count) / totalOrders]);
-	}
-if(app.data['appResource|quickstats/SABF.json'].contents.count)	{
-	chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SABF.json'].contents.count) / totalOrders]);
-	}
-if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{
-	chartData.push(['Sears', Number(app.data['appResource|quickstats/SSRS.json'].contents.count) / totalOrders]);
-	}
-if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{
-	chartData.push(['Buy.com', Number(app.data['appResource|quickstats/SBYS.json'].contents.count) / totalOrders]);
-	}
-
-
-
+/*var totalOrders = 0;
+if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SAMZ.json'].contents.count);}
+if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SEBA.json'].contents.count);}
+if(app.data['appResource|quickstats/SABF.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SABF.json'].contents.count);}
+if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SSRS.json'].contents.count);}
+if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SBYS.json'].contents.count);}
 app.u.dump(" -> totalOrders: "+totalOrders);
-app.u.dump(" -> chartData"); app.u.dump(chartData);
+*/
+//build chart data arrray.
+var chartData = new Array();
+if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Amazon', Number(app.data['appResource|quickstats/SAMZ.json'].contents.count)])}
+if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{chartData.push(['eBay Auction', Number(app.data['appResource|quickstats/SEBA.json'].contents.count)]);}
+if(app.data['appResource|quickstats/SABF.json'].contents.count)	{chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SABF.json'].contents.count)]);}
+if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{chartData.push(['Sears', Number(app.data['appResource|quickstats/SSRS.json'].contents.count)]);}
+if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{chartData.push(['Buy.com', Number(app.data['appResource|quickstats/SBYS.json'].contents.count)]);}
+
+
+
 var chart = new Highcharts.Chart({
             chart: {
                 renderTo: 'container',

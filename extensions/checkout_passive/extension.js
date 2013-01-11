@@ -262,7 +262,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 					//Do Nothing.  BAD 1pc, go home.
 				}
 				else {
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
 				}
 				
 				var msg = false

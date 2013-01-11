@@ -531,3 +531,5 @@ see shipping panel in product editor for example
 /* three column panel layout (homepage) */
 #landingPageColumn1	{width:65%; float:left;}
 #landingPageColumn2	{width:33%; float:right;}
+
+#landingPageColumn2 .varImage	{max-width:300px; width:100%;}
