@@ -259,8 +259,8 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 //SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
 				
 				if(app.vars._clientid == '1pc')	{
-					//Do Nothing.  BAD 1pc, go home.
-				}
+					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
+					}
 				else {
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
 				}
