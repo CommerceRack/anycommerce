@@ -48,8 +48,8 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="_dl12_style-20120725.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="_dl12_style-20120725.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script> 
@@ -165,7 +165,7 @@ app.u.loadScript(app.vars.baseURL+"downlite_init.js");
 			</div>
 		</div><!-- /header -->
 
-		<div id='breadcrumb'></div>
+		<!-- <div id='breadcrumb'></div> -->
 
 		<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 		<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
@@ -767,15 +767,16 @@ this will likely become more flexible in the future. ###
 	
 	<div class='priceContainer pricing marginTop marginBottom'>
 		<div class='basePrice' >
-			<span class='value' data-bind="var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt pricePrompt'>Our Price: </span>;"></span>
+			<span class='value' data-bind="var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt pricePrompt'>Price From:&nbsp;</span>;"></span>
 		</div>
 		<div>
-			<span class='retailPrice prodMSRP' data-bind="var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt retailPricePrompt'>MSRP: </span> ;"></span>
+			<span class='retailPrice prodMSRP' data-bind="var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span class='prompt retailPricePrompt'>MSRP:&nbsp;</span> ;"></span>
+
+			<span class='savings marginLeft'>
+				<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You Save: ;'></span>
+				<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+			</span>
 		</div>
-		<span class='savings marginLeft'>
-			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
-			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
-		</span>
 	</div>
 	
 	
@@ -783,38 +784,46 @@ this will likely become more flexible in the future. ###
 
 	
 <!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
-	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+<!--	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div> -->
 	
 	
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
 	
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
-		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
-	
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
+		<div class='qtyAndATCContainer clearfix qtyInput'>
+			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone floatRight' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
+			<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone floatRight'></fieldset>
+			<img class='floatLeft' src='images/free_shipping-147x38.png' width='147' height='38' alt='free shipping on orders over $150' />
+		</div>
 	</form>
 	
 
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
-
+	<!--
 	<section class='marginBottom'>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
-	
+	-->
 	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
-
+	<!--
 	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	| 
 
 	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({pid:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
-
+	-->
 	</menu>
+	<div id='prodDescTopContainer'>
+		<span id="prodDescTop" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;' class='clearfix'></span>
+	</div>
 
 	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
+</table>
+<table id='tabbedProductContentTable'>
 <tr>
-	<td colspan='2' class="tabbedProductContentTD">
+	<!-- <td colspan='2' class="tabbedProductContentTD">-->
+	<td class="tabbedProductContentTD">
 <!--
 the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
 or the tab clicked won't open the right content.
@@ -823,32 +832,39 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
-		<li class='prodDescTab'><a href='#'>Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
+		<!-- <li class='prodDescTab'><a href='#'>Description</a></li> -->
 		<li class='prodReviewsTab'><a href='#'>Reviews</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Detailed Description</a></li>
+		<!--
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
 		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#'>Video</a></li>
 		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#'>Accessories</a></li>
+		-->
+		<li id='meetDownliteTab' class=''><a href="#">Meet Downlite</a></li>
+		<li id='beddingGuideTab' class=''><a href="#beddingGuide">Bedding Guide</a></li>
+		<li id='shippingReturnsTab' class=''><a href="#shippingReturns">Shipping &amp; Returns</a></li>
 	</ul>
-	
+	<!--
 	<div class='tabContent'>
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
-
+	-->
 	<div class='tabContent'>
-		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
-	</div>
-
-	<div class='tabContent'>
-		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
-	</div>
-
-
-	<div  class='tabContent'>
 		<div class='clearfix alignRight'>
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 		</div>
 		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
+	</div>
+	
+	<div class='tabContent'>
+		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+		<div class='floatLeft displayNone' data-bind='var: product(is:user1); format:showIfSet;'><img src='images/tag_restassured-108x21.jpg' width="108" height="21" alt='' /></div> 
+		<div class='floatLeft displayNone' data-bind='var: product(is:user2); format:showIfSet;'><img src='images/tag_madeinusa-108x21.jpg' width="108" height="21" alt='' /></div>
+		<span class='clearfix'>&nbsp;</span>
+	</div>
+	<!--
+	<div class='tabContent'>
+		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
 	
 	<div class='tabContent'>
@@ -857,9 +873,103 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	<div class='tabContent'>
 		<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
-	</div>	
+	</div>
+	-->
+	<div class='tabContent'>
+		<img class="floatLeft prodTabImage" src="http://static.zoovy.com/img/downlite/W240-H180-Bffffff/4/480x360_made_in_the_usa_bedding.jpg" height="180" width="240">
+
+		<div class="textBlock"><h2>Made In The USA Bedding</h2><p>DOWNLITE is a fourth generation business that is proudly located in the United States. With a 100 plus years of family history in down bedding we are the largest down and feather processor in the United States. Not only do we manufacturer down bedding for the best department stores, catalogs, hotels and resorts but we also sell our hypoallergenic fillings to other bedding companies. Another branch of DOWNLITE sells our RestAssured Hypoallergenic fillings to other manufacturers including jacket and outerwear companies as well as to luxury furniture manufacturers.</p>
+		<p>Making bedding involves using materials from around the globe - from the filling to the fabric. As such we sometimes get asked to be more specific about what is considered 'Made In The USA'? </p></div>
+	</div>
+	<div class='tabContent'>
+		<p>Buying bedding online can be daunting because you can't touch the items. As the leading supplier of bedding to the best stores, hotels, resorts and cruise lines - we know how to keep you comfortable.</p>
+		<p>Many common questions are answered below - you can also visit our sleeping blog at NocJournal.com or call us for more advice.</p>
+		<h2>Fill Power Information</h2><ul><li> Often times the fill power of an item can be confused as a barometer for quality.</li>
+		<li> Fill power simply measures how fluffy the down is and makes the most sense when comparing comforters.</li>
+		<li> Most consumers love cloud lift soft bedding - and to get that experience a higher fill power is needed.</li>
+		<li> For Pillows a fill power of 550 - 600 is perfectly fine</li>
+		<li> For comforters a fill power of 600-800 is amazing (the higher the number the more cloud like you will feel</li>
+		</ul><h2>Pillow Tips</h2><p>Pillows are sold by density level - regardless of filling material.
+		White Goose Down is considered the gold standard closely followed by PrimaLoft which is our Luxury Down Alternative</p><ul>
+		<li> If you sleep on your side (50% of us do) then choose a firmer density pillow.</li>
+		<li> If you sleep on your back (25% of us do) then choose a medium density pillow.</li>
+		<li> If you sleep face down or on your stomach (25% of us do) - then choose a soft density pillow.</li>
+		</ul><p>
+		100% of DOWNLITE's pillows are made in the USA of Hypoallergenic materials.
+		</p><p>
+		Most pillows are machine washable &amp; dryable (except silk and rayon).
+		</p><p>
+		Pillows can last 1-25 years based on the fillings, usage and care. Polyester pillows last 1-2 years usually versus down and feather pillows which can last 5-25 years.
+		</p><p>
+		Fluff Your pillows in the dryer on high heat once a month for 15 minutes to keep them fluffy, fresh and in good shape.
+		</p><h2>Comforter Tips</h2><ul><li> We also suggest buying the biggest size you can to allow for less tug of war with the covers</li>
+		<li> Most comforters can be machine washed and dried in a commercial laundry mat</li>
+		<li> Try using a duvet to add color and protection to a comforter (duvet size should be within plus or minus two inches of the comforter dimensions).</li>
+		<li> Fills can shift in baffle box constructions - so look for PermaBaffle design comforters or sewn thru constructions.</li>
+		</ul>
+		<h2>Feather Bed Tips</h2><ul><li> 90% of all our feather beds are made in the USA.</li>
+		<li> Feather beds are too large to wash - so spot care paired with a protector works best.</li>
+		<li> Adding a mattress pad on a featherbed is a great way to limit any feather poking and extend usage.</li>
+		<li> Fluff you feather bed daily or every other day for optimum softness.</li>
+		</ul>
+		<h2>Sheeting, Duvets &amp; Fine Linens</h2><ul><li> We suggest Tencel Lyocell for fabrics which is really a miracle material with a soft to the touch hand, excellent moisture wicking and relatively easy care.</li>
+		<li> Tencel Lyocell comes from sustainably grown Eucalyptus trees and is processed in a very eco efficient manner.</li>
+		<li> Don't wash sheets, duvet covers or fine linens with towels.</li>
+		</ul>
+		<h2>Fabrics &amp; Thread Counts</h2><ul><li> Most of us have been conditioned to assume higher thread counts means a better product - this is not always the case.</li>
+		<li> We prefer Supima Cotton when available for it's long staple fibers (this means a more durable and silky product).</li>
+		<li> Higher thread counts mean a more dense fabric - which means  a stiffer fabric (generally we limit our fabrics to 500 TC or lower with most in the 300-400 range).</li>
+		<li> The weave and finishing of fabric can greatly impact it's hand (Which greatly impacts german fabrics which typically have the best hand but a relatively lower thread count due to amazing finishing).</li>
+		<li> DOWNLITE does not add FR (Flame Retardent) treatments to it's fabrics.</li>
+		<li> Wrinkle resistant fabric is usually chemically treated with an agent. DOWNLITE seldom uses these finishes for it's bedding (if an agent or finish was applied we would clearly mention it on the product information).</li>
+		<li> The finest cotton in the world is a German Batiste - very light weight and made with long staple cotton.</li></ul>
+	</div>
+	<div class='tabContent'>
+		<div class='floatRight marginBottom'>
+		<!-- START SCANALERT CODE  -->
+		<a target="_blank" href="https://www.mcafeesecure.com/RatingVerify?ref=www.downlitebedding.com"><img width="94" height="54" border="0"
+		src="http://images.scanalert.com/meter/www.downlitebedding.com/13.gif" alt="McAfee SECURE sites help keep you safe from identity theft, credit card fraud, spyware, spam, viruses and online scams" oncontextmenu="alert('Copying Prohibited by Law - McAfee SECURE is a Trademark of McAfee, Inc.'); return false;"></a>
+		<!-- END SCANALERT CODE -->	
+		</div>
+		<h2>Shipping:</h2>
+		<ul>
+		<li> Most orders received are processed within 1-2 business days except for special holiday time periods.</li>
+		<li> If your order has not shipped in those time frames please contact us.</li>
+		</ul>
+		<h2>Returns:</h2>
+		<ul>
+		<li> You can return most new and unopened items within 35 days of delivery for a refund (Please call or email us right away).</li>
+		<li> Items must be returned in new or unused condition and contain all original materials included with the shipment.</li>
+		<li> All returned items will be inspected and may be subject to a partial refund, if it has been used.</li>
+		<li> If the return is a result of our error, the full cost of the merchandise and shipping charges will be refunded.</li>
+		<li> Returns may be subject to you, the customer, paying for the return Shipping &amp; Handling, as well as a restocking fee up to 25% for non-defective items.</li>
+		<li> Please note if item is returned without a Return Merchandise Authorization (RMA) additional charges may apply.</li>
+		<li> Please DO NOT SEND back items prior to receiving a special return authorization issued by an associate.</li>
+		</ul>
+		<h2>Exchanges:</h2>
+		<ul>
+		<li> You can exchange most new and unopened items within 35 days of delivery.</li>
+		<li> Items must be returned in new or unused condition and contain all original materials included with the shipment.</li>
+		<li> All exchange items will be inspected and may be subject to a restocking fee.</li>
+		<li> No items may be returned or exchanged after 35 days. </li>
+		<li> If you purchased the item and received a free shipping promotion you will be credited back your order less a restocking fee. </li>
+		</ul>
+		<p>To apply for a return or exchange, please email us and an associate will review your file right away. In order to help you properly we request that you be as descriptive as possible when using our contact us form. Please DO NOT SEND back items prior to receiving a special return authorization issued by an associate.</p>
+		<p>Please allow for shipping and handling time when completing a return or exchange.</p>
+		<p>Expect to receive the refund within 2-3 weeks after DOWNLITE receives your return.</p>
+	</div>
 </div>
 </td>
+	<td>
+	<div id='prodlistAccessoriesContainer' class='clearfix'>
+		<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateAccessories;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;before:<h4></h4>;"></ul>
+	</div>
+	<!--
+	<div id='prodlistAccessoriesContainer' class='clearfix'>
+		<ul id='prodlistAccessories' class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateAccessories;hide_multipage_controls:true;hide_multipage:true; before:<h4></h4>;"></ul>
+	</div>
+	-->
+	</td>
 </tr>
 </table>
 <div class='prodlistRelatedContainer'>

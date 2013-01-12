@@ -1295,12 +1295,12 @@ PRODUCT TEMPLATE
 .addToCartButton	{cursor:pointer}
 .marginBottom	{padding-bottom:12px;}
 
-#prodViewerTable	{margin-bottom:20px;} 
+#prodViewerTable, .prodViewerContainer	{margin-bottom:20px;} 
 
 .stid, .mfg	{margin-bottom:8px;}
 
 .imageContainer	{background:#e6e6e6; padding:10px;}
-.prodImages img	{border:1px solid #b1b1af;}
+.prodImages img, .imageContainer img	{border:1px solid #b1b1af;}
 #prodViewerTable .prodThumbs div:last-child	{margin-right:0;}
 
 .prodVideoContainer	{border:1px solid #939393; background:#ffffff; padding:8px; margin-top:10px;}
@@ -1310,11 +1310,12 @@ PRODUCT TEMPLATE
 
 
 .prodSummaryContainer	{font-size:12px; line-height:18px; padding-left:20px;}
+.prodSummaryContainer h5 {font-weight:normal; margin-bottom:8px;}
 
 
 
-.priceContainer	{color:#798287; padding-bottom:12px; border-bottom:1px solid #efefef; margin-bottom:12px; padding-top:24px;}
-.priceContainer .prompt	{display:inline-block; width:120px;} /* price and msrp prompts */
+.priceContainer	{/*color:#798287;*/ padding-bottom:12px; border-bottom:1px solid #efefef; margin-bottom:12px; /*padding-top:12px;*/}
+.priceContainer .prompt	{/*display:inline-block; width:120px;*/ font-size: 12px; font-weight: normal;} /* price and msrp prompts */
 .basePrice .value	{font-size:23px; color:#bd6300; font-weight:bold;}
 
 .retailPrice .value	{font-size:14px; text-decoration:line-through;}
@@ -1340,10 +1341,10 @@ PRODUCT TEMPLATE
 	background: -ms-linear-gradient(top,  #ffffff 0%,#f0f0f4 100%); /* IE10+ */
 	background: linear-gradient(top,  #ffffff 0%,#f0f0f4 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f0f0f4',GradientType=0 ); /* IE6-8 */
-
 	}
+.qtyAndATCContainer fieldset {margin:0 0 3px;}
 	
-#addToCartBtn	{ padding:0; margin-left:4px 0 0 24px; background: url(images/dl12_addtocart-170x35.jpg) no-repeat; width:170px; height:35px; text-indent:30000px;}
+#addToCartBtn	{ padding:0; margin-left:4px 0 0 24px; background: url(images/dl12_addtocart-170x35.jpg) no-repeat; width:170px; height:35px; text-indent:30000px;margin:3px 0 0 3px;cursor:pointer;}
 .qtyInput	{font-size:10px; line-height:14px;}
 .qtyInput input	{display:block;}
 .atcSuccessMessage	{clear:both;}
@@ -1353,24 +1354,25 @@ PRODUCT TEMPLATE
 
 #prodlistAccessoriesContainer	{padding-left:20px;}
 #prodlistAccessoriesContainer h4	{background:url(images/accessories-251x59.jpg) no-repeat; width:251px; height:65px; margin:0; padding:0; text-indent:-50000;}
-#prodlistAccessories .prodThumb	{float:left; margin:0 6px 6px 0;}
-#prodlistAccessories li	{width:auto; height:auto; font-size:14px; }
-#prodlistAccessories .basePrice	{color:#c7620a;}
+#prodlistAccessoriesContainer .prodThumb	{float:left; margin:0 6px 6px 0;}
+#prodlistAccessoriesContainer li	{width:auto; height:auto; font-size:14px; margin:0;padding:0;}
+#prodlistAccessoriesContainer .basePrice	{color:#c7620a;}
 
 #prodlistRelatedContainer h4	{background:url(images/youmayalsolike-990x57.jpg) no-repeat; width:990px; height:65px; margin:0; padding:0;}
 
 
 
 .prodTabImage	{margin:0 12px 12px 0;} /* used for the photo in the global tabs */
+/* Updated all tabbedProductContentTable declarations to classes instead of IDs */
+.tabbedProductContentTable	{width:100%;}
+.tabbedProductContentTD	{width:90%;}
+.tabbedProductContentTD .ui-widget-header, .tabbedProductContentTD  .ui-widget-content	{border:none; background:none;}
 
-#tabbedProductContentTable	{width:100%;}
-#tabbedProductContentTD	{width:90%;}
-#tabbedProductContentTD .ui-widget-header, #tabbedProductContentTD  .ui-widget-content	{border:none; background:none;}
-
-#tabbedProductContentTD .ui-tabs	{padding:0; font-size:16px; font-weight:normal;}
-#tabbedProductContentTD .ui-tabs .ui-tabs-nav	{padding:0;}
-#tabbedProductContentTD .ui-tabs .ui-tabs-nav li	{margin:0 -3px 0px 0; font-family: 'PT Sans',arial,sans-serif; width:20%;}
-#tabbedProductContentTD .ui-tabs-panel	{
+.tabbedProductContentTD .ui-tabs {padding:0; font-size:16px; font-weight:normal;}
+.tabbedProductContent .tabContent	{font-size:16px; font-weight:normal;}
+.tabbedProductContentTD .ui-tabs .ui-tabs-nav	{padding:0;}
+.tabbedProductContentTD .ui-tabs .ui-tabs-nav li	{margin:0 -3px 0px 0; font-family: 'PT Sans',arial,sans-serif; width:20%; font-size:12px;}
+.tabbedProductContentTD .ui-tabs-panel	{
 	border:1px solid #d9d9d9;
 	-moz-border-radius: 3px;
 	border-radius: 3px;
@@ -1379,7 +1381,7 @@ PRODUCT TEMPLATE
 .myTab	{font-size:12px; }
 .ui-tabs .tabs li a	{padding:20px 0; display:block; width:100%; text-align:center;}
 .tabs .ui-state-active, .tabs .ui-state-default	{border:1px solid #d9d9d9; border-bottom-width: 0;}
-#tabbedProductContent .ui-state-default	{background:#efefef;
+.tabbedProductContent .ui-state-default	{background:#efefef;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
 	-webkit-border-radius: 2px;
@@ -1391,8 +1393,8 @@ PRODUCT TEMPLATE
 	background: -ms-linear-gradient(top,  #ffffff 0%,#f0f0f4 100%); /* IE10+ */
 	background: linear-gradient(top,  #ffffff 0%,#f0f0f4 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f0f0f4',GradientType=0 ); /* IE6-8 */}
-#tabbedProductContent .ui-state-active	{background:#ffffff; }
-.myTab a, #tabbedProductContent .ui-state-active a	{color:#4f4537; font-weight:bold; }
+.tabbedProductContent .ui-state-active	{background:#ffffff; }
+.myTab a, .tabbedProductContent .ui-state-active a	{color:#4f4537; font-weight:bold; }
 
 
 #prodViewerReviews	{font-size:.8em}
@@ -1407,12 +1409,12 @@ CATEGORY TEMPLATE
 
 /* breadcrumb, used on the category pages */
 
-#breadcrumb	{margin-bottom:12px; font-size:11px;}
-#breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
-#breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
-#breadcrumb li:last-child:after	{content:"";}
+.breadcrumb	{margin:12px 0; font-size:11px;}
+.breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
+.breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
+.breadcrumb li:last-child:after	{content:"";}
 
-#breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold;}
+.breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold;}
 
 .mpControls	{padding:2px 6px;}
 
@@ -1432,7 +1434,7 @@ CATEGORY TEMPLATE
 .categoryBox, .productBox	{border:1px solid #d2d2d2;} /* separate class for border because 'categoryList' is shared and not all lists need a border. */
 .categoryList .catName, .productList .productInfoPadding	{text-align:center; padding:8px;}
 
-.productList .productName	{font-weight:normal; margin-bottom:8px;}
+.productInfoPadding h5	{font-weight:normal; margin-bottom:8px;font-size:100%;}
 .pricing .retailPrice	{text-decoration:line-through}
 .pricing .basePrice	{color:#c95b04;}
 
