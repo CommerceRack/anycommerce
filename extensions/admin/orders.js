@@ -283,9 +283,9 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		$("<hr \/>").appendTo($cmenu);
 		
 		var $emailMenu = $("<menu label='Send email message '>");
-		for(key in app.ext.admin_orders.vars.emailMessages)	{
-			$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).on('click',function(){
-				app.ext.admin_orders.u.sendOrderMail(orderid,key,$row);
+		for(var key in app.ext.admin_orders.vars.emailMessages)	{
+			$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).data('msg',key).on('click',function(){
+				app.ext.admin_orders.u.sendOrderMail(orderid,$(this).data('msg'),$row);
 				app.model.dispatchThis('immutable');
 				}).appendTo($emailMenu);
 			}
@@ -538,6 +538,12 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 		app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
 		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
 		app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
+
+	$("[data-role='adminOrders|orderSummary'] :input",$target).off('change.trackChange').on('change.trackChange',function(){
+		$(this).addClass('edited');
+		$('.numChanges',$target).text($(".edited",$target).length).closest('button').button('enable').addClass('ui-state-highlight');
+		});
+
 		}
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 
@@ -732,8 +738,9 @@ else	{
 					}
 				}
 			},
-		
+
 //used for adding email message types to the actions dropdown.
+//recycled in list mode and edit mode. #MAIL| is important in list mode and stripped in edit mode during click event.
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
 				$tag.append("<li><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
@@ -1609,7 +1616,8 @@ $(selector + ' .editable').each(function(){
 					$(this).on('click',function(event){
 						event.preventDefault();
 						$('body').showLoading();
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(1)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
+//substring(6) on the link below strips #MAIL| from the url
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
 						app.model.dispatchThis('immutable');
 						});
 					});
@@ -1706,16 +1714,36 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 				$btn.button();
 				$btn.off('click.orderSummarySave').on('click.orderSummarySave',function(event){
 					event.preventDefault();
-					var frmObj = $btn.closest('form').serializeJSON();
-					if(frmObj['sum/shp_method'] && frmObj['sum/shp_total'])	{
-						var $parent = $btn.closest("[data-order-view-parent]"),
-						orderID = $parent.data('order-view-parent');
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier=SLOW&sum/shp_method="+frmObj['sum/shp_method']],{});
+
+					var frmObj = $btn.closest('form').serializeJSON(),
+					macros = new Array(),
+					$parent = $btn.closest("[data-order-view-parent]"),
+					orderID = $parent.data('order-view-parent');
+					
+//build tax macro/call, if necessary. Only add if inputs have changed.
+					if((frmObj.state_tax_rate && $("[name='state_tax_rate']",$parent).hasClass('edited')) || (frmObj.local_tax_rate && $("[name='local_tax_rate']",$parent).hasClass('edited')))	{
+						var macro = "SETTAX?"
+						if(frmObj.state_tax_rate)	{macro += "state_tax_rate="+frmObj.state_tax_rate}
+						if(frmObj.state_tax_rate && frmObj.local_tax_rate)	{macro += "&"}
+						if(frmObj.local_tax_rate)	{macro += "local_tax_rate="+frmObj.local_tax_rate}
+						macros.push(macro);
+						}
+//build shipping macro/call, if necessary. Only add if inputs have changed.
+					if($("[name='sum/shp_carrier']",$parent).hasClass('edited') || $("[name='sum/shp_method']",$parent).hasClass('edited') || $("[name='sum/shp_total']",$parent).hasClass('edited'))	{
+						macros.push("SETSHIPPING?sum/shp_total="+frmObj['sum/shp_total']+"&sum/shp_carrier=SLOW&sum/shp_method="+frmObj['sum/shp_method']);
+						}
+
+					if(macros.length)	{
 						$parent.empty();
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,macros,{});
 						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
 						app.model.dispatchThis('immutable');
 						}
-					else	{app.u.throwGMessage("It appears that either ship method ["+frmObj['sum/shp_method']+"] or ship total ["+frmObj['sum/shp_total']+"]  was left blank.");}
+					else	{
+						app.u.throwGMessage("in admin_orders.e.orderSummarySave, macros is empty. no tax or shipping update recognized.");
+						}
+
+					
 					});
 				},
 
@@ -1759,8 +1787,8 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						var $address = $("[data-ui-role='admin_orders|orderUpdateShipAddress']",$target);
 						var kvp = ""; //URI formatted string of address key (address1) value (123 evergreen terrace) pairs.
 
-						
-						
+		
+		
 						if($('.edited',$address).length)	{
 							$('[data-bind]',$address).each(function(){
 								var bindData = app.renderFunctions.parseDataBind($(this).data('bind'));
