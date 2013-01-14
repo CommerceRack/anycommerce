@@ -119,7 +119,7 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 			<div id="headerContent">
 				<img id="logo" src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" onClick="return showContent('category',{'navcat' : '.'});" />
 				<form id="headerSearchFrm" name="headerSearchFrm" action="#" class="productSearchForm" method="get">
-					<input id="txtSearch" class="productSearchKeyword handleDefault" name="KEYWORDS" type="text" value="Find it here..." />
+					<input id="txtSearch" class="productSearchKeyword handleDefault" name="KEYWORDS" type="search" value="Find it here..." />
 					<img id="btnTopNavSearch" src="site/images/button-top-nav-search.png" alt="Search Button" />
 				</form>
 				<img id="headerFreeShipping" src="site/images/header-free-shipping.png" alt="Free Shipping on Orders of $50 or Higher" />
@@ -132,12 +132,12 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 		<div id="nav">
 			<div id="navContent">
 				<ul>
-					<li><a href="#">ALL CATEGORIES</a><div class="subMenu"></div></li>
-					<li><a href="#">WHAT'S HOT</a><div class="subMenu"></div></li>
-					<li><a href="#">NEW ARRIVALS</a><div class="subMenu"></div></li>
-					<li><a href="#">ITEM TYPE</a><div class="subMenu"></div></li>
-					<li><a href="#">BY MANUFACTURER</a><div class="subMenu"></div></li>
-					<li><a href="#">CLEARANCE</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a><div class="subMenu"></div></li>
+					<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a><div class="subMenu"></div></li>
 				</ul>
 			</div>
 		</div>
@@ -171,11 +171,11 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 					<ul>
 						<li>FIND IT HERE</li>
 						<li><a href="#">All Categories</a></li>	
-						<li><a href="#">What's Hot</a></li>
-						<li><a href="#">New Arrivals</a></li>	
-						<li><a href="#">Item Type</a></li>
-						<li><a href="#">By Manufacturer</a></li>
-						<li><a href="#">Clearance items</a></li>	
+						<li><a href="#">Action Figures</a></li>
+						<li><a href="#">Statue</a></li>	
+						<li><a href="#">Collectibles</a></li>
+						<li><a href="#">Comics</a></li>
+						<li><a href="#">Prop Replicas</a></li>	
 					</ul>
 					<ul>
 						<li>MY ACCOUNT</li>
@@ -262,14 +262,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="catNavContent">
 				<p class="prevCat navCats">Previous</p>
 				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
-				<p class="currentCat">Current</p>
+				<p class="currentCat">All Categories</p>
 				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
 				<p class="nextCat navCats">Next</p>
 			</div>
 			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
 		</div>
+		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
-		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />
+		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{});" alt="View All Categories" />
 	</div>
 	<!--<h5 data-bind='var: nothing(); defaultValue: blue; elasticAttr: pid; format:searchLink; extension:myRIA;'></h5>
 	-->
@@ -321,21 +322,19 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
-<li id='categoryListTemplate'>
-	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
-		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:text;'></span></div>
-	</div>
-</li>
+	<li id='categoryListTemplate'>
+		<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
+			<div class='catName white2LGray'><span data-bind='var: category(pretty); format:text;'></span></div>
+		</div>
+	</li>
 
-
-<li id='categoryListTemplateRootCats'>
-	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
-		<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
-	</div>
-</li>
-
+	<li id='categoryListTemplateRootCats'>
+		<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
+			<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
+		</div>
+	</li>
 </ul>
 
 
@@ -346,27 +345,26 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
-	
-	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-	
-	<div>
-		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+	<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+		
+		<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+		
+		<div>
+			<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='216' height='216' />
+			</div>
+			<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+				<div class="prodThumbBackground"></div>
+				<h5 data-bind='var: product(zoovy:prod_name); format:text;' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')})"></h5>
+			
+				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+				<img src="site/images/button-buy-now.png" onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' />
+			</div>
+			
+			<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+	<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 		</div>
-		<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-			<div class="prodThumbBackground"></div>
-			<h5 data-bind='var: product(zoovy:prod_name); format:text;' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')})"></h5>
-		
-			<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-			<img src="site/images/button-buy-now.png"  onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' />
-		</div>
-		
-		
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
-	</div>
-</li>
+	</li>
 
 
 <!--
@@ -460,13 +458,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResults' class='loadingBG  ' >
 	<div class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
 		</div>
 		
 		<div class="prodThumbDesc">
 			<div class="prodThumbBackground" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'></div>
 			<h5 data-bind='var: product(prod_name); format:text;'></h5>
-		
 			<h6 data-bind='var: product(base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 			<img src="site/images/button-buy-now.png" onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>
 		</div>	
@@ -1104,23 +1101,23 @@ adding classes is not likely to have any bad effects.
 
 
 <div id='searchTemplate' class='searchResultsPage clearfix'>
-
-	<div class='sideline' >
-		<nav id='searchNav'>
-			<ul class='listStyleNone noPadOrMargin'><!--
-				<li id='altSearchesContainer'>
-				<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
-				<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-				</li>
-			-->
-				<li id='recentSearchesContainer'>
-				<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
-				<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-				</li>
-			</ul>
-		</nav>
+	<div class='contentPage'>
+		<div class='sideline' >
+			<nav id='searchNav'>
+				<ul class='listStyleNone noPadOrMargin'><!--
+					<li id='altSearchesContainer'>
+					<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
+					<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
+					</li>
+				-->
+					<li id='recentSearchesContainer'>
+					<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
+					<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
+					</li>
+				</ul>
+			</nav>
+		</div>
 	</div>
-	
 	<div class='mainColumn'>
 		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul><!-- productListTemplateResults gets loaded into here -->
 	</div>
@@ -1215,6 +1212,25 @@ So the cart template should contain these two elements and the extension should 
 <tr>
 	<td class='cartStuffContainer'>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
+	<div>
+		<p>HELPFUL LINKS</p>
+		<ul>
+			<li><a href="#">Contact Us</a></li>
+			<li><a href="#">Shipping Policy</a></li>
+			<li><a href="#">Return Policy</a></li>
+			<li><a href="#">Payment Policy</a></li>
+			<li><a href="#">Privacy Policy</a></li>
+			<li><a href="#">FAQs</a></li>
+		</ul>
+	</div>	
+	<p>
+		<span>FREE Shipping on all orders over $50</span><br />
+		All orders of $50 and more qualify for free standard shipping. Applicable only to address in the continental United States (HI and AK are not included). Free shipping does not apply to orders shipped to PO Boxes or international destinations. Not applicable to eBay or Amazon purchases.
+	</p>
+	<p>
+		<span>Preorders</span><br />
+		All preorders paid with a credit card will be charged at the time of shipment. All preorders paid with Google Checkout, Paypal or Amazon Payments will be charged when your order is placed. If you do not wish to pay for your preorder until it ships then you must use the checkout button and pay with a credit card. Orders that have both preorder and instock items we be shipped at the same time in one shipment. We recommend that you do not order in stock items with preorder items. 
+	</p>
 	</td>
 
 	<td class='cartSummaryTotalsContainer'>
@@ -1223,12 +1239,26 @@ So the cart template should contain these two elements and the extension should 
 		<div class='cartSummaryContainer'>
 		
 <section id='cartTemplateCostSummary' class='cartSummary'>
-
+	<span id="lblTotal">CART TOTAL</span>
+	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	
-	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:false;currencySign: $; pretext:Tax: ; '></div>
+	
+	<section id='cartTemplateShippingContainer'>
+		<h3>Shipping:</h3>
+		<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+	</section>	
+	
+	<div class='cartZipCodeContainer'>
+		<label for='data-ship_zip'>Zip/Postal Code:</label>
+		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(%ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
+		app.ext.store_cart.u.updateCartSummary();
+		app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+		app.model.dispatchThis('immutable');"  />
+	</div>	
+	
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; extension:store_cart; pretext:Shipping: '></div>	
 	
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	
@@ -1239,21 +1269,10 @@ So the cart template should contain these two elements and the extension should 
 	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
 
 </section>
-
-<section id='cartTemplateShippingContainer'>
-	<h3>Shipping:</h3>
-	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
-</section>
 		
 <section class='stdMargin'>
 
-	<div class='cartZipCodeContainer'>
-	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(%ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
-	app.ext.store_cart.u.updateCartSummary();
-	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-	app.model.dispatchThis('immutable');"  />
-	</div>
+
 
 	
 
@@ -1305,15 +1324,14 @@ So the cart template should contain these two elements and the extension should 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
-		
+		<p>PRODUCT DESCRIPTION</p>
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
-		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
-		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-
+		<div class='cartQty'>
+			<input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+			<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
+			<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+			<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 		</div>
 		
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
@@ -1595,49 +1613,33 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
-<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
-<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
-	<fieldset>
-	
-	<div>
-	<label for='modalLoginlogin'>Login/Email</label>
-	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
+	<div id="gotAccount">
+		<p>GOT AN ACCOUNT?</p>
+		<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+			<fieldset>
+				<div>
+					<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='E-mail address' size='25' />
+				</div>
+					
+				<div>
+					<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+				</div>
+					
+				<div>
+					<!--<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />-->
+				</div>
+				
+			</fieldset>
+		</form>
+		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginlogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+		<img class="pointer" src="site/images/button-login-to-my-account.png" alt="Login to my Account" onClick="$('form#modalLoginForm').submit();" />
 	</div>
-	
-	<div>
-	<label for='modalLoginpassword'>Password</label>
-	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+	<div id="createAccount">
+		<p>FIRST-TIMER?</p>
+		<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing kist, please choose this option.</p>
+		<img class="pointer" src="site/images/button-create-account.png" onClick="showContent('customer',{'show':'newsletter'});" alt="Create Account" />
 	</div>
-	
-	<div>
-	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
-	</div>
-	</fieldset>
-</form>
-
-<div id='recoverPasswordContainer'>
-<hr />
-
-<h3 class='marginBottom'>Recover Password</h3>
-<div id='recoverPasswordMessaging'></div>
-<form action='#' onSubmit="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
-<fieldset>
-<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
-
-<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
-
-</fieldset>
-</form>
-
-</div><!-- /recoverPasswordContainer -->
-
-<div>
-<hr />
-<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
-</div>
-
-
-
 </div>
 
 <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->

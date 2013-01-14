@@ -164,7 +164,7 @@ body
 						height: 62px;
 						margin: 0px auto;
 						position: relative;	
-						width: 360px;					
+						width: 440px;					
 					}	
 						div#container div#content div.featuredCategories div.catNavContent p.navCats
 						{	
@@ -891,6 +891,7 @@ div.contentPage
 			}
 				div.contentPage div.sideline nav ul li
 				{
+					
 				}
 					div.contentPage div.sideline nav ul li a
 					{
@@ -908,4 +909,197 @@ div.contentPage
 		padding-left: 10px;
 		position: relative;
 		width: 620px;
+	}
+	
+	div#modalCart
+	{
+		background-color: #b7a58b;
+	}
+		div#modalCart ul#cartStuffList
+		{
+			border-bottom: 1px solid #897c68;
+			clear: both;
+			padding-bottom: 20px;
+		}
+		div#modalCart ul#cartStuffList > li
+		{
+			background-color: #c9bca8;
+			border: 0px solid #FFFFFF;
+			margin: 12px 0px 12px 0px;
+			padding-bottom: 20px;
+			padding-top: 20px;
+			position: relative;
+		}
+		div#modalCart ul#cartStuffList > li:nth-child(even)
+		{
+			background-color: #897c68;
+		}
+			div#modalCart ul#cartStuffList > li img.prodThumb
+			{
+				margin-left: 20px;
+			}
+			div#modalCart ul#cartStuffList > li span.removeButton
+			{
+				cursor: pointer;
+				position: absolute;
+				right: 3px;
+				top: 3px;
+			}
+			div#modalCart ul#cartStuffList li > h4, div#modalCart ul#cartStuffList li > div:not(.floatLeft, .cartQty)
+			{
+				margin-left: 10px;
+			}
+			div#modalCart ul#cartStuffList li div.cartQty
+			{
+				position: absolute;
+				right: 20px; 
+				top: 19px;
+				width: 210px;
+			}
+			div#modalCart td.cartSummaryTotalsContainer
+			{
+				width: 1%;
+			}
+				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary span#lblTotal
+				{
+					color: #770000;
+					font-family: Helvetica;
+					font-size: 12px;
+					font-weight: bold;
+					margin-left: 63px;
+				}
+				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary > div
+				{
+					margin-left: 15px;
+					margin-top: 5px;
+				}
+		div#modalCart td.cartStuffContainer > p
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			margin-top: 20px;
+			width: 450px;
+		}
+			div#modalCart td.cartStuffContainer > p > span
+			{
+				font-size: 15px;
+				font-weight: bold;
+			}		
+		div#modalCart td.cartStuffContainer > div
+		{
+			background-color: #897c68;
+			float: right;
+			margin-top: 20px;
+			position: relative;
+			width: 200px;
+		}
+			div#modalCart td.cartStuffContainer > div > p
+			{
+				color: #770000;
+				margin: 0px;
+				margin-left: 30px;
+				margin-top: 30px;				
+			}
+			div#modalCart td.cartStuffContainer > div > ul
+			{
+				margin-left: 30px;
+				margin-top: 13px;
+				padding-bottom: 30px;
+			}
+				div#modalCart td.cartStuffContainer > div > ul > li
+				{
+					list-style: none;
+					padding-bottom: 5px;
+				}
+					div#modalCart td.cartStuffContainer > div > ul > li > a
+					{
+						color: #000000;
+						font-family: Helvetica;
+						font-size: 12px;
+						text-decoration: underline;
+					}
+					
+div#loginFormForModal
+{
+	background-color: #b7a58b;
+	height: 290px;
+	width: 625px;
+}					
+div#createAccount
+{
+	background: url("../images/box-create-account.png") no-repeat;
+	height: 281px;
+	position: relative;
+	width: 300px;
+}
+	div#createAccount img
+	{
+		position: absolute;
+		left: 30px;
+		top: 187px;
+	}
+	div#createAccount p
+	{
+		font-family: Helvetica;
+		position: absolute;
+	}
+	div#createAccount p:first-child
+	{
+		color: #FFFFFF;
+		font-size: 22px;
+		left: 77px;
+		top: 20px;
+	}
+	div#createAccount p:not(:first-child)
+	{
+		color: #000000;
+		font-size: 14px;
+		left: 24px;
+		top: 87px;
+		width: 254px;
+	}
+div#gotAccount
+{
+	background: url("../images/box-got-account.png") no-repeat;
+	height: 280px;
+	left: 337px;
+	position: absolute;
+	width: 300px;
+}
+	div#gotAccount p
+	{
+		font-size: Helvetica;
+		position: absolute;
+	}
+	div#gotAccount p:first-child
+	{
+		color: #FFFFFF;
+		font-size: 22px;
+		left: 54px;
+		top: 19px;
+	}
+	div#gotAccount p:not(:first-child)
+	{
+		color: #000000;
+		font-size: 12px;
+		left: 46px;
+		top: 251px;
+	}
+	div#gotAccount img
+	{
+		left: 30px;
+		position: absolute;
+		top: 186px;
+	}
+	div#gotAccount input#modalLoginlogin
+	{
+		left: 30px;
+		position: absolute;
+		top: 80px;
+	}
+	div#gotAccount input#modalLoginpassword
+	{
+		left: 30px;
+		position: absolute;
+		top: 132px;
 	}
