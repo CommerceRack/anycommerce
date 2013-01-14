@@ -1898,13 +1898,44 @@ the refreshCart call can come second because none of the following calls are upd
 			}, //renderFomrats
 
 		e : {
-			
-			"cartItemAdd" : function($btn)	{
+			"cartItemAddFromForm" : function($btn)	{
 				$btn.button();
-				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(){
-					var $button = $("<button>").text("Add to Order").button().on('click',function(){
-						$form = $('form','#chooserResultContainer');
+				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(event){
+					event.preventDefault();
+					app.ext.convertSessionToOrder.a.addToCart($(this).closest('form').serializeJSON())
+					});
+				}, //cartItemAddFromForm
+
+			"cartItemAddWithChooser" : function($btn)	{
+				$btn.button();
+				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(event){
+					event.preventDefault();
+
+//$button is passed into the showFinder function. This is the button that appears IN the chooser/finder for adding to the cart/order.					
+					var $button = $("<button>").text("Add to Order").button().on('click',function(event){
+						event.preventDefault();
+$(this).button('disable'); //prevent doubleclick.
+$form = $('form','#chooserResultContainer');
+if($form && $form.length)	{
+	var sfo = $form.serializeJSON(); //Serialized Form Object.
+	var pid = sfo.sku;  //shortcut
+	if(app.ext.store_product.validate.addToCart(pid))	{
+//this product call displays the messaging regardless, but the modal opens over it, so that's fine.
+		app.ext.convertSessionToOrder.a.addToCart(sfo);
+		}
+	else	{
+		$('.atcButton',$form).removeClass('disabled ui-disabled').removeAttr('disabled');
+		}
+	}
+else	{
+	app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+	$(this).button('enable');
+
+	}
+
+
 						});
+
 					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
 					});
 				}

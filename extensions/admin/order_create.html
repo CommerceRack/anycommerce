@@ -36,13 +36,11 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 	<label><span>Qty:</span><input type="text" name="quantity" size="3" value="1"  /></label>
 	<label><span>Product id:</span><input type='text' name='product_id'  /></label>
 	<label><span>Price: </span><input type='number' class='price' size='5' name='price' step='0.01' min='0' /></label>
-	<button onClick="app.ext.convertSessionToOrder.a.addToCart($(this).parent().serializeJSON())" class='ui-button ui-state-default ui-corner-all'>Add</button>
-<!--	<button onClick="app.ext.admin.a.showFinderInModal('CHOOSER');" class='ui-button ui-state-default ui-corner-all'>Find</button> -->
-	
+	<button data-app-event="convertSessionToOrder|cartItemAddFromForm">Add</button>
 </fieldset>
 </form><!--
 <hr />
-<button data-app-event="convertSessionToOrder|cartItemAdd">Use Chooser</button> <span class='hint'>use this for an easier method to select items with variations</span>
+<button data-app-event="convertSessionToOrder|cartItemAddWithChooser">Use Chooser</button> <span class='hint'>use this for an easier method to select items with variations</span>
 -->
 </div>
 

@@ -345,7 +345,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<fieldset>
 		<legend>Add Payment</legend>
 		<div class='labelsAsBreaks' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
-		<div><label>Amount: <input type='number' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
+		<div><label>Amount: <input type='number' size='5' data-bind='var: cart(sum/balance_due_total); format:popVal;' name='amt' step='0.01' min='0' /></label></div>
 		<div><label>Note: <input type='text' name='note' /></label></div>
 		<div><button data-app-event="admin_orders|orderUpdateAddPayment">Add Payment</button></div>
 	</fieldset>
