@@ -1919,12 +1919,17 @@ $form = $('form','#chooserResultContainer');
 if($form && $form.length)	{
 	var sfo = $form.serializeJSON(); //Serialized Form Object.
 	var pid = sfo.sku;  //shortcut
+	sfo.product_id = pid; //
 	if(app.ext.store_product.validate.addToCart(pid))	{
-//this product call displays the messaging regardless, but the modal opens over it, so that's fine.
+		app.calls.ping.init({
+			'callback':function(){
+				$('#prodFinder').dialog('close');
+				}
+			},'immutable');
 		app.ext.convertSessionToOrder.a.addToCart(sfo);
 		}
 	else	{
-		$('.atcButton',$form).removeClass('disabled ui-disabled').removeAttr('disabled');
+		$(this).button('enable'); //prevent doubleclick.
 		}
 	}
 else	{
