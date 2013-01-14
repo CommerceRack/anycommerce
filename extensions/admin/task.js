@@ -177,7 +177,12 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {}, //renderFormats
+		renderFormats : {
+			taskClass : function($tag,data)	{
+				if((Number(data.value) - app.u.unixNow()) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
+				else	{} //do nothing.
+				}
+			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 

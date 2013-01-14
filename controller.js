@@ -2022,7 +2022,8 @@ most likely, this will be expanded to support setting other data- attributes. ##
 		handleTranslation : function($r,data)	{
 //app.u.dump("BEGIN app.renderFunctions.handleTranslation");
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
-$r.find('[data-bind]').each(function()	{
+//
+$r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 										   
 	var $focusTag = $(this);
 	var value;
@@ -2505,14 +2506,17 @@ $tmp.empty().remove();
 //doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
 //			app.u.dump("BEGIN renderFormats.processList");
-			var $o; //recycled. what gets added to $tag for each iteration.
+			var $o, //recycled. what gets added to $tag for each iteration.
+			int = 0;
 			for(i in data.value)	{
-//				app.u.dump(i+") reached.");
-				$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
-//				app.u.dump(" ---> appended");
-				if(data.value[i].id){} //if an id was set, do nothing.
-				else	{$o.removeAttr('id').attr('data-obj_index',i)} //nuke the id. it's the template id and will be duplicated several times. set index for easy lookup later.
-				$tag.append($o);
+				if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
+				else	{
+					$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
+					if(data.value[i].id){} //if an id was set, do nothing.
+					else	{$o.removeAttr('id').attr('data-obj_index',i)} //nuke the id. it's the template id and will be duplicated several times. set index for easy lookup later.
+					$tag.append($o);
+					}
+				int += 1;				
 				}
 			$tag.removeClass('loadingBG');
 			},

@@ -57,7 +57,7 @@ reminder: you can't have a template for a tr without a parent table (same for li
 -->
 <table>
 <!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
-<tr id='taskListRowTemplate' class='taskRow' data-bind="var: task(id); format:assignAttribute; attribute:title;">
+<tr id='taskListRowTemplate' class='taskRow' data-bind="var: task(completed_gmt); format:taskClass; extension:admin_task;">
 	<td class='hideInMinifyMode'><input type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
 	<td class='hideInMinifyMode' data-bind="var: task(created_gmt); format:unix2mdy;"></td>
 	<td data-bind="var: task(completed_gmt); format:addClass; className: lineThrough gmt_; hideZero:true;"><span data-bind="var: task(title); format:text;"></span></td>
