@@ -179,8 +179,17 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 
 		renderFormats : {
 			taskClass : function($tag,data)	{
-				if((Number(data.value) - app.u.unixNow()) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
-				else	{} //do nothing.
+				if(Number(data.value.completed_gmt))	{
+					if((app.u.unixNow() - Number(data.value.completed_gmt)) > (60*60*24*7)){$tag.addClass('displayNone')} //hide tasks that were completed more than a week ago.
+					else	{} //do nothing.
+					}
+				else if(Number(data.value.due_gmt))	{
+					app.u.dump(" -> has a due date. Number(data.value.due_gmt) - app.u.unixNow(): "+(Number(data.value.due_gmt) - app.u.unixNow()));
+					if(app.u.unixNow() > Number(data.value.due_gmt)) {$tag.addClass('red');} //past due date.
+					else if ((Number(data.value.due_gmt) - app.u.unixNow()) < (60*60*24*2)){$tag.addClass('orange')} //due within 2 days. highlight.
+					else	{} //not past due or too close to due date.
+					}
+				else	{} // no due data and not completed. do nothing.
 				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
