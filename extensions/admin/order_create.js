@@ -60,8 +60,10 @@ a callback was also added which just executes this call, so that checkout COULD 
 //formerly hardcoded to zContent
 				app.ext.convertSessionToOrder.vars.containerID = containerID;
 				app.ext.convertSessionToOrder.u.createProcessCheckoutModal();
-
-				$(app.u.jqSelector('#',containerID)).append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
+				var $target = $(app.u.jqSelector('#',containerID));
+				$target.append(app.renderFunctions.createTemplateInstance('checkoutTemplate','checkoutContainer')).hideLoading();
+				
+				app.ext.admin.u.handleAppEvents($target)
 
 				if(app.u.determineAuthentication() == 'authenticated')	{
 					app.u.dump(" -> user is logged in. set account creation hidden input to 0");
@@ -197,8 +199,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 
 
-
-			
 /*
 Run once checkout form has been filled out (or is thought to be filled out).
 add all form fields to the session/cart (whether form validates or not)
@@ -228,6 +228,12 @@ if server validation passes, the callback handles what to do next (callback is m
 //cc and cv should never go. They're added as part of cartPaymentQ
 				delete serializedCheckout['payment/cc'];
 				delete serializedCheckout['payment/cv'];
+
+/* these fields are in checkout/order create but not 'supported' fields. don't send them */				
+				delete serializedCheckout['giftcard'];
+				delete serializedCheckout['want/bill_to_ship_cb'];
+				delete serializedCheckout['coupon'];
+
 				app.calls.cartSet.init(serializedCheckout);
 
 				var checkoutIsValid = app.ext.convertSessionToOrder.validate.isValid();
@@ -304,6 +310,7 @@ if server validation passes, the callback handles what to do next (callback is m
 //				app.u.dump(" -> tagObj:");  app.u.dump(tagObj);
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
 					//Match FOund.
+					app.calls.cartSet.init({"customer/cid":app.data[tagObj.datapointer].CID});
 					app.ext.admin.calls.customer.adminCustomerGet.init(app.data[tagObj.datapointer].CID,{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
 					app.model.dispatchThis('immutable');
 					}
@@ -1195,7 +1202,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump(" -> P: "); app.u.dump(P);
 				$('#printContainer').empty();
 				$('body').showLoading(); //indicate to client that button was pressed.
-				app.calls.appProfileInfo.init(P.data.profile,{},'immutable');				
+				app.calls.appProfileInfo.init({'profile':P.data.profile},{},'immutable');				
 				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':'appProfileInfo|'+P.data.profile,'extension':'convertSessionToOrder','templateID':P.data.type.toLowerCase()+'Template'});
 				app.model.dispatchThis('immutable');
 				},
@@ -1383,7 +1390,15 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 
 //copy the billing address from the ID into the form fields.
 				app.ext.convertSessionToOrder.u.setAddressFormFromPredefined(addressClass,$t.attr('data-addressId'));
-				$('#data-bill_email').val() == app.data.cartDetail['bill/email']; //for passive, need to make sure email is updated too.
+
+				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
+					$('#data-bill_email').val(app.data.cartDetail['bill/email']);
+					}
+				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid])	{
+					$('#data-bill_email').val(app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid]['%CUSTOMER']._EMAIL);
+					}
+				else	{}; //no email recorded yet.
+
 //copy all the billing address fields to the shipping address fields, if appropriate.
 				if($('#want-bill_to_ship').val() == '1') {
 					app.ext.store_checkout.u.setShipAddressToBillAddress();
@@ -1863,9 +1878,20 @@ the refreshCart call can come second because none of the following calls are upd
 						}
 					}
 				} //payMethodsAsRadioButtons
-			}
+			}, //renderFomrats
 
-		
+		e : {
+			
+			"cartItemAdd" : function($btn)	{
+				$btn.button();
+				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(){
+					var $button = $("<button>").text("Add to Order").button().on('click',function(){
+						$form = $('form','#chooserResultContainer');
+						});
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
+					});
+				}
+			}
 		}
 	return r;
 	}

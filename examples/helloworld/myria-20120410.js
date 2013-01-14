@@ -46,7 +46,7 @@ var myRIA = function() {
 					$('#myContent').append(app.renderFunctions.createTemplateInstance('profileTemplate',"newID"));
 
 //request profile data (company name, logo, policies, etc)
-					app.calls.appProfileInfo.init('DEFAULT',{'callback':'translateTemplate','parentID':'newID'});
+					app.calls.appProfileInfo.init({'profile':'DEFAULT'},{'callback':'translateTemplate','parentID':'newID'});
 					app.model.dispatchThis();
 
 	

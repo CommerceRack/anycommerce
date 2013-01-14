@@ -23,18 +23,18 @@ Task Manager overview and definition of 'terms'.
 
 TaskManager refers to the app, specifically the 'list' of tasks and the 'edit' panels.
 There are two modes:
- 1: 'list', which is also the default. This mode puts the app emphasis on the list of tasks.
+ 1: 'list', which is the default. This mode puts the app emphasis on the list of tasks.
  2: 'edit', which is when the edit column is expanded. the list portion is still viewable, but in a minimal display.
  -> individual task editors are referred to as a taskEditPanel.
 
 Create is supported, but opens a modal so there's no specific mode or mode change when it occurs.
 
-The 'modify' for create and delete also opens in a modal, so no specific mode change is needed.
+The 'modify' for tag or delete also opens in a modal, so no specific mode change is needed.
 
 Questions:
  -> there was a start to a detail call, then nothing. not needed cuz everything is in list?
 
-Features:
+Planned Features/UI enhancements:
  on taskEditPanel close, check # children and if zero, change mode to list.
 */
 
@@ -43,95 +43,6 @@ Features:
 var admin_task = function() {
 	var theseTemplates = new Array('taskListPageTemplate','taskListRowTemplate','taskListCreateEditTemplate','taskListEditPanelTemplate','taskListCreateTemplate');
 	var r = {
-
-////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-	calls : {
-		
-		adminTaskList : {
-			init : function(tagObj,q)	{
-				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskList";
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-//					app.u.dump(" -> data is NOT local");
-					r = 1;
-					this.dispatch(tagObj,q);
-					}
-				else	{
-//					app.u.dump(" -> data IS local");
-					app.u.handleCallback(tagObj);
-					}
-				return r;
-				},
-			dispatch : function(tagObj,q)	{
-				app.model.addDispatchToQ({"_cmd":"adminTaskList","_tag":tagObj},q);	
-				}
-			}, //adminTaskList
-		
-		adminTaskCreate : {
-			init : function(obj,tagObj,q)	{
-				this.dispatch(obj,tagObj,q);
-				return 1;
-				},
-			dispatch : function(obj,tagObj,q)	{
-				obj._cmd = "adminTaskCreate"
-				obj._tag = tagObj || {};
-				obj._tag.datapointer = "adminTaskCreate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			}, //adminTaskCreate
-
-		adminTaskComplete : {
-			init : function(taskid, tagObj,q)	{
-				this.dispatch(taskid, tagObj,q);
-				return 1;
-				},
-			dispatch : function(taskid, tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskComplete";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskComplete","_tag":tagObj},q);	
-				}
-			}, //adminTaskComplete
-
-		adminTaskRemove : {
-			init : function(taskid, tagObj,q)	{
-				this.dispatch(taskid, tagObj,q);
-				return 1;
-				},
-			dispatch : function(taskid, tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskRemove";
-				app.model.addDispatchToQ({"taskid":taskid, "_cmd":"adminTaskRemove","_tag":tagObj},q);	
-				}
-			}, //adminTaskRemove
-		
-		adminTaskUpdate : {
-			init : function(obj,tagObj,q)	{
-				this.dispatch(obj,tagObj,q);
-				return 1;
-				},
-			dispatch : function(obj,tagObj,q)	{
-				obj._tag = tagObj || {};
-				obj._tag.datapointer = "adminTaskUpdate|"+obj.taskid;
-				obj._cmd = "adminTaskUpdate";
-				app.model.addDispatchToQ(obj,q);	
-				}
-			} //adminTaskUpdate
-/*		adminTaskDetail : {
-			init : function(taskid,tagObj,q)	{
-				this.dispatch(taskid,tagObj,q);
-				},
-			dispatch : function(taskid,tagObj,q)	{
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminTaskDetail";
-				app.model.addDispatchToQ({"_cmd":"adminTaskDetail","taskid":taskid,"_tag":tagObj},q);	
-				}
-			} //adminTaskDetail
-*/		
-		}, //calls
-
-
 
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -228,7 +139,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 				$target.append(app.renderFunctions.transmogrify({},'taskListPageTemplate',{})); //populate content.
 				app.ext.admin_task.u.handleListButtons($target);
 //tasklistcontainer is the id, not the tbody, because the translateSelector exectuted in the callback only translates the children, not the target itself.
-				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //showTaskManager
 
@@ -322,7 +233,7 @@ $('#createTaskModal').dialog({'autoOpen':false,'modal':true,'width':500});
 //it'll empty the tasks, create the call and add showLoading to the tab in focus.
 			clearAndUpdateTaskManager : function()	{
 				app.model.destroy('adminTaskList'); //clear task list from localstorage and memory (forces request for new data)
-				app.ext.admin_task.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
+				app.ext.admin.calls.adminTaskList.init({'callback':'updateTaskList','extension':'admin_task','targetID':'taskListContainer'},'immutable');
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
 				$('#taskListTbody').empty();
 				}, //clearAndUpdateTaskManager
@@ -384,6 +295,8 @@ var $panel = app.renderFunctions.transmogrify(dataObj,'taskListEditPanelTemplate
 $panel.data('panel-state','open');
 $panel.attr('id','taskUpdatePanel_'+dataObj.id)
 $('.datepicker',$panel).datepicker({'dateFormat':'@'});
+$('.datepicker',$panel).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
+	
 $('#taskEditPanelsContainer').prepend($panel);
 
 $('button',$panel).each(function(){
@@ -445,7 +358,7 @@ if(numChecked)	{
 				"Delete selected tasks": function() {
 					$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
 						app.u.dump(" -> checked task ID: "+$(this).closest('[data-id]').data('id'));
-						app.ext.admin_task.calls.adminTaskRemove.init($(this).closest('[data-id]').data('id'),{},'immutable');
+						app.ext.admin.calls.adminTaskRemove.init($(this).closest('[data-id]').data('id'),{},'immutable');
 						});
 					app.ext.admin_task.u.clearAndUpdateTaskManager();
 					app.model.dispatchThis('immutable');
@@ -460,7 +373,7 @@ if(numChecked)	{
 		}
 	else if(cmd == 'adminTaskComplete')	{
 		$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
-			app.ext.admin_task.calls.adminTaskComplete.init($(this).closest('[data-id]').data('id'),{},'immutable');
+			app.ext.admin.calls.adminTaskComplete.init($(this).closest('[data-id]').data('id'),{},'immutable');
 			});
 		app.ext.admin_task.u.clearAndUpdateTaskManager();
 		app.model.dispatchThis('immutable');

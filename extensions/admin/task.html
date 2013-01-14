@@ -134,7 +134,7 @@ this makes the template more versatile.
 -->
 
 <form>
-<fieldset id='taskListCreateEditTemplate' class='labelsAsBreaks'>
+<fieldset id='taskListCreateEditTemplate' class='labelsAsBreaks alignedLabels alignedInputs'>
 	<label><span>Title:</span> <input type='text' name='title' max="100" maxlength="100" required='required' data-bind="var: task(title); format:popVal;" /></label>
 	<label><span>Priority:</span> <select name='priority' data-bind="var: task(priority); format:popVal;">
 		<option value='1'>1</option>
@@ -145,7 +145,7 @@ this makes the template more versatile.
 	<label><span>Assigned to:</span> <input type='text' name='luser' max="100" maxlength="100" data-bind="var: task(luser); format:popVal;" /></label>
 	<label><span>Due date:</span> <input type='text' name='due_gmt' max="100" maxlength="100" class='datepicker' data-bind="var: task(due_gmt); format:popVal;" /></label>
 <!--	<label><span>Link</span> <input type='text' name='LINK' max="100" maxlength="100" required='required' data-bind="var: task(LINK); format:popVal;" /></label> -->
-	<label><span>Detail</span> <textarea name='DETAIL' data-bind="var: task(detail); format:popVal;" rows='10'></textarea></label>
+	<label><span>Detail</span> <textarea name='detail' data-bind="var: task(detail); format:popVal;" rows='10'></textarea></label>
 </fieldset>
 
 <input type='hidden' name='class' value='TODO' />

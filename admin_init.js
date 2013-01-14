@@ -29,29 +29,17 @@ app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':functi
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
-app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
-app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.1.9.js']);
+app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
+app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.1.9.js']); //used for KPI
 
-app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']);
+app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication.
 
-// app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.parsequery.min.js']); // parses window.location parameters
-
-//have showLoading as early as possible. pretty handy feature.
+//have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showloading.css']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
 
-// markitup is a combo wiki+html editor
-// http://markitup.jaysalvat.com/documentation/
-// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.markitup.js']);
-// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/set.js']);
-// app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-wiki/style.css']);
-// app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/set.js']);
-// app.rq.push(['css',   1,app.vars.baseURL+'extensions/admin/resources/markitup/style-html/style.css']);
 
-// jHTMLArea - http://jhtmlarea.codeplex.com/
-// app.rq.push(['script',1,app.vars.baseURL+'
-
-// jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/
+// jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.
 app.rq.push(['css',1,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.css']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.js']); //must be in first pass in case orders is the landing page.
 app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ui.position.js']);
@@ -94,9 +82,9 @@ app.u.initMVC = function(attempts){
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	var percentPerInclude = Math.round((100 / app.vars.rq.length));  
+	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
-	var percentComplete = resourcesLoaded * percentPerInclude; //used to sum how many includes have successfully loaded.
+	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
 
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
@@ -130,77 +118,5 @@ app.u.initMVC = function(attempts){
 $(document).ready(function(){
 	app.u.handleRQ(0); //will start loading resources and eventually init the app.
 	});
-
-
-// ----------------------------------------------------------------------------
-// markItUp!
-// ----------------------------------------------------------------------------
-// Copyright (C) 2008 Jay Salvat
-// http://markitup.jaysalvat.com/
-// ----------------------------------------------------------------------------
-markItUpWikiSettings = {
-    nameSpace:          "wiki", // Useful to prevent multi-instances CSS conflict
-    // previewParserPath:  "~/sets/wiki/preview.php",
-    onShiftEnter:       {keepDefault:false, replaceWith:'\n\n'},
-    markupSet:  [
-        {name:'Heading 1', key:'1', openWith:'== ', closeWith:' ==', placeHolder:'Your title here...' },
-        {name:'Heading 2', key:'2', openWith:'=== ', closeWith:' ===', placeHolder:'Your title here...' },
-        {name:'Heading 3', key:'3', openWith:'==== ', closeWith:' ====', placeHolder:'Your title here...' },
-        {name:'Heading 4', key:'4', openWith:'===== ', closeWith:' =====', placeHolder:'Your title here...' },
-        {name:'Heading 5', key:'5', openWith:'====== ', closeWith:' ======', placeHolder:'Your title here...' },
-        {separator:'---------------' },        
-        {name:'Bold', key:'B', openWith:"'''", closeWith:"'''"}, 
-        {name:'Italic', key:'I', openWith:"''", closeWith:"''"}, 
-        {name:'Stroke through', key:'S', openWith:'<s>', closeWith:'</s>'}, 
-        {separator:'---------------' },
-        {name:'Bulleted list', openWith:'(!(* |!|*)!)'}, 
-        {name:'Numeric list', openWith:'(!(# |!|#)!)'}, 
-        {separator:'---------------' },
-        {name:'Picture', key:'P', replaceWith:'[[Image:[![Url:!:http://]!]|[![name]!]]]'}, 
-        {name:'Link', key:'L', openWith:'[[![Link]!] ', closeWith:']', placeHolder:'Your text to link here...' },
-        {name:'Url', openWith:'[[![Url:!:http://]!] ', closeWith:']', placeHolder:'Your text to link here...' },
-        {separator:'---------------' },
-        {name:'Quotes', openWith:'(!(> |!|>)!)'},
-        {name:'Code', openWith:'(!(<source lang="[![Language:!:php]!]">|!|<pre>)!)', closeWith:'(!(</source>|!|</pre>)!)'}, 
-        {separator:'---------------' },
-        {name:'Preview', call:'preview', className:'preview'}
-    ]
-}
-
-// ----------------------------------------------------------------------------
-// markItUp!
-// ----------------------------------------------------------------------------
-// Copyright (C) 2008 Jay Salvat
-// http://markitup.jaysalvat.com/
-// ----------------------------------------------------------------------------
-markItUpHTMLSettings = {
-    nameSpace:       "html", // Useful to prevent multi-instances CSS conflict
-    onShiftEnter:    {keepDefault:false, replaceWith:'<br />\n'},
-    onCtrlEnter:     {keepDefault:false, openWith:'\n<p>', closeWith:'</p>\n'},
-    onTab:           {keepDefault:false, openWith:'     '},
-    markupSet:  [
-        {name:'Heading 1', key:'1', openWith:'<h1(!( class="[![Class]!]")!)>', closeWith:'</h1>', placeHolder:'Your title here...' },
-        {name:'Heading 2', key:'2', openWith:'<h2(!( class="[![Class]!]")!)>', closeWith:'</h2>', placeHolder:'Your title here...' },
-        {name:'Heading 3', key:'3', openWith:'<h3(!( class="[![Class]!]")!)>', closeWith:'</h3>', placeHolder:'Your title here...' },
-        {name:'Heading 4', key:'4', openWith:'<h4(!( class="[![Class]!]")!)>', closeWith:'</h4>', placeHolder:'Your title here...' },
-        {name:'Heading 5', key:'5', openWith:'<h5(!( class="[![Class]!]")!)>', closeWith:'</h5>', placeHolder:'Your title here...' },
-        {name:'Heading 6', key:'6', openWith:'<h6(!( class="[![Class]!]")!)>', closeWith:'</h6>', placeHolder:'Your title here...' },
-        {name:'Paragraph', openWith:'<p(!( class="[![Class]!]")!)>', closeWith:'</p>'  },
-        {separator:'---------------' },
-        {name:'Bold', key:'B', openWith:'<strong>', closeWith:'</strong>' },
-        {name:'Italic', key:'I', openWith:'<em>', closeWith:'</em>'  },
-        {name:'Stroke through', key:'S', openWith:'<del>', closeWith:'</del>' },
-        {separator:'---------------' },
-        {name:'Ul', openWith:'<ul>\n', closeWith:'</ul>\n' },
-        {name:'Ol', openWith:'<ol>\n', closeWith:'</ol>\n' },
-        {name:'Li', openWith:'<li>', closeWith:'</li>' },
-        {separator:'---------------' },
-        {name:'Picture', key:'P', replaceWith:'<img src="[![Source:!:http://]!]" alt="[![Alternative text]!]" />' },
-        {name:'Link', key:'L', openWith:'<a href="[![Link:!:http://]!]"(!( title="[![Title]!]")!)>', closeWith:'</a>', placeHolder:'Your text to link...' },
-        {separator:'---------------' },
-        {name:'Clean', replaceWith:function(h) { return h.selection.replace(/<(.*?)>/g, "") } },
-        {name:'Preview', call:'preview', className:'preview' }
-    ]
-}
 
 

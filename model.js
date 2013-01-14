@@ -81,7 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-		version : "201248",
+		version : "201252",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -785,7 +785,6 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			},
 
 		handleResponse_appCartExists : function(responseData)	{
-
 			if(responseData.exists >= 1)	{
 				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				}

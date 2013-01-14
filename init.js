@@ -4,8 +4,8 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
 app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
 app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
@@ -35,7 +35,11 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 					})
 				$(".tabs li a",$tabContainer).each(function (index) {
 					$(this).attr('id','href_'+safePID+"_" + index.toString());
-					$(this).attr("href", "app://#spec_"+safePID+"_" + index.toString());
+					if( $.browser.msie){
+						$(this).attr("href", "#spec_"+safePID+"_" + index.toString());            
+					} else {
+						$(this).attr("href", "app://#spec_"+safePID+"_" + index.toString());            
+					}
 					});
 				$tabContainer.localtabs();
 				}
@@ -91,27 +95,25 @@ app.u.initMVC = function(attempts){
 	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
 	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
-	
-	if(percentComplete > 100 )
+	//make sure precentage is never over 100
+	if(percentComplete > 100 )	{
 		percentComplete = 100;
+		}
 	
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 
 	if(resourcesLoaded == app.vars.rq.length)	{
-		percentComplete = 100;
-		$('#appPreViewProgressBar').val(percentComplete);
-		$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
+
 		var clickToLoad = false;
 		if(clickToLoad){
 			$('#loader').fadeOut(1000);
-			$('#tenFourGoodBuddy').delay(1000).fadeIn(1000).click(function() {
+			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
 				app.u.loadApp();
 			});
 		} else {
 			app.u.loadApp();
-		}
-		
+			}
 		}
 	else if(attempts > 50)	{
 		app.u.dump("WARNING! something went wrong in init.js");
