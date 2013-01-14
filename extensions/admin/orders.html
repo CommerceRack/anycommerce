@@ -373,8 +373,42 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer'>
+	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;">
 	
+
+	
+	</section>
+	
+	<h2>History</h2>
+	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer'>
+	
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>User</th>
+		<th>Message</th>
+		<th>Addl Info</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
+	</table>
+	
+	</section>
+	
+</div>
+
+</div><!-- /order details template -->
+
+
+
+
+
+
+
+
+<div id='orderTrackingTemplate'>
+
 	<div class='rightCol labelsAsBreaks'>
 		<h3>Add New Package</h3>
 
@@ -420,33 +454,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<tbody data-bind="var: order(@SHIPMENTS); loadsTemplate: orderTrackingHistoryTemplate; format:processList; extension: admin;"></tbody>
 	</table>
 	</div>
-	
-	</section>
-	
-	<h2>History</h2>
-	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer'>
-	
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>Date</th>
-		<th>User</th>
-		<th>Message</th>
-		<th>Addl Info</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
-	</table>
-	
-	</section>
-	
+
 </div>
-
-</div><!-- /order details template -->
-
-
-
-
 
 
 

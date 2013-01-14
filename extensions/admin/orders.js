@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -1871,7 +1871,19 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					//The two lines below 'should' work. not tested yet.
 					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
 					app.ext.admin.calls.adminOrderDetail.init($btn.data('orderid'),{
-						'callback':'translateSelector',
+						'callback': function(rd){
+if(app.model.responseHasErrors(rd)){
+	app.u.throwMessage(rd);
+	}
+else	{
+	$parent.empty(); //only empty on success so that form is not emptied on a fail.
+	
+	if(typeof jQuery().hideLoading == 'function'){$parent.hideLoading();}
+	$parent.append(app.renderFunctions.transmogrify({},'orderTrackingTemplate',app.data[rd.datapointer]))
+	app.ext.admin.u.handleAppEvents($parent);
+	$(".gridTable tr:last",$parent).effect("highlight", {},3000); //make's it more obvious something happened.
+	}
+							},
 						'extension':'admin',
 						'selector':'#'+$parent.attr('id')
 						},'immutable');
