@@ -2238,9 +2238,13 @@ return $r;
 	renderFormats : {
 
 		imageURL : function($tag,data){
-//				app.u.dump('got into displayFunctions.image: "'+data.value+'"');
-			data.bindData.bgcolor = data.bindData.bgcolor || 'ffffff'
-//			app.u.dump(" -> width: "+$tag.width());
+//			app.u.dump('got into displayFunctions.image: "'+data.value+'"');
+			data.bindData.bgcolor = data.bindData.bgcolor || 'ffffff'; //default to white.
+			
+			if(data.bindData.isElastic) {
+				data.bindData.elasticImgIndex = data.bindData.elasticImgIndex || 0; //if a specific image isn't referenced, default to zero.
+				data.value = data.value[data.bindData.elasticImgIndex];
+				};
 			if(data.value)	{
 //set some recommended/required params.
 				data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
@@ -2273,12 +2277,6 @@ return $r;
 				}
 			},
 
-
-		elasticImage1URL : function($tag,data)	{
-			var bgcolor = data.bindData.bgcolor ? data.bindData.bgcolor : 'ffffff'
-			if(data.value[0])	{$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":$tag.attr('width'),"h":$tag.attr('height'),"b":bgcolor,"tag":0}))}
-			else	{$tag.style('display','none');}
-			},
 
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.

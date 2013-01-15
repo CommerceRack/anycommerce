@@ -290,7 +290,7 @@ ul .prompt	{display:inline-block; width:250px;}
 
 <ul>
 <li id='prodlistProdTemplate'>
-	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='100' height='100' />
+	<img src='%PROJECT_URL%/blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='100' height='100' />
 	<h5 data-bind='var: product(prod_name); format:text;'></h5>
 	<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price;'></h6>
 	<a href='#top' data-bind='var: product(pid); format:text;pretext: explore ;' onClick="$('#pid').val($(this).parent().attr('data-pid')); $('#prodExplorerBtn').click(); $tabs.tabs('select',4);"></a>

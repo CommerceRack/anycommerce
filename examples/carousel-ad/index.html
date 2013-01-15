@@ -98,7 +98,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplate' class='loadingBG fourColListItem fourColProdListItem' >
 	<div onClick="app.ext.myRIA.u.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='250' height='160' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='250' height='160' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>

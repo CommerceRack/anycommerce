@@ -1044,7 +1044,7 @@ PRODUCT TAB
 <tr id='productListTemplateTableResults'>
 	<td><button>Edit</button></td>	
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 	</td>
 	<td data-bind='var: product(prod_name); format:text;'></td>
 	<td data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></td>
