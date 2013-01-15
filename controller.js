@@ -1741,6 +1741,7 @@ later, it will handle other third party plugins as well.
 
 //Removing all ID's. Using this in UI. will update checkout to use this too once 201248+ released. 201248 is used by 1PC and it's xmas time
 //The names are also updated to use the new two char codes used by the paymentQ.
+/*
 			getSupplementalPaymentInputs2 : function(paymentID,data)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
@@ -1784,7 +1785,7 @@ later, it will handle other third party plugins as well.
 				return $o;
 				},
 
-
+*/
 // This function is in the controller so that it can be kept fairly global. It's used in checkout, store_crm (buyer admin) and will likely be used in admin (orders) at some point.
 // ### NOTE! SANITY ! WHATEVER - app.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the app.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
 

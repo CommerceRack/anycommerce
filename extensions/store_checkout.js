@@ -658,13 +658,14 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 
 //allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
 			setAddressFormFromPredefined : function(addressType,addressId)	{
-//				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
-//				app.u.dump(' -> address type = '+addressType);
-//				app.u.dump(' -> address id = '+addressId);
+				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
+				app.u.dump(' -> address type = '+addressType);
+				app.u.dump(' -> address id = '+addressId);
 				
-				var L = app.data.buyerAddressList['@'+addressType].length
-				var a;
-				var r = false;
+				var L = app.data.buyerAddressList['@'+addressType].length,
+				a, //shortcut to address object.
+				r = false; //what is returned.
+
 //looks through predefined addresses till it finds a match for the address id. sets a to address object.
 				for(var i = 0; i < L; i += 1)	{
 					if(app.data.buyerAddressList['@'+addressType][i]['_id'] == addressId){
@@ -672,6 +673,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 						r = true;
 						break;
 						}
+					else {}// no match. carry on.
 					}
 
 				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
