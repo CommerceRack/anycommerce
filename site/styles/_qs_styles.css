@@ -1103,3 +1103,34 @@ div#gotAccount
 		position: absolute;
 		top: 132px;
 	}
+div#checkoutContainer
+{
+	
+}
+	div#checkoutContainer .ui-widget-content
+	{
+		background: #938269;
+		border: 1px solid #938269;
+	}
+	div#checkoutContainer form, div#checkoutContainer div#chkoutCartSummaryContainer
+	{
+		margin: 0px auto;
+		width: 700px;
+	}
+	div#checkoutContainer fieldset
+	{
+		margin: 0px;
+		margin-bottom: 5px;
+		padding: 0px;
+		position: relative;
+	}
+	div#checkoutContainer fieldset legend
+	{
+		background: none;
+		border: 0px solid #000000;
+		margin: 0px;
+		padding: 0px;
+		position: relative;
+		left: 1px;
+		top: 1px;
+	}
