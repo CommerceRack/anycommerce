@@ -914,13 +914,13 @@ if(app.u.getParameterByName('debug'))	{
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 
 var uriParams = {};
-var ps = window.location.href; //param string
+var ps = window.location.href; //param string. find a regex for this to clean it up.
 if(ps.indexOf('?') >= 1)	{
 	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
 	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
-	app.u.dump(ps);
+//	app.u.dump(ps);
 	uriParams = app.u.kvp2Array(ps);
-	app.u.dump(uriParams);
+//	app.u.dump(uriParams);
 	}
 // app.u.dump(" -> uriParams"); app.u.dump(uriParams);
 if(uriParams.trigger == 'adminPartnerSet')	{
