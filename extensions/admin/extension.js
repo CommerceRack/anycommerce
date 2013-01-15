@@ -912,9 +912,16 @@ if(app.u.getParameterByName('debug'))	{
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
-				
 
-uriParams = app.u.kvp2Array(window.location.href.split('?')[1].split('#')[0]);
+var uriParams = {};
+var ps = window.location.href; //param string
+if(ps.indexOf('?') >= 1)	{
+	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
+	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
+	app.u.dump(ps);
+	uriParams = app.u.kvp2Array(ps);
+	app.u.dump(uriParams);
+	}
 // app.u.dump(" -> uriParams"); app.u.dump(uriParams);
 if(uriParams.trigger == 'adminPartnerSet')	{
 	app.u.dump(" -> execute adminPartnerSet call");
