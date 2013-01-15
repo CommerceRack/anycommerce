@@ -118,20 +118,20 @@ copying the template into memory was done for two reasons:
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
 //after login, the admin vars are set in the model.
 	handleAdminVars : function(){
-		app.u.dump("BEGIN handleAdminVars");
+//		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
 		
 		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}
 
-		app.u.dump(" -> localVars: "); app.u.dump(localVars);
+//		app.u.dump(" -> localVars: "); app.u.dump(localVars);
 		
 		function setVars(id){
 //			app.u.dump("GOT HERE!");
-			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
-			if(app.vars[id])	{app.u.dump("admin var already set.")} //already set, do nothing.
+//			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
+			if(app.vars[id])	{} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
 //uri ONLY gets checked for support. This is so that on redirects back to our UI from a partner interface don't update auth vars.
-			else if(app.u.getParameterByName('trigger') == 'support' && app.u.getParameterByName(id))	{app.u.dump("use URI var"); app.vars[id] = app.u.getParameterByName(id);} 
+			else if(app.u.getParameterByName('trigger') == 'support' && app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
 			else if(localVars[id])	{app.vars[id] = localVars[id]}
 			else	{app.vars[id] = ''}//set to blank by default.
 			}
@@ -143,12 +143,6 @@ copying the template into memory was done for two reasons:
 		setVars('username');
 
 		app.vars.username = app.vars.username.toLowerCase();
-//		app.u.dump(" -> app.vars: "); app.u.dump(app.vars);
-		
-//		if(!app.vars.username && app.vars.userid && app.vars.userid.indexOf('@') > 0)	{
-//			app.u.dump("REMINDER!!! this is a temporary solution till username is returned in authAdminLogin");
-//			app.vars.username = app.vars.userid.split('@')[1].toLowerCase();
-//			}
 		
 		},
 
@@ -1041,10 +1035,27 @@ URI PARAM
 			else
 				return decodeURIComponent(results[1].replace(/\+/g, " "));
 			},
+
+//turn a set of key value pairs (a=b&c=d) into an array. if string is from URI, use getParametersAsObject which handles encoding.
+		kvp2Array : function(s)	{
+			if(s)	{
+				var pairs = s.split('&');
+				for(var q in pairs) {
+					var param = pairs[q].split('=');
+					if(param[1])	{
+						params[ param[0] ] = param[1].replace(/\+/g, " "); 
+						}
+					}				
+				}
+			else	{
+				app.u.throwGMessage("in control.u.kvp2Array, no value passed.");
+				}
+			},
+		
 //will create an object of a series of key/value pairs in URI format.
 //if nothing is passed in, will get string directly from URL.
 		getParametersAsObject : function(string)	{
-//			app.u.dump("BEGIN control.u.getParametersAsObject");
+			app.u.dump("BEGIN control.u.getParametersAsObject");
 //			app.u.dump(" -> string: "+string);
 			var tmp = string ? string : location.search;
 //			app.u.dump(" -> tmp: "+tmp);
@@ -1056,13 +1067,7 @@ URI PARAM
 				url = decodeURIComponent(url);
 //				app.u.dump(" -> URL after tweaking: "+url);
 				if(app.u.isSet(url))	{
-					var queries = url.split('&');
-					for(var q in queries) {
-						var param = queries[q].split('=');
-						if(param[1])	{
-							params[ param[0] ] = param[1].replace(/\+/g, " "); 
-							}
-						}
+					params = this.kvp2Array(url)
 					}
 				}
 //			app.u.dump(" -> params: "); app.u.dump(params);
