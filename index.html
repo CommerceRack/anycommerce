@@ -26,11 +26,11 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201301071337",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201301141533",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.downlitebedding.com/",
-	"httpURL":"http://www.downlitebedding.com/"
+	"httpsURL":"https://ssl.zoovy.com/s=www.d38934b9ac.crackle.zoovy.net/",
+	"httpURL":"http://www.d38934b9ac.crackle.zoovy.net/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -96,16 +96,6 @@ app.u.loadScript(app.vars.baseURL+"downlite_init.js");
 
 <div id='appView' class='displayNone'>
 
-	<div class="need_help">
-		<p>
-			<a href="#company?show=contact" class='bindByAnchor'><strong>Need Help?</strong></a><br />
-			Call Us at<br />
-			(866) 931-3696<br />
-			or <a href="http://messenger.providesupport.com/messenger/1jz93amcu7bu108sbhe3gwkhul.html" target="_blank">Click Here</a><br />
-			for live chat<br>
-		</p>
-	</div>
-
 	<div class="wrapper">
 
 		<div class="header clearfix">
@@ -129,6 +119,11 @@ app.u.loadScript(app.vars.baseURL+"downlite_init.js");
 						<a target="_blank" href="https://www.mcafeesecure.com/RatingVerify?ref=www.downlitebedding.com"><img width="65" height="37" border="0" src="http://images.scanalert.com/meter/www.mcafee.com/55.gif" alt="McAfee Secure sites help keep you safe from identity theft, credit card fraud, spyware, spam, viruses and online scams" oncontextmenu="alert('Copying Prohibited by Law - McAfee Secure is a Trademark of McAfee, Inc.'); return false;"></a>
 						<!-- END SCANALERT CODE -->
 					</span>
+					<div class="need_help">
+						<p>
+							<strong>Need Help?</strong> <a href="#company?show=contact" class='bindByAnchor'>Call Us</a> <!--at 866.931.3696 -->or <a href="http://messenger.providesupport.com/messenger/1jz93amcu7bu108sbhe3gwkhul.html" target="_blank">Click Here</a> for live chat
+						</p>
+					</div>
 				</div>
 
 				<div class="header_cart_menu">					
@@ -467,7 +462,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<div class='catDesc'>	
 		<div class='textBlock' data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
 		
-		<ul data-bind="var: category(@subcategoryDetail); format: subcategoryList; extension: myRIA; loadsTemplate: breadcrumbTemplate;" class='listStyleNone noPadOrMargin noUnderline'></ul>
+		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: breadcrumbTemplate; detail:max;" class='listStyleNone clearfix noPadOrMargin categoryList noUnderline'></ul>
 
 		<div class='textBlock' data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
 	</div>
@@ -508,14 +503,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:text;'></span></div>
 	</div>
 </li>
-<!-- OLD 
-<li id='categoryListTemplate' class='categoryBox pointer categoryInnerBox' onClick="showContent('category',{'navcat':$(this).attr('data-catsafeid')});">
-	<div>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='230' height='230' /></div>
-		<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
-	</div>
-</li>
--->
+
 <li id='categoryListTemplateRootCats'>
 	<a data-bind='var: category(pretty); format:text;' href='#' onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')}); return false"></a>
 	<ul data-bind='var:category(@subcategoryDetail); format:subcategory2LevelList; extension:store_navcats;' class="child_menu">
@@ -528,14 +516,6 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</div>
 	-->
 </li>
-<!-- OLD
-<li id='categoryListTemplateRootCats'>
-	<a data-bind='var: category(pretty); format:text;' href='#'  onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')}); return false"></a>
-	<ul data-bind='var:category(@subcategoryDetail); format:subcategory2LevelList; extension:store_navcats; ' class="child_menu">
-		<li><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL; bgcolor:f1f3f2;' height='155' width='155' /></li>
-	</ul>
-</li>
--->
 </ul>
 
 
@@ -558,7 +538,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 			<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 			<div class='pricing'>
 				<div class='basePrice' >
-				<span class='value' data-bind="var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; before: <span class='prompt pricePrompt'>Our Price: </span>;">
+				<span class='value' data-bind="var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; before: <span class='prompt pricePrompt'>Price From: </span>;">
 				</span>
 				</div>
 				
@@ -671,7 +651,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
 	
-		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: Price From: ;'></h6>
 	</div>
 </li>
 </ul>
@@ -715,7 +695,20 @@ this will likely become more flexible in the future. ###
 
 <div id='productTemplate'>
 
+<div class='breadAndAddThisContainer'>
+<!-- addthis container -->
+	<div id='socialLinks' class='floatRight'>
+		<div class="addthis_toolbox addthis_default_style ">
+			<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+			<a class="addthis_button_tweet"></a>
+			<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+			<a class="addthis_button_pinterest_pinit" pi:pinit:url="http://www.downlitebedding.com" pi:pinit:media="http://www.downlitebedding.com/images/logo-200x64.png" pi:pinit:layout="horizontal"> </a> 
+			<a class="addthis_counter addthis_pill_style"></a>
+		</div>
+	</div>
+<!-- /addthis container -->
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+</div>
 
 <table class='prodViewerContainer'>
 <tr>
@@ -973,7 +966,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 </tr>
 </table>
 <div class='prodlistRelatedContainer'>
-	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h4></h4>; withReviews:1;"></ul>
 </div>
 
 

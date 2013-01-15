@@ -67,7 +67,7 @@
 .ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited { color: #615e59; text-decoration: none; }
 .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover, .ui-state-focus, .ui-widget-content .ui-state-focus, .ui-widget-header .ui-state-focus { border: 1px solid #999999; background: #dadada url(images/ui-bg_inset-soft_75_dadada_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #212121; }
 .ui-state-hover a, .ui-state-hover a:hover { color: #212121; text-decoration: none; }
-.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active { border: 1px solid #a7907e; background: #a7907e url(images/ui-bg_inset-soft_100_a7907e_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active, .checkoutButton { border: 1px solid #a7907e; background: #a7907e url(images/ui-bg_inset-soft_100_a7907e_1x100.png) 50% 50% repeat-x; font-weight: normal; color: #ffffff; }
 .ui-state-active a, .ui-state-active a:link, .ui-state-active a:visited { color: #ffffff; text-decoration: none; }
 .ui-widget :active { outline: none; }
 
@@ -665,13 +665,13 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
 }
 .header_ads{
 	float:left;
-	width:350px;
+	width:320px;
 	height:75px;
 	margin:6px 0 0 45px;
 }
 .header_contact{
 	float:left;
-	width:152px;
+	width:203px;
 	margin:6px 0 0 15px;
 }
 .header_contact p{
@@ -687,7 +687,7 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
 .header_contact span.contact_ads{
 	float:left;
 	padding-top:5px;
-	width:142px;
+	width:65px;
 	height:45px;
 	}
 
@@ -963,24 +963,25 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
 	background:#a29688;
 }
 .need_help{
-	z-index:10001;
+	/*z-index:10001;*/
 	background-image: url("images/need_help_bg.png");
     background-repeat: repeat-x;
     border: 1px solid #B2B2B2;
     border-radius: 6px 6px 6px 6px;
-    height: 124px;
-    position: fixed;
+    /*height: 124px;*/
+    /*position: fixed;
     top: 286px;
-	left:12px;
-    width: 110px;
+	left:12px;*/
+    width: 125px;
+	float:right;
 	}
 
 .need_help p{
 	color: #615A54;
     font-size: 12px;
     font-weight: bold;
-    line-height: 20px;
-    margin: 12px;
+    /*line-height: 20px;*/
+    margin: 4px;
 }
 .need_help p font{
 	font-size:15px;
@@ -1358,13 +1359,13 @@ PRODUCT TEMPLATE
 #prodlistAccessoriesContainer li	{width:auto; height:auto; font-size:14px; margin:0;padding:0;}
 #prodlistAccessoriesContainer .basePrice	{color:#c7620a;}
 
-#prodlistRelatedContainer h4	{background:url(images/youmayalsolike-990x57.jpg) no-repeat; width:990px; height:65px; margin:0; padding:0;}
+.prodlistRelatedContainer h4	{background:url(images/youmayalsolike-990x57.jpg) no-repeat; width:990px; height:65px; margin:0; padding:0;}
 
 
 
 .prodTabImage	{margin:0 12px 12px 0;} /* used for the photo in the global tabs */
 /* Updated all tabbedProductContentTable declarations to classes instead of IDs */
-.tabbedProductContentTable	{width:100%;}
+.tabbedProductContentTable, #tabbedProductContentTable	{width:100%;}
 .tabbedProductContentTD	{width:90%;}
 .tabbedProductContentTD .ui-widget-header, .tabbedProductContentTD  .ui-widget-content	{border:none; background:none;}
 
@@ -1425,12 +1426,13 @@ CATEGORY TEMPLATE
 .catVideoContainer .vidThumb	{float:left; margin-right:8px;}
 .catVideoContainer h2	{color:#655e4e; font-size:16px; font-weight:normal; padding:0; margin:0;}
 .catVideoContainer P	{margin:2px 0; padding:0; font-size:13px;}
-/*.catDesc {float:left;}*/
+.catDesc {float:left; width:465px;}
 .textBlock {display:inline;}
 
 .categoryList li	{height:300px;}
 .productList li	{height:370px;}
-.categoryList li, .productList li	{width:230px;  margin:4px; color:#6f7376; font-size:15px;} 
+.categoryList li, .productList li	{width:230px;  margin:4px; color:#6f7376; font-size:15px;}
+.catDesc .categoryList li {height:auto; width:auto;} 
 .categoryBox, .productBox	{border:1px solid #d2d2d2;} /* separate class for border because 'categoryList' is shared and not all lists need a border. */
 .categoryList .catName, .productList .productInfoPadding	{text-align:center; padding:8px;}
 
