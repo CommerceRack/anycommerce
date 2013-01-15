@@ -663,9 +663,9 @@ need to be customized on a per-ria basis.
 // this function gets executed after the request has been made, in the showPageContent response. for this reason it should NOT BE MOVED to store_search
 // ## this needs to be upgraded to use app.ext.store_search.u.getElasticResultsAsJQObject
 			productSearch : function($tag,data)	{
-				app.u.dump("BEGIN myRIA.renderFormats.productSearch");
+//				app.u.dump("BEGIN myRIA.renderFormats.productSearch");
 				data.bindData = app.renderFunctions.parseDataBind($tag.attr('data-bind'));
-				app.u.dump(data);
+//				app.u.dump(data);
 				if(data.value)	{
 					var parentID = $tag.attr('id');
 					var L = data.value.hits.hits.length;
@@ -694,7 +694,7 @@ fallback is to just output the value.
 
 			banner : function($tag, data)	{
 //				app.u.dump("begin myRIA.renderFormats.banner");
-				var obj = app.u.getParametersAsObject(decodeURI(data.value)); //returns an object LINK, ALT and IMG
+				var obj = app.u.kvp2Array(data.value); //returns an object LINK, ALT and IMG
 				var hash; //used to store the href value in hash syntax. ex: #company?show=return
 				var pageInfo = {};
 				
@@ -1199,7 +1199,8 @@ P.listID (buyer list id)
 				infoObj = this.detectRelevantInfoToPage(window.location.href); 
 				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-				infoObj.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
+				infoObj.uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
+
 				if(infoObj.uriParams.meta)	{
 					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
 					}

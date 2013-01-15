@@ -914,7 +914,7 @@ if(app.u.getParameterByName('debug'))	{
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 
-uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
+uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
 if(uriParams.trigger == 'adminPartnerSet')	{
 	//Merchant is most likely returning to the app from a partner site for some sort of verification
 	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});

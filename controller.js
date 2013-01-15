@@ -1036,24 +1036,17 @@ URI PARAM
 				return decodeURIComponent(results[1].replace(/\+/g, " "));
 			},
 
-//turn a set of key value pairs (a=b&c=d) into an array. if string is from URI, use getParametersAsObject which handles encoding.
+//turn a set of key value pairs (a=b&c=d) into an object. if string is from URI, use getParametersAsObject which handles encoding and executes this after.
+//formerly getParametersAsObject
 		kvp2Array : function(s)	{
-			if(s)	{
-				var pairs = s.split('&');
-				for(var q in pairs) {
-					var param = pairs[q].split('=');
-					if(param[1])	{
-						params[ param[0] ] = param[1].replace(/\+/g, " "); 
-						}
-					}				
-				}
-			else	{
-				app.u.throwGMessage("in control.u.kvp2Array, no value passed.");
-				}
+			if(s)	{return JSON.parse('{"' + decodeURI(s.replace(/&amp;/g, '&').replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')}
+			else	{return false}
 			},
 		
 //will create an object of a series of key/value pairs in URI format.
 //if nothing is passed in, will get string directly from URL.
+//commented on 2013-01-15
+/*
 		getParametersAsObject : function(string)	{
 			app.u.dump("BEGIN control.u.getParametersAsObject");
 //			app.u.dump(" -> string: "+string);
@@ -1063,18 +1056,17 @@ URI PARAM
 			var params = {};
 //check for ? to avoid js error which results when no uri params are present
 			if(string || url.indexOf('?') > 0)	{
-				url = url.replace('?', '').replace(/&amp;/g, '&'); //uri may be encoded or not. normalize.
+				url = url.replace('?', '').replace(/&amp;/g, '&').replace(/\+/g, " "); //uri may be encoded or not. normalize.
 				url = decodeURIComponent(url);
 //				app.u.dump(" -> URL after tweaking: "+url);
 				if(app.u.isSet(url))	{
-					params = this.kvp2Array(url)
+					params = this.kvp2Array(url);
 					}
 				}
 //			app.u.dump(" -> params: "); app.u.dump(params);
 			return params;
 			},
-
-
+*/
 
 
 /*

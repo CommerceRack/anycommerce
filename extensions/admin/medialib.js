@@ -1178,7 +1178,7 @@ var tabs = [
 
 //				app.u.dump("BEGIN admin_medialib.u.showFileUploadPage");
 				var $target = $('#setupContent')
-				pathParams = app.u.getParametersAsObject(path.split('?')[1]);
+				pathParams = app.u.kvp2Array(path.split('?')[1]);
 				if(!pathParams.VERB)(pathParams.VERB = "HELP"); //default to showing the help page.
 //				app.u.dump(" -> pathParams: "); app.u.dump(pathParams);
 				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+pathParams.VERB.toLowerCase(),{})); //load the page template.
