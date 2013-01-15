@@ -616,7 +616,7 @@ setTimeout(function(){
 //plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
 				
-				app.u.dump("BEGIN renderFormats.array2Template");
+				app.u.dump("BEGIN mediaLib.renderFormats.mediaList");
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
 				var itemsPerPage,media;

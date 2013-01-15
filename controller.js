@@ -2475,7 +2475,7 @@ $tmp.empty().remove();
 			}, //text
 
 		loadsTemplate : function($tag,data)	{
-			app.u.dump("BEGIN renderFormats.loadsTemplate");
+//			app.u.dump("BEGIN renderFormats.loadsTemplate");
 			$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data));
 			},
 
@@ -2498,7 +2498,7 @@ $tmp.empty().remove();
 				}
 			}, //money
 
-//This should be used for all lists going forward. stuffList and object2Template should be upgraded to use this.
+//This should be used for all lists going forward that don't require special handling (such as stufflist, prodlist, etc).
 //everthing that's in the data lineitem gets passed as first param in transmogrify, which will add each key/value as data-key="value"
 //at this time, prodlist WON'T use this because each pid in the list needs/makes an API call.
 //data-obj_index is set so that a quick lookup is available. ex: in tasks list, there's no detail call, so need to be able to find data quickly in orig object.
@@ -2517,18 +2517,6 @@ $tmp.empty().remove();
 					$tag.append($o);
 					}
 				int += 1;				
-				}
-			$tag.removeClass('loadingBG');
-			},
-
-
-		object2Template : function($tag,data)	{
-//			app.u.dump("BEGIN renderFormats.array2Template");
-//			app.u.dump(data.value);
-			var L = data.value.length;
-//			app.u.dump(" -> L: "+L);
-			for(var i = 0; i < L; i += 1)	{
-				$tag.append(app.renderFunctions.transmogrify({'id': $tag.attr('id') ? '02t_'+$tag.attr('id')+'_'+i : '02t_'+i},data.bindData.loadsTemplate,data.value[i])); 
 				}
 			$tag.removeClass('loadingBG');
 			}

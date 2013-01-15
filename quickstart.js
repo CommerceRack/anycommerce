@@ -1200,7 +1200,7 @@ P.listID (buyer list id)
 				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				infoObj.uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
-				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
+//				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
 					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
 					}
@@ -1455,7 +1455,7 @@ P.listID (buyer list id)
 				if(myHash.indexOf('#') == 0)	{myHash = myHash.substring(1);}
 				var infoObj = {}; //what is returned. infoObj.pageType and based on value of page type, infoObj.show or infoObj.pid or infoObj.navcat, etc
 				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
-				infoObj = app.u.getParametersAsObject(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
+				infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
 				infoObj.pageType = splits[0];
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
 					infoObj = false;
