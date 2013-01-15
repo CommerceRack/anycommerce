@@ -559,10 +559,9 @@ this will likely become more flexible in the future. ###
 			<form onsubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;" action="#" class="prodViewerAddToCartForm clearfix" data-bind="var: product(pid); format:atcForm; extension:store_product;">
 		
 				<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;"></fieldset>
-				<fieldset class="borderNone" data-bind="var: product(pid); format:atcQuantityInput; extension:store_product;" />
-					Quantity: <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
-				</fieldset>
-		
+
+				Quantity: <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
+
 				<div id="atcMessaging_FC5171-DS" class="atcSuccessMessage"></div>
 	
 				<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" onClick="$(this).parent().submit();" />
@@ -582,9 +581,9 @@ this will likely become more flexible in the future. ###
 	</div>
 </div>
 
-<div class='prodlistRelatedContainer'>
+<!--<div class='prodlistRelatedContainer'>
 	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
-</div>
+</div>-->
 
 
 </div><!-- productTemplate -->

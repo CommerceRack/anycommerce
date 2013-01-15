@@ -523,7 +523,7 @@ body
 				
 .prodDetailView
 {
-	height: 585px;
+	height: 650px;
 	margin: 0px auto;
 	position: relative;
 	width: 960px;
@@ -615,9 +615,9 @@ body
 div.prodRelatedItems
 {
 	background-color: #FFFFFF;
-	/*height: 230px;*/
+	height: 280px;
 	left: 0px;
-	overflow: hidden;
+	overflow: auto;
 	position: absolute;
 	width: 300px;
 	top: 356px;
@@ -632,7 +632,7 @@ div.prodRelatedItems
 			height: auto;
 			margin: 0;
 			padding: 0;
-			width: 300px;
+			width: 280px;
 		}			
 			div.prodRelatedItems ul.relatedItems li img.pointer
 			{
@@ -663,9 +663,10 @@ div.prodRelatedItems
 			{
 				height: auto;
 				left: 0px;
+				overflow: hidden;
 				position: relative;
 				top: 0px;
-				width: 300px;
+				width: 280px;
 			}
 				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h5
 				{
@@ -674,7 +675,7 @@ div.prodRelatedItems
 					font-size: 13px;
 					font-weight: normal;
 					padding: 25px 0 25px 70px;
-					width: 220px;
+					width: 210px;
 				}
 				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h6
 				{
@@ -789,7 +790,7 @@ div.prodRelatedItems
 		color: #770000;
 		font-family: Helvetica;
 		font-size: 12px;
-		left: 25px;
+		left: 20px;
 		position: absolute;
 		top: 58px;
 	}
