@@ -118,20 +118,20 @@ copying the template into memory was done for two reasons:
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
 //after login, the admin vars are set in the model.
 	handleAdminVars : function(){
-//		app.u.dump("BEGIN handleAdminVars");
+		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
 		
 		if(app.model.fetchData('authAdminLogin'))	{localVars = app.data.authAdminLogin}
 
-//		app.u.dump(" -> localVars: "); app.u.dump(localVars);
+		app.u.dump(" -> localVars: "); app.u.dump(localVars);
 		
 		function setVars(id){
 //			app.u.dump("GOT HERE!");
-//			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
-			if(app.vars[id])	{} //already set, do nothing.
+			app.u.dump("-> "+id+": "+app.u.getParameterByName(id));
+			if(app.vars[id])	{app.u.dump("admin var already set.")} //already set, do nothing.
 //check url. these get priority of local so admin/support can overwrite.
 //uri ONLY gets checked for support. This is so that on redirects back to our UI from a partner interface don't update auth vars.
-			else if(app.u.getParameterByName('trigger') == 'support' && app.u.getParameterByName(id))	{app.vars[id] = app.u.getParameterByName(id);} 
+			else if(app.u.getParameterByName('trigger') == 'support' && app.u.getParameterByName(id))	{app.u.dump("use URI var"); app.vars[id] = app.u.getParameterByName(id);} 
 			else if(localVars[id])	{app.vars[id] = localVars[id]}
 			else	{app.vars[id] = ''}//set to blank by default.
 			}
