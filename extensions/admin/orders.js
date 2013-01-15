@@ -1721,11 +1721,11 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					orderID = $parent.data('order-view-parent');
 					
 //build tax macro/call, if necessary. Only add if inputs have changed.
-					if((frmObj.state_tax_rate && $("[name='state_tax_rate']",$parent).hasClass('edited')) || (frmObj.local_tax_rate && $("[name='local_tax_rate']",$parent).hasClass('edited')))	{
+					if((frmObj['sum/tax_rate_state'] && $("[name='sum/tax_rate_state']",$parent).hasClass('edited')) || (frmObj['sum/tax_rate_zone'] && $("[name='sum/tax_rate_zone']",$parent).hasClass('edited')))	{
 						var macro = "SETTAX?"
-						if(frmObj.state_tax_rate)	{macro += "state_tax_rate="+frmObj.state_tax_rate}
-						if(frmObj.state_tax_rate && frmObj.local_tax_rate)	{macro += "&"}
-						if(frmObj.local_tax_rate)	{macro += "local_tax_rate="+frmObj.local_tax_rate}
+						if(frmObj['sum/tax_rate_state']) {macro += "sum/tax_rate_state="+frmObj['sum/tax_rate_state']}
+						if(frmObj['sum/tax_rate_state'] && frmObj['sum/tax_rate_zone'])	{macro += "&"}
+						if(frmObj['sum/tax_rate_zone'])	{macro += "sum/tax_rate_zone="+frmObj['sum/tax_rate_zone']}
 						macros.push(macro);
 						}
 //build shipping macro/call, if necessary. Only add if inputs have changed.

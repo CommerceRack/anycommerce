@@ -264,9 +264,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 				<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 				
 				<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-				<div>
-				<label>State tax rate: <input type='number' size='4' step='0.01' min='0' name='state_tax_rate' />%</label>
-				<label>Local tax rate: <input type='number' size='4' step='0.01' min='0' name='local_tax_rate' />%</label>
+				<!-- tax is NOT editable on marketplace orders -->
+				<div data-bind="var: order(is/origin_marketplace); format:hideIfSet;">
+				<label>State tax rate: <input type='number' size='4' step='0.01' min='0' name='sum/tax_rate_state' />%</label>
+				<label>Local tax rate: <input type='number' size='4' step='0.01' min='0' name='sum/tax_rate_zone' />%</label>
 				</div>
 				<div class='orderShipping'>
 				<select name='sum/shp_carrier' data-bind='var:order(sum/shp_carrier);format:popVal;'>

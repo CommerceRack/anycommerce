@@ -1060,7 +1060,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 //			app.u.dump(" -> datapointer = "+datapointer);
 			var local;
 			var r = false;
-			var expires = datapointer == 'authAdminLogin' ? (60*60*24*7) : (60*60*24); //how old the data can be before we fetch new.
+			var expires = datapointer == 'authAdminLogin' ? (60*60*24*2) : (60*60*24); //how old the data can be before we fetch new.
 	//checks to see if the request is already in 'this'.
 			if(app.data && !$.isEmptyObject(app.data[datapointer]))	{
 //				app.u.dump(' -> control already has data');

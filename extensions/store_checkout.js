@@ -673,9 +673,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 						break;
 						}
 					}
-				
-//				app.u.dump(' -> a = ');
-//				app.u.dump(a);
+
 				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
 				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
 				$('#data-'+addressType+'_city').val(a[addressType+'_city']);

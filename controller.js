@@ -2281,13 +2281,21 @@ return $r;
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
-//			app.u.dump('BEGIN control.renderFormats.hideorShowTab');
-//			app.u.dump(' -> data.value'+data.value);
 			if(data.value)	{
-//				app.u.dump(' -> setting $tag.show()');
 				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
 				}
 			},
+
+
+
+//handy for enabling tabs and whatnot based on whether or not a field is populated.
+//doesn't actually do anything with the value.
+		hideIfSet : function($tag,data)	{
+			if(data.value)	{
+				$tag.hide(); //IE isn't responding to the 'show', so the display:block is added as well.
+				}
+			},
+
 
 //for embedding. There is an action for showing a youtube video in an iframe in quickstart.
 // hint: set the action as an onclick and set attribute youtube:video id on element and use jquery to pass it in. 
