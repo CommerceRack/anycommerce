@@ -1920,8 +1920,37 @@ else	{
 				}, //orderUpdateAddTracking
 
 
+			"orderUpdateQuickview" : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-gear",secondary: "ui-icon-triangle-1-s"},text: false});
+				$btn.parent().css('position','relative');
+				var $menu = $btn.parent().find('menu')
+				$menu.menu().hide();
+				$menu.css({'position':'absolute','width':'200px','z-index':'10000'}).parent().css('position','relative');
+				
+				$menu.find('command').each(function(){
+					$(this).css('display','block');
+					$(this).click(function(event){
+						app.u.dump('got here');
+						$menu.hide();
+						});
+					});
+
+				$btn.off('click.orderUpdateQuickview').on('click.orderUpdateQuickview',function(event){
+					event.preventDefault();
+					app.u.dump('button was clicked.');
+					$menu.show().position({
+						my: "right top",
+						at: "right bottom",
+						of: this
+						});
+					//when this wasn't in a timeout, the 'click' on the button triggered. this. i know. wtf?  find a better solution. !!!
+					setTimeout(function(){$(document).one( "click", function() {$menu.hide();});},1000);
+					});
+				$btn.parent().buttonset();
+				},
+//the edit button in the order list mode. Will open order editable format.
 			"orderUpdateShowEditor" : function($btn){
-				$btn.button();
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 //				if(app.u.getParameterByName('debug'))	{
 					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(event){
 						event.preventDefault();

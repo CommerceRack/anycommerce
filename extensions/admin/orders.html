@@ -173,7 +173,16 @@
 	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
-	<td><button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;' class='smallButton'>Edit</button></td>
+	<td NOWRAP>
+	<button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+<!--	<button data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
+	<menu class='displayNone'>
+		<h3>Quickview</h3>
+		<command>Order contents</command>
+		<command>Order notes</command>
+		<command>Customer notes</command>
+	</menu>
+-->	</td>
 </tr>
 
 

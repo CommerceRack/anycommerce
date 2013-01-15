@@ -55,7 +55,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
 //used in conjunction with support/admin login. nukes entire local cache.
-		if(app.u.getParameterByName('flush'))	{
+		if(app.u.getParameterByName('flush') == 1)	{
 			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
 			localStorage.clear();
 			}

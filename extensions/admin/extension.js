@@ -920,9 +920,10 @@ if(uriParams.trigger == 'adminPartnerSet')	{
 	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
 	app.model.dispatchThis('immutable');
 	}
+
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 //the code for handling the support login is in the thisisanadminsession function (looking at uri)
-else if(app.u.thisIsAnAdminSession())	{
+if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
 	}
 else	{
