@@ -1039,8 +1039,12 @@ URI PARAM
 //turn a set of key value pairs (a=b&c=d) into an object. if string is from URI, use getParametersAsObject which handles encoding and executes this after.
 //formerly getParametersAsObject
 		kvp2Array : function(s)	{
-			if(s)	{return JSON.parse('{"' + decodeURI(s.replace(/&amp;/g, '&').replace(/&/g, "\",\"").replace(/=/g,"\":\"")) + '"}')}
-			else	{return false}
+			var r = false;
+			if(s)	{
+				s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
+				r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'))}
+			else	{}
+			return r;
 			},
 		
 //will create an object of a series of key/value pairs in URI format.
@@ -1049,16 +1053,16 @@ URI PARAM
 /*
 		getParametersAsObject : function(string)	{
 			app.u.dump("BEGIN control.u.getParametersAsObject");
-//			app.u.dump(" -> string: "+string);
+			app.u.dump(" -> string: "+string);
 			var tmp = string ? string : location.search;
-//			app.u.dump(" -> tmp: "+tmp);
+			app.u.dump(" -> tmp: "+tmp);
 			var url = tmp.split('#')[0]; //split at hash and only use relevant segment. otherwise last param is key:value#something
 			var params = {};
 //check for ? to avoid js error which results when no uri params are present
 			if(string || url.indexOf('?') > 0)	{
 				url = url.replace('?', '').replace(/&amp;/g, '&').replace(/\+/g, " "); //uri may be encoded or not. normalize.
 				url = decodeURIComponent(url);
-//				app.u.dump(" -> URL after tweaking: "+url);
+				app.u.dump(" -> URL after tweaking: "+url);
 				if(app.u.isSet(url))	{
 					params = this.kvp2Array(url);
 					}
@@ -1067,7 +1071,6 @@ URI PARAM
 			return params;
 			},
 */
-
 
 /*
 

@@ -1200,7 +1200,7 @@ P.listID (buyer list id)
 				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				infoObj.uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
-
+				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
 					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
 					}
