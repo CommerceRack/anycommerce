@@ -915,7 +915,7 @@ if(app.u.getParameterByName('debug'))	{
 				
 
 uriParams = app.u.kvp2Array(window.location.href.split('?')[1].split('#')[0]);
-app.u.dump(" -> uriParams"); app.u.dump(uriParams);
+// app.u.dump(" -> uriParams"); app.u.dump(uriParams);
 if(uriParams.trigger == 'adminPartnerSet')	{
 	app.u.dump(" -> execute adminPartnerSet call");
 	//Merchant is most likely returning to the app from a partner site for some sort of verification
