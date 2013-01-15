@@ -103,7 +103,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
 	
-		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
+		<h6 data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
 	</div>
 
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id); return false;">

@@ -102,7 +102,7 @@
 	</td>
 	<td>
 	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(prod_name); format:text;'></span></div>
-	<div data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:false;'></div>
+	<div data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></div>
 	</td>
 	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
 </tr>

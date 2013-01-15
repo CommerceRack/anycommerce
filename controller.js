@@ -2477,15 +2477,10 @@ $tmp.empty().remove();
 			$tag.append(app.renderFunctions.transmogrify({},data.bindData.loadsTemplate,data));
 			},
 
-		elasticMoney :function($tag,data)	{
-			data.value = data.value / 100;
-			app.renderFormats.money($tag,data);
-			}, //money
-		
 		money : function($tag,data)	{
 			
 //			app.u.dump('BEGIN view.formats.money');
-			var amount = data.value;
+			var amount = data.bindData.isElastic ? (data.value / 100) : data.value;
 			if(amount)	{
 				var r;
 				r = app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);

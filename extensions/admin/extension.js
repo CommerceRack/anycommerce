@@ -1244,21 +1244,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 		}, //callbacks
 
-	
-		
+
+
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-		
-		
+
+
 	renderFormats : {
-		
-		elastimage1URL : function($tag,data)	{
-//				app.u.dump(data.value[0]);
-//				var L = data.bindData.numImages ? data.bindData.numImages : 1; //default to only showing 1 image.
-//				for(var i = 0; i < L; i += 1)	{
-//					}
-			$tag.attr('src',app.u.makeImage({"name":data.value[0],"w":50,"h":50,"b":"FFFFFF","tag":0}));
-			},
-		
+
 		reportID2Pretty : function($tag,data)	{
 			var lookupTable = {
 				OGMS : 'Total sales',
@@ -1268,7 +1260,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				}
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
-	
+
+//very simple data to list function. no template needed (or allowed. use processList for that).
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
 			app.u.dump(data.value);
@@ -1278,7 +1271,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				}
 			$tag.append($o.children());
 			},
-		
+
 //a value, such as media library folder name, may be a path (my/folder/name) and a specific value from that string may be needed.
 //set bindData.splitter and the value gets split on that character.
 //optionally, set bindData.index to get a specific indices value (0,1, etc). if index is not declared, the last index is returned.
