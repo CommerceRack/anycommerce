@@ -914,8 +914,10 @@ if(app.u.getParameterByName('debug'))	{
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
 				
 
-uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
+uriParams = app.u.kvp2Array(window.location.href.split('?')[1].split('#')[0]);
+app.u.dump(" -> uriParams"); app.u.dump(uriParams);
 if(uriParams.trigger == 'adminPartnerSet')	{
+	app.u.dump(" -> execute adminPartnerSet call");
 	//Merchant is most likely returning to the app from a partner site for some sort of verification
 	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
 	app.model.dispatchThis('immutable');
