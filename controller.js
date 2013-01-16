@@ -2031,7 +2031,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 //	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
-		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'))  
+		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'));
 //		app.u.dump(" -> bindData.var: "+bindData['var']);
 
 //in some cases, it's necessary to pass the entire data object into the renderFormat. admin_orders paymentActions renderFormat is a good example. Most likely this will be used frequently in admin, in conjunction with processList renderFormat.

@@ -98,7 +98,7 @@ var admin_user = function() {
 					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
 					$parent.data('app-mode','detail');
 					$L.animate({width:"49%"},1000); //shrink list side.
-					$D.show().animate({width:"49%"},1000); //expand detail side.
+					$D.show().animate({width:"49%"},1000).addClass('expanded').removeClass('collapsed'); //expand detail side.
 					$('.hideInDetailMode',$L).hide(); //adjust list for minification.
 //when switching from detail to list mode, the detail panels collapse. re-open them IF they were open when the switch to list mode occured.
 					if(numDetailPanels)	{
@@ -114,8 +114,8 @@ var admin_user = function() {
 					$parent.data('app-mode','list');
 //if there are detail panels open, shrink them down but show the headers.
 					if(numDetailPanels)	{
-						$L.animate({width:"84%"},1000); //shrink list side.
-						$D.show().animate({width:"14%"},1000); //expand detail side.
+						$L.animate({width:"84%"},1000); //sexpand list side.
+						$D.show().animate({width:"14%"},1000).removeClass('expanded').addClass('collapsed'); //collapse detail side.
 						$btn.show();
 						$('.ui-widget-anypanel',$D).each(function(){
 							$(this).anypanel('collapse',true)
@@ -180,21 +180,44 @@ var admin_user = function() {
 					event.preventDefault();
 					app.u.dump("BEGIN admin_user.e.bossUserUpdateSave");
 					var $panel = $(this).closest('.ui-widget-anypanel'),
-					updateObject = {'uid':$panel.data('uid'),'roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)}
+					updateObject = {'luser':$panel.data('luser'),'roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)};
 //add all CHANGED attributes to the update object.
 					$(".edited",$panel).each(function(){
 						app.u.dump(" -> $(this).attr('name'): "+$(this).attr('name'));
 						updateObject[$(this).attr('name')] = $(this).val();
 						});
-					app.u.dump(" -> updateObject: "); app.u.dump(updateObject);
-					$("#userDetail_"+uid).showLoading();
+					
+					$(":checkbox",$panel).each(function(){
+						delete updateObject[$(this).attr('name')]; //remove the checkbox 'on' from the update object.
+						});
+					updateObject.login = updateObject.login || updateObject.luser; //make sure login is specified. that's what the call wants. same as luser... today...
+//					app.u.dump(" -> updateObject: "); app.u.dump(updateObject);
+					
+					var $contents = $(app.u.jqSelector('#','userDetail_'+updateObject.luser))
+					$('body').showLoading();
+					
 					app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
-					app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-					app.ext.admin.calls.bossUserUpdate.init(updateObject,{'callback':'translateSelector','extension':'admin','selector':"#userDetail_"+uid},'immutable');
-					app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
+					app.model.destroy('bossUserDetail|'+updateObject.luser); //clear local so a dispatch occurs.
+
+					app.ext.admin.calls.bossUserUpdate.init(updateObject,{},'immutable');
+					app.ext.admin.calls.bossUserDetail.init(updateObject.luser,{},'immutable');
+					app.ext.admin.calls.bossUserList.init({
+						'callback': function(rd)	{
+							$('body').hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								app.u.throwMessage(rd);
+								}
+							else	{
+								app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+								app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
+								app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+								$panel.anypanel('destroy');
+								$("[data-luser='"+updateObject.luser+"'] .editUser",'#userManagerContent').trigger('click');
+								}
+							}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
-				},
+				}, //bossUserUpdateSave
 
 /*
 the create and update template is recycled. the button has the same app event, but performs a different action based on whether or not a save or update is being perfomed.
@@ -242,8 +265,9 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					});
 				}, //bossUserCreateUpdateSave
 			
-			"bossUserUpdate" : function($btn){
+			"bossUserDetail" : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
+				$btn.addClass('editUser'); //used for triggering click after user update.
 				$btn.off('click.bossUserUpdate').on('click.bossUserUpdate',function(event){
 					event.preventDefault();
 //					app.u.dump("BEGIN admin_user.e.bossUserUpdate click event");
@@ -259,46 +283,64 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-var panelID = app.u.jqSelector('','userDetail_'+user.uid),
-$panel = $("<div\/>").data('uid',user.uid).hide().anypanel({
-	'title':'Edit: '+user.uid,
+var panelID = app.u.jqSelector('','userDetail_'+user.luser),
+$panel = $("<div\/>").data('luser',user.luser).hide().anypanel({
+	'title':'Edit: '+user.luser,
 	'templateID':'userManagerUserCreateUpdateTemplate',
 //	'data':user, //data not passed because it needs req and manipulation prior to translation.
-	'dataAttribs': {'id':panelID,'uid':user.uid,'usermode':'update'}
+	'dataAttribs': {'id':panelID,'luser':user.luser,'usermode':'update'}
 	}).prependTo($target);
+
 
 //adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
 var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpdateSave').html("Save <span class='numChanges'></span> Changes").button({'disabled':true});
 $('form',$panel).append($saveButton);
 app.ext.admin.u.handleAppEvents($panel);
-$panel.slideDown('slow');
 
 
-app.calls.bossUserDetail.init(user.luser,{
+
+if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 	'callback':function(rd){
-
+//		app.u.dump("BEGIN admin_user.e.bossUserUpdate anonymous callback");
+//		app.u.dump(" -> panelID: "+panelID);
+//		app.u.dump(" -> user.luser: "+user.luser);
 		if(app.model.responseHasErrors(rd)){
-			$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
-			rd.parentID = 'bossUserCreateModal'; //set so errors appear in modal.
 			app.u.throwMessage(rd);
 			}
 		else	{		
 			
-			var userData = app.data[rd.datapointer];
-			userData.myRoles = userData['@roles']; //have to merge in bossRoleList which also has @roles. so rename to preserve data.
-			$.extend(userData,app.data.bossRoleList);
-			$('#'+panelID).append(app.renderFunctions.translateSelector('#'+panelID),userData);
+			var userData = $.extend(app.data[rd.datapointer],app.data.bossRoleList);
 			
+//			app.u.dump(" -> userData:"); app.u.dump(userData);
+			app.renderFunctions.translateSelector('#'+panelID,userData);
+
 			$("[data-app-role='roleList']",$panel).sortable({ handle: ".handle" });
 			$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
 				$(this).addClass('edited');
 				$('.numChanges',$panel).text($(".edited",$panel).length);
 				$saveButton.button('enable').addClass('ui-state-highlight');
 				});
+			$("[name='login']",$panel).attr('disabled','disabled').css({'border':'none','background':'none'});
+			var L = userData['@roles'].length;
+//loop backwards so that each row can be moved to the top but the original order will be preserved.
+			for(var i = (L-1); i >= 0; i -= 1)	{
+//				app.u.dump(" -> userData['@roles'][i]: "+userData['@roles'][i]);
+				$("[name='"+userData['@roles'][i]+"']",$panel).attr('checked','checked');
+				$("[name='"+userData['@roles'][i]+"']",$panel).closest('tr').insertBefore($("[data-app-role='roleList'] > tbody > tr:first",$panel)); //move checked roles to top of list.
+				}
+			$panel.hideLoading();
 			}
 		}
-	},'mutable');
-app.model.dispatchThis('mutable');
+	},'mutable'))	{
+//showloading is run AFTER the animation so that it places itself correctly over the target.
+		$panel.slideDown('fast',function(){$panel.showLoading();});
+		app.model.dispatchThis('mutable');
+		}
+	else	{
+//no dispatch is occuring. Don't do a showLoading cuz the data will be added immediately.
+		$panel.slideDown('fast');
+		}
+
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
@@ -318,6 +360,7 @@ resizable: false,
 modal: true,
 buttons: {
 	"Delete User": function() {
+		$D.dialog('close');
 		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
 		app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
 		app.ext.admin.calls.bossUserDelete.init(data.uid,{},'immutable');

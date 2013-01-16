@@ -8,3 +8,6 @@
 
 /* turns of the detail column in the roles table while editing due to space constraints. */
 .ui-widget-anypanel .roleDetail	{display:none;}
+
+/* will hide the expand/collapse button for a panel when in list mode */
+.collapsed .ui-button-anypanel-toggle	{display:none;}

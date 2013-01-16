@@ -741,9 +741,16 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(luser,_tag,Q)	{
 				var r = 0;
 				Q = Q || 'immutable';
+				_tag = _tag || {};
+				_tag.datapointer = 'bossUserDelete|'+luser;
 				if(luser)	{
-					this.dispatch(luser,_tag,Q);
-					r = 1;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(luser,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
 					}
 				else	{
 					app.u.throwGMessage("In admin.calls.bossUserDetail, L user is undefined and required.");
@@ -751,8 +758,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				return r;
 				},
 			dispatch : function(luser,_tag,Q)	{
-				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDelete|'+luser;
 				app.model.addDispatchToQ({"_cmd":"bossUserDetail","login":luser,"_tag" : _tag},Q);
 				}
 			}, //bossUserDetail
@@ -780,7 +785,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				Q = Q || 'immutable';
-				if(!$.isEmptyObject(obj) && obj.uid)	{
+				if(!$.isEmptyObject(obj) && obj.luser)	{
 					this.dispatch(obj,_tag,Q);
 					r = 1;
 					}
@@ -793,7 +798,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = 'bossUserUpdate';
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'bossUserUpdate|'+obj.uid;
+				obj._tag.datapointer = 'bossUserUpdate|'+obj.luser;
 				app.model.addDispatchToQ(obj,Q);
 				}
 			},
@@ -971,8 +976,8 @@ else	{
 //the selector also gets run through jqSelector and hideLoading (if declared) is run.
 		translateSelector : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateSelector");
-//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
+				app.u.dump("BEGIN callbacks.translateSelector");
+				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 //				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector);
@@ -2832,7 +2837,7 @@ just lose the back button feature.
 						});
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.handleButtonActions, target was either not specified, not an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					app.u.throwGMessage("In admin_orders.u.handleButtonActions, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
 					}
 				
 				} //handleButtonActions
