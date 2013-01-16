@@ -351,8 +351,9 @@ templateID - the template id used (from app.templates)
 							}
 						for(var i = 0; i < L; i += 1)	{
 							if(data.value[i].pretty[0] != '!')	{
-								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':data.value[i].id,'catsafeid':data.value[i].id}));
-								numRequests += app.ext.store_navcats.calls[call].init(data.value[i].id,{'parentID':data.value[i].id,'callback':'translateTemplate'});
+								var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
+								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':parentID,'catsafeid':data.value[i].id}));
+								numRequests += app.ext.store_navcats.calls[call].init(data.value[i].id,{'parentID':parentID,'callback':'translateTemplate'});
 								}
 							}
 						if(numRequests)	{app.model.dispatchThis()}
@@ -360,8 +361,9 @@ templateID - the template id used (from app.templates)
 //if no detail level is specified, only what is in the actual value (typically, id, pretty and @products) will be available. Considerably less data, but no request per category.
 					else	{
 						for(var i = 0; i < L; i += 1)	{
+							var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
 							if(data.value[i].pretty[0] != '!')	{
-								$tag.append(app.renderFunctions.transmogrify({'id':data.value[i].id,'catsafeid':data.value[i].id},data.bindData.loadsTemplate,data.value[i]));
+								$tag.append(app.renderFunctions.transmogrify({'id':parentID,'catsafeid':data.value[i].id},data.bindData.loadsTemplate,data.value[i]));
 								}
 							}
 						}
