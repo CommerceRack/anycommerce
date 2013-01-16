@@ -259,23 +259,46 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					if(!$.isEmptyObject(user))	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-var $panel = $("<div\/>").data('uid',user.uid).hide().anypanel({
+var panelID = app.u.jqSelector('','userDetail_'+user.uid),
+$panel = $("<div\/>").data('uid',user.uid).hide().anypanel({
 	'title':'Edit: '+user.uid,
 	'templateID':'userManagerUserCreateUpdateTemplate',
-	'data':user,
-	'dataAttribs': {'id':'userDetail_'+user.uid,'uid':user.uid,'usermode':'update'}
+//	'data':user, //data not passed because it needs req and manipulation prior to translation.
+	'dataAttribs': {'id':panelID,'uid':user.uid,'usermode':'update'}
 	}).prependTo($target);
+
 //adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
 var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpdateSave').html("Save <span class='numChanges'></span> Changes").button({'disabled':true});
 $('form',$panel).append($saveButton);
 app.ext.admin.u.handleAppEvents($panel);
 $panel.slideDown('slow');
-$("[data-app-role='roleList']",$panel).sortable({ handle: ".handle" });
-$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
-	$(this).addClass('edited');
-	$('.numChanges',$panel).text($(".edited",$panel).length);
-	$saveButton.button('enable').addClass('ui-state-highlight');
-	});
+
+
+app.calls.bossUserDetail.init(user.luser,{
+	'callback':function(rd){
+
+		if(app.model.responseHasErrors(rd)){
+			$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
+			rd.parentID = 'bossUserCreateModal'; //set so errors appear in modal.
+			app.u.throwMessage(rd);
+			}
+		else	{		
+			
+			var userData = app.data[rd.datapointer];
+			userData.myRoles = userData['@roles']; //have to merge in bossRoleList which also has @roles. so rename to preserve data.
+			$.extend(userData,app.data.bossRoleList);
+			$('#'+panelID).append(app.renderFunctions.translateSelector('#'+panelID),userData);
+			
+			$("[data-app-role='roleList']",$panel).sortable({ handle: ".handle" });
+			$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
+				$(this).addClass('edited');
+				$('.numChanges',$panel).text($(".edited",$panel).length);
+				$saveButton.button('enable').addClass('ui-state-highlight');
+				});
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
