@@ -180,7 +180,7 @@ var admin_user = function() {
 					event.preventDefault();
 					app.u.dump("BEGIN admin_user.e.bossUserUpdateSave");
 					var $panel = $(this).closest('.ui-widget-anypanel'),
-					updateObject = {'luser':$panel.data('luser'),'roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)};
+					updateObject = {'luser':$panel.data('luser'),'@roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)};
 //add all CHANGED attributes to the update object.
 					$(".edited",$panel).each(function(){
 						app.u.dump(" -> $(this).attr('name'): "+$(this).attr('name'));
@@ -259,7 +259,17 @@ Whether it's a create or update is based on the data-usermode on the parent.
 								}
 							$parent.hideLoading();
 							}},'immutable');
-						app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
+						app.ext.admin.calls.bossUserList.init({'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								app.u.throwMessage(rd);
+								}
+							else	{
+								app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+								app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
+								app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+								}
+							$('body').hideLoading();
+							}},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					});
@@ -291,12 +301,13 @@ $panel = $("<div\/>").data('luser',user.luser).hide().anypanel({
 	'dataAttribs': {'id':panelID,'luser':user.luser,'usermode':'update'}
 	}).prependTo($target);
 
+$('.passwordContainer',$panel).append("<div class='hint'>leave password blank for no change<\/div>"); //password not editable from here.
 
 //adds the save button to the bottom of the form. not part of the template because the template is shared w/ create.
 var $saveButton = $("<button \/>").attr('data-app-event','admin_user|bossUserUpdateSave').html("Save <span class='numChanges'></span> Changes").button({'disabled':true});
+
 $('form',$panel).append($saveButton);
 app.ext.admin.u.handleAppEvents($panel);
-
 
 
 if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
@@ -361,10 +372,21 @@ modal: true,
 buttons: {
 	"Delete User": function() {
 		$D.dialog('close');
+		$('body').showLoading();
 		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
 		app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-		app.ext.admin.calls.bossUserDelete.init(data.uid,{},'immutable');
-		app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':"#userManagerContent [data-app-role='dualModeList']"},'immutable');
+		app.ext.admin.calls.bossUserDelete.init(data.luser,{},'immutable');
+		app.ext.admin.calls.bossUserList.init({'callback':function(rd){
+			if(app.model.responseHasErrors(rd)){
+				app.u.throwMessage(rd);
+				}
+			else	{
+				app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
+				app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+				}
+			$('body').hideLoading();
+			}},'immutable');
 		app.model.dispatchThis('immutable');
 		},
 	Cancel: function() {$( this ).dialog( "close" ).empty().remove();}

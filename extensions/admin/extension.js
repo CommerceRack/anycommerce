@@ -742,7 +742,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				var r = 0;
 				Q = Q || 'immutable';
 				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDelete|'+luser;
+				_tag.datapointer = 'bossUserDetail|'+luser;
 				if(luser)	{
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
@@ -763,11 +763,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //bossUserDetail
 
 		bossUserDelete : {
-			init : function(uid,_tag,Q)	{
+			init : function(luser,_tag,Q)	{
 				var r = 0;
 				Q = Q || 'immutable';
-				if(uid)	{
-					this.dispatch(uid,_tag,Q);
+				if(luser)	{
+					this.dispatch(luser,_tag,Q);
 					r = 1;
 					}
 				else	{
@@ -775,10 +775,10 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				return r;
 				},
-			dispatch : function(uid,_tag,Q)	{
+			dispatch : function(luser,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = 'bossUserDelete|'+uid;
-				app.model.addDispatchToQ({"_cmd":"bossUserDelete","uid":uid,"_tag" : _tag},Q);
+				_tag.datapointer = 'bossUserDelete|'+luser;
+				app.model.addDispatchToQ({"_cmd":"bossUserDelete","login":luser,"_tag" : _tag},Q);
 				}
 			}, //bossUserDelete
 		bossUserUpdate : {
@@ -977,7 +977,7 @@ else	{
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN callbacks.translateSelector");
-				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
+//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var selector = app.u.jqSelector(tagObj.selector[0],tagObj.selector.substring(1)); //this val is needed in string form for translateSelector.
 //				app.u.dump(" -> selector: "+selector);
 				var $target = $(selector);
@@ -1080,7 +1080,7 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td><a href='https://plus.google.com/communities/108928399105730273026' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
+				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td><a href=' https://www.youtube.com/zoovylive' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
 				var L = data.length;
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
@@ -1304,7 +1304,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //very simple data to list function. no template needed (or allowed. use processList for that).
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
-			app.u.dump(data.value);
+
 			var $o = $("<ul />"); //what is appended to tag. 
 			for(var i = 0; i < L; i += 1)	{
 				$o.append("<li>"+data.value[i]+"<\/li>");
