@@ -535,14 +535,14 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 		
 		app.ext.admin.u.handleAppEvents($target);
 //trigger the editable regions
-		app.ext.admin_orders.u.makeEditable(selector+' .billAddress',{});
-		app.ext.admin_orders.u.makeEditable(selector+' .shipAddress',{});
-		app.ext.admin_orders.u.makeEditable(selector+" [data-ui-role='orderUpdateNotesContainer']",{'inputType':'textarea'});
-
-	$("[data-role='adminOrders|orderSummary'] :input",$target).off('change.trackChange').on('change.trackChange',function(){
-		$(this).addClass('edited');
-		$('.numChanges',$target).text($(".edited",$target).length).closest('button').button('enable').addClass('ui-state-highlight');
-		});
+		app.ext.admin_orders.u.makeEditable($("[data-ui-role='orderUpdateNotesContainer']",$target),{'inputType':'textarea'});
+		app.ext.admin_orders.u.makeEditable($('.billAddress',$target),{});
+		app.ext.admin_orders.u.makeEditable($('.shipAddress',$target),{});
+		
+		$("[data-role='adminOrders|orderSummary'] :input",$target).off('change.trackChange').on('change.trackChange',function(){
+			$(this).addClass('edited');
+			$('.numChanges',$target).text($(".edited",$target).length).closest('button').button('enable').addClass('ui-state-highlight');
+			});
 
 		}
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
@@ -1329,12 +1329,11 @@ else	{
 //the selector should be the parent element. any elements within need an 'editable' class on them.
 //this way, a specific section of the page can be made editable (instead of just changing all editable elements).
 //using the .editable class inside allows for editing all elements on a page at one time. may be suicide tho.
-			makeEditable : function(selector,P)	{
+			makeEditable : function($container,P)	{
 //app.u.dump("BEGIN admin_orders.u.makeEditable");
 if(!P.inputType)	{P.inputType == 'text'}
 //info on editable can be found here: https://github.com/tuupola/jquery_jeditable
-//app.u.dump("BEGIN admin.a.makeEditable ["+selector+" .editable]");
-$(selector + ' .editable').each(function(){
+$('.editable',$container).each(function(){
 	var $text = $(this);
 //	app.u.dump(" -> making editable: "+$text.data('bind'));
 	if($text.attr('title'))	{
@@ -1363,9 +1362,9 @@ $(selector + ' .editable').each(function(){
 	}); //each
 
 //handles tabbing between jeditable elements. only tabs between jeditables within selector.
-    $(selector + ' .editable').off('keydown.jeditable').on('keydown.jeditable', function(evt) {
+    $('.editable',$container).off('keydown.jeditable').on('keydown.jeditable', function(evt) {
         if(evt.keyCode==9) {
-			var nextBox=$(selector + ' .editable').eq($(selector + ' .editable').index(this)+1);
+			var nextBox=$('.editable',$container).eq($('.editable',$container).index(this)+1);
 			$(this).find("input").trigger('blur');  //Go to assigned next box
 			$(nextBox).click();  //Go to assigned next box
 			return false;           //Suppress normal tab
@@ -1378,6 +1377,18 @@ $(selector + ' .editable').each(function(){
 			}, //u
 //e is 'Events'. these are assigned to buttons/links via appEvents.
 		e : {
+			
+/*			
+			"addressEdit" : function($btn)	{
+				$btn.button();
+				$btn.off('click.addressEdit').on('click.addressEdit',function(event){
+					app.u.dump("BEGIN admin_orders.e.addressEdit click event");
+					event.preventDefault();
+					app.ext.admin_orders.u.makeEditable($btn.parent().find('address'),{});
+					})
+				},
+*/			
+			
 			"orderListFiltersUpdate" : function($btn){
 //				$btn.addClass('ui-state-highlight');
 				$btn.button();
@@ -1970,7 +1981,24 @@ else	{
 //				else	{
 //					$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(){navigateTo('/biz/orders/view.cgi?OID='+$(this).data('orderid'));});
 //					}
-				} //orderUpdateShowEditor
+				}, //orderUpdateShowEditor
+
+			qvOrderInvoice : function($btn)	{
+				$btn.off('click.qvOrderInvoice').on('click.qvOrderInvoice',function(){
+					$btn.closest('menu').hide();
+					var orderID = $(this).closest('[data-orderid]').data('orderid');
+					var sdomain = $(this).closest('[data-sdomain]').data('sdomain');
+					var $content = $("<div \/>",{'title':'Invoice: '+orderID,'id':'qv_'+app.u.guidGenerator()}).appendTo('body');
+					$content.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',{'id':'','orderid':orderID}));
+					
+					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
+					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':$content.attr('id'),'extension':'admin','templateID':'invoiceTemplate','merge':'appProfileInfo|'+sdomain},'immutable');
+					app.model.dispatchThis('immutable');
+					$content.dialog({width:600,height:600});
+					$content.showLoading();
+					})
+				
+				}
 
 			} //buttonActions
 		

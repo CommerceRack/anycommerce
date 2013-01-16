@@ -476,7 +476,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				if(typeof obj == 'object' && (obj.profile || obj.domain))	{
 					_tag = _tag || {};
 					_tag.datapointer = 'appProfileInfo|'+(obj.profile || obj.domain);
-
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
 						this.dispatch(obj,_tag,Q);
@@ -2434,7 +2433,7 @@ $tmp.empty().remove();
 
 		epoch2pretty : function($tag,data)	{
 			var myDate = new Date( data.value*1000);
-			$tag.append(myDate.getFullYear()+"/"+myDate.getMonth()+"/"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
+			$tag.append(myDate.getFullYear()+"/"+(myDate.getMonth()+1)+"/"+myDate.getDate()+" "+myDate.getHours()+":"+myDate.getMinutes()+":"+myDate.getSeconds());
 			},
 
 		unix2mdy : function($tag,data)	{

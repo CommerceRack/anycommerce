@@ -54,6 +54,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			help : "", //webdoc ID.
 			navtabs : {}, //array of objects. link, name and selected (boolean)
 			title : {},
+			allowed : ['ts1','ro1'],
 			exec : function(){}  //executes the code to render the page.
 			},
 		"/biz/syndication/index.cgi" : {
@@ -736,6 +737,26 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //bossUserList
 
+		bossUserDetail : {
+			init : function(luser,_tag,Q)	{
+				var r = 0;
+				Q = Q || 'immutable';
+				if(luser)	{
+					this.dispatch(luser,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.bossUserDetail, L user is undefined and required.");
+					}
+				return r;
+				},
+			dispatch : function(luser,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = 'bossUserDelete|'+luser;
+				app.model.addDispatchToQ({"_cmd":"bossUserDetail","login":luser,"_tag" : _tag},Q);
+				}
+			}, //bossUserDetail
+
 		bossUserDelete : {
 			init : function(uid,_tag,Q)	{
 				var r = 0;
@@ -958,6 +979,11 @@ else	{
 //				app.u.dump(" -> $target.length: "+$target.length);
 				if(typeof jQuery().hideLoading == 'function'){$target.hideLoading();}
 				$target.removeClass('loadingBG'); //try to get rid of anything that uses loadingBG (cept prodlists) in favor of show/hideLoading()
+				var data = app.data[tagObj.datapointer];
+//merge allows for multiple datasets to be merged together prior to translation. use with caution.
+				if(tagObj.merge && app.data[tagObj.merge])	{
+					$.extend(data,app.data[tagObj.merge]);
+					}
 				app.renderFunctions.translateSelector(selector,app.data[tagObj.datapointer]);
 				app.ext.admin.u.handleAppEvents($target);
 				}
@@ -1874,9 +1900,9 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
 					}
-//				else if(path == '#!userManager')	{
-//					app.ext.admin_user.a.showUserManager();
-//					}
+				else if(path == '#!userManager')	{
+					app.ext.admin_user.a.showUserManager();
+					}
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
 					}

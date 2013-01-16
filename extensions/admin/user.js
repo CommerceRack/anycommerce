@@ -208,22 +208,23 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					var $parent = $('#bossUserCreateModal'),
 					frmObj = $(this).closest("form").serializeJSON(); //used to generate roles array and also sent directly as part of create. not used in update.
 					
-					$parent.showLoading();
-//build an array of the roles that are checked. order is important.
-					frmObj.roles = app.ext.admin_user.u.getRoleCheckboxesAsArray($parent);
-					$(":checkbox",$parent).each(function(){
-						delete frmObj[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
-						});
-
 					if($.isEmptyObject(frmObj))	{
 						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to locate form object for serialization or serialized object is empty.');
 						}
 					else {
+						$parent.showLoading();
+
+//build an array of the roles that are checked. order is important.
+						frmObj['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($parent);
+						$(":checkbox",$parent).each(function(){
+							delete frmObj[$(this).attr('name')]; //remove from serialized form object. params are/may be whitelisted.
+							});
+
 						app.model.destroy('bossUserList');
 						app.ext.admin.calls.bossUserCreate.init(frmObj,{'callback':function(rd){ //rd is responseData.
 							if(app.model.responseHasErrors(rd)){
 								$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
-								rd.parentID = 'bossUserCreateModal';
+								rd.parentID = 'bossUserCreateModal'; //set so errors appear in modal.
 								app.u.throwMessage(rd);
 								}
 							else	{
