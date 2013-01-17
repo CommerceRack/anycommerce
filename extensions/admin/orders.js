@@ -116,7 +116,6 @@ var admin_orders = function() {
 		mergeDataForBulkPrint : {
 			
 			onSuccess : function(tagObj){
-				
 				var tmpData = {};
 				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
 				//this is because a template only wants to be parsed once.
@@ -130,7 +129,6 @@ var admin_orders = function() {
 				$print.addClass('pageBreak'); //ensures template is on it's own page.
 				$('#printContainer').append($print);
 				}
-			
 			},
 
 
@@ -775,21 +773,22 @@ else	{
 		paystatus : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
 			var ps = data.value.substr(0,1), //first characer of pay status.
-			pretty;
+			pretty,
+			className = '';
 
 			switch(ps)	{
-				case '0': pretty = 'Paid'; break;
+				case '0': pretty = 'Paid'; className='green'; break;
 				case '1': pretty = 'Pending'; break;
-				case '2': pretty = 'Denied'; break;
+				case '2': pretty = 'Denied'; className='red'; break;
 				case '3': pretty = 'Cancelled'; break;
 				case '4': pretty = 'Review'; break;
 				case '5': pretty = 'Processing'; break;
 				case '6': pretty = 'Voided'; break;
-				case '9': pretty = 'Error'; break;
+				case '9': pretty = 'Error'; className='orange'; break;
 				default: pretty = 'unknown'; break;
 				}
 
-			$tag.text(pretty).attr('title',data.value); //used in order list, so don't force any pre/posttext.
+			$tag.text(pretty).attr('title',data.value).addClass(className); //used in order list, so don't force any pre/posttext.
 			return true;
 			}, //paystatus
 
