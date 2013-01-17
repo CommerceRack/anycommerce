@@ -102,12 +102,12 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 var th = $(this),
 thIndex = th.index(),
 inverse = false;
-	
+
 th.click(function(){
 	$table.find('td').filter(function(){
 		return $(this).index() === thIndex;
 		}).sortElements(function(a, b){
-			return $.text([a]) > $.text([b]) ? inverse ? -1 : 1 : inverse ? 1 : -1;
+			return $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
 			},function(){
 		// parentNode is the element we want to move
 		return this.parentNode; 
