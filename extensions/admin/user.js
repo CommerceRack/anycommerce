@@ -231,8 +231,25 @@ Whether it's a create or update is based on the data-usermode on the parent.
 					var $parent = $('#bossUserCreateModal'),
 					frmObj = $(this).closest("form").serializeJSON(); //used to generate roles array and also sent directly as part of create. not used in update.
 					
+					$(".appMessage",$parent).empty().remove(); //clean any existing errors.
+					
 					if($.isEmptyObject(frmObj))	{
 						app.u.throwGMessage('In admin_user.e.bossUserCreateUpdateSave, unable to locate form object for serialization or serialized object is empty.');
+						}
+					else if(!frmObj.email || !frmObj.password || !frmObj.fullname || !frmObj.login)	{
+						
+						var msg = 'The following fields are required:<ol>';
+
+						if(!frmObj.email)	{msg += "<li>email<\/li>"}
+						if(!frmObj.password)	{msg += "<li>password<\/li>"}
+						if(!frmObj.fullname)	{msg += "<li>fullname<\/li>"}
+						if(!frmObj.login)	{msg += "<li>login<\/li>"}
+						msg += "<\/ol>";
+						
+						var msgObj = app.u.errMsgObject(msg);
+						msgObj.parentID = 'bossUserCreateModal';
+						app.u.throwMessage(msgObj,true);
+						$parent.animate({scrollTop: 0}, 'fast');
 						}
 					else {
 						$parent.showLoading();
@@ -249,12 +266,13 @@ Whether it's a create or update is based on the data-usermode on the parent.
 								$parent.animate({scrollTop: 0}, 'slow'); //scroll to top of modal div to messaging appears. not an issue on success cuz content is emptied.
 								rd.parentID = 'bossUserCreateModal'; //set so errors appear in modal.
 								app.u.throwMessage(rd);
+								$parent.dialog({buttons: {"Close": function() {$( this ).dialog( "close" ).empty().remove();}}}); //adds a 'close' button.
 								}
 							else	{
 								var msg = app.u.successMsgObject("User has been created!");
 								msg.parentID = 'bossUserCreateModal';
 								$parent.empty(); //only empty if no error occurs. That way user can correct and re-submit.
-								app.u.throwMessage(msg);
+								app.u.throwMessage(msg,true);
 								$( ".selector" ).dialog( "option", "buttons", [ { text: "Close", click: function() { $( this ).dialog( "close" ); }} ] );
 								}
 							$parent.hideLoading();

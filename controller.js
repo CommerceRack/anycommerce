@@ -848,13 +848,17 @@ and model that needed to be permanently displayed had to be converted into an ob
 		throwMessage : function(msg,persistant){
 //			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
-			var $target; //where the app message will be appended.
-			var messageClass = "appMessage_"+this.guidGenerator(); //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
-			var r = messageClass; //what is returned. set to false if no good error message found. set to htmlID is error found. 
-			var $container = $("<div \/>").addClass('appMessage clearfix').addClass(messageClass).append("<button onClick='$(\"."+messageClass+"\").toggle(); return false;' class='ui-state-default ui-corner-all floatRight stdMargin'><span class='ui-button ui-icon-circle-close'>X</span><\/button>");
-//make sure the good-ole fallback destination for errors exists and is a modal.
-			var $globalDefault = $('#globalErrorMessaging')
-			if	($globalDefault.length == 0)	{
+
+			var $target, //where the app message will be appended.
+			messageClass = "appMessage_"+this.guidGenerator(), //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
+			r = messageClass, //what is returned. set to false if no good error message found. set to htmlID is error found.
+			$container = $("<div \/>").addClass('appMessage clearfix ui-widget ui-widget-content ui-corner-all').addClass(messageClass),
+			$closeButton = $("<button \/>").text('close message').addClass('floatRight').on('click.closeMsg',function(){$container.empty().remove()}).button({icons: {primary: "ui-icon-circle-close"},text: false}),
+			$globalDefault = $('#globalErrorMessaging'); //make sure the good-ole fallback destination for errors exists and is a modal.
+			
+			$container.append($closeButton);
+			
+			if($globalDefault.length == 0)	{
 				$globalDefault = $("<div \/>").attr({'id':'globalErrorMessaging'}).appendTo('body');
 				$globalDefault.dialog({autoOpen:false,modal:true})
 				}

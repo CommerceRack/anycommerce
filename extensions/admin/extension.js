@@ -1832,9 +1832,10 @@ var chart = new Highcharts.Chart({
 				$('#preloadAndLoginContents').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				$('.username','#appView').text(app.vars.username);
 				var domain = this.getDomain();
+//				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
 
-//show the domain chooser if one is not set. see showDomainChooser function for more info on why.
+//show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
 //if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
 				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
