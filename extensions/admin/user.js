@@ -82,6 +82,7 @@ var admin_user = function() {
 				var $L = $("[data-app-role='dualModeList']",$parent), //List column
 				$D = $("[data-app-role='dualModeDetail']",$parent), //detail column
 				numDetailPanels = $D.children().length,
+				oldMode = $parent.data('app-mode'),
 				$btn = $("[data-app-event='admin_user|toggleDualMode']",$parent);
 
 				if(mode)	{}
@@ -91,14 +92,17 @@ var admin_user = function() {
 
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
-				
+				app.u.dump(" -> old mode: "+oldMode);
 				app.u.dump(" -> mode: "+mode);
 				
 				if(mode == 'detail')	{
 					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
 					$parent.data('app-mode','detail');
-					$L.animate({width:"49%"},1000); //shrink list side.
-					$D.show().animate({width:"49%"},1000).addClass('expanded').removeClass('collapsed'); //expand detail side.
+					if(oldMode == mode)	{} //if mode is forced, could be in same mode. don't animate.
+					else	{
+						$L.animate({width:"49%"},1000); //shrink list side.
+						$D.show().animate({width:"49%"},1000).addClass('expanded').removeClass('collapsed'); //expand detail side.
+						}
 					$('.hideInDetailMode',$L).hide(); //adjust list for minification.
 //when switching from detail to list mode, the detail panels collapse. re-open them IF they were open when the switch to list mode occured.
 					if(numDetailPanels)	{
@@ -114,8 +118,12 @@ var admin_user = function() {
 					$parent.data('app-mode','list');
 //if there are detail panels open, shrink them down but show the headers.
 					if(numDetailPanels)	{
-						$L.animate({width:"84%"},1000); //sexpand list side.
-						$D.show().animate({width:"14%"},1000).removeClass('expanded').addClass('collapsed'); //collapse detail side.
+						if(oldMode == mode)	{} //if mode is forced, could be in same mode. don't animate.
+						else	{
+							$L.animate({width:"84%"},1000); //sexpand list side.
+							$D.show().animate({width:"14%"},1000)
+							}
+						$D.removeClass('expanded').addClass('collapsed'); //collapse detail side.
 						$btn.show();
 						$('.ui-widget-anypanel',$D).each(function(){
 							$(this).anypanel('collapse',true)
@@ -136,8 +144,13 @@ var admin_user = function() {
 				
 				}, //toggleDualMode
 
-			emptyUsersTable : function()	{
-				$("[data-app-role='dualModeListContents']","#userManagerContent").empty();
+			resetUsersTable : function()	{
+				var $table = $("[data-app-role='dualModeListContents']","#userManagerContent")
+				$table.empty();
+				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data.bossUserList);
+				app.ext.admin.u.handleAppEvents($table);
+				app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
+
 				},
 
 			getRoleCheckboxesAsArray : function($parent)	{
@@ -221,10 +234,7 @@ var admin_user = function() {
 										app.u.throwMessage(rd);
 										}
 									else	{
-										app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-										app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
-										app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
-										app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
+										app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
 										$panel.anypanel('destroy');
 										$("[data-luser='"+update.luser+"'] .editUser",'#userManagerContent').trigger('click');
 										}
@@ -301,9 +311,7 @@ Whether it's a create or update is based on the data-usermode on the parent.
 								app.u.throwMessage(rd);
 								}
 							else	{
-								app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-								app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
-								app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+								app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
 								}
 							$('body').hideLoading();
 							}},'immutable');
@@ -411,16 +419,13 @@ buttons: {
 		$D.dialog('close');
 		$('body').showLoading();
 		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
-		app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
 		app.ext.admin.calls.bossUserDelete.init(data.luser,{},'immutable');
 		app.ext.admin.calls.bossUserList.init({'callback':function(rd){
 			if(app.model.responseHasErrors(rd)){
 				app.u.throwMessage(rd);
 				}
 			else	{
-				app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
-				app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+				app.ext.admin_user.u.resetUsersTable();  //empty list of users so that changes are reflected.
 				}
 			$('body').hideLoading();
 			}},'immutable');
