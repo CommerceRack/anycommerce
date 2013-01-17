@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate','qvOrderNotes');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -485,6 +485,7 @@ $target.append($order);
 $('body').showLoading();
 
 //go fetch order data. callback handles data population.
+app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	app.u.dump("Executing callback for adminOrderDetail");
 	
@@ -784,7 +785,7 @@ else	{
 				case '4': pretty = 'Review'; break;
 				case '5': pretty = 'Processing'; break;
 				case '6': pretty = 'Voided'; break;
-				case '9': pretty = 'Error'; className='orange'; break;
+				case '9': pretty = 'Error ('+data.value+')'; className='orange'; break;
 				default: pretty = 'unknown'; break;
 				}
 
@@ -1982,19 +1983,37 @@ else	{
 //					}
 				}, //orderUpdateShowEditor
 
+			qvOrderNotes : function($btn)	{
+				$btn.off('click.qvOrderNotes').on('click.qvOrderNotes',function(){
+					$btn.closest('menu').hide();
+					var orderID = $(this).closest('[data-orderid]').data('orderid');
+					var $content = $("<div \/>",{'title':'Order Notes: '+orderID,'id':'qvOrderNotes_'+app.u.guidGenerator()}).appendTo('body');
+					$content.append(app.renderFunctions.createTemplateInstance('qvOrderNotes_',{'orderid':orderID}));
+					
+					$content.dialog({width:300,height:300});
+					$content.showLoading();
+					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','templateID':'qvOrderNotes'},'mutable');
+					app.model.dispatchThis('mutable');
+					
+					})
+				
+				},
+
 			qvOrderInvoice : function($btn)	{
 				$btn.off('click.qvOrderInvoice').on('click.qvOrderInvoice',function(){
 					$btn.closest('menu').hide();
 					var orderID = $(this).closest('[data-orderid]').data('orderid');
 					var sdomain = $(this).closest('[data-sdomain]').data('sdomain');
-					var $content = $("<div \/>",{'title':'Invoice: '+orderID,'id':'qv_'+app.u.guidGenerator()}).appendTo('body');
-					$content.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',{'id':'','orderid':orderID}));
+					var $content = $("<div \/>",{'title':'Invoice: '+orderID,'id':'qvOrderInvoice_'+app.u.guidGenerator()}).appendTo('body');
+					$content.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',{'orderid':orderID}));
 					
-					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
-					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':$content.attr('id'),'extension':'admin','templateID':'invoiceTemplate','merge':'appProfileInfo|'+sdomain},'immutable');
-					app.model.dispatchThis('immutable');
 					$content.dialog({width:600,height:600});
 					$content.showLoading();
+					
+					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
+					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','templateID':'invoiceTemplate','merge':'appProfileInfo|'+sdomain},'mutable');
+					app.model.dispatchThis('mutable');
+					
 					})
 				
 				}

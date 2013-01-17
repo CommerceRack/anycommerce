@@ -307,7 +307,15 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(orderID,_tag,Q)	{
 				var r = 0;
 				if(orderID)	{
-					this.dispatch(orderID,_tag,Q);
+					_tag = _tag || {};
+					_tag.datapointer = "adminOrderDetail|"+orderID;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(orderID,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
 					r = 1;
 					}
 				else	{
@@ -318,8 +326,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(orderID,_tag,Q)	{
 				var cmdObj = {};
 				cmdObj.orderid = orderID;
-				cmdObj._tag = _tag || {};
-				cmdObj._tag.datapointer = "adminOrderDetail|"+orderID;
+				cmdObj._tag = _tag;
 				cmdObj._cmd = "adminOrderDetail";
 				app.model.addDispatchToQ(cmdObj,Q);
 				}
