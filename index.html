@@ -86,7 +86,7 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 
 	<table>
 		<tr>
-			<td><img src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" /></td>
+			<td align='center'><img src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" /></td>
 		</tr>
 		<tr>
 			<td>&nbsp;</td>
@@ -94,11 +94,13 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 		<tr>
 			<td>
 			
-			<div id="loader">				
-				<div class='alignCenter'>
-					<progress id="appPreViewProgressBar" max="100" value="0" /><br />
-				</div>
-				<div id='appPreViewProgressText'>0% Complete</div>
+			<div id="loader">
+				<div>
+					<div class='alignCenter'>
+						<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+					</div>
+				<div>
+				<!--<div id='appPreViewProgressText'>0% Complete</div>-->
 				<span>LOADING... PLEASE WAIT</span>				
 			</div>
 			<div id="tenFourGoodBuddy" class="displayNone pointer">
@@ -133,7 +135,9 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 					<input id="txtSearch" class="productSearchKeyword handleDefault" name="KEYWORDS" type="search" value="Find it here..." />
 					<img id="btnTopNavSearch" src="site/images/button-top-nav-search.png" alt="Search Button" />
 				</form>
-				<img id="headerFreeShipping" src="site/images/header-free-shipping.png" alt="Free Shipping on Orders of $50 or Higher" />
+				<div id="headerFreeShipping">
+					<img src="blank.gif" alt="Free Shipping on Orders of $50 or Higher" />
+				</div>
 				<a id="btnSocialFacebook" href="#"><img src="site/images/social-button-facebook.png" alt="Social Button Facebook" /></a>
 				<a id="btnSocialTwitter" href="#"><img src="site/images/social-button-twitter.png" alt="Social Button Twitter" /></a>
 				<a id="btnSocialYoutube" href="#"><img src="site/images/social-button-youtube.png" alt="Social Button Youtube" /></a>
@@ -572,11 +576,12 @@ this will likely become more flexible in the future. ###
 		
 				<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;"></fieldset>
 
-				Quantity: <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
-
 				<div id="atcMessaging_FC5171-DS" class="atcSuccessMessage"></div>
 	
-				<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" onClick="$(this).parent().submit();" />
+				<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;">
+					Quantity <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
+					<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" onClick="$(this).parent().submit();" />
+				</div>
 				<input type="hidden" value="yes" name="add">
 				<input type="hidden" value="FC5171-DS" name="product_id">
 			</form>

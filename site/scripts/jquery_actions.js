@@ -1,5 +1,21 @@
 $(document).ready(function()
 {
+	var number = 1 + Math.floor(Math.random() * 4);
+	$("div#headerFreeShipping img").attr("data-note",number);
+	$("div#headerFreeShipping img").attr("src","site/images/header-free-shipping-icon-" + (number) + ".png");
+	setInterval(function() 
+	{
+		$("div#headerFreeShipping img").hide();
+		var number = 1 + Math.floor(Math.random() * 4);
+		while(number == parseInt($("div#headerFreeShipping img").attr("data-note")))
+		{
+			number = 1 + Math.floor(Math.random() * 4);
+		}		
+		$("div#headerFreeShipping img").attr("data-note",number);		
+		$("div#headerFreeShipping img").attr("src","site/images/header-free-shipping-icon-" + (number) + ".png");
+		$("div#headerFreeShipping img").show("fade", {}, 1000);
+	},5000);
+	
 	$("img#btnTopNavSearch").click(function()
 	{
 		$("form#headerSearchFrm").submit();
@@ -65,11 +81,13 @@ $(document).ready(function()
 	
 	$("a#btnSocialFacebook, a#btnSocialTwitter, a#btnSocialYoutube, a#btnSocialMail").mouseover(function()
 	{
-		$(this).css("top","90px");
+		$(this).animate({"top": "-=4px"}, "fast");
+		/*$(this).css("top","90px");*/
 	});
 	$("a#btnSocialFacebook, a#btnSocialTwitter, a#btnSocialYoutube, a#btnSocialMail").mouseout(function()
 	{
-		$(this).css("top","94px");
+		//$(this).css("top","94px");
+		$(this).animate({"top": "+=4px"}, "fast");
 	});	
 	$("div#navContent ul li").mouseover(function()
 	{

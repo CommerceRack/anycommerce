@@ -7,6 +7,60 @@ body
 {
 	background-color: #b7a58b
 }
+progress,          /* All HTML5 progress enabled browsers */
+progress[role]     /* polyfill */
+{
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	/* gets rid of default border in Firefox and Opera. */ 
+	border: none;
+
+	/* Needs to be in here for Safari polyfill so background images work as expected. */
+	background-size: auto;
+}
+
+/* Polyfill */
+progress[role]:after {
+	background-image: none; /* removes default background from polyfill */
+}
+
+/* Ensure fallback text doesn't appear in polyfill */
+progress[role] strong {
+	display: none;
+}
+progress,                          /* Firefox  */ 
+progress[role][aria-valuenow] {    /* Polyfill */
+   background: #938269 !important; /* !important is needed by the polyfill */
+}
+
+/* Chrome */
+progress::-webkit-progress-bar {
+    background: #938269;
+}
+
+/* IE10 */
+progress {
+    color: #bd0000;
+}
+
+/* Firefox */
+progress::-moz-progress-bar { 
+    background: #bd0000;	
+}
+
+/* Chrome */
+progress::-webkit-progress-value {
+    background: #bd0000;
+}
+
+/* Polyfill */
+progress[aria-valuenow]:before  {
+    background: #bd0000;
+}
 	div#appPreView
 	{
 		/*margin: 0px auto;
@@ -14,17 +68,53 @@ body
 		text-align: center;
 		width: 310px;*/
 		/*background: none repeat scroll 0 0 #FFFFFF;*/
-		background-color: #bfb6a7;
+		/*background-color: #bfb6a7;*/
 		border-radius: 8px 8px 8px 8px;
 		box-shadow: 0 0 6px 2px #555;
 		margin: 100px auto;
 		padding: 20px;
-		width: 310px;		
+		/*width: 310px;*/
+		width: 462px;
 	}
-		div#appPreView div#loader
+		div#appPreView table
 		{
-			text-align: center;
+			margin: 0px auto;
 		}
+			div#appPreView table div#loader
+			{
+				text-align: center;
+			}
+				div#appPreView table div#loader span
+				{
+					color: #63503B;
+					font-family: Helvetica;
+					font-size: 12px;
+				}
+				div#appPreView table div#loader > div
+				{
+					border: 1px solid #31281d;
+					border-bottom: 1px solid #afa496;
+					height: 31px;
+					width: 459px;
+				}
+					div#appPreView table div#loader > div > div.alignCenter
+					{
+						border-bottom: 1px solid #c4baad;
+						border-left: 1px solid #655948;
+						border-right: 1px solid #655948;
+						border-top: 1px solid #494134;
+						height: 29px;
+						width: 457px;
+					}
+						div#appPreView table div#loader > div > div.alignCenter > progress
+						{
+							border-bottom: 1px solid #330000;
+							border-left: 1px solid #600000;
+							border-right: 1px solid #6e0000;
+							border-top: 1px solid #965050;
+							height: 27px;
+							width: 455px;					
+						}
 	div#container
 	{
 		position: relative;
@@ -45,7 +135,7 @@ body
 				position: relative;
 				width: 960px;
 			}
-			div#container div#topNav div#topNavContent img,	div#container div#topNav div#topNavContent p
+			div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p
 			{
 				float: left;
 				position: relative;
@@ -112,12 +202,21 @@ body
 					top: 45px;
 					width: 25px;
 				}
-				div#container div#header div#headerContent img#headerFreeShipping
+				div#container div#header div#headerContent div#headerFreeShipping
 				{
+					background: url('../images/header-free-shipping.png');
+					height: 54px;
 					left: 730px;
 					position: absolute;
-					top: 10px;
+					width: 220px;
+					top: 20px;
 				}
+					div#container div#header div#headerContent div#headerFreeShipping img
+					{
+						left: -20px;
+						position: absolute;
+						top: -10px;
+					}
 				div#container div#header div#headerContent a#btnSocialFacebook
 				{
 					cursor: pointer;
