@@ -853,11 +853,12 @@ and model that needed to be permanently displayed had to be converted into an ob
 			messageClass = "appMessage_"+this.guidGenerator(), //the class added to the container of the message. message 'may' appear in multiple locations, so a class is used instead of an id.
 			r = messageClass, //what is returned. set to false if no good error message found. set to htmlID is error found.
 			$container = $("<div \/>").addClass('appMessage clearfix').addClass(messageClass),
-			$closeButton = $("<button \/>").text('close message').addClass('floatRight').on('click.closeMsg',function(){$container.empty().remove()}).button({icons: {primary: "ui-icon-circle-close"},text: false}),
+			$closeButton = $("<button \/>").text('close message').addClass('floatRight').button({icons: {primary: "ui-icon-circle-close"},text: false}),
 			$globalDefault = $('#globalErrorMessaging'); //make sure the good-ole fallback destination for errors exists and is a modal.
 			
+			$closeButton.on('click.closeMsg',function(){$(this).closest('.appMessage').empty().remove()});
 			$container.append($closeButton);
-			
+
 			if($globalDefault.length == 0)	{
 				$globalDefault = $("<div \/>").attr({'id':'globalErrorMessaging'}).appendTo('body');
 				$globalDefault.dialog({autoOpen:false,modal:true})

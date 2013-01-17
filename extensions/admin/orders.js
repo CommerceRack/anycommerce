@@ -1988,15 +1988,17 @@ else	{
 					$btn.closest('menu').hide();
 					var orderID = $(this).closest('[data-orderid]').data('orderid');
 					var $content = $("<div \/>",{'title':'Order Notes: '+orderID,'id':'qvOrderNotes_'+app.u.guidGenerator()}).appendTo('body');
-					$content.append(app.renderFunctions.createTemplateInstance('qvOrderNotes_',{'orderid':orderID}));
+					$content.append(app.renderFunctions.createTemplateInstance('qvOrderNotes',{'orderid':orderID}));
 					
-					$content.dialog({width:300,height:300});
+					$content.dialog({
+						width:300,
+						height:300,
+						close: function(event, ui){$(this).dialog('destroy').remove()} //garbage collection. removes from DOM.
+						});
 					$content.showLoading();
-					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','templateID':'qvOrderNotes'},'mutable');
+					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
 					app.model.dispatchThis('mutable');
-					
 					})
-				
 				},
 
 			qvOrderInvoice : function($btn)	{
@@ -2007,11 +2009,15 @@ else	{
 					var $content = $("<div \/>",{'title':'Invoice: '+orderID,'id':'qvOrderInvoice_'+app.u.guidGenerator()}).appendTo('body');
 					$content.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',{'orderid':orderID}));
 					
-					$content.dialog({width:600,height:600});
+					$content.dialog({
+						width:600,
+						height:600,
+						close: function(event, ui){$(this).dialog('destroy').remove()} //garbage collection. removes from DOM.
+						});
 					$content.showLoading();
 					
 					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
-					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','templateID':'invoiceTemplate','merge':'appProfileInfo|'+sdomain},'mutable');
+					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','merge':'appProfileInfo|'+sdomain},'mutable');
 					app.model.dispatchThis('mutable');
 					
 					})

@@ -179,6 +179,7 @@
 	<menu class='displayNone'>
 		<h3>Quickview</h3>
 		<li data-app-event="admin_orders|qvOrderInvoice">Invoice</li>
+		<li data-app-event="admin_orders|qvOrderNotes">Order Notes</li>
 	</menu>
 	</td>
 </tr>
@@ -575,8 +576,9 @@ The following templates are used in the 'order detail' modal/view.
 
 
 <div id='qvOrderNotes'>
-
+	<h6>Public Notes:</h6>
 	<div class='marginBottom' data-bind='var:order(want/order_notes);format:text;'></div>
+	<h6>Private Notes:</h6>
 	<div data-bind='var:order(flow/private_notes);format:text;'></div>
 
 </div>
