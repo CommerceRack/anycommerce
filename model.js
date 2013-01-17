@@ -1177,6 +1177,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 			var r = true; //what is returned. if a template is created, true is returned.
 			if(templateID && typeof $templateSpec == 'object')	{
 				app.templates[templateID] = $templateSpec.attr('data-templateid',templateID).clone();
+				app.templates[templateID].removeAttr('id'); //get rid of the ID to reduce likelyhood of duplicate ID's on the DOM.
 				$('#'+templateID).empty().remove(); //here for templates created from existing DOM elements. They're removed to ensure no duplicate ID's exist.
 				}
 			else	{
