@@ -134,7 +134,10 @@ else	{
 	}
 
 
-
+document.write = function(v){
+	if(console && console.warn){console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();")}
+	$("body").append(v);
+	}
 
 
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
