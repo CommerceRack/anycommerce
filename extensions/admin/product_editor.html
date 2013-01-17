@@ -433,47 +433,47 @@
 	<div class='panelContents displayNone ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom ui-accordion-content-active marginBottom'>
 <form action='#' class='labelsAsBreaks'>
 <fieldset>
-<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;" size='15' /> ounces (use # for pounds)</label>
+<label><span>Base weight:</span><input type='text' name='zoovy:base_weight' value='' data-bind="var: product(zoovy:base_weight); format:popVal;  hideZero:false;" size='15' /> ounces (use # for pounds)</label>
 <!-- webdb:ship_fixed -->
-<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
+<label><span>Fixed shipping cost:</span><input type='number' name='zoovy:shipcost' value='' data-bind="var: product(zoovy:shipcost); format:popVal; hideZero:false;" size='15' step='0.01' min='0' /> only applies if fixed shipping is enabled</label>
 
 <label><input type='checkbox' name='zoovy:pkg_exclusive' data-bind="var: product(zoovy:pkg_exclusive); format:popCheckbox;"> Do not combine with other packages <span class='experimental'>(experimental)</span></label>
 
 <div class='label clearfix'>
 <h4>Ship Dimensions</h4>
 
-<label class='floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal;" size='15' /></label>
-<label class='floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal;" size='15' /></label>
-<label class='floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal;" size='15' /></label>
+<label class='floatLeft'><span>Length:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_depth' value='' data-bind="var: product(zoovy:pkg_depth); format:popVal; hideZero:false;" size='15' /></label>
+<label class='floatLeft'><span>Height:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_height' value='' data-bind="var: product(zoovy:pkg_height); format:popVal; hideZero:false;" size='15' /></label>
+<label class='floatLeft'><span>Width:</span><input type='number' step='0.01' min='0' name='zoovy:pkg_width' value='' data-bind="var: product(zoovy:pkg_width); format:popVal; hideZero:false;" size='15' /></label>
 </div>
 
 <div class='label clearfix'>
 <h4>Domestic Shipping</h4>
 
-<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal;" size='6' /></label>
-<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal;" size='6' /></label>
-<label class='floatLeft'><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost1' value='' data-bind="var: product(zoovy:ship_cost1); format:popVal; hideZero:false;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_cost2' value='' data-bind="var: product(zoovy:ship_cost2); format:popVal; hideZero:false;" size='6' /></label>
+<label class='floatLeft'><span>Marketplace markup:</span><input type='number' step='0.01' min='0' name='zoovy:ship_markup' value='' data-bind="var: product(zoovy:ship_markup); format:popVal; hideZero:false;" size='6' /></label>
 </div>
 
 <div class='label clearfix'>
 <h4>Canadian Shipping</h4>
 
-<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal;" size='6' /></label>
-<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost1' value='' data-bind="var: product(zoovy:ship_can_cost1); format:popVal; hideZero:false;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_can_cost2' value='' data-bind="var: product(zoovy:ship_can_cost2); format:popVal; hideZero:false;" size='6' /></label>
 </div>
 
 <div class='label clearfix'>
 <h4>International Shipping</h4>
 
-<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal;" size='6' /></label>
-<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal;" size='6' /></label>
+<label class='floatLeft'><span>1st item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost1' value='' data-bind="var: product(zoovy:ship_int_cost1); format:popVal; hideZero:false;" size='6' /></label>
+<label class='floatLeft'><span>2nd item:</span><input type='number' step='0.01' min='0' name='zoovy:ship_int_cost2' value='' data-bind="var: product(zoovy:ship_int_cost2); format:popVal; hideZero:false;" size='6' /></label>
 </div>
 
 
 
-<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal;" size='6' /></label>
+<label><span>Insurance amount:</span><input type='number' step='0.01' min='0' name='zoovy:ship_insurance' value='' data-bind="var: product(zoovy:ship_insurance); format:popVal; hideZero:false;" size='6' /></label>
 
-<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal;" size='6' /></label>
+<label><span>Fixed handling:</span><input type='number' step='0.01' min='0' name='zoovy:ship_handling' value='' data-bind="var: product(zoovy:ship_handling); format:popVal; hideZero:false;" size='6' /></label>
 
 <div class='label clearfix'>
 <h4>Export Declaration [SED]</h4>
@@ -523,9 +523,9 @@
 
 <img src='blank.gif' width='150' height='150' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;'  />
 
-<label><span>Cost:</span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal;" size='7' /></label>
-<label><span>MSRP:</span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal;" size='7' /></label>
-<label><span>Sale price:</span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal;" size='7' /></label>
+<label><span>Cost:</span><input type='number' step='0.01' min='0' name='zoovy:base_cost' value='' data-bind="var: product(zoovy:base_cost); format:popVal; hideZero:false;" size='7' /></label>
+<label><span>MSRP:</span><input type='number' step='0.01' min='0' name='zoovy:prod_msrp' value='' data-bind="var: product(zoovy:prod_msrp); format:popVal; hideZero:false;" size='7' /></label>
+<label><span>Sale price:</span><input type='number' step='0.01' min='0' name='zoovy:base_price' value='' data-bind="var: product(zoovy:base_price); format:popVal; hideZero:false;" size='7' /></label>
 
 <label><input type='checkbox' name='zoovy:taxable' data-bind="var: product(zoovy:taxable); format:popCheckbox;"> Taxable</label>
 <label><input type='checkbox' name='is:fresh' data-bind="var: product(is:fresh); format:popCheckbox;"> Fresh</label>

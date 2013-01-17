@@ -346,23 +346,9 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 				});
 			}
 		});
-//if a user refreshes in the orders interface, anytable may not be loaded yet.
-// this will execute if it is loaded, or try again until it is or until 99 tries.
-	if(typeof $.ui.anytable == 'function') {$('#orderListTable').anytable()}
-	else	{
-		window.orderAnytableAttempts = 0;
-		window.orderAnytableInterval = setInterval(function(){
-			orderAnytableAttempts += 1;
-			if(typeof $.ui.anytable == 'function' || orderAnytableAttempts > 100) {
-				$('#orderListTable').anytable();
-				clearInterval(orderAnytableInterval);
-				//garbage cleanup
-				delete orderAnytableInterval; 
-				delete orderAnytableAttempts;
-				}
-			else	{} //do nothing. 
-			},500)
-		}
+
+	$('#orderListTable').anytable(); //make table headers sortable.
+
 	}
 else	{
 	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
