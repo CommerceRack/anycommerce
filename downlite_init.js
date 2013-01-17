@@ -162,8 +162,10 @@ app.u.appInitComplete = function(P)	{
 			
 	app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 		var $target=$('#wideSlideshow');
-		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return'<a href="#"> </a>';},slideExpr:'li'});	
+//		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return'<a href="#"> </a>';},slideExpr:'li'});	
+		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return' ';},slideExpr:'li'});
 		}]);
+		
 		
 // add link, css, etc to hotel finder.
 	$('.hotelFinder').removeClass('disabled').addClass('pointer').click(function () {

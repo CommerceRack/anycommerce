@@ -2364,7 +2364,7 @@ else	{
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].cart)	{
 					var $appView = $('#appView');
 					r = true;
-					var itemCount = app.data[tagObj.datapointer].sum.items_count);
+					var itemCount = (app.data[tagObj.datapointer].sum.items_count);
 	//				app.u.dump(" -> itemCount: "+itemCount);
 	//used for updating minicarts.
 					$('.cartItemCount',$appView).text(itemCount);
