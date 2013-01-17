@@ -118,3 +118,11 @@ order detail
 
 /* cart edit */
 .orderItemAddBasic label span	{text-align: right;}
+
+
+
+
+/* quickview styles */
+.orderQuickviewMenu h3	{padding:3px; margin:0;}
+.orderQuickviewMenu li	{border-top:1px solid #E4E4E4; padding: 3px;}
+.orderQuickviewContent .orderContentsTable, .orderQuickviewContent .gridTable	{width:100%;}

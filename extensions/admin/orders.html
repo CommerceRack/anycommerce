@@ -176,10 +176,12 @@
 	<td NOWRAP>
 	<button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
 	<button data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
-	<menu class='displayNone'>
+	<menu class='displayNone orderQuickviewMenu'>
 		<h3>Quickview</h3>
 		<li data-app-event="admin_orders|qvOrderInvoice">Invoice</li>
 		<li data-app-event="admin_orders|qvOrderNotes">Order Notes</li>
+		<li data-app-event="admin_orders|qvTrackingHistory">Shipping/Tracking</li>
+		<li data-app-event="admin_orders|qvEventHistory">Event History</li>
 	</menu>
 	</td>
 </tr>
@@ -387,28 +389,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 
 	<h2>Shipping/Tracking Information</h2>
-	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;">
-	
-
-	
-	</section>
+	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;"></section>
 	
 	<h2>History</h2>
-	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer'>
-	
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>Date</th>
-		<th>User</th>
-		<th>Message</th>
-		<th>Addl Info</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
-	</table>
-	
-	</section>
+	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer' data-bind="loadsTemplate:orderEventsHistoryContainerTemplate; format:loadsTemplate;"></section>
 	
 </div>
 
@@ -453,20 +437,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 	</div>
 
-	<div class='leftCol'>
-	<table class='gridTable'>
-	<thead>
-	<tr>
-		<th>Date</th>
-		<th>Carrier</th>
-		<th>Cost</th>
-		<th>Tracking</th>
-		<th>Weight</th>
-		<th>Notes</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: order(@SHIPMENTS); loadsTemplate: orderTrackingHistoryTemplate; format:processList; extension: admin;"></tbody>
-	</table>
+	<div class='leftCol' data-bind="loadsTemplate:orderTrackingHistoryContainerTemplate; format:loadsTemplate;">
+
 	</div>
 
 </div>
@@ -584,6 +556,41 @@ The following templates are used in the 'order detail' modal/view.
 </div>
 
 
+<!--
+ 
+The following templates are used both in the order editor AND in quickview.
+ 
+-->
+<div id='orderEventsHistoryContainerTemplate'>
+
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>User</th>
+		<th>Message</th>
+		<th>Addl Info</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@HISTORY); loadsTemplate: orderEventHistoryTemplate; format:processList; extension: admin;"></tbody>
+	</table>
+</div>
+
+<div id='orderTrackingHistoryContainerTemplate'>
+	<table class='gridTable'>
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Carrier</th>
+		<th>Cost</th>
+		<th>Tracking</th>
+		<th>Weight</th>
+		<th>Notes</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: order(@SHIPMENTS); loadsTemplate: orderTrackingHistoryTemplate; format:processList; extension: admin;"></tbody>
+	</table>
+</div>
 
 
 <!--
