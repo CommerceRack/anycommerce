@@ -7,6 +7,24 @@ body
 {
 	background-color: #b7a58b
 }
+	div#appPreView
+	{
+		/*margin: 0px auto;
+		margin-top: 200px;
+		text-align: center;
+		width: 310px;*/
+		/*background: none repeat scroll 0 0 #FFFFFF;*/
+		background-color: #bfb6a7;
+		border-radius: 8px 8px 8px 8px;
+		box-shadow: 0 0 6px 2px #555;
+		margin: 100px auto;
+		padding: 20px;
+		width: 310px;		
+	}
+		div#appPreView div#loader
+		{
+			text-align: center;
+		}
 	div#container
 	{
 		position: relative;
@@ -523,7 +541,7 @@ body
 				
 .prodDetailView
 {
-	height: 650px;
+	height: 605px;
 	margin: 0px auto;
 	position: relative;
 	width: 960px;
@@ -547,6 +565,7 @@ body
 .prodDetailView .prodImages .prodThumbs
 {
 	bottom: 0px;
+	display: none;
 	height: 70px; 
 	left: 0px;
 	position: absolute;
@@ -579,6 +598,7 @@ body
 			}
 	.prodDetailView .prodImages .prodThumbs .prodThumbBackButton
 	{
+		display: none;
 		height: 70px;
 		left: 0px;
 		position: absolute;
@@ -595,7 +615,8 @@ body
 			z-index: 1000;
 		}
 	.prodDetailView .prodImages .prodThumbs .prodThumbNextButton
-	{
+	{	
+		display: none;
 		right: 0px;
 		height: 70px;
 		position: absolute;
@@ -614,8 +635,7 @@ body
 
 div.prodRelatedItems
 {
-	background-color: #FFFFFF;
-	height: 280px;
+	height: 229px;
 	left: 0px;
 	overflow: auto;
 	position: absolute;
@@ -625,6 +645,7 @@ div.prodRelatedItems
 	div.prodRelatedItems ul.relatedItems
 	{
 		width: 100%;
+		background-color: #FFFFFF;
 	}
 		div.prodRelatedItems ul.relatedItems li
 		{
@@ -743,39 +764,52 @@ div.prodRelatedItems
 	font-family: Helvetica;
 	font-size: 12px;
 }
-	.prodBuyDetails div.prodBuyDetailsPrices span.prodMSRP
+.prodBuyDetails div.prodBuyDetailsPrices p
+{
+	float: left;
+	margin-top: 10px;
+}
+.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP
 	{
 		color: #999999;
-		left: 25px;
-		position: absolute;
-		top: 0px;
 	}
-		.prodBuyDetails div.prodBuyDetailsPrices span.prodMSRP span
+		.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span
 		{
 			color: #999999;
-			left: -15px;
 			font-family: Helvetica;
 			font-size: 20px;
-			position: absolute;
+			/*position: absolute;*/
 			text-decoration: line-through;
-			top: 13px;
+			/*top: 10px;*/
 		}	
-	.prodBuyDetails div.prodBuyDetailsPrices span.basePrice
+			.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span span.title
+			{
+				font-size: 12px;	
+				left: 12px;
+				position: absolute;
+				top: -2px;
+			}
+			.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span span.subtitle
+			{
+				color: #000000;
+				font-size: 12px;	
+				left: 90px;
+				position: absolute;
+				text-decoration: none;
+				top: -2px;
+			}			
+	.prodBuyDetails div.prodBuyDetailsPrices p.basePrice
 	{
-		color: #000000;
-		left: 130px;
-		position: absolute;
-		top: 0px;
+		padding-left: 10px;
+		text-align: center;
+		width: 50%;
 	}		
-		.prodBuyDetails div.prodBuyDetailsPrices span.basePrice span
+		.prodBuyDetails div.prodBuyDetailsPrices p.basePrice > span
 		{
 			color: #000000;
 			font-family: Helvetica;
 			font-size: 20px;
-			left: -15px;
-			position: absolute;
-			top: 13px;
-		}
+		}		
 	.prodBuyDetails div.prodBuyDetailsReviews
 	{
 		border-bottom: 1px solid #999999;
@@ -1106,7 +1140,7 @@ div#gotAccount
 	}
 div#checkoutContainer
 {
-	
+	margin-top: 10px;
 }
 	div#checkoutContainer .ui-widget-content
 	{
@@ -1129,9 +1163,17 @@ div#checkoutContainer
 	{
 		background: none;
 		border: 0px solid #000000;
+		clear: both;
+		float: left;
 		margin: 0px;
 		padding: 0px;
 		position: relative;
-		left: 1px;
+		left: 5px;
 		top: 1px;
+	}
+	
+	#chkoutPreflightFieldset .preflightInputContainer
+	{
+		clear: both;
+		padding-left: 5px;
 	}

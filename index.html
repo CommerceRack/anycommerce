@@ -33,12 +33,18 @@ var myCreole;
 	"httpsURL":"https://ssl.zoovy.com/s=55ba36a5fb.pop.zoovy.net/",
 	"httpURL":"http://www.55ba36a5fb.pop.zoovy.net/"
 	},u:{},rq:[]};*/
-var app = {vars:{ 
+/*var app = {vars:{ 
 	"release":"20130103195600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"baseURL":"",
 	"httpsURL":"https://webapi.zoovy.com/webapi/git/webhook.cgi/v=1/u=redford/p=0021B22A-55F5-11E2-8F78-4E02EB1F/k=378fe1bcf320b21b8cec7e6f1a724006/",
 	"httpURL":"http://www.98180cb1a5.dagobah.zoovy.net/"
-	},u:{},rq:[]};	
+	},u:{},rq:[]};*/	
+var app = {vars:{ 
+	"release":"20130103195600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"baseURL":"",
+	"httpsURL":"https://ssl.zoovy.com/s=www.toywars.com/",
+	"httpURL":"http://www.toywars.com/"
+	},u:{},rq:[]};		
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
@@ -77,26 +83,31 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-<table>
-<tr>
-	<td><!-- put logo here --></td>
-	<td>
-	
-	<div id="loader">
-		<h3>One moment please.</h3>
-		
-		<div class='alignCenter'>
-		<progress id="appPreViewProgressBar" max="100" value="0" /><br />
-		</div>
-		<div id='appPreViewProgressText'>0% Complete</div>
-	</div>
-	<div id="tenFourGoodBuddy" class="displayNone pointer">
-		Click here to load your totally kickass shopping experience!
-	<div>
-	<div class='appMessaging'></div>
-	</td>
-</tr>
-</table>
+
+	<table>
+		<tr>
+			<td><img src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" /></td>
+		</tr>
+		<tr>
+			<td>&nbsp;</td>
+		</tr>
+		<tr>
+			<td>
+			
+			<div id="loader">				
+				<div class='alignCenter'>
+					<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+				</div>
+				<div id='appPreViewProgressText'>0% Complete</div>
+				<span>LOADING... PLEASE WAIT</span>				
+			</div>
+			<div id="tenFourGoodBuddy" class="displayNone pointer">
+				Click here to load your totally kickass shopping experience!
+			<div>
+			<div class='appMessaging'></div>
+			</td>
+		</tr>
+	</table>
 </div>
 
 
@@ -270,7 +281,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
-		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{});" alt="View All Categories" />
+		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />
 	</div>
 	<!--<h5 data-bind='var: nothing(); defaultValue: blue; elasticAttr: pid; format:searchLink; extension:myRIA;'></h5>
 	-->
@@ -506,12 +517,13 @@ this will likely become more flexible in the future. ###
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <div class="prodDetailView">
-	<div class="prodImages">
+	<div class="prodImages" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
-		<div class="prodThumbs" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>	
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().attr("data-pid"),"int":"2"});' class='pointer' /></div>
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100'  onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().attr("data-pid"),"int":"3"});' class='pointer' /></div>
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().attr("data-pid"),"int":"4"});' class='pointer' /></div>
+		<!--<div class="prodThumbs" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>-->
+		<div class="prodThumbs" data-bind='var: product(zoovy:prod_image2); format:showIfSet;'>
+			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"2"});' class='pointer' /></div>
+			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100'  onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"3"});' class='pointer' /></div>
+			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"4"});' class='pointer' /></div>
 			<div class="prodThumbsBG"></div>
 			<div class="prodThumbBackButton">
 				<div class="prodThumbsBG"></div>
@@ -537,11 +549,11 @@ this will likely become more flexible in the future. ###
 	</div>
 	<div class="prodBuyDetails">
 		<div class="prodBuyDetailsPrices">			
-			<span class='prodMSRP'>WAS
-				<span data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: ;'></span>
+			<p class='prodMSRP'>
+				<span data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span class="title">WAS</span><span class="subtitle">NOW</span>;'></span>
 			</span>
-			<span class='basePrice'>NOW
-				<span data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: ;'></span>
+			<p class='basePrice'>
+				<span data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext:;'></span>
 			</span>	
 			<!--<span class='savings'>
 				<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
@@ -568,7 +580,8 @@ this will likely become more flexible in the future. ###
 				<input type="hidden" value="yes" name="add">
 				<input type="hidden" value="FC5171-DS" name="product_id">
 			</form>
-			<select id="ddlOptions"></select>
+			<!--<select id="ddlOptions"></select>-->
+			<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;">
 			<!--Quantity:&nbsp;<input id="txtQuantity" name="txtQuantity" type="text" />-->
 			<!--<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" onClick="$(this).parent().submit();" />-->
 			<!--<input type="submit" id="addToCartBtn" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton" value="Add to Cart">-->

@@ -1,13 +1,5 @@
 $(document).ready(function()
 {
-	/*$("img.catButton").mouseover(function()
-	{
-		$(this).css("opacity",".6");
-	});
-	$("img.catButton").mouseout(function()
-	{
-		$(this).removeAttr("style");
-	});*/
 	$("img#btnTopNavSearch").click(function()
 	{
 		$("form#headerSearchFrm").submit();
@@ -92,12 +84,12 @@ $(document).ready(function()
 		$(this).css("padding-left","8px");
 		$(this).css("padding-right","8px");			
 		$(this).find("a").css("top","15px");
-		$(this).find("div.subMenu").show();
+		//$(this).find("div.subMenu").show();
 	});
 	$("div#navContent ul li").mouseout(function()
 	{
 		$(this).removeAttr("style");
 		$(this).find("a").removeAttr("style");	
-		$(this).find("div.subMenu").hide();	
+		//$(this).find("div.subMenu").hide();	
 	});
 });
