@@ -369,16 +369,13 @@ if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 			
 //			app.u.dump(" -> userData:"); app.u.dump(userData);
 			app.renderFunctions.translateSelector('#'+panelID,userData);
-//			app.u.dump("Is this the droid I'm looking for?");
-			$("[data-app-role='roleList']",$panel).sortable({
-				handle : ".handle",
-				change : function(evt,ui)	{
-					app.u.dump('got here');
-					ui.item.find(':checkbox').addClass('edited');
-					$('.numChanges',$panel).text($(".edited",$panel).length);
-					$saveButton.button('enable').addClass('ui-state-highlight');
-					}
+//the list is already sortable by an app event. this just makes sure a change in role order increments # of changes and allows a save.
+			$("[data-app-role='roleList']",$panel).on("sortupdate",function(evt,ui){
+				ui.item.find(':checkbox').addClass('edited');
+				$('.numChanges',$panel).text($(".edited",$panel).length);
+				$saveButton.button('enable').addClass('ui-state-highlight');
 				});
+
 			$(":input",$panel).off('change.trackChange').on('change.trackChange',function(){
 				$(this).addClass('edited');
 				$('.numChanges',$panel).text($(".edited",$panel).length);
