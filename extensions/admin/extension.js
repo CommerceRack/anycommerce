@@ -2712,7 +2712,7 @@ else	{
 				var data = app.data['adminDomainList']['@DOMAINS'];
 				var L = data.length;
 				for(var i = 0; i < L; i += 1)	{
-					$target.append(app.renderFunctions.transmogrify({},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
+					$target.append(app.renderFunctions.transmogrify({'domain':app.data['adminDomainList']['@DOMAINS'][i].id},'domainPanelTemplate',app.data['adminDomainList']['@DOMAINS'][i]));
 					}
 				},
 
@@ -2726,11 +2726,12 @@ else	{
 
 			adminUIDomainPanelExecute : function($t){
 //				app.u.dump("BEGIN admin.u.adminUIDomainPanelExecute");
+
 				var data = $t.data();
 				if(data && data.verb && data.domain)	{
 					var obj = {};
-					var targetID = 'panelContents_'+app.u.makeSafeHTMLId(data.domain);
-					$(app.u.jqSelector('#',targetID)).showLoading();
+					var $fieldset = $t.parent().find("[data-app-role='domainEditorContents']");
+					$fieldset.showLoading();
 					$t.parent().find('.panelContents').show()
 					if(data.verb == 'LOAD')	{
 						//do nothing. data gets passed in as is.
@@ -2739,7 +2740,12 @@ else	{
 						data = $.extend(data,$t.closest('form').serializeJSON());
 						}
 					
-					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback':'showDataHTML','extension':'admin','targetID':targetID},'immutable');
+					app.ext.admin.calls.adminUIDomainPanelExecute.init(data,{'callback': function(rd){
+						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+						else	{
+							$fieldset.hideLoading().removeClass('loadingBG').html(app.data[rd.datapointer].html);
+							}
+						}},'immutable');
 					app.model.dispatchThis('immutable')
 					}
 				else	{
