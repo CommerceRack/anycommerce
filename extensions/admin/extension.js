@@ -790,7 +790,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.bossUserUpdate, obj is empty or obj.uid is not set.");
+					app.u.throwGMessage("In admin.calls.bossUserUpdate, obj is empty or obj.luser is not set.");
 					app.u.dump(obj);
 					}
 				return r;

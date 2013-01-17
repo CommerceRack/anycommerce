@@ -83,7 +83,7 @@ var admin_user = function() {
 				$D = $("[data-app-role='dualModeDetail']",$parent), //detail column
 				numDetailPanels = $D.children().length,
 				$btn = $("[data-app-event='admin_user|toggleDualMode']",$parent);
-				
+
 				if(mode)	{}
 				else if($parent.data('app-mode') == 'list')	{mode = 'detail'}
 				else if($parent.data('app-mode') == 'detail')	{mode = 'list'}
@@ -173,49 +173,67 @@ var admin_user = function() {
 				$this.sortable({ handle: ".handle" });
 				}, //roleListEdit
 
-
+//on a user update, only the fields that have changed are sent and roles are always sent.
+// so the form object is serialized for validation, but not sent.
 			"bossUserUpdateSave" : function($btn)	{
 				$btn.button();
 				$btn.off('click.bossUserUpdateSave').on('click.bossUserUpdateSave',function(event){
 					event.preventDefault();
 					app.u.dump("BEGIN admin_user.e.bossUserUpdateSave");
-					var $panel = $(this).closest('.ui-widget-anypanel'),
-					updateObject = {'luser':$panel.data('luser'),'@roles':app.ext.admin_user.u.getRoleCheckboxesAsArray($panel)};
-//add all CHANGED attributes to the update object.
-					$(".edited",$panel).each(function(){
-						app.u.dump(" -> $(this).attr('name'): "+$(this).attr('name'));
-						updateObject[$(this).attr('name')] = $(this).val();
-						});
+					var $panel = $btn.closest('.ui-widget-anypanel'),
+					frmObj = $btn.closest('form').serializeJSON();
 					
-					$(":checkbox",$panel).each(function(){
-						delete updateObject[$(this).attr('name')]; //remove the checkbox 'on' from the update object.
-						});
-					updateObject.login = updateObject.login || updateObject.luser; //make sure login is specified. that's what the call wants. same as luser... today...
-//					app.u.dump(" -> updateObject: "); app.u.dump(updateObject);
-					
-					var $contents = $(app.u.jqSelector('#','userDetail_'+updateObject.luser))
-					$('body').showLoading();
-					
-					app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
-					app.model.destroy('bossUserDetail|'+updateObject.luser); //clear local so a dispatch occurs.
+					if($panel.length == 0)	{app.u.throwGMessage("In admin_user.e.bossUserUpdateSave, unable to determine $panel [$panel.length = "+$panel.length+"].");}
+					else if($.isEmptyObject(frmObj))	{app.u.throwGMessage("In admin_user.e.bossUserUpdateSave, the serialized form object was empty.");}
+					else if(!frmObj.email || !frmObj.fullname )	{
+						var msg = 'Please populate the following fields:<ol>';
+						if(!frmObj.email)	{msg += "<li>email<\/li>"}
+						if(!frmObj.fullname)	{msg += "<li>fullname<\/li>"}
+						msg += "<\/ol>";
+						var msgObj = app.u.errMsgObject(msg);
+						app.u.throwMessage(msgObj,true);
+						}
+					else	{
+//						app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
+						var update = {};
+						update.login = frmObj.login; //for now, set both luser and login. Eventually, we'll use one or the other.
+						update.luser = frmObj.login;
 
-					app.ext.admin.calls.bossUserUpdate.init(updateObject,{},'immutable');
-					app.ext.admin.calls.bossUserDetail.init(updateObject.luser,{},'immutable');
-					app.ext.admin.calls.bossUserList.init({
-						'callback': function(rd)	{
-							$('body').hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								app.u.throwMessage(rd);
-								}
-							else	{
-								app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
-								app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
-								app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
-								$panel.anypanel('destroy');
-								$("[data-luser='"+updateObject.luser+"'] .editUser",'#userManagerContent').trigger('click');
-								}
-							}},'immutable');
-					app.model.dispatchThis('immutable');
+						update['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($panel);
+//add all CHANGED attributes to the update object.
+						$(".edited",$panel).each(function(){
+							update[$(this).attr('name')] = $(this).val();
+							});
+
+//the call will return a 1 if it's going to request and a zero if an error occured. only proceed if no errors.
+						if(app.ext.admin.calls.bossUserUpdate.init(update,{},'immutable'))	{
+							$('body').showLoading();
+
+//to ensure new copies of the data, destroy the old.						
+							app.model.destroy('bossUserList');
+							app.model.destroy('bossUserDetail|'+update.luser);
+
+							app.ext.admin.calls.bossUserDetail.init(update.luser,{},'immutable');
+							app.ext.admin.calls.bossUserList.init({
+								'callback': function(rd)	{
+									$('body').hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										app.u.throwMessage(rd);
+										}
+									else	{
+										app.ext.admin_user.u.emptyUsersTable();  //empty list of users so that changes are reflected.
+										app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data[rd.datapointer]);
+										app.ext.admin.u.handleAppEvents($("[data-app-role='dualModeList']",'#userManagerContent'));
+										app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),'detail');
+										$panel.anypanel('destroy');
+										$("[data-luser='"+update.luser+"'] .editUser",'#userManagerContent').trigger('click');
+										}
+									}},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{} //error handling handled by call in if statement.
+						}
+					
 					});
 				}, //bossUserUpdateSave
 
@@ -238,7 +256,7 @@ Whether it's a create or update is based on the data-usermode on the parent.
 						}
 					else if(!frmObj.email || !frmObj.password || !frmObj.fullname || !frmObj.login)	{
 						
-						var msg = 'The following fields are required:<ol>';
+						var msg = 'Please populate the following fields:<ol>';
 
 						if(!frmObj.email)	{msg += "<li>email<\/li>"}
 						if(!frmObj.password)	{msg += "<li>password<\/li>"}
@@ -277,6 +295,7 @@ Whether it's a create or update is based on the data-usermode on the parent.
 								}
 							$parent.hideLoading();
 							}},'immutable');
+						app.ext.admin.calls.bossUserDetail.init(frmObj.login,{},'immutable'); //get this local. better UX if merchant goes straight to edit mode.
 						app.ext.admin.calls.bossUserList.init({'callback':function(rd){
 							if(app.model.responseHasErrors(rd)){
 								app.u.throwMessage(rd);
@@ -349,7 +368,7 @@ if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 				$('.numChanges',$panel).text($(".edited",$panel).length);
 				$saveButton.button('enable').addClass('ui-state-highlight');
 				});
-			$("[name='login']",$panel).attr('disabled','disabled').css({'border':'none','background':'none'});
+			$("[name='login']",$panel).attr('readonly','readonly').css({'border':'none','background':'none'}); //NOTE - if attr disabled is set, serializeJSON does NOT include that field.
 			var L = userData['@roles'].length;
 //loop backwards so that each row can be moved to the top but the original order will be preserved.
 			for(var i = (L-1); i >= 0; i -= 1)	{
