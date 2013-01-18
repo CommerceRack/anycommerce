@@ -102,7 +102,8 @@ var admin_reports = function() {
 
 
 		u : {
-			
+//when a table header is clicked to change sort, the entire contents of the container (id) are rewritten.
+//keep that in mind when and deciding what ID to pass in.
 			drawTable : function(id,header,rows) {
 
 				var data = new google.visualization.DataTable();
@@ -114,7 +115,6 @@ var admin_reports = function() {
 			
 				var table = new google.visualization.Table(document.getElementById(id));
 				table.draw(data, {showRowNumber: true});
-
 				}
 			}, //u
 
@@ -138,7 +138,13 @@ var admin_reports = function() {
 							$content.hideLoading();
 							if(app.data[rd.datapointer]['@ROWS'].length)	{
 								$content.empty();
-								app.ext.admin_reports.u.drawTable($content.attr('id'),app.data[rd.datapointer]['@HEADER'],app.data[rd.datapointer]['@ROWS'])
+								$content.prepend($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all marginBottom alignRight buttonbar').append($("<button \/>")
+									.text('Export to CSV')
+									.click(function(){
+										$('table',$content).toCSV();
+									}).button()));
+								$content.append($("<div \/>",{'id':'ebayListingsReportContainer'}));
+								app.ext.admin_reports.u.drawTable('ebayListingsReportContainer',app.data[rd.datapointer]['@HEADER'],app.data[rd.datapointer]['@ROWS']);
 								}
 							else	{
 								app.u.throwMessage("There were no results for your query.");

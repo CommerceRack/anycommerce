@@ -172,8 +172,9 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .finderProdlistContainer .mpControls	{border:0; border-bottom-width:1px; line-height:24px;}
 
 
-
-
+/* use this in combo with ui-widget, ui-corner-all and ui-widget-content to create a horizontal bar of buttons with a container around them. */
+.ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
+.ui-widget-buttonbar button	{margin:0 2px;}
 
 .ui-widget fieldset	{margin:0; padding:0; border:0;}
 .ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
