@@ -761,19 +761,21 @@ adding classes is not likely to have any bad effects.
 		
 		
 			<div id='contactArticle' class='displayNone textContentArea'>
-				<h1>Contact Information</h1>
+				<h1>CONTACT US</h1>
+				<span>Please use the form to contact us with any questions.</span>
 				<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
-				<fieldset>
-					<legend>Contact Us</legend>
-					<div id='contactFormMessaging'></div>
-					<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
-					<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
-					<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
-					<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
-					<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
-					</div>
-				</fieldset>
+					<fieldset>
+						<div id='contactFormMessaging'></div>
+						<div><input type='email' name='sender' required='required' id='contactFormSender' value='Email Address' /></div>
+						<div><input type='text' name='subject' id='contactFormSubject' value='Subject' /></div>
+						<div><input type='text' name='OID' id='contactFormOID' value='Order Number (if applicable)' /></div>
+						<div>
+							<textarea name='body' required='required' id='contactFormBody'>Message/Notes</textarea>
+							<img class='pointer' src='site/images/button-send-message.png' onClick='$("form#contactForm").submit();' />
+						</div>
+					</fieldset>
 				</form>
+				<p><span>Order Status</span><br />If you'd like to check the status of an order, (or cancel one that hasn't been processed), please sign in to your customer account.<br /><br /><span>Phone</span><br />To place an order over the phone call +1 (760) 814-5647 between 9:30am - 5:00pm PST. If you have a specific question about an existing product or order please email us at help@toywars.com.<br /><br /><span>Email</span><br />For general product questions and order inquiries you can also email us at help@toywars.com. </p>
 				<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
 			</div>
 		

@@ -999,7 +999,7 @@ div.contentPage
 }
 	div.contentPage div.sideline
 	{
-		margin-right: 10px;
+		margin-right: 40px;
 		position: relative;
 		width: 220px;
 	}
@@ -1105,6 +1105,7 @@ div.contentPage
 				div#modalCart td.cartSummaryTotalsContainer > div
 				{			
 					height: 710px;
+					margin-bottom: 20px;
 				}
 				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary span#lblTotal
 				{
@@ -1257,6 +1258,10 @@ div#checkoutContainer
 {
 	margin-top: 10px;
 }
+	div#checkoutContainer legend
+	{
+		font-size: 18px;
+	}
 	div#checkoutContainer .ui-widget-content
 	{
 		background: #938269;
@@ -1266,6 +1271,11 @@ div#checkoutContainer
 	{
 		margin: 0px auto;
 		width: 700px;
+	}
+	div#checkoutContainer form
+	{
+		font-family: Helvetica;
+		font-size: 14px;
 	}
 	div#checkoutContainer fieldset
 	{
@@ -1288,7 +1298,81 @@ div#checkoutContainer
 		}
 		div#checkoutContainer fieldset > div > p, div#checkoutContainer fieldset > div ul, div#checkoutContainer fieldset > div > div > label
 		{
+			clear: both;
 			margin-left: 5px;
+		}
+		div#checkoutContainer fieldset > div ul:not(#checkoutStuffList)
+		{
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}		
+			div#checkoutContainer fieldset > div ul li.shipcon
+			{
+				margin: 0px;
+			}
+		section#checkoutTemplateCostSummary
+		{
+			background-color: #C9BCA8;
+			float: right;
+			font-size: 14px;
+			margin-right: 10px;
+			padding: 5px;
+			position: relative;
+			top: -2px;
+			width: 145px;
+		}			
+		div#couponContainer 
+		{
+			font-size: 14px;
+			text-align: center;
+			width: 100%;
+		}		
+			div#couponContainer input#couponCode
+			{		
+				width: 100px;
+			}
+		ul.paybySupplemental
+		{
+			border: none;
+			margin: 0;
+			margin-bottom: 0px;
+			margin-left: 0px;
+			margin-right: 0px;
+			margin-top: 0px;
+			padding: 0;
+		}
+		ul#checkoutStuffList
+		{
+			width: 480px;
+		}		
+			ul#checkoutStuffList li
+			{
+				background-color: #C9BCA8;
+				border: none;
+				margin: 10px;
+				padding: 10px;
+				width: auto;
+			}
+			ul#checkoutStuffList li:nth-child(2n)
+			{
+				background-color: #897C68;
+			}
+				ul#checkoutStuffList li img
+				{
+					margin: 0px;
+				}
+				ul#checkoutStuffList li div.floatLeft
+				{
+					padding-left: 5px;
+					width: 346px;					
+				}
+		#giftCardContainer
+		{
+			padding-bottom: 10px;
+		}
+		ul#chkout-shipMethods
+		{
+			padding-top: 10px;
 		}
 	
 	#chkoutPreflightFieldset .preflightInputContainer
@@ -1323,4 +1407,60 @@ div#checkoutContainer
 		div.checkoutMethods > img
 		{
 			padding: 5px;
+		}
+div#contactArticle
+{
+
+}	
+	div#contactArticle span
+	{
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+	div#contactArticle p
+	{
+		font-family: Helvetica;
+		font-size: 14px;
+		position: absolute;
+		left: 383px;
+		top: 72px;
+		width: 320px;
+	}	
+		div#contactArticle p span
+		{
+			font-weight: bold;
+			font-size: 15px;
+		}	
+	div#contactArticle h1
+	{
+		font-family: Helvetica;
+		font-size: 20px;
+		padding-bottom: 15px;
+		text-align: left;
+	}	
+	div#contactArticle #contactForm
+	{
+		float: none;
+		margin: 0;
+		text-align: left;
+	}
+		div#contactArticle #contactForm fieldset
+		{
+			border: none;
+			/*padding-left: 0px;*/
+		}
+		div#contactArticle #contactForm div input[type="text"],div#contactArticle #contactForm div input[type="email"]
+		{
+			height: 20px;
+		}
+		div#contactArticle #contactForm div input[type="text"],div#contactArticle #contactForm div input[type="email"],div#contactArticle #contactForm div textarea
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			margin-bottom: 5px;
+			width: 300px;
+		}
+		div#contactArticle #contactForm div textarea
+		{
+			margin-bottom: 10px;
 		}
