@@ -72,9 +72,11 @@ body	{margin:0px; padding:0; background-color:#ffffff; background:url(https://ww
 <script src="extensions/admin/resources/tmpl.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 <script src="extensions/admin/resources/load-image.min.js"></script><!-- required for media lib. loading in extension causes issues. -->
 
+
 <!-- not much is going to run without these two. load em early -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.js"></script>
+
 
 <script type="text/javascript" src="loadscript.js"></script>
 
@@ -384,9 +386,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 
-
-
-
 <div id='debugPanel' class='debug buttonset clearBoth clearAll clearfix'>
 	<div class='debugBG'></div>
 	<div class='debugContent'>
@@ -394,10 +393,15 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.ext.admin.a.showLandingPage();">showLandingPage</button>
 <button onClick="app.ext.admin_user.a.showUserManager();">User Manager</button>
-<button onClick="app.model.destroy('bossUserList');">destroy('bossUserList');</button>
+<button onClick="app.ext.admin_reports.a.showEbayReportUI();">showEbayReportUI</button>
 
 
 <button onClick="app.ext.admin.calls.bossUserDetail.init('lisas',{},'mutable'); app.model.dispatchThis('mutable');">bossUserDetail</button>
+
+
+
+<button onClick="app.model.addDispatchToQ({'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)},'mutable'); app.model.dispatchThis('mutable');">adminDataQuery</button>
+
 
 
 <button onClick="app.model.addDispatchToQ({'_cmd':'appResource','filename':'recentnews.json'},'mutable'); app.model.dispatchThis('mutable');">resource</button>

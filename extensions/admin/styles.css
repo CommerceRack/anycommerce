@@ -533,3 +533,10 @@ see shipping panel in product editor for example
 #landingPageColumn2	{width:33%; float:right;}
 
 #landingPageColumn2 .varImage	{max-width:300px; width:100%;}
+
+
+
+
+
+/* ebay reports page */
+.ebayListingsReportPage fieldset.oneThird	{width:30%}

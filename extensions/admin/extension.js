@@ -235,8 +235,24 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminCustomerSet
 
 
+		adminDataQuery : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.query)	{this.dispatch(obj,_tag,Q); r = 1;}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminDataQuery, no object or no object.query object passed.");
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminDataQuery';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminDataQuery';
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //adminPrivateSearch
 			
-			
+//			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)}
 			
 		adminDomainList : {
 			init : function(_tag,Q)	{
@@ -945,6 +961,16 @@ if(app.u.getParameterByName('debug'))	{
 				window.linkOffSite = app.ext.admin.u.linkOffSite;
 				window.adminUIDomainPanelExecute = app.ext.admin.u.adminUIDomainPanelExecute;
 				window._ignoreHashChange = false; // see handleHashState to see what this does.
+
+
+document.write = function(v){
+	if(console && console.warn){
+		console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();");
+		console.log("document.write contents: "+v);
+		}
+	$("body").append(v);
+	}
+
 
 var uriParams = {};
 var ps = window.location.href; //param string. find a regex for this to clean it up.
