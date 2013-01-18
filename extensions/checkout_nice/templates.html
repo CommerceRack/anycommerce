@@ -90,10 +90,11 @@ chkoutCartContents - will get loaded with the productListTemplateContentsSummary
 <div class='zwarn displayNone floatRight' id='chkoutSummaryErrors'></div>
 
 <div class='checkoutMethods clearfix'>
-	<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;">
+	<img class="pointer" src="site/images/button-place-order.png" alt="Place Order" onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;" />
+	<!--<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-button ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;">
 		<span></span>
 		Place Order
-	</button>
+	</button>-->
 </div>
 
 <div id='referenceNumberContainer' class='displayNone floatRight clearfix'>

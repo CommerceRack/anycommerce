@@ -553,16 +553,18 @@ this will likely become more flexible in the future. ###
 	</div>
 	<div class="prodBuyDetails">
 		<div class="prodBuyDetailsPrices">			
-			<p class='prodMSRP'>
-				<span data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span class="title">WAS</span><span class="subtitle">NOW</span>;'></span>
-			</span>
-			<p class='basePrice'>
-				<span data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext:;'></span>
-			</span>	
-			<!--<span class='savings'>
-				<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
-				<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
-			</span>-->			
+			<table>
+				<tr>
+					<td class='prodMSRP'>
+						<span data-bind='var: product(zoovy:prod_msrp); format:showIfSet;' class='priceTitle'>WAS</span>
+						<span data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $; hideZero:true; className: price; pretext:;'></span>
+					</td>
+					<td class='basePrice'>
+						<span data-bind='var: product(zoovy:prod_msrp); format:showIfSet;' class='priceTitle'>NOW</span>
+						<span data-bind='var: product(zoovy:base_price); format:money; currencySign: $; hideZero:true; className: price; pretext:;'></span>
+					</td>
+				</tr>
+			</table>		
 		</div>
 		<div class="prodBuyDetailsReviews">
 			<section class='marginBottom'>
@@ -1119,7 +1121,7 @@ So the cart template should contain these two elements and the extension should 
 
 	<td class='cartSummaryTotalsContainer'>
 	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
-		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
+		<!--<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>-->
 		<div class='cartSummaryContainer'>
 		
 <section id='cartTemplateCostSummary' class='cartSummary'>
@@ -1161,17 +1163,20 @@ So the cart template should contain these two elements and the extension should 
 	
 
 	<!-- some buttons that are alternatives to checkout. fewer is better -->
-	<menu class='cartAltButtonsContainer noPadOrMargin'>		
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
-	</menu>
+
+	<img id="btnCartShare" class="pointer" src="site/images/button-share-cart.png" alt="Share Cart" />
+	<img id="btnCartContinueShopping" class="pointer" src="site/images/button-continue-shopping.png" alt="Continue Shopping" onClick="$('#modalCart').dialog('close');" />
 	
 	<div class='checkoutButtonsContainer'>
 
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
-
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+		<!--<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>-->
+		<img class="pointer" src="site/images/button-checkout.png" alt="Checkout" onClick="showContent('checkout',{});" />
+		
+		<img src="site/images/cart-credit-cards-accepted.png.png" alt="Credit Cards Accepted" />
 
 		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
+		
+		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 		
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
 

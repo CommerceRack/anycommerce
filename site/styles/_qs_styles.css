@@ -858,6 +858,49 @@ div.prodRelatedItems
 	position: relative;
 	width: 180px;
 }
+	.prodBuyDetails div.prodBuyDetailsPrices table
+	{
+		width: 100%;
+	}
+		.prodBuyDetails div.prodBuyDetailsPrices table td
+		{
+			text-align: center;
+		}		
+			.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP
+			{
+			
+			}	
+				.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP span
+				{
+					color: #999999;				
+					font-size: 20px;				
+					text-decoration: line-through;								
+				}			
+					.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP span.priceTitle
+					{			
+						font-size: 12px;
+					}
+			.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice
+			{
+			
+			}	
+				.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice span
+				{
+					font-size: 20px;							
+				}		
+					.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice span.priceTitle
+					{
+						font-size: 12px;
+					}
+		.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice
+		{
+			color: #000000;
+			font-family: Helvetica;
+		}			
+			.prodBuyDetails div.prodBuyDetailsPrices table td span.priceTitle
+			{
+				display: none;
+			}
 .prodBuyDetails div.prodBuyDetailsPrices span
 {
 	font-family: Helvetica;
@@ -868,47 +911,7 @@ div.prodRelatedItems
 	float: left;
 	margin-top: 10px;
 }
-.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP
-	{
-		color: #999999;
-	}
-		.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span
-		{
-			color: #999999;
-			font-family: Helvetica;
-			font-size: 20px;
-			/*position: absolute;*/
-			text-decoration: line-through;
-			/*top: 10px;*/
-		}	
-			.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span span.title
-			{
-				font-size: 12px;	
-				left: 12px;
-				position: absolute;
-				top: -2px;
-			}
-			.prodBuyDetails div.prodBuyDetailsPrices p.prodMSRP > span span.subtitle
-			{
-				color: #000000;
-				font-size: 12px;	
-				left: 90px;
-				position: absolute;
-				text-decoration: none;
-				top: -2px;
-			}			
-	.prodBuyDetails div.prodBuyDetailsPrices p.basePrice
-	{
-		padding-left: 10px;
-		text-align: center;
-		width: 50%;
-	}		
-		.prodBuyDetails div.prodBuyDetailsPrices p.basePrice > span
-		{
-			color: #000000;
-			font-family: Helvetica;
-			font-size: 20px;
-		}		
+	
 	.prodBuyDetails div.prodBuyDetailsReviews
 	{
 		border-bottom: 1px solid #999999;
@@ -1055,11 +1058,12 @@ div.contentPage
 			clear: both;
 			padding-bottom: 20px;
 		}
+		
 		div#modalCart ul#cartStuffList > li
 		{
 			background-color: #c9bca8;
 			border: 0px solid #FFFFFF;
-			margin: 12px 0px 12px 0px;
+			margin: 2px 0px 12px 0px;
 			padding-bottom: 20px;
 			padding-top: 20px;
 			position: relative;
@@ -1079,6 +1083,10 @@ div.contentPage
 				right: 3px;
 				top: 3px;
 			}
+			div#modalCart ul#cartStuffList li > h4
+			{
+				width: 565px;
+			}
 			div#modalCart ul#cartStuffList li > h4, div#modalCart ul#cartStuffList li > div:not(.floatLeft, .cartQty)
 			{
 				margin-left: 10px;
@@ -1094,6 +1102,10 @@ div.contentPage
 			{
 				width: 1%;
 			}
+				div#modalCart td.cartSummaryTotalsContainer > div
+				{			
+					height: 710px;
+				}
 				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary span#lblTotal
 				{
 					color: #770000;
@@ -1107,52 +1119,56 @@ div.contentPage
 					margin-left: 15px;
 					margin-top: 5px;
 				}
-		div#modalCart td.cartStuffContainer > p
+		div#modalCart td.cartStuffContainer
 		{
-			font-family: Helvetica;
-			font-size: 12px;
-			margin-top: 20px;
-			width: 450px;
+			padding-bottom: 20px;
 		}
-			div#modalCart td.cartStuffContainer > p > span
+			div#modalCart td.cartStuffContainer > p
 			{
-				font-size: 15px;
-				font-weight: bold;
-			}		
-		div#modalCart td.cartStuffContainer > div
-		{
-			background-color: #897c68;
-			float: right;
-			margin-top: 20px;
-			position: relative;
-			width: 200px;
-		}
-			div#modalCart td.cartStuffContainer > div > p
-			{
-				color: #770000;
-				margin: 0px;
-				margin-left: 30px;
-				margin-top: 30px;				
+				font-family: Helvetica;
+				font-size: 12px;
+				margin-top: 20px;
+				width: 450px;
 			}
-			div#modalCart td.cartStuffContainer > div > ul
-			{
-				margin-left: 30px;
-				margin-top: 13px;
-				padding-bottom: 30px;
-			}
-				div#modalCart td.cartStuffContainer > div > ul > li
+				div#modalCart td.cartStuffContainer > p > span
 				{
-					list-style: none;
-					padding-bottom: 5px;
+					font-size: 15px;
+					font-weight: bold;
+				}		
+			div#modalCart td.cartStuffContainer > div
+			{
+				background-color: #897c68;
+				float: right;
+				margin-top: 20px;
+				position: relative;
+				width: 200px;
+			}
+				div#modalCart td.cartStuffContainer > div > p
+				{
+					color: #770000;
+					margin: 0px;
+					margin-left: 30px;
+					margin-top: 30px;				
 				}
-					div#modalCart td.cartStuffContainer > div > ul > li > a
+				div#modalCart td.cartStuffContainer > div > ul
+				{
+					margin-left: 30px;
+					margin-top: 13px;
+					padding-bottom: 30px;
+				}
+					div#modalCart td.cartStuffContainer > div > ul > li
 					{
-						color: #000000;
-						font-family: Helvetica;
-						font-size: 12px;
-						text-decoration: underline;
+						list-style: none;
+						padding-bottom: 5px;
 					}
-					
+						div#modalCart td.cartStuffContainer > div > ul > li > a
+						{
+							color: #000000;
+							font-family: Helvetica;
+							font-size: 12px;
+							text-decoration: underline;
+						}
+						
 div#loginFormForModal
 {
 	background-color: #b7a58b;
@@ -1258,21 +1274,53 @@ div#checkoutContainer
 		padding: 0px;
 		position: relative;
 	}
-	div#checkoutContainer fieldset legend
-	{
-		background: none;
-		border: 0px solid #000000;
-		clear: both;
-		float: left;
-		margin: 0px;
-		padding: 0px;
-		position: relative;
-		left: 5px;
-		top: 1px;
-	}
+		div#checkoutContainer fieldset legend
+		{
+			background: none;
+			border: 0px solid #000000;
+			clear: both;
+			float: left;
+			margin: 0px;
+			padding: 0px;
+			position: relative;
+			left: 5px;
+			top: 1px;
+		}
+		div#checkoutContainer fieldset > div > p, div#checkoutContainer fieldset > div ul, div#checkoutContainer fieldset > div > div > label
+		{
+			margin-left: 5px;
+		}
 	
 	#chkoutPreflightFieldset .preflightInputContainer
 	{
 		clear: both;
 		padding-left: 5px;
 	}
+	
+	img#btnCartShare, img#btnCartContinueShopping
+	{
+		margin-bottom: 10px;
+	}
+	
+	.checkoutButtonsContainer
+	{
+		text-align: center;
+		width: 100%;
+	}
+		.checkoutButtonsContainer > img, .checkoutButtonsContainer > span, .checkoutButtonsContainer > span img
+		{
+			float: none;
+			margin: 0;
+		}
+		.checkoutButtonsContainer > img, .checkoutButtonsContainer > span:not(#googleCheckoutButton) img
+		{
+			margin-bottom: 15px;
+		}		
+	div.checkoutMethods
+	{
+		text-align: center;
+	}
+		div.checkoutMethods > img
+		{
+			padding: 5px;
+		}
