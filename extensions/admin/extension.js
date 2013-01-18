@@ -2729,8 +2729,10 @@ else	{
 
 				var data = $t.data();
 				if(data && data.verb && data.domain)	{
-					var obj = {};
-					var $fieldset = $t.parent().find("[data-app-role='domainEditorContents']");
+					var obj = {},
+					$panel = $t.closest("[data-app-role='domainPanel']"),
+					$fieldset = $("[data-app-role='domainEditorContents']",$panel);
+					
 					$fieldset.showLoading();
 					$t.parent().find('.panelContents').show()
 					if(data.verb == 'LOAD')	{
