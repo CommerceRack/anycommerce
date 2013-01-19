@@ -17,10 +17,9 @@
 ************************************************************** */
 
 /*
-An extension for Google Adwords conversion tracking.  Which is not a great system.  
+An extension for Google Adwords conversion tracking. 
 
-
-Seriously, this extension is a hack.
+This extension is untested.
 
 */
 
