@@ -53,7 +53,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 				onError : function()	{
 	//errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 	//you may or may not need it.
-					app.u.dump('BEGIN app.ext.store_navcats.callbacks.init.onError');
+					app.u.dump('BEGIN app.ext.google_analytics.callbacks.init.onError');
 					}
 				},
 

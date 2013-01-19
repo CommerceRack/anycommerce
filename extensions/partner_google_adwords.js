@@ -24,3 +24,41 @@ Seriously, this extension is a hack.
 
 */
 
+var google_adwords = function() {
+	var r= {
+		vars : {
+
+		},
+		
+		callbacks : {
+			init : {
+				onSuccess : function(){
+					//nothing needs to be loaded except on conversion.
+					return true;
+				},
+				onError : function() {
+					app.u.dump('BEGIN app.ext.google_adwords.callbacks.init.onError');
+				}
+			},
+			
+			startExtension : {
+				onSuccess : function (){
+					if(app.ext.myRIA && app.ext.myRIA.template){
+						app.ext.store_checkout.checkoutCompletes.push(function(P){
+							app.u.dump("BEGIN google_adwords code pushed on store_checkout.checkoutCompletes");
+							var order = app.data['order|'+P.orderID];
+							google_conversion_value = order.sum.items_total;
+							app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');
+						});
+					} else	{
+						setTimeout(function(){app.ext.google_adwords.callbacks.startExtension.onSuccess()},250);
+					}
+				},
+				onError : function (){
+					app.u.dump('BEGIN app.ext.google_adwords.callbacks.startExtension.onError');
+				}
+			}
+		}
+	}
+	return r;
+}
