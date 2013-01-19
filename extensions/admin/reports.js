@@ -27,8 +27,9 @@ In addition, there are some other places, such as utilities > ebay listings repo
 
 reference:
 http://stackoverflow.com/questions/4639372/export-to-csv-in-jquery (toCSV)
-https://gist.github.com/3782074
+https://gist.github.com/3782074 (toCSV - full)
 https://developers.google.com/chart/interactive/docs/gallery/table#Formatters
+http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.html (build google drive spreadsheet via API)
 */
 
 

@@ -216,6 +216,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<h3 data-bind="var:order(flow/payment_status);format:paystatus; extension:admin_orders; pretext: Payment Status: ;"></h3>
 		<div data-bind="var:order(our/profile);format:text; pretext: profile: ;"></div>
 		<div data-bind="var:order(cart/refer);format:text; pretext: meta: ;"></div>
+		<div data-bind="var:order(cart/ip_address);format:text; pretext: IP Address: ;"></div>
 		<div data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></div>
 		<div data-bind='var: cart(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
 		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
