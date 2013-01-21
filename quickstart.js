@@ -2403,7 +2403,7 @@ if($form && $form.length)	{
 	var sfo = $form.serializeJSON(); //Serialized Form Object.
 	var pid = sfo.product_id;  //shortcut
 	$('.atcButton',$form).addClass('disabled ui-disabled').attr('disabled','disabled');
-	if(app.ext.store_product.validate.addToCart(pid))	{
+	if(app.ext.store_product.validate.addToCart(pid,$form))	{
 //this product call displays the messaging regardless, but the modal opens over it, so that's fine.
 		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
 		if(obj.action && obj.action == 'modal')	{

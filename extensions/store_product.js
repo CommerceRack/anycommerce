@@ -186,93 +186,92 @@ a parentID being passed may indicate the messaging is being throw to a minicart 
 //this is mostly due to the variations.js file not being updated (yet).
 //this'll change going forward.
 
-addToCart : function (pid){
-	//copied locally for quick reference.
-	var sogJSON = app.data['appProductGet|'+pid]['@variations']
-	var valid = true;
-//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
-
-	if($.isEmptyObject(sogJSON))	{
-		app.u.dump('no sogs present (or empty object)');
-		}
-	else	{
+addToCart : function (pid,$form){
+	app.u.dump("BEGIN store_product.validate.addToCart");
+	app.u.dump(" -> pid: "+pid);
+	var valid = true; //what is returned.
+	if(pid && $form)	{
+		//copied locally for quick reference.
+		var sogJSON = app.data['appProductGet|'+pid]['@variations'],
+		formJSON = $form.serializeJSON();
 		
-		$('#JSONpogErrors_'+pid).empty(); //empty the div so that all old errors are gone.
+	//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 	
-//		app.u.dump(' -> Sogs are present.');
-	
-		var thisSTID = pid; //used to compose the STID for inventory lookup.
-//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
-		var inventorySogPrompts = '';
-		var errors = '';
-		var pogid, pogType, pogValue, safeid;
-	//if the pog var is set, loop through it and validate.  
-		if(sogJSON)	{
-//			app.u.dump('got into the pogs-are-present validation');
-			for(var i = 0; i < sogJSON.length; i++)	{
-				pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
-				pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
-				safeid = app.u.makeSafeHTMLId(pogid);
-				app.u.dump(' -> pogid = '+pogid+' and type = '+pogType+' and safeid = '+safeid);
-	
-				if(sogJSON[i]['optional'] == 1)	{
-					//if the pog is optional, validation isn't needed.			
-					}
-				else if (pogType == 'attribs' || pogType == 'hidden' || pogType == 'readonly'){
-					//these types don't require validation.
-					}
-	//Okay, validate what's left.
-				else	{
-	
-//The value of a radio button is obtained slightly differently than any other form input type.
-//pogid is used here, not safeid, because the radio inputs name isn't sanitized.
-					if(pogType == 'radio' || pogType == 'imggrid')	{
-	//jquery method for getting radio button value
-						pogValue = $("input[name='pog_"+pogid+"']:checked").val(); //$('input:radio[name="pog_"+pogid]').pluck('value'); 
+		if($.isEmptyObject(sogJSON))	{
+			app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+			}
+		else if($.isEmptyObject(formJSON))	{
+			app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+			} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
+		else	{
+			app.u.dump(" -> everything is accounted for. Start validating.");	
+			$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
+		
+			var thisSTID = pid, //used to compose the STID for inventory lookup.
+			inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
+			errors = '', pogid, pogType;
+			
+			app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
+			
+//No work to do if there are no sogs. 
+			if(sogJSON)	{
+	//			app.u.dump('got into the pogs-are-present validation');
+				for(var i = 0; i < sogJSON.length; i++)	{
+					pogid = sogJSON[i]['id']; //the id is used multiple times so a var is created to reduce number of lookups needed.
+					pogType = sogJSON[i]['type']; //the type is used multiple times so a var is created to reduce number of lookups needed.
+		
+					if(sogJSON[i]['optional'] == 1)	{
+						//if the pog is optional, validation isn't needed.			
 						}
+					else if (pogType == 'attribs' || pogType == 'hidden' || pogType == 'readonly' || pogType == 'cb'){
+						//these types don't require validation.
+						}
+		//Okay, validate what's left.
 					else	{
-	//was originally just setting pogvalue to the form value, but if .value is blank, a js error was geing generated sometimes.
-						pogValue = $('#pog_'+safeid).val(); 
+		//If the option IS required (not set to optional) AND the option value is blank, AND the option type is not attribs (finder) record an error
+						if(formJSON['pog_'+pogid]){}
+						else	{
+							valid = false;
+							errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
+							}
+		
 						}
 					
-	//If the option IS required (not set to optional) AND the option value is blank, AND the option type is not attribs (finder) record an error
-					if(pogValue == "" || pogValue === undefined)	{
-						valid = false;
-						errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
+					//compose the STID
+					if(sogJSON[i]['inv'] == 1)	{
+						thisSTID += ':'+pogid+formJSON[pogid];
+						inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
 						}
-	
+					
 					}
-				
-				//compose the STID
-				if(sogJSON[i]['inv'] == 1)	{
-					thisSTID += ':'+pogid+pogValue;
-					inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
-					}
-				
 				}
-			}
-
-
-//		app.u.dump('past validation, before inventory validation. valid = '+valid);
 	
-	//if errors occured, report them.
-		 if(valid == false)	{
-//			app.u.dump(errors);
-			var errObj = app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
-			errObj.parentID = 'JSONpogErrors_'+pid
-			app.u.throwMessage(errObj);
-			}
-	//if all options are selected AND checkinventory is on, do inventory check.
-		else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
-	//		alert(thisSTID);
-			if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
-				var errObj = app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
+	
+	//		app.u.dump('past validation, before inventory validation. valid = '+valid);
+		
+		//if errors occured, report them.
+			 if(valid == false)	{
+	//			app.u.dump(errors);
+				var errObj = app.u.youErrObject("Uh oh! Looks like you left something out. Please make the following selection(s):<ul>"+errors+"<\/ul>",'42');
 				errObj.parentID = 'JSONpogErrors_'+pid
 				app.u.throwMessage(errObj);
-				valid = false;
 				}
-	
+		//if all options are selected AND checkinventory is on, do inventory check.
+			else if(valid == true && typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode > 1)	{
+		//		alert(thisSTID);
+				if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory'][thisSTID]) && app.data['appProductGet|'+pid]['@inventory'][thisSTID]['inv'] < 1)	{
+					var errObj = app.u.youErrObject("We're sorry, but the combination of selections you've made is not available. Try changing one of the following:<ul>"+inventorySogPrompts+"<\/ul>",'42');
+					errObj.parentID = 'JSONpogErrors_'+pid
+					app.u.throwMessage(errObj);
+					valid = false;
+					}
+		
+				}
 			}
+		}
+	else	{
+		app.u.throwGMessage("in store_product.validate.addToCart, either pid ("+pid+") not set or $form was not passed.");
+		valid = false;
 		}
 	app.u.dump('STID = '+thisSTID);
 	return valid;
