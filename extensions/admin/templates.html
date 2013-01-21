@@ -31,7 +31,7 @@ PRODUCT FINDER/CHOOSER
 	<li class='clearfix loadingBG stdListItem' id='adminElasticResult'>
 	<div class='removeProd' onClick='app.ext.admin.u.removePidFromFinder($(this).closest("[data-pid]"));'><span class='ui-icon ui-icon-closethick'></span></div>
 	<div class='handle'><span class='ui-icon ui-icon-grip-dotted-vertical'></span></div>
-	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
+	<img class='prodThumb' data-bind='var: product(images); format:imageURL; isElastic:1; extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
@@ -39,7 +39,7 @@ PRODUCT FINDER/CHOOSER
 
 
 	<li class='clearfix loadingBG stdListItem pointer' id='adminChooserElasticResult' onClick="$('#chooserResultContainer').empty(); app.ext.store_product.u.showProductDataIn('chooserResultContainer',{'pid':$(this).data('pid'),'templateID':'productTemplateChooser'});">
-	<img class='prodThumb' data-bind='var: product(images); format:elastimage1URL;extension:admin;' width='50' height='50' />
+	<img class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;extension:admin;' width='50' height='50' />
 	<div data-bind='var:product(prod_name); format:text;' class='prodName'></div>
 	<div class='pid' data-bind='var:product(pid); format:text;'></div>
 	</li>
@@ -887,7 +887,7 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('/biz/manage/repricing/index.cgi'); return false;">Dynamic Repricing <span class='new'>new</span></a>
 		<div class="subtitle0">Automatically raise/lower amazon prices based on competitors pricing.</div>
 
-		<a href="#" onClick="navigateTo('/biz/manage/ebay/index.cgi'); return false;">Listing &amp; Event Reports</a>
+		<a href="#" onClick="navigateTo('#!eBayListingsReport'); return false;">Listing &amp; Event Reports</a>
 		<div class="subtitle0">Listing Events are created anytime a listing is created, modified, or implicitly ended.</div>		
 		
 		</div>

@@ -485,11 +485,11 @@ var admin_prodEdit = function() {
 						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
 						app.model.destroy('appProductGet|'+pid);
 						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
+							$panel.hideLoading();
 							if(app.model.responseHasErrors(responseData)){
 								app.u.throwMessage(responseData);
 								}
 							else	{
-								$panel.hideLoading();
 								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 //								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
 								$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.

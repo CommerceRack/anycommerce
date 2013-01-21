@@ -83,7 +83,7 @@ var admin_reports = function() {
 
 		a : {
 			
-			showEbayReportUI : function()	{
+			showeBayListingsReport : function()	{
 				var $content = $("#utilitiesContent");
 				$content.empty().append(app.renderFunctions.createTemplateInstance('ebayListingsReportPageTemplate',{}));
 				app.ext.admin.u.bringTabIntoFocus('utilities');

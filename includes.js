@@ -39,6 +39,11 @@ variations.js
 This is somewhat legacy stuff here, adopted to work within the new framework.
 it is not an extension for this reason.
 at some point in the future, it should to be.
+
+SANITY - pog_ is added to the name. if this is ever changed, admin_orders.js will need to be updated too.
+look for line:
+if(index.substring(0,4) == 'pog_')
+
 */
 
 handlePogs = function(v,o) {

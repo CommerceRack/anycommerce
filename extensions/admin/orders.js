@@ -1508,37 +1508,77 @@ $('.editable',$container).each(function(){
 
 			"orderItemAddStructured" : function($btn)	{
 				$btn.button();
-				$btn.off('click.orderItemAddStructured').on('click.orderItemAddStructured',function(){
+				$btn.off('click.orderItemAddStructured').on('click.orderItemAddStructured',function(event){
+					event.preventDefault();
 					var $button = $("<button>").text("Add to Order").button().on('click',function(){
 						
 						var $parent = $btn.closest("[data-order-view-parent]"),
 						orderID = $parent.data('order-view-parent'),
-						$form = $('form','#chooserResultContainer');
-						var formJSON = $form.serializeJSON();
-						var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
-						
+						$form = $('form','#chooserResultContainer'),
+						formJSON = $form.serializeJSON(),
+						orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
+	
+						formJSON.product_id = formJSON.sku;
+	
 						if(formJSON.sku && orderID)	{
-						
-						for(index in formJSON)	{
+							if(app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
+								for(index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
 //if the value is more than two characters and not all uppercase, it's likely a text based sog. add a tildae to the front of the value.
 //this is used on the API side to help distinguish what key value pairs are options.
-							if(index.length == 2 && index.toUpperCase() == index && formJSON[index].length > 2 && formJSON[index].toUpperCase != formJSON[index])	{
-								formJSON[index] = "~"+formJSON[index];
+//									app.u.dump(" -> index.substr(4): "+index.substr(4));
+									if(index.length == 2 && index.toUpperCase() == index && formJSON[index].length > 2 && formJSON[index].toUpperCase != formJSON[index])	{
+										formJSON[index.substr(4)] = "~"+formJSON[index]
+										}
+//strip pog_ but no tildae, which is ONLY needed for text based sogs.
+									else if(index.substring(0,4) == 'pog_')	{
+										var pogID = index.substr(4)
+//special handling for checkboxes. If NOT optional and blank, needs to be set to NO.
+//on a checkbox sog, an extra param is passed pog_ID_cb which is set to 1. this is to 'know' that the cb was present so if the value is blank, we can handle accordingly.
+										if(pogID.indexOf('_cb') > -1)	{
+											var cbPogID = pogID.substring(0,(pogID.length-3)); //strip __cb off end.
+//											app.u.dump(" -> cbPogID: "+cbPogID);
+											if(formJSON[cbPogID])	{
+//												app.u.dump(" -> formJSON[cbPogID] already set: "+formJSON[cbPogID]);
+												} //already set, use that value and do nothing else.
+											else	{
+//check to see if the sog is optional. if so, do nothing. If not, set to NO
+												var sog = pogs.getOptionByID(cbPogID); //pogs. is instantiated in the chooser as part of the template.
+												if(sog.optional)	{
+//													app.u.dump(" -> sog.optional set: "+sog.optional);
+													} //do nothing if optional. will go up as blank.
+												else	{
+													formJSON[cbPogID] = "NO";
+													}
+												}
+											delete formJSON[index]; //deletes the pog_ID_on param, which isn't needed by the API.
+											}
+										else	{
+											formJSON[pogID] = formJSON[index]
+											delete formJSON[index];
+											}
+										}
+									
+									
+									
+									}
+								app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
+								$parent.empty();
+								app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+								app.model.dispatchThis('immutable');
+								
+								}
+							else	{
+	//error display is in validate code.							
 								}
 							}
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMADDSTRUCTURED?"+decodeURIComponent($.param(formJSON))]);
-						$parent.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
-						}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.orderItemAddStructured, unable to determine orderID ["+orderID+"] or pid ["+formJSON.sku+"]");
+							}
+						});
+					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
 					});
-				app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
-				});
-			}, //orderItemAddStructured
+				}, //orderItemAddStructured
 
 
 

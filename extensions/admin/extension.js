@@ -1942,6 +1942,9 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!userManager')	{
 					app.ext.admin_user.a.showUserManager();
 					}
+				else if(path == '#!eBayListingsReport')	{
+					app.ext.admin_reports.a.showeBayListingsReport();
+					}
 				else if(path == '#!orderPrint')	{
 					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
 					}
@@ -2498,6 +2501,9 @@ else if (vars.findertype == 'CHOOSER')	{
 else if(vars.findertype == 'PAGE')	{
 	if(vars.path.charAt(0) === '@')	{
 		$target.parent().find('.ui-dialog-title').text('Product Finder: Newsletter');
+		}
+	else if(vars.path == '*cart')	{
+		$target.parent().find('.ui-dialog-title').text('Product Finder: Cart');
 		}
 	else	{
 		$target.parent().find('.ui-dialog-title').text('Product Finder: '+app.data['appCategoryDetail|'+vars.path].pretty); //updates modal title

@@ -1941,7 +1941,7 @@ if($form && $form.length)	{
 	var sfo = $form.serializeJSON(); //Serialized Form Object.
 	var pid = sfo.sku;  //shortcut
 	sfo.product_id = pid; //
-	if(app.ext.store_product.validate.addToCart(pid))	{
+	if(app.ext.store_product.validate.addToCart(pid,$form))	{
 		app.calls.ping.init({
 			'callback':function(){
 				$('#prodFinder').dialog('close');
