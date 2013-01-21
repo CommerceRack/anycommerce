@@ -1870,8 +1870,8 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
 					delete formJSON['want/payby'];
 					
-//					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
-//					app.u.dump(" -> typeof validate[tender]: "+typeof app.ext.store_checkout.validate[formJSON.tender]);
+					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+					app.u.dump(" -> validate[tender]: "+app.ext.store_checkout.validate[formJSON.tender](formJSON));
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),

@@ -73,6 +73,18 @@ a callback was also added which just executes this call, so that checkout COULD 
 				r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 				app.model.dispatchThis("immutable");
 
+/*
+CC and other payment details are saved in memory so that when payment panel is reloaded (due to a change in the shipping panel, for instance) the payment info
+doesn't have to be reloaded. The following code nukes all that so that from one client to the next, the payment panel is emptied.
+*/
+var obj = app.ext.convertSessionToOrder.vars; //shortcut
+
+for(index in obj)	{
+	if(index.substring(0,8) == 'payment/')	{
+		delete obj[index];
+		}
+	}
+
 				return r; 
 				}			
 			},
@@ -173,13 +185,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 //formerly createOrder
 		adminOrderCreate : {
 			init : function(callback)	{
-//serializes just the payment panel, which is required for payment processing to occur (CC numbers can't be store anywhere, even in the session)
-//seems safari doesn't like serializing a fieldset. capture individually.
-//				var payObj = $('#chkoutPayOptionsFieldset').serializeJSON();
-				
 				this.dispatch(callback);
 				return 1;
-
 				},
 			dispatch : function(callback)	{
 				var payObj = {};

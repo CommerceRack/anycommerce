@@ -314,12 +314,19 @@ note - the order object is available at app.data['order|'+P.orderID]
 		validate : {
 			
 			CREDIT : function(vars)	{
-				var errors = new Array(); // what is returned. an array of the payment fields that are not correct. 
-				if(vars.CC && app.u.isValidCC(vars.CC))	{} else	{errors.push("CC");}
-				if(vars.MM && app.u.isValidMonth(vars.MM))	{} else {errors.push("MM");}
-				if(vars.YY && app.u.isValidCCYear(vars.YY))	{} else {errors.push("YY");}
-				if(vars.CV && vars.CV.length > 2){} else {errors.push("CV")}
-				return (errors.length) ? errors : false;
+				if(vars && typeof vars == 'object')	{
+					var errors = new Array(); // what is returned. an array of the payment fields that are not correct.
+					if(vars['payment/CC'] && app.u.isValidCC(vars['payment/CC']))	{} else	{errors.push("payment/CC");}
+					if(vars['payment/MM'] && app.u.isValidMonth(vars['payment/MM']))	{} else {errors.push("payment/MM");}
+					if(vars['payment/YY'] && app.u.isValidCCYear(vars['payment/YY']))	{} else {errors.push("payment/YY");}
+					if(vars['payment/CV'] && vars['payment/CV'].length > 2){} else {errors.push("payment/CV")}
+					return (errors.length) ? errors : false;
+					}
+				else	{
+					app.u.throwGMessage("in store_checkout.u.validate.CREDIT, vars is empty or not an object.");
+					return false;
+					}
+				
 				},
 			
 			ECHECK : function(vars) {

@@ -751,22 +751,23 @@ if(selector && mode)	{
 			var L = data.length;
 			var tagObj;
 			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+			app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder. done early in process to ensure retrieval regardless of upload result.
 			for(var i = 0; i < L; i += 1)	{
 				data[i].folder = folderName;
 				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
 				}
 			},
 		'publicFileUpload' : function(data,textStatus)	{
-			app.u.dump("Got to csvUploadToBatch success.");
+//			app.u.dump("Got to csvUploadToBatch success.");
 			app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
 			app.model.dispatchThis('immutable');
 			},
 		'adminTicketFileAttach' : function(data,textStatus)	{
-			app.u.dump(" -> Got to adminTicketFileAttach success.");
+//			app.u.dump(" -> Got to adminTicketFileAttach success.");
 			data[0].ticketid = $("[name='ticketid']",$selector).val();
 			data[0].uuid = $("[name='uuid']",$selector).val();
-			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
-			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
+//			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
+//			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
 			app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
 //			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
 			app.model.dispatchThis('immutable');
@@ -800,7 +801,6 @@ if(selector && mode)	{
 		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
 		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 	
-		app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
 		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
 		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
@@ -834,8 +834,6 @@ else	{
 
 
 
-
-
 			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
 				var L = app.data.adminImageFolderList['@folders'].length;
@@ -856,8 +854,20 @@ else	{
 				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
 				$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
 				if(P.selector && (P.FName || P.FName === 0))	{
-					$(P.selector + ' ul').empty().addClass('loadingBG');
-					P.callback = 'translateSelector'
+					app.u.dump(" -> P.selector.substring(1): "+P.selector.substring(1));
+					var $selector = $(app.u.jqSelector(P.selector[0],P.selector.substring(1)));
+					app.u.dump(" -> $selector.length: "+$selector.length);
+					$selector.showLoading();
+					$('ul',$selector).empty();
+					P.callback = function(rd)	{
+						if(app.model.responseHasErrors(rd)){
+							app.u.throwMessage(rd);
+							}
+						else	{
+							$selector.hideLoading();
+							app.renderFunctions.translateSelector(rd.selector,app.data[rd.datapointer]);
+							}
+						}
 					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.FName,P,Q || 'mutable');
 					}
 				else	{
