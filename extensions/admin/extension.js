@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate','authNewAccountCreateTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate','authNewAccountCreateTemplate','achievementsListTemplate'); 
 	var r = {
 		
 		vars : {
@@ -898,7 +898,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 $('title').append(" - release: "+app.vars.release);
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
-//app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/styles.css','admin_styles']);
+app.rq.push(['css',0,'http://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 
 
@@ -1500,6 +1500,15 @@ else	{
 				return false;
 				}, //showUI
 
+			showAchievementList : function($target)	{
+				if($target && $target.length)	{
+					$target.show().append(app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
+					app.ext.admin.u.handleAppEvents($target);
+					}
+				else	{
+					app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
+					}				
+				},
 
 			showAuthNewAccountCreate : function($target)	{
 				if($target && $target.length)	{
@@ -1896,7 +1905,7 @@ var chart = new Highcharts.Chart({
 				$('#appView').show();
 				$('#preloadAndLoginContainer').hide(); //hide all preView and login data.
 				$('#preloadAndLoginContents').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
-				$('.username','#appView').text(app.vars.username);
+				$('.username','#appView').text(app.vars.userid);
 				var domain = this.getDomain();
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //				app.u.dump(" -> DOMAIN: ["+domain+"]");
@@ -2929,6 +2938,16 @@ just lose the back button feature.
 			},	//util
 
 		e : {
+			
+			achievementDetail : function($row)	{
+				$row.on('mouseover.achievementDetail',function(){
+					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
+					})
+					.on('mouseout.achivementDetail',function(){
+					$(this).removeClass('ui-state-highlight');
+					})
+				},
+			
 			authNewAccountCreate : function($btn)	{
 				$btn.button();
 				$btn.off('authNewAccountCreate').on('click.authNewAccountCreate',function(event){

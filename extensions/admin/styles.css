@@ -405,6 +405,43 @@ Messaging Styles
 .ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat; width:25px; height:24px;}
 .ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
 
+
+.anyIcon	{background:url(images/ui_anyicon_set-612x792.png) no-repeat; width:55px; height:55px; display:inline-block;}
+
+/* row 1 */
+.anyIconFloat	{background-position:0 0;}
+.anyIconTools	{background-position:-57px 0px;}
+.anyIconEnvelope	{background-position:-122px 0px;}
+.anyIconHeart	{background-position:-185px 0px;}
+.anyIconHeartAdd	{background-position:-250px 0px;}
+.anyIconDownload	{background-position:-315px 0px;}
+.anyIconGears	{background-position:-378px 0px;}
+.anyIconCertificate	{background-position:-438px 0px;}
+
+/* row 2 */
+.anyIconNetwork	{background-position:0 -60px;}
+.anyIconPage	{background-position:-57px -60px;}
+.anyIconBookmark	{background-position:-122px -60px;}
+.anyIconChain	{background-position:-185px -60px;}
+.anyIconMagGlass	{background-position:-250px -60px;}
+.anyIconPlusSign	{background-position:-315px -60px;}
+.anyIconI	{background-position:-378px -60px;}
+.anyIconMinusSign	{background-position:-438px -60px;}
+
+/* row 3 */
+
+
+
+/* row 5 */
+.anyIconVertArrows	{background-position:0 -280px;}
+.anyIconHorArrows	{background-position:-57px -280px;}
+
+
+/* row 6 */
+.anyIconMug	{background-position:0 -342px;}
+.anyIconComputer	{background-position:-438px -342px;}
+
+
 /*
 
 ########################################################
@@ -540,6 +577,12 @@ see shipping panel in product editor for example
 #landingPageColumn2 .varImage	{max-width:300px; width:100%;}
 
 
+
+/* achievements page */
+table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-collapse: collapse;}
+.achievementList td	{vertical-align:top;border-bottom:1px solid #efefef; padding:6px 12px;}
+.achievementList p	{font-size:1em; margin:0px;}
+.achievementList h3	{font-size:1.5em; font-weight:normal; font-family: 'PT Sans', sans-serif;}
 
 /* account creation */
 fieldset.authNewAccountCreate	{width:400px; background:#ffffff;}
