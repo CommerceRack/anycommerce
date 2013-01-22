@@ -25,19 +25,19 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate','authNewAccountCreateTemplate'); 
 	var r = {
 		
-	vars : {
-		tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-		tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities'],
-		state : {},
-		tab : 'home',
-		templates : theseTemplates,
-		willFetchMyOwnTemplates : true,
-		"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
-		"dependencies" : ['store_prodlist','store_navcats','store_product','store_search'] //a list of other extensions (just the namespace) that are required for this one to load
-		},
+		vars : {
+			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
+			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities'],
+			state : {},
+			tab : 'home',
+			templates : theseTemplates,
+			willFetchMyOwnTemplates : true,
+			"tags" : ['IS_FRESH','IS_NEEDREVIEW','IS_HASERRORS','IS_CONFIGABLE','IS_COLORFUL','IS_SIZEABLE','IS_OPENBOX','IS_PREORDER','IS_DISCONTINUED','IS_SPECIALORDER','IS_BESTSELLER','IS_SALE','IS_SHIPFREE','IS_NEWARRIVAL','IS_CLEARANCE','IS_REFURB','IS_USER1','IS_USER2','IS_USER3','IS_USER4','IS_USER5','IS_USER6','IS_USER7','IS_USER8','IS_USER9'],
+			"dependencies" : ['store_prodlist','store_navcats','store_product','store_search'] //a list of other extensions (just the namespace) that are required for this one to load
+			},
 
 
 
@@ -679,6 +679,28 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 
+		authNewAccountCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(typeof obj == 'object' && obj.email && obj.domain && obj.phone && obj.firstname && obj.lastname && obj.company)	{
+					this.dispatch(obj,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.authNewAccountCreate, some required attributes were missing.");
+					app.u.dump(" -> All of the fields in the form must be populated. obj follows: "); app.u.dump(obj);
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "authNewAccountCreate";
+				obj._tag = _tag || {};
+				_tag.datapointer = "authNewAccountCreate";
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
+
+
 		finder : {
 			
 			adminNavcatProductInsert : {
@@ -1113,8 +1135,9 @@ else	{
 //				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
-				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td><a href=' https://www.youtube.com/zoovylive' target='_blank' ><img src='extensions/admin/images/join_zcmnty-300x250.gif' width='300' height='250' alt='' /><\/a><\/td><\/tr><\/table>");
+				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td><iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'><\/iframe><\/td><\/tr><\/table>");
 				var L = data.length;
+				$target.hideLoading();
 				if(L)	{
 					var $ul = $('#domainList'); //ul in modal.
 	//modal has been opened on this visit.  Domain list still reloaded in case they've changed.
@@ -1130,7 +1153,6 @@ else	{
 							$target.dialog('close');
 							}).appendTo($ul);
 						}
-					$target.hideLoading();
 					$('.domainList',$target).append($ul);
 					}
 				else	{
@@ -1477,6 +1499,17 @@ else	{
 					}
 				return false;
 				}, //showUI
+
+
+			showAuthNewAccountCreate : function($target)	{
+				if($target && $target.length)	{
+					$target.show().append(app.renderFunctions.createTemplateInstance('authNewAccountCreateTemplate',{}));
+					app.ext.admin.u.handleAppEvents($target);
+					}
+				else	{
+					app.u.throwGMessage("In admin.a.showAuthNewAccountCreate, $target is not specified or has no length.");
+					}
+				},
 
 /*
 A generic form handler. 
@@ -2895,7 +2928,33 @@ just lose the back button feature.
 
 			},	//util
 
-		e : {}
+		e : {
+			authNewAccountCreate : function($btn)	{
+				$btn.button();
+				$btn.off('authNewAccountCreate').on('click.authNewAccountCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.parents('form'),
+					formObj = $form.serializeJSON(),
+					$errors = $("<ul \/>");
+//					app.u.dump(" -> authNewAccountCreate.formObj: "); app.u.dump(formObj);
+					if(!formObj.firstname){$("<li \/>").text("First name").appendTo($errors)}
+					if(!formObj.lastname){$("<li \/>").text("Last name").appendTo($errors)}
+					if(!formObj.email){$("<li \/>").text("Email").appendTo($errors)}
+					if(!formObj.company){$("<li \/>").text("Company").appendTo($errors)}
+					if(!formObj.domain){$("<li \/>").text("Domain").appendTo($errors)}
+					if(!formObj.phone){$("<li \/>").text("Phone").appendTo($errors)}
+					
+					if($errors.children().length)	{
+						$("fieldset",$form).prepend($errors).prepend("It seems a few required fields were left blank. Please provide the following pieces of information:");
+						}
+					else	{
+						app.ext.admin.calls.authNewAccountCreate.init(formObj,{'callback':'showHeader','extension':'admin'},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					
+					});
+				}
+			}
 
 		} //r object.
 	return r;

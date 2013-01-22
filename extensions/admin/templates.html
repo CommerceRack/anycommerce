@@ -1087,3 +1087,25 @@ PRODUCT TAB
 </form>
 
 </div>
+
+
+
+
+<div id='authNewAccountCreateTemplate'>
+
+<form action='#'>
+<fieldset class='authNewAccountCreate labelsAsBreaks alignedLabels alignedInputs'>
+	<legend>Create Account</legend>
+	<label><span>First Name: </span><input type='text' name='firstname' required='required' /></label>
+	<label><span>Last Name: </span><input type='text' name='lastname' required='required' /></label>
+	<label><span>Email: </span><input type='email' name='email' required='required' /></label>
+	<label><span>Company/DBA: </span><input type='text' name='company' maxlength="10" required='required' /><div class='floatLeft hint'>will be your username. 10 char limit</div></label>
+	<label><span>Domain: </span><input type='url' name='domain' required='required' value='http://' /></label>
+	<label><span>Phone: </span><input type='tel' name='phone' required='required' /></label>
+	<div class='alignCenter'>
+		<button data-app-event='admin|authNewAccountCreate'>Create Account</button>
+	</div>
+</fieldset>
+</form>
+
+</div>

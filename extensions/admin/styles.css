@@ -122,7 +122,10 @@ if you want the list responsive, apply the .fluidList class.
 /* for non-datagrid tables. ex: setup page. */
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
 
-table.fullWidth	{width:100%;}
+table.fullWidth, iframe.fullWidth	{width:100%;}
+iframe.noBorders	{overflow:hidden; border:none;}
+
+iframe.ad-300x250	{height:250px;}
 
 /*
 Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set.
@@ -516,6 +519,7 @@ see shipping panel in product editor for example
 .alignedLabels label span	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
+.alignedInputs input[type=url],
 .alignedInputs input[type=password],
 .alignedInputs input[type=text]	{width:65%;}
 
@@ -537,7 +541,8 @@ see shipping panel in product editor for example
 
 
 
-
+/* account creation */
+fieldset.authNewAccountCreate	{width:400px; background:#ffffff;}
 
 /* ebay reports page */
 .ebayListingsReportPage fieldset.oneThird	{width:30%}

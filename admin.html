@@ -30,7 +30,7 @@ var app = {vars:{
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
-	"jqurl":"https://www.zoovy.com/webapi/jquery/index.cgi",
+	"jqurl": (document.domain || "https://www.zoovy.com") + "/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : baseURL,
@@ -144,23 +144,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 	</div>
 	
 	<div id='createAccountContainer' class='displayNone'>
-	<form name='merchantCreate' onSubmit="app.calls.authAccountCreate.init($(this).serializeJSON()); app.model.dispatchThis('immutable'); return false;">
-	<fieldset>
-		<legend>Create Account</legend>
-	
-		<div><label>Domain: <input type='text' name='domain' value='' required='required' /></label></div>
-		<div><label>Email: <input type='email' name='email' value='' required='required' /></label></div>
-		<div><label>First Name: <input type='text' name='firstname' value='' required='required' /></label></div>
-		<div><label>Last Name: <input type='text' name='lastname' value='' required='required' /></label></div>
-		<div><label>Company: <input type='text' name='company' value='' required='required' /></label></div>
-		<div><label>Phone: <input type='tel' name='phone' value='' required='required' /></label></div>
-		<div><label>Verify by: <select name='verification' required='required'>
-			<option value='sms'>SMS/Text Message</option>
-			<option value='voice'>Voice/phone call</option>
-		</select></label></div>
-		<input type='submit' value='create' />
-	</fieldset>
-	</form>
+
 	</div>
 
 </div>
@@ -410,6 +394,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
 
 <button onClick="app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})">handlePermssions</button>
+<button onClick="$('#loginFormContainer').toggle(); app.ext.admin.a.showAuthNewAccountCreate($('#createAccountContainer'));">showAuthNewAccountCreate</button>
 
 <!-- 
 

@@ -342,7 +342,6 @@ can't be added to a 'complete' because the complete callback gets executed after
 		context : app,
 		async: true,
 		contentType : "text/json",
-//		beforeSend: app.model.setHeader, //
 		dataType:"json",
 //ok to pass admin vars on non-admin session. They'll be ignored.
 		data: JSON.stringify({"_uuid":pipeUUID,"_cartid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
@@ -719,6 +718,10 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 			this.handleResponse_cartOrderCreate(responseData); //share the same actions. append as needed.
 			},
 	
+		handleResponse_authNewAccountCreate : function(responseData)	{
+			app.model.handleResponse_authAdminLogin(responseData); //this will have the same response as a login if successful.
+			},
+	
 	//this function gets executed upon a successful request for a create order.
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
 		handleResponse_cartOrderCreate : function(responseData)	{
@@ -773,7 +776,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 
 
 
-
+//this response is also executed by authNewAccoutnCreate
 		handleResponse_authAdminLogin: function(responseData)	{
 			app.u.dump("BEGIN model.handleResponse_authAdminLogin"); //app.u.dump(responseData);
 			if(app.model.responseHasErrors(responseData))	{} // do nothing. error handling handled in _default.
