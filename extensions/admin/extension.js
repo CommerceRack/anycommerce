@@ -1146,7 +1146,7 @@ else	{
 					else	{
 						$ul = $("<ul \/>").attr('id','domainList');
 						}
-					
+
 					for(var i = 0; i < L; i += 1)	{
 						$("<li \/>").data(data[i]).addClass('lookLikeLink').addClass(data[i].id == app.vars.domain ? 'ui-selected' : '').append(data[i].id+" [prt: "+data[i].prt+"]").click(function(){
 							app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'))

@@ -256,6 +256,7 @@ var admin_medialib = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.min.js']); //
 
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
@@ -594,6 +595,17 @@ setTimeout(function(){
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			
+			lazyImage : function($tag,data)	{
+//the default image on an image based data bind is blank.gif. this is exactly what lazyload wants. It'll use the value of data-original to load the image when visible.
+				data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
+				data.bindData.w = $tag.attr('width');
+				data.bindData.h = $tag.attr('height');
+				data.bindData.tag = 0;
+				$tag.attr('data-original',app.u.makeImage(data.bindData)); //passing in bindData allows for using
+				$tag.addClass('lazyLoad');
+				},
+			
 			showChildFolders : function($tag,data){
 				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
 				$tag.append(app.ext.admin_medialib.u.showFoldersByParentFID(data.value,data.bindData.loadsTemplate));
@@ -617,6 +629,7 @@ setTimeout(function(){
 			mediaList : function($tag,data)	{
 				
 				app.u.dump("BEGIN mediaLib.renderFormats.mediaList");
+				$("#mediaLibInfiniteScroller").scrollTop(0); //jump to top of image scroll
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
 				var itemsPerPage,media;
@@ -627,9 +640,7 @@ setTimeout(function(){
 				app.u.dump(" -> list-origin: "+listOrigin);
 				$tag.removeClass('loadingBG');
 
-				itemsPerPage = 25;
-				media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
-
+				media = data.value
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 
 				if((FName || listOrigin == 'search') && data.bindData.loadsTemplate)	{
@@ -664,49 +675,12 @@ setTimeout(function(){
 						}
 
 					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
-
-var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
-if(data.value.length > itemsPerPage)	{
-	if(startpoint === 0)	{
-	//folder was just loaded. add the infinite scroller.
-		app.u.dump("Init infiniteScroll");
-	//always jump to the top on a new instantiation. if it starts at bottom, will continually trigger more content.
-	//SANITY - don't put this into the 'on' event or scrolling is disabled.
-		$scrollContainer.scrollTop(0); 
-		
-		//remove any pre-existing infinite scroll instantiation (so scroll bind doesn't get added multiple times)
-		$scrollContainer.off('scroll.infinite').on('scroll.infinite',function() {
-			var $container = $(this);
-			var contentHeight = $("ul",$(this)).height(); //the height of the content within the scolling box.
-		
-	//the scrolltop() val is the number of pixels the scrollbar is from the top of containerHeight
-	// -> SANITY: scrollTop subtracts the value of (content height + scrollbarheight).  Ex below:
-	// 		If containerHeight is 250, contentHeight is 1000 and scrollbarheight is 10, at half way down, scrolltop will = 240.
-	//		scrollbar height is dependent on the theme used. typically 10-20.  70 is used as a precaution and to trigger load when 'close' to bottom
-	
-			if($(this).scrollTop() > (contentHeight - $container.height() - 70))	{
-	//			console.log('at or near the bottom');
-//				var fname = $tag.data('fname'); //folder name.
-	//			app.u.dump(" -> fname: "+fname);
-				var $li = $("<li \/>").addClass('loadingBG').appendTo($tag); //add temporary loading graphic as last lineitem. indicates something is happening.
-				app.ext.admin_medialib.renderFormats.mediaList($tag,data);
-				$li.empty().remove(); //remove temporary loading graphic.
-				}
-			}),($tag,data);
-		}
-	else if(startpoint >= data.value.length)	{
-		app.u.dump("The end is nigh! all content loaded. infinite scroll was killed (or it was never started).");
-		$scrollContainer.off('scroll.infinite'); //we've reached the bottom of the bottom. disable infinite scroll.
-		}
-	else{
-		//got here because more content was added but it wasn't the last page.
-		}
-	}
-else	{
-	//no infinite scroll because there aren't more images than items per page.
-	//would also get here if infinite scroll is disabled.
-	}
-
+$("img.lazyLoad").lazyload({
+	container : '#mediaLibInfiniteScroller',
+	threshold : 100
+	});
+//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a few pixels, then back up.
+$("#mediaLibInfiniteScroller").scrollTop(1);
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");

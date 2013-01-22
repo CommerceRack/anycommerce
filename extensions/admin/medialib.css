@@ -6,6 +6,7 @@ table.mediaLibrary td	{padding:0; vertical-align:top;}
 
 table.mediaLibrary .leftCol	{width:25%;}
 
+.lazyImage {display:none;}
 
 #mediaLibFolderList	{width:25%;}
 #mediaLibFolderContainer li	{display:block; clear:both; margin-bottom:5px;}

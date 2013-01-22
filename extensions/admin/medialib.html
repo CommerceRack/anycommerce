@@ -238,7 +238,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	
 	
 	<li id='mediaFileTemplate'>
-	<img src='blank.gif' data-bind='var: media(path); format:imageURL;' width='100' height='100' />
+	<img src='loading.gif' data-bind='var: media(path); format:lazyImage; extension:admin_medialib;' width='100' height='100' />
 	<div data-bind='var: media(Name); format:text;'></div>
 	<button data-btn-action='delete' title='Tag media for delete. click the delete selected button to remove all tagged media.'></button>
 	<button data-btn-action='select' title='Use this piece of media.'></button>
