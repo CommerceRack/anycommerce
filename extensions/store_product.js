@@ -526,10 +526,10 @@ it has no inventory AND inventory matters to merchant
 //basically, a simple check to see if the item has purchaseable inventory.
 			getProductInventory : function(pid)	{
 //				app.u.dump("BEGIN store_product.u.getProductInventory ["+pid+"]");
-				var inv = 0;
+				var inv = false;
 //if variations are NOT present, inventory count is readily available.
 				if($.isEmptyObject(app.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
-					inv = app.data['appProductGet|'+pid]['@inventory'][pid].inv 
+					inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].inv);
 //					app.u.dump(" -> item has no variations. inv = "+inv);
 					}
 //if variations ARE present, inventory must be summed from each inventory-able variation.
