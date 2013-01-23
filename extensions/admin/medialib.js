@@ -679,7 +679,7 @@ $("img.lazyLoad").lazyload({
 	container : '#mediaLibInfiniteScroller',
 	threshold : 100
 	});
-//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a few pixels, then back up.
+//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a pixel.
 $("#mediaLibInfiniteScroller").scrollTop(1);
 					}
 				else	{

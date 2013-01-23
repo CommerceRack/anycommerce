@@ -62,6 +62,11 @@ var store_product = function() {
 					r += 1;
 					this.dispatch(pid,tagObj,Q)
 					}
+//if the product record is in memory BUT the inventory is zero, go get updated record in case it's back in stock.
+				else if(app.ext.store_product.u.getProductInventory(pid) === 0)	{
+					r += 1;
+					this.dispatch(pid,tagObj,Q);
+					}
 				else 	{
 					app.u.handleCallback(tagObj)
 					}

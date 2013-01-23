@@ -371,6 +371,11 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 						r = 1;
 						this.dispatch(obj,_tag,Q);
 						}
+//if the product record is in memory BUT the inventory is zero, go get updated record in case it's back in stock.
+					else if(app.ext.store_product && (app.ext.store_product.u.getProductInventory(obj.pid) === 0))	{
+						r = 1;
+						this.dispatch(obj,_tag,Q);
+						}
 					else 	{
 						app.u.handleCallback(_tag);
 						}
