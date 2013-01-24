@@ -598,6 +598,11 @@ NOTES
 				if(P.pid && P.templateID)	{
 //					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
 					var parentID = "product-modal"
+					
+					/*
+						!! Note- app.u.handleParentForDialog does not adequately set title.  Edited the dialog call below to pass title.
+					*/
+					
 					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']);
 					
 					if(!P.parentID)	{
@@ -606,7 +611,7 @@ NOTES
 						} //if no parent is specified, this is a 'recycled' modal window. empty any old product data.
 					
 					$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"productViewer_"+parentID));
-					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false});
+					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false, title : app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']});
 					$parent.dialog('open');
 					
 					var tagObj = {};
