@@ -199,6 +199,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			_tag : {},
 			dispatch : null, // a dispatch that'll be added directly to the Q. _tag will be added to it.
 			showClose : true, //set to false to disable close (X) button.
+			showLoading : true, //set to false to disable showLoading()
 			content : null, //a jquery object of content to use.
 			header : null, //if set, will create an h2 around this and NOT use firstchild.
 			q : 'mutable', //which q to use.
@@ -241,7 +242,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					else	{
 						app.ext.admin.calls[o.call].init(o._tag,o.Q);
 						}
-					$t.showLoading();
+					if(o.showLoading){$t.showLoading();}
 					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
 				//they'll get executed as part of the callback if a call is specified.

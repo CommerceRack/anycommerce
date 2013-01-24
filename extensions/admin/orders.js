@@ -2034,8 +2034,8 @@ else	{
 					var orderID = $(this).attr('data-orderid');
 					var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
 					if(orderID)	{
-						$(app.u.jqSelector('#',"orders2Content")).empty();
-						app.ext.admin_orders.a.showOrderView(orderID,CID,"orders2Content"); //adds a showLoading
+						$(app.u.jqSelector('#',"ordersContent")).empty();
+						app.ext.admin_orders.a.showOrderView(orderID,CID,"ordersContent"); //adds a showLoading
 						app.model.dispatchThis();
 						}
 					else	{

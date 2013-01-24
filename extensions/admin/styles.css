@@ -1,3 +1,16 @@
+body	{margin:0; padding:0; background:#e2e3e5; height:100%;} /* width and overflow are for transitions, so moved content doesn't trigger width adjustment */
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;}
+
+a	{color:#21444f;}
+a:hover	{color:#000000;}
+
+
+
+img {border:0px;}
+
+
+
+
 /*
 items that are floated may cause their containers to 'shrink'. apply this class to the container
 class can also be applied to a 1 item per row list.
@@ -26,7 +39,7 @@ class can also be applied to a 1 item per row list.
 /* hideForApp or Vstore gets toggle on based on account/domain setting. toggle on instead of off to avoid popping. */
 /* .showForVstoreOnly, .showForAppOnly	{display:none;} - not used yet. soon. */
 
-.displayNone	{display:none;}
+.displayNone, .debug	{display:none;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
@@ -45,6 +58,40 @@ class can also be applied to a 1 item per row list.
 
 .lookLikeLink, .ui-widget-content a	{cursor:pointer; color:#0066CC;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
+
+
+
+
+
+/* text styling */
+
+
+
+
+/*section or page header. There should only be one of these per page and it should be at the very top.*/
+h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
+
+/* used for the heading of section of text blocks each with it's own sub heading.
+must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
+h2	{font-size: 1.3em; margin: 0px 0px 6px 0px;}
+
+/* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
+should be followed by a P , TABLE or LIST. */
+h3	{font-size: 1.2em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+/* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
+h4	{font-size: 1.1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+/* if you want to display a hint or tip, give it the hint class */
+
+
+.hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
+
+
+
+
+
 
 
 
@@ -161,9 +208,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:12px auto; width:90%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
-
-#appView	{background:#ffffff;}
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:96%; min-height:200px; background:#ffffff;} /* min height so showLoading always shows in full. should reduce jitter some too */
 
 
 /* multipage controls */
@@ -183,11 +228,11 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
 
 /* used for the wiki header 1 & 2 */
-.ui-widget h2	{font-size:1.4em; color:#333333; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h3, .ui-widget  legend	{font-size:1.3em; color:#616161; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h4	{font-size:1.2em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h5	{font-size:1.1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h6	{font-size:1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h4	{font-size:1.2em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h5	{font-size:1.1em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h6	{font-size:1em; font-weight:bold; margin: 0; padding: 0;}
 
 #headerSearchFrm	{float:right;}
 #headerSearchFrm legend {display:none;}
@@ -254,6 +299,126 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 	}
 	
 
+/*
+
+########################################################
+
+HEADER
+
+########################################################
+
+*/
+
+
+#mastHead	{position:relative; min-width:700px;}
+#mastHead .logo	{float:left; margin-left:12px; margin-top:5px;}
+#mastHead .menu	{float:right; margin-right:12px;  }
+#mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
+
+/* the row with the logo and text links */
+.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656;}
+
+.mhTabsContainer	{background:#757779; position:relative;}
+.mhTabsContainer ul	{width:100%; padding:0; margin:0; display:inline-block; position:relative; z-index:100; float:left;}
+.mhTabsContainer li	{display:block; float:left; list-style:none;border-right:1px solid #ededed; width:8%; padding:1px 4px 0 4px; margin:0; font-size:.75em; position:relative; color:#ffffff; cursor:pointer;}
+.mhTabsContainer li:last-child	{border-right:0px;}
+.mhTabsContainer li:hover	{background:#7398a5;}
+.mhTabsContainer li.active, #navTabs	{background:#c0d2d8; color:#565656;}
+.mhTabsContainer .toggleArrow	{width:1%;}
+
+.mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
+.mhTabsContainer ul.showIcons li	{height:55px;}
+.mhTabsContainer ul.hideIcons .icon	{display:none;}
+.mhTabsContainer ul.hideIcons li	{height:20px;}
+
+.mhTabsContainer .text	{position:relative; z-index:10;}
+.mhTabsContainer .icon	{background-image:url(images/tab_sprites-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
+.mhTabsContainer .productsTab .icon	{background-position: -110px 0;}
+.mhTabsContainer .ordersTab .icon	{background-position: -165px 0;}
+.mhTabsContainer .crmTab .icon	{background-position: -220px 0;}
+.mhTabsContainer .syndicationTab .icon	{background-position: -275px 0;}
+.mhTabsContainer .reportsTab .icon	{background-position: -330px 0;}
+.mhTabsContainer .kpiTab .icon	{background-position: -385px 0;}
+.mhTabsContainer .utilitiesTab .icon	{background-position: -440px 0;}
+.mhTabsContainer .supportTab .icon	{background-position: -495px 0;}
+
+
+.mhTabsContainer .setupTab.active .icon	{background-position: 0px -55px;} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab.active .icon	{background-position: -55px -55px;}
+.mhTabsContainer .productsTab.active .icon	{background-position: -110px -55px;}
+.mhTabsContainer .ordersTab.active .icon	{background-position: -165px -55px;}
+.mhTabsContainer .crmTab.active .icon	{background-position: -220px -55px;}
+.mhTabsContainer .syndicationTab.active .icon	{background-position: -275px -55px;}
+.mhTabsContainer .reportsTab.active .icon	{background-position: -330px -55px;}
+.mhTabsContainer .kpiTab.active .icon	{background-position: -385px -55px;}
+.mhTabsContainer .utilitiesTab.active .icon	{background-position: -440px -55px;}
+.mhTabsContainer .supportTab.active .icon	{background-position: -495px -55px;}
+
+
+.mhTabsContainer .messageCount	{
+	color:#ffffff; font-size:12px; font-weight:normal; line-height:18px;
+	display:block; position:absolute; top:-2px; right:-3px;
+	z-index:110;
+	height:20px; width:20px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	text-align:center;
+	border:1px solid #ffffff;
+	-webkit-box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	background: #fcfcfc; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #fcfcfc 0%, #b74040 4%, #cc0000 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#fcfcfc), color-stop(4%,#b74040), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#cc0000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+	}
+
+#navTabs	{text-align:center; font-size:.75em; line-height:1.7em;}
+#navTabs a	{padding:0px 12px; text-decoration:none;}
+#navTabs a:hover	{text-decoration:underline;}
+
+#breadcrumb	{border-bottom:1px solid #ededed; font-size:.8em; text-indent:12px;}
+
+.mhTabsContainer li.messagesTab:hover, #messagesContent, .mhTabsContainer li.messagesTabActive	{background:#565656 !important;}
+#messagesContent	{position:absolute; top:65px; left:0; right:0; height:200px;  z-index:99;}
+
+@media screen and (max-width: 1000px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
+	}
+
+
+
+
+
+
+
+/*
+
+########################################################
+
+LOGIN and preView
+
+########################################################
+
+*/
+
+
+#appPreView, #appLogin, #createAccountContainer	{font-size:1.5em; margin: 10% auto; width:500px;}
+
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+
+
+#appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
 
 
 
@@ -574,13 +739,13 @@ see shipping panel in product editor for example
 .pageLanding h2 .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
 
 /* three column panel layout (homepage) */
-#landingPageColumn1	{width:65%; float:left;}
-#landingPageColumn2	{width:33%; float:right;}
+#dashboardColumn1	{width:65%; float:left;}
+#dashboardColumn2	{width:33%; float:right;}
 
-#landingPageColumn2 .varImage	{max-width:300px; width:100%;}
+#dashboardColumn2 .varImage	{max-width:300px; width:100%;}
 
 .recentNewsContainer	{height:450px; overflow:auto;}
-
+.recentNewsContainer article	{margin-bottom:24px;}
 
 /* achievements page */
 table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-collapse: collapse;}
@@ -588,8 +753,6 @@ table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-col
 .achievementList p	{font-size:1em; margin:0px;}
 .achievementList h3	{font-size:1.5em; font-weight:normal; font-family: 'PT Sans', sans-serif;}
 
-/* account creation */
-fieldset.authNewAccountCreate	{width:400px; background:#ffffff;}
 
 /* ebay reports page */
 .ebayListingsReportPage fieldset.oneThird	{width:30%}

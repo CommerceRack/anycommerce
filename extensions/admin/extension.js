@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','landingPageTemplate','recentNewsItemTemplate','quickstatReportTemplate','authNewAccountCreateTemplate','achievementsListTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate'); 
 	var r = {
 		
 		vars : {
@@ -49,12 +49,13 @@ if no handler is in place, then the app would use legacy compatibility mode.
 	pages : {
 		
 		"/biz/setup/index.cgi" : {
-			messages : [], //array of strings. TYPE|MESSAGE
+			messages : [], //array of strings. TYPE|MESSAGE -> used in legacy compat.
 			bc : [], //array of objects. link and name in order left to right. zero is leftmost in array.
 			help : "", //webdoc ID.
 			navtabs : {}, //array of objects. link, name and selected (boolean)
 			title : {},
 			allowed : ['ts1','ro1'],
+			tab : '', //string. can be blank. if blank, uses tab in focus. use 'home' for no tab/turn all tabs off.
 			exec : function(){}  //executes the code to render the page.
 			},
 		"/biz/syndication/index.cgi" : {
@@ -898,6 +899,9 @@ if no handler is in place, then the app would use legacy compatibility mode.
 $('title').append(" - release: "+app.vars.release);
 app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html',theseTemplates);
 
+
+//SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
+//this is the leser of two weevils.
 app.rq.push(['css',0,'http://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 
@@ -1016,9 +1020,19 @@ if(uriParams.trigger == 'adminPartnerSet')	{
 if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
 	}
+else if(uriParams.show == 'acreate')	{
+	app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+		$("#appPreView").hide();
+		$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+		});
+	}
 else	{
-	$('#appPreView').hide();
-	$('#appLogin').show();
+	app.ext.admin.u.handleAppEvents($('#appLogin'));
+	$('#appPreView').css('position','relative').animate({right:($('body').width() + $("#appPreView").width() + 100)},'slow','',function(){
+		$("#appPreView").hide();
+		$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+		});
 	}
 				}
 			}, //initExtension
@@ -1126,7 +1140,7 @@ else	{
 //				if(responseData.errid == "100")	{
 //					app.u.throwMessage("This is most typically due to your system clock not being set correctly. For security, it must be set to both the correct time and timezone.");
 //					} //this is the clock issue.
-				$('#preloadAndLoginContents').hideLoading();
+				$('body').hideLoading();
 				}
 			}, //showHeader
 
@@ -1351,8 +1365,14 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				OGMS : 'Total sales',
 				OWEB : 'Web sales',
 				OGRT : 'Return customers',
-				OEXP : 'Expedited'
+				OEXP : 'Expedited',
+				SAMZ : 'Amazon',
+				SEBA : 'eBay auction',
+				SABF : 'eBay fixed price',
+				SSRS : 'Sears',
+				SBYS : 'Buy.com'
 				}
+
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
@@ -1395,12 +1415,13 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
-// app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+ app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
+					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{mode = 'tabClick'} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
@@ -1499,26 +1520,41 @@ else	{
 					}
 				return false;
 				}, //showUI
-
-			showAchievementList : function($target)	{
-				if($target && $target.length)	{
-					$target.show().append(app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
-					app.ext.admin.u.handleAppEvents($target);
-					}
-				else	{
-					app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
-					}				
+//this is a function that brian has in the UI on some buttons.
+//it's diferent than showUI so we can add extra functionality if needed.
+//the app itself should never use this function.
+			navigateTo : function(path,$t)	{
+				return this.showUI(path,$t ? $t : {});
 				},
 
-			showAuthNewAccountCreate : function($target)	{
-				if($target && $target.length)	{
-					$target.show().append(app.renderFunctions.createTemplateInstance('authNewAccountCreateTemplate',{}));
-					app.ext.admin.u.handleAppEvents($target);
+/*
+HEADER CODE
+*/
+
+// iconState is optional. if defined, will show or hide icons based on value (show or hide).
+// if iconState is not defined, then the function behaves like a toggle.
+// the value returned is boolen. t for icons are showing and f for icons are hidden.
+			toggleHeaderTabHeight : function(iconState)	{
+				var $target = $('.mhTabsContainer ul','#mastHead'),
+				r;
+				if(iconState == 'show' || $target.hasClass('hideIcons'))	{
+					$('.toggleArrow').html("&#9650;");
+					$target.removeClass('hideIcons').addClass('showIcons');
+					r = true;
 					}
 				else	{
-					app.u.throwGMessage("In admin.a.showAuthNewAccountCreate, $target is not specified or has no length.");
+					$('.toggleArrow').html("&#9660;");
+					$target.removeClass('showIcons').addClass('hideIcons');
+					r = false;
 					}
+			//if the messages pane is open, adjust it's position accordingly.
+				if($('#messagesContent').is(':visible'))	{
+					$('#messagesContent').css('top',$('#messagesContent').parent().height());
+					}
+				return r;
 				},
+
+
 
 /*
 A generic form handler. 
@@ -1533,45 +1569,37 @@ Execute your own dispatch. This allows the function to be more versatile
 set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
-				processForm : function($form,q)	{
-					var obj = $form.serializeJSON() || {};
-					if($form.length && (obj._cmd || obj.call))	{
+			processForm : function($form,q)	{
+				var obj = $form.serializeJSON() || {};
+				if($form.length && (obj._cmd || obj.call))	{
 //						app.u.dump(" -> admin.a.processForm data attributes: "); app.u.dump(data);
-						var _tag = {};
+					var _tag = {};
 //build the _tag obj.
-						for(var key in obj)	{
-							if(key.substring(0,5) == "_tag/")	{
-								_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
-								delete obj[key]; //remove from object so it isn't part of query.
-								}
-							else{}
+					for(var key in obj)	{
+						if(key.substring(0,5) == "_tag/")	{
+							_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
+							delete obj[key]; //remove from object so it isn't part of query.
 							}
-						app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
-						if(obj._cmd)	{
-							obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
-							app.model.addDispatchToQ(obj,q);
-							}
-						else if(obj.call)	{
-							var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
-							delete obj.call;
-							app.u.dump(" -> call: "+call);
-							app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
-							}
-						else{} //can't get here. either cmd or call are set by now.
-						
+						else{}
 						}
-					else	{
-						app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
+					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
+					if(obj._cmd)	{
+						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
+						app.model.addDispatchToQ(obj,q);
 						}
-					}, //processForm
-				
-
-//this is a function that brian has in the UI on some buttons.
-//it's diferent than showUI so we can add extra functionality if needed.
-//the app itself should never use this function.
-			navigateTo : function(path,$t)	{
-				return this.showUI(path,$t ? $t : {});
-				},
+					else if(obj.call)	{
+						var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
+						delete obj.call;
+						app.u.dump(" -> call: "+call);
+						app.ext.admin.calls[call.split('/')[1]].init(obj,_tag,q)
+						}
+					else{} //can't get here. either cmd or call are set by now.
+					
+					}
+				else	{
+					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
+					}
+				}, //processForm
 				
 			showDomainConfig : function(){
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading();
@@ -1624,8 +1652,6 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 
 				}, //changeDomain
 
-
-
 //used in the builder for when 'edit' is clicked on an element.
 //Params are set by B. This is for legacy support in the UI.
 
@@ -1648,8 +1674,6 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				$editor.dialog('open');
 				}, //loadElement
 
-
-			
 //run on a select list inside 'edit' for a product list element.
 //various select lists change what other options are available.
 //t is 'this' from the select.
@@ -1663,23 +1687,15 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				
 				}, //uiProdlistEditorUpdate
 
-
-
-
-
-
 /*
 
 ##############################    PRODUCT FINDER
 
 to generate an instance of the finder, run: 
 app.ext.admin.a.addFinderTo() passing in targetID (the element you want the finder appended to) and path (a cat safe id or list id)
-
+currently, executing this function directly is not supported. use the showFinderInModal.
+once multiple instances of the finder can be opened at one time, this will get used more.
 */
-
-
-//currently, executing this function directly is not supported. use the showFinderInModal.
-//once multiple instances of the finder can be opened at one time, this will get used more.
 			addFinderTo : function(targetID,vars)	{
 				app.u.dump("BEGIN admin.a.addFinderTo('"+targetID+"')"); app.u.dump(vars);
 				$(app.u.jqSelector('#',targetID)).parent().find('.ui-dialog-title').text('loading...'); //empty the title early to avoid confusion.
@@ -1704,8 +1720,6 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				app.model.dispatchThis();
 				}, //addFinderTo
-
-
 //path - category safe id or product attribute in data-bind format:    product(zoovy:accessory_products)
 //vars is for variables. eventually, path and attrib should be move into the vars object.
 //vars will be used to contain all the 'chooser' variables.
@@ -1738,29 +1752,8 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					}
 				}, //showFinderInModal
 
-
-			showAppChooser : function()	{
-				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
-				app.ext.admin.u.handleAppEvents($target);
-				},
-
-	
-//opens a dialog with a list of domains for selection.
-//a domain being selected for their UI experience is important, so the request is immutable.
-//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
-//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
-			showDomainChooser : function(){
-//				app.u.dump("BEGIN admin.a.showDomainChooser");
-				$('#domainChooserDialog').dialog('open').showLoading();
-				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
-				app.model.dispatchThis('immutable');
-				},	 //showDomainChooser
-				
-
-
 			login : function($form){
-				$('#preloadAndLoginContents').showLoading();
+				$('body').showLoading();
 				app.calls.authentication.accountLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
 				app.model.dispatchThis('immutable');
 				}, //login
@@ -1775,19 +1768,48 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 
 				}, //logout
 
-			showLandingPage : function()	{
+			showAchievementList : function($target)	{
+				if($target && $target.length)	{
+					$target.show().append(app.renderFunctions.createTemplateInstance('achievementsListTemplate',{}));
+					app.ext.admin.u.handleAppEvents($target);
+					}
+				else	{
+					app.u.throwGMessage("In admin.a.showAchievementsList, $target is not specified or has no length.");
+					}				
+				},
+
+			showAppChooser : function()	{
+				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
+				app.ext.admin.u.handleAppEvents($target);
+				},
+
+
+//opens a dialog with a list of domains for selection.
+//a domain being selected for their UI experience is important, so the request is immutable.
+//a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
+//though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
+			showDomainChooser : function(){
+//				app.u.dump("BEGIN admin.a.showDomainChooser");
+				$('#domainChooserDialog').dialog('open').showLoading();
+				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
+				app.model.dispatchThis('immutable');
+				},	 //showDomainChooser
+				
+			showDashboard : function()	{
 				var $content = $("#homeContent");
-				$content.empty().append(app.renderFunctions.createTemplateInstance('landingPageTemplate',{}));
+				$content.empty().append(app.renderFunctions.createTemplateInstance('dashboardTemplate',{}));
 				app.ext.admin.u.bringTabIntoFocus();
 				app.ext.admin.u.bringTabContentIntoFocus($content);
 				
 //recent news panel.
-				$('#landingPageColumn1',$content).append($("<div \/>").attr('id','landingPageRecentNewsPanel').anypanel({
+				$('#dashboardColumn1',$content).append($("<div \/>").attr('id','dashboardRecentNewsPanel').anypanel({
 					'title' : 'Recent News',
 					'showClose' : false,
+					'showLoading' : false,
 					'call' : 'appResource',
 					'callParams' : 'recentnews.json',
-					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageRecentNewsPanel'},
+					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#dashboardRecentNewsPanel'},
 					'content' : $("<div class='recentNewsContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;' \/>")
 					}));
 
@@ -1795,27 +1817,24 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				var $salesReportPanel = $("<div \/>").anypanel({
 					'title' : 'Sales Report',
 					'showClose' : false,
-					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='landingPageReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
+					'showLoading' : false,
+					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='dashboardReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
 					});
-				$('#landingPageColumn2',$content).append($salesReportPanel);
-				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
-				app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
-				app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
-				app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'landingPageReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+				$('#dashboardColumn2',$content).append($salesReportPanel);
+				app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
+				app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
+				app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
+				app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
+				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
+				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
+				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable');
 /*
-				.append($("<div \/>").attr('id','landingPageOGMSPanel').anypanel({
-					'title' : 'Overall Sales Since Midnight',
-					'showClose' : false,
-					'call' : 'appResource',
-					'callParams' : 'quickstats/OGMS.json',
-					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageOGMSPanel'},
-					'templateID' :'quickstatReportTemplate'
-					}))
-*/
-
-				$('#landingPageColumn2',$content).append($("<div \/>").attr('id','landingPageMktplacePanel').anypanel({
+				$('#dashboardColumn2',$content).append($("<div \/>").attr('id','dashboardMktplacePanel').anypanel({
 					'title' : 'Popular Marketplace Summary',
 					'showClose' : false,
+					'showLoading' : false,
 					'content' : $("<div \/>")
 					}));
 
@@ -1826,19 +1845,9 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
 //				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
-$('#landingPageMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
+$('#dashboardMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
 
 
-
-//compute total # of orders.
-/*var totalOrders = 0;
-if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SAMZ.json'].contents.count);}
-if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SEBA.json'].contents.count);}
-if(app.data['appResource|quickstats/SABF.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SABF.json'].contents.count);}
-if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SSRS.json'].contents.count);}
-if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{totalOrders += Number(app.data['appResource|quickstats/SBYS.json'].contents.count);}
-app.u.dump(" -> totalOrders: "+totalOrders);
-*/
 //build chart data arrray.
 var chartData = new Array();
 if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Amazon', Number(app.data['appResource|quickstats/SAMZ.json'].contents.count)])}
@@ -1887,9 +1896,9 @@ var chart = new Highcharts.Chart({
 
 					}},'mutable'); //buy
 
-
+*/
 				app.model.dispatchThis('mutable');
-				}
+				} //showdashboard
 			}, //action
 
 
@@ -1905,15 +1914,17 @@ var chart = new Highcharts.Chart({
 //If a domain hasn't been selected (from a previous session) then a prompt shows up to choose a domain.
 //the entire UI experience revolves around having a domain.
 			showHeader : function(){
-//				$('#appPreView').hide();
-//				$('#appLogin').hide();
+//hide all preView and login data.
+				$('#appLogin').hide(); 
+				$('#appPreView').hide();
+				$('#createAccountContainer').hide();
+
 				$('#appView').show();
-				$('#preloadAndLoginContainer').hide(); //hide all preView and login data.
-				$('#preloadAndLoginContents').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
+				
+				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				$('.username','#appView').text(app.vars.userid);
 				var domain = this.getDomain();
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
-//				app.u.dump(" -> DOMAIN: ["+domain+"]");
 
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
 //if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
@@ -1924,7 +1935,7 @@ var chart = new Highcharts.Chart({
 				else {
 					app.ext.admin.calls.adminDomainList.init({},'passive');
 					$('.domain','#appView').text(domain);
-					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('/biz/recent.cgi'));
+					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
 					}
 				}, //showHeader
 
@@ -1964,21 +1975,6 @@ var chart = new Highcharts.Chart({
 				return domain;
 				}, //getDomain
 
-
-
-
-
-
-
-//used for bringing one of the top tabs into focus. does NOT impact content area.
-// !!! NOTE - when the old showUI goes away, so can this function. it's replaced with bringTabIntoFocus
-			handleTopTabs : function(tab){
-				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
-				$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on');
-				},
-
-
-
 			loadNativeApp : function(path,opts){
 				if(path == '#!mediaLibraryManageMode')	{
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
@@ -1986,28 +1982,22 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!domainConfigPanel')	{
 					app.ext.admin.a.showDomainConfig();
 					}
-				else if(path == '#!userManager')	{
-					app.ext.admin_user.a.showUserManager();
-					}
-				else if(path == '#!eBayListingsReport')	{
-					app.ext.admin_reports.a.showeBayListingsReport();
-					}
-				else if(path == '#!orderPrint')	{
-					app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);
-					}
-				else if(path == '#!orderCreate')	{
-					app.ext.convertSessionToOrder.a.openCreateOrderForm();
-					}
+				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
+				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
+				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
+				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
+				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
+				else if(path == '#!domainConfigPanel')	{app.ext.admin.a.showDomainConfig();}
+
 				else if (path == '#!appChooser')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin.a.showAppChooser();
 					}
 				else if(path == '#!orders')	{
-					app.ext.admin.u.bringTabIntoFocus('orders2');
-					app.ext.admin.u.bringTabContentIntoFocus($("#orders2Content"));
-//					app.ext.admin.vars.tab = 'orders2';
-					app.ext.admin_orders.a.initOrderManager({"targetID":"orders2Content"});
+					app.ext.admin.u.bringTabIntoFocus('orders');
+					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
+					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
 					}
 				else if(path == '#!products')	{
 					app.u.dump("Go to product editor");
@@ -2018,23 +2008,35 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_task.a.showTaskManager();
 					}
-				else if(path == '#!domainConfigPanel')	{
-					app.ext.admin.a.showDomainConfig();
-					}
 				else	{
 					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
 					}
 				},
 
-
-
-
 //used for bringing one of the top tabs into focus. does NOT impact content area.
 			bringTabIntoFocus : function(tab){
-				$('li','#menutabs').addClass('off').removeClass('on'); //turn all tabs off.
-				if(tab)	{$('.'+tab+'Tab','#menutabs').removeClass('off').addClass('on')}
-				else	{} //perfectly to have no tab in focus (home, support, etc)
+				$('.mhTabsContainer ul','#mastHead').children().removeClass('active'); //strip active class from all other tabs.
+				$('.'+tab+'Tab','#mastHead').addClass('active'); ///!!! need to put this into a jqSelector function !!!
+				return false;
 				},
+
+
+			toggleMessagePane : function(state){
+
+				$target = $('#messagesContent');
+				$target.css('top',$target.parent().height()); //positions messages pane directly below tab bar, regardless of tab bar height.
+				console.log($target.css('display'));
+				if(state == 'hide' && $target.css('display') == 'none')	{} //pane is already hidden. do nothing.
+				else if(state == 'show' || $target.css('display') == 'none')	{
+					$target.slideDown();
+					$('.messagesTab').addClass('messagesTabActive');
+					}
+				else	{
+					$target.slideUp();
+					$('.messagesTab').removeClass('messagesTabActive');
+					}
+
+				}, //toggleMessagePane
 
 //should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
 //this will replace handleShowSection
@@ -2042,7 +2044,11 @@ var chart = new Highcharts.Chart({
 				if($target.is('visible'))	{
 					//target is already visible. do nothing.
 					}
+				else if($target.attr('id') == 'messagesContent')	{
+					this.toggleMessagePane(); //message tab is handled separately.
+					}
 				else	{
+					app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
 					$('.tabContent').hide();
 					$target.show();
 					}
@@ -2075,7 +2081,7 @@ var chart = new Highcharts.Chart({
 //this is for handling legacy paths.
 			handleShowSection : function(path,P,$target)	{
 				var tab = app.ext.admin.u.getTabFromPath(path);
-				this.handleTopTabs(tab);
+				this.bringTabIntoFocus(tab);
 //				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product' && !P.dialog)	{
 					app.u.dump(" -> open product editor");
@@ -2939,6 +2945,26 @@ just lose the back button feature.
 
 		e : {
 			
+			accountLogin : function($btn)	{
+				$btn.button();
+				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
+					event.preventDefault();
+					app.ext.admin.a.login($btn.closest('form'));
+					});
+				},
+			
+			showCreateAccount : function($btn)	{
+				$btn.button();
+				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
+					event.preventDefault();
+					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
+						$("#appLogin").hide();
+						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					})
+				},
+			
 			achievementDetail : function($row)	{
 				$row.on('mouseover.achievementDetail',function(){
 					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
@@ -2973,7 +2999,6 @@ just lose the back button feature.
 					var $parent = $(this).closest(['data-appid']);
 					app.u.dump("$parent.length: "+$parent.length);
 					app.u.dump("$parent.data: "); app.u.dump($parent.data());
-					die();
 					window.open($parent.data('app-repo')+"archive/master.zip");
 					})
 				},
@@ -3006,6 +3031,7 @@ just lose the back button feature.
 						$("fieldset",$form).prepend($errors).prepend("It seems a few required fields were left blank. Please provide the following pieces of information:");
 						}
 					else	{
+						$('body').showLoading();
 						app.ext.admin.calls.authNewAccountCreate.init(formObj,{'callback':'showHeader','extension':'admin'},'immutable');
 						app.model.dispatchThis('immutable');
 						}

@@ -31,6 +31,8 @@ table.orderManagerTable	{
 
 .orderManagerTable	td.leftCol .fixedWidth	{width: 150px;} /* for use on inputs and selects */
 
+.orderManagerTable .ui-accordion-header	{border-right:0} /* right border not needed. bounding box handles it */
+
 #orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
 .filterGroup ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
 .filterGroup li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
