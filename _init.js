@@ -32,7 +32,28 @@ app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','
 //spec_LLTRSHIRT017_0
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
-app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {	
 	var safePID = app.u.makeSafeHTMLId(P.pid); //can't use jqSelector because productTEmplate_pid still used makesafe. planned Q1-2012 update ###
 	var $tabContainer = $( ".tabbedProductContent",$('#productTemplate_'+safePID));
 		if($tabContainer.length)	{
@@ -53,14 +74,15 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 				}
 			}
 		else	{} //couldn't find the tab to tabificate.
-	}]);
+		app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+	}
+]);
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
 app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
-app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
