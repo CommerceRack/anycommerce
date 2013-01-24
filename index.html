@@ -262,7 +262,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
 					<div class="subMenu">
-						<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+						<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
 					</div>
 				</li>
 				<li>
@@ -353,7 +353,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
 					<div class="subMenu">
-						<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+						<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
 					</div>
 				</li>
 				<li>
@@ -599,7 +599,7 @@ this will likely become more flexible in the future. ###
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
 					<div class="subMenu">
-						<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+						<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
 					</div>
 				</li>
 				<li>
@@ -848,7 +848,7 @@ adding classes is not likely to have any bad effects.
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
 					<div class="subMenu">
-						<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+						<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
 					</div>
 				</li>
 				<li>
@@ -1154,37 +1154,37 @@ adding classes is not likely to have any bad effects.
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
 					<div class="subMenu">
-						<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+						<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
 					</div>
 				</li>
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
 					<div class="subMenu">
-						<ul id="navSearch2" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
+						<ul id="navSearch2" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 				</li>
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
 					<div class="subMenu">
-						<ul id="navSearch3" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
+						<ul id="navSearch3" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 				</li>
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
 					<div class="subMenu">
-						<ul id="navSearch4" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
+						<ul id="navSearch4" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 				</li>
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
 					<div class="subMenu">
-						<ul id="navSearch5" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
+						<ul id="navSearch5" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 				</li>
 				<li>
 					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
 					<div class="subMenu">
-						<ul id="navSearch6" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
+						<ul id="navSearch6" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 				</li>
 			</ul>
