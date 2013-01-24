@@ -450,7 +450,7 @@ progress[aria-valuenow]:before  {
 					box-shadow: 1px 1px 5px 1px #777777;
 				}																
 							
-		div#container div#nav
+		div#container div.nav
 		{
 			background: url("../images/background-nav.png") repeat-x;
 			height: 50px;
@@ -461,33 +461,31 @@ progress[aria-valuenow]:before  {
 			-webkit-box-shadow: 1px 1px 5px 1px #222222;
 			box-shadow:         1px 1px 5px 1px #222222;				
 		}
-			div#container div#nav div#navContent
+			div#container div.nav div.navContent
 			{
 				height: 50px;
 				margin: 0px auto;
 				position: relative;
 				width: 960px;
 			}
-				div#container div#nav div#navContent ul
+				div#container div.nav div.navContent ul
 				{
 					height: 50px;
 					margin: 0px auto;
 					/*position: relative;*/
 					width: 910px;
 				}
-					div#container div#nav div#navContent ul li
+					div#container div.nav div.navContent ul li
 					{
 						cursor: pointer;
 						float: left;
 						height: 50px;
 						list-style: none;
-						/*padding-left: 20px;
-						padding-right: 20px;*/
+						overflow: show;
 						padding-left: 10px;
 						padding-right: 10px;
-						/*position: relative;*/
 					}				
-						div#container div#nav div#navContent ul li a
+						div#container div.nav div.navContent ul li a
 						{
 							color: #FFFFFF;
 							font-family: Helvetica;
@@ -497,20 +495,24 @@ progress[aria-valuenow]:before  {
 							text-decoration: none;
 							top: 17px;
 						}
-							div#container div#nav div#navContent ul li a:hover
+							div#container div.nav div.navContent ul li a:hover
 							{
 								
 							}
-						div#container div#nav div#navContent ul li div.subMenu
+						div#container div.nav div.navContent ul li div.subMenu
 						{
 							background-color: #FFFFFF;
 							display: none;
-							height: 379px;
+							height: 0px;
 							left: 25px;
 							position: absolute;
 							top: 50px;
 							width: 905px;
 							z-index: 2000;
+							
+							-moz-box-shadow:    0px 1px 5px 1px #222222;
+							-webkit-box-shadow: 0x 1px 5px 1px #222222;
+							box-shadow:         0px 1px 5px 1px #222222;								
 						}
 						
 		div#container div#footer

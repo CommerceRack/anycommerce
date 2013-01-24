@@ -19,7 +19,7 @@ CHECOUT_PASSIVE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice","cartPaymentQTemplate");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,
@@ -28,7 +28,7 @@ var convertSessionToOrder = function() {
 			"chkoutBillAddress" : "Billing Address",
 			"chkoutShipAddress" : "Shipping Address",
 			"chkoutShipMethods" : "Shipping Options",
-			"chkoutPayOptions" : "Payment Choices",
+			"chkoutPayOptions" : "Payment",
 			"chkoutOrderNotes" : "Order Notes"
 			},
 //though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
@@ -259,13 +259,14 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 //SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
 				
 				if(app.vars._clientid == '1pc')	{
-					//Do Nothing.  BAD 1pc, go home.
-				}
+					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
+					}
 				else {
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_nice/templates.html',theseTemplates);
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
 				}
 				
 				var msg = false
+/*
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					msg = app.u.errMsgObject("Uh Oh! It appears an error occured. Please try again. If error persists, please contact the site administrator.");
 					}
@@ -274,10 +275,12 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				else if(zGlobals.checkoutSettings.preference_require_login == 1 || zGlobals.checkoutSettings.preference_request_login == 1)	{
 					msg = app.u.errMsgObject("Uh Oh! There appears to be an issue with the store configuration. Please change your checkout setting to 'passive' if you wish to use this layout.","MVC-INIT-CHECKOUT_PASSIVE_1000");
 					}
-				else if(typeof _gaq == 'undefined')	{
+
+//messaging for the test harness 'success'.
+*/
+				if(typeof _gaq == 'undefined')	{
 					msg = app.u.errMsgObject("Uh Oh! It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.","MVC-INIT-CHECKOUT_PASSIVE_1001");
 					}
-//messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
 					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.");
 					r = true;
@@ -663,9 +666,13 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 
 				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
 
+if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
-
+	setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
+	}
+else	{
+	//roi code should be handled by the app itself, not use the output from the UI
+	}
 				},
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onError ['+uuid+']');
@@ -1131,6 +1138,8 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');	
 				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
+				
+				app.renderFunctions.translateSelector('#paymentQContainer',app.data.cartDetail);  //used for translating paymentQ
 				}, //paymentOptions
 		
 		
@@ -1573,21 +1582,29 @@ the refreshCart call can come second because none of the following calls are upd
 				var isSelectedMethod = false;
 //				app.u.dump(" -> # payment options (L): "+L);
 				if(L > 0)	{
-					for(var i = 0; i < L; i += 1)	{
-						id = data.value[i].id;
-	//					app.u.dump(" -> i: "+i+" ["+id+"]");
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
-						
-						if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
-							isSelectedMethod = id;
-							}					
-						
-						o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
+					if(data.value[0].id == 'ZERO')	{
+						$tag.hide(); //hide payment options.
+						$tag.append("<li><input type='radio' name='want/payby' id='want-payby_ZERO' value='ZERO' checked='checked' \/><\/li>");
 						}
-	
-					$tag.html(o);
-					if(app.ext.convertSessionToOrder.vars['want/payby'])	{
-						$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+					else	{
+						$tag.show(); //make sure visible. could be hidden as part of paypal, then paypal could be cancelled.
+						for(var i = 0; i < L; i += 1)	{
+							id = data.value[i].id;
+		//					app.u.dump(" -> i: "+i+" ["+id+"]");
+							o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
+							
+							if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
+								isSelectedMethod = id;
+								}					
+							
+							o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+							}
+		
+						$tag.html(o);
+						if(app.ext.convertSessionToOrder.vars['want/payby'])	{
+							$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+							}
 						}
 					}
 				else	{
