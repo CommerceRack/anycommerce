@@ -338,7 +338,6 @@ a background on the target element may require an implicit override here.
 
 
 
-
 /*
 
 ####################
@@ -564,6 +563,10 @@ see shipping panel in product editor for example
 .alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
 
 
+
+
+
+
 /* landing page (aka recent news) */
 
 /* .pageLanding .ui-widget-content	{max-height:400px; overflow:auto; min-height:75px;} /* if/when browsers support it, check out  overflow-style */
@@ -576,6 +579,7 @@ see shipping panel in product editor for example
 
 #landingPageColumn2 .varImage	{max-width:300px; width:100%;}
 
+.recentNewsContainer	{height:450px; overflow:auto;}
 
 
 /* achievements page */

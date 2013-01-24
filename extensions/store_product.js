@@ -620,11 +620,7 @@ NOTES
 					app.ext.store_product.calls.appProductGet.init(P.pid,tagObj);
 					app.ext.store_product.calls.appReviewsList.init(P.pid); //
 
-//					app.u.dump(' -> numRequests = '+numRequests);
 					app.model.dispatchThis();
-
-					
-//					$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"productViewer_"+parentID));
 
 					}
 				else	{

@@ -35,7 +35,6 @@ var app = {vars:{
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : baseURL,
 	},u:{},rq:[]};
-
 	
 </script>
 
@@ -377,6 +376,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.ext.admin.a.showLandingPage();">showLandingPage</button>
 <button onClick="app.ext.admin_user.a.showUserManager();">User Manager</button>
+<button onClick="app.ext.admin_user.a.showAppChooser();">User Manager</button>
 
 
 
@@ -410,6 +410,52 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
 	</div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+This is content that isn't template worthy, but still necessary (most likely for modals or static pages)
+
+-->
+
+
+
+<div id='achievementAddProductModal' class='achievementModal displayNone' title="Achievement: Add a product">
+
+	<table>
+	<tr>
+		<td></td>
+		<td>
+		<h2>Add some product to your store</h2>
+		<p>For the purpose of this achievement, there are three ways to get product into your store (in actuality, there are more).</p>
+		<ol>
+			<li>Using the product editor</li>
+			<li>Through a CSV import</li>
+			<li>Add test product</li>
+		</ol>
+		
+		<p>#1. This is the manual process, but fairly simple.  Click the product tab and then the 'create new' link on the left. Fill in the appropriate fields and press save. That's all there is to it. Once the product is created, go into the editor to add pictures and more detailed information.<br />
+		Watch | <a href='http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=50788' target='webdoc' class='webdoc'>Read</a></p>
+		<p>#2. For adding in bulk, this is the best way to do it. Prepare your CSV with the appropriate headers (described in the link below) and then import through setup > import tools.<br />
+		Watch | <a href='http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=50285' target="webdoc" class='webdoc'>Read</a></p>
+		<p>#3. By far the easiest method, but also the least likely to get you selling (good for testing purposes). Simply click the link below and we'll add a few sample product to your store.<br />
+		Watch | Read | Do It!</p>
+		</td>
+	</tr>
+	</table>
+
+</div>
+
+
 
 
 

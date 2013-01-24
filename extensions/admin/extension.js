@@ -1739,6 +1739,11 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 				}, //showFinderInModal
 
 
+			showAppChooser : function()	{
+				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
+				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
+				app.ext.admin.u.handleAppEvents($target);
+				},
 
 	
 //opens a dialog with a list of domains for selection.
@@ -1783,7 +1788,7 @@ app.ext.admin.a.addFinderTo() passing in targetID (the element you want the find
 					'call' : 'appResource',
 					'callParams' : 'recentnews.json',
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#landingPageRecentNewsPanel'},
-					'content' : $("<div data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;' \/>")
+					'content' : $("<div class='recentNewsContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;' \/>")
 					}));
 
 //quickstats ogms.
@@ -1996,7 +2001,7 @@ var chart = new Highcharts.Chart({
 				else if (path == '#!appChooser')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					app.ext.admin.u.showAppChooser();
+					app.ext.admin.a.showAppChooser();
 					}
 				else if(path == '#!orders')	{
 					app.ext.admin.u.bringTabIntoFocus('orders2');
@@ -2897,11 +2902,6 @@ just lose the back button feature.
 
 
 
-			showAppChooser : function()	{
-				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content'));
-				$target.empty().append(app.renderFunctions.createTemplateInstance('pageTemplateSetupAppchooser',{}));
-				$('button',$target).button();
-				},
 
 //a UI Action should have a databind of data-app-event (this replaces data-btn-action).
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
@@ -2943,11 +2943,50 @@ just lose the back button feature.
 				$row.on('mouseover.achievementDetail',function(){
 					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});
 					})
-					.on('mouseout.achivementDetail',function(){
+					.on('mouseout.achievementDetail',function(){
 					$(this).removeClass('ui-state-highlight');
 					})
+					.on('click.achievementDetail',function(event){
+						event.preventDefault();
+						if($(this).data('app-contentid') && $(app.u.jqSelector('#',$(this).data('app-contentid'))).length)	{
+							app.u.dump(" -> $(this).data('app-contentid'): "+$(this).data('app-contentid'));
+							$(app.u.jqSelector('#',$(this).data('app-contentid'))).dialog({'modal':true});
+							}
+						else	{
+							app.u.throwGMessage("In admin.e.achievementDetail, no data-content-id specified on element.");
+							}
+						});
 				},
-			
+
+			appChooserAppChoose : function($btn)	{
+				$btn.button();
+				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+					event.preventDefault();
+					var $parent = $btn.closest(['data-appid']);
+					})
+				},
+
+			appChooserFork : function($btn)	{
+				$btn.button();
+				$btn.off('click.appChooserFork').on('click.appChooserFork',function(event){
+					event.preventDefault();
+					var $parent = $(this).closest(['data-appid']);
+					app.u.dump("$parent.length: "+$parent.length);
+					app.u.dump("$parent.data: "); app.u.dump($parent.data());
+					die();
+					window.open($parent.data('app-repo')+"archive/master.zip");
+					})
+				},
+
+			appChooserAppDownload : function($btn)	{
+				$btn.button();
+				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+					event.preventDefault();
+					var $parent = $btn.closest(['data-appid']);
+					alert("Open a confirm dialog that shows the app id AND the domain in focus. after confirm, 'this may take a few moments...' then go through process.. creating project, adding files to project, selecting app for domain xyz.com, etc");
+					})
+				},
+
 			authNewAccountCreate : function($btn)	{
 				$btn.button();
 				$btn.off('authNewAccountCreate').on('click.authNewAccountCreate',function(event){

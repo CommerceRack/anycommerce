@@ -471,42 +471,44 @@ SETUP PAGE TEMPLATE
 
 <div id='pageTemplateSetupAppchooser' class='page pageSetup pageSetupAppchooser clearfix'>
 
-<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='avalanche'>
-	<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Avalanche</div>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-		<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_avalanche/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
-		<div >
-			<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppExport">Export</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='avalanche' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Avalanche</div>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_avalanche/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
+			<div >
+				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
+				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+			</div>
 		</div>
 	</div>
-</div>
-<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='shadow'>
-	<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Shadow</div>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-		<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_shadow/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
-		<div>
-			<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppExport">Export</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+
+	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='shadow' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Shadow</div>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_shadow/preview.jpg' width='280' height='200' alt='shadow' /></div>
+			<div>
+				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
+				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+			</div>
 		</div>
 	</div>
-</div>
-<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='crispnclean'>
-	<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Crisp &amp; Clean</div>
-	<div class='ui-widget-content ui-corner-bottom stdPadding'>
-		<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_crispnclean/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
-		<div>
-			<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppExport">Export</button>
-			<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+
+	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='crispnclean' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Crisp &amp; Clean</div>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_crispnclean/preview.jpg' width='280' height='200' alt='crisp n clean' /></div>
+			<div>
+				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
+				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+			</div>
 		</div>
 	</div>
-</div>
 
 </div>
 
@@ -1113,36 +1115,52 @@ PRODUCT TAB
 </div>
 
 
+
+
+<!--
+
+########################################################
+
+
+ACHIEVEMENTS
+
+########################################################
+
+
+-->
+
+
+
 <div id='achievementsListTemplate'>
 
 <table class='achievementList'>
 <tbody>
-<tr data-app-role='achievement|addProduct' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementAddProductModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconMug'></span></td>
 	<td><h3 class='lookLikeLink'>Add some product</h3><p>Can't be ecommerce without something to sell.  Get a few items into your product database.</p></td>
 </tr>
 
-<tr data-app-role='achievement|addLogo' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementAddLogoModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconI'></span></td>
 	<td><h3 class='lookLikeLink'>Add your company logo</h3><p>Maximize your brand! Set your company logo so your shoppers know where they are.</p></td>
 </tr>
 
-<tr data-app-role='achievement|addDirectChannel' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementAddDirectChannelModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconNetwork'></span></td>
 	<td><h3 class='lookLikeLink'>Set up a direct sales channel</h3><p>Create an environment where your customers can shop!</p></td>
 </tr>
 
-<tr data-app-role='achievement|addIndirectChannel' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementAddIndirectChannelModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconHorArrows'></span></td>
 	<td><h3 class='lookLikeLink'>Set up an indirect sales channel</h3><p>Market your product across the internet to maximize revenue.</p></td>
 </tr>
 
-<tr data-app-role='achievement|watchVideo' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementWatchVideoModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconComputer'></span></td>
 	<td><h3 class='lookLikeLink'>Watch a training video</h3><p>Learn more about how to use our software and what we can do for you.</p></td>
 </tr>
 
-<tr data-app-role='achievement|joinCommunity' data-app-event='admin|achievementDetail'>
+<tr data-app-contentid='achievementJoinCommunityModal' data-app-event='admin|achievementDetail'>
 	<td><span class='anyIcon anyIconHeart'></span></td>
 	<td><h3 class='lookLikeLink'>Join our community</h3><p>Hear what your peers have to say and tell us what's on your mind.</p></td>
 </tr>
@@ -1150,3 +1168,4 @@ PRODUCT TAB
 </tbody>
 </table>
 </div>
+
