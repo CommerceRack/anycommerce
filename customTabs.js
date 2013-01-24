@@ -26,18 +26,20 @@ else{/*do nothing, can't warn if console.warn isn't defined*/}
 
 function isLocal( anchor ) {
 	//alert(anchor.href.replace( rhash, "" )+".."+location.href.replace( rhash, "" ).replace( /\s/g, "%20" ));
-	if(anchor.href.replace( rhash, "" ) === "app://"){
-		//app.u.dump("bypassing isLocal check");
-		return true;
-	}
 	
-	return anchor.hash.length > 1 &&
-		anchor.href.replace( rhash, "" ) ===
-			location.href.replace( rhash, "" )
-				// support: Safari 5.1
-				// Safari 5.1 doesn't encode spaces in window.location
-				// but it does encode spaces from anchors (#8777)
-				.replace( /\s/g, "%20" );
+	return true;
+//	if(anchor.href.replace( rhash, "" ) === "app://"){
+//		//app.u.dump("bypassing isLocal check");
+//		return true;
+//	}
+//	
+//	return anchor.hash.length > 1 &&
+//		anchor.href.replace( rhash, "" ) ===
+//			location.href.replace( rhash, "" )
+//				// support: Safari 5.1
+//				// Safari 5.1 doesn't encode spaces in window.location
+//				// but it does encode spaces from anchors (#8777)
+//				.replace( /\s/g, "%20" );
 	
 }
 
