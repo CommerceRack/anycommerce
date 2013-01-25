@@ -67,6 +67,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <script src="jquery.ui.widget.min.js"></script> 
 <script src="customTabs.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
+<script type="text/javascript" src="site/scripts/jquery.flippy.min.js"></script>
 
 
 
@@ -436,11 +437,12 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-	<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	<li id='productListTemplate' class='pointer loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();"  onClick="productFlip($(this));" >
 		
 		<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+		<!--<button class='btnViewProdDetails' onClick="productFlip($(this).parent());">Details</button>-->
 		
-		<div>
+		<div class="prodItemPane">
 			<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
 				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='216' height='216' />
 			</div>
@@ -455,6 +457,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 			<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 	<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 		</div>
+		<div class="prodItemAltData"><p data-bind='var: product(zoovy:prod_desc); format: text;'></p></div>
+		<div class="prodItemHoldData"></div>
 	</li>
 
 
@@ -1748,24 +1752,15 @@ The 'data-action' attribute is used to assign an onclick.
 <div id='loginFormContainer'>
 	<div id="gotAccount">
 		<p>GOT AN ACCOUNT?</p>
-		<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+		<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginLogin").val(),$("#modalLoginPassword").val()); return false;' id='modalLoginForm'>
 			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
 			<fieldset>
-				<div>
-					<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='E-mail address' size='25' />
-				</div>
-					
-				<div>
-					<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
-				</div>
-					
-				<div>
-					<!--<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />-->
-				</div>
-				
+				<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='E-mail Address' size='25' />
+				<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginPassword' value='' size='25' />	
+			    <span id="lblLoginPassword">Password</span>	
 			</fieldset>
 		</form>
-		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginlogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
 		<img class="pointer" src="site/images/button-login-to-my-account.png" alt="Login to my Account" onClick="$('form#modalLoginForm').submit();" />
 	</div>
 	<div id="createAccount">

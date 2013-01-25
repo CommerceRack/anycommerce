@@ -31,11 +31,43 @@ $(document).ready(function()
 	
 	$("input#txtSearch").focusout(function()
 	{
-		if( $.trim($(this).val()) == "")
+		if($.trim($(this).val()) == "")
 		{
 			$(this).val("Find it here...");
 		}
 	});
+	
+	$("input#modalLoginLogin").click(function()
+	{
+		if($(this).val() == "E-mail Address")
+		{
+			$(this).val("");
+		}	
+	});
+	
+	$("input#modalLoginLogin").focusout(function()
+	{
+		if($.trim($(this).val()) == "")
+		{
+			$(this).val("E-mail Address");
+		}
+	});	
+	
+	$("input#modalLoginPassword").click(function()
+	{
+		if($(this).val() == "")
+		{
+			$("span#lblLoginPassword").html("");
+		}
+	});
+	
+	$("input#modalLoginPassword").focusout(function()
+	{
+		if($.trim($(this).val()) == "")
+		{
+			$("span#lblLoginPassword").html("Password");
+		}
+	});		
 	
 	$("input#subscribeFullname").click(function()
 	{

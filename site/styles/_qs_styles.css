@@ -383,7 +383,7 @@ progress[aria-valuenow]:before  {
 			}
 				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li
 				{
-					background-color: #FFFFFF;
+					/*background-color: #FFFFFF;*/
 					border: 2px solid #FFFFFF;
 					height: 216px;
 					margin-left: 0;
@@ -405,6 +405,27 @@ progress[aria-valuenow]:before  {
 					position: absolute;
 					width: 216px;
 					top: 129px;
+				}
+				.prodItemPane
+				{
+					background-color: #FFFFFF;
+					height: 216px;
+					overflow: hidden;
+					position: relative;
+					width: 216px;
+				}
+					.prodItemPane p
+					{
+						height: 216px;
+						overflow: hidden;
+						padding-left: 5px;
+						padding-top: 3px;
+						text-align: left;
+						width: 216px;
+					}
+				div.prodItemHoldData, div.prodItemAltData
+				{
+					display: none;
 				}
 				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc .prodThumbBackground
 				{
@@ -1244,17 +1265,31 @@ div#gotAccount
 		position: absolute;
 		top: 186px;
 	}
-	div#gotAccount input#modalLoginlogin
+		div#gotAccount input
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			height: 24px;
+			position: absolute;
+			width: 237px;
+		}
+	div#gotAccount input#modalLoginLogin
 	{
 		left: 30px;
-		position: absolute;
 		top: 80px;
 	}
-	div#gotAccount input#modalLoginpassword
+	div#gotAccount input#modalLoginPassword
 	{
 		left: 30px;
-		position: absolute;
 		top: 132px;
+	}
+	div#gotAccount span#lblLoginPassword
+	{
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 32px;
+		position: absolute;
+		top: 138px;
 	}
 div#checkoutContainer
 {

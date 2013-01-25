@@ -2024,6 +2024,7 @@ buyer to 'take with them' as they move between  pages.
 				//$('#loginFormForModal').dialog({modal: true,width:550,autoOpen:false});
 				$('#loginFormForModal').dialog({modal: true,width:655,autoOpen:false});
 				$('#loginFormForModal').dialog('open');
+				$('#txtSearch').focus();
 				
 		
 				}, //showLoginModal
