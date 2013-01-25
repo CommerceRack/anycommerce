@@ -2250,7 +2250,7 @@ return $r;
 
 		imageURL : function($tag,data){
 //			app.u.dump('got into displayFunctions.image: "'+data.value+'"');
-			data.bindData.bgcolor = data.bindData.bgcolor || 'ffffff'; //default to white.
+			data.bindData.b = data.bindData.b || 'ffffff'; //default to white.
 			
 			if(data.bindData.isElastic) {
 				data.bindData.elasticImgIndex = data.bindData.elasticImgIndex || 0; //if a specific image isn't referenced, default to zero.
