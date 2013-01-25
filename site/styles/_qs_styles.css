@@ -792,6 +792,10 @@ div.prodRelatedItems
 				top: 10%;
 				width: 55px;
 			}
+			div.prodThumbContainer
+			{
+			
+			}
 			div.prodRelatedItems ul.relatedItems li div.prodThumbContainer ul.slideMe
 			{
 				height: 55px;
@@ -1501,3 +1505,12 @@ div#contactArticle
 		{
 			margin-bottom: 10px;
 		}
+		
+.btnViewProdDetails
+{
+	display: none;
+	left: 5px;
+	position: absolute;
+	top: 5px;
+	z-index: 1000;
+}

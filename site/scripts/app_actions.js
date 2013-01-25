@@ -2,16 +2,14 @@ function productFlip($obj)
 {
 	if($obj.closest("div.prodDetailView").length < 1)
 	{
-	var dir = "TOP";
-	var pind = $obj.index();
+		var dir = "TOP";
+		var pind = $obj.index();
 
-	if(((pind + 1) % 2) == 0)
-	{
-		dir = "LEFT";
-	}
+		if(((pind + 1) % 2) == 0)
+		{
+			dir = "LEFT";
+		}
 
-	//if($obj.attr("flipped") != "true")
-	//{
 		if($obj.find("div.prodItemPane").html().indexOf("flippy") < 0)
 		{
 			$obj.find("div.prodItemHoldData").html($obj.find("div.prodItemPane").html());
@@ -21,6 +19,8 @@ function productFlip($obj)
 			$obj.css("box-shadow","none");
 			$obj.find(".quickView").css("right","7px");
 			$obj.find(".quickView").css("top","7px");
+			$obj.find(".btnViewProdDetails").css("left","7px");
+			$obj.find(".btnViewProdDetails").css("top","7px");			
 			
 			$obj.find("div.prodItemPane").flippy(
 			{
@@ -37,44 +37,15 @@ function productFlip($obj)
 						$obj.find("div.prodItemHoldData").html("");
 						$obj.removeAttr("style");
 						$obj.find(".quickView").css("right","5px");
-						$obj.find(".quickView").css("top","5px");						
+						$obj.find(".quickView").css("top","5px");
+						$obj.find(".btnViewProdDetails").css("left","5px");
+						$obj.find(".btnViewProdDetails").css("top","5px");							
 					}
 				}
 			});
 		}
-	//}
 	}
 }
-
-/*function productFlip($obj)
-{
-	var dir = "TOP";
-	var pind = $obj.parent().index();
-
-	if(((pind + 1) % 2) == 0)
-	{
-		dir = "LEFT";
-	}
-
-	if($obj.attr("flipped") != "true")
-	{
-		$obj.parent().find("div.prodItemHoldData").html($obj.html());
-		$obj.attr("flipped","true");
-		$obj.flippy(
-		{
-			content: $obj.parent().find("div.prodItemAltData").html(),
-			direction: dir,
-			duration:"200",
-			onStart:function(){
-			},
-			onFinish:function(){
-				$obj.parent().find("div.prodItemAltData").html($obj.parent().find("div.prodItemHoldData").html());
-				$obj.parent().find("div.prodItemHoldData").html("");			
-			}
-		});
-	
-	}
-}*/
 
 function prepFlip($obj)
 {
