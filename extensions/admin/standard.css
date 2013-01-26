@@ -57,20 +57,55 @@ td.link_selected	{padding:2px; padding-left: 5px; background-color:#3366CC;}
 /* button should be used when there is a group of buttons next to each other.  
 Vertical lists of buttons should all have the same width. */
 
-.button	{-moz-border-radius: 4px; background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -323px; padding:1px 5px; cursor:pointer; border:solid 1px #c4c4c4; font-weight:bold; color:#666666; font-size:11px;  text-shadow:0 0 3px #ffffff;}
+.button, .button2, .savebutton	{
+	padding: .2em 1em;
+	border:1px solid #b0c3cb;
+	background:#c0d2d8 url(images/ui-bg_glass_100_c0d2d8_1x400.png) 50% 50% repeat-x;
+	font-weight:normal;
+	color:#21444f;
+	border-radius: 8px; 
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	cursor:pointer;
+	}
 
 /*button2 should be used when a button is all by its lonesome
 if a group of buttons is present nearby, but this button stands alone, it still gets the button2 class
-see product editor for examples. */
+see product editor for examples.
 
-.button2, .savebutton	{-moz-border-radius: 4px; background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -277px; padding:1px 5px; cursor:pointer; border:solid 1px #8db2e3; font-weight:bold; color:#ffffff; font-size:11px; text-shadow:0 0 3px #1c62ac;}
+.button2, .savebutton	{
+	padding: .2em 1em;
+	font-weight:normal;
+	border-radius: 8px; 
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	cursor:pointer;	
+	border:1px solid #fcefa1;
+	background:#ffffea url(images/ui-bg_glass_55_ffffea_1x400.png) 50% 50% repeat-x;
+	color:#565656
+	}
 
-
-.button:hover, .button2:hover, .savebutton:hover, .minibutton:hover	{background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -300px; color:#dd6a15; text-shadow:0 0 3px #ffffff; border-color:#efc080}
+ */
+.button:hover, .button2:hover, .savebutton:hover, .minibutton:hover	{
+	border:1px solid #12303a;
+	background:#254751 url(images/ui-bg_glass_75_254751_1x400.png) 50% 50% repeat-x;
+	color:#fff;
+	}
 
 
 /* a mini button is something which is typically used on a table row, often there will be many, and they are infrequently used.. */
-.minibutton	{font-family:Arial, Helvetica; font-size: 9px; border:outset 1px; font-weight:normal; -moz-border-radius: 2px; background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -323px; padding:1px 5px; cursor:pointer text-align:left; margin-bottom:0px; cursor:pointer; }
+.minibutton	{
+	padding: .1em .5em;
+	font-size:.85em;
+	border:1px solid #b0c3cb;
+	background:#c0d2d8 url(images/ui-bg_glass_100_c0d2d8_1x400.png) 50% 50% repeat-x;
+	font-weight:normal;
+	color:#21444f;
+	border-radius: 8px; 
+	-moz-border-radius: 8px; 
+	-webkit-border-radius: 8px;
+	cursor:pointer;	
+	}
 
 
 /* ## END FORM STYLES ## */
@@ -134,7 +169,7 @@ see product editor for examples. */
 
 
 
-.flexeditor .zoovysub2header	{background-color:#dae6f4;}
+.flexeditor .zoovysub2header	{background:#e6e6e6 url(images/ui-bg_glass_100_e6e6e6_1x400.png) 50% 50% repeat-x; color:#565656;}
 
 
 
