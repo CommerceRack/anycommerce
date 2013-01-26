@@ -21,7 +21,7 @@ else if (document.location.port == 8888) {
 	baseURL = '/';
 	}
 else {
-   baseURL = "//www.zoovy.com/biz/app/";
+   baseURL = "";
    }
 
 var app = {vars:{
@@ -89,6 +89,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 	<div class='appMessaging'></div>
 
+	<div><a href='/app/201301/admin.html'>Use previous version</a></div>
 </div>
 
 
@@ -108,6 +109,8 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 			
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
+			<div><a href='/app/201301/admin.html'>Use previous version</a></div>
+
 			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
 		</fieldset>
 		</form>
