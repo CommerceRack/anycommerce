@@ -2009,6 +2009,7 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.a.showAppChooser();
 					}
 				else if(path == '#!orders')	{
+					app.ext.admin.vars.tab = 'orders';
 					app.ext.admin.u.bringTabIntoFocus('orders');
 					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
 					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
