@@ -131,12 +131,11 @@ var admin_reports = function() {
 					else	{delete frmObj.batchid}
 					$content.showLoading();
 					app.ext.admin.calls.adminDataQuery.init(frmObj,{callback: function(rd){
+						$content.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							app.u.throwMessage(rd);
 							}
 						else	{
-							
-							$content.hideLoading();
 							if(app.data[rd.datapointer]['@ROWS'].length)	{
 								$content.empty();
 								$content.prepend($("<div \/>").addClass('ui-widget ui-widget-content ui-corner-all marginBottom alignRight buttonbar').append($("<button \/>")

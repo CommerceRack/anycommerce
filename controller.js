@@ -886,6 +886,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				msg.messageClass = messageClass;
 				var selector = undefined; //used if parentID isn't passed in to attempt to find a location for the message
 				if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
+					app.u.dump(' -> an id (parent, target or selector) was found.');
 					if(msg._rtag.parentID)	{selector = app.u.jqSelector('#',msg._rtag.parentID)}
 					else if(msg._rtag.targetID)	{selector = app.u.jqSelector('#',msg._rtag.targetID)}
 					else	{
@@ -895,8 +896,9 @@ and model that needed to be permanently displayed had to be converted into an ob
 				
 				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(selector && $(selector).length)	{$target = $(selector);}
-				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
+				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging'); app.u.dump(" -> using .appMessaging");}
 				else	{
+					app.u.dump(" -> using globalDefault");
 					$target = $globalDefault;
 					$target.dialog('open');
 					}
@@ -916,7 +918,9 @@ and model that needed to be permanently displayed had to be converted into an ob
 				}
 //get rid of all the loading gfx in the target so users know the process has stopped.
 			$target.removeClass('loadingBG');
-			if(typeof $.hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
+			app.u.dump(" -> $.hideLoading: "+typeof jQuery().hideLoading);
+			app.u.dump(" -> $target.attr('id'): "+$target.attr('id'));
+			if(typeof jQuery().hideLoading == 'function'){$target.hideLoading()} //used in UI. plan on switching everything applicable to this.
 // 			app.u.dump(" -> $target in error handling: "); app.u.dump($target);
 			return r;
 			},

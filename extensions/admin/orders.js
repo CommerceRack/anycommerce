@@ -493,6 +493,9 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	
 	$('body').hideLoading();
 	if(app.model.responseHasErrors(responseData)){
+		if(responseData._rtag && responseData._rtag.selector)	{
+			$(app.u.jqSelector(responseData._rtag.selector[0],responseData._rtag.selector.substring(1))).empty();
+			}
 		app.u.throwMessage(responseData);
 		}
 	else	{
