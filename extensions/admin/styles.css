@@ -1,4 +1,4 @@
-body	{margin:0; padding:0; background:#e2e3e5; height:100%;} /* width and overflow are for transitions, so moved content doesn't trigger width adjustment */
+body	{margin:0; padding:0; background:#f1f1f1; height:100%;} /* width and overflow are for transitions, so moved content doesn't trigger width adjustment */
 body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;}
 
 
