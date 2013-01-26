@@ -256,7 +256,7 @@ var admin_medialib = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
-				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.min.js']); //
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.js']); //
 
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
@@ -640,7 +640,7 @@ setTimeout(function(){
 				app.u.dump(" -> list-origin: "+listOrigin);
 				$tag.removeClass('loadingBG');
 
-				media = data.value
+				var media = data.value;
 				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
 
 				if((FName || listOrigin == 'search') && data.bindData.loadsTemplate)	{
@@ -659,10 +659,11 @@ setTimeout(function(){
 							}
 
 						media[i].id = 'mediaFile_'+(startpoint+i);
+						
 						$tag.append(app.renderFunctions.transmogrify(media[i],data.bindData.loadsTemplate,media[i]));
 						}
 
-
+					
 //mode is set on the UL when the media library is initialized or reopened.
 					if($tag.data('mode') == 'manage')	{
 						$tag.addClass('hideBtnSelect')
@@ -673,11 +674,14 @@ setTimeout(function(){
 							app.ext.admin_medialib.a.selectThisMedia($(this));
 							});
 						}
-
-					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
+					
+//
 $("img.lazyLoad").lazyload({
 	container : '#mediaLibInfiniteScroller',
-	threshold : 100
+	threshold : 100,
+	onLazyLoad : function($i){
+		app.ext.admin_medialib.u.handleMediaFileButtons($i.parents('li'));
+		}
 	});
 //lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a pixel.
 $("#mediaLibInfiniteScroller").scrollTop(1);
@@ -828,17 +832,17 @@ else	{
 				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
 				$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
 				if(P.selector && (P.FName || P.FName === 0))	{
-					app.u.dump(" -> P.selector.substring(1): "+P.selector.substring(1));
+//					app.u.dump(" -> P.selector.substring(1): "+P.selector.substring(1));
 					var $selector = $(app.u.jqSelector(P.selector[0],P.selector.substring(1)));
-					app.u.dump(" -> $selector.length: "+$selector.length);
+//					app.u.dump(" -> $selector.length: "+$selector.length);
 					$selector.showLoading();
-					$('ul',$selector).empty();
+					$('ul',$selector).empty(); //remove existing images (from previous folder)
 					P.callback = function(rd)	{
+						$selector.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							app.u.throwMessage(rd);
 							}
 						else	{
-							$selector.hideLoading();
 							app.renderFunctions.translateSelector(rd.selector,app.data[rd.datapointer]);
 							}
 						}
@@ -938,44 +942,32 @@ else	{
 //This gets run over individual media files (each image).
 //also gets run over the image details area in the header when opening media lib for a field that already has an image selected.
 			handleMediaFileButtons : function($target)	{
-				$('button',$target).each(function(){
-					var $button = $(this);
-					if($button.data('btn-action') == 'delete')	{
-						$button.addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							$(this).toggleClass('ui-state-highlight');
-							})
-						}
 
-					else if($button.data('btn-action') == 'clearMedia')	{
-						$button.addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							app.ext.admin_medialib.a.selectThisMedia($(this),true);
-							})
-						}
-					else if($button.data('btn-action') == 'select')	{
-						$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							// where does an image get added?f
-							$(this).closest('li').find('img').click();
-							})
-						}
-					else if($button.data('btn-action') == 'details')	{
-						$button.addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data())
-							})
-						}
-					else if($button.data('btn-action') == 'download')	{
-						$button.addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
-							})
-						}
-					else	{
-						//unknown type. do nothing to it (no .button) so it's easily identified.
-						}
-					})
+				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					$(this).toggleClass('ui-state-error');
+					});
+				$("[data-btn-action='selectMedia']",$target).addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-circle-check"}}).off('click.selectMedia').on('click.selectMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					$(this).closest('li').find('img').click();
+					});
+				$("[data-btn-action='mediaDetails']",$target).addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).off('click.mediaDetails').on('click.mediaDetails',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data());
+					});
+
+				$("[data-btn-action='clearMedia']",$target).addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).off('click.clearMedia').on('click.clearMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					app.ext.admin_medialib.a.selectThisMedia($(this),true);
+					});
+
+
+				
+				$("[data-btn-action='downloadMedia']",$target).addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).off('click.downloadMedia').on('click.downloadMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
+					});				
+				
 				}, //handleMediaFileButtons
 
 

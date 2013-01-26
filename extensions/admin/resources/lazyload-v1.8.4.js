@@ -11,6 +11,11 @@
  *
  * Version:  1.8.4
  *
+ 
+ NOTE - this file has been modified.
+ in settings, an 'onLazyLoad' param was added, which should be a function.
+ if set, it gets executed when the media for an element is loaded. The element ($self) is passed into the function.
+ 
  */
 (function($, window, document, undefined) {
     var $window = $(window);
@@ -27,6 +32,7 @@
             container       : window,
             data_attribute  : "original",
             skip_invisible  : true,
+			onLazyLoad		: null,
             appear          : null,
             load            : null
         };
@@ -93,9 +99,12 @@
                     if (settings.appear) {
                         var elements_left = elements.length;
                         settings.appear.call(self, elements_left, settings);
-                    }
+                    	}
                     $("<img />")
                         .bind("load", function() {
+							if(typeof settings.onLazyLoad == 'function')	{
+								settings.onLazyLoad($self,settings);
+								}
                             $self
                                 .hide()
                                 .attr("src", $self.data(settings.data_attribute))
@@ -105,14 +114,14 @@
                             /* Remove image from array so it is not looped next time. */
                             var temp = $.grep(elements, function(element) {
                                 return !element.loaded;
-                            });
+                            	});
                             elements = $(temp);
 
                             if (settings.load) {
                                 var elements_left = elements.length;
                                 settings.load.call(self, elements_left, settings);
-                            }
-                        })
+								}
+							})
                         .attr("src", $self.data(settings.data_attribute));
                 }
             });
