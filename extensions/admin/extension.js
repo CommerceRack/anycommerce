@@ -950,6 +950,11 @@ if(app.u.getParameterByName('debug'))	{
 	$('#jtSectionTab').show();
 	}
 
+//the zoovy branding is in place by default. override if on anycommerce.
+if(document.domain && document.domain.toLowerCase().indexOf('anycommerce'))	{
+	$('.logo img').attr('src','extensions/admin/images/anycommerce_logo-173x30.png');
+	}
+
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
 				$domainChooser.dialog({
@@ -1002,9 +1007,12 @@ var uriParams = {};
 var ps = window.location.href; //param string. find a regex for this to clean it up.
 if(ps.indexOf('?') >= 1)	{
 	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
-	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
+	if(ps.indexOf('#') == 0){} //'could' happen if uri is ...admin.html?#doSomething. no params, so do nothing.
+	else	{
+		if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
 //	app.u.dump(ps);
-	uriParams = app.u.kvp2Array(ps);
+		uriParams = app.u.kvp2Array(ps);
+		}
 //	app.u.dump(uriParams);
 	}
 // app.u.dump(" -> uriParams"); app.u.dump(uriParams);

@@ -1,14 +1,8 @@
 body	{margin:0; padding:0; background:#e2e3e5; height:100%;} /* width and overflow are for transitions, so moved content doesn't trigger width adjustment */
 body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;}
 
-a	{color:#21444f;}
-a:hover	{color:#000000;}
-
-
 
 img {border:0px;}
-
-
 
 
 /*
@@ -56,7 +50,8 @@ class can also be applied to a 1 item per row list.
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-.lookLikeLink, .ui-widget-content a	{cursor:pointer; color:#0066CC;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a, .lookLikeLink	{cursor:pointer; color:#7398a5;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
