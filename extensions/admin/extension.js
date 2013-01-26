@@ -1367,6 +1367,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				OGRT : 'Return customers',
 				OEXP : 'Expedited',
 				SAMZ : 'Amazon',
+				SGOO : 'Google',
 				SEBA : 'eBay auction',
 				SABF : 'eBay fixed price',
 				SSRS : 'Sears',
@@ -1422,15 +1423,15 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					var mode = undefined;
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
-					else if(path.substr(0,2) == "#:")	{mode = 'tabClick'} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
+					else if(path.substr(0,2) == "#:")	{
+						mode = 'tabClick';
+						path = "/biz/"+path.substring(2)+"/index.cgi";
+						opts.tab == opts.tab || path.substring(2);
+						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
 					
 					if(mode)	{
-
-if(path.substr(0,2) == "#:")	{
-	path = "/biz/"+path.substring(2)+"/index.cgi";
-	}
 
 //app.u.dump(" -> mode: "+mode);
 //app.u.dump(" -> path: "+path);
@@ -1826,11 +1827,14 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
 				app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
 				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
 				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
 				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
-				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable');
+				
 /*
+## NOTE - if you use the code below, streamline so that all the appResource calls don't get executed twice.
+
 				$('#dashboardColumn2',$content).append($("<div \/>").attr('id','dashboardMktplacePanel').anypanel({
 					'title' : 'Popular Marketplace Summary',
 					'showClose' : false,
@@ -1843,8 +1847,9 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{},'mutable'); //ebay auction
 				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
-//				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
+				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
+
 $('#dashboardMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
 
 
@@ -1855,6 +1860,7 @@ if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{chartData.push(
 if(app.data['appResource|quickstats/SABF.json'].contents.count)	{chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SABF.json'].contents.count)]);}
 if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{chartData.push(['Sears', Number(app.data['appResource|quickstats/SSRS.json'].contents.count)]);}
 if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{chartData.push(['Buy.com', Number(app.data['appResource|quickstats/SBYS.json'].contents.count)]);}
+if(app.data['appResource|quickstats/SGOO.json'].contents.count)	{chartData.push(['Google', Number(app.data['appResource|quickstats/SGOO.json'].contents.count)]);}
 
 
 
@@ -1881,7 +1887,7 @@ var chart = new Highcharts.Chart({
                         color: '#000000',
                         connectorColor: '#000000',
                         formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            return '<b>'+ this.point.name +'</b>: '+ Number(this.percentage).toFixed(2) +' %';
                         }
                     }
                 }
@@ -1895,8 +1901,8 @@ var chart = new Highcharts.Chart({
 
 
 					}},'mutable'); //buy
-
 */
+
 				app.model.dispatchThis('mutable');
 				} //showdashboard
 			}, //action
