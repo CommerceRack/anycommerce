@@ -176,12 +176,12 @@ zoovytableframe is a "scrollable frame" inside each tr is r1/r0/rs/rx, and each 
 */
 
 
-.zoovytable { vertical-align: top; text-align:left; font-family:Arial, Helvetica, sans-serif;  border: 2px solid #c3daf9; margin-bottom:10px; }
+.zoovytable { vertical-align: top; text-align:left; font-family:Arial, Helvetica, sans-serif;  border:1px solid #b0c3cb; margin-bottom:12px; background:#ffffff; border-collapse:collapse; }
 
 /* if this ends up looking like ass, remove the background attribute and change it to background:#d7ecff; */
-.zoovytableheader { padding: 3px 3px 3px 5px; background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -353px ; color:#595959; border:none; font-size:12px; font-weight:bold; }
+.zoovytableheader { padding: 3px 3px 3px 5px; background:#e6e6e6 url(images/ui-bg_glass_100_e6e6e6_1x400.png) 50% 50% repeat-x; color:#565656;}
 
-.zoovysub1header { padding: 2px 0px 3px 5px; font-family: sans-serif; color:#555555; background-color:#d9e7f8; border:none; font-size:8pt; font-weight:bold; }
+.zoovysub1header { padding: 2px 0px 3px 5px; font-family: sans-serif; color:#555555; background-color:#b0c3cb; border:none; font-size:8pt; font-weight:bold; }
 
 /* this is used in the product editor. I don't know where else.  in flexedit, it's used for the prompts. */
 .zoovysub2header { padding: 2px 0px 3px 5px; font-family: sans-serif; color:#555555; background-color:#cae1fa; border:none; font-size:8pt; font-weight:bold; }
@@ -191,36 +191,34 @@ zoovytableframe is a "scrollable frame" inside each tr is r1/r0/rs/rx, and each 
 
 /* alternating row colors for td. always start with r0 */
 
-.r1 { color:#333333; background-color: #f5f5f5; font-size: 8pt; }
-.r0 { color:#333333; background-color: #FFFFFF; font-size: 8pt; }
-.rx { color:#333333; background-color: #FFCC66; font-size: 8pt; }  /* added by B. not sure for what */
-.rs { color:#333333; background-color: #FFCCCC; font-size: 8pt; }  /* Row Selected */
-
-.cell { font-family: sans-serif; font-size:8pt; }
-
+.r1 { color:#21444f; background-color: #f5f5f5;  }
+.r0 { color:#21444f; background-color: #FFFFFF;  }
+.rx { color:#21444f; background-color: #FFCC66;  }  /* added by B. not sure for what */
+.rs { color:#21444f; background-color: #FFCCCC;  }  /* Row Selected */
 
 /* ## END TABLE STYLES ## */
 
 
 
-div.leftnav {margin-bottom:15px;}
+/* USED IN KPI */
+
+div.leftnav {margin-bottom:12px; margin-right:12px;}
 
 div.leftnav .selected a	{
-	background:url(/biz/images/header/ui_backgrounds-180x400.gif) repeat-x right -355px ; 
-	color:#ffffff; 
-	font-weight:bold;
+	border:1px solid #c8cacb;background:#f5f5f5 url(images/ui-bg_glass_100_f5f5f5_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#565656; /* ui-state-active */
 	}
 
 div.leftnav a	{
-	padding: 3px 3px 3px 5px; 
-	border:1px solid #efefef; 
+	border:1px solid #b0c3cb;background:#c0d2d8 url(images/ui-bg_glass_100_c0d2d8_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#21444f; /* ui-state-default */
 	text-decoration:none; 
-	margin-bottom:3px; 
-	font-size:12px; 
+	margin-bottom:3px;
+	padding:3px;
 	display:block;
 	}
 
-
+div.leftnav a:hover	{
+	border:1px solid #12303a;background:#254751 url(images/ui-bg_glass_75_254751_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#fff /* ui-state-hover */	
+	}
 
 
 

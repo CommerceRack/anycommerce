@@ -266,7 +266,7 @@ The styles below can be rebuilt using the jqueryUI themeroller.
 .ui-widget input,.ui-widget select,.ui-widget textarea,.ui-widget button{font-family:'PT Sans',tahoma,Arial,sans-serif;font-size:1em}
 .ui-widget-content{border:1px solid #c8cacb;background:#fff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;color:#5656}
 .ui-widget-content a{color:#5656}
-.ui-widget-header{border:1px solid #c8cacb;background:#e6e6e6 url(images/ui-bg_glass_100_e6e6e6_1x400.png) 50% 50% repeat-x;color:#565656;font-weight:bold}
+.ui-widget-header{border:1px solid #c8cacb;background:#cccccc url(images/ui-bg_glass_100_e6e6e6_1x400.png) 50% 50% repeat-x;color:#565656;font-weight:bold}
 .ui-widget-header a{color:#565656}
 .ui-state-default,.ui-widget-content .ui-state-default,.ui-widget-header .ui-state-default{border:1px solid #b0c3cb;background:#c0d2d8 url(images/ui-bg_glass_100_c0d2d8_1x400.png) 50% 50% repeat-x;font-weight:normal;color:#21444f}
 .ui-state-default a,.ui-state-default a:link,.ui-state-default a:visited{color:#21444f;text-decoration:none}

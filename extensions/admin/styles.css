@@ -146,6 +146,7 @@ using these shared margins will help make the UI more consistent.
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}
+.ui-widget-header-padding	{padding:3px 6px;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
@@ -208,7 +209,8 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:96%; min-height:200px; background:#ffffff;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:96%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+
 
 
 /* multipage controls */
@@ -410,7 +412,7 @@ LOGIN and preView
 */
 
 
-#appPreView, #appLogin, #createAccountContainer	{font-size:1.5em; margin: 10% auto; width:500px;}
+#appPreView, #appLogin, #createAccountContainer	{font-size:1.2em; margin: 10% auto; width:500px;}
 
 #appLogin label	{display:block; text-align:left; margin-bottom:12px;}
 #appLogin .hint	{font-size:14px;}
