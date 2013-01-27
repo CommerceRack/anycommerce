@@ -243,26 +243,50 @@ var admin_orders = function() {
 //app.u.dump('BEGIN admin_orders.callbacks.listOrders.onSuccess');
 //app.u.dump(' -> tagObj: '); app.u.dump(tagObj);
 
+
+
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 $('body').hideLoading();
 app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
 $("[data-app-event='admin_orders|orderListFiltersUpdate']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
-var orderid,cid;
+
 var ordersData = app.data[tagObj.datapointer]['@orders'];
 
 var L = ordersData.length;
 var $cmenu; //recyled. stors the context menu for an order.
 
-if(L)	{
-//	app.u.dump(" -> ordersData.length (L): "+L);
-	for(var i = 0; i < L; i += 1)	{
-		orderid = ordersData[i].ORDERID; //used for fetching order record.
-		cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
-		$target.append(app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]))
-		}
+//the more frequently the DOM is updated, the slower the interface. so all the rows are saved into this jqObj and then the children are passed into $target.
 
-$('button',$target).button();
+var $tbody = $("<tbody \/>"); //used to store all the rows so the dom only gets updated once.
+
+var $emailMenu = $("<menu label='Send email message '>");
+for(var key in app.ext.admin_orders.vars.emailMessages)	{
+	$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).data('msg',key).on('click',function(){
+		app.u.dump(" -> send "+$(this).data('msg')+" msg for order "+$(this).parent().data('orderid'));
+		app.ext.admin_orders.u.sendOrderMail($(this).parent().data('orderid'),$(this).data('msg'),$row);
+		app.model.dispatchThis('immutable');
+		}).appendTo($emailMenu);
+	}
+
+
+
+if(L)	{
+	app.u.dump(" -> ordersData.length (L): "+L);
+	for(var i = 0; i < L; i += 1)	{
+		var orderid = ordersData[i].ORDERID; //used for fetching order record.
+		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
+		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]);
+//		$('button',$row).button();		
+		$tbody.append($row);
+		}
+// didn't use a replace because I didn't want to lose the properties already on target maintain them in two locations.
+	$target.append($tbody.children());
+
 var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS'); //index of payment status column. used in flagOrderAsPaid. here so lookup only occurs once.
+
+
+
+
 
 //adding the contextual menu in the loop above failed. I think it's because the DOM wasn't updateing fast enough.	
 //this code would be a lot tighter if contextMenu supports a jquery object as the selector. hey. there's a thought.
@@ -279,16 +303,9 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		$("<command \/>").attr('label','Create crm ticket').on('click',function(){navigateTo('/biz/crm/index.cgi?ACTION=CREATE&orderid='+orderid,{'dialog':true}); return false;}).appendTo($cmenu);
 		
 		$("<hr \/>").appendTo($cmenu);
-		
-		var $emailMenu = $("<menu label='Send email message '>");
-		for(var key in app.ext.admin_orders.vars.emailMessages)	{
-			$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).data('msg',key).on('click',function(){
-				app.ext.admin_orders.u.sendOrderMail(orderid,$(this).data('msg'),$row);
-				app.model.dispatchThis('immutable');
-				}).appendTo($emailMenu);
-			}
-		$cmenu.append($emailMenu);
 
+	
+		$cmenu.append($emailMenu.clone(true).attr('data-orderid',orderid));
 
 		$("<hr \/>").appendTo($cmenu);
 		
@@ -300,6 +317,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 				}).appendTo($poolMenu);
 			}
 		$cmenu.append($poolMenu);
+		
 		$("<command \/>").attr('label','Flag as paid').on('click',function(){
 			app.ext.admin_orders.u.flagOrderAsPaid($row,statusColID);
 			app.model.dispatchThis('immutable');
@@ -456,6 +474,7 @@ else	{
 						$("[data-app-event='admin_orders|orderListFiltersUpdate']",$target).addClass('ui-state-highlight');
 						});
 					});
+					
 //go get the list of orders.
 				app.ext.admin_orders.a.showOrderList(P.filters);
 
@@ -465,6 +484,7 @@ else	{
 			else	{
 				app.u.throwGMessge("WARNING! - pool ["+P.pool+"] and/or targetID ["+P.targetID+"] not passed into initOrderManager");
 				}
+//			app.u.dump("END initOrderManager");
 			}, //initOrderManager
 
 
@@ -1234,7 +1254,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 //run this to change the pool for a specific order.
 //this gets run over each order selected in the bulk function below. (do not add a showLoading or a dispatchThis to this function.
 // -> when executing this function, run showloading and dispatch on your own.
-			changeOrderPool : function($row,pool,statusColID){
+			changeOrderPool : function($row,pool){
 				if($row.length && pool)	{
 					$row.attr('data-status','queued');  //data-status is used to record current status of row manipulation (queued, error, complete)
 					$('td:eq(0)',$row).empty().append("<span class='wait'><\/span>");
@@ -1247,12 +1267,11 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 //Run the dispatch on your own.  That way a bulkChangeOrderPool can be run at the same time as other requests.
 			bulkChangeOrderPool : function(CMD){
 				var $selectedRows = $('#orderListTable tr.ui-selected');
-				var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYMENT_STATUS');
 				
 				if($selectedRows.length)	{
 					var pool = CMD.substr(5);
 					$selectedRows.each(function() {
-						app.ext.admin_orders.u.changeOrderPool($(this),pool,statusColID);
+						app.ext.admin_orders.u.changeOrderPool($(this),pool);
 						});
 					}
 				else	{

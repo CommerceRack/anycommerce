@@ -1023,7 +1023,7 @@ if(uriParams.debug)	{
 	}
 
 
-	app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
+//	app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 if((document.domain && document.domain.toLowerCase().indexOf('anycommerce')) || app.u.isSet(uriParams.anycommerce))	{
@@ -1436,7 +1436,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
- app.u.dump("BEGIN admin.a.showUI ["+path+"]");
+// app.u.dump("BEGIN admin.a.showUI ["+path+"]");
 
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
@@ -1444,6 +1444,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{
+//						app.u.dump(" -> is #:");
 						mode = 'tabClick';
 						path = "/biz/"+path.substring(2)+"/index.cgi";
 						opts.tab == opts.tab || path.substring(2);
@@ -1481,7 +1482,7 @@ if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab 
 else	{} //do nothing. perfectly normal to not change what tab is in focus.
 
 
-//app.u.dump(" -> tab: "+opts.tab);
+//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
@@ -1503,6 +1504,8 @@ else	{
 	//not in an app. no tab specified. not in modal. odd. how did we get here? No $target will be set. error handling occurs in if($target) check below.
 	}
 
+
+//app.u.dump(" -> $target determined.");
 
 if($target && $target.length)	{
 	if(opts.dialog)	{
@@ -1539,6 +1542,7 @@ else	{
 				else	{
 					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
 					}
+app.u.dump(" -> END showUI. ");
 				return false;
 				}, //showUI
 //this is a function that brian has in the UI on some buttons.
@@ -2002,6 +2006,7 @@ var chart = new Highcharts.Chart({
 				}, //getDomain
 
 			loadNativeApp : function(path,opts){
+//				app.u.dump("BEGIN loadNativeApp");
 				if(path == '#!mediaLibraryManageMode')	{
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 					}
@@ -2021,10 +2026,12 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.a.showAppChooser();
 					}
 				else if(path == '#!orders')	{
+//					app.u.dump("into loadNativeApp -> #!orders");
 					app.ext.admin.vars.tab = 'orders';
 					app.ext.admin.u.bringTabIntoFocus('orders');
 					app.ext.admin.u.bringTabContentIntoFocus($("#ordersContent"));
 					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
+//					app.u.dump("end of loadNativeApp  else statement -> #! orders");
 					}
 				else if(path == '#!products')	{
 					app.u.dump("Go to product editor");
@@ -2038,6 +2045,7 @@ var chart = new Highcharts.Chart({
 				else	{
 					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
 					}
+//				app.u.dump("END loadNativeApp");
 				},
 
 //used for bringing one of the top tabs into focus. does NOT impact content area.
@@ -2133,6 +2141,11 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					$('#syndicationContent').empty().append(app.renderFunctions.transmogrify('','pageSyndicationTemplate',{}));
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
+					}
+				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin.u.loadNativeApp('#!orders',P);
 					}
 				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
