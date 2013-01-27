@@ -942,18 +942,6 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 	}
 
-if(app.u.getParameterByName('debug'))	{
-	$('button','#debugPanel').button();
-	$('#debugPanel').show()
-	$('.debugContent','#debugPanel').append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
-	$('body').css('padding-bottom',125);
-	$('#jtSectionTab').show();
-	}
-
-//the zoovy branding is in place by default. override if on anycommerce.
-if(document.domain && document.domain.toLowerCase().indexOf('anycommerce'))	{
-	$('.logo img').attr('src','extensions/admin/images/anycommerce_logo-173x30.png');
-	}
 
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
@@ -1015,6 +1003,7 @@ if(ps.indexOf('?') >= 1)	{
 		}
 //	app.u.dump(uriParams);
 	}
+
 // app.u.dump(" -> uriParams"); app.u.dump(uriParams);
 if(uriParams.trigger == 'adminPartnerSet')	{
 	app.u.dump(" -> execute adminPartnerSet call");
@@ -1022,6 +1011,26 @@ if(uriParams.trigger == 'adminPartnerSet')	{
 	app.ext.admin.calls.adminPartnerSet.init(uriParams,{'callback':'showHeader','extension':'admin'});
 	app.model.dispatchThis('immutable');
 	}
+
+
+
+if(uriParams.debug)	{
+	$('button','#debugPanel').button();
+	$('#debugPanel').show()
+	$('.debugContent','#debugPanel').append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('body').css('padding-bottom',125);
+	$('#jtSectionTab').show();
+	}
+
+//the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
+if((document.domain && document.domain.toLowerCase().indexOf('anycommerce')) || uriParams.anycommerce)	{
+	$('.logo img').attr('src','extensions/admin/images/anycommerce_logo-173x30.png');
+	$('body').addClass('isAnyCommerce');
+	}
+else	{
+	$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
+	}
+
 
 //if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
 //the code for handling the support login is in the thisisanadminsession function (looking at uri)
@@ -2114,7 +2123,6 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					$('#setupContent').empty().append(app.renderFunctions.createTemplateInstance('pageSetupTemplate',{}));
-					app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'setupContent'});  //navigateTo's hard coded on 2012/30
 					}
 				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
@@ -2169,12 +2177,6 @@ var chart = new Highcharts.Chart({
 				return r;
 				}, //getTabFromPath
 	
-	
-			handlePermissions : function($target,permissions)	{
-				app.u.dump("Permissions: "); app.u.dump(permissions);
-				if(permissions.isVstore)	{app.u.dump(" isVstore"); $(".showForVstoreOnly",$target).show();}
-				else	{$(".showForAppOnly",$target).show();}
-				},
 	
 	
 //the following function gets executed as part of any fetchAdminResource request. 

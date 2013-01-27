@@ -29,10 +29,9 @@ class can also be applied to a 1 item per row list.
 .valignTop	{vertical-align:top;}
 .valignMiddle	{vertical-align:middle;}
 
-/* hideForApp or Vstore gets toggle on based on account/domain setting. toggle on instead of off to avoid popping. */
-/* .showForVstoreOnly, .showForAppOnly	{display:none;} - not used yet. soon. */
 
-.displayNone, .debug	{display:none;}
+.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly	{display:none;}
+.isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
