@@ -1024,6 +1024,7 @@ if(uriParams.debug)	{
 
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 if((document.domain && document.domain.toLowerCase().indexOf('anycommerce')) || uriParams.anycommerce)	{
+	app.u.dump("Is anycommerce. document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	$('.logo img').attr('src','extensions/admin/images/anycommerce_logo-173x30.png');
 	$('body').addClass('isAnyCommerce');
 	}
