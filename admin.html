@@ -109,7 +109,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
 			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><a href='/app/201301/admin.html'>Use previous version</a></div>
+			<div class="hint"><a href='/app/201301/admin.html'> &#187; Use previous version</a></div>
 
 		</fieldset>
 		</form>
@@ -319,6 +319,10 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 <button onClick="app.ext.admin_user.a.showAppChooser();">App Chooser</button>
+
+<button onClick="app.ext.admin.calls.helpSearch.init('product',{},'mutable'); app.model.dispatchThis('mutable');">helpSearch</button>
+
+<button onClick="app.ext.admin.calls.helpDocumentGet.init('info_all_product_fields',{},'mutable'); app.model.dispatchThis('mutable');">helpDocumentGet</button>
 
 
 

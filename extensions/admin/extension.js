@@ -870,13 +870,48 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				}
+			}, //bossRoleList
+		
+		helpSearch : {
+			init : function(keywords,_tag,Q)	{
+				var r = 0;
+				if(keywords)	{
+					r = 1;
+					this.dispatch(keywords,_tag,Q);
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.helpSearch, keywords not specified.");
+					}
+				return 1;
+				},
+			dispatch : function(keywords,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd:'helpSearch','keywords':keywords,_tag:_tag || {}},Q || 'mutable');
+				}
+			}, //helpSearch
+
+		helpDocumentGet : {
+			init : function(docid,_tag,Q)	{
+				if(docid)	{
+					var r = 0;
+					_tag = _tag || {};
+					_tag.datapointer = 'helpDocumentGet|'+docid;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						this.dispatch(docid,_tag,Q);
+						r = 1;
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.helpDocumentGet, docid not specified.");
+					}
+				return r;
+				},
+			dispatch : function(docid,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd : 'helpDocumentGet','_tag':_tag,'docid':docid},Q || 'immutable');
+				}
 			} //bossRoleList
-//calls not supported yet.
-//		bossRoleCreate : {},
-//		bossRoleUpdate : {},
-//		bossRoleDelete : {}
-
-
 		}, //calls
 
 
@@ -1542,7 +1577,7 @@ else	{
 				else	{
 					app.u.throwGMessage("Warning! path not set for admin.a.showUI");
 					}
-app.u.dump(" -> END showUI. ");
+//app.u.dump(" -> END showUI. ");
 				return false;
 				}, //showUI
 //this is a function that brian has in the UI on some buttons.
