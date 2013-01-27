@@ -1,6 +1,5 @@
-body	{margin:0; padding:0; background:#f1f1f1; height:100%;} /* width and overflow are for transitions, so moved content doesn't trigger width adjustment */
-body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;}
-
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
 
 img {border:0px;}
 
@@ -407,7 +406,7 @@ LOGIN and preView
 */
 
 
-#appPreView, #appLogin, #createAccountContainer	{font-size:1.2em; margin: 10% auto; width:500px;}
+#appPreView, #appLogin, #createAccountContainer	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
 
 #appLogin label	{display:block; text-align:left; margin-bottom:12px;}
 #appLogin .hint	{font-size:14px;}
