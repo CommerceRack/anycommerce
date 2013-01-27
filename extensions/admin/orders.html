@@ -6,6 +6,24 @@
 	
 <div class='searchAndFilterContainer'>
 
+		<h2>Search</h2>
+		<div>
+<form class='labelsAsBreaks'>
+<fieldset>
+
+	<label>
+	<span>Keyword: </span>
+	<input type='search' name='keyword' class='fixedWidth' />
+	</label>
+	<label><input type='checkbox' name='isDetailedSearch' />detailed search</label>
+	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
+
+	<button data-app-event="admin_orders|orderSearch">Show Results</button>
+
+</fieldset>
+</form>
+		</div>
+	
 		<h2>Filter</h2>	
 		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
@@ -57,24 +75,7 @@
 	
 		</div>
 	
-		<h2>Search</h2>
-		<div>
-<form class='labelsAsBreaks'>
-<fieldset>
 
-	<label>
-	<span>Keyword: </span>
-	<input type='search' name='keyword' class='fixedWidth' />
-	</label>
-	<label><input type='checkbox' name='isDetailedSearch' />detailed search</label>
-	<label># orders: <input type='number' max="250" min="1" name='size' value='30' size='3' /></label>
-
-	<button data-app-event="admin_orders|orderSearch">Show Results</button>
-
-</fieldset>
-</form>
-		</div>
-	
 		<h2>Report</h2>
 		<div>Coming Soon!</div>
 
