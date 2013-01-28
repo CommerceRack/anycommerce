@@ -131,7 +131,7 @@ th.click(function(){
 					break;
 				
 				default:
-					console.log("Unrecognized option passed into anypanel via setOption");
+					console.log("Unrecognized option passed into anytable via setOption");
 					console.log(" -> option: "+option);
 					break;
 				}
@@ -212,7 +212,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element;
-			if($t.data('isanypanel'))	{} //already a panel, do nothing.
+			if($t.data('isanypanel'))	{} //already a panel, skip all the styling and data.
 			else	{
 //isanypanel data is set to true as an easy check to
 				$t.addClass('ui-widget ui-widget-anypanel marginBottom').data('isanypanel',true).css('position','relative');
@@ -246,6 +246,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
 				//they'll get executed as part of the callback if a call is specified.
+				self._handleInitialState();
 				}
 			}, //_init
 
@@ -322,15 +323,16 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 
 		_handleInitialState : function()	{
-			if(this.options.state == 'preferences')	{
-				var preferences = app.ext.admin.u.devicePreferencesGet(this.extension);
-				this.options.state = preferences.anypanel[this.options.name].state || 'expand'; //if not defined, default to expand.
-				}
+// ##### NOT SUPPORTED... YET....
+//			if(this.options.state == 'preferences')	{
+//				var preferences = app.ext.admin.u.devicePreferencesGet(this.extension);
+//				this.options.state = preferences.anypanel[this.options.name].state || 'expand'; //if not defined, default to expand.
+//				}
 			
 			if(this.options.state == 'collapse')	{ this.collapse();}
 			else if (this.options.state == 'expand')	{this.expand();}
 			else	{
-				console.log("unknown state passed into anypanel");
+				console.warn("unknown state passed into anypanel");
 				}
 			}, // !!! not done or in use yet.
 

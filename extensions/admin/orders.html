@@ -259,6 +259,8 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 
 <div class='orderSupplementalInformation'>
 
+
+	<div data-app-role='orderContents'>
 	<h2>Order Contents</h2>
 	
 	<section>
@@ -317,9 +319,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 -->
 	</form>
 	</section>
+	</div>
 
 
-
+	<div data-app-role='orderNotes'>
 	<h2>Notes</h2>
 	<section class='notes' data-ui-role='orderUpdateNotesContainer'>
 	
@@ -347,10 +350,10 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	</section>
+	</div>
 
 
-
-
+	<div data-app-role='orderPaymentInfo'>
 	<h2>Payment Information</h2>
 	<section class='paymentInformation clearfix' id='adminOrdersPaymentMethodsContainer' data-ui-role='orderUpdatePaymentMethodsContainer'>
 	
@@ -386,15 +389,20 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 	
 	</section>
+	</div>
+	
 
-
-
-
+	<div data-app-role='orderShippingInfo'>
 	<h2>Shipping/Tracking Information</h2>
 	<section class='trackingInformation clearfix' data-ui-role='orderUpdateAddTrackingContainer' data-bind="loadsTemplate: orderTrackingTemplate; format:loadsTemplate;"></section>
+	</div>
+
 	
+	<div data-app-role='orderHistory'>
 	<h2>History</h2>
 	<section class='historyInformation'  data-ui-role='orderUpdateHistoryContainer' data-bind="loadsTemplate:orderEventsHistoryContainerTemplate; format:loadsTemplate;"></section>
+	</div>
+
 	
 </div>
 

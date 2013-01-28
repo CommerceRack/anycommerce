@@ -578,10 +578,12 @@ else	{
 	app.u.dump("WARNING! - no CID set.");
 	}
 //dispatch occurs outside this function.
-$('.orderSupplementalInformation',$target).accordion({
-	collapsible: true,
-	heightStyle: "content"
-	});
+$("[data-app-role='orderContents']",$target).anypanel({'showClose':false});
+$("[data-app-role='orderNotes']",$target).anypanel({'showClose':false,'state':'collapse'});
+$("[data-app-role='orderPaymentInfo']",$target).anypanel({'showClose':false,'state':'collapse'});
+$("[data-app-role='orderShippingInfo']",$target).anypanel({'showClose':false,'state':'collapse'});
+$("[data-app-role='orderHistory']",$target).anypanel({'showClose':false,'state':'collapse'});
+
 app.ext.admin.u.handleAppEvents($target);
 
 
