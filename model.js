@@ -1442,7 +1442,9 @@ This is checks for two things:
 						}
 					}
 				else	{
-					app.u.dump(' -> waiting on: '+namespace);
+					if(app.vars.debug == 'init')	{
+						app.u.dump(' -> waiting on: '+namespace);
+						}
 					r = false;
 					break;
 					}

@@ -1049,7 +1049,7 @@ if(uriParams.trigger == 'adminPartnerSet')	{
 
 
 
-if(uriParams.debug)	{
+if(app.vars.debug)	{
 	$('button','#debugPanel').button();
 	$('#debugPanel').show()
 	$('.debugContent','#debugPanel').append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
@@ -2318,7 +2318,7 @@ var chart = new Highcharts.Chart({
 						if(msgObj.BATCH)	{
 							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchJob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"
 							}
-						app.u.dump(msgObj);	
+//						app.u.dump(msgObj);	
 						var r = app.u.throwMessage(msgObj);
 						$('.buttonify','.'+r).button();
 						app.u.dump("throwMessage response = "+r);

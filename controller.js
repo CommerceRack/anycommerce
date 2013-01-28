@@ -60,8 +60,7 @@ jQuery.extend(zController.prototype, {
 			localStorage.clear();
 			}
 		
-
-		
+		app.vars.debug = app.u.getParameterByName('debug'); //set a var for this so the URI doesn't have to be checked each time.
 //in some cases, such as the zoovy UI, zglobals may not be defined. If that's the case, certain vars, such as jqurl, must be passed in via P in initialize:
 		if(typeof zGlobals == 'object')	{
 			app.vars.profile = zGlobals.appSettings.profile.toUpperCase();
@@ -833,7 +832,7 @@ it'll then set app.rq.push to mirror this function.
 //uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
 //this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
 		throwGMessage : function(err,parentID){
-			var msg = this.errMsgObject("Well this is embarrassing. Something bad happened. Please try that again. If this error persists, please contact the site administrator.<br \/>Err: "+err+"<br \/>Dev: console may contain additional details.","#");
+			var msg = this.youMsgObject("Something bad just happened. If this error persists, please contact the site administrator with these details:<br \/>Err: "+err+"<br \/>URI: "+document.location+" Dev: console may contain additional details.","#");
 			app.u.dump("FROM throwGMessage: "+err);
 			if(parentID)	{msg.parentID = parentID}
 			this.throwMessage(msg);
