@@ -1482,6 +1482,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{
 //						app.u.dump(" -> is #:");
+						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
 						path = "/biz/"+path.substring(2)+"/index.cgi";
 						opts.tab == opts.tab || path.substring(2);
