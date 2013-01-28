@@ -1880,7 +1880,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 
 						handleNote = function(type){
 							var $note = $("[data-ui-role='admin_orders|"+type+"']",$target);
-							if($note.hasClass('edited'))	{changeArray.push(type+'?note='+$note.text());}
+							if($note.hasClass('edited'))	{changeArray.push(type+'?note='+encodeURI($note.text()));}
 							else	{} //do nothing. note was not edited.
 							}
 						handleNote('SETPRIVATENOTE');
