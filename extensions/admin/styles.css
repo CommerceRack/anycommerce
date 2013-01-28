@@ -1,3 +1,5 @@
+body {line-height: 1;} /* helps to reduce some errant whitespace issues */
+
 body	{margin:0; padding:0; background:#f1f1f1; } 
 body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
 
@@ -311,10 +313,16 @@ HEADER
 #mastHead .menu span	{display:inline;}
 #mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
 
-/* the row with the logo and text links */
-.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656;}
+/*
+the row with the logo and text links
 
-.mhTabsContainer	{background:#757779; position:relative;}
+NOTE - the overflow hidden on headerTop and the display inlineblock/width are to solve an errant spacing issue appearin between the two elments using these classes.
+*/
+.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656; overflow:hidden;}
+.mhTabsContainer	{background:#757779; position:relative; display:inline-block; width:100%;}
+
+
+
 .mhTabsContainer ul	{width:100%; padding:0; margin:0; display:inline-block; position:relative; z-index:100; float:left;}
 .mhTabsContainer li	{display:block; float:left; list-style:none;border-right:1px solid #ededed; width:8%; padding:1px 4px 0 4px; margin:0; font-size:.75em; position:relative; color:#ffffff; cursor:pointer;}
 .mhTabsContainer li:last-child	{border-right:0px;}
@@ -391,7 +399,7 @@ HEADER
 	}
 
 
-
+.pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
 
 
 
