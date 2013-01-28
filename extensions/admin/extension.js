@@ -2976,6 +2976,27 @@ just lose the back button feature.
 					}
 				},
 
+//does everything. pass in a docid and this 'll handle the call, request and display.
+//will check to see if a dom element already exists and , if so, just open that and make it flash. 
+			showHelpInDialog : function(docid)	{
+				if(docid)	{
+					var targetID = 'helpfile_'+docid
+					var $target = $(app.u.jqSelector('#',targetID));
+//already on the dom. just open it.
+					if($target.length)	{
+						$target.dialog('open').highlight();
+						}
+					else	{
+						$target = $("<div \/>").attr('id',targetID).appendTo('body');
+						$target.dialog({width:500, height:500}).showLoading();
+						app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{'callback':'translateSelector','extension':'admin','selector':'#'+targetID},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					}
+				else	{
+					app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
+					}
+				},
 
 
 
