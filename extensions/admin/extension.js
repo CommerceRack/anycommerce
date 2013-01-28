@@ -1665,7 +1665,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				}, //processForm
 				
 			showDomainConfig : function(){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading();
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading({"message":"Requesting up to date list of domains."});
 				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
 				app.model.dispatchThis('immutable')
 				},
@@ -1816,13 +1816,13 @@ once multiple instances of the finder can be opened at one time, this will get u
 				}, //showFinderInModal
 
 			login : function($form){
-				$('body').showLoading();
+				$('body').showLoading({"message":"Authenticating credentials. One moment please."});
 				app.calls.authentication.accountLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
 				app.model.dispatchThis('immutable');
 				}, //login
 
 			logout : function(){
-				$('body').showLoading();
+				$('body').showLoading({"message":"You are being logged out. One moment please."});
 				app.calls.authentication.authAdminLogout.init({'callback':'handleLogout','extension':'admin'});//always immutable.
 				app.model.dispatchThis('immutable');
 //nuke all this after the request so that the dispatch has the info it needs.
@@ -1854,7 +1854,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //though domainChooserDialog is the element that's used, it's passed in the callback anyway for error handling purposes.
 			showDomainChooser : function(){
 //				app.u.dump("BEGIN admin.a.showDomainChooser");
-				$('#domainChooserDialog').dialog('open').showLoading();
+				$('#domainChooserDialog').dialog('open').showLoading({'message':'Fetching your list of domains.'});
 				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
 				app.model.dispatchThis('immutable');
 				},	 //showDomainChooser
@@ -2889,7 +2889,7 @@ else	{
 					$panel = $t.closest("[data-app-role='domainPanel']"),
 					$fieldset = $("[data-app-role='domainEditorContents']",$panel);
 					
-					$fieldset.showLoading();
+					$fieldset.showLoading({'message':'Loading information for domain: '+data.domain});
 					$t.parent().find('.panelContents').show()
 					if(data.verb == 'LOAD')	{
 						//do nothing. data gets passed in as is.
@@ -2985,11 +2985,12 @@ just lose the back button feature.
 					var $target = $(app.u.jqSelector('#',targetID));
 //already on the dom. just open it.
 					if($target.length)	{
-						$target.dialog('open').highlight();
+						$target.dialog('open')
+						$target.effect("highlight", {}, 1500);
 						}
 					else	{
 						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr("data-bind","var: help(body); format:text;").appendTo('body');
-						$target.dialog({width:500, height:500}).showLoading();
+						$target.dialog({width:500, height:500}).showLoading({'message':'Fetching documentation, one moment please.'});
 						app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{'callback':'translateSelector','extension':'admin','selector':'#'+targetID},'mutable');
 						app.model.dispatchThis('mutable');
 						}
@@ -3137,7 +3138,7 @@ just lose the back button feature.
 						$("fieldset",$form).prepend($errors).prepend("It seems a few required fields were left blank. Please provide the following pieces of information:");
 						}
 					else	{
-						$('body').showLoading();
+						$('body').showLoading({'message':'Creating new account. One moment please.'});
 						app.ext.admin.calls.authNewAccountCreate.init(formObj,{'callback':'showHeader','extension':'admin'},'immutable');
 						app.model.dispatchThis('immutable');
 						}

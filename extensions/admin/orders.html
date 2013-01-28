@@ -136,6 +136,7 @@
 			<th data-name='ORDERID' title='order id'>order id</th>
 			<th data-name='ORDER_BILL_NAME' title='billing full name'>customer</th>
 			<th data-name='ORDER_TOTAL' title='order total'>total</th>
+			<th data-name='ORDER_ITEMS' title='order total'>items</th>
 			<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
 			<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
 			<th data-name='CREATED_GMT' title='date order created'>created</th>
@@ -167,6 +168,7 @@
 	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
+	<td><span data-bind='var:order(ITEMS);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>

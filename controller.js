@@ -832,7 +832,7 @@ it'll then set app.rq.push to mirror this function.
 //uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
 //this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
 		throwGMessage : function(err,parentID){
-			var msg = this.youMsgObject("Something bad just happened. If this error persists, please contact the site administrator with these details:<br \/>Err: "+err+"<br \/>URI: "+document.location+" Dev: console may contain additional details.","#");
+			var msg = this.youErrObject("Something bad just happened. If this error persists, please contact the site administrator with these details:<br \/>Err: "+err+"<br \/>URI: "+document.location+" Dev: console may contain additional details.","#");
 			app.u.dump("FROM throwGMessage: "+err);
 			if(parentID)	{msg.parentID = parentID}
 			this.throwMessage(msg);
@@ -882,7 +882,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				}
 			else if(typeof msg === 'object')	{
 				persistant = persistant || msg.persistant; //global persistence (within this context) gets priority.
-				if(msg.errtype == 'iseerr')	{persistant = true} //ise errs throw extra info at the user. make persistent.
+				if(msg.errtype == 'iseerr' || msg.errtype == 'ISE')	{persistant = true} //ise errs throw extra info at the user. make persistent.
 				msg.messageClass = messageClass;
 				var selector = undefined; //used if parentID isn't passed in to attempt to find a location for the message
 				if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{

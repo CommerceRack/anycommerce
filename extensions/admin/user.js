@@ -61,7 +61,7 @@ var admin_user = function() {
 //generate some of the task list content right away so the user knows something is happening.
 				$tabContent.empty();
 				$tabContent.append(app.renderFunctions.createTemplateInstance('userManagerPageTemplate',{'id':'userManagerContent'})); //placeholder
-				$('#userManagerContent').showLoading();
+				$('#userManagerContent').showLoading({'message':'Fetching your user list.'});
 				app.ext.admin.calls.bossRoleList.init({},'mutable'); //have this handy.
 				app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':'#userManagerContent'},'mutable');
 				app.model.dispatchThis('mutable');
@@ -220,7 +220,7 @@ var admin_user = function() {
 
 //the call will return a 1 if it's going to request and a zero if an error occured. only proceed if no errors.
 						if(app.ext.admin.calls.bossUserUpdate.init(update,{},'immutable'))	{
-							$('body').showLoading();
+							$('body').showLoading({'message':'Saving your changes for '+update.login});
 
 //to ensure new copies of the data, destroy the old.						
 							app.model.destroy('bossUserList');
@@ -280,7 +280,7 @@ Whether it's a create or update is based on the data-usermode on the parent.
 						$parent.animate({scrollTop: 0}, 'fast');
 						}
 					else {
-						$parent.showLoading();
+						$parent.showLoading({'message':'Creating user '+frmObj.login});
 
 //build an array of the roles that are checked. order is important.
 						frmObj['@roles'] = app.ext.admin_user.u.getRoleCheckboxesAsArray($parent);
@@ -394,7 +394,7 @@ if(app.ext.admin.calls.bossUserDetail.init(user.luser,{
 		}
 	},'mutable'))	{
 //showloading is run AFTER the animation so that it places itself correctly over the target.
-		$panel.slideDown('fast',function(){$panel.showLoading();});
+		$panel.slideDown('fast',function(){$panel.showLoading({'message':'Gathering nuts, berries and user details.'});});
 		app.model.dispatchThis('mutable');
 		}
 	else	{

@@ -1481,7 +1481,7 @@ This is checks for two things:
 				}
 			else if(attempts > 100)	{
 				//that is a lot of tries.
-				throwGMessage("It appears that some files were unable to load. This could be a problem with the app OR due to a slow PC or internet connection.");
+				throwMessage(app.u.errMsgObject("It appears that some files were unable to load. This could be a problem with the app OR due to a slow PC or internet connection."));
 				}
 			else	{
 				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj,attempts)},250);
@@ -1538,7 +1538,18 @@ ADMIN/USER INTERFACE
 						}
 					else	{
 						$('#'+app.ext.admin.u.getTabFromPath(pathParts[0])+'Content').empty(); ///empty out loading div and any template placeholder.
-						app.u.throwGMessage("Error details = UI request failure: "+b);
+
+//make sure a callback is defined.
+				var msgDetails = "A request failure occured. Please try again or if the error persists, please report the following information: <ul>";
+				msgDetails += "<li>issue: API request failure (likely an ISE)<\/li>";
+				msgDetails += "<li>uri: "+document.location+"<\/li>";
+				msgDetails += "<li>domain: "+app.vars.domain+"<\/li>";
+				msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
+				msgDetails += "<\/ul>";
+				
+				app.u.throwMessage({'errid':'ISE','errmsg':msgDetails,'errtype':'ISE','uiIcon':'alert','uiClass':'error'});
+
+
 						if(typeof viewObj.error == 'function'){viewObj.error()}
 						}
 					app.ext.admin.vars.uiRequest = {} //reset request container to easily determine if another request is in progress
