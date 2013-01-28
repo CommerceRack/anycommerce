@@ -307,7 +307,8 @@ HEADER
 
 #mastHead	{position:relative; min-width:700px;}
 #mastHead .logo	{float:left; margin-left:12px; margin-top:5px;}
-#mastHead .menu	{float:right; margin-right:12px;  }
+#mastHead .menu	{float:right; margin-right:12px; white-space: nowrap;}
+#mastHead .menu span	{display:inline;}
 #mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
 
 /* the row with the logo and text links */

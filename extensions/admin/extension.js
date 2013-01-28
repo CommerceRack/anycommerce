@@ -3015,25 +3015,7 @@ just lose the back button feature.
 
 		e : {
 			
-			accountLogin : function($btn)	{
-				$btn.button();
-				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
-					event.preventDefault();
-					app.ext.admin.a.login($btn.closest('form'));
-					});
-				},
-			
-			showCreateAccount : function($btn)	{
-				$btn.button();
-				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
-					event.preventDefault();
-					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
-					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
-						$("#appLogin").hide();
-						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
-						});
-					})
-				},
+
 			
 			achievementDetail : function($row)	{
 				$row.on('mouseover.achievementDetail',function(){
@@ -3053,6 +3035,8 @@ just lose the back button feature.
 							}
 						});
 				},
+
+/* app chooser */
 
 			appChooserAppChoose : function($btn)	{
 				$btn.button();
@@ -3082,6 +3066,36 @@ just lose the back button feature.
 					})
 				},
 
+/* login and create account */
+
+			accountLogin : function($btn)	{
+				$btn.button();
+				$btn.off('click.accountLogin').on('click.accountLogin',function(event){
+					event.preventDefault();
+					app.ext.admin.a.login($btn.closest('form'));
+					});
+				},
+			
+			showCreateAccount : function($btn)	{
+				$btn.button();
+				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
+					event.preventDefault();
+					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
+					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
+						$("#appLogin").hide();
+						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
+						});
+					})
+				},
+			authShowLogin : function($ele)	{
+				$ele.off('click.authShowLogin').on('click.authShowLogin',function(event){
+					event.preventDefault();
+					$("#createAccountContainer").css('position','relative').animate({right:($('body').width() + $("#createAccountContainer").width() + 100)},'slow','',function(){
+						$("#createAccountContainer").hide();
+						$('#appLogin').css({'left':'1000px','position':'relative'}).show().removeClass('displayNone').animate({'left':'0'},'slow');
+						});
+					})			
+				},
 			authNewAccountCreate : function($btn)	{
 				$btn.button();
 				$btn.off('authNewAccountCreate').on('click.authNewAccountCreate',function(event){

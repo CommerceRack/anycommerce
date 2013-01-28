@@ -107,7 +107,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
 			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><a href='/app/201301/admin.html'> &#187; Use previous version</a></div>
+			<div class="hint"><b><a href='/app/201301/admin.html'> &#187; Use previous version</a></b></div>
 
 		</fieldset>
 		</form>
@@ -138,6 +138,7 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 		<label><span>Company/DBA: </span><input type='text' name='company' maxlength="10" required='required' /><div class='helper alignRight'>company name will be your username. 10 char limit</div></label>
 		<label><span>Domain: </span><input type='url' name='domain' required='required' value='http://' /></label>
 		<label><span>Phone: </span><input type='tel' name='phone' required='required' size='10' /></label>
+		<div class='stdPadding lookLikeLink' data-app-event='admin|authShowLogin'> &#187; back to login</div>
 		<div class='alignRight'>
 			<button data-app-event='admin|authNewAccountCreate'>Create Account</button>
 		</div>
@@ -159,10 +160,9 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 		<div class='clearfix headerTop'>
 			<div class='logo pointer alignCenter' onClick="navigateTo('#!dashboard');" title='home'><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
 			<div class='menu floatRight'>
-			<span class='showForZoovyOnly'>
-			<span class='pointer lookLikeLink' onClick="return navigateTo('/biz/downloads/index.cgi');" title='Use our windows clients for managing orders and product'>Downloads</span> | </span>
-			<span class='pointer lookLikeLink' onClick="return navigateTo('#!taskManager');" title='view and edit your task list'>Tasks</span> | 
-			<span class='pointer lookLikeLink' onClick="app.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
+				<span class='pointer lookLikeLink showForZoovyOnly' onClick="return navigateTo('/biz/downloads/index.cgi');" title='Use our windows clients for managing orders and product'>Downloads</span>
+				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!taskManager');" title='view and edit your task list'>Tasks</span>
+				| <span class='pointer lookLikeLink' onClick="app.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
 			</div>
 			
 			<div class='floatRight marginRight'>
