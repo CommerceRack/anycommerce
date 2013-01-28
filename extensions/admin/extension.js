@@ -2096,9 +2096,9 @@ var chart = new Highcharts.Chart({
 
 			toggleMessagePane : function(state){
 
-				$target = $('#messagesContent');
+				var $target = $('#messagesContent');
 				$target.css('top',$target.parent().height()); //positions messages pane directly below tab bar, regardless of tab bar height.
-				console.log($target.css('display'));
+
 				if(state == 'hide' && $target.css('display') == 'none')	{} //pane is already hidden. do nothing.
 				else if(state == 'show' || $target.css('display') == 'none')	{
 					$target.slideDown();
@@ -2988,7 +2988,7 @@ just lose the back button feature.
 						$target.dialog('open').highlight();
 						}
 					else	{
-						$target = $("<div \/>").attr('id',targetID).appendTo('body');
+						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr("data-bind","var: help(body); format:text;").appendTo('body');
 						$target.dialog({width:500, height:500}).showLoading();
 						app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{'callback':'translateSelector','extension':'admin','selector':'#'+targetID},'mutable');
 						app.model.dispatchThis('mutable');
