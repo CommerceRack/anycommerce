@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20130127.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"20130127.2",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -318,18 +318,16 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
-<button onClick="app.ext.admin_user.a.showAppChooser();">App Chooser</button>
+<button onClick="navigateTo('#!appChooser');">App Chooser</button>
+<button onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList</button>
+
 
 <button onClick="app.ext.admin.calls.helpSearch.init('product',{},'mutable'); app.model.dispatchThis('mutable');">helpSearch</button>
-
-<button onClick="app.ext.admin.calls.helpDocumentGet.init('info_all_product_fields',{},'mutable'); app.model.dispatchThis('mutable');">helpDocumentGet</button>
-
-
-
-<button onClick="app.ext.admin.calls.bossUserDetail.init('lisas',{},'mutable'); app.model.dispatchThis('mutable');">bossUserDetail</button>
+<!-- flexedit: info_all_product_fields -->
+<button onClick="app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{},'mutable'); app.model.dispatchThis('mutable');">helpDocumentGet</button>
 
 
-<button onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList</button>
+
 
 <button onClick="app.model.addDispatchToQ({'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)},'mutable'); app.model.dispatchThis('mutable');">adminDataQuery</button>
 

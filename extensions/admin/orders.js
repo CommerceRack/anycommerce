@@ -635,6 +635,7 @@ else	{
 				$('body').showLoading();
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
+				app.model.destroy('adminOrderList'); //always refresh list.
 				app.ext.admin.calls.adminOrderList.init(filterObj,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'});
 				app.model.dispatchThis();
 				}
