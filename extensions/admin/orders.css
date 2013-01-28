@@ -52,7 +52,9 @@ table.orderManagerTable	{
 
 
 .orderManagerTable .leftCol .ui-accordion .ui-accordion-header:first-child	{margin-top:0px;}
-.orderManagerTable .bulkEditMenu li li	{width:150px;}
+.orderManagerTable .bulkEditMenu 	{font-size:.75em}
+.orderManagerTable .bulkEditMenu li li	{width:160px;}
+.orderManagerTable .bulkEditMenu li li li	{width:190px;}
 
 .ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
 .ui-selected .selectedIcon	{display:block !important;}
