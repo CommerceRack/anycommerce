@@ -1479,9 +1479,9 @@ This is checks for two things:
 						}
 					} // end loop.				
 				}
-			else if(attempts > 40)	{
+			else if(attempts > 100)	{
 				//that is a lot of tries.
-				throwGMessage(" some extensions took at least ten seconds to load. That's no good");
+				throwGMessage("It appears that some files were unable to load. This could be a problem with the app OR due to a slow PC or internet connection.");
 				}
 			else	{
 				setTimeout(function(){app.model.executeCallbacksWhenExtensionsAreReady(extObj,attempts)},250);

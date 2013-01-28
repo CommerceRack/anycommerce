@@ -495,7 +495,7 @@ $order.attr('data-order-view-parent',orderID); //put this on the parent so that 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append($order);
 
-$('body').showLoading();
+$('body').showLoading({'message':'Requesting up to date order information.'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
@@ -618,7 +618,7 @@ else	{
 		showOrderList : function(filterObj)	{
 			app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
-				$('body').showLoading();
+				$('body').showLoading({'message':'Requesting up to date order list.'});
 			//create instance of the template. currently, there's no data to populate.
 				filterObj.DETAIL = 9;
 				app.model.destroy('adminOrderList'); //always refresh list.

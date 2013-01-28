@@ -1729,21 +1729,6 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 					}
 				},
 				
-				
-				
-/*
-CHANGE LOG: 2012-04-04
-addressFieldUpdated was changed in such a way that the zip and country inputs should NOT have recalculateShipMethods on them anymore IF addressFieldUpdated is present (bill inputs).
-ship inputs or other inputs that do NOT have the addressFieldUpdated function executed can still use recalculateShipMethods directly. SUCR should be blank or false for these instances.
-
-addressFieldUpdated should now also have the fieldID passed in. ex:
-app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id);
-
-this change was made to reduce duplicate requests AND solve an issue where the session wasn't being updated prior to new ship/pay methods being requested.
-recalculateShipMethods function was also modified to support SUCR var.
-handleBill2Ship function added.
-*/
-
 
 //executed when any billing address field is updated so that tax is accurately computed/recomputed and displayed in the totals area.
 			addressFieldUpdated : function(fieldID)	{

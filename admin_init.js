@@ -40,7 +40,7 @@ app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5
 
 //have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/showloading.css']);
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.js']);
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.jt.js']);
 
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/anyplugins.js']);
 
@@ -103,10 +103,10 @@ app.u.initMVC = function(attempts){
 		myCreole = new Parse.Simple.Creole();
 		
 		}
-	else if(attempts > 50)	{
+	else if(attempts > 100)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
-		$('.appMessaging').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
+		$('.appMessaging').empty().append("<h2>Not all resources were able to be loaded.</h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. This is <b>most likely due to a slow computer and/or slow internet connection<\/b>. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
 		app.u.howManyPassZeroResourcesAreLoaded(true);
 		}
 	else	{
