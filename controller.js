@@ -882,6 +882,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 				}
 			else if(typeof msg === 'object')	{
 				persistant = persistant || msg.persistant; //global persistence (within this context) gets priority.
+				if(msg.errtype == 'iseerr')	{persistant = true} //ise errs throw extra info at the user. make persistent.
 				msg.messageClass = messageClass;
 				var selector = undefined; //used if parentID isn't passed in to attempt to find a location for the message
 				if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
@@ -972,7 +973,18 @@ This function will have both cases.
 						}
 					}
 				else if(d['errid'])	{
-					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg
+					var msgDetails = "";
+					if(d.errtype == 'iseerr')	{
+						msgDetails += "<ul>";
+						msgDetails += "<li>errtype: iseerr<\/li>";
+						msgDetails += "<li>errid: "+d.errid+"<\/li>";
+						msgDetails += "<li>uri: "+document.location+"<\/li>";
+						msgDetails += "<li>domain: "+app.vars.domain+"<\/li>";
+						msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
+						msgDetails += "<\/ul>";
+						}
+					
+					r += "<div class='"+d.errtype+" appMessageTxt'>"+d.errmsg+msgDetails;
 					if(d.errid && d.errid != "#") { r += "<br \/>Error ID: "+d.errid}
 					r += "<\/div>";
 //					app.u.dump("WARNGING! error occured. id: "+d.errid+" and type: "+d.errtype+" and msg: "+errmsg);
