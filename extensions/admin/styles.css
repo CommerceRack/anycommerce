@@ -320,6 +320,7 @@ HEADER
 .mhTabsContainer li:last-child	{border-right:0px;}
 .mhTabsContainer li:hover	{background:#7398a5;}
 .mhTabsContainer li.active, #navTabs	{background:#c0d2d8; color:#565656;}
+#navTabs a	{color: #333333;}
 .mhTabsContainer .toggleArrow	{width:1%;}
 
 .mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
