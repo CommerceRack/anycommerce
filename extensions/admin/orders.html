@@ -33,7 +33,7 @@
 				<li data-filtervalue='PENDING'>Pending</li>
 				<li data-filtervalue='REVIEW'>Review</li>
 				<li data-filtervalue='HOLD'>Hold</li>
-				<li data-filtervalue='APPROVED'>Approved</li>
+				<li data-filtervalue='APPROVED'>Approved</li><!-- add this to li for auto-submit:  data-app-event='admin_orders|orderListFiltersUpdate' -->
 				<li data-filtervalue='PROCESS'>Process</li>
 				<li data-filtervalue='COMPLETED'>Completed</li>
 				<li data-filtervalue='DELETED'>Cancelled</li>
@@ -71,7 +71,7 @@
 			</section>
 
 			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label></div>
-			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdate'>Show Results</button>
+			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdateButton'>Show Results</button>
 	
 		</div>
 	

@@ -631,6 +631,7 @@ else	{
 
 //shows a list of orders by pool.
 		showOrderList : function(filterObj)	{
+			app.u.dump("BEGIN orders.a.showOrderList");
 			if(!$.isEmptyObject(filterObj))	{
 				$('body').showLoading();
 			//create instance of the template. currently, there's no data to populate.
@@ -1437,11 +1438,8 @@ $('.editable',$container).each(function(){
 				},
 */			
 			
-			"orderListFiltersUpdate" : function($btn){
-//				$btn.addClass('ui-state-highlight');
-				$btn.button();
-				$btn.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
-					event.preventDefault();
+			"orderListFiltersUpdate" : function($ele)	{
+				$ele.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
 					$('#orderListTableBody').empty(); //this is targeting the table body.
 					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
 					var obj = {}
@@ -1462,6 +1460,12 @@ $('.editable',$container).each(function(){
 						app.ext.admin_orders.a.showOrderList(obj);
 						}
 					});
+				},
+			
+			"orderListFiltersUpdateButton" : function($btn){
+//				$btn.addClass('ui-state-highlight');
+				$btn.button();
+				app.ext.admin_orders.e.orderListFiltersUpdate($btn);
 				}, //orderListFiltersUpdate
 				
 

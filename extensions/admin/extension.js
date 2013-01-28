@@ -1058,14 +1058,16 @@ if(uriParams.debug)	{
 	}
 
 
-//	app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
+//app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
-if((document.domain && document.domain.toLowerCase().indexOf('anycommerce')) || app.u.isSet(uriParams.anycommerce))	{
+if(document.domain && document.domain.toLowerCase().indexOf('anycommerce'))	{
+	app.u.dump(" -> Treat as anycommerce");
 	$('.logo img').attr('src','extensions/admin/images/anycommerce_logo-173x30.png');
 	$('body').addClass('isAnyCommerce');
 	}
 else	{
+	app.u.dump(" -> Treat as zoovy");
 	$('body').addClass('isZoovy'); //displays all the Zoovy only content (will remain hidden for anyCommerce)
 	}
 
