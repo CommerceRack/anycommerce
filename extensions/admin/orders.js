@@ -247,8 +247,10 @@ var admin_orders = function() {
 
 var $target = $('#orderListTableBody'); //a table in the orderManagerTemplate
 $('body').hideLoading();
-app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
-$("[data-app-event='admin_orders|orderListFiltersUpdate']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
+
+//ucomment this in button instead of auto-submit mode. button class changed once filter changes occur (but before button is pressed). this resets button.
+//$("[data-app-event='admin_orders|orderListFiltersUpdateButton']",$(".searchAndFilterContainer")).removeClass('ui-state-highlight');
+//app.ext.admin_orders.u.handleFilterCheckmarks($(".searchAndFilterContainer"));
 
 var ordersData = app.data[tagObj.datapointer]['@orders'];
 
@@ -462,7 +464,8 @@ else	{
 					$this.addClass('pointer').click(function() {
 						if($this.hasClass('ui-selected'))	{$this.removeClass('ui-selected')}
 						else	{$this.addClass("ui-selected").siblings().removeClass("ui-selected")}
-						$("[data-app-event='admin_orders|orderListFiltersUpdate']",$target).addClass('ui-state-highlight');
+//in button instead of auto-submit, uncomment this. it'll make the button change color
+//						$("[data-app-event='admin_orders|orderListFiltersUpdateButton']",$target).addClass('ui-state-highlight');
 						});
 					});
 					

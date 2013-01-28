@@ -29,14 +29,14 @@
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
 			<ul id='orderListFilterPool' class='noPadOrMargin filterGroup' data-filter='POOL'>
-				<li data-filtervalue='RECENT'>Recent</li>
-				<li data-filtervalue='PENDING'>Pending</li>
-				<li data-filtervalue='REVIEW'>Review</li>
-				<li data-filtervalue='HOLD'>Hold</li>
-				<li data-filtervalue='APPROVED'>Approved</li><!-- add this to li for auto-submit:  data-app-event='admin_orders|orderListFiltersUpdate' -->
-				<li data-filtervalue='PROCESS'>Process</li>
-				<li data-filtervalue='COMPLETED'>Completed</li>
-				<li data-filtervalue='DELETED'>Cancelled</li>
+				<li data-filtervalue='RECENT' data-app-event='admin_orders|orderListFiltersUpdate'>Recent</li>
+				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='REVIEW' data-app-event='admin_orders|orderListFiltersUpdate'>Review</li>
+				<li data-filtervalue='HOLD' data-app-event='admin_orders|orderListFiltersUpdate'>Hold</li>
+				<li data-filtervalue='APPROVED' data-app-event='admin_orders|orderListFiltersUpdate'>Approved</li><!-- add this to li for auto-submit:  data-app-event='admin_orders|orderListFiltersUpdate' -->
+				<li data-filtervalue='PROCESS' data-app-event='admin_orders|orderListFiltersUpdate'>Process</li>
+				<li data-filtervalue='COMPLETED' data-app-event='admin_orders|orderListFiltersUpdate'>Completed</li>
+				<li data-filtervalue='DELETED' data-app-event='admin_orders|orderListFiltersUpdate'>Cancelled</li>
 			</ul>
 			</section>
 
@@ -44,10 +44,10 @@
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
 			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin filterGroup' data-filter='PAYMENT_VERB'>
-				<li data-filtervalue='PAID'>Paid</li>
-				<li data-filtervalue='PENDING'>Pending</li>
-				<li data-filtervalue='DENIED'>Denied</li>
-				<li data-filtervalue='ERROR'>Error</li>
+				<li data-filtervalue='PAID' data-app-event='admin_orders|orderListFiltersUpdate'>Paid</li>
+				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
+				<li data-filtervalue='DENIED' data-app-event='admin_orders|orderListFiltersUpdate'>Denied</li>
+				<li data-filtervalue='ERROR' data-app-event='admin_orders|orderListFiltersUpdate'>Error</li>
 			</ul>
 			</section>
 			
@@ -55,9 +55,9 @@
 			<section class='clearfix'>
 			<h4>Payment Type:</h4>
 			<ul id='orderListFilterPaymentType' class='noPadOrMargin filterGroup' data-filter='PAYMENT_METHOD'>
-				<li data-filtervalue='PAYPAL'>PayPal</li>
-				<li data-filtervalue='CASH'>Cash</li>
-				<li data-filtervalue='CRED'>Credit</li>
+				<li data-filtervalue='PAYPAL' data-app-event='admin_orders|orderListFiltersUpdate'>PayPal</li>
+				<li data-filtervalue='CASH' data-app-event='admin_orders|orderListFiltersUpdate'>Cash</li>
+				<li data-filtervalue='CRED'data-app-event='admin_orders|orderListFiltersUpdate'>Credit</li>
 			</ul>
 			</section>
 			
@@ -65,13 +65,13 @@
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
 			<ul id='orderListFilterMarket' class='noPadOrMargin filterGroup' data-filter='MKT'>
-				<li data-filtervalue='EBY'>eBay</li>
-				<li data-filtervalue='AMZ'>Amazon</li>
+				<li data-filtervalue='EBY'data-app-event='admin_orders|orderListFiltersUpdate'>eBay</li>
+				<li data-filtervalue='AMZ'data-app-event='admin_orders|orderListFiltersUpdate'>Amazon</li>
 			</ul>
 			</section>
 
 			<div class='marginBottom marginTop'><label># orders: <input type='number' max="250" min="1" id='filterLimit' value='30' size='3' /></label></div>
-			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdateButton'>Show Results</button>
+<!--			<button class='marginBottom' data-app-event='admin_orders|orderListFiltersUpdateButton'>Show Results</button> -->
 	
 		</div>
 	
