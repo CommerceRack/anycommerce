@@ -338,15 +338,6 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		app.ext.admin.u.handleAppEvents($row);
 		}); //orderlineitem.each
 	
-//assign a click event to the 'view order' button that appears in each row.
-	$target.find('.viewOrder').each(function(){
-		$(this).click(function(){
-			var orderID = $(this).attr('data-orderid');
-			var CID = $(this).closest('tr').attr('data-cid');
-			app.ext.admin_orders.a.orderDetailsInDialog(orderID,CID);
-			app.model.dispatchThis();
-			})
-		});
 
 	$target.selectable({
 		filter: 'tr',
@@ -534,7 +525,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 			},{
 			'callback':function(responseData){
 				if(app.model.responseHasErrors(responseData)){
-					app.u.throwGMessage("In admin_orders.u.orderDetailsInDialog, the request for payment details has failed.");
+					app.u.throwGMessage("In admin_orders.u.showOrderView, the request for payment details has failed.");
 					}
 				else {
 //						app.u.dump("responseData: "); app.u.dump(responseData);
@@ -595,8 +586,8 @@ app.ext.admin.u.handleAppEvents($target);
 			},
 
 
-		orderDetailsInDialog : function(orderID,CID)	{
-//app.u.dump("BEGIN extensions.admin_orders.a.orderDetailsInDialog");
+		showOrderEditorInDialog : function(orderID,CID)	{
+//app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
 //app.u.dump(" -> orderID : "+orderID);
 //app.u.dump(" -> CID : "+CID);
 
@@ -606,28 +597,20 @@ if(orderID)	{
 	//when a modal may be opened more than once, set autoOpen to false then execute a dialog('open'). Otherwise it won't open after the first time.
 	safeID = 'viewOrderDialog_'+orderID;
 	var $ordersModal = $(app.u.jqSelector('#',safeID)); //global so it can be easily closed.
-	
-//if dialog is already open and not empty, bring it into focus.
-	if($ordersModal.dialog( "isOpen" ) === true && $ordersModal.children().length)	{
-		$ordersModal.dialog('moveToTop').effect('highlight'); //.closest('.ui-dialog').effect('bounce'); to effect the entire dialog container
-		}
-// dialog is not open and/or does not exist. If the dialog was opened, then closed, we re-fetch the order info.
-	else	{
-//if dialog does not exist (not opened in this session yet), create it.
-		if($ordersModal.length == 0)	{
-			$ordersModal = $("<div />").attr({'id':safeID,'title':'Edit Order '+orderID}).data('orderid',orderID).appendTo('body');
-			$ordersModal.dialog({width:"90%",height:$(window).height() - 100,'autoOpen':false,modal:true});
-			}
 
-		//be sure to empty the div or if it has already been loaded, duplicate content will show up.
-		$ordersModal.dialog('open');
-		this.showOrderView(orderID,CID,safeID);
+	if($ordersModal.length == 0)	{
+		$ordersModal = $("<div />").attr({'id':safeID,'title':'Edit Order '+orderID}).data('orderid',orderID).appendTo('body');
+		$ordersModal.dialog({width:"90%",height:$(window).height() - 100,'autoOpen':false,modal:true});
 		}
+	else	{$ordersModal.empty()} //dialog already exists, empty it to always populate w/ up to date content.
+	$ordersModal.dialog('open');
+	this.showOrderView(orderID,CID,safeID);
+	app.model.dispatchThis();
 	}
 else	{
-	app.u.throwGMessage("WARNING! - no orderID passed into admin_orders.u.orderDetailsInDialog.");
+	app.u.throwGMessage("WARNING! - no orderID passed into admin_orders.u.showOrderEditorInDialog.");
 	}
-			}, //orderDetailsInDialog
+			}, //showOrderEditorInDialog
 
 
 
