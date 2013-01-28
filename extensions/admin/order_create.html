@@ -415,6 +415,29 @@ because it's used in 'print' mode, some legacy attributes are used.
 </tr>
 <tr>
 
+
+	<td valign='top'>
+	<h3>Bill To</h3>
+<address>
+<h4>
+	<span data-bind='var:order(bill/firstname);format:text;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<h5 data-bind='var:order(bill/company);format:text;'></h5>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+<div data-bind='var:order(bill/email);format:text;'></div>
+<div data-bind='var:order(bill/phone);format:text;'></div>
+</address>
+	</td>
+
+
 	<td valign='top'>
 	<h3>Destination</h3>
 <address>
@@ -438,26 +461,7 @@ because it's used in 'print' mode, some legacy attributes are used.
 	</td>
 
 
-	<td valign='top'>
-	<h3>Bill To</h3>
-<address>
-<h4>
-	<span data-bind='var:order(bill/firstname);format:text;'></span>
-	<span data-bind='var:order(bill/lastname);format:text;'></span>
-</h4>
-<h5 data-bind='var:order(bill/company);format:text;'></h5>
-<div data-bind='var:order(bill/address1);format:text;'></div>
-<div data-bind='var:order(bill/address2);format:text;'></div>
-<div>
-	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
-</div>
-<div data-bind='var:order(bill/countrycode);format:text;'></div>
-<div data-bind='var:order(bill/email);format:text;'></div>
-<div data-bind='var:order(bill/phone);format:text;'></div>
-</address>
-	</td>
+
 </tr>
 <tr>
 	<td class='orderContentsProdlistContainer' colspan='2'>
