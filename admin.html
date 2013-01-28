@@ -324,6 +324,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <!-- flexedit: info_all_product_fields -->
 <button onClick="app.ext.admin.u.showHelpInDialog('prodmgr_detail_ogoverview');">showHelpInDialog</button>
 
+<button onClick="app.ext.admin.calls.appResource.init('email_macros.json',{},'mutable'); app.model.dispatchThis('mutable');">appResource</button>
 
 <button onClick="app.ext.admin_orders.a.showOrderEditorInDialog('2013-01-550');">orderDetailsInDialog</button>
 
@@ -335,17 +336,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})">handlePermssions</button>
 
-<!-- 
-
-<button onClick="app.ext.admin_batchJob.a.showBatchJobStatus('342679');">adminBatchJobStatus</button>
-<button onClick="app.ext.admin_batchJob.calls.adminBatchJobList.init(); app.model.dispatchThis();">adminBatchJobList</button>
-
-
-<button onClick="showUI('/biz/setup/builder/index.cgi');">Builder</button>
-<button onClick="app.ext.admin_medialib.a.showMediaLib({'mode':'manage'}); app.model.dispatchThis();">Media Library</button>
- -->
-<button onClick='$("#ordersContent").empty(); app.ext.admin_orders.a.initOrderManager({"pool":"RECENT","targetID":"ordersContent"});'>initOrderManager</button>
-<button onClick="app.ext.convertSessionToOrder.a.openCreateOrderForm();">Create Order</button>
 	</div>
 </div>
 

@@ -28,7 +28,7 @@ For the list of supported payment methods, do an appPaymentMethods command and p
 
 
 var admin_orders = function() {
-	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate');
+	var theseTemplates = new Array('orderManagerTemplate','adminOrderLineItem','orderDetailsTemplate','orderStuffItemTemplate','orderPaymentHistoryTemplate','orderEventHistoryTemplate','orderTrackingHistoryTemplate','orderAddressTemplate','buyerNotesTemplate','orderStuffItemEditorTemplate','orderTrackingTemplate','qvOrderNotes','orderEventsHistoryContainerTemplate','orderTrackingHistoryContainerTemplate','orderEmailCustomMessageTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
@@ -269,8 +269,31 @@ for(var key in app.ext.admin_orders.vars.emailMessages)	{
 		app.model.dispatchThis('immutable');
 		}).appendTo($emailMenu);
 	}
+/*
+Start of custom email message tool.
 
-
+$("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on('click',function(){
+		app.u.dump("Open custom message/mail chooser");
+		var orderID = $(this).parent().data('orderid');
+		var $target = $('#orderEmailCustomMessage');
+		if($target.length)	{
+			$target.empty();
+			}
+		else	{
+			$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
+			$target.dialog({'width':500,'height':500,'autoOpen':false});
+			}
+		$target.append(app.renderFunctions.transmogrify({},'orderEmailCustomMessageTemplate',app.ext.admin_orders.vars));
+		var $menu = $("ul",$target).first().menu();
+		$("a",$menu).each(function(){
+			$(this).on('click',function(event){
+				event.preventDefault();
+				$menu.menu('collapseAll');
+				});
+			})
+		$target.dialog('open');
+		}).appendTo($emailMenu);
+*/
 
 if(L)	{
 	app.u.dump(" -> ordersData.length (L): "+L);

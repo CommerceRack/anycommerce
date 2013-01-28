@@ -644,3 +644,15 @@ used in legacy compat mode (and probably full app mode as well)
 </address>
 
 
+<div id='orderEmailCustomMessageTemplate' class='orderEmailCustomMessage'>
+<ul>
+	<li>Start with blank content</li>
+	<li>Wse content from
+		<ul data-bind="var: admin_orders(emailMessages); format: emailMessagesListItems; extension:admin_orders;"></ul>
+	</li>
+</ul>
+<br />
+
+<textarea></textarea>
+<button>send email</button>
+</div>

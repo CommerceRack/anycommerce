@@ -407,7 +407,7 @@ set adjustAttempts to true to increment by 1.
 				msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
 				msgDetails += "<\/ul>";
 				
-				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ISE','persistant':true,'errmsg':'The request has failed. The app may continue to operate normally.  Please try again or contact the site administrator if error persists. Sorry for any inconvenience. Please include the following:'+msgDetails})
+				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ISE','persistant':true,'errmsg':'The request has failed. The app may continue to operate normally.<br \/>Please try again or contact the site administrator with the following details:'+msgDetails})
 				}
 			},
 	
