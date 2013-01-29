@@ -2018,7 +2018,6 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					delete formJSON['want/payby'];
 					
 					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
-					app.u.dump(" -> validate[tender]: "+app.ext.store_checkout.validate[formJSON.tender](formJSON));
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),
