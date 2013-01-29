@@ -222,8 +222,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 				if(o.title)	{$header = $("<h2 \/>").text(o.title).appendTo($t)}
 				else	{$header = $t.children(":first")}
 				
-				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'});
+				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'}).addClass('pointer');
 				$header.wrap($("<div \/>").addClass('ui-widget-header ui-anypanel-header ui-corner-top ').css({'padding':'0px;','minHeight':'24px'}));
+				$header.off('click.toggle').on('click.toggle',function(){self.toggle()});
 				
 				self._handleButtons($header);
 			
@@ -303,11 +304,13 @@ Additional a settings button can be added which will contain a dropdown of selec
 			o = this.options,
 			buttonStyles = {'float':'right','width':'20px','height':'20px','padding':0,'margin':'2px'}; //classes applied to each of the buttons.
 			
+			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent());
+			
 			if(o.showClose)	{
-				$header.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(){self.destroy()})); //settings button
+				$buttonSet.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(){self.destroy()})); //settings button
 				}
 
-			$header.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').addClass('ui-button-anypanel ui-button-anypanel-settings').css(buttonStyles).text('Settings')
+			$buttonSet.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').addClass('ui-button-anypanel ui-button-anypanel-settings').css(buttonStyles).text('Settings')
 				.button({text: false,icons : {primary : 'ui-icon-wrench'}})
 				.off('click.settingsMenu').on('click.settingsMenu',function(){
 					var $ul = $("[data-app-role='settingsMenu']",$t).toggle();
@@ -319,7 +322,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					})); //the settings button is always generated, but only toggled on when necessary.
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
-			$header.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(){self.toggle()})); //settings button
+			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(){self.toggle()})); //settings button
 			},
 
 		_handleInitialState : function()	{
