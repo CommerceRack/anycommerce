@@ -288,7 +288,6 @@ if(L)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
 		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
 		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
-//		$('button',$row).button();		
 		$tbody.append($row);
 		}
 // didn't use a replace because I didn't want to lose the properties already on target maintain them in two locations.
@@ -350,7 +349,8 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		app.ext.admin.u.handleAppEvents($row);
 		}); //orderlineitem.each
 	
-
+//note - attempted to add a doubleclick event but selectable and dblclick don't play well. the 'distance' option wasn't a good solution
+//because it requires a slight drag before the 'select' is triggered.
 	$target.selectable({
 		filter: 'tr',
 		stop: function(){

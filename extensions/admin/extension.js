@@ -1235,7 +1235,8 @@ else	{
 			}, //handleElementSave
 
 		showHeader : {
-			onSuccess : function(){
+			onSuccess : function(_rtag){
+				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{app.ext.admin.a.changeDomain(_rtag.domain,0)} //account was just created, skip domain chooser.
 				app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
