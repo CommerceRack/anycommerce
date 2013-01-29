@@ -1240,7 +1240,7 @@ else	{
 				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
 					app.u.dump(" -> response contained a domain. use it to set the domain.");
-					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0);
+					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0,'#!dashboard');
 					} //account was just created, skip domain chooser.
 				app.ext.admin.u.showHeader();
 				},
@@ -1745,7 +1745,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					app.vars.domain = domain;
 					$('.domain','#appView').text(domain);
 //					app.rq.push(['script',0,'http://'+domain+'/jquery/config.js']); //load zGlobals. saves over existing values.
-					if(partition){}
+					if(Number(partition) >= 0){}
 					else	{
 						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
 						}
@@ -3155,6 +3155,7 @@ just lose the back button feature.
 				$btn.button();
 				$btn.off('click.showCreateAccount').on('click.showCreateAccount',function(event){
 					event.preventDefault();
+					localStorage.clear();
 					app.ext.admin.u.handleAppEvents($('#createAccountContainer'));
 					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
 						$("#appLogin").hide();
