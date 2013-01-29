@@ -253,8 +253,8 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 		var prt = $(this).parent().data('prt');
 		var $target = $('#orderEmailCustomMessage');
 		
-		app.u.dump(" -> orderid: "+orderID);
-		app.u.dump(" -> partition: "+prt);
+//		app.u.dump(" -> orderid: "+orderID);
+//		app.u.dump(" -> partition: "+prt);
 		
 		if($target.length)	{
 			$target.empty();
@@ -265,23 +265,30 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 			}
 		
 		
-		
-		$target.append(app.renderFunctions.transmogrify({},'orderEmailCustomMessageTemplate',app.ext.admin_orders.vars));
-		var $menu = $("ul",$target).first().menu();
-		$("a",$menu).each(function(){
-			$(this).on('click',function(event){
-				event.preventDefault();
-				$menu.menu('collapseAll');
-				});
-			})
+
 		$target.dialog('open');
 		$target.showLoading({'message':'Fetching list of email messages/content'});
-		app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(){
+		app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
 			$target.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				if(rd._rtag && rd._rtag.selector)	{
+					$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+					}
+				app.u.throwMessage(rd);
+				}
+			else	{
+				$target.append(app.renderFunctions.transmogrify({},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
+				app.ext.admin.u.handleAppEvents($target);
+				}
+
 			}},'mutable');
-		
+		app.model.dispatchThis('mutable');
 		}).appendTo($emailMenu);
 */
+
+
+
+
 if(L)	{
 	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
@@ -768,12 +775,23 @@ else	{
 
 //used for adding email message types to the actions dropdown.
 //recycled in list mode and edit mode. #MAIL| is important in list mode and stripped in edit mode during click event.
+//designed for use with the vars object in this extension, not the newer adminEmailList _cmd
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
 				$tag.append("<li><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
 				}
 			},
 
+
+//used for adding email message types to a select menu.
+//designed for use with the vars object returned by a adminEmailList _cmd
+		emailMessagesListOptions : function($tag,data)	{
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
+				}
+			},
+			
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
 			return true;
@@ -1707,6 +1725,23 @@ $('.editable',$container).each(function(){
 
 
 				}, //orderEmailSend
+
+			"orderEmailCustomSend" : function($btn)	{
+				$btn.button();
+				$btn.off('click.orderEmailCustomSend').on('click.orderEmailCustomSend',function(event){
+					event.preventDefault();
+					alert('do something');
+					})
+				}, //orderEmailCustomSend
+
+//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
+			"orderEmailCustomChangeSource" : function($select)	{
+				$select.off('change.orderEmailCustomChangeSource').on('change.orderEmailCustomChangeSource',function(){
+					var $option = $("option:selected",$(this));
+					app.u.dump($option.data());
+//					app.data["adminEmailList|0|ORDERS"]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY;
+					})
+				}, //orderEmailCustomChangeSource
 
 //
 			"orderEmailShowMessageList" : function($btn){

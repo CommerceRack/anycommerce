@@ -278,14 +278,14 @@ if no handler is in place, then the app would use legacy compatibility mode.
 		adminEmailList : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
-//				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj);
+				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj); app.u.dump(_tag);
 				if(obj && (Number(obj.PRT) >= 0) && obj.TYPE)	{
 					_tag = _tag || {};
 					_tag.datapointer = "adminEmailList|"+obj.PRT+"|"+obj.TYPE;
 					
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
-						this.dispatch(_tag,Q);
+						this.dispatch(obj,_tag,Q);
 						}
 					else	{
 						app.u.handleCallback(_tag);
