@@ -274,6 +274,34 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}			
 			}, //adminDomainList
 
+//PRT and TYPE (ex: ORDER) are required params
+		adminEmailList : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+//				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj);
+				if(obj && (Number(obj.PRT) >= 0) && obj.TYPE)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminEmailList|"+obj.PRT+"|"+obj.TYPE;
+					
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminEmailList, PRT ["+obj.PRT+"] and TYPE ["+obj.TYPE+"] are required and one was not set.");
+					}
+				return r; 
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminEmailList";
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'mutable');
+				}			
+			}, //adminEmailList
 
 
 		adminPrivateSearch : {

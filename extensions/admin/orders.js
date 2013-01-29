@@ -78,6 +78,7 @@ var admin_orders = function() {
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+		
 				return r;
 				},
 			onError : function()	{
@@ -86,8 +87,6 @@ var admin_orders = function() {
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
 			}, //init
-
-
 
 
 		mergeDataForBulkPrint : {
@@ -246,13 +245,17 @@ for(var key in app.ext.admin_orders.vars.emailMessages)	{
 		app.model.dispatchThis('immutable');
 		}).appendTo($emailMenu);
 	}
-/*
-Start of custom email message tool.
 
+/*
 $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on('click',function(){
 		app.u.dump("Open custom message/mail chooser");
 		var orderID = $(this).parent().data('orderid');
+		var prt = $(this).parent().data('prt');
 		var $target = $('#orderEmailCustomMessage');
+		
+		app.u.dump(" -> orderid: "+orderID);
+		app.u.dump(" -> partition: "+prt);
+		
 		if($target.length)	{
 			$target.empty();
 			}
@@ -260,6 +263,9 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 			$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
 			$target.dialog({'width':500,'height':500,'autoOpen':false});
 			}
+		
+		
+		
 		$target.append(app.renderFunctions.transmogrify({},'orderEmailCustomMessageTemplate',app.ext.admin_orders.vars));
 		var $menu = $("ul",$target).first().menu();
 		$("a",$menu).each(function(){
@@ -269,15 +275,19 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 				});
 			})
 		$target.dialog('open');
+		$target.showLoading({'message':'Fetching list of email messages/content'});
+		app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(){
+			$target.hideLoading();
+			}},'mutable');
+		
 		}).appendTo($emailMenu);
 */
-
 if(L)	{
 	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
 		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
-		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN},tagObj.templateID,ordersData[i]);
+		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
 //		$('button',$row).button();		
 		$tbody.append($row);
 		}
@@ -306,8 +316,8 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 		
 		$("<hr \/>").appendTo($cmenu);
 
-	
-		$cmenu.append($emailMenu.clone(true).attr('data-orderid',orderid));
+
+		$cmenu.append($emailMenu.clone(true).attr({'data-orderid':orderid,'data-prt':$row.data('prt')}));
 
 		$("<hr \/>").appendTo($cmenu);
 		

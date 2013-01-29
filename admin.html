@@ -30,7 +30,7 @@ var app = {vars:{
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
-	"jqurl": "https://www.zoovy.com/webapi/jquery/index.cgi",
+	"jqurl": (document.domain.indexOf('anycommerce') > -1) ?  "https://www.anycommerce.com/webapi/jquery/index.cgi" : "https://www.zoovy.com/webapi/jquery/index.cgi",
 //	"secureURL" : "https://www.zoovy.com",
 	"username": "", //needs to be set for header and media library. gets set in admin.initUserInterface
 	"baseURL" : baseURL,
@@ -111,9 +111,11 @@ app.u.loadScript(app.vars.baseURL+"admin_init.js");
 
 		</fieldset>
 		</form>
-		<hr class='ruler' />
-		<div class='alignCenter'>
-<button class="createAccount" data-app-event="admin|showCreateAccount"><span class="ui-button-text">Create An Account</span></button>
+		<div class='showForAnyCommerceOnly'>
+			<hr class='ruler' />
+			<div class='alignCenter'>
+			<button class="createAccount" data-app-event="admin|showCreateAccount"><span class="ui-button-text">Create An Account</span></button>
+			</div>
 		</div>
 
 
@@ -323,6 +325,9 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="app.ext.admin.calls.helpSearch.init('paymentstatus',{},'mutable'); app.model.dispatchThis('mutable');">helpSearch</button>
 <!-- flexedit: info_all_product_fields -->
 <button onClick="app.ext.admin.u.showHelpInDialog('prodmgr_detail_ogoverview');">showHelpInDialog</button>
+
+
+<button onClick="app.ext.admin.calls.adminEmailList.init({},'mutable'); app.model.dispatchThis('mutable');">adminEmailList</button>
 
 <button onClick="app.ext.admin.calls.appResource.init('email_macros.json',{},'mutable'); app.model.dispatchThis('mutable');">appResource</button>
 
