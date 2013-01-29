@@ -1236,7 +1236,12 @@ else	{
 
 		showHeader : {
 			onSuccess : function(_rtag){
-				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{app.ext.admin.a.changeDomain(_rtag.domain,0)} //account was just created, skip domain chooser.
+				app.u.dump("BEGIN admin.callbacks.showHeader");
+				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
+				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
+					app.u.dump(" -> response contained a domain. use it to set the domain.");
+					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0);
+					} //account was just created, skip domain chooser.
 				app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
