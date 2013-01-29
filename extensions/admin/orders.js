@@ -79,7 +79,6 @@ var admin_orders = function() {
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
-		
 				return r;
 				},
 			onError : function()	{

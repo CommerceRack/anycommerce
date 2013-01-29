@@ -1032,7 +1032,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 					'width': '90%',
 					'height': 500,
 					'closeOnEscape': false,
-					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon.
+					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon. will close on domain selection
 					});
 
 
@@ -1238,10 +1238,11 @@ else	{
 			onSuccess : function(_rtag){
 				app.u.dump("BEGIN admin.callbacks.showHeader");
 				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
+//account was just created, skip domain chooser.
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
 					app.u.dump(" -> response contained a domain. use it to set the domain.");
 					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0,'#!dashboard');
-					} //account was just created, skip domain chooser.
+					}
 				app.ext.admin.u.showHeader();
 				},
 			onError : function(responseData){
@@ -2087,7 +2088,12 @@ var chart = new Highcharts.Chart({
 				if(app.model.fetchData('authAdminLogin'))	{
 					localVars = app.data['authAdminLogin'];
 					}
-				
+//will use the domain auto-created by a recently created account.
+				else if(app.model.fetchData('authNewAccountCreate'))	{
+					localVars = app.data['authNewAccountCreate'].domain;
+					}
+				else	{} //no other local lookup 
+
 				if(domain = app.u.getParameterByName('domain')) {} //the single = here is intentional. sets the val during the if so the function doesn't have to be run twice.
 				else if(app.vars.domain)	{domain = app.vars.domain}
 				else if(localVars.domain){domain = localVars.domain}
