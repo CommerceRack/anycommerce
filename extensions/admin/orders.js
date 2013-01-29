@@ -246,16 +246,13 @@ for(var key in app.ext.admin_orders.vars.emailMessages)	{
 		}).appendTo($emailMenu);
 	}
 
-/*
+
 $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on('click',function(){
 		app.u.dump("Open custom message/mail chooser");
 		var orderID = $(this).parent().data('orderid');
 		var prt = $(this).parent().data('prt');
 		var $target = $('#orderEmailCustomMessage');
-		
-//		app.u.dump(" -> orderid: "+orderID);
-//		app.u.dump(" -> partition: "+prt);
-		
+	
 		if($target.length)	{
 			$target.empty();
 			}
@@ -263,8 +260,6 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 			$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
 			$target.dialog({'width':500,'height':500,'autoOpen':false});
 			}
-		
-		
 
 		$target.dialog('open');
 		$target.showLoading({'message':'Fetching list of email messages/content'});
@@ -277,14 +272,14 @@ $("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on(
 				app.u.throwMessage(rd);
 				}
 			else	{
-				$target.append(app.renderFunctions.transmogrify({},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
+				$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
 				app.ext.admin.u.handleAppEvents($target);
 				}
 
 			}},'mutable');
 		app.model.dispatchThis('mutable');
 		}).appendTo($emailMenu);
-*/
+
 
 
 
@@ -1730,16 +1725,48 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderEmailCustomSend').on('click.orderEmailCustomSend',function(event){
 					event.preventDefault();
-					alert('do something');
+					var $form = $btn.parents('form'),
+					frmObj = $form.serializeJSON(),
+					orderID = $btn.closest("[data-orderid]").data('orderid');
+					
+					$('body').showLoading({'message':'Sending custom message for order '+orderID});
+					
+					if(!$.isEmptyObject(frmObj) && orderID && frmObj.subject && frmObj.body && frmObj.body.length > 1)	{
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?body="+encodeURI(frmObj.body)+"&subject="+encodeURI(frmObj.subject)],{'callback':function(rd){
+$('body').hideLoading();
+if(app.model.responseHasErrors(rd)){
+	rd.parentID = 'orderEmailCustomMessage';
+	app.u.throwMessage(rd);
+	}
+else	{
+	$('#orderEmailCustomMessage').empty().append("Thank you, your message has been sent.");
+	}
+							}});
+						app.model.dispatchThis('immutable')
+						}
+					else	{
+						app.u.throwGMessage("In admin_orders.e.orderEmailCustomSend, both subject ["+frmObj.subject+"] and body are required and one was empty OR app was unable to ascertain the order id ["+orderID+"]");
+						app.u.dump("In the following object, body param MUST be present and have a length > 1"); app.u.dump(frmObj);
+						}
+					
 					})
 				}, //orderEmailCustomSend
 
 //applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
 			"orderEmailCustomChangeSource" : function($select)	{
 				$select.off('change.orderEmailCustomChangeSource').on('change.orderEmailCustomChangeSource',function(){
-					var $option = $("option:selected",$(this));
-					app.u.dump($option.data());
-//					app.data["adminEmailList|0|ORDERS"]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY;
+					var $option = $("option:selected",$(this)),
+					datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer');
+					if($option.value == 'BLANK')	{
+						$option.parents('form').find("[name='body']").val(""); //clear the form.
+						}
+					else if(datapointer && app.data[datapointer])	{
+						$option.parents('form').find("[name='body']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
+						$option.parents('form').find("[name='subject']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
+						}
+					else	{
+						app.u.dump("In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"].");
+						}
 					})
 				}, //orderEmailCustomChangeSource
 

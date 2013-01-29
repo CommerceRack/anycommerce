@@ -647,15 +647,20 @@ used in legacy compat mode (and probably full app mode as well)
 <div id='orderEmailCustomMessageTemplate' class='orderEmailCustomMessage labelsAsBreaks alignedLabels alignedInputs'>
 <form action='#'>
 <label>
-	<span>Message Source:</span>
+	<span>Message source:</span>
 	<select data-bind="var: admin_orders(@MSGS); format: emailMessagesListOptions; extension:admin_orders;" data-app-event="admin_orders|orderEmailCustomChangeSource">
 		<option value='BLANK'>blank</option>
 	</select>
 </label>
 
 <label>
+	<span>Subject:</span>
+	<input type='text' name='subject' required='required' maxlength="40" />
+</label>
+
+<label>
 	<span>Message:</span>
-	<textarea name='body'></textarea>
+	<textarea name='body' rows='10' required='required'></textarea>
 </label>
 
 <button data-app-event="admin_orders|orderEmailCustomSend">send email</button>
