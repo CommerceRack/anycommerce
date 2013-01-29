@@ -3007,7 +3007,7 @@ just lose the back button feature.
 						$target.effect("highlight", {}, 1500);
 						}
 					else	{
-						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr("data-bind","var: help(body); format:text;").appendTo('body');
+						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).attr("data-bind","var: help(body); format:text;").addClass('helpDoc').appendTo('body');
 						$target.dialog({width:500, height:500}).showLoading({'message':'Fetching documentation, one moment please.'});
 						app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{'callback':'translateSelector','extension':'admin','selector':'#'+targetID},'mutable');
 						app.model.dispatchThis('mutable');

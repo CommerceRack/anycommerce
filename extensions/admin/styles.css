@@ -764,6 +764,13 @@ table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-col
 
 
 
+/* help documentation styles */
+
+.helpDoc h1	{margin-bottom:12px;} /* document title */
+.helpDoc h2	{margin-bottom:4px;} /* title for each article (used to be SECTION) */
+.helpDoc article {margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #efefef;}
+
+
 /*
 http://codepad.co/s/7cca38#select
 some pad (more or less)specific styles.
