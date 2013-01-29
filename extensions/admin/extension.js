@@ -348,6 +348,24 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(cmdObj,Q);
 				}
 			}, //adminOrderDetail
+			
+			
+		adminOrderPaymentMethods	: {
+			
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			
+			dispatch : function(obj,_tag,Q){
+				obj._cmd = 'adminOrderPaymentMethods';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminOrderPaymentMethods';
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			
+			},
+			
 //updating an order is a critical function and should ALWAYS be immutable.
 		adminOrderUpdate : {
 			init : function(orderID,updates,_tag)	{

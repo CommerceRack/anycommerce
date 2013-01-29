@@ -65,29 +65,6 @@ var admin_orders = function() {
 			'amazon' : 'Amazon'
 			}
 		},
-	calls : {
-
-
-//obj requires: cartid, countrycode and ordertotal
-//This call was left here intentionally.  The call is also in store_checkout and it's a bit different there.
-//The two calls will need to eventually get merged.
-		appPaymentMethods : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj = obj || {};
-				obj._cmd = "appPaymentMethods";
-				obj._tag = _tag || {};
-				obj._tag.datapointer = "appPaymentMethods|"+obj.cartid;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			} //appPaymentMethods
-
-		}, //calls
-
-
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -509,6 +486,8 @@ else	{
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
 //otherwise, it could be possible to load new content into the tab but NOT have the data attributes cleaned out.
 		showOrderView : function(orderID,CID,targetID,Q)	{
+			app.u.dump("BEGIN orders.a.showOrderView");
+			app.u.dump(" -> cid: "+CID);
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
@@ -544,8 +523,9 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 
 		app.renderFunctions.translateSelector(selector,orderData);
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
-		app.ext.admin_orders.calls.appPaymentMethods.init({
-			'cartid':orderData.cart.cartid,
+		app.ext.admin.calls.adminOrderPaymentMethods.init({
+			'orderid':orderID,
+			'customerid':CID,
 			'ordertotal':orderData.sum.order_total,
 			'countrycode':orderData.ship.countrycode || orderData.bill.countrycode
 			},{
@@ -1120,9 +1100,9 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							output += "<button>Void</button>";
 							break;
 						case 'override':
-							output += "Override: "+pref.uuid;
-							output += "<div class='warning'>This is an advanced interface intended for experts only.  <b>Do not use without the guidance of technical support.</b><br \/><a target='webdoc' href='http://webdoc.zoovy.com/doc/50456'>WEBDOC #50456: Payment Status Codes</a><\/div>";
-							output += "New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
+							output += "<h4 class='clearfix'>Override: "+pref.uuid+"<\/h4>";
+							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin.u.showHelpInDialog(\"ordermgr_detail_paymentstatus\");'>Payment Status Codes</span><\/div>";
+							output += "<br \/>New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
 							output += reasonInput;
 							output += "<button>Override</button>";
 							break;

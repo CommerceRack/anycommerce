@@ -761,3 +761,13 @@ table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-col
 
 /* ebay reports page */
 .ebayListingsReportPage fieldset.oneThird	{width:30%}
+
+
+
+/*
+http://codepad.co/s/7cca38#select
+some pad (more or less)specific styles.
+*/
+@media screen and (max-width: 1024px) {
+	.domainList li {padding:0 4px;}
+	}
