@@ -58,7 +58,8 @@ var admin_orders = function() {
 			'STATPRE' : 'Order %ORDERID% Preordered',
 			'STATPROC' : 'Order %ORDERID% Processing',
 			'STATRECN' : 'Order %ORDERID% moved to Recent',
-			'TRACKING' : 'Order %ORDERID% shipped'
+			'TRACKING' : 'Order %ORDERID% shipped',
+			'CUSTOMMESSAGE' : 'Custom message' //if this changes, change class here in orders css: .orderManagerTable .bulkEditMenu .emailmsg_custommessage
 			},
 		"markets" : {
 			'ebay' : 'eBay',
@@ -240,45 +241,20 @@ var $tbody = $("<tbody \/>"); //used to store all the rows so the dom only gets 
 var $emailMenu = $("<menu label='Send email message '>");
 for(var key in app.ext.admin_orders.vars.emailMessages)	{
 	$("<command \/>").attr('label',app.ext.admin_orders.vars.emailMessages[key]).data('msg',key).on('click',function(){
-		app.u.dump(" -> send "+$(this).data('msg')+" msg for order "+$(this).parent().data('orderid'));
-		app.ext.admin_orders.u.sendOrderMail($(this).parent().data('orderid'),$(this).data('msg'),$row);
-		app.model.dispatchThis('immutable');
+//		app.u.dump(" -> send "+$(this).data('msg')+" msg for order "+$(this).parent().data('orderid'));
+		if($(this).data('msg') == 'CUSTOMMESSAGE')	{
+			var orderID = $(this).parent().data('orderid');
+			var prt = $(this).parent().data('prt');
+			app.ext.admin_orders.a.showCustomMailEditor(orderID,prt);
+			}
+		else	{
+			app.ext.admin_orders.u.sendOrderMail($(this).parent().data('orderid'),$(this).data('msg'),$row);
+			app.model.dispatchThis('immutable');
+			}
 		}).appendTo($emailMenu);
 	}
 
 
-$("<command \/>").attr('label','Custom Message').data('msg','CUSTOMMESSAGE').on('click',function(){
-		app.u.dump("Open custom message/mail chooser");
-		var orderID = $(this).parent().data('orderid');
-		var prt = $(this).parent().data('prt');
-		var $target = $('#orderEmailCustomMessage');
-	
-		if($target.length)	{
-			$target.empty();
-			}
-		else	{
-			$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
-			$target.dialog({'width':500,'height':500,'autoOpen':false});
-			}
-
-		$target.dialog('open');
-		$target.showLoading({'message':'Fetching list of email messages/content'});
-		app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
-			$target.hideLoading();
-			if(app.model.responseHasErrors(rd)){
-				if(rd._rtag && rd._rtag.selector)	{
-					$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
-					}
-				app.u.throwMessage(rd);
-				}
-			else	{
-				$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
-				app.ext.admin.u.handleAppEvents($target);
-				}
-
-			}},'mutable');
-		app.model.dispatchThis('mutable');
-		}).appendTo($emailMenu);
 
 
 
@@ -492,6 +468,42 @@ else	{
 				}
 //			app.u.dump("END initOrderManager");
 			}, //initOrderManager
+
+
+//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
+//though not a modal, only one can be open at a time.
+		showCustomMailEditor : function(orderID, prt)	{
+			if(orderID && Number(prt) >= 0)	{
+				var $target = $('#orderEmailCustomMessage');
+				if($target.length)	{$target.empty();}
+				else	{
+					$target = $("<div \/>",{'id':'orderEmailCustomMessage','title':'Send custom email'}).appendTo("body");
+					$target.dialog({'width':500,'height':500,'autoOpen':false});
+					}
+	
+				$target.dialog('open');
+				$target.showLoading({'message':'Fetching list of email messages/content'});
+	
+				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
+					$target.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						if(rd._rtag && rd._rtag.selector)	{
+							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+							}
+						app.u.throwMessage(rd);
+						}
+					else	{
+						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
+						app.ext.admin.u.handleAppEvents($target);
+						}
+		
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			else	{
+				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
+				}
+			},
 
 
 
@@ -773,7 +785,7 @@ else	{
 //designed for use with the vars object in this extension, not the newer adminEmailList _cmd
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
-				$tag.append("<li><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
+				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
 				}
 			},
 
@@ -1782,10 +1794,15 @@ else	{
 				menu.find('li a').each(function(){
 					$(this).on('click',function(event){
 						event.preventDefault();
-						$('body').showLoading();
+						if($(this).attr('href') == '#MAIL|CUSTOMMESSAGE')	{
+							app.ext.admin_orders.a.showCustomMailEditor(orderID,app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
+							}
+						else	{
+							$('body').showLoading();
 //substring(6) on the link below strips #MAIL| from the url
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
-						app.model.dispatchThis('immutable');
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
+							app.model.dispatchThis('immutable');
+							}
 						});
 					});
 

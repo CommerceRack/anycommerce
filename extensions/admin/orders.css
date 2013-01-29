@@ -56,6 +56,8 @@ table.orderManagerTable	{
 .orderManagerTable .bulkEditMenu li li	{width:160px;}
 .orderManagerTable .bulkEditMenu li li li	{width:190px;}
 
+.orderManagerTable .bulkEditMenu .emailmsg_custommessage	{display:none;}
+
 .ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
 .ui-selected .selectedIcon	{display:block !important;}
 
