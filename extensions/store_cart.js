@@ -372,20 +372,22 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
 //the cart messaging is OUTSIDE the template. That way if the template is re-rendered, existing messaging is not lost.
-					if($modal.length == 0)	{
-						$modal = $("<div><div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div><\/div>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
-						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
-						}
-					else	{
+					if($modal.length)	{
 						$('#modalCartContents',$modal).empty(); //empty to remove any previous content.
 						$('.appMessaging',$modal).empty(); //errors are cleared because if the modal is closed before the default error animation occurs, errors become persistent.
 						$modal.dialog('open');
 						}
+					else	{
+						$modal = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
+						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
+						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
+						}
+						
 					if(P.showLoading === true)	{
 						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
-						$modal.append(app.renderFunctions.transmogrify('modalCartContents',P.templateID,app.data['cartDetail']));
+						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
 						}
 					}
 				else	{
