@@ -1622,11 +1622,12 @@ $('.editable',$container).each(function(){
 
 			"orderItemAddBasic" : function($btn)	{
 				$btn.button();
-				$btn.off('click.orderItemAddBasic').on('click.orderItemAddBasic',function(){
+				$btn.off('click.orderItemAddBasic').on('click.orderItemAddBasic',function(event){
+					event.preventDefault();
 					app.u.dump("BEGIN admin_orders.buttonActions.orderItemAddBasic.click");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid'),
 					$parent = $btn.closest("[data-order-view-parent]"),
-					$form = $("<form>").append("<label><span>sku:</span><input type='text' name='stid' value='' required='required' /></label><label><span>name:</span><input type='text' name='title' value='' required='required'  /></label><label><span>qty:</span><input type='number' size='3' name='qty' value='1' required='required'  /></label><label><span>price:</span><input type='number' size='7' name='price' value='' required='required'  /></label>"),
+					$form = $("<form>").append("<label><span>sku:</span><input type='text' name='stid' value='' required='required' /></label><label><span>name:</span><input type='text' name='title' value='' required='required'  /></label><label><span>qty:</span><input type='number' size='3' name='qty' value='1' required='required'  /></label><label><span>price:</span><input type='number' size='7' name='price' value=''  step='0.01' min='0' required='required'  /></label>"),
 					$modal = $("<div \/>").addClass('labelsAsBreaks orderItemAddBasic').attr('title','Add item to order').append($form),
 					$button = $("<button \/>").addClass('alignCenter').text("Add to Order").button();
 					$form.append($button);
