@@ -498,7 +498,7 @@ else	{
 						app.u.throwMessage(rd);
 						}
 					else	{
-						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
+						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
 						app.ext.admin.u.handleAppEvents($target);
 						}
 		
@@ -1809,20 +1809,43 @@ $('.editable',$container).each(function(){
 					var $form = $btn.parents('form'),
 					frmObj = $form.serializeJSON(),
 					orderID = $btn.closest("[data-orderid]").data('orderid');
+					partition = $btn.closest("[data-prt]").data('prt');
 					
 					$('body').showLoading({'message':'Sending custom message for order '+orderID});
 					
-					if(!$.isEmptyObject(frmObj) && orderID && frmObj.subject && frmObj.body && frmObj.body.length > 1)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?body="+encodeURI(frmObj.body)+"&subject="+encodeURI(frmObj.subject)],{'callback':function(rd){
+					if(!$.isEmptyObject(frmObj) && orderID && frmObj.SUBJECT && frmObj.BODY && frmObj.BODY.length > 1)	{
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?body="+encodeURI(frmObj.BODY)+"&subject="+encodeURI(frmObj.SUBJECT)],{'callback':function(rd){
 $('body').hideLoading();
 if(app.model.responseHasErrors(rd)){
 	rd.parentID = 'orderEmailCustomMessage';
 	app.u.throwMessage(rd);
 	}
 else	{
-	$('#orderEmailCustomMessage').empty().append("Thank you, your message has been sent.");
+	var msgObj = app.u.successMsgObject("Thank you, your message has been sent.");
+	$('#orderEmailCustomMessage').empty();
+	msgObj.parentID = 'orderEmailCustomMessage';
+	app.u.throwMessage(msgObj);
 	}
 							}});
+//						app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
+						if(frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
+//							app.u.dump(" -> updating default system messaging");
+							frmObj.PRT = partition;
+							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
+							app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
+							app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
+if(app.model.responseHasErrors(rd)){
+	rd.parentID = 'orderEmailCustomMessage';
+	app.u.throwMessage(rd);
+	}
+else	{
+	var msgObj = app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
+	msgObj.parentID = 'orderEmailCustomMessage';
+	app.u.throwMessage(msgObj);
+	}
+								}},'immutable');
+							}
+						
 						app.model.dispatchThis('immutable')
 						}
 					else	{
@@ -1837,13 +1860,18 @@ else	{
 			"orderEmailCustomChangeSource" : function($select)	{
 				$select.off('change.orderEmailCustomChangeSource').on('change.orderEmailCustomChangeSource',function(){
 					var $option = $("option:selected",$(this)),
-					datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer');
-					if($option.value == 'BLANK')	{
-						$option.parents('form').find("[name='body']").val(""); //clear the form.
+					datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
+					$form = $option.parents('form');
+					if($option.val() == 'BLANK')	{
+						$form.find("[name='body']").val(""); //clear the form.
+						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
+						$(".msgType",$form).empty();
 						}
 					else if(datapointer && app.data[datapointer])	{
-						$option.parents('form').find("[name='body']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
-						$option.parents('form').find("[name='subject']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
+						$form.find("[name='BODY']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
+						$form.find("[name='SUBJECT']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
+						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
+						$(".msgType",$form).text($form.find("[name='MSGID']").val());
 						}
 					else	{
 						app.u.dump("In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"].");
