@@ -978,6 +978,7 @@ This function will have both cases.
 						msgDetails += "<ul>";
 						msgDetails += "<li>errtype: iseerr<\/li>";
 						msgDetails += "<li>errid: "+d.errid+"<\/li>";
+						msgDetails += "<li>errmsg: "+d.errmsg+"<\/li>";
 						msgDetails += "<li>uri: "+document.location+"<\/li>";
 						msgDetails += "<li>domain: "+app.vars.domain+"<\/li>";
 						msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
