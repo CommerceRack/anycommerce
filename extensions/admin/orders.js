@@ -527,6 +527,7 @@ $('body').showLoading({'message':'Requesting up to date order information.'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //needed for trackingAsLink render format
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	app.u.dump("Executing callback for adminOrderDetail");
 	
@@ -659,6 +660,7 @@ else	{
 				}
 	
 			}, //showOrderList
+
 
 
 		handlePaymentAction : function($frm)	{
@@ -822,6 +824,43 @@ else	{
 				app.u.dump("WARNING! unsupported key character in review status for admin.orders.renderFormats.reviewstatus");
 				}
 			}, //reviewStatus
+
+//pass in the entire shipments line/object (@SHIPMENTS[0])
+		trackingAsLink : function($tag,data)	{
+			app.u.dump(" -> data.value: "); app.u.dump(data.value);
+			if(data.value.track)	{			
+				$tag.text(data.value.track);
+//can only link up the tracking number if we can convert the ship code to a carrier, which requires appResource|shipcodes.json
+//don't fail if it's not available (it should be by now), just output the tracking number without a link.
+				if(app.model.fetchData("appResource|shipcodes.json"))	{
+					var carrier = app.ext.admin_orders.u.getCarrierByShipCode(data.value.carrier);
+					app.u.dump(" -> carrier: "+carrier);
+					if(carrier == "UPS" || carrier == "FDX" || carrier == "DHL" || carrier == "USPS")	{
+						$tag.addClass('lookLikeLink');
+						$tag.off('click.tracking').on('click.tracking',function(){
+							if(carrier == "UPS")	{
+								app.ext.admin.u.linkOffSite("http://wwwapps.ups.com/WebTracking/track?HTMLVersion=5.0&loc=en_US&Requester=UPSHome&WBPM_lid=homepage%2Fct1.html_pnl_trk&trackNums="+data.value.track+"&track.x=Track");
+								}
+							else if(carrier == "DHL")	{
+								app.ext.admin.u.linkOffSite("http://webtrack.dhlglobalmail.com/?mobile=&trackingnumber="+data.value.track);
+								}
+							else if(carrier == "USPS")	{
+								app.ext.admin.u.linkOffSite("https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1="+data.value.track);
+								}
+							else if(carrier == "FDX")	{
+								app.ext.admin.u.linkOffSite("https://www.fedex.com/fedextrack/index.html?tracknumbers="+data.value.track+"&cntry_code=us");
+								}
+							else	{} //should never get here.
+							});
+						}
+					else	{} //no direct link for this carrier.
+					}
+				else	{
+					app.u.dump("WARNING! non critical issue: admin_orders.renderFormat.trackingAsLink could not display the tracking # as a link because appResource|shipcodes.json was not available.");
+					}
+				}
+			else	{} //no tracking number. do nothing.
+			},
 		
 		paystatus : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatus");
@@ -964,6 +1003,31 @@ else	{
 			
 			return flags;
 			},
+
+
+
+//pass in a code such as FXHD and the carrier (FDX) will be returned.
+//handy when setting up links on tracking codes.
+		getCarrierByShipCode : function(code)	{
+			app.u.dump("BEGIN admin_orders.u.getCarrierByShipCode");
+			app.u.dump(" -> code: "+code);
+			var r; //what is returned. either a carrier OR false if no carrier available.
+			if(app.model.fetchData("appResource|shipcodes.json") && code)	{
+				app.u.dump(" -> appResource is availble. ");
+				if(app.data["appResource|shipcodes.json"].contents[code])	{
+					r = app.data["appResource|shipcodes.json"].contents[code].carrier;
+					}
+				else	{
+					app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, app.data['appResource|shipcodes.json'].contents["+code+"] was not set. most likely an unrecognized ship code");
+					}
+				}
+			else	{
+				app.u.throwGMessage("In admin_orders.u.getCarrierByShipCode, either appResource|shipcodes.json ["+typeof app.data["appResource|shipcodes.json"]+"] not available or no shipping code was passed ["+code+"]");
+				r = false;
+				}
+			return r;
+			}, //getCarrierByShipCode
+
 
 /*
 

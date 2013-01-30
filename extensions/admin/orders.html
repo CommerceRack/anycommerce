@@ -488,7 +488,7 @@ The following templates are used in the 'order detail' modal/view.
 	<td><time data-bind='var: shipment(created); format:unix2mdy; showtime:true;'></time></td>
 	<td><span data-bind='var: shipment(carrier); format:text;'></span></td>
 	<td><span data-bind='var: shipment(cost); format:money;'></span></td>
-	<td><span data-bind='var: shipment(track); format:text;'></span></td>
+	<td><span data-bind='useParentData:true; format:trackingAsLink; extension:admin_orders;'></span></td>
 	<td><span data-bind='var: shipment(actualwt); format:text;'></span></td>
 	<td><span data-bind='var: shipment(notes); format:text;'></span></td>
 </tr>
