@@ -1764,64 +1764,20 @@ later, it will handle other third party plugins as well.
 				return obj;
 				},
 
-
-//Removing all ID's. Using this in UI. will update checkout to use this too once 201248+ released. 201248 is used by 1PC and it's xmas time
-//The names are also updated to use the new two char codes used by the paymentQ.
-/*
-			getSupplementalPaymentInputs2 : function(paymentID,data)	{
-//				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
-//				app.u.dump(" -> data:"); app.u.dump(data);
-				var $o = $(); //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
-				$o = $("<div />").addClass("paybySupplemental").attr('data-ui-supplemental',paymentID);
-				var safeid = ''; //used in echeck loop. recycled in loop.
-				var tmp = ''; //tmp var used to put together string of html to append to $o
-				switch(paymentID)	{
-	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
-	//expiration is less of a concern
-					case 'PAYPALEC' :
-					//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
-						break;
-
-					case 'CREDIT':
-						tmp += "<label>Credit Card # <input type='text' size='20' name='CC' value='"+(data['CC'] || "")+"' onKeyPress='return app.u.numbersOnly(event);' /><\/label>";
-//two selects inside a label behaved badly, so  div is used for the container on this row.
-						tmp += "<div>Expiration <select name='MM'><option><\/option>";
-						tmp += app.u.getCCExpMonths(data['MM']);
-						tmp += "<\/select>";
-						tmp += "<select name='YY'><option value=''><\/option>"+app.u.getCCExpYears(data['YY'])+"<\/select><\/div>";
-						tmp += "<label>CVV/CID <input type='text' size='8' name='CV' onKeyPress='return app.u.numbersOnly(event);' value='" + (data['CV'] || "") + "'  /> <span class='ui-icon ui-icon-help pointer' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/label>";
-						break;
-
-					case 'PO':
-						tmp += "<label>PO #<input type='text' size='15' name='PO' class=' purchaseOrder' value='"+ (data['PO'] || "") +"' /><\/label>";
-						break;
-
-					case 'ECHECK':
-						var echeckFields = {"EA" : "Account #","ER" : "Routing #","EN" : "Account Name","EB" : "Bank Name","ES" : "Bank State","EI" : "Check #"}
-						for(var key in echeckFields) {
-							safeid = app.u.makeSafeHTMLId(key);
-							tmp += "<label>"+echeckFields[key]+"<input type='text' size='15' name='"+key+"' value='" + (data[key] || "") + "' /><\/label>";
-							}
-						break;
-					default:
-//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
-						$o = false; //return false if there is no supplemental fields
-					}
-				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
-				return $o;
-				},
-
-*/
 // This function is in the controller so that it can be kept fairly global. It's used in checkout, store_crm (buyer admin) and will likely be used in admin (orders) at some point.
 // ### NOTE! SANITY ! WHATEVER - app.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the app.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
 
-			getSupplementalPaymentInputs : function(paymentID,data)	{
+			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
 				var $o; //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
 				$o = $("<ul />").attr("id","paybySupplemental_"+paymentID).addClass("paybySupplemental");
 				var safeid = ''; //used in echeck loop. recycled in loop.
 				var tmp = ''; //tmp var used to put together string of html to append to $o
+				
+				var payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid'>Flag as paid<\/label><\/li>"
+				
+				
 				switch(paymentID)	{
 	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 	//expiration is less of a concern
@@ -1838,16 +1794,38 @@ later, it will handle other third party plugins as well.
 						tmp += "<\/select>";
 						tmp += "<select name='payment/YY' id='payment-yy' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
 						
-						tmp += "<li><label for='payment/CV'>CVV/CID<\/label><input type='text' size='8' name='payment/CV' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						tmp += "<li><label for='payment/CV'>CVV/CID<\/label><input type='text' size='4' name='payment/CV' id='payment-cv' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
 						if(data['payment/CV']){tmp += data['payment/CV']}
 						tmp += "'  required='required' /> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
+						
+						if(isAdmin === true)	{
+							tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
+							tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
+							tmp += "<li><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/li>"
+							}
+						
+						
+						break;
+	
+						case 'CASH':
+						case 'MO':
+						case 'CHECK':
+						case 'PICKUP':
+//will output a flag as paid checkbox ONLY in the admin interface.
+//if this param is passed in a store, it will do nothing.
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
 						break;
 	
 					case 'PO':
-						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='2' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+						tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
 						if(data['payment/PO'])
 								tmp += data['payment/PO'];
 						tmp += "' /><\/li>";
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
 						break;
 	
 					case 'ECHECK':

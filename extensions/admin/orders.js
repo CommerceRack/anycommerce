@@ -568,14 +568,9 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 					app.renderFunctions.translateSelector("#adminOrdersPaymentMethodsContainer [data-ui-role='orderUpdateAddPaymentContainer']",app.data[responseData.datapointer]);
 					$('input:radio',$target).each(function(){
 						$(this).off('click.getSupplemental').on('click.getSupplemental',function(){
-							app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset'));
-							if($(this).val() == 'CREDIT')	{
-								var $addlInputs = $("<div \/>");
-								$("<label \/>").text('authorize').prepend($("<input \/>").val('AUTHORIZE').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
-								$("<label \/>").text('charge').prepend($("<input \/>").val('CHARGE').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
-								$("<label \/>").text('refund').prepend($("<input \/>").val('REFUND').attr({'name':'VERB','type':'radio'})).appendTo($addlInputs);
-								$(this).parent().next().append($addlInputs);
-								}
+//generates the bulk of the inputs. shared with store. these are admin only inputs.
+//eventually, these should be moved into updatePayDetails and an admin param should be supported.
+							app.ext.convertSessionToOrder.u.updatePayDetails($(this).closest('fieldset')); 
 							});
 						});
 					}
@@ -2117,7 +2112,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
 					delete formJSON['want/payby'];
 					
-					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+//					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),
@@ -2136,7 +2131,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 							$("[name='amt']",$paymentContainer).parent().addClass('mandatory');
 							}
 						else if(errors)	{
-							var msgObj = app.u.errMsgObject("Some required field (indicated in red) are missing or invalid.");
+							var msgObj = app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							app.u.throwMessage(msgObj);
 							for(index in errors)	{
@@ -2146,6 +2141,10 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						else	{
 							if(formJSON.tender == 'CREDIT')	{
 								CMD = "ADDPROCESSPAYMENT";
+								}
+							else if(formJSON.flagAsPaid.toLowerCase() == 'on')	{
+								CMD = "ADDPAIDPAYMENT";
+								delete formJSON.flagAsPaid;
 								}
 							else	{CMD = "ADDPAYMENT"}
 							var $parent = $btn.closest("[data-order-view-parent]"),
