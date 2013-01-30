@@ -251,7 +251,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._tag.datapointer = 'adminDataQuery';
 				app.model.addDispatchToQ(obj,Q);
 				}
-			}, //adminPrivateSearch
+			}, //adminDataQuery
 			
 //			{'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)}
 			
@@ -302,6 +302,25 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}			
 			}, //adminEmailList
+
+
+
+		adminEmailSave : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.PRT && obj.MSGID)	{this.dispatch(obj,_tag,Q); r = 1;}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminEmailSave, no object or object.PRT or object.MSGID not passed.");
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminEmailSave';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminEmailSave';
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminDataQuery
 
 
 		adminPrivateSearch : {
@@ -1236,11 +1255,11 @@ else	{
 
 		showHeader : {
 			onSuccess : function(_rtag){
-				app.u.dump("BEGIN admin.callbacks.showHeader");
-				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
+//				app.u.dump("BEGIN admin.callbacks.showHeader");
+//				app.u.dump(" -> app.data["+_rtag.datapointer+"]:");	app.u.dump(app.data[_rtag.datapointer]);
 //account was just created, skip domain chooser.
 				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer].domain)	{
-					app.u.dump(" -> response contained a domain. use it to set the domain.");
+//					app.u.dump(" -> response contained a domain. use it to set the domain.");
 					app.ext.admin.a.changeDomain(app.data[_rtag.datapointer].domain,0,'#!dashboard');
 					}
 				app.ext.admin.u.showHeader();
@@ -1256,7 +1275,7 @@ else	{
 
 		handleDomainChooser : {
 			onSuccess : function(tagObj){
-//				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
+				app.u.dump("BEGIN admin.callbacks.handleDomainChooser.onSuccess");
 				var data = app.data[tagObj.datapointer]['@DOMAINS'];
 				var $target = $(app.u.jqSelector('#',tagObj.targetID));
 				$target.empty().append("<table class='fullWidth'><tr><td class='domainList valignTop'><\/td><td valignTop><iframe src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/ad_300x250.html' class='fullWidth noBorders ad-300x250'><\/iframe><\/td><\/tr><\/table>");

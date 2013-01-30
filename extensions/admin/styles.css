@@ -197,7 +197,7 @@ later if more variety is needed, we can either create exceptions or more rules t
 
 
 /* loading classes. do NOT change class name. change styling as needed */
-.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:100px; min-width:100px;}
+.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:30px; min-width:115px;}
 li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
 .wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
