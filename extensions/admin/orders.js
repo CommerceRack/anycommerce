@@ -1796,7 +1796,8 @@ $('.editable',$container).each(function(){
 				$btn.off('click.orderEmailSend').on('click.orderEmailSend',function(event){
 					app.u.dump(" -> orderEmailSend clicked.");
 					event.preventDefault();
-					$btn.parent().find("[data-app-event='orderEmailShowMessageList']").click();
+					$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").trigger('click');
+					app.u.dump(" -> $btn.parent().find('[data-app-event='orderEmailShowMessageList']').length: "+$btn.parent().find("[data-app-event='admin_orders|orderEmailShowMessageList']").length);
 					});
 
 

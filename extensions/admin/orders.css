@@ -101,6 +101,7 @@ order detail
 
 .orderDetails .shipAddressContainer .email	{display:none;}
 
+.orderMailMenuList a	{text-decoration:none; padding:3px 6px; font-size:.75em;} /* the list of emails in the dropdown for send mail */
 
 /* payment panel */
 

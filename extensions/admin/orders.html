@@ -253,7 +253,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	<button data-app-event="admin_orders|orderEmailSend">Send Email</button>
 	<button data-app-event="admin_orders|orderEmailShowMessageList">Message List</button>
 	</div>
-	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;">
+	<ul data-bind="var: order(emailMessages); format: emailMessagesListItems; extension:admin_orders;" class='orderMailMenuList'>
 	</ul>
 	<button class='floatRight' data-app-event="admin_orders|orderUpdateSave">Save <span class='changeCount'></span> Changes</button>
 	<button class='floatRight' data-app-event="admin_orders|orderUpdateCancel">Back to Order List</button>
