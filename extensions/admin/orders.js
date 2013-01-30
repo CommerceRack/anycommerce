@@ -1168,8 +1168,8 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				var output = ""; //set to a blank val so += doesn't prepend 'false'.
 				if(action && pref)	{
 //these are vars so that they can be maintained easily.
-					var reasonInput = "<label>Reason/Note: <input size=20 type='textbox' name='note' \/><\/label>";
-					var amountInput = "<label>Amount: $<input size='7' type='number' name='amt' step='0.01' min='0' value='"+pref.amt+"' \/><\/label>";
+					var reasonInput = "<label class='marginBottom'>Reason/Note: <input size=20 type='textbox' name='note' \/><\/label>";
+					var amountInput = "<label class='marginBottom'>Amount: $<input size='7' type='number' name='amt' step='0.01' min='0' value='"+pref.amt+"' \/><\/label>";
 					output += "<input type='hidden' name='uuid' value='"+pref.uuid+"' \/>";
 					output += "<input type='hidden' name='ACTION' value='"+action+"' \/>";
 					switch(action)	{
