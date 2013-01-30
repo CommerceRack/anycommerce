@@ -261,7 +261,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch1" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>						
 					</div>
@@ -321,7 +321,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
-		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />
+		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
 	</div>
 	<!--<h5 data-bind='var: nothing(); defaultValue: blue; elasticAttr: pid; format:searchLink; extension:myRIA;'></h5>
 	-->
@@ -352,7 +352,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch7" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
 					</div>
@@ -551,7 +551,7 @@ the loadingBG class is removed (must be that classname) when the template is tra
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
 <li id='productListTemplateResults' class='loadingBG  ' >
-	<div class='pointer'>
+	<div class=''>
 		<div class='prodThumbContainer'>
 			<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
 		</div>
@@ -601,7 +601,7 @@ this will likely become more flexible in the future. ###
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch13" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>							
 					</div>
@@ -850,7 +850,7 @@ adding classes is not likely to have any bad effects.
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch19" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>							
 					</div>
@@ -1039,7 +1039,7 @@ adding classes is not likely to have any bad effects.
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch25" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
 					</div>
@@ -1198,7 +1198,7 @@ adding classes is not likely to have any bad effects.
 		<div class="navContent">
 			<ul>
 				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: ' '});">ALL CATEGORIES</a>
+					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 					<div class="subMenu">
 						<ul id="navSearch31" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
 					</div>

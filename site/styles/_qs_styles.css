@@ -412,7 +412,7 @@ progress[aria-valuenow]:before  {
 				.prodItemPane
 				{
 					background-color: #FFFFFF;
-					height: 216px;
+					/*height: 216px;*/
 					overflow: hidden;
 					position: relative;
 					width: 216px;
@@ -1018,7 +1018,7 @@ div.prodRelatedItems
 /* search */
 .mainColumn
 {
-	margin-left: 30px;
+	margin: 0 auto;
 	width: 960px;
 }
 
