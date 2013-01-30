@@ -590,8 +590,8 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 
 		}
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
-
-if(CID)	{
+//zero isn't a valid cid.  cid must also be a number.
+if(Number(CID) > 0)	{
 	r += app.ext.admin.calls.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
