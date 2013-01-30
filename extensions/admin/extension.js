@@ -308,7 +308,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 		adminEmailSave : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(obj && Number(obj.PRT) >= 0 && obj.MSGID)	{this.dispatch(obj,_tag,Q); r = 1;}
+				if(obj && Number(obj.PRT) >= 0 && obj.MSGID && obj.TYPE)	{this.dispatch(obj,_tag,Q); r = 1;}
 				else	{
 					app.u.throwGMessage("In admin.calls.adminEmailSave, no object ["+typeof obj+"] or object.PRT ["+obj.PRT+"] or object.MSGID ["+obj.MSGID+"] not passed.");
 					}

@@ -1831,8 +1831,9 @@ else	{
 						if(frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
 //							app.u.dump(" -> updating default system messaging");
 							frmObj.PRT = partition;
+							frmObj.TYPE = 'ORDER'; //Don't pass a blank FORMAT, must be set to correct type.
 							delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
-							app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
+//							app.u.dump(" -> frmObj: "); app.u.dump(frmObj);
 							app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
 if(app.model.responseHasErrors(rd)){
 	rd.parentID = 'orderEmailCustomMessage';
@@ -1841,6 +1842,7 @@ if(app.model.responseHasErrors(rd)){
 else	{
 	var msgObj = app.u.successMsgObject("Thank you, "+frmObj.MSGID+" message has been updated.");
 	msgObj.parentID = 'orderEmailCustomMessage';
+	
 	app.u.throwMessage(msgObj);
 	}
 								}},'immutable');
