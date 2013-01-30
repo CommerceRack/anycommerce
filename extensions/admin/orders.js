@@ -533,7 +533,6 @@ $('body').showLoading({'message':'Requesting up to date order information.'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
-app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //needed for trackingAsLink render format
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 	app.u.dump("Executing callback for adminOrderDetail");
 	
