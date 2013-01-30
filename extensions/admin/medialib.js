@@ -683,8 +683,15 @@ $("img.lazyLoad").lazyload({
 		app.ext.admin_medialib.u.handleMediaFileButtons($i.parents('li'));
 		}
 	});
-//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a pixel.
-$("#mediaLibInfiniteScroller").scrollTop(1);
+
+if(L > 20)	{
+	//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a pixel.
+	$("#mediaLibInfiniteScroller").scrollTop(1);
+	}
+else	{
+//scrolltop code above doesn't work if there's no scroll bar.  so instead, show the images if under 20.
+	$("img.lazyLoad").lazyload({event: 'click'}).trigger('click'); 
+	}
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
@@ -883,7 +890,7 @@ else	{
 
 			buildDeleteMediaRequests : function(){
 				$('#mediaLibFileList .btnDelete').each(function(){
-					if($(this).hasClass('ui-state-highlight'))	{
+					if($(this).hasClass('ui-state-error'))	{
 						var data = $(this).closest('li').data();
 						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
@@ -945,7 +952,7 @@ else	{
 
 				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
 					event.preventDefault(); //keeps button from submitting the form.
-					$(this).toggleClass('ui-state-error');
+					$(this).toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
 					});
 				$("[data-btn-action='selectMedia']",$target).addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-circle-check"}}).off('click.selectMedia').on('click.selectMedia',function(event){
 					event.preventDefault(); //keeps button from submitting the form.
