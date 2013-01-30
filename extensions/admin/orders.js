@@ -342,6 +342,12 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 					$('td:eq(0)',$row).html(""); //empty status icon container.
 					}
 				});
+			if($(".ui-selected",$(this)).length > 0)	{
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
+				}
+			else	{
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").hide();
+				}
 			}
 		});
 
@@ -389,7 +395,7 @@ else	{
 // passes in a new ID so that multiple instances of the ordermanager can be open (not supported yet. may never be supported or needed.)
 				$target.empty().append(app.renderFunctions.transmogrify({'id':'OM_'+P.targetID},'orderManagerTemplate',app.ext.admin_orders.vars));
 				
-				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu();
+				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']",$target).menu().hide();
 // 1 item in the menu can be selected at a time, but the 'proceed' button is what actually makes the changes. the ui-selected class is used to determine action
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu'] a",$target).each(
 					function(){$(this).on('click',function(event){
