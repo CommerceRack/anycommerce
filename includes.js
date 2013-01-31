@@ -709,7 +709,9 @@ Parse.Simple.Base.Rule.prototype = {
                 // workaround for bad IE
                 data = data.replace(/\n/g, ' \r');
             }
-            node.appendChild(document.createTextNode(data));
+            //node.appendChild(document.createTextNode(data));
+            //Fixed to allow special characters, such as &copy; to show up from wiki text.
+			node.innerHTML += data;
         }
     }    
 };
