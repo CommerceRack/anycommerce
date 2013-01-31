@@ -204,7 +204,8 @@ function zoovyModel() {
 //			app.u.dump("//END: filterQ. myQ length = "+myQ.length+" c = "+c);
 			return myQ;
 			}, //filterQ
-		
+
+
 //execute this function in the app itself when a request is/may be in progrees and the user changes course.
 //for instance, if the user does a search for 'sho' then corrects to 'shoe' prior to the request being completed,
 //you'd want to abort the request in favor of the new command (you would not want a callback executed on 'sho', so cancel it).
@@ -225,11 +226,13 @@ function zoovyModel() {
 			return r;
 			},
 
-
+//Allows for the abort of a request.  Aborting a request will NOT trigger the error handler, as an abort is not an error.
 		abortRequest : function(QID,UUID)	{
 			if(QID && UUID && app.globalAjax.requests[QID][UUID])	{
 				app.u.dump("model.abortRequest run on QID "+QID+" for UUID "+UUID);
 				app.globalAjax.requests[QID][UUID].abort();
+				app.model.changeDispatchStatusInQ(QID,UUID,'aborted');
+				delete app.globalAjax.requests[QID][UUID];
 				}
 			else	{
 				app.u.throwGMessage("In model.abortRequest, either QID ["+QID+"] or UUID ["+UUID+"] blank or app.globalAjax.requests[QID][UUID] does not exist (request may have already completed)");
