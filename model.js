@@ -226,6 +226,16 @@ function zoovyModel() {
 			},
 
 
+		abortRequest : function(QID,UUID)	{
+			if(QID && UUID && app.globalAjax.requests[QID][UUID])	{
+				app.u.dump("model.abortRequest run on QID "+QID+" for UUID "+UUID);
+				app.globalAjax.requests[QID][UUID].abort();
+				}
+			else	{
+				app.u.throwGMessage("In model.abortRequest, either QID ["+QID+"] or UUID ["+UUID+"] blank or app.globalAjax.requests[QID][UUID] does not exist (request may have already completed)");
+				}
+			},
+
 
 //if a request is in progress and a immutable request is made, execute this function which will change the status's of the uuid(s) in question.
 //function is also run when model.abortQ is executed.
@@ -266,12 +276,12 @@ a successful request executes handleresponse (handleresponse executes the contro
 note - a successful request just means that contact with the server was made. it does not mean the request itself didn't return errors.
 
 QID = Queue ID.  Defaults to the general dispatchQ but allows for the PDQ to be used.
-
+either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uuid can be used to cancel the request.
 */
 	
 		dispatchThis : function(QID)	{
 //			app.u.dump("'BEGIN model.dispatchThis ["+QID+"]");
-			var r = true; //set to false if no dispatch occurs. return value.
+			var r; //set to false if no dispatch occurs. set to pipeuuid if a dispatch occurs. this is the value returned.
 			QID = QID === undefined ? 'mutable' : QID; //default to the general Q, but allow for priorityQ to be passed in.
 //used as the uuid on the 'parent' request (the one containing the pipelines).
 //set this early so that it can be added to each request in the Q as pipeUUID for error handling.
@@ -369,7 +379,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 		delete app.globalAjax.requests[QID][pipeUUID];
 		app.model.handleResponse(d);}
 		)
-
+	r = pipeUUID; //return the pipe uuid so that a request can be cancelled if need be.
 				}
 
 		return r;
