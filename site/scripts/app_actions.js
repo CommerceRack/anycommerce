@@ -35,6 +35,7 @@ function productFlip($obj)
 					{
 						$obj.find("div.prodItemAltData").html($obj.find("div.prodItemHoldData").html());
 						$obj.find("div.prodItemHoldData").html("");
+						$obj.find("div.prodItemPane").jScrollPane({showArrows:true});
 						$obj.removeAttr("style");
 						$obj.find(".quickView").css("right","5px");
 						$obj.find(".quickView").css("top","5px");
@@ -76,13 +77,13 @@ $(document).ready(function()
 		$(this).css("padding-right","8px");
 		$(this).find("a").css("top","15px");
 		$(this).find("div.subMenu").show();
-		$(this).find("div.subMenu").stop().animate({"height":"379px"}, 1000);
+		$(this).find("div.subMenu").stop().animate({"height":"379px"}, 300);
 	});
 	$("div.navContent ul li").mouseout(function()
 	{
 		$(this).removeAttr("style");
 		$(this).find("a").removeAttr("style");	
-		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 1000);		
+		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 300);
 		$(this).find("div.subMenu").hide();
 	});
 });

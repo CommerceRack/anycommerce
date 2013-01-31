@@ -3,17 +3,19 @@ $(document).ready(function()
 	var number = 1 + Math.floor(Math.random() * 4);
 	$("div#headerFreeShipping img").attr("data-note",number);
 	$("div#headerFreeShipping img").attr("src","site/images/header-free-shipping-icon-" + (number) + ".png");
+	
 	setInterval(function() 
 	{
-		$("div#headerFreeShipping img").hide();
-		var number = 1 + Math.floor(Math.random() * 4);
-		while(number == parseInt($("div#headerFreeShipping img").attr("data-note")))
-		{
-			number = 1 + Math.floor(Math.random() * 4);
-		}		
-		$("div#headerFreeShipping img").attr("data-note",number);		
-		$("div#headerFreeShipping img").attr("src","site/images/header-free-shipping-icon-" + (number) + ".png");
-		$("div#headerFreeShipping img").show("fade", {}, 1000);
+		$("div#headerFreeShipping img").fadeOut("1000",function(){
+			var number = 1 + Math.floor(Math.random() * 4);
+			while(number == parseInt($("div#headerFreeShipping img").attr("data-note")))
+			{
+				number = 1 + Math.floor(Math.random() * 4);
+			}		
+			$("div#headerFreeShipping img").attr("data-note",number);		
+			$("div#headerFreeShipping img").attr("src","site/images/header-free-shipping-icon-" + (number) + ".png");				
+			$("div#headerFreeShipping img").fadeIn("1000");
+		});
 	},5000);
 	
 	$("img#btnTopNavSearch").click(function()

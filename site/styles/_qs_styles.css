@@ -1,3 +1,8 @@
+@font-face
+{
+	font-family: BebasNeue;
+	src: url('fonts/BebasNeue.otf'),
+}
 *{padding: 0; margin: 0;}
 .pointer
 {
@@ -6,6 +11,10 @@
 body
 {
 	background-color: #b7a58b
+}
+h1
+{
+	font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 }
 progress,          /* All HTML5 progress enabled browsers */
 progress[role]     /* polyfill */
@@ -117,7 +126,9 @@ progress[aria-valuenow]:before  {
 						}
 	div#container
 	{
+		margin: 0px auto;
 		position: relative;
+		width: 1000px;
 	}
 		div#container div#topNav
 		{
@@ -290,7 +301,7 @@ progress[aria-valuenow]:before  {
 						{	
 							color: #FFFFFF;
 							float: left;
-							font-family: Helvetica;
+							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 							font-size: 20px;
 							padding-right: 18px;
 							position: relative;
@@ -300,7 +311,7 @@ progress[aria-valuenow]:before  {
 						{	
 							color: #FFFFFF;
 							float: left;
-							font-family: Helvetica;
+							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 							font-size: 30px;
 							position: relative;
 							top: 16px;
@@ -497,7 +508,8 @@ progress[aria-valuenow]:before  {
 					height: 50px;
 					margin: 0px auto;
 					/*position: relative;*/
-					width: 910px;
+					/*width: 910px;*/
+					width: 770px;
 				}
 					div#container div.nav div.navContent ul li
 					{
@@ -506,19 +518,20 @@ progress[aria-valuenow]:before  {
 						height: 50px;
 						list-style: none;
 						overflow: show;
-						padding-left: 10px;
-						padding-right: 10px;
+						padding-left: 15px;
+						padding-right: 15px;
 						line-height:16px;
 					}				
 						div#container div.nav div.navContent ul li a
 						{
 							color: #FFFFFF;
-							font-family: Helvetica;
-							font-size: 15px;
+							/*font-family: Helvetica;*/
+							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+							font-size: 24px;
 							font-weight: bold;
 							position: relative;
 							text-decoration: none;
-							top: 17px;
+							top: 18px;
 						}
 							div#container div.nav div.navContent ul li a:hover
 							{
@@ -1018,8 +1031,8 @@ div.prodRelatedItems
 /* search */
 .mainColumn
 {
-	margin: 0 auto;
-	width: 960px;
+	/*margin: 0 auto;
+	width: 960px;*/
 }
 
 /* content pages */
@@ -1037,7 +1050,8 @@ div.contentPage
 		div.contentPage div.sideline nav
 		{
 			background-color: #c9bca8;
-			margin-bottom: 30px;
+			/*margin-bottom: 30px;*/
+			margin-top: 12px;
 			position: relative;
 			width: 220px;
 		}
@@ -1052,10 +1066,11 @@ div.contentPage
 			}
 			div.contentPage div.sideline nav ul
 			{
-				margin-top: 3px;
+				/*margin-top: 3px;
 				padding-bottom: 25px;
 				padding-left: 30px;
-				position: relative;
+				position: relative;*/
+				padding: 1px;
 			}
 				div.contentPage div.sideline nav ul li
 				{

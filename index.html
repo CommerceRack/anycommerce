@@ -62,12 +62,15 @@ css files should be included before any .js file to ensure they are downloaded i
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/redmond/jquery-ui.css" />
 <link rel="stylesheet" type="text/css" href="site/styles/_qs_styles.css" />
+<link rel="stylesheet" type="text/css" href="site/styles/jScrollPane.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script> 
 <script src="customTabs.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 <script type="text/javascript" src="site/scripts/jquery.flippy.min.js"></script>
+<script type="text/javascript" src="site/scripts/jScrollPane.js"></script>
+<script type="text/javascript" src="site/scripts/jquery.mousewheel.js"></script>
 
 
 
@@ -120,13 +123,13 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 		<div id="topNav">
 			<div id="topNavContent">
 				<img src="site/images/header-top-nav-account-icon.png" alt="Account Icon" />
-				<p>Welcome, Guest! <a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">LOGIN</a> or <a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">SIGN-UP</a></p>
+				<p>Welcome, Guest! <a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">LOGIN</a> or <a href="#" onClick="return showContent('customer',{'show':'newsletter'});">SIGN-UP</a></p>
 				<img src="site/images/header-top-nav-view-cart-icon.png" alt="View Cart Icon" />
 				<p><span class="cartItemCount"></span> Items in your Shopping Cart <a href="#" onClick="return showContent('cart',{});">VIEW CART</a></p>
 				<img src="site/images/header-top-nav-contact-us-icon.png" alt="Contact Us Icon" />
-				<p><a href="#" onclick="showContent('company',{'show':'contact'});">CONTACT US</a></p>
+				<p><a href="#" onClick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
 				<img src="site/images/header-top-nav-questions-icon.png" alt="Questions Icon" />
-				<p>Questions? <a href="#" onclick="showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
+				<p>Questions? <a href="#" onClick="return showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
 			</div>
 		</div>
 		<div id="header">
@@ -139,13 +142,55 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 				<div id="headerFreeShipping">
 					<img src="blank.gif" alt="Free Shipping on Orders of $50 or Higher" />
 				</div>
-				<a id="btnSocialFacebook" href="#"><img src="site/images/social-button-facebook.png" alt="Social Button Facebook" /></a>
+				<a id="btnSocialFacebook" href="http://www.facebook.com/shoptoywars"><img src="site/images/social-button-facebook.png" alt="Social Button Facebook" /></a>
 				<a id="btnSocialTwitter" href="#"><img src="site/images/social-button-twitter.png" alt="Social Button Twitter" /></a>
 				<a id="btnSocialYoutube" href="#"><img src="site/images/social-button-youtube.png" alt="Social Button Youtube" /></a>
-				<a id="btnSocialMail" href="#"><img src="site/images/social-button-mail.png" alt="Social Button Mail" /></a>
+				<a id="btnSocialMail" href="#" onclick="return showContent('company',{'show':'contact'});"><img src="site/images/social-button-mail.png" alt="Social Button Mail" /></a>
 			</div>
 		</div>
 		<div id="content">
+			<div class="nav">
+				<div class="navContent">
+					<ul>
+						<li>
+							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
+							<div class="subMenu">
+
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
+							<div class="subMenu">
+
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
+							<div class="subMenu">
+
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
+							<div class="subMenu">
+									
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
+							<div class="subMenu">
+										
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
+							<div class="subMenu">
+										
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<!-- VIEW CONTENT -->
 			<!-- leave the appView div, put your your html here ...  -->
 			
@@ -165,28 +210,28 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 				<div id="footerLinks">
 					<ul>
 						<li>NEED HELP?</li>
-						<li><a href="#">Home</a></li>
+						<li><a href="#" onClick="return showContent('category',{'navcat' : '.'});">Home</a></li>
 						<li><a href="#">About</a></li>
-						<li><a href="#">Contact</a></li>
+						<li><a href="#" onclick="return showContent('company',{'show':'contact'});">Contact</a></li>
 						<li><a href="#">Policies</a></li>
-						<li><a href="#">FAQs</a></li>
+						<li><a href="#" onclick="return showContent('company',{'show':'faq'});">FAQs</a></li>
 						<li><a href="#">Blog</a></li>	
 					</ul>
 					<ul>
 						<li>FIND IT HERE</li>
-						<li><a href="#">All Categories</a></li>	
-						<li><a href="#">Action Figures</a></li>
-						<li><a href="#">Statue</a></li>	
-						<li><a href="#">Collectibles</a></li>
-						<li><a href="#">Comics</a></li>
-						<li><a href="#">Prop Replicas</a></li>	
+						<li><a href="#" onclick="return showContent('category',{'navcat' : '.'});">All Categories</a></li>	
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'action figures'});">Action Figures</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Statue</a></li>	
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'collectibles'});">Collectibles</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comics'});">Comics</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'prop replicas'});">Prop Replicas</a></li>	
 					</ul>
 					<ul>
 						<li>MY ACCOUNT</li>
-						<li><a href="#">Log-in or Sign-Up</a></li>
-						<li><a href="#">View My Account</a></li>	
-						<li><a href="#">View Shopping Cart</a></li>
-						<li><a href="#">Checkout</a></li>	
+						<li><a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
+						<li><a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>	
+						<li><a href="#" onclick="return showContent('cart',{});">View Shopping Cart</a></li>
+						<li><a href="#" onclick="return showContent('cart',{});">Checkout</a></li>	
 						<li><a href="#">Recently Viewed Items</a></li>	
 						<li><a href="#">Previous Orders</a></li>																								
 					</ul>	
@@ -210,7 +255,7 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 					</div>																								
 				</div>
 				<div id="copyright">
-					<p>Copyright 2012. Please read our <a href="#">Privacy Statement</a>. eCommerce Engine by <a href="#">Zoovy</a></p>
+					<p>Copyright 2012. Please read our <a href="#" onClick="return showContent('company',{'show':'privacy'});">Privacy Statement</a>. eCommerce Engine by <a href="http://www.zoovy.com">Zoovy</a></p>
 				</div>
 			</div>
 		</div>
@@ -257,48 +302,7 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
-	<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch1" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>						
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch2" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch3" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch4" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch5" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch6" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
+	
 	<div id="featuredItems">
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		
@@ -348,48 +352,6 @@ each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
-	<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch7" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch8" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch9" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch10" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch11" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch12" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
 	<!--<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>-->
 
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
@@ -415,14 +377,14 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 	<li id='categoryListTemplate'>
-		<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
 			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
 			<div class='catName white2LGray'><span data-bind='var: category(pretty); format:text;'></span></div>
 		</div>
 	</li>
 
 	<li id='categoryListTemplateRootCats'>
-		<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
 			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
 			<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
 		</div>
@@ -440,10 +402,10 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show(); if($(this).closest('div.prodRelatedItems').length < 1){$('.btnViewProdDetails',$(this)).show();}" onMouseOut="$('.quickView').hide(); if($(this).closest('div.prodRelatedItems').length < 1){$('.btnViewProdDetails').hide();}">
 		
 		<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-		<button class='btnViewProdDetails' onClick="productFlip($(this).parent());">Details</button>
+		<!--<button class='btnViewProdDetails' onClick="productFlip($(this).parent());">Details</button>-->
 		
 		<div class="prodItemPane">
-			<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+			<div class='pointer prodThumbContainer' data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})">
 				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='216' height='216' />
 			</div>
 			<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
@@ -451,17 +413,49 @@ remember to NOT put the button inside the 'onclick' container or two events will
 				<h5 data-bind='var: product(zoovy:prod_name); format:text;' onClick="if($(this).closest('div.prodRelatedItems').length > 0){showContent('product',{'pid':$(this).parent().attr('data-pid')})}"></h5>
 			
 				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-				<img src="site/images/button-buy-now.png" onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' />
+				<!--<img src="site/images/button-buy-now.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' />-->
+				<!--<img src="site/images/button-product-list-add-to-cart.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />-->
+				<form data-bind="var: product(pid); format:atcForm; extension:store_product;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+					<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="atcButton addToCartButton">
+						<input type="hidden" value="1" size="3" name="quantity" min="1" class="zform_number" id="quantity_FC5171-DS">						
+						<img src="site/images/button-product-list-add-to-cart.png" onclick="$(this).parent().submit();" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />
+					</div>	
+					<input type="hidden" name="add" value="yes">
+					<input type="hidden" name="product_id" value="FC5171-DS">
+					<input type="hidden" value="yes" name="add"><input type="hidden" value="DCD516921" name="product_id">
+				</form>
 			</div>
 			
-			<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+			<!--<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>-->
 	<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 		</div>
 		<div class="prodItemAltData"><p data-bind='var: product(zoovy:prod_desc); format: text;'></p></div>
 		<div class="prodItemHoldData"></div>
 	</li>
+	
+<div class=''>
+		<div class='pointer prodThumbContainer' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
+		</div>
+		
+		<div class="prodThumbDesc">
+			<div class="prodThumbBackground" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'></div>
+			<h5 data-bind='var: product(prod_name); format:text;'></h5>
+			<h6 data-bind='var: product(base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+			<!--<img src="site/images/button-buy-now.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>-->
+			<!--<img src="site/images/button-product-list-add-to-cart.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />-->
+			<form data-bind="var: product(pid); format:atcForm; extension:store_product;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+				<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="atcButton addToCartButton">
+					<input type="hidden" value="1" size="3" name="quantity" min="1" class="zform_number" id="quantity_FC5171-DS">						
+					<img src="site/images/button-product-list-add-to-cart.png" onclick="$(this).parent().submit();" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />
+				</div>
+				<input type="hidden" name="add" value="yes">
+				<input type="hidden" name="product_id" value="FC5171-DS">
+				<input type="hidden" value="yes" name="add"><input type="hidden" value="DCD516921" name="product_id">
+			</form>
+		</div>	
 
-
+	</div>
 <!--
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
@@ -477,7 +471,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 			
 				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-				<img src="site/images/button-buy-now.png"  onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>
+				<img src="site/images/button-buy-now.png"  onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>
 		</div>		
 		
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
@@ -508,7 +502,7 @@ container ul should have lineItemProdlist class on it instead of productList
 				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 
-<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
+<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="return showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
 <span class="ui-icon ui-icon-cart"></span>
 </button>
 		
@@ -552,7 +546,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 -->
 <li id='productListTemplateResults' class='loadingBG  ' >
 	<div class=''>
-		<div class='prodThumbContainer'>
+		<div class='pointer prodThumbContainer' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 			<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
 		</div>
 		
@@ -560,7 +554,17 @@ remember to NOT put the button inside the 'onclick' container or two events will
 			<div class="prodThumbBackground" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'></div>
 			<h5 data-bind='var: product(prod_name); format:text;'></h5>
 			<h6 data-bind='var: product(base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-			<img src="site/images/button-buy-now.png" onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>
+			<!--<img src="site/images/button-buy-now.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>-->
+			<!--<img src="site/images/button-product-list-add-to-cart.png" onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />-->
+			<form data-bind="var: product(pid); format:atcForm; extension:store_product;" class="prodViewerAddToCartForm clearfix" action="#" onsubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+				<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="atcButton addToCartButton">
+					<input type="hidden" value="1" size="3" name="quantity" min="1" class="zform_number" id="quantity_FC5171-DS">						
+					<img src="site/images/button-product-list-add-to-cart.png" onclick="$(this).parent().submit();" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer' alt="Add To Cart" />
+				</div>
+				<input type="hidden" name="add" value="yes">
+				<input type="hidden" name="product_id" value="FC5171-DS">
+				<input type="hidden" value="yes" name="add"><input type="hidden" value="DCD516921" name="product_id">
+			</form>
 		</div>	
 
 	</div>
@@ -597,48 +601,7 @@ this will likely become more flexible in the future. ###
 
 
 <div id='productTemplate'>
-	<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch13" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>							
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch14" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch15" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch16" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch17" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch18" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
+	
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
 <div class="prodDetailView">
@@ -846,48 +809,6 @@ adding classes is not likely to have any bad effects.
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='companyTemplate' class='clearfix loadingBG'>
-	<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch19" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>							
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch20" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch21" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch22" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch23" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch24" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
 	<div class="contentPage">
 		<div class='sideline' >
 			<nav id='companyNav'>
@@ -905,10 +826,10 @@ adding classes is not likely to have any bad effects.
 			<nav id='myAccountNav'>
 				<p>MY ACCOUNT</p>
 				<ul class='listStyleNone noPadOrMargin'>
-					<li><a href="#">Log-in or Sign-Up</a></li>
-					<li><a href="#">View My Account</a></li>
-					<li><a href="#">View Shopping Cart</a></li>
-					<li><a href="#">Checkout</a></li>
+					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
+					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>
+					<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
+					<li><a href="#" onClick="return showContent('checkout',{});">Checkout</a></li>
 					<li><a href="#">Recently Viewed Items</a></li>
 					<li><a href="#">Previous Orders</a></li>
 				</ul>
@@ -1035,48 +956,6 @@ adding classes is not likely to have any bad effects.
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='customerTemplate' class='clearfix loadingBG'>
-<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch25" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch26" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>											
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch27" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>									
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch28" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch29" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch30" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>										
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
 	<div class="contentPage">
 		<div class='sideline' >
 			<nav id='customerNav'>
@@ -1094,14 +973,14 @@ adding classes is not likely to have any bad effects.
 			<nav id='myAccountNav'>
 				<p>MY ACCOUNT</p>
 				<ul class='listStyleNone noPadOrMargin'>
-					<li><a href="#">Log-in or Sign-Up</a></li>
-					<li><a href="#">View My Account</a></li>
-					<li><a href="#">View Shopping Cart</a></li>
-					<li><a href="#">Checkout</a></li>
+					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
+					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>
+					<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
+					<li><a href="#" onClick="return showContent('checkout',{});">Checkout</a></li>
 					<li><a href="#">Recently Viewed Items</a></li>
 					<li><a href="#">Previous Orders</a></li>
 				</ul>
-			</nav>
+			</nav>				
 		</div>
 	
 		<div class='mainColumn'>
@@ -1194,48 +1073,6 @@ adding classes is not likely to have any bad effects.
 
 
 <div id='searchTemplate' class='searchResultsPage clearfix'>
-	<div class="nav">
-		<div class="navContent">
-			<ul>
-				<li>
-					<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-					<div class="subMenu">
-						<ul id="navSearch31" data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>								
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
-					<div class="subMenu">
-						<ul id="navSearch32" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"action figures"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
-					<div class="subMenu">
-						<ul id="navSearch33" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
-					<div class="subMenu">
-						<ul id="navSearch34" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"collectibles"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
-					<div class="subMenu">
-						<ul id="navSearch35" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-					</div>
-				</li>
-				<li>
-					<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
-					<div class="subMenu">
-						<ul id="navSearch36" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"prop replicas"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-					</div>
-				</li>
-			</ul>
-		</div>
-	</div>
 	<div class='contentPage'>
 		<div class='sideline' >
 			<nav id='searchNav'>
@@ -1350,12 +1187,12 @@ So the cart template should contain these two elements and the extension should 
 	<div>
 		<p>HELPFUL LINKS</p>
 		<ul>
-			<li><a href="#">Contact Us</a></li>
-			<li><a href="#">Shipping Policy</a></li>
-			<li><a href="#">Return Policy</a></li>
-			<li><a href="#">Payment Policy</a></li>
-			<li><a href="#">Privacy Policy</a></li>
-			<li><a href="#">FAQs</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'shipping'});">Shipping Policy</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'return'});">Return Policy</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'payment'});">Payment Policy</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Privacy Policy</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQs</a></li>
 		</ul>
 	</div>	
 	<p>
@@ -1418,8 +1255,8 @@ So the cart template should contain these two elements and the extension should 
 	
 	<div class='checkoutButtonsContainer'>
 
-		<!--<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>-->
-		<img class="pointer" src="site/images/button-checkout.png" alt="Checkout" onClick="showContent('checkout',{});" />
+		<!--<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick= "return showContent('checkout',{});">Store Checkout</button></span>-->
+		<img class="pointer" src="site/images/button-checkout.png" alt="Checkout" onClick="return showContent('checkout',{});" />
 		
 		<img src="site/images/cart-credit-cards-accepted.png.png" alt="Credit Cards Accepted" />
 
@@ -1485,7 +1322,7 @@ used on a product layout. Some product have 'children' which may represent the s
 -->
 
 <ul>
-<li id='productListTemplateChildren' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
+<li id='productListTemplateChildren' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' />
 	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
 </li>
@@ -1766,7 +1603,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<div id="createAccount">
 		<p>FIRST-TIMER?</p>
 		<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing kist, please choose this option.</p>
-		<img class="pointer" src="site/images/button-create-account.png" onClick="showContent('customer',{'show':'newsletter'});" alt="Create Account" />
+		<img class="pointer" src="site/images/button-create-account.png" onClick="return showContent('customer',{'show':'newsletter'});" alt="Create Account" />
 	</div>
 </div>
 
