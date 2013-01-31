@@ -511,7 +511,7 @@ The following templates are used in the 'order detail' modal/view.
 
 <table>
 <tr id='orderStuffItemEditorTemplate' class='orderStuffItemRow'>
-	<td><span data-bind='var: order(stid); format:text; className: stid;'></span></td>
+	<td><span data-bind='var: order(sku); format:text; className: stid;'></span></td><!-- stid has mkt data on it. use sku -->
 	<td>
 		<div data-bind='var: order(prod_name); format:text; '></div>
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
