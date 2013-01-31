@@ -55,7 +55,7 @@ function prepFlip($obj)
 
 $(document).ready(function()
 {
-	$("div#mainContentArea div").each(function()
+	/*$("div#mainContentArea div").each(function()
 	{
 		if($(this).css("display") == "none")
 		{
@@ -85,5 +85,5 @@ $(document).ready(function()
 		$(this).find("a").removeAttr("style");	
 		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 300);
 		$(this).find("div.subMenu").hide();
-	});
+	});*/
 });
