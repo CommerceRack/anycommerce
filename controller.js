@@ -156,29 +156,35 @@ Exception - the controller is used for admin sessions too. if an admin session i
 A session ID could be passed in through vars, but app.sessionId isn't set until the session id has been verified OR the app is explicitly told to not validate the session.
 */
 		if(app.vars.thisSessionIsAdmin && app.vars.sessionId)	{
+			app.u.dump(" -> admin session and session id set.");
 //you'd get here in the UI.
 			app.sessionId = app.vars.sessionId
 			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.thisSessionIsAdmin)	{
+			app.u.dump(" -> admin session. no session id.");
 			//for now, do nothing.  this may change later.
 			app.model.addExtensions(app.vars.extensions);
 			}
 		else if(app.vars.sessionId)	{
+			app.u.dump(" -> session id set.");
 			app.calls.appCartExists.init(app.vars.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.model.dispatchThis('immutable');
 			}
 //if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(app.u.isSet(app.u.getParameterByName('sessionId')))	{
+			app.u.dump(" -> session id from URI used.");
 			app.calls.appCartExists.init(app.u.getParameterByName('sessionId'),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
 		else if(app.model.fetchSessionId())	{
+			app.u.dump(" -> session retrieved from localstorage..");
 			app.calls.appCartExists.init(app.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.model.dispatchThis('immutable');
 			}
 		else	{
+			app.u.dump(" -> go get a new session id.");
 			app.calls.getValidSessionID.init('handleNewSession');
 			app.model.dispatchThis('immutable');
 			}

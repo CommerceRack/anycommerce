@@ -284,7 +284,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 	
 		dispatchThis : function(QID)	{
 //			app.u.dump("'BEGIN model.dispatchThis ["+QID+"]");
-			var r; //set to false if no dispatch occurs. set to pipeuuid if a dispatch occurs. this is the value returned.
+			var r = true; //set to false if no dispatch occurs. set to pipeuuid if a dispatch occurs. this is the value returned.
 			QID = QID === undefined ? 'mutable' : QID; //default to the general Q, but allow for priorityQ to be passed in.
 //used as the uuid on the 'parent' request (the one containing the pipelines).
 //set this early so that it can be added to each request in the Q as pipeUUID for error handling.
