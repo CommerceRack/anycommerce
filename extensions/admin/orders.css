@@ -103,6 +103,10 @@ order detail
 
 .orderMailMenuList a	{text-decoration:none; padding:3px 6px; font-size:.75em;} /* the list of emails in the dropdown for send mail */
 
+/* compensate for some default styling to make supplemental contain wrap up right against the corresponding payment type */
+#adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
+ul.paybySupplemental	{margin-top:0;}
+
 /* payment panel */
 
 .actionInputs label, .actionInputs div, .actionInputs button	{display:inline-block; margin-left:12px;}
