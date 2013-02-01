@@ -1533,3 +1533,108 @@ div#contactArticle
 	top: 5px;
 	z-index: 1000;
 }
+
+div#checkoutSuccessContent
+{
+
+}
+	div#checkoutSuccessContent div#floatRight#ocmThirdParty
+	{
+		width: 280px;
+	}
+	div#checkoutSuccessContent div#orderSummaryDetails
+	{
+		font-family: Helvetica;
+		text-align: center;
+		width: 700px;
+	}
+	div#checkoutSuccessContent div#orderSummaryDetails > div
+	{	
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+		div#checkoutSuccessContent div#orderSummaryDetails h2
+		{
+			color: #770000;
+			font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+			font-size: 36px;
+			margin: 0 auto;
+			width: 505px;
+		}
+		div#checkoutSuccessContent div#orderSummaryDetails h3 
+		{
+			background-color: #FFFFFF;
+			font-family: Helvetica;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 12px 70px 12px 70px;
+			margin: 0 auto;
+			margin-bottom: 50px;
+			text-align: center;
+			width: 270px;
+			
+		}		
+		div#checkoutSuccessContent div#orderSummaryDetails div#orderSummaryLinkToInvoice
+		{
+			border-bottom: 1px solid #897C68;
+			border-top: 1px solid #897C68;
+			font-family: Helvetica;
+			font-size: 16px;
+			font-weight: bold;
+			margin-bottom: 10px;
+			margin-top: 5px;
+			padding-top: 10px;
+			text-align: left;
+		}
+			div#checkoutSuccessContent div#orderSummaryDetails div#orderSummaryLinkToInvoice > div
+			{
+				font-size: 14px;
+				font-weight: normal;
+				margin-top: 10px;
+			}
+		div#checkoutSuccessContent div#invoiceContainer
+		{
+			
+		}
+			div#checkoutSuccessContent div#invoiceContainer table
+			{
+				
+			}		
+				div#checkoutSuccessContent div#invoiceContainer table tr td
+				{
+					font-family: Helvetica;
+					font-size: 14px;
+					font-style: normal;
+				}	
+					div#checkoutSuccessContent div#invoiceContainer table tr td hgroup, div#checkoutSuccessContent div#invoiceContainer table tr td address
+					{
+						width: 200px;
+					}
+						div#checkoutSuccessContent div#invoiceContainer table tr td hgroup h5
+						{
+							font-size: 18px;
+							margin-bottom: 10px;
+						}					
+						div#checkoutSuccessContent div#invoiceContainer table tr td address
+						{
+							margin-bottom: 5px;
+						}
+					div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer
+					{						
+						width: 490px;
+					}
+						div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer ul.lineItemProdlist li
+						{
+							background-color: #c9bca8;
+							border-bottom: none;
+							height: auto;
+							margin-bottom: 10px;
+							margin-top: 10px;
+							padding: 10px 0px 15px 10px;
+							width: auto;
+						}
+						div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer ul.lineItemProdlist li:nth-child(even)
+						{
+							background-color: #897c68;
+						}					
+						
