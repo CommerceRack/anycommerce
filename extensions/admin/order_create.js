@@ -1588,7 +1588,9 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 
 				var o = '';
 				$('.ui-state-active',$container).removeClass('ui-state-active ui-corner-top ui-corner-all ui-corner-bottom');
-				$('.paybySupplemental', $container).hide(); //hide all other payment messages/fields.
+ //in Admin, some of the supplemental inputs are shared between payment types (flag as paid)
+//so to ensure the checkbox isn't on by accident, remove all supplemental material when switching between.
+				$('.paybySupplemental', $container).empty().remove();
 				var $radio = $("[name='want/payby']:checked",$container);
 				
 				
