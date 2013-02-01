@@ -2146,8 +2146,8 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 //the object used to create the suplementals is shared with checkout and it currently has the data as payment/cc et all.
 //so that's stripped to just cc. 
 								for(index in formJSON)	{
-									app.u.dump(" -> index.substring(0,7): "+index.substring(0,7));
-									app.u.dump(" -> index.substr(7): "+index.substr(7));
+//									app.u.dump(" -> index.substring(0,8): "+index.substring(0,7));
+//									app.u.dump(" -> index.substr(8): "+index.substr(7));
 									if(index.substring(0,8) == 'payment/')	{
 										formJSON[index.substr(8)] = formJSON[index];
 										delete formJSON[index]; //clean out invalid params
