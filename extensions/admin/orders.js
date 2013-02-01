@@ -2141,6 +2141,18 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						else	{
 							if(formJSON.tender == 'CREDIT')	{
 								CMD = "ADDPROCESSPAYMENT";
+//!!! update checkout to not look for payment/cc so this for loop can be removed. (getSupplementalPaymentInputs in controller). shared a lot.
+//when you do this, the validate.CREDIT function needs to be updated too.
+//the object used to create the suplementals is shared with checkout and it currently has the data as payment/cc et all.
+//so that's stripped to just cc. 
+								for(index in formJSON)	{
+									app.u.dump(" -> index.substring(0,7): "+index.substring(0,7));
+									app.u.dump(" -> index.substr(7): "+index.substr(7));
+									if(index.substring(0,8) == 'payment/')	{
+										formJSON[index.substr(8)] = formJSON[index];
+										delete formJSON[index]; //clean out invalid params
+										}
+									}
 								}
 							else if(formJSON.flagAsPaid.toLowerCase() == 'on')	{
 								CMD = "ADDPAIDPAYMENT";
