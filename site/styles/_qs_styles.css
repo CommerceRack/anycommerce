@@ -569,7 +569,7 @@ progress[aria-valuenow]:before  {
 								float: left;
 								list-style-position: inside;
 								list-style-type: disc;
-								padding: 10px;
+								padding: 20px 15px 20px 25px
 							}
 								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
 								{
