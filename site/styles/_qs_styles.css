@@ -72,17 +72,10 @@ progress[aria-valuenow]:before  {
 }
 	div#appPreView
 	{
-		/*margin: 0px auto;
-		margin-top: 200px;
-		text-align: center;
-		width: 310px;*/
-		/*background: none repeat scroll 0 0 #FFFFFF;*/
-		/*background-color: #bfb6a7;*/
 		border-radius: 8px 8px 8px 8px;
 		box-shadow: 0 0 6px 2px #555;
 		margin: 100px auto;
 		padding: 20px;
-		/*width: 310px;*/
 		width: 462px;
 	}
 		div#appPreView table
@@ -236,7 +229,7 @@ progress[aria-valuenow]:before  {
 					cursor: pointer;
 					left: 776px;
 					position: absolute;
-					top: 94px; /* visible 90px */
+					top: 94px;
 				}
 				div#container div#header div#headerContent a#btnSocialTwitter
 				{
@@ -354,10 +347,6 @@ progress[aria-valuenow]:before  {
 							-webkit-box-shadow: 1px 1px 5px 1px #222222;
 							box-shadow:         1px 1px 5px 1px #222222;							
 						}	
-						/*ul.categoryList li:not(:first-child), ul.categoryList li:not(:nth-child(7)) 
-						{
-							margin-left: 20px;
-						}*/	
 							ul.categoryList div.thumbContainer
 							{
 								text-align: center;
@@ -397,7 +386,6 @@ progress[aria-valuenow]:before  {
 			}
 				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li
 				{
-					/*background-color: #FFFFFF;*/
 					border: 2px solid #FFFFFF;
 					height: 216px;
 					margin-left: 0;
@@ -408,10 +396,7 @@ progress[aria-valuenow]:before  {
 					
 					box-shadow: 1px 1px 5px 1px #222222;							
 				}
-				/*div#container div#content div.categoryTemplate div ul.fluidList li:not(:first-child),li:not(:nth-child(4))
-				{
-					margin-left: 20px;	
-				}*/
+
 				.prodThumbDesc
 				{	
 					height: 87px;
@@ -423,7 +408,6 @@ progress[aria-valuenow]:before  {
 				.prodItemPane
 				{
 					background-color: #FFFFFF;
-					/*height: 216px;*/
 					overflow: hidden;
 					position: relative;
 					width: 216px;
@@ -507,8 +491,6 @@ progress[aria-valuenow]:before  {
 				{
 					height: 50px;
 					margin: 0px auto;
-					/*position: relative;*/
-					/*width: 910px;*/
 					width: 770px;
 				}
 					div#container div.nav div.navContent > ul > li
@@ -524,7 +506,6 @@ progress[aria-valuenow]:before  {
 						div#container div.nav div.navContent > ul > li > a
 						{
 							color: #FFFFFF;
-							/*font-family: Helvetica;*/
 							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 							font-size: 24px;
 							font-weight: bold;
@@ -560,9 +541,7 @@ progress[aria-valuenow]:before  {
 							div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *
 							{
 								cursor: default;
-								/*display: inherit;*/
 								position: relative;
-								/*z-index: 2000;*/
 							}
 							div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul
 							{
@@ -662,8 +641,7 @@ progress[aria-valuenow]:before  {
 						}						
 						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table
 						{
-							/*position: relative;
-							top: 70px;*/
+
 						}					
 						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td
 						{
@@ -847,9 +825,6 @@ div.prodRelatedItems
 		}			
 			div.prodRelatedItems ul.relatedItems li img.pointer
 			{
-				/*bottom: 5px;
-				position: absolute;
-				right: 5px;*/
 				display: none;
 			}
 			div.prodRelatedItems ul.relatedItems li img.prodThumb
@@ -1082,8 +1057,7 @@ div.prodRelatedItems
 /* search */
 .mainColumn
 {
-	/*margin: 0 auto;
-	width: 960px;*/
+
 }
 
 /* content pages */
@@ -1101,7 +1075,6 @@ div.contentPage
 		div.contentPage div.sideline nav
 		{
 			background-color: #c9bca8;
-			/*margin-bottom: 30px;*/
 			margin-top: 12px;
 			position: relative;
 			width: 220px;
@@ -1117,10 +1090,6 @@ div.contentPage
 			}
 			div.contentPage div.sideline nav ul
 			{
-				/*margin-top: 3px;
-				padding-bottom: 25px;
-				padding-left: 30px;
-				position: relative;*/
 				padding: 1px;
 			}
 				div.contentPage div.sideline nav ul li
@@ -1558,7 +1527,6 @@ div#contactArticle
 		div#contactArticle #contactForm fieldset
 		{
 			border: none;
-			/*padding-left: 0px;*/
 		}
 		div#contactArticle #contactForm div input[type="text"],div#contactArticle #contactForm div input[type="email"]
 		{
