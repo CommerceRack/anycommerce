@@ -1,0 +1,165 @@
+TOYWARS - ADDING CONTENT TO DROPDOWNS
+
+1) Download GitHub for Windows (Click the green "download" button on the top-right of http://windows.github.com/)
+
+2) Install GitHub Client
+
+3) Login with your credentials
+
+4) Mouse over toywars.com and click "Clone" to download toywars.com (you may be asked for a location to store this repository, if a default "repository storage" area was not requested by the application during install.
+
+5) Once the process completes (you may be asked where to store it), browse to the GitHub folder storing toywars.com on your local hard drive.
+
+6) Open toywars.com/index.html in a text editor (recommended to use the application Notepad++ [http://notepad-plus-plus.org/download/v6.2.3.html]) and browse to the navigation section (see code below)
+
+NOTE: This navigation section is the main navigation bar which you mouse over on the website.
+
+7) Each category which you mouse over on the main navigation bar is stored in an <li> tag which is a child of a single <ul> which is a child of <div class="navContent">. Inside each <li> is an <a> link to the specified page / search query, and also contains <div class="subMenu"> which is hidden until you mouse over the corresponding category. Inside of this div, is <div class="dropDownListHolder">. It is here where you will put your code for dropdown lists.
+
+8) In the below section for the keyword "statue", there is the corresponding anchor, followed by its <div class="subMenu">, and then its child <div class="dropDownListHolder"> with static content inside.
+
+9) Inside the static content of "statue" resides several <ul> tags, each representing a single list ("New", "Preorders", "Characters", "Theme", Manufacturers"). Each <ul> has at least one <li> tag, which the very first li represents the title (inside the main site css stylesheet, the layout is pre-determined so no styling will need to take place. If styling DOES need to take place, please contact the web designer!), and subsequent <li>'s represent list items containing <a> anchor tags which link out to various custom searches.
+
+LAYOUT:
+
+	<div class="dropDownListHolder">
+		<ul>
+			<li>LIST#1's TITLE</li>
+		</ul>
+		<ul>
+			<li>LIST#2's TITLE</li>
+		</ul>
+		<ul>
+			<li>LIST#3's TITLE</lI>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 3 category 1'});">LIST 3 CATEGORY 1</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 3 category 2'});">LIST 3 CATEGORY 2</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 3 category 3'});">LIST 3 CATEGORY 3</a></li>
+		</ul>
+		<ul>
+			<li>LIST#4's TITLE</lI>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 4 category 1'});">LIST 4 CATEGORY 1</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 4 category 2'});">LIST 4 CATEGORY 2</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 4 category 3'});">LIST 4 CATEGORY 3</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 4 category 4'});">LIST 4 CATEGORY 4</a></li>
+			<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'list 4 category 5'});">LIST 4 CATEGORY 5</a></li>
+		</ul>
+	</div>
+
+10) Following the above model will create categories similar to those in the "statue" section.
+
+11) Lists will display in a left to right manner and the window will dynamically expand vertically with the lists that you add.
+
+12) When finished saving your changes, navigate back to the GitHub application, and make sure you are in toywars.com (if not, double click on it from the main menu in GitHub. If you don't see toywars.com, try clicking on your username under the "github" category on the left side of the screen.)
+
+13) All the files you modified will be listed on the left side of the screen (by default all of their checkboxes are checked, make sure you leave them all checked!). There will be a window section called "uncommitted changes". Simply Enter a small message with changes in the "COMMIT MESSAGE (REQUIRED)" section and any additional notes you would like to add in the "EXTENDED DESCRIPTION (OPTIONAL)" section. 
+
+14) Once you fill in your comments, click the "COMMIT" button under the "EXTENDED DESCRIPTION" section.
+
+15) Afterward, click on the "SYNC" button at the top of the application screen. Once it finishes, it should display "IN SYNC".
+
+16) Open firefox and navigate to https://webapi.zoovy.com/webapi/git/webhook.cgi/v=1/u=redford/p=0021B22A-55F5-11E2-8F78-4E02EB1F/k=378fe1bcf320b21b8cec7e6f1a724006
+
+17) Once the page fully loads (it may take some time), it will read the phrase "HAPPY". Just to be safe, (using Firefox), hold SHIFT and click the "Reload Current Page" circular arrow button to the right of the address bar.
+
+18) Once complete, navigate to http://www.toywars.com. Once the page fully loads, hold SHIFT and click the "Reload Current Page" button, for a freshly cached version of your site.
+
+19) Your new changes are now live!
+
+20) Contact any of the project team members on PODIO if you have any questions.
+------------------------------------------
+CODE:
+
+			<div class="nav">
+				<div class="navContent">
+					<ul>
+						<li>
+							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+								
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUE</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+									<ul>
+										<li>New</li>
+									</ul>
+									<ul>
+										<li>Preorders</li>
+									</ul>																
+									<ul>
+										<li>Characters</li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america'});">Captain America</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader'});">Darth Vader</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker'});">Joker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk'});">Hulk</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker'});">Luke Skaywalker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
+									</ul>
+									<ul>
+										<li>Theme</li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
+									</ul>
+									<ul>
+										<li>Manufacturers</li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bridge direct'});">Bridge Direct</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane'});">McFarlane</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
+									</ul>
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+								
+								</div>
+							</div>
+						</li>
+						<li>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
+							<div class="subMenu">
+								<div class="dropDownListHolder">
+
+								<div>
+							</div>
+						</li>
+					</ul>
+				</div>
+			</div>
