@@ -123,7 +123,7 @@ $(document).ready(function()
 		//$(this).css("top","94px");
 		$(this).animate({"top": "+=4px"}, "fast");
 	});	
-	$("div.navContent ul li").mouseover(function()
+	$("div.navContent > ul > li").mouseover(function()
 	{
 		$(this).css("border-top","2px solid #3c0000");
 		$(this).css("border-left","2px solid #3c0000");
@@ -133,14 +133,36 @@ $(document).ready(function()
 		$(this).css("background","url('site/images/background-nav-active.png')");
 		$(this).css("padding-left","13px");
 		$(this).css("padding-right","13px");
-		$(this).find("a").css("top","15px");
+		$(this).children("a").css("top","15px");
 		$(this).find("div.subMenu").show();
-		$(this).find("div.subMenu").stop().animate({"height":"379px"}, 300);
+		var height = 379;
+		var heightCt = 0;
+		$(this).find("div.subMenu > div > ul").each(function(i)
+		{			
+			if($(this).position().top > heightCt)
+			{
+				heightCt = $(this).position().top;
+			}
+		});
+		$(this).find("div.subMenu > div > ul > li").each(function(i)
+		{
+			if($(this).position().top > heightCt)
+			{
+				heightCt = $(this).position().top;
+			}
+		});		
+		if(heightCt > height)
+		{
+			height = heightCt;
+		}
+		//$(this).find("div.subMenu").stop().animate({"height":"379px"}, 300);
+		height = height + "px";
+		$(this).find("div.subMenu").stop().animate({"height":height}, 300);
 	});
-	$("div.navContent ul li").mouseout(function()
+	$("div.navContent > ul > li").mouseout(function()
 	{
 		$(this).removeAttr("style");
-		$(this).find("a").removeAttr("style");	
+		$(this).children("a").removeAttr("style");	
 		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 300);
 		$(this).find("div.subMenu").hide();
 	});

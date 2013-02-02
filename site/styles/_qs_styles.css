@@ -503,7 +503,7 @@ progress[aria-valuenow]:before  {
 				position: relative;
 				width: 960px;
 			}
-				div#container div.nav div.navContent ul
+				div#container div.nav div.navContent > ul
 				{
 					height: 50px;
 					margin: 0px auto;
@@ -511,9 +511,8 @@ progress[aria-valuenow]:before  {
 					/*width: 910px;*/
 					width: 770px;
 				}
-					div#container div.nav div.navContent ul li
+					div#container div.nav div.navContent > ul > li
 					{
-						cursor: pointer;
 						float: left;
 						height: 50px;
 						list-style: none;
@@ -522,7 +521,7 @@ progress[aria-valuenow]:before  {
 						padding-right: 15px;
 						line-height:16px;
 					}				
-						div#container div.nav div.navContent ul li a
+						div#container div.nav div.navContent > ul > li > a
 						{
 							color: #FFFFFF;
 							/*font-family: Helvetica;*/
@@ -533,7 +532,7 @@ progress[aria-valuenow]:before  {
 							text-decoration: none;
 							top: 18px;
 						}
-							div#container div.nav div.navContent ul li a:hover
+							div#container div.nav div.navContent > ul > li > a:hover
 							{
 								
 							}
@@ -552,6 +551,58 @@ progress[aria-valuenow]:before  {
 							-webkit-box-shadow: 0x 1px 5px 1px #222222;
 							box-shadow:         0px 1px 5px 1px #222222;								
 						}
+							div#container div.nav div.navContent ul li div.subMenu > div.dropDownListHolder
+							{
+								height: 100%;
+								position: relative;
+								width: 100%;
+							}						
+							div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *
+							{
+								cursor: default;
+								/*display: inherit;*/
+								position: relative;
+								/*z-index: 2000;*/
+							}
+							div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul
+							{
+								float: left;
+								list-style-position: inside;
+								list-style-type: disc;
+								padding: 10px;
+							}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+								{
+									color: #770000;
+									font-family: Helvetica;
+									font-size: 12px;
+								}					
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li
+								{								
+									font-family: Helvetica;									
+									list-style-type: none;
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before
+								{
+									content: "» ";
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child
+								{
+									color: #000000;
+									font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+									font-size: 20px;
+									list-style: none;
+									margin-bottom: 10px;
+								}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+									{
+										cursor: pointer;
+										text-decoration: none;
+									}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover
+									{									
+										text-decoration: underline;
+									}
 						
 		div#container div#footer
 		{
