@@ -211,6 +211,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : _tag});	
 				}
 			}, //adminCustomerLookup
+
 		adminCustomerSet : {
 			init : function(CID,setObj,_tag)	{
 				var r = 0;

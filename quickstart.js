@@ -1984,18 +1984,23 @@ return r;
 //ex #category?navcat=.something will return {pageType:category,navcat:.something}
 			parseAnchor : function(str)	{
 //					app.u.dump("GOT HERE");
+				var P = {};
+				if(str)	{
 					var tmp1 = str.substring(1).split('?');
-					var P = {};
 					P.pageType = tmp1[0];
 					if(tmp1.length > 1){
 						var tmp2 = tmp1[1].split('=');
 						P[tmp2[0]] = tmp2[1];
-					} else {
+						}
+					else {
 						// Should reach here in case of href="#homepage" (or anything with no params, but #homepage is the only use-case
+						}
+					}
+				else	{
 					}
 //					app.u.dump(P);
-					return P;
-				}, //parseAnchor
+				return P;
+			}, //parseAnchor
 			
 //selector is a jquery selector. could be as simple as .someClass or #someID li a
 //will add an onclick event of showContent().  uses the href value to set params.
