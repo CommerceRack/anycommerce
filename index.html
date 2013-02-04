@@ -26,12 +26,11 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201301311137",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201302041506",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.d38934b9ac.crackle.zoovy.net/",
 	"httpURL":"http://www.d38934b9ac.crackle.zoovy.net/"
-	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
@@ -53,7 +52,6 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script> 
-<script src="customTabs.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -888,31 +886,31 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
-		<!-- <li class='prodDescTab'><a href='#'>Description</a></li> -->
-		<li class='prodReviewsTab'><a href='#'>Reviews</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Detailed Description</a></li>
+		<!-- <li class='prodDescTab'><a href='#prodDesc'>Description</a></li> -->
+		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Detailed Description</a></li>
 		<!--
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#'>Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#'>Accessories</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
 		-->
-		<li id='meetDownliteTab' class=''><a href="#">Meet Downlite</a></li>
-		<li id='beddingGuideTab' class=''><a href="#beddingGuide">Bedding Guide</a></li>
-		<li id='shippingReturnsTab' class=''><a href="#shippingReturns">Shipping &amp; Returns</a></li>
+		<li class='meetDownliteTab'><a href="#aboutDL">Meet Downlite</a></li>
+		<li class='beddingGuideTab'><a href="#beddingGuide">Bedding Guide</a></li>
+		<li class='shippingReturnsTab'><a href="#shippingReturns">Shipping &amp; Returns</a></li>
 	</ul>
 	<!--
 	<div class='tabContent'>
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
 	-->
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodReviews'>
 		<div class='clearfix alignRight'>
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 		</div>
 		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
 	</div>
 	
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodSpecs'>
 		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
 		<div class='floatLeft displayNone' data-bind='var: product(is:user1); format:showIfSet;'><img src='images/tag_restassured-108x21.jpg' width="108" height="21" alt='' /></div> 
 		<div class='floatLeft displayNone' data-bind='var: product(is:user2); format:showIfSet;'><img src='images/tag_madeinusa-108x21.jpg' width="108" height="21" alt='' /></div>
@@ -931,13 +929,13 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
 	</div>
 	-->
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='aboutDL'>
 		<img class="floatLeft prodTabImage" src="http://static.zoovy.com/img/downlite/W240-H180-Bffffff/4/480x360_made_in_the_usa_bedding.jpg" height="180" width="240">
 
 		<div class="textBlock"><h2>Made In The USA Bedding</h2><p>DOWNLITE is a fourth generation business that is proudly located in the United States. With a 100 plus years of family history in down bedding we are the largest down and feather processor in the United States. Not only do we manufacturer down bedding for the best department stores, catalogs, hotels and resorts but we also sell our hypoallergenic fillings to other bedding companies. Another branch of DOWNLITE sells our RestAssured Hypoallergenic fillings to other manufacturers including jacket and outerwear companies as well as to luxury furniture manufacturers.</p>
 		<p>Making bedding involves using materials from around the globe - from the filling to the fabric. As such we sometimes get asked to be more specific about what is considered 'Made In The USA'? </p></div>
 	</div>
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='beddingGuide'>
 		<p>Buying bedding online can be daunting because you can't touch the items. As the leading supplier of bedding to the best stores, hotels, resorts and cruise lines - we know how to keep you comfortable.</p>
 		<p>Many common questions are answered below - you can also visit our sleeping blog at NocJournal.com or call us for more advice.</p>
 		<h2>Fill Power Information</h2><ul><li> Often times the fill power of an item can be confused as a barometer for quality.</li>
@@ -980,7 +978,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<li> Wrinkle resistant fabric is usually chemically treated with an agent. DOWNLITE seldom uses these finishes for it's bedding (if an agent or finish was applied we would clearly mention it on the product information).</li>
 		<li> The finest cotton in the world is a German Batiste - very light weight and made with long staple cotton.</li></ul>
 	</div>
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='shippingReturns'>
 		<div class='floatRight marginBottom'>
 		<!-- START SCANALERT CODE  -->
 		<a target="_blank" href="https://www.mcafeesecure.com/RatingVerify?ref=www.downlitebedding.com"><img width="94" height="54" border="0"
