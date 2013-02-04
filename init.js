@@ -30,16 +30,9 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	var safePID = app.u.makeSafeHTMLId(P.pid); //can't use jqSelector because productTEmplate_pid still used makesafe. planned Q1-2013 update ###
 	var $tabContainer = $( ".tabbedProductContent",$('#productTemplate_'+safePID));
 		if($tabContainer.length)	{
-			if($tabContainer.data("tabs")){} //tabs have already been instantiated. no need to be redundant.
+			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
 			else	{
-				$("div.tabContent",$tabContainer).each(function (index) {
-					$(this).attr("id", "spec_"+safePID+"_" + index.toString());
-					})
-				$(".tabs li a",$tabContainer).each(function (index) {
-					$(this).attr('id','href_'+safePID+"_" + index.toString());
-					$(this).attr("href", "#spec_"+safePID+"_" + index.toString());            
-					});
-				$tabContainer.localtabs();
+				$tabContainer.anytabs();
 				}
 			}
 		else	{} //couldn't find the tab to tabificate.
@@ -50,6 +43,8 @@ app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
+
+app.rq.push(['script',1,app.vars.baseURL+'anytabs.js']);
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);

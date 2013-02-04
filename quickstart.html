@@ -45,7 +45,6 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script>
-<script src="customTabs.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -468,28 +467,28 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
-		<li class='prodDescTab'><a href='#'>Description</a></li>
-		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#'>Specs</a></li>
-		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#'>Features</a></li>
-		<li class='prodReviewsTab'><a href='#'>Reviews</a></li>
-		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#'>Video</a></li>
-		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#'>Accessories</a></li>
+		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
 	</ul>
 
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodDesc'>
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
 
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodSpecs'>
 		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
 
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodFeatures'>
 		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
 	</div>
 
 
-	<div  class='tabContent'>
+	<div  class='tabContent' data-anytab-content='prodReviews'>
 
 		<div class='clearfix alignRight'>
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
@@ -499,7 +498,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 	</div>
 
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodVideo'>
 		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
 	</div>
 
