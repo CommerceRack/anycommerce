@@ -51,7 +51,7 @@ app.u.loadScript((("https:" == document.location.protocol) ? "https://" : "http:
 					}
 				},
 
-			addTriggers : {
+			startExtension : {
 				onSuccess : function(){
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.store_checkout && app.ext.store_checkout.checkoutCompletes && typeof _gaq == 'object')	{
