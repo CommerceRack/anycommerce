@@ -58,14 +58,14 @@ app.u.loadScript((("https:" == document.location.protocol) ? "https://" : "http:
 //executed after checkout.
 app.ext.store_checkout.checkoutCompletes.push(function(P){
 	var order = app.data['order|'+P.orderID];
-	var gts_output = "<!-- START Trusted Stores Order --><div id='gts-order' style='display:none;'><!-- start order and merchant information --> <span id='gts-o-id'>"+P.orderID+"</span><span id='gts-o-domain'>"+app.vars.httpURL+"</span><span id='gts-o-email'>"+order.bill.email+"</span><span id='gts-o-country'>"+order.bill.countrycode+"</span><span id='gts-o-currency'>USD</span><span id='gts-o-total'>"+order.sum.order_total+"</span><span id='gts-o-discounts'>0</span><span id='gts-o-shipping-total'>"+order.sum.shp_total+"</span><span id='gts-o-tax-total'>"+order.sum.tax_total+"</span><span id='gts-o-est-ship-date'></span><span id='gts-o-has-preorder'>N</span><span id='gts-o-has-digital'>N</span><!-- end order and merchant information --><!-- start repeated item specific information -->";
+	var gts_output = "<!-- START Trusted Stores Order --><div id='gts-order' style='display:none;'><!-- start order and merchant information --> <span id='gts-o-id'>"+P.orderID+"</span><span id='gts-o-domain'>"+app.vars.httpURL+"</span><span id='gts-o-email'>"+order.bill.email+"</span><span id='gts-o-country'>"+order.bill.countrycode+"</span><span id='gts-o-currency'>USD</span><span id='gts-o-total'>"+order.sum.order_total+"</span><span id='gts-o-discounts'>0</span><span id='gts-o-shipping-total'>"+order.sum.shp_total+"</span><span id='gts-o-tax-total'>"+order.sum.tax_total+"</span><span id='gts-o-est-ship-date'></span><span id='gts-o-has-preorder'>N</span><span id='gts-o-has-digital'>N</span><!-- end order and merchant information --><!-- start repeated item specific information --><!-- end repeated item specific information -->";
 	
 	var L = order['@ITEMS'].length;
 	for(var i = 0; i < L; i += 1)	{
 		gts_output += 	"<span class='gts-item'>"
-					+		"<span class='gts-i-name'>"+order['@ITEMS'][i].prod_name+"</span>"
-					+		"<span class='gts-i-price'>"+order['@ITEMS'][i].base_price+"</span>"
-					+		"<span class='gts-i-quantity'>"+order['@ITEMS'][i].qty+"</span>"
+					+		"<span class='gts-"+i+"-name'>"+order['@ITEMS'][i].prod_name+"</span>"
+					+		"<span class='gts-"+i+"-price'>"+order['@ITEMS'][i].base_price+"</span>"
+					+		"<span class='gts-"+i+"-quantity'>"+order['@ITEMS'][i].qty+"</span>"
 					+	"</span>";
 		}
 /*
@@ -75,7 +75,7 @@ left out of lineitem for now.
 <span class="gts-i-prodsearch-country">ITEM_GOOGLE_SHOPPING_COUNTRY</span>
 <span class="gts-i-prodsearch-language">ITEM_GOOGLE_SHOPPING_LANGUAGE</span>
 */	
-	gts_output += "<!-- end repeated item specific information --></div><!-- END Trusted Stores -->";
+	gts_output += "</div><!-- END Trusted Stores -->";
 	
 	$('body').append(gts_output);
 	});
