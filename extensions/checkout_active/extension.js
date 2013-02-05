@@ -1219,7 +1219,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
 $('.ui-state-active',$panelFieldset).first().trigger('click'); 
-app.u.dump(" -> $('.ui-state-active',$panelFieldset).length: "+$('.ui-state-active',$panelFieldset).length);
+
 
 
 //update form elements based on cart object.
@@ -1268,6 +1268,11 @@ app.u.dump(" -> $('.ui-state-active',$panelFieldset).length: "+$('.ui-state-acti
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateShipAddress','shipAddressUL'));
 				app.renderFunctions.translateTemplate(app.data.cartDetail,'shipAddressUL');
 				$('#shipAddressUL').addClass(cssClass);
+
+
+//the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
+$('.ui-state-active',$panelFieldset).first().trigger('click'); 
+
 
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
 				if(app.data.appCheckoutDestinations['@destinations'].length < 2)
