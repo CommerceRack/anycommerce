@@ -2359,20 +2359,26 @@ else	{
 				
 //app.ext.myRIA.u.handleMinicartUpdate();			
 			handleMinicartUpdate : function(tagObj)	{
-//				app.u.dump("BEGIN myRIA.u.handleMinicartUPdate");
+//				app.u.dump("BEGIN myRIA.u.handleMinicartUPdate"); app.u.dump(tagObj);
 				var r = false; //what's returned. t for cart updated, f for no update.
-				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].cart)	{
-					var $appView = $('#appView');
+				var $appView = $('#appView');
+				var itemCount = 0;
+				var subtotal = 0;
+				var total = 0;
+				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].sum)	{
 					r = true;
-					var itemCount = (app.data[tagObj.datapointer].sum.items_count);
-	//				app.u.dump(" -> itemCount: "+itemCount);
-	//used for updating minicarts.
-					$('.cartItemCount',$appView).text(itemCount);
-					var subtotal = app.u.isSet(app.data[tagObj.datapointer].cart['sum/items_total']) ? app.data[tagObj.datapointer].cart['sum/items_total'] : 0;
-					var total = app.u.isSet(app.data[tagObj.datapointer].cart['sum/order_total']) ? app.data[tagObj.datapointer].cart['sum/order_total'] : 0;
-					$('.cartSubtotal',$appView).text(app.u.formatMoney(subtotal,'$',2,false));
-					$('.cartTotal',$appView).text(app.u.formatMoney(total,'$',2,false));
+					var itemCount = app.u.isSet(app.data[tagObj.datapointer].sum.items_count) || 0;
+					var subtotal = app.data[tagObj.datapointer].sum.items_total;
+					var total = app.data[tagObj.datapointer].sum.order_total;
 					}
+				else	{
+					//cart not in memory yet. use defaults.
+					}
+
+				$('.cartItemCount',$appView).text(itemCount);
+				$('.cartSubtotal',$appView).text(app.u.formatMoney(subtotal,'$',2,false));
+				$('.cartTotal',$appView).text(app.u.formatMoney(total,'$',2,false));
+
 				//no error for cart data not being present. It's a passive function.
 				return r;
 				},
