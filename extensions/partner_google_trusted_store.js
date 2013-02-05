@@ -62,7 +62,11 @@ app.ext.store_checkout.checkoutCompletes.push(function(P){
 	
 	var L = order['@ITEMS'].length;
 	for(var i = 0; i < L; i += 1)	{
-		gts_output += "<span class='gts-item'><span class='gts-i-name'>"+order['@ITEMS'][i].prod_name+"</span><span class='gts-i-price'>"+order['@ITEMS'][i].base_price+"</span><span class='gts-i-quantity'>"+order['@ITEMS'][i].qty+"</span></span>";
+		gts_output += 	"<span class='gts-item'>"
+					+		"<span class='gts-i-name'>"+order['@ITEMS'][i].prod_name+"</span>"
+					+		"<span class='gts-i-price'>"+order['@ITEMS'][i].base_price+"</span>"
+					+		"<span class='gts-i-quantity'>"+order['@ITEMS'][i].qty+"</span>"
+					+	"</span>";
 		}
 /*
 left out of lineitem for now.
