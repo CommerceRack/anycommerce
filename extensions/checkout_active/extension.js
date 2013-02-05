@@ -1219,7 +1219,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
 $('.ui-state-active',$panelFieldset).first().trigger('click'); 
-
+app.u.dump(" -> $('.ui-state-active',$panelFieldset).length: "+$('.ui-state-active',$panelFieldset).length);
 
 
 //update form elements based on cart object.
