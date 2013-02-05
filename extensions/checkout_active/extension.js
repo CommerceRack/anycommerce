@@ -1218,7 +1218,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 
 //the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
-$('address.ui-state-active').first().trigger('click'); 
+$('.ui-state-active',$panelFieldset).first().trigger('click'); 
 
 
 
