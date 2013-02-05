@@ -16,6 +16,7 @@ app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
 
 app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','startExtension']);
+app.rq.push(['extension',1,'google_ts','extensions/partner_google_trusted_store','startExtension']);
 //app.rq.push(['extension',1,'bonding_buysafe','extensions/bonding_buysafe.js','startExtension']);
 //app.rq.push(['extension',1,'powerReviews','extensions/reviews_powerreviews.js','startExtension']);
 //app.rq.push(['extension',0,'magicToolBox','extensions/imaging_magictoolbox.js','startExtension']); // (not working yet - ticket in to MTB)
@@ -224,5 +225,5 @@ app.u.appInitComplete = function(P)	{
 
 //don't execute script till both jquery AND the dom are ready.
 $(document).ready(function(){
-	app.u.handleRQ(0)
+	app.u.handleRQ(0);
 	});
