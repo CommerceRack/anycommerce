@@ -58,6 +58,31 @@ app.rq.push(['script',5,(document.location.protocol == 'https:' ? 'https:' : 'ht
 
 
 
+
+
+
+//sample of an onDeparts. executed any time a user leaves this page/template type.
+app.rq.push(['templateFunction','cartTemplate','onCompletes',function(P) {
+	
+	if(window.google_remarketing_has_run)	{}
+	else	{
+		app.u.dump(" -> EXECUTING google remarketing code.");
+		window.google_conversion_id = 1046921581;
+		window.google_conversion_language = "en";
+		window.google_conversion_format = "3";
+		window.google_conversion_color = "ffffff";
+		window.google_conversion_label = "O2xRCM_GnBQQ7YKb8wM";
+		window.google_conversion_value = 0;
+		window.google_remarketing_has_run = true;
+		app.rq.push(['script',0,'https://www.googleadservices.com/pagead/conversion.js']);
+		}
+	}]);
+
+
+
+
+
+
 /*
 This function is overwritten once the controller is instantiated. 
 Having a placeholder allows us to always reference the same messaging function, but not impede load time with a bulky error function.
