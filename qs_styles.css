@@ -343,8 +343,7 @@ SEARCH RESULTS PAGE
 
 ***************************************************/
 
-#searchNav a	{padding:2px 6px;}
-#recentSearchesList	{border-top:0;}
+#mainContentArea_search	{position:relative;}
 
 
 

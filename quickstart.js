@@ -140,6 +140,7 @@ document.write = function(v){
 	}
 
 
+
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
@@ -1051,6 +1052,117 @@ else	{
 				return false;
 				},
 
+
+
+			
+			handleProdPreview : function(pid)	{
+				
+				var $parent = $('#mainContentArea_search'),
+				$img = $('li img',$parent).first(),
+				height = $img.height(),
+				width = $img.width(),
+				$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
+				$detail = $('.previewProductDetail',$parent); //target for content.
+	
+
+
+//if the detail panel is already visible, no need to animate or adjust css on containers.
+				if($detail.is(':visible'))	{
+//transition out the existing product in view.
+					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})	
+					} 
+				else	{
+					//class below is used as a selector for setting data() on button bar. don't change.
+					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':0}).prependTo($parent);
+					
+//button for turning off preview mode. returns li's to normal state and animates the two 'panes'.
+					$("<button \/>").button().text('close preview').on('click',function(event){
+						app.ext.myRIA.u.revertPageFromPreviewMode($parent);
+						}).prependTo($buttonBar);
+
+					
+
+					var $nextButton = $("<button \/>").button().addClass('nextButton').text('Next').on('click',function(event){
+						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
+						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
+						}).prependTo($buttonBar);
+
+					var $prevButton = $("<button \/>").addClass('prevButton').button().text('Previous').on('click',function(event){
+						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
+						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
+						}).prependTo($buttonBar);
+
+					$detail.show().css({'padding-top': ($buttonBar.height() + 5)+'px'}); //top padding to compensate for button bar.
+
+					$('.hideInMinimalMode',$liContainer).hide();
+					$('li',$liContainer).each(function(){
+						$(this).css({'overflow':'hidden','margin':'0 3px 3px 0','padding':'1px'}); //add padding to compensate for border on 'active'
+						$(this).animate({'height':height,'width':width},'fast'); //reduce the height and width so only the image is visible.
+						});
+
+					$detail.css({'float':'right'});
+					$liContainer.css({'float':'left','overflow':'auto','height':'500px'});
+					
+					$detail.animate({'width':'65%'},'slow');
+					$liContainer.animate({'width':'30%'},'slow');
+					}
+
+
+
+//remove active state from any other item and add it to item now in focus.
+//had an issue with the addition of the border causing 'bumps' to occur when active class selected. to compensate, padding of 1px is added to 
+//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
+//this needs to be after if/else above so that styling in 'else' happens first.
+				$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
+				$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
+
+				$('.buttonBar',$parent).data('pid',pid); //used for 'next' and 'previous' buttons
+				
+				var liIndex = $("[data-pid='"+pid+"']",$liContainer).index();
+
+//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
+				if(liIndex === 0)	{
+					$('.prevButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
+					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
+					}
+				else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
+					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
+					$('.nextButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
+					}
+				else	{
+					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
+					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
+					}
+
+				app.ext.myRIA.a.showInlineProdDetails({'pid':pid,'templateID':'productTemplateQuickView','selector':'.previewProductDetail'});
+				},
+
+
+//a self contained function which will display a product template within a specified selector.
+//handles call, callback and dispatch.
+//allows for callback override.
+			showInlineProdDetails : function(infoObj)	{
+				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
+				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{
+					app.u.dump(" -> all required params are present.");
+					var $parent = $(app.u.jqSelector(infoObj.selector.charAt(0),infoObj.selector.substring(1)));
+
+					$parent.append(app.renderFunctions.createTemplateInstance(infoObj.templateID));
+
+					infoObj.callback = infoObj.callback ? infoObj.callback : 'translateSelector';
+					infoObj.extension = infoObj.extension ? infoObj.extension : ''; //translateTemplate is part of controller, not an extension
+
+					app.ext.store_product.calls.appProductGet.init(infoObj.pid,infoObj);
+					app.ext.store_product.calls.appReviewsList.init(infoObj.pid);
+					app.model.dispatchThis();					
+					
+					}
+				else	{
+					app.u.throwGMessage("In myRIA.a.showInlineProdDetails, either infoObj was empty ["+typeof infoObj+"] or infoObj.pid ["+infoObj.pid+"] or infoObj.selector ["+infoObj.selector+"] or infoObj.templateID ["+infoObj.templateID+"] was not set."); app.u.dump(infoObj);
+					}
+				},
+
+
 /*
 required:
 P.stid
@@ -1315,6 +1427,25 @@ if(ps.indexOf('?') >= 1)	{
 //				app.u.dump("BEGIN myRIA.u.changeCursor ["+style+"]");
 				$('html, body').css('cursor',style);
 				},
+
+
+			revertPageFromPreviewMode : function($parent)	{
+				if(typeof $parent == 'object')	{
+					$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
+					$detail = $('.previewProductDetail',$parent); //target for content.
+					
+					$('.hideInMinimalMode',$liContainer).show();
+					$detail.animate({'width':'0'},'slow','',function(){$(this).addClass('displayNone').removeAttr('style').empty()});
+					$liContainer.animate({'width':'99%'},'slow','',function(){$(this).removeAttr('style')});
+					$('li[style]',$liContainer).removeAttr('style'); //remove the style attributes which will return to the classes instead.
+					$('li',$liContainer).removeClass('ui-state-active').removeAttr('style');
+					$(".buttonBar",$parent).remove();
+					}
+				else	{
+					app.u.throwGMessage("In myRIA.u.revertPageFromPreviewMode, $parent not specified or not an object ["+typeof $parent+"].");
+					}
+				},
+
 
 //executed on initial app load AND in some elements where user/merchant defined urls are present (banners).
 // Determines what page is in focus and returns appropriate object (r.pageType)
@@ -1820,7 +1951,9 @@ return r;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
 //only create instance once.
-				if($('#mainContentArea_search').length)	{}
+				if($('#mainContentArea_search').length)	{
+					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'))
+					}
 				else	{
 					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(infoObj.templateID,'mainContentArea_search'))
 					}
@@ -1833,15 +1966,13 @@ return r;
 				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
 					}
-				app.ext.myRIA.u.showRecentSearches();
+
+
 				if(infoObj.ATTRIBUTES) {
-					app.u.dump("GOT HERE");
 					app.ext.store_search.u.handleElasticQueryFilterByAttributes(infoObj.KEYWORDS,infoObj.ATTRIBUTES,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
 				} else {
 					app.ext.store_search.u.handleElasticSimpleQuery(infoObj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
 				}
-//legacy search.
-//				app.ext.store_search.calls.searchResult.init(infoObj,{'callback':'showResults','extension':'myRIA'});
 				// DO NOT empty altSearchesLis here. wreaks havoc.
 				app.model.dispatchThis();
 
@@ -2082,8 +2213,9 @@ buyer to 'take with them' as they move between  pages.
 					}
 				},
 
-			showRecentSearches : function()	{
-				var o = ''; //output. what's added to the recentSearchesList ul
+//will return a list of recent searches as a jq object ordered list.
+			getRecentSearchesOL : function()	{
+				var $o = $("<ol \/>"); //What's returned. ordered lists of searches w/ click events.
 				var L = app.ext.myRIA.vars.session.recentSearches.length;
 				var keywords,count;
 				for(var i = 0; i < L; i++)	{
@@ -2093,11 +2225,11 @@ buyer to 'take with them' as they move between  pages.
 					if(app.u.isSet(count))	{
 						count = " ("+count+")";
 						}
-//					app.u.dump(" -> adding "+keywords+" to list of recent searches");
-// 
-					o += "<li><a href='#' onClick=\"$('.productSearchKeyword').val('"+keywords+"'); showContent('search',{'KEYWORDS':'"+keywords+"'}); return false;\">"+keywords+count+"<\/a><\/li>";
+					$("<li \/>").on('click',function(){
+						$('.productSearchKeyword').val('"+keywords+"'); showContent('search',{'KEYWORDS':'"+keywords+"'}); return false;
+						}).text(keywords).appendTo($o);
 					}
-				$('#recentSearchesList').html(o);
+				return $o;
 				},
 
 			showPageInDialog : function(infoObj)	{
