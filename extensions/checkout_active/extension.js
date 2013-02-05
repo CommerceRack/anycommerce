@@ -1216,6 +1216,12 @@ an existing user gets a list of previous addresses they've used and an option to
 				app.renderFunctions.translateTemplate(app.data.cartDetail,'billAddressUL');
 				$('#billAddressUL').addClass(cssClass);
 
+
+//the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
+$('address.ui-state-active').first().trigger('click'); 
+
+
+
 //update form elements based on cart object.
 				if(authState == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
 //					app.u.dump(' -> user is logged in and has predefined shipping addresses so bill to ship not displayed.');
