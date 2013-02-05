@@ -982,7 +982,7 @@ else	{
 					
 					$content.addClass('displayNone').append(contents);
 					$content.appendTo('body');
-					$content.dialog();
+					$content.dialog({'width':600});
 					});
 				}
 			return true;
