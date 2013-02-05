@@ -887,7 +887,7 @@ else	{
 		
 		paystatusDetailed : function($tag,data){
 			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
-
+			app.u.dump(data.value);
 			var pref = data.value, //shortcut. used the common name so dev's would know exactly what data type we're dealing with.
 			ps = pref.ps.substr(0,1), //first characer of pay status.
 			output,
@@ -965,6 +965,26 @@ else	{
 				}
 
 			$tag.html(output); //used in order list, so don't force any pre/posttext.
+			if(ps >= 2)	{
+				$tag.on('click',function(){
+					var $content = $("<div \/>",{'title':'Some Debug Info'});
+					contents = "<ul>",
+					acct = data.value.acct.split('|');
+					
+					for(var i = 0; i < acct.length; i += 1)	{
+						contents += "<li>"+acct[i]+"<\/li>";
+						}
+					content += "<\/ul>";
+
+					for(index in data.value)	{
+						contents += index+": "+data.value[index]+"<br>";
+						}
+					
+					$content.addClass('displayNone').append(contents);
+					$content.appendTo('body');
+					$content.dialog();
+					});
+				}
 			return true;
 			} //paystatus
 
