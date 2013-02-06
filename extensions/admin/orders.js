@@ -886,8 +886,8 @@ else	{
 
 		
 		paystatusDetailed : function($tag,data){
-			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
-			app.u.dump(data.value);
+//			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
+//			app.u.dump(data.value);
 			var pref = data.value, //shortcut. used the common name so dev's would know exactly what data type we're dealing with.
 			ps = pref.ps.substr(0,1), //first characer of pay status.
 			output,

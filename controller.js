@@ -899,7 +899,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 						selector = app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector);
 						}
 					}
-				
+
 				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(selector && $(selector).length)	{$target = $(selector);}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging'); app.u.dump(" -> using .appMessaging");}
