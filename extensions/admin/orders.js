@@ -965,6 +965,7 @@ else	{
 				}
 
 			$tag.html(output); //used in order list, so don't force any pre/posttext.
+//this adds some debug information, mostly for support.  Will make the payment status clickable and open a div with some debug data.
 			if(ps >= 2)	{
 				$tag.on('click',function(){
 					var $content = $("<div \/>",{'title':'Some Debug Info'});
