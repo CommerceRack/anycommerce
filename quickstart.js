@@ -170,6 +170,9 @@ document.write = function(v){
 				
 				app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
 				if(typeof app.u.appInitComplete == 'function'){app.u.appInitComplete(page)}; //gets run after app has been init
+				
+				app.ext.myRIA.u.bindAppNav();
+
 				}
 			}, //startMyProgram 
 
@@ -843,6 +846,9 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					app.ext.myRIA.u.handleTemplateFunctions($.extend(app.ext.myRIA.vars.hotw[0],{"state":"onDeparts"}))
 					}
 				app.ext.myRIA.u.handleSandHOTW(infoObj);
+//handles the appnav. the ...data function must be run first because the display function uses params set by the function.
+				app.ext.myRIA.u.handleAppNavData(infoObj);
+				app.ext.myRIA.u.handleAppNavDisplay(infoObj);
 
 //				app.u.dump("showContent.infoObj: "); app.u.dump(infoObj);
 				switch(pageType)	{
@@ -1864,9 +1870,85 @@ return r;
 
 /*
 
-#########################################     FUNCTIONS FOR DEALING WITH PAGE CONTENT (SHOW)
+#########################################     FUNCTIONS FOR DEALING WITH PAGE CONTENT (SHOW) and adding functionality to that content.
 
 */
+
+/*
+effects the display of the nav buttons only. should be run just after the handleAppNavData function in showContent.
+*/
+			handleAppNavDisplay : function(infoObj)	{
+				app.u.dump("BEGIN myRIA.u.handleNavButtonsForDetailPage");
+//				app.u.dump(" -> history of the world: "); app.u.dump(app.ext.myRIA.vars.hotw[1]);
+
+				var r = false, //what is returned. true if buttons are visible. false if not.
+				$nextBtn = $("[data-app-role='prodDetailNextItemButton']","#appNav"),
+				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
+				
+				app.u.dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
+				
+//The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
+				if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{
+					$nextBtn.show();
+					$prevBtn.show();
+					r = true;
+					}
+				else	{
+					$prevBtn.hide();
+					$nextBtn.hide();
+					} //no historical data yet. perfectly normal. make sure buttons are hidden.
+				return r;
+				},
+
+//gets executed in showContent.  just adds the data() vars needed.
+			handleAppNavData : function(infoObj)	{
+				var r = false, //what is returned. true if data is applied. false if not.
+				$nextBtn = $("[data-app-role='prodDetailNextItemButton']","#appNav"),
+				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
+				
+				if(infoObj.pageType == 'category')	{
+					$nextBtn.data('datapointer','appCategoryDetail|'+infoObj.navcat);
+					$prevBtn.data('datapointer','appCategoryDetail|'+infoObj.navcat);
+					r = true;
+					}
+//when moving from one product to the next using the buttons, do not reset data();
+				else if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{}
+				else	{
+					$prevBtn.data('datapointer','');
+					$nextBtn.data('datapointer','');							
+					}
+				return r;
+				},
+
+//executed during the extension init. binds actions to the various appNav buttons.
+			bindAppNav : function(){
+				var $nextBtn = $("[data-app-role='prodDetailNextItemButton']","#appNav"),
+				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
+				
+				$nextBtn.button({icons: {primary: "ui-icon-seek-next"},text: false});
+				$prevBtn.button({icons: {primary: "ui-icon-seek-prev"},text: false});
+				
+				function step($btn,increment)	{
+					if($btn.data('datapointer').indexOf('appCategoryDetail') >= 0)	{
+						var csv = app.data[$btn.data('datapointer')]['@products'],
+						index = csv.indexOf(app.ext.myRIA.vars.hotw[0].pid) + increment;
+						
+						if(index < 0)	{index = csv.length - 1} //after first product, jump to last
+						else if(index >= csv.length)	{index = 0} //afer last item, jump to first.
+						else	{} //leave index alone.
+						
+						showContent('product',{'pid':csv[index]});
+						}
+					else	{} //non category datapointer. really should never get here.
+					}
+				
+				$nextBtn.off('click.next').on('click.next',function(){
+					step($(this),1);
+					});
+				$prevBtn.off('click.prev').on('click.prev',function(){
+					step($(this),-1);
+					});
+				},
 
 
 //rather than having all the params in the dom, just call this function. makes updating easier too.
@@ -1883,6 +1965,9 @@ return r;
 					infoObj.state = 'onInits'
 					parentID = infoObj.templateID+"_"+app.u.makeSafeHTMLId(pid);
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
+					
+
+					
 //no need to render template again.
 					if(!$('#'+parentID).length){
 						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID)

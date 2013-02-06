@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.toynk.zoovy.com/",
-	"httpURL":"http://www.toynk.com/"
+	"httpURL":"http://www.bikinimo.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -102,7 +102,15 @@ This file is intended to go along with the 10-step tutorial at:
 	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
 	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
 	-->
+	
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+
+<!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
+<div id='appNav'>
+	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+</div>
+
 <div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 
 
@@ -503,7 +511,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
 	</div>
 
-	<div class='tabContent'>
+	<div class='tabContent' data-anytab-content='prodAccessories'>
 <ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
 	</div>
 

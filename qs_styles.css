@@ -145,6 +145,14 @@ and offMenu is toggle off, hiding the change button.
 
 
 
+/* app nav */
+
+#appNav {position:relative; height:1px; overflow:visible;}
+#appNav .prodDetailPrevItemButton	{position:absolute; top:20px; left:-10px;}
+#appNav .prodDetailNextItemButton	{position:absolute; top:20px; right:-10px;}
+
+
+
 /***************************************************
 
 LISTS (product list and/or subcategory list)
