@@ -401,6 +401,20 @@ setTimeout(function(){
 					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
 					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 600});
 
+//allow only alphanumeric characters AND underscores
+					$('#mediaLibNewFolderName').off('keypress.mediaLib').on('keypress.mediaLib', function (event) {
+						if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
+						else	{
+							var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+							var regex = new RegExp("^[a-zA-Z0-9\_]+$");
+							if (!regex.test(key)) {
+								event.preventDefault();
+								return false;
+								}
+							}
+						});
+
+
 					app.ext.admin_medialib.u.handleMediaLibButtons($target);
 
 					app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},'immutable');

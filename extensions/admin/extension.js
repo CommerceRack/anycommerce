@@ -3041,7 +3041,7 @@ just lose the back button feature.
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			devicePreferencesSet : function(ext,varObj)	{
-//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
+				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
 				if(ext && varObj)	{
 					app.u.dump("device preferences for "+ext+" have just been updated");
 					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.

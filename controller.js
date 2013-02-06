@@ -1306,7 +1306,8 @@ VALIDATION
 				r = false;
 			return r;
 			}, //isSet
-
+		
+		
 		numbersOnly : function(e)	{
 			var unicode=e.charCode? e.charCode : e.keyCode
 			// if (unicode!=8||unicode!=9)
