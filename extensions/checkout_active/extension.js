@@ -370,7 +370,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 
 		addGiftcardToCart : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('got to addGiftcardToCart success');
+				app.u.dump('BEGIN convertSessionToOrder.callbacks.addGiftcardToCart.onSuccess');
 //after a gift card is entered, update the payment panel as well as the cart/invoice panel.
 				app.ext.convertSessionToOrder.panelContent.cartContents();
 				app.ext.convertSessionToOrder.panelContent.paymentOptions();
@@ -388,6 +388,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - giftcard added'
 
 				},
 			onError : function(responseData,uuid)	{
+				app.u.dump('BEGIN convertSessionToOrder.callbacks.addGiftcardToCart.onError');
 				app.ext.convertSessionToOrder.panelContent.paymentOptions(); //regenerate the panel. need to show something or no payments can be selected.
 				responseData.parentID = 'chkoutPayOptionsFieldsetErrors'
 				app.u.throwMessage(responseData);
@@ -454,6 +455,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 					
 					},
 				onError : function(responseData,uuid)	{
+					app.u.dump("handleInventoryUpdate.error");
 					app.ext.convertSessionToOrder.panelContent.paymentOptions();
 //global errors are emptied when 'complete order' is pushed, so do not empty in the responses or any other errors will be lost.
 					app.u.throwMessage(responseData);
@@ -463,10 +465,12 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 
 		updateCheckoutPayOptions : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.updateCheckoutPayOptions.success');
+				app.u.dump('BEGIN convertSessionToOrder.callbacks.updateCheckoutPayOptions.success');
+				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions'); //empties panel. //ensures no double content loading.
 				app.ext.convertSessionToOrder.panelContent.paymentOptions();
 				},
 			onError : function(responseData,uuid)	{
+				app.u.dump('BEGIN convertSessionToOrder.callbacks.updateCheckoutPayOptions.onError');
 				app.ext.convertSessionToOrder.panelContent.paymentOptions();  //reload panel or just error shows and user can't proceed.
 				responseData.parentID = 'chkoutPayOptionsFieldsetErrors'
 				app.u.throwMessage(responseData);
@@ -571,6 +575,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 						app.ext.convertSessionToOrder.panelContent.accountInfo();
 						app.ext.convertSessionToOrder.panelContent.shipAddress();
 						app.ext.convertSessionToOrder.panelContent.shipMethods();
+						app.u.dump(" -> in loadPanelContent");
 						app.ext.convertSessionToOrder.panelContent.paymentOptions();
 //if order notes is on, show panel and populate content.
 						if(zGlobals.checkoutSettings.chkout_order_notes == true)	{
@@ -1352,7 +1357,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 
 
 			paymentOptions : function()	{
-				app.u.dump('app.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
+				app.u.dump('BEGIN convertSessionToOrder.panelContent.paymentOptions');
 				var $panelFieldset = $("#chkoutPayOptionsFieldset").toggle(true).removeClass("loadingBG")
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');
