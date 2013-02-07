@@ -1058,8 +1058,16 @@ else	{
 				return false;
 				},
 
+//use this when linking from one store to another when you want to share the cart.
+			linkToStore : function(url,type){
 
+				if(type == 'vstore') {window.open(url+'c='+app.sessionId+'/');}
+				else if(type == 'app') {window.open(url+'?sessionId='+app.sessionId+'/');}
+				else {
+					$('#globalMessage').anymessage({'message':'unknown type passed into myRIA.a.linkToStore.','gMessage':true});
+					}
 
+				},
 			
 			handleProdPreview : function(pid)	{
 				
