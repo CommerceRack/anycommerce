@@ -720,21 +720,22 @@ allow for global manipulation if needed later.
 app.u.handleCallback(tagObj);
 */
 
-		handleCallback : function(tagObj)	{
+		handleCallback : function(_rtag)	{
 //			app.u.dump("BEGIN u.handleCallback");
-//			if(tagObj && tagObj.datapointer && ){app.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback. -> commented out 2012-12-21. this shouldn't be needed in data.
-			if(tagObj && tagObj.callback){
+//			if(_rtag && _rtag.datapointer && ){app.data[_rtag.datapointer]['_rtag'] = _rtag} //updates obj in memory to have latest callback. -> commented out 2012-12-21. this shouldn't be needed in data.
+			if(_rtag && _rtag.callback){
 //				app.u.dump(" -> callback exists");
-//				app.u.dump(tagObj.callback);
-				if(typeof tagObj.callback == 'function')	{app.u.dump(" -> executing anonymous function."); tagObj.callback(tagObj);}
+//				app.u.dump(_rtag.callback);
+				if(typeof _rtag.callback == 'function')	{app.u.dump(" -> executing anonymous function."); _rtag.callback(_rtag);}
 				else	{
 //				app.u.dump(" -> callback is not an anonymous function.");
 					var callback;
 //most callbacks are likely in an extension, but support for 'root' callbacks is necessary.
 //save path to callback so that we can verify the onSuccess is a function before executing (reduce JS errors with this check)
-					callback = tagObj.extension ? app.ext[tagObj.extension].callbacks[tagObj.callback] : app.callbacks[tagObj.callback];
+					callback = _rtag.extension ? app.ext[_rtag.extension].callbacks[_rtag.callback] : app.callbacks[_rtag.callback];
+//					app.u.dump(" -> typeof app.callbacks[_rtag.callback]: "+typeof callback);
 					if(typeof callback.onSuccess == 'function')	{
-						callback.onSuccess(tagObj);
+						callback.onSuccess(_rtag);
 						}
 					else	{}//callback defined as string, but callback.onsuccess is not a function.
 					}

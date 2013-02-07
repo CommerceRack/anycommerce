@@ -3383,7 +3383,7 @@ just lose the back button feature.
 						var $contentArea = $('.gridTable',$parent).first();
 						$contentArea.show().find('tbody').empty(); //empty any previous search results.
 						$contentArea.showLoading({"message":"Searching for help files"});
-						app.ext.admin.calls.helpSearch.init(formObj.keywords,{'callback':'anycontent','extension':'admin','jqObj':$contentArea},'mutable');
+						app.ext.admin.calls.helpSearch.init(formObj.keywords,{'callback':'anycontent','jqObj':$contentArea},'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					else	{
