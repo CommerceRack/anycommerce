@@ -42,7 +42,7 @@ app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5
 
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.showloading-v1.0.jt.js']);
 
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/anyplugins.js']);
+app.rq.push(['script',0,app.vars.baseURL+'anyplugins.js']);
 
 
 // jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.

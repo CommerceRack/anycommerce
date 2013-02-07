@@ -1,5 +1,453 @@
 /*
 
+
+
+plugins fairly tailored to the anycommerce/zoovy mvc.
+
+anymessage - throw a message at the user, supporting classes and icons for severity.
+anytabs - a simple tab script that does NOT use id's. jqueryui tabs does not play well on recycled templates (cat, product, etc). ok in checkout/cart.
+anycontent - used to generate content (go figure). pass in a template id and/or data for translation and appending to jqObject.
+
+jqueryui widget/plugin help can be found here:
+http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-plugin/
+
+*/
+
+
+
+
+/*
+//////////////////// ANY MESSAGE \\\\\\\\\\\\\\\\\\\\\
+anymessage - a utility for throwing any commerce messages to the user.
+examples: 
+$('#allBase').anymessage({'message':'All your base are belong to us'});
+$('#allBase').anymessage('message':responseData); where responseData is an API response containing a message (either err, _msg or @issues format)
+
+Alternatively, you could call it like this:
+$('#diddy').anymessage({'iconClass':'ui-icon-clock','containerClass':'ui-state-error'}); (all params are optional)<br />
+$('#diddy').anymessage('addMessage',responseData);
+
+For the list of available params, see the 'options' object below.
+
+*/
+
+(function($) {
+	$.widget("ui.anymessage",{
+		options : {
+			message : null, //a string or a anycommerce message object (err or _msg or @issues are acceptable)
+			gMessage : false, //set to true to throw a generic message. Will include extra error details
+			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
+			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+			persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+			},
+
+		_init : function(){
+//			app.u.dump("BEGIN anymessage");
+			var self = this,
+			o = self.options, //shortcut
+			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			o.persistant = o.message.errtype == 'iseerr' ? true :o.persistant; //iseErr should be persistant
+
+			self.output = self._getContainer(); //the jquery object of the message output.
+			
+			self.output.append(self._getCloseButton()); //a close button is always generated, even on a persistent message.
+			self.output.append(self._getIcon());
+			self.output.append(self._getFormattedMessage());
+			$t.prepend(self.output); //
+
+			if(o.persistant)	{} //message is persistant. do nothing.
+			else	{this.ts = setTimeout(function(){$t.anymessage('close');},10000);} //auto close message after a short duration.
+			
+			}, //_init
+
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			},
+
+//an animated 'close'
+		close : function(){
+//the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
+			if(this.element.is(':visible'))	{
+				this.element.slideUp('slow');
+				}
+			else	{} //already closed. do nothing. could get here if message closed manually, before timeout runs.
+			},
+
+		_getIcon : function()	{
+			var o = this.options, //shortcut
+			msg = o.message,
+			r; //what is returned
+			if(o.iconClass)		{}
+			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-'+msg.errtype}
+			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
+			else	{o.iconClass = 'ui-icon-info'}
+			
+			return $("<span \/>").addClass('ui-icon ui-icon-anymessage').addClass(o.iconClass).css({'float':'left','marginRight':'5px','marginBottom':'5px','marginTop':'3px'});
+			},
+
+		_getCloseButton : function()	{
+			var $t = this.element;
+			return $("<button \/>")
+				.text('close message').css({'float':'right','marginLeft':'5px','marginBottom':'5px'})
+				.button({icons: {primary: "ui-icon-circle-close"},text: false})
+				.addClass(this.options.message.errtype == 'iseerr' ? 'ui-state-error' : '')
+				.on('click.closeMsg',function(){$t.anymessage('close')});
+			},
+
+//adds the outer 'container' div around the message.
+		_getContainer : function()	{
+			return $("<div \/>").addClass("ui-widget ui-widget-content ui-corner-all marginBottom").css({'padding':'5px','min-height':'28px'}).addClass(this.options.containerClass);
+			},
+
+
+		_getFormattedMessage : function(m)	{
+			app.u.dump(" -> _getFormattedMessage executed");
+			var o = this.options, //shortcut
+			msg = app.u.isSet(m) ? m : o.message, //shortcut to the message itself.
+			msgDetails = "", //used for iseerr (server side error) and ise/no response
+			$r, //what is returned.
+			amcss = {'margin':'0','paddingBottom':'5px'} //anyMessageCSS - what's applied to P (or each P in the case of _msgs)
+			if(!msg)	{
+				app.u.dump(" -> msg is blank. could be that message is being handled as a method.");
+				//no message passed. is ok because messages 'could' get handled as a method.
+				}
+			else if(typeof msg == 'string')	{
+				$r = $("<p \/>").addClass('anyMessage').css(amcss).text(msg);
+				}
+			else if(typeof msg == 'object')	{
+//				app.u.dump(" -> msg type is object.");
+				if(msg['_msgs'])	{
+				app.u.dump(" -> msg format is _msgs.");
+					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
+					for(var i = 1; i <= msg['_msgs']; i += 1)	{
+						$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
+						}
+					}
+				else if(msg['errid'])	{
+//					app.u.dump(" -> msg type is err.");
+					$r = $("<p \/>").addClass('anyMessage').css(amcss).addClass(msg.errtype).text(msg.errmsg+" ["+msg.errid+"]");
+					
+					if(msg.errtype == 'iseerr')	{
+					app.u.dump(" -> msg IS iseerr.");
+					this.output.addClass('ui-state-error');
+						var msgDetails = "<ul>";
+						msgDetails += "<li>errtype: iseerr<\/li>";
+						msgDetails += "<li>errid: "+msg.errid+"<\/li>";
+						msgDetails += "<li>errmsg: "+msg.errmsg+"<\/li>";
+						msgDetails += "<li>uri: "+document.location+"<\/li>";
+						msgDetails += "<li>domain: "+app.vars.domain+"<\/li>";
+						msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
+						msgDetails += "<\/ul>";
+						$r.append(msgDetails);
+						}
+					}
+//the validate order request returns a list of issues.
+				else if(msg['@issues'])	{
+					var L = msg['@issues'].length;
+					console.dir("Got to @issues, length: "+L);
+					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
+					for(var i = 0; i < L; i += 1)	{
+						$r.append("<p>"+msg['@issues'][i][3]+"<\/p>");
+						}
+					}
+				else	{
+					$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured');
+					} //unknown data format
+				}
+			else	{
+				app.u.dump(" -> app.u.formatResponseErrors 'else' hit. Should not have gotten to this point");
+				$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured'); //don't want to have our error handler generate an error on screen.
+				}
+			return $r;
+
+			},
+
+		addMessage : function(m)	{
+//			console.log("Here comes my M face:"); console.dir(m);
+			this.output.append(this._getFormattedMessage(m));
+			},
+
+//clear the message entirely. run after a close. removes element from DOM.
+		destroy : function(){
+			this.element.empty().remove();
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+/*
+
+
+//////////////////// ANY TABS \\\\\\\\\\\\\\\\\\\\\
+
+anytabs - a simple tab script that does NOT use id's.
+Format content like so:
+
+<div id='bob'>
+<ul>
+	<li><a href='#doh'>One</a></li>
+	<li><a href='#adeer'>Two</a></li>
+	<li><a href='#afemale'>Three Times</a></li>
+	<li><a href='#deer'>A Mady</a></li>
+</ul>
+<div data-anytab-content='doh'>Content 1</div>
+<div data-anytab-content='adeer'>Content 2</div>
+<div data-anytab-content='afemale'>Content 3</div>
+<div data-anytab-content='deer'>Content 4</div>
+</div>
+
+and execute with $('#bob').anytabs();
+open a tab like this: $('#bob').anytabs('reveal','deer');
+or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
+*/
+(function($) {
+	$.widget("ui.anytabs",{
+		options : {},
+
+		_init : function(){
+			var self = this,
+			o = self.options, //shortcut
+			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			
+			if($t.attr('widget') == 'anytabs')	{} //id has already been set as tabs.
+			else	{
+				console.log('got into init else');
+				$t.attr('widget','anytabs')
+				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
+				self.tabs = $("ul",$t).first();
+	
+	//style and move tabs into container.
+				self._handleContent();
+				self._addClasses2Content();
+				
+	//style and add click events to tabs.
+				self._addClasses2Tabs();
+				self._addEvent2Tabs();
+	//make a tab visible/active.
+				self._handleDefaultTab();
+				}
+			}, //_init
+
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			},
+
+		_activateFirstTab : function()	{
+			this.tabs.children().first().addClass('ui-state-active ui-tabs-active');
+			this.tabContent.children().first().css('display','block');
+			},
+
+		_handleDefaultTab : function()	{
+			var anchor = document.location.hash;
+//if no anchor is set, activate the default.
+			if(anchor)	{
+				var foundMatch = false;
+				$('a',this.element).each(function(){
+					if($(this).attr('href') == anchor)	{$(this).trigger('click'); foundMatch = true; return false;} //the return false breaks out of the loop.
+					});
+//if href value matches the anchor, trigger the default tab.
+				if(foundMatch)	{}
+				else	{this._activateFirstTab();}
+				}
+			else	{
+				this._activateFirstTab();
+				}
+			},
+
+		_addEvent2Tabs : function()	{
+			var self = this;
+			this.tabs.find('li').each(function(){
+				$(this).off('click.anytab').on('click.anytab',function(){
+					self.reveal($(this));
+					});
+				});
+			},
+
+		_addClasses2Tabs : function()	{
+			this.tabs.addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix').css({'padding-left':'0px'});
+			this.tabs.find('a').addClass('ui-tabs-anchor').attr('role','presentation');
+			this.tabs.find('li').addClass('ui-state-default ui-corner-top');
+			},
+//create a container div and add each content panel to it.
+		_handleContent : function()	{
+			var $t = this.element,
+			self = this;
+			
+			self.tabContent = $("<div \/>").addClass('ui-widget ui-widget-content ui-corner-bottom ui-corner-tr');
+			$t.append(self.tabContent);
+			$("[data-anytab-content]",$t).each(function(){
+				self.tabContent.append($(this));
+				});
+			},
+
+		_addClasses2Content : function()	{
+			$("[data-anytab-content]",this.element).addClass("ui-tabs-panel ui-widget-content ui-corner-bottom").css('display','none');
+			
+			},
+
+		
+
+		reveal : function($tab)	{
+			if(typeof $tab == 'string')	{
+				if($tab.charAt(0) == '#')	{}
+				else	{$tab = '#'+$tab}
+				$('a',this.element).each(function(){
+					if($(this).attr('href') == $tab)	{
+						$(this).trigger('click'); //will re-execute this function with $tab as object.
+						return false; //breaks out of each loop.
+						}
+					});
+				
+				}
+			else if(typeof $tab == 'object')	{
+				var dac = $tab.find('a').attr('href').substring(1); //data-anytab-content
+				document.location.hash = dac; //set hash. triggering click doesn't do this.
+				this.tabs.find('.ui-state-active').removeClass('ui-state-active ui-tabs-active');
+				$tab.addClass('ui-state-active ui-tabs-active');
+
+				this.tabContent.find('.ui-tabs-panel').hide();
+				$("[data-anytab-content='"+dac+"']",this.tabContent).show();
+				}
+			else	{} //unknownn type for $tab far
+			},
+
+//clear the message entirely. run after a close. removes element from DOM.
+		destroy : function(){
+			this.element.empty().remove();
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+
+
+
+
+
+
+/*
+
+//////////////////// ANY TEMPLATE \\\\\\\\\\\\\\\\\\\\\
+
+$("#something").anycontent({'templateID':'someTemplate'});
+$("#something").anycontent({'templateID':'someTemplate','datapointer':'appProductGet|PID'});
+$("#something").anycontent({'templateID':'someTemplate','data':someDataObject});
+
+see options object below for full list of suppoerted params
+
+either templateID or (data or datapointer) are required.
+
+*/
+
+(function($) {
+	$.widget("ui.anycontent",{
+		options : {
+			templateID : null, //The template to be used
+			datapointer : null, //The data pointer in app.data
+			data : null, //The data used to populate the template
+			showLoading : true, //if no data is passed and createTemplateInstance used, if true will execute show loading.
+			showLoadingMessage : 'Fetching content...', //message passed into showLoading.
+			dataAttribs : {} //will be used to set data attributes on the template [data- not data()].
+			},
+
+		_init : function(){
+//			app.u.dump("BEGIN anycontent");
+			var self = this,
+			o = self.options, //shortcut
+			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+// the 'or' portion will attemplate to add a template if the ID is on the DOM.
+
+//			app.u.dump("anycontent params: "); app.u.dump(o);
+
+			if(o.templateID && (app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
+//				app.u.dump(" -> passed template check.");
+				self._anyContent();
+				}
+			else if(o.data || (o.datapointer && !$.isEmptyObject(app.data[o.datapointer])))	{
+//				app.u.dump(" -> passed data check.");
+				self._anyContent();
+				}
+			else	{
+				$t.anymessage({
+					persistant : true,
+					gMessage : true,
+					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in app.data "});
+				}
+			}, //_init
+
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			},
+
+
+		_anyContent : function()	{
+			app.u.dump(" -> _anyContent executed.");
+			var o = this.options,
+			r = true; // what is returned. false if not able to create template.
+			
+			
+			if(o.templateID && o.datapointer && app.data[datapointer])	{
+				app.u.dump(" -> template and datapointer present. transmogrify.");
+				this.element.hideLoading().removeClass('loadingBG');
+				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[datapointer]));
+				}
+			else if(o.templateID && o.data)	{
+				app.u.dump(" -> template and data present. transmogrify.");
+				this.element.hideLoading().removeClass('loadingBG');
+				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+				}
+//a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
+			else if(o.templateID)	{
+				app.u.dump(" -> templateID specified. create Instance.");
+				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
+				if(o.showLoading)	{
+					this.element.showLoading(o.showLoadingMessage);
+					}
+				}
+//if just translating because the template has already been rendered
+			else if(o.data)	{
+				app.u.dump(" -> data specified, translate selector");
+				app.renderFunctions.translateSelector(this.element,o.data);
+				this.element.hideLoading().removeClass('loadingBG');
+				}
+			else	{
+				//should never get here. function won't be run if no templateID specified.
+				r = false;
+				}
+			return r;
+			},
+
+		_addNewTemplate : function()	{
+			var r = false; //what's returned. true if able to create template.
+			var $tmp = $(app.u.jqSelector('#',templateID));
+			if($tmp.length > 0)	{
+				app.model.makeTemplate($tmp,templateID);
+				r = true;
+				}
+			else{} //do nothing. Error will get thrown later.
+			},
+
+//clear the message entirely. run after a close. removes element from DOM.
+		destroy : function(){
+			this.element.empty().remove();
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+
+
+
+
+
+/*
+
 This file is a variety of plugins that are either open-source or were written by Zoovy/anycommerce.
 They're in one file just to minimize the number of includes.
 
@@ -185,6 +633,8 @@ if persist is set to true, plus extension and name are set, the state is remembe
  -> name is a unique identifier for the panel within the extension namespace.
 
 Additional a settings button can be added which will contain a dropdown of selectable options.
+
+!!! - the plugin should be updated to use anycontent for populating
 
 */
 (function($) {
@@ -399,6 +849,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 				$("[data-btn-action='settingsMenu']",this.element).show().closest('.ui-widget-header').after($ul);
 				}
 			else	{} //no listitems. do nothing.
+
 			},
 			
 		destroy : function(){
@@ -411,7 +862,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 
 
-
+/* will convert a tbody into a csv */
 
 jQuery.fn.toCSV = function() {
   var data = $(this).first(); //Only one table

@@ -587,7 +587,45 @@ app.u.throwMessage(responseData); is the default error handler.
 //				app.vars['_admin'] is set in the model.
 				}
 			},
-			
+
+
+
+//very similar to the original translate selector in the control and intented to replace it. 
+//This executes the handleAppEvents in addition to the normal translation.
+//the selector also gets run through jqSelector and hideLoading (if declared) is run.
+		anycontent : {
+			onSuccess : function(tagObj)	{
+//				app.u.dump("BEGIN callbacks.anycontent");
+				if(tagObj && tagObj.jqObj && typeof tagObj.jqObj == 'object')	{
+					
+					var $target = tagObj.jqObj, //shortcut.
+					data = app.data[tagObj.datapointer];
+					
+//					app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
+					
+//anycontent will disable hideLoading and loadingBG classes.
+					$target.anycontent({data: app.data[tagObj.datapointer],'templateID':tagObj.templateID});
+					app.ext.admin.u.handleAppEvents($target);
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof tagObj.jqObj+'].','gMessage':true});
+					}
+				if(typeof jQuery().hideLoading == 'function'){}
+				
+				},
+			onError : function(rd)	{
+				if(rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj == 'object'){
+					rd._rtag.jqObj.hideLoading().anymessage({'message':rd});
+					}
+				else	{
+					$('#globalMessage').anymessage({'message':rd});
+					}
+				}
+			}, //translateSelector
+
+
+
 		translateSelector : {
 			onSuccess : function(tagObj)	{
 //				app.u.dump("BEGIN callbacks.translateSelector");
@@ -2526,7 +2564,7 @@ $tmp.empty().remove();
 				else	{
 					$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
 					if(data.value[i].id){} //if an id was set, do nothing.
-					else	{$o.removeAttr('id').attr('data-obj_index',i)} //nuke the id. it's the template id and will be duplicated several times. set index for easy lookup later.
+					else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
 					$tag.append($o);
 					}
 				int += 1;				

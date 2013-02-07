@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20130206.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"20130207.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -319,12 +319,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="navigateTo('#!appChooser');">App Chooser</button>
 <button onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList</button>
-
-
-<button onClick="app.ext.admin.calls.helpSearch.init('paymentstatus',{},'mutable'); app.model.dispatchThis('mutable');">helpSearch</button>
-<!-- flexedit: info_all_product_fields -->
-<button onClick="app.ext.admin.u.showHelpInDialog('prodmgr_detail_ogoverview');">showHelpInDialog</button>
-
+<button onClick="$('#setupContent').empty(); app.ext.admin.a.showHelpInterface($('#setupContent'));">showHelpInterface</button>
 
 <button onClick="app.ext.admin.calls.adminEmailList.init({},'mutable'); app.model.dispatchThis('mutable');">adminEmailList</button>
 
