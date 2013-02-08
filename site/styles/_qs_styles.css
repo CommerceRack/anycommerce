@@ -254,6 +254,7 @@ progress[aria-valuenow]:before  {
 				}
 		div#container div#content
 		{
+			background-color: #c5b6a2;
 			position: relative;
 		}
 			div#container div#content div#homepageTemplate_
@@ -467,7 +468,11 @@ progress[aria-valuenow]:before  {
 					z-index: 1000;
 										
 					box-shadow: 1px 1px 5px 1px #777777;
-				}																
+				}			
+				div.searchResultsPage
+				{
+					padding-left: 10px;
+				}
 							
 		div#container div.nav
 		{
@@ -508,7 +513,7 @@ progress[aria-valuenow]:before  {
 							color: #FFFFFF;
 							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
 							font-size: 24px;
-							font-weight: bold;
+							/*font-weight: bold;*/
 							position: relative;
 							text-decoration: none;
 							top: 18px;
@@ -904,9 +909,11 @@ div.prodRelatedItems
 	{
 		font-family: Helvetica;
 		font-size: 13px;
+		height: 465px;
 		margin-left: 20px;
 		margin-top: 20px;
-		width: 340px;
+		overflow: auto;
+		width: 355px;
 	}
 
 .prodBuyDetails
