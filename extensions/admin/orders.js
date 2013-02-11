@@ -1848,7 +1848,7 @@ $('.editable',$container).each(function(){
 					$('body').showLoading({'message':'Sending custom message for order '+orderID});
 					
 					if(!$.isEmptyObject(frmObj) && orderID && frmObj.SUBJECT && frmObj.BODY && frmObj.BODY.length > 1)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?body="+encodeURI(frmObj.BODY)+"&subject="+encodeURI(frmObj.SUBJECT)],{'callback':function(rd){
+						app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?body="+encodeURIComponent(frmObj.BODY)+"&subject="+encodeURIComponent(frmObj.SUBJECT)],{'callback':function(rd){
 $('body').hideLoading();
 if(app.model.responseHasErrors(rd)){
 	rd.parentID = 'orderEmailCustomMessage';
@@ -2092,7 +2092,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 
 						handleNote = function(type){
 							var $note = $("[data-ui-role='admin_orders|"+type+"']",$target);
-							if($note.hasClass('edited'))	{changeArray.push(type+'?note='+encodeURI($note.text()));}
+							if($note.hasClass('edited'))	{changeArray.push(type+'?note='+encodeURIComponent($note.text()));}
 							else	{} //do nothing. note was not edited.
 							}
 						handleNote('SETPRIVATENOTE');
