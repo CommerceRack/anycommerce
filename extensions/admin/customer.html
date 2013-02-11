@@ -1,0 +1,58 @@
+
+<section id='customerGeneralTemplate'>
+
+	<div class='clearfix'>
+		<span class='floatLeft'></span>
+	</div>
+
+	<div class='clearfix'>
+		<div class='floatLeft'>
+		<label><span>Email:</span><input type="textbox" name="email" value=""></label>
+		<label><span>First Name:</span><input size="15" type="textbox" name="firstname" value=""></label>
+		<label><span>Last Name:</span><input size="15" type="textbox" name="lastname" value=""></label>
+		</div>
+	
+		<div class='floatRight'>
+		<label><span>Password: </span><input type='textbox' name='pass' value=""></label>
+		<label><input type="checkbox" name="reset_hint"> Remove Password Hint <span class="hint">(password recovery can be done via email only)</span></label>
+		<label><input type="checkbox" name="is_locked"> Lock customer account</label>
+		</div>
+	</div>
+
+</section>
+
+
+<div id='customerWalletAddTemplate'>
+<form action='#'>
+<fieldset>
+	<label><span>CC</span><input type='number' size='20' maxlength="16" name='CC' value='' /></label>
+	<label><span>YY</span><input type='number' size='2' maxlength="2" name='CC' value='' /></label>
+	<label><span>MM</span><input type='number' size='2' maxlength="2" name='CC' value='' /></label>
+</fieldset>
+
+<button>Save Wallet</button>
+
+</form>
+</div>
+
+
+
+<address id='customerAddressAddUpdateTemplate'>
+<form action='#'>
+<fieldset>
+	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' data-bind="var:address(_id); format:popVal;" /></label>
+	<label><span>First name</span><input type='text' name='' value=''  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
+	<label><span>Last name</span><input type='text' name='' value=''  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
+	<label><span>Company</span><input type='text' name='' value=''  data-bind="var:address(ship_company); defaultVar: address(bill_company); format:popVal;" /></label>
+	<label><span>Address</span><input type='text' name='' value=''  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
+	<label><span>Address 2</span><input type='text' name='' value=''  data-bind="var:address(ship_address2); defaultVar: address(bill_address2); format:popVal;" /></label>
+	<label><span>City</span><input type='text' name='' value=''  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
+	<label><span>Region/State</span><input type='text' name='' value=''  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
+	<label><span>Postal/Zip</span><input type='text' name='' value=''  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
+	<label><span>Country</span><input type='text' name='' value='' size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
+
+	<label><span>Email</span><input type='email' name='' value=''  data-bind="var:address(bill_email); format:popVal;" /></label>
+	<label><span>Phone</span><input type='phone' name='' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>
+</fieldset>
+</form><!-- no button. added via JS. helps to make it painfully obvious this form is recycled :) -->
+</address>
