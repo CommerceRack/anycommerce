@@ -263,6 +263,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					self.reveal($(this));
 					});
 				});
+			this.tabs.find('li a').each(function(event){event.preventDefault();});
 			},
 
 		_addClasses2Tabs : function()	{
