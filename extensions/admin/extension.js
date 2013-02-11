@@ -164,34 +164,31 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 		adminCustomerDetail : {
-			init : function(CID,_tag,Q)	{
+			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(CID)	{
+				if(obj && obj.CID)	{
 //if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
 					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerGet|"+CID;
+					_tag.datapointer = "adminCustomerDetail|"+obj.CID;
 					if(app.model.fetchData(_tag.datapointer) == false)	{
 						r = 1;
-						this.dispatch(CID,_tag,Q);
+						this.dispatch(obj,_tag,Q);
 						}
 					else	{
 						app.u.handleCallback(_tag);
 						}
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerGet, no CID specified.");
+					app.u.throwGMessage("In admin.calls.adminCustomerDetail, no CID specified in param object.");
 					}
 				return r;
 				},
-			dispatch : function(CID,_tag,Q)	{
-//					app.u.dump("CID: "+CID);
-				var obj = {};
-				obj._cmd = "adminCustomerGet";
-				obj.CID = CID;
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminCustomerDetail";
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q);
 				}
-			}, //adminCustomerGet
+			}, //adminCustomerDetail
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
 			init : function(email,_tag,Q)	{

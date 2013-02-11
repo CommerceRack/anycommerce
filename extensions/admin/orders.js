@@ -263,7 +263,7 @@ if(L)	{
 	app.u.dump(" -> ordersData.length (L): "+L);
 	for(var i = 0; i < L; i += 1)	{
 		var orderid = ordersData[i].ORDERID; //used for fetching order record.
-		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerGet call.
+		var cid = ordersData[i].CUSTOMER; //used for sending adminCustomerDetail call.
 		var $row = app.renderFunctions.transmogrify({"id":"order_"+orderid,"cid":cid,"orderid":orderid,"sdomain":ordersData[i].SDOMAIN,"prt":ordersData[i].PRT},tagObj.templateID,ordersData[i]);
 		$tbody.append($row);
 		}
@@ -596,7 +596,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 //zero isn't a valid cid.  cid must also be a number.
 if(Number(CID) > 0)	{
-	r += app.ext.admin.calls.adminCustomerGet.init(CID,{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
+	r += app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
 	app.u.dump("WARNING! - no CID set.");

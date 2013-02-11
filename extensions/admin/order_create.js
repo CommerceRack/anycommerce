@@ -318,7 +318,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
 					//Match FOund.
 					app.calls.cartSet.init({"customer/cid":app.data[tagObj.datapointer].CID});
-					app.ext.admin.calls.adminCustomerGet.init(app.data[tagObj.datapointer].CID,{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
+					app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[tagObj.datapointer].CID},{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -1279,8 +1279,8 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump("BEGIN convertSessionToOrder.u.getAddressesByType");
 				var r = false;
 				if(CID && type)	{
-					if(app.data['adminCustomerGet|'+CID] && app.data['adminCustomerGet|'+CID]['%CUSTOMER'] && !$.isEmptyObject(app.data['adminCustomerGet|'+CID]['%CUSTOMER']['@'+type.toUpperCase()])){
-						r = app.data['adminCustomerGet|'+CID]['%CUSTOMER']['@'+type.toUpperCase()];
+					if(app.data['adminCustomerDetail|'+CID] && app.data['adminCustomerDetail|'+CID]['%CUSTOMER'] && !$.isEmptyObject(app.data['adminCustomerDetail|'+CID]['%CUSTOMER']['@'+type.toUpperCase()])){
+						r = app.data['adminCustomerDetail|'+CID]['%CUSTOMER']['@'+type.toUpperCase()];
 						}
 					else	{} //no addresses set.
 					}
@@ -1432,8 +1432,8 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
 					$('#data-bill_email').val(app.data.cartDetail['bill/email']);
 					}
-				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid])	{
-					$('#data-bill_email').val(app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid]['%CUSTOMER']._EMAIL);
+				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid])	{
+					$('#data-bill_email').val(app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]['%CUSTOMER']._EMAIL);
 					}
 				else	{}; //no email recorded yet.
 
