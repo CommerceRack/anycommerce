@@ -48,7 +48,9 @@ For the list of available params, see the 'options' object below.
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 			o.persistant = o.message.errtype == 'iseerr' ? true :o.persistant; //iseErr should be persistant
 
+			o.messageElementID = 'msg_'+app.u.guidGenerator(); //a unique ID applied to the container of the message. used for animating.
 			self.output = self._getContainer(); //the jquery object of the message output.
+			self.output.attr('id',o.messageElementID);
 			
 			self.output.append(self._getCloseButton()); //a close button is always generated, even on a persistent message.
 			self.output.append(self._getIcon());
@@ -67,8 +69,9 @@ For the list of available params, see the 'options' object below.
 //an animated 'close'
 		close : function(){
 //the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
-			if(this.element.is(':visible'))	{
-				this.element.slideUp('slow');
+//also, remove the message (this.output), not the target element, which may have a lot of other content.
+			if(this.output.is(':visible'))	{
+				this.output.slideUp('slow');
 				}
 			else	{} //already closed. do nothing. could get here if message closed manually, before timeout runs.
 			},
@@ -641,7 +644,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 (function($) {
 	$.widget("ui.anypanel",{
 		options : {
-			state : 'expand', //expand, collapse and preferences are acceptable values. sets panel contents to opened or closed.
+			state : 'expand', //expand, collapse and persistent. are acceptable values. sets panel contents to opened or closed.
 			templateID : null, //what any commerce template to use to populate the panel.
 			data : {}, //what data to use to translate the panel.
 			dataAttribs : {}, //optional set of params to set as data on content. currently, only used if content is generated from templateID.
@@ -656,13 +659,16 @@ Additional a settings button can be added which will contain a dropdown of selec
 			q : 'mutable', //which q to use.
 			extension : '', //used in conjunction w/ persist.
 			name : '', //used in conjunction w/ persist.
-			persist : false, //if set to true and name AND extension set, will save to localStorage using devicePreferences
+			persistent : false, //if set to true and name AND extension set, will save to localStorage
 			settingsMenu : {}
 			},
 		_init : function(){
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element;
+			
+//			app.u.dump("BEGIN anypanel._init");
+//			app.u.dump(" -> options: "); app.u.dump(o);
 			if($t.data('isanypanel'))	{} //already a panel, skip all the styling and data.
 			else	{
 //isanypanel data is set to true as an easy check to
@@ -777,12 +783,16 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 
 		_handleInitialState : function()	{
-// ##### NOT SUPPORTED... YET....
-//			if(this.options.state == 'preferences')	{
-//				var preferences = app.ext.admin.u.dpsGet(this.extension);
-//				this.options.state = preferences.anypanel[this.options.name].state || 'expand'; //if not defined, default to expand.
-//				}
-			
+			if(this.options.state == 'persistent' && this.options.name && this.options.extension)	{
+				var settings = app.ext.admin.u.dpsGet(this.options.extension,'anypanel');
+				if(settings && settings[this.options.name])	{
+					this.options.state = settings[this.options.name].state; //if not defined, default to expand.
+					}
+				else	{
+					this.options.state = 'expand';
+					}
+				}
+//			app.u.dump("this.options.state: "+this.options.state);
 			if(this.options.state == 'collapse')	{ this.collapse();}
 			else if (this.options.state == 'expand')	{this.expand();}
 			else	{
@@ -804,7 +814,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			if(preserveState)	{}
 			else	{
 				this.options.state = 'collapse';
-				this._handlePreferencesStateUpdate('collapse');
+				this._handlePersistentStateUpdate('collapse');
 				}
 			},
 
@@ -813,17 +823,21 @@ Additional a settings button can be added which will contain a dropdown of selec
 			$('.ui-widget-content',this.element).slideDown();
 			$('.ui-widget-header',this.element).removeClass('ui-corner-bottom');
 			this.options.state = 'expand';
-			this._handlePreferencesStateUpdate('expand');
+			this._handlePersistentStateUpdate('expand');
 			},
 
-		_handlePreferencesStateUpdate : function(value)	{
-			var r = false; //will return true if a preferences update occurs.
-			if(this.persist && value && this.options.extension)	{
-				if(this.extension && this.name)	{
-					var updatedPreferences = {};
-					updatedPreferences[this.options.name] = {'state':value};
-					var preferences = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension),updatedPreferences); //make sure panel object exits. general panel is always expand.
-					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',preferences); //update the localStorage session var.
+		_handlePersistentStateUpdate : function(value)	{
+//			app.u.dump("BEGIN anypanel._handlePersistentStateUpdate")
+			var r = false; //will return true if a persistent update occurs.
+//			app.u.dump(" -> this.options.persistent: "+this.options.persistent);
+//			app.u.dump(" -> value: "+value);
+			if(this.options.persistent && value)	{
+//				app.u.dump("GOT HERE!!!!!!!!!!!! ")
+				if(this.options.extension && this.options.name)	{
+					var settings = {};
+					settings[this.options.name] = {'state':value};
+					var newSettings = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
+					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
 				else	{

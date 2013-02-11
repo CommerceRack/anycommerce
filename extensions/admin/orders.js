@@ -377,12 +377,12 @@ else	{
 			var oldFilters = app.ext.admin.u.dpsGet('admin_orders');
 			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
-				app.u.dump(" -> use old filters.");
+//				app.u.dump(" -> use old filters.");
 				P.filters = oldFilters.managerFilters || {};
 				}
 			else{P.filters = {}; app.u.dump(" -> no filters at all. will use a default.");}
 
-			app.u.dump(" -> oldFilters: "); app.u.dump(oldFilters);
+//			app.u.dump(" -> oldFilters: "); app.u.dump(oldFilters);
 
 //if no filters are passed in and no 'last filter' is present, set some defaults.
 			if($.isEmptyObject(P.filters))	{
@@ -603,10 +603,10 @@ else	{
 	}
 //dispatch occurs outside this function.
 $("[data-app-role='orderContents']",$target).anypanel({'showClose':false});
-$("[data-app-role='orderNotes']",$target).anypanel({'showClose':false,'state':'collapse'});
-$("[data-app-role='orderPaymentInfo']",$target).anypanel({'showClose':false,'state':'collapse'});
-$("[data-app-role='orderShippingInfo']",$target).anypanel({'showClose':false,'state':'collapse'});
-$("[data-app-role='orderHistory']",$target).anypanel({'showClose':false,'state':'collapse'});
+$("[data-app-role='orderNotes']",$target).anypanel({'showClose':false,'state':'persistent','extension':'admin_orders','name':'orderNotes','persistent':true});
+$("[data-app-role='orderPaymentInfo']",$target).anypanel({'showClose':false,'state':'persistent','extension':'admin_orders','name':'orderPaymentInfo','persistent':true});
+$("[data-app-role='orderShippingInfo']",$target).anypanel({'showClose':false,'state':'persistent','extension':'admin_orders','name':'orderShippingInfo','persistent':true});
+$("[data-app-role='orderHistory']",$target).anypanel({'showClose':false,'state':'persistent','extension':'admin_orders','name':'orderHistory','persistent':true});
 
 app.ext.admin.u.handleAppEvents($target);
 
@@ -830,7 +830,7 @@ else	{
 
 //pass in the entire shipments line/object (@SHIPMENTS[0])
 		trackingAsLink : function($tag,data)	{
-			app.u.dump(" -> data.value: "); app.u.dump(data.value);
+//			app.u.dump(" -> data.value: "); app.u.dump(data.value);
 			if(data.value.track)	{			
 				$tag.text(data.value.track);
 //can only link up the tracking number if we can convert the ship code to a carrier, which requires appResource|shipcodes.json
@@ -1007,6 +1007,32 @@ else	{
 			$(".ui-selected").append("<span class='floatRight ui-icon ui-icon-check'><\/span>"); //add to selected items.
 			},
 
+
+			submitFilter : function()	{
+
+				$('#orderListTableBody').empty(); //this is targeting the table body.
+				$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
+				var obj = {}
+				obj.LIMIT = Number($('#filterLimit').val()) || 30;
+				$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
+					var val = $(this).find('.ui-selected').attr('data-filtervalue');
+					if(val){
+						obj[$(this).attr('data-filter')]=val
+						}
+					});
+				if($.isEmptyObject(obj))	{
+					app.u.throwMessage('Please select at least one filter criteria');
+					}
+				else	{
+//						app.u.dump(" -> filter change is getting set locally.");
+					app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
+//						app.u.dump("Filter Obj: "); app.u.dump(obj);
+					app.model.destroy('adminOrderList'); //clear local storage to ensure request
+					app.ext.admin_orders.a.showOrderList(obj);
+					}
+
+				},
+
 //https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Operators/Bitwise_Operators
 
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
@@ -1135,7 +1161,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 						}
 					}
 				else if (pref['tender'] == pref.tender.match(/CASH|CHECK|PO|MO/)) {
-					app.u.dump(" -> into tender regex else if");
+//					app.u.dump(" -> into tender regex else if");
 					if (app.ext.admin_orders.u.ispsa(pref['ps'],[3])) {
 						// top level payment is a credit, so we can only perform voids.
 						actions.push('void') 
@@ -1553,28 +1579,16 @@ $('.editable',$container).each(function(){
 			
 			"orderListFiltersUpdate" : function($ele)	{
 				$ele.off('click.orderListFiltersUpdate').on('click.orderListFiltersUpdate',function(event){
-					$('#orderListTableBody').empty(); //this is targeting the table body.
-					$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
-					var obj = {}
-					obj.LIMIT = Number($('#filterLimit').val()) || 30;
-					$("[data-ui-role='admin_orders|orderListFiltersUpdate'] ul").each(function(){
-						var val = $(this).find('.ui-selected').attr('data-filtervalue');
-						if(val){
-							obj[$(this).attr('data-filter')]=val
-							}
-						});
-					if($.isEmptyObject(obj))	{
-						app.u.throwMessage('Please select at least one filter criteria');
-						}
-					else	{
-//						app.u.dump(" -> filter change is getting set locally.");
-						app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
-						app.u.dump("Filter Obj: "); app.u.dump(obj);
-						app.model.destroy('adminOrderList'); //clear local storage to ensure request
-						app.ext.admin_orders.a.showOrderList(obj);
-						}
+					app.ext.admin_orders.u.submitFilter();
 					});
 				},
+			
+			"orderListFilterLimitUpdate" : function($input){
+				$input.off('blur.orderListFilterLimitUpdate').on('blur.orderListFilterLimitUpdate',function(event){
+					app.ext.admin_orders.u.submitFilter();
+					});
+				}, //orderListFiltersUpdate
+
 			
 			"orderListFiltersUpdateButton" : function($btn){
 //				$btn.addClass('ui-state-highlight');
@@ -2006,7 +2020,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderSearch, keyword ["+frmObj.keyword+"] not specified.");
+						$('#globalMessaging').anymessage({"message":"Please add a keyword (order id, email, etc) into the search form"});
 						}
 
 					});
@@ -2104,8 +2118,8 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 //no var declaration because the ship address var is recycled.
 						$address = $("[data-ui-role='admin_orders|orderUpdateBillAddress']",$target);
 
-						app.u.dump(" -> $address.length: "+$address.length);
-						app.u.dump(" -> $('.edited',$address).length: "+$('.edited',$address).length);
+//						app.u.dump(" -> $address.length: "+$address.length);
+//						app.u.dump(" -> $('.edited',$address).length: "+$('.edited',$address).length);
 
 						if($('.edited',$address).length)	{
 							$('[data-bind]',$address).each(function(){
@@ -2117,11 +2131,16 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 							changeArray.push('SETBILLADDR?'+kvp);
 							}
 						delete $address;   //not used anymore.
-
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
-						$target.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable'); //adds a showloading
-						app.model.dispatchThis('immutable');
+						
+						if(changeArray.length)	{
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
+							$target.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable'); //adds a showloading
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$("#ordersContent_order").anymessage({'message':'No changes have made.'});
+							}
 						}
 					else	{
 						app.u.throwGMessage("In admin_orders.buttonActions.orderUpdateSave, unable to determine order id.");
