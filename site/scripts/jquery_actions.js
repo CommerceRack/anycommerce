@@ -137,18 +137,18 @@ $(document).ready(function()
 		$(this).find("div.subMenu").show();
 		var height = 379;
 		var heightCt = 0;
-		$(this).find("div.subMenu > div > ul").each(function(i)
+		/*$(this).find("div.subMenu > div > ul").each(function(i)
 		{			
 			if($(this).position().top > heightCt)
 			{
 				heightCt = $(this).position().top;
 			}
-		});
-		$(this).find("div.subMenu > div > ul > li").each(function(i)
+		});*/
+		$(this).find("div.subMenu > div *").each(function(i)
 		{
 			if($(this).position().top > heightCt)
 			{
-				heightCt = $(this).position().top;
+				heightCt = $(this).position().top + $(this).height();
 			}
 		});		
 		if(heightCt > height)
