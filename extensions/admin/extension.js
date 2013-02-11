@@ -195,19 +195,19 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				var r = 0;
 				if(email)	{
 					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerLookup"; //if changed, test order create for existing customer
+					_tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer
 					this.dispatch(email,_tag,Q);
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerLookup, no email specified.");
+					app.u.throwGMessage("In admin.calls.adminCustomerSearch, no email specified.");
 					}
 				return r;
 				},
 			dispatch : function(email,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminCustomerLookup","email":email,"_tag" : _tag});	
+				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag});	
 				}
-			}, //adminCustomerLookup
+			}, //adminCustomerSearch
 
 		adminCustomerUpdate : {
 			init : function(CID,setObj,_tag)	{

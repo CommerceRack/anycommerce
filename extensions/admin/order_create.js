@@ -1041,9 +1041,9 @@ an existing user gets a list of previous addresses they've used and an option to
 				var $panelFieldset = $("#chkoutShipAddressFieldset");
 				
 				if(CID)	{
-//					app.u.dump(" -> CID is set: "+CID);
+					app.u.dump(" -> CID is set: "+CID);
 					addresses = app.ext.convertSessionToOrder.u.getAddressesByType('ship',CID);
-//					app.u.dump(" -> addresses: "); app.u.dump(addresses);
+					app.u.dump(" -> addresses: "); app.u.dump(addresses);
 					if(addresses)	{
 						txt = "Please choose from (click on) shipping address(es) below:";
 						txt += app.ext.convertSessionToOrder.u.addressListOptions('ship'); // creates pre-defined address blocks.
@@ -1212,7 +1212,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				$buttonBar.append($("<button \/>").text("Find Customer").button().click(function(){
 					$buttonBar.hide();
 					$target.showLoading();
-					app.ext.admin.calls.adminCustomerLookup.init($('#customerLookupByEmail').val(),{'callback':'useLookupForCustomerGet','extension':'convertSessionToOrder'});
+					app.ext.admin.calls.adminCustomerSearch.init($('#customerLookupByEmail').val(),{'callback':'useLookupForCustomerGet','extension':'convertSessionToOrder'});
 					app.model.dispatchThis();
 					}));
 				$buttonBar.appendTo($target);
@@ -1268,7 +1268,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 			getCID : function()	{
 				var r; //what is returned. false unless customer ID is set.
-				if(app.data.adminCustomerLookup && app.data.adminCustomerLookup.CID)	{r = app.data.adminCustomerLookup.CID}
+				if(app.data.adminCustomerSearch && app.data.adminCustomerSearch.CID)	{r = app.data.adminCustomerSearch.CID}
 				else {r = false}
 				return r;
 				},
@@ -1279,8 +1279,8 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump("BEGIN convertSessionToOrder.u.getAddressesByType");
 				var r = false;
 				if(CID && type)	{
-					if(app.data['adminCustomerDetail|'+CID] && app.data['adminCustomerDetail|'+CID]['%CUSTOMER'] && !$.isEmptyObject(app.data['adminCustomerDetail|'+CID]['%CUSTOMER']['@'+type.toUpperCase()])){
-						r = app.data['adminCustomerDetail|'+CID]['%CUSTOMER']['@'+type.toUpperCase()];
+					if(app.data['adminCustomerDetail|'+CID] && !$.isEmptyObject(app.data['adminCustomerDetail|'+CID]['@'+type.toUpperCase()])){
+						r = app.data['adminCustomerDetail|'+CID]['@'+type.toUpperCase()];
 						}
 					else	{} //no addresses set.
 					}
@@ -1309,7 +1309,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			buyerHasPredefinedAddresses : function(TYPE)	{
 				var r; //What is returned. TFU.  U = unknown (no TYPE)
 				var CID = app.ext.convertSessionToOrder.u.getCID();
-				if(CID && app.data['setCustomerRecord'+CID] && !$.isEmptyObject(app.data['setCustomerRecord'+CID]['%CUSTOMER']['@'+TYPE.toUpperCase()]))	{
+				if(CID && app.data['setCustomerRecord'+CID] && !$.isEmptyObject(app.data['setCustomerRecord'+CID]['@'+TYPE.toUpperCase()]))	{
 					r = true
 					}
 				else	{r = false}
@@ -1433,7 +1433,7 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					$('#data-bill_email').val(app.data.cartDetail['bill/email']);
 					}
 				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid])	{
-					$('#data-bill_email').val(app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]['%CUSTOMER']._EMAIL);
+					$('#data-bill_email').val(app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]._EMAIL);
 					}
 				else	{}; //no email recorded yet.
 
@@ -1470,6 +1470,7 @@ This was done because it is:
 
 
 //allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
+//can't use shared call in store_checkout cuz it loads data from a different location. !!! fix this in new checkout.
 			setAddressFormFromPredefined : function(addressType,addressId)	{
 //				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
 //				app.u.dump(' -> address type = '+addressType);
@@ -1478,8 +1479,8 @@ This was done because it is:
 				var CID = app.ext.convertSessionToOrder.u.getCID();
 				var addresses = this.getAddressesByType(addressType,CID); //address object
 				var emailAddress = "";
-				if(CID && app.data['appCustomerGet|'+CID] && app.data['appCustomerGet|'+CID]['%CUSTOMER'])	{
-					emailAddress = app.data['appCustomerGet|'+CID]['%CUSTOMER']._EMAIL;
+				if(CID && app.data['adminCustomerDetail|'+CID])	{
+					emailAddress = app.data['adminCustomerDetail|'+CID]._EMAIL;
 					}
 				var L = addresses.length
 				var a;
@@ -1500,8 +1501,8 @@ This was done because it is:
 				$('#data-'+addressType+'_company').val(a[addressType+'_company']);
 				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
 				$('#data-'+addressType+'_city').val(a[addressType+'_city']);
-				$('#data-'+addressType+'_state').val(a[addressType+'_state']);
-				$('#data-'+addressType+'_zip').val(a[addressType+'_zip']);
+				$('#data-'+addressType+'_state').val(a[addressType+'_region']);
+				$('#data-'+addressType+'_zip').val(a[addressType+'_postal']);
 				$('#data-'+addressType+'_country').val(a[addressType+'_country'] ? a[addressType+'_country'] : "US"); //country is sometimes blank. This appears to mean it's a US company?
 				$('#data-'+addressType+'_firstname').val(a[addressType+'_firstname']);
 				$('#data-'+addressType+'_lastname').val(a[addressType+'_lastname']);
