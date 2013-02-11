@@ -2173,6 +2173,7 @@ var chart = new Highcharts.Chart({
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
+//				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}

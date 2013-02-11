@@ -1,5 +1,67 @@
+<div id='CustomerPageTemplate' class='page pageCustomer' data-app-role='dualModeContainer' data-app-mode='list'>
 
-<section id='customerGeneralTemplate'>
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+		
+			<div class='buttonSet'>
+				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
+			</div>
+			
+			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
+				<input type='search' name='email'  />
+				<button data-app-event='admin|customerSearch'>Search</button>
+			</form>
+			
+			
+			<h3 class='heading'>Customer Search</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		
+		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the customer(s) you are looking for.</div>
+		
+		<table class='gridTable fullWidth displayNone' >
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th>title</th>
+			<th class='hideInDetailMode'>Summary/id</th>
+			<th>Relevance</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		</div>
+	</section>
+</div>
+
+
+
+
+
+
+
+<table>
+<tr id='customerSearchResultsTemplate' onClick="app.ext.admin.u.showHelpInDialog($(this).data('docid'));" class='pointer'>
+	<td data-bind='var: help(title); format:text;'></td>
+	<td class='hideInDetailMode'>
+	<p data-bind='var: help(summary); format:text;'></p>
+	<div data-bind='var: help(docid); format:text;'></div>
+	</td>
+	<td data-bind='var: help(score); format:text;'></td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+<section id='customerEditorGeneralTemplate'>
 
 	<div class='clearfix'>
 		<span class='floatLeft'></span>

@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array();
+	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorGeneralTemplate');
 	var r = {
 
 
@@ -35,8 +35,8 @@ var admin_customer = function() {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
 
-//				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/user.html',theseTemplates);
-//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/user.css','user_styles']);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/customer.html',theseTemplates);
+//				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/customer.css','user_styles']);
 
 				return r;
 				},
@@ -55,17 +55,21 @@ var admin_customer = function() {
 		a : {
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showCustomerManager : function() {
-				app.u.dump("BEGIN admin_user.a.showCustomerManager");
-				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
-//generate some of the task list content right away so the user knows something is happening.
-				$tabContent.empty();
-				$tabContent.append(app.renderFunctions.createTemplateInstance('userManagerPageTemplate',{'id':'userManagerContent'})); //placeholder
-				$('#userManagerContent').showLoading({'message':'Fetching your user list.'});
-				app.ext.admin.calls.bossRoleList.init({},'mutable'); //have this handy.
-				app.ext.admin.calls.bossUserList.init({'callback':'translateSelector','extension':'admin','selector':'#userManagerContent'},'mutable');
-				app.model.dispatchThis('mutable');
-				} //showTaskManager
+			showCustomerManager : function($target) {
+
+				if($("[data-app-role='dualModeContainer']",$target).length)	{$target.show()} //already an instance of help open in this target. leave as is.
+				else	{
+					$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
+					app.ext.admin.u.handleAppEvents($target);
+					}
+				
+//if the target is a tab, bring that tab/content into focus.
+				if($target.data('section'))	{
+					app.ext.admin.u.bringTabIntoFocus($target.data('section'));
+					app.ext.admin.u.bringTabContentIntoFocus($target);
+					}
+
+				} //showCustomerManager
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -76,7 +80,11 @@ var admin_customer = function() {
 
 		u : {}, //u [utilities]
 
-		e : {} //e [app Events]
+		e : {
+			'customerManager' : function(){
+				
+				}
+			} //e [app Events]
 		} //r object.
 	return r;
 	}

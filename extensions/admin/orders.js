@@ -537,7 +537,7 @@ else	{
 //app.u.dump(" -> targetID: "+targetID);
 //if you are reusing a targetID, do your own empty before running this.
 var $target = $(app.u.jqSelector('#',targetID)),
-$order = $(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID+"_order",'orderid':orderID}));
+$order = $(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID+"_order",'orderid':orderID,'cid':CID}));
 $order.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
@@ -607,6 +607,7 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 //zero isn't a valid cid.  cid must also be a number.
 if(Number(CID) > 0)	{
+	app.u.dump("fetch customer record");
 	r += app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
@@ -2084,8 +2085,9 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					app.model.destroy('adminOrderList');
 
 					var $target = $btn.closest("[data-order-view-parent]"),
-					orderID = $target.data('order-view-parent');
-						
+					orderID = $target.data('order-view-parent'),
+					cid = app.data['adminOrderDetail|'+orderID].customer.cid;
+					
 					if(orderID)	{
 
 //the changes are all maintained on one array and pushed onto 1 request (not 1 pipe, but one adminOrderUpdate _cmd).
@@ -2110,6 +2112,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						handleNote('SETPUBLICNOTE');
 						handleNote('ADDCUSTOMERNOTE');
 
+						
 
 //for address uses teh setSHIPADDR and/or SETSHIPADDR
 						var $address = $("[data-ui-role='admin_orders|orderUpdateShipAddress']",$target);
@@ -2144,9 +2147,10 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 						delete $address;   //not used anymore.
 						
 						if(changeArray.length)	{
+							if(cid)	{app.model.destroy("adminCustomerDetail|"+cid);} //refresh the customer data in case notes changed.
 							app.ext.admin.calls.adminOrderUpdate.init(orderID,changeArray,{},'immutable');
 							$target.empty();
-							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$target.attr('id'),'immutable'); //adds a showloading
+							app.ext.admin_orders.a.showOrderView(orderID,cid,$target.attr('id'),'immutable'); //adds a showloading
 							app.model.dispatchThis('immutable');
 							}
 						else	{

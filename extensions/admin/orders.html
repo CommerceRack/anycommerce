@@ -347,7 +347,7 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<h3>Customer Notes: </h3>
 		<div class='editable marginBottom'  data-ui-role='admin_orders|ADDCUSTOMERNOTE'></div>
 		<table class='gridTable marginTop'>
-		<tbody data-bind='var:order(%CUSTOMER/@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
+		<tbody data-bind='var:order(@NOTES);format:processList;loadsTemplate:buyerNotesTemplate;'>
 		</tbody>
 		</table>
 	</div>
