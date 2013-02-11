@@ -96,8 +96,9 @@ var admin_prodEdit = function() {
 			onSuccess : function(_rtag)	{
 				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
 //the device preferences are how panels are open/closed by default.
-				var settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
-				settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
+				var settings = app.ext.admin.u.dpsGet('admin_prodEdit','openPanel');
+//				app.u.dump(" -> settings: "); app.u.dump(settings);
+				settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
 
 				var pid = app.data[_rtag.datapointer].pid;
 				var $target = $('#productTabMainContent');
@@ -115,11 +116,11 @@ var admin_prodEdit = function() {
 					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
 						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate',app.data[_rtag.datapointer]['@PANELS'][i]));
 						}
-					if(settings && settings.openPanel[panelid])	{
+					if(settings && settings[panelid])	{
 						$('.panelHeader','#panel_'+panelid).click(); //open panel. This function also adds the dispatch.
 						}
 					}
-				app.ext.admin.u.devicePreferencesSet('admin_prodEdit',settings); //update the localStorage session var.
+				app.ext.admin.u.dpsSet('admin_prodEdit',"openPanel",settings); //update the localStorage session var.
 				}
 			}
 		}, //callbacks
@@ -152,15 +153,15 @@ var admin_prodEdit = function() {
 			$panel = $('.panelContents',$header.parent()),
 			pid = $panel.data('pid'),
 			panelid = $header.parent().data('panelid'),
-			settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
+			settings = app.ext.admin.u.dpsGet('admin_prodEdit',"openPanel");
 
-			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
+			settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
 
 			$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
 
 			if($panel.is(":visible"))	{
 				app.u.dump(" -> into the code to show the panel");
-				settings.openPanel[panelid] = true;
+				settings[panelid] = true;
 				$header.addClass('ui-accordion-header-active ui-state-active').removeClass('ui-corner-bottom');
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
 //panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
@@ -175,12 +176,12 @@ var admin_prodEdit = function() {
 					}
 				}
 			else	{
-				settings.openPanel[panelid] = false;
+				settings[panelid] = false;
 				$header.removeClass('ui-accordion-header-active ui-state-active').addClass('ui-corner-bottom');
 				$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
 				}
 
-			app.ext.admin.u.devicePreferencesSet('admin_prodEdit',settings); //update the localStorage session var.
+			app.ext.admin.u.dpsSet('admin_prodEdit',"openPanel",settings); //update the localStorage session var.
 			},
 
 

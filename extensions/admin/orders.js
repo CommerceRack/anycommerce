@@ -374,7 +374,7 @@ else	{
 			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
 
-			var oldFilters = app.ext.admin.u.devicePreferencesGet('admin_orders');
+			var oldFilters = app.ext.admin.u.dpsGet('admin_orders');
 			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
 				app.u.dump(" -> use old filters.");
@@ -1568,7 +1568,7 @@ $('.editable',$container).each(function(){
 						}
 					else	{
 //						app.u.dump(" -> filter change is getting set locally.");
-						app.ext.admin.u.devicePreferencesSet('admin_orders',{'managerFilters':obj});
+						app.ext.admin.u.dpsSet('admin_orders','managerFilters',obj);
 						app.u.dump("Filter Obj: "); app.u.dump(obj);
 						app.model.destroy('adminOrderList'); //clear local storage to ensure request
 						app.ext.admin_orders.a.showOrderList(obj);

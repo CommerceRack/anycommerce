@@ -779,7 +779,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_handleInitialState : function()	{
 // ##### NOT SUPPORTED... YET....
 //			if(this.options.state == 'preferences')	{
-//				var preferences = app.ext.admin.u.devicePreferencesGet(this.extension);
+//				var preferences = app.ext.admin.u.dpsGet(this.extension);
 //				this.options.state = preferences.anypanel[this.options.name].state || 'expand'; //if not defined, default to expand.
 //				}
 			
@@ -818,12 +818,12 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 		_handlePreferencesStateUpdate : function(value)	{
 			var r = false; //will return true if a preferences update occurs.
-			if(this.persist && value)	{
+			if(this.persist && value && this.options.extension)	{
 				if(this.extension && this.name)	{
-					var updatedPreferences = {"anypanel":{}};
-					updatedPreferences.anypanel[this.options.name] = {'state':value};
-					var preferences = $.extend(true,app.ext.admin.u.devicePreferencesGet(this.options.extension),updatedPreferences); //make sure panel object exits. general panel is always expand.
-					app.ext.admin.u.devicePreferencesSet(this.options.extension,preferences); //update the localStorage session var.
+					var updatedPreferences = {};
+					updatedPreferences[this.options.name] = {'state':value};
+					var preferences = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension),updatedPreferences); //make sure panel object exits. general panel is always expand.
+					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',preferences); //update the localStorage session var.
 					r = true;
 					}
 				else	{
