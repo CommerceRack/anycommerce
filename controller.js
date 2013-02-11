@@ -2541,12 +2541,15 @@ $tmp.empty().remove();
 //			app.u.dump('BEGIN view.formats.money');
 			var amount = data.bindData.isElastic ? (data.value / 100) : data.value;
 			if(amount)	{
-				var r;
+				var r,o;
 				r = app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
 //					app.u.dump(' -> attempting to use var. value: '+data.value);
 //					app.u.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
 //					app.u.dump(' -> r = '+r);
-				$tag.text(r)
+				r.split('.');
+				o = r[0]
+				if(r[1])	{o += '<span class="cents">.'+r[1]+'<\/span>'}
+				$tag.html(o)
 				}
 			}, //money
 

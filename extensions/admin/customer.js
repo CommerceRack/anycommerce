@@ -81,8 +81,12 @@ var admin_customer = function() {
 		u : {}, //u [utilities]
 
 		e : {
-			'customerManager' : function(){
-				
+			'customerSearch' : function($btn){
+				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
+					event.preventDefault();
+					console.warn("NOT DONE YET");
+					});
 				}
 			} //e [app Events]
 		} //r object.
