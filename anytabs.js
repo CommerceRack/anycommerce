@@ -75,14 +75,14 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 		_addEvent2Tabs : function()	{
 			var self = this;
-			this.tabs.find('li').each(function(){
-				$(this).off('click.anytab').on('click.anytab',function(){
-					self.reveal($(this));
+			this.tabs.find('li a').each(function(){
+				$(this).click(function(event){
+					event.preventDefault();
 					});
 				});
-			this.tabs.find('li a').each(function(event){event.preventDefault();});	
 			},
 
+			
 		_addClasses2Tabs : function()	{
 			this.tabs.addClass('ui-tabs-nav ui-helper-reset ui-helper-clearfix').css({'padding-left':'0px'});
 			this.tabs.find('a').addClass('ui-tabs-anchor').attr('role','presentation');
