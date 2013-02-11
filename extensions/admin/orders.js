@@ -444,10 +444,21 @@ else	{
 						})
 					});
 
-				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)}
+				if(P.filters.LIMIT)	{$('#filterLimit').val(P.filters.LIMIT)} //set default val for limit.
+
+//check to see which index in accordian was open last.
+				var settings = app.ext.admin.u.dpsGet('admin_orders','accordion') || {};
+				settings.active = settings.active || 0; //default to search.
 				$(".searchAndFilterContainer",$target).accordion({
-					heightStyle: "content"
+					heightStyle: "content",
+					active : settings.active,
+					change : function(e,ui)	{
+						app.ext.admin.u.dpsSet('admin_orders','accordion',{'active':$(this).accordion('option', 'active')}); //update settings with active accordion index.
+						}
 					});
+				
+//				$(".searchAndFilterContainer",$target).accordion( "option", "active", 2 );
+				
 //Make the list of filters selectable. (status, type, marketplace, etc)				
 //since only 1 option per UL is selectable, selectable() was avoided.
 				$(".filterGroup",$target).children().each(function(){
@@ -789,7 +800,7 @@ else	{
 //designed for use with the vars object in this extension, not the newer adminEmailList _cmd
 		emailMessagesListItems : function($tag,data)	{
 			for(key in data.value)	{
-				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"'>"+data.value[key]+"</a></li>");
+				$tag.append("<li class='emailmsg_"+key.toLowerCase()+"'><a href='#MAIL|"+key+"'>"+data.value[key]+" ("+key+")</a></li>");
 				}
 			},
 
@@ -1922,7 +1933,7 @@ else	{
 
 				var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 				var menu = $btn.parent().next('ul').menu().hide();
-				menu.css({'position':'absolute','width':'200px','z-index':'10000'}).parent().css('position','relative');
+				menu.css({'position':'absolute','width':'300px','z-index':'10000'}).parent().css('position','relative');
 				
 				menu.find('li a').each(function(){
 					$(this).on('click',function(event){
