@@ -1981,10 +1981,10 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.u.bringTabContentIntoFocus($content);
 				
 //recent news panel.
+				app.model.destroy('appResource|recentnews.json'); //always fetch the most recent news.
 				$('#dashboardColumn1',$content).append($("<div \/>").attr('id','dashboardRecentNewsPanel').anypanel({
-					'title' : 'Recent News',
+					'header' : 'Recent News',
 					'showClose' : false,
-					'showLoading' : false,
 					'call' : 'appResource',
 					'callParams' : 'recentnews.json',
 					'_tag' : {'callback':'translateSelector','extension':'admin','selector':'#dashboardRecentNewsPanel'},
@@ -1993,8 +1993,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 //quickstats ogms.
 				var $salesReportPanel = $("<div \/>").anypanel({
-					'title' : 'Sales Report',
-					'showClose' : false,
+					'header' : 'Sales Report',
 					'showLoading' : false,
 					'content' : $("<div><table class='fullWidth'><thead><th><\/th><th>Count<\/th><th>Sales<\/th><th>Units<\/th><\/thead><tbody id='dashboardReportTbody'><\/tbody><\/table><p>These reports are for all domains since midnight.<\/p><\/div>")
 					});
@@ -3239,7 +3238,7 @@ just lose the back button feature.
 						});
 					}
 				else	{
-					app.u.throwGMessage("In admin_orders.u.handleButtonActions, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
 					}
 				
 				} //handleAppEvents

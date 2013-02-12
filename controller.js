@@ -354,6 +354,28 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			},//appCategoryDetail
 
 
+//get a list of newsletter subscription lists.
+		appNewslettersList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "appNewslettersList"
+				if(app.model.fetchData('appNewslettersList') == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"appNewslettersList","_tag" : _tag},Q || 'immutable');	
+				}
+			},//getNewsletters	
+
+
 
 //get a product record.
 //required params: obj.pid.

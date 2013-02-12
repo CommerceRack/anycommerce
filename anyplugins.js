@@ -94,7 +94,7 @@ For the list of available params, see the 'options' object below.
 				.text('close message').css({'float':'right','marginLeft':'5px','marginBottom':'5px'})
 				.button({icons: {primary: "ui-icon-circle-close"},text: false})
 				.addClass(this.options.message.errtype == 'iseerr' ? 'ui-state-error' : '')
-				.on('click.closeMsg',function(){$t.anymessage('close')});
+				.on('click.closeMsg',function(event){event.preventDefault(); $t.anymessage('close')});
 			},
 
 //adds the outer 'container' div around the message.
@@ -429,9 +429,9 @@ either templateID or (data or datapointer) are required.
 
 		_addNewTemplate : function()	{
 			var r = false; //what's returned. true if able to create template.
-			var $tmp = $(app.u.jqSelector('#',templateID));
+			var $tmp = $(app.u.jqSelector('#',this.options.templateID));
 			if($tmp.length > 0)	{
-				app.model.makeTemplate($tmp,templateID);
+				app.model.makeTemplate($tmp,this.options.templateID);
 				r = true;
 				}
 			else{} //do nothing. Error will get thrown later.
@@ -771,12 +771,13 @@ Additional a settings button can be added which will contain a dropdown of selec
 			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent());
 			
 			if(o.showClose)	{
-				$buttonSet.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(){self.destroy()})); //settings button
+				$buttonSet.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(event){event.preventDefault(); self.destroy()})); //settings button
 				}
 
 			$buttonSet.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').addClass('ui-button-anypanel ui-button-anypanel-settings').css(buttonStyles).text('Settings')
 				.button({text: false,icons : {primary : 'ui-icon-wrench'}})
-				.off('click.settingsMenu').on('click.settingsMenu',function(){
+				.off('click.settingsMenu').on('click.settingsMenu',function(event){
+					event.preventDefault();
 					var $ul = $("[data-app-role='settingsMenu']",$t).toggle();
 
 //this will make it so any click outsite the menu closes the menu. the one() means it only gets triggered once.
@@ -786,7 +787,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					})); //the settings button is always generated, but only toggled on when necessary.
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
-			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(){self.toggle()})); //settings button
+			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(event){event.preventDefault(); self.toggle()})); //settings button
 			},
 
 		_handleInitialState : function()	{

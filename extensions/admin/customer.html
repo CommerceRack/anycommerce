@@ -52,14 +52,15 @@
 
 
 <div id='customerEditorTemplate' class='clearfix customerEditor'>
-
+	<form action='#'>
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		<h2 class='floatLeft ui-widget-header-padding'>
 User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
 Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span>
 Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
 		</h2>
-		<button class='floatRight' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|customerEditorSave'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' name="reset_hint" >Remove Password Hint</button>
 	</div>
 
 
@@ -69,25 +70,27 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="general">
 	<h2>General</h2>
 	<div>
-	<label><span>Email:</span><input type="text" name="email"  data-bind="var:customer(INFO.EMAIL); format:popVal;"></label>
-	<label><span>First Name:</span><input size="15" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;"></label>
-	<label><span>Last Name:</span><input size="15" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;"></label>
-	<label><span>Password: </span><input type='text' name='pass'  data-bind="var:customer(INFO.PASSWORD); format:popVal;"></label>
-	<label><input type="checkbox" name="reset_hint"> Remove Password Hint - password recovery via email only</span></label>
-	<label><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popCheckbox;"> Lock customer account</label>
+	<fieldset>
+		<label><span>Email:</span><input size='20' type="text" name="email" data-bind="var:customer(INFO.EMAIL); format:popVal;" /></label>
+		<label><span>First Name:</span><input size="20" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;" /></label>
+		<label><span>Last Name:</span><input size="20" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;" /></label>
+		<label><span>Password: </span><input size='20' type='text' name='pass' data-bind="var:customer(INFO.PASSWORD); format:popVal;" /></label>
+		<label><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popCheckbox;"> Lock customer account</label>
+	</fieldset>
 	</div>
 </div>
 
 
-<div id='customerEditorTemplate_giftcard' class='labelsAsBreaks alignedLabels panel' data-app-role="giftcards">
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="giftcards">
 	<h2>Giftcards</h2>
 	<div class='clearfix' data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></div>
 </div>
 
 
-<div id='customerEditorTemplate_newsletter' class='labelsAsBreaks alignedLabels panel' data-app-role="newsletter">
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="newsletter">
 	<h2>Newsletters</h2>
-	<div>newsletter content</div>
+	<div data-bind="format:newsletters; extension:admin_customer; useParentData:true;">
+	</div>
 </div>
 
 
@@ -95,8 +98,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="ship">
 	<h2>Shipping Addresses</h2>
 	<div>
-	<table class='gridTable'>
-	<tbody data-bind="var:customer(@SHIP); format:processList; loadsTemplate:customerEditorAddressListTemplate;">
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@SHIP); format:processList; loadsTemplate:customerEditorAddressListTemplate;" data-address-type="@SHIP">
 	</tbody>
 	</table>
 	</div>
@@ -105,8 +108,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="bill">
 	<h2>Billing Addresses</h2>
 	<div>
-	<table class='gridTable'>
-	<tbody data-bind="var:customer(@BILL); format:processList; loadsTemplate:customerEditorAddressListTemplate;">
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@BILL); format:processList; loadsTemplate:customerEditorAddressListTemplate;" data-address-type="@BILL">
 	</tbody>
 	</table>
 	</div>
@@ -189,6 +192,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 	</div><!-- /column 2 -->
 
+	</form>
 </div>
 
 
@@ -201,8 +205,6 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div id='customerEditorGiftcardListTemplate'>
 Something
 </div>
-
-
 
 
 
@@ -224,10 +226,10 @@ Something
 <span data-bind="var:address(bill_region); defaultVar: address(ship_region); format:text;"></span>
 	</td>
 	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
-	<td>
-<button>Edit</button>
-<button>Delete</button>
-<button>Is Default</button>
+	<td class='alignRight'>
+<button data-app-event="admin_customer|customerAddressUpdate">Edit this address</button>
+<button data-app-event="admin_customer|customerRowRemove">Delete this address</button>
+<button data-app-event="admin_customer|customerHandleIsDefault">Set address as default</button>
 	</td>
 </tr>
 
@@ -237,8 +239,8 @@ Something
 <div data-bind="var:note(LUSER); format:text;"></div>
 	</td>
 	<td data-bind="var:note(NOTE); format:text;"></td>
-	<td>
-<button>Delete</button>
+	<td class='alignRight'>
+	<button data-app-event="admin_customer|customerRowRemove">Delete this note</button>
 	</td>
 </tr>
 
@@ -246,7 +248,10 @@ Something
 	<td data-bind="var:wallet(TD); format:text;"></td>
 	<td data-bind="var:wallet(TC); format:text;"></td>
 	<td data-bind="var:wallet(TE); format:text;"></td>
-	<td><button>update</button><button>remove</button><button>default</button></td>
+	<td class='alignRight'>
+<!--	<button data-app-event="admin_customer|customerWalletDetail">View this wallet</button> -->
+	<button data-app-event="admin_customer|customerRowRemove">Delete this wallet</button>
+	<button data-app-event="admin_customer|customerHandleIsDefault">Set wallet as default</button></td>
 </tr>
 </table>
 
@@ -275,7 +280,7 @@ Something
 
 
 
-<address id='customerAddressAddUpdateTemplate'>
+<address id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
 <form action='#'>
 <fieldset>
 	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' data-bind="var:address(_id); format:popVal;" /></label>

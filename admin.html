@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20130211.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"20130212.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -318,7 +318,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
 <button onClick="navigateTo('#!appChooser');">App Chooser</button>
-<button onClick="$('#setupContent').empty(); app.ext.admin_customer.a.showCustomerEditor($('#setupContent'),'7633557');">showCustomerEditor</button>
+<button onClick="app.model.destroy('adminCustomerDetail|7633557'); $('#setupContent').empty(); app.ext.admin_customer.a.showCustomerEditor($('#setupContent'),{'CID':'7633557'});">showCustomerEditor</button>
 
 <button onClick="$('#setupContent').empty(); app.ext.admin_customer.a.showCustomerManager($('#setupContent'));">customerManager</button>
 
