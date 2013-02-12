@@ -266,9 +266,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					self.reveal($(this));
 					});
 				});
-			this.tabs.find('li a').each($(this).on('click',function(event){
-				event.preventDefault();
-				}));
+			this.tabs.find('li a').each(function(){
+				$(this).on('click',function(event){
+					event.preventDefault();
+					});
+				});
 			},
 
 		_addClasses2Tabs : function()	{
