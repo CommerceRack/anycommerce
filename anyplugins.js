@@ -657,6 +657,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			showClose : true, //set to false to disable close (X) button.
 			showLoading : true, //set to false to disable showLoading()
 			content : null, //a jquery object of content to use.
+			wholeHeaderToggle : true, //set to false if only the expand/collapse button should toggle panel (important if panel is draggable)
 			header : null, //if set, will create an h2 around this and NOT use firstchild.
 			q : 'mutable', //which q to use.
 			extension : '', //used in conjunction w/ persist.
@@ -675,15 +676,19 @@ Additional a settings button can be added which will contain a dropdown of selec
 			else	{
 //isanypanel data is set to true as an easy check to
 				$t.addClass('ui-widget ui-widget-anypanel marginBottom').data('isanypanel',true).css('position','relative');
+				if(o.name)	{$t.addClass('panel_'+o.name)} 
 				var $header, $content;
 				
 				
-				if(o.title)	{$header = $("<h2 \/>").text(o.title).appendTo($t)}
+				if(o.header)	{$header = $("<h2 \/>").text(o.header); $header.appendTo($t)}
 				else	{$header = $t.children(":first")}
 				
-				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'}).addClass('pointer');
+				$header.css({'fontSize':'.85em','lineHeight':'2em','textIndent':'.75em'});
 				$header.wrap($("<div \/>").addClass('ui-widget-header ui-anypanel-header ui-corner-top ').css({'padding':'0px;','minHeight':'24px'}));
-				$header.off('click.toggle').on('click.toggle',function(){self.toggle()});
+
+				if(o.wholeHeaderToggle)	{
+					$header.addClass('pointer').off('click.toggle').on('click.toggle',function(){self.toggle()});
+					}
 				
 				self._handleButtons($header);
 			

@@ -10,7 +10,7 @@
 			</div>
 			
 			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
-				<input type='search' name='email'  />
+				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|customerSearch'>Search</button>
 			</form>
 			
@@ -59,37 +59,63 @@
 
 
 
+<div id='customerEditorTemplate_general' class='labelsAsBreaks'>
+<label><span>Email:</span><input type="textbox" name="email" value=""></label>
+<label><span>First Name:</span><input size="15" type="textbox" name="firstname" value=""></label>
+<label><span>Last Name:</span><input size="15" type="textbox" name="lastname" value=""></label>
+<label><span>Password: </span><input type='textbox' name='pass' value=""></label>
+<label><input type="checkbox" name="reset_hint"> Remove Password Hint <span class="hint">(password recovery can be done via email only)</span></label>
+<label><input type="checkbox" name="is_locked"> Lock customer account</label>
+</div>
+
+<div id='customerEditorTemplate_wholesale' class='labelsAsBreaks'>
+<label>Schedule: []</label>
+<label><input type="checkbox" name="ALLOW_PO"> Enable/Accept Purchase Orders</label>
+<label><input type="checkbox" name="RESALE"> Do not charge sales tax</label>
+<label><span>Credit Limit: $</span><input type="textbox" name="CREDIT_LIMIT" value="" size="10" /></label>
+<label><span>Credit Balance: $</span><input type="textbox" name="CREDIT_BALANCE" value="" size="10" /></label>
+<label><span>Resale #: </span><input type="textbox" name="RESALE_PERMIT" value="" size="15" /></label>
+<label><span>Account Manager: </span><input type="textbox" name="ACCOUNT_MANAGER" value="" size="10" /></label>
+</div>
+
+<div id='customerEditorTemplate_giftcard' class='labelsAsBreaks'>
+giftcard content
+</div>
+
+<div id='customerEditorTemplate_newsletter' class='labelsAsBreaks'>
+newsletter content
+</div>
+
+<div id='customerEditorTemplate_tickets' class='labelsAsBreaks'>
+Tickets content
+</div>
+
+<div id='customerEditorTemplate_notes' class='labelsAsBreaks'>
+Notes content
+</div>
+
+<div id='customerEditorTemplate_wallets' class='labelsAsBreaks'>
+Wallets content
+</div>
+
+<div id='customerEditorTemplate_addresses' class='labelsAsBreaks'>
+Addresses content
+</div>
+
+<div id='customerEditorTemplate_dropship' class='labelsAsBreaks'>
+dropship content
+</div>
 
 
-<section id='customerEditorGeneralTemplate'>
 
-	<div class='clearfix'>
-		<span class='floatLeft'></span>
-	</div>
-
-	<div class='clearfix'>
-		<div class='floatLeft'>
-		<label><span>Email:</span><input type="textbox" name="email" value=""></label>
-		<label><span>First Name:</span><input size="15" type="textbox" name="firstname" value=""></label>
-		<label><span>Last Name:</span><input size="15" type="textbox" name="lastname" value=""></label>
-		</div>
-	
-		<div class='floatRight'>
-		<label><span>Password: </span><input type='textbox' name='pass' value=""></label>
-		<label><input type="checkbox" name="reset_hint"> Remove Password Hint <span class="hint">(password recovery can be done via email only)</span></label>
-		<label><input type="checkbox" name="is_locked"> Lock customer account</label>
-		</div>
-	</div>
-
-</section>
 
 
 <div id='customerWalletAddTemplate'>
 <form action='#'>
 <fieldset>
 	<label><span>CC</span><input type='number' size='20' maxlength="16" name='CC' value='' /></label>
-	<label><span>YY</span><input type='number' size='2' maxlength="2" name='CC' value='' /></label>
-	<label><span>MM</span><input type='number' size='2' maxlength="2" name='CC' value='' /></label>
+	<label><span>YY</span><input type='number' size='2' maxlength="2" name='YY' value='' /></label>
+	<label><span>MM</span><input type='number' size='2' maxlength="2" name='MM' value='' /></label>
 </fieldset>
 
 <button>Save Wallet</button>

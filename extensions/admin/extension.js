@@ -205,7 +205,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				return r;
 				},
 			dispatch : function(email,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag});	
+				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag},Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
 

@@ -239,6 +239,28 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+
+
+/* css for a three column layout. will be used on dashboard and in customer editor. */
+
+/* three column panel layout (homepage) */
+.twoColumn{  
+	width:49%;  
+	margin-right:1%;  
+	min-height:300px;  
+	float:left;  
+	}  
+
+
+.twoColumn .placeholder{  
+	background: #ffffff;  
+	}  
+
+
+
+
+
+
 /* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
 
 
@@ -769,6 +791,7 @@ table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-col
 .helpDoc h1	{margin-bottom:12px;} /* document title */
 .helpDoc h2	{margin-bottom:4px;} /* title for each article (used to be SECTION) */
 .helpDoc article {margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #efefef;}
+
 
 
 /*
