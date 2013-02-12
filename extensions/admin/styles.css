@@ -138,6 +138,9 @@ using these shared margins will help make the UI more consistent.
 .marginRight	{margin-right:12px;}
 .marginTop	{margin-top:12px;}
 .marginBottom	{margin-bottom:12px;}
+
+.paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
+
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}

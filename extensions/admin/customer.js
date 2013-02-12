@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate_general','customerEditorTemplate_wholesale','customerEditorTemplate_giftcard','customerEditorTemplate_newsletter','customerEditorTemplate_tickets','customerEditorTemplate_notes','customerEditorTemplate_wallets','customerEditorTemplate_addresses','customerEditorTemplate_dropship');
+	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate');
 	var r = {
 
 
@@ -76,15 +76,14 @@ var admin_customer = function() {
 				if($target && typeof $target == 'object')	{
 					if(CID)	{
 						$target.showLoading("Fetching Customer Record");
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':function(rd){
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1},{'callback':function(rd){
 $target.hideLoading();
 if(app.model.responseHasErrors(rd)){
 	app.u.throwMessage(rd);
 	}
 else	{
 	//div that all panels are added to, then this div is appended to the dom. more efficient and allows for classes to be added.
-	var $contents = $("<div \/>").addClass('customerEditor'),
-	panels = {
+	var panels = {
 		'general' : {'index':0,'column':1},
 		'wholesale' : {'index':0,'column':1},
 		'giftcard' : {'index':1,'column':1},
@@ -94,21 +93,15 @@ else	{
 		'wallets' : {'index':1,'column':2},
 		'addresses' : {'index':2,'column':2},
 		'dropship' : {'index':3,'column':2}
-		},
-	L = panels.length;
+		};
 	
-	var $cols = {};
-	$cols.c1 = $("<div \/>").addClass('twoColumn').attr('data-app-column','1'),
-	$cols.c2 = $("<div \/>").addClass('twoColumn').attr('data-app-column','2')
-
-
+	$target.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer]});
 	
-	for(var index in panels)	{
-		$("<div \/>").anypanel({'header':index,'wholeHeaderToggle':false,'templateID':'customerEditorTemplate_'+index,'data':app.data[rd.datapointer],'showClose':false,'state':'persistent','extension':'admin_customer','name':index,'persistent':true}).appendTo($cols['c'+panels[index].column]);
-		}
-	$cols.c1.appendTo($contents);
-	$cols.c2.appendTo($contents);
-	$contents.appendTo($target);
+	$("div.panel",$target).each(function(){
+		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
+		$(this).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_customer','name':PC,'persistent':true});
+		})
+	
 	}
 
 	var sortCols = $('.twoColumn').sortable({  
@@ -125,9 +118,12 @@ else	{
 //			console.log(' -> here.');
 			}
 		}).disableSelection();
-
-
-
+	
+	$("input",$target).each(function(){
+		$(this).removeAttr('disabled').off('change.trackChange').on('change.trackChange',function(){
+			$(this).addClass('edited');
+			});
+		})
 							}},'mutable');
 						app.model.dispatchThis('mutable');
 						}

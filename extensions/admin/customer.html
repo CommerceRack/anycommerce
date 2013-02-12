@@ -5,10 +5,6 @@
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 		
-			<div class='buttonSet'>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</div>
-			
 			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|customerSearch'>Search</button>
@@ -39,10 +35,6 @@
 
 
 
-
-
-
-
 <table>
 <tr id='customerSearchResultsTemplate' onClick="app.ext.admin.u.showHelpInDialog($(this).data('docid'));" class='pointer'>
 	<td data-bind='var: help(title); format:text;'></td>
@@ -59,52 +51,210 @@
 
 
 
-<div id='customerEditorTemplate_general' class='labelsAsBreaks'>
-<label><span>Email:</span><input type="textbox" name="email" value=""></label>
-<label><span>First Name:</span><input size="15" type="textbox" name="firstname" value=""></label>
-<label><span>Last Name:</span><input size="15" type="textbox" name="lastname" value=""></label>
-<label><span>Password: </span><input type='textbox' name='pass' value=""></label>
-<label><input type="checkbox" name="reset_hint"> Remove Password Hint <span class="hint">(password recovery can be done via email only)</span></label>
-<label><input type="checkbox" name="is_locked"> Lock customer account</label>
+<div id='customerEditorTemplate' class='clearfix customerEditor'>
+
+	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
+		<h2 class='floatLeft ui-widget-header-padding'>
+User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bind="var:customer(_CID); format:text; pretext:[; posttext:];" class='paddingRight'></span>
+Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span>
+Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
+		</h2>
+		<button class='floatRight' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+	</div>
+
+
+	<div class='twoColumn' data-app-column='1'>
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="general">
+	<h2>General</h2>
+	<div>
+	<label><span>Email:</span><input type="text" name="email"  data-bind="var:customer(INFO.EMAIL); format:popVal;"></label>
+	<label><span>First Name:</span><input size="15" type="text" name="firstname"  data-bind="var:customer(INFO.FIRSTNAME); format:popVal;"></label>
+	<label><span>Last Name:</span><input size="15" type="text" name="lastname"  data-bind="var:customer(INFO.LASTNAME); format:popVal;"></label>
+	<label><span>Password: </span><input type='text' name='pass'  data-bind="var:customer(INFO.PASSWORD); format:popVal;"></label>
+	<label><input type="checkbox" name="reset_hint"> Remove Password Hint - password recovery via email only</span></label>
+	<label><input type="checkbox" name="is_locked" data-bind="var:customer(INFO.IS_LOCKED); format:popCheckbox;"> Lock customer account</label>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_wholesale' class='labelsAsBreaks'>
-<label>Schedule: []</label>
-<label><input type="checkbox" name="ALLOW_PO"> Enable/Accept Purchase Orders</label>
-<label><input type="checkbox" name="RESALE"> Do not charge sales tax</label>
-<label><span>Credit Limit: $</span><input type="textbox" name="CREDIT_LIMIT" value="" size="10" /></label>
-<label><span>Credit Balance: $</span><input type="textbox" name="CREDIT_BALANCE" value="" size="10" /></label>
-<label><span>Resale #: </span><input type="textbox" name="RESALE_PERMIT" value="" size="15" /></label>
-<label><span>Account Manager: </span><input type="textbox" name="ACCOUNT_MANAGER" value="" size="10" /></label>
+
+<div id='customerEditorTemplate_giftcard' class='labelsAsBreaks alignedLabels panel' data-app-role="giftcards">
+	<h2>Giftcards</h2>
+	<div class='clearfix' data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></div>
 </div>
 
-<div id='customerEditorTemplate_giftcard' class='labelsAsBreaks'>
-giftcard content
+
+<div id='customerEditorTemplate_newsletter' class='labelsAsBreaks alignedLabels panel' data-app-role="newsletter">
+	<h2>Newsletters</h2>
+	<div>newsletter content</div>
 </div>
 
-<div id='customerEditorTemplate_newsletter' class='labelsAsBreaks'>
-newsletter content
+
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="ship">
+	<h2>Shipping Addresses</h2>
+	<div>
+	<table class='gridTable'>
+	<tbody data-bind="var:customer(@SHIP); format:processList; loadsTemplate:customerEditorAddressListTemplate;">
+	</tbody>
+	</table>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_tickets' class='labelsAsBreaks'>
-Tickets content
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="bill">
+	<h2>Billing Addresses</h2>
+	<div>
+	<table class='gridTable'>
+	<tbody data-bind="var:customer(@BILL); format:processList; loadsTemplate:customerEditorAddressListTemplate;">
+	</tbody>
+	</table>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_notes' class='labelsAsBreaks'>
-Notes content
+
+	</div><!-- /column 1 -->
+	
+	<div class='twoColumn' data-app-column='2'>
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="notes">
+	<h2>Notes</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@NOTES); format:processList; loadsTemplate:customerEditorNoteListTemplate;">
+	</tbody>
+	</table>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_wallets' class='labelsAsBreaks'>
-Wallets content
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="wholesale">
+	<h2>Wholesale</h2>
+	<div>
+	<label>Schedule: []</label>
+	<label><input type="checkbox" name="ALLOW_PO" data-bind="var:customer(WS.ALLOW_PO); format:popCheckbox;"> Enable/Accept Purchase Orders</label>
+	<label><input type="checkbox" name="RESALE" data-bind="var:customer(WS.RESALE); format:popCheckbox;"> Do not charge sales tax</label>
+	<label><span>Credit Limit: $</span><input type="number" step='0.01' min='0' name="CREDIT_LIMIT"  size="10" data-bind="var:customer(WS.CREDIT_LIMIT); hideZero:false; format:popVal;" /></label>
+	<label><span>Credit Balance: $</span><input type="number" step='0.01' min='0' name="CREDIT_BALANCE"  size="10" data-bind="var:customer(WS.CREDIT_BALANCE); hideZero:false; format:popVal;" /></label>
+	<label><span>Resale #: </span><input type="number" name="RESALE_PERMIT"  size="15" data-bind="var:customer(WS.RESALE_PERMIT); format:popVal;" /></label>
+	<label><span>Account Manager: </span><input type="text" name="ACCOUNT_MANAGER"  size="10" data-bind="var:customer(WS.ACCOUNT_MANAGER); format:popVal;" /></label>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_addresses' class='labelsAsBreaks'>
-Addresses content
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="wallets">
+	<h2>Wallets</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Description</th>
+		<th>Created</th>
+		<th>Store Until</th>
+		<th>Actions</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@WALLETS); format:processList; loadsTemplate:customerEditorWalletListTemplate;">
+	
+	</tbody>
+	</table>
+	</div>
 </div>
 
-<div id='customerEditorTemplate_dropship' class='labelsAsBreaks'>
-dropship content
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="tickets">
+	<h2>Tickets</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Created</th>
+		<th>Ticket</th>
+		<th>Subject</th>
+		<th>Status</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@TICKETS); format:processList; loadsTemplate:customerEditorTicketListTemplate;">
+	
+	</tbody>
+	</table>
+	</div>
 </div>
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
+	<h2>Dropship</h2>
+	<div>dropship content</div>
+</div>
+
+
+
+	</div><!-- /column 2 -->
+
+</div>
+
+
+
+
+
+
+
+
+<div id='customerEditorGiftcardListTemplate'>
+Something
+</div>
+
+
+
+
+
+
+<table>
+<tr id='customerEditorTicketListTemplate'>
+	<td data-bind="var:ticket(CREATED_GMT); format:unix2mdy;"></td>
+	<td data-bind="var:ticket(TKTCODE); format:text;"></td>
+	<td data-bind="var:ticket(SUBJECT); format:text;"></td>
+	<td data-bind="var:ticket(STATUS); format:text;"></td>
+</tr>
+
+
+<tr id='customerEditorAddressListTemplate'>
+	<td data-bind="var:address(_id); format:text;"></td>
+	<td>
+<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
+<span data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></span>
+<span data-bind="var:address(bill_region); defaultVar: address(ship_region); format:text;"></span>
+	</td>
+	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
+	<td>
+<button>Edit</button>
+<button>Delete</button>
+<button>Is Default</button>
+	</td>
+</tr>
+
+<tr id='customerEditorNoteListTemplate'>
+	<td>
+<div data-bind="var:note(CREATED_GMT); format:unix2mdy;"></div>
+<div data-bind="var:note(LUSER); format:text;"></div>
+	</td>
+	<td data-bind="var:note(NOTE); format:text;"></td>
+	<td>
+<button>Delete</button>
+	</td>
+</tr>
+
+<tr id='customerEditorWalletListTemplate'>
+	<td data-bind="var:wallet(TD); format:text;"></td>
+	<td data-bind="var:wallet(TC); format:text;"></td>
+	<td data-bind="var:wallet(TE); format:text;"></td>
+	<td><button>update</button><button>remove</button><button>default</button></td>
+</tr>
+</table>
+
+
+
+
+
+
 
 
 

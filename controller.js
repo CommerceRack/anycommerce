@@ -2541,15 +2541,22 @@ $tmp.empty().remove();
 //			app.u.dump('BEGIN view.formats.money');
 			var amount = data.bindData.isElastic ? (data.value / 100) : data.value;
 			if(amount)	{
-				var r,o;
+				var r,o,sr;
 				r = app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
 //					app.u.dump(' -> attempting to use var. value: '+data.value);
 //					app.u.dump(' -> currencySign = "'+data.bindData.currencySign+'"');
+
+//if the value is greater than .99 AND has a decimal, put the 'change' into a span to allow for styling.
+				if(r.indexOf('.') > 0)	{
 //					app.u.dump(' -> r = '+r);
-				r.split('.');
-				o = r[0]
-				if(r[1])	{o += '<span class="cents">.'+r[1]+'<\/span>'}
-				$tag.html(o)
+					sr = r.split('.');
+					o = sr[0];
+					if(sr[1])	{o += '<span class="cents">.'+sr[1]+'<\/span>'}
+					$tag.html(o);
+					}
+				else	{
+					$tag.html(r);
+					}
 				}
 			}, //money
 
@@ -2561,19 +2568,30 @@ $tmp.empty().remove();
 //doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
 //			app.u.dump("BEGIN renderFormats.processList");
-			var $o, //recycled. what gets added to $tag for each iteration.
-			int = 0;
-			for(i in data.value)	{
-				if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
-				else	{
-					$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
-					if(data.value[i].id){} //if an id was set, do nothing.
-					else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
-					$tag.append($o);
-					}
-				int += 1;				
-				}
 			$tag.removeClass('loadingBG');
+			if(data.bindData.loadsTemplate)	{
+				var $o, //recycled. what gets added to $tag for each iteration.
+				int = 0;
+				for(i in data.value)	{
+					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
+					else	{
+						$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
+						if(typeof $o == 'object')	{
+							if(data.value[i].id){} //if an id was set, do nothing.
+							else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
+							$tag.append($o);
+							}
+						else	{
+							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistant':true});
+							}
+						}
+					int += 1;				
+					}
+				
+				}
+			else	{
+				$tag.anymessage({'message':'Unable to render list item - no loadsTemplate specified.','persistant':true});
+				}
 			}
 			
 		},
