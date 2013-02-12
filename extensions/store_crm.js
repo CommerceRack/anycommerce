@@ -483,6 +483,7 @@ see jquery/api webdoc for required/optional param
 				var orderid;
 				var L = app.data[tagObj.datapointer]['@orders'].length;
 				if(L > 0)	{
+					$parent.empty();
 					for(var i = 0; i < L; i += 1)	{
 						orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID;
 						$parent.append(app.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
