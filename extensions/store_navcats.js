@@ -33,21 +33,22 @@ var store_navcats = function() {
 	calls : {
 //formerly categoryTree
 		appCategoryList : {
-			init : function(tagObj,Q)	{
+			init : function(root,tagObj,Q)	{
 //				app.u.dump("BEGIN store_navcats.calls.appCategoryList.init");
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				if(app.model.fetchData('appCategoryList') == false)	{
 					r = 1;
-					this.dispatch(tagObj,Q);
+					this.dispatch(root,tagObj,Q);
 					}
 				else 	{
 					app.u.handleCallback(tagObj)
 					}
 				return r;
 				},
-			dispatch : function(tagObj,Q)	{
+			dispatch : function(root,tagObj,Q)	{
 				obj = {};
 				obj['_cmd'] = "appCategoryList";
+				obj.root = root;
 				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
 				obj['_tag'].datapointer = 'appCategoryList'; //for now, override datapointer for consistency's sake.
 //if no extension is set, use this one. need to b able to override so that a callback from outside the extension can be added.
@@ -98,6 +99,7 @@ obj.PATH = .cat.safe.id
 //formerly categoryDetail
 		appCategoryDetail : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //			app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetail.init ('+catSafeID+')');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -123,6 +125,7 @@ obj.PATH = .cat.safe.id
 
 		appCategoryDetailMore : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //				app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetailMore.init');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -158,6 +161,7 @@ obj.PATH = .cat.safe.id
 
 		appCategoryDetailMax : {
 			init : function(catSafeID,tagObj,Q)	{
+				Q = Q || 'mutable';
 //				app.u.dump('BEGIN app.ext.store_navcats.calls.appCategoryDetailMax.init');
 				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
 				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
@@ -188,7 +192,36 @@ obj.PATH = .cat.safe.id
 				tagObj.detail = 'max';
 				app.model.addDispatchToQ({"_cmd":"appCategoryDetail","safe":catSafeID,"detail":"max","_tag" : tagObj},Q);	
 				}
-			}//appCategoryDetailMax
+			},//appCategoryDetailMax
+
+
+
+		appNavcatDetail : {
+			init : function(path,tagObj,Q)	{
+				app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.init ('+path+')');
+				Q = Q || 'mutable';
+				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
+				tagObj = typeof tagObj !== 'object' ? {} : tagObj;
+//whether max, more or just detail, always save to same loc.
+//add here so if tagObj is passed directly into callback because data is in localStorage, the datapointer is set.
+				tagObj.datapointer = 'appNavcatDetail|'+path;
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r += 1;
+					this.dispatch(path,tagObj,Q);
+					}
+				else {
+		// app.u.dump(' -> using local');
+					app.u.handleCallback(tagObj)
+					}
+				return r;
+				},
+			dispatch : function(path,tagObj,Q)	{
+		// app.u.dump('BEGIN app.ext.store_navcats.calls.appNavcatDetail.dispatch');
+				var path;
+				app.model.addDispatchToQ({"_cmd":"appNavcatDetail","path":path,"_tag" : tagObj},Q);	
+				}
+			}//appNavcatDetail
+
 
 		}, //calls
 
@@ -300,17 +333,58 @@ templateID - the template id used (from app.templates)
 				}, //numSubcats
 
 
+			categoryList : function($tag,data)	{
+//				app.u.dump("BEGIN store_navcats.renderFormats.categoryList");
+				if(typeof data.value == 'object' && data.value.length > 0)	{
+					var L = data.value.length;
+					var call = 'appCategoryDetail';
+					var numRequests = 0;
+//The process is different depending on whether or not 'detail' is set.  detail requires a call for additional data.
+//detail will be set when more than the very basic information about the category is displayed (thumb, subcats, etc)
+					if(data.bindData.detail)	{
+						if(data.bindData.detail == 'min')	{} //uses default call
+						else if(data.bindData.detail == 'more' || data.bindData.detail == 'max')	{
+							call = call+(data.bindData.detail.charAt(0).toUpperCase() + data.bindData.detail.slice(1)); //first letter of detail needs to be uppercase
+							}
+						else	{
+							app.u.dump("WARNING! invalid value for 'detail' in categoryList renderFunction");
+							}
+						for(var i = 0; i < L; i += 1)	{
+							if(data.value[i].pretty[0] != '!')	{
+								var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
+								$tag.append(app.renderFunctions.createTemplateInstance(data.bindData.loadsTemplate,{'id':parentID,'catsafeid':data.value[i].id}));
+								numRequests += app.ext.store_navcats.calls[call].init(data.value[i].id,{'parentID':parentID,'callback':'translateTemplate'});
+								}
+							}
+						if(numRequests)	{app.model.dispatchThis()}
+						}
+//if no detail level is specified, only what is in the actual value (typically, id, pretty and @products) will be available. Considerably less data, but no request per category.
+					else	{
+						for(var i = 0; i < L; i += 1)	{
+							var parentID = data.value[i].id+"_catgid+"+(app.u.guidGenerator().substring(10));
+							if(data.value[i].pretty[0] != '!')	{
+								$tag.append(app.renderFunctions.transmogrify({'id':parentID,'catsafeid':data.value[i].id},data.bindData.loadsTemplate,data.value[i]));
+								}
+							}
+						}
+					}
+				else	{
+					//value isn't an object or is empty. perfectly normal to get here if a page has no subs.
+					}
+				},
 
 //assumes that you have already gotten a 'max' detail for the safecat specified data.value.
 //shows the category, plus the first three subcategories.
 			subcategory2LevelList : function($tag,data)	{
-//				app.u.dump("BEGIN store_navcats.renderFormats.subcatList");
+				app.u.dump("BEGIN store_navcats.renderFormats.subcategory2LevelList");
 				var catSafeID; //used in the loop for a short reference.
 				var subcatDetail = data.value;
 				var o = '';
 				if(!$.isEmptyObject(subcatDetail))	{
 					var L = subcatDetail.length;
-					var size = L > 15 ? 15 : L; //don't show more than 15.
+					if(data.bindData.size == 'false')	{size = L}
+					else if(Number(data.bindData.size))	{size = Number(data.bindData.size)} //if size is valid, use it.
+					else	{size = L > 15 ? 15 : L; } //don't show more than 15 unless specified
 //!!! hhhmm.. needs fixin. need to compensate 'i' for hidden categories.
 					for(var i = 0; i < size; i +=1)	{
 						if(subcatDetail[i].pretty[0] != '!')	{
@@ -327,36 +401,39 @@ templateID - the template id used (from app.templates)
 
 //pass in category safe id as value
 			breadcrumb : function($tag,data)	{
-//app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); app.u.dump(data);
+//app.u.dump("BEGIN store_navcats.renderFunctions.breadcrumb"); 
 var numRequests = 0; //number of requests (this format may require a dispatch to retrieve parent category info - when entry is a page 3 levels deep)
-var TID = data.bindData.loadsTemplate; //Template ID
-//on a category page, the catsafeid is the value. on a product page, the value is an array of recent categories, where 0 is always the most recent category.
-var path = typeof(data.value) == 'object' ? data.value[0] : data.value;
-if(path)	{
-	var pathArray = path.split('.');
+
+if(app.u.isSet(data.value))	{
+	var pathArray = data.value.split('.');
 	var L = pathArray.length;
 	var s = '.'
 	var catSafeID; //recycled in loop for path of category in focus during iteration.
-	
-//	app.u.dump(" -> path: "+path);
-	//app.u.dump(" -> TID: "+TID);
-	//app.u.dump(pathArray);
-	//app.u.dump(" -> L: "+L);
 	//make sure homepage has a pretty.  yes, it sometimes happens that it doesn't.
-	if(!app.data['appCategoryDetail|.'].pretty)
-		app.data['appCategoryDetail|.'].pretty = 'Home';
-	
-	$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':'.'},data.bindData.loadsTemplate,app.data['appCategoryDetail|.']));
+//	if(!app.data['appCategoryDetail|.'] || !app.data['appCategoryDetail|.'].pretty)	{
+//		app.data['appCategoryDetail|.'].pretty = 'Home';
+//		}
+
+//Creates var for tracking whether root has been met.
+	var reachedRoot = false;
 // homepage has already been rendered. if path == ., likely we r on a product page, arriving from homepage. don't show bc.
-	if(path == '.'){}
+	if(data.value == '.'){}
 	else	{
-		for(i = 1; i < L; i += 1)	{
+		for(var i = 0; i < L; i += 1)	{
 			s += pathArray[i];
-		//	app.u.dump(" -> "+i+" s(path): "+s);
-			$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));
-			s += '.';
+			
+//Checks the rootcat to ensure we don't add extra categories above our root to the breadcrumb.  Once reachedRoot is triggered, add all categories below the root.
+			if(!reachedRoot) {
+				reachedRoot = (zGlobals.appSettings.rootcat === s);
 			}
+			if(reachedRoot) {
+			//	app.u.dump(" -> "+i+" s(path): "+s);
+				$tag.append(app.renderFunctions.transmogrify({'id':'.','catsafeid':s},data.bindData.loadsTemplate,app.data['appCategoryDetail|'+s]));
+			}
+			if(i!=0)
+			s += '.';
 		}
+	}
 	
 
 	
@@ -389,9 +466,59 @@ the formatted is specific so that getChildDataOf can be used for a specific id o
 							}
 						}
 					}
+				else	{
+					app.u.dump("WARNING! Attempted to run store_navcats.u.getRootCats before appCategoryList is in data/memory.");
+					}
 				return r;
 				}, //getRootCatsData
 
+			getCatsFromCategoryList : function(catSafeID)	{
+				app.u.dump('BEGIN app.ext.store_navcats.u.getCatsFromCategoryList');
+				var r = false; //what is returned. false if appCategoryList is not defined. otherwise an array of category id's. empty array if no subcats defined.
+				if(!catSafeID)	{
+					app.u.throwGMessage("catSafeID not specified in store_navcats.u.getCatsFromCategoryList");
+					}
+				else if(!app.data.appCategoryList)	{
+					app.u.throwGMessage("Attempted to run store_navcats.u.getCatsFromCategoryList before appCategoryList is in data/memory.");
+					}
+				else if(catSafeID == '.')	{
+					r = app.ext.store_navcats.u.getRootCats();
+					}
+				else if(app.data.appCategoryList && catSafeID)	{
+					var L = app.data.appCategoryList['@paths'].length;
+					r = new Array();
+					for(var i = 0; i < L; i += 1)	{
+						if(app.data.appCategoryList['@paths'][i].indexOf(catSafeID) == 0)	{
+							r.push(app.data.appCategoryList['@paths'][i]);
+							}
+						}
+					}
+				else	{
+					app.u.throwGMessage("An unknown error occured in store_navcats.u.getCatsFromCategoryList");
+					}
+				return r;
+				}, //getRootCatsData
+
+			getListOfSubcats : function(catSafeID){
+//				app.u.dump("BEGIN store_navcats.u.getListOfSubcats ["+catSafeID+"]");
+				var catsArray = new Array();				
+				if(catSafeID == '.')	{
+					catsArray = this.getRootCats();
+					}
+				else if(app.data['appCategoryDetail|'+catSafeID])	{
+					if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
+						catsArray = app.data['appCategoryDetail|'+catSafeID]['@subcategories'];
+						}
+//when a max detail is done for appCategoryDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
+					else if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object')	{
+						catsArray = this.getSubsFromDetail(catSafeID);
+						}
+//					app.u.dump(" -> catsArray: "); app.u.dump(catsArray);
+					}
+				else if(catsArray = this.getCatsFromCategoryList(catSafeID)){}	// = instead of == cuz we're setting the value of catsArray in the IF
+				else	{} //catch
+				return catsArray;
+				},
 
 /*
 a function for obtaining information about a categories children.
@@ -411,46 +538,25 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 //				app.u.dump("BEGIN app.ext.store_navcats.u.getChildDataOf ("+catSafeID+")");
 //				app.u.dump(app.data['appCategoryDetail|'+catSafeID])
 //if . is passed as catSafeID, then tier1 cats are desired. The list needs to be generated.
-				var catsArray = new Array(); 
+				var catsArray = this.getListOfSubcats(catSafeID)
 				var newParentID;
 				var tier = (catSafeID.split('.').length) - 1; //root cat split to 2, so subtract 1.
-				if(catSafeID == '.')
-					catsArray = this.getRootCats();
-				else if(app.data['appCategoryDetail|'+catSafeID] && typeof app.data['appCategoryDetail|'+catSafeID]['@subcategories'] == 'object')	{
-					catsArray = app.data['appCategoryDetail|'+catSafeID]['@subcategories'];
-//					app.u.dump("GOT HERE for "+catSafeID);
-					}
-//when a max detail is done for appCategoryDetail, subcategories[] is replaced with subcategoryDetail[] in which each subcat is an object.
-				else if(typeof app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail']))	{
-					catsArray = this.getSubsFromDetail(catSafeID);
-					}
-				else	{
-					//most likely, category doesn't have subcats.
-					}
 				
 				if(catsArray.length > 0)	{
 					
 					catsArray.sort(); //sort by safe id.
 					var L = catsArray.length;
 					var call = call ? call : "appCategoryDetail"
-	//				app.u.dump(" -> tier = "+tier);
-	//				app.u.dump(" -> parentID = "+tagObj.parentID);
-	//				app.u.dump(" -> call = "+call);
-	//				app.u.dump(" -> # subcats = "+L);
 	//used in the for loop below to determine whether or not to render a template. use this instead of checking the two vars (templateID and parentID)
 					renderTemplate = false;
 					if(tagObj.templateID && tagObj.parentID)	{
 						var $parent = $('#'+tagObj.parentID);
 						var renderTemplate = true;
 						}
-	//				app.u.dump(" -> parentid.length: "+$parent.length);
-	//				app.u.dump(" -> renderTemplate: "+renderTemplate);
-	
 					for(var i = 0; i < L; i += 1)	{
 						if(renderTemplate)	{
 	//homepage is skipped. at this point we're dealing with subcat data and don't want 'homepage' to display among them
 							if(catsArray[i] != '.')	{
-	//							app.u.dump(" -> createTemplateInstance for: "+catsArray[i]);
 								newParentID = tagObj.parentID+"_"+catsArray[i]
 								$parent.append(app.renderFunctions.createTemplateInstance(tagObj.templateID,{"id":newParentID,"catsafeid":catsArray[i]}));
 								}
@@ -459,22 +565,20 @@ note - there is NO error checking in here to make sure the subcats aren't alread
 	//I would have though that manipulating tagObj within another function would be local to that function. apparently not.
 						numRequests += app.ext.store_navcats.calls[call].init(catsArray[i],$.extend({'parentID':newParentID},tagObj));
 						}
-	//				app.u.dump(' -> num requests: '+numRequests);
 					}
 				return numRequests;
 				}, //getChildDataOf
 
 //on a appCategoryDetail, the @subcategoryDetail contains an object. The data is structured differently than @subcategories.
-//this function will return an array of subcat id's, formatted like the value of 
+//this function will return an array of subcat id's, formatted like the value of @subcategories.
 			getSubsFromDetail : function(catSafeID)	{
-
-var catsArray = new Array(); //what is returned. incremented with each dispatch created.
-var L = app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'].length
-for(var i = 0; i < L; i += 1)	{
-	catsArray.push(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'][i].id);
-	}
-//app.u.dump(catsArray);
-return catsArray;			
+				var catsArray = new Array(); //what is returned. incremented with each dispatch created.
+				var L = app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'].length
+				for(var i = 0; i < L; i += 1)	{
+					catsArray.push(app.data['appCategoryDetail|'+catSafeID]['@subcategoryDetail'][i].id);
+					}
+				//app.u.dump(catsArray);
+				return catsArray;			
 				}, //getSubsFromDetail
 			
 						

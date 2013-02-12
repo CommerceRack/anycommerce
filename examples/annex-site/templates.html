@@ -1,0 +1,718 @@
+<!-- used to add the product options/variations, error messaging container, quantity input, etc) -->
+<div id='addToCartTemplate'>
+	<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' style='border:none;'></fieldset>
+	<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' style='border:none;'></fieldset>
+</div>
+	
+	
+
+
+
+<!-- cart templates -->
+
+
+
+
+<!--
+used for store_cart.js
+
+
+The cart viewer is basically just a container for two other elements that get translated.
+Currently, the elements within that get translated have 'fixed' template ID's and element IDs.
+cartViewerContents is the id used for a list of the items in the cart, and it uses template id cartViewerProductTemplate.
+cartSummaryTotals is the id used for totals, subtotal, tax, shipping, etc. It uses template id cartSummaryTotalsTemplate.
+
+fixed id's and templates was a decision that was made for usability. transferring around the two id's for each template was
+sticky, so they're fixed. Makes it easier on the designer and the developer.
+
+So the cart template should contain these two elements and the extension should contain these two templates.
+-->
+
+<div id='cartViewer' class='loadingBG'>
+
+<div id="cartAccessoriesCarouselContainer" class='displayNone marginBottom'>
+	<h2>These items go great!</h2>
+	<ul id="cartAccessoriesCarousel" class="jcarousel-skin-proximus"></ul>
+</div>
+
+
+<form id='cartViewerForm' action='#' onSubmit='return false'>
+<table>
+<tr>
+	<td id='cartViewerContentsContainer'>
+	<ul id='cartViewerContents' class='noListStyle lineItemProdlist'></ul>
+	</td>
+
+	<td id='cartSummaryTotalsContainer'>
+	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
+		<h4 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h4>
+
+
+		<div id='cartMessaging'></div>
+
+		<div id='cartSummaryTotals' class='cartRtColMargin'></div>
+		
+		<section  class='stdMargin'>
+
+			<div class='padMargBorderBottom'>
+			<label for='data-ship_zip'>Zip/Postal Code</label>
+			<input type='text' size='10'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
+			app.ext.store_cart.u.updateCartSummary();
+			app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+			app.model.dispatchThis('immutable');"  />
+			</div>
+
+	
+
+			<h5 class='marginBottom'>Coupons &amp; Giftcards</h5>
+			<div id='couponContainer'  class='padMargBorderBottom'>
+	
+				<div id='couponFrmContainer'>
+					<label for='couponCode'>Coupon/Promo Code:</label>
+					<input type='text' name='coupon' id='couponCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
+					<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_cart.u.handleCouponSubmit($('#couponCode').val(),'couponContainer'); app.model.dispatchThis('immutable'); return false;" id='addCouponBtn'>add</button>
+				</div>
+			</div>
+	
+	
+			<div id='giftcardContainer' class='padMargBorderBottom'>
+				<label for='giftcardCode'>Gift Certificate Code:</label>
+				<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
+				<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_cart.u.handleGiftcardSubmit($('#giftcardCode').val(),'giftcardContainer'); app.model.dispatchThis('immutable'); return false;" id='addGiftcardBtn'>add</button>
+			</div>
+			
+
+			
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+			
+			<div class='marginBottom clearfix'></div>
+
+			<span onClick="app.ext.myRIA.u.handlePageContent('checkout','');" class='pointer' title='proceed to secure checkout'><img src='hb3_checkout-123x44.png' width='123' height='44' alt='proceed to secure checkout' /></span>
+			<span id='payPalHackButton' data-bind='var: cart(id); format:paypalECButton;'></span>
+			<span id='googleHackButton' data-bind='var: cart(id); format:googleCheckoutButton;'></span>
+
+			
+		</section>
+	</div>
+
+
+	</td>
+</tr>
+
+</table>
+</form>
+</div><!-- /cartViewer -->
+
+
+
+<!--
+cart summary template. used in both the shopping cart modal and checkout.
+### SANITY! - the shipping options are inside this spec so that they update every time
+the item totals do. shipping options could be effected by zip, what's in the cart, 
+and what promotions are added.
+-->
+
+<!--
+
+<div data-bind="var: cart(id); format:text; pretext:CART ID: ; "></div> here for testing. you probably wouldn't want this
+
+ -->
+		
+
+<div id='cartSummaryTemplate' class='loadingBG'>
+
+	<section class='padMargBorderBottom'>
+		<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+		
+		<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+		<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+		
+		<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+		
+		<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+		<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	
+	</section>
+
+		<h5 class='marginBottom'>Shipping:</h5>
+
+		<ul class='noListStyle' data-bind='var: cart(@shipmethods); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+		
+</div><!-- /cartSummaryTemplate -->
+
+
+
+
+
+<!-- cart line-item template -->
+<ul>
+	<li id='cartViewerProductTemplate' class='padMargBorderBottom clearfix'>
+		
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+	
+		<h5 data-bind='var: product(prod_name); format:text; '></h5>
+		
+		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+		
+		<div>
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this).attr('data-stid'),this.value); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' />
+		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+		<button class='ui-state-default ui-corner-all' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;'>
+		<span class='ui-icon ui-icon-closethick'></span>
+		</button>
+		</div>
+		
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
+	</li>
+</ul>
+
+
+
+
+
+
+
+
+
+<!-- reviews form -->
+
+
+<!--
+used for store_crm.js
+-->
+
+<div id='reviewFrmTemplate'>
+
+<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
+<input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
+
+<label for='reviewsCustomerName'>Your Name:</label>
+<input type="text" name="CUSTOMER_NAME" id='reviewsCustomerName' value="" MAXLENGTH="30" />
+<br />
+
+<label for='reviewsLocation'>Location:</label>
+<input type="text" MAXLENGTH="30" name="LOCATION" id='reviewsLocation' value="" />
+<br />
+
+<label for='reviewsSubject'>Subject:</label>
+<input type="text" MAXLENGTH="60" name="SUBJECT" id='reviewsSubject' />
+<br />
+
+
+<label for='reviewsMessage'>Review:</label>
+<textarea name="MESSAGE" id='reviewsMessage'></textarea>
+<br />
+
+<label for='reviewsRating'>Score:</label>
+<select name="RATING" id='reviewsRating'>
+	<option value="10">5</option>
+	<option value="9">4.5</option>
+	<option value="8">4</option>
+	<option value="7">3.5</option>
+	<option value="6">3</option>
+	<option value="5">2.5</option>
+	<option value="4">2</option>
+	<option value="3">1.5</option>
+	<option value="2">1</option>
+	<option value="1">.5</option>
+</select>
+<br />
+
+<input type="submit" value="submit review" class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' />
+
+</form>
+</div>
+
+
+<div id='subscribeFormTemplate'>
+<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+
+<fieldset class='userInfo'>
+<div>
+<label for='subscribeLogin'>Email Address</label>
+<input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+</div>
+
+<div>
+<label for='subscribeFullname'>Full Name</label>
+<input type='text'  maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+</div>
+</fieldset>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ui-state-active' value='Subscribe'>
+
+</form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+//////////////////////////////////////////////// 		CHECKOUT TEMPLATES
+-->
+
+
+
+<!--
+checkout parent
+fieldsets 'can' be defined here if a specific order is desired. If fieldsets are not defined, a default order will be used.
+ -> fieldsets should be hidden by default, they'll be toggled on as needed.
+ -> do not change fieldset id's.
+ -> do not change the checkout form id.
+ -> do not change the chkoutCartSummaryContainer id. that is where the cart summary is generated (using other specs).
+-->
+<div id='zCheckoutContainerSpec' class='checkoutFormContainer'>
+
+	<form id='zCheckoutFrm' name='zCheckoutFrm' action='#' onSubmit='return false;'>
+	
+<!-- this is outside the fieldsets so that it can be used to maintain state (fieldsets sometimes get regenerated) -->
+	<input type='hidden' value='1' name='want/create_customer' id='want-create_customer' /><!-- valid values are 1/0 -->
+
+<!-- this is the actual value/input used. more reliable to handle here than in a checkbox.  -->
+	<input type='hidden' value='1' name='want/bill_to_ship' id='want-bill_to_ship' /><!-- valid values are 1/0 -->
+	
+	</form>
+	
+	<div id='chkoutCartSummaryContainer'></div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--
+spec for the 'order summary' panel that appears in checkout.
+cartSummaryTotalsContainer - will get loaded with the cartSummaryTotalsSpec
+chkoutCartContents - will get loaded with the myCheckoutSpec later (item list)
+-->
+<fieldset id='chkout-cartSummarySpec' class='ui-widget ui-widget-content ui-corner-all'>
+	<legend class='ui-widget-header ui-corner-all'>Order Contents</legend>
+	<div>
+
+		<div id='chkoutSummaryTotalsContainer'>
+
+
+
+			<!-- a spec gets translated and smashed in here -->		
+			<div id='cartSummaryTotalsContainer'></div>
+
+
+<!--
+sanity: do not add callback to getCartContents.init to update panel (handled as part of success) or error messaging gets overwritten.
+-->
+	<div id='couponContainer'>
+		<div id='couponMessaging' class='displayNone'></div><!-- used to report success and fail messaging -->
+		<div id='couponFrmContainer'>
+			<label for='couponCode'>Coupon/Promo Code:</label>
+			<input type='text' name='coupon' id='couponCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
+			<button class='loadingButton ui-state-default ui-corner-all' onClick="app.ext.convertSessionToOrder.utilities.handleCouponSubmit(); return false;" id='addCouponBtn'><span></span>add</button>
+		</div>
+	</div>
+
+
+<!--
+some errors may appear 'out of view'. 
+the chkoutSummaryErrors reports that errors have occured AND reports errors returned on createOrder request. 
+it should be in view when the place order button is pushed.
+-->			
+			<div id='chkoutSummaryErrors'></div>
+
+
+			<button id='chkoutPlaceOrderBtn' class='ui-state-default ui-corner-all ui-state-highlight floatRight loadingButton' onClick="app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable'); return false;"><span></span>Place Order</button>
+							
+			<div class='clearAll'></div>
+
+		</div>
+
+	
+		<!-- cart lineitems added to this ul, based on it's id -->
+		<ul id='chkoutCartContents' class='noListStyle noPadOrMargin loadingBG'></ul>
+		
+	
+		<div class='clearAll'></div>
+	</div>	
+</fieldset>
+
+
+
+
+
+
+<!--
+used in checkout for 'order total' panel. this is the line-item spec for a cart item (product/coupon/etc)
+the defaultVar on prodName is for promotions, which have a 'description' attribute
+-->
+<ul>
+<li id='myCheckoutSpec' class='cartTotalLineItem clearfix'>
+	<div class='floatLeft '><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;'  width='75' height='75' /></div>
+	<div class='floatLeft '>
+		<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
+		<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+		<div><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></div>
+		<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
+	</div>
+	<div class='clearAll'></div>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+<!--
+used in checkout for 'order total' panel.
+contains order summary (total, shipping, tax, gift card, etc)
+-->
+
+<div id='cartSummaryTotalsSpec'>
+	
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:convertSessionToOrder;'></div>
+	
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:convertSessionToOrder;'></div>
+	
+</div>
+
+
+
+<!--
+billing address panel spec
+do NOT change any input names or id's or checkout will likely break.
+-->
+
+<ul id='chkout-billAddressSpec' class='noPadOrMargin noListStyle'>
+
+	<li class='bill_firstname'><label for='data-bill_firstname'>First Name</label><input type='text' name='bill/firstname' id='data-bill_firstname' required='required' value='' data-bind='var: cart(bill/firstname); format:popVal;'  /></li>
+
+	<li class='bill_lastname'><label for='data-bill_lastname'>Last Name</label><input type='text' name='bill/lastname' id='data-bill_lastname' required='required' value='' data-bind='var: cart(bill/lastname); format:popVal;'  /></li>
+
+	<li class='bill_lastname'><label for='data-bill_email'>Email</label><input type='text' name='bill/email' id='data-bill_email' required='required' value='' data-bind='var: cart(bill/email); format:popVal;'  /></li>
+
+
+	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
+
+	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+
+	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+
+	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	
+	<li class='bill_state'><label for='data-bill_state'>State</label><input type='text'  name='bill/region' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	
+	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/postal' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+
+	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='bill/countrycode' id='data-bill_country' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="app.ext.convertSessionToOrder.utilities.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
+
+	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /></li>
+
+	<li id='want-bill_to_ship_cb_container'>
+	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.utilities.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='want-bill_to_ship_cb' checked='checked' /><label for='want-bill_to_ship_cb'>ship to billing address</label></div>
+	<!--
+SANITY: under the form tag is a hidden var that is actually used for the value for bill_to_ship. checkboxes are unreliable.
+the hidden input is higher in the code to make sure it added to the DOM prior to the shipping panel code getting executed.
+	-->
+	</li>
+	
+</ul>
+
+
+
+
+<!--
+shipping address panel spec
+do NOT change any input names or id's or checkout will likely break.
+-->
+
+<ul id='chkout-shipAddressSpec' class='noPadOrMargin noListStyle'>
+
+	<li class='ship_firstname'><label for='data-ship_firstname'>First Name</label><input type='text' name='ship/firstname' id='data-ship_firstname' required='required' value='' data-bind='var: cart(ship/firstname); format:popVal;'  /></li>
+
+	<li class='ship_lastname'><label for='data-ship_lastname'>Last Name</label><input type='text' name='ship/lastname' id='data-ship_lastname' required='required' value='' data-bind='var: cart(ship/lastname); format:popVal;'  /></li>
+
+	<li class='ship_company'><label for='data-ship_company'>Company</label><input type='text' name='ship/company' id='data-ship_company' value='' data-bind='var: cart(ship/company); format:popVal;'  /></li>
+
+	<li class='ship_address1'><label for='data-ship_address1'>Address</label><input type='text' name='ship/address1' id='data-ship_address1' required='required' value='' data-bind='var: cart(ship/address1); format:popVal;'   /></li>
+
+	<li class='ship_address2'><label for='data-ship_address2'>Address 2</label><input type='text' name='ship/address2' id='data-ship_address2' value='' data-bind='var: cart(ship/address2); format:popVal;'  /></li>
+
+	<li class='ship_city'><label for='data-ship_city'>City</label><input type='text' name='ship/city' id='data-ship_city' required='required' value='' data-bind='var: cart(ship/city); format:popVal;'  /></li>
+	
+	<li class='ship_state'><label for='data-ship_state'>State</label><input type='text'  name='ship/region' id='data-ship_state' size='2' value='' data-bind='var: cart(ship/region); format:popVal;' maxlength='10' required='required' /></li>
+	
+	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='ship/postal' id='data-ship_zip' size='10' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></li>
+
+	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='ship/countrycode' id='data-ship_country' data-bind='var: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension:convertSessionToOrder;' required='required' onChange="app.ext.convertSessionToOrder.utilities.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></li>
+
+	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='ship/phone' id='data-ship_phone' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></li>
+	
+</ul>
+
+
+<!--
+shipping methods panel spec
+do NOT change any div id's or messaging will not work properly.
+messaging are hidden by default, then displayed if needed. keeps panel from being jittery.
+-->
+
+<div id='chkout-shipMethodsSpec'>
+
+	<p class=' displayNone' id='noShipMethodsAvailable'>Shipping rates to be determined... (try entering a zip code)</p>
+	<p class=' displayNone' id='noZipShipMessage'>Enter a zip/postal code in the appropriate field above and additional shipping options may appear</p>
+
+<!-- shipping options will be displayed in one of the following two elements. use only one. -->
+
+<!-- ship options as radio buttons -->
+	<ul id='chkout-shipMethods' class='noPadOrMargin noListStyle' data-bind='var: cartShippingMethods(@methods); format:shipMethodsAsRadioButtons; extension:convertSessionToOrder;'></ul>
+
+
+<!-- use this for shipping methods in a dropdown -->
+<!-- 
+	<label for='want/shipping_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='want/shipping_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension:convertSessionToOrder;' onChange="app.ext.convertSessionToOrder.utilities.updateShipMethod(this.value); app.model.dispatchThis('immutable');"></select>	
+-->
+
+</div>
+
+
+
+
+
+
+
+<!--
+payment options panel spec
+do NOT change any div id's or messaging will not work properly.
+-->
+
+
+<div id='checkout-payOptionsSpec'>
+
+	<div id='giftCardContainer'>
+		<p id='giftcardMessaging'></p><!-- used to report success and fail messaging -->
+		<label for='giftcardCode'>Gift Certificate Code:</label>
+		<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
+		<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.utilities.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
+	</div>
+
+	<ul id='chkout-payOptions' class='noPadOrMargin noListStyle' data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension:convertSessionToOrder;'></ul>
+
+
+</div>
+
+
+
+<!--
+order notes panel spec
+do NOT change the input name or id or checkout will likely break.
+-->
+
+<div id='chkout-orderNotesSpec'>
+<p>Please include any special instructions or comments here:</p>
+<textarea class='chkoutOrderNotes' id='want-order_notes' name='want/order_notes' onChange='app.calls.cartSet.init({"want/order_notes":this.value}); app.model.dispatchThis("immutable");' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
+</div>
+
+
+
+
+
+
+<!-- used after a successful checkout.  -->
+
+<div id='checkoutSuccess' class='checkoutSuccess'>
+
+	<div class='floatRight ocmThirdParty'>
+		<h2 id='ocmPrompt'>What would you like to do next?</h2>
+<!-- the twitter and facebook actions are added post checkout. The order contents are included as part of the message -->
+		<div class='ocm ocmFacebookComment pointer zlink'><img src='hb12_fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
+		<div class='ocm ocmTwitterComment pointer zlink' ><img src='hb12_tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
+
+		<div class='ocm ocmContinue'><a href='%NONSECURE_URL%' class='zlink'><img src='hb12_continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></a></div>
+
+		
+
+	</div>
+
+
+	<div id='orderSummaryDetails' class='orderSummaryDetails'>
+		<h2>Thank you! Your order has been placed.</h2>
+		<h3 data-bind='var: order(orderid); format:text; pretext:Your order id is ;'></h3>
+		<h4 id='orderSummaryLinkToInvoice' class=' underline pointer' data-bind='var:order(orderid); format:orderStatusLink; extension:convertSessionToOrder;'>Click here to view/print your invoice.</h4>
+		<div class='zwarn paymentRequired'></div> <!-- used for 'payment needed' messaging, including cc errors. leave within the parent div so it's clickable. set a class of paymentRequired on another div if this messaging is needed multiple times. -->
+
+		<div class=''>You will receive an order confirmation email with details of your order</div>
+	</div>
+
+
+	<div class='clearAll'></div>
+
+
+	<div data-bind='var: order(orderid); format:accessoryUpsell; extension:convertSessionToOrder;'></div>
+
+</div>
+
+
+
+
+<address id='billAddressTemplate' class='ui-state-default buyerAddressContainer buyerBillAddressContainer'>
+	<div class='addressFullname'>
+		<span data-bind="var: address(bill_firstname);format:text;"></span> <span data-bind="var: address(bill_lastname);format:text;"></span>
+	</div>
+	<div class='address'>
+		<div data-bind="var: address(bill_address1);format:text;"></div>
+		<div data-bind="var: address(bill_address2);format:text;"></div>
+		
+		<span data-bind="var: address(bill_city);format:text; posttext:, ;"></span>
+		<span data-bind="var: address(bill_state);format:text;posttext:. ;"></span>
+		<span data-bind="var: address(bill_zip);format:text;"></span>
+		<div data-bind="var: address(bill_country);format:text;"></div>
+
+	</div>
+</address>
+
+
+
+<address id='shipAddressTemplate' class='ui-state-default buyerAddressContainer buyerShipAddressContainer'>
+	<div class='addressFullname'>
+		<span data-bind="var: address(ship_firstname);format:text;"></span> <span data-bind="var: address(ship_lastname);format:text;"></span>
+	</div>
+	<div class='address'>
+		<div data-bind="var: address(ship_address1);format:text;"></div>
+		<div data-bind="var: address(ship_address2);format:text;"></div>
+		
+		<span data-bind="var: address(ship_city); format:text; posttext:, ;"></span>
+		<span data-bind="var: address(ship_state); format:text; posttext:. ;"></span>
+		<span data-bind="var: address(ship_zip); format:text;"></span>
+		<div data-bind="var: address(ship_country); format:text;"></div>
+
+	</div>
+</address>
+
+
+
+
+
+
+<!--
+//////////////////////////////////////////////// 		END CHECKOUT TEMPLATES
+-->
+
+
+
+
+
+<!-- product viewr -->
+
+
+
+<div id='prodViewerTemplate'  >
+
+
+<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+<table id='prodViewerTable' class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='350' height='350' />
+</div>
+	</td>
+
+	<td>
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
+	
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
+	
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
+	
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
+	
+	</div>
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
+	
+	<div data-bind='var: product(pid); format:priceRetailSavings; extension:myRIA;' class='priceContainer'></div>
+
+	
+	<div id='prodlistChildrenContainer' class='displayNone' data-bind='var: product(zoovy:grp_type); format:addClass; pretext:grpType_;'>
+		<h3>Please Choose: </h3>
+		<ul id='prodlistChildren' class='noListStyle loadingBG smallProdlist'></ul>
+	</div>
+	
+<!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+	
+<!--
+you'll likely want to something MUCH more custom here. this just simply adds it to the cart and reports a success. it can be used, if desired. 
+-->	
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' id='prodViewerAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id);  return false;">
+	
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
+	
+		<input type='image' src='hb12_addtocart-154x55.png' alt='Add to Cart' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' class='displayNone' />
+	</form>
+	
+	
+	</td>
+</tr>
+<tr>
+	<td colspan='3' id="tabbedProductContentTD">
+
+<div id="tabbedProductContent">
+
+	<ul class='tabs'>
+		<li id='prodDescTab' class='displayNone' data-bind='var: product(zoovy:prod_desc); format:showIfSet;'><a href="#prodDesc" >Description</a></li>
+		<li id='prodDetailTab' class='displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href="#prodDetail">Specs</a></li>
+		<li id='prodFeaturesTab' class='displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href="#prodFeatures">Features</a></li>
+		<li id='prodVideoTab' class='displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href="#prodVideo">Video</a></li>
+	</ul>
+<!-- tab content -->
+	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	
+	<div id="prodDetail" data-bind='var: product(zoovy:prod_detail);  format:wiki; wikiFormats:myRIA; '></div>
+	
+	<div id="prodFeatures" data-bind='var: product(zoovy:prod_features);  format:wiki; wikiFormats:myRIA; '></div>
+	
+	<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'>
+	<div id="mediaplayer"></div>
+	</div>
+
+	
+</div>
+
+	</td>
+</tr>
+</table>
+
+
+</div>
+

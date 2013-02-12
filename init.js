@@ -1,102 +1,61 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
-
-// A list of all the extensions that are going to be used.
-//if an extension is 'required' for any page within the store to load properly, the extension should be added as a dependency within quickstart.js
-app.vars.extensions = [
-	{"namespace":"store_prodlist","filename":"extensions/store_prodlist.js"},
-	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_passive/extension.js"},  /* checkout_passive does not require buyer to login */
-//	{"namespace":"convertSessionToOrder","filename":"extensions/checkout_nice/extension.js"},	/* checkout_nice prompts buyer to login */
-	{"namespace":"store_checkout","filename":"extensions/store_checkout.js"},
-	{"namespace":"store_navcats","filename":"extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"extensions/store_search.js"},
-	{"namespace":"store_product","filename":"extensions/store_product.js"},
-	{"namespace":"store_cart","filename":"extensions/store_cart.js"},
-//	{"namespace":"analytics_google","filename":"extensions/analytics_google.js","callback":"addTriggers"},
-//	{"namespace":"bonding_buysafe","filename":"extensions/bonding_buysafe.js","callback":"addTriggers"},
-	{"namespace":"store_crm","filename":"extensions/store_crm.js"},
-	{"namespace":"myRIA","filename":"quickstart.js","callback":"startMyProgram"}
-	];
-
-
-/*
-app.vars.scripts is an object containing a list of scripts that are required/desired.
-for each script, include:  
-	pass -> scripts are loaded in a loop. pass 1 is loaded before app gets initiated and should only include 'required' scripts. Use > 1 for other scripts.
-	location -> the location of the file. be sure to load a secure script on secure pages to avoid an ssl error.
-	validator -> a function returning true or false if the script is loaded. Used primarily on pass 1.
-optionally also include:
-	callback -> a function to execute after the script is loaded.
-*/
-app.vars.scripts = new Array();
-
-
-
-app.vars.scripts.push({
-	'pass':1,
-	'location':app.vars.baseURL+'controller.js',
-	'validator':function(){return (typeof zController == 'function') ? true : false;},
-	'callback':function(){app.u.initMVC()} //the app.u.initMVC callback is what instantiates the controller.
-	})
-
-
-app.vars.scripts.push({
-	'pass':1,
-	'location':(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js',
-	'validator':function(){return (typeof $ == 'function' && jQuery.ui) ? true : false;}
-	})
-//The config.js file is 'never' local. it's a remote file, so...
-//when opening the app locally, always use the nonsecure config file. Makes testing easier.
-//when opening the app remotely, use app.vars.baseURL which will be http/https as needed.
-
-app.vars.scripts.push({
-	'pass':1,
-	'location':(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js',
-	'validator':function(){return (typeof zGlobals == 'object') ? true : false;}
-	})
-
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'model.js','validator':function(){return (typeof zoovyModel == 'function') ? true : false;}})
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'includes.js','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
-
-//slider
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'cycle.js','validator':function(){
-	app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
-	return (typeof jQuery().cycle == 'undefined') ? false : true;}
-	})
-
-
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'carousel.js','validator':function(){
-	app.u.dump("typeof jQuery.cycle:"+typeof jQuery.cycle);
-	return (typeof jQuery().cycle == 'undefined') ? false : true;}
-	})
- //basic_slider
- 
- 
-//used for making text editable (customer address). non-essential. loaded late.
-app.vars.scripts.push({'pass':8,'location':app.vars.baseURL+'jeditable.js','validator':function(){return (typeof $ == 'function' && jQuery().editable) ? true : false;}})
-app.vars.scripts.push({'pass':1,'location':app.vars.baseURL+'js/jquery.carouFredSel-6.1.0-min.js','validator':function(){return true}})
+app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
 
-/*
-Will load all the scripts from pass X where X is an integer less than 10.
-This will load all of the scripts in the app.vars.scripts object that have a matching 'pass' value.
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
+app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
+app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
+app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
+app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
+app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
+app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
+app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
 
-*/
+app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
+//app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
+//app.rq.push(['extension',1,'buysafe_guarantee','extensions/partner_buysafe_guarantee.js','startExtension']);
+//app.rq.push(['extension',1,'powerReviews_reviews','extensions/partner_powerreviews_reviews.js','startExtension']);
+//app.rq.push(['extension',0,'magicToolBox_mzp','extensions/partner_magictoolbox_mzp.js','startExtension']); // (not working yet - ticket in to MTB)
 
-app.u.loadScriptsByPass = function(PASS,CONTINUE)	{
-//	app.u.dump("BEGIN app.u.loadScriptsByPass ["+PASS+"]");
-	var L = app.vars.scripts.length;
-	var numIncludes = 0; //what is returned. The total number of includes for this pass.
-	for(var i = 0; i < L; i += 1)	{
-		if(app.vars.scripts[i].pass == PASS)	{
-			numIncludes++
-			app.u.loadScript(app.vars.scripts[i].location,app.vars.scripts[i].callback);
+
+//spec_LLTRSHIRT017_0
+//add tabs to product data.
+//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	var safePID = app.u.makeSafeHTMLId(P.pid); //can't use jqSelector because productTEmplate_pid still used makesafe. planned Q1-2013 update ###
+	var $tabContainer = $( ".tabbedProductContent",$('#productTemplate_'+safePID));
+		if($tabContainer.length)	{
+			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
+			else	{
+				$tabContainer.anytabs();
+				}
 			}
-		}
-	if(CONTINUE == true && PASS <= 10)	{app.u.loadScriptsByPass((PASS + 1),true)}
-	return numIncludes;
-	}
+		else	{} //couldn't find the tab to tabificate.
+	}]);
+
+app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
+app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
+app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
+app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
+app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
+
+app.rq.push(['script',0,app.vars.baseURL+'anyplugins.js']); //in zero pass in case product page is first page.
+
+//sample of an onDeparts. executed any time a user leaves this page/template type.
+app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
+
+
+
+
+
+
+//group any third party files together (regardless of pass) to make troubleshooting easier.
+app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js']);
 
 
 /*
@@ -107,178 +66,91 @@ app.u.throwMessage = function(m)	{
 	alert(m); 
 	}
 
-
-
-
-//put any code that you want executed AFTER the app has been initiated in here.  This may include adding onCompletes or onInits for a given template.
-app.u.appInitComplete = function()	{
-	
-
-	app.u.loadScriptsByPass(2,true); //loads the rest of the scripts.
-	app.u.dump("Executing myAppIsLoaded code...");
-//display product blob fields in tabbed format.
-	app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {$( "#tabbedProductContent" ).tabs()}) 
-
-//banner slideshow.
-	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-		  var $target = $('#wideSlideshow');
-		  if($target.children().length > 1) {
-			   $('#wideSlideshow').cycle({
-				fx:'fade',
-				speed:'slow',
-				timeout: 5000,
-				pager:'#slideshowNav',
-				slideExpr: 'li'			   
-			   });
+app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
+	var L = app.vars.rq.length;
+	var r = 0; //what is returned. total # of scripts that have finished loading.
+	for(var i = 0; i < L; i++)	{
+		if(app.vars.rq[i][app.vars.rq[i].length - 1] === true)	{
+			r++;
 			}
-		})
-//best sellers carousel.
-	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-		var $target = $('#homeProdSearchBestSellers');
-//http://caroufredsel.dev7studios.com/configuration.php
-		setTimeout(function(){
-			app.u.dump("execute carousel");
-			$target.carouFredSel({
-				responsive: true,
-				auto: {play: false},
-				width: '100%',
-				prev: '#prev_best',
-				next: '#next_best',
-				items: {
-					width: 200,
-					visible: {min: 2,max: 5}
-					}
-				})
-			},1000)
-		})
-
-
-//best sellers carousel.
-	app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-		var $target = $('#homeProdSearchNewArrivals');
-//http://caroufredsel.dev7studios.com/configuration.php
-		setTimeout(function(){
-			app.u.dump("execute carousel");
-			$target.carouFredSel({
-				responsive: true,
-				auto: {play: false},
-				width: '100%',
-				prev: '#prev_new',
-				next: '#next_new',
-				items: {
-					width: 210,
-					visible: {min: 2,max: 5}
-					}
-				})
-			},1000)
-		})
-
-
-
-	} //appInitComplete
-	
-	
-	
-	
-
-	
-
-//start the app.
-var acScriptsInPass;
-//don't execute script till both jquery AND the dom are ready.
-$(document).ready(function(){
-	acScriptsInPass = app.u.loadScriptsByPass(1,false);
-
-	$('#cat a').click(function() {
-		toggleCatMenu();
-		});
-
-	$('.hasSubcats','#nav').click(function(){
-		app.u.dump("topCat Clicked");
-		$('.subcatListContainer').hide(); //hide all open subcategories.
-		$('.selected','#nav').removeClass('selected'); //turn off 'selected' from last viewed tier1.
-		$(this).addClass('selected'); //make this tier1 in focus.
-		$(this).parent().find('.subcatListContainer').show(); //shows this categories subcats.
-		})
-
-	$('a','.subcatContainer').click(function(){
-		toggleCatMenu();
-		});
-
-	});
-
-function toggleCatMenu()	{
-	var $cats = $('#subcatContainer');
-	if($cats.is(':visible'))	{
-		//hide the categories
-		app.u.dump("hide cats");
-		$cats.slideUp();
+		if(debug)	{app.u.dump(" -> "+i+": "+app.vars.rq[i][2]+": "+app.vars.rq[i][app.vars.rq[i].length -1]);}
 		}
-	else	{
-		//show the categories
-		app.u.dump("show cats");
-		$cats.slideDown();
-		}
+	return r;
 	}
 
 
-
-
+//gets executed once controller.js is loaded.
+//check dependencies and make sure all other .js files are done, then init controller.
+//function will get re-executed if not all the scripts in app.vars.scripts pass 1 are done loading.
+//the 'attempts' var is incremented each time the function is executed.
 
 app.u.initMVC = function(attempts){
-//	app.u.dump("app.u.initMVC activated");
+	app.u.dump("app.u.initMVC activated ["+attempts+"]");
 	var includesAreDone = true;
 
-//what percentage of completion a single include represents (if 10 includes, each is 10%). subtract 1 just to make sure percentComplete < 100
-	var percentPerInclude = Math.round((100 / acScriptsInPass)) - 1;  
-	var percentComplete = 0; //used to sum how many includes have successfully loaded.
-	
-	if(!attempts){attempts = 1} //the number of attempts that have been made to load. allows for error handling
-	var L = app.vars.scripts.length
-//	app.u.dump(" -> L: "+L+" and attempt: "+attempts);
-//don't break out of the loop on the first false. better to loop the whole way through so that the progress bar can go up as quickly as possible.
-	for(var i = 0; i < L; i += 1)	{
-		if(app.vars.scripts[i].pass == 1 && app.vars.scripts[i].validator()){
-			//this file is loaded.
-			percentComplete += percentPerInclude;
-			}
-		else if(app.vars.scripts[i].pass != 1)	{
-			//only first pass items are validated for instantiting the controller.
-			}
-		else	{
-			//file not loaded.
-			app.u.dump(" -> attempt "+attempts+" waiting on: "+app.vars.scripts[i].location)
-			includesAreDone = false;
-			}
+//what percentage of completion a single include represents (if 10 includes, each is 10%).
+	var percentPerInclude = (100 / app.vars.rq.length);  
+	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
+	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
+	//make sure precentage is never over 100
+	if(percentComplete > 100 )	{
+		percentComplete = 100;
 		}
-
+	
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
-	
-	if(includesAreDone == true && jQuery)	{
-		$.support.cors = true;  //cross site scripting for non cors sites. will b needed for IE10. IE8 & 9 don't support xss well.
-//instantiate controller. handles all logic and communication between model and view.
-//passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
-//tmp is a throw away variable. app is what should be used as is referenced within the mvc.
-		var tmp = new zController(app);
 
-		//instantiate wiki parser.
-		myCreole = new Parse.Simple.Creole();
+	if(resourcesLoaded == app.vars.rq.length)	{
 
+		var clickToLoad = false;
+		if(clickToLoad){
+			$('#loader').fadeOut(1000);
+			$('#clickToLoad').delay(1000).fadeIn(1000).click(function() {
+				app.u.loadApp();
+			});
+		} else {
+			app.u.loadApp();
+			}
 		}
-	else if(attempts > 80)	{
+	else if(attempts > 50)	{
 		app.u.dump("WARNING! something went wrong in init.js");
 		//this is 10 seconds of trying. something isn't going well.
 		$('#appPreView').empty().append("<h2>Uh Oh. Something seems to have gone wrong. </h2><p>Several attempts were made to load the store but some necessary files were not found or could not load. We apologize for the inconvenience. Please try 'refresh' and see if that helps.<br><b>If the error persists, please contact the site administrator</b><br> - dev: see console.</p>");
-//throw some debugging at the console to report what didn't load.
-		for(var i = 0; i < L; i += 1)	{
-			if(app.vars.scripts[i].pass == 1)	{
-				app.u.dump(" -> "+app.vars.scripts[i].location+": "+app.vars.scripts[i].validator());
-				}
-			}
-		
+		app.u.howManyPassZeroResourcesAreLoaded(true);
 		}
 	else	{
 		setTimeout("app.u.initMVC("+(attempts+1)+")",250);
 		}
+
 	}
+
+app.u.loadApp = function() {
+//instantiate controller. handles all logic and communication between model and view.
+//passing in app will extend app so all previously declared functions will exist in addition to all the built in functions.
+//tmp is a throw away variable. app is what should be used as is referenced within the mvc.
+		app.vars.rq = null; //to get here, all these resources have been loaded. nuke record to keep DOM clean and avoid any duplication.
+		var tmp = new zController(app);
+//instantiate wiki parser.
+		myCreole = new Parse.Simple.Creole();
+}
+
+
+//Any code that needs to be executed after the app init has occured can go here.
+//will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
+app.u.appInitComplete = function(P)	{
+	app.u.dump("Executing myAppIsLoaded code...");
+	}
+
+
+
+
+//don't execute script till both jquery AND the dom are ready.
+$(document).ready(function(){
+	app.u.handleRQ(0)
+	});
+
+
+
+
+
+

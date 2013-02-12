@@ -1,0 +1,57 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'install',
+1 verbose cli   'proxy-url' ]
+2 info using npm@1.1.65
+3 info using node@v0.8.14
+4 verbose node symlink C:\Program Files\nodejs\\node.exe
+5 verbose read json C:\Users\brian\package.json
+6 verbose read json C:\Users\brian\node_modules\async\package.json
+7 verbose read json C:\Users\brian\node_modules\colors\package.json
+8 verbose read json C:\Users\brian\node_modules\exports\package.json
+9 verbose read json C:\Users\brian\node_modules\fishback\package.json
+10 verbose read json C:\Users\brian\node_modules\http-proxy\package.json
+11 verbose read json C:\Users\brian\node_modules\mitm-proxy\package.json
+12 verbose read json C:\Users\brian\node_modules\optimist\package.json
+13 verbose read json C:\Users\brian\node_modules\pkginfo\package.json
+14 verbose read json C:\Users\brian\node_modules\socket.io\package.json
+15 verbose read json C:\Users\brian\node_modules\tunnel\package.json
+16 verbose read json C:\Users\brian\node_modules\ws\package.json
+17 verbose read json C:\Users\brian\package.json
+18 verbose cache add [ 'proxy-url', null ]
+19 silly cache add name=undefined spec="proxy-url" args=["proxy-url",null]
+20 verbose parsed url { pathname: 'proxy-url', path: 'proxy-url', href: 'proxy-url' }
+21 silly lockFile 996341f6-proxy-url proxy-url
+22 verbose lock proxy-url C:\Users\brian\AppData\Roaming\npm-cache\996341f6-proxy-url.lock
+23 silly lockFile 996341f6-proxy-url proxy-url
+24 verbose addNamed [ 'proxy-url', '' ]
+25 verbose addNamed [ null, '' ]
+26 silly lockFile a221d8ef-proxy-url proxy-url@
+27 verbose lock proxy-url@ C:\Users\brian\AppData\Roaming\npm-cache\a221d8ef-proxy-url.lock
+28 silly addNameRange { name: 'proxy-url', range: '', hasData: false }
+29 verbose url raw proxy-url
+30 verbose url resolving [ 'https://registry.npmjs.org/', './proxy-url' ]
+31 verbose url resolved https://registry.npmjs.org/proxy-url
+32 info trying registry request attempt 1 at 17:03:10
+33 http GET https://registry.npmjs.org/proxy-url
+34 http 404 https://registry.npmjs.org/proxy-url
+35 silly registry.get cb [ 404,
+35 silly registry.get   { server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+35 silly registry.get     date: 'Mon, 26 Nov 2012 01:02:35 GMT',
+35 silly registry.get     'content-type': 'application/json',
+35 silly registry.get     'content-length': '52',
+35 silly registry.get     'cache-control': 'must-revalidate' } ]
+36 silly lockFile a221d8ef-proxy-url proxy-url@
+37 error 404 'proxy-url' is not in the npm registry.
+37 error 404 You should bug the author to publish it
+37 error 404
+37 error 404 Note that you can also install from a
+37 error 404 tarball, folder, or http url, or git url.
+38 error System Windows_NT 6.2.9200
+39 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "proxy-url"
+40 error cwd C:\Users\brian\Documents\GitHub\AnyCommerce-Development\utilities\node-local-webserver
+41 error node -v v0.8.14
+42 error npm -v 1.1.65
+43 error code E404
+44 verbose exit [ 1, true ]

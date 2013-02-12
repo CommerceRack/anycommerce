@@ -136,27 +136,6 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				}
 			},//buyerAddressAddUpdate 
 
-//always uses immutable q so that an order update is not cancelled.
-/*
-NOT SUPPORTED.
-		buyerOrderUpdate  : {
-			init : function(orderid,updateArray,tagObj)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-//				tagObj.datapointer = "buyerOrderMacro"  //don't think we want a data pointer here.
-				var cmdObj = {};
-				cmdObj.orderid = orderid;
-				cmdObj['_cmd'] = 'buyerOrderUpdate';
-				cmdObj['@updates'] = updateArray;
-				cmdObj['_tag'] = tagObj;
-				this.dispatch(cmdObj);
-				return 1;
-				},
-			dispatch : function(cmdObj)	{
-				app.model.addDispatchToQ(cmdObj,'immutable');	
-				}
-			},//buyerOrderMacro
-*/
-
 
 //formerly getAllCustomerLists
 		buyerProductLists : {
@@ -228,7 +207,7 @@ NOT SUPPORTED.
 				var r = 0;
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "buyerWalletList";
-				if(app.model.fetchData('getNewsletters') == false)	{
+				if(app.model.fetchData('buyerWalletList') == false)	{
 					r = 1;
 					this.dispatch(tagObj,Q);
 					}
@@ -411,7 +390,7 @@ see jquery/api webdoc for required/optional param
 				return r;
 				},
 			dispatch : function(tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_zjsid":app.sessionId,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_tag" : tagObj},Q);	
 				}			
 			}, //buyerPurchaseHistory
 
@@ -429,7 +408,7 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(orderid,tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_zjsid":app.sessionId,"_tag" : tagObj},Q);	
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_tag" : tagObj},Q);	
 				}			
 			}, //buyerPurchaseHistoryDetail
 		buyerAddressList : {
@@ -485,7 +464,7 @@ see jquery/api webdoc for required/optional param
 				app.u.dump(" -> L = "+L);
 				var topicID;
 				if(L > 0)	{
-					for(i = 0; i < L; i += 1)	{
+					for(var i = 0; i < L; i += 1)	{
 						topicID = app.data[tagObj.datapointer]['@topics'][i]['TOPIC_ID']
 						app.u.dump(" -> TOPIC ID = "+topicID);
 						$parent.append(app.renderFunctions.transmogrify({'id':topicID,'data-topicid':topicID},tagObj.templateID,app.data[tagObj.datapointer]['@topics'][i]))
@@ -504,7 +483,8 @@ see jquery/api webdoc for required/optional param
 				var orderid;
 				var L = app.data[tagObj.datapointer]['@orders'].length;
 				if(L > 0)	{
-					for(i = 0; i < L; i += 1)	{
+					$parent.empty();
+					for(var i = 0; i < L; i += 1)	{
 						orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID;
 						$parent.append(app.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
 						app.renderFunctions.translateTemplate(app.data[tagObj.datapointer]['@orders'][i],"order_"+orderid);
@@ -594,7 +574,7 @@ see jquery/api webdoc for required/optional param
 //				app.u.dump('BEGIN app.ext.store_prodlist.renderFormats.mpPagesAsListItems');
 //				app.u.dump(data);
 				var o = "<ul class='subscriberLists'>";
-				for(index in data.value)	{
+				for(var index in data.value)	{
 					o += "<li title='"+data.value[index].EXEC_SUMMARY+"'>";
 					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' id='newsletter-"+data.value[index].ID+"' \/>";
 					o += "<label for='newsletter-"+data.value[index].ID+"'>"+data.value[index].NAME+"<\/label><\/li>";
@@ -610,7 +590,7 @@ see jquery/api webdoc for required/optional param
 				
 				var L = data.value.length;
 				var o = ''; //what is appended to tag. a compiled list of shipping lineitems.
-				for(i = 0; i < L; i += 1)	{
+				for(var i = 0; i < L; i += 1)	{
 					o += "<li><a href='"+app.ext.myRIA.u.getTrackingURL(data.value[i].carrier,data.value[i].track)+"' target='"+data.value[i].carrier+"'>"+data.value[i].track+"</a>";
 					if(app.u.isSet(data.value[i].cost))
 						o += " ("+app.u.formatMoney(data.value[i].cost,'$',2,true)+")";
@@ -731,14 +711,18 @@ for(var i = 0; i < L; i += 1)	{
 return $r;
 				},
 
-//assumes the list is already in memory
-//formerly getSkusFromList
+/*
+The list object returned on a buyerProductListDetail is not a csv or even a string of skus, it's an array of objects, each object containing information
+about a sku (when it was added t the list, qty, etc).
+This is used to get add an array of skus, most likely for a product list.
+*/
+
 			getSkusFromBuyerList : function(listID)	{
 				app.u.dump("BEGIN store_crm.u.getSkusFromList ("+listID+")");
 				var L = app.data['buyerProductListDetail|'+listID]['@'+listID].length;
 				var csvArray = new Array(); //array of skus. What is returned.
 				
-				for(i = 0; i < L; i+=1)	{
+				for(var i = 0; i < L; i+=1)	{
 					csvArray.push(app.data['buyerProductListDetail|'+listID]['@'+listID][i].SKU);
 					}
 				csvArray = $.grep(csvArray,function(n){return(n);}); //remove blanks

@@ -6,8 +6,12 @@
 .project
 .metadata
 bin/
+/utilities/proxy/node_modules/
 tmp/
-_notes/
+proxy/
+*extensions/_notes/
+extensions/_notes/dwsync.xml
+*_notes/
 *.tmp
 *.bak
 *.swp

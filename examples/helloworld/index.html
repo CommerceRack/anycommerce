@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>MySpectacularWebsite.com</title>
+
+<!-- profile specific settings -->
+<script type="text/javascript" src="http://www.homebrewers.com/jquery/config.js"></script>
+
+<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jquery-1.6.4.min.js"></script>
+
+<script type="text/javascript" src="../../model.js"></script>
+<script type="text/javascript" src="../../controller.js"></script>
+<script type="text/javascript" src="../../includes.js"></script>
+
+
+
+
+<script type="text/javascript">
+
+
+var app;
+var myCreole;
+var myExtensions = [
+	// Standard extensions - comment these out if your app does not need them
+	{"namespace":"myRIA","filename":"myria-20120410.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
+	];
+
+$(function() {
+
+	$.support.cors = true;  //cross site scripting for non cors sites. will b needed for IE10. IE8 & 9 don't support xss well.
+	app = new zController({
+		"release":"20120410143100" //increment this with each change. should solve caching issues.
+		},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
+		
+	//instantiate wiki parser.
+	myCreole = new Parse.Simple.Creole();
+	});
+
+
+</script>
+
+
+
+
+
+
+
+</head>
+<body>
+
+
+<div id='myContent'></div>
+
+
+<div id='templates' style='display:none;'>
+<!-- a template. will be removed from the dom as templates are loaded into memory -->
+	<div id='profileTemplate'>
+<table>
+<tr>
+	<td valign='top'><img src='blank.gif' width='300' height='300' alt='my cool website logo' data-bind='var: profile(zoovy:company_logo); format:imageURL;' /></td>
+	<td>
+	<div data-bind='var: profile(zoovy:about); format:wiki;'></div>
+	</td>
+</tr>
+</table>	
+	</div>
+
+</div>
+
+
+</body>
+</html>

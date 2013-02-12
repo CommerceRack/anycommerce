@@ -1,0 +1,40 @@
+{
+  "name": "anyCommerce Quickstart",
+  "version": "201246",
+  "manifest_version": 2,
+
+  // Recommended
+  "description": "anyCommerce Quickstart",
+//  "icons": "icons": { "16": "icon16.png", "48": "icon48.png", "128": "icon128.png" },
+  "default_locale": "en",
+  
+  // Pick one (or none)
+//  "browser_action": {...},
+//  "page_action": {...},
+//  "theme": {...},
+//  "app": {...},
+
+  // Add any of these that you need
+//  "background": {"persistent": false, ...},
+//  "background": {"persistent": true, ...},
+//  "chrome_url_overrides": {...},
+//  "content_scripts": [...],
+//  "content_security_policy": "policyString",
+//  "file_browser_handlers": [...],
+//  "homepage_url": "http://path/to/homepage",
+//  "incognito": "spanning" or "split",
+//  "intents": {...}
+//  "key": "publicKey",
+//  "minimum_chrome_version": "versionString",
+
+//  "nacl_modules": [...],
+//  "offline_enabled": true,
+//  "omnibox": { "keyword": "aString" },
+//  "options_page": "aFile.html",
+//  "permissions": [...],
+//  "plugins": [...],
+//  "requirements": {...},
+//  "update_url": "http://path/to/updateInfo.xml",
+//  "web_accessible_resources": [...],
+//  "sandbox": [...]
+}

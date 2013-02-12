@@ -1,0 +1,30 @@
+
+.productEditorContainer	{width:100%;}
+.productEditorContainer td	{vertical-align:top;}
+
+.mainColContent	{width:80%; padding:0 24px; }
+.productEditorContainer .leftColNav 	{padding:0 24px; border-right:1px solid #cccccc;}
+
+
+/* used in the left column */
+#prodLeftCol ul, #prodLeftCol li	{list-style:none; margin:0; padding:0;}
+#prodLeftCol li	{margin-left:10px;}
+#prodLeftCol li a	{padding:3px 0; display:block;}
+
+#prodEditorResultsTable tr:nth-child(odd)		{ background-color:#eee; }
+#prodEditorResultsTable tr:nth-child(even)		{ background-color:#fff; }
+
+#panelContents_general textarea	{width:80%;} /* override brians cols='80' */
+
+/* panel specific styles */
+
+.prodEditGeneralPanelLeftCol	{width:1%; padding-right:12px;}
+
+
+@media screen and (max-width: 1180px) {
+/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+	#panel_general .alignedLabels label span	{display:block; width:100%;}
+	#panel_general .alignedInputs textarea,
+	#panel_general .alignedInputs input[type=email],
+	#panel_general .alignedInputs input[type=text]	{width:100%;}
+	}

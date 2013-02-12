@@ -1,0 +1,299 @@
+.displayNone	{display:none;}
+.clearfix	{clear:both;} /* experimenting here - 20120327 */
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+
+/* loading classes. do NOT change class name. change styling as needed */
+.loadingBG	{background:url(carousel/hb12_red_loading-32x32.gif) no-repeat center center; min-height:28px;}
+
+.noListStyle, .noListStyle li	{list-style:none; padding:0; margin:0;}
+.listStyleNone, .listStyleNone li	{list-style:none; padding:0; margin:0;}
+
+#appTemplates {display:none;}
+
+#productDetailModal	fieldset	{border:0; margin:0 0 12px 0; padding:0;}
+.priceContainer	{margin-bottom:12px;}
+
+button.ui-button	{padding:3px 10px;}
+
+
+
+/******* positioning *******/
+
+.floatLeft	{float:left;}
+.floatRight	{float:right;}
+
+.alignCenter	{text-align:center;}
+.alignLeft	{text-align:left;}
+.alignRight	{text-align:right;}
+
+.center	{margin:0 auto;}
+
+
+/****** aesthetics/usability ******/
+
+/* added to buttons (such as place order) when they're disabled to clearly indicate they should not be clicked again. */
+.disabled	{
+	cursor:crosshair !important;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+.pointer	{cursor:pointer;}
+
+/* used when an element needs to start of hidden. this is used frequently. */
+.displayNone	{display:none;}
+
+.lineThrough	{text-decoration:line-through}
+.underline	{text-decoration:underline; cursor:pointer} /* only use this on clickable text */
+.borderNone	{border:none;}
+
+.clearfix	{clear:both;}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+	}
+	
+
+
+
+
+/***************************************************
+
+CART
+NOTE - Some of these classes are also shared with the cart summary that appears during checkout.
+
+***************************************************/
+
+.cartSummaryTotalsContainer h2	{margin:0; border-top:0; border-left:0; border-right:0; padding:2px 12px; font-size:.8em;} /* header */
+.cartSummaryTotalsContainer .cartSummaryContainer	{padding:12px;}
+.cartZipCodeContainer, .cartAltButtonsContainer, .cartSummaryContainer	{margin-bottom:12px; padding-bottom:12px; border-bottom:1px dotted #efefef;}
+
+.cartStuffContainer	{width:60%; vertical-align:top; padding-right:12px;}
+.cartSummaryTotalsContainer {width:40%; padding-left:12px; font-size:.8em;} /* by default, this is the right column */
+
+.checkoutButtonsContainer span	{display:block; float:left; margin:0 12px 12px 0;}
+
+.cartShipMethods, .cartZipCodeContainer, .cartSummary	{margin:12px 0;}
+
+.cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
+
+.checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
+
+
+
+
+
+
+
+/***************************************************
+
+PRODUCT DETAIL PAGE
+
+***************************************************/
+
+#prodViewerTable	{width:100%;}
+#prodViewerTable td	{vertical-align:top;}
+
+/* primary image and thumbnails */
+.imageContainer	{width:10%; padding-right:24px;}
+#prodViewerTable .prodThumbs div	{float:left; margin:12px 12px 0 0;}
+
+
+.prodSummaryContainer	{width:90%;}
+
+#tabbedProductContent .tabs li	{display:none;} /* tabs are hidden by default. enabled if field is populated */
+#tabbedProductContent #prodReviewsTab	{display:block;} /* reviews tab always shows up */
+
+/*
+the child list and loading graphic should only show up IF the product is a parent.
+so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
+*/
+.grpType_PARENT	{display:block; margin-bottom:12px;}
+
+
+#prodViewerAddToCartForm	{padding-bottom:12px;} /* add some margin after add to cart */
+
+
+/****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
+
+.reviewSummaryContainer	.numReviews	{line-height:21px; display:inline-block; height:21px; float:left; margin-left:4px; padding-right:6px;}
+.reviewSummaryContainer	.numReviews:after	{content:": "}
+.reviewSprite	{background:url(qs_reviews_stars-150x150.png) no-repeat; width:122px; height:21px; display:inline-block;}
+.review_1, .review_2	{background-position:0 0;}
+.review_3, .review_4	{background-position:0 -26px;}
+.review_4, .review_6	{background-position:0 -53px;}
+.review_7, .review_8	{background-position:0 -79px;}
+.review_9, .review_10	{background-position:0 -106px;}
+
+
+
+
+
+
+
+
+/* carousel & prodlist container styles */
+
+.prodlistCarouselContainer	{width:278px; position:relative; background:#ffffff; border:0; font-family:Arial, Helvetica, sans-serif;}
+.prodlistCarouselContainer h5	{margin:0; padding:2px 5px; font-size:13px; color:#333333;}
+.prodlistCarouselContainer h6	{margin:0; padding:2px 5px; font-size:14px; color:#006287;}
+.prodlistCarouselContainer button	{cursor:pointer;}
+
+/* jquery ui modal is zindex 1002 */
+.checkoutNowButton	{
+	position:absolute; bottom:5px; right:1px; 
+	z-index:1001;
+	display:none;
+	cursor:pointer;
+	margin:0; padding:3px 10px;
+	font-size:12px; color:#ffffff;
+	background:#006287;
+	border:1px solid #003399;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	}
+
+.addToCartBtn	{margin:3px 0; padding:0; border:0; color:#FF3300; font-weight:bold; font-size:12px; background:none;}
+
+
+.jcarousel-skin-proximus .jcarousel-container {}
+
+.jcarousel-skin-proximus .jcarousel-container-horizontal {
+	width: auto;
+	padding: 0 0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-container-vertical {
+	width: auto;
+	height: 290px;
+	padding: 0;
+	}
+
+.jcarousel-skin-proximus .jcarousel-clip-horizontal {
+	height: 290px;
+	width: auto;
+	}
+
+.jcarousel-skin-proximus .jcarousel-clip-vertical {
+	width: auto;
+	height: 290px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item {
+    width: 278px;
+    height: 290px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-horizontal {
+	margin-left: 0;
+    margin-right:0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-vertical {
+    margin-bottom: 0px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-item-placeholder {
+    background: none;
+    color: #000;
+	}
+
+/**
+ *  Horizontal Buttons
+ */
+.jcarousel-skin-proximus .jcarousel-next-horizontal {
+	position: absolute;
+    width: 30px;
+    height: 30px;
+	right: -20px;
+	top:40px;
+    background: transparent url(arrows-250x250.png) no-repeat -90px -20px;
+	cursor:pointer;
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal,
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal:hover,
+.jcarousel-skin-proximus .jcarousel-next-disabled-horizontal:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-horizontal {
+    position: absolute;
+    top: 40px;
+    left: -10px;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    background: transparent url(arrows-250x250.png) no-repeat -8px -20px;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal:hover,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-horizontal:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}
+
+
+
+/**
+ *  Vertical Buttons
+ */
+.jcarousel-skin-proximus .jcarousel-next-vertical {
+    position: absolute;
+    bottom: 0px;
+    width: 75px;
+    height: 23px;
+    cursor: pointer;
+    background: url(arrows-250x250.png) no-repeat -11px -190px transparent;
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-vertical:hover {
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-vertical:active {
+	}
+
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical,
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical:hover,
+.jcarousel-skin-proximus .jcarousel-next-disabled-vertical:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical {
+    position: absolute;
+    top: 0px;
+    width: 75px;
+    height: 23px;
+    cursor: pointer;
+    background: url(arrows-250x250.png) no-repeat -11px -155px transparent;
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical:hover {
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-vertical:active {
+	}
+
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical:hover,
+.jcarousel-skin-proximus .jcarousel-prev-disabled-vertical:active {
+    cursor: default;
+	filter: alpha(opacity=50);
+	opacity:0.5;
+	}

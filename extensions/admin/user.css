@@ -1,0 +1,18 @@
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .heading	{text-indent:12px; line-height:35px;}
+.dualModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
+
+
+/* turns of the detail column in the roles table while editing due to space constraints. */
+.ui-widget-anypanel .roleDetail	{display:none;}
+
+/* will hide the expand/collapse button for a panel when in list mode */
+.collapsed .ui-button-anypanel-toggle	{display:none;}
+
+.ulAsCSV ul	{margin:0; padding:0; list-style:none;}
+.ulAsCSV li	{margin:0; padding:0; float:left;}
+.ulAsCSV li:after	{content:", "}
+.ulAsCSV li:last-child:after	{content:""}
