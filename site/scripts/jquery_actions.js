@@ -155,6 +155,10 @@ $(document).ready(function()
 		{
 			height = heightCt;
 		}
+		if($(this).find("a > img").attr("src") != "")
+		{
+			$(this).find("a").show();
+		}
 		//$(this).find("div.subMenu").stop().animate({"height":"379px"}, 300);
 		height = height + "px";
 		$(this).find("div.subMenu").stop().animate({"height":height}, 300);
