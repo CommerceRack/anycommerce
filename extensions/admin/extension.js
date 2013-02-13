@@ -1560,7 +1560,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				SAMZ : 'Amazon',
 				SGOO : 'Google',
 				SEBA : 'eBay auction',
-				SABF : 'eBay fixed price',
+				SEBF : 'eBay fixed price',
 				SSRS : 'Sears',
 				SBYS : 'Buy.com'
 				}
@@ -2048,7 +2048,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
 				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
-				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
+				app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 				
 /*
@@ -2064,7 +2064,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 //recent news panel.
 				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{},'mutable'); //amazon
 				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{},'mutable'); //ebay auction
-				app.ext.admin.calls.appResource.init('quickstats/SABF.json',{},'mutable'); //ebay fixed price
+				app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
 				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
 				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
@@ -2076,7 +2076,7 @@ $('#dashboardMktplacePanel .ui-widget-content',$content).append($("<div \/>").at
 var chartData = new Array();
 if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Amazon', Number(app.data['appResource|quickstats/SAMZ.json'].contents.count)])}
 if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{chartData.push(['eBay Auction', Number(app.data['appResource|quickstats/SEBA.json'].contents.count)]);}
-if(app.data['appResource|quickstats/SABF.json'].contents.count)	{chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SABF.json'].contents.count)]);}
+if(app.data['appResource|quickstats/SEBF.json'].contents.count)	{chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SEBF.json'].contents.count)]);}
 if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{chartData.push(['Sears', Number(app.data['appResource|quickstats/SSRS.json'].contents.count)]);}
 if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{chartData.push(['Buy.com', Number(app.data['appResource|quickstats/SBYS.json'].contents.count)]);}
 if(app.data['appResource|quickstats/SGOO.json'].contents.count)	{chartData.push(['Google', Number(app.data['appResource|quickstats/SGOO.json'].contents.count)]);}
