@@ -37,7 +37,10 @@
 
 
 
-
+<!--
+data-app-role on the panels is used. ex: in admin_customer.a.showAddAddressModal
+if the data attrib is changed or any changes are made to the values (especially shipping) be sure to update .js
+-->
 
 
 <div id='customerEditorTemplate' class='clearfix customerEditor'>
@@ -109,6 +112,17 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	
 	<div class='twoColumn column2' data-app-column='2'>
 
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="orders">
+	<h2>Order History</h2>
+	<div>
+	<table class='gridTable fullWidth'>
+	<tbody data-bind="var:customer(@ORDERS); format:processList; loadsTemplate:customerEditorOrderListTemplate;"></tbody>
+	</table>
+	</div>
+</div>
+
+
+
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="notes">
 	<h2>Notes</h2>
 	<div>
@@ -123,7 +137,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="wholesale">
 	<h2>Wholesale</h2>
 	<div>
-	<label>Schedule: []</label>
+	<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_customer;">Schedule: </label>
 	<label><input type="checkbox" name="ALLOW_PO" data-bind="var:customer(WS.ALLOW_PO); format:popCheckbox;"> Enable/Accept Purchase Orders</label>
 	<label><input type="checkbox" name="RESALE" data-bind="var:customer(WS.RESALE); format:popCheckbox;"> Do not charge sales tax</label>
 	<label><span>Credit Limit: $</span><input type="number" step='0.01' min='0' name="CREDIT_LIMIT"  size="10" data-bind="var:customer(WS.CREDIT_LIMIT); hideZero:false; format:popVal;" /></label>
@@ -206,6 +220,10 @@ Something
 	<td data-bind="var:ticket(STATUS); format:text;"></td>
 </tr>
 
+<tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('id'),$(this).closest('[data-cid]').data('cid'));">
+	<td data-bind="var:ticket(id); format:text;"></td>
+</tr>
+
 
 <tr id='customerEditorAddressListTemplate'>
 	<td data-bind="var:address(_id); format:text;"></td>
@@ -256,35 +274,36 @@ Something
 
 <div id='customerWalletAddTemplate'>
 <form action='#'>
-<fieldset>
-	<label><span>CC</span><input type='number' size='20' maxlength="16" name='CC' value='' /></label>
-	<label><span>YY</span><input type='number' size='2' maxlength="2" name='YY' value='' /></label>
-	<label><span>MM</span><input type='number' size='2' maxlength="2" name='MM' value='' /></label>
+<fieldset class='labelsAsBreaks'>
+	<label><span>CC</span><input type='number' required='required' size='20' maxlength="16" name='CC' value='' /></label>
+	<label><span>YY</span><input type='number' required='required' size='2' maxlength="2" name='YY' value='' /></label>
+	<label><span>MM</span><input type='number' required='required' size='2' maxlength="2" name='MM' value='' /></label>
 </fieldset>
 
-<button>Save Wallet</button>
+<button data-app-event='admin_customer|walletCreate'>Save Wallet</button>
 
 </form>
 </div>
 
 
 
+
 <address id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
 <form action='#'>
 <fieldset>
-	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' data-bind="var:address(_id); format:popVal;" /></label>
-	<label><span>First name</span><input type='text' name='' value=''  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
-	<label><span>Last name</span><input type='text' name='' value=''  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
-	<label><span>Company</span><input type='text' name='' value=''  data-bind="var:address(ship_company); defaultVar: address(bill_company); format:popVal;" /></label>
-	<label><span>Address</span><input type='text' name='' value=''  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
-	<label><span>Address 2</span><input type='text' name='' value=''  data-bind="var:address(ship_address2); defaultVar: address(bill_address2); format:popVal;" /></label>
-	<label><span>City</span><input type='text' name='' value=''  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
-	<label><span>Region/State</span><input type='text' name='' value=''  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
-	<label><span>Postal/Zip</span><input type='text' name='' value=''  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
-	<label><span>Country</span><input type='text' name='' value='' size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
+	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' maxlength="6" size='6' data-bind="var:address(_id); format:popVal;" /></label>
+	<label><span>First name</span><input type='text' name='firstname' value=''  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
+	<label><span>Last name</span><input type='text' name='lastname' value=''  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
+	<label><span>Company</span><input type='text' name='company' value=''  data-bind="var:address(ship_company); defaultVar: address(bill_company); format:popVal;" /></label>
+	<label><span>Address</span><input type='text' name='address1' value=''  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
+	<label><span>Address 2</span><input type='text' name='address2' value=''  data-bind="var:address(ship_address2); defaultVar: address(bill_address2); format:popVal;" /></label>
+	<label><span>City</span><input type='text' name='city' value=''  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
+	<label><span>Region/State</span><input type='text' name='region' value=''  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
+	<label><span>Postal/Zip</span><input type='text' name='postal' value=''  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
+	<label><span>Country</span><input type='text' name='countrycode' value='' size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
 
-	<label><span>Email</span><input type='email' name='' value=''  data-bind="var:address(bill_email); format:popVal;" /></label>
-	<label><span>Phone</span><input type='phone' name='' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>
+	<label><span>Email</span><input type='email' name='email' value=''  data-bind="var:address(bill_email); format:popVal;" /></label>
+	<label><span>Phone</span><input type='phone' name='phone' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>
 </fieldset>
 </form><!-- no button. added via JS. helps to make it painfully obvious this form is recycled :) -->
 </address>

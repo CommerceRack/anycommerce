@@ -674,6 +674,50 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 
+
+
+		adminWholesaleScheduleList : {
+			init : function(_tag,q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
+				_tag = _tag || {};
+				_tag.datapointer = "adminWholesaleScheduleList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,q)	{
+				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleList","_tag":_tag},q);	
+				}
+			}, //adminWholesaleScheduleList
+
+
+		adminWholesaleScheduleDetail : {
+			init : function(scheduleID,_tag,q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
+				_tag = _tag || {};
+				_tag.datapointer = "adminWholesaleScheduleDetail|"+scheduleID;
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(scheduleID,_tag,q)	{
+				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleDetail","schedule":scheduleID,"_tag":_tag},q);	
+				}
+			}, //adminWholesaleScheduleList
+
+
+
+
 //This will get a copy of the config.js file.
 		appConfig : {
 			init : function(_tag,Q)	{
@@ -728,7 +772,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //appPageSet
 
 
-//??? should this be saved in local storage?
 		appResource : {
 			init : function(filename,_tag,Q)	{
 				var r = 0;
@@ -3040,8 +3083,44 @@ else	{
 				}, //toggleDualMode
 
 
-
-
+//Currently, a fairly simple validation script. The browsers aren't always implementing their form validation for the dynamically generated content, so this
+//is simple validator which can be extended over time.
+// checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
+			validateForm : function($form)	{
+				if($form && $form instanceof jQuery)	{
+					var r = true; //what is returned. false if any required fields are empty.
+					$form.showLoading({'message':'Validating'});
+					$('input',$form).each(function(){
+						var $input = $(this),
+						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
+						
+						function removeClass($t){
+							$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
+							}
+						
+						if($input.attr('required') == 'required' && !$input.val())	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.parent().append($span.text('required'));
+							removeClass($input);
+							}
+						else if($input.attr('maxlength') && $input.val().length < $input.attr('maxlength'))	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.parent().append($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+							removeClass($input);
+							}
+						else	{
+							$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
+							}
+						});
+					$form.hideLoading();
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'Object passed into admin.u.validateForm is empty or not a jquery object','gMessage':true});
+					}
+				return r;
+				},
 
 
 //In some cases, we'll likely want to kill everything in local storage BUT save the login and session data.

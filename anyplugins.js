@@ -1,12 +1,15 @@
 /*
 
-
-
+This file is a variety of plugins that are either open-source or were written by Zoovy/anycommerce.
+They're in one file just to minimize the number of includes.
 plugins fairly tailored to the anycommerce/zoovy mvc.
 
 anymessage - throw a message at the user, supporting classes and icons for severity.
 anytabs - a simple tab script that does NOT use id's. jqueryui tabs does not play well on recycled templates (cat, product, etc). ok in checkout/cart.
 anycontent - used to generate content (go figure). pass in a template id and/or data for translation and appending to jqObject.
+anypanel - turn an element into a toggle-able panel with localStorage based persistence.
+anycb - will turn a label/checkbox into an IOS-esque on/off toggle
+anytable - apply to any table with a thead and the th within that head will be clickable for sorting by that column.
 
 jqueryui widget/plugin help can be found here:
 http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-plugin/
@@ -17,7 +20,11 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 
 
 /*
-//////////////////// ANY MESSAGE \\\\\\\\\\\\\\\\\\\\\
+
+
+/////  ANYMESSAGE  \\\\\
+
+
 anymessage - a utility for throwing any commerce messages to the user.
 examples: 
 $('#allBase').anymessage({'message':'All your base are belong to us'});
@@ -183,7 +190,7 @@ For the list of available params, see the 'options' object below.
 /*
 
 
-//////////////////// ANY TABS \\\\\\\\\\\\\\\\\\\\\
+/////  ANYTABS  \\\\\
 
 anytabs - a simple tab script that does NOT use id's.
 Format content like so:
@@ -339,7 +346,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 /*
 
-//////////////////// ANY TEMPLATE \\\\\\\\\\\\\\\\\\\\\
+/////  ANYCONTENT  \\\\\
 
 $("#something").anycontent({'templateID':'someTemplate'});
 $("#something").anycontent({'templateID':'someTemplate','datapointer':'appProductGet|PID'});
@@ -454,12 +461,7 @@ either templateID or (data or datapointer) are required.
 
 
 
-/*
 
-This file is a variety of plugins that are either open-source or were written by Zoovy/anycommerce.
-They're in one file just to minimize the number of includes.
-
-*/
 
 
 /**
@@ -544,6 +546,12 @@ jQuery.fn.sortElements = (function(){
 
 
 /*
+
+
+/////  ANYTABLE  \\\\\
+
+
+
 run $('#someTable').anytable() to have the headers become clickable for sorting by that column.
 */
 
@@ -618,6 +626,76 @@ th.click(function(){
 			}
 		}); // create the widget
 })(jQuery); 
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+/////  ANYCB  \\\\\
+
+
+
+run $('label').anycb() over a piece of html formatted as <label><input type='checkbox'>Prompt</label>
+and it'll turn the cb into an ios-esque on/off switch.
+*/
+(function($) {
+	$.widget("ui.anycb",{
+		options : {
+			},
+		_init : function(){
+			var self = this,
+			$label = self.element;
+			
+			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			else	{
+				var $input = $("input",$label).first(),
+				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
+				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
+	
+				$label.data('anycb',true);
+				self.span = $span; //global (within instance) for easy reference.
+
+				$input.hide();
+				$container.append($span);
+				$label.prepend($container);
+				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
+		
+				$input.on('change.anycb',function(){
+					if($input.is(':checked')){self._turnOn();}
+					else	{self._turnOff();}
+					});
+				}
+
+			}, //_init
+		_turnOn : function()	{
+			this.span.text('on');
+			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
+			this.span.animate({'left':-1},'fast');
+			},
+		_turnOff : function()	{
+			this.span.text('off');
+			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
+			this.span.animate({'left': 24},'fast');
+			},
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+
+
 
 
 
@@ -772,15 +850,20 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 		_handleButtons : function($header)	{
 			var	self = this,
+			$t = self.element,
 			o = this.options,
 			buttonStyles = {'float':'right','width':'20px','height':'20px','padding':0,'margin':'2px'}; //classes applied to each of the buttons.
 			
-			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent());
-			
+			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent()); 
+
+//button to 'close' (removes from dom) the panel.			
 			if(o.showClose)	{
 				$buttonSet.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(event){event.preventDefault(); self.destroy()})); //settings button
 				}
+//button to toggle (expand/collapse) the panel.
+			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(event){event.preventDefault(); self.toggle()})); //settings button
 
+//tools menu, which will be a wrench button with a dropdown of options.
 			$buttonSet.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').addClass('ui-button-anypanel ui-button-anypanel-settings').css(buttonStyles).text('Settings')
 				.button({text: false,icons : {primary : 'ui-icon-wrench'}})
 				.off('click.settingsMenu').on('click.settingsMenu',function(event){
@@ -794,7 +877,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 					})); //the settings button is always generated, but only toggled on when necessary.
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
-			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(event){event.preventDefault(); self.toggle()})); //settings button
 			},
 
 		_handleInitialState : function()	{
@@ -813,7 +895,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			else	{
 				console.warn("unknown state passed into anypanel");
 				}
-			}, // !!! not done or in use yet.
+			},
 
 		toggle : function(){
 			if(this.options.state == 'expand')	{this.collapse()}
@@ -865,11 +947,11 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_destroySettingsMenu : function()	{
 			$("[data-app-role='settingsMenu']",this.element).empty().remove();
 			},
-		
+
 		_buildSettingsMenu : function()	{
-			var $ul = $("<ul \/>"),
+			var $ul = $("<ul \/>").css({'width':'200px'}),
 			sm = this.options.settingsMenu;
-			
+
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
 			for(index in sm)	{
 				$("<li \/>").text(index).on('click',sm[index]).appendTo($ul);
@@ -895,18 +977,19 @@ Additional a settings button can be added which will contain a dropdown of selec
 /* will convert a tbody into a csv */
 
 jQuery.fn.toCSV = function() {
-  var data = $(this).first(); //Only one table
-  var csvData = [];
-  var tmpArr = [];
-  var tmpStr = '';
-  data.find("tr").each(function() {
-      if($(this).find("th").length) {
-          $(this).find("th").each(function() {
-            tmpStr = $(this).text().replace(/"/g, '""');
-            tmpArr.push('"' + tmpStr + '"');
-          });
-          csvData.push(tmpArr);
-      } else {
+	var data = $(this).first(); //Only one table
+	var csvData = [];
+	var tmpArr = [];
+	var tmpStr = '';
+	data.find("tr").each(function() {
+	if($(this).find("th").length) {
+		$(this).find("th").each(function() {
+		tmpStr = $(this).text().replace(/"/g, '""');
+		tmpArr.push('"' + tmpStr + '"');
+		});
+		csvData.push(tmpArr);
+		}
+	else {
           tmpArr = [];
           $(this).find("td").each(function() {
              $(this).find("td").each(function() {
@@ -928,56 +1011,5 @@ jQuery.fn.toCSV = function() {
 
 
 
-
-
-
-/*
-run $('label').anycb() over a piece of html formatted as <label><input type='checkbox'>Prompt</label>
-and it'll turn the cb into an ios-esque on/off switch.
-*/
-(function($) {
-	$.widget("ui.anycb",{
-		options : {
-			},
-		_init : function(){
-			var self = this,
-			$label = self.element;
-			
-			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
-			else	{
-				var $input = $("input",$label).first(),
-				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
-				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
-	
-				$label.data('anycb',true);
-				self.span = $span; //global (within instance) for easy reference.
-
-				$input.hide();
-				$container.append($span);
-				$label.prepend($container);
-				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
-		
-				$input.on('change.anycb',function(){
-					if($input.is(':checked')){self._turnOn();}
-					else	{self._turnOff();}
-					});
-				}
-
-			}, //_init
-		_turnOn : function()	{
-			this.span.text('on');
-			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
-			this.span.animate({'left':-1},'fast');
-			},
-		_turnOff : function()	{
-			this.span.text('off');
-			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
-			this.span.animate({'left': 24},'fast');
-			},
-		_setOption : function(option,value)	{
-			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
-			}
-		}); // create the widget
-})(jQuery); 
 
 

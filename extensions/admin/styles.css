@@ -735,7 +735,7 @@ put the prompt into a span
 <label><span>prompt</span>input</label>
 */
 .labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
-.labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
 
 /* 
 within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
@@ -747,7 +747,7 @@ see shipping panel in product editor for example
 .labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-.alignedLabels label span	{width:30%;}
+.alignedLabels label span:first-of-type	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],
