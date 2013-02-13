@@ -77,6 +77,7 @@ var admin_customer = function() {
 					if(obj && obj.CID)	{
 						$target.showLoading("Fetching Customer Record");
 						app.calls.appNewslettersList.init({},'mutable');
+						console.warn("NEED TO GET WHOLESALE SCHEDULE HERE");
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1},{'callback':function(rd){
 $target.hideLoading();
 
@@ -129,6 +130,7 @@ else	{
 		});
 	app.ext.admin.u.handleAppEvents($target);
 	$("table.gridTable thead",$target).parent().anytable();
+	$("[type='checkbox']",$target).parent().anycb();
 //	$(".toggleMe",$target).buttonset();
 
 							}},'mutable');
@@ -250,7 +252,7 @@ else	{
 						}
 					});
 				},
-			
+//saves all the changes to a customer editor			
 			'customerEditorSave' : function($btn)	{
 				$btn.button();
 console.warn('action on customerEditorSave not complete');
@@ -259,7 +261,8 @@ console.warn('action on customerEditorSave not complete');
 					alert('this will do something');
 					});
 				},
-			
+
+//run when searching the customer manager for a customer.
 			'customerSearch' : function($btn){
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
 				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
@@ -267,12 +270,27 @@ console.warn('action on customerEditorSave not complete');
 
 					var $parent = $btn.closest("[data-app-role='dualModeContainer']"),
 					$form = $("[data-app-role='customerSearch']",$parent).first(),
-					formObj = $form.serializeJSON();
+					formObj = $form.serializeJSON(),
+					$target = $('.dualModeListContent',$parent).first();
 					
+					$target.empty(); //make sure any previously open customers are cleared.
 					$parent.showLoading("Searching for "+formObj.email);
-					app.u.dump(" -> formObj: "); app.u.dump(formObj);
-					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(){
+//					app.u.dump(" -> formObj: "); app.u.dump(formObj);
+					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(rd){
 						$parent.hideLoading();
+						
+$('.dualModeListMessaging',$parent).empty();
+if(app.model.responseHasErrors(rd)){
+	$parent.anymessage(rd);
+	}
+else	{
+	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
+		app.ext.admin_customer.a.showCustomerEditor($target,{'CID':app.data[rd.datapointer].CID});
+		}
+	else	{
+		$('.dualModeListMessaging',$parent).anymessage({'message':'No customers matched that email address. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
+		}
+	}
 						}},'mutable');
 					app.model.dispatchThis();
 

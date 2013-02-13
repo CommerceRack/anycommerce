@@ -115,7 +115,7 @@ For the list of available params, see the 'options' object below.
 				//no message passed. is ok because messages 'could' get handled as a method.
 				}
 			else if(typeof msg == 'string')	{
-				$r = $("<p \/>").addClass('anyMessage').css(amcss).text(msg);
+				$r = $("<p \/>").addClass('anyMessage').css(amcss).html(msg);
 				}
 			else if(typeof msg == 'object')	{
 //				app.u.dump(" -> msg type is object.");
@@ -158,7 +158,7 @@ For the list of available params, see the 'options' object below.
 					} //unknown data format
 				}
 			else	{
-				app.u.dump(" -> app.u.formatResponseErrors 'else' hit. Should not have gotten to this point");
+				app.u.dump(" -> app.u.formatResponsethis.span 'else' hit. Should not have gotten to this point");
 				$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured'); //don't want to have our error handler generate an error on screen.
 				}
 			return $r;
@@ -531,6 +531,11 @@ jQuery.fn.sortElements = (function(){
     };
     
 })();
+
+
+
+
+
 
 
 
@@ -920,3 +925,59 @@ jQuery.fn.toCSV = function() {
   var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
   window.open(uri);
 }
+
+
+
+
+
+
+/*
+run $('label').anycb() over a piece of html formatted as <label><input type='checkbox'>Prompt</label>
+and it'll turn the cb into an ios-esque on/off switch.
+*/
+(function($) {
+	$.widget("ui.anycb",{
+		options : {
+			},
+		_init : function(){
+			var self = this,
+			$label = self.element;
+			
+			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			else	{
+				var $input = $("input",$label).first(),
+				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
+				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
+	
+				$label.data('anycb',true);
+				self.span = $span; //global (within instance) for easy reference.
+
+				$input.hide();
+				$container.append($span);
+				$label.prepend($container);
+				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
+		
+				$input.on('change.anycb',function(){
+					if($input.is(':checked')){self._turnOn();}
+					else	{self._turnOff();}
+					});
+				}
+
+			}, //_init
+		_turnOn : function()	{
+			this.span.text('on');
+			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
+			this.span.animate({'left':-1},'fast');
+			},
+		_turnOff : function()	{
+			this.span.text('off');
+			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
+			this.span.animate({'left': 24},'fast');
+			},
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}
+		}); // create the widget
+})(jQuery); 
+
+

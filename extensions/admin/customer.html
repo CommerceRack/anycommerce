@@ -4,7 +4,7 @@
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
-		
+			<button class='floatRight marginLeft'>Add New User</button>
 			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|customerSearch'>Search</button>
@@ -14,21 +14,10 @@
 			<h3 class='heading'>Customer Search</h3>
 		</div>
 		
-		<div class='ui-widget-content ui-corner-bottom'>
-		
-		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the customer(s) you are looking for.</div>
-		
-		<table class='gridTable fullWidth displayNone' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th>title</th>
-			<th class='hideInDetailMode'>Summary/id</th>
-			<th>Relevance</th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='dualModeListMessaging marginBottom'>Please use the search above to find the customer(s) you are looking for.</div>
+			<div class='dualModeListContent'></div>
+
 		</div>
 	</section>
 </div>
@@ -118,7 +107,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 	</div><!-- /column 1 -->
 	
-	<div class='twoColumn' data-app-column='2'>
+	<div class='twoColumn column2' data-app-column='2'>
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="notes">
 	<h2>Notes</h2>
