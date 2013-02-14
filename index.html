@@ -537,7 +537,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<div class="clearfix"></div>
 </div>
 
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate;" class='listStyleNone clearfix noPadOrMargin fluidList categoryList marginBottom'></ul>
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail: max;" class='listStyleNone clearfix noPadOrMargin fluidList categoryList marginBottom'></ul>
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>	
 	
