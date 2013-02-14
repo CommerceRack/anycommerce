@@ -344,6 +344,30 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminDataQuery
 
 
+
+
+//get a list of newsletter subscription lists.
+		adminNewsletterList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminNewsletterList"
+				if(app.model.fetchData('adminNewsletterList') == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminNewsletterList","_tag" : _tag},Q || 'immutable');	
+				}
+			},//getNewsletters	
+
+
 		adminPrivateSearch : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;

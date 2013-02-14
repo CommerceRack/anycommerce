@@ -355,12 +355,12 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 
 
 //get a list of newsletter subscription lists.
-		appNewslettersList : {
+		appNewsletterList : {
 			init : function(_tag,Q)	{
 				var r = 0;
 				_tag = _tag || {}; 
-				_tag.datapointer = "appNewslettersList"
-				if(app.model.fetchData('appNewslettersList') == false)	{
+				_tag.datapointer = "appNewsletterList"
+				if(app.model.fetchData('appNewsletterList') == false)	{
 					r = 1;
 					this.dispatch(_tag,Q);
 					}
@@ -371,7 +371,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				return r;
 				},
 			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"appNewslettersList","_tag" : _tag},Q || 'immutable');	
+				app.model.addDispatchToQ({"_cmd":"appNewsletterList","_tag" : _tag},Q || 'immutable');	
 				}
 			},//getNewsletters	
 

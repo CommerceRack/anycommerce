@@ -40,7 +40,6 @@ var admin_customer = function() {
 
 				var $modal = $("<div \/>",{'id':'customerUpdateModal'}).appendTo('body'); //used for various update/add features.
 				$modal.dialog({'autoOpen':false,'width':500,'height':500,'modal':true});
-				app.calls.appNewslettersList.init({},'passive'); //get these early to have handy.
 				return r;
 				},
 			onError : function()	{
@@ -72,7 +71,7 @@ var admin_customer = function() {
 				if($target && typeof $target == 'object')	{
 					if(obj && obj.CID)	{
 						$target.showLoading("Fetching Customer Record");
-						app.calls.appNewslettersList.init({},'mutable');
+						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						console.warn('Giftcards currently disabled because they do not work. returns iseerr.');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
@@ -233,22 +232,23 @@ else	{
 			
 			newsletters : function($tag,data)	{
 				
-				if(!app.data.appNewslettersList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
-				else if(app.data.appNewslettersList['@lists'].length == 0)	{
+				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
+				else if(app.data.adminNewsletterList['@lists'].length == 0)	{
 					$tag.anymessage({'message':'You have not created any subscriber lists.','persistant':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
-					L = app.data.appNewslettersList['@lists'].length,
+					L = app.data.adminNewsletterList['@lists'].length,
 					listbw = data.value.INFO.NEWSLETTER; //list bitwise. just a shortcut.
 //					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+") ID: "+app.data.appNewslettersList['@lists'][i].ID); //getNewslettersTF
-//						app.u.dump(" -> getNewslettersTF: "+app.ext.admin_customer.u.getNewslettersTF(data.value.INFO.NEWSLETTER,Number(app.data.appNewslettersList['@lists'][i].ID)));
+						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
 						$("<label \/>").append($("<input \/>",{
 							'type':'checkbox',
-							'name':'list_'+app.data.appNewslettersList['@lists'][i].ID
-							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.appNewslettersList['@lists'][i].ID)))).append(app.data.appNewslettersList['@lists'][i].NAME + " [prt: "+app.data.appNewslettersList['@lists'][i].PRT+"]").appendTo($f);
+							'name':'list_'+app.data.adminNewsletterList['@lists'][i].ID
+							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
+							}
+						else	{} //do nothing in this case. It's a newsletter w/ no name (likely the bitwise not appropriated yet)
 						}
 					$f.appendTo($tag);
 					}

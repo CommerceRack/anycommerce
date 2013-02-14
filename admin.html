@@ -317,6 +317,11 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<div class='debugContent'>
 <button onClick="localStorage.clear();">Nuke LocalStorage</button>
 
+
+<button onClick="app.model.destroy('adminNewsletterList');">destroy adminNewsletterList</button>
+
+
+
 <button onClick="navigateTo('#!appChooser');">App Chooser</button>
 <button onClick="app.model.destroy('adminCustomerDetail|7633554');">destroy customer</button>
 <button onClick="$('#setupContent').empty(); app.ext.admin_customer.a.showCustomerEditor($('#setupContent'),{'CID':'7633554'});">showCustomerEditor</button>
