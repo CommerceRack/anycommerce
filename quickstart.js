@@ -1181,11 +1181,11 @@ P.listID (buyer list id)
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
 				infoObj.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
 				if(infoObj.uriParams.meta)	{
-				app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
+				app.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
 				}
 
 				if(infoObj.uriParams.meta_src)	{
-				app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
+				app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
 				}
 
 
