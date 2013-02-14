@@ -250,7 +250,7 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 					},
 				dispatch : function(obj,tagObj)	{
 					obj["_cmd"] = "buyerLogout";
-					obj["_tag"] = tagObj;
+					obj["_tag"] = tagObj || {};
 					obj["_tag"]["datapointer"] = "buyerLogout";
 					app.model.addDispatchToQ(obj,'immutable');
 					}
@@ -1173,10 +1173,13 @@ AUTHENTICATION/USER
 
 //## allow for targetID to be passed in.
 		logBuyerOut : function()	{
-// ,'targetID':'logMessaging' was removed from the line below in 201239 to give more flexibility to apps. add a class of appMessaging to your app and the log will appear there.
+//kill all the memory and localStorage vars used in determineAuthentication
+			app.model.destroy('appBuyerLogin'); //nuke this so app doesn't fetch it to re-authenticate session.
+			app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
+			app.vars.cid = null; //used in soft-auth.
+			
 			app.calls.authentication.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 			app.calls.refreshCart.init({},'immutable');
-			app.vars.cid = null; //nuke cid as it's used in the soft auth.
 			app.model.dispatchThis('immutable');
 			},
 		
@@ -1196,10 +1199,11 @@ AUTHENTICATION/USER
 				var r = 'none';
 				if(this.thisIsAnAdminSession())	{r = 'admin'}
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'}
-				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'}
+				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'; app.u.dump(" -> buyerLogin");}
+				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'; app.u.dump(" -> cid/username");}
 				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.cid))	{
 					r = 'authenticated';
+					app.u.dump(" -> from cart");
 					app.vars.cid = app.data.cartDetail.customer.cid;
 					}
 //need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
@@ -1214,7 +1218,7 @@ AUTHENTICATION/USER
 				else	{
 					//catch.
 					}
-//				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
+				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
 
 				return r;
 				},
