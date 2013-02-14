@@ -1133,7 +1133,9 @@ URI PARAM
 		kvp2Array : function(s)	{
 			var r = false;
 			if(s && s.indexOf('=') > -1)	{
+//				app.u.dump(s.replace(/"/g, "\",\x22"));
 				s = s.replace(/&amp;/g, '&'); //needs to happen before the decodeURIComponent (specifically for how banner elements are encoded )
+				// .replace(/"/g, "\",\x22")
 				r = JSON.parse(decodeURIComponent('{"' + s.replace(/&/g, "\",\"").replace(/=/g,"\":\"") + '"}'));
 				}
 			else	{}

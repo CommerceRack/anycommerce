@@ -535,7 +535,7 @@ need to be customized on a per-ria basis.
 */
 		wiki : {
 			":search" : function(suffix,phrase){
-				return "<a href='#' onClick=\"return showContent('search',{'KEYWORDS':'"+suffix+"'}); \">"+phrase+"<\/a>"
+				return "<a href='#' onClick=\"return showContent('search',{'KEYWORDS':'"+suffix.encodeURI()+"'}); \">"+phrase+"<\/a>"
 				},
 			":category" : function(suffix,phrase){
 				return "<a href='#category?navcat="+suffix+"' onClick='return showContent(\"category\",{\"navcat\":\""+suffix+"\"});'>"+phrase+"<\/a>"
@@ -1356,6 +1356,8 @@ if(ps.indexOf('?') >= 1)	{
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
+				infoObj.dateObj = new Date(); //milliseconds timestamp
+				app.u.dump(infoObj);
 				app.ext.myRIA.vars.sotw = infoObj;
 				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
@@ -1556,7 +1558,10 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = '#search?KEYWORDS='+infoObj.KEYWORDS}
+					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{
+						app.u.dump("ROAR");
+						r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
+						}
 					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
 						//shouldn't get here because pageInfo was already validated. but just in case...
@@ -1777,7 +1782,7 @@ if(ps.indexOf('?') >= 1)	{
 					else	{
 						fullpath += this.buildRelativePath(infoObj);
 						}
-					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams} //add params back on to url.
+					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams.encodeURI()} //add params back on to url.
 					else if(typeof infoObj.uriParams == 'object' && !$.isEmptyObject(infoObj.uriParams)) {
 //will convert uri param object into uri friendly key value pairs.						
 						fullpath += '?';
@@ -2319,7 +2324,9 @@ buyer to 'take with them' as they move between  pages.
 						count = " ("+count+")";
 						}
 					$("<li \/>").on('click',function(){
-						$('.productSearchKeyword').val('"+keywords+"'); showContent('search',{'KEYWORDS':'"+keywords+"'}); return false;
+						$('.productSearchKeyword').val('"+keywords+"');
+						showContent('search',{'KEYWORDS':'"+keywords+"'});
+						return false;
 						}).text(keywords).appendTo($o);
 					}
 				return $o;

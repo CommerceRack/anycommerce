@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate');
+	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate');
 	var r = {
 
 
@@ -83,7 +83,7 @@ var admin_customer = function() {
 						app.calls.appNewslettersList.init({},'mutable');
 						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						console.warn('Giftcards currently disabled because they do not work. returns iseerr.');
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1},{'callback':function(rd){
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
 $target.hideLoading();
 
 if(app.model.responseHasErrors(rd)){
@@ -152,7 +152,19 @@ else	{
 					$target.anymessage({'message':'In admin_customer.a.showAddWalletModal, no CID defined.',gMessage:true});
 					}
 				},
-			
+
+
+			showCustomerCreateModal : function(){
+				var $target = $('#customerUpdateModal').empty();
+				$('.ui-dialog-title',$target.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
+				$target.dialog('open');
+				$target.anycontent({'templateID':'customerCreateTemplate','showLoading':false});
+				
+				app.ext.admin.u.handleAppEvents($target);
+				
+				
+				},
+
 //obj required params are cid, type (bill or ship)
 			showAddAddressModal : function(obj,$parent){
 				var $target = $('#customerUpdateModal').empty();
