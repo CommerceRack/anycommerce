@@ -4,7 +4,7 @@
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
-			<button class='floatRight marginLeft'>Add New User</button>
+			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add New User</button>
 			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|customerSearch'>Search</button>
@@ -75,7 +75,19 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="giftcards">
 	<h2>Giftcards</h2>
-	<div class='clearfix' data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></div>
+	<div>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Amount</th>
+		<th>Note</th>
+		<th>Created</th>
+		<th>Expires</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></tbody>
+	</table>
+	</div>
 </div>
 
 
@@ -116,6 +128,15 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<h2>Order History</h2>
 	<div>
 	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>Order Id</th>
+		<th># Items</th>
+		<th>Pay Type</th>
+		<th>Total</th>
+		<th>Created</th>
+	</tr>
+	</thead>
 	<tbody data-bind="var:customer(@ORDERS); format:processList; loadsTemplate:customerEditorOrderListTemplate;"></tbody>
 	</table>
 	</div>
@@ -205,23 +226,29 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 
 
-<div id='customerEditorGiftcardListTemplate'>
-Something
-</div>
-
-
-
 
 <table>
-<tr id='customerEditorTicketListTemplate'>
-	<td data-bind="var:ticket(CREATED_GMT); format:unix2mdy;"></td>
+<tr id='customerEditorTicketListTemplate' class='pointer' onClick="navigateTo('/biz/crm/index.cgi?VERB=TICKET-VIEW&TKTCODE=96332');">
+	<td data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
 	<td data-bind="var:ticket(TKTCODE); format:text;"></td>
 	<td data-bind="var:ticket(SUBJECT); format:text;"></td>
 	<td data-bind="var:ticket(STATUS); format:text;"></td>
 </tr>
 
+
+<tr id='customerEditorGiftcardListTemplate'>
+	<td data-bind="var:giftcart(BALANCE); format:text;"></td>
+	<td data-bind="var:giftcart(NOTE); format:text;"></td>
+	<td data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
+</tr>
+
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('id'),$(this).closest('[data-cid]').data('cid'));">
-	<td data-bind="var:ticket(id); format:text;"></td>
+	<td data-bind="var:order(ORDERID); format:text;"></td>
+	<td data-bind="var:order(ITEMS); format:text;"></td>
+	<td data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>
+	<td data-bind="var:order(ORDER_TOTAL); format:text;"></td>
+	<td data-bind="var:order(CREATED_GMT); format:epoch2pretty;"></td>
 </tr>
 
 
@@ -241,10 +268,8 @@ Something
 </tr>
 
 <tr id='customerEditorNoteListTemplate'>
-	<td>
-<div data-bind="var:note(CREATED_GMT); format:unix2mdy;"></div>
-<div data-bind="var:note(LUSER); format:text;"></div>
-	</td>
+	<td  data-bind="var:note(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var:note(LUSER); format:text;"></td>
 	<td data-bind="var:note(NOTE); format:text;"></td>
 	<td class='alignRight'>
 	<button data-app-event="admin_customer|customerRowRemove">Delete this note</button>
@@ -312,27 +337,28 @@ Something
 
 <div id='customerCreateTemplate'>
 <form action='#'>
-<fieldset>
+<fieldset class='labelsAsBreaks alignedLabels'>
 <label>
 	<span>Email address:</span>
-	<input type="email" value="" name="EMAIL" required='required' />
+	<input type="email" value="" name="email" required='required' />
 </label>
 
 <label>
 	<span>First name:</span>
-	<input type="text" value="" name="FIRST" required='required' />
+	<input type="text" value="" name="firstname"  />
 </label>
 
 <label>
 	<span>Last name:</span>
-	<input type="text" value="" name="LAST" required='required' />
+	<input type="text" value="" name="lastname" />
 </label>
 
-
+<!--
 <label><input type="checkbox" name="NEWS" checked='checked' /> Subscribe to all Default Newsletters</label>
-<label><input type="checkbox" name="PASS" checked='checked' /> Automatically generate a secure password</label>
+-->
+<label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
 
-<button>Create Customer</button>
+<button data-app-event='admin_customer|adminCustomerCreate'>Create Customer</button>
 
 </fieldset>
 </form>

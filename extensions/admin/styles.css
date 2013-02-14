@@ -263,6 +263,9 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
+
+
 
 /* dual-level css menu. used for multipage 'pages' in prodlists (finder) */
 
@@ -803,4 +806,15 @@ some pad (more or less)specific styles.
 */
 @media screen and (max-width: 1024px) {
 	.domainList li {padding:0 4px;}
+	}
+
+
+@media screen and (max-width: 800px) {
+	.twoColumn{  
+		width:100%;
+		clear:both;
+		}  
+	
+	.twoColumn.column2 {clear:both;}
+
 	}

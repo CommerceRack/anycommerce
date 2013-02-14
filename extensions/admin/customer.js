@@ -40,7 +40,7 @@ var admin_customer = function() {
 
 				var $modal = $("<div \/>",{'id':'customerUpdateModal'}).appendTo('body'); //used for various update/add features.
 				$modal.dialog({'autoOpen':false,'width':500,'height':500,'modal':true});
-				
+				app.calls.appNewslettersList.init({},'passive'); //get these early to have handy.
 				return r;
 				},
 			onError : function()	{
@@ -58,19 +58,11 @@ var admin_customer = function() {
 		a : {
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showCustomerManager : function($target) {
-
-				if($("[data-app-role='dualModeContainer']",$target).length)	{$target.show()} //already an instance of help open in this target. leave as is.
-				else	{
-					$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
-					app.ext.admin.u.handleAppEvents($target);
-					}
-				
-//if the target is a tab, bring that tab/content into focus.
-				if($target.data('section'))	{
-					app.ext.admin.u.bringTabIntoFocus($target.data('section'));
-					app.ext.admin.u.bringTabContentIntoFocus($target);
-					}
+			showCustomerManager : function() {
+				var $target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+				$target.empty();
+				$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
+				app.ext.admin.u.handleAppEvents($target);
 
 				}, //showCustomerManager
 
@@ -114,12 +106,22 @@ else	{
 //			console.log(' -> here.');
 			}
 		});
-	
+
+//add an onchange that adds the edited class, which is what the handleChanges function uses to count the # of changes.
+//for textboxes, toggle the class on/off. That way if a checkbox is turned off, then back on, the change count is accurate.	
 	$("input",$target).each(function(){
-		$(this).off('change.trackChange').on('change.trackChange',function(){
-			$(this).addClass('edited');
-			$('.numChanges').text($('.edited',sortCols).length).parents('button').addClass('ui-state-highlight').button('enable');
-			});
+		if($(this).is(':checkbox'))	{
+			$(this).off('change.trackChange').on('change.trackChange',function(){
+				$(this).toggleClass('edited');
+				app.ext.admin_customer.u.handleChanges($target);
+				});			
+			}
+		else	{
+			$(this).off('change.trackChange').on('change.trackChange',function(){
+				$(this).addClass('edited');
+				app.ext.admin_customer.u.handleChanges($target);
+				});
+			}
 		});
 
 	app.ext.admin.u.handleAppEvents($target);
@@ -140,7 +142,7 @@ else	{
 				}, //showCustomerEditor
 
 //obj should contain CID. likely will include partition soon too.
-			showAddWalletModal : function(obj,$parent)	{
+			showAddWalletModal : function(obj)	{
 				var $target = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$target.parent()).text('Add a new wallet');
 				$target.dialog('open');
@@ -153,20 +155,16 @@ else	{
 					}
 				},
 
-
 			showCustomerCreateModal : function(){
 				var $target = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$target.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
-				$target.dialog('open');
 				$target.anycontent({'templateID':'customerCreateTemplate','showLoading':false});
-				
 				app.ext.admin.u.handleAppEvents($target);
-				
-				
+				$target.dialog('open');
 				},
 
 //obj required params are cid, type (bill or ship)
-			showAddAddressModal : function(obj,$parent){
+			showAddAddressModal : function(obj){
 				var $target = $('#customerUpdateModal').empty();
 				$('.ui-dialog-title',$target.parent()).text(''); //blank the title bar so old title doesn't show up if error occurs
 				$target.dialog('open');
@@ -236,15 +234,21 @@ else	{
 			newsletters : function($tag,data)	{
 				
 				if(!app.data.appNewslettersList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
-				else if(!app.data.appNewslettersList['@lists'])	{
-					$tag.anymessage({'message':'You have not created any subscriber lists.'})
+				else if(app.data.appNewslettersList['@lists'].length == 0)	{
+					$tag.anymessage({'message':'You have not created any subscriber lists.','persistant':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
-					L = app.data.appNewslettersList['@lists'].length;
-					
+					L = app.data.appNewslettersList['@lists'].length,
+					listbw = data.value.INFO.NEWSLETTER; //list bitwise. just a shortcut.
+//					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
-						$("<label \/>").append($("<input \/>",{'type':'checkbox','name':'list_'+app.data.appNewslettersList['@lists'][i].ID})).append(app.data.appNewslettersList['@lists'][i].NAME + " [prt: "+app.data.appNewslettersList['@lists'][i].PRT+"]").appendTo($f);
+//						app.u.dump(" -> "+i+") ID: "+app.data.appNewslettersList['@lists'][i].ID); //getNewslettersTF
+//						app.u.dump(" -> getNewslettersTF: "+app.ext.admin_customer.u.getNewslettersTF(data.value.INFO.NEWSLETTER,Number(app.data.appNewslettersList['@lists'][i].ID)));
+						$("<label \/>").append($("<input \/>",{
+							'type':'checkbox',
+							'name':'list_'+app.data.appNewslettersList['@lists'][i].ID
+							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.appNewslettersList['@lists'][i].ID)))).append(app.data.appNewslettersList['@lists'][i].NAME + " [prt: "+app.data.appNewslettersList['@lists'][i].PRT+"]").appendTo($f);
 						}
 					$f.appendTo($tag);
 					}
@@ -256,6 +260,17 @@ else	{
 
 
 		u : {
+//run after a form input on the page has changed. updates the 'numChanges' class to indicate # of changes and enable parent button.
+			handleChanges : function($target)	{
+				var numChanges = $('.edited',$target).length;
+				if(numChanges)	{
+					$('.numChanges',$target).text(numChanges).parents('button').addClass('ui-state-highlight').button('enable');
+					}
+				else	{
+					$('.numChanges',$target).text("").parents('button').removeClass('ui-state-highlight').button('disable');
+					}
+				},
+			
 //adds the extra buttons to each of the panels.
 //obj should include obj.CID
 			handleAnypanelButtons : function($target,obj){
@@ -267,9 +282,19 @@ else	{
 						$('.panel_bill',$target).anypanel('option','settingsMenu',{'Add Address':function(){
 							app.ext.admin_customer.a.showAddAddressModal({type:'@BILL','CID':obj.CID},$target);
 							}});
-						$('.panel_wallets',$target).anypanel('option','settingsMenu',{'Add Wallet':function(){
-							app.ext.admin_customer.a.showAddWalletModal(obj,$target);
+						$("[data-app-role='wallets']",$target).anypanel('option','settingsMenu',{'Add Wallet':function(){
+							app.ext.admin_customer.a.showAddWalletModal(obj);
 							}});
+						
+						$("[data-app-role='giftcards']",$target).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
+							navigateTo('/biz/manage/giftcard/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+							}});
+						
+						$("[data-app-role='tickets']",$target).anypanel('option','settingsMenu',{'Start a New Ticket':function(){
+							navigateTo('/biz/crm/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+							}});					
+
+
 						}
 					else	{
 						$target.anymessage({'message':'In admin_customer.u.handleAnypanelButtons, CID not passed.','gMessage':true});
@@ -282,16 +307,13 @@ else	{
 
 //macro is the addr macro for adminCustomerUpdate (either addrcreate or addrupdate)
 //obj should contain CID and type. in the future, likely to contain partition.
-//$parent is optional. if passed, used for updating the panel that the address was added/updated from. This is not the parent of the form, but the originator of where add/edit was clicked.
-			customerAddressAddUpdate : function($form,MACRO,obj,$parent)	{
+			customerAddressAddUpdate : function($form,MACRO,obj)	{
 				if(MACRO && $form && $form instanceof jQuery)	{
 					if(app.ext.admin.u.validateForm($form))	{
 						$('body').showLoading({"message":"Customer address being updated/added for "+obj.CID});
 						var formObj = $form.serializeJSON();
 
 						app.model.destroy("adminCustomerDetail|"+obj.CID);
-//if a parent is defined, then update the appropriate panel within the parent.
-						if($parent && typeof $parent == 'object' && $parent.length && $("[data-app-role='"+obj.type.substring(1).toLowerCase()+"']",$parent))	{}
 						
 						app.ext.admin.calls.adminCustomerUpdate.init([MACRO+"?"+encodeURIComponent(formObj)],{'callback':function(){
 							$('body').hideLoading();
@@ -311,8 +333,19 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_customer.u.customerAddressAddUpdate, either $form or macro not passed.'});					
 					}
-				} //customerAddressAddUpdate
-				
+				}, //customerAddressAddUpdate
+
+
+//The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
+			getNewslettersTF : function(newsint,val)	{
+				B = Number(newsint).toString(2); //binary
+//				app.u.dump(" -> Binary of flags: "+B);
+				return B.charAt(val - 1) == 1 ? true : false; //1
+				},
+
+
+
+
 			}, //u [utilities]
 
 		e : {
@@ -321,21 +354,23 @@ else	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
 				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
 					event.preventDefault();
+					
 //if this class is already present, the button is set for delete already. unset the delete.
 					if($btn.hasClass('ui-state-error'))	{
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('ui-state-error').find('button').each(function(){
+						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
 							$(this).button('enable')
 							}); //enable the other buttons
 						$btn.button('enable');
 						}
 					else	{
-
-						$btn.addClass('ui-state-error').parents('tr').addClass('ui-state-error').find('button').each(function(){
+//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
+						$btn.addClass('ui-state-error').parents('tr').addClass('edited').find('button').each(function(){
 							$(this).button('disable')
 							}); //disable the other buttons
 						$btn.button('enable');
 
 						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
 					});
 				}, //customerRowRemove
 //used for both addresses and wallets.
@@ -438,6 +473,44 @@ else	{
 					});
 				}, //customerSearch
 
+//executed within the customer create form to validate form and create user.
+			'adminCustomerCreate' : function($btn)	{
+				$btn.button().off('click.adminCustomerCreate').on('click.adminCustomerCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					
+					if(app.ext.admin.u.validateForm($form))	{
+var updates = new Array(),
+formObj = $form.serializeJSON();
+
+//app.u.dump(" -> formObj: "); app.u.dump(formObj);
+
+updates.push("CREATE?email="+formObj.email);
+if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
+if(formObj.lasttname)	{updates.push("SET?lastname="+formObj.lastname);}
+if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+
+// $('body').showLoading("Creating customer record for "+formObj.email);
+app.ext.admin.calls.adminCustomerCreate.init(updates,{});
+app.model.dispatchThis('immutable');
+
+						}
+					else	{
+						//the validation function puts the errors next to the necessary fields
+						}
+
+					});;
+				},
+
+//executed on a button to show the customer create form.
+			'showCustomerCreate' : function($btn)	{
+				
+				$btn.button().off('click.showCustomerCreate').on('click.showCustomerCreate',function(event){
+					event.preventDefault();
+					app.ext.admin_customer.a.showCustomerCreateModal();
+					});
+				
+				},
 			'walletCreate' : function($btn)	{
 				$btn.button();
 				$btn.off('click.walletCreate').on('click.walletCreate',function(event){

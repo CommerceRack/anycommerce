@@ -209,16 +209,39 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminCustomerSearch
 
-		adminCustomerUpdate : {
-			init : function(CID,setObj,_tag)	{
+//email is required in macro
+		adminCustomerCreate : {
+			init : function(updates,_tag)	{
 				var r = 0;
-				if(CID && !$.isEmptyObject(setObj))	{
-					this.dispatch(CID,setObj,_tag)
+				if(updates)	{
+					this.dispatch(updates,_tag)
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminCustomerSet, CID ["+CID+"] not set or setObj was empty");
-					app.u.dump("setObj follows: "); app.u.dump(setObj);
+					app.u.throwGMessage("In admin.calls.adminCustomerSet, macro not set or setObj was empty");
+					}
+				return r;
+				},
+			dispatch : function(updates,_tag)	{
+				var obj = {};
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerCreate';
+				obj._cmd = "adminCustomerCreate";
+				obj.CID = 0; //create wants a zero customer id
+				obj['@updates'] = updates;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //adminCustomerSet
+
+		adminCustomerUpdate : {
+			init : function(CID,updates,_tag)	{
+				var r = 0;
+				if(CID && updates)	{
+					this.dispatch(CID,updates,_tag)
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerUpdate, CID ["+CID+"] or updates ["+updates+"] not set");
 					}
 				return r;
 				},
@@ -2215,7 +2238,7 @@ var chart = new Highcharts.Chart({
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
-//				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
+				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
@@ -3246,7 +3269,7 @@ just lose the back button feature.
 			dpsSet : function(ext,ns,varObj)	{
 //				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
 				if(ext && ns && varObj)	{
-					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
+//					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
 					
 					if(typeof sessionData[ext] != 'object'){sessionData[ext] = {ns:{}}}; //each ext gets it's own object so that no ext writes over anothers.

@@ -1357,7 +1357,6 @@ if(ps.indexOf('?') >= 1)	{
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
 				infoObj.dateObj = new Date(); //milliseconds timestamp
-				app.u.dump(infoObj);
 				app.ext.myRIA.vars.sotw = infoObj;
 				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
