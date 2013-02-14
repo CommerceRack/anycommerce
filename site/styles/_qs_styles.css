@@ -588,11 +588,12 @@ progress[aria-valuenow]:before  {
 										text-decoration: underline;
 									}
 									div.dropDownListHolder > a
-									/*div.dropDownListHolder > img*/
 									{
+										bottom: 0px;
 										clear: both;
 										display: none;
-										float: right;
+										position: absolute;
+										right: 0px;										
 									}
 		div#container div#footer
 		{
