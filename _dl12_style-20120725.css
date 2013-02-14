@@ -754,15 +754,6 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
 	margin:0px 24px 0 0;
 	height:35px; width:100px;
 	}
-#brandCategories li	img	{
-/*    filter: url(filters.svg#grayscale);  Firefox 3.5+ - this worked locally, but broke on the server.*/
-    filter: gray; /* IE6-9 */
-    -webkit-filter: grayscale(1); /* Webkit Nightlies & Google Chrome Canary */
-	}
-#brandCategories li	img:hover	{
-    filter: none;
-    -webkit-filter: grayscale(0);
-	}
 
 .nav_menu{
 	float:left;

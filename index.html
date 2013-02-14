@@ -529,9 +529,9 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <!--	</div>-->
 	<div class='catDesc'>	
 		<div class='textBlock' data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
-		
+		<!-- COMMENTING OUT UNTIL FRAMEWORK ALLOWS MULTIPLE FORMAT/CATEGORY CALLS ON A PAGE; AS OF 201248 IT DOES NOT
 		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: breadcrumbTemplate; detail:max;" class='listStyleNone clearfix noPadOrMargin categoryList noUnderline'></ul>
-
+		-->
 		<div class='textBlock' data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></div>
 	</div>
 	<div class="clearfix"></div>
