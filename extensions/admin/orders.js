@@ -360,6 +360,12 @@ else	{
 	//tabObj.keyword has the query. Check regex here.
 	}
 
+	if(tagObj.keyword)	{
+		var regex = /^20\d\d-[01]\d-[\d]+$/;
+		app.u.dump("regex text: "+regex.test(tagObj.keyword));
+		}
+
+
 				}
 			} //listOrders
 		}, //callbacks
