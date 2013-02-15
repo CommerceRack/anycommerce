@@ -357,6 +357,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 	}
 else	{
 	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
+	//tabObj.keyword has the query. Check regex here.
 	}
 
 				}
@@ -2028,7 +2029,7 @@ else	{
       }}
 	}
 
-app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem','keyword':frmObj.keyword},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}
