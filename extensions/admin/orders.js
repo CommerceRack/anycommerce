@@ -44,7 +44,7 @@ var admin_orders = function() {
 			'ORDER.ARRIVED.EBF' : 'Order arrived: eBay follow up',
 			'ORDER.ARRIVED.WEB' : 'Order arrived: website follow up',
 			'ORDER.FEEDBACK.AMZ' : 'Amazon Feedback request',
-			'ORDER.FEEDBACK.EBAY' : 'Amazon Feedback request',
+			'ORDER.FEEDBACK.EBAY' : 'eBay Feedback request',
 			'ORDER.NOTE' : 'Order %ORDERID%',
 			'ORDER.SHIPPED' : 'Order %ORDERID% shipped',
 			'ORDER.SHIPPED.EBAY' : 'Your eBay order has been shipped.',
