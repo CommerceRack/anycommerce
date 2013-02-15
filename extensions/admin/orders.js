@@ -337,11 +337,21 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 //handle the icon.
 				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
 				else if($row.hasClass('ui-selected'))	{
-					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>");
+					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
+//make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
+					$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
+						$('#ordersContent').empty();
+						app.ext.admin_orders.a.showOrderView($row.attr('data-orderid'),$row.attr('data-cid'),"ordersContent"); //adds a showLoading
+						app.model.dispatchThis();
+						})
 					}
 				else	{
 					$('td:eq(0)',$row).html(""); //empty status icon container.
+					$('td:eq(1) span',$row).removeClass('lookLikeLink').off('mousedown.orderLink'); //remove clickable link
 					}
+				
+				
+				
 				});
 			if($(".ui-selected",$(this)).length > 0)	{
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
