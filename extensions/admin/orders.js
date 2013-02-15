@@ -360,8 +360,6 @@ else	{
 	//if this was a keyword search and the keyword was an order ID, show this extra messaging to allow the user to attempt to load the order directly. 
 	//good for if elastic is having emotional issues.
 
-	}
-
 	var regex = /^20\d\d-[01]\d-[\d]+$/;
 	if(tagObj.keyword && regex.test(tagObj.keyword))	{
 		app.u.dump("The search was for an order ID.");
@@ -369,8 +367,10 @@ else	{
 			$('#ordersContent').empty();
 			app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
 			app.model.dispatchThis();
-			}).append("<b>Click here</b> to try to load order "+tagObj.keyword));
+			}).append("<b>Click here</b> to load order "+tagObj.keyword));
 		}
+	}
+
 
 
 				}
