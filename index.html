@@ -797,7 +797,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 			<div class="prodThumbBackground"></div>
 			<h5 data-bind='var: product(prod_name); format:text;'></h5>
-			<h6 data-bind='var: product(base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
+			<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 			<img src="site/images/button-product-list-view-item.png" class='pointer' alt="View Item" onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})" />
 		</div>	
 
@@ -906,7 +906,7 @@ this will likely become more flexible in the future. ###
 				<input type="hidden" value="FC5171-DS" name="product_id">
 			</form>
 			<!--<select id="ddlOptions"></select>-->
-			<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;">
+			<!--<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;">-->
 			<!--Quantity:&nbsp;<input id="txtQuantity" name="txtQuantity" type="text" />-->
 			<!--<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" onClick="$(this).parent().submit();" />-->
 			<!--<input type="submit" id="addToCartBtn" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton" value="Add to Cart">-->
@@ -1821,7 +1821,7 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
-	<div id="gotAccount">
+	<div id="gotAccount"> 
 		<p>GOT AN ACCOUNT?</p>
 		<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginLogin").val(),$("#modalLoginPassword").val()); return false;' id='modalLoginForm'>
 			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
