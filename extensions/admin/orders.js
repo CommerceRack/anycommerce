@@ -357,12 +357,19 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 	}
 else	{
 	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
-	//tabObj.keyword has the query. Check regex here.
+	//if this was a keyword search and the keyword was an order ID, show this extra messaging to allow the user to attempt to load the order directly. 
+	//good for if elastic is having emotional issues.
+
 	}
 
-	if(tagObj.keyword)	{
-		var regex = /^20\d\d-[01]\d-[\d]+$/;
-		app.u.dump("regex text: "+regex.test(tagObj.keyword));
+	var regex = /^20\d\d-[01]\d-[\d]+$/;
+	if(tagObj.keyword && regex.test(tagObj.keyword))	{
+		app.u.dump("The search was for an order ID.");
+		$('#orderListTableContainer').append($("<div \/>").addClass('lookLikeLink').on('click',function(){
+			$('#ordersContent').empty();
+			app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
+			app.model.dispatchThis();
+			}).append("<b>Click here</b> to try to load order "+tagObj.keyword));
 		}
 
 
