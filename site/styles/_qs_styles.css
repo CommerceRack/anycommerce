@@ -518,6 +518,11 @@ progress[aria-valuenow]:before  {
 							text-decoration: none;
 							top: 18px;
 						}
+						.no-fontface div#container div.nav div.navContent > ul > li > a
+						{
+							font-family: Arial, Helvetica, sans-serif;
+							font-size: 14px;						
+						}
 							div#container div.nav div.navContent > ul > li > a:hover
 							{
 								
@@ -1073,6 +1078,10 @@ div.prodRelatedItems
 		li.shipcon > label > input
 		{
 			margin-right: 5px;
+		}
+		.prodBuyDetails div.latency
+		{
+			margin-bottom: 10px;
 		}
 		
 /* search */

@@ -71,7 +71,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript" src="site/scripts/jquery.flippy.min.js"></script>
 <script type="text/javascript" src="site/scripts/jScrollPane.js"></script>
 <script type="text/javascript" src="site/scripts/jquery.mousewheel.js"></script>
-
+<script type="text/javascript" src="site/scripts/modernizr-2.6.2-custom.js"></script>
 
 
 
@@ -899,22 +899,18 @@ this will likely become more flexible in the future. ###
 				<div id="atcMessaging_FC5171-DS" class="atcSuccessMessage"></div>
 	
 				<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;">
+					<div data-bind="var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);" class="latency"></div>
 					Quantity <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
 					<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" onClick="$(this).parent().submit();" />
 				</div>
 				<input type="hidden" value="yes" name="add">
 				<input type="hidden" value="FC5171-DS" name="product_id">
 			</form>
-			<!--<select id="ddlOptions"></select>-->
-			<!--<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;">-->
-			<!--Quantity:&nbsp;<input id="txtQuantity" name="txtQuantity" type="text" />-->
-			<!--<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" onClick="$(this).parent().submit();" />-->
-			<!--<input type="submit" id="addToCartBtn" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton" value="Add to Cart">-->
-			<!--<input type="submit" id="addToCartBtn" data-bind="var: product(pid); format:addToCartButton; extension:store_product;" class="ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton" value="Add to Cart">-->
 			<div class="prodBuyDetailsOptionsSharing">
 				<img id="btnProdShare" src="site/images/button-share-product.png" alt="Share Product" />
 				<img id="btnProdAddToWishlist" src="site/images/button-add-to-wishlist.png" alt="Add To Wishlist" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' onClick="app.ext.myRIA.a.add2BuyerList({pid:$(this).attr('data-pid'),'listid':'wishlist'}); return false;" />
 			</div>
+			<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
 		</div>
 	</div>
 </div>
