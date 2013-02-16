@@ -230,7 +230,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <table>
 <tr id='customerEditorTicketListTemplate' class='pointer' onClick="navigateTo('/biz/crm/index.cgi?VERB=TICKET-VIEW&TKTCODE=96332');">
 	<td data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
-	<td data-bind="var:ticket(TKTCODE); format:text;"></td>
+	<td data-bind="var:ticket(TKTCODE); format:text;" class='lookLikeLink'></td>
 	<td data-bind="var:ticket(SUBJECT); format:text;"></td>
 	<td data-bind="var:ticket(STATUS); format:text;"></td>
 </tr>
@@ -244,7 +244,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('id'),$(this).closest('[data-cid]').data('cid'));">
-	<td data-bind="var:order(ORDERID); format:text;"></td>
+	<td data-bind="var:order(ORDERID); format:text;" class='lookLikeLink'></td>
 	<td data-bind="var:order(ITEMS); format:text;"></td>
 	<td data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>
 	<td data-bind="var:order(ORDER_TOTAL); format:text;"></td>
