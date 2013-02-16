@@ -862,7 +862,7 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
     font-size: 13px;
     margin: 0;
     padding: 10px;
-    width: 280px;
+    width: 467px;
 }
 .search {
     background-image: url("images/SearchBg.png");
@@ -876,6 +876,23 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
     padding: 10px 0\0/;
 	width:80px;
 }
+.hotelFinder {
+    background-image: url("images/SearchBg.png");
+    border: 1px solid #BFBFBD;
+    color: #858585;
+    float: left;
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0;
+    padding: 9px 30px;
+}
+.hotelFindBlurb {
+	float:left;
+	text-align:right;
+	font-size:11px;
+	margin-right:10px;
+	padding:3px 0 0;
+}	
 .dotted {
     border-right: 1px dashed #1A1A1A;
     float: left;
@@ -885,7 +902,7 @@ h1	{color:#665d51; font-size:18px; font-weight:bold; margin:0 0 12px 0; padding:
 .index_ads {
     float: right;
     height: 43px;
-    width: 579px;
+/*    width: 579px;*/
 }
 .slider{	
 	width:100%;
