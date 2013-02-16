@@ -356,6 +356,7 @@ else	{
 					event.preventDefault();
 					
 //if this class is already present, the button is set for delete already. unset the delete.
+//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
 					if($btn.hasClass('ui-state-error'))	{
 						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
 							$(this).button('enable')
@@ -431,10 +432,40 @@ else	{
 //saves all the changes to a customer editor			
 			'customerEditorSave' : function($btn)	{
 				$btn.button();
-console.warn('action on customerEditorSave not complete');
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					alert('this will do something');
+					var $form = $btn.closest('form'),
+					macros = new Array();
+//find all the elements that have been edited. In most cases, this is the input itself.
+//the exception to this would be a 'row' which has been deleted. could be a wallet, address or a note
+					$('.edited').each(function(){
+						
+						var $tag = $(this),
+						$panel = $tag.closest('.panel');
+//
+						if($tag.is('tr'))	{
+							app.u.dump(" -> found a TR: "+$panel.data('app-role'));
+							if($panel.data('app-role') == 'ship' || $panel.data('app-role') == 'bill')	{
+								macros.push("ADDRREMOVE?TYPE="+$panel.data('app-role').toUpperCase()+"&SHORTCUT="+$panel.data('_id'));
+								}
+							else if($panel.data('app-role') == 'wallet')	{
+								macros.push("WALLETREMOVE?SECUREID="+$panel.data('id'));
+								}
+							else if($panel.data('app-role') == 'note')	{
+								macros.push("NOTEREMOVE?NOTEID="+$panel.data('id'));
+								}
+							else	{
+								app.u.dump(" -> unknown panel type");
+								}
+							}
+						else if($tag.is('input'))	{
+							app.u.dump(" -> found an input: "+$tag.val());
+							}
+						else	{
+							app.u.dump(" -> found an unexpected type");
+							}
+						app.u.dump(" -> MACROS: "); app.u.dump(macros);
+						});
 					});
 				}, //customerEditorSave
 
