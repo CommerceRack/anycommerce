@@ -346,104 +346,6 @@ else	{
 
 		e : {
 
-
-
-//acu = Admin Customer Update. means button will trigger that call. What follows acu is the macro it will execute.
-			acuAddrUpdate : function($btn){
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
-					event.preventDefault();
-					var $target = $('#customerUpdateModal').empty();
-					$('.ui-dialog-title',$target.parent()).text('Update customer address');
-					$target.dialog('open');
-					
-					var CID = $(this).closest('.panel').data('cid'),
-					type = $btn.closest("[data-address-type]").data('address-type'),
-					index = Number($btn.closest('tr').data('obj_index'));
-					
-					if(CID && index >= 0 && type)	{
-						$target.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
-
-						$("[name='SHORTCUT']",$target).attr('disabled','disabled').parent().append('not editable'); //once created, the shortcut is not editable.
-
-						if(type == '@SHIP')	{
-							$("[type='email']",$target).parent().empty().remove();
-							}
-
-						var $button = $("<button \/>").text('Save Address').button().on('click',function(event){
-							event.preventDefault();
-							app.ext.admin_customer.u.customerAddressAddUpdate($('form',$target),'ADDRUPDATE',{'CID':CID,'type':type},$target);
-							});						
-						$target.append($button);
-						}
-					else	{
-						$target.anymessage({'message':'In admin_customer.e.customerAddressUpdate, unable to determine CID ['+CID+'] or address type ['+type+'] or address index ['+index+']',gMessage:true});
-						}
-					});
-				}, //customerAddressUpdate
-
-			acuHintReset : function($btn)	{
-				$btn.button();
-				$btn.off('click.hintReset').on('click.hintReset',function(event){
-					event.preventDefault();
-					var $target = $("#customerUpdateModal").empty().dialog('open'),
-					CID = $btn.closest("[data-cid]").data('cid');
-					
-					$target.html("<p class='clearfix marginBottom'>Please confirm that you want to reset this customers password hint. There is no undo.<\/p>");
-					
-					
-					$("<button \/>").text('Cancel').addClass('floatLeft').button().on('click',function(){
-						$target.dialog('close');
-						}).appendTo($target);
-				
-					$("<button \/>").text('Confirm').addClass('floatRight').button().on('click',function(){
-						$target.showLoading({'message':'Updating customer record...'});
-						app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
-							$target.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$target.anymessage(rd);
-								}
-							else	{
-								$target.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
-								}
-							}},'immutable');
-							app.model.dispatchThis('immutable');
-						
-						}).appendTo($target);
-
-					});				
-				}, //acuHintReset
-
-			acuWalletCreate : function($btn)	{
-				$btn.button();
-				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
-					event.preventDefault();
-					
-					var $form = $btn.closest('form'),
-					CID = $btn.closest("[data-cid]").data('cid');
-					
-					if(!CID)	{
-						$form.anymessage({'message':'in admin_customer.e.walletCreate, could not determine CID.','gMessage':true});
-						}
-					else if(app.ext.admin.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding wallet to customer record.'});
-						app.ext.admin.calls.adminCustomerUpdate.init(["WALLETCREATE?"+encodeURIComponent($form.serializeJSON())],{'callback':function(){
-							$form.hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$form.anymessage(rd);
-								}
-							else	{
-								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
-								}
-							}},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						$form.anymessage({'message':'Please enter all the fields below.'});
-						}
-					});
-				}, //acuWalletCreate
-
 //executed within the customer create form to validate form and create user.
 			execAdminCustomerCreate : function($btn)	{
 				$btn.button().off('click.execAdminCustomerCreate').on('click.execAdminCustomerCreate',function(event){
@@ -566,8 +468,20 @@ app.model.dispatchThis('immutable');
 						
 						if(macros.length)	{
 							app.u.dump(" -> MACROS: "); app.u.dump(macros);
-//							app.ext.admin.calls.adminCustomerUpdate.init($btn.closest('data-cid').data('cid'),macros,{},'immutable');
-//							app.model.dispatchThis('immutable');
+							$('body').showLoading({'message':'Saving changes to cutomer record.'});
+//get a clean copy of the customer record so that the notes panel can be updated.
+							app.model.destroy('adminCustomerDetail|'+CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
+							app.ext.admin.calls.adminCustomerUpdate.init($btn.closest('data-cid').data('cid'),macros,{'callback':function(){
+								$('body').hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage(rd);
+									}
+								else	{
+									app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-templateid='customerEditorTemplate']").parent(),{'CID':CID})
+									}
+								}},'immutable');
+							app.model.dispatchThis('immutable');
 							}
 						else	{
 							$btn.closest('form').anymessage({'message':'In admin_customer.e.customerEditorSave, no recognizable fields were present.',gMessage:true});
@@ -609,6 +523,95 @@ else	{
 
 					});
 				}, //execCustomerSearch
+
+			execHintReset : function($btn)	{
+				$btn.button();
+				$btn.off('click.hintReset').on('click.hintReset',function(event){
+					event.preventDefault();
+					var $target = $("#customerUpdateModal").empty().dialog('open'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					$target.html("<p class='clearfix marginBottom'>Please confirm that you want to reset this customers password hint. There is no undo.<\/p>");
+					
+					
+					$("<button \/>").text('Cancel').addClass('floatLeft').button().on('click',function(){
+						$target.dialog('close');
+						}).appendTo($target);
+				
+					$("<button \/>").text('Confirm').addClass('floatRight').button().on('click',function(){
+						$target.showLoading({'message':'Updating customer record...'});
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
+							$target.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$target.anymessage(rd);
+								}
+							else	{
+								$target.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
+								}
+							}},'immutable');
+							app.model.dispatchThis('immutable');
+						
+						}).appendTo($target);
+
+					});				
+				}, //execHintReset
+
+			execNoteCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.noteCreate').on('click.noteCreate',function(event){
+					event.preventDefault();
+					var note = $btn.parent().find("[name='noteText']").val(),
+					$parent = $btn.closest('.panel'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					if(CID && note)	{
+						$parent.showLoading({'message':'Adding note to customer record'});
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(){
+							//update notes panel or show errors.
+							alert('not done yet');
+							}},'immutable');
+//get a clean copy of the customer record so that the notes panel can be updated.
+						app.model.destroy('adminCustomerDetail|'+CID);
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else if(!CID)	{
+						$btn.closest('fieldset').anymessage({'message':'In admin_customer.e.execNoteCreate, unable to determine customer ID','gMessage':true});
+						}
+					else	{
+						$btn.closest('fieldset').anymessage({'message':'Please enter a note to save.','errtype':'youerr'});
+						}
+					});
+				},
+			execWalletCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
+					event.preventDefault();
+					
+					var $form = $btn.closest('form'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					if(!CID)	{
+						$form.anymessage({'message':'in admin_customer.e.walletCreate, could not determine CID.','gMessage':true});
+						}
+					else if(app.ext.admin.u.validateForm($form))	{
+						$form.showLoading({'message':'Adding wallet to customer record.'});
+						app.ext.admin.calls.adminCustomerUpdate.init(["WALLETCREATE?"+encodeURIComponent($form.serializeJSON())],{'callback':function(){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage(rd);
+								}
+							else	{
+								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
+								}
+							}},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$form.anymessage({'message':'Please enter all the fields below.'});
+						}
+					});
+				}, //execWalletCreate
 
 //used for both addresses and wallets.
 			tagRowForIsDefault : function($btn){
@@ -660,6 +663,40 @@ else	{
 					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
 					});
 				}, //tagRowForRemove
+
+//acu = Admin Customer Update. means button will trigger that call. What follows acu is the macro it will execute.
+			showAddrUpdate : function($btn){
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
+					event.preventDefault();
+					var $target = $('#customerUpdateModal').empty();
+					$('.ui-dialog-title',$target.parent()).text('Update customer address');
+					$target.dialog('open');
+					
+					var CID = $(this).closest('.panel').data('cid'),
+					type = $btn.closest("[data-address-type]").data('address-type'),
+					index = Number($btn.closest('tr').data('obj_index'));
+					
+					if(CID && index >= 0 && type)	{
+						$target.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
+
+						$("[name='SHORTCUT']",$target).attr('disabled','disabled').parent().append('not editable'); //once created, the shortcut is not editable.
+
+						if(type == '@SHIP')	{
+							$("[type='email']",$target).parent().empty().remove();
+							}
+
+						var $button = $("<button \/>").text('Save Address').button().on('click',function(event){
+							event.preventDefault();
+							app.ext.admin_customer.u.customerAddressAddUpdate($('form',$target),'ADDRUPDATE',{'CID':CID,'type':type},$target);
+							});						
+						$target.append($button);
+						}
+					else	{
+						$target.anymessage({'message':'In admin_customer.e.customerAddressUpdate, unable to determine CID ['+CID+'] or address type ['+type+'] or address index ['+index+']',gMessage:true});
+						}
+					});
+				}, //showAddrUpdate
 
 //executed on a button to show the customer create form.
 			showCustomerCreate : function($btn)	{

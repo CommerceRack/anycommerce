@@ -88,8 +88,8 @@ For the list of available params, see the 'options' object below.
 			msg = o.message,
 			r; //what is returned
 			if(o.iconClass)		{}
-			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-'+msg.errtype}
-			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
+			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-z-'+msg.errtype}
+			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-z-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
 			else	{o.iconClass = 'ui-icon-info'}
 //			app.u.dump(" -> o.iconClass: "+o.iconClass);
 			return $("<span \/>").addClass('ui-icon ui-icon-anymessage').addClass(o.iconClass).css({'float':'left','marginRight':'5px','marginBottom':'5px','marginTop':'3px'});

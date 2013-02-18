@@ -598,6 +598,7 @@ Messaging Styles
 .ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
 .ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
 .ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
+.ui-icon-z-youerr	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 .ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 
 
