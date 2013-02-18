@@ -188,19 +188,20 @@ app.u.appInitComplete = function(P)	{
 		
 		
 // add link, css, etc to hotel finder.
-	$('.hotelFinder').removeClass('disabled').addClass('pointer').click(function () {
-		$('#hotelListContainer').dialog({
-			'autoOpen':false,
-			'width':'60%',
-			'modal':'true',
-			'height':'500'
-			});
-		$('#hotelListContainer').dialog('open');
+// FOR 201248 UPGRADE CLIENT ASKED THAT LINK GO TO HOTELS CAT PAGE NOT MODAL
+//	$('.hotelFinder').removeClass('disabled').addClass('pointer').click(function () {
+//		$('#hotelListContainer').dialog({
+//			'autoOpen':false,
+//			'width':'60%',
+//			'modal':'true',
+//			'height':'500'
+//			});
+//		$('#hotelListContainer').dialog('open');
 	//only render the menu the first time the modal is opened. saves cycles and eliminates duplicates appearing
-		if($('#hotelListContainerUL > li').length < 1)	{
-			app.renderFunctions.translateSelector('#hotelListContainer',app.data['appCategoryDetail|.hotels']);
-			}
-		});
+//		if($('#hotelListContainerUL > li').length < 1)	{
+//			app.renderFunctions.translateSelector('#hotelListContainer',app.data['appCategoryDetail|.hotels']);
+//			}
+//		});
 	//addthis code for productTemplate
 	app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";
