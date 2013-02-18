@@ -14,6 +14,7 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
+app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']); //MC's addthis ext from 201307
 
 app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']); //old default callback.
 app.rq.push(['extension',1,'google_ts','extensions/partner_google_trusted_store.js','startExtension']); //new default callback.
