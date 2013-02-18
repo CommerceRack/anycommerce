@@ -7,7 +7,7 @@
 			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add New User</button>
 			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
-				<button data-app-event='admin_customer|customerSearch'>Search</button>
+				<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
 			</form>
 			
 			
@@ -51,8 +51,8 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span>
 Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
 		</h2>
-		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|customerEditorSave'>Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|hintReset'>Remove Password Hint</button>
+		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|acuHintReset'>Remove Password Hint</button>
 	</div>
 
 
@@ -261,9 +261,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	</td>
 	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
 	<td class='alignRight'>
-<button data-app-event="admin_customer|customerAddressUpdate">Edit this address</button>
-<button data-app-event="admin_customer|customerRowRemove">Delete this address</button>
-<button data-app-event="admin_customer|customerHandleIsDefault">Set address as default</button>
+<button data-app-event="admin_customer|acuAddrUpdate">Edit this address</button>
+<button data-app-event="admin_customer|tagRowForRemove">Delete this address</button>
+<button data-app-event="admin_customer|tagRowForIsDefault">Set address as default</button>
 	</td>
 </tr>
 
@@ -272,7 +272,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td data-bind="var:note(LUSER); format:text;"></td>
 	<td data-bind="var:note(NOTE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin_customer|customerRowRemove">Delete this note</button>
+	<button data-app-event="admin_customer|tagRowForRemove">Delete this note</button>
 	</td>
 </tr>
 
@@ -281,9 +281,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td data-bind="var:wallet(TC); format:text;"></td>
 	<td data-bind="var:wallet(TE); format:text;"></td>
 	<td class='alignRight'>
-<!--	<button data-app-event="admin_customer|customerWalletDetail">View this wallet</button> -->
-	<button data-app-event="admin_customer|customerRowRemove">Delete this wallet</button>
-	<button data-app-event="admin_customer|customerHandleIsDefault">Set wallet as default</button></td>
+<!--	<button data-app-event="admin_customer|showWalletDetail">View this wallet</button> -->
+	<button data-app-event="admin_customer|tagRowForRemove">Delete this wallet</button>
+	<button data-app-event="admin_customer|tagRowForIsDefault">Set wallet as default</button></td>
 </tr>
 </table>
 
@@ -305,7 +305,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<label><span>MM</span><input type='number' required='required' size='2' maxlength="2" name='MM' value='' /></label>
 </fieldset>
 
-<button data-app-event='admin_customer|walletCreate'>Save Wallet</button>
+<button data-app-event='admin_customer|acuWalletCreate'>Save Wallet</button>
 
 </form>
 </div>
@@ -358,7 +358,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 -->
 <label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
 
-<button data-app-event='admin_customer|adminCustomerCreate'>Create Customer</button>
+<button data-app-event='admin_customer|execAdminCustomerCreate'>Create Customer</button>
 
 </fieldset>
 </form>
