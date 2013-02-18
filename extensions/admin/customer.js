@@ -73,7 +73,6 @@ var admin_customer = function() {
 						$target.showLoading("Fetching Customer Record");
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
-						console.warn('Giftcards currently disabled because they do not work. returns iseerr.');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
 $target.hideLoading();
 
@@ -208,7 +207,7 @@ else	{
 //generates the select list too, instead of just the options, so that error messaging can be handled in a good manner.
 //the customer object is what's passed in here.
 			wholesaleScheduleSelect : function($tag,data)	{
-				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
+				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
 				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
 					$tag.anymessage({'message':'You have not created any schedules yet.'})
 					}
@@ -245,7 +244,7 @@ else	{
 						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
 						$("<label \/>").append($("<input \/>",{
 							'type':'checkbox',
-							'name':'list_'+app.data.adminNewsletterList['@lists'][i].ID
+							'name':'newsletter_'+app.data.adminNewsletterList['@lists'][i].ID
 							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
 							}
 						else	{} //do nothing in this case. It's a newsletter w/ no name (likely the bitwise not appropriated yet)
@@ -350,6 +349,7 @@ else	{
 
 		e : {
 //use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
+//the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
 			'customerRowRemove' : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
 				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
@@ -382,8 +382,19 @@ else	{
 
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
-					$btn.addClass('ui-state-highlight'); //flag as default.
+
+//if the button is already hightlighted, unhighlight. default is being de-selected.
+//the highlight class is also used in the validation (customerEditorSave) so if the class is changed, be sure to update the save function.
+					if($btn.hasClass('ui-state-highlight'))	{
+						$btn.removeClass('ui-state-highlight');
+						$btn.closest('tr').removeClass('edited');
+						}
+					else	{
+						$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
+						$btn.addClass('ui-state-highlight'); //flag as default.
+						$btn.closest('tr').addClass('edited');
+						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form")); //update save button.
 					});
 				}, //customerHandleIsDefault
 
@@ -397,7 +408,6 @@ else	{
 			
 			'customerAddressUpdate' : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				console.warn('action on customerAddressUpdate not complete');
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
 					var $target = $('#customerUpdateModal').empty();
@@ -435,37 +445,99 @@ else	{
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form'),
-					macros = new Array();
+					macros = new Array(),
+					wholesale = "", //wholesale and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
+					general = "";
+
+//used to determine whether or not the val sent to the API should be a 1 (checked) or 0 (unchecked). necessary for something checked being unchecked.
+					function handleCheckbox($tag)	{
+						if($tag.is(':checked'))	{return 1}
+						else	{return 0}
+						}
+
 //find all the elements that have been edited. In most cases, this is the input itself.
 //the exception to this would be a 'row' which has been deleted. could be a wallet, address or a note
 					$('.edited').each(function(){
 						
 						var $tag = $(this),
-						$panel = $tag.closest('.panel');
-//
+						$panel = $tag.closest('.panel')
+						pr = $panel.data('app-role'); //shortcut.  panel role
+//if the tag is a tr, this is a 'delete'
 						if($tag.is('tr'))	{
-							app.u.dump(" -> found a TR: "+$panel.data('app-role'));
-							if($panel.data('app-role') == 'ship' || $panel.data('app-role') == 'bill')	{
-								macros.push("ADDRREMOVE?TYPE="+$panel.data('app-role').toUpperCase()+"&SHORTCUT="+$panel.data('_id'));
+//if one of the buttons in this row has the error class, then a delete is occuring. Currently, the only other edit option in a row is set to default.
+//however, you would never need to do both delete and set as default, so only perform one or the other, prioritizing with delete.
+							if($("button.ui-state-error",$tag).length > 0)	{
+								if(pr == 'ship' || pr == 'bill')	{
+									macros.push("ADDRREMOVE?TYPE="+pr.toUpperCase()+"&SHORTCUT="+$tag.data('_id'));
+									}
+								else if(pr == 'wallets')	{
+									macros.push("WALLETREMOVE?SECUREID="+$tag.data('id'));
+									}
+								else if(pr == 'notes')	{
+									macros.push("NOTEREMOVE?NOTEID="+$tag.data('id'));
+									}
+								else	{
+									$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unrecognized panel role for a remove action.'});
+									}
 								}
-							else if($panel.data('app-role') == 'wallet')	{
-								macros.push("WALLETREMOVE?SECUREID="+$panel.data('id'));
-								}
-							else if($panel.data('app-role') == 'note')	{
-								macros.push("NOTEREMOVE?NOTEID="+$panel.data('id'));
+							else if($("button.ui-state-highlight",$tag).length > 0)	{
+								if(pr == 'ship' || pr == 'bill')	{
+									macros.push("ADDRUPDATE?TYPE="+pr.toUpperCase()+"&SHORTCUT="+$tag.data('_id')+"&default=1");
+									}
+								else if(pr == 'wallets')	{
+									macros.push("WALLETDEFAULT?SECUREID="+$tag.data('id'));
+									}
+								else	{
+									$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unsupported panel role ['+pr+'] used for set default.'});
+									}
 								}
 							else	{
-								app.u.dump(" -> unknown panel type");
+								$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unable to determine action for update to this panel.'});
 								}
 							}
 						else if($tag.is('input'))	{
-							app.u.dump(" -> found an input: "+$tag.val());
+							if($tag.attr('name') == 'password')	{
+								macros.push("PASSWORDRESET?password="+$tag.val());
+								}
+							else if(pr == 'general')	{
+								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
+								}
+							else if(pr == 'newsletter')	{
+								general += $tag.attr('name')+"="+handleCheckbox($tag);
+								}
+							else if(pr == 'wholesale')	{
+								wholesale += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&";  //val of checkbox is 'on'. change to 1.
+								}
+							else	{
+								$panel.anymessage({'message':'In admin_customer.e.adminEditorSave, panel role ['+pr+'] not an expected type'});
+								}
+
 							}
 						else	{
-							app.u.dump(" -> found an unexpected type");
+							$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unexpected update type (not input or tr).'});
 							}
-						app.u.dump(" -> MACROS: "); app.u.dump(macros);
-						});
+						}); // ends .edited each()
+
+
+
+						if(wholesale != '')	{
+							if(wholesale.charAt(wholesale.length-1) == '&')	{wholesale = wholesale.substring(0, wholesale.length - 1)} //strip trailing ampersand.
+							macros.push("WSSET?"+wholesale);
+							}
+
+						if(general != '')	{
+							if(general.charAt(general.length-1) == '&')	{general = general.substring(0, general.length - 1)} //strip trailing ampersand.
+							macros.push("SET?"+general);
+							}						
+						
+						if(macros.length)	{
+							app.u.dump(" -> MACROS: "); app.u.dump(macros);
+//							app.ext.admin.calls.adminCustomerUpdate.init($btn.closest('data-cid').data('cid'),macros,{},'immutable');
+//							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$btn.closest('form').anymessage({'message':'In admin_customer.e.customerEditorSave, no recognizable fields were present.',gMessage:true});
+							}
 					});
 				}, //customerEditorSave
 
