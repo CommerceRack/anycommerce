@@ -80,14 +80,26 @@ if(app.model.responseHasErrors(rd)){
 	app.u.throwMessage(rd);
 	}
 else	{
-	
 	$target.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer],'dataAttribs':obj});
 	
+	var panArr = app.ext.admin.u.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
+
+	if(panArr)	{
+		app.u.dump(" -> panArr is set !!!!!");
+		var L = panArr.length;
+
+//yes, I know loops in loops are bad. But these are very small loops.
+		for(var i = 0; i < L; i += 1)	{
+			var col = $("[data-app-column='"+(i+1)+"']",$target);
+
+			}
+		}
+		
+//make into anypanels.
 	$("div.panel",$target).each(function(){
 		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
 		$(this).data('cid',obj.CID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_customer','name':PC,'persistent':true});
 		})
-	
 	}
 
 	var sortCols = $('.twoColumn').sortable({  
@@ -100,8 +112,13 @@ else	{
 //the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
 		stop: function(event, ui){
 			$(ui.item).find('h2').click();
-			sortCols.each(function(){console.log($(this).sortable( "toArray" ))})
-//			console.log(' -> here.');
+			var dataObj = new Array();
+			sortCols.each(function(){
+				var $col = $(this);
+				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+				});
+			app.ext.admin.u.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
+			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 			}
 		});
 
@@ -179,10 +196,10 @@ else	{
 						}
 					else	{}
 					
-					var $form = $('form',$target),
+					var $form = $('form',$target).first(),
 					$btn = $("<button \/>").text('Add Address').button().on('click',function(event){
 						event.preventDefault();
-						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj,$target);
+						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj);
 						});
 
 					$form.append($btn);
@@ -228,7 +245,13 @@ else	{
 					
 					}
 				}, //wholesaleScheduleSelect
-			
+			orderHistoryTotal : function($tag,data)	{
+				var L = data.value.length,
+				sum = 0; //sum of all orders combined.
+				for(var i = 0; i < L; i += 1)	{
+					sum += data.value[i].ORDER_TOTAL;
+					}
+				},
 			newsletters : function($tag,data)	{
 				
 				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
@@ -276,23 +299,24 @@ else	{
 				if($target && typeof $target == 'object')	{
 					if(obj.CID)	{
 						$('.panel_ship',$target).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.showAddAddressModal({type:'@SHIP','CID':obj.CID},$target);
+							app.ext.admin_customer.a.showAddAddressModal({type:'@SHIP','CID':obj.CID});
 							}});
+
 						$('.panel_bill',$target).anypanel('option','settingsMenu',{'Add Address':function(){
-							app.ext.admin_customer.a.showAddAddressModal({type:'@BILL','CID':obj.CID},$target);
+							app.ext.admin_customer.a.showAddAddressModal({type:'@BILL','CID':obj.CID});
 							}});
+
 						$("[data-app-role='wallets']",$target).anypanel('option','settingsMenu',{'Add Wallet':function(){
 							app.ext.admin_customer.a.showAddWalletModal(obj);
 							}});
-						
+
 						$("[data-app-role='giftcards']",$target).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
 							navigateTo('/biz/manage/giftcard/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
 							}});
-						
+
 						$("[data-app-role='tickets']",$target).anypanel('option','settingsMenu',{'Start a New Ticket':function(){
 							navigateTo('/biz/crm/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
 							}});					
-
 
 						}
 					else	{
@@ -307,14 +331,14 @@ else	{
 //macro is the addr macro for adminCustomerUpdate (either addrcreate or addrupdate)
 //obj should contain CID and type. in the future, likely to contain partition.
 			customerAddressAddUpdate : function($form,MACRO,obj)	{
-				if(MACRO && $form && $form instanceof jQuery)	{
+				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID)	{
 					if(app.ext.admin.u.validateForm($form))	{
 						$('body').showLoading({"message":"Customer address being updated/added for "+obj.CID});
 						var formObj = $form.serializeJSON();
 
 						app.model.destroy("adminCustomerDetail|"+obj.CID);
 						
-						app.ext.admin.calls.adminCustomerUpdate.init([MACRO+"?"+encodeURIComponent(formObj)],{'callback':function(){
+						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+encodeURIComponent(formObj)],{'callback':function(){
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$target.anymessage(rd);
@@ -330,7 +354,7 @@ else	{
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_customer.u.customerAddressAddUpdate, either $form or macro not passed.'});					
+					$('#globalMessaging').anymessage({'message':'In admin_customer.u.customerAddressAddUpdate, either $form, customerID or macro not passed.'});
 					}
 				}, //customerAddressAddUpdate
 
@@ -382,7 +406,8 @@ app.model.dispatchThis('immutable');
 					event.preventDefault();
 					var $form = $btn.closest('form'),
 					macros = new Array(),
-					wholesale = "", //wholesale and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
+					wholesale = "", //wholesale, dropship and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
+					dropship = "",
 					general = "";
 
 //used to determine whether or not the val sent to the API should be a 1 (checked) or 0 (unchecked). necessary for something checked being unchecked.
@@ -441,6 +466,9 @@ app.model.dispatchThis('immutable');
 							else if(pr == 'newsletter')	{
 								general += $tag.attr('name')+"="+handleCheckbox($tag);
 								}
+							else if(pr == 'dropship')	{
+								dropship += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
+								}
 							else if(pr == 'wholesale')	{
 								wholesale += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&";  //val of checkbox is 'on'. change to 1.
 								}
@@ -461,6 +489,12 @@ app.model.dispatchThis('immutable');
 							macros.push("WSSET?"+wholesale);
 							}
 
+						if(dropship != '')	{
+							if(dropship.charAt(dropship.length-1) == '&')	{dropship = dropship.substring(0, dropship.length - 1)} //strip trailing ampersand.
+							macros.push("ADDRUPDATE?TYPE=WS&"+dropship);
+							}						
+
+
 						if(general != '')	{
 							if(general.charAt(general.length-1) == '&')	{general = general.substring(0, general.length - 1)} //strip trailing ampersand.
 							macros.push("SET?"+general);
@@ -478,7 +512,7 @@ app.model.dispatchThis('immutable');
 									$('#globalMessaging').anymessage(rd);
 									}
 								else	{
-									app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-templateid='customerEditorTemplate']").parent(),{'CID':CID})
+									app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-app-role='customerManager']").parent(),{'CID':CID})
 									}
 								}},'immutable');
 							app.model.dispatchThis('immutable');
@@ -583,6 +617,7 @@ else	{
 						}
 					});
 				},
+
 			execWalletCreate : function($btn)	{
 				$btn.button();
 				$btn.off('click.walletCreate').on('click.walletCreate',function(event){

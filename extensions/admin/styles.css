@@ -144,7 +144,7 @@ using these shared margins will help make the UI more consistent.
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}
-.ui-widget-header-padding	{padding:3px 6px;}
+.ui-widget-header-padding	{padding:3px 6px !important;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 

@@ -4,12 +4,13 @@
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
+			<div class='floatRight smallPadding'>
 			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add New User</button>
-			<form class='searchBar floatRight' action='#' data-app-role='customerSearch'>
+			<form class='searchBar floatRight marginRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
 			</form>
-			
+			</div>
 			
 			<h3 class='heading'>Customer Search</h3>
 		</div>
@@ -43,7 +44,7 @@ if the data attrib is changed or any changes are made to the values (especially 
 -->
 
 
-<div id='customerEditorTemplate' class='clearfix customerEditor'>
+<div id='customerEditorTemplate' class='clearfix customerEditor' data-app-role='customerManager'>
 	<form action='#'>
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		<h2 class='floatLeft ui-widget-header-padding'>
@@ -138,6 +139,12 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		<th>Created</th>
 	</tr>
 	</thead>
+	<tfoot>
+	<tr>
+		<td colspan='4' class='alignRight' data-bind="var:customer(@ORDERS); format:orderHistoryTotal; extension:admin_customer;"></td>
+		<td></td>
+	</tr>
+	</tfoot>
 	<tbody data-bind="var:customer(@ORDERS); format:processList; loadsTemplate:customerEditorOrderListTemplate;"></tbody>
 	</table>
 	</div>
@@ -153,7 +160,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	</tbody>
 	</table>
 
-	<fieldset>
+	<fieldset class='alignedInputs'>
 		<input type='text' name='noteText' />
 		<button data-app-event="admin_customer|execNoteCreate">Save Note</button>
 	</fieldset>
@@ -215,8 +222,24 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </div>
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
-	<h2>Dropship</h2>
-	<div>dropship content</div>
+	<h2>Dropship Billing Address</h2>
+	<div>
+<fieldset>
+	<label><span>Address 1:</span><input type='text' name='address1' data-bind='var: customer(WS.ws_address1); format:popVal;' /></label>
+	<label><span>Address 2:</span><input type='text' name='address2' data-bind='var: customer(WS.ws_address2); format:popVal;' /></label>
+	<label><span>City:</span><input type='text' name='city' data-bind='var: customer(WS.ws_city); format:popVal;' /></label>
+	<label><span>State/Region:</span><input type='text' name='region' data-bind='var: customer(WS.ws_region); format:popVal;' /></label>
+	<label><span>Zip/Postal:</span><input size='9' type='text' name='postal' data-bind='var: customer(WS.ws_postal); format:popVal;' /></label>
+	<label><span>Country Code:</span><input size='2' type='text' name='country' data-bind='var: customer(WS.ws_country); format:popVal;' /></label>
+	<hr />
+	
+	<label><span>Contact:</span><input type='text' name='billing_contact' data-bind='var: customer(WS.BILLING_CONTACT); format:popVal;' /></label>
+	<label><span>Phone:</span><input type='text' name='billing_phone' data-bind='var: customer(WS.BILLING_PHONE); format:popVal;' /></label>
+	
+	<p class='hint'>For internal use only</p>
+
+</fieldset>
+	</div>
 </div>
 
 
