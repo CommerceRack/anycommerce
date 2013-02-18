@@ -52,7 +52,7 @@ Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='p
 Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
 		</h2>
 		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|customerEditorSave'>Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight' name="reset_hint" >Remove Password Hint</button>
+		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|hintReset'>Remove Password Hint</button>
 	</div>
 
 

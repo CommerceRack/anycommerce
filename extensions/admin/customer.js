@@ -81,7 +81,7 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	
-	$target.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer]});
+	$target.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer],'dataAttribs':obj});
 	
 	$("div.panel",$target).each(function(){
 		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
@@ -268,7 +268,7 @@ else	{
 				else	{
 					$('.numChanges',$target).text("").parents('button').removeClass('ui-state-highlight').button('disable');
 					}
-				},
+				}, //handleChanges
 			
 //adds the extra buttons to each of the panels.
 //obj should include obj.CID
@@ -342,71 +342,41 @@ else	{
 				return B.charAt(val - 1) == 1 ? true : false; //1
 				},
 
-
-
-
 			}, //u [utilities]
 
 		e : {
-//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
-//the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
-			'customerRowRemove' : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
-				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
+
+
+//executed within the customer create form to validate form and create user.
+			adminCustomerCreate : function($btn)	{
+				$btn.button().off('click.adminCustomerCreate').on('click.adminCustomerCreate',function(event){
 					event.preventDefault();
+					var $form = $btn.closest('form');
 					
-//if this class is already present, the button is set for delete already. unset the delete.
-//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
-					if($btn.hasClass('ui-state-error'))	{
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
-							$(this).button('enable')
-							}); //enable the other buttons
-						$btn.button('enable');
+					if(app.ext.admin.u.validateForm($form))	{
+var updates = new Array(),
+formObj = $form.serializeJSON();
+
+//app.u.dump(" -> formObj: "); app.u.dump(formObj);
+
+updates.push("CREATE?email="+formObj.email);
+if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
+if(formObj.lasttname)	{updates.push("SET?lastname="+formObj.lastname);}
+if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+
+// $('body').showLoading("Creating customer record for "+formObj.email);
+app.ext.admin.calls.adminCustomerCreate.init(updates,{});
+app.model.dispatchThis('immutable');
+
 						}
 					else	{
-//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
-						$btn.addClass('ui-state-error').parents('tr').addClass('edited').find('button').each(function(){
-							$(this).button('disable')
-							}); //disable the other buttons
-						$btn.button('enable');
-
+						//the validation function puts the errors next to the necessary fields
 						}
-					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
-					});
-				}, //customerRowRemove
-//used for both addresses and wallets.
-			'customerHandleIsDefault' : function($btn){
-				$btn.button({icons: {primary: "ui-icon-check"},text: false});
 
-				if($btn.closest('tr').data('_is_default') == 1)	{$btn.addClass('ui-state-highlight')}
-
-				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
-					event.preventDefault();
-
-//if the button is already hightlighted, unhighlight. default is being de-selected.
-//the highlight class is also used in the validation (customerEditorSave) so if the class is changed, be sure to update the save function.
-					if($btn.hasClass('ui-state-highlight'))	{
-						$btn.removeClass('ui-state-highlight');
-						$btn.closest('tr').removeClass('edited');
-						}
-					else	{
-						$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
-						$btn.addClass('ui-state-highlight'); //flag as default.
-						$btn.closest('tr').addClass('edited');
-						}
-					app.ext.admin_customer.u.handleChanges($btn.closest("form")); //update save button.
-					});
-				}, //customerHandleIsDefault
-
-			'customerWalletDetail' : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-check"},text: false});
-
-				$btn.off('click.customerWalletDetail').on('click.customerWalletDetail',function(event){
-					event.preventDefault();
-					});				
-				}, //customerWalletDetail
+					});;
+				},
 			
-			'customerAddressUpdate' : function($btn){
+			customerAddressUpdate : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
@@ -440,7 +410,7 @@ else	{
 				}, //customerAddressUpdate
 
 //saves all the changes to a customer editor			
-			'customerEditorSave' : function($btn)	{
+			customerEditorSave : function($btn)	{
 				$btn.button();
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
@@ -541,8 +511,59 @@ else	{
 					});
 				}, //customerEditorSave
 
+//used for both addresses and wallets.
+			customerHandleIsDefault : function($btn){
+				$btn.button({icons: {primary: "ui-icon-check"},text: false});
+
+				if($btn.closest('tr').data('_is_default') == 1)	{$btn.addClass('ui-state-highlight')}
+
+				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
+					event.preventDefault();
+
+//if the button is already hightlighted, unhighlight. default is being de-selected.
+//the highlight class is also used in the validation (customerEditorSave) so if the class is changed, be sure to update the save function.
+					if($btn.hasClass('ui-state-highlight'))	{
+						$btn.removeClass('ui-state-highlight');
+						$btn.closest('tr').removeClass('edited');
+						}
+					else	{
+						$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
+						$btn.addClass('ui-state-highlight'); //flag as default.
+						$btn.closest('tr').addClass('edited');
+						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form")); //update save button.
+					});
+				}, //customerHandleIsDefault
+
+//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
+//the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
+			customerRowRemove : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
+					event.preventDefault();
+					
+//if this class is already present, the button is set for delete already. unset the delete.
+//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+					if($btn.hasClass('ui-state-error'))	{
+						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
+							$(this).button('enable')
+							}); //enable the other buttons
+						$btn.button('enable');
+						}
+					else	{
+//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
+						$btn.addClass('ui-state-error').parents('tr').addClass('edited').find('button').each(function(){
+							$(this).button('disable')
+							}); //disable the other buttons
+						$btn.button('enable');
+
+						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
+					});
+				}, //customerRowRemove
+
 //run when searching the customer manager for a customer.
-			'customerSearch' : function($btn){
+			customerSearch : function($btn){
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
 				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
 					event.preventDefault();
@@ -576,45 +597,57 @@ else	{
 					});
 				}, //customerSearch
 
-//executed within the customer create form to validate form and create user.
-			'adminCustomerCreate' : function($btn)	{
-				$btn.button().off('click.adminCustomerCreate').on('click.adminCustomerCreate',function(event){
+			customerWalletDetail : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-check"},text: false});
+
+				$btn.off('click.customerWalletDetail').on('click.customerWalletDetail',function(event){
 					event.preventDefault();
-					var $form = $btn.closest('form');
+					});				
+				}, //customerWalletDetail
+
+			hintReset : function($btn)	{
+				$btn.button();
+				$btn.off('click.hintReset').on('click.hintReset',function(event){
+					event.preventDefault();
+					var $target = $("#customerUpdateModal").empty().dialog('open'),
+					CID = $btn.closest("[data-cid]").data('cid');
 					
-					if(app.ext.admin.u.validateForm($form))	{
-var updates = new Array(),
-formObj = $form.serializeJSON();
+					$target.html("<p class='clearfix marginBottom'>Please confirm that you want to reset this customers password hint. There is no undo.<\/p>");
+					
+					
+					$("<button \/>").text('Cancel').addClass('floatLeft').button().on('click',function(){
+						$target.dialog('close');
+						}).appendTo($target);
+				
+					$("<button \/>").text('Confirm').addClass('floatRight').button().on('click',function(){
+						$target.showLoading({'message':'Updating customer record...'});
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
+							$target.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$target.anymessage(rd);
+								}
+							else	{
+								$target.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
+								}
+							}},'immutable');
+							app.model.dispatchThis('immutable');
+						
+						}).appendTo($target);
 
-//app.u.dump(" -> formObj: "); app.u.dump(formObj);
-
-updates.push("CREATE?email="+formObj.email);
-if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
-if(formObj.lasttname)	{updates.push("SET?lastname="+formObj.lastname);}
-if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
-
-// $('body').showLoading("Creating customer record for "+formObj.email);
-app.ext.admin.calls.adminCustomerCreate.init(updates,{});
-app.model.dispatchThis('immutable');
-
-						}
-					else	{
-						//the validation function puts the errors next to the necessary fields
-						}
-
-					});;
+					});				
 				},
 
 //executed on a button to show the customer create form.
-			'showCustomerCreate' : function($btn)	{
+			showCustomerCreate : function($btn)	{
 				
 				$btn.button().off('click.showCustomerCreate').on('click.showCustomerCreate',function(event){
 					event.preventDefault();
 					app.ext.admin_customer.a.showCustomerCreateModal();
 					});
 				
-				},
-			'walletCreate' : function($btn)	{
+				}, //showCustomerCreate
+
+			walletCreate : function($btn)	{
 				$btn.button();
 				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
 					event.preventDefault();
@@ -642,7 +675,7 @@ app.model.dispatchThis('immutable');
 						$form.anymessage({'message':'Please enter all the fields below.'});
 						}
 					});
-				}
+				} //walletCreate
 
 			} //e [app Events]
 		} //r object.

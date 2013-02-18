@@ -590,17 +590,15 @@ Messaging Styles
 .ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
 .ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
 
-.ui-state-z-success .success	{background:none;} /* compensates for bg image for standard.css */
+.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center !important; width:29px; height:29px;}
 
-.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
-.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center; width:29px; height:29px;}
-
-.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat; width:25px; height:22px;}
-.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat; width:25px; height:25px;}
-.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat; width:25px; height:24px;}
-.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
+.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat !important; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
+.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
+.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 
 
 .anyIcon	{background:url(images/ui_anyicon_set-612x792.png) no-repeat; width:55px; height:55px; display:inline-block;}

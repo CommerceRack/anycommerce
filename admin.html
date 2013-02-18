@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"20130212.1",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
+	"release":"201307.a",   ///|> Increment this with each change. should solve caching issues. format: YYYYMMDD.X where X starts at 1 and is incremented w/ each daily change.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -320,7 +320,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 <button onClick="app.model.destroy('adminNewsletterList');">destroy adminNewsletterList</button>
 
-
+<button onClick="$('#globalMessaging').anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','containerClass':'ui-state-success','persistant':true})">anymessage</button>
 
 <button onClick="navigateTo('#!appChooser');">App Chooser</button>
 <button onClick="app.model.destroy('adminCustomerDetail|7633554');">destroy customer</button>
