@@ -1427,7 +1427,8 @@ VALIDATION
 
 //used frequently to throw errors or debugging info at the console.
 //called within the throwError function too
-		dump : function(msg)	{
+		dump : function(msg,type)	{
+			type = type || 'log'; //supported types are 'warn' and 'error'
 //if the console isn't open, an error occurs, so check to make sure it's defined. If not, do nothing.
 			if(typeof console != 'undefined')	{
 				if(typeof console.dir == 'function' && typeof msg == 'object')	{
@@ -1439,7 +1440,7 @@ VALIDATION
 					console.log('object output not supported');
 					}
 				else
-					console.log(msg);
+					console[type](msg);
 				}
 			}, //dump
 

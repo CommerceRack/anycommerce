@@ -244,7 +244,7 @@ addToCart : function (pid,$form){
 					
 					//compose the STID
 					if(sogJSON[i]['inv'] == 1)	{
-						thisSTID += ':'+pogid+formJSON[pogid];
+						thisSTID += ':'+pogid+formJSON['pog_'+pogid];
 						inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
 						}
 					

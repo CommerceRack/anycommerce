@@ -2043,34 +2043,42 @@ effects the display of the nav buttons only. should be run just after the handle
 			showSearch : function(infoObj)	{
 //				app.u.dump("BEGIN myRIA.u.showSearch. infoObj follows: ");
 //				app.u.dump(infoObj);
-				infoObj.templateID = 'searchTemplate'
+				infoObj.templateID = 'searchTemplate';
 				infoObj.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
+				var $page = $('#mainContentArea_search'),
+				qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
+				if(infoObj.fields)	{qObj.fields = infoObj.fields}
 
 //only create instance once.
-				if($('#mainContentArea_search').length)	{
-					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'))
+				if($page.length)	{
+					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'));
 					}
 				else	{
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(infoObj.templateID,'mainContentArea_search'))
+					$('#mainContentArea').anycontent({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
+					$page = $('#mainContentArea_search');
 					}
 
-				
-
 //add item to recently viewed list IF it is not already in the list.
-
-//I believe this should build datapointer and use fetchData?  Otherwise more complex queries will not be accessible.
 				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
 					}
 
+				var query = app.ext.store_search.u.buildElasticSimpleQuery(qObj),
+				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
+				_tag.datapointer = qObj.fields ? "appPublicSearch|"+qObj.query+"|"+qObj.fields : "appPublicSearch|"+qObj.query;
 
-				if(infoObj.ATTRIBUTES) {
-					app.ext.store_search.u.handleElasticQueryFilterByAttributes(infoObj.KEYWORDS,infoObj.ATTRIBUTES,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
-				} else {
-					app.ext.store_search.u.handleElasticSimpleQuery(infoObj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
-				}
-				// DO NOT empty altSearchesLis here. wreaks havoc.
+/*
+#####
+if you are going to override any of the defaults in the query, such as size, do it here BEFORE the query is added as data on teh $page.
+ex:  query.size = 200
+#####
+*/
+query.size = 10;
+//add the elastic query as data to the results container so that it can be used for multipage.
+//extend is used to create a copy so that further changes to query are not added to DOM (such as _tag which contains this element and causes recursion issues).
+				$('#resultsProductListContainer').data('elastic-query',$.extend(true,{},query)); 
+				app.ext.store_search.calls.appPublicSearch.init(query,_tag);
 				app.model.dispatchThis();
 
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.

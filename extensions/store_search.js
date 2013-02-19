@@ -113,12 +113,31 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
 				var L = app.data[tagObj.datapointer]['_count'];
-				$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG')
+				
+				var $list = tagObj.list;
+				$list.empty().removeClass('loadingBG').attr('data-app-role','searchResults');
+				$list.parent().find('.resultsHeader, .multipageControls').empty().remove(); //remove any previous results multipage headers
+
 				if(L == 0)	{
-					$parent.append("Your query returned zero results.");
+					$list.append("Your query returned zero results.");
 					}
 				else	{
-					$parent.append(app.ext.store_search.u.getElasticResultsAsJQObject(tagObj));
+					$list.append(app.ext.store_search.u.getElasticResultsAsJQObject(tagObj)); //prioritize w/ getting product in front of buyer
+
+//this code is in development. next/prev buttons work.
+//header works.
+//sorting does NOT work.
+//need pagination output as well.
+//					var $header = app.ext.store_search.u.buildResultsHeader($list,tagObj.datapointer);
+//					if($header)	{
+//						$header.insertBefore($list);
+//						var $multipage = app.ext.store_search.u.buildMultipageControls($list,tagObj); //summary is at the top
+//						$multipage.insertAfter($header); //multipage nav is at the top and bottom
+//						$multipage.clone().insertAfter($list);
+//						var $sortMenu = app.ext.store_search.u.buildSortMenu();
+//						$sortMenu.menu()
+//						$sortMenu.appendTo($header);
+//						}
 					}
 				}
 			}
@@ -131,7 +150,102 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 
 		u : {
+//list is the UL or whatever element type contains the list of product.
+			buildResultsHeader : function($list,datapointer)	{
+				app.u.dump("BEGIN store_search.u.buildMultipageHeader");
+				
+				var $header = false, //will be a jquery object IF the necesarry data is present.
+				EQ = $list.data('elastic-query'); //Elastic Query
+				
+				if(datapointer && $list && EQ)	{
+					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top').text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
+					}
+				else if(!EQ)	{
+					app.u.dump("NOTICE! the search results container did not contain data('elastic-filter') so no multipage data is present.",'warn');
+					}
+				else if(!$list)	{
+					$('#globalMessaging').anymessage({'message':'In store_search.u.buildResultsHeader, no $list object specified','gMessage':true})
+					}
+				else	{
+					$list.parent.anymessage({'message':'In store_search.u.buildResultsHeader, no datapointer specified','gMessage':true});
+					}
+
+				return $header;
+				},
 			
+			buildMultipageControls : function($list,_rtag)	{
+				
+				app.u.dump("BEGIN store_search.u.buildMultipageControls");
+				
+				var $controls,
+				EQ = $list.data('elastic-query'); //Elastic Query
+//				app.u.dump(" -> EQ: "); app.u.dump(EQ);
+				if($list && EQ && _rtag && _rtag.datapointer)	{
+//					app.u.dump("EQ: "); app.u.dump(EQ);
+					var data = app.data[_rtag.datapointer], //shortcut
+					from = EQ.from || 0,
+					pageInFocus = $list.data('page-in-focus') || 1, //start at 1, not zero, so page 1 = 1
+					totalPageCount = Math.ceil(data.hits.total / EQ.size) //total # of pages for this list.
+
+					$controls = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom');
+					var $prevBtn = $("<button \/>").text("Previous Page").button().addClass('previous previousButton').on('click.multipagePrev',function(event){
+						event.preventDefault();
+						app.ext.store_search.u.changePage($list,(pageInFocus - 1),_rtag);
+						});
+					var $nextBtn = $("<button \/>").text("Next Page").button().addClass('next nextButton').on('click.multipageNext',function(event){
+						event.preventDefault();
+						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
+						});
+//commented out for testing.				
+					if(pageInFocus == 1)	{$prevBtn.button('disable');}
+					else if(totalPageCount == pageInFocus){$nextBtn.button('disable')} //!!! disable next button if on last page.
+					else	{}
+
+					$prevBtn.appendTo($controls);
+					$nextBtn.appendTo($controls);
+					}
+				else if($list)	{} //$list is defined but not EQ. do not show errors for this. it may be intentional.
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_search.u.buildMultipageControls, $list or datapointer not specified','gMessage':true});
+					}
+
+				return $controls;
+				
+				},
+
+			changePage : function($list,newPage,_tag)	{
+				if($list && newPage)	{
+					var EQ = $list.data('elastic-query'); //Elastic Query
+					
+					if(EQ)	{
+						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
+						query.size = EQ.size; //use original size, not what's returned in buildSimple...
+						query.from = newPage * EQ.size;
+						$list.data('elastic-query',query); //add the elastic query as data to the results container so that it can be used for multipage.
+						$list.data('page-in-focus',newPage);
+						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
+						app.model.dispatchThis();
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In store_search.u.changePage, $list set but missing data(elastic-query).','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_search.u.changePage, $list or newPage not specified','gMessage':true});
+					}
+				},
+			
+			buildSortMenu : function(){
+				var $ul = $("<ul \/>");
+				$("<li \/>").text("Relevance").appendTo($ul);
+				$("<li \/>").text("Alphabetical (a to z)").appendTo($ul);
+				$("<li \/>").text("Price (low to high)").appendTo($ul);
+				
+				var $li = $("<li \/>").append("<a href='#'>sort by</a>");
+				$li.append($ul);
+				
+				return $("<ul \/>").css('width','200px').append($li);
+				},
 			
 			getAlternativeQueries : function(keywords,tagObj)	{
 				var keywordsArray = new Array();
@@ -221,29 +335,30 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				return $r.children();
 				},
 
-			handleElasticSimpleQuery : function(keywords,tagObj)	{
-				var qObj = {}; //query object
-				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
-				qObj.size = 250;
-				qObj.query =  {"query_string" : {"query" : keywords}};
-				if(typeof tagObj != 'object')	{tagObj = {}};
-				tagObj.datapointer = "appPublicSearch|"+keywords
-				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
-				app.model.dispatchThis();
+//Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
+			buildElasticSimpleQuery : function(obj)	{
+				var query = {}; //what is returned. false if error occurs.
+				if(obj && obj.query)	{
+					query.type = 'product';
+					query.mode = 'elastic-native';
+					query.size = 250;
+					query.query =  {"query_string" : obj};
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_search.u.buildElasticSimpleQuery, obj.query was empty. ',gMessage:true});
+					query = false;
+					}
+				return query;
 				},
-				
-			handleElasticQueryFilterByAttributes : function(keywords, attributes, tagObj) {
-				var qObj = {}; //query object
-				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
-				qObj.size = 250;
-				qObj.query =  {"query_string" : {"query" : keywords, "fields" : attributes}};
-				if(typeof tagObj != 'object')	{tagObj = {}};
-				tagObj.datapointer = "appPublicSearch|"+keywords+"|"+attributes;
-				app.u.dump(" --> datapointer for filterByAttributes query: "+tagObj.datapointer);
-				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
+
+//not used by quickstart anymore. Still in use by analyzer and admin product editor.
+			handleElasticSimpleQuery : function(keywords,_tag)	{
+				var qObj = this.buildElasticSimpleQuery({'query':keywords});
+				_tag = _tag || {};
+				_tag.datapointer = "appPublicSearch|"+keywords;
+				var r = app.ext.store_search.calls.appPublicSearch.init(qObj,_tag);
 				app.model.dispatchThis();
+				return r;
 				}
 				
 			} //util

@@ -362,7 +362,7 @@ var admin_prodEdit = function() {
 		handleProductKeywordSearch : function(obj)	{
 			if(obj && obj.KEYWORDS)	{
 				app.ext.admin_prodEdit.u.prepContentArea4Results();
-				app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateTableResults','parentID':'prodEditorResultsTable'});
+				app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateTableResults','list':$('#prodEditorResultsTable')});
 				app.model.dispatchThis();
 				}
 			else	{
