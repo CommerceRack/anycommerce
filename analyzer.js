@@ -19,19 +19,17 @@
 
 
 
-var myRIA = function() {
+var analyzer = function() {
 	var r = {
 		vars : {
-			"templates" : ['profileTemplate','catInfoTemplate','prodlistProdTemplate'],
-			"dependAttempts" : 0,  //used to count how many times loading the dependencies has been attempted.
-			"dependencies" : ['store_navcats','store_search'] //a list of other extensions (just the namespace) that are required for this one to load
+			"templates" : ['profileTemplate','catInfoTemplate','prodlistProdTemplate']
 			},
 		
 		calls: {
 			
 			appResource : {
 				init : function(filename,tagObj,Q)	{
-//					app.u.dump("BEGIN myRIA.calls.appResource.init");
+//					app.u.dump("BEGIN analyzer.calls.appResource.init");
 					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
 					tagObj.datapointer = 'appResource|'+filename;
 					this.dispatch(filename,tagObj,Q);
@@ -57,25 +55,30 @@ var myRIA = function() {
 				onError : function()	{
 //errors will get reported for this callback as part of the extensions loading.  This is here for extra error handling purposes.
 //you may or may not need it.
-					app.u.dump('BEGIN app.ext.myRIA.callbacks.init.onError');
+					app.u.dump('BEGIN app.ext.analyzer.callbacks.init.onError');
 					}
 				},
 
 //this is the callback defined to run after extension loads.
 			startMyProgram : {
 				onSuccess : function()	{
-					
-$('#profileSummary').append(app.renderFunctions.createTemplateInstance('profileTemplate',"profileSummaryList"));
-					
-$('#tabs-1').append(app.ext.myRIA.u.objExplore(zGlobals));
-$('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 
-					app.ext.myRIA.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'myRIA'});
+$('#profileSummary').anycontent({'templateID':'profileTemplate','dataAttribs':{id:"profileSummaryList"}});
+
+$('#tabs-1').append(app.ext.analyzer.u.objExplore(zGlobals));
+$('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
+
+					app.ext.analyzer.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'analyzer'});
 //request profile data (company name, logo, policies, etc)
-					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
-					app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"});
-					app.model.dispatchThis();
-					
+					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'analyzer'});
+					if(zGlobals && zGlobals.appSettings && zGlobals.appSettings.rootcat)	{
+						app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"analyzer"});
+						app.model.dispatchThis();
+						}
+					else	{
+						$("#globalMessaging").anyMessage({'message':'Could not load category tree because zGlobals.appSettings.rootcat was not present/accessable.'});
+						}
+
 					},
 				onError : function(responseData,uuid)	{
 //error handling is a case where the response is delivered (unlike success where datapointers are used for recycling purposes)
@@ -96,11 +99,11 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 
 			prodDebug : {
 				onSuccess : function(tagObj)	{
-//					app.u.dump("BEGIN myRIA.callbacks.prodDebug");
-					$('#attribsDebugData').append(app.ext.myRIA.u.objExplore(app.data[tagObj.datapointer]['%attribs']));
-					$('#variationsDebugData').append(app.ext.myRIA.u.objExplore(app.data[tagObj.datapointer]['@variations']));
-					$('#inventoryDebugData').append(app.ext.myRIA.u.objExplore(app.data[tagObj.datapointer]['@inventory']));
-					$('#prodDebugThumbs').append(app.ext.myRIA.u.prodDebugImageList(tagObj.datapointer));
+//					app.u.dump("BEGIN analyzer.callbacks.prodDebug");
+					$('#attribsDebugData').append(app.ext.analyzer.u.objExplore(app.data[tagObj.datapointer]['%attribs']));
+					$('#variationsDebugData').append(app.ext.analyzer.u.objExplore(app.data[tagObj.datapointer]['@variations']));
+					$('#inventoryDebugData').append(app.ext.analyzer.u.objExplore(app.data[tagObj.datapointer]['@inventory']));
+					$('#prodDebugThumbs').append(app.ext.analyzer.u.prodDebugImageList(tagObj.datapointer));
 					$('#tabs-5 li:odd').addClass('odd');
 					},
 				onError : function(responseData,uuid)	{
@@ -115,11 +118,11 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 					var dataSrc;
 //not all data is at the root level.
 					app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
-					$('#profileData').html(app.ext.myRIA.u.objExplore(app.data[tagObj.datapointer]));
+					$('#profileData').html(app.ext.analyzer.u.objExplore(app.data[tagObj.datapointer]));
 					},
 				onError : function(responseData,uuid)	{
 	//throw some messaging at the user.  since the categories should have appeared in the left col, that's where we'll add the messaging.
-					app.u.dump("BEGIN myRIA.callbacks.handleFlexedit.onError");
+					app.u.dump("BEGIN analyzer.callbacks.handleFlexedit.onError");
 					app.u.handleErrors(responseData,uuid);
 					}
 				}, //handleProfile
@@ -131,14 +134,14 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 					},
 				onError : function(responseData,uuid)	{
 	//throw some messaging at the user.  since the categories should have appeared in the left col, that's where we'll add the messaging.
-					app.u.dump("BEGIN myRIA.callbacks.handleFlexedit.onError");
+					app.u.dump("BEGIN analyzer.callbacks.handleFlexedit.onError");
 					app.u.handleErrors(responseData,uuid);
 					}
 				}, //handleFlexedit
 				
 			handleElasticResults : {
 				onSuccess : function(tagObj)	{
-//					app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
+//					app.u.dump("BEGIN analyzer.callbacks.handleElasticResults.onSuccess.");
 					var L = app.data[tagObj.datapointer]['_count'];
 //					app.u.dump(" -> Number Results: "+L);
 					$parent = $('#'+tagObj.parentID).empty().removeClass('loadingBG');
@@ -165,7 +168,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 		a : {
 			
 			showSubcats : function(path)	{
-//				app.u.dump("BEGIN myRIA.a.showSubcats ["+path+"]");
+//				app.u.dump("BEGIN analyzer.a.showSubcats ["+path+"]");
 				var parentID = 'categoryTreeSubs_'+app.u.makeSafeHTMLId(path);
 //				app.u.dump(" -> size() = "+$('#'+parentID+' li').size());
 //once the parentID has children, the subcats have already been loaded. don't load them twice.
@@ -177,7 +180,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 			
 			exploreProduct : function(pid)	{
 				$('#attribsDebugData, #variationsDebugData ,#inventoryDebugData, #prodDebugThumbs').empty();
-				app.ext.store_product.calls.appProductGet.init(pid,{'callback':'prodDebug','extension':'myRIA'});
+				app.ext.store_product.calls.appProductGet.init(pid,{'callback':'prodDebug','extension':'analyzer'});
 				app.model.dispatchThis();
 				},
 			
@@ -185,7 +188,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 				$('#tagList li').removeClass('ui-state-active'); //remove any previously active states from list item choiced.
 				$('#'+tag).addClass('ui-state-active'); //add active state to list item now in focus.
 				$('#tagProdlist').empty().addClass('loadingBG'); //empty results container so new list isn't appended to previous list, if present.
-				app.ext.store_search.calls.appPublicProductSearch.init({'size':250,'mode':'elastic-native','filter':{'term':{'tags':tag}}},{'callback':'handleElasticResults','extension':'myRIA','datapointer':'appPublicSearch|'+tag,'parentID':'tagProdlist'});
+				app.ext.store_search.calls.appPublicProductSearch.init({'size':250,'mode':'elastic-native','filter':{'term':{'tags':tag}}},{'callback':'handleElasticResults','extension':'analyzer','datapointer':'appPublicSearch|'+tag,'parentID':'tagProdlist'});
 				app.model.dispatchThis();
 				}, //showItemsTaggedAs
 
@@ -195,7 +198,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 				}
 
 			}, //actions
-		util : {
+		u : {
 			
 			buildTagsList : function(P)	{
 				var $ul = $("<ul>").attr(P); //what is returned.
@@ -204,7 +207,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 				var L = tags.length;
 				for(var i = 0; i < L; i += 1)	{
 					$li = $("<li>").attr('id',tags[i]).addClass('ui-state-default').text(tags[i]).click(function(){
-						app.ext.myRIA.a.showItemsTaggedAs(this.id);
+						app.ext.analyzer.a.showItemsTaggedAs(this.id);
 						});
 					$li.appendTo($ul);
 					}
@@ -227,7 +230,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 			handleElasticFilterOrQuery : function()	{
 				var quilter = $.parseJSON($('#advsrch_filterQuery').val()); //query/filter object
 				if(quilter)	{
-					app.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'myRIA','parentID':'elasticResults','datapointer':'elasticsearch|Test'});
+					app.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'analyzer','parentID':'elasticResults','datapointer':'elasticsearch|Test'});
 					app.model.dispatchThis();
 					}
 				else	{
@@ -237,7 +240,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 				},
 			
 			objExplore : function(obj)	{
-// 				app.u.dump("BEGIN myRIA.u.objExplore");
+// 				app.u.dump("BEGIN analyzer.u.objExplore");
 				var keys = new Array();
 				for (var n in obj) {
 					keys.push(n);
@@ -252,7 +255,7 @@ $('#tabs-4').append(app.ext.myRIA.u.buildTagsList({'id':'tagList'}));
 					$prompt = $('<span>').addClass('prompt').text(keys[i]).appendTo($li);
 					
 					if(typeof obj[keys[i]] == 'object')	{
-						$value = app.ext.myRIA.u.objExplore(obj[keys[i]]);
+						$value = app.ext.analyzer.u.objExplore(obj[keys[i]]);
 						}
 					else	{
 						$value = $('<span>').addClass('value').text(obj[keys[i]]);

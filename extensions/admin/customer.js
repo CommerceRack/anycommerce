@@ -341,7 +341,7 @@ else	{
 						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+encodeURIComponent(formObj)],{'callback':function(){
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$target.anymessage(rd);
+								$target.anymessage({'message':rd});
 								}
 							else	{
 								$target.empty().anymessage({'message':'Thank you, the address has been added'});
@@ -509,7 +509,7 @@ app.model.dispatchThis('immutable');
 							app.ext.admin.calls.adminCustomerUpdate.init($btn.closest('data-cid').data('cid'),macros,{'callback':function(){
 								$('body').hideLoading();
 								if(app.model.responseHasErrors(rd)){
-									$('#globalMessaging').anymessage(rd);
+									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
 									app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-app-role='customerManager']").parent(),{'CID':CID})
@@ -542,7 +542,7 @@ app.model.dispatchThis('immutable');
 						
 $('.dualModeListMessaging',$parent).empty();
 if(app.model.responseHasErrors(rd)){
-	$parent.anymessage(rd);
+	$parent.anymessage({'message':rd});
 	}
 else	{
 	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
@@ -577,7 +577,7 @@ else	{
 						app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
 							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$target.anymessage(rd);
+								$target.anymessage({'message':rd});
 								}
 							else	{
 								$target.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
@@ -634,7 +634,7 @@ else	{
 						app.ext.admin.calls.adminCustomerUpdate.init(["WALLETCREATE?"+encodeURIComponent($form.serializeJSON())],{'callback':function(){
 							$form.hideLoading();
 							if(app.model.responseHasErrors(rd)){
-								$form.anymessage(rd);
+								$form.anymessage({'message':rd});
 								}
 							else	{
 								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});

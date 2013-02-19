@@ -8,53 +8,53 @@
 
 
 
-<!-- jquery and jquery ui -->
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
-
-
-<!-- zoovy mvc -->
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201225/model.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201225/controller.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/zmvc/201304/includes.js"></script>
-<script type="text/javascript" src="http://static.zoovy.com/graphics/general/jslib/jquery/jcarousel-0.2.7/jquery.jcarousel.min.js"></script>
-
-
 
 
 <script type="text/javascript">
 
 localStorage.clear();
+var $tabs, //set globally so tabs can easily be opened via click events
+myCreole;
 
-var $tabs; //set globally so tabs can be opened via click events
+var app = {vars:{
+	"release":"20130214074800",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"_clientid":"zmvc"
+	},u:{},rq:[]};
 
-var app;
-var myCreole;
-var myExtensions = [
-	{"namespace":"store_navcats","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_navcats.js"},
-	{"namespace":"store_search","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_search.js"},
-	{"namespace":"store_product","filename":"http://static.zoovy.com/graphics/general/jslib/zmvc/201225/extensions/store_product.js"},
-	{"namespace":"myRIA","filename":"site_analyzer.js","callback":"startMyProgram"} //should be last, but doesn't have to be.
-	];
+//set base url so images, css, js, etc all load from appropriate location once deployed.
+//baseURL as blank lets loadScript function run off local copy when testing locally.
+if(document.location.protocol != 'file:')	{
+	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL;
+	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+	}
+</script>
 
 
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js"></script>
+<script type="text/javascript" src="loadscript.js"></script>
+
+
+
+<script type="text/javascript">
+app.u.loadScript("analyzer_init.js");
+</script>
+
+
+<script type="text/javascript">
 
 
 function getConfig4Domain()	{
 	var domain = $('#domain').val();
 	if(domain)	{
 		console.log('BEGIN getConfig4Domain');
-		var protocol = location.protocol === 'https:' ? 'https:' : 'http:';
-		var url = protocol+'//'+$('#domain').val()+'/jquery/config.js';
+		var url = 'http://'+$('#domain').val()+'/jquery/config.js';
 		$.getScript(url).success(function(script, textStatus) {
-			app = new zController({
-				"release":"20120621043900" //increment this with each change. should solve caching issues.
-				},myExtensions);  //instantiate controller. handles all logic and communication between model and view.
-				//instantiate wiki parser.
-			myCreole = new Parse.Simple.Creole();
-			app.u.dump("app init has run");
+//instantiate wiki parser.
+			app.u.handleRQ(0);
 			$('#domainFrm').hide(); //hide the domain form. need new cart if domain changes. easier to just reload page (for now).
-			$('#refreshBtn').show();
+			$('#refreshBtn').button().show();
 			$tabs = $( "#tabs" ).show().tabs();
 			}).fail(function(jqxhr, settings, exception) {
 			  alert('An error occured trying to load the config.js');
@@ -125,7 +125,7 @@ ul .prompt	{display:inline-block; width:250px;}
 </head>
 <body class='ui-widget'>
 <div class='clearfix'>
-<button class='floatRight ui-button ui-corner-all ui-state-default displayNone' onClick="app.ext.myRIA.a.changeDomains();" id='refreshBtn'>Change Domains</button>
+<button class='floatRight ui-button ui-corner-all ui-state-default displayNone' onClick="app.ext.analyzer.a.changeDomains();" id='refreshBtn'>Change Domains</button>
 
 <form action='#' onSubmit='getConfig4Domain(); return false;' id='domainFrm' name='domainFrm'>
 <label>Domain:</label>
@@ -182,7 +182,7 @@ ul .prompt	{display:inline-block; width:250px;}
 	
 	
 	<div id="tabs-5" >
-<form action='#' onSubmit="app.ext.myRIA.a.exploreProduct($('#pid').val()); return false;">
+<form action='#' onSubmit="app.ext.analyzer.a.exploreProduct($('#pid').val()); return false;">
 <label for='pid'>Product ID: </label>
 <input type='text' name='pid' id='pid' size='25' />
 <input type='submit' value='go' class='ui-button ui-corner-all ui-state-active' id='prodExplorerBtn' />
@@ -207,14 +207,14 @@ ul .prompt	{display:inline-block; width:250px;}
 	
 <div id='keywordContainer'>
 	<label for='simpleKeywordSearch'>keyword</label><input type='text' name='simpleKeywordSearch' id='simpleKeywordSearch' value='' />
-	<button onClick="app.ext.store_search.u.handleElasticSimpleQuery($('#simpleKeywordSearch').val(),{'callback':'handleElasticResults','extension':'myRIA','parentID':'elasticResults','datapointer':'elasticsearch|'+$('#simpleKeywordSearch').val()}); app.model.dispatchThis(); return false;">Go</button>
+	<button onClick="app.ext.store_search.u.handleElasticSimpleQuery($('#simpleKeywordSearch').val(),{'callback':'handleElasticResults','extension':'analyzer','parentID':'elasticResults','datapointer':'elasticsearch|'+$('#simpleKeywordSearch').val()}); app.model.dispatchThis(); return false;">Go</button>
 	<span class='hint'><a href='#' onClick="$('#keywordContainer, #queryFilterContainer').toggle();">advanced search</a></span>
 </div>
 
 <div id='queryFilterContainer' class='displayNone'>
 <textarea id='advsrch_filterQuery' name='advsrch_filterQuery' cols='40' rows='10'></textarea>
 <!-- <textarea id='advsrch_attributes' name='advsrch_attributes' cols='40' rows='10'></textarea> -->
-<button onClick="app.ext.myRIA.u.handleElasticFilterOrQuery(); return false;">Go</button>
+<button onClick="app.ext.analyzer.u.handleElasticFilterOrQuery(); return false;">Go</button>
 <span class='hint'><a href='#' onClick="$('#keywordContainer, #queryFilterContainer').toggle();">keyword search</a></span>
 </div>
 
@@ -248,6 +248,7 @@ ul .prompt	{display:inline-block; width:250px;}
 
 
 <div id='appTemplates' style='display:none;'>
+
 <!-- a template. will be removed from the dom as templates are loaded into memory -->
 	<div id='profileTemplate'>
 
@@ -281,7 +282,7 @@ ul .prompt	{display:inline-block; width:250px;}
 		pretty: <span data-bind='var: category(pretty); format:text;'></span><br />
 		id: <span data-bind='var: category(id); format:text;'></span> 
 		# product: <span data-bind='var: category(@products); format:numProduct; extension:store_navcats; defaultVal:0;'></span>
-		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="app.ext.myRIA.a.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
+		<a href='#'  data-bind='var:category(id); format:assignAttribute; attribute:data-catsafeid;' onClick="app.ext.analyzer.a.showSubcats($(this).attr('data-catsafeid')); return false;"># subcats: <span data-bind='var: category(@subcategories); format:numSubcats; extension:store_navcats;defaultVal:0;'></span></a>
 	</div>
 	
 	<ul data-bind='var:category(id); format:assignAttribute; attribute:id; valuePretext:categoryTreeSubs_;' class='subcats'></ul>

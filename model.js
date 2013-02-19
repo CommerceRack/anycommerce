@@ -734,7 +734,10 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 					app.u.dump(' -> successful response for uuid '+uuid+'. callback defined ('+callback+') but does not exist or is not valid type.')
 					}
 				}
-			app.q[app.model.whichQAmIFrom(uuid)][Number(uuid)]['status'] = status;
+			var fromQ = app.model.whichQAmIFrom(uuid);
+			if(fromQ && app.q[fromQ] && app.q[fromQ][Number(uuid)])	{
+				app.q[app.model.whichQAmIFrom(uuid)][Number(uuid)]['status'] = status;
+				}
 			return status;
 		},
 	

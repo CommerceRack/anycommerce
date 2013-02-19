@@ -185,7 +185,7 @@ For the list of available params, see the 'options' object below.
 				$target = $('.ui-widget-anymessage',this.element);
 				}
 			
-			$message.each(function(){
+			$target.each(function(){
 //the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
 //also, remove the message (this.output), not the target element, which may have a lot of other content.
 				if($(this).is(':visible'))	{
