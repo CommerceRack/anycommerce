@@ -1099,7 +1099,7 @@ else	{
 						app.ext.myRIA.u.revertPageFromPreviewMode($parent);
 						}).prependTo($buttonBar);
 
-	 
+
 //The next and previous buttons just trigger a click on the image.
 					var $nextButton = $("<button \/>").button().addClass('nextButton navButton').text('Next').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
