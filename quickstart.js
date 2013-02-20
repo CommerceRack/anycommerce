@@ -1086,39 +1086,48 @@ else	{
 //if the detail panel is already visible, no need to animate or adjust css on containers.
 				else if($detail.is(':visible'))	{
 //transition out the existing product in view.
-					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
+					$detail.children().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
 					}
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
 					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':0}).prependTo($parent);
+					$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //used to determine if a page change has occured in next/prev product buttons.
+
 					
 //button for turning off preview mode. returns li's to normal state and animates the two 'panes'.
 					$("<button \/>").button().text('close preview').on('click',function(event){
 						app.ext.myRIA.u.revertPageFromPreviewMode($parent);
 						}).prependTo($buttonBar);
 
-					 
+	 
 //The next and previous buttons just trigger a click on the image.
 					var $nextButton = $("<button \/>").button().addClass('nextButton navButton').text('Next').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
 						$nextButton.button('option','disabled',true);
-						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
+						if($buttonBar.data('page-in-focus') == $('#resultsProductListContainer').data('page-in-focus'))	{
+							$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
+							}
+						else	{
+							$('#resultsProductListContainer').children().first().find('.pointer').first().trigger('click');
+							$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //set vars to match so 'next' button recognizes as same page if no page change has occured.
+							}
 						}).prependTo($buttonBar);
 
 					var $prevButton = $("<button \/>").addClass('prevButton navButton').button().text('Previous').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
 						$prevButton.button('disable');
-						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
+						if($buttonBar.data('page-in-focus') == $('#resultsProductListContainer').data('page-in-focus'))	{
+							$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
+							}
+						else	{
+							$('#resultsProductListContainer').children().first().find('.pointer').first().trigger('click');
+							$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //set vars to match so 'next' button recognizes as same page if no page change has occured.
+							}						
 						}).prependTo($buttonBar);
 
 					$detail.show().css({'padding-top': ($buttonBar.height() + 5)+'px'}); //top padding to compensate for button bar.
 
-					$('.hideInMinimalMode',$liContainer).hide();
-					$('li',$liContainer).each(function(){
-						$(this).css({'overflow':'hidden','margin':'0 3px 3px 0','padding':'1px'}); //add padding to compensate for border on 'active'
-						$(this).animate({'height':height,'width':width},'fast'); //reduce the height and width so only the image is visible.
-						});
-
+					$parent.addClass('minimalMode'); //use a class to toggle elements on/off instead of show/hide. That way if content is regenerated, visibility state is preserved
 					$detail.css({'float':'right'});
 					$liContainer.css({'float':'left','overflow':'auto','height':'500px'});
 					
@@ -1478,13 +1487,12 @@ if(ps.indexOf('?') >= 1)	{
 				if(typeof $parent == 'object')	{
 					$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
 					$detail = $('.previewProductDetail',$parent); //target for content.
-					
-					$('.hideInMinimalMode',$liContainer).show();
-					$detail.animate({'width':'0'},'slow','',function(){$(this).addClass('displayNone').removeAttr('style').empty()});
-					$liContainer.animate({'width':'99%'},'slow','',function(){$(this).removeAttr('style')});
-					$('li[style]',$liContainer).removeAttr('style'); //remove the style attributes which will return to the classes instead.
-					$('li',$liContainer).removeClass('ui-state-active').removeAttr('style');
-					$(".buttonBar",$parent).remove();
+
+					$parent.removeClass('minimalMode'); //returns product list and multipage display to normal
+					$detail.animate({'width':'0'},'slow','',function(){$(this).addClass('displayNone').removeAttr('style').empty()}); //return right col to zero width
+					$liContainer.animate({'width':'99%'},'slow','',function(){$(this).removeAttr('style')}); //return main col to 100% width
+					$('li.ui-state-active',$liContainer).removeClass('ui-state-active');
+					$(".buttonBar",$parent).remove(); //get rid of navigation
 					}
 				else	{
 					app.u.throwGMessage("In myRIA.u.revertPageFromPreviewMode, $parent not specified or not an object ["+typeof $parent+"].");
@@ -2105,9 +2113,8 @@ ex:  query.size = 200
 #####
 */
 query.size = 10;
-//add the elastic query as data to the results container so that it can be used for multipage.
-//extend is used to create a copy so that further changes to query are not added to DOM (such as _tag which contains this element and causes recursion issues).
-				$('#resultsProductListContainer').data('elastic-query',$.extend(true,{},query)); 
+
+				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),query,1);
 				app.ext.store_search.calls.appPublicSearch.init(query,_tag);
 				app.model.dispatchThis();
 

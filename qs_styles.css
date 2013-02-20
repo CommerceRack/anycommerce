@@ -136,7 +136,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-/* pages like search results, company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
+/* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
 .mainColumn	{width:75%;}
 .sideline	{float:right; width:20%; margin:0 0 24px 0px;}
@@ -352,8 +352,15 @@ SEARCH RESULTS PAGE
 ***************************************************/
 
 #mainContentArea_search	{position:relative;}
-
-
+.resultsHeader .ui-menu	{width:250px;} /* used for sorting and pagination menus */
+.resultsHeader .ui-menu-icon	{float:left;}
+.minimalMode .hideInMinimalMode	{display:none;}
+.minimalMode .searchResultsProduct	{
+	height:120px; width:120px; overflow:hidden; margin:0 5px 5px 0;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	}
 
 /***************************************************
 
