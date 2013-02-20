@@ -2112,7 +2112,7 @@ if you are going to override any of the defaults in the query, such as size, do 
 ex:  query.size = 200
 #####
 */
-query.size = 10;
+query.size = 50;
 
 				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),query,1);
 				app.ext.store_search.calls.appPublicSearch.init(query,_tag);
