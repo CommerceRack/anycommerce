@@ -110,34 +110,45 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 //the request that uses this as a callback should have the following params set for _tag:
 // parentID, templateID (template used on each item in the results) and datapointer.
 		handleElasticResults : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 				app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
-				var L = app.data[tagObj.datapointer]['_count'];
+				var L = app.data[_rtag.datapointer]['_count'];
 				
-				var $list = tagObj.list;
+				var $list = _rtag.list;
 				$list.empty().removeClass('loadingBG').attr('data-app-role','searchResults');
-				$list.parent().find('.resultsHeader, .multipageControls').empty().remove(); //remove any previous results multipage headers
+				$list.parent().find('.resultsHeader').empty().remove(); //remove any previous results multipage headers
 
 				if(L == 0)	{
 					$list.append("Your query returned zero results.");
 					}
 				else	{
-					$list.append(app.ext.store_search.u.getElasticResultsAsJQObject(tagObj)); //prioritize w/ getting product in front of buyer
+					$list.append(app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
 
-//this code is in development. next/prev buttons work.
-//header works.
-//sorting does NOT work.
-//need pagination output as well.
-					var $header = app.ext.store_search.u.buildResultsHeader($list,tagObj.datapointer);
-					if($header)	{
-						$header.insertBefore($list);
-						var $sortMenu = app.ext.store_search.u.buildSortMenu($list,tagObj);
-						$sortMenu.appendTo($header);
+					var EQ = $list.data('elastic-query'); //Elastic Query
+					if(EQ)	{
+						var $header = app.ext.store_search.u.buildResultsHeader($list,_rtag.datapointer), //# of results and keyword display.
+						$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
+						$pageMenu = app.ext.store_search.u.buildPagination($list,_rtag), //pagination as ul
+						$multipage = app.ext.store_search.u.buildPaginationButtons($list,_rtag), //next/prev buttons
+						$menuContainer = $("<div \/>").addClass('resultsMenuContainer'), //used to hold menus. imp for abs. positioning.
+						$controlsContainer = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom'); //used to hold menus and buttons.
 						
-						var $multipage = app.ext.store_search.u.buildMultipageControls($list,tagObj); //summary is at the top
-						$multipage.insertAfter($header); //multipage nav is at the top and bottom
-					
+						$menuContainer.append($sortMenu);
+						$menuContainer.append($pageMenu);
+						$menuContainer.appendTo($controlsContainer);
+						$multipage.appendTo($controlsContainer); //multipage nav is at the top and bottom
+						
+						$header.insertBefore($list);
+						$controlsContainer.insertBefore($list);
+
+//add to DOM prior to running menu. helps it to not barf.
 						$sortMenu.menu();
+						$pageMenu.menu(); 
+						
+						
+						}
+					else	{
+						//no error gets thrown here. it is an acceptable use case to display search results w/ no multipage functionality.
 						}
 					}
 				}
@@ -174,9 +185,9 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				return $header;
 				},
 			
-			buildMultipageControls : function($list,_rtag)	{
+			buildPaginationButtons : function($list,_rtag)	{
 				
-				app.u.dump("BEGIN store_search.u.buildMultipageControls");
+				app.u.dump("BEGIN store_search.u.buildPaginationButtons");
 				
 				var $controls,
 				EQ = $list.data('elastic-query'); //Elastic Query
@@ -188,11 +199,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					pageInFocus = $list.data('page-in-focus') || 1, //start at 1, not zero, so page 1 = 1
 					totalPageCount = Math.ceil(data.hits.total / EQ.size) //total # of pages for this list.
 
-					$controls = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom');
-					
-					var $pagination = app.ext.store_search.u.buildPagination($list,_rtag);
-					$pagination.appendTo($controls);
-					$pagination.menu(); //add to DOM prior to running menu. helps it to not barf.
+					$controls = $("<div \/>").addClass('');
+
 //SANITY -> the classes on these buttons are used in quickstart. 					
 					var $prevPageBtn = $("<button \/>").text("Previous Page").button({icons: {primary: "ui-icon-circle-triangle-w"},text: false}).addClass('prevPageButton').on('click.multipagePrev',function(event){
 						event.preventDefault();
@@ -202,17 +210,17 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
 						});
-//commented out for testing.				
+
 					if(pageInFocus == 1)	{$prevPageBtn.button('disable');}
 					else if(totalPageCount == pageInFocus){$nextPageBtn.button('disable')} //!!! disable next button if on last page.
 					else	{}
 
-					$prevPageBtn.appendTo($controls);
 					$nextPageBtn.appendTo($controls);
+					$prevPageBtn.appendTo($controls);
 					}
 				else if($list)	{} //$list is defined but not EQ. do not show errors for this. it may be intentional.
 				else	{
-					$('#globalMessaging').anymessage({'message':'In store_search.u.buildMultipageControls, $list or datapointer not specified','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In store_search.u.buildPaginationButtons, $list or datapointer not specified','gMessage':true});
 					}
 
 				return $controls;
@@ -235,7 +243,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					if(EQ)	{
 						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
 						query.size = EQ.size; //use original size, not what's returned in buildSimple...
-						query.from = newPage * EQ.size;
+						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						app.ext.store_search.u.updateDataOnListElement($list,query,newPage);
 						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
 						app.model.dispatchThis();
@@ -260,7 +268,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						
 						if(totalPageCount <= 1)	{app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);} //if there is only 1 page or something went wrong, don't show pagination.
 						else	{
-							$pagination = $("<ul \/>").addClass('pagination');
+							$pagination = $("<ul \/>").addClass('pagination resultsMenu');
 							$pagination.addClass('hideInMinimalMode').append($("<li \/>").html("<a href='#'>Page "+pageInFocus+" of "+totalPageCount+"<\/a>"));
 							var $pages = $("<ul \/>");
 							for(var i = 1; i <= totalPageCount; i+= 1)	{
@@ -283,10 +291,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					$('#globalMessaging').anymessage({'message':'In store_search.u.buildPagination, either $list ['+typeof $list+'] or _tag ['+typeof _tag+'] not passed','gMessage':true});
 					}
 				return $pagination;
-				},
+				}, //buildPagination
 
 			buildSortMenu : function($list,_tag){
-				var $sort = $("<ul \/>").addClass('sortMethods'),
+				var $sort = $("<ul \/>").addClass('sortMethods resultsMenu'),
 				$ul = $("<ul \/>"),
 				EQ = $list.data('elastic-query'); //Elastic Query
 				
@@ -308,7 +316,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
 						query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = 0;
-						query.sort = [{'salesrank':{'order':'asc'}}];
+						query.sort = [{'base_price':{'order':'asc'}}];
 						
 						app.ext.store_search.u.updateDataOnListElement($list,query,1);
 
@@ -318,7 +326,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					})
 				
 				return $sort;
-				},
+				}, //buildSortMenu
 			
 			getAlternativeQueries : function(keywords,tagObj)	{
 				var keywordsArray = new Array();
