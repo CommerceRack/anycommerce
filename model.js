@@ -885,9 +885,6 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							responseData['errmsg'] = "could not find category (may not exist)";
 							} //a response errid of zero 'may' mean no errors.
 						break;
-					case 'appPublicSearch':
-						//currently, there are no errors. I have a hunch this will change.
-						break;
 		
 					case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
 					case 'cartItemsAdd':

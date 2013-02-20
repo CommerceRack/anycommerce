@@ -131,12 +131,12 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					var $header = app.ext.store_search.u.buildResultsHeader($list,tagObj.datapointer);
 					if($header)	{
 						$header.insertBefore($list);
-//						var $multipage = app.ext.store_search.u.buildMultipageControls($list,tagObj); //summary is at the top
-//						$multipage.insertAfter($header); //multipage nav is at the top and bottom
-//						$multipage.clone().insertAfter($list);
-//						var $sortMenu = app.ext.store_search.u.buildSortMenu();
-//						$sortMenu.menu()
-//						$sortMenu.appendTo($header);
+						var $multipage = app.ext.store_search.u.buildMultipageControls($list,tagObj); //summary is at the top
+						$multipage.insertAfter($header); //multipage nav is at the top and bottom
+						$multipage.clone().insertAfter($list);
+						var $sortMenu = app.ext.store_search.u.buildSortMenu($list,tagObj);
+						$sortMenu.menu()
+						$sortMenu.appendTo($header);
 						}
 					}
 				}
@@ -188,21 +188,22 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					totalPageCount = Math.ceil(data.hits.total / EQ.size) //total # of pages for this list.
 
 					$controls = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom');
-					var $prevBtn = $("<button \/>").text("Previous Page").button().addClass('previous previousButton').on('click.multipagePrev',function(event){
+					
+					var $prevPageBtn = $("<button \/>").text("Previous Page").button({icons: {primary: "ui-icon-circle-triangle-w"},text: false}).addClass('prevPageButton').on('click.multipagePrev',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus - 1),_rtag);
 						});
-					var $nextBtn = $("<button \/>").text("Next Page").button().addClass('next nextButton').on('click.multipageNext',function(event){
+					var $nextPageBtn = $("<button \/>").text("Next Page").button({icons: {primary: "ui-icon-circle-triangle-e"},text: false}).addClass('nextPageButton').on('click.multipageNext',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
 						});
 //commented out for testing.				
-					if(pageInFocus == 1)	{$prevBtn.button('disable');}
-					else if(totalPageCount == pageInFocus){$nextBtn.button('disable')} //!!! disable next button if on last page.
+					if(pageInFocus == 1)	{$prevPageBtn.button('disable');}
+					else if(totalPageCount == pageInFocus){$nextPageBtn.button('disable')} //!!! disable next button if on last page.
 					else	{}
 
-					$prevBtn.appendTo($controls);
-					$nextBtn.appendTo($controls);
+					$prevPageBtn.appendTo($controls);
+					$nextPageBtn.appendTo($controls);
 					}
 				else if($list)	{} //$list is defined but not EQ. do not show errors for this. it may be intentional.
 				else	{
@@ -235,14 +236,36 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					}
 				},
 			
-			buildSortMenu : function(){
-				var $ul = $("<ul \/>");
-				$("<li \/>").text("Relevance").appendTo($ul);
-				$("<li \/>").text("Alphabetical (a to z)").appendTo($ul);
-				$("<li \/>").text("Price (low to high)").appendTo($ul);
+			buildSortMenu : function($list,_tag){
+				var $ul = $("<ul \/>"),
+				EQ = $list.data('elastic-query'), //Elastic Query
+				$li = $("<li \/>").append("<a href='#'>sort by</a>");
 				
-				var $li = $("<li \/>").append("<a href='#'>sort by</a>");
-				$li.append($ul);
+				$("<li \/>").html("<a href='#'>Relevance</a>").appendTo($ul);
+				$("<li \/>").html("<a href='#'>Alphabetical (a to z)</a>").appendTo($ul);
+				$("<li \/>").html("<a href='#'>Price (low to high)</a>").appendTo($ul);
+				
+				$li.append($ul); //adds ul of sorts to the li w/ the sort by prompt.
+				
+				//add click events to the href's
+				$("a",$ul).each(function(){
+
+					$(this).on('click',function(event){
+						event.preventDefault();
+						app.u.dump(" -> change sort order");
+					
+						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
+						query.size = EQ.size; //use original size, not what's returned in buildSimple...
+						query.from = 0;
+						query.sort = [{'prod_name':{'order':'asc'}}];
+						$list.data('elastic-query',query); //add the elastic query as data to the results container so that it can be used for multipage.
+						$list.data('page-in-focus',1);
+						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
+						app.model.dispatchThis();
+						});
+
+
+					})
 				
 				return $("<ul \/>").css('width','200px').append($li);
 				},

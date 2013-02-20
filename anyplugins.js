@@ -419,24 +419,24 @@ either templateID or (data or datapointer) are required.
 
 
 		_anyContent : function()	{
-			app.u.dump(" -> _anyContent executed.");
+//			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
 			r = true; // what is returned. false if not able to create template.
 			
 			
 			if(o.templateID && o.datapointer && app.data[datapointer])	{
-				app.u.dump(" -> template and datapointer present. transmogrify.");
+//				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[datapointer]));
 				}
 			else if(o.templateID && o.data)	{
-				app.u.dump(" -> template and data present. transmogrify.");
+//				app.u.dump(" -> template and data present. transmogrify.");
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
-				app.u.dump(" -> templateID specified. create Instance.");
+//				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				if(o.showLoading)	{
 					this.element.showLoading(o.showLoadingMessage);
@@ -444,7 +444,7 @@ either templateID or (data or datapointer) are required.
 				}
 //if just translating because the template has already been rendered
 			else if(o.data)	{
-				app.u.dump(" -> data specified, translate selector");
+//				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,o.data);
 				this.element.hideLoading().removeClass('loadingBG');
 				}

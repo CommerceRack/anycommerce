@@ -1087,7 +1087,7 @@ else	{
 				else if($detail.is(':visible'))	{
 //transition out the existing product in view.
 					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
-					} 
+					}
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
 					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':0}).prependTo($parent);
@@ -1154,7 +1154,9 @@ else	{
 							else	{
 								$detail.anycontent({'templateID':'productTemplateQuickView','data' : app.data[rd.datapointer]})
 								}
+
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
+
 setTimeout(function(){
 	if(liIndex === 0)	{
 		$('.prevButton',$parent).button("option", "disabled", true);
@@ -1180,7 +1182,10 @@ setTimeout(function(){
 //handles call, callback and dispatch.
 //allows for callback override.
 //pid is required and either a selector and a templateID OR a function as the callback (in which it's assumed everything the callback needs is in the function itself)
-			showInlineProdDetails : function(infoObj)	{
+
+//function is more or less replaced by anycontent plugin.
+
+/*			showInlineProdDetails : function(infoObj)	{
 				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
 				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{
 					app.u.dump(" -> all required params are present.");
@@ -1200,7 +1205,7 @@ setTimeout(function(){
 					app.u.throwGMessage("In myRIA.a.showInlineProdDetails, either infoObj was empty ["+typeof infoObj+"] or infoObj.pid ["+infoObj.pid+"] or infoObj.selector ["+infoObj.selector+"] or infoObj.templateID ["+infoObj.templateID+"] was not set."); app.u.dump(infoObj);
 					}
 				},
-
+*/
 
 /*
 required:
