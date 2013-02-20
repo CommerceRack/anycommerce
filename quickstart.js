@@ -1077,13 +1077,16 @@ else	{
 				width = $img.width(),
 				$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
 				$detail = $('.previewProductDetail',$parent); //target for content.
-	
+				
+				
+//##### SANITY -> 	there are a few checks to see if data.pid is already = to the pid passed in.  
+//					This is to prevent double-click on a button or clicking on a product that is already in focus.
 
-
+				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
 //if the detail panel is already visible, no need to animate or adjust css on containers.
-				if($detail.is(':visible'))	{
+				else if($detail.is(':visible'))	{
 //transition out the existing product in view.
-					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})	
+					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
 					} 
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
@@ -1094,15 +1097,17 @@ else	{
 						app.ext.myRIA.u.revertPageFromPreviewMode($parent);
 						}).prependTo($buttonBar);
 
-					
-
-					var $nextButton = $("<button \/>").button().addClass('nextButton').text('Next').on('click',function(event){
+					 
+//The next and previous buttons just trigger a click on the image.
+					var $nextButton = $("<button \/>").button().addClass('nextButton navButton').text('Next').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
+						$nextButton.button('option','disabled',true);
 						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
 						}).prependTo($buttonBar);
 
-					var $prevButton = $("<button \/>").addClass('prevButton').button().text('Previous').on('click',function(event){
+					var $prevButton = $("<button \/>").addClass('prevButton navButton').button().text('Previous').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
+						$prevButton.button('disable');
 						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
 						}).prependTo($buttonBar);
 
@@ -1121,40 +1126,60 @@ else	{
 					$liContainer.animate({'width':'30%'},'slow');
 					}
 
-
-
-//remove active state from any other item and add it to item now in focus.
-//had an issue with the addition of the border causing 'bumps' to occur when active class selected. to compensate, padding of 1px is added to 
-//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
-//this needs to be after if/else above so that styling in 'else' happens first.
-				$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
-				$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
-
-				$('.buttonBar',$parent).data('pid',pid); //used for 'next' and 'previous' buttons
-				
-				var liIndex = $("[data-pid='"+pid+"']",$liContainer).index();
-
-//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
-				if(liIndex === 0)	{
-					$('.prevButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					}
-				else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
-					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
-					}
+				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
 				else	{
-					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					}
 
-				app.ext.myRIA.a.showInlineProdDetails({'pid':pid,'templateID':'productTemplateQuickView','selector':'.previewProductDetail'});
+					$('.buttonBar',$parent).data('pid',pid); //used for 'next' and 'previous' buttons
+	
+	//remove active state from any other item and add it to item now in focus.
+	//had an issue with the addition of the border causing 'bumps' to occur when active class selected. to compensate, padding of 1px is added to 
+	//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
+	//this needs to be after if/else above so that styling in 'else' happens first.
+					$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
+					$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
+	
+					
+					
+					var liIndex = $("[data-pid='"+pid+"']",$liContainer).index();
+	
+	//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
+	/*				
+	*/
+					app.ext.store_product.calls.appProductGet.init(pid,{
+						'callback':function(rd){
+
+							if(app.model.responseHasErrors(rd)){
+								$detail.anymessage({'message':rd});
+								}
+							else	{
+								$detail.anycontent({'templateID':'productTemplateQuickView','data' : app.data[rd.datapointer]})
+								}
+//in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
+setTimeout(function(){
+	if(liIndex === 0)	{
+		$('.prevButton',$parent).button("option", "disabled", true);
+		$('.nextButton',$parent).button("option", "disabled", false);
+		}
+	else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
+		$('.prevButton',$parent).button("option", "disabled", false);
+		$('.nextButton',$parent).button("option", "disabled", true);
+		}
+	else	{
+		$('.prevButton',$parent).button("option", "disabled", false);
+		$('.nextButton',$parent).button("option", "disabled", false);
+		}
+},300);
+							}
+						});
+					app.model.dispatchThis();
+					}
 				},
 
 
 //a self contained function which will display a product template within a specified selector.
 //handles call, callback and dispatch.
 //allows for callback override.
+//pid is required and either a selector and a templateID OR a function as the callback (in which it's assumed everything the callback needs is in the function itself)
 			showInlineProdDetails : function(infoObj)	{
 				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
 				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{

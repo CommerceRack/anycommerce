@@ -128,16 +128,16 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 //header works.
 //sorting does NOT work.
 //need pagination output as well.
-//					var $header = app.ext.store_search.u.buildResultsHeader($list,tagObj.datapointer);
-//					if($header)	{
-//						$header.insertBefore($list);
+					var $header = app.ext.store_search.u.buildResultsHeader($list,tagObj.datapointer);
+					if($header)	{
+						$header.insertBefore($list);
 //						var $multipage = app.ext.store_search.u.buildMultipageControls($list,tagObj); //summary is at the top
 //						$multipage.insertAfter($header); //multipage nav is at the top and bottom
 //						$multipage.clone().insertAfter($list);
 //						var $sortMenu = app.ext.store_search.u.buildSortMenu();
 //						$sortMenu.menu()
 //						$sortMenu.appendTo($header);
-//						}
+						}
 					}
 				}
 			}
