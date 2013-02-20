@@ -352,7 +352,11 @@ SEARCH RESULTS PAGE
 ***************************************************/
 
 #mainContentArea_search	{position:relative;}
-.resultsHeader .ui-menu	{width:250px;} /* used for sorting and pagination menus */
+.resultsHeader	{position:relative; z-index:1000;}
+.resultsHeader ul.ui-menu	{width:250px; position:absolute; margin:3px 0 0 3px;} /* used for sorting and pagination menus */
+.resultsHeader ul.ui-menu ul	{z-index:10000;}
+.resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
+
 .resultsHeader .ui-menu-icon	{float:left;}
 .minimalMode .hideInMinimalMode	{display:none;}
 .minimalMode .searchResultsProduct	{

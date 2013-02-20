@@ -264,9 +264,15 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							$pagination.addClass('hideInMinimalMode').append($("<li \/>").html("<a href='#'>Page "+pageInFocus+" of "+totalPageCount+"<\/a>"));
 							var $pages = $("<ul \/>");
 							for(var i = 1; i <= totalPageCount; i+= 1)	{
-								$("<li \/>").html("<a href='#'>Page "+i+"<\/a>").appendTo($pages);
+								$("<li \/>").html("<a href='#' data-page='"+i+"'>Page "+i+"<\/a>").appendTo($pages);
 								}
 							$("li:first",$pagination).append($pages);
+							$("a",$pages).each(function(){
+								$(this).on('click',function(event){
+									event.preventDefault();
+									app.ext.store_search.u.changePage($list,$(this).data('page'),_tag);
+									})
+								});
 							}
 						}
 					else	{
