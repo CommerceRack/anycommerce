@@ -195,8 +195,14 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				var r = 0;
 				if(email)	{
 					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer
-					this.dispatch(email,_tag,Q);
+					_tag.datapointer = "adminCustomerSearch|"+email; //if changed, test order create for existing customer and customer manager.
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(email,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
 					r = 1;
 					}
 				else	{
@@ -248,7 +254,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(CID,setObj,_tag)	{
 				var obj = {};
 				_tag = _tag || {};
-				obj._cmd = "adminCustomerSet";
+				obj._cmd = "adminCustomerUpdate";
 				obj.CID = CID;
 				obj['%set'] = setObj;
 				obj._tag = _tag;
@@ -3134,12 +3140,16 @@ else	{
 //is simple validator which can be extended over time.
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
 			validateForm : function($form)	{
+				app.u.dump("BEGIN admin.u.validateForm");
 				if($form && $form instanceof jQuery)	{
 					var r = true; //what is returned. false if any required fields are empty.
 					$form.showLoading({'message':'Validating'});
 					$('input',$form).each(function(){
 						var $input = $(this),
 						$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
+						
+						
+						app.u.dump(" -> validating input."+$input.attr('name'));
 						
 						function removeClass($t){
 							$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
@@ -3151,7 +3161,13 @@ else	{
 							$input.parent().append($span.text('required'));
 							removeClass($input);
 							}
-						else if($input.attr('maxlength') && $input.val().length < $input.attr('maxlength'))	{
+						else if($input.attr('maxlength') && $input.val().length > $input.attr('maxlength'))	{
+							r = false;
+							$input.addClass('ui-state-error');
+							$input.parent().append($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+							removeClass($input);
+							}
+						else if($input.data('minlength') && $input.val().length < $input.data('minlength'))	{
 							r = false;
 							$input.addClass('ui-state-error');
 							$input.parent().append($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
@@ -3166,6 +3182,7 @@ else	{
 				else	{
 					$('#globalMessaging').anymessage({'message':'Object passed into admin.u.validateForm is empty or not a jquery object','gMessage':true});
 					}
+				app.u.dump(" -> r in validateForm: "+r);
 				return r;
 				},
 

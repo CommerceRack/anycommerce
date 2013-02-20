@@ -5,7 +5,7 @@
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
-			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add New User</button>
+			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add Customer</button>
 			<form class='searchBar floatRight marginRight' action='#' data-app-role='customerSearch'>
 				<input type='search' name='email' placeholder='email address'  />
 				<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
@@ -161,8 +161,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	</table>
 
 	<fieldset class='alignedInputs'>
-		<input type='text' name='noteText' />
-		<button data-app-event="admin_customer|execNoteCreate">Save Note</button>
+		<input type='text' name='noteText' class='skipTrack' placeholder="Enter your note here" data-app-event="admin_customer|tagNoteButtonAsEnabled" />
+		<button data-app-event='admin_customer|execNoteCreate'>Add Note</button>
 	</fieldset>
 	
 	</div>
@@ -346,16 +346,16 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <address id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
 <form action='#'>
 <fieldset>
-	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' maxlength="6" size='6' data-bind="var:address(_id); format:popVal;" /></label>
-	<label><span>First name</span><input type='text' name='firstname' value=''  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
-	<label><span>Last name</span><input type='text' name='lastname' value=''  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
+	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' required='required' data-minlength='3' maxlength="8" size='6' data-bind="var:address(_id); format:popVal;" /></label>
+	<label><span>First name</span><input type='text' name='firstname' value='' required='required'  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
+	<label><span>Last name</span><input type='text' name='lastname' value='' required='required'  data-bind="var:address(ship_lastname); defaultVar: address(bill_lastname); format:popVal;" /></label>
 	<label><span>Company</span><input type='text' name='company' value=''  data-bind="var:address(ship_company); defaultVar: address(bill_company); format:popVal;" /></label>
-	<label><span>Address</span><input type='text' name='address1' value=''  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
+	<label><span>Address</span><input type='text' name='address1' value='' required='required'  data-bind="var:address(ship_address1); defaultVar: address(bill_address1); format:popVal;" /></label>
 	<label><span>Address 2</span><input type='text' name='address2' value=''  data-bind="var:address(ship_address2); defaultVar: address(bill_address2); format:popVal;" /></label>
-	<label><span>City</span><input type='text' name='city' value=''  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
-	<label><span>Region/State</span><input type='text' name='region' value=''  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
-	<label><span>Postal/Zip</span><input type='text' name='postal' value=''  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
-	<label><span>Country</span><input type='text' name='countrycode' value='' size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
+	<label><span>City</span><input type='text' name='city' value='' required='required'  data-bind="var:address(ship_city); defaultVar: address(bill_city); format:popVal;" /></label>
+	<label><span>Region/State</span><input type='text' name='region' value='' required='required'  data-bind="var:address(ship_region); defaultVar: address(bill_region); format:popVal;" /></label>
+	<label><span>Postal/Zip</span><input type='text' name='postal' value='' required='required'  data-bind="var:address(ship_postal); defaultVar: address(bill_postal); format:popVal;" /></label>
+	<label><span>Country</span><input type='text' name='countrycode' value='' required='required'  size='2' maxlength="2" data-bind="var:address(ship_countrycode); defaultVar: address(bill_countrycode); format:popVal;" /></label>
 
 	<label><span>Email</span><input type='email' name='email' value=''  data-bind="var:address(bill_email); format:popVal;" /></label>
 	<label><span>Phone</span><input type='phone' name='phone' value=''  data-bind="var:address(ship_phone); defaultVar: address(bill_phone); format:popVal;" /></label>

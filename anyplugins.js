@@ -448,8 +448,14 @@ either templateID or (data or datapointer) are required.
 				app.renderFunctions.translateSelector(this.element,o.data);
 				this.element.hideLoading().removeClass('loadingBG');
 				}
+//if just translating because the template has already been rendered
+			else if(o.datapointer  && app.data[o.datapointer])	{
+//				app.u.dump(" -> data specified, translate selector");
+				app.renderFunctions.translateSelector(this.element,app.data[o.datapointer]);
+				this.element.hideLoading().removeClass('loadingBG');
+				}
 			else	{
-				//should never get here. function won't be run if no templateID specified.
+				//should never get here. error handling handled in _init before this is called.
 				r = false;
 				}
 			return r;

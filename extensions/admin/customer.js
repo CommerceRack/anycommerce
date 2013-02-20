@@ -70,7 +70,7 @@ var admin_customer = function() {
 				
 				if($target && typeof $target == 'object')	{
 					if(obj && obj.CID)	{
-						$target.showLoading("Fetching Customer Record");
+						$target.showLoading({"message":"Fetching Customer Record"});
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
@@ -94,7 +94,7 @@ else	{
 
 			}
 		}
-		
+
 //make into anypanels.
 	$("div.panel",$target).each(function(){
 		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
@@ -131,8 +131,9 @@ else	{
 				app.ext.admin_customer.u.handleChanges($target);
 				});			
 			}
+		else if($(this).hasClass('skipTrack')){} //notes, for example, is independant.
 		else	{
-			$(this).off('change.trackChange').on('change.trackChange',function(){
+			$(this).off('keyup.trackChange').one('keyup.trackChange',function(){
 				$(this).addClass('edited');
 				app.ext.admin_customer.u.handleChanges($target);
 				});
@@ -199,13 +200,19 @@ else	{
 					var $form = $('form',$target).first(),
 					$btn = $("<button \/>").text('Add Address').button().on('click',function(event){
 						event.preventDefault();
-						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj);
+						
+						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj,function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$target.anymessage({'message':rd});
+								}
+							else	{
+								$target.empty().anymessage({'message':'Thank you, the address has been added'});
+								}
+							});
 						});
 
 					$form.append($btn);
-					$('input',$form).each(function(){
-						if($(this).attr('name') != 'address2')	{$(this).attr('required','required')}
-						});
 
 					}
 				else	{
@@ -245,6 +252,7 @@ else	{
 					
 					}
 				}, //wholesaleScheduleSelect
+				
 			orderHistoryTotal : function($tag,data)	{
 				var L = data.value.length,
 				sum = 0; //sum of all orders combined.
@@ -252,6 +260,7 @@ else	{
 					sum += data.value[i].ORDER_TOTAL;
 					}
 				},
+				
 			newsletters : function($tag,data)	{
 				
 				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
@@ -330,23 +339,17 @@ else	{
 
 //macro is the addr macro for adminCustomerUpdate (either addrcreate or addrupdate)
 //obj should contain CID and type. in the future, likely to contain partition.
-			customerAddressAddUpdate : function($form,MACRO,obj)	{
-				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID)	{
+			customerAddressAddUpdate : function($form,MACRO,obj,callback)	{
+				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID && typeof callback == 'function')	{
 					if(app.ext.admin.u.validateForm($form))	{
-						$('body').showLoading({"message":"Customer address being updated/added for "+obj.CID});
+						app.u.dump(" -> form validated. proceed.");
+						$form.showLoading({"message":"Updating customer address record."});
 						var formObj = $form.serializeJSON();
-
-						app.model.destroy("adminCustomerDetail|"+obj.CID);
 						
-						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+encodeURIComponent(formObj)],{'callback':function(){
-							$('body').hideLoading();
-							if(app.model.responseHasErrors(rd)){
-								$target.anymessage({'message':rd});
-								}
-							else	{
-								$target.empty().anymessage({'message':'Thank you, the address has been added'});
-								}
-							}},'immutable');
+						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+encodeURIComponent(formObj)],{'callback':callback},'immutable');
+//destroy and detail must occur after update
+						app.model.destroy('adminCustomerDetail|'+obj.CID);
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -384,7 +387,7 @@ formObj = $form.serializeJSON();
 
 updates.push("CREATE?email="+formObj.email);
 if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
-if(formObj.lasttname)	{updates.push("SET?lastname="+formObj.lastname);}
+if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
 if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
 
 // $('body').showLoading("Creating customer record for "+formObj.email);
@@ -406,6 +409,7 @@ app.model.dispatchThis('immutable');
 					event.preventDefault();
 					var $form = $btn.closest('form'),
 					macros = new Array(),
+					CID = $btn.closest("[data-cid]").data('cid'),
 					wholesale = "", //wholesale, dropship and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
 					dropship = "",
 					general = "";
@@ -504,17 +508,19 @@ app.model.dispatchThis('immutable');
 							app.u.dump(" -> MACROS: "); app.u.dump(macros);
 							$('body').showLoading({'message':'Saving changes to cutomer record.'});
 //get a clean copy of the customer record so that the notes panel can be updated.
-							app.model.destroy('adminCustomerDetail|'+CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
-							app.ext.admin.calls.adminCustomerUpdate.init($btn.closest('data-cid').data('cid'),macros,{'callback':function(){
+							app.ext.admin.calls.adminCustomerUpdate.init(CID,macros,{'callback':function(rd){
 								$('body').hideLoading();
 								if(app.model.responseHasErrors(rd)){
 									$('#globalMessaging').anymessage({'message':rd});
 									}
 								else	{
-									app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-app-role='customerManager']").parent(),{'CID':CID})
+									var $parent = $btn.closest("[data-app-role='customerManager']").parent();
+									$parent.empty();
+									app.ext.admin_customer.a.showCustomerEditor($parent,{'CID':CID})
 									}
 								}},'immutable');
+							app.model.destroy('adminCustomerDetail|'+CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{
@@ -535,7 +541,7 @@ app.model.dispatchThis('immutable');
 					$target = $('.dualModeListContent',$parent).first();
 					
 					$target.empty(); //make sure any previously open customers are cleared.
-					$parent.showLoading("Searching for "+formObj.email);
+					$parent.showLoading({"message":"Searching for "+formObj.email});
 //					app.u.dump(" -> formObj: "); app.u.dump(formObj);
 					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(rd){
 						$parent.hideLoading();
@@ -592,6 +598,7 @@ else	{
 
 			execNoteCreate : function($btn)	{
 				$btn.button();
+				$btn.button('disable');
 				$btn.off('click.noteCreate').on('click.noteCreate',function(event){
 					event.preventDefault();
 					var note = $btn.parent().find("[name='noteText']").val(),
@@ -600,9 +607,19 @@ else	{
 					
 					if(CID && note)	{
 						$parent.showLoading({'message':'Adding note to customer record'});
-						app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(){
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(rd){
 							//update notes panel or show errors.
-							alert('not done yet');
+							$parent.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$parent.anymessage({'message':rd});
+								}
+							else	{
+								$("tbody",$parent).empty(); //clear all existing notes.
+								$("input",$parent).val(''); //empty notes input(s).
+								$parent.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
+								app.ext.admin.u.handleAppEvents($parent);
+								}
+							
 							}},'immutable');
 //get a clean copy of the customer record so that the notes panel can be updated.
 						app.model.destroy('adminCustomerDetail|'+CID);
@@ -699,12 +716,23 @@ else	{
 					});
 				}, //tagRowForRemove
 
-//acu = Admin Customer Update. means button will trigger that call. What follows acu is the macro it will execute.
+			tagNoteButtonAsEnabled : function($ele)	{
+				$ele.off('keyup.tagNoteButtonAsEnabled'); //remove old event so nuking val doesn't trigger change code.
+				$ele.val(''); //reset value. panel has events re-run after note added. this clears the last note.
+				$ele.one('keyup.tagNoteButtonAsEnabled',function(){
+					$ele.parent().find("[data-app-event='admin_customer|execNoteCreate']").button('enable').addClass('ui-state-highlight');
+					});
+				},
+
 			showAddrUpdate : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					var $target = $('#customerUpdateModal').empty();
+					var $target = $('#customerUpdateModal').empty(),
+					$parent = $btn.closest('.ui-widget-anypanel');
+					
+					app.u.dump(" -> $parent.length: "+$parent.length);
+					
 					$('.ui-dialog-title',$target.parent()).text('Update customer address');
 					$target.dialog('open');
 					
@@ -723,7 +751,21 @@ else	{
 
 						var $button = $("<button \/>").text('Save Address').button().on('click',function(event){
 							event.preventDefault();
-							app.ext.admin_customer.u.customerAddressAddUpdate($('form',$target),'ADDRUPDATE',{'CID':CID,'type':type},$target);
+							var $form = $('form',$target);
+							app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRUPDATE',{'CID':CID,'type':type},function(rd){
+								$form.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$target.anymessage({'message':rd});
+									}
+								else	{
+									$target.empty().anymessage({'message':'Thank you, the address has been changed','persistant':true});
+									//clear existing addresses and re-render.
+									$("tbody",$parent).empty();
+									$parent.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
+									app.ext.admin.u.handleAppEvents($parent);
+									
+									}
+								});
 							});						
 						$target.append($button);
 						}
