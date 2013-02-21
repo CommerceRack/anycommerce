@@ -11,9 +11,6 @@
 #prodLeftCol li	{margin-left:10px;}
 #prodLeftCol li a	{padding:3px 0; display:block;}
 
-#prodEditorResultsTable tr:nth-child(odd)		{ background-color:#eee; }
-#prodEditorResultsTable tr:nth-child(even)		{ background-color:#fff; }
-
 #panelContents_general textarea	{width:80%;} /* override brians cols='80' */
 
 /* panel specific styles */

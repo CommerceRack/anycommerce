@@ -270,6 +270,63 @@ var admin_prodEdit = function() {
 
 		u : {
 
+
+		handleProductListTab : function(process)	{
+			app.u.dump("BEGIN admin_orders.u.handleProductListTab");
+			var $target = $('#productListTab');
+			if($target.length)	{
+//init should be run when the extension is loaded. adds click events and whatnot.
+				if(process == 'init')	{
+//					app.u.dump(" -> process = init");
+					$target.hide();  //make sure it's invisible.
+					$('.tab',$target).on('click.showProductListTab',function(){
+						if($target.css('left') == '0px')	{
+							app.ext.admin_orders.u.handleProductListTab('collapse');
+							}
+						else	{
+							app.ext.admin_orders.u.handleProductListTab('expand');
+							}
+						});
+					}
+				else if(process == 'activate')	{
+					$target.css('left',0).show(); //make tab/contents visible.
+					$( "#orderListTableBody" ).selectable( "disable" ); //remove the selectable functionality.
+					var $tbody = $('tbody',$target);
+					$('thead tr',$target).empty().append($('th','#orderListTable').clone());
+					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first then copy rows over.
+//remove click event to move the orders over to the tab, since they're already in the tab.
+					$("[data-app-event='admin_orders|orderUpdateShowEditor']",$tbody).off('click.moveOrdersToTab').on('click.hideOrderTab',function(){
+						app.ext.admin_orders.u.handleProductListTab('collapse');
+						});
+					$("table",$target).anytable();
+					$('td .orderid',$target).addClass('lookLikeLink').on('click.orderLink',function(){
+						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
+						})
+//pause for just a moment, then shrink the panel. Lets user see what happened.
+					setTimeout(function(){
+						app.ext.admin_orders.u.handleProductListTab('collapse');
+						},1500);
+					}
+				else if(process == 'collapse')	{
+					$target.animate({left: -($target.outerWidth())}, 'slow');
+					}
+				else if(process == 'expand')	{
+					$target.animate({left: 0}, 'fast');
+					}
+				else if(process == 'deactivate')	{
+					$target.hide();
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_prodEdit.u.handleProductListTab, unrecognized process ['+process+']','gMessage':true});
+					}
+				}
+			else	{
+				app.u.dump("admin_prodEdit.u.handleProductListTab function executed, but orderListTab not on DOM."); //noncritical error. do not show to user.
+				}
+			},
+
+
+
 //app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
 			getPanelContents : function(pid,panelid)	{
 				var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
@@ -355,7 +412,7 @@ var admin_prodEdit = function() {
 			},
 //clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
 		prepContentArea4Results : function(){
-			$("#productTabMainContent").empty().append($("<table>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+			$("#productTabMainContent").empty().append($("<table class='fullWidth gridTable'>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
 			},
 		
 		
@@ -375,7 +432,15 @@ var admin_prodEdit = function() {
 
 //e is for 'events'. This are used in handleAppEvents.
 		e : {
-
+			
+			"showProductEditor" : function($btn){
+				$btn.button();
+				$btn.off('click.showProductEditor').on('click.showProductEditor',function(event){
+					event.preventDefault();
+					app.ext.admin_prodEdit.a.showPanelsFor($btn.closest('[data-pid]').data('pid'));
+					})
+				},
+			
 			"configOptions" : function($t)	{
 				$t.button();
 				$t.off('click.configOptions').on('click.configOptions',function(event){

@@ -97,14 +97,13 @@
 		
 	<td>
 	<div class='prodThumbContainer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='35' height='35' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1; bgcolor:ffffff;' width='45' height='45' />
 	</div>
 	</td>
-	<td>
-	<div><span data-bind='var: product(pid); defaultVar: product(_id); format:text;'></span> - <span data-bind='var: product(prod_name); format:text;'></span></div>
-	<div data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></div>
-	</td>
-	<td><button onClick="app.ext.admin_prodEdit.a.showPanelsFor($(this).closest('[data-pid]').attr('data-pid'));">Edit</button></td>
+	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
+	<td><div data-bind='var: product(prod_name); format:text;'></div></td>
+	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
+	<td align='right'><button data-app-event="admin_prodEdit|showProductEditor">Edit</button></td>
 </tr>
 
 
