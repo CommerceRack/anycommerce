@@ -14,7 +14,7 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','quickstart.js','startMyProgram']);
-app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']); //MC's addthis ext from 201307
+app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']); //MC's addthis ext from 201307
 
 app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','addTriggers']); //old default callback.
 app.rq.push(['extension',1,'google_ts','extensions/partner_google_trusted_store.js','startExtension']); //new default callback.
@@ -45,7 +45,7 @@ app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':functi
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
-app.rq.push(['script',1,app.vars.baseURL+'anytabs.js']);
+app.rq.push(['script',0,app.vars.baseURL+'anytabs.js']);
 
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
