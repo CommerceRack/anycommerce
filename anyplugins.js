@@ -601,7 +601,17 @@ th.click(function(){
 	$table.find('td').filter(function(){
 		return $(this).index() === thIndex;
 		}).sortElements(function(a, b){
-			return $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+			var r;
+			var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
+			var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
+			if(numA && numB)	{
+//				console.log('is a number');
+				r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+				}
+			else	{
+				r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+				}
+			return r
 			},function(){
 		// parentNode is the element we want to move
 		return this.parentNode; 
