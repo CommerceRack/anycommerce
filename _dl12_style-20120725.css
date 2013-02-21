@@ -1419,7 +1419,7 @@ CATEGORY TEMPLATE
 
 /* breadcrumb, used on the category pages */
 
-.breadcrumb	{margin:12px 0; font-size:11px;}
+.breadcrumb	{margin:12px 0; font-size:11px; width:50%;float:left;}
 .breadcrumb li	{padding:0; margin:0; cursor:pointer; padding-right:10px;}
 .breadcrumb li:after	{content:" > "; padding-left:10px; font-size:10px; font-weight:bold; color:#999999;}
 .breadcrumb li:last-child:after	{content:"";}
