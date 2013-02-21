@@ -67,7 +67,7 @@ var partner_addthis = function() {
 							//Adds the addthis code to the container specified
 							//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
 							//Note: this also includes using custom share icons.
-							$(app.ext.partner_addthis.vars.selector, '#productTemplate_'+app.u.makeSafeHTMLId(P.pid)).append(
+							$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).append(
 									'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
 								+		'<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>'
 								+		'<a class="addthis_button_tweet"></a>'
@@ -75,6 +75,7 @@ var partner_addthis = function() {
 								+		'<a class="addthis_button_pinterest_pinit" pi:pinit:url="http://www.downlitebedding.com" pi:pinit:media="http://www.downlitebedding.com/images/logo-200x64.png" pi:pinit:layout="horizontal"></a>'
 								+		'<a class="addthis_counter addthis_pill_style"></a>'
 								+	'</div>');
+								
 							
 							//Set URL+title for most sharing code
 							var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";
@@ -91,7 +92,7 @@ var partner_addthis = function() {
 							addthis.toolbox('#socialLinks');
 							});
 						app.ext.myRIA.template.productTemplate.onDeparts.push(function(P) {
-							$(app.ext.partner_addthis.vars.selector, '#productTemplate_'+app.u.makeSafeHTMLId(P.pid)).empty();
+							$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).empty();
 						});
 					} else	{
 						setTimeout(function(){app.ext.partner_addthis.callbacks.startExtension.onSuccess()},250);
