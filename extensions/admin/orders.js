@@ -1061,11 +1061,16 @@ else	{
 					$target.css('left',0).show(); //make tab/contents visible.
 					$( "#orderListTableBody" ).selectable( "disable" ); //remove the selectable functionality.
 					var $tbody = $('tbody',$target);
+					$('thead tr',$target).empty().append($('th','#orderListTable').clone());
 					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first then copy rows over.
 //remove click event to move the orders over to the tab, since they're already in the tab.
 					$("[data-app-event='admin_orders|orderUpdateShowEditor']",$tbody).off('click.moveOrdersToTab').on('click.hideOrderTab',function(){
 						app.ext.admin_orders.u.handleOrderListTab('collapse');
 						});
+					$("table",$target).anytable();
+					$('td .orderid',$target).addClass('lookLikeLink').on('click.orderLink',function(){
+						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
+						})
 //pause for just a moment, then shrink the panel. Lets user see what happened.
 					setTimeout(function(){
 						app.ext.admin_orders.u.handleOrderListTab('collapse');
