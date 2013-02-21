@@ -168,16 +168,16 @@
 	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
-	<td><span data-bind='var:order(ITEMS);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ITEMS);format:text;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
 	<td class='hideInMinimalMode'><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
 	<td class='hideInMinimalMode'><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
-	<td class='hideInMinimalMode'><span data-bind='var:order(POOL);format:text;'></span></td>
+	<td><span data-bind='var:order(POOL);format:text;'></span></td>
 	<td NOWRAP class='alignRight'>
-	<button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+	<button data-app-event='admin_orders|orderUpdateShowEditor'  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
 	<button class='hideInMinimalMode' data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
 	<menu class='displayNone orderQuickviewMenu'>
 		<h3>Quickview</h3>

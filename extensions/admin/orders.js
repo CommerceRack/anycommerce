@@ -343,9 +343,7 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
 //make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
 					$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
-						$('#ordersContent').empty();
-						app.ext.admin_orders.a.showOrderView($row.attr('data-orderid'),$row.attr('data-cid'),"ordersContent"); //adds a showLoading
-						app.model.dispatchThis();
+						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
 						})
 					}
 				else	{
@@ -401,7 +399,7 @@ else	{
 		initOrderManager : function(P)	{
 			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
-
+			app.ext.admin_orders.u.handleOrderListTab('deactivate')
 			var oldFilters = app.ext.admin.u.dpsGet('admin_orders');
 			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
@@ -1048,7 +1046,7 @@ else	{
 			if($target.length)	{
 //init should be run when the extension is loaded. adds click events and whatnot.
 				if(process == 'init')	{
-					app.u.dump(" -> process = init");
+//					app.u.dump(" -> process = init");
 					$target.hide();  //make sure it's invisible.
 					$('.tab',$target).on('click.showOrderListTab',function(){
 						if($target.css('left') == '0px')	{
@@ -1060,12 +1058,10 @@ else	{
 						});
 					}
 				else if(process == 'activate')	{
-					app.u.dump(" -> process = activate");
 					$target.css('left',0).show(); //make tab/contents visible.
-					// tried using transfer. It didn't work.
-//					$('#orderListTableContainer').effect('transfer', {'to':'#orderListTab'}, 2000,function(){app.u.dump("DONE!")});
+					$( "#orderListTableBody" ).selectable( "disable" ); //remove the selectable functionality.
 					var $tbody = $('tbody',$target);
-					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first.
+					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first then copy rows over.
 //remove click event to move the orders over to the tab, since they're already in the tab.
 					$("[data-app-event='admin_orders|orderUpdateShowEditor']",$tbody).off('click.moveOrdersToTab').on('click.hideOrderTab',function(){
 						app.ext.admin_orders.u.handleOrderListTab('collapse');
@@ -1076,13 +1072,12 @@ else	{
 						},1500);
 					}
 				else if(process == 'collapse')	{
-					$target.animate({left: -($target.width())}, 'slow');
+					$target.animate({left: -($target.outerWidth())}, 'slow');
 					}
 				else if(process == 'expand')	{
 					$target.animate({left: 0}, 'fast');
 					}
 				else if(process == 'deactivate')	{
-					app.u.dump(" -> process = deactivate");
 					$target.hide();
 					}
 				else	{
