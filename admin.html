@@ -315,7 +315,9 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <div id='debugPanel' class='debug buttonset clearBoth clearAll clearfix'>
 	<div class='debugBG'></div>
 	<div class='debugContent'>
-<button onClick="localStorage.clear();">Nuke LocalStorage</button>
+<button onClick="localStorage.clear();">Nuke ALL LocalStorage</button>
+<button onClick="app.ext.admin.u.selectivelyNukeLocalStorage();">Nuke Selective LocalStorage</button>
+
 
 
 <button onClick="app.model.destroy('adminNewsletterList');">destroy adminNewsletterList</button>

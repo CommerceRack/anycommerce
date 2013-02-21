@@ -3196,12 +3196,11 @@ else	{
 //session data is panel disposition and order and things like that.
 			selectivelyNukeLocalStorage : function(){
 				var admin = {};
-				var session = {};
 				if(app.model.fetchData('authAdminLogin'))	{admin = app.data['authAdminLogin'];}
-				if(app.model.fetchData('session'))	{session = app.data['session'];}
+				var dps = app.ext.admin.u.dpsGet(); //all 'session' vars
 				localStorage.clear();
 				app.storageFunctions.writeLocal('authAdminLogin',admin);
-				app.storageFunctions.writeLocal('session',session);
+				app.storageFunctions.writeLocal('session',dps);
 				},
 
 
