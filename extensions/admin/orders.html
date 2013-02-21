@@ -518,7 +518,7 @@ The following templates are used in the 'order detail' modal/view.
 	</td>	
 	
 	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
-	<td><input type='number' name='price' data-bind="var: order(base_price); format:popVal;" size='7' step='0.01' min='0' /></td>
+	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td>
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
 	<td><button data-app-event="admin_orders|orderItemRemove">Remove From Order</button></td>
