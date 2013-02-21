@@ -85,7 +85,7 @@ else	{
 	var panArr = app.ext.admin.u.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
 
 	if(!$.isEmptyObject(panArr))	{
-		app.u.dump(" -> panArr: "); app.u.dump(panArr);
+//		app.u.dump(" -> panArr: "); app.u.dump(panArr);
 		var L = panArr.length;
 
 //yes, I know loops in loops are bad. But these are very small loops.
@@ -508,7 +508,7 @@ app.model.dispatchThis('immutable');
 							}						
 						
 						if(macros.length)	{
-							app.u.dump(" -> MACROS: "); app.u.dump(macros);
+//							app.u.dump(" -> MACROS: "); app.u.dump(macros);
 							$('body').showLoading({'message':'Saving changes to cutomer record.'});
 //get a clean copy of the customer record so that the notes panel can be updated.
 							app.ext.admin.calls.adminCustomerUpdate.init(CID,macros,{'callback':function(rd){
