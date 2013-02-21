@@ -1426,6 +1426,8 @@ CATEGORY TEMPLATE
 
 .breadcrumb li:last-child a	{color:#666666; text-decoration:none; font-weight:bold;}
 
+.socialLinks {margin-top:12px;}
+
 .mpControls	{padding:2px 6px;}
 
 .catMediaCol	{width:30%; padding-right:24px;display:table-cell;}
