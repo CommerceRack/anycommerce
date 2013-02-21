@@ -80,6 +80,9 @@ var admin_orders = function() {
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+				
+				app.ext.admin_orders.u.handleOrderListTab('init');
+				
 				return r;
 				},
 			onError : function()	{
@@ -1037,6 +1040,59 @@ else	{
 
 
 		u : {
+
+
+		handleOrderListTab : function(process)	{
+			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
+			var $target = $('#orderListTab');
+			if($target.length)	{
+//init should be run when the extension is loaded. adds click events and whatnot.
+				if(process == 'init')	{
+					app.u.dump(" -> process = init");
+					$target.hide();  //make sure it's invisible.
+					$('.tab',$target).on('click.showOrderListTab',function(){
+						if($target.css('left') == '0px')	{
+							app.ext.admin_orders.u.handleOrderListTab('collapse');
+							}
+						else	{
+							app.ext.admin_orders.u.handleOrderListTab('expand');
+							}
+						});
+					}
+				else if(process == 'activate')	{
+					app.u.dump(" -> process = activate");
+					$target.css('left',0).show(); //make tab/contents visible.
+					// tried using transfer. It didn't work.
+//					$('#orderListTableContainer').effect('transfer', {'to':'#orderListTab'}, 2000,function(){app.u.dump("DONE!")});
+					var $tbody = $('tbody',$target);
+					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first.
+//remove click event to move the orders over to the tab, since they're already in the tab.
+					$("[data-app-event='admin_orders|orderUpdateShowEditor']",$tbody).off('click.moveOrdersToTab').on('click.hideOrderTab',function(){
+						app.ext.admin_orders.u.handleOrderListTab('collapse');
+						});
+//pause for just a moment, then shrink the panel. Lets user see what happened.
+					setTimeout(function(){
+						app.ext.admin_orders.u.handleOrderListTab('collapse');
+						},1500);
+					}
+				else if(process == 'collapse')	{
+					$target.animate({left: -($target.width())}, 'slow');
+					}
+				else if(process == 'expand')	{
+					$target.animate({left: 0}, 'fast');
+					}
+				else if(process == 'deactivate')	{
+					app.u.dump(" -> process = deactivate");
+					$target.hide();
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_orders.u.handleOrderListTab, unrecognized process ['+process+']','gMessage':true});
+					}
+				}
+			else	{
+				app.u.dump("admin_orders.u.handleOrderListTab function executed, but orderListTab not on DOM."); //noncritical error. do not show to user.
+				}
+			},
 
 // gets run after a filter is run. never on filter click unless click submits.
 		handleFilterCheckmarks : function($target)	{
@@ -2329,11 +2385,20 @@ else	{
 //the edit button in the order list mode. Will open order editable format.
 			"orderUpdateShowEditor" : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				
+				//a separate click event is added for the tab functionality so that it can be removed when orders are moved.
+				//otherwise, clicking the edit button in the tab will duplicate orders (or barf)
+				$btn.off('click.moveOrdersToTab').on('click.moveOrdersToTab',function(){
+					var orderID = $(this).attr('data-orderid');
+					if(orderID)	{
+						app.ext.admin_orders.u.handleOrderListTab('activate');
+						}
+					});
+				
 				$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(event){
 					event.preventDefault();
-//						app.u.dump("show order editor");
-					var orderID = $(this).attr('data-orderid');
-					var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
+					var orderID = $(this).attr('data-orderid'),
+					CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
 					if(orderID)	{
 						$(app.u.jqSelector('#',"ordersContent")).empty();
 						app.ext.admin_orders.a.showOrderView(orderID,CID,"ordersContent"); //adds a showLoading

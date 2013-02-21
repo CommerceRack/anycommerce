@@ -32,7 +32,7 @@ class can also be applied to a 1 item per row list.
 .valignMiddle	{vertical-align:middle;}
 
 
-.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly	{display:none;}
+.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly, .minimalMode .hideInMinimalMode	{display:none;}
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
@@ -207,7 +207,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:96%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
 
 
 

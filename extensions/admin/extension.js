@@ -1720,6 +1720,10 @@ if(opts.dialog){
 else if(opts.tab)	{
 	opts.targetID = opts.tab+"Content";
 	$target = $(app.u.jqSelector('#',opts.targetID));
+	if(opts.tab != 'orders')	{
+		app.u.dump("opts.tab is  NOT set to orders");
+		app.ext.admin_orders.u.handleOrderListTab('deactivate');
+		}
 	} 
 else if(app.ext.admin.vars.tab)	{
 	opts.targetID = app.ext.admin.vars.tab+"Content";
