@@ -3289,13 +3289,14 @@ just lose the back button feature.
 				_ignoreHashChange = false; //turned off again to re-engage this feature.
 				},
 
-//Device Persistent Settings (DPS) Get
+//Device Persistent Settings (DPS) Get  ### here for search purposes:   preferences settings localstorage
 //undefined is returned if there are no matchings session vars.
 //if no extension is passed, return the entire sesssion object (if it exists).
 //this allows for one extension to read anothers preferences and use/change them.
 //ns is an optional param. NameSpace.
 			dpsGet : function(ext,ns)	{
 				var obj = app.storageFunctions.readLocal('session');
+//				app.u.dump("ACCESSING DPS:"); app.u.dump(obj);
 				if(obj == undefined)	{
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
@@ -3317,12 +3318,20 @@ just lose the back button feature.
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
 					
-					if(typeof sessionData[ext] != 'object'){sessionData[ext] = {ns:{}}}; //each ext gets it's own object so that no ext writes over anothers.
-					if(typeof sessionData[ext][ns] != 'object'){sessionData[ext] = {}}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
+					if(typeof sessionData[ext] != 'object'){
+						sessionData[ext] = {};
+						sessionData[ext][ns]= varObj;
+						} //each ext gets it's own object so that no ext writes over anothers.
+					else if(typeof sessionData[ext][ns] != 'object'){
+						sessionData[ext][ns] = varObj;
+						} //each dataset in the extension gets a NameSpace. ex: orders.panelState
+					else	{
+						sessionData[ext][ns] = varObj;
+						} //object  exists already. update it.
 
 //can't extend, must overwrite. otherwise, turning things 'off' gets obscene.					
 //					$.extend(true,sessionData[ext],varObj); //merge the existing data with the new. if new and old have matching keys, new overwrites old.
-					sessionData[ext][ns] = varObj;
+
 					app.storageFunctions.writeLocal('session',sessionData); //update the localStorage session var.
 					}
 				else	{

@@ -84,14 +84,17 @@ else	{
 	
 	var panArr = app.ext.admin.u.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
 
-	if(panArr)	{
-		app.u.dump(" -> panArr is set !!!!!");
+	if(!$.isEmptyObject(panArr))	{
+		app.u.dump(" -> panArr: "); app.u.dump(panArr);
 		var L = panArr.length;
 
 //yes, I know loops in loops are bad. But these are very small loops.
+//this will resort the panels into the order specified in local storage.
 		for(var i = 0; i < L; i += 1)	{
-			var col = $("[data-app-column='"+(i+1)+"']",$target);
-
+			var $col = $("[data-app-column='"+(i+1)+"']",$target);
+			for(index in panArr[i])	{
+				$("[data-app-role='"+panArr[i][index]+"']",$target).first().appendTo($col);
+				}
 			}
 		}
 
@@ -118,7 +121,7 @@ else	{
 				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
 				});
 			app.ext.admin.u.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
-			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 			}
 		});
 
