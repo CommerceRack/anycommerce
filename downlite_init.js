@@ -218,7 +218,7 @@ app.u.appInitComplete = function(P)	{
 //		}
 
 //		}]); //addThis productTemplate code		
-//	}
+}
 
 
 //app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
