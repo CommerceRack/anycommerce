@@ -72,6 +72,7 @@ css files should be included before any .js file to ensure they are downloaded i
 <script type="text/javascript" src="site/scripts/jScrollPane.js"></script>
 <script type="text/javascript" src="site/scripts/jquery.mousewheel.js"></script>
 <script type="text/javascript" src="site/scripts/modernizr-2.6.2-custom.js"></script>
+<script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0.js"></script>
 
 
 
@@ -589,16 +590,42 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	<div class="featuredCategories">
 		<div class="catNav">
 			<div class="catNavContent">
-				<p class="prevCat navCats">Previous</p>
+				<!--<p class="prevCat navCats"></p>-->
 				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
 				<p class="currentCat">All Categories</p>
 				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
-				<p class="nextCat navCats">Next</p>
+				<!--<p class="nextCat navCats"></p>-->
 			</div>
 			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
 		</div>
+		<div class="catCarousel">
+			<div class="ccItem">
+				<h2>All Categories</h2>
+				<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Category List 1</h2>
+				<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Category List 2</h2>
+				<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Category List 3</h2>
+				<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Category List 4</h2>
+				<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+			</div>			
+		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
+		
+		
+		<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
+		
+		
 		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
 	</div>
 	<!--<h5 data-bind='var: nothing(); defaultValue: blue; elasticAttr: pid; format:searchLink; extension:myRIA;'></h5>
@@ -689,7 +716,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 				<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">			
 					<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>		
-					<img src="site/images/button-product-list-add-to-cart.png" onClick="$(this).parent().submit();" class='pointer' alt="Add To Cart" />						
+					<img src="site/images/button-product-list-add-to-cart.png" onClick="$(this).parent().submit();" class='pointer' alt="Add To Cart" />
 					<input type='hidden' value='1' size='3' name='quantity' />
 				</form>
 			</div>
