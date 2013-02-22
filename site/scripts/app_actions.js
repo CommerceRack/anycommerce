@@ -55,5 +55,22 @@ function prepFlip($obj)
 
 $(document).ready(function()
 {
-
+	var carousel1;
+	function foo1(){ $(".catCarousel").carouFredSel({
+			auto : false,
+			prev : ".btnCatBack",
+			next : ".btnCatNext",
+	});}
+	carousel1 = foo1;
+	setTimeout(carousel1, 1000);
+	
+	$("div.catNavContent img.btnCatNext").click(function()
+	{
+		$("p.currentCat").text($("div.catCarousel div.ccItem:nth-child(2)").find("h2").text());
+	});
+	$("div.catNavContent img.btnCatBack").click(function()
+	{
+		$("p.currentCat").text($("div.catCarousel div.ccItem:last-child").find("h2").text());
+	});	
 }); 
+

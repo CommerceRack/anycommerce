@@ -289,7 +289,8 @@ progress[aria-valuenow]:before  {
 						height: 62px;
 						margin: 0px auto;
 						position: relative;	
-						width: 440px;					
+						/*width: 440px;*/
+						width: 350px;
 					}	
 						div#container div#content div.featuredCategories div.catNavContent p.navCats
 						{	
@@ -313,6 +314,7 @@ progress[aria-valuenow]:before  {
 						div#container div#content div.featuredCategories div.catNavContent p:not(:last-child)
 						{	
 							padding-right: 18px;
+							width: 250px;
 						}											
 						div#container div#content div.featuredCategories div.catNavContent img.catButton
 						{	
@@ -1687,3 +1689,16 @@ div#checkoutSuccessContent
 							background-color: #897c68;
 						}					
 						
+.caroufredsel_wrapper
+{
+	margin: 0px auto;
+	overflow: hidden;
+	width: 1000px;
+}
+
+.caroufredsel_wrapper div.ccItem
+{
+	float: left;
+	padding-left: 25px;
+	width: 970px;
+}

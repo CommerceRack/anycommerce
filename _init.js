@@ -34,6 +34,11 @@ app.rq.push(['extension',1,'analytics_google','extensions/analytics_google.js','
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0.js']);	
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/app_actions.js']);
 }]);
 
