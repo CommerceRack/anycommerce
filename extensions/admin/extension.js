@@ -1631,6 +1631,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				}
 			$tag.append($o.children());
 			},
+		arrayLength : function($tag,data)	{
+			$tag.text(data.value.length);
+			},
+		showTrueIfSet : function($tag,data)	{
+			$tag.text('true') //won't get into renderFormat if not populated.
+			},
 
 //a value, such as media library folder name, may be a path (my/folder/name) and a specific value from that string may be needed.
 //set bindData.splitter and the value gets split on that character.

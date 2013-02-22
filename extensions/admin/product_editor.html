@@ -103,6 +103,8 @@
 	<td data-bind='var: product(pid); defaultVar: product(_id); format:text;'></td>
 	<td><div data-bind='var: product(prod_name); format:text;'></div></td>
 	<td data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:false;'></td>
+	<td data-bind='var:product(pogs); format:showTrueIfSet; extension:admin;'></td>
+	<td data-bind='var:product(child_pids); format:arrayLength; extension:admin;'></td>
 	<td align='right'><button data-app-event="admin_prodEdit|showProductEditor">Edit</button></td>
 </tr>
 

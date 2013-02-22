@@ -412,7 +412,12 @@ var admin_prodEdit = function() {
 			},
 //clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
 		prepContentArea4Results : function(){
-			$("#productTabMainContent").empty().append($("<table class='fullWidth gridTable'>").attr('id','prodEditorResultsTable').addClass('loadingBG'));
+			var $container = $("#productTabMainContent").addClass('ui-widget ui-widget-content'),
+			$table = $("<table \/>").addClass('fullWidth ').addClass('gridTable');
+			$table.append("<thead><tr><th><\/th><th>SKU<\/th><th>Name<\/th><th>Price<\/th><th>Options<\/th><th>Children<\/th><th><\/th><\/tr><\/thead>");
+			$table.append($("<tbody \/>",{'id':'prodEditorResultsTable'}));
+			$container.empty().append($table);
+			$table.anytable();
 			},
 		
 		
