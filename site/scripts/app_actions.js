@@ -72,5 +72,13 @@ $(document).ready(function()
 	{
 		$("p.currentCat").text($("div.catCarousel div.ccItem:last-child").find("h2").text());
 	});	
+	$("div.catNavContent img.catButton").mouseover(function()
+	{
+		$(this).css("opacity",".65");
+	});	
+	$("div.catNavContent img.catButton").mouseout(function()
+	{
+		$(this).css("opacity","1");
+	});		
 }); 
 
