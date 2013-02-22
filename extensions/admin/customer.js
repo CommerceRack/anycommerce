@@ -355,7 +355,7 @@ else	{
 						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+encodeURIComponent(formObj)],{'callback':callback},'immutable');
 //destroy and detail must occur after update
 						app.model.destroy('adminCustomerDetail|'+obj.CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID},{},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -526,7 +526,7 @@ app.model.dispatchThis('immutable');
 									}
 								}},'immutable');
 							app.model.destroy('adminCustomerDetail|'+CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{
@@ -629,7 +629,7 @@ else	{
 							}},'immutable');
 //get a clean copy of the customer record so that the notes panel can be updated.
 						app.model.destroy('adminCustomerDetail|'+CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else if(!CID)	{
@@ -745,7 +745,7 @@ else	{
 					var CID = $(this).closest('.panel').data('cid'),
 					type = $btn.closest("[data-address-type]").data('address-type'),
 					index = Number($btn.closest('tr').data('obj_index'));
-					
+
 					if(CID && index >= 0 && type)	{
 						$target.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
 

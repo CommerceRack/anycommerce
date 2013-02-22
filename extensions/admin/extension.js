@@ -256,7 +256,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				_tag = _tag || {};
 				obj._cmd = "adminCustomerUpdate";
 				obj.CID = CID;
-				obj['%set'] = setObj;
+				obj['@updates'] = setObj;
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
