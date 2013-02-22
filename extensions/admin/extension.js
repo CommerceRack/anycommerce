@@ -1236,7 +1236,7 @@ if(app.vars.debug)	{
 	}
 
 
-app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
+//app.u.dump("Is anycommerce? document.domain: "+document.domain+" and uriParams.anycommerce: ["+uriParams.anycommerce+"]");
 	
 //the zoovy branding is in place by default. override if on anycommerce.com OR if an anycommerce URI param is present (for debugging)
 if(document.domain && document.domain.toLowerCase().indexOf('anycommerce') > -1)	{
@@ -1727,8 +1727,10 @@ else if(opts.tab)	{
 	opts.targetID = opts.tab+"Content";
 	$target = $(app.u.jqSelector('#',opts.targetID));
 	if(opts.tab != 'orders')	{
-		app.u.dump("opts.tab is  NOT set to orders");
 		app.ext.admin_orders.u.handleOrderListTab('deactivate');
+		}
+	if(opts.tab != 'product')	{
+		app.ext.admin_prodEdit.u.handleProductListTab('deactivate');
 		}
 	} 
 else if(app.ext.admin.vars.tab)	{
@@ -2383,7 +2385,7 @@ var chart = new Highcharts.Chart({
 				this.bringTabIntoFocus(tab);
 //				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product' && !P.dialog)	{
-					app.u.dump(" -> open product editor");
+//					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);

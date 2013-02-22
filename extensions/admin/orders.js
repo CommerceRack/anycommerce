@@ -1041,7 +1041,7 @@ else	{
 
 
 		handleOrderListTab : function(process)	{
-			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
+//			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
 			var $target = $('#orderListTab');
 			if($target.length)	{
 //init should be run when the extension is loaded. adds click events and whatnot.
