@@ -80,10 +80,10 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<table class='gridTable fullWidth'>
 	<thead>
 	<tr>
-		<th>Amount</th>
-		<th>Note</th>
-		<th>Created</th>
-		<th>Expires</th>
+		<th class='alignLeft'>Amount</th>
+		<th class='alignLeft'>Note</th>
+		<th class='alignRight'>Created</th>
+		<th class='alignRight'>Expires</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></tbody>
@@ -132,16 +132,16 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<table class='gridTable fullWidth'>
 	<thead>
 	<tr>
-		<th>Order Id</th>
-		<th># Items</th>
-		<th>Pay Type</th>
-		<th>Total</th>
-		<th>Created</th>
+		<th class='alignLeft'>Order Id</th>
+		<th class='alignRight'># Items</th>
+		<th class='alignRight'>Pay Type</th>
+		<th class='alignRight'>Total</th>
+		<th class='alignRight'>Created</th>
 	</tr>
 	</thead>
 	<tfoot>
 	<tr>
-		<td colspan='4' class='alignRight' data-bind="var:customer(@ORDERS); format:orderHistoryTotal; extension:admin_customer;"></td>
+		<td colspan='4' class='alignRight' data-bind="var:customer(@ORDERS); format:orderHistoryTotal; extension:admin_customer; currencySign:$;"></td>
 		<td></td>
 	</tr>
 	</tfoot>
@@ -189,10 +189,10 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<table class='gridTable fullWidth'>
 	<thead>
 	<tr>
-		<th>Description</th>
-		<th>Created</th>
-		<th>Store Until</th>
-		<th>Actions</th>
+		<th class='alignLeft'>Description</th>
+		<th class='alignRight'>Created</th>
+		<th class='alignRight'>Store Until</th>
+		<th class='alignRight'>Actions</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var:customer(@WALLETS); format:processList; loadsTemplate:customerEditorWalletListTemplate;">
@@ -208,10 +208,10 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<table class='gridTable fullWidth'>
 	<thead>
 	<tr>
-		<th>Created</th>
-		<th>Ticket</th>
-		<th>Subject</th>
-		<th>Status</th>
+		<th class='alignLeft'>Created</th>
+		<th class='alignLeft'>Subject</th>
+		<th class='alignRight'>Ticket</th>
+		<th class='alignRight'>Status</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var:customer(@TICKETS); format:processList; loadsTemplate:customerEditorTicketListTemplate;">
@@ -222,19 +222,22 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </div>
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
-	<h2>Dropship Billing Address</h2>
+	<h2>Dropship</h2>
 	<div>
 <fieldset>
+		<legend>Logo</legend>
+</fieldset>
+<fieldset>
+
+	<legend>Billing Address</legend>
+	<label><span>Contact:</span><input type='text' name='billing_contact' data-bind='var: customer(WS.BILLING_CONTACT); format:popVal;' /></label>
+	<label><span>Phone:</span><input type='text' name='billing_phone' data-bind='var: customer(WS.BILLING_PHONE); format:popVal;' /></label>
 	<label><span>Address 1:</span><input type='text' name='address1' data-bind='var: customer(WS.ws_address1); format:popVal;' /></label>
 	<label><span>Address 2:</span><input type='text' name='address2' data-bind='var: customer(WS.ws_address2); format:popVal;' /></label>
 	<label><span>City:</span><input type='text' name='city' data-bind='var: customer(WS.ws_city); format:popVal;' /></label>
 	<label><span>State/Region:</span><input type='text' name='region' data-bind='var: customer(WS.ws_region); format:popVal;' /></label>
 	<label><span>Zip/Postal:</span><input size='9' type='text' name='postal' data-bind='var: customer(WS.ws_postal); format:popVal;' /></label>
 	<label><span>Country Code:</span><input size='2' type='text' name='country' data-bind='var: customer(WS.ws_country); format:popVal;' /></label>
-	<hr />
-	
-	<label><span>Contact:</span><input type='text' name='billing_contact' data-bind='var: customer(WS.BILLING_CONTACT); format:popVal;' /></label>
-	<label><span>Phone:</span><input type='text' name='billing_phone' data-bind='var: customer(WS.BILLING_PHONE); format:popVal;' /></label>
 	
 	<p class='hint'>For internal use only</p>
 
@@ -259,26 +262,26 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 <table>
 <tr id='customerEditorTicketListTemplate' class='pointer' onClick="navigateTo('/biz/crm/index.cgi?VERB=TICKET-VIEW&TKTCODE=96332');">
-	<td data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
-	<td data-bind="var:ticket(TKTCODE); format:text;" class='lookLikeLink'></td>
-	<td data-bind="var:ticket(SUBJECT); format:text;"></td>
-	<td data-bind="var:ticket(STATUS); format:text;"></td>
+	<td class='alignLeft' data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignLeft' data-bind="var:ticket(SUBJECT); format:text;"></td>
+	<td class='alignRight' data-bind="var:ticket(TKTCODE); format:text;" class='lookLikeLink'></td>
+	<td class='alignRight' data-bind="var:ticket(STATUS); format:text;"></td>
 </tr>
 
 
 <tr id='customerEditorGiftcardListTemplate'>
-	<td data-bind="var:giftcart(BALANCE); format:text;"></td>
-	<td data-bind="var:giftcart(NOTE); format:text;"></td>
-	<td data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
-	<td data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
+	<td class='alignLeft' data-bind="var:giftcart(BALANCE); format:text;"></td>
+	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
+	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('id'),$(this).closest('[data-cid]').data('cid'));">
 	<td data-bind="var:order(ORDERID); format:text;" class='lookLikeLink'></td>
-	<td data-bind="var:order(ITEMS); format:text;"></td>
-	<td data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>
-	<td data-bind="var:order(ORDER_TOTAL); format:text;"></td>
-	<td data-bind="var:order(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight' data-bind="var:order(ITEMS); format:text;"></td>
+	<td class='alignRight' data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>
+	<td class='alignRight' data-bind="var:order(ORDER_TOTAL); format:money; currencySign:$;"></td>
+	<td class='alignRight' data-bind="var:order(CREATED_GMT); format:epoch2pretty;"></td>
 </tr>
 
 
@@ -307,9 +310,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </tr>
 
 <tr id='customerEditorWalletListTemplate'>
-	<td data-bind="var:wallet(TD); format:text;"></td>
-	<td data-bind="var:wallet(TC); format:text;"></td>
-	<td data-bind="var:wallet(TE); format:text;"></td>
+	<td class='alignLeft' data-bind="var:wallet(TD); format:text;"></td>
+	<td class='alignRight' data-bind="var:wallet(TC); format:text;"></td>
+	<td class='alignRight' data-bind="var:wallet(TE); format:text;"></td>
 	<td class='alignRight'>
 <!--	<button data-app-event="admin_customer|showWalletDetail">View this wallet</button> -->
 	<button data-app-event="admin_customer|tagRowForRemove">Delete this wallet</button>

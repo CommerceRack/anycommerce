@@ -257,11 +257,14 @@ else	{
 				}, //wholesaleScheduleSelect
 				
 			orderHistoryTotal : function($tag,data)	{
+				app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
 				var L = data.value.length,
 				sum = 0; //sum of all orders combined.
 				for(var i = 0; i < L; i += 1)	{
-					sum += data.value[i].ORDER_TOTAL;
+					sum += Number(data.value[i].ORDER_TOTAL);
 					}
+				data.value = sum; //preserve data object except data.value. that way other params, such as currency symbol, can still be set.
+				app.renderFormats.money($tag,data)
 				},
 				
 			newsletters : function($tag,data)	{
