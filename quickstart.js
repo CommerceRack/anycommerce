@@ -762,6 +762,77 @@ fallback is to just output the value.
 				}, //legacyURLToRIA
 
 
+
+//This is for use on a category or search results page.
+//changes the text on the button based on certain attributes.
+//app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'});
+			addToCartButton : function($tag,data)	{
+//				app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+
+//if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
+				
+				var className, price, buttonState, buttonText = 'Add to Cart',
+				pid = data.value.pid, //...pid set in both elastic and appProductGet
+				inv = app.ext.store_product.u.getProductInventory(pid);
+				
+//				if(app.model.fetchData('appProductGet|'+pid))	{}
+				if(data.bindData.isElastic)	{
+					price = data.value.base_price;
+					if(data.value.tags.indexOf('IS_PREORDER') > -1)	{buttonText = 'Preorder'; className = 'preorder';}
+					else if(data.value.tags.indexOf('IS_COLORFUL') > -1)	{buttonText = 'Choose Color'; className = 'variational colorful';}
+					else if(data.value.tags.indexOf('IS_SIZEABLE') > -1)	{buttonText = 'Choose Size'; className = 'variational sizeable;'}
+					else if(data.value.pogs.length > 0)	{buttonText = 'Choose Options'; className = 'variational';}
+					else	{}
+					//look in tags for tags. indexOf
+					}
+				else	{
+					var pData = data.value['%attribs']; //shortcut
+					price = pData['zoovy:base_price'];
+					if(pData['is:preorder'])	{
+						buttonText = 'Preorder'; className = 'preorder';
+						}
+					else if(pData['is:colorful'])	{
+						buttonText = 'Choose Color'; className = 'variational colorful';
+						}
+					else if(pData['is:sizeable'])	{
+						buttonText = 'Choose Size'; className = 'variational sizeable';
+						}
+					else if(!$.isEmptyObject(pData['@variations']))	{
+						buttonText = 'Choose Options'; className = 'variational';
+						}
+					else	{
+						}
+					
+					}
+
+//no price and/or no inventory mean item is not purchaseable.
+				if(!price)	{
+					buttonState = 'disable';
+					}
+				else if(inv && inv <= 0)	{buttonState = 'disable';}
+				else{}
+				
+//				app.u.dump(" -> inv: "+inv);
+				$tag.addClass(className).text(buttonText);
+				$tag.button();
+				if(buttonState)	{$tag.button(buttonState)}
+				else	{
+					if(buttonText.toLowerCase() == 'add to cart')	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							app.ext.myRIA.u.handleAddToCart($(this).closest('form'),{'action':'modal'}); 
+							})
+						}
+					else	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							showContent('product',{'pid':pid}); 
+							})
+						}
+					}
+//				app.u.dump(" -> ID at end: "+$tag.attr('id'));
+				}, //addToCartButton
+
 //pass in the sku for the bindata.value so that the original data object can be referenced for additional fields.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
 			priceRetailSavingsDifference : function($tag,data)	{

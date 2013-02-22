@@ -11,12 +11,10 @@
 $(function() {
 	$('code').each(function(){
 		var $this = $(this);
-		var html = $this.html();
-		var str = html.split('\n');
-		$this.empty().append($("<textarea>").attr('rows',(str.length+1)).val(html));
+		var html = $this.html().trim();
+		$this.empty().css({'white-space':'pre-wrap'}).text(html);
 		})
 	});
-
 </script>
 
 <style type='text/css'>
@@ -25,6 +23,8 @@ textarea	{width:90%; height:auto; font-size:.9em; line-height:1.3em; clear:both;
 h1,h2,h3,h4,h5,h6	{margin:12px 0}
 h3	{color:#333333;}
 section	{margin:12px 0;}
+
+code	{white-space:pre-wrap; padding:6px; background:#efefef; font-size:.90em; display:block; border:1px solid #cccccc;}
 </style>
 </head>
 

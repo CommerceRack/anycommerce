@@ -249,21 +249,24 @@ formerly showCart
 		renderFormats : {
 			
 			cartItemQty : function($tag,data)	{
-//				app.u.dump("BEGIN store_cart.renderFormats.cartItemQty");
-//				app.u.dump(data);
-				var stid = $tag.closest('[data-stid]').attr('data-stid'); //get the stid off the parent container.
-//				app.u.dump(stid);
-				$tag.val(data.value).attr('data-stid',stid);
+//for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
+				if(data.value.stid[0] == '%' || data.value.asm_master)	{$tag.attr('readonly','readonly').css('border-width','0').val(data.value.qty)} 
+				else	{
+					$tag.val(data.value.qty).attr('data-stid',data.value.stid);
+					}
 				},
 				
 				
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
-				if(data.value[0] == '%')	{$tag.remove()}
+				if(data.value.stid[0] == '%')	{$tag.remove()}
+				else if(data.value.asm_master)	{$tag.remove()}
 				else	{
-$tag.attr({'data-stid':data.value}).val(0); //val is used for the updateCartQty
+$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
+$tag.button({icons: {primary: "ui-icon-closethick"},text: false});
 //the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
-$tag.click(function(){
+$tag.one('click',function(event){
+	event.preventDefault();
 	app.ext.store_cart.u.updateCartQty($tag);
 	app.model.dispatchThis('immutable');
 	});
