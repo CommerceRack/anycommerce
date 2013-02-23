@@ -133,13 +133,13 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						var EQ = $list.data('elastic-query'); //Elastic Query
 						if(EQ)	{
 							var $header = app.ext.store_search.u.buildResultsHeader($list,_rtag.datapointer), //# of results and keyword display.
-							$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
+//							$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
 							$pageMenu = app.ext.store_search.u.buildPagination($list,_rtag), //pagination as ul
 							$multipage = app.ext.store_search.u.buildPaginationButtons($list,_rtag), //next/prev buttons
 							$menuContainer = $("<div \/>").addClass('resultsMenuContainer'), //used to hold menus. imp for abs. positioning.
 							$controlsContainer = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom'); //used to hold menus and buttons.
 							
-							$menuContainer.append($sortMenu);
+//							$menuContainer.append($sortMenu); //sorting not working. commented out for now. !!!
 							$menuContainer.append($pageMenu);
 							$menuContainer.appendTo($controlsContainer);
 							$multipage.appendTo($controlsContainer); //multipage nav is at the top and bottom
@@ -148,7 +148,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							$controlsContainer.insertBefore($list);
 	
 	//add to DOM prior to running menu. helps it to not barf.
-							$sortMenu.menu();
+//							$sortMenu.menu();
 							$pageMenu.menu(); 
 							
 							
