@@ -1201,7 +1201,7 @@ AUTHENTICATION/USER
 				var r = 'none';
 				if(this.thisIsAnAdminSession())	{r = 'admin'}
 //was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = 'authenticated'; app.u.dump(" -> buyerLogin");}
+				else if(app.model.fetchData('app.data.appBuyerLogin') && app.data.appBuyerLogin.cid)  {r = 'authenticated'; app.u.dump(" -> buyerLogin");}
 				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'; app.u.dump(" -> cid/username");}
 				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.cid))	{
 					r = 'authenticated';

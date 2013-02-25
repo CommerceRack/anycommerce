@@ -513,7 +513,7 @@ else	{
 					}
 				}
 			}, //showList
-		authenticateZoovyUser : {
+		authenticateBuyer : {
 			onSuccess : function(tagObj)	{
 				app.vars.cid = app.data[tagObj.datapointer].cid; //save to a quickly referencable location.
 				$('#loginSuccessContainer').show(); //contains 'continue' button.
@@ -521,7 +521,7 @@ else	{
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
 				}
-			} //authenticateZoovyUser
+			} //authenticateBuyer
 
 		}, //callbacks
 
@@ -1457,11 +1457,31 @@ if(ps.indexOf('?') >= 1)	{
 					app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
+				if(app.u.determineAuthentication() != 'none')  {
+					app.ext.myRIA.u.handleLoginActions();
+					}
+
 //				app.u.dump(" -> infoObj follows:");
 //				app.u.dump(infoObj);
 				app.ext.myRIA.a.showContent('',infoObj);
 				return infoObj //returning this saves some additional looking up in the appInit
 				},
+
+			handleLoginActions : function()  {
+				$('body').addClass('buyerLoggedIn');
+				$('.username').text(app.u.getUsernameFromCart());
+				},
+			
+			
+			handleLogoutActions : function()  {
+				$('body').removeClass('buyerLoggedIn');
+				$('.username').empty();
+				app.u.logBuyerOut();
+				showContent('homepage',{});
+				},
+
+
+
 //handle State and History Of The World.
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
@@ -2733,7 +2753,7 @@ else	{
 					}
 					
 				if(errors == ''){
-					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'authenticateZoovyUser','extension':'myRIA'});
+					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.ext.store_crm.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					
