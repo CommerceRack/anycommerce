@@ -226,8 +226,11 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<div>
 <fieldset>
 		<legend>Logo</legend>
+		<img width="200" height="70" src="/images/blank.gif" name="dropshipLogoImg" id="dropshipLogoImg">
+		<a onclick="mediaLibrary($('#dropshipLogoImg'),$('#dropshipLogo'),'Choose Dropship Logo'); return false;" href="#"><b>[Edit]</b></a>
+		<input type='hidden' name='dropshipLogo' val='' />
 </fieldset>
-<fieldset>
+<fieldset data-role='dropship-bill-address'>
 
 	<legend>Billing Address</legend>
 	<label><span>Contact:</span><input type='text' name='billing_contact' data-bind='var: customer(WS.BILLING_CONTACT); format:popVal;' /></label>

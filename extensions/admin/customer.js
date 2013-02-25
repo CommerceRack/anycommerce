@@ -420,7 +420,7 @@ app.model.dispatchThis('immutable');
 					macros = new Array(),
 					CID = $btn.closest("[data-cid]").data('cid'),
 					wholesale = "", //wholesale, dropship and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
-					dropship = "",
+					dropshipAddrUpdate = false, //set to true if address update is present. sends entire address, not just changed fields.
 					general = "";
 
 //used to determine whether or not the val sent to the API should be a 1 (checked) or 0 (unchecked). necessary for something checked being unchecked.
@@ -480,7 +480,11 @@ app.model.dispatchThis('immutable');
 								general += $tag.attr('name')+"="+handleCheckbox($tag);
 								}
 							else if(pr == 'dropship')	{
-								dropship += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
+								//Add something here for dropship logo.
+								if($tag.attr('name') == 'image')	{}
+								else	{
+									dropshipAddrUpdate = true;
+									}
 								}
 							else if(pr == 'wholesale')	{
 								wholesale += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&";  //val of checkbox is 'on'. change to 1.
@@ -502,9 +506,10 @@ app.model.dispatchThis('immutable');
 							macros.push("WSSET?"+wholesale);
 							}
 
-						if(dropship != '')	{
-							if(dropship.charAt(dropship.length-1) == '&')	{dropship = dropship.substring(0, dropship.length - 1)} //strip trailing ampersand.
-							macros.push("ADDRUPDATE?TYPE=WS&"+dropship);
+						if(dropshipAddrUpdate)	{
+							var wsAddrUpdate = $("[data-role='dropship-bill-address']",$form).serialize();
+							app.u.dump(" -> wsAddrUpdate: "+wsAddrUpdate);
+							macros.push("ADDRUPDATE?TYPE=WS&"+wsAddrUpdate);
 							}						
 
 
