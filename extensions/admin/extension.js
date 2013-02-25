@@ -3381,19 +3381,21 @@ just lose the back button feature.
 //value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
-			handleAppEvents : function($target)	{
+//obj is some optional data. obj.$content would be a common use.
+			handleAppEvents : function($target,obj)	{
 //				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
 					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
+						obj = obj || {},
 						extension = $ele.data('app-event').split("|")[0],
 						action = $ele.data('app-event').split("|")[1];
 //						app.u.dump(" -> action: "+action);
 						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
-							app.ext[extension].e[action]($ele);
+							app.ext[extension].e[action]($ele,obj);
 							} //no action specified. do nothing. element may have it's own event actions specified inline.
 						else	{
 							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");

@@ -224,11 +224,11 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
 	<h2>Dropship</h2>
 	<div>
-<fieldset>
-		<legend>Logo</legend>
-		<img width="200" height="70" src="/images/blank.gif" name="dropshipLogoImg" id="dropshipLogoImg">
-		<a onclick="mediaLibrary($('#dropshipLogoImg'),$('#dropshipLogo'),'Choose Dropship Logo'); return false;" href="#"><b>[Edit]</b></a>
-		<input type='hidden' name='dropshipLogo' val='' />
+<fieldset class='marginBottom'>
+	<legend>Logo</legend>
+	<img width="200" height="70" src="/images/blank.gif" id='customerDropshipLogoImg'  data-bind='var: customer(WS.LOGO); format:imageURL;bgcolor:TTTTTT;' class='marginTop' >
+	<a data-app-event="admin_customer|showMediaLib4DropshipLogo" href="#"><b>[Edit]</b></a>
+	<input type='hidden' name='LOGO' id='customerDropshipLogo' val='' />
 </fieldset>
 <fieldset data-role='dropship-bill-address'>
 
@@ -298,8 +298,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
 	<td class='alignRight'>
 <button data-app-event="admin_customer|showAddrUpdate">Edit this address</button>
-<button data-app-event="admin_customer|tagRowForRemove">Delete this address</button>
-<button data-app-event="admin_customer|tagRowForIsDefault">Set address as default</button>
+<button data-app-event="admin_customer|tagRowForRemove">Delete this address</button><!--
+<button data-app-event="admin_customer|tagRowForIsDefault">Set address as default</button> -->
 	</td>
 </tr>
 
@@ -318,8 +318,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td class='alignRight' data-bind="var:wallet(TE); format:text;"></td>
 	<td class='alignRight'>
 <!--	<button data-app-event="admin_customer|showWalletDetail">View this wallet</button> -->
-	<button data-app-event="admin_customer|tagRowForRemove">Delete this wallet</button>
-	<button data-app-event="admin_customer|tagRowForIsDefault">Set wallet as default</button></td>
+	<button data-app-event="admin_customer|tagRowForRemove">Delete this wallet</button><!--
+	<button data-app-event="admin_customer|tagRowForIsDefault">Set wallet as default</button>--></td>
 </tr>
 </table>
 
