@@ -348,6 +348,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 <address id='customerAddressAddUpdateTemplate' class='labelsAsBreaks alignedLabels'>
 <form action='#'>
+<input type='hidden' name='TYPE' value='' /><!-- val populated w/ js -->
 <fieldset>
 	<label><span>Shortcut</span><input type='text' name='SHORTCUT' value='' required='required' data-minlength='3' maxlength="8" size='6' data-bind="var:address(_id); format:popVal;" /></label>
 	<label><span>First name</span><input type='text' name='firstname' value='' required='required'  data-bind="var:address(ship_firstname); defaultVar: address(bill_firstname); format:popVal;" /></label>
