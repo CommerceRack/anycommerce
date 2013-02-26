@@ -250,7 +250,7 @@ formerly showCart
 			
 			cartItemQty : function($tag,data)	{
 //for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
-				if(data.value.stid[0] == '%' || data.value.asm_master)	{$tag.attr('readonly','readonly').css('border-width','0').val(data.value.qty)} 
+				if((data.value.stid && data.value.stid[0] == '%') || data.value.asm_master)	{$tag.attr('readonly','readonly').css('border-width','0').val(data.value.qty)} 
 				else	{
 					$tag.val(data.value.qty).attr('data-stid',data.value.stid);
 					}

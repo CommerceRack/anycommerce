@@ -1249,11 +1249,11 @@ AUTHENTICATION/USER
 		getUsernameFromCart : function()	{
 //			app.u.dump('BEGIN u.getUsernameFromCart');
 			var r = false;
-			if(app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
+			if(app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.login))	{
 				r = app.data.cartDetail.customer.login;
 //				app.u.dump(' -> login was set. email = '+r);
 				}
-			else if(app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
+			else if(app.data.cartDetail && app.data.cartDetail.bill && app.u.isSet(app.data.cartDetail.bill.email)){
 				r = app.data.cartDetail.bill.email;
 //				app.u.dump(' -> bill/email was set. email = '+r);
 				}
