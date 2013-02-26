@@ -633,11 +633,22 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			return r;
 			},
 
-//some commands should not get saved locally.
+//some commands should not get saved locally, either because they contain sensitive data or because of the nature of the call.
 		thisGetsSavedLocally : function(cmd)	{
 			var r = true; //what is returned. is set to false if the cmd should not get saved to local storage.
-			if(cmd == 'cartSet')	{r = false} //changes to cart are saved in cart objects, not as individual changes.
-			else if(cmd == 'ping')	{r = false}
+			switch(cmd)	{
+				case 'adminCustomerUpdate': //may contain cc
+				case 'adminCustomerWalletPeek': //contains cc #
+				case 'adminOrderCreate': //may contain cc
+				case 'adminOrderPaymentAction': //may contain cc
+				case 'adminOrderUpdate': //may contain cc
+				case 'cartOrderCreate': //may contain cc
+				case 'cartPaymentQ': //may contain cc
+				case 'cartSet': //changes are reflected in cart object.
+				case 'ping':
+				r = false
+				break;
+				}
 			return r;
 			},
 

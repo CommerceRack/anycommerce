@@ -1,3 +1,8 @@
+@font-face	{
+	font-family: barcode3of9;
+	src: url('resources/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
 body {line-height: 1;} /* helps to reduce some errant whitespace issues */
 
 body	{margin:0; padding:0; background:#f1f1f1; } 
@@ -62,7 +67,7 @@ a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 
 
 
-
+.barcode	{font-family: barcode3of9 !important;}
 /*section or page header. There should only be one of these per page and it should be at the very top.*/
 h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
 

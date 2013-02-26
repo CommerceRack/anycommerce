@@ -2339,7 +2339,6 @@ return $r;
 			}, //imageURL
 
 
-
 		stuffList : function($tag,data)	{
 //			app.u.dump("BEGIN renderFormat.stuffList");
 			var L = data.value.length;
