@@ -576,6 +576,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $zContent = $(app.u.jqSelector('#',app.ext.convertSessionToOrder.vars.containerID)).empty();
 				var oldSession = app.sessionId;
+				app.u.dump(" -> tagObj for checkoutSuccess.onSuccess: "); app.u.dump(tagObj);
 				var orderID = app.data[tagObj.datapointer].orderid;
 
 				app.u.jumpToAnchor(app.ext.convertSessionToOrder.vars.containerID);

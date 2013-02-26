@@ -613,11 +613,13 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				if(this.thisGetsSavedToMemory(responseData['_rcmd']))	{
 					app.data[datapointer] = responseData;
 					}
+				else	{app.u.dump(" -> data not saved to memory: "+responseData['_rcmd']);}
 				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
 					var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 					obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
 					app.storageFunctions.writeLocal(datapointer,obj4Save); //save to local storage, if feature is available.
 					}
+				else	{app.u.dump(" -> data not saved to LS: "+responseData['_rcmd']);}
 				}
 			else	{
 //catch. not writing to local. Either not necessary or an error occured.
@@ -627,9 +629,13 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 		thisGetsSavedToMemory : function(cmd)	{
 			var r = true;
-			r = this.thisGetsSavedLocally(cmd); //anything not saved locally is automatically not saved to memory.
-//an appPageGet request extends the original page object. (in case two separate requests come in for different attributes for the same category.
-			if(cmd == 'appPageGet')	{r = false;}
+			switch(cmd)	{
+				case 'appPageGet': //saved into category object earlier in process. redundant here.
+				case 'cartSet': //changes are reflected in cart object.
+				case 'ping':
+				r = false
+				break;
+				}
 			return r;
 			},
 
@@ -642,6 +648,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				case 'adminOrderCreate': //may contain cc
 				case 'adminOrderPaymentAction': //may contain cc
 				case 'adminOrderUpdate': //may contain cc
+				case 'appPageGet': //
 				case 'cartOrderCreate': //may contain cc
 				case 'cartPaymentQ': //may contain cc
 				case 'cartSet': //changes are reflected in cart object.
