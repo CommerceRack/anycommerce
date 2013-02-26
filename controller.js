@@ -815,7 +815,7 @@ it'll then set app.rq.push to mirror this function.
 // <link rel="stylesheet" type="text/css" href="filename" />
 				fileref.setAttribute('rel', 'stylesheet');
 				fileref.setAttribute('type', 'text/css');
-				fileref.setAttribute('href', filename);
+				fileref.setAttribute('href', filename + "_v="+app.vars.release);
 				if(domID)	{fileref.setAttribute('id', domID);}
 // Append link object inside html's head
 				document.getElementsByTagName("head")[0].appendChild(fileref);

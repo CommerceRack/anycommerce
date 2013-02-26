@@ -1376,7 +1376,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 		fetchExtension : function(extObjItem)	{
 //			app.u.dump('BEGIN model.fetchExtention ['+extObjItem.namespace+']');
 			var errors = '';
-			var url = extObjItem.filename;
+			var url = extObjItem.filename+"?_v="+app.vars.release;
 			var namespace = extObjItem.namespace; //for easy reference.
 //			app.u.dump(' -> url = '+url);
 		

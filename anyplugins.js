@@ -959,7 +959,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 
 		_handlePersistentStateUpdate : function(value)	{
-//			app.u.dump("BEGIN anypanel._handlePersistentStateUpdate")
+			app.u.dump("BEGIN anypanel._handlePersistentStateUpdate");
 			var r = false; //will return true if a persistent update occurs.
 //			app.u.dump(" -> this.options.persistent: "+this.options.persistent);
 //			app.u.dump(" -> value: "+value);
@@ -969,6 +969,9 @@ Additional a settings button can be added which will contain a dropdown of selec
 					var settings = {};
 					settings[this.options.name] = {'state':value};
 					var newSettings = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
+					app.u.dump(' -> '+this.options.extension);
+					app.u.dump(' -> newSettings:');
+					app.u.dump(newSettings);
 					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
