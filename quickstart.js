@@ -1731,6 +1731,7 @@ return r;
 					else	{
 //typically, the onCompletes get handled as part of the request callback, but the template has already been rendered so the callback won't get executed.
 						P.state = 'onCompletes'; //needed for handleTemplateFunctions.
+						P.datapointer = 'appProductGet|'+P.pid;
 						app.ext.myRIA.u.handleTemplateFunctions(P);
 						}
 
