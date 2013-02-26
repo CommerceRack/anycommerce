@@ -2294,7 +2294,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 										}
 									}
 								}
-							else if(formJSON.flagAsPaid.toLowerCase() == 'on')	{
+							else if(formJSON.flagAsPaid && formJSON.flagAsPaid.toLowerCase() == 'on')	{
 								CMD = "ADDPAIDPAYMENT";
 								delete formJSON.flagAsPaid;
 								}
