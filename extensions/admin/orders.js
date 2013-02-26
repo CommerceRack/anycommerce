@@ -569,7 +569,7 @@ $order.attr('data-order-view-parent',orderID); //put this on the parent so that 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append($order);
 
-$('body').showLoading({'message':'Requesting up to date order information.'});
+$('body').showLoading({'message':'Fetching order'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
@@ -1447,7 +1447,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					
 					if(templateID)	{
 						$('#printContainer').empty(); //clean out any previously printed content.
-						$('body').showLoading();
+						$('body').showLoading({'message':'Generating file for print'});
 						
 						app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
 						
@@ -1648,7 +1648,7 @@ $('.editable',$container).each(function(){
 					$content.append(app.renderFunctions.createTemplateInstance(obj.templateID,{'orderid':obj.orderID}));
 
 					$content.dialog(dialogParams);
-					$content.showLoading();
+					$content.showLoading({'message':'Loading order information'});
 					app.ext.admin.calls.adminOrderDetail.init(obj.orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
 					app.model.dispatchThis('mutable');
 				
@@ -2024,7 +2024,7 @@ else	{
 							app.ext.admin_orders.a.showCustomMailEditor(orderID,app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
 							}
 						else	{
-							$('body').showLoading();
+							$('body').showLoading({'message':'Emailing customer [message: '+$(this).attr('href').substring(6)+']'});
 //substring(6) on the link below strips #MAIL| from the url
 							app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
 							app.model.dispatchThis('immutable');
@@ -2087,7 +2087,7 @@ else	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
-						$('body').showLoading();
+						$('body').showLoading({'message':'Searching orders...'});
 if(frmObj.isDetailedSearch == 'on')	{
 	query = {'size':Number(frmObj.size) || 30,'filter' : {
 	'or' : [
@@ -2327,7 +2327,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					event.preventDefault();
 
 					var $parent = $btn.closest("[data-ui-role='orderUpdateAddTrackingContainer']");
-					$parent.showLoading(); //run just on payment panel
+					$parent.showLoading({'message':'Updating order with tracking information'}); //run just on payment panel
 					var kvp = $btn.parents('form').serialize();
 					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
 					app.model.destroy('adminOrderDetail|'+$btn.data('orderid')); //get a clean copy of the order.
@@ -2451,7 +2451,7 @@ else	{
 						height:600,
 						close: function(event, ui){$(this).dialog('destroy').remove()} //garbage collection. removes from DOM.
 						});
-					$content.showLoading();
+					$content.showLoading({'message':'Fetching order'});
 					
 					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
 					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','merge':'appProfileInfo|'+sdomain},'mutable');
