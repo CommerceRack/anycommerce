@@ -374,6 +374,7 @@ var admin_prodEdit = function() {
 					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var tag = $(this).text();
+						$('#prodEditorResultsTbody').showLoading({'message':'Fetching items tagged as '+tag})
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"tags":tag}}},{'datapointer':'appPublicSearch|'+tag,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search',list:$('#prodEditorResultsTbody')});
 						app.model.dispatchThis('mutable');
 						})
@@ -384,6 +385,7 @@ var admin_prodEdit = function() {
 					$(this).addClass('lookLikeLink').click(function(){
 						app.ext.admin_prodEdit.u.prepContentArea4Results();
 						var mktid = $(this).data('mktid')+'_on';
+						$('#prodEditorResultsTbody').showLoading({'message':'Fetching items for '+$(this).text()})
 						app.ext.store_search.calls.appPublicProductSearch.init({"size":"50","mode":"elastic-native","filter":{"term":{"marketplaces":mktid}}},{'datapointer':'appPublicSearch|'+mktid,'templateID':'productListTemplateTableResults','callback':'handleElasticResults','extension':'store_search',list:$('#prodEditorResultsTbody')});
 						app.model.dispatchThis('mutable');
 						})
@@ -399,7 +401,7 @@ var admin_prodEdit = function() {
 				}
 			else	{
 				P.targetID = "productTabMainContent";
-				$(app.u.jqSelector('#',P.targetID)).empty().showLoading();
+				$(app.u.jqSelector('#',P.targetID)).empty().showLoading({'message':'loading...'});
 				app.model.fetchAdminResource(path,P);
 				}
 			}, //showProductTab 
@@ -578,7 +580,7 @@ var admin_prodEdit = function() {
 						});			
 					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
-						$panel.showLoading();
+						$panel.showLoading({'message':'Updating product '+pid});
 						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
 						app.model.destroy('appProductGet|'+pid);
 						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
