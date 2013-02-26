@@ -23,6 +23,10 @@
 
 
 <script type="text/javascript">
+/* need to correct for a server side issue where domain.com isn't forwarding to www.domain.com */
+if(document.location.protocol != 'file:' && document.domain.indexOf('www') == -1 && document.domain == 'downlitebedding.com')	{
+	document.location = 'http://www.downlitebedding.com';
+	}
 var _gaq = _gaq || [];
 _gaq.push(['_setAccount', 'UA-30870435-1']); //downlitebedding.com = UA-30870435-1    -2 is for .zoovy.com
 _gaq.push(['_trackPageview']);
