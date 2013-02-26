@@ -555,8 +555,8 @@ else	{
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
 //otherwise, it could be possible to load new content into the tab but NOT have the data attributes cleaned out.
 		showOrderView : function(orderID,CID,targetID,Q)	{
-			app.u.dump("BEGIN orders.a.showOrderView");
-			app.u.dump(" -> cid: "+CID);
+//			app.u.dump("BEGIN orders.a.showOrderView");
+//			app.u.dump(" -> cid: "+CID);
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
@@ -574,7 +574,7 @@ $('body').showLoading({'message':'Requesting up to date order information.'});
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
-	app.u.dump("Executing callback for adminOrderDetail");
+//	app.u.dump("Executing callback for adminOrderDetail");
 	
 	$('body').hideLoading();
 	if(app.model.responseHasErrors(responseData)){
@@ -633,11 +633,11 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 //zero isn't a valid cid.  cid must also be a number.
 if(Number(CID) > 0)	{
-	app.u.dump("fetch customer record");
+//	app.u.dump("fetch customer record");
 	r += app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
-	app.u.dump("WARNING! - no CID set.");
+	app.u.dump("WARNING! - no CID set. not critical, but CID is preferred.");
 	}
 //dispatch occurs outside this function.
 $("[data-app-role='orderContents']",$target).anypanel({'showClose':false});
