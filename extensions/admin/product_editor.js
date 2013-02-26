@@ -300,7 +300,7 @@ var admin_prodEdit = function() {
 					
 					$tbody.empty().append($('#prodEditorResultsTbody').children()); //clear old orders first then copy rows over.
 //remove click event to move the orders over to the tab, since they're already in the tab.
-					$("[data-app-event='admin_prodEdit|showProductEditor']",$tbody).off('click.moveProductToTab').on('click.hideProductTab',function(){
+					$("[data-app-event='admin_prodEdit|showProductEditor']",$tbody).off('click.moveProductsToTab').on('click.hideProductTab',function(){
 						app.ext.admin_prodEdit.u.handleProductListTab('collapse');
 						});
 					$("table",$target).anytable();
