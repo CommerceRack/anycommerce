@@ -614,7 +614,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 					app.data[datapointer] = responseData;
 					}
 				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
-					var obj4Save = $.extend(true,{},responseData);
+					var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 					obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
 					app.storageFunctions.writeLocal(datapointer,obj4Save); //save to local storage, if feature is available.
 					}
@@ -684,8 +684,9 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 
 					}
 				else	{
-					app.data[datapointer] = responseData;
-					app.storageFunctions.writeLocal(datapointer,responseData); //save to local storage, if feature is available.
+					this.writeToMemoryAndLocal(responseData);
+//					app.data[datapointer] = responseData;
+//					app.storageFunctions.writeLocal(datapointer,responseData); //save to local storage, if feature is available.
 					}
 				}
 			else	{
@@ -756,7 +757,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
 		handleResponse_cartOrderCreate : function(responseData)	{
 	//currently, there are no errors at this level. If a connection or some other critical error occured, this point would not have been reached.
-			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
+//			app.u.dump("BEGIN model.handleResponse_createOrder ["+responseData.orderid+"]");
 			var datapointer = "order|"+responseData.orderid;
 			app.storageFunctions.writeLocal(datapointer,app.data.cartDetail);  //save order locally to make it available for upselling et all.
 			app.data[datapointer] = app.data.cartDetail; //saved to object as well for easy access.
