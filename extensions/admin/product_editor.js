@@ -429,6 +429,7 @@ var admin_prodEdit = function() {
 		handleProductKeywordSearch : function(obj)	{
 			if(obj && obj.KEYWORDS)	{
 				app.ext.admin_prodEdit.u.prepContentArea4Results();
+				$('#prodEditorResultsTbody').showLoading({'message':'Performing search...'})
 				app.ext.store_search.u.handleElasticSimpleQuery(obj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateTableResults','list':$('#prodEditorResultsTbody')});
 				app.model.dispatchThis();
 				}

@@ -226,9 +226,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<div>
 <fieldset class='marginBottom'>
 	<legend>Logo</legend>
-	<img width="200" height="70" src="/images/blank.gif" id='customerDropshipLogoImg'  data-bind='var: customer(WS.LOGO); format:imageURL;bgcolor:TTTTTT;' class='marginTop' >
+	<img width="200" height="70" src="/images/blank.gif" id='customerDropshipLogoImg'  data-bind='var: customer(WS.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' class='marginTop' >
 	<a data-app-event="admin_customer|showMediaLib4DropshipLogo" href="#"><b>[Edit]</b></a>
-	<input type='hidden' name='LOGO' id='customerDropshipLogo' val='' />
+	<input type='text' name='LOGO' id='customerDropshipLogo' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
 </fieldset>
 <fieldset data-role='dropship-bill-address'>
 

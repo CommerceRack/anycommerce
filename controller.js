@@ -2334,7 +2334,7 @@ return $r;
 				$tag.attr('src',app.u.makeImage(data.bindData)); //passing in bindData allows for using
 				}
 			else	{
-				$tag.css('display','none'); //if there is no image, hide the src. 
+//				$tag.css('display','none'); //if there is no image, hide the src. 
 				}
 			}, //imageURL
 

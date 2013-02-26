@@ -134,12 +134,20 @@ else	{
 				});			
 			}
 		else if($(this).hasClass('skipTrack')){} //notes, for example, is independant.
+//logo value changed with JS, which doesn't trigger keyup code. It's run through medialib.
+		else if($(this).attr('name') == 'LOGO')	{
+			$(this).off('change.trackChange').one('change.trackChange',function(){
+				$(this).addClass('edited');
+				app.ext.admin_customer.u.handleChanges($custEditorTarget);
+				});			
+			}
 		else	{
 			$(this).off('keyup.trackChange').one('keyup.trackChange',function(){
 				$(this).addClass('edited');
 				app.ext.admin_customer.u.handleChanges($custEditorTarget);
 				});
 			}
+
 		});
 
 	app.ext.admin.u.handleAppEvents($custEditorTarget);
@@ -418,7 +426,16 @@ if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
 if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
 
 // $('body').showLoading("Creating customer record for "+formObj.email);
-app.ext.admin.calls.adminCustomerCreate.init(updates,{});
+app.ext.admin.calls.adminCustomerCreate.init(updates,{'callback':function(rd){
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
+		}
+	else	{
+		$('#customerUpdateModal').dialog('close');
+		$('.dualModeListMessaging',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty();
+		app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'CID':app.data[rd.datapointer].CID})
+		}
+	}});
 app.model.dispatchThis('immutable');
 
 						}
