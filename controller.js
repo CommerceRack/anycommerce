@@ -310,10 +310,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				}
 			},//getValidSessionID
 
-
-
-
-
 		appCategoryDetail : {
 			init : function(obj,_tag,Q)	{
 				if(obj && obj.safe)	{
@@ -375,8 +371,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				}
 			},//getNewsletters	
 
-
-
 //get a product record.
 //required params: obj.pid.
 //optional params: obj.withInventory and obj.withVariations
@@ -419,10 +413,6 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //appProductGet
-
-
-
-
 
 //always uses immutable Q
 // ### need to migrate anything using this to use appCartCreate.
@@ -491,6 +481,50 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				}
 			}, //cartSet
 
+
+//used to get a clean copy of the cart. ignores local/memory. used for logout.
+		cartDetail : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {};
+				_tag.datapointer = "cartDetail";
+				if(app.model.fetchData(_tag.datapointer))	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+//				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
+				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": _tag},Q || 'mutable');
+				} 
+			}, // refreshCart removed comma from here line 383
+
+// formerly updateCartQty
+		cartItemUpdate : {
+			init : function(stid,qty,_tag)	{
+//				app.u.dump('BEGIN app.calls.cartItemUpdate.');
+				var r = 0;
+				if(stid && Number(qty) >= 0)	{
+					r = 1;
+					this.dispatch(stid,qty,_tag);
+					}
+				else	{
+					app.u.throwGMessage("In calls.cartItemUpdate, either stid ["+stid+"] or qty ["+qty+"] not passed.");
+					}
+				return r;
+				},
+			dispatch : function(stid,qty,_tag)	{
+//				app.u.dump(' -> adding to PDQ. callback = '+callback)
+				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": _tag},'immutable');
+				app.ext.store_checkout.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
+				}
+			 },
+
+
 		ping : {
 			init : function(tagObj,Q)	{
 				this.dispatch(tagObj,Q);
@@ -531,20 +565,12 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 			}, //appProfileInfo
 
 //used to get a clean copy of the cart. ignores local/memory. used for logout.
+//this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. !!! fix during cleanup or big release.
 		refreshCart : {
-			init : function(tagObj,Q)	{
-//				app.u.dump("BEGIN app.calls.refreshCart");
-				var r = 1;
-//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which will likely need datapointer to be set).
-				tagObj = jQuery.isEmptyObject(tagObj) ? {} : tagObj;
-				tagObj.datapointer = "cartDetail";
-				this.dispatch(tagObj,Q);
-				return r;
-				},
-			dispatch : function(tagObj,Q)	{
-//				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
-				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": tagObj},Q);
-				} 
+			init : function(_tag,Q)	{
+				app.model.destroy('cartDetail');
+				app.calls.cartDetail.init(_tag,Q);
+				}
 			} // refreshCart removed comma from here line 383
 		}, // calls
 
@@ -627,7 +653,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					
 //anycontent will disable hideLoading and loadingBG classes.
 					$target.anycontent({data: app.data[tagObj.datapointer],'templateID':tagObj.templateID});
-					app.ext.admin.u.handleAppEvents($target);
+					if(app.ext.admin)	{app.ext.admin.u.handleAppEvents($target);}
 
 					}
 				else	{

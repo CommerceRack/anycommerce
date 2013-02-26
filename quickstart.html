@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.toynk.zoovy.com/",
-	"httpURL":"http://www.zephyrsports.com/"
+	"httpURL":"http://www.gkworld.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -359,7 +359,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 	</div>
-	<div class='hideInMinimalMode' class='pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>
 </ul>
 
@@ -1412,6 +1412,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<button  onClick="localStorage.clear(); return false;">Clear Local Storage</button>
 	<button  onClick="alert(app.ext.store_checkout.u.thisSessionIsPayPal());">Alert isPaypal</button>
 	<button  onClick="alert(app.ext.store_checkout.u.aValidPaypalTenderIsPresent());">Alert aValidPaypalTenderIsPresent</button>
+	<button  onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</button>
 
 <form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
 	<fieldset>
