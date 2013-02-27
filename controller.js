@@ -489,11 +489,11 @@ _gaq.push(['_trackEvent','Authentication','User Event','Logged in through Facebo
 				_tag = _tag || {};
 				_tag.datapointer = "cartDetail";
 				if(app.model.fetchData(_tag.datapointer))	{
-					r = 1;
-					this.dispatch(_tag,Q);
+					app.u.handleCallback(_tag);
 					}
 				else	{
-					app.u.handleCallback(_tag);
+					r = 1;
+					this.dispatch(_tag,Q);
 					}
 				return r;
 				},

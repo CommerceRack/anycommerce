@@ -21,6 +21,7 @@ CHECOUT_NICE.JS (just here to make it easier to know which extension is open)
 var convertSessionToOrder = function() {
 	var theseTemplates = new Array(
 	'checkoutTemplate', //container for whole checkout page.
+	'chkoutPreflightTemplate',
 	'chkoutCartItemsListTemplate', //order contents (line items)
 	'chkoutCartSummaryTemplate', //panel for order summary (subtotal, shipping, etc)
 	'chkoutAddressBillTemplate', //billing address
@@ -373,7 +374,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 				responseData.parentID = 'chkoutPayOptionsFieldsetErrors'
 				app.u.throwMessage(responseData);
 				}
-			},
+			}, //updateCheckoutPayOptions
 
 
 		handleBuyerLogin : {
@@ -389,7 +390,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 				app.model.dispatchThis('immutable');
 				}
-			},
+			}, //handleBuyerLogin
 
 
 
@@ -402,7 +403,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 				responseData.parentID = 'chkoutSummaryErrors'
 				app.u.throwMessage(responseData);
 				}
-			},
+			}, //updateCheckoutOrderContents
 /*
 this gets executed after the server side validating is run.
 success would mean the checkout has successfully validated.
@@ -435,7 +436,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']
 
 
 				}
-			},
+			}, //finishedValidatingCheckout
 
 
 
@@ -590,7 +591,7 @@ else	{
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
 				}
-			}
+			} //checkoutSuccess
 
 		}, //callbacks
 
@@ -1302,7 +1303,17 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 			}, //panelContent
 	
+//push onto this (store_checkout.checkoutCompletes.push(function(P){});
+//after checkout, these will be iterated thru and executed.
+/*
+Parameters included are as follows:
+P.orderID
+P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
+P.datapointer - pointer to cartOrderCreate
 
+note - the order object is available at app.data['order|'+P.orderID]
+*/
+		checkoutCompletes : [],
 
 
 
@@ -1313,9 +1324,36 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
+					
+					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
+					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
+					
 					app.model.destroy('cartDetail');
-					app.ext.store_checkout.calls.appPaymentMethods.init({},'immutable');
-					app.calls.cartDetail.init({'callback':'anycontent','jqObj':$chkContainer},'immutable');
+					app.calls.cartDetail.init({'callback':function(rd){
+						$chkContainer.hideLoading(); //always hideloading, errors or no, so interface is still usable.
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							if(app.data.cartDetail['@ITEMS'].length)	{
+//NOTE - this should only be done once. panels should be updated individually from there forward.
+								$chkContainer.anycontent({'templateID':'checkoutTemplate',data:$.extend(true,app.data.cartDetail,app.data.appPaymentMethods)}); 
+								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
+									var $fieldset = $(element),
+									role = $fieldset.data('app-role');
+									
+									$fieldset.addClass('ui-corner-all');
+									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
+									app.ext.convertSessionToOrder.u.handlePanel($chkContainer,role,['applyLogic']);
+									});
+								}
+							else	{
+								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
+								}
+							}
+						}},'immutable');
+
+					app.model.dispatchThis('immutable');
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'in convertSessionToOrder.a.startCheckout, no $chkContainer not passed or does not exist.'});
@@ -1325,10 +1363,68 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			},
 
 
+////////////////////////////////////   						events [e]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+		e : {
+			execAddressUpdate : function($input)	{
+				$input.off('blur.execAddressUpdate').on('blur.execAddressUpdate',function(){
+					//will trigger u.addressFieldUpdated code.
+					})
+				},
+			
+			execBuyerLogin : function($btn)	{
+				$btn.button();
+				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
+					event.preventDefault();
+					//log buyer in.
+					//rerun logic on all panels.
+					})
+				}
+			},
+
+
 ////////////////////////////////////   						util [u]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 		u : {
+//$content could be the parent form or the forms container. just something around this checkout. (so that multiple checkout forms are possible. imp in UI
+//role is the value of data-app-role on the fieldset.
+//actions is what needs to happen. an array.  accepted values are empty, showLoading, addAppEvents, translate and applyLogic. ex: ['translate','applyLogic']
+//actions are rendered in the order they're passed.
+
+			handlePanel : function($context, role, actions)	{
+				if($context && role && actions && typeof actions === 'object')	{
+
+					var L = actions.length,
+					$fieldset = $("[data-app-role='"+app.u.jqSelector('',role)+"']",$context),
+					ao = {};
+
+					ao.showLoading = function ($context, $fieldset){$(".panelContent",$fieldset).showLoading({'message':'Fetching updated content'})},
+					ao.empty = function($context, $fieldset){$(".panelContent",$fieldset).empty()},
+					ao.addAppEvents = function($context, $fieldset){},
+					ao.applyLogic = function($context, $fieldset){
+//						$fieldset.css('background','green'); //for testing selector.
+						//these will execute a panel specific utility
+						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
+					ao.translate = function($context, $fieldset)	{
+						
+						} //populates the template.
+					
+					for(var i = 0; i < L; i += 1)	{
+						app.u.dump(" -> typeof 'ao.'+actions[i]: "+typeof ao[actions[i]]);
+						if(typeof ao[actions[i]] === 'function'){
+							ao[actions[i]]($context, $fieldset);
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':"In convertSessionToOrder.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
+							}
+						}
+					
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In convertSessionToOrder.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
+					}
+				},
 
 //when a country is selected, the required attribute must be added or dropped from state/province.
 //this is important because the browser itself will indicate which fields are required.
@@ -1342,7 +1438,8 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 					app.u.dump(' -> got here: '+type);
 					$('#data-'+type+'_state').removeAttr('required').parent().removeClass('mandatory');
 					}
-				},
+				}, //countryChange
+
 //201308 added to replace call: saveCheckoutFields
 //may need to sanitize out payment vars.
 			saveAllCheckoutFields : function($form,_tag)	{
@@ -1366,7 +1463,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 
 					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
-				},
+				}, //saveAllCheckoutFields
 
 			createProcessCheckoutModal : function()	{
 				
@@ -1386,7 +1483,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 						});  //browser doesn't like percentage for height
 					}
 			
-				},
+				}, //createProcessCheckoutModal
 
 //executed when a coupon is submitted. handles ajax call for coupon and also updates cart.
 			handleCouponSubmit : function()	{
@@ -1416,7 +1513,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods');
 				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
 				app.model.dispatchThis('immutable');
-				},
+				}, //handleChangeFromPayPalEC
 
 
 
@@ -1460,7 +1557,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 				else {
 					$("#chkoutPreflightFieldsetErrors").empty().toggle(true).append(app.u.formatMessage("please provide a valid email address")); //remove any previous error message. display error.
 					}
-				},
+				}, //handleGuestEmail
 
 
 
@@ -1529,7 +1626,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Payment method selected ('+pay
 //the legend and error ul are here because this is what is used to set the panels to 'loading' when a request is made.
 //adding the error container allows errors to be added while the ajax request is still in progress or finished but content hasn't been added yet.
 //basically, guarantees the existence of the error container.
-			handlePanel : function(panel,hidden)	{
+			oldHandlePanel : function(panel,hidden)	{
 //				app.u.dump("BEGIN convertSessionToOrder.panels.handlePanel");
 //				app.u.dump(" -> panel: "+panel);
 //				app.u.dump(" -> hidden: "+hidden);
@@ -1701,6 +1798,7 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 					SUCR = true;
 					}
 //when zip or country is updated, we may need to recalculate the ship methods.
+//NOTE -> need to recalculate shipping upon address1 change too. in case it changes to a PO box or something like that.
 				if(fieldID.indexOf('zip') > 0 || fieldID.indexOf('country') > 0)	{
 					var TYPE = fieldID.indexOf('ship') > 0 ? 'ship' : 'bill';
 					app.u.dump(" -> type: "+TYPE);
@@ -1723,7 +1821,6 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 				app.u.dump(" -> handleBill2Ship val: "+billToShip);
 				return billToShip;
 				},
-
 
 
 //Executed when the bill or ship fields for zip or country are updated.

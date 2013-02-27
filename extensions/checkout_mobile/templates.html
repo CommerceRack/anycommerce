@@ -12,26 +12,21 @@ item list and summary are separate just to give more control over location.
 
 	<form action='#'>
 	
-<!-- this is outside the fieldsets so that it can be used to maintain state (fieldsets sometimes get regenerated) -->
-	<input type='hidden' value='1' name='want/create_customer' id='want-create_customer' /><!-- valid values are 1/0 -->
-
-<!-- this is the actual value/input used. more reliable to handle here than in a checkbox.  -->
-	<input type='hidden' value='1' name='want/bill_to_ship' id='want-bill_to_ship' /><!-- valid values are 1/0 -->
 
 <!-- define panel order -->
-	<fieldset data-app-role='chkoutPreflight' class='displayNone'>
-		<legend></legend>
-		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutPreflightTemplate;'></div>
+	<fieldset data-app-role='chkoutPreflight'>
+		<legend>Email / Account Login</legend>
+		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutPreflightTemplate; useParentData:true;'></div>
 	</fieldset>
 	
 	<fieldset data-app-role='chkoutAccountCreate' class='displayNone'>
 		<legend>Account Creation</legend>
-		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAccountCreateTemplate;'></div>
+		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAccountCreateTemplate; '></div>
 	</fieldset>
 
-	<fieldset data-app-role='chkoutAddressBill' class='displayNone'>
+	<fieldset data-app-role='chkoutAddressBill'>
 		<legend>Billing Address</legend>
-		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: panelContentTemplate;'></div>
+		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div>
 	</fieldset>
 	
 	<fieldset data-app-role='chkoutAddressShip' class='displayNone'>
@@ -39,26 +34,26 @@ item list and summary are separate just to give more control over location.
 		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div>
 	</fieldset>
 
-	<fieldset data-app-role='chkoutMethodsShip' class='displayNone'>
-		<legend>Shipping Options</legend>
+	<fieldset data-app-role='chkoutMethodsShip'>
+		<legend>Shipping</legend>
 		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsShipTemplate;'></div>
 	</fieldset>
 	
-	<fieldset data-app-role='chkoutMethodsPay' class='displayNone'>
-		<legend>Payment Methods</legend>
+	<fieldset data-app-role='chkoutMethodsPay'>
+		<legend>Payment</legend>
 		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsPayTemplate;'></div>
 	</fieldset>
 
 <!-- line items -->	
-	<fieldset data-app-role='chkoutCartItemsList' class='displayNone'>
+	<fieldset data-app-role='chkoutCartItemsList'>
 		<legend>Contents</legend>
-		<table data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartItemsListTemplate;'></table>
+<!--		<table data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartItemsListTemplate;'></table> -->
 	</fieldset>
 
 <!-- totals et all -->
-	<fieldset data-app-role='chkoutCartSummary' class='displayNone'>
+	<fieldset data-app-role='chkoutCartSummary'>
 		<legend>Summary</legend>
-		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartSummaryTemplate;'></div>
+<!--		<div data-app-role='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartSummaryTemplate;'></div>-->
 	</fieldset>
 
 	</form>
@@ -67,6 +62,16 @@ item list and summary are separate just to give more control over location.
 
 
 
+
+<section id='chkoutPreflightTemplate'>
+
+<input type='email' name='bill/email' size='30' placeholder="email address" /> 	
+<label><input type='checkbox' name='want/create_customer' />Create customer account</label>
+
+<div>If you have an account with us, please enter your password below to login</div>
+<input type='password' placeholder='password' size='30' name='' /><button>login</button>
+
+</section>
 
 
 
@@ -99,7 +104,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_checkout;'></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
 	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
@@ -107,7 +112,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; currencySign: $; pretext:Returns Credit: ; '></div>
 	<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
 
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_checkout;'></div>
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></div>
 
 	<div class='couponEntryContainer'>
 		<label for='coupon'>Coupon/Promo Code:</label>
@@ -135,37 +140,35 @@ billing address panel spec
 do NOT change any input names or id's or checkout will likely break.
 -->
 
-<ul id='chkoutAddressBillTemplate' class='noPadOrMargin listStyleNone clearfix'>
+<section id='chkoutAddressBillTemplate'>
 
-	<li class='bill_firstname'><label for='data-bill_firstname'>First Name</label><input type='text' name='bill/firstname' id='data-bill_firstname' required='required' value='' data-bind='var: cart(bill/firstname); format:popVal;'  /></li>
+	<div><input type='text' placeholder='first name' name='bill/firstname' required='required' value='' data-bind='var: cart(bill/firstname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='last name' name='bill/lastname' required='required' value='' data-bind='var: cart(bill/lastname); format:popVal;'  /></div>
 
-	<li class='bill_lastname'><label for='data-bill_lastname'>Last Name</label><input type='text' name='bill/lastname' id='data-bill_lastname' required='required' value='' data-bind='var: cart(bill/lastname); format:popVal;'  /></li>
+	<div class='bill_company'><input type='text' name='bill/company' placeholder='company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<li class='bill_company'><label for='data-bill_company'>Company</label><input type='text' name='bill/company' id='data-bill_company' value='' data-bind='var: cart(bill/company); format:popVal;'  /></li>
+	<div><input type='text' name='bill/address1' placeholder='address' required='required' value='' data-bind='var: cart(bill/address1); format:popVal;'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 
-	<li class='bill_address1'><label for='data-bill_address1'>Address</label><input type='text' name='bill/address1' id='data-bill_address1' required='required' value='' data-bind='var: cart(bill/address1); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<div><input type='text' name='bill/address2' placeholder='address 2' value='' data-bind='var: cart(bill/address2); format:popVal;'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 
-	<li class='bill_address2'><label for='data-bill_address2'>Address 2</label><input type='text' name='bill/address2' id='data-bill_address2' value='' data-bind='var: cart(bill/address2); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
-
-	<li class='bill_city'><label for='data-bill_city'>City</label><input type='text' name='bill/city' id='data-bill_city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<div><input type='text' name='bill/city' placeholder='city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	
-	<li class='bill_state'><label for='data-bill_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='bill/region' id='data-bill_state' size='2' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<div><input type='text'  name='bill/region' placeholder='state/region' size='5' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	
-	<li class='bill_zip'><label for='data-bill_zip'>Zip/Postal Code</label><input type='text'  name='bill/postal' id='data-bill_zip' size='10' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" /></li>
+	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' size='14' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10' required='required' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 
-	<li class='bill_country' id='billCountryContainer'><label for='data-bill_country'>Country</label><select name='bill/countrycode' id='data-bill_country' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></li>
+<!--	<div><select name='bill/countrycode' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' onChange="app.ext.cco.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');" ></select></div> -->
 
-	<li class='bill_phone'><label for='data-bill_phone'>Phone</label><input type='text' name='bill/phone' id='data-bill_phone' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></li>
+	<div><input type='tel' name='bill/phone' placeholder='phone number' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
-	<li id='want-bill_to_ship_cb_container'>
-	<div class='checkbox'><input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='want/bill_to_ship_cb' id='want-bill_to_ship_cb' checked='checked' /><label for='want-bill_to_ship_cb'>ship to billing address</label></div>
-	<!--
-SANITY: under the form tag is a hidden var that is actually used for the value for bill_to_ship. checkboxes are unreliable.
-the hidden input is higher in the code to make sure it added to the DOM prior to the shipping panel code getting executed.
-	-->
-	</li>
+	<div>
+	<label>
+	<input type='checkbox' onClick='app.ext.convertSessionToOrder.u.toggleShipAddressPanel();' name='want/bill_to_ship' checked='checked' />
+	ship to billing address
+	</label>
+	</div>
 	
-</ul>
+</section>
 
 
 
@@ -176,36 +179,36 @@ shipping address panel spec
 do NOT change any input names or id's or checkout will likely break.
 -->
 
-<ul id='chkoutAddressShipTemplate' class='noPadOrMargin listStyleNone clearfix'>
+<section id='chkoutAddressShipTemplate'>
 
-	<li class='ship_firstname'><label for='data-ship_firstname'>First Name</label><input type='text' name='ship/firstname' id='data-ship_firstname' required='required' value='' data-bind='var: cart(ship/firstname); format:popVal;'  /></li>
+	<div><input type='text' placeholder='first name' name='ship/firstname' required='required' value='' data-bind='var: cart(ship/firstname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='last name' name='ship/lastname' required='required' value='' data-bind='var: cart(ship/lastname); format:popVal;'  /></div>
 
-	<li class='ship_lastname'><label for='data-ship_lastname'>Last Name</label><input type='text' name='ship/lastname' id='data-ship_lastname' required='required' value='' data-bind='var: cart(ship/lastname); format:popVal;'  /></li>
+	<div class='bill_company'><input type='text' name='ship/company' placeholder='company' value='' data-bind='var: cart(ship/company); format:popVal;'  /></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<li class='ship_company'><label for='data-ship_company'>Company</label><input type='text' name='ship/company' id='data-ship_company' value='' data-bind='var: cart(ship/company); format:popVal;'  /></li>
+	<div><input type='text' name='ship/address1' placeholder='address' required='required' value='' data-bind='var: cart(ship/address1); format:popVal;'  /></div>
 
-	<li class='ship_address1'><label for='data-ship_address1'>Address</label><input type='text' name='ship/address1' id='data-ship_address1' required='required' value='' data-bind='var: cart(ship/address1); format:popVal;'   /></li>
+	<div><input type='text' name='ship/address2' placeholder='address 2' value='' data-bind='var: cart(ship/address2); format:popVal;' /></div>
 
-	<li class='ship_address2'><label for='data-ship_address2'>Address 2</label><input type='text' name='ship/address2' id='data-ship_address2' value='' data-bind='var: cart(ship/address2); format:popVal;'  /></li>
-
-	<li class='ship_city'><label for='data-ship_city'>City</label><input type='text' name='ship/city' id='data-ship_city' required='required' value='' data-bind='var: cart(ship/city); format:popVal;'  /></li>
+	<div><input type='text' name='ship/city' placeholder='city' required='required' value='' data-bind='var: cart(ship/city); format:popVal;' /></div>
 	
-	<li class='ship_state'><label for='data-ship_state'>State<span class='bill_province'>/Province</span></label><input type='text'  name='ship/region' id='data-ship_state' size='2' value='' data-bind='var: cart(ship/region); format:popVal;' maxlength='10' required='required' /></li>
-	
-	<li class='ship_zip'><label for='data-ship_zip'>Zip/Postal Code</label><input type='text'  name='ship/postal' id='data-ship_zip' size='10' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></li>
+	<div><input type='text'  name='ship/region' placeholder='state/region' size='5' value='' data-bind='var: cart(ship/region); format:popVal;' maxlength='10' required='required' /></div>
 
-	<li class='ship_country' id='shipCountryContainer'><label for='ship_country'>Country</label><select name='ship/countrycode' id='data-ship_country' data-bind='var: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: store_checkout;' required='required' onChange="app.ext.store_checkout.u.countryChange('ship',this.value); app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></li>
-
-	<li class='ship_phone'><label for='data-ship_phone'>Phone</label><input type='text' name='ship/phone' id='data-ship_phone' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></li>
 	
-</ul>
+	<div><input type='text'  name='ship/postal' size='14' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' required='required' onChange="app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" /></div>
+
+<!--	<div class='ship_country'><select name='ship/countrycode' data-bind='var: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' onChange="app.ext.cco.u.countryChange('ship',this.value); app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');" ></select></div>-->
+
+	<div class='ship_phone'><input type='tel' name='ship/phone' placeholder='phone number' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></div>
+	
+</section>
 
 
 <!-- a panel that only appears in 'nice' -->
 <section id='chkoutAccountCreateTemplate'>
 
-<label>Password<input type='password' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /></label>
-<label>Verify Password<input type='password' name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></label>
+<div><input type='password' placeholder='password' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /><span class='hint'>must be at least X characters</span></div>
+<div><input type='password' placeholder='verify password' name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></div>
 <label>Recovery Question
 <select name='want/recovery_hint' data-bind='var: cart(want/recovery_hint); format:popVal;'>
 	<option value='2'>Name of your favorite childhood pet?</option>
@@ -215,7 +218,8 @@ do NOT change any input names or id's or checkout will likely break.
 </select>
 </label>
 
-<label>Recovery Answer<input type='text' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
+<input type='text' placeholder='recovery answer' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
+
 </section>
 
 
@@ -227,19 +231,14 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 -->
 
 <div id='chkoutMethodsShipTemplate'>
-
-<!-- shipping options will be displayed in one of the following two elements. use only one. -->
-
-<!-- ship options as radio buttons -->
 	<ul id='chkout-shipMethods' class='noPadOrMargin listStyleNone' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;'></ul>
-
-
-<!-- use this for shipping methods in a dropdown -->
-<!-- 
-	<label for='want/shipping_id'>Select Shipping Method: </label><select id='chkout-shipMethods' name='want/shipping_id' data-bind='var: cart(@shipmethods); format:shipMethodsAsOptions; extension: store_checkout;' onChange="app.ext.convertSessionToOrder.u.updateShipMethod(this.value); app.model.dispatchThis('immutable');"></select>	
--->
-
 </div>
+
+
+
+
+
+
 
 
 <!--
@@ -250,10 +249,10 @@ do NOT change any div id's or messaging will not work properly.
 
 <div id='chkoutMethodsPayTemplate'>
 
-	<div>
+	<div class='giftCardContainer'>
 	<label for='giftcardCode'>Gift Certificate Code:</label>
 	<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
-	<button class='ui-state-default ui-corner-all loadingButton' onClick="app.ext.convertSessionToOrder.u.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'><span></span>add</button>
+	<button onClick="app.ext.convertSessionToOrder.u.handleGiftcardSubmit(); return false;" id='addGiftcardBtn'>add</button>
 	</div>
 
 	<div id='paymentQContainer' class='marginBottom'>
@@ -304,7 +303,7 @@ do NOT change any div id's or messaging will not work properly.
 	<tr id='buyerWalletsListItem'>
 		<td><input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" /></td>
 		<td data-bind="var: wallet(TD); format:text;"></td>
-		<td data-bind="var: wallet(TD); format: walletName2Icon; extension:store_checkout;"></td>
+		<td data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></td>
 	</tr>
 </table>
 
@@ -344,7 +343,7 @@ do NOT change the input name or id or checkout will likely break.
 	<div id='orderSummaryDetails' class='orderSummaryDetails'>
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-bind='var: order(orderid); format:text; pretext:Your order id is ;'></h3>
-		<div id='orderSummaryLinkToInvoice' class=' pointer' data-bind='var:order(orderid); format:orderStatusLink; extension: store_checkout;'>
+		<div id='orderSummaryLinkToInvoice' class=' pointer' data-bind='var:order(orderid); format:orderStatusLink; extension: cco;'>
 		Click here to view/print your invoice.
 		<div class='zwarn paymentRequired'></div> <!-- used for 'payment needed' messaging, including cc errors. leave within the parent div so it's clickable. set a class of paymentRequired on another div if this messaging is needed multiple times. -->
 		</div>

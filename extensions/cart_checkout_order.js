@@ -20,7 +20,7 @@ The intention of this extension is to replace store_checkout and store_cart, sin
 
 ************************************************************** */
 //SCO = Shared Checkout Object
-var store_checkout = function() {
+var cco = function() {
 	var r = {
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
 
@@ -50,12 +50,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 		appPaymentMethods : {
 			init : function(obj,_tag,Q)	{
-				if(obj && obj.country && obj.total)	{
-					this.dispatch(obj,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({"message":"in cco.calls.appPaymentMethods obj.total or obj.country were missing.","gMessage":true});
-					}
+				this.dispatch(obj,_tag,Q); //obj could contain country (as countrycode) and order total.
 				return 1;
 				},
 			dispatch : function(obj,_tag,Q)	{
@@ -183,8 +178,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				}
 			}, //cartSet
 
-
-
 //uses the cart ID, which is passed on the parent/headers.
 //always immutable.
 		cartOrderCreate : {
@@ -198,8 +191,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.addDispatchToQ({'_cmd':'cartOrderCreate','_tag':_tag},'immutable');
 				}
 			},//cartOrderCreate
-
-
 
 
 /*
@@ -333,17 +324,7 @@ left them be to provide guidance later.
 		}, //callbacks
 
 		
-//push onto this (store_checkout.checkoutCompletes.push(function(P){});
-//after checkout, these will be iterated thru and executed.
-/*
-Parameters included are as follows:
-P.orderID
-P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
-P.datapointer - pointer to cartOrderCreate
 
-note - the order object is available at app.data['order|'+P.orderID]
-*/
-		checkoutCompletes : [],
 
 
 //Pass in an object (typically based on $form.serializeJSON) and 
