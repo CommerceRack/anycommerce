@@ -1,11 +1,9 @@
 
 
 
-<div id='wholesaleSupplierManagerTemplate'  class='page pageSupplier' data-app-role='dualModeContainer' data-app-mode='list'>
+<div id='wholesaleSupplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
 
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
+	<section class='soloModeListContainer'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
 			<button class='floatRight marginLeft' data-app-event="admin_wholesale|showSupplierCreate">Add Supplier</button>
@@ -15,15 +13,15 @@
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='dualModeListMessaging marginBottom'></div>
-			<div class='dualModeListContent'>
+			<div class='soloModeListMessaging marginBottom'></div>
+			<div class='soloModeListContent' data-app-role='soloModeContentContainer'>
 			<table app-data-role='wholesaleSupplierList' class='fullWidth gridTable'>
 			<thead>
 			<tr>
 				<th class='alignLeft'>Name</th>
 				<th class='alignLeft'>ID</th>
-				<th class='alignLeft'>Type</th>
-				<th class='alignLeft'>Mode</th>
+				<th class='alignLeft hideInMinimalMode'>Type</th>
+				<th class='alignLeft hideInMinimalMode'>Mode</th>
 				<th></th>
 			</tr>
 			</thead>
@@ -41,12 +39,12 @@
 <!-- used in the list mode for each supplier -->
 <table>
 <tr id='wholesaleSupplierListTemplate'>
-	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;"></td>
+	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
-	<td data-bind="var:supplier(FORMAT); format:text;"></td>
-	<td data-bind="var:supplier(MODE); format:text;"></td>
+	<td data-bind="var:supplier(FORMAT); format:text;" hideInMinimalMode></td>
+	<td data-bind="var:supplier(MODE); format:text;" hideInMinimalMode></td>
 	<td class='alignRight'>
-	<button class='marginRight' data-app-event='admin_wholesale|execSupplierDelete'>Remove this Supplier</button>
+	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|execSupplierDelete'>Remove this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
 	</td>
 	
@@ -69,18 +67,107 @@
 	<span class='hint'>A unique 6 character alphanumeric code used for this supplier.</span>
 	</div>
 	
-	<div class='label'>PROFILES<select ></select>
-	<span class='hint'>Affects contact information Zoovy sends to your supplier.</span>
-	</div>
+	<div class='label'>some inputs for contact info</div>
 
-	<div class='label'><input type="text" placeholder='name' maxlength="60" value="" name="NAME"  /></div>
-	<div class='label'><input type="text" placeholder='account' maxlength="60" value="" name="ACCOUNT"  /></div>
+	<div class='label'><input type="text" placeholder='supplier name' maxlength="60" value="" name="NAME" required='required' /></div>
+	<div class='label'><input type="text" placeholder='account' maxlength="60" value="" name="ACCOUNT" required='required' /></div>
 	<div class='label'><input type="tel" placeholder='phone' maxlength="12" value="" name="PHONE"  /></div>
-	<div class='label'><input type="email" placeholder='email' maxlength="65" value="" name="EMAIL"  /></div>
+	<div class='label'><input type="email" placeholder='email' maxlength="65" value="" name="EMAIL"  required='required' /></div>
 	<div class='label'><input type="text" placeholder='website' maxlength="65" value="" name="WEBSITE"  /></div>
 	
-	<div class='alignCenter'><button>Add Supplier</button></div>
+	<div class='alignCenter'><button data-app-event='admin_wholesale|execSupplierCreate'>Add Supplier</button></div>
 </fieldset>
 </form>
+
+</div>
+
+
+
+
+
+<div id='wholesaleSupplierUpdateTemplate'>
+
+
+	<div class='twoColumn' data-app-column='1'>
+
+
+<div class='panel' data-app-role='general'>
+	<h2>General Settings</h2>
+	<div>
+	<fieldset>
+
+<label><span>Markup</span><input name='MARKUP' value='' size='10' maxlength='15' type='text' /></label>
+<label><span>Name:</span><input name='NAME' value='' size='30' maxlength='40' type='text' /></label>
+<label><span>Phone:</span><input name='PHONE' value='' size='12' maxlength='12' type='text' /></label>
+<label><span>Email:</span><input name='EMAIL' value='j' size='30' maxlength='40' type='text' /></label>
+<label><span>Account:</span><input name='ACCOUNT' value='' size='30' maxlength='40' type='text' /></label>
+<label><span>Website:</span><input name='WEBSITE' value='' size='30' maxlength='40' type='text' /></label>
+<label><span>Item Notes:</span>
+	<select name='ITEM_NOTES'>
+		<option value='0' selected=''>No</option>
+		<option value='1'>Yes</option>
+	</select />
+</label>
+<div class='hint'>Choose to display Supplier Code / Tracking info on Invoice (under each Item)</div />
+
+<label><span>Quickbooks Vendor Name:</span><input name='.partner.vendor' value='' size='' maxlength='' type='text' /></label>
+<label>
+	<span>Partner:</span>
+	<select name='PARTNER'>
+		<option selected='' value=''>None</option>
+	</select />
+</label>
+
+
+	</fieldset>
+	</div>
+</div><!-- /general panel -->
+
+<div class='panel' data-app-role='productUpdates'>
+	<h2>Setup: Product Updates</h2>
+	<div>
+	<fieldset>
+<label>
+	<span>Partner:</span>
+	<select name='PRODUCT_CONNECTOR'>
+		<option selected='' value=''>None</option>
+	</select />
+</label>
+	</fieldset>
+	</div>
+</div><!-- /productUpdates panel -->
+
+<div class='panel' data-app-role='shippingCalculations'>
+	<h2>Setup: Shipping Calculations</h2>
+	<div></div>
+</div>
+
+
+	</div><!-- end column 1 -->
+
+
+
+
+	<div class='twoColumn' data-app-column='2'>
+
+<div class='panel' data-app-role='InventoryDownload'>
+	<h2>Setup: Inventory Download</h2>
+	<div></div>
+</div>
+
+<div class='panel' data-app-role='automaticOrdering'>
+	<h2>Setup: Automatic Ordering</h2>
+	<div></div>
+</div>
+
+<div class='panel' data-app-role='trackingConfirmation'>
+	<h2>Setup: Tracking/Confirmation</h2>
+	<div></div>
+</div>
+
+
+
+	</div><!-- end column 2 -->
+
 
 </div>

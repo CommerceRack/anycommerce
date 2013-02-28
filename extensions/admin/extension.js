@@ -610,6 +610,24 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({_cmd : "adminSupplierList",_tag:_tag},Q || mutable);
 				}
 			}, //adminSupplierList
+//SID = supplier id (CODE)
+		adminSupplierDetail : {
+			init : function(SID,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSupplierDetail|"+SID;
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(SID,_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return 1;
+				},
+			dispatch : function(SID,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","CODE":SID,_tag:_tag},Q || mutable);
+				}
+			}, //adminSupplierList
 
 			
 // !!! not done. 

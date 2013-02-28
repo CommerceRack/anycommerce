@@ -718,8 +718,23 @@ DEBUGGER
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#59000000', endColorstr='#1a000000',GradientType=0 ); /* IE6-9 */
 	}
 
+/*
+
+########################################################
 
 
+STYLES FOR SPECIFIC UI LAYOUTS (dualMode and soloMode)
+
+########################################################
+
+*/
+
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .heading, .soloModeListContainer .heading	{text-indent:12px; line-height:35px;}
+.dualModeListContainer .buttonSet, .soloModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
 
 
 

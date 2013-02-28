@@ -42,7 +42,7 @@ For the list of available params, see the 'options' object below.
 	$.widget("ui.anymessage",{
 		options : {
 			message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
-			gMessage : false, //set to true to throw a generic message. Will include extra error details
+			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 			persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
@@ -174,7 +174,12 @@ For the list of available params, see the 'options' object below.
 			return $r;
 
 			},
-
+//intended for use inside the user interface
+/*
+		'type' : {
+			'success' : {'iconClass':'ui-icon-z-success','containerClass':''}
+			},
+*/
 //an animated 'close'
 		close : function($message){
 			var $target;  //what is being closed. could be an individual message OR all messages.
