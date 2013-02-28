@@ -107,9 +107,11 @@ var myRIA = function() {
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('.debugQuickLinks','.debug').menu().css({'width':'150px'});
 	$('button','.debug').button();
 	app.ext.myRIA.u.bindAppViewForms('.debug');
 	app.ext.myRIA.u.bindNav('.debug .bindByAnchor');
+	$('body').css('padding-bottom',$('.debug').last().height());
 	}
 
 //attach an event to the window that will execute code on 'back' some history has been added to the history.
@@ -2019,7 +2021,7 @@ return r;
 effects the display of the nav buttons only. should be run just after the handleAppNavData function in showContent.
 */
 			handleAppNavDisplay : function(infoObj)	{
-				app.u.dump("BEGIN myRIA.u.handleNavButtonsForDetailPage");
+//				app.u.dump("BEGIN myRIA.u.handleNavButtonsForDetailPage");
 //				app.u.dump(" -> history of the world: "); app.u.dump(app.ext.myRIA.vars.hotw[1]);
 
 				var r = false, //what is returned. true if buttons are visible. false if not.

@@ -3151,6 +3151,7 @@ else	{
 //Currently, a fairly simple validation script. The browsers aren't always implementing their form validation for the dynamically generated content, so this
 //is simple validator which can be extended over time.
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
+//
 			validateForm : function($form)	{
 				app.u.dump("BEGIN admin.u.validateForm");
 				if($form && $form instanceof jQuery)	{
@@ -3382,6 +3383,7 @@ just lose the back button feature.
 //good naming convention on the action would be the object you are dealing with followed by the action being performed OR
 // if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
 //obj is some optional data. obj.$content would be a common use.
+// !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
 			handleAppEvents : function($target,obj)	{
 //				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{

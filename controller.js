@@ -853,6 +853,42 @@ it'll then set app.rq.push to mirror this function.
 
 
 
+//a UI Action should have a databind of data-app-event (this replaces data-btn-action).
+//value of action should be EXT|buttonObjectActionName.  ex:  admin_orders|orderListFiltersUpdate
+//good naming convention on the action would be the object you are dealing with followed by the action being performed OR
+// if the action is specific to a _cmd or a macro (for orders) put that as the name. ex: admin_orders|orderItemAddBasic
+//obj is some optional data. obj.$content would be a common use.
+// !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
+			handleAppEvents : function($target,obj)	{
+//				app.u.dump("BEGIN admin.u.handleAppEvents");
+				if($target && $target.length && typeof($target) == 'object')	{
+//					app.u.dump(" -> target exists"); app.u.dump($target);
+					$("[data-app-event]",$target).each(function(){
+						var $ele = $(this),
+						obj = obj || {},
+						extension = $ele.data('app-event').split("|")[0],
+						action = $ele.data('app-event').split("|")[1];
+//						app.u.dump(" -> action: "+action);
+						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
+//if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
+//if the button doesn't need it (there better be a good reason), remove the classes in that button action.
+							app.ext[extension].e[action]($ele,obj);
+							} //no action specified. do nothing. element may have it's own event actions specified inline.
+						else	{
+							app.u.throwGMessage("In admin.u.handleAppEvents, unable to determine action ["+action+"] and/or extension ["+extension+"] and/or extension/action combination is not a function");
+							}
+						});
+					}
+				else	{
+					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
+					}
+				
+				}, //handleAppEvents
+
+
+
+
+
 		printByElementID : function(id)	{
 //				app.u.dump("BEGIN myRIA.a.printByElementID");
 			if(id && $('#'+id).length)	{
@@ -1246,7 +1282,7 @@ AUTHENTICATION/USER
 				else	{
 					//catch.
 					}
-				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
+//				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
 
 				return r;
 				},
@@ -1411,44 +1447,8 @@ VALIDATION
 			},
 
 		isValidEmail : function(str) {
-//			app.u.dump("BEGIN isValidEmail for: "+str);
-			var r = true; //what is returned.
-			if(!str || str == false)	{r = false;}
-			else	{
-				var at="@"
-				var dot="."
-				var lat=str.indexOf(at)
-				var lstr=str.length
-				var ldot=str.indexOf(dot)
-				if (str.indexOf(at)==-1){
-					app.u.dump(" -> email does not contain an @");
-					r = false
-					}
-				if (str.indexOf(at)==-1 || str.indexOf(at)==0 || str.indexOf(at)==lstr){
-					app.u.dump(" -> @ in email is in invalid location (first or last)");
-					r = false
-					}
-				if (str.indexOf(dot)==-1 || str.indexOf(dot)==0 || str.indexOf(dot)==lstr){
-					app.u.dump(" -> email does not have a period or it is in an invalid location (first or last)");
-					r = false
-					}
-				if (str.indexOf(at,(lat+1))!=-1){
-					app.u.dump(" -> email contains two @");
-					r = false
-					}
-				if (str.substring(lat-1,lat)==dot || str.substring(lat+1,lat+2)==dot){
-					app.u.dump(" -> email contains multiple periods");
-					r = false
-					}
-				if (str.indexOf(dot,(lat+2))==-1){
-					r = false
-					}
-				if (str.indexOf(" ")!=-1){
-					r = false
-					}
-//				app.u.dump("u.isValidEmail: "+r);
-				}
-			return r;					
+			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    		return re.test(str);				
 			}, //isValidEmail
 
 //used frequently to throw errors or debugging info at the console.

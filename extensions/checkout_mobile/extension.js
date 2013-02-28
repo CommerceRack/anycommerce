@@ -22,11 +22,13 @@ var convertSessionToOrder = function() {
 	var theseTemplates = new Array(
 	'checkoutTemplate', //container for whole checkout page.
 	'chkoutPreflightTemplate',
-	'chkoutCartItemsListTemplate', //order contents (line items)
+	'chkoutCartContentsTemplate', //cart contents
+	'chkoutCartItemTemplate', //cart contents product template
 	'chkoutCartSummaryTemplate', //panel for order summary (subtotal, shipping, etc)
 	'chkoutAddressBillTemplate', //billing address
 	'chkoutAddressShipTemplate', //duh
 	'chkoutMethodsShipTemplate',
+	'chkoutNotesTemplate',
 	'chkoutMethodsPayTemplate' //payment option panel
 	);
 	var r = {
@@ -77,14 +79,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 					app.u.dump("It appears we've just returned from PayPal.");
 					app.ext.convertSessionToOrder.vars['payment-pt'] = token;
 					app.ext.convertSessionToOrder.vars['payment-pi'] = payerid;
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"convertSessionToOrder","callback":"handlePayPalIntoPaymentQ"});
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"convertSessionToOrder","callback":"handlePayPalIntoPaymentQ"});
 					app.calls.refreshCart.init({},'immutable'); //need cart updated with paymentQ for callback on cartPaymentQ above.
 					app.model.dispatchThis('immutable');
-//					r += app.ext.store_checkout.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
+//					r += app.ext.cco.calls.cartPaypalGetExpressCheckoutDetails.init({'token':token,'payerid':payerid});
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
-				else if(app.ext.store_checkout.u.thisSessionIsPayPal())	{
-					if(!app.ext.store_checkout.u.aValidPaypalTenderIsPresent())	{app.ext.store_checkout.u.nukePayPalEC();}
+				else if(app.ext.cco.u.thisSessionIsPayPal())	{
+					if(!app.ext.cco.u.aValidPaypalTenderIsPresent())	{app.ext.cco.u.nukePayPalEC();}
 					r = app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 					app.model.dispatchThis("immutable");
 					}
@@ -126,7 +128,7 @@ if server validation passes, the callback handles what to do next (callback is m
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
 				if($("#want-payby_PAYPALEC").is(':checked') && !app.ext.convertSessionToOrder.vars['payment-pt'])	{
 					$('#modalProcessCheckout').append("<h2>Redirecting to PayPal...</h2>");
-					app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
+					app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
 					}
 				else	{
 					var checkoutIsValid = app.ext.convertSessionToOrder.validate.isValid();
@@ -258,7 +260,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 				app.u.throwMessage(responseData);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.ext.store_checkout.u.nukePayPalEC();
+				app.ext.cco.u.nukePayPalEC();
 				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
 				app.model.dispatchThis('immutable');
 				}
@@ -377,23 +379,6 @@ _gaq.push(['_trackEvent','Checkout','App Event','Cart updated - inventory adjust
 			}, //updateCheckoutPayOptions
 
 
-		handleBuyerLogin : {
-			onSuccess : function(tagObj){
-//				app.u.dump('BEGIN convertSessionToOrder.callbacks.handleBuyerLogin.success');
-//				app.u.dump(" -> tagObj:"); app.u.dump(tagObj);
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
-				app.model.dispatchThis('immutable');
-				},
-			onError : function(responseData)	{
-				app.u.throwMessage(responseData);
-//login attempt failed, but show checkout form anyway so user can proceed.
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
-				app.model.dispatchThis('immutable');
-				}
-			}, //handleBuyerLogin
-
-
-
 		updateCheckoutOrderContents : {
 			onSuccess : function(){
 				app.ext.convertSessionToOrder.panelContent.cartContents();
@@ -416,8 +401,8 @@ error would mean something was not complete.
 			
 				$('#modalProcessCheckout').append("<h2>Creating Order...</h2>");
 //okay, now build the paymentQ. This will add 1 payment to the Q. Giftcards et all will be handled by now.
-				app.ext.store_checkout.u.buildPaymentQ();
-				app.ext.store_checkout.calls.cartOrderCreate.init("checkoutSuccess");
+				app.ext.cco.u.buildPaymentQ();
+				app.ext.cco.calls.cartOrderCreate.init("checkoutSuccess");
 				app.model.dispatchThis('immutable');
 
 
@@ -430,7 +415,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Server side validation passed']
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled '); //make place order button appear and be clickable.
 				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
 				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
-				app.ext.store_checkout.u.showServerErrors(responseData,uuid);
+				app.ext.cco.u.showServerErrors(responseData,uuid);
 				
 _gaq.push(['_trackEvent','Checkout','App Event','Server side validation failed']);
 
@@ -502,7 +487,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 //needs to executed in here instead of in a callback for the payalget because the get is only run once per cart/session (unless cart is changed)
 //but checkout may get load/reloaded and if the cart hasn't changed, the forms still need to be 'locked'.
 //needs to run at the end here so that all the dom manipulating is done prior so function can 'lock' fields
-				if(app.ext.store_checkout.u.thisSessionIsPayPal())	{
+				if(app.ext.cco.u.thisSessionIsPayPal())	{
 					app.ext.convertSessionToOrder.u.handlePaypalFormManipulation();
 					}				
 				
@@ -538,11 +523,11 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 */
 				$('.paymentRequired').append(app.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
 
-//				$('.paymentRequired').append(app.ext.store_checkout.u.checkoutSuccessPaymentFailure(app.data[tagObj.datapointer].payment_success,app.data['order|'+orderID].cart['want/payby']));
+//				$('.paymentRequired').append(app.ext.cco.u.checkoutSuccessPaymentFailure(app.data[tagObj.datapointer].payment_success,app.data['order|'+orderID].cart['want/payby']));
 				
 				
 				
-				var cartContentsAsLinks = encodeURI(app.ext.store_checkout.u.cartContentsAsLinks('order|'+orderID))
+				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID))
 				
 				$('.ocmTwitterComment').click(function(){
 					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
@@ -564,9 +549,9 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
 _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
 
-				var L = app.ext.store_checkout.checkoutCompletes.length;
+				var L = app.ext.cco.checkoutCompletes.length;
 				for(var i = 0; i < L; i += 1)	{
-					app.ext.store_checkout.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+					app.ext.cco.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
 					}
 
 
@@ -586,7 +571,7 @@ else	{
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled '); //make place order button appear and be clickable.
 				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
 				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
-				app.ext.store_checkout.u.showServerErrors(responseData,uuid);
+				app.ext.cco.u.showServerErrors(responseData,uuid);
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
@@ -874,7 +859,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','billing address obtained']);
 				$('#chkoutShipAddressFieldset .mandatory').removeClass('mandatory');
 //copy all the billing address fields to the shipping address fields, if appropriate. if so, don't bother validating.
 				if($('#want-bill_to_ship_cb').is(':checked')) {
-					app.ext.store_checkout.u.setShipAddressToBillAddress();
+					app.ext.cco.u.setShipAddressToBillAddress();
 					}
 				else	{
 					r = this.addressIsPopulated('ship');
@@ -958,17 +943,10 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 
 
 /*
-each of these functions creates their respective panel. 
-each panel is a fieldset, which is created in a call, then populated in a callback once the 
-data sets have been received. Any time checkout is intiated, several requests are made to
-make sure all the data is up to date (shipping options, inventory check, etc).
-
-a given panel can update another, but should NOT contain code to modify another panel.
+each of these functions impacts display of it's panel (ONLY IT'S PANEL). 
 all logic should be in the panel itself. That'll make it easier to maintain.
- -> there is one exception to this. currently, 'ship to billing' will hide/unhide the shipping address panel instead of reloading it. 
- 	this is handled differently because it's more efficient to just hide/unhide the panel then reload it each time.
 */ 
-		panelContent : {
+		panelLogic : {
 
 /*
 the authstate determines what shows in the preflight panel. It could be email and facebook login with a link for existing users
@@ -976,225 +954,100 @@ or if the user is already logged in, it could just be their email address printe
 after a login occurs, all the panels are updated because the users account could effect just about anything, including shipping options, 
 payment options, pricing, etc
 */
-			preflight : function()	{
-//				app.u.dump("BEGIN app.ext.convertSessionToOrder.panelContent.preflightPanel.");
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutPreflight'); //reset contents to avoid any duplicate content.
-				var username = app.u.getUsernameFromCart();
-				var className = '';
-				var o; //output.
+			chkoutPreflight : function(formObj,$fieldset)	{
+//				app.u.dump("BEGIN convertSessionToOrder.panelLogic.chkoutPreflight");
 				var authState = app.u.determineAuthentication();
-				var email = '';
-				
-				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{email = app.data.cartDetail.bill.email;}
-//username may not be an email address, so only use it if it passes validation.
-				else if(username && app.u.isValidEmail(username))	{email = username;}
-				
-//				app.u.dump(" -> authState = "+authState);
-//				app.u.dump(" -> username = "+username);
-//				app.u.dump(" -> email = "+email);
 
-	
-
-//user is already logged in...
-
-					if(authState == 'authenticated')	{
-//						app.u.dump(" -> Already Authenticated");
-						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin listStyleNone'>";
-						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
-						o += "<input type='hidden'   name='bill/email' id='data-bill_email' value='"+email+"' /><\/ul>";
-						}
-					else	{
-
-//						app.u.dump(" -> Login Prompts (default panel behavior/else)");
-						o = "<div id='preflightGuestInputs' class='preflightInputContainer'><h2>Guest Checkout<\/h2><div><label for='bill/email'>Email<\/label>";
-						o += "<input type='email'   name='bill/email' id='data-bill_email' value='"+email+"' onkeypress='if (event.keyCode==13){$(\"#guestCheckoutBtn\").click();}' />";
-						o += "<button class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleGuestEmail($(\"#data-bill_email\").val());' id='guestCheckoutBtn'>"
-//once an email is obtained, 'next' could be confusing as the button text. so change text based on how far into the process the user is.
-//authstate will = none (or blank?) if no email has been obtained.
-						o += authState == 'guest' || authState == 'thirdPartyGuest' ? 'Update Email' : 'Next';
-						o += "<\/button><\/div>";
-	
-//no need to show this for thirdPartyGuest (confusing) or 'none' (login form already shows up).
-						if(authState == 'guest')	{
-							o += "<div class='floatRight'><a href='#' onClick='$(\"#preflightAccountInputs\").toggle(true); return false;' class='login'>Click here to log in<\/a><\/div>";
-//NOTE - IE prefers onClick not onChange on checkboxes.
-							o += "<div id='chkout-create_customerContainer'><input  type='checkbox' checked='checked' value='1' onClick=\"app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox(this.checked?1:0);\" name='want/create_customer_cb' id='want-create_customer_cb' \/> <label for='want-create_customer_cb'>Create Customer Account<\/label><\/div>"
-						
-						
-							}
-
-						o += "<\/div>"; // closes preflightGuestInputs div
-						
-	//for guests and thirdPartyCheckin, the native login form is hidden. it's still rendered so we can toggle it as needed.
-						if(authState != 'none')
-							className = 'displayNone'; //hide extra login info once authenticated as guest. a 'view' link will display.
-							
-						o += "<div id='preflightAccountInputs' class='"+className+" preflightInputContainer'><h2>Existing Users<\/h2>";
-						o += "<div><label for='bill/email2'>Email<\/label><input type='email' name='bill/email' id='data-bill_email2' value='"+email+"' /><\/div>";
-//the preventDefault below stops the form from submitting on enter keypress.
-						o += "<div><label for='want-password'>Password<\/label><input type='password'  name='password' id='want-password' value='' onkeypress='if (event.keyCode==13){$(\"#userLoginBtn\").click(); event.preventDefault();}' />";
-						o += "<button  class='ui-state-default ui-corner-all' onClick='app.ext.convertSessionToOrder.u.handleUserLogin($(\"#data-bill_email2\").val(),$(\"#want-password\").val());' id='userLoginBtn'>Log in<\/button><\/div><\/div>";
-	
-	
-	//only show the third party logins IF user isn't already logged in to one and they're enabled
-						if(authState != 'thirdPartyGuest' && zGlobals.thirdParty.facebook.appId)
-								o+= "<div id='preflightThirdParty' class='"+className+" preflightInputContainer'><h2>Third Party Login<\/h2><fb:login-button onlogin='app.calls.authentication.facebook.init({\"callback\":\"authenticateThirdParty\",\"extension\":\"convertSessionToOrder\"}); app.model.dispatchThis(\"immutable\");'>Login with Facebook</fb:login-button><\/div>";
-						}
-
-
-
-// if fieldset is removed, opting instead to use the jquery element object directly, test in IE. it was changed to this while testing a bug.
-				var $fieldset = $("#chkoutPreflightFieldset").toggle(true);
-//				app.u.dump(" -> GOT HERE. $fieldset.length = "+$fieldset.length);
-				$fieldset.append(o);
-				
-				if(typeof FB == 'object')	{
-					FB.init({appId:zGlobals.thirdParty.facebook.appId, cookie:true, status:true, xfbml:true}); //must come after the <fb:... code is added to the dom.
+//If the user is logged in, no sense showing password or create account prompts.
+				if(authState == 'authenticated')	{
+					app.u.dump(" -> user is authenticated");
+					$("[data-app-role='login']",$fieldset).hide();
+					$("[data-app-role='username']",$fieldset).show();
 					}
-//				app.u.dump('END app.ext.convertSessionToOrder.panelContent.preflighPanel.');
+//hide the password input
+				else if(formObj['want/create_customer'] == 'on')	{
+					$("[data-app-role='login']",$fieldset).show();
+					$("[data-app-role='username']",$fieldset).hide();
+					$("[data-app-role='loginPasswordContainer']",$fieldset).hide();
+					}
+				else	{
+					$("[data-app-role='login']",$fieldset).show();
+					$("[data-app-role='username']",$fieldset).hide();
+					$("[data-app-role='loginPasswordContainer']",$fieldset).show();
+					}
 				}, //preflight
 
 
-
-
-
-
-
-			accountInfo : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.accountInfo.  ');
-				var authState = app.u.determineAuthentication();
-				var createCustomer = app.data.cartDetail['want/create_customer'] ? app.data.cartDetail['want/create_customer'] : 0;
+			chkoutAccountCreate : function(formObj,$fieldset)	{
+//				app.u.dump('BEGIN convertSessionToOrder.panelLogic.chkoutAccountCreate');
 				
-//				app.u.dump(' -> createCustomer = '+createCustomer);
-
+				var authState = app.u.determineAuthentication(),
+				createCustomer = formObj['want/create_customer'];
 
 				if(authState == 'authenticated' || authState == 'thirdPartyGuest')	{
-//in this case, the account creation panel isn't even rendered.
-					createCustomer = 0; //make sure create account is turned off.
-					$('#chkoutAccountInfoFieldset').toggle(false); //make sure panel is hidden
-//					app.u.dump(' -> user is already logged via zoovy or third party. create account panel not shown.');
+					$fieldset.hide();
 					}
 				else {
 //though it may not be visible, the panel is still rendered and then toggled on/off based on the create account checkbox.
-					if(createCustomer == 0)	{
-						$("#want-create_customer_cb").removeAttr('checked');  //make sure checkbox is not checked.
-						$('#chkoutAccountInfoFieldset').toggle(false); //make sure panel is hidden
-//						app.u.dump(' -> createCustomer == 0 (effectively, the create account checkbox is NOT checked). create account panel not shown.');
+					if(createCustomer == 'on')	{
+						$fieldset.show();
 						}
 					else	{
-						$('#chkoutAccountInfoFieldset').toggle(true);
-//						app.u.dump(' -> createCustomer == 1. Show the panel.');
+						$fieldset.hide();
 						}
-	
-					var o = "";
-	
-					var $panelFieldset = $("#chkoutAccountInfoFieldset");
-					$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateAccountInfo','accountInfoContainer'));
-					app.renderFunctions.translateTemplate(app.data.cartDetail,'accountInfoContainer');	
-	
-					$('#want-create_customer').val(createCustomer); //set the hidden form input to appropriate value.
 					}
-					
-				},
+				}, //chkoutAccountCreate
 				
 /*
 a guest checkout gets just a standard address entry. 
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
-			billAddress : function()	{
+			chkoutAddressBill : function(formObj,$fieldset)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.billAddress.  ');
-				var data = app.data.cartDetail;
-				var txt = '';
-				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
-			 	var authState = app.u.determineAuthentication();
-				if(authState == 'authenticated' && app.ext.store_checkout.u.buyerHasPredefinedAddresses('bill') == true)	{
-//					app.u.dump(" -> user is logged in AND has predefined billing address(es)");
-					txt = "Please choose from (click on) billing address(es) below:";
-					txt += app.ext.store_checkout.u.addressListOptions('bill'); // creates pre-defined address blocks.
-					cssClass = 'displayNone';
-					}
-				
-//troubleshooting IE issues, so saved to var instead of manipulating directly. may not need this, but test in IE if changed.
-				var $panelFieldset = $("#chkoutBillAddressFieldset").append("<p>"+txt+"<\/p>");
-				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateBillAddress','billAddressUL'));
-				app.renderFunctions.translateTemplate(app.data.cartDetail,'billAddressUL');
-				$('#billAddressUL').addClass(cssClass);
-
-
-//the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
-$('.ui-state-active',$panelFieldset).first().trigger('click'); 
-
-
-
-//update form elements based on cart object.
-				if(authState == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
-//					app.u.dump(' -> user is logged in and has predefined shipping addresses so bill to ship not displayed.');
-					$("#want-bill_to_ship_cb").removeAttr("checked");
-					$("#want-bill_to_ship").val('0');
-					$("#want-bill_to_ship_cb_container").toggle(false);
-					}
-				else if(app.data.cartDetail['want/bill_to_ship']*1 == 0)	{
-//					app.u.dump(' -> bill to ship is disabled ('+app.data.cartDetail['want/bill_to_ship']+')');
-					$("#want-bill_to_ship_cb").removeAttr("checked");
-					$("#want-bill_to_ship").val('0');
+				var authState = app.u.determineAuthentication();
+				if(authState == 'authenticated' && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
+					$("[data-app-role='addressSelect']",$fieldset).show();
+					$("[data-app-role='addressNew']",$fieldset).hide();
 					}
 				else	{
-//					app.u.dump(' -> bill to ship is enabled ('+app.data.cartDetail['want/bill_to_ship']+')');
-					$("#want-bill_to_ship").val('1');
-					$("#want-bill_to_ship_cb").attr("checked","checked");
-					}
-				
+					$("[data-app-role='addressSelect']",$fieldset).hide();
+					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
-				if(app.data.appCheckoutDestinations['@destinations'].length < 2)
-					$('#billCountryContainer').toggle(false);
-
-//				app.u.dump('END app.ext.convertSessionToOrder.panelContent.billAddress.');
-				}, //billAddress
-				
-				
-			shipAddress : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipAddress.  ');
-				var txt = '';
-				var cssClass = '';  //used around the form fields. turned off if pre-defined addresses exist, but form is still generated so a new address can be added.
-				var $panelFieldset = $("#chkoutShipAddressFieldset");
-				
-				if(app.u.determineAuthentication() == 'authenticated' && app.ext.store_checkout.u.addressListOptions('ship') != false)	{
-					app.u.dump(' -> user is authenticated and has predefined shipping addressses.');
-// for existing customers/addresses, there is a default bill and a default ship address that could be different. So, the checkbox for bill to ship is NOT checked and the ship address panel is displayed.
-					$panelFieldset.toggle(true); //toggles the panel on.
-					txt = "<p>Please choose from (click on) shipping address(es) below:<\/p>";
-					txt += app.ext.store_checkout.u.addressListOptions('ship'); // creates pre-defined address blocks.
-					cssClass = 'displayNone'; 
+					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
+						$("[data-app-role='billCountry']",$fieldset).hide();
+						}
 					}
-
-				$panelFieldset.append(txt);
-
-				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateShipAddress','shipAddressUL'));
-				app.renderFunctions.translateTemplate(app.data.cartDetail,'shipAddressUL');
-				$('#shipAddressUL').addClass(cssClass);
-
-
-//the click on the address needs to be triggered if one is active by default, or the form inputs don't get populated.
-$('.ui-state-active',$panelFieldset).first().trigger('click'); 
-//app.u.dump(" -> shipping: $('.ui-state-active',$panelFieldset).length: "+$('.ui-state-active',$panelFieldset).length);
-
-//from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
-				if(app.data.appCheckoutDestinations['@destinations'].length < 2)
-					$('#shipCountryContainer').toggle(false);
+				}, //chkoutAddressBill
 				
-				}, //shipAddress
+			chkoutAddressShip : function(formObj,$fieldset)	{
+				var authState = app.u.determineAuthentication();
+				if(authState == 'authenticated' && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
+					$("[data-app-role='addressSelect']",$fieldset).show();
+					//need logic here to select address if only 1 predefined exists.
+					$("[data-app-role='addressNew']",$fieldset).hide();
+					}
+				else	{
+					$("[data-app-role='addressSelect']",$fieldset).hide();
+					$("[data-app-role='addressNew']",$fieldset).show();
+//from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
+					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
+						$("[data-app-role='shipCountry']",$fieldset).hide();
+						}
+					}
+				}, //chkoutAddressShip
 
-
-			shipMethods : function()	{
+			chkoutMethodsShip : function(formObj,$fieldset)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipMethods');
 
-				var $panelFieldset = $("#chkoutShipMethodsFieldset");
+				var $panelFieldset = $("#chkoutShipMethodsFieldset"),
+				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
+				L = shipMethods.length;
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateShipMethods','shipMethodsContainer'));
 				app.renderFunctions.translateTemplate(app.data.cartDetail,'shipMethodsContainer');
 
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
-				if(app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
+				if(L == 0)	{
 					$('#noShipMethodsAvailable').toggle(true);
 					}
 				else if(!$('#data-bill_zip').val() && !$('ship_zip').val()) {
@@ -1208,9 +1061,9 @@ in these instances, the selected method in the cart/memory/local storage must ge
 Of course, this should only happen IF a method was selected previously.
 */
 				var foundMatchingShipMethodId = false; 
-				var L = app.data.cartShippingMethods['@methods'].length;
+				
 				for(var i = 0; i < L; i += 1)	{
-					if(app.data.cartShippingMethods['@methods'][i].id == app.data.cartDetail['want/shipping_id'])	{
+					if(shipMethods[i].id == app.data.cartDetail['want/shipping_id'])	{
 						foundMatchingShipMethodId = true;
 						break; //once a match is found, no need to continue the loop.
 						}
@@ -1223,43 +1076,43 @@ Of course, this should only happen IF a method was selected previously.
 					app.model.dispatchThis('immutable');
 					}
 					
-				}, //shipMethods
+				}, //chkoutMethodsShip
 
+			chkoutCartItemsList : function(formObj,$fieldset){}, //chkoutCartItemsList
 
+			chkoutCartSummary : function(formObj,$fieldset)	{
+//The reference # only shows up IF company is populated and payby isn't PO.
+//The input isn't shown till a payment is selected to avoid displaying it, then hiding it.
+//the input is removed entirely because the field name is used if payment type = PO.
 
+				if(formObj['bill/company'] && formObj['want/payby'] && formObj['want/payby'] != "PO")	{
+					$("[data-app-role='referenceNumber']",$fieldset).show();
+					}
+				else	{
+					$("[data-app-role='referenceNumber']",$fieldset).empty().remove();
+					}
+				
+				}, //chkoutCartSummary
 
+			chkoutMethodsPay : function(formObj,$fieldset)	{
 
-//displays the cart contents in a non-editable format in the right column of checkout		
-			cartContents : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.cartContents');
-				var $container = $('#chkoutCartSummaryContainer').toggle(true); //make sure panel is visible.
+if(app.ext.cco.u.thisSessionIsPayPal())	{
+	//this is a paypal session. payment methods are not available any longer. stored payments are irrelevant. show paymentQ
+	
+	}
+
+var authState = app.u.determineAuthentication();
+//if the user is logged in and has wallets, they are displayed in a tabbed format.
+if(authState == 'authenticated' && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
+	$("[data-app-role='paymentOptionsContainer']",$fieldset).anytabs();
+	}
+else	{
+	$("[data-anytab-content='storedPaymentsContainer']").hide();
+	}
 
 /*
-checkoutCartSummary is the id given once the 'container' template has been rendered. It only needs to be rendered once. 
- -> this is more efficient. This also solves any error handling issues where the dom isn't updated prior to error messaging being added (the div may not exist yet).
-two of it's children are rendered each time the panel is updated (the prodlist and cost summary)
-*/
-				if($('#chkoutCartSummary').length == 0)	{
-//					app.u.dump(" -> chkoutCartSummary has no children. render entire panel.");
-					$container.append(app.renderFunctions.createTemplateInstance('checkoutTemplateCartSummaryPanel','chkoutCartSummary'));
-					}
-				$('#checkoutStuffList').empty(); //since the template isn't getting generated empty each time, the list must be manually emptied.
-//SANITY -> yes, the template only needs to be added once (above) but it needs to be translated each time this function is executed.
-				app.renderFunctions.translateTemplate(app.data.cartDetail,'chkoutCartSummary');
-//use the payby var, not radio, because the radio button may not exist on the DOM at this point
-//also, don't show it till a payment method is selected. Then it is less likely to appear then disappear because PO was selected.
-				if($('#data-bill_company').val() && app.ext.convertSessionToOrder.vars['want/payby'] && app.ext.convertSessionToOrder.vars['want/payby'] != "PO")	{$('#referenceNumberContainer').show()}
-				else	{$('#referenceNumberContainer').hide()} //things to change tho, so this hide is here in case it was shown but now needs to be hidden.
-				
-				}, //cartContents
+//thisSessionIsPayPal
 
-
-
-			paymentOptions : function()	{
-				app.u.dump('BEGIN convertSessionToOrder.panelContent.paymentOptions');
-				var $panelFieldset = $("#chkoutPayOptionsFieldset").toggle(true)
-				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
-				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');
 //if wallets exist, then tabs are created, putting wallets in open panel and everything else hidden away in tab 2.
 //the ul for the tabs is hidden by default so that when no wallets are present, no tabs show up.
 				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
@@ -1277,33 +1130,21 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					$("#chkoutPayOptionsFieldsetErrors").addClass("displayNone");
 					})
 				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
-				if(app.ext.convertSessionToOrder.vars['want/payby'])	{
-					$(":radio[value='"+app.ext.convertSessionToOrder.vars['want/payby']+"']",$panelFieldset).click();
-					}
 
 				app.renderFunctions.translateSelector('#paymentQContainer',app.data.cartDetail);  //used for translating paymentQ
 
 //				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
-				}, //paymentOptions
-		
-		
-/*
-the notes textarea will create a dispacth for the contents when they're updated, but it doesn't send.
-after using it, too frequently the dispatch would get cancelled/dominated by another dispatch.
-*/
-			orderNotes : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.orderNotes');
-				var $panelFieldset = $("#chkoutOrderNotesFieldset").toggle(true)
-				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplateOrderNotesPanel','orderNotesContainer'));
-				app.renderFunctions.translateTemplate(app.data.cartDetail,'orderNotesContainer');
-//				app.u.dump('END app.ext.convertSessionToOrder.panelContent.orderNotes');
-				} //orderNotes
+*/				}, //chkoutMethodsPay
+
+			chkoutNotes : function()	{
+
+				} //chkoutNotes
 
 
 
 			}, //panelContent
 	
-//push onto this (store_checkout.checkoutCompletes.push(function(P){});
+//push onto this (cco.checkoutCompletes.push(function(P){});
 //after checkout, these will be iterated thru and executed.
 /*
 Parameters included are as follows:
@@ -1324,7 +1165,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
-					
+
+//only send the request for addresses if the user is logged in or the request will return an error.
+					var auth = app.u.determineAuthentication();
+					if(auth == 'authenticated')	{
+						app.ext.cco.calls.buyerAddressList.init({},'immutable');
+						app.ext.cco.calls.buyerWalletList.init({},'immutable');
+						}
+
 					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
 					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
 					
@@ -1337,14 +1185,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							if(app.data.cartDetail['@ITEMS'].length)	{
 //NOTE - this should only be done once. panels should be updated individually from there forward.
-								$chkContainer.anycontent({'templateID':'checkoutTemplate',data:$.extend(true,app.data.cartDetail,app.data.appPaymentMethods)}); 
+								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.convertSessionToOrder.u.extendedDataForCheckout()}); 
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
 									
 									$fieldset.addClass('ui-corner-all');
 									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
-									app.ext.convertSessionToOrder.u.handlePanel($chkContainer,role,['applyLogic']);
+									app.ext.convertSessionToOrder.u.handlePanel($chkContainer,role,['handleUILogic','handleAppEvents']);
 									});
 								}
 							else	{
@@ -1358,12 +1206,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 				else	{
 					$('#globalMessaging').anymessage({'message':'in convertSessionToOrder.a.startCheckout, no $chkContainer not passed or does not exist.'});
 					}
-				}
+				} //startCheckout
 			
 			},
 
 
-////////////////////////////////////   						events [e]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////   						appEvents [e]			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
 			execAddressUpdate : function($input)	{
@@ -1371,14 +1219,129 @@ note - the order object is available at app.data['order|'+P.orderID]
 					//will trigger u.addressFieldUpdated code.
 					})
 				},
-			
+
+//immediately update cart anytime the email address is added/changed. for remarketing purposes.
+//no need to refresh the cartDetail here.
+			execBuyerEmailUpdate : function($input)	{
+				$input.off('blur.execEmailUpdate').on('blur.execEmailUpdate',function(){
+					if(app.u.isValidEmail($input.val()))	{
+						app.ext.cco.calls.cartSet.init({'bill/email':$input.val()},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					});
+				},
+				
 			execBuyerLogin : function($btn)	{
 				$btn.button();
 				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
 					event.preventDefault();
-					//log buyer in.
-					//rerun logic on all panels.
+					var $fieldset = $btn.closest('fieldset'),
+					$email = $("[name='bill/email']",$fieldset),
+					$password = $("[name='password']",$fieldset);
+
+					if($email.val() && $password.val())	{
+						$('body').showLoading({'message':'Verifying username and password...'});
+						//we have want we need. attempt login.
+						app.calls.authentication.zoovy.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
+							$('body').hideLoading();
+							if(app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
+							else	{
+								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
+								var $form = $fieldset.closest('form');
+
+//								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleUILogic','handleAppEvents']);
+//								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleUILogic','handleAppEvents']);
+
+//no content changes here, but potentially some display changes.
+								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAccountCreate',['handleUILogic']);
+								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutPreflight',['handleUILogic']);
+								
+								}
+							}});
+//piggyback the buyer calls onto the login call. suppress errors.
+						app.ext.cco.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
+						app.ext.cco.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else {
+					$fieldset.anymessage({'message':'Please fill out the fields indicated below:'});
+						if(!app.u.isValidEmail($email.val()))	{
+							//email is blank or invalid
+							$email.addClass('ui-state-error');
+							}
+						if(!$password.val())	{
+							$password.addClass('ui-state-error');
+							}
+						}
 					})
+				},
+
+			execCartOrderCreate : function($btn)	{
+//				$btn.button();
+				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
+					event.preventDefault();
+					//app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable');
+					})
+				},
+
+			execCountryUpdate : function($sel)	{
+				// billing:  
+//				app.ext.cco.u.countryChange('bill',this.value); app.ext.convertSessionToOrder.u.addressFieldUpdated(this.id); app.model.dispatchThis('immutable');
+				
+				//shipping:
+				// app.ext.cco.u.countryChange('ship',this.value); app.ext.convertSessionToOrder.u.recalculateShipMethods('ship'); app.model.dispatchThis('immutable');
+				},
+
+			execCouponAdd : function($btn)	{
+//				$btn.button();
+				$btn.off('click.execCouponAdd').on('click.execCouponAdd',function(event){
+					event.preventDefault();
+					//app.ext.convertSessionToOrder.u.handleCouponSubmit();
+					})
+				},
+
+			execGiftcardAdd : function($btn)	{
+//				$btn.button();
+				$btn.off('click.execGiftcardAdd').on('click.execGiftcardAdd',function(event){
+					event.preventDefault();
+					//app.ext.convertSessionToOrder.u.handleGiftcardSubmit();
+					})
+				},
+
+			execShipMethodUpdate : function($ul)	{
+				$("input",$ul).each(function(){
+					$(this).off("change.execShipMethodUpdate").on("change.execShipMethodUpdate", function(){
+						$('.ui-state-active',$ul).removeClass('ui-state-active');
+						$(this).closest('li').addClass("ui-state-active ui-corner-all");
+						app.ext.convertSessionToOrder.u.updateShipMethod($(this).val());
+						app.model.dispatchThis("immutable");
+						});
+					})
+				},
+
+			execPayMethodUpdate : function($context)	{
+				$("input",$context).each(function(){
+					$(this).off("change.execPayMethodUpdate").on("change.execPayMethodUpdate", function(){
+						$('.ui-state-active',$context).removeClass('ui-state-active ui-corner-all');
+						$(this).parent().addClass("ui-state-active");
+						app.u.dump("execPayMethodUpdate does not do anything yet.",'warn');
+						});
+					})
+				},
+
+			tagAsAccountCreate : function($cb)	{
+//				$cb.anycb;
+				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
+					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
+					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleUILogic']);
+					});
+				},
+			
+			tagAsShipToBill : function($cb)	{
+//				$cb.anycb;
+				$cb.off('change.tagAsShipToBill').on('change.tagAsShipToBill',function()	{
+					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleUILogic']);
+					});
 				}
 			},
 
@@ -1387,33 +1350,49 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 		u : {
+			
+			
+			extendedDataForCheckout : function()	{
+				if(app.u.determineAuthentication() == 'authenticated')	{
+					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail,app.data.buyerAddressList,app.data.buyerWalletList);
+					}
+				else	{
+					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
+					}
+				return obj;
+				},
+			
 //$content could be the parent form or the forms container. just something around this checkout. (so that multiple checkout forms are possible. imp in UI
 //role is the value of data-app-role on the fieldset.
-//actions is what needs to happen. an array.  accepted values are empty, showLoading, addAppEvents, translate and applyLogic. ex: ['translate','applyLogic']
+//actions is what needs to happen. an array.  accepted values are empty, showLoading, addAppEvents, translate and handleUILogic. ex: ['translate','handleUILogic']
 //actions are rendered in the order they're passed.
 
 			handlePanel : function($context, role, actions)	{
 				if($context && role && actions && typeof actions === 'object')	{
 
 					var L = actions.length,
+					formObj = $context.is('form') ? $context.serializeJSON() : $("form",$context).serializeJSON(),
 					$fieldset = $("[data-app-role='"+app.u.jqSelector('',role)+"']",$context),
 					ao = {};
 
-					ao.showLoading = function ($context, $fieldset){$(".panelContent",$fieldset).showLoading({'message':'Fetching updated content'})},
-					ao.empty = function($context, $fieldset){$(".panelContent",$fieldset).empty()},
-					ao.addAppEvents = function($context, $fieldset){},
-					ao.applyLogic = function($context, $fieldset){
-//						$fieldset.css('background','green'); //for testing selector.
-						//these will execute a panel specific utility
+					ao.showLoading = function (formObj, $fieldset){$(".panelContent",$fieldset).showLoading({'message':'Fetching updated content'})},
+					ao.empty = function(formObj, $fieldset){$(".panelContent",$fieldset).empty()},
+					ao.handleAppEvents = function(formObj, $fieldset){app.u.handleAppEvents($fieldset)},
+					ao.handleUILogic = function(formObj, $fieldset){
+						if(typeof app.ext.convertSessionToOrder.panelLogic[role] === 'function')	{
+							app.ext.convertSessionToOrder.panelLogic[role](formObj,$fieldset);
+							}
+						else	{
+							$fieldset.anymessage({'message':'In convertSessionToOrder.u.handlePanel, panelLogic['+role+'] not a function','gMessage':true});
+							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
-					ao.translate = function($context, $fieldset)	{
-						
+					ao.translate = function(formObj, $fieldset)	{
+						$fieldset.anycontent({'data' : app.ext.convertSessionToOrder.u.extendedDataForCheckout()});
 						} //populates the template.
 					
 					for(var i = 0; i < L; i += 1)	{
-						app.u.dump(" -> typeof 'ao.'+actions[i]: "+typeof ao[actions[i]]);
 						if(typeof ao[actions[i]] === 'function'){
-							ao[actions[i]]($context, $fieldset);
+							ao[actions[i]](formObj, $fieldset);
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':"In convertSessionToOrder.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
@@ -1489,7 +1468,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			handleCouponSubmit : function()	{
 				$('#chkoutSummaryErrors').empty(); //remove any existing errors.
 				$('#addCouponBtn').attr('disabled','disabled').addClass('ui-state-disabled ');
-				app.ext.store_checkout.calls.cartCouponAdd.init($('#couponCode').val(),{"callback":'addCouponToCart',"extension":"convertSessionToOrder"}); 
+				app.ext.cco.calls.cartCouponAdd.init($('#couponCode').val(),{"callback":'addCouponToCart',"extension":"convertSessionToOrder"}); 
 				app.model.dispatchThis('immutable');
 				}, //handleCouponSubmit
 
@@ -1497,8 +1476,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 //no 'loadingbg' is needed on button because entire panel goes to loading onsubmit.
 //panel is reloaded in case the submission of a gift card changes the payment options available.
 			handleGiftcardSubmit : function()	{
-				app.ext.store_checkout.calls.cartGiftcardAdd.init($('#giftcardCode').val(),{"callback":'addGiftcardToCart',"extension":"convertSessionToOrder"}); 
-				app.ext.store_checkout.calls.appPaymentMethods.init();
+				app.ext.cco.calls.cartGiftcardAdd.init($('#giftcardCode').val(),{"callback":'addGiftcardToCart',"extension":"convertSessionToOrder"}); 
+				app.ext.cco.calls.appPaymentMethods.init();
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
 				app.model.dispatchThis('immutable');
 				}, //handleGiftcardSubmit
@@ -1506,7 +1485,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 			handleChangeFromPayPalEC : function()	{
-//				app.ext.store_checkout.u.nukePayPalEC(); //kills all local and session paypal payment vars
+//				app.ext.cco.u.nukePayPalEC(); //kills all local and session paypal payment vars
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress');
@@ -1514,76 +1493,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
 				app.model.dispatchThis('immutable');
 				}, //handleChangeFromPayPalEC
-
-
-
-//X will be a 1 or a 0 for checked/not checked, respectively
-			handleCreateAccountCheckbox : function(X)	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox');
-				app.u.dump(' -> X = '+X);
-				app.u.dump(' -> #chkoutAccountInfoFieldset.length = '+$('#chkoutAccountInfoFieldset').length);
-				
-				$('#want-create_customer').val(X); //update hidden input value to reflect checkbox state.
-
-/*
-when checkout initially loads, the checkbox for 'create account' is present, but the panel is not.
-don't toggle the panel till after preflight has occured. preflight is done once an email address is obtained.
-*/
-
-				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
-					X ? $('#chkoutAccountInfoFieldset').toggle(true) : $('#chkoutAccountInfoFieldset').toggle(false);
-					}
-//update session.
-				app.calls.cartSet.init({"want/create_customer":X});
-				app.calls.cartSet.init({"want/create_customer_cb":X});
-				app.model.dispatchThis('immutable');
-				
-//				app.u.dump('END app.ext.convertSessionToOrder.u.handleCreateAccountCheckbox');
-				}, //handleCreateAccountCheckbox
-
-
-
-
-
-
-//executed in checkout when 'next/submit' button is pushed for 'guest checkout' after adding an email address. (preflight panel)
-			handleGuestEmail : function(email)	{
-				$("#chkoutPreflightFieldsetErrors").empty().toggle(false); //hide any previous errors.
-				if(app.u.isValidEmail(email) == true){
-					app.calls.cartSet.init({"bill/email":email}); //save email address to cart/session
-					app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
-					app.model.dispatchThis('immutable');
-					}
-				else {
-					$("#chkoutPreflightFieldsetErrors").empty().toggle(true).append(app.u.formatMessage("please provide a valid email address")); //remove any previous error message. display error.
-					}
-				}, //handleGuestEmail
-
-
-
-//executed in checkout when 'next/submit' button is pushed for 'existing account' after adding an email/password. (preflight panel)
-//handles inline validation
-			handleUserLogin : function(email,password)	{
-				var errors = '';
-				var $errorDiv = $("#chkoutPreflightFieldsetErrors").empty().toggle(false); //make sure error screen is hidden and empty.
-				
-				if(!app.u.isValidEmail(email)){
-					errors += "<li>Please provide a valid email address<\/li>";
-					}
-				if(!password)	{
-					errors += "<li>Please provide your password<\/li>";
-					}
-					
-				if(errors == ''){
-					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'handleBuyerLogin','extension':'convertSessionToOrder'});
-					app.model.dispatchThis('immutable');
-					$('#preflightGuestInputs, #preflightAccountInputs').hide();
-					$('#chkoutPreflightFieldsetErrors').empty().show();
-					}
-				else {
-					$errorDiv.toggle(true).append(app.u.formatMessage("<ul>"+errors+"<\/ul>"));
-					}
-				}, //handleUserLogin
 
 
 //run when a payment method is selected. updates memory and adds a class to the radio/label.
@@ -1621,64 +1530,15 @@ _gaq.push(['_trackEvent','Checkout','User Event','Payment method selected ('+pay
 
 
 
-
-//panel value could be: chkoutPreflight, chkoutAccountInfo, chkoutBillAddress, chkoutShipAddress
-//the legend and error ul are here because this is what is used to set the panels to 'loading' when a request is made.
-//adding the error container allows errors to be added while the ajax request is still in progress or finished but content hasn't been added yet.
-//basically, guarantees the existence of the error container.
-			oldHandlePanel : function(panel,hidden)	{
-//				app.u.dump("BEGIN convertSessionToOrder.panels.handlePanel");
-//				app.u.dump(" -> panel: "+panel);
-//				app.u.dump(" -> hidden: "+hidden);
-				var cssClass = hidden == true ? 'displayNone' : ''; //if hidden is enabled, add the displayNone class. Used on initial load of checkout to hide all but the preflight panel.
-
-//here for troubleshooting.
-
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.u.handlePanel.');
-//				app.u.dump(' -> panel = '+panel);
-//				app.u.dump(' -> hidden = '+hidden);
-//				app.u.dump(' -> cssClass = '+cssClass);
-
-//output which is automatically added to each panel. Used for title and error handling.
-				var o = "<legend id='"+panel+"Legend' class='ui-widget-header ui-corner-all'>"+app.ext.convertSessionToOrder.vars.legends[panel]+"<\/legend>";
-				o += "<div id='"+panel+"FieldsetErrors'><\/div>";
-//if the panel doesn't already exist, create it.
-				if(!$('#'+panel+'Fieldset').length > 0) {
-//					app.u.dump(' -> panel does not exist');
-					$('#zCheckoutFrm').append("<fieldset id='"+panel+"Fieldset' class='ui-widget ui-widget-content ui-corner-all  "+cssClass+"'>"+o+"<\/fieldset>");
-					}
-				else{
-//					app.u.dump(' -> panel exists');
-					$('#'+panel+'Fieldset').empty().addClass(' ui-widget ui-widget-content ui-corner-all  '+cssClass).append(o);
-					}
-//				app.u.dump('END app.ext.convertSessionToOrder.u.handlePanel.');				
-				}, //handlePanel
-
-
-
-
-
-
 //run when a shipping method is selected. updates cart/session and adds a class to the radio/label
 //the dispatch occurs where/when this function is executed, NOT as part of the function itself.
 			updateShipMethod : function(shipID,safeID)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.u.');	
 //				app.u.dump('value = '+shipID);	
 				app.calls.cartSet.init({'want/shipping_id':shipID});
-				app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable'); //update cart totals to reflect new ship method selected.
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');  //empty panel and set to loading
-				app.ext.store_checkout.calls.appPaymentMethods.init("updateCheckoutPayOptions"); //updates payment panel (pay methods may change based on shipping method)
-//on radio buttons, a safe id is passed in reference to the container li for style manipulation.
-//if the safeid isn't passed, we're likely in a select list or some other format where style changes are not needed.
-				if(safeID)	{
-					$("#chkout-shipMethods li").removeClass("selected ui-state-active ui-corner-all");
-					$('.shipcon_'+safeID).addClass('selected ui-state-active ui-corner-all');
-					}
-
-_gaq.push(['_trackEvent','Checkout','User Event','Shipping method selected ('+shipID+')']);
-
-
-//				app.u.dump('END app.checkoutFunctions.ShipMethod. shipID = '+shipID);			
+				app.model.destroy('cartDetail');
+				app.calls.cartDetail.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable'); //update cart totals to reflect new ship method selected.
+				app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
 				}, //updateShipMethod
 
 
@@ -1691,10 +1551,10 @@ _gaq.push(['_trackEvent','Checkout','User Event','Shipping method selected ('+sh
 					app.u.dump(' -> bill to ship IS checked (hide shipping address panel)');
 					$('#chkoutShipAddressFieldset').toggle(false); //disable display of ship address panel.
 					$('#want-bill_to_ship').val('1');  //update hidden input. this is what is actually used in ajax request.
-					app.ext.store_checkout.u.setShipAddressToBillAddress(); //update all shipping address fields from bill address.
+					app.ext.cco.u.setShipAddressToBillAddress(); //update all shipping address fields from bill address.
 					app.ext.convertSessionToOrder.calls.saveCheckoutFields.init(); //update session. all fields are updated because shipping address fields were populated.
 					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods');  //empties panel. sets to loading.
-					app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init("updateCheckoutShipMethods"); //update shipping methods and shipping panel
+					app.ext.cco.calls.cartShippingMethodsWithUpdate.init("updateCheckoutShipMethods"); //update shipping methods and shipping panel
 					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');  //updates cart object and reloads order contents panel.
 					}
 //do not ship to billing
@@ -1779,7 +1639,7 @@ $('#giftcardMessaging').text('PayPal not compatible with giftCards');
 $('#giftcardCode').attr('disabled','disabled'); //, #couponCode
 $('#addGiftcardBtn').attr('disabled','disabled').addClass('ui-state-disabled'); //, #addCouponBtn
 
-$('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext.store_checkout.u.nukePayPalEC();'>Choose Alternate Payment Method<\/a>");
+$('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext.cco.u.nukePayPalEC();'>Choose Alternate Payment Method<\/a>");
 					}
 				},
 				
@@ -1791,7 +1651,7 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 //these changes need to be made before				
 
 				this.handleBill2Ship(); //will set ship vars if bill to ship is checked.
-				if(app.ext.store_checkout.u.taxShouldGetRecalculated())	{
+				if(app.ext.cco.u.taxShouldGetRecalculated())	{
 					app.u.dump(" -> saveCheckoutFields originated from addressFieldUpdated");
 					app.ext.convertSessionToOrder.calls.saveCheckoutFields.init(); //update session with ALL populated fields.
 					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
@@ -1814,7 +1674,7 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 				var billToShip = ($('#want-bill_to_ship').val())*1;
 				if(billToShip) {
 					app.u.dump(" -> billToShip is true. update ship inputs with current zip/country.");
-					app.ext.store_checkout.u.setShipAddressToBillAddress(); //update all shipping address fields from bill address.
+					app.ext.cco.u.setShipAddressToBillAddress(); //update all shipping address fields from bill address.
 //					$('#data-ship_zip').val($('#data-bill_zip').val());
 //					$('#data-ship_country').val($('#data-bill_country').val());
 					}
@@ -1854,11 +1714,11 @@ the refreshCart call can come second because none of the following calls are upd
 //the saveCheckoutFields above this if statement needs to be put in the q prior to the appPaymentMethods below.
 					if(billToShip) {
 						app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions'); //empties panel. sets to loading.
-						app.ext.store_checkout.calls.appPaymentMethods.init("updateCheckoutPayOptions");
+						app.ext.cco.calls.appPaymentMethods.init("updateCheckoutPayOptions");
 						}
 
 					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods'); //empties panel. sets to loading.
-					app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init("updateCheckoutShipMethods");
+					app.ext.cco.calls.cartShippingMethodsWithUpdate.init("updateCheckoutShipMethods");
 					
 				
 					}
@@ -1904,7 +1764,7 @@ the refreshCart call can come second because none of the following calls are upd
 					if(isSelectedMethod)
 						o+= ' selected ';
 					o += "shipcon_"+safeid; 
-					o += "'><label><input type='radio' name='want/shipping_id' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updateShipMethod(this.value,\""+safeid+"\"); app.model.dispatchThis(\"immutable\"); '";
+					o += "'><label><input type='radio' name='want/shipping_id' value='"+id+"' ";
 					if(isSelectedMethod)
 						o += " checked='checked' "
 					o += "/>"+shipName+": <span >"+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/span><\/label><\/li>";
@@ -1925,7 +1785,6 @@ the refreshCart call can come second because none of the following calls are upd
 				var isSelectedMethod = false;
 //				app.u.dump(" -> # payment options (L): "+L);
 				if(L > 0)	{
-					
 					//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
 					if(data.value[0].id == 'ZERO')	{
 						$tag.hide(); //hide payment options.
@@ -1937,9 +1796,8 @@ the refreshCart call can come second because none of the following calls are upd
 							id = data.value[i].id;
 	//onClick event is added through panelContent.paymentOptions
 	//setting selected method to checked is also handled there.
-							o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' /><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+							o += "<label><input type='radio' name='want/payby' value='"+id+"' />"+data.value[i].pretty+"<\/label>";
 							}
-		
 						$tag.html(o);
 						}
 					}

@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.toynk.zoovy.com/",
-	"httpURL":"http://www.toynk.com/"
+	"httpURL":"http://www.sporks.zoovy.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -41,7 +41,7 @@ all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script>
@@ -1398,30 +1398,38 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 <div class='debug displayNone'>
-
-<menu>
-	<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
-	<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
-	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
-	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
-	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
-	<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
-	<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
-
-</menu>
-	<button  onClick="localStorage.clear(); return false;">Clear Local Storage</button>
-	<button  onClick="alert(app.ext.store_checkout.u.thisSessionIsPayPal());">Alert isPaypal</button>
-	<button  onClick="alert(app.ext.store_checkout.u.aValidPaypalTenderIsPresent());">Alert aValidPaypalTenderIsPresent</button>
-	<button  onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</button>
-
-<form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
-	<fieldset>
-	<legend>Search</legend>
-	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
-	</fieldset>
-	<input class="search" type="submit" value="Search" />
+<table>
+<tr>
+	<td>
+<ul class='debugQuickLinks'>
+	<li>Store Links
+	<ul>
+		<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
+		<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
+		<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
+		<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
+		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
+	</ul>
+	</li>
+	<li>Some JS test links
+	<ul>
+		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
+		<li><a href='#' onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
+		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
+	</ul>
+	</li>
+</ul>
+	</td>
+	<td>
+<form name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
+	<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" />
+	<button>Search</button>
 </form>
-
+	</td>
+</tr>
+</table>
 
 </div>
 

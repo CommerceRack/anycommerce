@@ -5,11 +5,11 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
 
 
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_mobile/extension.js']);
-//app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_mobile/extension.js']);
+app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
-app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
+//app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
 
 
 
@@ -62,7 +62,7 @@ app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
-app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js']);
+app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/jquery-ui.min.js']);
 
 
 /*

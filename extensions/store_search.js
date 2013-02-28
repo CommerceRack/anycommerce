@@ -150,7 +150,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 	
 	//add to DOM prior to running menu. helps it to not barf.
 //							$sortMenu.menu();
-							$pageMenu.menu(); 
+							if($pageMenu.length)	{$pageMenu.menu();}
 							
 							
 							}

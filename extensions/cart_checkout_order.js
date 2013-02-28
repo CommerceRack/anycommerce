@@ -166,15 +166,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 			
 // REMOVE from controller when this extension deploys !!!
 		cartSet : {
-			init : function(obj,tagObj,Q)	{
-				this.dispatch(obj,tagObj,Q);
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
-			dispatch : function(obj,tagObj,Q)	{
-				if(!Q)	{Q = 'immutable'}
+			dispatch : function(obj,_tag,Q)	{
 				obj["_cmd"] = "cartSet";
-				if(tagObj)	{obj["_tag"] = tagObj;}
-				app.model.addDispatchToQ(obj,Q);
+				obj._tag = _tag || {};
+				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartSet
 
@@ -257,7 +256,6 @@ left them be to provide guidance later.
 '_tag':tagObj},'immutable');
 				}
 			}
-	
 
 		}, //calls
 
@@ -265,16 +263,7 @@ left them be to provide guidance later.
 
 
 
-
-
-
-
 					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-
-
-
 
 
 
@@ -888,8 +877,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
 //so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
 			countriesAsOptions : function($tag,data)	{
-				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
-				app.u.dump(" -> Country: "+data.value);
+//				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
+//				app.u.dump(" -> Country: "+data.value);
 				var r = '';
 				var L = app.data.appCheckoutDestinations['@destinations'].length;
 //				app.u.dump(" -> number of countries = "+L);
@@ -930,15 +919,16 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var L = app.data.cartShippingMethods['@methods'].length;
+				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
+				L = shipMethods.length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(app.data.cartShippingMethods['@methods'][i].id == data.value)	{
-						var pretty = app.u.isSet(app.data.cartShippingMethods['@methods'][i]['pretty']) ? app.data.cartShippingMethods['@methods'][i]['pretty'] : app.data.cartShippingMethods['@methods'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+					if(shipMethods[i].id == data.value)	{
+						var pretty = app.u.isSet(shipMethods[i]['pretty']) ? shipMethods[i]['pretty'] : shipMethods[i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
 						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
 //only show amount if not blank.
-						if(app.data.cartShippingMethods['@methods'][i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartShippingMethods['@methods'][i].amount,' $',2,false)+"<\/span>";
+						if(shipMethods[i].amount)	{
+							o += "<span class='orderShipAmount'>"+app.u.formatMoney(shipMethods[i].amount,' $',2,false)+"<\/span>";
 							}
 						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
