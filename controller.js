@@ -618,7 +618,7 @@ app.u.throwMessage(responseData); is the default error handler.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
 //
-					app.calls.whoAmI.init({'callback':'suppressErrors'},'passive'); //get this info when convenient.
+					app.calls.whoAmI.init({'callback':'suppressErrors'},'mutable'); //get this info when convenient.
 					}
 				else	{
 					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
@@ -1252,6 +1252,14 @@ AUTHENTICATION/USER
 			return (app.vars.deviceid && app.vars.userid && app.vars.authtoken) ? true : false;
 			},
 
+//uses the supported methods for determining if a buyer is logged in/session is authenticated.
+//neither whoAmI or appBuyerLogin are in localStorage to ensure data from a past session isn't used.
+		buyerIsAuthenticated : function()	{
+			r = false;
+			if(app.data.whoAmI && app.data.whoAmI.cid)	{r = true}
+			else if(app.data.appBuyerLogin && app.data.appBuyerLogin.cid)	{r = true}
+			return r;
+			},
 
 //pretty straightforward. If a cid is set, the session has been authenticated.
 //if the cid is in the cart/local but not the control, set it. most likely this was a cart passed to us where the user had already logged in or (local) is returning to the checkout page.
@@ -1262,14 +1270,7 @@ AUTHENTICATION/USER
 			determineAuthentication : function(){
 				var r = 'none';
 				if(this.thisIsAnAdminSession())	{r = 'admin'}
-//was running in to an issue where cid was in local, but user hadn't logged in to this session yet, so now both cid and username are used.
-				else if(app.model.fetchData('app.data.appBuyerLogin') && app.data.appBuyerLogin.cid)  {r = 'authenticated'; app.u.dump(" -> buyerLogin");}
-				else if(app.vars.cid && app.u.getUsernameFromCart())	{r = 'authenticated'; app.u.dump(" -> cid/username");}
-				else if(app.model.fetchData('cartDetail') && app.data.cartDetail && app.data.cartDetail.customer && app.u.isSet(app.data.cartDetail.customer.cid))	{
-					r = 'authenticated';
-					app.u.dump(" -> from cart");
-					app.vars.cid = app.data.cartDetail.customer.cid;
-					}
+				else if(app.u.buyerIsAuthenticated())	{r = 'authenticated'}
 //need to run third party checks prior to default 'guest' check because bill/email will get set for third parties
 //and all third parties would get 'guest'
 				else if(typeof FB != 'undefined' && !$.isEmptyObject(FB) && FB['_userStatus'] == 'connected')	{

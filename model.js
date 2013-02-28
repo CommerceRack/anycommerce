@@ -648,11 +648,13 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				case 'adminOrderCreate': //may contain cc
 				case 'adminOrderPaymentAction': //may contain cc
 				case 'adminOrderUpdate': //may contain cc
+				case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
 				case 'appPageGet': //
 				case 'cartOrderCreate': //may contain cc
 				case 'cartPaymentQ': //may contain cc
 				case 'cartSet': //changes are reflected in cart object.
 				case 'ping':
+				case 'whoAmI': //contains login info. needs to be session specific.
 				r = false
 				break;
 				}

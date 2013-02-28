@@ -955,11 +955,9 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			chkoutPreflight : function(formObj,$fieldset)	{
-//				app.u.dump("BEGIN convertSessionToOrder.panelLogic.chkoutPreflight");
-				var authState = app.u.determineAuthentication();
-
+				app.u.dump("BEGIN convertSessionToOrder.panelLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
-				if(authState == 'authenticated')	{
+				if(app.u.buyerIsAuthenticated())	{
 					app.u.dump(" -> user is authenticated");
 					$("[data-app-role='login']",$fieldset).hide();
 					$("[data-app-role='username']",$fieldset).show();
@@ -1243,9 +1241,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$('body').showLoading({'message':'Verifying username and password...'});
 						//we have want we need. attempt login.
 						app.calls.authentication.zoovy.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
+							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 							else	{
+								app.u.dump(" -> no errors. user is logged in.");
 								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 								var $form = $fieldset.closest('form');
 
@@ -1369,7 +1369,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			handlePanel : function($context, role, actions)	{
 				if($context && role && actions && typeof actions === 'object')	{
-
+					app.u.dump("BEGIN handlePanel for role: "+role);
 					var L = actions.length,
 					formObj = $context.is('form') ? $context.serializeJSON() : $("form",$context).serializeJSON(),
 					$fieldset = $("[data-app-role='"+app.u.jqSelector('',role)+"']",$context),
