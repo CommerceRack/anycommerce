@@ -1240,6 +1240,7 @@ AUTHENTICATION/USER
 //kill all the memory and localStorage vars used in determineAuthentication
 			app.model.destroy('appBuyerLogin'); //nuke this so app doesn't fetch it to re-authenticate session.
 			app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
+			app.model.destroy('whoAmI'); //need this nuked too.
 			app.vars.cid = null; //used in soft-auth.
 			
 			app.calls.authentication.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
