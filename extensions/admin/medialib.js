@@ -591,7 +591,7 @@ setTimeout(function(){
 //						app.u.dump(" -> folderProperties.fname IS set");
 //						app.u.dump("admin_medialib.a.showMediaAndSubs folderProperties follows: ");	app.u.dump(folderProperties);
 						$mediaTarget.attr({'data-fid':folderProperties.fid,'data-fname':folderProperties.fname});
-						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname,'selector':'#mediaLibFileList'});
+						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname.toString(),'selector':'#mediaLibFileList'});
 						app.model.dispatchThis();
 						}
 					else	{
