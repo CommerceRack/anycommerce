@@ -1702,3 +1702,23 @@ div#checkoutSuccessContent
 	padding-left: 25px;
 	width: 970px;
 }
+
+button.prodATCButton
+{
+	/*background: url("../images/button-product-list-add-to-cart.png") no-repeat;
+	border: medium none;*/
+	border: none;
+	bottom: 4px;
+	height: 23px;	
+	position: absolute;
+	right: 4px;
+	z-index: 1001;
+	/*width: 77px;*/
+	width: 100px;
+}
+	button.prodATCButton > span.ui-button-text
+	{
+		/*display: none;*/
+		font-size: 12px;
+		padding: 0px;
+	}

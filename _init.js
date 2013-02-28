@@ -178,6 +178,72 @@ app.u.loadApp = function() {
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
 app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
+		app.renderFormats.addToCartButton = function($tag,data)	{
+//				app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+
+//if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
+				
+				var className, price, buttonState, buttonText = 'Add to Cart',
+				pid = data.value.pid, //...pid set in both elastic and appProductGet
+				inv = app.ext.store_product.u.getProductInventory(pid);
+				
+//				if(app.model.fetchData('appProductGet|'+pid))	{}
+				if(data.bindData.isElastic)	{
+					price = data.value.base_price;
+					if(data.value.tags.indexOf('IS_PREORDER') > -1)	{buttonText = 'Preorder'; className = 'preorder';}
+					else if(data.value.tags.indexOf('IS_COLORFUL') > -1)	{buttonText = 'Choose Color'; className = 'variational colorful';}
+					else if(data.value.tags.indexOf('IS_SIZEABLE') > -1)	{buttonText = 'Choose Size'; className = 'variational sizeable;'}
+					else if(data.value.pogs.length > 0)	{buttonText = 'Choose Options'; className = 'variational';}
+					else	{}
+					//look in tags for tags. indexOf
+					}
+				else	{
+					var pData = data.value['%attribs']; //shortcut
+					price = pData['zoovy:base_price'];
+					if(pData['is:preorder'])	{
+						buttonText = 'Preorder'; className = 'preorder';
+						}
+					else if(pData['is:colorful'])	{
+						buttonText = 'Choose Color'; className = 'variational colorful';
+						}
+					else if(pData['is:sizeable'])	{
+						buttonText = 'Choose Size'; className = 'variational sizeable';
+						}
+					else if(!$.isEmptyObject(pData['@variations']))	{
+						buttonText = 'Choose Options'; className = 'variational';
+						}
+					else	{
+						}
+					
+					}
+
+//no price and/or no inventory mean item is not purchaseable.
+				if(!price)	{
+					buttonState = 'disable';
+					}
+				else if(inv && inv <= 0)	{buttonState = 'disable';}
+				else{}
+				
+//				app.u.dump(" -> inv: "+inv);
+				$tag.addClass(className).text(buttonText);
+				$tag.button();
+				if(buttonState)	{$tag.button(buttonState)}
+				else	{
+					if(buttonText.toLowerCase() == 'add to cart')	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							app.ext.myRIA.u.handleAddToCart($(this).closest('form'),{'action':'modal'}); 
+							})
+						}
+					else	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							showContent('product',{'pid':pid}); 
+							})
+						}
+					}
+//				app.u.dump(" -> ID at end: "+$tag.attr('id'));
+				}
 	}
 
 

@@ -716,7 +716,8 @@ remember to NOT put the button inside the 'onclick' container or two events will
 				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 				<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">			
 					<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>		
-					<img src="site/images/button-product-list-add-to-cart.png" onClick="$(this).parent().submit();" class='pointer' alt="Add To Cart" />
+					<button class="prodATCButton" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'><img src="site/images/button-product-list-preorder.png" alt="Preorder" /></button>
+					<!--<img src="site/images/button-product-list-add-to-cart.png" onClick="$(this).parent().submit();" class='pointer' alt="Add To Cart" />-->
 					<input type='hidden' value='1' size='3' name='quantity' />
 				</form>
 			</div>
