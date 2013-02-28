@@ -19,8 +19,8 @@
 
 
 
-var admin_customer = function() {
-	var theseTemplates = new Array('wholesaleSupplierAddTemplate');
+var admin_wholesale = function() {
+	var theseTemplates = new Array('wholesaleSupplierAddTemplate','wholesaleSupplierManagerTemplate','wholesaleSupplierListTemplate');
 	var r = {
 
 
@@ -32,11 +32,11 @@ var admin_customer = function() {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
 			onSuccess : function()	{
-				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-
-				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
-				r = true;
-
+				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/wholesale.html',theseTemplates);
+				var $wm = $("<div \/>",{'id':'wholesaleModal'}).appendTo('body'); //a recycleable element for modals.
+				$wm.dialog({'autoOpen':false,'modal':true,'width':500,'height':500});
+				
 				return r;
 				},
 			onError : function()	{
@@ -49,36 +49,71 @@ var admin_customer = function() {
 
 
 
-////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////   ACTION [a]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//actions are functions triggered by a user interaction, such as a click/tap.
-//these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
-
-			}, //Actions
+			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
+			showSupplierManager : function($smTarget)	{
+				$smTarget.showLoading({'message':'Fetching supplier list'});
+				
+				app.ext.admin.calls.adminSupplierList.init({'callback':function(rd){
+					$smTarget.hideLoading();
+					if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+					else	{
+						$smTarget.anycontent({'templateID':'wholesaleSupplierManagerTemplate','datapointer':rd.datapointer});
+						app.ext.admin.u.handleAppEvents($smTarget);
+						$("[app-data-role='wholesaleSupplierList']",$smTarget).anytable();
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				
+				
+				},
+			
+			showSupplierEditor : function($smeTarget) {},
+			
+			showSupplierCreateModal : function(){
+				var $wm = $('#wholesaleModal')
+				$wm.empty().dialog('open').anycontent({'templateID':'wholesaleSupplierAddTemplate','showLoading':false});
+				app.ext.admin.u.handleAppEvents($wm);
+				}
+			}, //a [actions]
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//renderFormats are what is used to actually output data.
-//on a data-bind, format: is equal to a renderformat. extension: tells the rendering engine where to look for the renderFormat.
-//that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-//utilities are typically functions that are exected by an event or action.
-//any functions that are recycled should be here.
 		u : {
 			}, //u [utilities]
 
-//app-events are added to an element through data-app-event="extensionName|functionName"
-//right now, these are not fully supported, but they will be going forward. 
-//they're used heavily in the admin.html file.
-//while no naming convention is stricly forced, 
-//when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
+////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
+
 		e : {
+			showSupplierCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(){
+					app.ext.admin_wholesale.a.showSupplierCreateModal();
+					})
+				},
+
+			showSupplierEditor : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.showSupplierEditor').on('click.showSupplierEditor',function(){
+					alert('Not done. needs to open editor.');
+					});
+				},
+
+			execSupplierDelete : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.off('click.execSupplierDelete').on('click.execSupplierDelete',function(){
+					alert('Not done. needs to open confirmation modal.');
+					});
+				}
 			} //e [app Events]
+
 		} //r object.
 	return r;
 	}

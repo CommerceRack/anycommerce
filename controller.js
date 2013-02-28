@@ -1445,6 +1445,20 @@ VALIDATION
 				return false //disable key press
 				}
 			},
+		
+		alphaNumeric : function(event)	{
+			var r = true; //what is returned.
+			if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
+			else	{
+				var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+				var regex = new RegExp("^[a-zA-Z0-9]+$");
+				if (!regex.test(key)) {
+					event.preventDefault();
+					r = false;
+					}
+				}
+			return r;
+			},
 
 		isValidEmail : function(str) {
 			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
