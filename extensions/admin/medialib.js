@@ -39,6 +39,7 @@ var admin_medialib = function() {
 		adminCSVImport : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -52,6 +53,7 @@ var admin_medialib = function() {
 		adminImageDelete : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -64,6 +66,7 @@ var admin_medialib = function() {
 		adminImageDetail : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -75,6 +78,7 @@ var admin_medialib = function() {
 		adminImageFolderCreate : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -85,6 +89,7 @@ var admin_medialib = function() {
 		adminImageFolderDelete : {
 			init : function(f,tagObj,Q)	{
 				this.dispatch(f,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(f,tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -92,44 +97,62 @@ var admin_medialib = function() {
 				}
 			}, //adminImageFolderDelete
 
-
-//f is folder
-		adminImageFolderDetail : {
-			init : function(f,tagObj,Q)	{
-//				app.u.dump("BEGIN admin_medialib.calls.adminImageFolderDetail.init");
-//				app.u.dump(" -> Q: "+Q);
-//				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
-				tagObj = tagObj || {};
-				tagObj.datapointer = "adminImageFolderDetail|"+f
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-//					app.u.dump(" -> data is NOT local");
-					r = 1;
-					this.dispatch(f,tagObj,Q);
-					}
-				else	{
-//					app.u.dump(" -> data IS local");
-					app.u.handleCallback(tagObj);
-					}
+// use adminImageFolderDetail call (which executes the same _cmd) for a simple folder list lookup.
+//That way, the data is stored in localStorage for quick reference.
+//for folder detail, set detail:"FOLDER" on obj param
+		adminImageList : {
+			init : function(obj,tagObj,Q)	{
+				this.dispatch(obj,tagObj,Q);
+				return 1; //# of dispatches to occur.
 				},
-			dispatch : function(f,tagObj,Q)	{
-//				app.u.dump(" -> adding dispatch to "+Q+" queue");
-				app.model.addDispatchToQ({"_cmd":"adminImageFolderDetail","folder":f,"_tag" : tagObj},Q);
+			dispatch : function(obj,tagObj,Q)	{
+				obj._tag = tagObj || {};
+				obj._tag.datapointer = "adminImageList"
+				obj._cmd = "adminImageList";
+				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminImageDetail
 
 
+//folderDetail call was deprecated, but to keep local storage maintainable, the folderDetail name is used as the datapointer.
+//f is folder
+		adminImageFolderDetail : {
+			init : function(f,tagObj,Q)	{
+				var r; //# of dispatches to occur.  what is returned.
+				tagObj = tagObj || {};
+				tagObj.datapointer = "adminImageFolderDetail|"+f
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(f,tagObj,Q);
+					}
+				else	{
+					app.u.handleCallback(tagObj);
+					r = 0;
+					}
+				return r;
+				},
+			dispatch : function(f,tagObj,Q)	{
+//				app.u.dump(" -> adding dispatch to "+Q+" queue");
+				app.model.addDispatchToQ({"_cmd":"adminImageList","orderby":"NAME","folder":f,"detail":"NONE","_tag" : tagObj},Q);
+				}
+			}, //adminImageDetail
+
+
+//a list of all the folders.
 		adminImageFolderList : {
 			init : function(tagObj,Q)	{
-
-tagObj = tagObj || {};
-tagObj.datapointer = 'adminImageFolderList';
-if(app.model.fetchData(tagObj.datapointer) == false)	{
-	r = 1;
-	this.dispatch(tagObj,Q);
-	}
-else	{
-	app.u.handleCallback(tagObj);
-	}
+				var r; 
+				tagObj = tagObj || {};
+				tagObj.datapointer = 'adminImageFolderList';
+				if(app.model.fetchData(tagObj.datapointer) == false)	{
+					r = 1;
+					this.dispatch(tagObj,Q);
+					}
+				else	{
+					r = 0;
+					app.u.handleCallback(tagObj);
+					}
+				return r;
 				},
 			dispatch : function(tagObj,Q)	{
 				tagObj = tagObj || {};
@@ -141,7 +164,7 @@ else	{
 //This implementation of the call does not support a 'data' for the file itself, it's used with the jqueryUI plugin,
 //which uploads the file to a location on the server where it is store temporarily, and returns a guid as part of that request.
 		adminImageUpload : {
-			init : function(obj,tagObj,Q){this.dispatch(obj,tagObj,Q);},
+			init : function(obj,tagObj,Q){this.dispatch(obj,tagObj,Q); return 1},
 			dispatch : function(obj,tagObj,Q){
 				obj._cmd = "adminImageUpload";
 				obj._tag = tagObj || {};
@@ -152,6 +175,7 @@ else	{
 
 		adminPublicFileList : {
 			init : function(tagObj,Q)	{
+				var r;//# of dispatches to occur.
 				tagObj = tagObj || {};
 				tagObj.datapointer = 'adminPublicFileList';
 				if(app.model.fetchData(tagObj.datapointer) == false)	{
@@ -159,8 +183,10 @@ else	{
 					this.dispatch(tagObj,Q);
 					}
 				else	{
+					r = 0
 					app.u.handleCallback(tagObj);
 					}
+				return r;
 				},
 			dispatch : function(tagObj,Q)	{
 				obj = {};
@@ -174,6 +200,7 @@ else	{
 		adminPublicFileUpload : {
 			init : function(obj,tagObj,Q)	{
 				this.dispatch(obj,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj,Q)	{
 				obj._tag =  tagObj || {};
@@ -185,6 +212,7 @@ else	{
 		adminPublicFileDelete : {
 			init : function(filename,tagObj,Q)	{
 				this.dispatch(filename,tagObj,Q);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(filename,tagObj,Q)	{
 				var obj = {};
@@ -200,6 +228,7 @@ else	{
 		adminUIMediaLibraryExecute : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
+				return 1;//# of dispatches to occur.
 				},
 			dispatch : function(obj,tagObj)	{
 				obj._cmd = "adminUIMediaLibraryExecute"
@@ -227,6 +256,7 @@ else	{
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/medialib.html',theseTemplates);
 
 
+				app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/lazyload-v1.8.4.js']); //
 
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.fileupload-ui.css','admin_medialib_fileupload_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jquery.image-gallery.min.css','admin_medialib_imagegallery_ui']); //CSS to style the file input field as button and adjust the jQuery UI progress bars
@@ -261,24 +291,34 @@ setTimeout(function(){
 		showMediaLibrary : {
 
 			onSuccess : function(tagObj){
-//				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
-				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG');
+				app.u.dump("BEGIN admin_medialib.callbacks.showMediaLibrary.onSuccess");
+				$(app.u.jqSelector('#',tagObj.parentID)).removeClass('loadingBG'); //removes from main col.
+				$('.loadingBG','#mediaLibFolderList').removeClass('loadingBG'); //remove from left col.
+				
 				var L = app.data[tagObj.datapointer]['@folders'].length;
 				var $template; //recycled. holds template till appended to parent.
+				var fdata; //folder data. recycled. shortcut.
 //				app.u.dump(" -> @folders.length: "+L);
 //Generate the list of folders (on left);
 				for(var i = 0; i < L; i += 1)	{
-//					app.u.dump(" -> FID: "+app.data[tagObj.datapointer]['@folders'][i].FID+" and parentFID: "+app.data[tagObj.datapointer]['@folders'][i].ParentFID);
-					app.data[tagObj.datapointer]['@folders'][i].id = '#mediaRootFolder_'+app.data[tagObj.datapointer]['@folders'][i].FName //the id given to each root folders.
-					$template = app.renderFunctions.transmogrify(app.data[tagObj.datapointer]['@folders'][i],'mediaLibFolderTemplate',app.data[tagObj.datapointer]['@folders'][i]);
-					//number parentFID will return false for the root level categories, which are set to "0" (string);
-					//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
-					Number(app.data[tagObj.datapointer]['@folders'][i].ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(app.data[tagObj.datapointer]['@folders'][i].ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
+					fdata = app.data[tagObj.datapointer]['@folders'][i];
+					if(fdata.FName.substring(0,7) == "_ticket")	{} //_ticket folders are skipped.
+					else	{
+						fdata.id = '#mediaRootFolder_'+fdata.FName //the id given to each root folders.
+						$template = app.renderFunctions.transmogrify(fdata,'mediaLibFolderTemplate',fdata);
+	//number(parentFID) will return false for the root level categories, which are set to "0" (string);
+	//this will add the next folder either as a root or a sub folder, if the parentFID is not 0.
+						Number(fdata.ParentFID) ? $('#mediaChildren_'+app.u.makeSafeHTMLId(fdata.ParentFID)).append($template) : $('#mediaLibFolderListUL').append($template); 
+						}
 					}
-				app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
-
+			
+				$('#mediaLibControlsTabContainer').tabs();
 //in some cases, we may re-run this callback (such as after a file upload) and we need to open the folder on the left and in the media area opened for continuity.
 				if(app.ext.admin_medialib.u.getOpenFolderName())	{app.ext.admin_medialib.u.openMediaFolderByFilePath(app.ext.admin_medialib.u.getOpenFolderName())}
+//for whatever reason, jqfu has decided it doesn't want to init properly right away. a slight pause and it works fine. weird. ### need a better long term solution.
+				setTimeout(function(){
+					app.ext.admin_medialib.u.convertFormToJQFU('#mediaLibUploadForm','mediaLibrary'); //turns the file upload area into a jquery file upload
+					},2000);
 				}
 
 			}, //showMediaLibrary
@@ -286,6 +326,7 @@ setTimeout(function(){
 		handleMediaLibSrc : {
 			onSuccess : function(tagObj){
 				app.u.dump("BEGIN admin_medialib.callbacks.handleMediaLibSrc.onSuccess");
+				app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 				var img = app.data[tagObj.datapointer].IMG;
 				var $target = $('#mediaLibraryFocusMediaDetails').show();
 				$target.append(app.renderFunctions.transmogrify({'path':app.data[tagObj.datapointer].IMG,'name':app.data[tagObj.datapointer].IMG},'mediaLibSelectedFileTemplate',app.data[tagObj.datapointer]));
@@ -351,13 +392,28 @@ setTimeout(function(){
 //this is where the contents for what media is currently selected go. Needs to be emptied each time so old contents don't show up.
 //also hidden by default. will be set to visible if populated (keep buttons from showing up)
 					$('#mediaLibraryFocusMediaDetails').empty().hide();
+
 					} //media lib has already been created.
 //media library hasn't been opened yet. Add to dom and add properties that only get added once.
 				else	{
 					$target = $("<div \/>").attr({'id':'mediaModal','title':'Media Library'}).addClass('loadingBG').appendTo('body');
 //by adding the template instance only once, the media lib will re-open showing last edited folder.
 					$target.append(app.renderFunctions.createTemplateInstance('mediaLibTemplate'));
-					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 500});
+					$target.dialog({'autoOpen':false,'modal':true, width:'90%', height: 600});
+
+//allow only alphanumeric characters AND underscores
+					$('#mediaLibNewFolderName').off('keypress.mediaLib').on('keypress.mediaLib', function (event) {
+						if((event.keyCode ? event.keyCode : event.which) == 8) {} //backspace. allow.
+						else	{
+							var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+							var regex = new RegExp("^[a-zA-Z0-9\_]+$");
+							if (!regex.test(key)) {
+								event.preventDefault();
+								return false;
+								}
+							}
+						});
+
 
 					app.ext.admin_medialib.u.handleMediaLibButtons($target);
 
@@ -495,25 +551,31 @@ setTimeout(function(){
 					}
 				}, //showMediaDetailsInDialog
 
+
 			showMediaAndSubs : function(folderProperties){
+//				app.u.dump("BEGIN admin_medialib.a.showMediaAndSubs"); app.u.dump(folderProperties);
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
+					app.u.dump("folderproperties.fid IS set.");
 					var $mediaTarget = $('#mediaLibFileList ul');
+					$mediaTarget.data('list-origin','folder');
 					app.model.abortQ('mutable'); //if folders are clicked in quick succession, incomplete requests should get cancelled so their results don't show up.
 //SANITY -> folderProperties loads from data() on the li. which means, all variable names will be lowercase for browser compatibility.
 
+//what follows is folder related code.  Populates/displays the subfolders. updates 'add folder' dropdown.
 					var $folderTarget = $('#mediaChildren_'+folderProperties.fid); //ul for folder children.
-
 					$('.ui-selected','#mediaLibFolderList').removeClass('ui-selected');
 
 					$folderTarget.toggle(); //allows folders to be opened and closed.
 					$folderTarget.parent().find('a:first').addClass('ui-selected');
-	//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
+
+//updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
 					$('#mediaLibActionsBar .selectAddFolderChoices li:last').attr('data-fname',folderProperties.fname).show().trigger('click').text("As child of "+folderProperties.fname);
 					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
-	//now handle the delete folder button. Folders with subfolders can not be deleted.
-	//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
-	//if children are present, lock the disable folder button.
-	//this code must be run after the subfolders have been added or children().length won't be accurate.
+
+//now handle the delete folder button. Folders with subfolders can not be deleted.
+//updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
+//if children are present, lock the disable folder button.
+//this code must be run after the subfolders have been added or children().length won't be accurate.
 					$('#mediaLibActionsBar .deleteFolderBtn .folderid').text(folderProperties.fname);
 
 					if($folderTarget.children().length)	{
@@ -523,11 +585,19 @@ setTimeout(function(){
 						$('#mediaLibActionsBar .deleteFolderBtn').button('enable').attr('title','delete folder '+folderProperties.fname).data({'focus-folder-id':folderProperties.fid,'focus-folder-name':folderProperties.fname})
 						}
 
-					//show files.
-					if(folderProperties.fname)	{
+//THe following code is for the file display.
+//0 is, unfortunately, a valid folder name.
+					if(folderProperties.fname || folderProperties.fname === 0)	{
+//						app.u.dump(" -> folderProperties.fname IS set");
+//						app.u.dump("admin_medialib.a.showMediaAndSubs folderProperties follows: ");	app.u.dump(folderProperties);
 						$mediaTarget.attr({'data-fid':folderProperties.fid,'data-fname':folderProperties.fname});
-						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname,'selector':'#mediaLibFileList'});
+						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname.toString(),'selector':'#mediaLibFileList'});
 						app.model.dispatchThis();
+						}
+					else	{
+						app.u.throwGMessage("admin_medialib.a.showMediaAndSubs folderProperties.fname is NOT set.<br\/>DEV: see console for details.");
+						app.u.dump("WARNING! admin_medialib.a.showMediaAndSubs folderProperties.fname no set. folderproperties follows: ");
+						app.u.dump(folderProperties);
 						}
 					}
 				else	{
@@ -542,6 +612,17 @@ setTimeout(function(){
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			
+			lazyImage : function($tag,data)	{
+//the default image on an image based data bind is blank.gif. this is exactly what lazyload wants. It'll use the value of data-original to load the image when visible.
+				data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
+				data.bindData.w = $tag.attr('width');
+				data.bindData.h = $tag.attr('height');
+				data.bindData.tag = 0;
+				$tag.attr('data-original',app.u.makeImage(data.bindData)); //passing in bindData allows for using
+				$tag.addClass('lazyLoad');
+				},
+			
 			showChildFolders : function($tag,data){
 				app.u.dump("BEGIN admin_medialib.renderFormats.showChildFolders");
 				$tag.append(app.ext.admin_medialib.u.showFoldersByParentFID(data.value,data.bindData.loadsTemplate));
@@ -564,82 +645,77 @@ setTimeout(function(){
 //plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
 				
-//				app.u.dump("BEGIN renderFormats.array2Template");
+//				app.u.dump("BEGIN mediaLib.renderFormats.mediaList");
+				$("#mediaLibInfiniteScroller").scrollTop(0); //jump to top of image scroll
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
-				var itemsPerPage = 25;
-				var media = data.value.slice(startpoint,startpoint+itemsPerPage); //array of media files to show.
-				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
-//				app.u.dump(" -> L: "+L);
+				var itemsPerPage,media;
+//				var settings = app.ext.admin.u.dpsGet('admin_medialib');
+				var val; //recycled. set to path/filename.
+				var FName = $tag.closest('[data-fname]').attr('data-fname'); //the name of the folder in focus.
+				var listOrigin = $tag.data('list-origin'); //will = search or folder. on a folder imageList req, no 'folder' info is requested (because we already know what folder we're in and the request is faster without requiring the folder lookup)
+//				app.u.dump(" -> list-origin: "+listOrigin);
 				$tag.removeClass('loadingBG');
 
-				var val; //recycled. set to path/filename.
-				var FName = $tag.closest('[data-fname]').attr('data-fname');
-				if(FName && data.bindData.loadsTemplate)	{
+				var media = data.value;
+				var L = media.length; //number of media files. could be different from startpoint+X if it's the last page in the list.
+
+				if((FName || listOrigin == 'search') && data.bindData.loadsTemplate)	{
 					for(var i = 0; i < L; i += 1)	{
 //update data.value[i] with path and id, then pass this entire object into transmogrify so all the values are stored in data for use later on
 //SANITY - FName is set to be consistent when this data is passed for interpolation (transmogrify param 3), but when data- is set (param 1) lowercase is used for browser compatiblity.
-						media[i].path = FName+"/"+media[i].Name;
-						media[i].FName = FName;
+						if(FName && listOrigin == 'folder')	{
+							media[i].path = FName+"/"+media[i].Name;
+							media[i].FName = FName;
+							}
+						else if(listOrigin == 'search')	{
+							media[i].path = media[i].Folder+"/"+media[i].Name;
+							}
+						else	{
+							app.u.throwGMessage("Unsupported origin or FName could not be determined with origin = folder in admin_medialib.renderFormats.mediaList");
+							}
+
 						media[i].id = 'mediaFile_'+(startpoint+i);
+						
 						$tag.append(app.renderFunctions.transmogrify(media[i],data.bindData.loadsTemplate,media[i]));
 						}
 
+					
 
-//mode is set on the UL when the media library is initialized or reopened.
-					if($tag.data('mode') == 'manage')	{
-						$tag.addClass('hideBtnSelect')
-						}
-					else	{
-						$tag.removeClass('hideBtnSelect')
-						$('img',$tag).addClass('pointer').click(function(){
-							app.ext.admin_medialib.a.selectThisMedia($(this));
-							});
-						}
+					
+//
+$("img.lazyLoad").lazyload({
+	container : '#mediaLibInfiniteScroller',
+	threshold : 100,
+	onLazyLoad : function($i){
+		app.ext.admin_medialib.u.handleMediaFileButtons($i.parents('li'));
+		}
+	});
 
-					app.ext.admin_medialib.u.handleMediaFileButtons($("li",$tag));
-
-var $scrollContainer = $('#mediaLibInfiniteScroller'); //infinitescroll container. it's the div AROUND the ul, not the UL itself.
-if(data.value.length > itemsPerPage)	{
-	if(startpoint === 0)	{
-	//folder was just loaded. add the infinite scroller.
-		app.u.dump("Init infiniteScroll");
-	//always jump to the top on a new instantiation. if it starts at bottom, will continually trigger more content.
-	//SANITY - don't put this into the 'on' event or scrolling is disabled.
-		$scrollContainer.scrollTop(0); 
-		
-		//remove any pre-existing infinite scroll instantiation (so scroll bind doesn't get added multiple times)
-		$scrollContainer.off('scroll.infinite').on('scroll.infinite',function() {
-			var $container = $(this);
-			var contentHeight = $("ul",$(this)).height(); //the height of the content within the scolling box.
-		
-	//the scrolltop() val is the number of pixels the scrollbar is from the top of containerHeight
-	// -> SANITY: scrollTop subtracts the value of (content height + scrollbarheight).  Ex below:
-	// 		If containerHeight is 250, contentHeight is 1000 and scrollbarheight is 10, at half way down, scrolltop will = 240.
-	//		scrollbar height is dependent on the theme used. typically 10-20.  70 is used as a precaution and to trigger load when 'close' to bottom
-	
-			if($(this).scrollTop() > (contentHeight - $container.height() - 70))	{
-	//			console.log('at or near the bottom');
-				var fname = $tag.data('fname'); //folder name.
-	//			app.u.dump(" -> fname: "+fname);
-				var $li = $("<li \/>").addClass('loadingBG').appendTo($tag); //add temporary loading graphic as last lineitem. indicates something is happening.
-				app.ext.admin_medialib.renderFormats.mediaList($tag,data);
-				$li.empty().remove(); //remove temporary loading graphic.
-				}
-			}),($tag,data);
-		}
-	else if(startpoint >= data.value.length)	{
-		app.u.dump("The end is nigh! all content loaded. infinite scroll was killed.");
-		$scrollContainer.off('scroll.infinite'); //we've reached the bottom of the bottom. disable infinite scroll.
-		}
-	else{
-		//got here because more content was added but it wasn't the last page.
-		}
+if(L > 20)	{
+	//lazyload seems to want the scroll to move a bit to show the above the fold images. so we jump down a pixel.
+	$("#mediaLibInfiniteScroller").scrollTop(1);
 	}
 else	{
-	//no infinite scroll because there aren't more images than items per page.
+//scrolltop code above doesn't work if there's no scroll bar.  so instead, show the images if under 20.
+	$("img.lazyLoad").lazyload({event: 'click'}).trigger('click'); 
+	}
+	
+
+//mode is set on the UL when the media library is initialized or reopened.
+// ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
+if($tag.data('mode') == 'manage')	{
+	$tag.addClass('hideBtnSelect')
+	}
+else	{
+	$tag.removeClass('hideBtnSelect');
+	$('img',$tag).addClass('pointer').off('click.mediaSelect').on('click.mediaSelect',function(){
+		app.ext.admin_medialib.a.selectThisMedia($(this));
+		});
 	}
 
+	
+	
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
@@ -667,88 +743,105 @@ else	{
 			convertFormToJQFU : function(selector,mode)	{
 
 app.u.dump("BEGIN admin_medialib.u.convertFormToJQFU");
+app.u.dump(" -> selector: "+selector);
+app.u.dump(" -> mode: "+mode);
 
+//'use strict';
 
-'use strict';
-
-var successCallbacks = {
-//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
-	'mediaLibrary' : function(data,textStatus){
-		var L = data.length;
-		var tagObj;
-		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
-		for(var i = 0; i < L; i += 1)	{
-			data[i].folder = folderName;
-			app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
+//both a selector and a mode are required.
+if(selector && mode)	{
+	
+	var $selector = $(app.u.jqSelector(selector.charAt(0),selector.substring(1)));
+//	app.u.dump(" -> $selector.length: "+$selector.length); //app.u.dump($selector);
+//	app.u.dump(" -> $selector: "); app.u.dump($selector);
+	var successCallbacks = {
+	//The dispatches in this request are immutable. the imageUpload and updates need to happen at the same time to provide a good UX and the image creation should be immutable.
+		'mediaLibrary' : function(data,textStatus){
+			var L = data.length;
+			var tagObj;
+			var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+			app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder. done early in process to ensure retrieval regardless of upload result.
+			for(var i = 0; i < L; i += 1)	{
+				data[i].folder = folderName;
+				app.ext.admin_medialib.calls.adminImageUpload.init(data[i],{'callback':'handleImageUpload','extension':'admin_medialib','filename':data[i].filename},'immutable'); //on a successful response, add the file to the media library.
+				}
+			},
+		'publicFileUpload' : function(data,textStatus)	{
+//			app.u.dump("Got to csvUploadToBatch success.");
+			app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
+			app.model.dispatchThis('immutable');
+			},
+		'adminTicketFileAttach' : function(data,textStatus)	{
+//			app.u.dump(" -> Got to adminTicketFileAttach success.");
+			data[0].ticketid = $("[name='ticketid']",$selector).val();
+			data[0].uuid = $("[name='uuid']",$selector).val();
+//			app.u.dump(" -> data[0].ticketid: "+data[0].ticketid);
+//			app.u.dump(" -> data[0].uuid: "+data[0].uuid);
+			app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
+//			app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
+			app.model.dispatchThis('immutable');
+			},
+		'csvUploadToBatch' : function(data,textStatus) {
+			app.u.dump("Got to csvUploadToBatch success.");
+	//		app.u.dump(" -> data:"); app.u.dump(data);
+	//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
+			app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
+			app.model.dispatchThis('immutable');
 			}
-		},
-	'publicFileUpload' : function(data,textStatus)	{
-		app.u.dump("Got to csvUploadToBatch success.");
-		app.ext.admin_medialib.calls.adminPublicFileUpload.init(data[0],{'callback':'handleFileUpload2Batch','extension':'admin'},'immutable');
-		app.model.dispatchThis('immutable');
-		},
-	'adminTicketFileAttach' : function(data,textStatus)	{
-		app.u.dump(" -> Got to adminTicketFileAttach success.");
-		data[0].ticketid = $('#ticketFileUploadModal').attr('data-ticketid');
-		app.u.dump(" -> data[0].ticketid: "+data[0].ticketid)
-		app.ext.admin_support.calls.adminTicketFileAttach.init(data[0],{'callback':'handleAdminTicketFileAttach','extension':'admin_support'},'immutable');
-		app.calls.ping.init({'callback':'showUI','extension':'admin','path':'/biz/support/index.cgi?VERB=TICKET-VIEW&ID='+data[0].ticketid},'immutable'); //need to piggy-back this on the file attach so that the showUI request is triggered after the changes are reflected on the ticket.
-		app.model.dispatchThis('immutable');
-		},
-	'csvUploadToBatch' : function(data,textStatus) {
-		app.u.dump("Got to csvUploadToBatch success.");
-//		app.u.dump(" -> data:"); app.u.dump(data);
-//		data[0].filetype = 'PRODUCT'; //tho only 1 csv can be uploaded at a time, the response is still nested because it's shared across all file uploads.
-		app.ext.admin_medialib.calls.adminCSVImport.init($.extend(data[0],$('#csvUploadToBatchForm').serializeJSON()),{'callback':'handleFileUpload2Batch','extension':'admin_medialib'},'immutable');
+		}
+	
+	//add domain to form so that it gets passed along to fileupload.cgi
+	$selector.append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
+	
+	// Initialize the jQuery File Upload widget:
+	$selector.fileupload({
+		// Uncomment the following to send cross-domain cookies:
+		//xhrFields: {withCredentials: true},
+		url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
+		maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
+		success : function(data,textStatus){
+			app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
+			successCallbacks[mode](data,textStatus);
+			}
+		});
+	//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
+	
+	function fileuploadstopped() {
+		app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
+		var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
+	
+		app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
+		app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
 		app.model.dispatchThis('immutable');
 		}
-	}
-
-//add domain to form so that it gets passed along to fileupload.cgi
-$(selector).append("<input type='hidden' name='DOMAIN' value='"+app.vars.domain+"' \/>");
-
-// Initialize the jQuery File Upload widget:
-$(selector).fileupload({
-	// Uncomment the following to send cross-domain cookies:
-	//xhrFields: {withCredentials: true},
-	url: '//www.zoovy.com/webapi/jquery/fileupload.cgi', //don't hard code to http or https. breaks safari and chrome.
-	maxNumberOfFiles : (mode == 'csvUploadToBatch') ? 1 : null, //for csv uploads, allow only 1 file to be selected.
-	success : function(data,textStatus){
-//		app.u.dump(" -> mode:  "+mode+" data: "); app.u.dump(data);
-		successCallbacks[mode](data,textStatus);
+	
+	//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
+	if(mode == 'mediaLibrary')	{
+		app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
+		$selector.off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
 		}
-	});
-//$selector.bind('fileuploadadd', function (e, data) {}) //use this if a per-file-upload function is needed.
+	// Enable iframe cross-domain access via redirect option:
+	$selector.fileupload(
+		'option',
+		'redirect',
+		window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
+		);
+	
+	
+	//$('.btn-success',$selector).on('click', function(){$(".fileUploadButtonBar").show()});
 
-function fileuploadstopped() {
-	app.u.dump(" -> MEDIALIB. this should only get run once, after the upload is done.");
-	var folderName = $('#mediaLibFileList ul').attr('data-fname'); /// for now, uploads will go to whatever folder is currently open
 
-	app.model.destroy('adminImageFolderDetail|'+folderName); //clear local copy of folder.
-	app.ext.admin_medialib.calls.adminImageFolderDetail.init(folderName,{},'immutable'); //update local/memory but do nothing. action handled in reset... function below.
-	app.ext.admin_medialib.u.resetAndGetMediaFolders('immutable'); //will empty list and create dispatch.
-	app.model.dispatchThis('immutable');
 	}
-
-//this bind is used to update the folder list AND the open folder. It's here so that it only occurs once instead as part of each file uploaded.
-if(mode == 'mediaLibrary')	{
-	app.u.dump(" -> MODE is mediaLibrary and we're now adding a bind:");
-	$(selector).off('fileuploadstopped.jqfu').on('fileuploadstopped.jqfu',fileuploadstopped); //do not double-bind the event. remove then re-add.
+else	{
+	app.u.throwGMessage("In admin_medialib.u.convertFormToJQFU, either selector ["+selector+"] or mode ["+mode+"] are not set.");
 	}
-// Enable iframe cross-domain access via redirect option:
-$(selector).fileupload(
-	'option',
-	'redirect',
-	window.location.href.replace(/\/[^\/]*$/,'/cors/result.html?%s')
-	);
-
-
-//$('.btn-success',$(selector)).on('click', function(){$(".fileUploadButtonBar").show()});
-
-
 
 
 				}, //convertFormToJQFU
+
+
+
+
 
 			getFolderInfoFromFID : function(FID)	{
 				var r = false; //what is returned. Will be an object if FID is a valid folder id.
@@ -765,12 +858,26 @@ $(selector).fileupload(
 //Will show the images for a given folder. Handles requesting the data.
 // selector is a jquery selector (#something) of what gets translated. the entire selector gets translated.
 //FName is the folder name (pretty). FID won't work.
+// SANITY -> 0 (zero) is a valid folder name.
 			showMediaFor : function(P,Q)	{
 				$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
 				$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
-				if(P.selector && P.FName)	{
-					$(P.selector + ' ul').empty().addClass('loadingBG');
-					P.callback = 'translateSelector'
+				if(P.selector && (P.FName || P.FName === 0))	{
+//					app.u.dump(" -> P.selector.substring(1): "+P.selector.substring(1));
+					var $selector = $(app.u.jqSelector(P.selector[0],P.selector.substring(1)));
+//					app.u.dump(" -> $selector.length: "+$selector.length);
+					$selector.showLoading();
+					$('ul',$selector).empty(); //remove existing images (from previous folder)
+					P.callback = function(rd)	{
+						$selector.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							app.u.throwMessage(rd);
+							}
+						else	{
+							app.u.dump(" -> rd: "); app.u.dump(rd);
+							app.renderFunctions.translateSelector(rd.selector,app.data[rd.datapointer]);
+							}
+						}
 					app.ext.admin_medialib.calls.adminImageFolderDetail.init(P.FName,P,Q || 'mutable');
 					}
 				else	{
@@ -808,7 +915,7 @@ $(selector).fileupload(
 
 			buildDeleteMediaRequests : function(){
 				$('#mediaLibFileList .btnDelete').each(function(){
-					if($(this).hasClass('ui-state-highlight'))	{
+					if($(this).hasClass('ui-state-error'))	{
 						var data = $(this).closest('li').data();
 						app.ext.admin_medialib.calls.adminImageDelete.init({'folder':data.fname,'file':data.name},{},'immutable');
 						}
@@ -820,10 +927,10 @@ $(selector).fileupload(
 //the root LI's contain UL's with their FID in the ID. (mediaChildren_FID) (arguably, should have been mediaChildrenOf_ to indicate better).
 //each of these UL's contain all the properties of the parent folder. fid, fname, etc
 			openMediaFolderByFilePath : function(path)	{
-				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
+//				app.u.dump("BEGIN admin_medialib.u.openMediaFolderByFilePath ["+path+"]");
 //if no slashes or periods, is a root category.
 				if(path && path.indexOf('/') == -1 && path.indexOf('.') == -1){
-					app.u.dump(" -> is a root folder.");
+//					app.u.dump(" -> is a root folder.");
 					$('#mediaRootFolder_'+path+' a:first').click();
 					}
 				else if(path)	{
@@ -831,7 +938,7 @@ $(selector).fileupload(
 					var pathArray = path.split('/');
 					var path2Now = pathArray[0]; //puts path back together again. each pass it adds a folder back, starting with the root and working down 2 the last.
 					var L = (path.indexOf('.') > -1) ? pathArray.length - 1 : pathArray.length; //if last spot is filename, ignore.
-					app.u.dump(" -> L: "+L);
+//					app.u.dump(" -> L: "+L);
 					var $rootCat = $('#mediaRootFolder_'+pathArray[0])
 					var fid = $rootCat.data('fid'); //root folder has fname in the id, but all properties in data.
 					var $tmp;
@@ -859,7 +966,7 @@ $(selector).fileupload(
 				},
 
 			resetAndGetMediaFolders : function(Q)	{
-				$('ul','#mediaLibFolderList').addClass('loadingBG').children().remove(); //folders will be re-added later.
+				$('#mediaLibFolderListUL').addClass('loadingBG').children().remove(); //folders will be re-added later.
 				app.model.destroy('adminImageFolderList'); //clear memory and local storage to ensure request is made.
 				app.ext.admin_medialib.calls.adminImageFolderList.init({'callback':'showMediaLibrary','extension':'admin_medialib','parentID':'mediaModal','templateID':'mediaLibTemplate'},Q);
 				},
@@ -867,49 +974,58 @@ $(selector).fileupload(
 //This gets run over individual media files (each image).
 //also gets run over the image details area in the header when opening media lib for a field that already has an image selected.
 			handleMediaFileButtons : function($target)	{
-				$('button',$target).each(function(){
-					var $button = $(this);
-					if($button.data('btn-action') == 'delete')	{
-						$button.addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							$(this).toggleClass('ui-state-highlight');
-							})
-						}
 
-					else if($button.data('btn-action') == 'clearMedia')	{
-						$button.addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							app.ext.admin_medialib.a.selectThisMedia($(this),true);
-							})
-						}
-					else if($button.data('btn-action') == 'select')	{
-						$button.addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-check"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							// where does an image get added?f
-							$(this).closest('li').find('img').click();
-							})
-						}
-					else if($button.data('btn-action') == 'details')	{
-						$button.addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data())
-							})
-						}
-					else if($button.data('btn-action') == 'download')	{
-						$button.addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).click(function(event){
-							event.preventDefault(); //keeps button from submitting the form.
-							window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
-							})
-						}
-					else	{
-						//unknown type. do nothing to it (no .button) so it's easily identified.
-						}
-					})
+				$("[data-btn-action='deleteMedia']",$target).addClass('btnDelete').button({text:false,icons: {primary: "ui-icon-trash"}}).off('click.deleteImage').on('click.deleteImage',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					$(this).toggleClass('ui-state-error'); //NOTE - buildDeleteMediaRequests uses this class. if you change the class, change that function too.
+					});
+				$("[data-btn-action='selectMedia']",$target).addClass('btnSelect').button({text:false,icons: {primary: "ui-icon-circle-check"}}).off('click.selectMedia').on('click.selectMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					$(this).closest('li').find('img').click();
+					});
+				$("[data-btn-action='mediaDetails']",$target).addClass('btnDetails').button({text:false,icons: {primary: "ui-icon-info"}}).off('click.mediaDetails').on('click.mediaDetails',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					app.ext.admin_medialib.a.showMediaDetailsInDialog($(this).closest('[data-path]').data());
+					});
+
+				$("[data-btn-action='clearMedia']",$target).addClass('btnClear').button({text:false,icons: {primary: "ui-icon-circle-close"}}).off('click.clearMedia').on('click.clearMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					app.ext.admin_medialib.a.selectThisMedia($(this),true);
+					});
+
+
+				
+				$("[data-btn-action='downloadMedia']",$target).addClass('btnDownload').button({text:false,icons: {primary: "ui-icon-image"}}).off('click.downloadMedia').on('click.downloadMedia',function(event){
+					event.preventDefault(); //keeps button from submitting the form.
+					window.open(app.u.makeImage({'name':$(this).closest('[data-path]').data('path')}));
+					});				
+				
 				}, //handleMediaFileButtons
 
 
 //these are the actions on the tool bar row of buttons, not the individual photo/media buttons.
 			handleMediaLibButtons : function($target){
+
+
+$('#mediaLibSearchContainer button',$target).each(function(){
+	var $button = $(this);
+	$button.button();
+	if($button.data('btn-action') == 'mediaLibSearch')	{
+		$button.off('click.searchSubmit').on('click.searchSubmit',function(event){
+			event.preventDefault();
+			$('.welcomeMessage','#mediaLibFileList').hide(); //make sure welcome message is off.
+			$('#mediaLibInfiniteScroller').show(); //make sure media list is visible
+			$('#mediaFilesUL').empty().addClass('loadingBG').data('list-origin','search');
+			$form = $(this).closest('form');
+			app.ext.admin_medialib.calls.adminImageList.init($form.serializeJSON(),{'callback':'translateSelector','selector':'#mediaLibFileList'},'immutable');
+			app.model.dispatchThis('immutable');
+			})
+		}
+	else	{
+		app.u.throwGMessage("In admin_medialib.u.handleMediaLibButtons, unknown button action ["+$button.data('btn-action')+"] declared in mediaLibSearch element");
+
+		}
+	});
 
 $('#mediaLibActionsBar button',$target).each(function(){
 
@@ -1029,7 +1145,11 @@ var menu = $(this).parent().find('ul').toggle().css({position:'absolute','z-inde
 	});
 			})
 		}
+	else	{
+		app.u.throwGMessage("In admin_medialib.u.handleMediaLibButtons, unknown button action ["+$button.data('btn-action')+"] declared in mediaLibActionsBar element");
+		}
 	});
+	
 //groups any buttons inside a span as a button set. this is specifically for the add folder feature.
 $('#mediaLibActionsBar span',$target).buttonset();
 //makes any ul's inside the spans a menu. THey'll appear on click as part of the btn-action code. used, but not limited to, for selectAddFolderDestination
@@ -1066,7 +1186,7 @@ var tabs = [
 
 //				app.u.dump("BEGIN admin_medialib.u.showFileUploadPage");
 				var $target = $('#setupContent')
-				pathParams = app.u.getParametersAsObject(path.split('?')[1]);
+				pathParams = app.u.kvp2Array(path.split('?')[1]);
 				if(!pathParams.VERB)(pathParams.VERB = "HELP"); //default to showing the help page.
 //				app.u.dump(" -> pathParams: "); app.u.dump(pathParams);
 				$target.empty().append(app.renderFunctions.transmogrify({},'page-setup-import-'+pathParams.VERB.toLowerCase(),{})); //load the page template.

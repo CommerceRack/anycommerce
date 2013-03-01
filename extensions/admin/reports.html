@@ -1,0 +1,51 @@
+
+
+
+
+<div id='ebayListingsReportPageTemplate' class='ebayListingsReportPage'>
+<form action='#'>
+
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird'>
+	<legend>eBay Listings CSV Export</legend>
+	<label><input name='query' value="listing-active" type="radio"> Active Listings</label>
+	<label><input name='query' value="listing-active-fixed" type="radio"> Active Listings (Fixed Price)</label>
+	<label><input name='query' value="listing-active-store" type="radio"> Active Listings (Store)</label>
+	<label><input name='query' value="listing-active-auction" type="radio"> Active Listings (Auction)</label>
+	<label><input name='query' value="listing-all" type="radio"> All Listings (including ended)</label>
+	<label><input name='query' value="listing-allattempts" type="radio"> All Listings and Attempts</label>
+</fieldset>
+
+
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all marginRight oneThird'>
+	<legend>Powerlister CSV Export</legend>
+	<label><input name='query' value="power-all" type="radio"> All PowerListers</label>
+	<label><input name='query' value="power-active" type="radio"> - New/Active PowerListers</label>
+	<label><input name='query' value="power-paused" type="radio"> - Paused PowerListers</label>
+	<label><input name='query' value="power-error" type="radio"> - Errored PowerListers</label>
+	<label><input name='query' value="power-done" type="radio"> - Done PowerListers</label>
+	<label><input name='query' value="power-missing" type="radio"> Products without Powerlisters</label>
+</fieldset>
+
+<fieldset class='labelsAsBreaks floatLeft ui-widget ui-widget-content ui-corner-all oneThird'>
+	<legend>Event CSV Export</legend>
+	<label><input name='query' value="event-all" type="radio"> All Events</label>
+	<label><input name='query' value="event-pending" type="radio"> - Pending/Running</label>
+	<label><input name='query' value="event-error" type="radio"> - Result: ERROR</label>
+	<label><input name='query' value="event-warning" type="radio"> - Result: SUCCESS w/WARNING</label>
+	<label><input name='query' value="event-success" type="radio"> - Result: SUCCESS</label>
+	<label><input name='query' value="event-target-powr.auction" type="radio"> eBay Powerlister</label>
+	<label><input name='query' value="event-target-ebay.fixed" type="radio"> eBay Fixed Price</label>
+	<label><input name='query' value="event-target-ebay.auction" type="radio"> eBay Auctions</label>
+	<label>BatchID/Job#: <input name="batchid" size="10" value="" type="number"><span class='zhint'>optional</span></label>
+</fieldset>
+<div class='clearfix'></div>
+<fieldset class='marginTop ui-widget ui-widget-content ui-corner-all'>
+
+<div class='floatRight'><button data-app-event="admin_reports|ebayReportView">View</button></div>
+
+<label>Time Period/since: <input type='number' class='datepicker' name='since_gmt' /></label>
+
+</fieldset>
+</form>
+
+</div>

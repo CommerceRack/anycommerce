@@ -39,6 +39,11 @@ variations.js
 This is somewhat legacy stuff here, adopted to work within the new framework.
 it is not an extension for this reason.
 at some point in the future, it should to be.
+
+SANITY - pog_ is added to the name. if this is ever changed, admin_orders.js will need to be updated too.
+look for line:
+if(index.substring(0,4) == 'pog_')
+
 */
 
 handlePogs = function(v,o) {
@@ -107,11 +112,11 @@ getOptionByID: function(id) {
 ////////////////////////////      DEFAULT HANDLERS       \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 //upgraded to jquery.
-renderOptionSELECT: function(pog,safeid) {
+renderOptionSELECT: function(pog) {
 //	app.u.dump('BEGIN renderOptionSELECT for pog '+pog.id+' and safe id = '+safeid);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>");
-	var $selectList = $("<select>").attr({"id":"pog_"+safeid,"name":"pog_"+pogid}).addClass('zform_select');
+	var $selectList = $("<select>").attr({"name":"pog_"+pogid});
     var i = 0;
     var len = pog.options.length;
 
@@ -129,7 +134,7 @@ renderOptionSELECT: function(pog,safeid) {
 		optionTxt = pog['options'][i]['prompt'];
 		if(pog['options'][i]['p'])
 			optionTxt += pogs.handlePogPrice(pog['options'][i]['p']); //' '+pog['options'][i]['p'][0]+'$'+pog['options'][i]['p'].substr(1);
-		selOption = "<option value='"+pog['options'][i]['v']+"' id='option_"+pogid+""+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
+		selOption = "<option value='"+pog['options'][i]['v']+"'>"+optionTxt+"<\/option>";
 		$selectList.append(selOption);
 		i++;
 		}
@@ -144,7 +149,7 @@ renderOptionSELECT: function(pog,safeid) {
 // timer permitting, rewrite this. create an object for each optgroup and use that objects id to save options into.
 // during each loop, add the optgroup id to a separate array and at the end, use that array to add each optgroup to selectlist. 
 // may be a bit faster than this. cleaner too.
-renderOptionBIGLIST: function(pog,safeid) {
+renderOptionBIGLIST: function(pog) {
 
 	var pogid = pog.id;
 	var selOptions = '';
@@ -152,7 +157,7 @@ renderOptionBIGLIST: function(pog,safeid) {
 	var inc = 0;
     var len = pog.options.length;
 	var $parentDiv = $("<span \/>");
-	var $selectList = $("<select \/>").attr({"id":"pog_"+safeid,"name":"pog_"+pogid}).addClass("zform_select zform_biglist");
+	var $selectList = $("<select \/>").attr({"name":"pog_"+pogid}).addClass("zform_select zform_biglist");
 //sets the first options on both select lists.
 	$selectList.append("<option value='' disable='disabled' selected='selected'>Please Choose...<\/option>");
 
@@ -198,13 +203,13 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 
 
 //upgraded to jquery.
-renderOptionIMGSELECT: function(pog,safeid) {
-//	app.u.dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
+renderOptionIMGSELECT: function(pog) {
+	app.u.dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
 	var pogid = pog.id;
-	var $parentDiv = $("<span \/>"); // = $("#div_"+safeid);
-	var $selectList = $("<select>").attr({"id":"pog_"+safeid,"name":"pog_"+pogid}).addClass('zform_select').bind('change', function(e){
-		var thumbnail = $("#pog_"+safeid+" option:selected").attr('data-thumbnail');
-		$("#selectImg_"+safeid).attr('src',app.u.makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false,"lib":app.username,"id":"selectImg_"+safeid}));
+	var $parentDiv = $("<span \/>").addClass('imgSelectContainer');
+	var $selectList = $("<select>").attr({"name":"pog_"+pogid}).addClass('zform_select').bind('change', function(e){
+		var thumbnail = $("option:selected",$(this)).attr('data-thumbnail');
+		$(this).closest('.imgSelectContainer').find('img').attr('src',app.u.makeImage({"w":pog.width,"h":pog.height,"name":thumbnail,"b":"FFFFFF","tag":false,"lib":app.username}));
 		});
     var i = 0;
     var len = pog.options.length;
@@ -232,7 +237,7 @@ renderOptionIMGSELECT: function(pog,safeid) {
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 
-	$imageDiv = $('<div>').attr({"id":"imgSelect_"+safeid+"_img"}).addClass('imageselect_image');
+	$imageDiv = $('<div>').addClass('imageselect_image');
 	$imageDiv.html(app.u.makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"lib":app.username,"id":"selectImg_"+pogid}));
 	$imageDiv.appendTo($parentDiv);
 	app.u.dump('END renderOptionIMGSELECT for pog '+pog.id);
@@ -240,36 +245,31 @@ renderOptionIMGSELECT: function(pog,safeid) {
 	},
 
 //upgraded to jquery. needs css love.
-renderOptionRADIO: function(pog,safeid)	{
+renderOptionRADIO: function(pog)	{
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 	
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
-	
-	var $radioInput; //used to create the radio button element.
-	var radioLabel; //used to create the radio button label.
     var i = 0;
     var len = pog['options'].length;
 	while (i < len) {
-		radioLabel = "<label for='pog_id_"+safeid+"_value_"+pog['options'][i]['v']+"'>"+pog['options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: "pog_"+pogid, value: pog['options'][i]['v'], id: "pog_id_"+safeid+"_value_"+pog['options'][i]['v']});
-		$parentDiv.append($radioInput).append(radioLabel);
-		i++
+		$parentDiv.append($('<input>').attr({type: "radio", name: "pog_"+pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt']).wrap($("<label \/>")));
+		i++;
 		}
 	return $parentDiv;
 	},
 
 
 //upgraded to jquery.
-renderOptionCB: function(pog,safeid) {
+renderOptionCB: function(pog) {
 	var pogid = pog.id;
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
-	var $checkbox = $('<input>').attr({type: "checkbox", name: "pog_"+pogid, value: 'ON', id: "pog_"+safeid});
+	var $parentDiv = $("<span \/>");
+	$('<input>').attr({type: "checkbox", name: "pog_"+pogid, value: 'ON'}).appendTo($parentDiv);
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $hidden = $('<input>').attr({type: "hidden", name: "pog_"+pogid+"_cb", value: '1', id: "pog_"+safeid});
-	$parentDiv.append($checkbox).append($hidden);
+	$('<input>').attr({type: "hidden", name: "pog_"+pogid+"_cb", value: '1'}).appendTo($parentDiv);
+
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
 
@@ -278,38 +278,35 @@ renderOptionCB: function(pog,safeid) {
 
 
 //upgraded to jquery.
-renderOptionHIDDEN: function(pog,safeid) {
+renderOptionHIDDEN: function(pog) {
 	var pogid = pog.id;
 //hidden attributes don't need a label. !!!
-//	document.getElementById("pog_"+safeid+"_id").style.display = 'none';
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
 	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $hidden = $('<input>').attr({type: "hidden", name: "pog_"+pogid, value: defaultValue, id: "pog_"+safeid});
-	$parentDiv.append($hidden);
+	$parentDiv.append($('<input>').attr({type: "hidden", name: "pog_"+pogid, value: defaultValue}));
 	
 	return $parentDiv;
 	},
 
 
 //upgraded to jquery.
-renderOptionATTRIBS: function(pog,safeid)	{
+renderOptionATTRIBS: function(pog)	{
 //attributes are used with finders. They don't do anything and they don't require a form element in the add to cart.. BUT we may want to do something merchant specific, so here it is.... to overide...
 //	document.getElementById("div_"+safeid).style.display = 'none'; !!!
-	
 	},
 
 
 
 //upgraded to jquery.
-renderOptionTEXT: function(pog,safeid) {
+renderOptionTEXT: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
 	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $textbox = $('<input>').attr({type: "text", name: "pog_"+pogid, value: defaultValue, id: "pog_"+safeid}).addClass('zform_textbox')
+	var $textbox = $('<input>').attr({type: "text", name: "pog_"+pogid, value: defaultValue});
 	if(pog['maxlength'])	{
 		$textbox.keyup(function(){
 			if (this.value.length > (pog['maxlength'] - 1)) // if too long...trim it!
@@ -325,20 +322,20 @@ renderOptionTEXT: function(pog,safeid) {
 
 
 //upgraded to jquery.
-renderOptionCALENDAR: function(pog,safeid) {
+renderOptionCALENDAR: function(pog) {
 	var pogid = pog.id;
 	
 	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
 	
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
-	var $textbox = $('<input>').attr({type: "text", name: "pog_"+pogid, value: defaultValue, id: "pog_"+safeid}).addClass('zform_textbox').datepicker({altFormat: "DD, d MM, yy"});
+	var $parentDiv = $("<span \/>");
+	var $textbox = $('<input>').attr({type: "text", name: "pog_"+pogid, value: defaultValue}).addClass('zform_textbox').datepicker({altFormat: "DD, d MM, yy"});
 	$parentDiv.append($textbox);
 
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 
 //if the rush prompt is set, display it under the form.
 	if(pog.rush_prompt)	{
-		$parentDiv.append("<div class='zhint' id='rush_prompt_"+safeid+">"+pog['rush_prompt']+"<\/div>");
+		$parentDiv.append("<div class='zhint'>"+pog['rush_prompt']+"<\/div>");
 		}
 	
 	return $parentDiv;
@@ -349,13 +346,13 @@ renderOptionCALENDAR: function(pog,safeid) {
 
 
 
-renderOptionNUMBER: function(pog,safeid) {
+renderOptionNUMBER: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
 	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 //right now, 'number' isn't widely supported, so a JS regex is added to strip non numeric characters
-	var $textbox = $('<input>').attr({type: "number", name: "pog_"+pogid, value: defaultValue, id: "pog_"+safeid}).addClass('zform_textbox').keyup(function(){
+	var $textbox = $('<input>').attr({type: "number", name: "pog_"+pogid, value: defaultValue}).keyup(function(){
 		this.value = this.value.replace(/[^0-9]/g, '');
 		});
 
@@ -374,13 +371,13 @@ renderOptionNUMBER: function(pog,safeid) {
 
 
 
-renderOptionTEXTAREA: function(pog,safeid) {
+renderOptionTEXTAREA: function(pog) {
 	var pogid = pog.id;
 //cant set the value to null in IE because it will literally write out 'undefined'. this statement should handle undefined, defined and blank just fine.
 	var defaultValue = app.u.isSet(pog['default']) ?  pog['default'] : "";
-	var $parentDiv = $("<span \/>");// = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 //Creates the 'hidden input' form field in the DOM which is used to let the cart know that the checkbox element was present and it's absense in the form post means it wasn't checked.		
-	var $textbox = $('<textarea>').attr({name: "pog_"+pogid, value: defaultValue, id: "pog_"+safeid}).addClass('zform_textarea');
+	var $textbox = $('<textarea>').attr({name: "pog_"+pogid, value: defaultValue});
 	$parentDiv.append($textbox);
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	return $parentDiv;
@@ -391,7 +388,7 @@ renderOptionTEXTAREA: function(pog,safeid) {
 
 
 //needs testing.
-renderOptionREADONLY: function(pog,safeid) {
+renderOptionREADONLY: function(pog) {
 	return $("<span class='zsmall'>"+pog['default']+"<\/span>");
 	},
 
@@ -400,11 +397,11 @@ renderOptionREADONLY: function(pog,safeid) {
 //create an override for IMGGRID to be used for webapp. no radio button, just thumbnails that, on click, will set a hidden input. !!!!!!!!!!!!!
 //also explore frameworks (jqueryui or jquerymobile ?) for better handling of form display.
 
-renderOptionIMGGRID: function(pog,safeid)	{
+renderOptionIMGGRID: function(pog)	{
 
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>"); // = $('#div_'+safeid);
+	var $parentDiv = $("<span \/>");
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
 	
 	var $radioInput; //used to create the radio button element.
@@ -413,9 +410,9 @@ renderOptionIMGGRID: function(pog,safeid)	{
     var i = 0;
     var len = pog['options'].length;
 	while (i < len) {
-		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username,"id":"selectImg_"+safeid});
-		radioLabel = "<label for='pog_id_"+safeid+"_value_"+pog['options'][i]['v']+"'>"+pog['options'][i]['prompt']+"<\/label>";
-		$radioInput = $('<input>').attr({type: "radio", name: "pog_"+pogid, value: pog['options'][i]['v'], id: "pog_id_"+safeid+"_value_"+pog['options'][i]['v']});
+		thumbnail = app.u.makeImage({"w":pog.width,"h":pog.height,"name":pog['options'][i]['img'],"b":"FFFFFF","tag":true,"lib":app.username});
+		radioLabel = "<label>"+pog['options'][i]['prompt']+"<\/label>";
+		$radioInput = $('<input>').attr({type: "radio", name: "pog_"+pogid, value: pog['options'][i]['v']});
 		$parentDiv.append(thumbnail).append($radioInput).append(radioLabel).wrap("<div class='floatLeft'><\/div>");;
 		i++
 		}
@@ -425,14 +422,14 @@ renderOptionIMGGRID: function(pog,safeid)	{
 	},
 
 
-renderOptionUNKNOWN: function(pog,safeid) {
+renderOptionUNKNOWN: function(pog) {
 	return("UNKNOWN "+pog.type+": "+pog.prompt+" / "+pog.id);
 	},
 
 // !!! this'll need fixin
 showHintIcon : function(pogid,pogHint)	{
 //	app.u.dump("BEGIN variations.showHintIcon");
-	return "<span class='ghint_qmark_container'><a href='#' onclick='$(\"#ghint_"+pogid+"\").toggle(); return false;' class='ghint_qmark'>?<\/a></span><div style='display:none;' class='zhint' id='ghint_"+pogid+"'>"+pogHint+"</div>";
+	return "<span class='ghint_qmark_container'><a href='#' onclick='$(this).parent().next().toggle(); return false;' class='ghint_qmark'>?<\/a></span><div style='display:none;' class='zhint'>"+pogHint+"</div>";
 	},
 
 
@@ -464,16 +461,16 @@ showHintIcon : function(pogid,pogHint)	{
 
 renderOption: function(pog,pid) {
 	var pogid = pog.id;
-	var safeid = app.u.makeSafeHTMLId(pogid); //pogs have # signs, which must be stripped to be jquery friendly.
+
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").attr("id","div_"+safeid).addClass("zform_div").addClass("pogType_"+pog.type);
+	var $formFieldDiv = $("<div>").addClass("zform_div").addClass("pogType_"+pog.type);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;
 
 
 //create the label (prompt) for the form input and make it a child of the newly created div.
-	var $formFieldLabel = $('<label>').attr({"for":"pog_"+safeid,"id":"pog_"+safeid+"_id","title":labelTitle}).text(pog.prompt);
+	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).text(pog.prompt);
 
 	$formFieldDiv.append($formFieldLabel);
 	
@@ -482,13 +479,13 @@ renderOption: function(pog,pid) {
 //	$displayObject.append($formFieldDiv);   /// NOTE the form ID on this should probably be auto-generated from the element ID.
 
     if (this.handlers["pogid."+pogid]) {
-      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog,safeid)");
+      $optionObj = eval("this."+this.handlers["pogid."+pogid]+"(pog)");
       }
     else if (this.handlers["type."+pog.type]) {
-      $optionObj = eval("this."+this.handlers["type."+pog.type]+"(pog,safeid)");
+      $optionObj = eval("this."+this.handlers["type."+pog.type]+"(pog)");
       }
     else {
-      $optionObj = eval("this."+this.handlers["unknown."]+"(pog,safeid)");
+      $optionObj = eval("this."+this.handlers["unknown."]+"(pog)");
       }
 	$formFieldDiv.append($optionObj);
 	return $formFieldDiv;
@@ -712,7 +709,9 @@ Parse.Simple.Base.Rule.prototype = {
                 // workaround for bad IE
                 data = data.replace(/\n/g, ' \r');
             }
-            node.appendChild(document.createTextNode(data));
+            //node.appendChild(document.createTextNode(data));
+            //Fixed to allow special characters, such as &copy; to show up from wiki text.
+			node.innerHTML += data;
         }
     }    
 };
@@ -1010,10 +1009,10 @@ this was necessary because otherwise the converted html was output as <a href...
 			
 				switch(operation) {
 					case ":url" :
-						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":search"] == 'function')
-							output = app.ext[linkCmdPointer].wiki[":search"](suffix,phrase)
+						if(linkCmdPointer && !$.isEmptyObject(app.ext[linkCmdPointer].wiki) && typeof app.ext[linkCmdPointer].wiki[":url"] == 'function')
+							output = app.ext[linkCmdPointer].wiki[":url"](suffix,phrase)
 						else
-							output = "<a href=\""+suffix+"\">"+phrase+"</a>";
+							output = "<a href=\""+suffix+"\" target='_blank'>"+phrase+"</a>";
 						break;
 
 					case ":search" :

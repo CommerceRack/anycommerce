@@ -136,27 +136,6 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				}
 			},//buyerAddressAddUpdate 
 
-//always uses immutable q so that an order update is not cancelled.
-/*
-NOT SUPPORTED.
-		buyerOrderUpdate  : {
-			init : function(orderid,updateArray,tagObj)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-//				tagObj.datapointer = "buyerOrderMacro"  //don't think we want a data pointer here.
-				var cmdObj = {};
-				cmdObj.orderid = orderid;
-				cmdObj['_cmd'] = 'buyerOrderUpdate';
-				cmdObj['@updates'] = updateArray;
-				cmdObj['_tag'] = tagObj;
-				this.dispatch(cmdObj);
-				return 1;
-				},
-			dispatch : function(cmdObj)	{
-				app.model.addDispatchToQ(cmdObj,'immutable');	
-				}
-			},//buyerOrderMacro
-*/
-
 
 //formerly getAllCustomerLists
 		buyerProductLists : {
@@ -504,6 +483,7 @@ see jquery/api webdoc for required/optional param
 				var orderid;
 				var L = app.data[tagObj.datapointer]['@orders'].length;
 				if(L > 0)	{
+					$parent.empty();
 					for(var i = 0; i < L; i += 1)	{
 						orderid = app.data[tagObj.datapointer]['@orders'][i].ORDERID;
 						$parent.append(app.renderFunctions.createTemplateInstance(tagObj.templateID,"order_"+orderid));
@@ -731,8 +711,12 @@ for(var i = 0; i < L; i += 1)	{
 return $r;
 				},
 
-//assumes the list is already in memory
-//formerly getSkusFromList
+/*
+The list object returned on a buyerProductListDetail is not a csv or even a string of skus, it's an array of objects, each object containing information
+about a sku (when it was added t the list, qty, etc).
+This is used to get add an array of skus, most likely for a product list.
+*/
+
 			getSkusFromBuyerList : function(listID)	{
 				app.u.dump("BEGIN store_crm.u.getSkusFromList ("+listID+")");
 				var L = app.data['buyerProductListDetail|'+listID]['@'+listID].length;

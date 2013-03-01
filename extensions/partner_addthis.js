@@ -69,13 +69,12 @@ var partner_addthis = function() {
 							//Note: this also includes using custom share icons.
 							$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).append(
 									'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-								+		'<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>'
-								+		'<a class="addthis_button_tweet"></a>'
-								+		'<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>'
-								+		'<a class="addthis_button_pinterest_pinit" pi:pinit:url="http://www.downlitebedding.com" pi:pinit:media="http://www.downlitebedding.com/images/logo-200x64.png" pi:pinit:layout="horizontal"></a>'
-								+		'<a class="addthis_counter addthis_pill_style"></a>'
+								+		'<a class="addthis_button_preferred_1"></a>'
+								+		'<a class="addthis_button_preferred_2"></a>'
+								+		'<a class="addthis_button_preferred_3"></a>'
+								+		'<a class="addthis_button_preferred_4"></a>'
+								+		'<a class="addthis_button_compact"></a>'
 								+	'</div>');
-								
 							
 							//Set URL+title for most sharing code
 							var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";

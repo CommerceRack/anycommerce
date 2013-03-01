@@ -19,7 +19,7 @@ CHECOUT_PASSIVE.JS (just here to make it easier to know which extension is open)
 ************************************************************** */
 
 var convertSessionToOrder = function() {
-	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice");
+	var theseTemplates = new Array("productListTemplateCheckout","checkoutSuccess","checkoutTemplateBillAddress","checkoutTemplateShipAddress","checkoutTemplateOrderNotesPanel","checkoutTemplateCartSummaryPanel","checkoutTemplateShipMethods","checkoutTemplatePayOptionsPanel","checkoutTemplate","invoiceTemplate","productListTemplateInvoice","cartPaymentQTemplate");
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true,
@@ -28,7 +28,7 @@ var convertSessionToOrder = function() {
 			"chkoutBillAddress" : "Billing Address",
 			"chkoutShipAddress" : "Shipping Address",
 			"chkoutShipMethods" : "Shipping Options",
-			"chkoutPayOptions" : "Payment Choices",
+			"chkoutPayOptions" : "Payment",
 			"chkoutOrderNotes" : "Order Notes"
 			},
 //though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
@@ -164,7 +164,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.ext.store_checkout.u.nukePayPalEC(); //require paypal re-authentication anytime the cart is updated.
 				}
 			 },
@@ -193,6 +193,10 @@ if server validation passes, the callback handles what to do next (callback is m
 				serializedCheckout['want/bill_to_ship_cb'] = null;  //this isn't a valid checkout field. used only for some logic processing.
 				serializedCheckout['payment/cc'] = ''; //cc and cv should never go. They're added as part of cartPaymentQ
 				serializedCheckout['payment/cv'] = '';
+/* these fields are in checkout/order create but not 'supported' fields. don't send them */				
+				delete serializedCheckout['giftcard'];
+				delete serializedCheckout['want/bill_to_ship_cb'];
+				delete serializedCheckout['coupon'];
 				app.calls.cartSet.init(serializedCheckout);
 
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
@@ -252,8 +256,17 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				var r =false; //returns false if checkout can't load due to account config conflict.
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
 //start this process as early as possible. Errors will be reported independantly of init (result of ajax req. for templates).
-				app.model.fetchNLoadTemplates('extensions/checkout_passive/templates.html',theseTemplates);
+//SANITY: if you remove the baseURL var from the beginning of this, you'll break 1PC.
+				
+				if(app.vars._clientid == '1pc')	{
+					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
+					}
+				else {
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_passive/templates.html',theseTemplates);
+				}
+				
 				var msg = false
+/*
 				if(!zGlobals || $.isEmptyObject(zGlobals.checkoutSettings))	{
 					msg = app.u.errMsgObject("Uh Oh! It appears an error occured. Please try again. If error persists, please contact the site administrator.");
 					}
@@ -262,12 +275,15 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed (va
 				else if(zGlobals.checkoutSettings.preference_require_login == 1 || zGlobals.checkoutSettings.preference_request_login == 1)	{
 					msg = app.u.errMsgObject("Uh Oh! There appears to be an issue with the store configuration. Please change your checkout setting to 'passive' if you wish to use this layout.","MVC-INIT-CHECKOUT_PASSIVE_1000");
 					}
-				else if(typeof _gaq == 'undefined')	{
+
+//messaging for the test harness 'success'.
+*/
+				if(typeof _gaq == 'undefined')	{
 					msg = app.u.errMsgObject("Uh Oh! It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.","MVC-INIT-CHECKOUT_PASSIVE_1001");
 					}
-//messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
-					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.")
+					msg = app.u.successMsgObject("<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.");
+					r = true;
 					}
 				else	{
 					r = true;
@@ -650,9 +666,13 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 
 				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
 
+if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
-
+	setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
+	}
+else	{
+	//roi code should be handled by the app itself, not use the output from the UI
+	}
 				},
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onError ['+uuid+']');
@@ -751,7 +771,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 				var safeid,$holder;
 				if($payMethod.val())	{
 					switch($payMethod.val())	{
-						
+//for payment supplemental, can't use required='required' because they're not removed from the DOM if the user switches from echeck to cc (and at that point, they're no longer required						
 						case 'CREDIT':
 							var $paymentCC = $('#payment-cc').removeClass('mandatory');
 							var $paymentMM = $('#payment-mm').removeClass('mandatory');
@@ -762,7 +782,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 							if(!app.u.isValidCCYear($paymentYY.val())){$paymentYY.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please select an expiration year<\/li>'}
 							if($paymentCV.val().length < 3){$paymentCV.parent().addClass('mandatory'); valid = 0; errMsg += '<li>please enter a cvv/cid #<\/li>'}
 							break;
-						
+
 						case 'ECHECK':
 							$('#paymentea').parent().removeClass('mandatory');
 							$('#paymenter').parent().removeClass('mandatory');
@@ -770,15 +790,14 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 							$('#paymenteb').parent().removeClass('mandatory');
 							$('#paymentes').parent().removeClass('mandatory');
 							$('#paymentei').parent().removeClass('mandatory');
-							if(!$('#paymentea').val())	{valid = 0; errMsg += '<li>please enter account #<\/li>'; $('#paymentea').parent().addClass('mandatory')}
-							if(!$('#paymenter').val())	{valid = 0; errMsg += '<li>please enter routing #<\/li>'; $('#paymenter').parent().addClass('mandatory')}
-							if(!$('#paymenten').val())	{valid = 0; errMsg += '<li>please enter account name<\/li>'; $('#paymenten').parent().addClass('mandatory')}
-							if(!$('#paymenteb').val())	{valid = 0; errMsg += '<li>please enter bank name<\/li>'; $('#paymenteb').parent().addClass('mandatory')}
-							if(!$('#paymentes').val())	{valid = 0; errMsg += '<li>please enter bank state<\/li>'; $('#paymentes').parent().addClass('mandatory')}
-							if(!$('#paymentei').val())	{valid = 0; errMsg += '<li>please enter check #<\/li>'; $('#paymentei').parent().addClass('mandatory')}
+							if(!$('#paymentEA').val())	{valid = 0; errMsg += '<li>please enter account #<\/li>'; $('#paymentEA').parent().addClass('mandatory')}
+							if(!$('#paymentER').val())	{valid = 0; errMsg += '<li>please enter routing #<\/li>'; $('#paymentER').parent().addClass('mandatory')}
+							if(!$('#paymentEN').val())	{valid = 0; errMsg += '<li>please enter account name<\/li>'; $('#paymentEN').parent().addClass('mandatory')}
+							if(!$('#paymentEB').val())	{valid = 0; errMsg += '<li>please enter bank name<\/li>'; $('#paymentEB').parent().addClass('mandatory')}
+							if(!$('#paymentES').val())	{valid = 0; errMsg += '<li>please enter bank state<\/li>'; $('#paymentES').parent().addClass('mandatory')}
+							if(!$('#paymentEI').val())	{valid = 0; errMsg += '<li>please enter check #<\/li>'; $('#paymentEI').parent().addClass('mandatory')}
 							break;
-//eCheck has required=required on it, so the browser will validate. if this causes no issues, we'll start moving all forms over to this instead of 
-//js validation. browser based validation is new at this point. (2012-06-22)
+
 						
 						case 'PO':
 							var $paymentPO = $('#payment-po').removeClass('mandatory');
@@ -1119,6 +1138,8 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');	
 				app.ext.convertSessionToOrder.u.updatePayDetails(app.ext.convertSessionToOrder.vars['want/payby']);
+				
+				app.renderFunctions.translateSelector('#paymentQContainer',app.data.cartDetail);  //used for translating paymentQ
 				}, //paymentOptions
 		
 		
@@ -1561,21 +1582,29 @@ the refreshCart call can come second because none of the following calls are upd
 				var isSelectedMethod = false;
 //				app.u.dump(" -> # payment options (L): "+L);
 				if(L > 0)	{
-					for(var i = 0; i < L; i += 1)	{
-						id = data.value[i].id;
-	//					app.u.dump(" -> i: "+i+" ["+id+"]");
-						o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
-						
-						if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
-							isSelectedMethod = id;
-							}					
-						
-						o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
+					if(data.value[0].id == 'ZERO')	{
+						$tag.hide(); //hide payment options.
+						$tag.append("<li><input type='radio' name='want/payby' id='want-payby_ZERO' value='ZERO' checked='checked' \/><\/li>");
 						}
-	
-					$tag.html(o);
-					if(app.ext.convertSessionToOrder.vars['want/payby'])	{
-						$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+					else	{
+						$tag.show(); //make sure visible. could be hidden as part of paypal, then paypal could be cancelled.
+						for(var i = 0; i < L; i += 1)	{
+							id = data.value[i].id;
+		//					app.u.dump(" -> i: "+i+" ["+id+"]");
+							o += "<li class='paycon_"+id+"' id='payby_"+id+"'><div class='paycon'><input type='radio' name='want/payby' id='want-payby_"+id+"' value='"+id+"' onClick='app.ext.convertSessionToOrder.u.updatePayDetails(\""+id+"\"); app.ext.convertSessionToOrder.vars[\"want/payby\"] = $(this).val(); $(\"#chkoutPayOptionsFieldsetErrors\").addClass(\"displayNone\");' ";
+							
+							if(id == app.ext.convertSessionToOrder.vars['want/payby'] || L == 1)	{
+								isSelectedMethod = id;
+								}					
+							
+							o += "/><label for='want-payby_"+id+"'>"+data.value[i].pretty+"<\/label></div><\/li>";
+							}
+		
+						$tag.html(o);
+						if(app.ext.convertSessionToOrder.vars['want/payby'])	{
+							$('#want-payby_'+app.ext.convertSessionToOrder.vars['want/payby']).click(); //trigger after adding to tag, or id doesn't exist on the DOM yet.
+							}
 						}
 					}
 				else	{

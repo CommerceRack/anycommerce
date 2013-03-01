@@ -105,7 +105,7 @@ formerly showCart
 				},
 			dispatch : function(stid,qty,tagObj)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
-				app.model.addDispatchToQ({"_cmd":"updateCart","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
+				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": tagObj},'immutable');
 				app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
 				}
 			 },
@@ -249,21 +249,27 @@ formerly showCart
 		renderFormats : {
 			
 			cartItemQty : function($tag,data)	{
-//				app.u.dump("BEGIN store_cart.renderFormats.cartItemQty");
-//				app.u.dump(data);
-				var stid = $tag.closest('[data-stid]').attr('data-stid'); //get the stid off the parent container.
-//				app.u.dump(stid);
-				$tag.val(data.value).attr('data-stid',stid);
+				$tag.val(data.value.qty);
+//for coupons and assemblies, no input desired, but qty display is needed. so the qty is inserted where the input was.
+				if((data.value.stid && data.value.stid[0] == '%') || data.value.asm_master)	{
+					$tag.attr('readonly','readonly').css('border-width','0')
+					} 
+				else	{
+					$tag.attr('data-stid',data.value.stid);
+					}
 				},
 				
 				
 			removeItemBtn : function($tag,data)	{
 //nuke remove button for coupons.
-				if(data.value[0] == '%')	{$tag.remove()}
+				if(data.value.stid[0] == '%')	{$tag.remove()}
+				else if(data.value.asm_master)	{$tag.remove()}
 				else	{
-$tag.attr({'data-stid':data.value}).val(0); //val is used for the updateCartQty
+$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
+$tag.button({icons: {primary: "ui-icon-closethick"},text: false});
 //the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
-$tag.click(function(){
+$tag.one('click',function(event){
+	event.preventDefault();
 	app.ext.store_cart.u.updateCartQty($tag);
 	app.model.dispatchThis('immutable');
 	});
@@ -298,15 +304,15 @@ $tag.click(function(){
 				var o = '';
 //				app.u.dump('BEGIN app.renderFormats.shipInfo. (formats shipping for minicart)');
 //				app.u.dump(data);
-				var L = app.data.cartShippingMethods['@methods'].length;
+				var L = app.data.cartDetail['@SHIPMETHODS'].length;
 				for(var i = 0; i < L; i += 1)	{
 //					app.u.dump(' -> method '+i+' = '+app.data.cartShippingMethods['@methods'][i].id);
-					if(app.data.cartShippingMethods['@methods'][i].id == data.value)	{
-						var pretty = app.u.isSet(app.data.cartShippingMethods['@methods'][i]['pretty']) ? app.data.cartShippingMethods['@methods'][i]['pretty'] : app.data.cartShippingMethods['@methods'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
+					if(app.data.cartDetail['@SHIPMETHODS'][i].id == data.value)	{
+						var pretty = app.u.isSet(app.data.cartDetail['@SHIPMETHODS'][i]['pretty']) ? app.data.cartDetail['@SHIPMETHODS'][i]['pretty'] : app.data.cartDetail['@SHIPMETHODS'][i]['name'];  //sometimes pretty isn't set. also, ie didn't like .pretty, but worked fine once ['pretty'] was used.
 						o = "<span class='orderShipMethod'>"+pretty+": <\/span>";
 //only show amount if not blank.
-						if(app.data.cartShippingMethods['@methods'][i].amount)	{
-							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartShippingMethods['@methods'][i].amount,' $',2,false)+"<\/span>";
+						if(app.data.cartDetail['@SHIPMETHODS'][i].amount)	{
+							o += "<span class='orderShipAmount'>"+app.u.formatMoney(app.data.cartDetail['@SHIPMETHODS'][i].amount,' $',2,false)+"<\/span>";
 							}
 						break; //once we hit a match, no need to continue. at this time, only one ship method/price is available.
 						}
@@ -382,13 +388,14 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
 						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
 						}
-						
+
 					if(P.showLoading === true)	{
 						$('#modalCartContents',$modal).append("<div class='loadingBG' \/>"); //have to add child because the modal classes already have bg assigned
 						}
 					else	{
 						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
 						}
+
 					}
 				else	{
 					app.u.throwGMessage("ERROR! no templateID passed into showCartInModal. P follows: ");

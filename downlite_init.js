@@ -45,7 +45,7 @@ app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':functi
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
-app.rq.push(['script',0,app.vars.baseURL+'anytabs.js']);
+app.rq.push(['script',0,app.vars.baseURL+'anyplugins.js']);
 
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.

@@ -724,12 +724,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResults' class='loadingBG  ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL; isElastic:1; bgcolor:ffffff;' width='120' height='120' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
 	
-		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: Price From: ;'></h6>
+		<h6 data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Price From: ;'></h6>
 	</div>
 </li>
 </ul>
@@ -1421,26 +1421,14 @@ adding classes is not likely to have any bad effects.
 
 <div id='searchTemplate' class='searchResultsPage clearfix'>
 
+	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
+	<div class='previewProductDetail displayNone'></div>
 
-	<div class='sideline' >
-	<nav id='searchNav'>
-	<ul class='listStyleNone noPadOrMargin'><!--
-		<li id='altSearchesContainer'>
-		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
-		<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-		</li>
-	-->
-		<li id='recentSearchesContainer'>
-		<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
-		<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-		</li>
-	</ul>
-	</nav>
+	<div class='previewListContainer'>
+		<!-- productListTemplateResults gets loaded into here -->
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
 	</div>
-	
-	<div class='mainColumn'>
-		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul><!-- productListTemplateResults gets loaded into here -->
-	</div>
+
 </div>
 
 
@@ -1615,9 +1603,8 @@ So the cart template should contain these two elements and the extension should 
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<span class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
-		<span class='ui-icon ui-icon-closethick'></span>
-		</span>
+		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+
 		
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 	
@@ -1626,7 +1613,7 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
