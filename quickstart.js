@@ -1452,11 +1452,11 @@ if(ps.indexOf('?') >= 1)	{
 
 //				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
-					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
+					app.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
 					}
 
 				if(infoObj.uriParams.meta_src)	{
-					app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
+					app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
 				if(app.u.determineAuthentication() != 'none')  {
