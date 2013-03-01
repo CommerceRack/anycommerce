@@ -514,7 +514,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminOrderPaymentAction
 
 
-
 		adminPartnerSet : {
 			init : function(obj,_tag)	{
 				obj._cmd = 'adminPartnerSet'
@@ -575,8 +574,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminProductUpdate
 
-
-
 		adminSupplierCreate	: {
 			
 			init : function(obj,_tag,Q)	{
@@ -610,41 +607,42 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({_cmd : "adminSupplierList",_tag:_tag},Q || mutable);
 				}
 			}, //adminSupplierList
-//SID = supplier id (CODE)
+
+//VENDORID = supplier id (CODE)
 		adminSupplierDetail : {
-			init : function(SID,_tag,Q)	{
+			init : function(VENDORID,_tag,Q)	{
 				_tag = _tag || {};
-				_tag.datapointer = "adminSupplierDetail|"+SID;
+				_tag.datapointer = "adminSupplierDetail|"+VENDORID;
 				if(app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
-					this.dispatch(SID,_tag,Q);
+					this.dispatch(VENDORID,_tag,Q);
 					}
 				else	{
 					app.u.handleCallback(_tag);
 					}
 				return 1;
 				},
-			dispatch : function(SID,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","CODE":SID,_tag:_tag},Q || mutable);
+			dispatch : function(VENDORID,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","VENDORID":VENDORID,_tag:_tag},Q || mutable);
 				}
 			}, //adminSupplierList
 
 			
 // !!! not done. 
 		adminSupplierUpdate	: {
-			init : function(SID, updateObj,_tag,Q)	{
+			init : function(VENDORID, updateObj,_tag,Q)	{
 				var r = 0;
-				if(SID && typeof updateObj == 'object')	{
+				if(VENDORID && typeof updateObj == 'object')	{
 					r = 1;
-					this.dispatch(SID,updateObj,_tag,Q);
+					this.dispatch(VENDORID,updateObj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierCreate, either SID ["+SID+"] or updateObj ["+typeof updateObj+"] not passed","gMessage":true})
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierCreate, either VENDORID ["+VENDORID+"] or updateObj ["+typeof updateObj+"] not passed","gMessage":true})
 					}
 				return r;
 				},
 			
-			dispatch : function(SID,updateObj,_tag,Q){
+			dispatch : function(VENDORID,updateObj,_tag,Q){
 				obj._cmd = 'adminSupplierUpdate';
 				obj._tag = _tag || {};
 				obj._tag.datapointer = 'adminSupplierUpdate';
@@ -2361,7 +2359,7 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
-				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")))}
+				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 				else if(path == '#!domainConfigPanel')	{app.ext.admin.a.showDomainConfig();}
 

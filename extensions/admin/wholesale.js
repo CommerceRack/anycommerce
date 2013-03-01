@@ -20,7 +20,7 @@
 
 
 var admin_wholesale = function() {
-	var theseTemplates = new Array('wholesaleSupplierAddTemplate','wholesaleSupplierManagerTemplate','wholesaleSupplierListTemplate');
+	var theseTemplates = new Array('wholesaleSupplierAddTemplate','wholesaleSupplierManagerTemplate','wholesaleSupplierListTemplate','wholesaleSupplierUpdateTemplate');
 	var r = {
 
 
@@ -69,21 +69,54 @@ var admin_wholesale = function() {
 				
 				
 				}, //showSupplierManager
-			
-			showSupplierEditor : function($editorContainer,SID) {
-				if($editorContainer && SID)	{
-					app.ext.admin.calls.adminSupplierDetail.init(SID,{},'mutable');
+
+			showSupplierEditor : function($editorContainer,VENDORID) {
+				if($editorContainer && VENDORID)	{
+					app.ext.admin.calls.adminSupplierDetail.init(VENDORID,{'callback':function(rd){
+
+if(app.model.responseHasErrors(rd)){$editorContainer.anymessage({'message':rd})}
+else	{
+	$editorContainer.anycontent({'templateID':'wholesaleSupplierUpdateTemplate','datapointer':rd.datapointer});
+	app.ext.admin.u.handleAppEvents($editorContainer);
+	$(":checkbox",$editorContainer).anycb();
+//make into anypanels.
+	$("div.panel",$editorContainer).each(function(){
+		var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
+		$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
+		});
+
+
+	var sortCols = $('.twoColumn').sortable({  
+		connectWith: '.twoColumn',
+		handle: 'h2',
+		cursor: 'move',
+		placeholder: 'placeholder',
+		forcePlaceholderSize: true,
+		opacity: 0.4,
+//the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
+		stop: function(event, ui){
+			$(ui.item).find('h2').click();
+			var dataObj = new Array();
+			sortCols.each(function(){
+				var $col = $(this);
+				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+				});
+			app.ext.admin.u.dpsSet('admin_wholesale','editorPanelOrder',dataObj); //update the localStorage session var.
+//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
+			}
+		});
+
+
+	}
+
+						}},'mutable');
 					app.model.dispatchThis('mutable');
 /*
-//make into anypanels.
-	$("div.panel",$custEditorTarget).each(function(){
-		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
-		$(this).data('cid',obj.CID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_customer','name':PC,'persistent':true});
-		})
+
 */
 					}
 				else	{
-					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or SID ['+SID+'] undefined','gMessage':true});
+					$("#globalMessaging").anymessage({'message':'In admin_wholesale.a.showSupplierEditor, either $editorContainer ['+typeof $editorContainer+'] or VENDORID ['+VENDORID+'] undefined','gMessage':true});
 					}
 				}, //showSupplierEditor
 
@@ -119,9 +152,9 @@ var admin_wholesale = function() {
 				$btn.off('click.execSupplierCreate').on('click.execSupplierCreate',function(){
 					var $form = $btn.closest('form'),
 					formObj = $form.serializeJSON();
-					formObj.CODE = formObj.CODE.toUpperCase(); //codes are all uppercase.
+					formObj.VENDORID = formObj.VENDORID.toUpperCase(); //codes are all uppercase.
 					if(app.ext.admin.u.validateForm($form))	{
-						$('body').showLoading({'message':'Adding new supplier '+formObj.CODE});
+						$('body').showLoading({'message':'Adding new supplier '+formObj.VENDORID});
 						app.model.destroy('adminSupplierList');
 
 //Attempt to create new user and update the modal w/ appropriate messaging.
@@ -129,7 +162,7 @@ var admin_wholesale = function() {
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
 							else	{
-								$form.parent().empty().anymessage({'message':'Thank you, supplier '+formObj.CODE+' has been created.','iconClass':'ui-icon-z-success'})
+								$form.parent().empty().anymessage({'message':'Thank you, supplier '+formObj.VENDORID+' has been created.','iconClass':'ui-icon-z-success'})
 								}
 							}},'immutable');
 
@@ -191,6 +224,20 @@ var admin_wholesale = function() {
 					}); //$btn.on
 				}, //execSupplierDelete
 
+			showConnectorFieldset : function($select)	{
+				
+//change event toggles which panel is displayed.
+				$select.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
+					$select.closest('.panel').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){
+						var $fieldset = $(this);
+						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
+						if($select.val() == $fieldset.data('app-role'))	{$fieldset.show()}
+						else	{$fieldset.hide();}
+						})
+					});
+				$select.trigger('change');
+				},
+
 //applied to 'create user' button. just opens the modal.
 			showSupplierCreate : function($btn)	{
 				$btn.button();
@@ -213,7 +260,7 @@ var admin_wholesale = function() {
 						app.ext.admin_wholesale.a.showSupplierEditor($editorContainer,$row.data('code'));
 						}
 					else	{
-						$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain SID','gMessage':true});
+						$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
 						}
 					});
 				}

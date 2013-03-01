@@ -1001,9 +1001,7 @@ a guest checkout gets just a standard address entry.
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
 			chkoutAddressBill : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.billAddress.  ');
-				var authState = app.u.determineAuthentication();
-				if(authState == 'authenticated' && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
+				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
 					$("[data-app-role='addressSelect']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					}
@@ -1018,8 +1016,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressBill
 				
 			chkoutAddressShip : function(formObj,$fieldset)	{
-				var authState = app.u.determineAuthentication();
-				if(authState == 'authenticated' && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
+				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
 					$("[data-app-role='addressSelect']",$fieldset).show();
 					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
@@ -1099,9 +1096,9 @@ if(app.ext.cco.u.thisSessionIsPayPal())	{
 	
 	}
 
-var authState = app.u.determineAuthentication();
+
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
-if(authState == 'authenticated' && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
+if(app.u.buyerIsAuthenticated() && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
 	$("[data-app-role='paymentOptionsContainer']",$fieldset).anytabs();
 	}
 else	{
@@ -1164,9 +1161,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$chkContainer.empty();
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
 
-//only send the request for addresses if the user is logged in or the request will return an error.
-					var auth = app.u.determineAuthentication();
-					if(auth == 'authenticated')	{
+					if(app.u.buyerIsAuthenticated())	{
 						app.ext.cco.calls.buyerAddressList.init({},'immutable');
 						app.ext.cco.calls.buyerWalletList.init({},'immutable');
 						}
@@ -1353,7 +1348,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 			
 			extendedDataForCheckout : function()	{
-				if(app.u.determineAuthentication() == 'authenticated')	{
+				if(app.u.buyerIsAuthenticated())	{
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail,app.data.buyerAddressList,app.data.buyerWalletList);
 					}
 				else	{

@@ -46,6 +46,8 @@
 	<td class='alignRight'>
 	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|execSupplierDelete'>Remove this Supplier</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
+	<button class='marginLeft'>Products</button>
+	<button class='marginLeft'>Orders</button>
 	</td>
 	
 </tr>
@@ -58,7 +60,7 @@
 
 <div id='wholesaleSupplierAddTemplate'>
 
-<form action='#'>
+<form action='#' autocomplete="on">
 <fieldset class='labelsAsBreaks'>
 	<legend>Add a New Supplier</legend>
 	
@@ -85,29 +87,30 @@
 
 
 
-<div id='wholesaleSupplierUpdateTemplate'>
+<div id='wholesaleSupplierUpdateTemplate' class='clearfix'>
+<form autocomplete="on" action='#'>
+	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
+		<button class='floatRight' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatLeft'>Orders</button>
+		<button class='floatLeft'>Product</button>
+	</div>
 
 
-	<div class='twoColumn' data-app-column='1'>
+	<div class='twoColumn marginRight' data-app-column='1'>
 
 
 <div class='panel' data-app-role='general'>
 	<h2>General Settings</h2>
 	<div>
-	<fieldset>
+	<fieldset class='labelsAsBreaks'>
 
-<label><span>Markup</span><input name='MARKUP' value='' size='10' maxlength='15' type='text' /></label>
-<label><span>Name:</span><input name='NAME' value='' size='30' maxlength='40' type='text' /></label>
-<label><span>Phone:</span><input name='PHONE' value='' size='12' maxlength='12' type='text' /></label>
-<label><span>Email:</span><input name='EMAIL' value='j' size='30' maxlength='40' type='text' /></label>
-<label><span>Account:</span><input name='ACCOUNT' value='' size='30' maxlength='40' type='text' /></label>
-<label><span>Website:</span><input name='WEBSITE' value='' size='30' maxlength='40' type='text' /></label>
-<label><span>Item Notes:</span>
-	<select name='ITEM_NOTES'>
-		<option value='0' selected=''>No</option>
-		<option value='1'>Yes</option>
-	</select />
-</label>
+<label><span>Markup</span><input name='MARKUP' value='' size='10' maxlength='15' type='text' data-bind='var: supplier(MARKUP); format:popVal;' /></label>
+<label><span>Name:</span><input name='NAME' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(NAME); format:popVal;' /></label>
+<label><span>Phone:</span><input name='PHONE' value='' size='12' maxlength='12' type='text' data-bind='var: supplier(PHONE); format:popVal;' /></label>
+<label><span>Email:</span><input name='EMAIL' value='j' size='30' maxlength='40' type='text' data-bind='var: supplier(EMAIL); format:popVal;' /></label>
+<label><span>Account:</span><input name='ACCOUNT' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(ACCOUNT); format:popVal;' /></label>
+<label><span>Website:</span><input name='WEBSITE' value='' size='30' maxlength='40' type='url' data-bind='var: supplier(WEBSITE); format:popVal;' /></label>
+<label><input name='ITEM_NOTES' type='checkbox' data-bind='var: supplier(ITEM_NOTES); format:popCheckbox;' /><span>Item Notes:</span></label>
 <div class='hint'>Choose to display Supplier Code / Tracking info on Invoice (under each Item)</div />
 
 <label><span>Quickbooks Vendor Name:</span><input name='.partner.vendor' value='' size='' maxlength='' type='text' /></label>
@@ -147,7 +150,7 @@
 
 
 
-	<div class='twoColumn' data-app-column='2'>
+	<div class='twoColumn column2' data-app-column='2'>
 
 <div class='panel' data-app-role='InventoryDownload'>
 	<h2>Setup: Inventory Download</h2>
@@ -156,7 +159,55 @@
 
 <div class='panel' data-app-role='automaticOrdering'>
 	<h2>Setup: Automatic Ordering</h2>
-	<div></div>
+	
+	<div>
+	<fieldset>
+<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-app-event='admin_wholesale|showOrderConnectorFieldset'>
+	<option value="NONE">NONE</option>
+	<option value="EMAIL">EMAIL</option>
+	<option value="FTP">FTP</option>
+	<option value="API">API</option>
+	<option value="AMZSQS">Amazon SQS</option>
+</select>
+	</fieldset>
+
+<section data-app-role='connectorFieldsetContainer' class='labelsAsBreaks'>
+
+	<fieldset data-app-role='NONE' class='displayNone'>
+	<label><input type='checkbox' name='%ORDER.notes' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Include Order Notes</label>
+	<label><input type='checkbox' name='%ORDER.field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popCheckbox;" />Show Cost Field</label>
+	<label><input type='checkbox' name='%ORDER.dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Hide Zero Quantity Items</label>
+	
+	</fieldset>
+	
+	<fieldset data-app-role='EMAIL' class='displayNone'>
+		<legend>Email</legend>
+		<label><span>Email From:</span><input type='email' name='' /></label>
+		<label><span>Email To:</span><input type='email' name='' /></label>
+		<label><span>Email BCC:</span><input type='email' name='' /></label>
+		<label><span>Subject:</span><input type='text' name='' /></label>
+		<label><span>Message Body:</span><textarea name=''></textarea></label>
+	</fieldset>
+	
+	<fieldset data-app-role='FTP' class='displayNone'>
+		<legend>FTP</legend>
+	</fieldset>
+	
+	<fieldset data-app-role='API' class='displayNone'>
+		<legend>API</legend>
+		<label><span>API URL:</span><input type='url' name='' /></label>
+	</fieldset>
+	
+	<fieldset data-app-role='AMZSQS' class='displayNone'>
+		<legend>AMZSQS</legend>
+		<label><span>Amazon AWS Access Key</span><input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;" />
+		<label title="Double Secret Probation Key"><span>Amazon AWS Secret Key</span><input type='text' name='' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;" />
+		<label><span>Amazon SQS Channel</span><input type='text' name='' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;" />
+	</fieldset>
+
+</section>
+
+	</div>
 </div>
 
 <div class='panel' data-app-role='trackingConfirmation'>
@@ -168,5 +219,5 @@
 
 	</div><!-- end column 2 -->
 
-
+</form>
 </div>
