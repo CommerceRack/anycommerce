@@ -167,7 +167,16 @@ $(document).ready(function()
 	{
 		$(this).removeAttr("style");
 		$(this).children("a").removeAttr("style");	
-		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 300);
-		$(this).find("div.subMenu").hide();
+		$(this).find("div.subMenu").stop().animate({"height":"0px"}, 300, $(this).find("div.subMenu").hide());
 	});
+	$("div.navContent a").click(function()
+	{
+		$("div.navContent div.subMenu").each(function()
+		{
+			if($(this).css("display") != "none")
+			{
+				$(this).stop().animate({"height":"0px"}, 300, $(this).hide());
+			}
+		});
+	});	
 }); 

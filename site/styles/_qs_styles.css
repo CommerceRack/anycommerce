@@ -387,7 +387,7 @@ progress[aria-valuenow]:before  {
 				margin: 0px auto;
 				width: 750px;	
 			}
-				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li
+				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li, div.catCarousel ul.productList li
 				{
 					border: 2px solid #FFFFFF;
 					height: 216px;
@@ -414,6 +414,12 @@ progress[aria-valuenow]:before  {
 					overflow: hidden;
 					position: relative;
 					width: 216px;
+					
+				}
+				div.prodRelatedItems .prodItemPane
+				{
+					padding: 3px;
+					width: 275px;
 				}
 					.prodItemPane p
 					{
@@ -428,7 +434,7 @@ progress[aria-valuenow]:before  {
 				{
 					display: none;
 				}
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc .prodThumbBackground
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc .prodThumbBackground, div.catCarousel ul.productList li div .prodThumbDesc .prodThumbBackground
 				{
 					background-color: #FFFFFF;
 					height: 100%;
@@ -439,7 +445,7 @@ progress[aria-valuenow]:before  {
 					width: 100%;
 					z-index: 999;
 				}	
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h5
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h5, div.catCarousel ul.productList li div .prodThumbDesc h5
 				{
 					font-family: Helvetica;
 					font-size: 12px;
@@ -450,7 +456,7 @@ progress[aria-valuenow]:before  {
 					width: 216px;
 					z-index: 1000;
 				}
-				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h6
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h6, div.catCarousel ul.productList li div .prodThumbDesc h6
 				{
 					font-family: Helvetica;
 					font-size: 18px;
@@ -461,7 +467,7 @@ progress[aria-valuenow]:before  {
 					z-index: 1000;
 				}
 				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc img
-, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img,  div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc img				
+, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc img, div.catCarousel ul.productList li div .prodThumbDesc img			
 				{
 					bottom: 3px;
 					cursor: pointer;
@@ -844,7 +850,7 @@ div.prodRelatedItems
 			padding: 0;
 			width: 280px;
 		}			
-			div.prodRelatedItems ul.relatedItems li img.pointer
+			div.prodRelatedItems ul.relatedItems li img.pointer, div.prodRelatedItems form, div.prodRelatedItems button
 			{
 				display: none;
 			}
@@ -875,6 +881,7 @@ div.prodRelatedItems
 				height: auto;
 				left: 0px;
 				overflow: hidden;
+				padding: 5px;
 				position: relative;
 				top: 0px;
 				width: 280px;
@@ -885,8 +892,9 @@ div.prodRelatedItems
 					font-family: Helvetica;
 					font-size: 13px;
 					font-weight: normal;
-					padding: 25px 0 25px 70px;
-					width: 210px;
+					margin-left: 53px;
+					padding: 10px;
+					width: 212px;
 				}
 				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h6
 				{
@@ -1699,8 +1707,16 @@ div#checkoutSuccessContent
 .caroufredsel_wrapper div.ccItem
 {
 	float: left;
+	height: 326px;
+	overflow: auto;
 	padding-left: 25px;
-	width: 970px;
+	/*width: 970px;*/
+	width: 977px;
+}
+
+div.catCarousel h2
+{
+	margin-top: 10px;
 }
 
 button.prodATCButton
@@ -1715,6 +1731,9 @@ button.prodATCButton
 	z-index: 1001;
 	/*width: 77px;*/
 	width: 100px;
+	background: url("../images/button-product-list-empty.png") repeat scroll 0 0 transparent;
+	color: #FFFFFF;
+	font-weight: bold;	
 }
 	button.prodATCButton > span.ui-button-text
 	{

@@ -1,4 +1,4 @@
-function productFlip($obj)
+/*function productFlip($obj)
 {
 	if($obj.closest("div.prodDetailView").length < 1)
 	{
@@ -51,7 +51,7 @@ function productFlip($obj)
 function prepFlip($obj)
 {
 	$obj.removeAttr("flipped");
-}
+}*/
 
 $(document).ready(function()
 {
