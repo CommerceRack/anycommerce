@@ -830,6 +830,7 @@ progress[aria-valuenow]:before  {
 
 div.prodRelatedItems
 {
+	background-color: #FFFFFF;
 	height: 229px;
 	left: 0px;
 	overflow: auto;
