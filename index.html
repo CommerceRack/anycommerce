@@ -365,10 +365,9 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 								<div class="dropDownListHolder">
 								    <ul>
 								        <li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130213'});">New for 2/13</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130206'});">New for 2/6</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130130'});">New for 1/30</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130123'});">New for 1/23</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130307'});">New for 3/7</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130228'});">New for 2/28</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130221'});">New for 2/21</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
@@ -611,7 +610,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div class="ccItem">
 				<h2>Star Wars</h2>
-				<ul id="carCat2" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"star wars"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"star wars"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>Doctor Who</h2>
