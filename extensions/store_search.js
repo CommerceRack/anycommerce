@@ -180,7 +180,13 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				EQ = $list.data('elastic-query'); //Elastic Query
 				
 				if(datapointer && $list && EQ)	{
-					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top hideInMinimalMode').text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
+					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top hideInMinimalMode');
+					if(EQ.query && EQ.query.query_string && EQ.query.query_string.query){
+						$header.text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
+						}
+					else {
+						$header.text(app.data[datapointer].hits.total+" Results for your query");
+						}
 					}
 				else if(!EQ)	{
 					app.u.dump("NOTICE! the search results container did not contain data('elastic-filter') so no multipage data is present.",'warn');
@@ -251,8 +257,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 					var EQ = $list.data('elastic-query'); //Elastic Query
 					
 					if(EQ)	{
-						var query = app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);
-						query.size = EQ.size; //use original size, not what's returned in buildSimple...
+						var query = EQ;
+						//query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						app.ext.store_search.u.updateDataOnListElement($list,query,newPage);
 						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
@@ -425,7 +431,17 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 					}
 				return $r.children();
 				},
-
+			
+			
+//Example of an obj would be {'filter':{'term':{'tags':'IS_BESTSELLER'}}} -- IE a full query or filter- just adding the required params here.
+			buildElasticRaw : function(obj) {
+				obj.type = 'product';
+				obj.mode = 'elastic-native';
+				obj.size = 250;
+				
+				return obj;
+			},
+			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
 			buildElasticSimpleQuery : function(obj)	{
 				var query = {}; //what is returned. false if error occurs.

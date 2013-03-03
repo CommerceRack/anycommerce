@@ -158,6 +158,8 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
+	<a href="#" onClick="return showContent('search',{'elastic':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
+
 <ul id="wideSlideshow" class="pics slideshow">
 		<img src='images/blank.gif' width='712' height='400' data-bind="var: category(%page.banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
 	</ul>
