@@ -2195,30 +2195,30 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 					
 //If raw elastic has been provided, use that.  Otherwise build a query.
-				var elastic;
-				if(infoObj.elastic){
-					elastic = app.ext.store_search.u.buildElasticRaw(infoObj.elastic);
+				var elasticsearch;
+				if(infoObj.elasticsearch){
+					elasticsearch = app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 				} else {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
-					elastic = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
+					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
 				}
 /*
 #####
-if you are going to override any of the defaults in the elastic, such as size, do it here BEFORE the elastic is added as data on teh $page.
-ex:  elastic.size = 200
+if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
+ex:  elasticsearch.size = 200
 #####
 */
-elastic.size = 50;
+elasticsearch.size = 50;
 
 				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
-				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elastic);
+				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
 				//app.u.dump(_tag.datapointer);
 
 				
 				
-				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elastic,1);
-				app.ext.store_search.calls.appPublicSearch.init(elastic,_tag);
+				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
+				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,_tag);
 				app.model.dispatchThis();
 
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
