@@ -172,6 +172,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 
 		u : {
+		
+//!!! The header and pagination handling all relies on a query->query_string->query type object.  With more complex elastic searches we must add handling
+
+
 //list is the UL or whatever element type contains the list of product.
 			buildResultsHeader : function($list,datapointer)	{
 				app.u.dump("BEGIN store_search.u.buildMultipageHeader");
@@ -432,14 +436,15 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				return $r.children();
 				},
 			
-			
+	
+//Adds elastic search params to a raw elasticsearch object	
+//Currently this relies on elasticsearch being passed by reference
+//!!! @JT is there a better way to do this? Are these side effects acceptable? -mc
 //Example of an obj would be {'filter':{'term':{'tags':'IS_BESTSELLER'}}} -- IE a full query or filter- just adding the required params here.
-			buildElasticRaw : function(obj) {
-				obj.type = 'product';
-				obj.mode = 'elastic-native';
-				obj.size = 250;
-				
-				return obj;
+			buildElasticRaw : function(elasticsearch) {
+				elasticsearch.type = 'product';
+				elasticsearch.mode = 'elastic-native';
+				elasticsearch.size = 250;
 			},
 			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
