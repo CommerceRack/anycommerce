@@ -312,45 +312,35 @@ These two pieces of data are used for mapping after the uploads to set what fold
 
 
 
-<div id='debugPanel' class='debug buttonset clearBoth clearAll clearfix'>
-	<div class='debugBG'></div>
-	<div class='debugContent'>
-
-<button onClick="localStorage.clear();">Nuke ALL LocalStorage</button>
-<button onClick="app.ext.admin.u.selectivelyNukeLocalStorage();">Nuke Selective LocalStorage</button>
-
-
-<button onClick="navigateTo('#!supplierManager');">Supplier Manager</button>
-<button onClick="navigateTo('#!appChooser');">App Chooser</button>
-<button onClick="app.model.destroy('adminCustomerDetail|7633554');">destroy customer</button>
-<button onClick="$('#setupContent').empty(); app.ext.admin_customer.a.showCustomerEditor($('#setupContent'),{'CID':'7633554'});">showCustomerEditor</button>
-
-<button onClick="$('#setupContent').empty(); app.ext.admin_customer.a.showCustomerManager($('#setupContent'));">customerManager</button>
-
-
-
-<button onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList</button>
-
-<button onClick="$('#setupContent').empty(); app.ext.admin.a.showHelpInterface($('#setupContent'));">showHelpInterface</button>
-
-<button onClick="app.ext.admin.calls.adminEmailList.init({},'mutable'); app.model.dispatchThis('mutable');">adminEmailList</button>
-
+<div id='debugPanel' class='ui-widget ui-widget-content ui-corner-all smallPadding'>
+<h5>Debugificator</h5>
+<ul class='debugMenu'>
+	<li><a href='#'>Tools</a>
+	<ul>
+		<li><a href='#' onClick="app.ext.admin.u.selectivelyNukeLocalStorage();">Selectively Clear LocalStorage (keep login &amp; preferences)</a></li>
+		<li><a href='#' onClick="localStorage.clear();">Clear LocalStorage for domain</a></li>
+	</ul>
+	</li>
+	<li><a href='#'>Pages</a>
+	<ul>
+		<li><a href='#' onClick="navigateTo('#!supplierManager');">Supplier Manager</a></li>
+		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showHelpInterface($('#setupContent'));">showHelpInterface (in setup)</a></li>
+	</ul>
+	</li>
+</ul>
 
 <!--
 <button onClick="app.ext.admin.calls.appResource.init('email_macros.json',{},'mutable'); app.model.dispatchThis('mutable');">appResource</button>
 <button onClick="app.ext.admin.calls.appResource.init('shipcodes.json',{},'mutable'); app.model.dispatchThis('mutable');">shipcodes.json</button>
-
-<button onClick="app.ext.admin_orders.a.showOrderEditorInDialog('2013-01-550');">orderDetailsInDialog</button>
+<button onClick="app.ext.admin.calls.adminEmailList.init({},'mutable'); app.model.dispatchThis('mutable');">adminEmailList</button>
 <button onClick="app.model.addDispatchToQ({'_cmd':'adminDataQuery','query':'listing-active','since_gmt':app.u.unixNow() - (60*60*24*10)},'mutable'); app.model.dispatchThis('mutable');">adminDataQuery</button>
+<button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
 
 -->
 
 
-<button onClick="app.ext.admin.calls.appConfig.init(); app.model.dispatchThis();">appConfig</button>
-
-<button onClick="app.ext.admin.u.handlePermissions($('#setupContent'),{'isVstore':true})">handlePermssions</button>
-
-	</div>
 </div>
 
 

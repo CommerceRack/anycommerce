@@ -703,20 +703,11 @@ DEBUGGER
 
 */
 
-#debugPanel	{position:fixed; bottom:0; right:0; left:0; height:125px; border:1px solid #cccccc;}
-#debugPanel .debugContent	{position:relative; z-index:10; padding:12px;}
-#debugPanel .debugBG	{
-	height:125px;
-	z-index:1;
-	position:absolute; top:0; bottom:0; left:0; right:0;
-	background: -moz-linear-gradient(top,  rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.35)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#59000000', endColorstr='#1a000000',GradientType=0 ); /* IE6-9 */
-	}
+#debugPanel	{position:fixed; bottom:100px; left:-15px; width:125px; padding-left:25px; display:none;}
+#debugPanel .debugMenu ul	{width:250px;}
+#debugPanel h5 {margin:4px 0;}
+#debugPanel h6 {margin:4px 0;}
+
 
 /*
 
@@ -756,7 +747,8 @@ for use in forms where the label is the row container.
 put the prompt into a span
 <label><span>prompt</span>input</label>
 */
-.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
 .labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
 
 /* 
@@ -774,10 +766,11 @@ see shipping panel in product editor for example
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],
 .alignedInputs input[type=password],
-.alignedInputs input[type=text]	{width:65%;}
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:60%; }
 
 .alignedInputs input[type=number], 
-.alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
+.alignedInputs select	{max-width:60%;} /* shrink to fit widest option, but stay under threshold */
 
 
 

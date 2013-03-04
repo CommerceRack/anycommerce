@@ -590,8 +590,60 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			
 			}, //adminSupplierCreate
 
+		adminSupplierItemList : {
+			init : function(vendorid,_tag,Q)	{
+				var r = 0;
+				if(vendorid)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminSupplierItemList|"+vendorid;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(vendorid,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierItemList, vendorid not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(vendorid,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd : "adminSupplierItemList",_tag:_tag,"VENDORID":vendorid},Q || mutable);
+				}
+			}, //adminSupplierItemList
+
+
+		adminSupplierOrderList : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.VENDORID && obj.FILTER)	{
+					_tag = _tag || {};
+					_tag.datapointer = "adminSupplierOrderList|"+obj.VENDORID+"|"+obj.FILTER;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(obj,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierOrderList, either FILTER or VENDORID not passed in param object","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminSupplierOrderList";
+				obj._tag = _tag || {};
+				app.model.addDispatchToQ(obj,Q || mutable);
+				}
+			}, //adminSupplierOrderList
+
 		adminSupplierList : {
 			init : function(_tag,Q)	{
+				var r = 0;
 				_tag = _tag || {};
 				_tag.datapointer = "adminSupplierList";
 				if(app.model.fetchData(_tag.datapointer) == false)	{
@@ -601,7 +653,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				else	{
 					app.u.handleCallback(_tag);
 					}
-				return 1;
+				return r;
 				},
 			dispatch : function(_tag,Q)	{
 				app.model.addDispatchToQ({_cmd : "adminSupplierList",_tag:_tag},Q || mutable);
@@ -610,40 +662,42 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 //VENDORID = supplier id (CODE)
 		adminSupplierDetail : {
-			init : function(VENDORID,_tag,Q)	{
+			init : function(vendorid,_tag,Q)	{
+				var r = 0;
 				_tag = _tag || {};
-				_tag.datapointer = "adminSupplierDetail|"+VENDORID;
+				_tag.datapointer = "adminSupplierDetail|"+vendorid;
 				if(app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
-					this.dispatch(VENDORID,_tag,Q);
+					this.dispatch(vendorid,_tag,Q);
 					}
 				else	{
 					app.u.handleCallback(_tag);
 					}
-				return 1;
+				return r;
 				},
-			dispatch : function(VENDORID,_tag,Q)	{
-				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","VENDORID":VENDORID,_tag:_tag},Q || mutable);
+			dispatch : function(vendorid,_tag,Q)	{
+				app.model.addDispatchToQ({_cmd : "adminSupplierDetail","VENDORID":vendorid,_tag:_tag},Q || mutable);
 				}
 			}, //adminSupplierList
 
 			
 // !!! not done. 
 		adminSupplierUpdate	: {
-			init : function(VENDORID, updateObj,_tag,Q)	{
+			init : function(vendorid, updateObj,_tag,Q)	{
 				var r = 0;
-				if(VENDORID && typeof updateObj == 'object')	{
+				if(vendorid && typeof updateObj == 'object')	{
 					r = 1;
-					this.dispatch(VENDORID,updateObj,_tag,Q);
+					this.dispatch(vendorid,updateObj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierCreate, either VENDORID ["+VENDORID+"] or updateObj ["+typeof updateObj+"] not passed","gMessage":true})
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSupplierCreate, either vendorid ["+vendorid+"] or updateObj ["+typeof updateObj+"] not passed","gMessage":true});
 					}
 				return r;
 				},
 			
-			dispatch : function(VENDORID,updateObj,_tag,Q){
+			dispatch : function(vendorid,updateObj,_tag,Q){
 				obj._cmd = 'adminSupplierUpdate';
+				obj.VENDORID = vendorid;
 				obj._tag = _tag || {};
 				obj._tag.datapointer = 'adminSupplierUpdate';
 				app.model.addDispatchToQ(obj,Q || 'immutable');
@@ -1304,10 +1358,15 @@ if(uriParams.trigger == 'adminPartnerSet')	{
 
 
 if(app.vars.debug)	{
-	$('button','#debugPanel').button();
-	$('#debugPanel').show()
-	$('.debugContent','#debugPanel').append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
-	$('body').css('padding-bottom',125);
+//	$('button','#debugPanel').button();
+	var $DP = $('#debugPanel');
+	$DP.show().find('.debugMenu').menu()
+	$DP.append("<h6 class='clearfix'>debug: "+app.vars.debug+"</h6><h6 class='clearfix'>v: "+app.vars.release+"</h6><hr />");
+	$('<input \/>').attr({'type':'text','placeholder':'destroy','size':'10'}).on('blur',function(){
+		app.model.destroy($(this).val());
+		app.u.dump("DEBUG: "+$(this).val()+" was just removed from memory and local storage");
+		$(this).val('');
+		}).appendTo($DP);
 	$('#jtSectionTab').show();
 	}
 

@@ -1244,12 +1244,15 @@ note - the order object is available at app.data['order|'+P.orderID]
 								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 								var $form = $fieldset.closest('form');
 
-//								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleUILogic','handleAppEvents']);
-//								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleUILogic','handleAppEvents']);
+//								
+//								
 
 //no content changes here, but potentially some display changes.
 								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAccountCreate',['handleUILogic']);
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutPreflight',['handleUILogic']);
+//here, content does change. the cart will now contain a username, which is needed on the display.
+								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutPreflight',['empty','translate','handleUILogic','handleAppEvents']);
+								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleUILogic','handleAppEvents']);
+								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleUILogic','handleAppEvents']);
 								
 								}
 							}});

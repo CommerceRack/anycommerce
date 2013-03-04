@@ -76,9 +76,11 @@ var admin_wholesale = function() {
 
 if(app.model.responseHasErrors(rd)){$editorContainer.anymessage({'message':rd})}
 else	{
-	$editorContainer.anycontent({'templateID':'wholesaleSupplierUpdateTemplate','datapointer':rd.datapointer});
+	$editorContainer.anycontent({'templateID':'wholesaleSupplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
 	app.ext.admin.u.handleAppEvents($editorContainer);
-	$(":checkbox",$editorContainer).anycb();
+	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
+	$("[type='checkbox']",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
+	
 //make into anypanels.
 	$("div.panel",$editorContainer).each(function(){
 		var PC = $(this).data('app-role'); //panel content (general, productUpdates, etc)
@@ -230,7 +232,7 @@ else	{
 				$select.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
 					$select.closest('.panel').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){
 						var $fieldset = $(this);
-						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
+//						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
 						if($select.val() == $fieldset.data('app-role'))	{$fieldset.show()}
 						else	{$fieldset.hide();}
 						})
@@ -262,6 +264,20 @@ else	{
 					else	{
 						$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
 						}
+					});
+				},
+			showSupplierItemList : function($btn)	{
+				
+				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){
+					app.ext.admin.calls.adminSupplierItemList.init($btn.closest("[data-code]").data('code'),{},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
+			showSupplierOrderList : function($btn)	{
+				
+				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){
+					app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':$btn.closest("[data-code]").data('code'),'FILTER':'RECENT'},{},'mutable');
+					app.model.dispatchThis('mutable');
 					});
 				}
 			} //e [app Events]
