@@ -445,6 +445,8 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				elasticsearch.type = 'product';
 				elasticsearch.mode = 'elastic-native';
 				elasticsearch.size = 250;
+				
+				return elasticsearch;
 			},
 			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
