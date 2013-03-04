@@ -2198,6 +2198,8 @@ effects the display of the nav buttons only. should be run just after the handle
 				var elasticsearch;
 				if(infoObj.elasticsearch){
 					elasticsearch = app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
+					app.u.dump(infoObj.elasticsearch);
+					app.u.dump(elasticsearch);
 				} else {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}

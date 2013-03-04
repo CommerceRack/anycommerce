@@ -437,16 +437,16 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				},
 			
 	
-//Adds elastic search params to a raw elasticsearch object	
-//Currently this relies on elasticsearch being passed by reference
-//!!! @JT is there a better way to do this? Are these side effects acceptable? -mc
+//Adds elastic search params to a new raw elasticsearch object
 //Example of an obj would be {'filter':{'term':{'tags':'IS_BESTSELLER'}}} -- IE a full query or filter- just adding the required params here.
 			buildElasticRaw : function(elasticsearch) {
-				elasticsearch.type = 'product';
-				elasticsearch.mode = 'elastic-native';
-				elasticsearch.size = 250;
+				var es = $.extend(true, {}, elasticsearch);
 				
-				return elasticsearch;
+				es.type = 'product';
+				es.mode = 'elastic-native';
+				es.size = 250;
+				
+				return es;
 			},
 			
 //Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
