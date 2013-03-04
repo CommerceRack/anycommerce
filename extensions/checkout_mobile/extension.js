@@ -572,7 +572,7 @@ else	{
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled '); //make place order button appear and be clickable.
 				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
 				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
-				app.ext.cco.u.showServerErrors(responseData,uuid);
+				app.u.throwMessage(responseData,uuid); //!!! test this to make sure it works.
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
