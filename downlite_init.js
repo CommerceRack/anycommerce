@@ -40,7 +40,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	}]);
 
 app.rq.push(['script',0,(document.location.protocol == 'file:') ? app.vars.httpURL+'jquery/config.js' : app.vars.baseURL+'jquery/config.js']); //The config.js is dynamically generated.
-app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
+//app.rq.push(['script',0,app.vars.baseURL+'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})
 app.rq.push(['script',1,app.vars.baseURL+'jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
@@ -117,10 +117,14 @@ app.u.initMVC = function(attempts){
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).
-	var percentPerInclude = Math.round((100 / app.vars.rq.length));  
+	var percentPerInclude = (100 / app.vars.rq.length);  
 	var resourcesLoaded = app.u.howManyPassZeroResourcesAreLoaded();
-	var percentComplete = resourcesLoaded * percentPerInclude; //used to sum how many includes have successfully loaded.
-
+	var percentComplete = Math.round(resourcesLoaded * percentPerInclude); //used to sum how many includes have successfully loaded.
+	//make sure precentage is never over 100
+	if(percentComplete > 100 )	{
+		percentComplete = 100;
+		}
+	
 	$('#appPreViewProgressBar').val(percentComplete);
 	$('#appPreViewProgressText').empty().append(percentComplete+"% Complete");
 
