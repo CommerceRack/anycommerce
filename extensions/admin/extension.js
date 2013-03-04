@@ -2405,6 +2405,34 @@ var chart = new Highcharts.Chart({
 				return domain;
 				}, //getDomain
 
+
+//pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
+//will also update a .numChanges selector with the number of elements within the context that have edited on them.
+//will also 'enable' the parent button of that class.
+			applyEditTrackingToInputs : function($context)	{
+
+				$("input",$context).each(function(){
+					
+					if($(this).hasClass('skipTrack')){} //allows for a field to be skipped.
+					else if($(this).is(':checkbox') || $(this).is('select'))	{
+						$(this).off('change.trackChange').on('change.trackChange',function(){
+							$(this).toggleClass('edited');
+							$('.numChanges',$context).text($('.edited',$context).length).closest('button').button("enable");
+							});			
+						}
+					else	{
+						$(this).off('keyup.trackChange').one('keyup.trackChange',function(){
+							$(this).addClass('edited');
+							$('.numChanges',$context).text($('.edited',$context).length).closest('button').button("enable");
+							});
+						}
+			
+					});
+
+				}, //applyEditTrackingToInputs
+
+
+
 			loadNativeApp : function(path,opts){
 //				app.u.dump("BEGIN loadNativeApp");
 				if(path == '#!mediaLibraryManageMode')	{

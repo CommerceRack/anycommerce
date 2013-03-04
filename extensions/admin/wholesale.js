@@ -87,7 +87,10 @@ else	{
 		$(this).data('vendorid',VENDORID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_wholesale','name':PC,'persistent':true});
 		});
 
+//make inputs 'know' when they've been added and update the button.
+app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
+//make panels draggable
 	var sortCols = $('.twoColumn').sortable({  
 		connectWith: '.twoColumn',
 		handle: 'h2',
@@ -141,8 +144,41 @@ else	{
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		u : {
-			}, //u [utilities]
+		buildMacros : {
+			general : function($form)	{
+				if($form)	{
+					var formObj = $form.serializeJSON(),
+					vendorID = $form.closest("[data-vendorid]").data('vendorid');
+					
+					$('input',$form).each(function(){
+						var $ele = $(this);
+						if($ele.is(':checkbox') && ($ele.is(':checked')))	{
+							formObj[$ele.attr('name')] = 1;
+							}
+						else if($ele.is(':checkbox'))	{ //if it isn't checked, it's disabled.
+							formObj[$ele.attr('name')] = 0;
+							}
+						else	{} //currently, only checkboxes need special treatment.
+						});
+					
+					if(vendorID)	{
+						macro = "COMPANYSET?"+decodeURIComponent($.param(formObj));
+//						app.ext.admin.calls.adminSupplierUpdate.init(vendorID, [macro],{},'immutable');
+						app.u.dump(macro);
+						}
+					else	{
+						$form.anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, unable to ascertain vendorID.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.buildMacros.general, $form not set or not a jquery object.","gMessage":true})
+					}
+				},
+				
+			shippingCalculations : function($form)	{
+				
+				},
+			}, //buildMacros
 
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
 
@@ -226,6 +262,49 @@ else	{
 					}); //$btn.on
 				}, //execSupplierDelete
 
+			execSupplierUpdate : function($btn)	{
+				$btn.button();
+				$btn.button('disable');
+				$btn.off('click.execSupplierUpdate').on('click.execSupplierUpdate',function(){
+					var $form =  $btn.closest('form'),
+					panel = $form.closest('.panel').data('app-role');
+					
+					if($form && panel)	{
+		
+						var formObj = $form.serializeJSON(),
+						vendorID = $form.closest("[data-vendorid]").data('vendorid');
+						
+						$('input',$form).each(function(){
+							var $ele = $(this);
+							if($ele.is(':checkbox') && ($ele.is(':checked')))	{
+								formObj[$ele.attr('name')] = 1;
+								}
+							else if($ele.is(':checkbox'))	{ //if it isn't checked, it's disabled.
+								formObj[$ele.attr('name')] = 0;
+								}
+							else	{} //currently, only checkboxes need special treatment.
+							});
+						
+						if(vendorID)	{
+							macro = "COMPANYSET?"+decodeURIComponent($.param(formObj));
+		//						app.ext.admin.calls.adminSupplierUpdate.init(vendorID, [macro],{},'immutable');
+							app.u.dump(macro);
+							}
+						else	{
+							$form.anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, unable to ascertain vendorID.','gMessage':true});
+							}
+
+
+
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execSupplierUpdate, either $form or panel not set.'});
+						}
+					
+					}); //$btn.on
+				},
+
+//apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
 			showConnectorFieldset : function($select)	{
 				
 //change event toggles which panel is displayed.
@@ -238,7 +317,7 @@ else	{
 						})
 					});
 				$select.trigger('change');
-				},
+				}, //showConnectorFieldset
 
 //applied to 'create user' button. just opens the modal.
 			showSupplierCreate : function($btn)	{
@@ -246,7 +325,7 @@ else	{
 				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(){
 					app.ext.admin_wholesale.a.showSupplierCreateModal({"$context":$btn.closest("[data-app-role='supplierManager']").parent()});
 					})
-				},
+				}, //showSupplierCreate
 
 //applied to 'edit user' button and the link in the list (name). opens the editor.
 			showSupplierEditor : function($ele)	{
@@ -265,14 +344,16 @@ else	{
 						$("#globalMessaging").anymessage({'message':'In admin_wholesale.e.showSupplierEditor, unable to ascertain VENDORID','gMessage':true});
 						}
 					});
-				},
+				}, //showSupplierEditor
+
 			showSupplierItemList : function($btn)	{
 				
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){
 					app.ext.admin.calls.adminSupplierItemList.init($btn.closest("[data-code]").data('code'),{},'mutable');
 					app.model.dispatchThis('mutable');
 					});
-				},
+				}, //showSupplierItemList
+
 			showSupplierOrderList : function($btn)	{
 				
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){

@@ -89,11 +89,12 @@
 
 <div id='wholesaleSupplierUpdateTemplate' class='clearfix'>
 
-<form autocomplete="on" action='#'>
+
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
-		<button class='floatRight' disabled='disabled'>Save <span class='numChanges'></span> Changes</button>
-		<button class='floatRight'>Orders</button>
-		<button class='floatRight'>Product</button>
+		
+		<button class='floatRight'>Order List</button>
+		<button class='floatRight'>Product List</button>
+		<button class='floatRight'>Add Product</button>
 		
 		<h2 class='floatLeft ui-widget-header-padding'>
 		Supplier: <span data-bind="var:supplier(CODE); format:text;"></span>
@@ -107,7 +108,8 @@
 
 <div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='general'>
 	<h2>General Settings</h2>
-	<div>
+	<div class='clearfix'>
+	<form autocomplete="on" action='#'>
 	<fieldset>
 
 <label>
@@ -160,6 +162,8 @@
 </label>
 
 	</fieldset>
+	<button class='floatRight' data-app-event='admin_wholesale|execSupplierUpdate'>Save <span class='numChanges'></span> Changes</button>
+	</form>
 	</div>
 </div><!-- /general panel -->
 
@@ -175,8 +179,6 @@
 		<option value='NONE'>None</option>
 	</select />
 </label>
-
-<button>Add products</button>
 
 	</fieldset>
 	</div>
