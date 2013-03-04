@@ -158,7 +158,7 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
-	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
+	
 
 <ul id="wideSlideshow" class="pics slideshow">
 		<img src='images/blank.gif' width='712' height='400' data-bind="var: category(%page.banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
@@ -171,6 +171,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <!-- a sample of how to format an elastic native search in a data-bind -->
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+
+	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
 
 <!-- a sample of how to get a 'list' src onto the page. -->
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
