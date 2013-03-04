@@ -63,6 +63,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 		buyerAddressList : {
 			init : function(_tag,Q)	{
+				app.u.dump("BEGIN cart_checkout_order.calls.buyerAddressList ");
 				var r = 0;
 				_tag = _tag || {};
 				_tag.datapointer = "buyerAddressList";
@@ -71,6 +72,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 					this.dispatch(_tag,Q);
 					}
 				else	{
+					app.u.dump("buyerAddressList found in local or memory.");
 					app.u.handleCallback(_tag);
 					}
 				return r;
@@ -90,6 +92,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 					this.dispatch(_tag,Q);
 					}
 				else	{
+					app.u.dump("buyerWalletList found in local or memory.");
 					app.u.handleCallback(_tag);
 					}
 				return r;

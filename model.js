@@ -613,13 +613,13 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				if(this.thisGetsSavedToMemory(responseData['_rcmd']))	{
 					app.data[datapointer] = responseData;
 					}
-				else	{app.u.dump(" -> data not saved to memory: "+responseData['_rcmd']);}
+				else	{}
 				if(this.thisGetsSavedLocally(responseData['_rcmd']))	{
 					var obj4Save = $.extend(true,{},responseData); //this makes a copy so that the responseData object itself isn't impacted.
 					obj4Save._rtag = null; //make sure _rtag doesn't get saved to localstorage. may contiain a jquery object, function, etc.
 					app.storageFunctions.writeLocal(datapointer,obj4Save); //save to local storage, if feature is available.
 					}
-				else	{app.u.dump(" -> data not saved to LS: "+responseData['_rcmd']);}
+				else	{}
 				}
 			else	{
 //catch. not writing to local. Either not necessary or an error occured.
@@ -646,10 +646,12 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				case 'adminCustomerUpdate': //may contain cc
 				case 'adminCustomerWalletPeek': //contains cc #
 				case 'adminOrderCreate': //may contain cc
+				case 'adminOrderDetail': //may contain cc
 				case 'adminOrderPaymentAction': //may contain cc
 				case 'adminOrderUpdate': //may contain cc
 				case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
 				case 'appPageGet': //
+				case 'buyerWalletList': //conains some cc info.
 				case 'cartOrderCreate': //may contain cc
 				case 'cartPaymentQ': //may contain cc
 				case 'cartSet': //changes are reflected in cart object.

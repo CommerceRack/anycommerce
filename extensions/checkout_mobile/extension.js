@@ -29,6 +29,7 @@ var convertSessionToOrder = function() {
 	'chkoutAddressShipTemplate', //duh
 	'chkoutMethodsShipTemplate',
 	'chkoutNotesTemplate',
+	'chkoutBuyerAddressTemplate',
 	'chkoutMethodsPayTemplate' //payment option panel
 	);
 	var r = {
@@ -1014,7 +1015,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						}
 					}
 				}, //chkoutAddressBill
-				
+
 			chkoutAddressShip : function(formObj,$fieldset)	{
 				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
 					$("[data-app-role='addressSelect']",$fieldset).show();
@@ -1161,9 +1162,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$chkContainer.empty();
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
 
+					app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
+
 					if(app.u.buyerIsAuthenticated())	{
-						app.ext.cco.calls.buyerAddressList.init({},'immutable');
-						app.ext.cco.calls.buyerWalletList.init({},'immutable');
+						
+						app.ext.cco.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
+						app.ext.cco.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
+						
 						}
 
 					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
@@ -1236,7 +1241,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$('body').showLoading({'message':'Verifying username and password...'});
 						//we have want we need. attempt login.
 						app.calls.authentication.zoovy.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
-							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
+//							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 							else	{
@@ -1786,7 +1791,7 @@ the refreshCart call can come second because none of the following calls are upd
 					//ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
 					if(data.value[0].id == 'ZERO')	{
 						$tag.hide(); //hide payment options.
-						$tag.append("<li><input type='radio' name='want/payby' id='want-payby_ZERO' value='ZERO' checked='checked' \/><\/li>");
+						$tag.append("<div><input type='radio' name='want/payby'  value='ZERO' checked='checked' \/>"+data.value[i].pretty+"<\/div>");
 						}
 					else	{
 						$tag.show(); //make sure visible. could be hidden as part of paypal, then paypal could be cancelled.
@@ -1794,7 +1799,7 @@ the refreshCart call can come second because none of the following calls are upd
 							id = data.value[i].id;
 	//onClick event is added through panelContent.paymentOptions
 	//setting selected method to checked is also handled there.
-							o += "<label><input type='radio' name='want/payby' value='"+id+"' />"+data.value[i].pretty+"<\/label>";
+							o += "<div><label><input type='radio' name='want/payby' value='"+id+"' />"+data.value[i].pretty+"<\/label></div>";
 							}
 						$tag.html(o);
 						}

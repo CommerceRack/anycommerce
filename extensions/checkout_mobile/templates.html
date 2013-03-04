@@ -31,8 +31,7 @@ item list and summary are separate just to give more control over location.
 	
 	<fieldset data-app-role='chkoutAddressShip' class='displayNone'>
 		<legend>Shipping Address</legend>
-		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for return customers -->
-		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for new customers -->
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for new customers -->
 	</fieldset>
 
 	<fieldset data-app-role='chkoutMethodsShip'>
@@ -175,6 +174,14 @@ do NOT change any input names or id's or checkout will likely break.
 
 <section id='chkoutAddressShipTemplate'>
 
+		<!-- for return customers. !!! NEED A VAR HERE. -->
+		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div>
+		
+		<!-- for new customers -->
+		<div class='panelContent' data-app-role='addressNew'>
+
+
+
 	<div><input type='text' placeholder='first name' name='ship/firstname' required='required' value='' data-bind='var: cart(ship/firstname); format:popVal;'  /></div>
 	<div><input type='text' placeholder='last name' name='ship/lastname' required='required' value='' data-bind='var: cart(ship/lastname); format:popVal;'  /></div>
 
@@ -195,6 +202,7 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<div class='shipPhone'><input type='tel' name='ship/phone' placeholder='phone number' value='' data-bind='var: cart(ship/phone); format:popVal;'  /></div>
 	
+	</div>
 </section>
 
 
@@ -310,7 +318,10 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 
-
+<address id='chkoutBuyerAddressTemplate'>
+	<div data-bind="var:address(bill_address); defaultVar: address(ship_address); format:text;"></div>
+	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
+</address>
 
 
 

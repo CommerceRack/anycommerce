@@ -169,18 +169,21 @@ A session ID could be passed in through vars, but app.sessionId isn't set until 
 		else if(app.vars.sessionId)	{
 			app.u.dump(" -> session id set.");
 			app.calls.appCartExists.init(app.vars.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.whoAmI.init({'callback':'suppressErrors'},'mutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(app.u.isSet(app.u.getParameterByName('sessionId')))	{
 			app.u.dump(" -> session id from URI used.");
 			app.calls.appCartExists.init(app.u.getParameterByName('sessionId'),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.whoAmI.init({'callback':'suppressErrors'},'mutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
 		else if(app.model.fetchSessionId())	{
 			app.u.dump(" -> session retrieved from localstorage..");
 			app.calls.appCartExists.init(app.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.whoAmI.init({'callback':'suppressErrors'},'mutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 		else	{
@@ -617,8 +620,6 @@ app.u.throwMessage(responseData); is the default error handler.
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
-//
-					app.calls.whoAmI.init({'callback':'suppressErrors'},'mutable'); //get this info when convenient.
 					}
 				else	{
 					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
