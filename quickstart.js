@@ -1759,7 +1759,7 @@ if(ps.indexOf('?') >= 1)	{
 				if(infoObj.pageType === 'search' && infoObj.elasticsearch){
 					infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
 				} else {
-					// That's an interesting search you have there...
+					infoObj.pageType = 'homepage';
 				}
 				
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
