@@ -1688,9 +1688,9 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{
-						app.u.dump("ROAR");
-						r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
+					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
+						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
+						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
 						}
 					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
@@ -1720,7 +1720,7 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = true}
 					else if(infoObj.pageType == 'cart')	{r = true}
 					else if(infoObj.pageType == 'checkout')	{r = true}
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = true}
+					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{r = true}
 					else if(infoObj.pageType == 'customer' && infoObj.show)	{r = true}
 					else if(infoObj.pageType == 'company' && infoObj.show)	{r = true}
 					else	{
@@ -1754,6 +1754,14 @@ if(ps.indexOf('?') >= 1)	{
 				infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
 //				app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
 				infoObj.pageType = splits[0];
+				
+				//De-stringify elastic search from page hash so we can build our raw elastic during showContent
+				if(infoObj.pageType === 'search' && infoObj.elasticsearch){
+					infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
+				} else {
+					// That's an interesting search you have there...
+				}
+				
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
 					infoObj = false;
 					}
@@ -1794,7 +1802,9 @@ if(ps.indexOf('?') >= 1)	{
 					break;
 
 				case 'search':
-					relativePath = '#search?KEYWORDS='+infoObj.KEYWORDS
+					app.u.dump("BUILDRELATIVEPATH");
+					app.u.dump(infoObj.elasticsearch);
+					relativePath = '#search?elasticsearch='+JSON.stringify(infoObj.elasticsearch);
 					break;
 
 				case 'company':
@@ -2198,13 +2208,12 @@ effects the display of the nav buttons only. should be run just after the handle
 				var elasticsearch;
 				if(infoObj.elasticsearch){
 					elasticsearch = app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
-					app.u.dump(infoObj.elasticsearch);
-					app.u.dump(elasticsearch);
 				} else {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
 					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
 				}
+				//app.u.dump(elasticsearch);
 /*
 #####
 if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
@@ -2216,7 +2225,9 @@ elasticsearch.size = 50;
 				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
 				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
 				//app.u.dump(_tag.datapointer);
-
+				
+				//Used to build relative path
+				infoObj.elasticsearch = $.extend(true, {}, elasticsearch);
 				
 				
 				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
