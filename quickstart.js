@@ -1446,7 +1446,7 @@ if(ps.indexOf('?') >= 1)	{
 	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
 	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
 //	app.u.dump(ps);
-	try{
+	try {
 		infoObj.uriParams = app.u.kvp2Array(ps);
 	} catch(err){
 		//we lost the URI params to kvp2Array
@@ -1755,20 +1755,25 @@ if(ps.indexOf('?') >= 1)	{
 				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
 //				app.u.dump(" -> splits: "); app.u.dump(splits);
 				
+				
+				//Try to parse URI information
 				try {
 					infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
 //					app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
 					infoObj.pageType = splits[0];
+					
+					//The below may not be necessary, depending on how the kvp2array function handles the parsing of the hash info with nested objects
+					
+					//De-stringify elastic search from page hash so we can build our raw elastic during showContent
+					//if(infoObj.pageType === 'search' && infoObj.elasticsearch){
+					//	infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
+					//} 
 				} catch (err){
-					infoObj.pageType = 'homepage';
+					//Problem parsing info
+					app.u.dump("Error parsing Hash: "+err, 'warn');
 				}
 				
-				//De-stringify elastic search from page hash so we can build our raw elastic during showContent
-				if(infoObj.pageType === 'search' && infoObj.elasticsearch){
-					infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
-				} else {
-					infoObj.pageType = 'homepage';
-				}
+				
 				
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
 					infoObj = false;
