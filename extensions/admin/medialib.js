@@ -551,6 +551,7 @@ setTimeout(function(){
 					}
 				}, //showMediaDetailsInDialog
 
+
 			showMediaAndSubs : function(folderProperties){
 //				app.u.dump("BEGIN admin_medialib.a.showMediaAndSubs"); app.u.dump(folderProperties);
 				if(!$.isEmptyObject(folderProperties) && folderProperties.fid)	{
@@ -566,9 +567,11 @@ setTimeout(function(){
 
 					$folderTarget.toggle(); //allows folders to be opened and closed.
 					$folderTarget.parent().find('a:first').addClass('ui-selected');
+
 //updates the text in the folder dropdown to allow the user to make the selection for where a new folder is created.
 					$('#mediaLibActionsBar .selectAddFolderChoices li:last').attr('data-fname',folderProperties.fname).show().trigger('click').text("As child of "+folderProperties.fname);
 					$('#mediaLibActionsBar .addMediaFilesBtn').attr('title','select files for upload to this folder').button('enable'); //the button is disabled by default (can't add files to root) and during the delete folder process.
+
 //now handle the delete folder button. Folders with subfolders can not be deleted.
 //updates the delete folder button with attributes of what folder is in focus so the button knows what folder to delete.
 //if children are present, lock the disable folder button.
@@ -588,7 +591,7 @@ setTimeout(function(){
 //						app.u.dump(" -> folderProperties.fname IS set");
 //						app.u.dump("admin_medialib.a.showMediaAndSubs folderProperties follows: ");	app.u.dump(folderProperties);
 						$mediaTarget.attr({'data-fid':folderProperties.fid,'data-fname':folderProperties.fname});
-						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname,'selector':'#mediaLibFileList'});
+						app.ext.admin_medialib.u.showMediaFor({'FName':folderProperties.fname.toString(),'selector':'#mediaLibFileList'});
 						app.model.dispatchThis();
 						}
 					else	{
@@ -642,7 +645,7 @@ setTimeout(function(){
 //plus, in the css file, there's line 23 that needs to be uncommented.
 			mediaList : function($tag,data)	{
 				
-				app.u.dump("BEGIN mediaLib.renderFormats.mediaList");
+//				app.u.dump("BEGIN mediaLib.renderFormats.mediaList");
 				$("#mediaLibInfiniteScroller").scrollTop(0); //jump to top of image scroll
 //				app.u.dump(data.value);
 				var startpoint = $tag.children().length; //will eq 0 at start or 100 after 100 items
@@ -651,7 +654,7 @@ setTimeout(function(){
 				var val; //recycled. set to path/filename.
 				var FName = $tag.closest('[data-fname]').attr('data-fname'); //the name of the folder in focus.
 				var listOrigin = $tag.data('list-origin'); //will = search or folder. on a folder imageList req, no 'folder' info is requested (because we already know what folder we're in and the request is faster without requiring the folder lookup)
-				app.u.dump(" -> list-origin: "+listOrigin);
+//				app.u.dump(" -> list-origin: "+listOrigin);
 				$tag.removeClass('loadingBG');
 
 				var media = data.value;
@@ -678,16 +681,7 @@ setTimeout(function(){
 						}
 
 					
-//mode is set on the UL when the media library is initialized or reopened.
-					if($tag.data('mode') == 'manage')	{
-						$tag.addClass('hideBtnSelect')
-						}
-					else	{
-						$tag.removeClass('hideBtnSelect')
-						$('img',$tag).addClass('pointer').click(function(){
-							app.ext.admin_medialib.a.selectThisMedia($(this));
-							});
-						}
+
 					
 //
 $("img.lazyLoad").lazyload({
@@ -706,6 +700,22 @@ else	{
 //scrolltop code above doesn't work if there's no scroll bar.  so instead, show the images if under 20.
 	$("img.lazyLoad").lazyload({event: 'click'}).trigger('click'); 
 	}
+	
+
+//mode is set on the UL when the media library is initialized or reopened.
+// ### IMPORTANT ### run this AFTER lazy load, so that the click trigger there does NOT impact the click event here.
+if($tag.data('mode') == 'manage')	{
+	$tag.addClass('hideBtnSelect')
+	}
+else	{
+	$tag.removeClass('hideBtnSelect');
+	$('img',$tag).addClass('pointer').off('click.mediaSelect').on('click.mediaSelect',function(){
+		app.ext.admin_medialib.a.selectThisMedia($(this));
+		});
+	}
+
+	
+	
 					}
 				else	{
 					app.u.throwGMessage("admin_medialib.renderFormats.mediaList unable to determine folder name (hint: should be set on parent ul as data-fname) or templateid [data.bindData.loadsTemplate: "+data.bindData.loadsTemplate+"].");
@@ -864,6 +874,7 @@ else	{
 							app.u.throwMessage(rd);
 							}
 						else	{
+							app.u.dump(" -> rd: "); app.u.dump(rd);
 							app.renderFunctions.translateSelector(rd.selector,app.data[rd.datapointer]);
 							}
 						}

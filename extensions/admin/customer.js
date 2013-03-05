@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate');
+	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate');
 	var r = {
 
 
@@ -38,6 +38,8 @@ var admin_customer = function() {
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/customer.html',theseTemplates);
 //				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/customer.css','user_styles']);
 
+				var $modal = $("<div \/>",{'id':'customerUpdateModal'}).appendTo('body'); //used for various update/add features.
+				$modal.dialog({'autoOpen':false,'width':500,'height':500,'modal':true});
 				return r;
 				},
 			onError : function()	{
@@ -55,55 +57,51 @@ var admin_customer = function() {
 		a : {
 //This is how the task manager is opened. Just execute this function.
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
-			showCustomerManager : function($target) {
-
-				if($("[data-app-role='dualModeContainer']",$target).length)	{$target.show()} //already an instance of help open in this target. leave as is.
-				else	{
-					$target.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
-					app.ext.admin.u.handleAppEvents($target);
-					}
-				
-//if the target is a tab, bring that tab/content into focus.
-				if($target.data('section'))	{
-					app.ext.admin.u.bringTabIntoFocus($target.data('section'));
-					app.ext.admin.u.bringTabContentIntoFocus($target);
-					}
-
+			showCustomerManager : function() {
+				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+				$tabContent.empty();
+				$tabContent.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
+				app.ext.admin.u.handleAppEvents($tabContent);
 				}, //showCustomerManager
+
 //in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
-			showCustomerEditor : function($target,obj)	{
+			showCustomerEditor : function($custEditorTarget,obj)	{
 				
-				if($target && typeof $target == 'object')	{
+				if($custEditorTarget && typeof $custEditorTarget == 'object')	{
 					if(obj && obj.CID)	{
-						$target.showLoading("Fetching Customer Record");
-						app.calls.appNewslettersList.init({},'mutable');
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1},{'callback':function(rd){
-$target.hideLoading();
+						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
+						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
+						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
+$custEditorTarget.hideLoading();
 
 if(app.model.responseHasErrors(rd)){
 	app.u.throwMessage(rd);
 	}
 else	{
-	//div that all panels are added to, then this div is appended to the dom. more efficient and allows for classes to be added.
-	var panels = {
-		'general' : {'index':0,'column':1},
-		'wholesale' : {'index':0,'column':1},
-		'giftcard' : {'index':1,'column':1},
-		'newsletter' : {'index':2,'column':1},
-		'tickets' : {'index':3,'column':1},
-		'notes' : {'index':0,'column':2},
-		'wallets' : {'index':1,'column':2},
-		'addresses' : {'index':2,'column':2},
-		'dropship' : {'index':3,'column':2}
-		};
+	$custEditorTarget.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer],'dataAttribs':obj});
 	
-	$target.anycontent({'templateID':'customerEditorTemplate','data':app.data[rd.datapointer]});
-	
-	$("div.panel",$target).each(function(){
+	var panArr = app.ext.admin.u.dpsGet('admin_customer','editorPanelOrder'); //panel Array for ordering.
+
+	if(!$.isEmptyObject(panArr))	{
+//		app.u.dump(" -> panArr: "); app.u.dump(panArr);
+		var L = panArr.length;
+
+//yes, I know loops in loops are bad. But these are very small loops.
+//this will resort the panels into the order specified in local storage.
+		for(var i = 0; i < L; i += 1)	{
+			var $col = $("[data-app-column='"+(i+1)+"']",$custEditorTarget);
+			for(index in panArr[i])	{
+				$("[data-app-role='"+panArr[i][index]+"']",$custEditorTarget).first().appendTo($col);
+				}
+			}
+		}
+
+//make into anypanels.
+	$("div.panel",$custEditorTarget).each(function(){
 		var PC = $(this).data('app-role'); //panel content (general, wholesale, etc)
 		$(this).data('cid',obj.CID).anypanel({'wholeHeaderToggle':false,'showClose':false,'state':'persistent','extension':'admin_customer','name':PC,'persistent':true});
 		})
-	
 	}
 
 	var sortCols = $('.twoColumn').sortable({  
@@ -116,31 +114,126 @@ else	{
 //the 'stop' below is to stop panel content flicker during drag, caused by mouseover effect for configuration options.
 		stop: function(event, ui){
 			$(ui.item).find('h2').click();
-			sortCols.each(function(){console.log($(this).sortable( "toArray" ))})
-//			console.log(' -> here.');
+			var dataObj = new Array();
+			sortCols.each(function(){
+				var $col = $(this);
+				dataObj.push($col.sortable( "toArray",{'attribute':'data-app-role'} ));
+				});
+			app.ext.admin.u.dpsSet('admin_customer','editorPanelOrder',dataObj); //update the localStorage session var.
+//			app.u.dump(' -> dataObj: '); app.u.dump(dataObj);
 			}
 		});
-	
-	$("input",$target).each(function(){
-		$(this).off('change.trackChange').on('change.trackChange',function(){
-			$(this).addClass('edited');
-			$('.numChanges').text($('.edited',sortCols).length).parents('button').addClass('ui-state-highlight').button('enable');
-			});
-		});
-	app.ext.admin.u.handleAppEvents($target);
-	$("table.gridTable thead",$target).parent().anytable();
-//	$(".toggleMe",$target).buttonset();
 
+//add an onchange that adds the edited class, which is what the handleChanges function uses to count the # of changes.
+//for textboxes, toggle the class on/off. That way if a checkbox is turned off, then back on, the change count is accurate.	
+	$("input",$custEditorTarget).each(function(){
+		if($(this).is(':checkbox'))	{
+			$(this).off('change.trackChange').on('change.trackChange',function(){
+				$(this).toggleClass('edited');
+				app.ext.admin_customer.u.handleChanges($custEditorTarget);
+				});			
+			}
+		else if($(this).hasClass('skipTrack')){} //notes, for example, is independant.
+//logo value changed with JS, which doesn't trigger keyup code. It's run through medialib.
+		else if($(this).attr('name') == 'LOGO')	{
+			$(this).off('change.trackChange').one('change.trackChange',function(){
+				$(this).addClass('edited');
+				app.ext.admin_customer.u.handleChanges($custEditorTarget);
+				});			
+			}
+		else	{
+			$(this).off('keyup.trackChange').one('keyup.trackChange',function(){
+				$(this).addClass('edited');
+				app.ext.admin_customer.u.handleChanges($custEditorTarget);
+				});
+			}
+
+		});
+
+	app.ext.admin.u.handleAppEvents($custEditorTarget);
+	$("table.gridTable thead",$custEditorTarget).parent().anytable();
+	$("[type='checkbox']",$custEditorTarget).parent().anycb();
+	app.ext.admin_customer.u.handleAnypanelButtons($custEditorTarget,obj);
+	
 							}},'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					else	{
-						$target.anymessage({"message":"In admin_customer.a.showCustomerEditor, CID was not passed"});
+						$custEditorTarget.anymessage({"message":"In admin_customer.a.showCustomerEditor, CID was not passed"});
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCustomerEditor, $target is blank or not an object."});
+					$('#globalMessaging').anymessage({"message":"In admin_customer.a.showCustomerEditor, $custEditorTarget is blank or not an object."});
 					}
+				}, //showCustomerEditor
+
+//obj should contain CID. likely will include partition soon too.
+			showAddWalletModal : function(obj,$walletPanel)	{
+				var $modal = $('#customerUpdateModal').empty();
+				$('.ui-dialog-title',$modal.parent()).text('Add a new wallet');
+				$modal.dialog('open');
+				if(obj && obj.CID)	{
+					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
+					app.ext.admin.u.handleAppEvents($modal,{'$context':$walletPanel});
+					}
+				else	{
+					$modal.anymessage({'message':'In admin_customer.a.showAddWalletModal, no CID defined.',gMessage:true});
+					}
+				}, //showAddWalletModal
+
+			showCustomerCreateModal : function(){
+				var $modal = $('#customerUpdateModal').empty();
+				$('.ui-dialog-title',$modal.parent()).text('Add a new customer'); //blank the title bar so old title doesn't show up if error occurs
+				$modal.anycontent({'templateID':'customerCreateTemplate','showLoading':false});
+				app.ext.admin.u.handleAppEvents($modal);
+				$modal.dialog('open');
+				},
+
+//obj required params are cid, type (bill or ship)
+			showAddAddressModal : function(obj,$customerEditor){
+				var $modal = $('#customerUpdateModal').empty();
+				$('.ui-dialog-title',$modal.parent()).text(''); //blank the title bar so old title doesn't show up if error occurs
+				$modal.dialog('open');
+				
+				if(obj && obj.CID && obj.type)	{
+					$('.ui-dialog-title',$modal.parent()).text('Add a new '+obj.type.substring(0).toLowerCase()+' customer address');
+					$modal.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false});
+					$("[name='TYPE']",$modal).val(obj.type.toUpperCase().substring(1)); //val is @ship or @bill and needs to be SHIP or BILL
+					if(obj.type == '@SHIP')	{
+						$("[type='email']",$modal).parent().empty().remove();
+						}
+					else if(app.data["adminCustomerDetail|"+obj.CID] && app.data["adminCustomerDetail|"+obj.CID]._EMAIL )	{
+						$("[type='email']",$modal).val(app.data["adminCustomerDetail|"+obj.CID]._EMAIL); //populate email address w/ default.
+						}
+					else	{}
+					
+					var $form = $('form',$modal).first(),
+					$btn = $("<button \/>").text('Add Address').button().on('click',function(event){
+						event.preventDefault();
+						
+						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj,function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$modal.anymessage({'message':rd});
+								}
+							else	{
+								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistant':true});
+								//clear existing addresses and re-render.
+								var $panel = $("[data-app-role='"+obj.type.substring(1)+"']",$customerEditor); //ship or bill panel.
+								$("tbody",$panel).empty(); //clear address rows so new can be added.
+								$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+obj.CID}); //translate panel, which add all addresses.
+								app.ext.admin.u.handleAppEvents($panel);
+								}
+							});
+						});
+
+					$form.append($btn);
+
+					}
+				else	{
+					$modal.anymessage({'message':'In admin_customer.a.showAddAddressInModal, either CID ['+obj.CID+'] or type ['+obj.type+'] is not set.','gMessage':true});
+					}
+				
 				}
 			
 			}, //Actions
@@ -148,136 +241,643 @@ else	{
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+//will generate a select list of wholesale schedules
+//if the customer is already on a schedule, their schedule will be pre-selected.
+//generates the select list too, instead of just the options, so that error messaging can be handled in a good manner.
+//the customer object is what's passed in here.
+			wholesaleScheduleSelect : function($tag,data)	{
+				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
+				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
+					$tag.anymessage({'message':'You have not created any schedules yet.'})
+					}
+				else if(!data.value)	{$tag.anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
+				else	{
+					var $select = $("<select \/>",{'name':'SCHEDULE'}),
+					schedules =app.data.adminWholesaleScheduleList['@SCHEDULES'], //shortcut
+					L = app.data.adminWholesaleScheduleList['@SCHEDULES'].length
+					list = null;
+					$select.append($("<option \/>",{'value':''}).text('none'));
+					for(var i = 0; i < L; i += 1)	{
+						$select.append($("<option \/>",{'value':schedules[i].id}).text(schedules[i].id));
+						}
+					
+					$select.appendTo($tag);
+					
+					if(data.value.INFO && data.value.INFO.SCHEDULE)	{$select.val(data.value.INFO.SCHEDULE)} //preselect schedule, if set.
+					
+					}
+				}, //wholesaleScheduleSelect
+				
+			orderHistoryTotal : function($tag,data)	{
+				app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
+				var L = data.value.length,
+				sum = 0; //sum of all orders combined.
+				for(var i = 0; i < L; i += 1)	{
+					sum += Number(data.value[i].ORDER_TOTAL);
+					}
+				data.value = sum; //preserve data object except data.value. that way other params, such as currency symbol, can still be set.
+				app.renderFormats.money($tag,data)
+				},
+				
 			newsletters : function($tag,data)	{
 				
-				if(!app.data.appNewslettersList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
-				else if(!app.data.appNewslettersList['@lists'])	{
-					$tag.anymessage({'message':'You have not created any subscriber lists.'})
+				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
+				else if(app.data.adminNewsletterList['@lists'].length == 0)	{
+					$tag.anymessage({'message':'You have not created any subscriber lists.','persistant':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
-					L = app.data.appNewslettersList['@lists'].length;
-					
+					L = app.data.adminNewsletterList['@lists'].length,
+					listbw = data.value.INFO.NEWSLETTER; //list bitwise. just a shortcut.
+//					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
-						$("<label \/>").append($("<input \/>",{'type':'checkbox','name':'list_'+app.data.appNewslettersList['@lists'][i].ID})).append(app.data.appNewslettersList['@lists'][i].NAME + " [prt: "+app.data.appNewslettersList['@lists'][i].PRT+"]").appendTo($f);
+						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
+						$("<label \/>").append($("<input \/>",{
+							'type':'checkbox',
+							'name':'newsletter_'+app.data.adminNewsletterList['@lists'][i].ID
+							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
+							}
+						else	{} //do nothing in this case. It's a newsletter w/ no name (likely the bitwise not appropriated yet)
 						}
 					$f.appendTo($tag);
 					}
 				
-				}
+				} //newsletters
+
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {}, //u [utilities]
+		u : {
+//run after a form input on the page has changed. updates the 'numChanges' class to indicate # of changes and enable parent button.
+			handleChanges : function($customerEditor)	{
+				var numChanges = $('.edited',$customerEditor).length;
+				if(numChanges)	{
+					$('.numChanges',$customerEditor).text(numChanges).parents('button').addClass('ui-state-highlight').button('enable');
+					}
+				else	{
+					$('.numChanges',$customerEditor).text("").parents('button').removeClass('ui-state-highlight').button('disable');
+					}
+				}, //handleChanges
+			
+//adds the extra buttons to each of the panels.
+//obj should include obj.CID
+			handleAnypanelButtons : function($customerEditor,obj){
+				if($customerEditor && typeof $customerEditor == 'object')	{
+					if(obj.CID)	{
+						$('.panel_ship',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
+							app.ext.admin_customer.a.showAddAddressModal({type:'@SHIP','CID':obj.CID},$customerEditor);
+							}});
 
-		e : {
-//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
-			'customerRowRemove' : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
-				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
-					event.preventDefault();
-//if this class is already present, the button is set for delete already. unset the delete.
-					if($btn.hasClass('ui-state-error'))	{
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('ui-state-error').find('button').each(function(){
-							$(this).button('enable')
-							}); //enable the other buttons
-						$btn.button('enable');
+						$('.panel_bill',$customerEditor).anypanel('option','settingsMenu',{'Add Address':function(){
+							app.ext.admin_customer.a.showAddAddressModal({type:'@BILL','CID':obj.CID},$customerEditor);
+							}});
+
+						$("[data-app-role='wallets']",$customerEditor).anypanel('option','settingsMenu',{'Add Wallet':function(){
+							app.ext.admin_customer.a.showAddWalletModal(obj,$customerEditor);
+							}});
+
+						$("[data-app-role='giftcards']",$customerEditor).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
+							navigateTo('/biz/manage/giftcard/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+							}});
+
+						$("[data-app-role='tickets']",$customerEditor).anypanel('option','settingsMenu',{'Start a New Ticket':function(){
+							navigateTo('/biz/crm/index.cgi?VERB=CREATE&CID='+obj.CID,{dialog:true});
+							}});					
+
 						}
 					else	{
+						$customerEditor.anymessage({'message':'In admin_customer.u.handleAnypanelButtons, CID not passed.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_customer.u.handleAnypanelButtons, CID not passed.','gMessage':true});
+					}
+				}, //handleAnypanelButtons
 
-						$btn.addClass('ui-state-error').parents('tr').addClass('ui-state-error').find('button').each(function(){
-							$(this).button('disable')
-							}); //disable the other buttons
-						$btn.button('enable');
+//macro is the addr macro for adminCustomerUpdate (either addrcreate or addrupdate)
+//obj should contain CID and type. in the future, likely to contain partition.
+			customerAddressAddUpdate : function($form,MACRO,obj,callback)	{
+				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID && typeof callback == 'function')	{
+					if(app.ext.admin.u.validateForm($form))	{
+						app.u.dump(" -> form validated. proceed.");
+						$form.showLoading({"message":"Updating customer address record."});
+//shortcut is turned into a readonly, which means serialize skips it, so it's added back here.
+						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+((MACRO == 'ADDRUPDATE') ? "SHORTCUT="+$("[name='SHORTCUT']",$form).val()+"&" : "")+$form.serialize()],{'callback':callback},'immutable');
+//destroy and detail must occur after update
+						app.model.destroy('adminCustomerDetail|'+obj.CID);
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$form.anymessage({'message':'Some required fields were missing or left blank.'})
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_customer.u.customerAddressAddUpdate, either $form, customerID or macro not passed.'});
+					}
+				}, //customerAddressAddUpdate
 
+
+
+			getAddressByID : function(addrObj,id)	{
+				var r = false; //what is returned. will be an address object if there's a match.
+				if(addrObj && id)	{
+					for(var i = 0; i < addrObj.length; i += 1)	{
+						if(addrObj[i]._id == id)	{
+							r = addrObj[i];
+							break;
+							}
+						else	{}
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'in admin_customer.u.getAddressByID, either addrObj or ID empty'});
+					}
+				return r;
+				},
+
+//The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
+			getNewslettersTF : function(newsint,val)	{
+				B = Number(newsint).toString(2); //binary
+//				app.u.dump(" -> Binary of flags: "+B);
+				return B.charAt(val - 1) == 1 ? true : false; //1
+				},
+
+			}, //u [utilities]
+
+		e : {
+
+//executed within the customer create form to validate form and create user.
+			execAdminCustomerCreate : function($btn)	{
+				$btn.button().off('click.execAdminCustomerCreate').on('click.execAdminCustomerCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					
+					if(app.ext.admin.u.validateForm($form))	{
+var updates = new Array(),
+formObj = $form.serializeJSON();
+
+//app.u.dump(" -> formObj: "); app.u.dump(formObj);
+
+updates.push("CREATE?email="+formObj.email);
+if(formObj.firstname)	{updates.push("SET?firstname="+formObj.firstname);}
+if(formObj.lastname)	{updates.push("SET?lastname="+formObj.lastname);}
+if(formObj.generatepassword)	{updates.push("PASSWORDRESET?password=");} //generate a random password
+
+// $('body').showLoading("Creating customer record for "+formObj.email);
+app.ext.admin.calls.adminCustomerCreate.init(updates,{'callback':function(rd){
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
+		}
+	else	{
+		$('#customerUpdateModal').dialog('close');
+		$('.dualModeListMessaging',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty();
+		app.ext.admin_customer.a.showCustomerEditor($('.dualModeListContent',app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),{'CID':app.data[rd.datapointer].CID})
+		}
+	}});
+app.model.dispatchThis('immutable');
+
+						}
+					else	{
+						//the validation function puts the errors next to the necessary fields
+						}
+
+					});;
+				},
+
+//saves all the changes to a customer editor
+			execCustomerEditorSave : function($btn)	{
+				$btn.button();
+				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form'),
+					macros = new Array(),
+					CID = $btn.closest("[data-cid]").data('cid'),
+					wholesale = "", //wholesale and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
+					dropshipAddrUpdate = false, //set to true if address update is present. sends entire address, not just changed fields.
+					general = "";
+
+//used to determine whether or not the val sent to the API should be a 1 (checked) or 0 (unchecked). necessary for something checked being unchecked.
+					function handleCheckbox($tag)	{
+						if($tag.is(':checked'))	{return 1}
+						else	{return 0}
+						}
+
+//find all the elements that have been edited. In most cases, this is the input itself.
+//the exception to this would be a 'row' which has been deleted. could be a wallet, address or a note
+					$('.edited').each(function(){
+						
+						var $tag = $(this),
+						$panel = $tag.closest('.panel')
+						pr = $panel.data('app-role'); //shortcut.  panel role
+//if the tag is a tr, this is a 'delete'
+						if($tag.is('tr'))	{
+//if one of the buttons in this row has the error class, then a delete is occuring. Currently, the only other edit option in a row is set to default.
+//however, you would never need to do both delete and set as default, so only perform one or the other, prioritizing with delete.
+							if($("button.ui-state-error",$tag).length > 0)	{
+								if(pr == 'ship' || pr == 'bill')	{
+									macros.push("ADDRREMOVE?TYPE="+pr.toUpperCase()+"&SHORTCUT="+$tag.data('_id'));
+									}
+								else if(pr == 'wallets')	{
+									macros.push("WALLETREMOVE?SECUREID="+$tag.data('wi'));
+									}
+								else if(pr == 'notes')	{
+									macros.push("NOTEREMOVE?NOTEID="+$tag.data('id'));
+									}
+								else	{
+									$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unrecognized panel role for a remove action.'});
+									}
+								}
+							else if($("button.ui-state-highlight",$tag).length > 0)	{
+								if(pr == 'ship' || pr == 'bill')	{
+									//must pass entire address object any time addrupdate occurs.
+									var addr = app.ext.admin_customer.u.getAddressByID(app.data['adminCustomerDetail|'+CID]['@'+pr.toUpperCase()],$tag.data('_id'));
+//these two aren't needed. nuke em.
+									delete addr['_is_default'];
+									delete addr['_id'];
+//strip bill_ ship_ off of front.
+									for(index in addr)	{
+										addr[index.substring(5)] = addr[index];
+										delete addr[index];
+										}
+//set as default.
+									addr['DEFAULT'] = 1;
+//pretty sure the API wants TYPE and SHORTCUT to be on the front of this macro.
+									macros.push("ADDRUPDATE?TYPE="+pr.toUpperCase()+"&SHORTCUT="+$tag.data('_id')+"&"+decodeURIComponent($.param(addr)));
+									}
+								else if(pr == 'wallets')	{
+									macros.push("WALLETDEFAULT?SECUREID="+$tag.data('id'));
+									}
+								else	{
+									$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unsupported panel role ['+pr+'] used for set default.'});
+									}
+								}
+							else	{
+								$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unable to determine action for update to this panel.'});
+								}
+							}
+						else if($tag.is('input'))	{
+							if($tag.attr('name') == 'password')	{
+								macros.push("PASSWORDRESET?password="+$tag.val());
+								}
+							else if(pr == 'general')	{
+								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
+								}
+							else if(pr == 'newsletter')	{
+								general += $tag.attr('name')+"="+handleCheckbox($tag);
+								}
+							else if(pr == 'dropship')	{
+								//Add something here for dropship logo.
+								if($tag.attr('name') == 'LOGO')	{
+									macros.push("WSSET?LOGO="+$tag.val());
+									}
+								else	{
+									dropshipAddrUpdate = true;
+									}
+								}
+							else if(pr == 'wholesale')	{
+								wholesale += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&";  //val of checkbox is 'on'. change to 1.
+								}
+							else	{
+								$panel.anymessage({'message':'In admin_customer.e.adminEditorSave, panel role ['+pr+'] not an expected type'});
+								}
+
+							}
+						else	{
+							$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unexpected update type (not input or tr).'});
+							}
+						}); // ends .edited each()
+
+
+
+						if(wholesale != '')	{
+							if(wholesale.charAt(wholesale.length-1) == '&')	{wholesale = wholesale.substring(0, wholesale.length - 1)} //strip trailing ampersand.
+							macros.push("WSSET?"+wholesale);
+							}
+
+						if(dropshipAddrUpdate)	{
+							var wsAddrUpdate = $("[data-role='dropship-bill-address']",$form).serialize();
+							app.u.dump(" -> wsAddrUpdate: "+wsAddrUpdate);
+							macros.push("ADDRUPDATE?TYPE=WS&"+wsAddrUpdate);
+							}						
+
+
+						if(general != '')	{
+							if(general.charAt(general.length-1) == '&')	{general = general.substring(0, general.length - 1)} //strip trailing ampersand.
+							macros.push("SET?"+general);
+							}						
+						
+						if(macros.length)	{
+//							app.u.dump(" -> MACROS: "); app.u.dump(macros);
+							var $custManager = $btn.closest("[data-app-role='customerManager']").parent();
+							$custManager.showLoading({'message':'Saving changes to customer record.'});
+//get a clean copy of the customer record so that the notes panel can be updated.
+							app.ext.admin.calls.adminCustomerUpdate.init(CID,macros,{'callback':function(rd){
+								$custManager.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$('#globalMessaging').anymessage({'message':rd});
+									}
+								else	{
+									
+									$custManager.empty();
+									app.ext.admin_customer.a.showCustomerEditor($custManager,{'CID':CID})
+									}
+								}},'immutable');
+							app.model.destroy('adminCustomerDetail|'+CID);
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$btn.closest('form').anymessage({'message':'In admin_customer.e.customerEditorSave, no recognizable fields were present.',gMessage:true});
+							}
+					});
+				}, //customerEditorSave
+
+//run when searching the customer manager for a customer.
+			execCustomerSearch : function($btn){
+				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
+					event.preventDefault();
+
+					var $custManager = $btn.closest("[data-app-role='dualModeContainer']"),
+					$form = $("[data-app-role='customerSearch']",$custManager).first(),
+					formObj = $form.serializeJSON(),
+					$custEditorTarget = $('.dualModeListContent',$custManager).first();
+					
+					$custEditorTarget.empty(); //make sure any previously open customers are cleared.
+					$custManager.showLoading({"message":"Searching for "+formObj.email});
+//					app.u.dump(" -> formObj: "); app.u.dump(formObj);
+					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(rd){
+						$custManager.hideLoading();
+						
+$('.dualModeListMessaging',$custManager).empty();
+if(app.model.responseHasErrors(rd)){
+	$custManager.anymessage({'message':rd});
+	}
+else	{
+	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
+		app.ext.admin_customer.a.showCustomerEditor($custEditorTarget,{'CID':app.data[rd.datapointer].CID});
+		}
+	else	{
+		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that email address. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
+		}
+	}
+						}},'mutable');
+					app.model.dispatchThis();
+
+					});
+				}, //execCustomerSearch
+
+			execHintReset : function($btn)	{
+				$btn.button();
+				$btn.off('click.hintReset').on('click.hintReset',function(event){
+					event.preventDefault();
+					var $modal = $("#customerUpdateModal").empty().dialog('open'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					$modal.html("<p class='clearfix marginBottom'>Please confirm that you want to reset this customers password hint. There is no undo.<\/p>");
+					
+					
+					$("<button \/>").text('Cancel').addClass('floatLeft').button().on('click',function(){
+						$modal.dialog('close');
+						}).appendTo($modal);
+				
+					$("<button \/>").text('Confirm').addClass('floatRight').button().on('click',function(){
+						$modal.showLoading({'message':'Updating customer record...'});
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["HINTRESET"],{'callback':function(rd){
+							$modal.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$modal.anymessage({'message':rd});
+								}
+							else	{
+								$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
+								}
+							}},'immutable');
+							app.model.dispatchThis('immutable');
+						
+						}).appendTo($modal);
+
+					});				
+				}, //execHintReset
+
+			execNoteCreate : function($btn)	{
+				$btn.button();
+				$btn.button('disable');
+				$btn.off('click.noteCreate').on('click.noteCreate',function(event){
+					event.preventDefault();
+					var note = $btn.parent().find("[name='noteText']").val(),
+					$panel = $btn.closest('.panel'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					if(CID && note)	{
+						$panel.showLoading({'message':'Adding note to customer record'});
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["NOTECREATE?TXT="+encodeURIComponent(note)],{'callback':function(rd){
+							//update notes panel or show errors.
+							$panel.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$panel.anymessage({'message':rd});
+								}
+							else	{
+								$("tbody",$panel).empty(); //clear all existing notes.
+								$("input",$panel).val(''); //empty notes input(s).
+								$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
+								app.ext.admin.u.handleAppEvents($panel);
+								}
+							
+							}},'immutable');
+//get a clean copy of the customer record so that the notes panel can be updated.
+						app.model.destroy('adminCustomerDetail|'+CID);
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else if(!CID)	{
+						$btn.closest('fieldset').anymessage({'message':'In admin_customer.e.execNoteCreate, unable to determine customer ID','gMessage':true});
+						}
+					else	{
+						$btn.closest('fieldset').anymessage({'message':'Please enter a note to save.','errtype':'youerr'});
 						}
 					});
 				},
+
+			execWalletCreate : function($btn,o)	{
+				$btn.button();
+				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
+					event.preventDefault();
+					
+					var $form = $btn.closest('form'),
+					CID = $btn.closest("[data-cid]").data('cid');
+					
+					if(!CID)	{
+						$form.anymessage({'message':'in admin_customer.e.walletCreate, could not determine CID.','gMessage':true});
+						}
+					else if(app.ext.admin.u.validateForm($form))	{
+						$form.showLoading({'message':'Adding wallet to customer record '+CID+'.'});
+
+
+						app.ext.admin.calls.adminCustomerUpdate.init(CID,["WALLETCREATE?"+$form.serialize()],{'callback':function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd});
+								}
+							else	{
+								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
+								if(o && o['$context'])	{
+									var $panel = o['$context']; //shortcut and and to identify what the context is.
+									$("tbody",$panel).empty(); //clear wallets
+									$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
+									app.ext.admin.u.handleAppEvents($panel);
+									}
+								}
+							}},'immutable');
+//do this after the update so the detail includes the changes from the update.
+						app.model.destroy('adminCustomerDetail|'+CID);
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$form.anymessage({'message':'Please enter all the fields below.'});
+						}
+					});
+				}, //execWalletCreate
+
 //used for both addresses and wallets.
-			'customerHandleIsDefault' : function($btn){
+			tagRowForIsDefault : function($btn){
 				$btn.button({icons: {primary: "ui-icon-check"},text: false});
 
 				if($btn.closest('tr').data('_is_default') == 1)	{$btn.addClass('ui-state-highlight')}
 
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
-					$btn.addClass('ui-state-highlight'); //flag as default.
+
+//if the button is already hightlighted, unhighlight. default is being de-selected.
+//the highlight class is also used in the validation (customerEditorSave) so if the class is changed, be sure to update the save function.
+					if($btn.hasClass('ui-state-highlight'))	{
+						$btn.removeClass('ui-state-highlight');
+						$btn.closest('tr').removeClass('edited');
+						}
+					else	{
+						$btn.closest('table').find('button.ui-state-highlight').removeClass('ui-state-highlight'); //un-default the other buttons.
+						$btn.addClass('ui-state-highlight'); //flag as default.
+						$btn.closest('tr').addClass('edited');
+						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form")); //update save button.
+					});
+				}, //tagRowForIsDefault
+
+//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
+//the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
+			tagRowForRemove : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
+					event.preventDefault();
+					
+//if this class is already present, the button is set for delete already. unset the delete.
+//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+					if($btn.hasClass('ui-state-error'))	{
+						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
+							$(this).button('enable')
+							}); //enable the other buttons
+						$btn.button('enable');
+						}
+					else	{
+//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
+						$btn.addClass('ui-state-error').parents('tr').addClass('edited').find('button').each(function(){
+							$(this).button('disable')
+							}); //disable the other buttons
+						$btn.button('enable');
+
+						}
+					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
+					});
+				}, //tagRowForRemove
+
+			tagNoteButtonAsEnabled : function($ele)	{
+				$ele.off('keyup.tagNoteButtonAsEnabled'); //remove old event so nuking val doesn't trigger change code.
+				$ele.val(''); //reset value. panel has events re-run after note added. this clears the last note.
+				$ele.one('keyup.tagNoteButtonAsEnabled',function(){
+					$ele.parent().find("[data-app-event='admin_customer|execNoteCreate']").button('enable').addClass('ui-state-highlight');
 					});
 				},
 
-
-			'customerWalletDetail' : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-check"},text: false});
-
-				$btn.off('click.customerWalletDetail').on('click.customerWalletDetail',function(event){
-					event.preventDefault();
-					});				
-				},
-			
-			'customerAddressUpdate' : function($btn){
+			showAddrUpdate : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				console.warn('action on customerAddressUpdate not complete');
 				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
 					event.preventDefault();
-					var $target = $('#addressUpdateModal');
-					if($target.length)	{$target.empty()} //element already exists on DOM. just empty it.
-					else	{
-//address editor doesn't exist yet. create it.
-						$target = $("<div \/>",{'id':'addressUpdateModal','title':'Edit Customer Address'}).appendTo('body');
-						$target.dialog({'autoOpen':false,'width':500,'height':500,'modal':true});
-						}
-
-					$target.dialog('open');
+					var $modal = $('#customerUpdateModal').empty(),
+					$addrPanel = $btn.closest('.ui-widget-anypanel');
 					
-					var CID = $btn.closest('.panel').data('cid'),
+					app.u.dump(" -> $addrPanel.length: "+$addrPanel.length);
+					
+					$('.ui-dialog-title',$modal.parent()).text('Update customer address');
+					$modal.dialog('open');
+					
+					var CID = $(this).closest('.panel').data('cid'),
 					type = $btn.closest("[data-address-type]").data('address-type'),
 					index = Number($btn.closest('tr').data('obj_index'));
-					
-					if(CID && index >= 0 && type)	{
-						$target.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
 
-						$("[name='SHORTCUT']",$target).attr('disabled','disabled').parent().append('not editable'); //once created, the shortcut is not editable.
+					if(CID && index >= 0 && type)	{
+						$modal.anycontent({'templateID':'customerAddressAddUpdateTemplate','showLoading':false,data:app.data['adminCustomerDetail|'+CID][type][index]});
+						$("[name='TYPE']",$modal).val(type.toUpperCase().substring(1)); //val is @ship or @bill and needs to be SHIP or BILL
+						$("[name='SHORTCUT']",$modal).attr('disabled','disabled').parent().append('not editable'); //once created, the shortcut is not editable.
 
 						if(type == '@SHIP')	{
-							$("[type='email']",$target).parent().empty().remove();
+							$("[type='email']",$modal).parent().empty().remove();
 							}
-						$target.append("add save button here");
+
+						var $button = $("<button \/>").text('Save Address').button().on('click',function(event){
+							event.preventDefault();
+							var $form = $('form',$modal);
+							app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRUPDATE',{'CID':CID,'type':type},function(rd){
+								$form.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$modal.anymessage({'message':rd});
+									}
+								else	{
+									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistant':true});
+									//clear existing addresses and re-render.
+									$("tbody",$addrPanel).empty();
+									$addrPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
+									app.ext.admin.u.handleAppEvents($addrPanel);
+									
+									}
+								});
+							});						
+						$modal.append($button);
 						}
 					else	{
-						$target.anymessage({'message':'In admin_customer.e.customerAddressUpdate, unable to determine CID ['+CID+'] or address type ['+type+'] or address index ['+index+']',gMessage:true});
+						$modal.anymessage({'message':'In admin_customer.e.customerAddressUpdate, unable to determine CID ['+CID+'] or address type ['+type+'] or address index ['+index+']',gMessage:true});
 						}
 					});
-				},
-			
-			'customerEditorSave' : function($btn)	{
-				$btn.button();
-console.warn('action on customerEditorSave not complete');
-				$btn.off('click.customerEditorSave').on('click.customerEditorSave',function(event){
+				}, //showAddrUpdate
+
+//executed on a button to show the customer create form.
+			showCustomerCreate : function($btn)	{
+				
+				$btn.button().off('click.showCustomerCreate').on('click.showCustomerCreate',function(event){
 					event.preventDefault();
-					alert('this will do something');
+					app.ext.admin_customer.a.showCustomerCreateModal();
+					});
+				
+				}, //showCustomerCreate
+
+			showMediaLib4DropshipLogo : function($ele)	{
+				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
+					event.preventDefault();
+					mediaLibrary($('#customerDropshipLogoImg'),$('#customerDropshipLogo'),'Choose Dropship Logo');
 					});
 				},
-			
-			'customerSearch' : function($btn){
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
-				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
+
+//not in use yet. will show wallet details.
+			showWalletDetail : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-check"},text: false});
+
+				$btn.off('click.showWalletDetail').on('click.showWalletDetail',function(event){
 					event.preventDefault();
+					});				
+				} //showWalletDetail
 
-					var $parent = $btn.closest("[data-app-role='dualModeContainer']"),
-					$form = $("[data-app-role='customerSearch']",$parent).first(),
-					formObj = $form.serializeJSON();
-					
-					$parent.showLoading("Searching for "+formObj.email);
-					app.u.dump(" -> formObj: "); app.u.dump(formObj);
-					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(){
-						$parent.hideLoading();
-						}},'mutable');
-					app.model.dispatchThis();
 
-					});
-				}
 			} //e [app Events]
 		} //r object.
 	return r;

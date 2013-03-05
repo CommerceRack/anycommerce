@@ -371,24 +371,6 @@ These styles can probably be removed if we implement the extjs header.
 
 */
 
-/* common styling */
-#header		{font-size:12px;}
-/* styles for the top level tabs */
-#header ul, li	{list-style:none; margin:0px; padding:0px; font-family:Arial, Helvetica, sans-serif; z-index:500; position:relative;}
-#header li	{ float:left; margin-right:2px;}
-
-/* sets the background.  a span is used inside the href tag so that a left and right background image can be used. */
-#menutabs li a span	{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat left top; padding-left:10px; line-height:22px; display:block;}
-#menutabs li a	{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat right top; padding-right:10px; display:block; text-decoration:none; color:#2462aa; font-size:13px;}
-
-/* in focus state for tabs.  also compensates for hover state, so focus tab has no hover */
-#menutabs li.on span, #menutabs li.on:hover span	{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat left -31px;}
-#menutabs li.on a, #menutabs li.on a:hover		{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat right -31px; color:#2462aa; font-weight:bold}
-
-/* hover state */
-#menutabs li:hover span	{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat left -62px;}
-
-#menutabs li a:hover		{background:url(/biz/images/header/ui_backgrounds-180x400.gif) no-repeat right -62px; color:#FF3300;}
 
 
 

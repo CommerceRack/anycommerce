@@ -107,9 +107,11 @@ var myRIA = function() {
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
+	$('.debugQuickLinks','.debug').menu().css({'width':'150px'});
 	$('button','.debug').button();
 	app.ext.myRIA.u.bindAppViewForms('.debug');
 	app.ext.myRIA.u.bindNav('.debug .bindByAnchor');
+	$('body').css('padding-bottom',$('.debug').last().height());
 	}
 
 //attach an event to the window that will execute code on 'back' some history has been added to the history.
@@ -513,7 +515,7 @@ else	{
 					}
 				}
 			}, //showList
-		authenticateZoovyUser : {
+		authenticateBuyer : {
 			onSuccess : function(tagObj)	{
 				app.vars.cid = app.data[tagObj.datapointer].cid; //save to a quickly referencable location.
 				$('#loginSuccessContainer').show(); //contains 'continue' button.
@@ -521,7 +523,7 @@ else	{
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
 				}
-			} //authenticateZoovyUser
+			} //authenticateBuyer
 
 		}, //callbacks
 
@@ -535,29 +537,29 @@ need to be customized on a per-ria basis.
 */
 		wiki : {
 			":search" : function(suffix,phrase){
-				return "<a href='#' onClick=\"return showContent('search',{'KEYWORDS':'"+suffix+"'}); \">"+phrase+"<\/a>"
+				return "<a href='#' onClick=\"return showContent('search',{'KEYWORDS':'"+encodeURI(suffix)+"'}); \">"+phrase+"<\/a>";
 				},
 			":category" : function(suffix,phrase){
-				return "<a href='#category?navcat="+suffix+"' onClick='return showContent(\"category\",{\"navcat\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#category?navcat="+suffix+"' onClick='return showContent(\"category\",{\"navcat\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 				},
 			":product" : function(suffix,phrase){
-				return "<a href='#product?pid="+suffix+"' onClick='return showContent(\"product\",{\"pid\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#product?pid="+suffix+"' onClick='return showContent(\"product\",{\"pid\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 				},
 			":customer" : function(suffix,phrase){
-				return "<a href='#customer?show="+suffix+"' onClick='return showContent(\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#customer?show="+suffix+"' onClick='return showContent(\"customer\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 				},
 
 			":policy" : function(suffix,phrase){
-				return "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"
+				return "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 				},
 
 			":app" : function(suffix,phrase){
 				var output; //what is returned.
 				if(suffix == 'contact')	{
-					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 					}
 				else if(suffix == 'contact')	{
-					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>"					
+					output = "<a href='#policy?show="+suffix+"' onClick='return showContent(\"company\",{\"show\":\""+suffix+"\"});'>"+phrase+"<\/a>";
 					}
 				else	{
 					//we'll want to do something fantastic here.
@@ -761,6 +763,78 @@ fallback is to just output the value.
 					}
 				}, //legacyURLToRIA
 
+
+
+//This is for use on a category or search results page.
+//changes the text on the button based on certain attributes.
+//app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'});
+			addToCartButton : function($tag,data)	{
+//				app.u.dump("BEGIN store_product.renderFunctions.addToCartButton");
+
+//if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
+				
+				var className, price, buttonState, buttonText = 'Add to Cart',
+				pid = data.value.pid, //...pid set in both elastic and appProductGet
+				inv = app.ext.store_product.u.getProductInventory(pid);
+				
+//				if(app.model.fetchData('appProductGet|'+pid))	{}
+				if(data.bindData.isElastic)	{
+					price = data.value.base_price;
+					if(data.value.tags.indexOf('IS_PREORDER') > -1)	{buttonText = 'Preorder'; className = 'preorder';}
+					else if(data.value.tags.indexOf('IS_COLORFUL') > -1)	{buttonText = 'Choose Color'; className = 'variational colorful';}
+					else if(data.value.tags.indexOf('IS_SIZEABLE') > -1)	{buttonText = 'Choose Size'; className = 'variational sizeable;'}
+					else if(data.value.pogs.length > 0)	{buttonText = 'Choose Options'; className = 'variational';}
+					else	{}
+					//look in tags for tags. indexOf
+					}
+				else	{
+					var pData = data.value['%attribs']; //shortcut
+					price = pData['zoovy:base_price'];
+					if(pData['is:preorder'])	{
+						buttonText = 'Preorder'; className = 'preorder';
+						}
+					else if(pData['is:colorful'])	{
+						buttonText = 'Choose Color'; className = 'variational colorful';
+						}
+					else if(pData['is:sizeable'])	{
+						buttonText = 'Choose Size'; className = 'variational sizeable';
+						}
+//pdata is a shortcut to attribs.
+					else if(data.value['@variations'].length)	{
+						buttonText = 'Choose Options'; className = 'variational';
+						}
+					else	{
+						}
+					
+					}
+
+//no price and/or no inventory mean item is not purchaseable.
+				if(!price)	{
+					buttonState = 'disable';
+					}
+				else if(inv && inv <= 0)	{buttonState = 'disable';}
+				else{}
+				
+//				app.u.dump(" -> inv: "+inv);
+				$tag.addClass(className).text(buttonText);
+				$tag.button();
+				if(buttonState)	{$tag.button(buttonState)}
+				else	{
+					if(buttonText.toLowerCase() == 'add to cart')	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							app.ext.myRIA.u.handleAddToCart($(this).closest('form'),{'action':'modal'}); 
+							})
+						}
+					else	{
+						$tag.on('click.detailsOrAdd',function(event){
+							event.preventDefault();
+							showContent('product',{'pid':pid}); 
+							})
+						}
+					}
+//				app.u.dump(" -> ID at end: "+$tag.attr('id'));
+				}, //addToCartButton
 
 //pass in the sku for the bindata.value so that the original data object can be referenced for additional fields.
 // will show price, then if the msrp is MORE than the price, it'll show that and the savings/percentage.
@@ -1077,43 +1151,57 @@ else	{
 				width = $img.width(),
 				$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
 				$detail = $('.previewProductDetail',$parent); //target for content.
-	
+				
+				
+//##### SANITY -> 	there are a few checks to see if data.pid is already = to the pid passed in.  
+//					This is to prevent double-click on a button or clicking on a product that is already in focus.
 
-
+				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
 //if the detail panel is already visible, no need to animate or adjust css on containers.
-				if($detail.is(':visible'))	{
+				else if($detail.is(':visible'))	{
 //transition out the existing product in view.
-					$detail.children().first().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})	
-					} 
+					$detail.children().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
+					}
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
 					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':0}).prependTo($parent);
+					$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //used to determine if a page change has occured in next/prev product buttons.
+
 					
 //button for turning off preview mode. returns li's to normal state and animates the two 'panes'.
 					$("<button \/>").button().text('close preview').on('click',function(event){
 						app.ext.myRIA.u.revertPageFromPreviewMode($parent);
 						}).prependTo($buttonBar);
 
-					
 
-					var $nextButton = $("<button \/>").button().addClass('nextButton').text('Next').on('click',function(event){
+//The next and previous buttons just trigger a click on the image.
+					var $nextButton = $("<button \/>").button().addClass('nextButton navButton').text('Next').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
-						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
+						$nextButton.button('option','disabled',true);
+						if($buttonBar.data('page-in-focus') == $('#resultsProductListContainer').data('page-in-focus'))	{
+							$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).next().children().first().trigger('click'); //click event is on div, not li
+							}
+						else	{
+							$('#resultsProductListContainer').children().first().find('.pointer').first().trigger('click');
+							$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //set vars to match so 'next' button recognizes as same page if no page change has occured.
+							}
 						}).prependTo($buttonBar);
 
-					var $prevButton = $("<button \/>").addClass('prevButton').button().text('Previous').on('click',function(event){
+					var $prevButton = $("<button \/>").addClass('prevButton navButton').button().text('Previous').on('click',function(event){
 						event.preventDefault(); //in case this ends up in a form, don't submit onclick.
-						$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
+						$prevButton.button('disable');
+						if($buttonBar.data('page-in-focus') == $('#resultsProductListContainer').data('page-in-focus'))	{
+							$("[data-pid='"+$(this).parent().data('pid')+"']",$liContainer).prev().children().first().trigger('click'); //click event is on div, not li
+							}
+						else	{
+							$('#resultsProductListContainer').children().first().find('.pointer').first().trigger('click');
+							$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //set vars to match so 'next' button recognizes as same page if no page change has occured.
+							}						
 						}).prependTo($buttonBar);
 
 					$detail.show().css({'padding-top': ($buttonBar.height() + 5)+'px'}); //top padding to compensate for button bar.
 
-					$('.hideInMinimalMode',$liContainer).hide();
-					$('li',$liContainer).each(function(){
-						$(this).css({'overflow':'hidden','margin':'0 3px 3px 0','padding':'1px'}); //add padding to compensate for border on 'active'
-						$(this).animate({'height':height,'width':width},'fast'); //reduce the height and width so only the image is visible.
-						});
-
+					$parent.addClass('minimalMode'); //use a class to toggle elements on/off instead of show/hide. That way if content is regenerated, visibility state is preserved
 					$detail.css({'float':'right'});
 					$liContainer.css({'float':'left','overflow':'auto','height':'500px'});
 					
@@ -1121,41 +1209,66 @@ else	{
 					$liContainer.animate({'width':'30%'},'slow');
 					}
 
-
-
-//remove active state from any other item and add it to item now in focus.
-//had an issue with the addition of the border causing 'bumps' to occur when active class selected. to compensate, padding of 1px is added to 
-//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
-//this needs to be after if/else above so that styling in 'else' happens first.
-				$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
-				$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
-
-				$('.buttonBar',$parent).data('pid',pid); //used for 'next' and 'previous' buttons
-				
-				var liIndex = $("[data-pid='"+pid+"']",$liContainer).index();
-
-//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
-				if(liIndex === 0)	{
-					$('.prevButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					}
-				else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
-					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", true).addClass('ui-state-disabled');
-					}
+				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
 				else	{
-					$('.prevButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					$('.nextButton',$parent).button("option", "disabled", false).removeClass('ui-state-disabled');
-					}
 
-				app.ext.myRIA.a.showInlineProdDetails({'pid':pid,'templateID':'productTemplateQuickView','selector':'.previewProductDetail'});
+					$('.buttonBar',$parent).data('pid',pid); //used for 'next' and 'previous' buttons
+	
+	//remove active state from any other item and add it to item now in focus.
+	//had an issue with the addition of the border causing 'bumps' to occur when active class selected. to compensate, padding of 1px is added to 
+	//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
+	//this needs to be after if/else above so that styling in 'else' happens first.
+					$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
+					$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
+	
+					
+					
+					var liIndex = $("[data-pid='"+pid+"']",$liContainer).index();
+	
+	//disable 'previous' button if first item in list is active. same for handling last item and next. otherwise, always enable buttons.
+	/*				
+	*/
+					app.ext.store_product.calls.appProductGet.init(pid,{
+						'callback':function(rd){
+
+							if(app.model.responseHasErrors(rd)){
+								$detail.anymessage({'message':rd});
+								}
+							else	{
+								$detail.anycontent({'templateID':'productTemplateQuickView','data' : app.data[rd.datapointer]})
+								}
+
+//in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
+
+setTimeout(function(){
+	if(liIndex === 0)	{
+		$('.prevButton',$parent).button("option", "disabled", true);
+		$('.nextButton',$parent).button("option", "disabled", false);
+		}
+	else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
+		$('.prevButton',$parent).button("option", "disabled", false);
+		$('.nextButton',$parent).button("option", "disabled", true);
+		}
+	else	{
+		$('.prevButton',$parent).button("option", "disabled", false);
+		$('.nextButton',$parent).button("option", "disabled", false);
+		}
+},300);
+							}
+						});
+					app.model.dispatchThis();
+					}
 				},
 
 
 //a self contained function which will display a product template within a specified selector.
 //handles call, callback and dispatch.
 //allows for callback override.
-			showInlineProdDetails : function(infoObj)	{
+//pid is required and either a selector and a templateID OR a function as the callback (in which it's assumed everything the callback needs is in the function itself)
+
+//function is more or less replaced by anycontent plugin.
+
+/*			showInlineProdDetails : function(infoObj)	{
 				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
 				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{
 					app.u.dump(" -> all required params are present.");
@@ -1175,7 +1288,7 @@ else	{
 					app.u.throwGMessage("In myRIA.a.showInlineProdDetails, either infoObj was empty ["+typeof infoObj+"] or infoObj.pid ["+infoObj.pid+"] or infoObj.selector ["+infoObj.selector+"] or infoObj.templateID ["+infoObj.templateID+"] was not set."); app.u.dump(infoObj);
 					}
 				},
-
+*/
 
 /*
 required:
@@ -1334,17 +1447,25 @@ if(ps.indexOf('?') >= 1)	{
 	ps = ps.split('?')[1]; //ignore everything before the first questionmark.
 	if(ps.indexOf('#') >= 1)	{ps = ps.split('#')[0]} //uri params should be before the #
 //	app.u.dump(ps);
-	infoObj.uriParams = app.u.kvp2Array(ps);
+	try {
+		infoObj.uriParams = app.u.kvp2Array(ps);
+	} catch(err){
+		//we lost the URI params to kvp2Array
+	}
 //	app.u.dump(uriParams);
 	}
 
 //				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
-					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
+					app.calls.cartSet.init({'want/refer':infoObj.uriParams.meta},{},'passive');
 					}
 
 				if(infoObj.uriParams.meta_src)	{
-					app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
+					app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
+					}
+
+				if(app.u.determineAuthentication() != 'none')  {
+					app.ext.myRIA.u.handleLoginActions();
 					}
 
 //				app.u.dump(" -> infoObj follows:");
@@ -1352,10 +1473,27 @@ if(ps.indexOf('?') >= 1)	{
 				app.ext.myRIA.a.showContent('',infoObj);
 				return infoObj //returning this saves some additional looking up in the appInit
 				},
+
+			handleLoginActions : function()  {
+				$('body').addClass('buyerLoggedIn');
+				$('.username').text(app.u.getUsernameFromCart());
+				},
+			
+			
+			handleLogoutActions : function()  {
+				$('body').removeClass('buyerLoggedIn');
+				$('.username').empty();
+				app.u.logBuyerOut();
+				showContent('homepage',{});
+				},
+
+
+
 //handle State and History Of The World.
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
+				infoObj.dateObj = new Date(); //milliseconds timestamp
 				app.ext.myRIA.vars.sotw = infoObj;
 				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
@@ -1447,13 +1585,12 @@ if(ps.indexOf('?') >= 1)	{
 				if(typeof $parent == 'object')	{
 					$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
 					$detail = $('.previewProductDetail',$parent); //target for content.
-					
-					$('.hideInMinimalMode',$liContainer).show();
-					$detail.animate({'width':'0'},'slow','',function(){$(this).addClass('displayNone').removeAttr('style').empty()});
-					$liContainer.animate({'width':'99%'},'slow','',function(){$(this).removeAttr('style')});
-					$('li[style]',$liContainer).removeAttr('style'); //remove the style attributes which will return to the classes instead.
-					$('li',$liContainer).removeClass('ui-state-active').removeAttr('style');
-					$(".buttonBar",$parent).remove();
+
+					$parent.removeClass('minimalMode'); //returns product list and multipage display to normal
+					$detail.animate({'width':'0'},'slow','',function(){$(this).addClass('displayNone').removeAttr('style').empty()}); //return right col to zero width
+					$liContainer.animate({'width':'99%'},'slow','',function(){$(this).removeAttr('style')}); //return main col to 100% width
+					$('li.ui-state-active',$liContainer).removeClass('ui-state-active');
+					$(".buttonBar",$parent).remove(); //get rid of navigation
 					}
 				else	{
 					app.u.throwGMessage("In myRIA.u.revertPageFromPreviewMode, $parent not specified or not an object ["+typeof $parent+"].");
@@ -1556,7 +1693,10 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = '#search?KEYWORDS='+infoObj.KEYWORDS}
+					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
+						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
+						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
+						}
 					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
 						//shouldn't get here because pageInfo was already validated. but just in case...
@@ -1585,7 +1725,7 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = true}
 					else if(infoObj.pageType == 'cart')	{r = true}
 					else if(infoObj.pageType == 'checkout')	{r = true}
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = true}
+					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{r = true}
 					else if(infoObj.pageType == 'customer' && infoObj.show)	{r = true}
 					else if(infoObj.pageType == 'company' && infoObj.show)	{r = true}
 					else	{
@@ -1616,9 +1756,26 @@ if(ps.indexOf('?') >= 1)	{
 				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
 //				app.u.dump(" -> splits: "); app.u.dump(splits);
 				
-				infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
-//				app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
-				infoObj.pageType = splits[0];
+				
+				//Try to parse URI information
+				try {
+					infoObj = app.u.kvp2Array(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
+//					app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
+					infoObj.pageType = splits[0];
+					
+					//The below may not be necessary, depending on how the kvp2array function handles the parsing of the hash info with nested objects
+					
+					//De-stringify elastic search from page hash so we can build our raw elastic during showContent
+					//if(infoObj.pageType === 'search' && infoObj.elasticsearch){
+					//	infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
+					//} 
+				} catch (err){
+					//Problem parsing info
+					app.u.dump("Error parsing Hash: "+err, 'warn');
+				}
+				
+				
+				
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
 					infoObj = false;
 					}
@@ -1659,7 +1816,9 @@ if(ps.indexOf('?') >= 1)	{
 					break;
 
 				case 'search':
-					relativePath = '#search?KEYWORDS='+infoObj.KEYWORDS
+					app.u.dump("BUILDRELATIVEPATH");
+					app.u.dump(infoObj.elasticsearch);
+					relativePath = '#search?elasticsearch='+JSON.stringify(infoObj.elasticsearch);
 					break;
 
 				case 'company':
@@ -1777,7 +1936,7 @@ if(ps.indexOf('?') >= 1)	{
 					else	{
 						fullpath += this.buildRelativePath(infoObj);
 						}
-					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams} //add params back on to url.
+					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams.encodeURI()} //add params back on to url.
 					else if(typeof infoObj.uriParams == 'object' && !$.isEmptyObject(infoObj.uriParams)) {
 //will convert uri param object into uri friendly key value pairs.						
 						fullpath += '?';
@@ -1886,7 +2045,7 @@ return r;
 effects the display of the nav buttons only. should be run just after the handleAppNavData function in showContent.
 */
 			handleAppNavDisplay : function(infoObj)	{
-				app.u.dump("BEGIN myRIA.u.handleNavButtonsForDetailPage");
+//				app.u.dump("BEGIN myRIA.u.handleNavButtonsForDetailPage");
 //				app.u.dump(" -> history of the world: "); app.u.dump(app.ext.myRIA.vars.hotw[1]);
 
 				var r = false, //what is returned. true if buttons are visible. false if not.
@@ -2039,34 +2198,54 @@ effects the display of the nav buttons only. should be run just after the handle
 			showSearch : function(infoObj)	{
 //				app.u.dump("BEGIN myRIA.u.showSearch. infoObj follows: ");
 //				app.u.dump(infoObj);
-				infoObj.templateID = 'searchTemplate'
+				infoObj.templateID = 'searchTemplate';
 				infoObj.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-
-//only create instance once.
-				if($('#mainContentArea_search').length)	{
-					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'))
-					}
-				else	{
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(infoObj.templateID,'mainContentArea_search'))
-					}
-
+				var $page = $('#mainContentArea_search');
 				
 
-//add item to recently viewed list IF it is not already in the list.
+//only create instance once.
+				if($page.length)	{
+					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'));
+					}
+				else	{
+					$('#mainContentArea').anycontent({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
+					$page = $('#mainContentArea_search');
+					}
 
-//I believe this should build datapointer and use fetchData?  Otherwise more complex queries will not be accessible.
+//add item to recently viewed list IF it is not already in the list.
 				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
 					}
-
-
-				if(infoObj.ATTRIBUTES) {
-					app.ext.store_search.u.handleElasticQueryFilterByAttributes(infoObj.KEYWORDS,infoObj.ATTRIBUTES,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
+					
+//If raw elastic has been provided, use that.  Otherwise build a query.
+				var elasticsearch;
+				if(infoObj.elasticsearch){
+					elasticsearch = app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
 				} else {
-					app.ext.store_search.u.handleElasticSimpleQuery(infoObj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
+					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
+					if(infoObj.fields)	{qObj.fields = infoObj.fields}
+					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
 				}
-				// DO NOT empty altSearchesLis here. wreaks havoc.
+				//app.u.dump(elasticsearch);
+/*
+#####
+if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
+ex:  elasticsearch.size = 200
+#####
+*/
+elasticsearch.size = 50;
+
+				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
+				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
+				//app.u.dump(_tag.datapointer);
+				
+				//Used to build relative path
+				infoObj.elasticsearch = $.extend(true, {}, elasticsearch);
+				
+				
+				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
+				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,_tag);
 				app.model.dispatchThis();
 
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
@@ -2319,7 +2498,9 @@ buyer to 'take with them' as they move between  pages.
 						count = " ("+count+")";
 						}
 					$("<li \/>").on('click',function(){
-						$('.productSearchKeyword').val('"+keywords+"'); showContent('search',{'KEYWORDS':'"+keywords+"'}); return false;
+						$('.productSearchKeyword').val('"+keywords+"');
+						showContent('search',{'KEYWORDS':'"+keywords+"'});
+						return false;
 						}).text(keywords).appendTo($o);
 					}
 				return $o;
@@ -2611,7 +2792,7 @@ else	{
 					}
 					
 				if(errors == ''){
-					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'authenticateZoovyUser','extension':'myRIA'});
+					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
 //					app.ext.store_crm.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					

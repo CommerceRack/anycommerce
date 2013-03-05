@@ -36,29 +36,30 @@ var admin_orders = function() {
 		"pools" : ['RECENT','PENDING','REVIEW','HOLD','APPROVED','PROCESS','COMPLETED','CANCELLED'],
 		"payStatus" : ['Paid','Pending','Denied','Cancelled','Review','Processing','Voided','Error','unknown'], //the order here is VERY important. matches the first char in paystatus code.
 		"emailMessages" : {
-			'OCREATE':'Order created',
-			'OCUSTOM1' : 'Order custom 1',
-			'OCUSTOM2' : 'Order custom 2',
-			'ODENIED' : 'Order payment denied',
-			'OFBAMAZON' : 'Amazon Feedback request',
-			'OMERGE' : 'Your order has been merged',
+			'ORDER.CONFIRM':'Order created',
+			'ORDER.CUSTOM_MESSAGE1' : 'Order custom 1',
+			'ORDER.CONFIRM_DENIED' : 'Order confirmation w/payment denied',
 			'ORDER.ARRIVED.AMZ' : 'Order arrived: Amazon follow up',
 			'ORDER.ARRIVED.BUY' : 'Order arrived: Buy.com follow up',
 			'ORDER.ARRIVED.EBF' : 'Order arrived: eBay follow up',
 			'ORDER.ARRIVED.WEB' : 'Order arrived: website follow up',
+			'ORDER.FEEDBACK.AMZ' : 'Amazon Feedback request',
+			'ORDER.FEEDBACK.EBAY' : 'eBay Feedback request',
 			'ORDER.NOTE' : 'Order %ORDERID%',
-			'ORDER.SHIP.EBAY' : 'Your order has been shipped.',
-			'OSPLIT' : 'Changes to your order',
-			'PAYREMIND' : 'Payment reminder',
-			'STATAPPR' : 'Order %ORDERID% approved',
-			'STATBACK' : 'Order %ORDERID% backordered',
-			'STATCOMP' : 'Order %ORDERID% shipped',
-			'STATKILL' : 'Order %ORDERID% cancelled',
-			'STATPEND' : 'Order %ORDERID% pending',
-			'STATPRE' : 'Order %ORDERID% preordered',
-			'STATPROC' : 'Order %ORDERID% processing',
-			'STATRECN' : 'Order %ORDERID% moved to recent',
-			'TRACKING' : 'Order %ORDERID% shipped',
+			'ORDER.SHIPPED' : 'Order %ORDERID% shipped',
+			'ORDER.SHIPPED.EBAY' : 'Your eBay order has been shipped.',
+			'ORDER.SHIPPED.AMZ' : 'Your Amazon order has been shipped.',
+			'ORDER.MERGED' : 'Your order has been merged',
+			'ORDER.SPLIT' : 'Changes to your order',
+			'ORDER.PAYMENT_REMINDER' : 'Payment reminder',
+			'ORDER.MOVE.APPROVED' : 'Order %ORDERID% approved',
+			'ORDER.MOVE.RECENT' : 'Order %ORDERID% backordered',
+			'ORDER.MOVE.COMPELTED' : 'Order %ORDERID% completed',
+			'ORDER.MOVE.CANCEL' : 'Order %ORDERID% cancelled',
+			'ORDER.MOVE.PENDING' : 'Order %ORDERID% pending',
+			'ORDER.MOVE.PREORDER' : 'Order %ORDERID% preordered',
+			'ORDER.MOVE.PROCESSING' : 'Order %ORDERID% processing',
+			'ORDER.MOVE.RECENT' : 'Order %ORDERID% moved to recent',
 			'CUSTOMMESSAGE' : 'Custom/Edit message' //if this changes, change class here in orders css: .orderManagerTable .bulkEditMenu .emailmsg_custommessage
 			},
 		"markets" : {
@@ -79,6 +80,9 @@ var admin_orders = function() {
 //				app.u.dump("DEBUG - template url is changed for local testing. add: ");
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/orders.css','orders_styles']);
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/orders.html',theseTemplates);
+				
+				app.ext.admin_orders.u.handleOrderListTab('init');
+				
 				return r;
 				},
 			onError : function()	{
@@ -336,11 +340,19 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 //handle the icon.
 				if($row.data('status') == 'queued')	{} //do nothing here. leave the wait icon alone.
 				else if($row.hasClass('ui-selected'))	{
-					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>");
+					$('td:eq(0)',$row).html("<span class='ui-icon ui-icon-circle-check'></span>"); //change icon in col 1
+//make orderid clickable in col 2. Has to use mousedown because selectable adds a helper div under the mouse that causes the link click to not trigger.
+					$('td:eq(1) span',$row).addClass('lookLikeLink').off('mousedown.orderLink').on('mousedown.orderLink',function(){ 
+						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
+						})
 					}
 				else	{
 					$('td:eq(0)',$row).html(""); //empty status icon container.
+					$('td:eq(1) span',$row).removeClass('lookLikeLink').off('mousedown.orderLink'); //remove clickable link
 					}
+				
+				
+				
 				});
 			if($(".ui-selected",$(this)).length > 0)	{
 				$("[data-ui-role='admin_orders|orderUpdateBulkEditMenu']").show().effect("highlight", {},1000);
@@ -356,7 +368,21 @@ var statusColID = app.ext.admin_orders.u.getTableColIndexByDataName('ORDER_PAYME
 	}
 else	{
 	$('#orderListTableContainer').append("<div class='noOrdersMessage'>There are no orders that match the current filter criteria.<\/div>");
+	//if this was a keyword search and the keyword was an order ID, show this extra messaging to allow the user to attempt to load the order directly. 
+	//good for if elastic is having emotional issues.
+
+	var regex = /^20\d\d-[01]\d-[\d]+$/;
+	if(tagObj.keyword && regex.test(tagObj.keyword))	{
+		app.u.dump("The search was for an order ID.");
+		$('#orderListTableContainer').append($("<div \/>").addClass('lookLikeLink').on('click',function(){
+			$('#ordersContent').empty();
+			app.ext.admin_orders.a.showOrderView(tagObj.keyword,'','ordersContent'); //adds a showLoading
+			app.model.dispatchThis();
+			}).append("<b>Click here</b> to load order "+tagObj.keyword));
+		}
 	}
+
+
 
 				}
 			} //listOrders
@@ -373,7 +399,7 @@ else	{
 		initOrderManager : function(P)	{
 			app.u.dump("BEGIN admin_orders.a.initOrderManager");
 //			app.u.dump(P);
-
+			app.ext.admin_orders.u.handleOrderListTab('deactivate')
 			var oldFilters = app.ext.admin.u.dpsGet('admin_orders');
 			if(P.filters){app.u.dump(" -> filters were passed in");} //used filters that are passed in.
 			else if(oldFilters != undefined)	{
@@ -529,8 +555,8 @@ else	{
 //targetID can be a tab, so the order template is appended to that (assigned to $order) and that is what's modified/tranlated. NOT targetID.
 //otherwise, it could be possible to load new content into the tab but NOT have the data attributes cleaned out.
 		showOrderView : function(orderID,CID,targetID,Q)	{
-			app.u.dump("BEGIN orders.a.showOrderView");
-			app.u.dump(" -> cid: "+CID);
+//			app.u.dump("BEGIN orders.a.showOrderView");
+//			app.u.dump(" -> cid: "+CID);
 			var r = 1; //what is returned. # of dispatches that occur.
 			Q = Q || 'mutable'
 			if(orderID && targetID)	{
@@ -543,12 +569,12 @@ $order.attr('data-order-view-parent',orderID); //put this on the parent so that 
 //create an instance of the invoice display so something is in front of the user quickly.
 $target.append($order);
 
-$('body').showLoading({'message':'Requesting up to date order information.'});
+$('body').showLoading({'message':'Fetching order'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
-	app.u.dump("Executing callback for adminOrderDetail");
+//	app.u.dump("Executing callback for adminOrderDetail");
 	
 	$('body').hideLoading();
 	if(app.model.responseHasErrors(responseData)){
@@ -607,11 +633,11 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 	},'extension':'admin_orders','selector':'#'+$order.attr('id')},Q);
 //zero isn't a valid cid.  cid must also be a number.
 if(Number(CID) > 0)	{
-	app.u.dump("fetch customer record");
+//	app.u.dump("fetch customer record");
 	r += app.ext.admin.calls.adminCustomerDetail.init({'CID':CID},{'callback':'translateSelector','extension':'admin','selector':'#customerInformation'},Q); //
 	}
 else	{
-	app.u.dump("WARNING! - no CID set.");
+	app.u.dump("WARNING! - no CID set. not critical, but CID is preferred.");
 	}
 //dispatch occurs outside this function.
 $("[data-app-role='orderContents']",$target).anypanel({'showClose':false});
@@ -1013,6 +1039,61 @@ else	{
 
 		u : {
 
+
+		handleOrderListTab : function(process)	{
+//			app.u.dump("BEGIN admin_orders.u.handleOrderListTab");
+			var $target = $('#orderListTab');
+			if($target.length)	{
+//init should be run when the extension is loaded. adds click events and whatnot.
+				if(process == 'init')	{
+//					app.u.dump(" -> process = init");
+					$target.hide();  //make sure it's invisible.
+					$('.tab',$target).on('click.showOrderListTab',function(){
+						if($target.css('left') == '0px')	{
+							app.ext.admin_orders.u.handleOrderListTab('collapse');
+							}
+						else	{
+							app.ext.admin_orders.u.handleOrderListTab('expand');
+							}
+						});
+					}
+				else if(process == 'activate')	{
+					$target.css('left',0).show(); //make tab/contents visible.
+					$( "#orderListTableBody" ).selectable( "disable" ); //remove the selectable functionality.
+					var $tbody = $('tbody',$target);
+					$('thead tr',$target).empty().append($('th','#orderListTable').clone());
+					$tbody.empty().append($('#orderListTableBody').children()); //clear old orders first then copy rows over.
+//remove click event to move the orders over to the tab, since they're already in the tab.
+					$("[data-app-event='admin_orders|orderUpdateShowEditor']",$tbody).off('click.moveOrdersToTab').on('click.hideOrderTab',function(){
+						app.ext.admin_orders.u.handleOrderListTab('collapse');
+						});
+					$("table",$target).anytable();
+					$('td .orderid',$target).addClass('lookLikeLink').on('click.orderLink',function(){
+						$(this).closest('tr').find("[data-app-event='admin_orders|orderUpdateShowEditor']").trigger('click');
+						})
+//pause for just a moment, then shrink the panel. Lets user see what happened.
+					setTimeout(function(){
+						app.ext.admin_orders.u.handleOrderListTab('collapse');
+						},1500);
+					}
+				else if(process == 'collapse')	{
+					$target.animate({left: -($target.outerWidth())}, 'slow');
+					}
+				else if(process == 'expand')	{
+					$target.animate({left: 0}, 'fast');
+					}
+				else if(process == 'deactivate')	{
+					$target.hide();
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_orders.u.handleOrderListTab, unrecognized process ['+process+']','gMessage':true});
+					}
+				}
+			else	{
+				app.u.dump("admin_orders.u.handleOrderListTab function executed, but orderListTab not on DOM."); //noncritical error. do not show to user.
+				}
+			},
+
 // gets run after a filter is run. never on filter click unless click submits.
 		handleFilterCheckmarks : function($target)	{
 			$(".ui-icon-check",$target).empty().remove(); //clear all checkmarks.
@@ -1366,7 +1447,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 					
 					if(templateID)	{
 						$('#printContainer').empty(); //clean out any previously printed content.
-						$('body').showLoading();
+						$('body').showLoading({'message':'Generating file for print'});
 						
 						app.calls.appProfileInfo.init({'profile':'DEFAULT'},{},'immutable'); //have this handy for any orders with no sdomain.
 						
@@ -1567,7 +1648,7 @@ $('.editable',$container).each(function(){
 					$content.append(app.renderFunctions.createTemplateInstance(obj.templateID,{'orderid':obj.orderID}));
 
 					$content.dialog(dialogParams);
-					$content.showLoading();
+					$content.showLoading({'message':'Loading order information'});
 					app.ext.admin.calls.adminOrderDetail.init(obj.orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin'},'mutable');
 					app.model.dispatchThis('mutable');
 				
@@ -1943,7 +2024,7 @@ else	{
 							app.ext.admin_orders.a.showCustomMailEditor(orderID,app.data["adminOrderDetail|"+orderID].our.prt || 0); //if partition isn't set, use default partition.
 							}
 						else	{
-							$('body').showLoading();
+							$('body').showLoading({'message':'Emailing customer [message: '+$(this).attr('href').substring(6)+']'});
 //substring(6) on the link below strips #MAIL| from the url
 							app.ext.admin.calls.adminOrderUpdate.init(orderID,["EMAIL?msg="+$(this).attr('href').substring(6)],{'callback':'handleSendEmailFromEdit','extension':'admin_orders'});
 							app.model.dispatchThis('immutable');
@@ -2006,7 +2087,7 @@ else	{
 //						app.ext.admin.calls.adminPrivateSearch.init({'size':20,'type':['order',frmObj.type],'query':{'query_string':{'query':frmObj.keyword}}},{'callback':'listOrders','extension':'admin_orders'},'immutable');
 						$('#orderListTableBody').empty();
 						$('.noOrdersMessage','#orderListTableContainer').empty().remove(); //get rid of any existing no orders messages.
-						$('body').showLoading();
+						$('body').showLoading({'message':'Searching orders...'});
 if(frmObj.isDetailedSearch == 'on')	{
 	query = {'size':Number(frmObj.size) || 30,'filter' : {
 	'or' : [
@@ -2027,7 +2108,7 @@ else	{
       }}
 	}
 
-app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem'},'immutable');
+app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extension':'admin_orders','templateID':'adminOrderLineItem','keyword':frmObj.keyword},'immutable');
 
 						app.model.dispatchThis('immutable');
 						}
@@ -2213,7 +2294,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 										}
 									}
 								}
-							else if(formJSON.flagAsPaid.toLowerCase() == 'on')	{
+							else if(formJSON.flagAsPaid && formJSON.flagAsPaid.toLowerCase() == 'on')	{
 								CMD = "ADDPAIDPAYMENT";
 								delete formJSON.flagAsPaid;
 								}
@@ -2246,7 +2327,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					event.preventDefault();
 
 					var $parent = $btn.closest("[data-ui-role='orderUpdateAddTrackingContainer']");
-					$parent.showLoading(); //run just on payment panel
+					$parent.showLoading({'message':'Updating order with tracking information'}); //run just on payment panel
 					var kvp = $btn.parents('form').serialize();
 					app.ext.admin.calls.adminOrderUpdate.init($btn.data('orderid'),["ADDTRACKING?"+kvp],{},'immutable');
 					app.model.destroy('adminOrderDetail|'+$btn.data('orderid')); //get a clean copy of the order.
@@ -2304,11 +2385,20 @@ else	{
 //the edit button in the order list mode. Will open order editable format.
 			"orderUpdateShowEditor" : function($btn){
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				
+				//a separate click event is added for the tab functionality so that it can be removed when orders are moved.
+				//otherwise, clicking the edit button in the tab will duplicate orders (or barf)
+				$btn.off('click.moveOrdersToTab').on('click.moveOrdersToTab',function(){
+					var orderID = $(this).attr('data-orderid');
+					if(orderID)	{
+						app.ext.admin_orders.u.handleOrderListTab('activate');
+						}
+					});
+				
 				$btn.off('click.orderUpdateShowEditor').on('click.orderUpdateShowEditor',function(event){
 					event.preventDefault();
-//						app.u.dump("show order editor");
-					var orderID = $(this).attr('data-orderid');
-					var CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
+					var orderID = $(this).attr('data-orderid'),
+					CID = $(this).closest('tr').attr('data-cid'); //not strictly required, but helpful.
 					if(orderID)	{
 						$(app.u.jqSelector('#',"ordersContent")).empty();
 						app.ext.admin_orders.a.showOrderView(orderID,CID,"ordersContent"); //adds a showLoading
@@ -2361,7 +2451,7 @@ else	{
 						height:600,
 						close: function(event, ui){$(this).dialog('destroy').remove()} //garbage collection. removes from DOM.
 						});
-					$content.showLoading();
+					$content.showLoading({'message':'Fetching order'});
 					
 					if(sdomain)	{app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');}
 					app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':'translateSelector','selector':"#"+$content.attr('id'),'extension':'admin','merge':'appProfileInfo|'+sdomain},'mutable');

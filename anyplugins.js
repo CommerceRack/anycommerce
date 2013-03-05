@@ -1,12 +1,15 @@
 /*
 
-
-
+This file is a variety of plugins that are either open-source or were written by Zoovy/anycommerce.
+They're in one file just to minimize the number of includes.
 plugins fairly tailored to the anycommerce/zoovy mvc.
 
 anymessage - throw a message at the user, supporting classes and icons for severity.
 anytabs - a simple tab script that does NOT use id's. jqueryui tabs does not play well on recycled templates (cat, product, etc). ok in checkout/cart.
 anycontent - used to generate content (go figure). pass in a template id and/or data for translation and appending to jqObject.
+anypanel - turn an element into a toggle-able panel with localStorage based persistence.
+anycb - will turn a label/checkbox into an IOS-esque on/off toggle
+anytable - apply to any table with a thead and the th within that head will be clickable for sorting by that column.
 
 jqueryui widget/plugin help can be found here:
 http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-plugin/
@@ -17,7 +20,11 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 
 
 /*
-//////////////////// ANY MESSAGE \\\\\\\\\\\\\\\\\\\\\
+
+
+/////  ANYMESSAGE  \\\\\
+
+
 anymessage - a utility for throwing any commerce messages to the user.
 examples: 
 $('#allBase').anymessage({'message':'All your base are belong to us'});
@@ -34,8 +41,8 @@ For the list of available params, see the 'options' object below.
 (function($) {
 	$.widget("ui.anymessage",{
 		options : {
-			message : null, //a string or a anycommerce message object (err or _msg or @issues are acceptable)
-			gMessage : false, //set to true to throw a generic message. Will include extra error details
+			message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 			persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
@@ -46,16 +53,20 @@ For the list of available params, see the 'options' object below.
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-			o.persistant = o.message.errtype == 'iseerr' ? true :o.persistant; //iseErr should be persistant
 
 			o.messageElementID = 'msg_'+app.u.guidGenerator(); //a unique ID applied to the container of the message. used for animating.
-			self.output = self._getContainer(); //the jquery object of the message output.
-			self.output.attr('id',o.messageElementID);
 			
-			self.output.append(self._getCloseButton()); //a close button is always generated, even on a persistent message.
-			self.output.append(self._getIcon());
-			self.output.append(self._getFormattedMessage());
-			$t.prepend(self.output); //
+//the content is in an array because otherwise adding multiple messages to one selector causes them to share properties, which is not a desired behavior.
+			if(typeof self.outputArr == 'object')	{}
+			else	{self.outputArr = new Array()}
+			
+			var i = self.outputArr.push(self._getContainer()) - 1;  //the jquery object of the message output.
+			self.outputArr[i].attr('id',o.messageElementID);
+			
+			self.outputArr[i].append(self._getCloseButton()); //a close button is always generated, even on a persistent message.
+			self.outputArr[i].append(self._getIcon());
+			self.outputArr[i].append(self._getFormattedMessage(i));
+			$t.prepend(self.outputArr[i]); //
 
 			if(o.persistant)	{} //message is persistant. do nothing.
 			else	{this.ts = setTimeout(function(){$t.anymessage('close');},10000);} //auto close message after a short duration.
@@ -66,25 +77,17 @@ For the list of available params, see the 'options' object below.
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			},
 
-//an animated 'close'
-		close : function(){
-//the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
-//also, remove the message (this.output), not the target element, which may have a lot of other content.
-			if(this.output.is(':visible'))	{
-				this.output.slideUp('slow');
-				}
-			else	{} //already closed. do nothing. could get here if message closed manually, before timeout runs.
-			},
+
 
 		_getIcon : function()	{
 			var o = this.options, //shortcut
 			msg = o.message,
 			r; //what is returned
 			if(o.iconClass)		{}
-			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-'+msg.errtype}
-			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
+			else if(msg && typeof msg == 'object' && msg.errtype)	{o.iconClass = 'ui-icon-z-'+msg.errtype}
+			else if(msg && typeof msg == 'object' && msg['_msg_0_type'])	{o.iconClass = 'ui-icon-z-'+msg['_msg_0_type']} //only 1 icon is displayed, so just show the first.
 			else	{o.iconClass = 'ui-icon-info'}
-			
+//			app.u.dump(" -> o.iconClass: "+o.iconClass);
 			return $("<span \/>").addClass('ui-icon ui-icon-anymessage').addClass(o.iconClass).css({'float':'left','marginRight':'5px','marginBottom':'5px','marginTop':'3px'});
 			},
 
@@ -93,46 +96,53 @@ For the list of available params, see the 'options' object below.
 			return $("<button \/>")
 				.text('close message').css({'float':'right','marginLeft':'5px','marginBottom':'5px'})
 				.button({icons: {primary: "ui-icon-circle-close"},text: false})
-				.addClass(this.options.message.errtype == 'iseerr' ? 'ui-state-error' : '')
-				.on('click.closeMsg',function(event){event.preventDefault(); $t.anymessage('close')});
+				.on('click.closeMsg',function(event){event.preventDefault(); $t.anymessage('close',$(this).closest('.ui-widget-anymessage'))});
 			},
 
 //adds the outer 'container' div around the message.
 		_getContainer : function()	{
-			return $("<div \/>").addClass("ui-widget ui-widget-content ui-corner-all marginBottom").css({'padding':'5px','min-height':'28px'}).addClass(this.options.containerClass);
+			return $("<div \/>").addClass("ui-widget ui-widget-content ui-widget-anymessage ui-corner-all marginBottom").css({'padding':'5px','min-height':'28px'}).addClass(this.options.containerClass);
 			},
 
 
-		_getFormattedMessage : function(m)	{
-			app.u.dump(" -> _getFormattedMessage executed");
+		_getFormattedMessage : function(instance)	{
+//			app.u.dump(" -> _getFormattedMessage executed");
 			var o = this.options, //shortcut
-			msg = app.u.isSet(m) ? m : o.message, //shortcut to the message itself.
+			msg = o.message || o, //shortcut to the message itself. if message blank, options are used, which may contain the response data errors (_msgs, err etc)
 			msgDetails = "", //used for iseerr (server side error) and ise/no response
 			$r, //what is returned.
 			amcss = {'margin':'0','paddingBottom':'5px'} //anyMessageCSS - what's applied to P (or each P in the case of _msgs)
+			
+			
 			if(!msg)	{
-				app.u.dump(" -> msg is blank. could be that message is being handled as a method.");
+//				app.u.dump(" -> msg is blank. could be that message is being handled as a method.");
 				//no message passed. is ok because messages 'could' get handled as a method.
 				}
 			else if(typeof msg == 'string')	{
-				$r = $("<p \/>").addClass('anyMessage').css(amcss).text(msg);
+//				app.u.dump(" -> msg is string: "+msg);
+				$r = $("<p \/>").addClass('anyMessage').css(amcss).html(msg);
 				}
 			else if(typeof msg == 'object')	{
-//				app.u.dump(" -> msg type is object.");
-				if(msg['_msgs'])	{
+//				app.u.dump(" -> msg type is object."); app.u.dump(msg);
+				if(msg._msgs)	{
 				app.u.dump(" -> msg format is _msgs.");
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 1; i <= msg['_msgs']; i += 1)	{
 						$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
 						}
 					}
-				else if(msg['errid'])	{
-//					app.u.dump(" -> msg type is err.");
+				else if(msg.errid)	{
+					app.u.dump(" -> msg type is err.");
 					$r = $("<p \/>").addClass('anyMessage').css(amcss).addClass(msg.errtype).text(msg.errmsg+" ["+msg.errid+"]");
 					
 					if(msg.errtype == 'iseerr')	{
-					app.u.dump(" -> msg IS iseerr.");
-					this.output.addClass('ui-state-error');
+//					app.u.dump(" -> msg IS iseerr.");
+
+					o.persistant = true; //iseErr should be persistant
+					this.outputArr[instance].addClass('ui-state-error');
+					$('button',this.outputArr[instance]).button('disable');
+
+					this.outputArr[instance].addClass('ui-state-error');
 						var msgDetails = "<ul>";
 						msgDetails += "<li>errtype: iseerr<\/li>";
 						msgDetails += "<li>errid: "+msg.errid+"<\/li>";
@@ -154,20 +164,41 @@ For the list of available params, see the 'options' object below.
 						}
 					}
 				else	{
-					$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured');
+//					$r = $("<p \/>").addClass('anyMessage').text('An unknown error has occured');
 					} //unknown data format
 				}
 			else	{
-				app.u.dump(" -> app.u.formatResponseErrors 'else' hit. Should not have gotten to this point");
+//				app.u.dump(" -> app.u.formatResponsethis.span 'else' hit. Should not have gotten to this point");
 				$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured'); //don't want to have our error handler generate an error on screen.
 				}
 			return $r;
 
 			},
-
-		addMessage : function(m)	{
-//			console.log("Here comes my M face:"); console.dir(m);
-			this.output.append(this._getFormattedMessage(m));
+//intended for use inside the user interface
+/*
+		'type' : {
+			'success' : {'iconClass':'ui-icon-z-success','containerClass':''}
+			},
+*/
+//an animated 'close'
+		close : function($message){
+			var $target;  //what is being closed. could be an individual message OR all messages.
+			if($message)	{
+				$target = $message;
+				}
+			else	{
+				$target = $('.ui-widget-anymessage',this.element);
+				}
+			
+			$target.each(function(){
+//the message could be removed manually prior to the callback being executed, so don't animate if that's the case. (avoids popping issue)
+//also, remove the message (this.output), not the target element, which may have a lot of other content.
+				if($(this).is(':visible'))	{
+					$(this).slideUp('fast');
+					}
+				else	{} //already closed. do nothing. could get here if message closed manually, before timeout runs.
+				
+				})
 			},
 
 //clear the message entirely. run after a close. removes element from DOM.
@@ -183,7 +214,7 @@ For the list of available params, see the 'options' object below.
 /*
 
 
-//////////////////// ANY TABS \\\\\\\\\\\\\\\\\\\\\
+/////  ANYTABS  \\\\\
 
 anytabs - a simple tab script that does NOT use id's.
 Format content like so:
@@ -339,7 +370,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 /*
 
-//////////////////// ANY TEMPLATE \\\\\\\\\\\\\\\\\\\\\
+/////  ANYCONTENT  \\\\\
 
 $("#something").anycontent({'templateID':'someTemplate'});
 $("#something").anycontent({'templateID':'someTemplate','datapointer':'appProductGet|PID'});
@@ -393,24 +424,24 @@ either templateID or (data or datapointer) are required.
 
 
 		_anyContent : function()	{
-			app.u.dump(" -> _anyContent executed.");
+//			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
 			r = true; // what is returned. false if not able to create template.
 			
 			
-			if(o.templateID && o.datapointer && app.data[datapointer])	{
-				app.u.dump(" -> template and datapointer present. transmogrify.");
+			if(o.templateID && o.datapointer && app.data[o.datapointer])	{
+//				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
-				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[datapointer]));
+				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[o.datapointer]));
 				}
 			else if(o.templateID && o.data)	{
-				app.u.dump(" -> template and data present. transmogrify.");
-				this.element.hideLoading().removeClass('loadingBG');
+//				app.u.dump(" -> template and data present. transmogrify.");
+				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
-				app.u.dump(" -> templateID specified. create Instance.");
+//				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				if(o.showLoading)	{
 					this.element.showLoading(o.showLoadingMessage);
@@ -418,12 +449,18 @@ either templateID or (data or datapointer) are required.
 				}
 //if just translating because the template has already been rendered
 			else if(o.data)	{
-				app.u.dump(" -> data specified, translate selector");
+//				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,o.data);
 				this.element.hideLoading().removeClass('loadingBG');
 				}
+//if just translating because the template has already been rendered
+			else if(o.datapointer  && app.data[o.datapointer])	{
+//				app.u.dump(" -> data specified, translate selector");
+				app.renderFunctions.translateSelector(this.element,app.data[o.datapointer]);
+				this.element.hideLoading().removeClass('loadingBG');
+				}
 			else	{
-				//should never get here. function won't be run if no templateID specified.
+				//should never get here. error handling handled in _init before this is called.
 				r = false;
 				}
 			return r;
@@ -454,12 +491,7 @@ either templateID or (data or datapointer) are required.
 
 
 
-/*
 
-This file is a variety of plugins that are either open-source or were written by Zoovy/anycommerce.
-They're in one file just to minimize the number of includes.
-
-*/
 
 
 /**
@@ -538,7 +570,18 @@ jQuery.fn.sortElements = (function(){
 
 
 
+
+
+
+
+
 /*
+
+
+/////  ANYTABLE  \\\\\
+
+
+
 run $('#someTable').anytable() to have the headers become clickable for sorting by that column.
 */
 
@@ -563,7 +606,17 @@ th.click(function(){
 	$table.find('td').filter(function(){
 		return $(this).index() === thIndex;
 		}).sortElements(function(a, b){
-			return $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+			var r;
+			var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
+			var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
+			if(numA && numB)	{
+//				console.log('is a number');
+				r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+				}
+			else	{
+				r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+				}
+			return r
 			},function(){
 		// parentNode is the element we want to move
 		return this.parentNode; 
@@ -613,6 +666,76 @@ th.click(function(){
 			}
 		}); // create the widget
 })(jQuery); 
+
+
+
+
+
+
+
+
+
+
+/*
+
+
+/////  ANYCB  \\\\\
+
+
+
+run $('label').anycb() over a piece of html formatted as <label><input type='checkbox'>Prompt</label>
+and it'll turn the cb into an ios-esque on/off switch.
+*/
+(function($) {
+	$.widget("ui.anycb",{
+		options : {
+			},
+		_init : function(){
+			var self = this,
+			$label = self.element;
+			
+			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			else	{
+				var $input = $("input",$label).first(),
+				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
+				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
+	
+				$label.data('anycb',true);
+				self.span = $span; //global (within instance) for easy reference.
+
+				$input.hide();
+				$container.append($span);
+				$label.prepend($container);
+				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
+		
+				$input.on('change.anycb',function(){
+					if($input.is(':checked')){self._turnOn();}
+					else	{self._turnOff();}
+					});
+				}
+
+			}, //_init
+		_turnOn : function()	{
+			this.span.text('on');
+			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
+			this.span.animate({'left':-1},'fast');
+			},
+		_turnOff : function()	{
+			this.span.text('off');
+			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
+			this.span.animate({'left': 24},'fast');
+			},
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+
+
 
 
 
@@ -767,15 +890,20 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 		_handleButtons : function($header)	{
 			var	self = this,
+			$t = self.element,
 			o = this.options,
 			buttonStyles = {'float':'right','width':'20px','height':'20px','padding':0,'margin':'2px'}; //classes applied to each of the buttons.
 			
-			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent());
-			
+			var $buttonSet = $("<div \/>").addClass('floatRight').css({'position':'absolute','top':'2px','right':'2px'}).appendTo($header.parent()); 
+
+//button to 'close' (removes from dom) the panel.			
 			if(o.showClose)	{
 				$buttonSet.append($("<button \/>").attr({'data-btn-action':'close','title':'close panel'}).addClass('ui-button-anypanel ui-button-anypanel-close').css(buttonStyles).button({icons : {primary : 'ui-icon-close'},'text':false}).on('click.panelClose',function(event){event.preventDefault(); self.destroy()})); //settings button
 				}
+//button to toggle (expand/collapse) the panel.
+			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(event){event.preventDefault(); self.toggle()})); //settings button
 
+//tools menu, which will be a wrench button with a dropdown of options.
 			$buttonSet.append($("<button \/>").hide().attr('data-btn-action','settingsMenu').addClass('ui-button-anypanel ui-button-anypanel-settings').css(buttonStyles).text('Settings')
 				.button({text: false,icons : {primary : 'ui-icon-wrench'}})
 				.off('click.settingsMenu').on('click.settingsMenu',function(event){
@@ -789,7 +917,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 					})); //the settings button is always generated, but only toggled on when necessary.
 			if(o.settingsMenu)	{self._buildSettingsMenu()}			
 
-			$buttonSet.append($("<button \/>").attr({'data-btn-action':'toggle','title':'expand/collapse panel'}).addClass('ui-button-anypanel ui-button-anypanel-toggle').css(buttonStyles).button({icons : {primary : 'ui-icon-triangle-1-n'},'text':false}).on('click.panelViewState',function(event){event.preventDefault(); self.toggle()})); //settings button
 			},
 
 		_handleInitialState : function()	{
@@ -808,7 +935,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			else	{
 				console.warn("unknown state passed into anypanel");
 				}
-			}, // !!! not done or in use yet.
+			},
 
 		toggle : function(){
 			if(this.options.state == 'expand')	{this.collapse()}
@@ -837,7 +964,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			},
 
 		_handlePersistentStateUpdate : function(value)	{
-//			app.u.dump("BEGIN anypanel._handlePersistentStateUpdate")
+//			app.u.dump("BEGIN anypanel._handlePersistentStateUpdate");
 			var r = false; //will return true if a persistent update occurs.
 //			app.u.dump(" -> this.options.persistent: "+this.options.persistent);
 //			app.u.dump(" -> value: "+value);
@@ -847,11 +974,13 @@ Additional a settings button can be added which will contain a dropdown of selec
 					var settings = {};
 					settings[this.options.name] = {'state':value};
 					var newSettings = $.extend(true,app.ext.admin.u.dpsGet(this.options.extension,'anypanel'),settings); //make sure panel object exits.
+//					app.u.dump(' -> '+this.options.extension);
+//					app.u.dump(' -> newSettings:');	app.u.dump(newSettings);
 					app.ext.admin.u.dpsSet(this.options.extension,'anypanel',newSettings); //update the localStorage session var.
 					r = true;
 					}
 				else	{
-					console.warn("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistant.");
+					app.u.dump("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistant.",'warn');
 					}
 				}
 			return r;
@@ -860,14 +989,16 @@ Additional a settings button can be added which will contain a dropdown of selec
 		_destroySettingsMenu : function()	{
 			$("[data-app-role='settingsMenu']",this.element).empty().remove();
 			},
-		
+
 		_buildSettingsMenu : function()	{
-			var $ul = $("<ul \/>"),
+			var $ul = $("<ul \/>").css({'width':'200px'}),
 			sm = this.options.settingsMenu;
-			
+
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
 			for(index in sm)	{
-				$("<li \/>").text(index).on('click',sm[index]).appendTo($ul);
+				$("<li \/>").addClass('ui-state-default').on('click',sm[index]).on('click.closeMenu',function(){
+					$ul.menu( "collapse" ); //close the menu.
+					}).hover(function(){$(this).addClass('ui-state-hover')},function(){$(this).removeClass('ui-state-hover')}).text(index).appendTo($ul);
 				}
 			if($ul.children().length)	{
 				$ul.menu();
@@ -890,18 +1021,19 @@ Additional a settings button can be added which will contain a dropdown of selec
 /* will convert a tbody into a csv */
 
 jQuery.fn.toCSV = function() {
-  var data = $(this).first(); //Only one table
-  var csvData = [];
-  var tmpArr = [];
-  var tmpStr = '';
-  data.find("tr").each(function() {
-      if($(this).find("th").length) {
-          $(this).find("th").each(function() {
-            tmpStr = $(this).text().replace(/"/g, '""');
-            tmpArr.push('"' + tmpStr + '"');
-          });
-          csvData.push(tmpArr);
-      } else {
+	var data = $(this).first(); //Only one table
+	var csvData = [];
+	var tmpArr = [];
+	var tmpStr = '';
+	data.find("tr").each(function() {
+	if($(this).find("th").length) {
+		$(this).find("th").each(function() {
+		tmpStr = $(this).text().replace(/"/g, '""');
+		tmpArr.push('"' + tmpStr + '"');
+		});
+		csvData.push(tmpArr);
+		}
+	else {
           tmpArr = [];
           $(this).find("td").each(function() {
              $(this).find("td").each(function() {
@@ -920,3 +1052,8 @@ jQuery.fn.toCSV = function() {
   var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
   window.open(uri);
 }
+
+
+
+
+

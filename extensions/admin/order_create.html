@@ -159,7 +159,7 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.convertSessionToOrder.u.updateCartQty($(this),{'callback':'loadPanelContent','extension':'convertSessionToOrder'}); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.convertSessionToOrder.u.updateCartQty($(this),{'callback':'loadPanelContent','extension':'convertSessionToOrder'}); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -566,7 +566,10 @@ This should get moved to orders when order is taken over
 	<td width='50%' valign='top'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: profile(zoovy:logo_invoice); defaultVar: profile(zoovy:company_logo); format:imageURL;  b:ffffff;' width='200' height='85' />
 	</td>
-	<td width='50%' valign='middle'><h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2></td>
+	<td width='50%' valign='middle'>
+	<h2 data-bind='var: order(our/orderid); format:text; pretext:Order: ;'></h2>
+	<div data-bind='var: order(our/orderid); format:text; pretext:Order: ;' class='barcode'></div>
+	</td>
 </tr>
 <tr>
 	<td valign='top'>

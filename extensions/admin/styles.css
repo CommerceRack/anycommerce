@@ -1,3 +1,8 @@
+@font-face	{
+	font-family: barcode3of9;
+	src: url('resources/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
 body {line-height: 1;} /* helps to reduce some errant whitespace issues */
 
 body	{margin:0; padding:0; background:#f1f1f1; } 
@@ -32,7 +37,7 @@ class can also be applied to a 1 item per row list.
 .valignMiddle	{vertical-align:middle;}
 
 
-.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly	{display:none;}
+.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly, .minimalMode .hideInMinimalMode	{display:none;}
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
@@ -62,7 +67,7 @@ a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 
 
 
-
+.barcode	{font-family: barcode3of9 !important;}
 /*section or page header. There should only be one of these per page and it should be at the very top.*/
 h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
 
@@ -144,7 +149,7 @@ using these shared margins will help make the UI more consistent.
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}
-.ui-widget-header-padding	{padding:3px 6px;}
+.ui-widget-header-padding	{padding:3px 6px !important;}
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
@@ -207,7 +212,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:96%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
 
 
 
@@ -249,11 +254,11 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 /* three column panel layout (homepage) */
 .twoColumn{  
 	width:49%;  
-	margin-right:1%;  
 	min-height:300px;  
 	float:left;  
 	}  
 
+.twoColumn.column2 {float:right;}
 
 .twoColumn .placeholder{  
 	background: #ffffff;  
@@ -261,6 +266,9 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+
+
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
 
 
 
@@ -587,17 +595,16 @@ Messaging Styles
 .ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
 .ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
 
-.ui-state-z-success .success	{background:none;} /* compensates for bg image for standard.css */
+.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center !important; width:29px; height:29px;}
 
-.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
-.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center; width:29px; height:29px;}
-
-.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat; width:25px; height:22px;}
-.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat; width:25px; height:25px;}
-.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat; width:25px; height:24px;}
-.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
+.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat !important; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
+.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
+.ui-icon-z-youerr	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 
 
 .anyIcon	{background:url(images/ui_anyicon_set-612x792.png) no-repeat; width:55px; height:55px; display:inline-block;}
@@ -696,23 +703,29 @@ DEBUGGER
 
 */
 
-#debugPanel	{position:fixed; bottom:0; right:0; left:0; height:125px; border:1px solid #cccccc;}
-#debugPanel .debugContent	{position:relative; z-index:10; padding:12px;}
-#debugPanel .debugBG	{
-	height:125px;
-	z-index:1;
-	position:absolute; top:0; bottom:0; left:0; right:0;
-	background: -moz-linear-gradient(top,  rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.35)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#59000000', endColorstr='#1a000000',GradientType=0 ); /* IE6-9 */
-	}
+#debugPanel	{position:fixed; bottom:100px; left:-15px; width:125px; padding-left:25px; display:none;}
+#debugPanel .debugMenu ul	{width:250px;}
+#debugPanel h5 {margin:4px 0;}
+#debugPanel h6 {margin:4px 0;}
 
 
+/*
 
+########################################################
+
+
+STYLES FOR SPECIFIC UI LAYOUTS (dualMode and soloMode)
+
+########################################################
+
+*/
+
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .heading, .soloModeListContainer .heading	{text-indent:12px; line-height:35px;}
+.dualModeListContainer .buttonSet, .soloModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
 
 
 
@@ -734,8 +747,9 @@ for use in forms where the label is the row container.
 put the prompt into a span
 <label><span>prompt</span>input</label>
 */
-.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
-.labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
 
 /* 
 within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
@@ -747,15 +761,16 @@ see shipping panel in product editor for example
 .labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-.alignedLabels label span	{width:30%;}
+.alignedLabels label span:first-of-type	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
 .alignedInputs input[type=url],
 .alignedInputs input[type=password],
-.alignedInputs input[type=text]	{width:65%;}
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:60%; }
 
 .alignedInputs input[type=number], 
-.alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
+.alignedInputs select	{max-width:60%;} /* shrink to fit widest option, but stay under threshold */
 
 
 
@@ -803,4 +818,15 @@ some pad (more or less)specific styles.
 */
 @media screen and (max-width: 1024px) {
 	.domainList li {padding:0 4px;}
+	}
+
+
+@media screen and (max-width: 800px) {
+	.twoColumn{  
+		width:100%;
+		clear:both;
+		}  
+	
+	.twoColumn.column2 {clear:both;}
+
 	}

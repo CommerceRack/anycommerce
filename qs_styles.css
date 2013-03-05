@@ -41,7 +41,7 @@ input:focus {
 	}
 
 button:focus	{outline:none;}
-button.ui-button	{padding:2px 12px !important;} /* jqueryui ui-button default class doesn't handle padding for 'button' elements. */
+
 .zform_number	{width:50px;}
 
 /*
@@ -121,11 +121,24 @@ and offMenu is toggle off, hiding the change button.
 
 
 /* messaging css. some error css is defined in the jqueryui styles */
-.appMessage	{margin-bottom:3px; text-align:left;}
-.appMessage .ui-icon	{float:left; margin:4px 5px;}
-.appMessage {padding:5px;} /* add padding to children, not parent, that way we can empty the parent and no space is reserved */
-.appMessage ul	{margin-left:12px; font-size:.9em;}
-.appMessage ul li	{margin:0; padding:0;}
+
+.appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
+.zMessage	{margin:6px; 0}
+
+.appMessage	{margin-bottom:12px; position:relative;}
+.appMessage .stdMargin {padding:5px;}
+.appMessage .ui-button	{position:absolute; top:-3px; right:-3px; z-index:100;}
+.appMessage .ui-icon	{float:left; margin-right:12px;}
+
+/* some messages have a red bg. add a white circle around the icon in these cases. */
+.ui-state-z-ise .ui-icon, .ui-state-z-error .ui-icon, .ui-state-z-debug .ui-icon	{
+	background-color:#ffffff;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+	}
+
+/*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
+.appMessage .appMessageTxt	{float:left;}
 
 .ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae; background:#dff6df; color:#333333;}
 .ui-state-warning	{border:1px solid #f58d48; background:#ffdfc9; color:#333333;}
@@ -136,7 +149,7 @@ and offMenu is toggle off, hiding the change button.
 
 
 
-/* pages like search results, company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
+/* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
 .mainColumn	{width:75%;}
 .sideline	{float:right; width:20%; margin:0 0 24px 0px;}
@@ -353,7 +366,22 @@ SEARCH RESULTS PAGE
 
 #mainContentArea_search	{position:relative;}
 
+.resultsHeader	{position:relative; padding:3px 6px;}
+.resultsMenuContainer	{position:absolute; top:1px; left:3px;}
+.resultsMenuContainer .resultsMenu	{margin:3px 12px 0 0px;} /* used for sorting and pagination menus */
+.resultsMenuContainer ul.ui-menu ul	{z-index:10000;}
 
+.resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
+
+.resultsMenuContainer .ui-menu-icon	{float:left;} /* make sure > icon in menu's floats to the left when subnav is avail. */
+
+.minimalMode .hideInMinimalMode	{display:none;}
+.minimalMode .searchResultsProduct	{
+	height:120px; width:120px; overflow:hidden; margin:0 5px 5px 0;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;
+	}
 
 /***************************************************
 
@@ -404,6 +432,7 @@ NOTE - Some of these classes are also shared with the cart summary that appears 
 .cartSummaryTotalsContainer h3	{margin:12px 0;} /* shipping methods prompt */
 
 .checkoutButton	{font-weight:bold !important;} /* probably want to customize this with a graphic or something that stands out much more */
+
 
 
 
@@ -531,34 +560,6 @@ CHECKOUT
 
 
 
-/* for order confirmation page of checkout */
-
-#invoiceContainer .balanceDue	{display:none;} /* in checkout, the cart object is used to display invoice, not an actual invoice. hide balance due, it's reported elsewhere */
-#invoiceContainer .writeReview	{display:none;}
-
-.facebookSendLineItem	{float:left; margin:3px;}
-.facebookSendLineItem img	{height:65px; width:56px;}
-
-
-/* error containers */
-p.zwarn, ul.zwarn	{border:1px solid #cc0000; padding:5px; margin:0 0 12px 0; background:#ffd6d6; clear:both; text-align:left;}
-ul.zwarn li	{margin-left:15px;}
-
-/* applied to fieldset once validated */
-.validatedFieldset	{} /* border:1px solid #006600 */
-.validatedFieldset legend	{} /* background-image:url(images/checkmark-25x26.png); background-position: top right; background-repeat: no-repeat; */
-
-
-
-/* -----------------> POST-CHECKOUT MARKETING PAGE  <----------------- */
-
-.checkoutSuccess	{padding:20px 0;} /* don't change this to margin. will F up sites */
-
-
-.ocmThirdParty	{ line-height:200%; width:300px;}
-.ocmThirdParty .ocm	{margin:0 5px 5px 0;  float:left;}
-
-
 
 
 
@@ -619,3 +620,6 @@ ul.zwarn li	{margin-left:15px;}
 	width: 160px;
 	}
 
+
+
+.debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}

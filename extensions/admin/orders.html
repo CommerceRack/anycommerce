@@ -28,7 +28,7 @@
 		<div data-ui-role='admin_orders|orderListFiltersUpdate'>
 			<section class='clearfix'>
 			<h4>Order Status:</h4>
-			<ul id='orderListFilterPool' class='noPadOrMargin filterGroup' data-filter='POOL'>
+			<ul id='orderListFilterPool' class='noPadOrMargin listStyleNone filterGroup' data-filter='POOL'>
 				<li data-filtervalue='RECENT' data-app-event='admin_orders|orderListFiltersUpdate'>Recent</li>
 				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
 				<li data-filtervalue='REVIEW' data-app-event='admin_orders|orderListFiltersUpdate'>Review</li>
@@ -43,7 +43,7 @@
 
 			<section class='clearfix'>
 			<h4>Payment Status:</h4>
-			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin filterGroup' data-filter='PAYMENT_VERB'>
+			<ul id='orderListFilterPaymentStatus' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_VERB'>
 				<li data-filtervalue='PAID' data-app-event='admin_orders|orderListFiltersUpdate'>Paid</li>
 				<li data-filtervalue='PENDING' data-app-event='admin_orders|orderListFiltersUpdate'>Pending</li>
 				<li data-filtervalue='DENIED' data-app-event='admin_orders|orderListFiltersUpdate'>Denied</li>
@@ -54,7 +54,7 @@
 			
 			<section class='clearfix'>
 			<h4>Payment Type:</h4>
-			<ul id='orderListFilterPaymentType' class='noPadOrMargin filterGroup' data-filter='PAYMENT_METHOD'>
+			<ul id='orderListFilterPaymentType' class='noPadOrMargin listStyleNone filterGroup' data-filter='PAYMENT_METHOD'>
 				<li data-filtervalue='PAYPAL' data-app-event='admin_orders|orderListFiltersUpdate'>PayPal</li>
 				<li data-filtervalue='CASH' data-app-event='admin_orders|orderListFiltersUpdate'>Cash</li>
 				<li data-filtervalue='CRED' data-app-event='admin_orders|orderListFiltersUpdate'>Credit</li>
@@ -64,7 +64,7 @@
 			
 			<section class='clearfix'>
 			<h4>Marketplace:</h4><!-- in integrations file OR in zoovy.pm (line 2613) -->
-			<ul id='orderListFilterMarket' class='noPadOrMargin filterGroup' data-filter='MKT'>
+			<ul id='orderListFilterMarket' class='noPadOrMargin listStyleNone filterGroup' data-filter='MKT'>
 				<li data-filtervalue='EBF' data-app-event='admin_orders|orderListFiltersUpdate'>eBay</li>
 				<li data-filtervalue='AMZ' data-app-event='admin_orders|orderListFiltersUpdate'>Amazon</li>
 			</ul>
@@ -135,13 +135,13 @@
 			<th></th>
 			<th data-name='ORDERID' title='order id'>order id</th>
 			<th data-name='ORDER_BILL_NAME' title='billing full name'>customer</th>
-			<th data-name='ORDER_TOTAL' title='order total'>total</th>
-			<th data-name='ORDER_ITEMS' title='order total'>items</th>
-			<th data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
+			<th class='hideInMinimalMode' data-name='ORDER_TOTAL' title='order total'>total</th>
+			<th class='hideInMinimalMode' data-name='ORDER_ITEMS' title='order total'>items</th>
+			<th class='hideInMinimalMode' data-name='ORDER_PAYMENT_METHOD' title='payment method'>method</th>
 			<th data-name='ORDER_PAYMENT_STATUS' title='order payment status'>status</th>
-			<th data-name='CREATED_GMT' title='date order created'>created</th>
-			<th data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
-			<th data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
+			<th class='hideInMinimalMode' data-name='CREATED_GMT' title='date order created'>created</th>
+			<th class='hideInMinimalMode' data-name='ORDER_SHIP_ZONE' title='shipping destination'>dest.</th>
+			<th class='hideInMinimalMode' data-name='REVIEW_STATUS' title='fraud review status'>fraud</th>
 			<th data-name='FLAGS' title='fraud review status'>flags</th>
 			<th data-name='REVIEW_STATUS' title='order status'>pool</th>
 			<th></th>
@@ -167,18 +167,18 @@
 	<td class='statusIcon'></td>
 	<td><span data-bind='var:order(ORDERID);format:text;' class='orderid'></span></td>
 	<td><span data-bind='var:order(ORDER_BILL_NAME);format:text;'></span></td>
-	<td><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
-	<td><span data-bind='var:order(ITEMS);format:text;'></span></td>
-	<td><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_TOTAL);format:money; currencySign: $;  hideZero:false;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ITEMS);format:text;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_PAYMENT_METHOD);format:text;'></span></td>
 	<td><span data-bind='var:order(ORDER_PAYMENT_STATUS);format:paystatus;extension:admin_orders;'></span></td>
-	<td><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
-	<td><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
-	<td><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><time data-bind='var:order(CREATED_GMT);format:unix2mdy;'></time></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(ORDER_SHIP_ZONE);format:billzone;extension:admin_orders;'></span></td>
+	<td class='hideInMinimalMode'><span data-bind='var:order(REVIEW_STATUS);format:reviewStatus;extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(FLAGS);format:orderFlagsAsSpans; extension:admin_orders;'></span></td>
 	<td><span data-bind='var:order(POOL);format:text;'></span></td>
-	<td NOWRAP>
-	<button data-app-event="admin_orders|orderUpdateShowEditor"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
-	<button data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
+	<td NOWRAP class='alignRight'>
+	<button data-app-event='admin_orders|orderUpdateShowEditor'  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>Edit</button>
+	<button class='hideInMinimalMode' data-app-event="admin_orders|orderUpdateQuickview"  data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>QuickView</button>
 	<menu class='displayNone orderQuickviewMenu'>
 		<h3>Quickview</h3>
 		<li data-app-event="admin_orders|qvOrderInvoice">Invoice</li>
@@ -518,7 +518,7 @@ The following templates are used in the 'order detail' modal/view.
 	</td>	
 	
 	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
-	<td><input type='number' name='price' data-bind="var: order(base_price); format:popVal;" size='7' step='0.01' min='0' /></td>
+	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td>
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
 	<td><button data-app-event="admin_orders|orderItemRemove">Remove From Order</button></td>

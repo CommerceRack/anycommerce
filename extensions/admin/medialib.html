@@ -230,7 +230,7 @@ the data-btn-action='selectUploads' triggers a click of the span btn-success bel
 	<li id='mediaLibFolderTemplate' class='mediaLibraryFolder'>
 	<a href='#' onClick="app.ext.admin_medialib.a.showMediaAndSubs($(this).parent().data()); return false;">
 		<span class="ui-icon ui-icon-folder-collapsed floatLeft"></span>
-		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/;"></span>
+		<span data-bind="var: media(FName); format:getIndexOfSplit; extension:admin; splitter:/; hideZero:false;"></span>
 		<span data-bind="var: media(ImageCount); format:text; pretext:(; posttext:);"></span>
 	</a>
 	<ul class='displayNone marginLeft' data-bind="var: media(FID); format:assignAttribute; attribute:id; valuePretext:mediaChildren_;"></ul>
