@@ -799,7 +799,8 @@ fallback is to just output the value.
 					else if(pData['is:sizeable'])	{
 						buttonText = 'Choose Size'; className = 'variational sizeable';
 						}
-					else if(!$.isEmptyObject(pData['@variations']))	{
+//pdata is a shortcut to attribs.
+					else if(data.value['@variations'].length)	{
 						buttonText = 'Choose Options'; className = 'variational';
 						}
 					else	{
