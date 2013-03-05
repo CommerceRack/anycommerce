@@ -111,6 +111,8 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 //the request that uses this as a callback should have the following params set for _tag:
 // parentID, templateID (template used on each item in the results) and datapointer.
+//the request that uses this as a callback should have the following params set for _tag:
+// parentID, templateID (template used on each item in the results) and datapointer.
 		handleElasticResults : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN myRIA.callbacks.handleElasticResults.onSuccess.");
@@ -133,6 +135,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 	
 						var EQ = $list.data('elastic-query'); //Elastic Query
 						if(EQ)	{
+							
 							var $header = app.ext.store_search.u.buildResultsHeader($list,_rtag.datapointer), //# of results and keyword display.
 //							$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
 							$pageMenu = app.ext.store_search.u.buildPagination($list,_rtag), //pagination as ul
@@ -141,16 +144,21 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							$controlsContainer = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom'); //used to hold menus and buttons.
 							
 //							$menuContainer.append($sortMenu); //sorting not working. commented out for now. !!!
-							$menuContainer.append($pageMenu);
-							$menuContainer.appendTo($controlsContainer);
-							$multipage.appendTo($controlsContainer); //multipage nav is at the top and bottom
-							
 							$header.insertBefore($list);
-							$controlsContainer.insertBefore($list);
+//pageMenu will be false if there are no pages. If there's no pagination, no further output is needed.
+							if($pageMenu)	{
 	
-	//add to DOM prior to running menu. helps it to not barf.
-//							$sortMenu.menu();
-							if($pageMenu.length)	{$pageMenu.menu();}
+								$menuContainer.append($pageMenu);
+								$menuContainer.appendTo($controlsContainer);
+								$multipage.appendTo($controlsContainer); //multipage nav is at the top and bottom
+								
+								
+								$controlsContainer.insertBefore($list);
+//add to DOM prior to running menu. helps it to not barf.
+								$pageMenu.menu();
+//								$sortMenu.menu();
+								}
+	
 							
 							
 							}
