@@ -17,7 +17,7 @@
 <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
 <meta http-equiv="pragma" content="no-cache" />
 
-<base href='' /><!-- leave blank so it works for a local file -->
+<base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
 
 
@@ -26,17 +26,16 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130220095400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"2013030515400",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
-	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.toynk.zoovy.com/",
-	"httpURL":"http://www.sporks.zoovy.com/"
+	"baseURL":"", //used in non-local mode.
+	"testURL":"http://www.sporks.zoovy.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL;
+	app.vars.baseURL  = "/";
 	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 	}
 </script>
@@ -46,10 +45,10 @@ if(document.location.protocol != 'file:')	{
 all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="qs_styles.css" />
+<link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery-1.8.2.min.js"></script><!-- https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min/jquery-1.8.2.min.js -->
 <script src="jquery.ui.widget.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
@@ -57,7 +56,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"init.js");
+app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
 

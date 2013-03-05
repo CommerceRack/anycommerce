@@ -800,7 +800,7 @@ fallback is to just output the value.
 						buttonText = 'Choose Size'; className = 'variational sizeable';
 						}
 //pdata is a shortcut to attribs.
-					else if(data.value['@variations'].length)	{
+					else if(!$.isEmptyObject(data.value['@variations']))	{
 						buttonText = 'Choose Options'; className = 'variational';
 						}
 					else	{
@@ -988,7 +988,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 // if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
 							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
-							var SSLlocation = app.vars.secureURL+"?sessionId="+app.sessionId+"#checkout?show=checkout";
+							var SSLlocation = zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#checkout?show=checkout";
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation;
 							}

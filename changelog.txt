@@ -7,6 +7,11 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
 
+
+201310
+Lots of filename/location changes.
+no more httpURL and httpsURL. a testURL is present/required for testing the file locally (has to know where to get config.js from)
+
 201308
 The link for 'log out' changed.
 'cartItemQty' rendeformat changed and requires now requires parent data.
