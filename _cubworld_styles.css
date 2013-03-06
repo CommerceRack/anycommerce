@@ -101,6 +101,18 @@ HEADER STYLES
 	right: 0px;
 }
 
+
+#catNavRow2 {
+	color: white;
+	position: absolute;
+	bottom: 42px;
+	left: 20px;
+}
+
+#catNavRow2 div {
+	float: left;
+	margin: 0px 10px;
+}
 /****************************************************************
 
 FOOTER STYLES
@@ -109,9 +121,14 @@ FOOTER STYLES
 
 #footerSubscribeForm {
 	height: 57px;
+	line-height: 57px;
 	background: url(img/cw12_subscribe_bgstr-1x57.gif) top left repeat-x;
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
+}
+#footerSubscribeForm img{
+	vertical-align: middle;
+	margin-left: 15px;
 }
 
 #footerNavContainer {

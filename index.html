@@ -23,6 +23,9 @@
 
 <script type="text/javascript">
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+//var _gaq = _gaq || [];
+//_gaq.push(['_setAccount','UA-370308-1']);
+//_gaq.push(['_trackPageview']);
 var myCreole;
 
 var app = {vars:{
@@ -151,6 +154,16 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 		<input type='search' name='KEYWORDS' placeholder='Enter Search Term...' class="productSearchKeyword handleDefault" />
 		<button></button>
 	</form>
+	
+	
+	<div id="catNavRow2">
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise'});"><img src="img/catNavRow2/cw12_n_wringlyfield-93x12.png" alt="Wrigley Field" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.on-field-gear'});"><img src="img/catNavRow2/cw12_n_onfieldgear-93x12.png" alt="On Field Gear" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.vintage-chicago-cubs'});"><img src="img/catNavRow2/cw12_n_vintageapprl-111x12.png" alt="Vintage Apparel" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.sports-world-gift-cards'});"><img src="img/catNavRow2/cw12_n_giftcards-72x12.png" alt="Gift Cards" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel'});"><img src="img/catNavRow2/cw12_n_chicagoteam-100x12.png" alt="Chicago Teams" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise'});"><img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" /></div>
+	</div>
 </div>
 
 <div id="content">	
@@ -163,7 +176,15 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 </div>
 
 <div id="footer">
-	<div id="footerSubscribeForm"></div>
+	<div id="footerSubscribeForm">
+		<img src="img/cw12_tit_signup-364x15.png" />
+		<form action='#' id='footerSubscribeFrm' name='footerSubscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('footerSubscribeFrm'); return false">
+			<input type='text' placeholder="Full Name" maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+			<input type='email' placeholder="Email Address" maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+
+			<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe'>
+		</form>
+	</div>
 	<div id="footerNavContainer"></div>
 </div>
 
