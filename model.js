@@ -592,6 +592,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
 //admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
 		destroy : function(key)	{
+			app.u.dump(" -> destroying "+key);
 			delete app.data[key];
 			localStorage.removeItem(key);
 			},
@@ -1113,15 +1114,15 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 //			app.u.dump(" -> datapointer = "+datapointer);
 			var local;
 			var r = false;
-			var expires = datapointer == 'authAdminLogin' ? (60*60*24*2) : (60*60*24); //how old the data can be before we fetch new.
-	//checks to see if the request is already in 'this'. IMPORTANT to check if object is empty in case empty objects are put up for extending defaults (checkout)
+			var expires = datapointer == 'authAdminLogin' ? (60*60*24*6) : (60*60*24); //how old the data can be before we fetch new.
+//checks to see if the request is already in 'this'. IMPORTANT to check if object is empty in case empty objects are put up for extending defaults (checkout)
 			if(app.data && !$.isEmptyObject(app.data[datapointer]))	{
-//				app.u.dump(' -> control already has data');
+//				app.u.dump(' -> data already in memory.');
 				r = true;
 				}
 //then check local storage and, if present, update the control object
 			else if (local = app.storageFunctions.readLocal(datapointer))	{
-//				app.u.dump(' -> local does have data.');
+//				app.u.dump(' -> data in localStorage');
 	//			app.u.dump(local);
 				if(local.ts)	{
 					if((app.u.unixNow() - local.ts) > expires)	{
@@ -1143,7 +1144,8 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 				}
 
 //set app.globalAjax.checkForLocalJSON to true and the app will look for local copies (not local storage) of the json
-			if(r === false && app.globalAjax.checkForLocalJSON)	{
+//Not in use at this time. left here for future use though.
+/*			if(r === false && app.globalAjax.checkForLocalJSON)	{
 				if(app.globalAjax.localJSONFolder)	{
 //				app.u.dump(" -> Data not in memory or local.");
 					if(datapointer.indexOf("appProductGet") > -1)	{
@@ -1170,6 +1172,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 					app.u.dump("WARNING! checkForLocalJSON enabled but localJSONFolder not set.");
 					}
 				}
+*/				
 //			app.u.dump("END fetchData for "+datapointer+". r = "+r);
 			return r;
 			}, //fetchData

@@ -60,19 +60,22 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	var $target = $('#homeProdSearchNewArrivals');
 	if($target.data('isCarousel'))	{} //only make it a carousel once.
 	else	{
-		$target.data('isCarousel',true).carouFredSel({
-			auto: false,
-			prev: '.foo2carouselPrev',
-			next: '.foo2carouselNext',
-			width: '100%',
-			scroll: 2,
-	//		mousewheel: true, //this is mobile, so mousewheel isn't necessary (plugin is not loaded)
-			swipe: {
-				onMouse: true,
-				onTouch: true
-			}
-		});
-	}
+//for whatever reason, caroufredsel needs to be executed after a moment.
+		setTimeout(function(){
+			$target.data('isCarousel',true).carouFredSel({
+				auto: false,
+				prev: '.foo2carouselPrev',
+				next: '.foo2carouselNext',
+				width: '100%',
+				scroll: 2,
+		//		mousewheel: true, //this is mobile, so mousewheel isn't necessary (plugin is not loaded)
+				swipe: {
+					onMouse: true,
+					onTouch: true
+					}
+				});
+			},1000); 
+		}
 
 	}]);
 

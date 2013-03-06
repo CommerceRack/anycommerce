@@ -63,18 +63,18 @@ a callback was also added which just executes this call, so that checkout COULD 
 
 		buyerAddressList : {
 			init : function(_tag,Q)	{
-				app.u.dump("BEGIN cart_checkout_order.calls.buyerAddressList ");
+//				app.u.dump("BEGIN cco.calls.buyerAddressList ");
 				var r = 0;
 				_tag = _tag || {};
 				_tag.datapointer = "buyerAddressList";
-				if(app.model.fetchData(_tag.datapointer))	{
-					r = 1;
+//				if(app.model.fetchData(_tag.datapointer))	{
+//					r = 1;
 					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.dump("buyerAddressList found in local or memory.");
-					app.u.handleCallback(_tag);
-					}
+//					}
+//				else	{
+//					app.u.dump("buyerAddressList found in local or memory.");
+//					app.u.handleCallback(_tag);
+//					}
 				return r;
 				},
 			dispatch : function(_tag,Q)	{
@@ -87,14 +87,14 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var r = 0;
 				_tag = _tag || {};
 				_tag.datapointer = "buyerWalletList";
-				if(app.model.fetchData(_tag.datapointer))	{
+//				if(app.model.fetchData(_tag.datapointer))	{
 					r = 1;
 					this.dispatch(_tag,Q);
-					}
-				else	{
-					app.u.dump("buyerWalletList found in local or memory.");
-					app.u.handleCallback(_tag);
-					}
+//					}
+//				else	{
+//					app.u.dump("buyerWalletList found in local or memory.");
+//					app.u.handleCallback(_tag);
+//					}
 				return r;
 				},
 			dispatch : function(_tag,Q)	{
@@ -423,68 +423,6 @@ left them be to provide guidance later.
 				return r;
 				},
 
-//generate the list of existing addresses (for users that are logged in )
-//appends addresses to a fieldset based on TYPE (bill or ship)
-
-			addressListOptions : function(TYPE)	{
-//				app.u.dump("BEGIN store_checkout.u.addressListOptions ("+TYPE+")");
-
-				var r = "";  //used for what is returned
-				if(TYPE && this.buyerHasPredefinedAddresses(TYPE))	{
-
-var $a; //a paticular address, set once within the loop. shorter that app.data... each reference
-var selAddress = false; //selected address. if one has already been selected, it's used. otherwise, _is_default is set as value.
-var lctype = TYPE.toLowerCase();
-//if an address has already been selected, highlight it.  if not, use default.
-if(app.data.cartDetail && app.data.cartDetail[lctype] && app.data.cartDetail[lctype].shortcut)	{
-	selAddress = app.data.cartDetail[lctype].shortcut;								
-	}
-else	{
-	selAddress = app.ext.store_checkout.u.determinePreferredAddress(TYPE);
-	}
-
-var L = app.data.buyerAddressList['@'+lctype].length;
-//app.u.dump(" -> # addresses: "+L);
-//app.u.dump(" -> selectedAddressID = "+selAddress);
-
-for(var i = 0; i < L; i += 1)	{
-	a = app.data.buyerAddressList['@'+lctype][i];
-//	app.u.dump(" -> ID = "+a['_id']);
-	r += "<address class='pointer ui-state-default ";
-//if an address has already been selected, add appropriate class.
-	if(selAddress == a['_id'])	{
-//		app.u.dump(" -> MATCH!");
-		r += ' ui-state-active';
-		}
-//if no predefined address is selected, add approriate class to account default address
-	else if(a['_is_default'] == 1 && selAddress == false)	{
-		r += ' ui-state-active ';
-//		app.u.dump(" -> no address selected. using default. ");
-		}
-							
-	r += "' data-addressClass='"+TYPE+"' data-addressId='"+a['_id']+"' onClick='app.ext.store_checkout.u.selectPredefinedAddress(this);' id='"+TYPE+"_address_"+a['_id']+"'>";
-	r +=a[TYPE+'_firstname']+" "+a[TYPE+'_lastname']+"<br \/>";
-	r +=a[TYPE+'_address1']+"<br \/>";
-	if(a[TYPE+'_address2'])	{r +=a[TYPE+'_address2']+"<br \/>"}
-	r += a[TYPE+'_city'];
-//state, zip and country may not be populated. check so 'undef' isn't written to screen.
-	if(a[TYPE+'_region']) {r += " "+a[TYPE+'_region']+", "}
-	if(a[TYPE+'_postal'])	{r +=a[TYPE+'_postal']}
-	if(app.u.isSet(a[TYPE+'_countrycode']))	{r += "<br \/>"+a[TYPE+'_countrycode']}
-	r += "<\/address>";
-	}
-var parentID = (TYPE == 'ship') ? 'chkoutShipAddressFieldset' : 'chkoutBillAddressFieldset';
-r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); app.ext.store_checkout.u.removeClassFromChildAddresses(\""+parentID+"\");'>Enter new address or edit selected address<\/address>";
-					
-					}
-				else	{
-					//no predefined addresses. make sure address input is visible.
-					$("#"+TYPE+"AddressUL").toggle(true);
-					}
-				return r;
-				}, //addressListOptions
-
-
 
 //will get the items from a cart and return them as links. used for social marketing.
 			cartContentsAsLinks : function(datapointer)	{
@@ -502,218 +440,6 @@ r += "<address class='pointer' onClick='$(\"#"+TYPE+"AddressUL\").toggle(true); 
 //				app.u.dump('links = '+r);
 				return r;
 				}, //cartContentsAsLinks
-
-
-
-//will remove the selected and ui-state-active classes from all address elements within the passed parent div id.
-			removeClassFromChildAddresses : function(parentDivId)	{
-				$('#'+parentDivId+' address').each(function() {
-					$(this).removeClass('selected  ui-state-active');
-					});				
-				}, //removeClassFromChildAddresses
-			
-//if checkout succeded but payment failed (cash, cc fail, PO, etc) then this function gets executed.
-			checkoutSuccessPaymentFailure : function(paycode,payby)	{
-				app.u.dump('BEGIN store_checkout.u.checkoutSuccessPaymentFailure');
-				app.u.dump(' -> paycode = '+paycode);
-				app.u.dump(' -> payby = '+payby);
-				var r;
-
-/*
-0 = success (unequivicable)
-1 = pending
-4 = got money, but its under review. this is legacy from before fraud status was added. not used much. treat as zero.
-
-payment_success will be undef if fail.
-payment_success will be set to payment_status. CC
-*/
-
-		
-		if(typeof paycode == 'undefined')	{
-					switch(payby)	{
-						case 'CREDIT':
-							r = "There was a problem processing your credit card. Please contact us or click here for details.";
-							break;
-						default:
-							r = 'Payment is still required for this order. Please click here for details.'; //rather than replicate all the sysmessages, we'll direct traffic to the invoice page. 
-						}
-
-_gaq.push(['_trackEvent','Checkout','User Event','Payment failure ('+payby+')']);
-_gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
-					
-					}
-				
-				return r;
-				}, //checkoutSuccessPaymentFailure
-
-
-
-//used to display errors that are returned on the validateCheckout call if validation fails. 
-//this is executed from a callback. It's here in case it's needed in multiple callbacks.
-			showServerErrors : function(responseData,uuid)	{
-				if(responseData['@issues'])	{
-					var L = responseData['@issues'].length;
-	//				app.u.dump('BEGIN store_checkout.u.showServerErrors. there are '+L+' errors');
-					var $errorDiv = responseData['_rtag'].targetID ? $('#'+responseData['_rtag'].targetID) : $('#chkoutSummaryErrors')
-					$errorDiv.empty();
-					if($errorDiv.length == 0)
-						$errorDiv = $("<p \/>").attr("id","chkoutSummaryErrors").prependTo($('#zCheckoutFrm'));
-					var o = "<ul>"; //responseData['_msg_1_txt']+
-					
-					for(var i = 0; i < L; i += 1)	{
-						o += "<li>"+responseData['@issues'][i][3]+"<\/li>";
-						}
-					o += "<\/ul>";
-					$errorDiv.append(app.u.formatMessage({"message":o,"uiClass":"error","uiIcon":"alert"})).toggle(true);
-					}
-				else	{
-					app.u.throwMessage(responseData);
-					}
-				}, //showServerErrors
-
-
-	
-
-/*
-sometimes _is_default is set for an address in the list of bill/ship addresses.
-sometimes it isn't. sometimes, apparently, it's set more than once.
-this function closely mirrors core logic.
-*/
-			determinePreferredAddress : function(TYPE)	{
-//				app.u.dump("BEGIN store_checkout.u.determinePreferredAddress  ("+TYPE+")");
-				var r = false; //what is returned
-				if(!TYPE){ r = false}
-				else	{
-					var L = app.data.buyerAddressList['@'+TYPE].length;
-//look to see if a default is set. if so, take the first one.
-					for(var i = 0; i < L; i += 1)	{
-						if(app.data.buyerAddressList['@'+TYPE][i]['_is_default'] == 1)	{
-							r = app.data.buyerAddressList['@'+TYPE][i]['_id'];
-							break; //no sense continuing the loop.
-							}
-						}
-//if no default is set, use the first address.
-					if(r == false)	{
-						r =app.data.buyerAddressList['@'+TYPE][0]['_id']
-						}
-					}
-//				app.u.dump("address id = "+r);
-				
-				return r;
-				},
-
-
-
-	
-//is run when an existing address is selected.
-//removes 'selected' class from all other addresses in fieldset.
-//sets 'selected' class on focus address
-//executes call which updates form fields.
-//x = element object (this)
-			selectPredefinedAddress : function(addressObject)	{
-//				app.u.dump("BEGIN app.ext.convertSessionToOrder.u.selectPredefinedAddress");
-				var $x = $(addressObject);
-				var addressClass = $x.attr('data-addressClass'); //ship or bill
-
-				$("#"+addressClass+"AddressUL").toggle(false); //turns off display of new address form
-				
-				app.ext.convertSessionToOrder.u.removeClassFromChildAddresses($x.parent().attr('id'));
-				$x.addClass('selected  ui-state-active ui-corner-all');
-//wtf? when attempting to pass {"data."+addressClass+"_id" : $x.attr('data-addressId')} directly into the setSession function, it barfed. creating the object then passing it in works tho. odd.
-				var idObj = {};
-				idObj[addressClass+"/shortcut"] = $x.attr('data-addressId');  //for whatever reason, using this as the key in the setsession function caused a js error. set data.bill_id/data.ship_id = DEFAULT (or whatever the address id is)
-				
-//				app.u.dump(" -> addressClass = "+addressClass);
-//				app.u.dump(" -> addressID = "+$x.attr('data-addressId'));
-//add this to the pdq
-				app.calls.cartSet.init(idObj);
-
-//copy the billing address from the ID into the form fields.
-				app.ext.store_checkout.u.setAddressFormFromPredefined(addressClass,$x.attr('data-addressId'));
-				$('#data-bill_email').val() == app.data.cartDetail['bill/email']; //for passive, need to make sure email is updated too.
-//copy all the billing address fields to the shipping address fields, if appropriate.
-				if($('#want-bill_to_ship').val() == '1') {
-					app.ext.store_checkout.u.setShipAddressToBillAddress();
-					}
-/*
-rather than going through and picking out just the address fields, send everything up.
-This was done because it is:
-1. lighter
-2. one more way of collecting as much of the data as possible in case checkout is abandoned.
-*/
-				app.ext.convertSessionToOrder.calls.saveCheckoutFields.init(); 
-
-//for billing addresses, the payment panel must be updated.
-				if(addressClass == 'bill')	{
-					app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions'); //empty panel. set to loading.
-					app.ext.store_checkout.calls.appPaymentMethods.init("updateCheckoutPayOptions");
-					}
-//for shipping addresses, the shipping methods panel needs updating. if predefined addresses exist, no 'ship to bill' checkbox appears.
-				else if(addressClass == 'ship')	{
-					app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods'); //empty panel. set to loading.
-					app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init("updateCheckoutShipMethods"); //update shipping methods and shipping panel
-					}
-				else	{
-					app.u.dump(" -> UNKNOWN class for address selection. should be bill or ship. is: "+addressClass);
-					}
-
-				app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');  //updates cart object and reloads order contents panel.
-				app.model.dispatchThis('immutable');
-
-_gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected ('+addressClass+')']);
-
-
-				}, //selectPredefinedAddress
-				
-//sets the values of the shipping address to what is set in the billing address fields.
-//can't recycle the setAddressFormFromPredefined here because it may not be a predefined address.
-			setShipAddressToBillAddress : function()	{
-//				app.u.dump('BEGIN store_checkout.u.setShipAddressToBillAddress');
-				$('#chkoutBillAddressFieldset > ul').children().children().each(function() {
-					if($(this).is(':input')){$('#'+this.id.replace('bill_','ship_')).val(this.value)}
-					});
-				},
-
-
-
-
-//allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
-			setAddressFormFromPredefined : function(addressType,addressId)	{
-//				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
-//				app.u.dump(' -> address type = '+addressType);
-//				app.u.dump(' -> address id = '+addressId);
-				
-				var L = app.data.buyerAddressList['@'+addressType].length,
-				a, //shortcut to address object.
-				r = false; //what is returned.
-
-//looks through predefined addresses till it finds a match for the address id. sets a to address object.
-				for(var i = 0; i < L; i += 1)	{
-					if(app.data.buyerAddressList['@'+addressType][i]['_id'] == addressId){
-						a = app.data.buyerAddressList['@'+addressType][i];
-						r = true;
-						break;
-						}
-					else {}// no match. carry on.
-					}
-
-//app.u.dump(" -> a[addressType+'_region']: "+a[addressType+'_region']);
-//app.u.dump(" -> a[addressType+'_postal']: "+a[addressType+'_postal']);
-//app.u.dump(" -> $('#data-'+addressType+'_zip').length: "+$('#data-'+addressType+'_zip').length);
-//app.u.dump(" -> $('#data-'+addressType+'_state').length: "+$('#data-'+addressType+'_state').length);
-
-				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
-				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
-				$('#data-'+addressType+'_city').val(a[addressType+'_city']);
-				$('#data-'+addressType+'_state').val(a[addressType+'_region']);
-				$('#data-'+addressType+'_zip').val(a[addressType+'_postal']);
-				$('#data-'+addressType+'_country').val(a[addressType+'_countrycode'] ? a[addressType+'_countrycode'] : "US"); //country is sometimes blank. This appears to mean it's a US company?
-				$('#data-'+addressType+'_firstname').val(a[addressType+'_firstname']);
-				$('#data-'+addressType+'_lastname').val(a[addressType+'_lastname']);
-				if(app.u.isSet(a[addressType+'_phone'])){$('#data-'+addressType+'_phone').val(a[addressType+'_phone'])};
-				return r;
-				}, //setAddressFormFromPredefined
-
 
 
 //if checkout succeded but payment failed (cash, cc fail, PO, etc) then this function gets executed.
@@ -756,6 +482,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 			thisSessionIsPayPal : function()	{
 				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
 				},
+
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
 //according to B, there will be only 1 paypal tender in the paymentQ.
 			aValidPaypalTenderIsPresent : function()	{
@@ -824,40 +551,120 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return r;
 				},
 			
+
+
+
+
+//paymentID is the payment that is selected.
+//data is a data object, such as cartDetail or an invoice.
+//isAdmin is used to determine if additional output is included (flag as paid checkbox and some other inputs)
+
+			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
+//				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
+//				app.u.dump(" -> data:"); app.u.dump(data);
+				
+				var $o = $("<ul />").addClass("paybySupplemental"), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
+				tmp = '', //tmp var used to put together string of html to append to $o
+				payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
+				
+				
+				switch(paymentID)	{
+	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
+	//expiration is less of a concern
+					case 'PAYPALEC' :
+						break;
+					case 'CREDIT':
+						tmp += "<li><label>Credit Card #<input type='text' size='20' name='payment/CC' class=' creditCard' value='";
+						if(data['payment/CC']){tmp += data['payment/CC']}
+						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/label><\/li>";
+						
+						tmp += "<li><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += app.u.getCCExpMonths(data['payment/MM']);
+						tmp += "<\/select>";
+						tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
+						
+						tmp += "<li><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						if(data['payment/CV']){tmp += data['payment/CV']}
+						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
+						
+						if(isAdmin === true)	{
+							tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
+							tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
+							tmp += "<li><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/li>"
+							}
+						
+						
+						break;
+	
+						case 'CASH':
+						case 'MO':
+						case 'CHECK':
+						case 'PICKUP':
+//will output a flag as paid checkbox ONLY in the admin interface.
+//if this param is passed in a store, it will do nothing.
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
+						break;
+	
+					case 'PO':
+						tmp += "<li><label for='payment-po'>PO #<input type='text' size='10' name='payment/PO' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+						if(data['payment/PO'])
+								tmp += data['payment/PO'];
+						tmp += "' /><\/label><\/li>";
+						if(isAdmin === true)	{
+							tmp += payStatusCB;
+							}
+						break;
+	
+					case 'ECHECK':
+						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
+						for(var key in echeckFields) {
+							safeid = app.u.makeSafeHTMLId(key);
+//the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
+//The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
+							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<input type='text' size='2' name='"+key+"' class=' echeck'  value='";
+//if the value for this field is set in the data object (cart or invoice), set it here.
+							if(data[key])
+								tmp += data[key];
+							tmp += "' /><\/label><\/li>";
+							}
+						break;
+					default:
+//if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
+						$o = false; //return false if there is no supplemental fields
+					}
+				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
+				return $o;
+//				app.u.dump(" -> $o:");
+//				app.u.dump($o);
+			},
+
+
+
+
+
+
+
+
+
+
+
+
+
 			
 //for tax to accurately be computed, several fields may be required.
 //this function checks to see if they're populated and, if so, returns true.
 //also used in cartPaypalSetExpressCheckout call to determine whether or not address should be requested on paypal side or not.
-			taxShouldGetRecalculated : function()	{
+			taxShouldGetRecalculated : function(formObj)	{
 //				app.u.dump("BEGIN app.ext.store_checkout.u.taxShouldGetRecalculated");
 				var r = true;//what is returned. set to false if errors > 0
-				var errors = 0; //used to track number of fields not populated.
-				
-				if(!$('#data-bill_address1').val())	{
-//					app.u.dump(" -> address is blank");
-					errors += 1;
-					}
-				if(!$('#data-bill_city').val()){
-//					app.u.dump(" -> city is blank");
-					errors += 1;
-					}
-				if(!$('#data-bill_state').val()){
-//					app.u.dump(" -> state is blank");
-					errors += 1;
-					}
-				if(!$('#data-bill_zip').val()){
-//					app.u.dump(" -> zip is blank");
-					errors += 1;
-					}
-				if(!$('#data-bill_country').val()){
-//					app.u.dump(" -> country is blank");
-					errors += 1;
-					}
-				if(errors > 0)	{
-					r = false;
-					}
-//				app.u.dump(" -> tax should be recalculated = "+r);
-//				app.u.dump("END app.ext.store_checkout.u.taxShouldGetRecalculated");
+				if(!formObj['bill/address1'])	{r = false;}
+				else if(!formObj['bill/city']){r = false;}
+				else if(!formObj['bill/region']){r = false;}
+				else if(!formObj['bill/postal']){r = false;}
+				else if(!formObj['bill/countrycode']){r = false;}
+				else {} //All the fields required for accurate tax calculation are present.
 				return r;
 				} //taxShouldGetRecalculated
 

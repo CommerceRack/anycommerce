@@ -1919,6 +1919,8 @@ later, it will handle other third party plugins as well.
 // ### NOTE! SANITY ! WHATEVER - app.ext.convertSessionToOrder.vars is referenced below. When this is removed, make sure to update checkouts to add an onChange event to update the app.ext.convertSessionToOrder.vars object because otherwise the CC number won't be in memory and possibly won't get sent as part of calls.cartOrderCreate.
 
 			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
+				app.u.dump(" -> USING OLD VERSION of getSupplementalPaymentInputs. CHANGE TO NEW in cco");
+				//NOTE -> this function wasn't just deleted because extensive testing needs to occur to the checkouts/UI and I'm still in dev on the new version of the function.
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
 				var $o; //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
@@ -2611,13 +2613,17 @@ $tmp.empty().remove();
 			$tag.val(data.value);
 			}, //text
 
-//only use this on fields where the value is b
+//only use this on fields where the value is boolean
+//if setting checked=checked by default, be sure to pass hideZero as false.
 		popCheckbox : function($tag,data){
-//			app.u.dump(" -> data.value: "+data.value);
+			app.u.dump(" -> popCheckbox data.value: "+data.value);
 			if(Number(data.value))	{$tag.attr('checked',true);}
 			else if(data.value === 'on')	{$tag.attr('checked',true);}
 			else if(data.value == true)	{$tag.attr('checked',true);}
-			else{} //shouldn't get here if data.value isn't populated.
+			else if(Number(data.value) === 0){ //treat as number in case API return "0"
+				$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
+				}
+			else{}
 			},
 
 

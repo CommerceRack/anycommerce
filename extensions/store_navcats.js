@@ -46,7 +46,7 @@ var store_navcats = function() {
 				return r;
 				},
 			dispatch : function(root,tagObj,Q)	{
-				obj = {};
+				var obj = {};
 				obj['_cmd'] = "appCategoryList";
 				obj.root = root;
 				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
