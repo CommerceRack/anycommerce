@@ -30,7 +30,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"baseURL":"",
 	"httpsURL":"https://ssl.zoovy.com/s=www.toynk.zoovy.com/",
-	"httpURL":"http://www.c7efb3a5.hoth.zoovy.net "
+	"httpURL":"http://www.c7efb3a5.hoth.zoovy.net/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -48,6 +48,7 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="qs_styles.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="_cubworld_styles.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="jquery.ui.widget.min.js"></script>
@@ -64,12 +65,6 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 </head>
 
 <body>
-<!-- DELETE THIS WHEN YOU GET STARTED -->
-<h1>WELCOME TO QUICKSTART</h1>
-This file is intended to go along with the 10-step tutorial at:
-<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
-<!-- /DELETE THIS WHEN YOU GET STARTED -->
-
 
 
 
@@ -101,27 +96,43 @@ This file is intended to go along with the 10-step tutorial at:
 
 <div id='appView' class='displayNone'>
 
-<!-- VIEW CONTENT -->
-<!-- leave the appView div, put your your html here ...  -->
-
-	<!--
-	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
-	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
-	-->
 	
-<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
-
-<!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
-<div id='appNav'>
-	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
-	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+	
+	<map name="socialiconsmap">
+		<area target="_social" title="Pinit" alt="Pinit" href="http://pinterest.com/sportsworldchi/" coords="1,0,15,15" shape="rect">
+		<area target="_social" title="Facebook" alt="Facebook" href="http://www.facebook.com/SportsWorldChicago" coords="20,0,35,15" shape="rect">
+		<area target="_social" title="Twitter" alt="Twitter" href="http://twitter.com/SportsWorldChi" coords="41,0,57,15" shape="rect">
+		<area target="_social" title="Linked In" alt="Linked In" href="http://www.linkedin.com/company/sports-world-chicago" coords="62,0,78,15" shape="rect">
+		<area target="_social" alt="Google +" href="https://plus.google.com/106091495697037500720" coords="82,0,98,14" shape="rect">
+	</map>
+	
+	
+	
+	
+	
+	
+	
+	
+<div id="header">
+	
 </div>
 
-<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+<div id="content">	
+	<div id='globalMessaging' class='appMessaging'></div>
+	<div id='appNav'>
+		<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+		<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+	</div>
+	<div id='mainContentArea'></div>
+</div>
 
+<div id="footer">
+	<div id="footerSubscribeForm"></div>
+	<div id="footerNavContainer"></div>
+</div>
 
-<!-- ... your html ends -->
-<!-- /VIEW CONTENT -->
+<div class="smallPrint">Copyright © 2013, All Rights Reserved.</div>
+
 </div>
 
 

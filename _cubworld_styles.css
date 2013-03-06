@@ -1,0 +1,39 @@
+body {
+	background: url(img/cw12_pinstripe5-61x1.png) top left repeat, url(img/cw12_body_bg-1x60.png) left top repeat-x;
+}
+
+#appView {
+	width: 1020px;
+	margin: 0px auto;
+}
+
+#content {
+	background: white;
+	border-left: 2px solid #002675;
+	border-right: 2px solid #002675;
+}
+
+#header {
+	position: relative;
+	background: url(img/cw12_header_bg-1020x163.png) bottom left no-repeat;
+	width: 1020px;
+	height: 206px;
+}
+
+#footerSubscribeForm {
+	height: 57px;
+	background: url(img/cw12_subscribe_bgstr-1x57.gif) top left repeat-x;
+	border-left: 2px solid #002675;
+	border-right: 2px solid #002675;
+}
+
+#footerNavContainer {
+	background: url(img/cw12_footer_navbg-1020x121.png) top left no-repeat;
+	height: 121px;
+}
+
+.smallPrint {
+	color: #666666;
+	font-family: arial, helvetica;
+	font-size: 8pt;
+}

@@ -800,7 +800,7 @@ fallback is to just output the value.
 						buttonText = 'Choose Size'; className = 'variational sizeable';
 						}
 //pdata is a shortcut to attribs.
-					else if(data.value['@variations'].length)	{
+					else if(data.value['@variations'] && data.value['@variations'].length)	{
 						buttonText = 'Choose Options'; className = 'variational';
 						}
 					else	{
