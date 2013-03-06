@@ -937,7 +937,7 @@ payment options, pricing, etc
 			accountInfo : function()	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.accountInfo.  ');
 				var authState = app.u.determineAuthentication();
-				var createCustomer = app.data.cartDetail['want/create_customer'] ? app.data.cartDetail['want/create_customer'] : 0;
+				var createCustomer = (app.data.cartDetail && app.data.cartDetail['want/create_customer']) ? app.data.cartDetail['want/create_customer'] : 0;
 				
 //				app.u.dump(' -> createCustomer = '+createCustomer);
 
