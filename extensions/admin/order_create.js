@@ -1270,7 +1270,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 			getCID : function()	{
 				var r; //what is returned. false unless customer ID is set.
 				if(app.data.cartDetail && app.data.cartDetail.customer && app.data.cartDetail.customer.cid)	{
-					r = app.data.cartDetail.customer;
+					r = app.data.cartDetail.customer.cid;
 					}
 				else if(app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email && app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email] && app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email].CID)	{
 					r = app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email].CID
