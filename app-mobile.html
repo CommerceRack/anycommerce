@@ -52,7 +52,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="jquery.ui.widget.min.js"></script>
+<script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
 
 
@@ -177,10 +177,19 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
-	
-<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"8","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin homepageResults'></ul>
 
-<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"8","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>New Arrivals</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin homepageResults'></ul>
+
+<div class="list_carousel responsive clearfix">
+	<a class="foo2carouselPrev" href="#">prev</a>
+	<a class="foo2carouselNext" href="#">next</a>
+
+	<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"20","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin homepageResults'></ul>
+
+</div>
+
+	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"8","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin homepageResults'></ul>
+
+
 
 </div>
 

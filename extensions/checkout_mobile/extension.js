@@ -1242,7 +1242,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 					if(addressType && addressID)	{
 						$btn.addClass('ui-state-highlight');
-						//need to populate the address so that shipping can update.
+						//need to populate the address so that shipping can update. 
 						}
 					else	{
 						$btn.closest('fieldset').anymessage({'message':'In convertSessionToOrder.e.execBuyerAddressSelect','gMessage':true});

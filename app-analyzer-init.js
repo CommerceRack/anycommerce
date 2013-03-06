@@ -8,9 +8,9 @@ app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
 app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'analyzer','app-analyzer.js','startMyProgram']);
-app.rq.push(['script',0,'jquery.showloading-v1.0.jt.js']);
+app.rq.push(['script',0,'resources/jquery.showloading-v1.0.jt.js']);
 
-app.rq.push(['script',0,'jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
+app.rq.push(['script',0,'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
 app.rq.push(['script',0,'model.js']); //'validator':function(){return (typeof zoovyModel == 'function') ? true : false;}}
 app.rq.push(['script',0,'includes.js']); //','validator':function(){return (typeof handlePogs == 'function') ? true : false;}})

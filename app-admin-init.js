@@ -35,16 +35,16 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 
-app.rq.push(['script',1,app.vars.baseURL+'jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
+app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late. used in orders.
 app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/highcharts-v2.3.5.js']); //used for KPI
 
 app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5.js']); //used for authentication.
 
 //have showLoading as early as possible. pretty handy feature. used everywhere.
-app.rq.push(['script',0,app.vars.baseURL+'jquery.showloading-v1.0.jt.js']);
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']);
 
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
-app.rq.push(['script',0,app.vars.baseURL+'jquery.ui.anyplugins.js']);
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
 
 
 // jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.

@@ -116,3 +116,48 @@ button.quickView	{background:#000000; border:0; padding:2px 6px; font-size:.85em
 /* product detail page */
 .prodSummaryContainer hgroup h5	{font-weight:normal;}
 
+
+
+
+/*
+HOMEPAGE
+*/
+
+
+/* for the carousel */
+.list_carousel {
+	background-color: #ccc;
+	position:relative;
+	margin: 0 0 12px 0px;
+	}
+.list_carousel ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: block;
+	}
+.list_carousel li {
+	text-align: center;
+	width: 120px;
+	height: 120px;
+	overflow:hidden;
+	padding: 0;
+	margin: 6px;
+	display: block;
+	float: left;
+	}
+.list_carousel.responsive {
+	width: auto;
+	margin-left: 0;
+	}
+
+.foo2carouselPrev {
+	position:absolute;
+	left:-10px; top:20px; 
+	font-size:40px;
+	}
+.foo2carouselNext {
+	position:absolute;
+	right:-10px; top:20px; 
+	font-size:40px;
+	}
