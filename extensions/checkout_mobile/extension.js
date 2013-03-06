@@ -1037,7 +1037,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipMethods');
-
+// REMINDER - the messaging for 'enter a zip' and whatnot should disappear if predefined addresses are present.
 				var $panelFieldset = $("#chkoutShipMethodsFieldset"),
 				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
@@ -1429,6 +1429,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				},
 
+
+
+
+
+
+
 //when a country is selected, the required attribute must be added or dropped from state/province.
 //this is important because the browser itself will indicate which fields are required.
 //some countries do not have state/province, so for international it is automatically not required.
@@ -1761,14 +1767,7 @@ the refreshCart call can come second because none of the following calls are upd
 
 
 
-
-
-
 ////////////////////////////////////   						renderFormats			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-
-
-
 
 
 
@@ -1795,10 +1794,6 @@ the refreshCart call can come second because none of the following calls are upd
 					}
 				$tag.html(o);
 				}, //shipMethodsAsRadioButtons
-			
-
-
-
 
 			payMethodsAsRadioButtons : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.payOptionsAsRadioButtons');
@@ -1834,7 +1829,8 @@ the refreshCart call can come second because none of the following calls are upd
 						}
 					}
 				} //payMethodsAsRadioButtons
-			}
+			
+			} //renderFormats
 
 		
 		}

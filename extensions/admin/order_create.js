@@ -976,7 +976,7 @@ a guest checkout gets just a standard address entry.
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
 			billAddress : function()	{
-				app.u.dump('BEGIN convertSessionToOrder.panelContent.billAddress.  ');
+//				app.u.dump('BEGIN convertSessionToOrder.panelContent.billAddress.  ');
 				var data = app.data.cartDetail;
 				var txt = '';
 				var cssClass; //used to hide the form inputs if user is logged in and has predefined addresses. inputs are still generated so user can create a new address.
@@ -1034,15 +1034,14 @@ an existing user gets a list of previous addresses they've used and an option to
 				
 				
 			shipAddress : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipAddress.  ');
+				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipAddress.  ');
 				var CID = app.ext.convertSessionToOrder.u.getCID();
 				var addresses = false
 				var txt = '';
 				var cssClass = '';  //used around the form fields. turned off if pre-defined addresses exist, but form is still generated so a new address can be added.
 				var $panelFieldset = $("#chkoutShipAddressFieldset");
-				
+				app.u.dump(" -> CID: "+CID);
 				if(CID)	{
-					app.u.dump(" -> CID is set: "+CID);
 					addresses = app.ext.convertSessionToOrder.u.getAddressesByType('ship',CID);
 					app.u.dump(" -> addresses: "); app.u.dump(addresses);
 					if(addresses)	{
@@ -1080,7 +1079,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
-				if(app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
+				if(app.data.cartDetail && app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
 					$('#noShipMethodsAvailable').show();
 					}
 				else	{
@@ -1109,7 +1108,7 @@ Of course, this should only happen IF a method was selected previously.
 						}
 					}
 
-				if(foundMatchingShipMethodId == false && app.data.cartDetail['want/shipping_id'])	{
+				if(foundMatchingShipMethodId == false && app.data.cartDetail && app.data.cartDetail['want/shipping_id'])	{
 					app.u.dump(' -> previously selected ship method is no longer available. update session with null value.');
 					app.calls.cartSet.init({"want/shipping_id":null});  //the set will update the method, session and local storage.
 					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
@@ -1150,7 +1149,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 
 
 			paymentOptions : function()	{
-				app.u.dump('app.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
+//				app.u.dump('app.ext.convertSessionToOrder.panelContent.paymentOptions has been executed');
 				var $panelFieldset = $("#chkoutPayOptionsFieldset").toggle(true).removeClass("loadingBG")
 				$panelFieldset.append(app.renderFunctions.createTemplateInstance('checkoutTemplatePayOptionsPanel','payOptionsContainer'));
 				app.renderFunctions.translateTemplate(app.data.appPaymentMethods,'payOptionsContainer');
@@ -1169,7 +1168,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 					app.ext.convertSessionToOrder.vars["want/payby"] = $(this).val();
 					$("#chkoutPayOptionsFieldsetErrors").addClass("displayNone");
 					})
-				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby'])
+//				app.u.dump(" -> app.ext.convertSessionToOrder.vars['want/payby']: "+app.ext.convertSessionToOrder.vars['want/payby']);
 				if(app.ext.convertSessionToOrder.vars['want/payby'])	{
 					$(":radio[value='"+app.ext.convertSessionToOrder.vars['want/payby']+"']",$panelFieldset).click();
 					}
@@ -1275,7 +1274,6 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				else if(app.data.cartDetail && app.data.cartDetail.bill && app.data.cartDetail.bill.email && app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email] && app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email].CID)	{
 					r = app.data['adminCustomerSearch|'+app.data.cartDetail.bill.email].CID
 					}
-//				if(app.data.adminCustomerSearch && app.data.adminCustomerSearch.CID)	{r = app.data.adminCustomerSearch.CID}
 				else {r = false}
 				return r;
 				},
@@ -1381,9 +1379,9 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				var r = "";  //used for what is returned
 				var addresses = this.getAddressesByType(TYPE,CID); //address object
 				if(TYPE && !$.isEmptyObject(addresses))	{
-					app.u.dump(" -> addresses present.");
+//					app.u.dump(" -> addresses present.");
 					var L = addresses.length;
-					app.u.dump(" -> # addresses: "+L);
+//					app.u.dump(" -> # addresses: "+L);
 					for(var i = 0; i < L; i += 1)	{
 						r += "<address class='pointer ui-state-default ";
 						r += "' data-addressClass='"+lctype+"' data-addressId='"+addresses[i]['_id']+"' onClick='app.ext.convertSessionToOrder.u.selectPredefinedAddress(this);' id='"+lctype+"_address_"+addresses[i]['_id']+"'>";
