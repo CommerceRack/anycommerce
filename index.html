@@ -93,10 +93,8 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 </div>
 
 
-
 <div id='appView' class='displayNone'>
 
-	
 	
 	<map name="socialiconsmap">
 		<area target="_social" title="Pinit" alt="Pinit" href="http://pinterest.com/sportsworldchi/" coords="1,0,15,15" shape="rect">
@@ -114,7 +112,12 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 	
 	
 <div id="header">
+	<div id="logo" class="pointer"><img src="img/cw12_logo-366x64.png" onClick="return showContent('homepage',{});" /></div>
 	
+	<form id="headerSearchFrm" name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
+		<input type='search' name='KEYWORDS' placeholder='Enter Search Term...' class="productSearchKeyword handleDefault" />
+		<button></button>
+	</form>
 </div>
 
 <div id="content">	

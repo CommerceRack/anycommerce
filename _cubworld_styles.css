@@ -20,6 +20,47 @@ body {
 	height: 206px;
 }
 
+#logo {
+	position: absolute;
+	left: 10px;
+	top: 10px;
+}
+
+#headerSearchFrm {
+	position: absolute;
+	right: 10px;
+	top: 66px;
+}
+
+#headerSearchFrm input[type='search'] {
+	background: url(img/cw12_serbox_bg-261x30.png) top left no-repeat;
+	width: 261px;
+	height: 30px;
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	text-indent: 6px;
+	
+	color: #808184;
+    font: 12px Arial,Helvetica,sans-serif;
+	
+	position: absolute;
+	top: 0px;
+	right: 112px;
+}
+
+#headerSearchFrm button{
+	background:url(img/cw_btn_search-108x30.png) top left no-repeat;
+	width: 108px;
+	height: 30px;
+	border: none;
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	top: 0px;
+	right: 0px;
+}
+
 #footerSubscribeForm {
 	height: 57px;
 	background: url(img/cw12_subscribe_bgstr-1x57.gif) top left repeat-x;
