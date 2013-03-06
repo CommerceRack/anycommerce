@@ -11,6 +11,8 @@ item list and summary are separate just to give more control over location.
 <div id='checkoutTemplate' class='checkoutFormContainer' data-app-role='checkout'>
 
 	<form action='#'>
+	<input type='hidden' name='bill_address_shortcut' />
+	<input type='hidden' name='ship_address_shortcut' />
 
 <!-- define panel order -->
 	<fieldset data-app-role='chkoutPreflight'>
@@ -25,8 +27,15 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role='chkoutAddressBill'>
 		<legend>Billing Address</legend>
-		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for return customers -->
+		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='var: buyer(@bill); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for new customers -->
+		
+		<div>
+		<label>
+		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popCheckbox;" checked='checked' data-app-event='convertSessionToOrder|tagAsBillToShip' />
+		ship to billing address
+		</label>
+		</div>
 	</fieldset>
 	
 	<fieldset data-app-role='chkoutAddressShip' class='displayNone'>
@@ -153,13 +162,6 @@ do NOT change any input names or id's or checkout will likely break.
 	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' data-app-event="convertSessionToOrder|execCountryUpdate" ></select></div>
 
 	<div><input type='tel' name='bill/phone' placeholder='phone number' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
-
-	<div>
-	<label>
-	<input type='checkbox' name='want/bill_to_ship' checked='checked' data-app-event='convertSessionToOrder|tagAsShipToBill' />
-	ship to billing address
-	</label>
-	</div>
 
 </section>
 
@@ -318,15 +320,13 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 
-<address id='chkoutBuyerAddressTemplate'>
-	<div data-bind="var:address(bill_address); defaultVar: address(ship_address); format:text;"></div>
-	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
+<address id='chkoutBuyerAddressTemplate' class='ui-widget ui-widget-content ui-corner-all'>
+	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
+	<div>
+		<span data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></span>
+		<button data-app-event="convertSessionToOrder|execBuyerAddressSelect">use this address</button>
+	</div>
 </address>
-
-
-
-
-
 
 
 

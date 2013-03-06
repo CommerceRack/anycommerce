@@ -1017,6 +1017,9 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressBill
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
+				if(formObj['want/bill_to_ship'] == 'on')	{$fieldset.hide()}
+				else	{$fieldset.show()}
+				
 				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
 					$("[data-app-role='addressSelect']",$fieldset).show();
 					//need logic here to select address if only 1 predefined exists.
@@ -1228,7 +1231,25 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					});
 				},
-				
+			
+//executed when an predefined address (from a buyer who is logged in) is selected.
+			execBuyerAddressSelect : function($btn)	{
+				$btn.button();
+				$btn.off('click.execBuyerAddressUpdate').on('click.execBuyerAddressUpdate',function(event){
+					event.preventDefault();
+					var addressType = $btn.closest('fieldset').data('app-role'), //will be ship or bill.
+					addressID = $btn.closest('address').data('_id');
+					
+					if(addressType && addressID)	{
+						$btn.addClass('ui-state-highlight');
+						//need to populate the address so that shipping can update.
+						}
+					else	{
+						$btn.closest('fieldset').anymessage({'message':'In convertSessionToOrder.e.execBuyerAddressSelect','gMessage':true});
+						}
+					});
+				},
+			
 			execBuyerLogin : function($btn)	{
 				$btn.button();
 				$btn.off('click.execBuyerLogin').on('click.execBuyerLogin',function(event){
@@ -1277,7 +1298,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						}
 					})
-				},
+				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
 //				$btn.button();
@@ -1285,7 +1306,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					event.preventDefault();
 					//app.ext.convertSessionToOrder.calls.processCheckout.init('finishedValidatingCheckout'); app.model.dispatchThis('immutable');
 					})
-				},
+				}, //execCartOrderCreate
 
 			execCountryUpdate : function($sel)	{
 				// billing:  
@@ -1340,9 +1361,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 					});
 				},
 			
-			tagAsShipToBill : function($cb)	{
-//				$cb.anycb;
-				$cb.off('change.tagAsShipToBill').on('change.tagAsShipToBill',function()	{
+			tagAsBillToShip : function($cb)	{
+				$cb.anycb;
+				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
 					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleUILogic']);
 					});
 				}
