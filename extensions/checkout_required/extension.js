@@ -1361,7 +1361,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					}
 					
 				if(errors == ''){
-					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'handleBuyerLogin','extension':'convertSessionToOrder'});
+					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'handleBuyerLogin','extension':'convertSessionToOrder'});
 					app.model.dispatchThis('immutable');
 					$('#preflightGuestInputs, #preflightAccountInputs').hide();
 					$('#chkoutPreflightFieldsetErrors').empty().addClass('loadingBG').show();

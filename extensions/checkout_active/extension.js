@@ -1139,7 +1139,7 @@ payment options, pricing, etc
 	
 	//only show the third party logins IF user isn't already logged in to one and they're enabled
 						if(authState != 'thirdPartyGuest' && zGlobals.thirdParty.facebook.appId)
-								o+= "<div id='preflightThirdParty' class='"+className+" preflightInputContainer'><h2>Third Party Login<\/h2><fb:login-button onlogin='app.calls.authentication.facebook.init({\"callback\":\"authenticateThirdParty\",\"extension\":\"convertSessionToOrder\"}); app.model.dispatchThis(\"immutable\");'>Login with Facebook</fb:login-button><\/div>";
+								o+= "<div id='preflightThirdParty' class='"+className+" preflightInputContainer'><h2>Third Party Login<\/h2><fb:login-button onlogin='app.calls.appVerifyTrustedPartner.init(\"facebook\",{\"callback\":\"authenticateThirdParty\",\"extension\":\"convertSessionToOrder\"}); app.model.dispatchThis(\"immutable\");'>Login with Facebook</fb:login-button><\/div>";
 						}
 
 
@@ -1537,7 +1537,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					}
 					
 				if(errors == ''){
-					app.calls.authentication.zoovy.init({"login":email,"password":password},{'callback':'handleBuyerLogin','extension':'convertSessionToOrder'});
+					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'handleBuyerLogin','extension':'convertSessionToOrder'});
 					app.model.dispatchThis('immutable');
 					$('#preflightGuestInputs, #preflightAccountInputs').hide();
 					$('#chkoutPreflightFieldsetErrors').empty().addClass('loadingBG').show();

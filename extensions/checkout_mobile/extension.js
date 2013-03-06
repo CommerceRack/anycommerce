@@ -1240,7 +1240,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					if($email.val() && $password.val())	{
 						$('body').showLoading({'message':'Verifying username and password...'});
 						//we have want we need. attempt login.
-						app.calls.authentication.zoovy.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
+						app.calls.appBuyerLogin.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
 //							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
 							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
