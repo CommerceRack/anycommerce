@@ -114,6 +114,39 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 <div id="header">
 	<div id="logo" class="pointer"><img src="img/cw12_logo-366x64.png" onClick="return showContent('homepage',{});" /></div>
 	
+	<div class="livechat">
+		<!-- BEGIN ProvideSupport.com Custom Images Chat Button Code -->
+		<div id="ciQYEp" style="z-index:100;position:absolute;"></div><div id="scQYEp" style="display:inline"></div><div id="sdQYEp" style="display:none"></div><script type="text/javascript">var seQYEp=document.createElement("script");seQYEp.type="text/javascript";var seQYEps=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/cubworld/safe-standard.js?ps_h=QYEp&ps_t="+new Date().getTime()+"&online-image=http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw12_livechat-203x41.png&offline-image=http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw12_livechat-203x41.png";setTimeout("seQYEp.src=seQYEps;document.getElementById('sdQYEp').appendChild(seQYEp)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=cubworld">Live Support</a></div></noscript>
+		<!-- END ProvideSupport.com Custom Images Chat Button Code -->
+	</div>
+	
+	<div id="headerNav">
+		<!-- note- the order of these elements is backwards as they are floated right -->
+		<span class="cartLink floatRight">
+			<a href="#" onClick="return showContent('cart',{});"><img src="img/cw12_icn_cart-11x11.png" /> Cart</a>
+		</span>
+		<span class="topLink floatRight">
+			<a href="#" onClick="return showContent('cart',{});">Help</a> |
+		</span>
+		<span class="topLink floatRight">
+			<a href="#" onClick="return showContent('cart',{});">My Account</a> |
+		</span>
+		<span class="topLink floatRight">
+			<a href="#" onClick="return showContent('cart',{});">Contact</a> |
+		</span>
+		
+		<img src="img/cw12_social_icons-98x15.png" usemap="#socialiconsmap" class="floatRight socialLinks" />
+		<map name="socialiconsmap">
+			<area target="_social" title="Pinit" alt="Pinit" href="http://pinterest.com/sportsworldchi/" coords="1,0,15,15" shape="rect">
+			<area target="_social" title="Facebook" alt="Facebook" href="http://www.facebook.com/SportsWorldChicago" coords="20,0,35,15" shape="rect">
+			<area target="_social" title="Twitter" alt="Twitter" href="http://twitter.com/SportsWorldChi" coords="41,0,57,15" shape="rect">
+			<area target="_social" title="Linked In" alt="Linked In" href="http://www.linkedin.com/company/sports-world-chicago" coords="62,0,78,15" shape="rect">
+			<area target="_social" alt="Google +" href="https://plus.google.com/106091495697037500720" coords="82,0,98,14" shape="rect">
+		</map>
+		
+		<div class="phone floatRight clear">Questions? Call <span>888-428-2967</span></div>
+	</div>
+	
 	<form id="headerSearchFrm" name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
 		<input type='search' name='KEYWORDS' placeholder='Enter Search Term...' class="productSearchKeyword handleDefault" />
 		<button></button>

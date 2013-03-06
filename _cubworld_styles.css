@@ -1,5 +1,8 @@
 body {
 	background: url(img/cw12_pinstripe5-61x1.png) top left repeat, url(img/cw12_body_bg-1x60.png) left top repeat-x;
+	padding: 0px;
+	margin: 0px;
+	font-family: Tahoma,arial,sans-serif;
 }
 
 #appView {
@@ -13,18 +16,55 @@ body {
 	border-right: 2px solid #002675;
 }
 
+.clear{clear:both;}
+
+/****************************************************************
+
+HEADER STYLES
+
+****************************************************************/
+
 #header {
 	position: relative;
 	background: url(img/cw12_header_bg-1020x163.png) bottom left no-repeat;
 	width: 1020px;
 	height: 206px;
 }
-
+#header .livechat {
+	position: absolute;
+	left: 50%;
+	margin-left: -109px;
+}
 #logo {
 	position: absolute;
-	left: 10px;
-	top: 10px;
+	left: 6px;
+	top: 16px;
 }
+
+#headerNav {
+	font: 12px Arial,Helvetica,sans-serif;
+	line-height: 15px;
+	color: white;
+	position: absolute;
+	top: 6px;
+	right: 0px;
+}
+#headerNav a {text-decoration: none; color: white;}
+#headerNav a:hover{color:#FFDE00;}
+#headerNav .cartLink a{
+	color: #FFDE00;
+	font-weight: bold;
+	text-decoration: none;
+}
+#headerNav .cartLink img {
+	vertical-align: middle;
+	padding-bottom: 2px;
+	padding-right: 2px;
+}
+#headerNav .topLink  {margin-right: 4px;}
+#headerNav .socialLinks {margin-right: 16px;}
+#headerNav .phone {margin-top: 8px;font-size:11px;}
+#headerNav .phone span {color: #FFDE00;font-size:14px;font-weight: bold;}
 
 #headerSearchFrm {
 	position: absolute;
@@ -60,6 +100,12 @@ body {
 	top: 0px;
 	right: 0px;
 }
+
+/****************************************************************
+
+FOOTER STYLES
+
+****************************************************************/
 
 #footerSubscribeForm {
 	height: 57px;
