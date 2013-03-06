@@ -1,15 +1,15 @@
 var app = app || {vars:{},u:{}}; //make sure app exists.
 app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
+app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
 
-
+// ### NOTE - mobile does NOT work. it's in development.
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_mobile/extension.js']);
 //app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
-app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
 
 
 
