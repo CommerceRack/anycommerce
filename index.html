@@ -177,16 +177,40 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 </div>
 
 <div id="footer">
-	<div id="footerSubscribeForm">
+	<div id="footerSubscribeBar">
 		<img src="img/cw12_tit_signup-364x15.png" />
-		<form action='#' id='footerSubscribeFrm' name='footerSubscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('footerSubscribeFrm'); return false">
-			<input type='text' placeholder="Full Name" maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
-			<input type='email' placeholder="Email Address" maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+		<form action='#' id='footerSubscribeForm' name='footerSubscribeForm' onSubmit="app.ext.store_crm.u.handleSubscribe('footerSubscribeForm'); return false">
+			<input class="text" type='text' placeholder="Full Name" maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+			<input class="text"  type='email' placeholder="Email Address" maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
 
 			<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe'>
 		</form>
 	</div>
-	<div id="footerNavContainer"></div>
+	<div id="footerNavContainer">
+		<div id="sectionTitleCustServ" class="sectionTitle">CUSTOMER SERVICE</div>
+		<div id="sectionTitleSWC" class="sectionTitle">SPORTS WORLD CHICAGO</div>
+		
+		<ul id="footerNavListCustServ">
+			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/contact_us.cgis">Contact</a></li>
+			<li><a onclick="window.open('http://www.sportsworldchicago.com/category/size_chart/?wrapper=%POPUP_THEME%','advice','status=no,width=500,height=500,menubar=no,scrollbars=yes'); return false;" href="#">Size Chart</a></li>
+			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/category/help_desk/">Help Desk</a></li>
+			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/customer">My Account</a></li>
+			<li><a href="http://www.sportsworldchicago.com/category/rewards_program/">Rewards</a></li>
+			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/checkout.cgis">Checkout</a></li>
+			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/customer/order/status/">Order Status</a></li>
+			<li><a href="http://www.sportsworldchicago.com/privacy.cgis">Privacy</a></li>
+			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/cart.cgis">View Cart</a></li>
+		</ul>
+		<ul id="footerNavListSWC">
+			<li><a href="http://www.sportsworldchicago.com/category/in_the_news/">In the News</a></li>
+			<li><a href="http://www.sportsworldchicago.com/category/affiliates/">Affiliates</a></li>
+			<li><a href="http://www.sportsworldchicago.com/about_us.cgis" rel="nofollow">About</a></li>
+			<li><a href="http://www.sportsworldchicago.com/category/group_sales/">Group Sales</a></li>
+			<li><a href="http://www.sportsworldchicago.com/category/careers/" rel="nofollow">Careers</a></li>
+			<li><a href="http://www.sportsworldchicago.com/category/sitemap/" rel="nofollow">Site Map</a></li>
+		</ul>
+		
+	</div>
 </div>
 
 <div class="smallPrint">Copyright © 2013, All Rights Reserved.</div>

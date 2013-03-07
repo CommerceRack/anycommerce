@@ -20,6 +20,7 @@ body {
 .clear{clear:both;}
 .previewListContainer{position:relative; z-index: 10001; background: white;}
 .previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
+#resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}
 /****************************************************************
 
 HEADER STYLES
@@ -121,22 +122,65 @@ FOOTER STYLES
 
 ****************************************************************/
 
-#footerSubscribeForm {
+#footerSubscribeBar {
 	height: 57px;
 	line-height: 57px;
 	background: url(img/cw12_subscribe_bgstr-1x57.gif) top left repeat-x;
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
 }
-#footerSubscribeForm img{
+#footerSubscribeBar img{
 	vertical-align: middle;
 	margin-left: 15px;
 }
 
+#footerSubscribeForm {
+	float: right;
+	height: 57px;
+	margin-right: 60px;
+}
+#footerSubscribeForm input.text {width: 225px; padding: 0px;}
+#footerSubscribeForm input{height: 28px;}
+#footerSubscribeForm input[type="submit"]{position:relative; top:-1px;}
+
 #footerNavContainer {
 	background: url(img/cw12_footer_navbg-1020x121.png) top left no-repeat;
 	height: 121px;
+	position: relative;
 }
+
+#footerNavContainer .sectionTitle {
+	position: absolute;
+	top: 8px;
+	color: #FFFFFF;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+#sectionTitleCustServ {left:20px;}
+#sectionTitleSWC {left:290px;}
+
+#footerNavContainer ul {
+	font: 11px Arial,Helvetica,sans-serif;
+    list-style: none outside none;
+	position: absolute;
+	top: 40px;
+	margin: 0px;
+	padding: 0px;
+}
+
+#footerNavListCustServ{left:20px; width: 246px; background:url(img/cw12_footnav_dline-2x57.png) bottom right no-repeat;}
+#footerNavListSWC{left:290px; width:164px;}
+
+#footerNavContainer ul li{
+	display: block;
+    float: left;
+    line-height: 20px;
+    margin: 0;
+    padding: 0;
+    width: 82px;
+}
+#footerNavContainer ul li a{color: #122666;text-decoration: none;}
 
 .smallPrint {
 	color: #666666;
