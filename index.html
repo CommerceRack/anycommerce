@@ -62,7 +62,7 @@ css files should be included before any .js file to ensure they are downloaded i
 
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"init.js");
+app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 </script>
 
 
@@ -191,8 +191,8 @@ app.u.loadScript(app.vars.baseURL+"init.js");
 		<div id="sectionTitleSWC" class="sectionTitle">SPORTS WORLD CHICAGO</div>
 		
 		<ul id="footerNavListCustServ">
-			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/contact_us.cgis">Contact</a></li>
-			<li><a onclick="window.open('http://www.sportsworldchicago.com/category/size_chart/?wrapper=%POPUP_THEME%','advice','status=no,width=500,height=500,menubar=no,scrollbars=yes'); return false;" href="#">Size Chart</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
+			<li><a href="#" onclick="app.ext.cubworld.a.showSizeChart(); return false;">Size Chart</a></li>
 			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/category/help_desk/">Help Desk</a></li>
 			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/customer">My Account</a></li>
 			<li><a href="http://www.sportsworldchicago.com/category/rewards_program/">Rewards</a></li>
@@ -1549,6 +1549,219 @@ The 'data-action' attribute is used to assign an onclick.
 
 </div>
 
+<div id="size-chart" class="displayNone">
+	<p></p><center><em></em></center><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><font><font></font></font><font><font></font></font><strong><font size="3">Sizing Tips</font></strong></div><div align="left"><font size="2">Use these tips as a general guide when finding your measurements:</font></div><ol><li><div align="left"><font size="2">Chest/Bust: With your arms at your sides, measure around the fullest part of your chest, across shoulder blades and under arms.</font></div></li><li><div align="left"><font size="2">Waist: To measure your natural waistline, wrap the tape so it intersects your navel. Keep tape flat, but comfortably loose.</font></div></li><li><div align="left"><font size="2">Hips: Stand with your heels together and measure the fullest part of your hips, keeping the measuring tape level and parallel to the floor, front, and back.</font></div></li><li><div align="left"><font size="2">Inseam: Stand up straight, and start tape measure high in your crotch. Straighten the tape down the inside of your leg to the top of your shoe/foot.</font></div></li></ol>
+<p></p><p>
+<br></p><center><center><center><table id="jersey_size_chart" cellspacing="1"><tbody><tr align="center" bgcolor="#dddddd"><td colspan="9"><font size="1" face="Verdana"><strong>ADULT AUTHENTIC BASEBALL JERSEY SIZE (Majestic Athletic)</strong></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana"><strong>SIZE</strong></font></td><td><p align="center"><font size="1" face="Verdana"><strong>S/M</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>L</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>XXL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>3XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>4XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>5XL</strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>6XL</strong></font></p></td></tr><tr bgcolor="#eeeeee"><td width="75"><font size="1" face="Verdana"><strong>CHEST (In.)</strong></font></td><td width="40"><center><font size="1" face="Verdana">38-40</font></center></td><td width="40"><center><font size="1" face="Verdana">42-44</font></center></td><td width="40"><center><font size="1" face="Verdana">46-48</font></center></td><td width="40"><center><font size="1" face="Verdana">50-52</font></center></td><td width="40"><center><font size="1" face="Verdana">52-54</font></center></td><td width="40"><center><font size="1" face="Verdana">54-56</font></center></td><td width="40"><center><font size="1" face="Verdana">56-58</font></center></td><td width="40"><center><font size="1" face="Verdana">58-60</font></center></td></tr><tr bgcolor="#eeeeee"><td width="75"><font size="1" face="Verdana"><strong>WAIST (In.)</strong></font></td><td width="40"><center><font size="1" face="Verdana">30-32</font></center></td><td width="40"><center><font size="1" face="Verdana">34-36</font></center></td><td width="40"><center><font size="1" face="Verdana">38-40</font></center></td><td width="40"><center><font size="1" face="Verdana">42-44</font></center></td><td width="40"><center><font size="1" face="Verdana">46-48</font></center></td><td width="40"><center><font size="1" face="Verdana">48-50</font></center></td><td width="40"><center><font size="1" face="Verdana">50-52</font></center></td><td width="40"><center><font size="1" face="Verdana">52-54</font></center></td></tr></tbody></table>
+</center><font size="1"></font><center><font size="1"></font><hr size="2" width="100%"><font size="1"><br>
+</font></center><center><table id="size_chart" cellspacing="1"><tbody><tr bgcolor="#dddddd"><td><p align="center"><font size="1" face="Verdana"><strong>IN </strong></font></p></td><td><p align="center"><font size="1" face="Verdana"><strong>CM </strong></font></p></td><td colspan="4"><p align="center"><font size="1" face="Verdana"><strong>HAT SIZE (New Era, 59Fifty, Twins '47)</strong></font></p></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">21 1/4</font></td><td><p align="center"><font size="1" face="Verdana">54</font></p></td><td><font size="1" face="Verdana">6 3/4</font></td><td rowspan="2"><font size="1" face="Verdana">Small (S)</font></td><td rowspan="3"><font size="1" face="Verdana">Small/Medium (S/M)</font></td><td rowspan="2" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">21 5/8</font></td><td><p align="center"><font size="1" face="Verdana">55</font></p></td><td><font size="1" face="Verdana">6 7/8</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22</font></td><td><p align="center"><font size="1" face="Verdana">55.9</font></p></td><td><font size="1" face="Verdana">7</font></td><td rowspan="2"><font size="1" face="Verdana">Medium (M)</font></td><td rowspan="5"><font size="1" face="Verdana">One Size Fits Most</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22 3/8</font></td><td><p align="center"><font size="1" face="Verdana">56.8</font></p></td><td><font size="1" face="Verdana">7-1/8</font></td><td rowspan="3"><font size="1" face="Verdana">Medium/Large (M/L)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">22 3/4</font></td><td><p align="center"><font size="1" face="Verdana">57.8</font></p></td><td><font size="1" face="Verdana">7-1/4</font></td><td rowspan="2"><font size="1" face="Verdana">Large (L)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 1/8</font></td><td><p align="center"><font size="1" face="Verdana">58.7</font></p></td><td><font size="1" face="Verdana">7 3/8</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 1/2</font></td><td><p align="center"><font size="1" face="Verdana">59.7</font></p></td><td><font size="1" face="Verdana">7 1/2</font></td><td rowspan="2"><font size="1" face="Verdana">XL</font></td><td rowspan="3"><font size="1" face="Verdana">Large/XL (L/XL)</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">23 7/8</font></td><td><p align="center"><font size="1" face="Verdana">60.6</font></p></td><td><font size="1" face="Verdana">7 5/8</font></td><td rowspan="4" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">24 1/4</font></td><td><p align="center"><font size="1" face="Verdana">61.6</font></p></td><td><font size="1" face="Verdana">7 3/4</font></td><td rowspan="3"><font size="1" face="Verdana">XXL</font></td></tr><tr bgcolor="#eeeeee"><td><font size="1" face="Verdana">24 5/8</font></td><td><p align="center"><font size="1" face="Verdana">62.5</font></p></td><td><font size="1" face="Verdana">7 7/8</font></td><td rowspan="2" bgcolor="#ffffff"><font size="1" face="Verdana"></font></td></tr><tr bgcolor="#eeeeee"><td><p align="left"><font size="1" face="Verdana">25</font></p></td><td><p align="center"><font size="1" face="Verdana">63.5</font></p></td><td><font size="1" face="Verdana">8</font></td></tr></tbody></table></center><font size="1"><font size="1"></font></font><center>
+</center>
+</center></center><p></p>
 
+
+
+
+
+<p>
+<font size="1"><font size="1"><font size="1"></font></font></font></p><center><font size="1"><font size="1"><font size="1"></font></font></font><hr size="2" width="100%"><font size="1"><font size="1"><font size="1"><br>
+</font></font></font></center><center>
+</center><p></p><p>
+</p><table id="size_chart" cellspacing="1">
+  <tbody>
+</tbody></table><p></p><p>
+</p><p align="center"><strong><font size="1" face="Verdana">MEN'S SIZING (Banner '47, Majestic, Antigua, Stitches, etc.)*</font></strong></p>
+
+<p></p>
+<p>
+Â&nbsp;
+</p><p align="left"><strong><font size="1" face="Verdana">Small</font></strong></p>
+<strong><font size="1" face="Verdana">Medium</font></strong>
+<strong><font size="1" face="Verdana">Large</font></strong>
+<strong><font size="1" face="Verdana">X-Large</font></strong>
+<strong><font size="1" face="Verdana">XX-Large</font></strong>
+<div align="left"><strong><font size="1" face="Verdana">XXX-Large</font></strong></div>
+
+  <strong><font size="1" face="Verdana">Size</font></strong>
+  <p align="left"><font size="1" face="Verdana">34/36</font></p>
+  <font size="1" face="Verdana">38/40</font>
+  <font size="1" face="Verdana">42/44</font>
+  <font size="1" face="Verdana">46/48</font>
+  <font size="1" face="Verdana">50/52</font>
+  <div align="left"><font size="1" face="Verdana">54/56</font></div>
+
+    <strong><font size="1" face="Verdana">Neck</font></strong>
+    <p align="left"><font size="1" face="Verdana">14-14.5 in </font></p>
+    <font size="1" face="Verdana">15-15.5 in </font>
+    <font size="1" face="Verdana">16-16.5 in </font>
+    <font size="1" face="Verdana">17-17.5 in </font>
+    <font size="1" face="Verdana">18-18.5 in </font>
+    <div align="left"><font size="1" face="Verdana">19-19.5 in </font></div>
+
+      <strong><font size="1" face="Verdana">Chest</font></strong>
+      <p align="left"><font size="1" face="Verdana">34-36 in </font></p>
+      <font size="1" face="Verdana">38-40 in </font>
+      <font size="1" face="Verdana">42-44 in </font>
+      <font size="1" face="Verdana">46-48 in </font>
+      <font size="1" face="Verdana">50-52 in </font>
+      <div align="left"><font size="1" face="Verdana">54-56 in </font></div>
+
+        <strong><font size="1" face="Verdana">Waist</font></strong>
+        <p align="left"><font size="1" face="Verdana">28-30 in </font></p>
+        <font size="1" face="Verdana">32-34 in </font>
+        <font size="1" face="Verdana">36-38 in </font>
+        <font size="1" face="Verdana">40-42 in </font>
+        <font size="1" face="Verdana">44-46 in </font>
+        <div align="left"><font size="1" face="Verdana">48-50 in </font></div>
+
+          <strong><font size="1" face="Verdana">Hips</font></strong>
+          <p align="left"><font size="1" face="Verdana">34-36 in </font></p>
+          <font size="1" face="Verdana">38-40 in </font>
+          <font size="1" face="Verdana">42-44 in </font>
+          <font size="1" face="Verdana">45.5-47 in </font>
+          <font size="1" face="Verdana">48.5-50.5 in </font>
+          <div align="left"><font size="1" face="Verdana">51.5-54 in </font></div>
+
+<font size="1"><font size="1"><font size="1"><font size="1"></font></font></font></font><center>
+</center>
+<p></p>
+
+
+
+<p>
+<font size="1"><font size="1"><font size="1"><font size="1"><font size="1"></font></font></font></font></font></p><center><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"></font></font></font></font></font><hr size="2" width="100%"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><br>
+</font></font></font></font></font></center><center>
+<font size="1"><font size="1"><font size="1"><font size="1"><font size="1">  <font size="1">
+  <table id="size_chart" cellspacing="1">
+    <tbody>
+      <tr bgcolor="#dddddd">
+        <td colspan="7"><p align="center"><strong><font size="1" face="Verdana">WOMEN'S SIZING (Banner '47, Majestic, Antigua, 5th &amp; Ocean, G-III)*</font></strong></p></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td width="40">Â&nbsp;</td>
+        <td width="70"><p align="left"><strong><font size="1" face="Verdana">Small</font></strong></p></td>
+        <td width="70"><strong><font size="1" face="Verdana">Medium</font></strong></td>
+        <td width="70"><strong><font size="1" face="Verdana">Large</font></strong></td>
+        <td width="70"><strong><font size="1" face="Verdana">X-Large</font></strong></td>
+        <td width="70"><strong><font size="1" face="Verdana">XX-Large</font></strong></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Size</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">4/6</font></p></td>
+        <td><font size="1" face="Verdana">8/10</font></td>
+        <td><font size="1" face="Verdana">12/14</font></td>
+        <td><font size="1" face="Verdana">16/18</font></td>
+        <td><font size="1" face="Verdana">20</font></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Bust</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">33.5-35 in </font></p></td>
+        <td><font size="1" face="Verdana">35.5-37 in </font></td>
+        <td><font size="1" face="Verdana">37.5-40 in </font></td>
+        <td><font size="1" face="Verdana">37.5-40 in </font></td>
+        <td><font size="1" face="Verdana">40.5-43.5 in </font></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Waist</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">25.5-27 in </font></p></td>
+        <td><font size="1" face="Verdana">27.5-29 in </font></td>
+        <td><font size="1" face="Verdana">29.5-32 in </font></td>
+        <td><font size="1" face="Verdana">32.5-35.5 in </font></td>
+        <td><font size="1" face="Verdana">36-37.5 in </font></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Hips</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">36-37.5 in </font></p></td>
+        <td><font size="1" face="Verdana">38-39.5 in </font></td>
+        <td><font size="1" face="Verdana">40-42.5 in </font></td>
+        <td><font size="1" face="Verdana">43-46 in </font></td>
+        <td><font size="1" face="Verdana">46.5-48 in </font></td>
+      </tr>
+    </tbody>
+  </table>
+  </font><br>
+</font></font></font></font></font></center>
+<font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><center><hr size="2" width="100%"><br>
+</center><center>
+  <font size="1">
+  <table id="size_chart" cellspacing="1">
+    <tbody>
+      <tr bgcolor="#dddddd">
+        <td colspan="7"><p align="center"><strong><font size="1" face="Verdana">YOUTH SIZING (Stitches, Majestic, Dynasty, etc.)*</font></strong></p></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td width="40">Â&nbsp;</td>
+        <td width="70"><p align="left"><strong><font size="1" face="Verdana">Small</font></strong></p></td>
+        <td width="70"><strong><font size="1" face="Verdana">Medium</font></strong></td>
+        <td width="70"><strong><font size="1" face="Verdana">Large</font></strong></td>
+        <td width="70"><strong><font size="1" face="Verdana">X-Large</font></strong></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Size</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">6/8</font></p></td>
+        <td><font size="1" face="Verdana">10/12</font></td>
+        <td><font size="1" face="Verdana">14/16</font></td>
+        <td><font size="1" face="Verdana">18/20</font></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Chest</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">24-26 in </font></p></td>
+        <td><font size="1" face="Verdana">28-30 in </font></td>
+        <td><font size="1" face="Verdana">32-34 in </font></td>
+        <td><font size="1" face="Verdana">36-38 in </font></td>
+      </tr>
+      <tr bgcolor="#eeeeee">
+        <td><strong><font size="1" face="Verdana">Waist</font></strong></td>
+        <td><p align="left"><font size="1" face="Verdana">21-23 in </font></p></td>
+        <td><font size="1" face="Verdana">25-27 in </font></td>
+        <td><font size="1" face="Verdana">29-31 in </font></td>
+        <td><font size="1" face="Verdana">33-35 in </font></td>
+      </tr>
+    </tbody>
+  </table>
+  </font>
+</center><font size="1"><center>
+</center><br>
+</font></font></font></font></font></font></font><p></p>
+<p>
+</p><center><em></em></center><div class="h3" align="left"><strong></strong></div><div class="h3" align="left"><strong></strong></div><div align="center"><div align="center"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><div class="h3" align="left"><strong><i>* These charts are for reference only. Fit may vary depending on the construction, materials, and manufacturer.</i></strong></div></font></font></font></font></font></font></font></div><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><font size="1"><div class="h3" align="left"><hr size="2" width="100%"></div></font></font></font></font></font></font></font></div>
+
+<p></p>
+<p>
+</p><center><em></em></center><div class="h3" align="left"><strong></strong>
+<center>
+<table id="pants_size_chart" cellspacing="1">
+  <tbody>
+  <tr bgcolor="#dddddd">
+    <td colspan="9"><font size="1" face="Verdana"></font><center><font size="1" face="Verdana"><b>Adult Pro Style Baseball Pants Size Chart</b></font></center></td>
+  </tr>
+  <tr bgcolor="#eeeeee">
+    <td><font size="1" face="Verdana">SIZE</font></td>
+    <td><center><font size="1" face="Verdana">S</font></center></td>
+    <td><center><font size="1" face="Verdana">M</font></center></td>
+    <td><center><font size="1" face="Verdana">L</font></center></td>
+    <td><center><font size="1" face="Verdana">XL</font></center></td>
+    <td><center><font size="1" face="Verdana">XXL</font></center></td>
+  </tr>
+  <tr bgcolor="#eeeeee">
+    <td width="75"><font size="1" face="Verdana">WAIST (In)</font></td>
+    <td width="40"><center><font size="1" face="Verdana">28-30</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">32-34</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">36-38</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">40-42</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">42-44</font></center></td>
+  </tr>
+        <tr bgcolor="#eeeeee">
+    <td width="75"><font size="1" face="Verdana">INSEAM (In.)</font></td>
+    <td width="40"><center><font size="1" face="Verdana">30</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">31</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">32</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">33</font></center></td>
+    <td width="40"><center><font size="1" face="Verdana">34</font></center></td>
+  </tr>
+</tbody></table>
+<font size="1"><br>
+<i>* These charts are for reference only. Fit may vary slightly.</i></font></center></div><p></p>
+
+</div>
 </body>
 </html>
