@@ -193,23 +193,27 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<ul id="footerNavListCustServ">
 			<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
 			<li><a href="#" onclick="app.ext.cubworld.a.showSizeChart(); return false;">Size Chart</a></li>
-			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/category/help_desk/">Help Desk</a></li>
-			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/customer">My Account</a></li>
-			<li><a href="http://www.sportsworldchicago.com/category/rewards_program/">Rewards</a></li>
-			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/checkout.cgis">Checkout</a></li>
-			<li><a rel="nofollow" href="https://secure.sportsworldchicago.com/c=WCVswg9Wmd3Wk8HLs35Xpm1ne/s=www.sportsworldchicago.com/customer/order/status/">Order Status</a></li>
-			<li><a href="http://www.sportsworldchicago.com/privacy.cgis">Privacy</a></li>
-			<li><a rel="nofollow" href="http://www.sportsworldchicago.com/cart.cgis">View Cart</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.help_desk'});">Help Desk</a></li>
+			<li><a href="#" onClick="return showContent('customer',{'show':'myaccount'});">My Account</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.rewards_program'});">Rewards</a></li>
+			<li><a href="#" onClick="return showContent('checkout',{});">Checkout</a></li>
+			<li><a href="#" onClick="return showContent('customer',{'show':'orders'});">Order Status</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
+			<li><a href="#" onClick="return showContent('cart',{});">View Cart</a></li>
 		</ul>
 		<ul id="footerNavListSWC">
-			<li><a href="http://www.sportsworldchicago.com/category/in_the_news/">In the News</a></li>
-			<li><a href="http://www.sportsworldchicago.com/category/affiliates/">Affiliates</a></li>
-			<li><a href="http://www.sportsworldchicago.com/about_us.cgis" rel="nofollow">About</a></li>
-			<li><a href="http://www.sportsworldchicago.com/category/group_sales/">Group Sales</a></li>
-			<li><a href="http://www.sportsworldchicago.com/category/careers/" rel="nofollow">Careers</a></li>
-			<li><a href="http://www.sportsworldchicago.com/category/sitemap/" rel="nofollow">Site Map</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.in_the_news'});">In the News</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.affiliates'});">Affiliates</a></li>
+			<li><a href="#" onClick="return showContent('company',{'show':'about'});">About</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.group_sales'});">Group Sales</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.careers'});">Careers</a></li>
+			<li><a href="#" onClick="return showContent('category',{'navcat':'.sitemap'});">Site Map</a></li>
 		</ul>
 		
+		<div id="footerIcons">
+			<img src="img/payment_icons-177x21.png" class="floatRight" />
+			<img src="img/cw09_usps-113x20.gif" class="floatRight" />
+		</div>
 	</div>
 </div>
 
