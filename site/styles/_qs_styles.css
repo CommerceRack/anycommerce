@@ -1708,8 +1708,8 @@ div#checkoutSuccessContent
 .caroufredsel_wrapper div.ccItem
 {
 	float: left;
-	height: 326px;
-	overflow: auto;
+	height: auto;
+	overflow: hidden;
 	padding-left: 25px;
 	/*width: 970px;*/
 	width: 977px;

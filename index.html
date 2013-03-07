@@ -180,11 +180,11 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 									</ul>
 									<ul>
 										<li>Everything Else</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bobble head'});">Bobble Heads</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bottle opener'});">Bottle Openers</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'cologne fragrance'});">Cologne and Fragrances</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'plush'});">Plush</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Bottle Openers</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22cologne fragrance\x22'});">Cologne and Fragrances</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22ice trays\x22'});">Ice Trays</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
 									</ul>
 									<a href="#" onClick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="https://static.zoovy.com/img/redford/W900-H100/toywars/dropdownfunkopop4.jpg" /></a>
 								</div>
@@ -606,7 +606,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		<div class="catCarousel">
 			<div class="ccItem">
 				<h2>All Categories</h2>
-				<ul id="carCat1" data-bind="var: category(@.theme); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+				<ul id="carCat1" data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>Star Wars</h2>
@@ -614,15 +614,15 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			</div>
 			<div class="ccItem">
 				<h2>Doctor Who</h2>
-				<ul id="carCat3" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"doctor who"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"doctor who"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>Walking Dead</h2>
-				<ul id="carCat4" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"walking dead"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"walking dead"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>New Comics</h2>
-				<ul id="carCat5" data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"new comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"new comics"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>			
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
