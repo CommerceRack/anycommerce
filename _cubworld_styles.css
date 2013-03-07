@@ -19,7 +19,7 @@ body {
 
 .clear{clear:both;}
 .previewListContainer{position:relative; z-index: 10001; background: white;}
-.previewProductDetail {height: 469px; overflow: scroll; padding: 0px;}
+.previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
 /****************************************************************
 
 HEADER STYLES
