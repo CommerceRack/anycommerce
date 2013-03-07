@@ -180,6 +180,19 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 </div>
 
 <div id="footer">
+	<div id="footerBanners">
+		<a href="#" onClick="return showContent('category',{'navcat':'.new-arrivals.z_custom_design_studio'});">
+			<img src="img/custom_shirt_shop_banner_3.jpg" />
+		</a>
+		
+		<a href="#">
+			<img src="img/sportsworld_giftcard_promotion.png" />
+		</a>
+		
+		<a href="#">
+			<img src="img/cant_find_a_player_banner_5.png" />
+		</a>
+	</div>
 	<div id="footerSubscribeBar">
 		<img src="img/cw12_tit_signup-364x15.png" />
 		<form action='#' id='footerSubscribeForm' name='footerSubscribeForm' onSubmit="app.ext.store_crm.u.handleSubscribe('footerSubscribeForm'); return false">
@@ -280,8 +293,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
 
-<!-- a sample of how to get a 'list' src onto the page. -->
+<!-- a sample of how to get a 'list' src onto the page.
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+ -->
 
 
 </div>
