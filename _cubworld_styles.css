@@ -14,10 +14,12 @@ body {
 	background: white;
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
+	overflow: hidden;
 }
 
 .clear{clear:both;}
-
+.previewListContainer{position:relative; z-index: 10001; background: white;}
+.previewProductDetail {height: 469px; overflow: scroll; padding: 0px;}
 /****************************************************************
 
 HEADER STYLES

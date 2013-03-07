@@ -1199,7 +1199,7 @@ else	{
 							}						
 						}).prependTo($buttonBar);
 
-					$detail.show().css({'padding-top': ($buttonBar.height() + 5)+'px'}); //top padding to compensate for button bar.
+					$detail.show().css({'margin-top': ($buttonBar.height() + 5)+'px'}); //top padding to compensate for button bar.
 
 					$parent.addClass('minimalMode'); //use a class to toggle elements on/off instead of show/hide. That way if content is regenerated, visibility state is preserved
 					$detail.css({'float':'right'});
