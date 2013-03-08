@@ -1160,7 +1160,8 @@ else	{
 //if the detail panel is already visible, no need to animate or adjust css on containers.
 				else if($detail.is(':visible'))	{
 //transition out the existing product in view.
-					$detail.children().css({'position':'absolute','z-index':10000,'width':$detail.width()}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
+					app.u.dump($detail.get(0).clientWidth);
+					$detail.children().css({'position':'absolute','z-index':10000,'width':$detail.get(0).clientWidth}).animate({'right':1000},'slow','',function(){$(this).empty().remove()})
 					}
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
