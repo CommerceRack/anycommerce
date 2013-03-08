@@ -125,7 +125,7 @@ FOOTER STYLES
 	text-align: center;
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
-	margin-bottom: 4px;
+	padding-bottom: 4px;
 }
 
 #footerBanners a {text-decoration: none; margin: 2px; }
