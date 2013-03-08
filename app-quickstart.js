@@ -1875,7 +1875,7 @@ if(ps.indexOf('?') >= 1)	{
 // ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
 
 			handleHashState : function()	{
-//				app.u.dump("BEGIN myRIA.u.handleHashState");
+				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash;
 				var pio = this.getPageInfoFromHash(hash); //if not valid pageInfo hash, false is returned
 //				app.u.dump(" -> hash: "+hash);
@@ -2386,10 +2386,9 @@ elasticsearch.size = 50;
 //pass in a bindNav anchor and the 'pageInfo' will be returned.
 //ex #category?navcat=.something will return {pageType:category,navcat:.something}
 			parseAnchor : function(str)	{
-//					app.u.dump("GOT HERE");
 				var P = {};
 				if(str)	{
-					var tmp1 = str.substring(1).split('?');
+					var tmp1 = str.replace(/\#!?/g,'').split('?'); //the regext will strip # or #! off the front of the string.
 					P.pageType = tmp1[0];
 					if(tmp1.length > 1){
 						var tmp2 = tmp1[1].split('=');

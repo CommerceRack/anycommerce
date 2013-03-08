@@ -130,8 +130,8 @@ app.u.loadScript(app.vars.baseURL+"app-mobile-init.js");
 	<ul>
 		<li onClick="showContent('homepage',{});"><span class='sprite homeIcon'></span></li>
 		<li onClick="showContent('cart',{});"><span class='sprite cartIcon'></span></li>
-		<li onClick="showContent('customer',{'show':'lists'});"><span class='sprite wishlistIcon'></span></li>
-		<li onClick="showContent('company',{});"><span class='sprite infopagesIcon'></span></li>
+		<li><a href='#!company?show=lists' class='bindByAnchor'><span class='sprite wishlistIcon'></span></a></li>
+		<li><a href='#!company?show=about' class='bindByAnchor'><span class='sprite infopagesIcon'></span></a></li>
 	</ul>
 	</div>
 </div>
