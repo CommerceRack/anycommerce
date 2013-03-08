@@ -65,6 +65,19 @@ var cubworld = function() {
 		a : {
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'width':800, height:550});
+				},
+				
+			showDropDown : function ($tag) {
+				var $dropdown = $(".dropdown", $tag);
+				var height = 0;
+				$dropdown.children().each(function(){
+					height += $(this).outerHeight(true);
+				});
+				$dropdown.stop().animate({"height":height+"px"}, 500);
+				},
+				
+			hideDropDown : function ($tag) {
+				$(".dropdown", $tag).stop().animate({"height":"0px"}, 500);
 				}
 			}, //Actions
 

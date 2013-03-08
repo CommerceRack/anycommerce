@@ -101,22 +101,6 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 
 
 <div id='appView' class='displayNone'>
-
-	
-	<map name="socialiconsmap">
-		<area target="_social" title="Pinit" alt="Pinit" href="http://pinterest.com/sportsworldchi/" coords="1,0,15,15" shape="rect">
-		<area target="_social" title="Facebook" alt="Facebook" href="http://www.facebook.com/SportsWorldChicago" coords="20,0,35,15" shape="rect">
-		<area target="_social" title="Twitter" alt="Twitter" href="http://twitter.com/SportsWorldChi" coords="41,0,57,15" shape="rect">
-		<area target="_social" title="Linked In" alt="Linked In" href="http://www.linkedin.com/company/sports-world-chicago" coords="62,0,78,15" shape="rect">
-		<area target="_social" alt="Google +" href="https://plus.google.com/106091495697037500720" coords="82,0,98,14" shape="rect">
-	</map>
-	
-	
-	
-	
-	
-	
-	
 	
 <div id="header">
 	<div id="logo" class="pointer"><img src="img/cw12_logo-366x64.png" onClick="return showContent('homepage',{});" /></div>
@@ -159,6 +143,23 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<button></button>
 	</form>
 	
+	<div id="catNavRow1">
+		<div class="pointer" 
+			onClick="return showContent('category',{'navcat':'.new-arrivals'});" 
+			onMouseOver="app.ext.cubworld.a.showDropDown($(this));" 
+			onMouseOut="app.ext.cubworld.a.hideDropDown($(this));">
+				<img src="img/catNavRow1/cw12_n_newarr-129x19.png" alt="New Arrivals" />
+				<div class="dropdown">
+					<div>hello world</div>
+				</div>
+		</div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-shirts'});"><img src="img/catNavRow1/cw12_n_shirts-83x19.png" alt="Shirts" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys'});"><img src="img/catNavRow1/cw12_n_jerseys-94x19.png" alt="Jerseys" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-sweatshirts'});"><img src="img/catNavRow1/cw12_n_sweatshirts-132x19.png" alt="Sweatshirts" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-hats'});"><img src="img/catNavRow1/cw12_n_hats-61x19.png" alt="Hats" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-accessories'});"><img src="img/catNavRow1/cw12_n_accessories-131x19.png" alt="Accessories" /></div>
+		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-souvenirs'});"><img src="img/catNavRow1/cw12_n_souveniers-99x19.png" alt="Souvenirs" /></div>
+	</div>
 	
 	<div id="catNavRow2">
 		<div class="pointer" onClick="return showContent('category',{'navcat':'.wrigley-field-merchandise'});"><img src="img/catNavRow2/cw12_n_wringlyfield-93x12.png" alt="Wrigley Field" /></div>
@@ -167,6 +168,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="pointer" onClick="return showContent('category',{'navcat':'.sports-world-gift-cards'});"><img src="img/catNavRow2/cw12_n_giftcards-72x12.png" alt="Gift Cards" /></div>
 		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-sports-team-apparel'});"><img src="img/catNavRow2/cw12_n_chicagoteam-100x12.png" alt="Chicago Teams" /></div>
 		<div class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-sale-merchandise'});"><img src="img/catNavRow2/cw12_n_clearance-72x12.png" alt="Clearance" /></div>
+	</div>
+	
+	<div id="catNavRow3">
+		
 	</div>
 </div>
 

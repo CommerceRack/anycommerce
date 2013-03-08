@@ -105,17 +105,32 @@ HEADER STYLES
 	right: 0px;
 }
 
-
+#catNavRow1{
+	position: absolute;
+	left: 40px;
+	bottom: 80px;
+}
 #catNavRow2 {
-	color: white;
 	position: absolute;
 	bottom: 42px;
-	left: 20px;
+	left: 30px;
+}
+
+#catNavRow1 div {
+	float: left;
 }
 
 #catNavRow2 div {
 	float: left;
 	margin: 0px 10px;
+}
+
+.dropdown {height: 0px; overflow: hidden;}
+#catNavRow1 > div > .dropdown {
+	background: white;
+	position: absolute;
+	top: 19px;
+	left:0px;
 }
 /****************************************************************
 
