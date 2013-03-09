@@ -481,6 +481,25 @@ Parameters expected are:
 					}
 				return r;
 				},
+			
+			
+			getSkuByUUID : function(uuid){
+				var r; //what is returned. either false or a uuid.
+				if(app.data.cartDetail && app.data.cartDetail['@ITEMS'])	{
+					var L = app.data.cartDetail['@ITEMS'].length;
+					for(var i = 0; i < L; i += 1)	{
+						if(app.data.cartDetail['@ITEMS'].uuid == uuid)	{
+							r = app.data.cartDetail['@ITEMS'].stid || app.data.cartDetail['@ITEMS'].sku;
+							break; //once we have a match, no need to continue.
+							}
+						}
+					}
+				else	{
+					r = false;
+					}
+				return r;
+				},
+			
 /*
 executing when quantities are adjusted for a given cart item.
 call is made to update quantities.

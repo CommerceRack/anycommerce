@@ -13,7 +13,7 @@ Lots of filename changes
 some file name change and/or relocation: anyplugins, showLoading and jeditable
 introduced 2 new sample apps: wholesale and mobile.
 no more httpURL and httpsURL. a testURL is present/required for testing the file locally (has to know where to get config.js from)
-
+added support for showContent('search',{'TAGS':'IS_BESTSELLER'}); will work for any tag. supported tags are in analyzer
 
 * calls nested in authentication {} within the controller are no longer nested.
 

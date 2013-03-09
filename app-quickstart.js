@@ -1076,35 +1076,27 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 				return false; //always return false so the default action (href) is cancelled. hashstate will address the change.
 				}, //showContent
 
-/*
-add as an action to a button.
-First check to see if item is purchaseable. If not, jump to product detail page. could be that inventory/variations weren't retrieved or that the item is a parent.
-If item has variations, will go to detail page.
-if item has no variations and does have inventory, will add to cart.
-supports same actions as default add to cart.
-assumes product record is in memory.
-*/
-/*
-			add2CartOrDetails : function(sku,P)	{
-P.pageType = 'product';
-P.pid = sku;
-if(sku && app.data['appProductGet|'+sku])	{
-	if(app.ext.store_product.u.productIsPurchaseable(sku))	{
-		if(app.data['appProductGet|'+sku]['@variations'] && $.isEmptyObject(app.data['appProductGet|'+sku]['@variations'])	{showContent(P);} //either variations weren't retrieved or item HAS variations. 
-		else if(){}
-	else	{
-//for some reason, the item isn't purchaseable. could be that it's a parent, that variations or inventory haven't been retrieved. jump to detail page.
-		showContent(P);
-		}
-	}
-else	{
-	app.u.throwMessage("Oops. It seems we weren't quite ready for you to do that or the developer made a mistake. Please try again momentarily and if the error persists, please let us know. <br />err: sku ["+sku+"] not passed into myRIA.u.add2CartOrDetails or data not in memory.");
-	}
-				
+
+//each item in the cart has a UUID. The UUID is used (not the stid) to modify the cart
+// !!! INCOMPLETE
+			moveItemFromCartToWishlist : function(uuid)	{
+				var sku = app.ext.store_cart.u.getSkuByUUID(uuid);
+				//adds item to wishlist. cart removal ONLY occurs if this is successful.
+				app.ext.store_crm.calls.buyerProductListAppendTo.init({sku:sku,'listid':'wishlist'},{'callback':function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$detail.anymessage({'message':rd});
+						}
+					else	{
+						//item has been added to wishlist.
+						//remove from cart. update cart.
+						//display message to user that everything happened successfully.
+						}
+					}},'immutable'); 
+				app.model.dispatchThis('immutable');
 				},
 
-*/
-//for now, only product is supported in quickview. This may change in the future.
+
+//for now, only product and category are supported in quickview. This may change in the future.
 //Required Params:  pageType, pid and templateID.
 //no defaulting on template id because that'll make expanding this to support other page types more difficult.
 //assumes data to be displayed is already in memory.
@@ -2227,15 +2219,12 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 				else if(infoObj.TAG)	{
 					elasticsearch = {"filter":{"term":{"tags":infoObj.TAG}}}
-					elasticsearch.type = 'product';
-					elasticsearch.mode = 'elastic-native';
-					elasticsearch.size = 50;
+					elasticsearch = app.ext.store_search.u.buildElasticRaw(elasticsearch);
 					}
 				else if (infoObj.KEYWORDS) {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
 					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
-					elasticsearch.size = 50;
 					}
 				else	{
 					
@@ -2246,7 +2235,7 @@ effects the display of the nav buttons only. should be run just after the handle
 if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
 ex:  elasticsearch.size = 200
 */
-
+elasticsearch.size = 50;
 
 				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
 				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
