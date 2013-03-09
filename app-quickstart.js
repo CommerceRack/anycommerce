@@ -980,7 +980,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 
-//for local, don't jump to secure. !!! discuss w/ b.
+//for local, don't jump to secure. ### this may have to change for a native app. what's the protocol? is there one?
 						if('file:' == document.location.protocol)	{
 							app.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
 							}
@@ -2201,7 +2201,9 @@ effects the display of the nav buttons only. should be run just after the handle
 				infoObj.templateID = 'searchTemplate';
 				infoObj.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				var $page = $('#mainContentArea_search');
+				var $page = $('#mainContentArea_search'),
+				elasticsearch = {};
+				
 				
 
 //only create instance once.
@@ -2222,19 +2224,29 @@ effects the display of the nav buttons only. should be run just after the handle
 				var elasticsearch;
 				if(infoObj.elasticsearch){
 					elasticsearch = app.ext.store_search.u.buildElasticRaw(infoObj.elasticsearch);
-				} else {
+					}
+				else if(infoObj.TAG)	{
+					elasticsearch = {"filter":{"term":{"tags":infoObj.TAG}}}
+					elasticsearch.type = 'product';
+					elasticsearch.mode = 'elastic-native';
+					elasticsearch.size = 50;
+					}
+				else if (infoObj.KEYWORDS) {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
 					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
-				}
+					elasticsearch.size = 50;
+					}
+				else	{
+					
+					}
 				//app.u.dump(elasticsearch);
 /*
 #####
 if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
 ex:  elasticsearch.size = 200
-#####
 */
-elasticsearch.size = 50;
+
 
 				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
 				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);
