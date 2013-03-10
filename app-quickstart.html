@@ -1072,6 +1072,7 @@ So the cart template should contain these two elements and the extension should 
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
 		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight moveToWishlist marginRight' data-bind='var: product(uuid);format:assignAttribute; attribute:data-uuid;'onClick="app.ext.myRIA.a.moveItemFromCartToWishlist($(this).data('uuid'));">Move to Wishlist</button>
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 

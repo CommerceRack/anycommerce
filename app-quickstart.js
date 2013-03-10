@@ -1084,15 +1084,26 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 				//adds item to wishlist. cart removal ONLY occurs if this is successful.
 				app.ext.store_crm.calls.buyerProductListAppendTo.init({sku:sku,'listid':'wishlist'},{'callback':function(rd){
 					if(app.model.responseHasErrors(rd)){
-						$detail.anymessage({'message':rd});
+						$('#cartMessaging').anymessage({'message':rd});
 						}
 					else	{
-						//item has been added to wishlist.
-						//remove from cart. update cart.
-						//display message to user that everything happened successfully.
+						//by now, item has been added to wishlist. So remove it from the cart.
+						app.model.destroy('cartDetail');
+						app.ext.store_cart.calls.cartItemUpdate.init(sku,0,{callback:function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#cartMessaging').anymessage({'message':rd});
+								}
+							else	{
+								//item successfully removed from the cart.
+								app.ext.store_cart.u.showCartInModal(infoObj);
+								$('#cartMessaging').anymessage({'message':'Thank you. The item has been added to your wishlist and removed from the cart.'}); //!!! need to make this a success message.
+								}
+							}});
+						app.calls.cartDetail();
+//							app.model.dispatchThis('immutable');
 						}
 					}},'immutable'); 
-				app.model.dispatchThis('immutable');
+//				app.model.dispatchThis('immutable');
 				},
 
 
