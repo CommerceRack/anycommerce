@@ -881,17 +881,20 @@ adding classes is not likely to have any bad effects.
 
 <form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
 <input type='hidden' name='form' value='wholesale' />
+
 <fieldset class='marginBottom'>
 	<legend>Account Information</legend>
-	<input name='ar_contact' type='text' size='30' placeholder='Accounts Receivable Contact' required='required' />
+	<input name='firstname' type='text' size='30' placeholder='First Name' required='required' />
+	<input name='lastname' type='text' size='30' placeholder='Last Name' required='required' />
 	<input name='company' type='text' size='30' placeholder='Company Name' />
 	<input name='email' type='email' size='30' placeholder='Email' required='required' />
 	<input name='address1' type='text' size='30' placeholder='Address 1'  required='required' />
 	<input name='address2' type='text' size='30' placeholder='Address 2' />
 	<input name='city' type='text' size='30' placeholder='City' required='required' />
-	<input name='state' type='text' size='5' placeholder='State' required='required' />
-	<input name='zip' type='text' size='10' placeholder='Zip' required='required' />	
-	
+	<input name='region' type='text' size='5' placeholder='State' />
+	<input name='postal' type='text' size='10' placeholder='Zip' />	
+	<input name='ar_contact' type='text' size='30' placeholder='AR Contact' />
+	<input name='ar_phone' type='tel' size='12' placeholder='AR Phone #' />
 </fieldset>
 
 <fieldset class='marginBottom'>

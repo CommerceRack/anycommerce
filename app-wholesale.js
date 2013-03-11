@@ -889,13 +889,18 @@ fallback is to just output the value.
 					var $inputs = $(".qtyChanged",$context);
 					if($inputs.length)	{
 						$inputs.each(function(){
-							var obj = {'%variations':{}};
-	//everything is serialized into the variations object and then pid and qty are moved up a level
-							obj['%variations'] = $(this).closest('form').serializeJSON();
-							obj.qty = obj['%variations'].qty; delete obj['%variations'].qty;
-							obj.sku = obj['%variations'].sku; delete obj['%variations'].sku;
-							
-							app.calls.cartItemAppend.init(obj,{});
+							if(Number(obj.qty) > 0)	{
+								var obj = {'%variations':{}};
+		//everything is serialized into the variations object and then pid and qty are moved up a level
+								obj['%variations'] = $(this).closest('form').serializeJSON();
+								obj.qty = obj['%variations'].qty; delete obj['%variations'].qty;
+								obj.sku = obj['%variations'].sku; delete obj['%variations'].sku;
+								
+								app.calls.cartItemAppend.init(obj,{});
+								}
+							else	{
+								//qty is zero or NAN
+								}
 							});
 						app.model.dispatchThis('immutable');
 						}
