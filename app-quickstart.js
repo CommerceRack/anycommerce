@@ -763,6 +763,17 @@ fallback is to just output the value.
 					}
 				}, //legacyURLToRIA
 
+//use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
+// render format will also hide the button if the user is not logged in.
+			moveToWishlistButton : function($tag,data)	{
+				
+				if(app.u.buyerIsAuthenticated())	{
+					$tag.show().button({icons: {primary: "ui-icon-heart"},text: false});
+					$tag.off('click.moveToWishlist').on('click.moveToWishList',app.ext.myRIA.a.moveItemFromCartToWishlist(data.value));
+					}
+				else	{$tag.hide();}
+				
+				},
 
 
 //This is for use on a category or search results page.

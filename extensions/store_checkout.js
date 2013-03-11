@@ -742,6 +742,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 
 //This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
+				app.u.dump("BEGIN store_checkout.u.thisSessionIsPayPal.");
 				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
 				},
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
@@ -758,11 +759,12 @@ payment methods or they may add something new to the cart. If they do, execute t
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
 			nukePayPalEC : function() {
-//				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
+				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
 				$('#returnFromThirdPartyPayment').hide(); //used to display a 'welcome back' message. should be hidden if paypal is no longer active payment.
 				app.ext.convertSessionToOrder.vars['payment-pt'] = null;
 				app.ext.convertSessionToOrder.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
+//					app.u.dump(" -> got into anonymous function. PQI: "); app.u.dump(PQI);
 					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
@@ -773,18 +775,18 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //the value returned gets added to an array, which is returned by this function.
 //the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
-//				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
+				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
 				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
 				var r = new Array(); //what is returned if someFunction returns anything.
 				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
-//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
+					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
 					var L = app.data.cartDetail['@PAYMENTQ'].length;
-//					app.u.dump(" -> paymentQ.length: "+L);
+					app.u.dump(" -> paymentQ.length: "+L);
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
+						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
 						if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
 							inc += 1;
-							if(typeof someFunction == 'function')	{
+							if(typeof someFunction === 'function')	{
 								r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
 								}
 							}
