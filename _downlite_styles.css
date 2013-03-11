@@ -1,0 +1,6 @@
+.preflightInputContainer {
+	width: 45%;
+	float: left;
+}
+
+.preflightInputContainer label {width: 100px;display:inline-block;}
