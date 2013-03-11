@@ -593,7 +593,9 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
 		destroy : function(key)	{
 			app.u.dump(" -> destroying "+key);
-			delete app.data[key];
+			if(app.data[key])	{
+				delete app.data[key];
+				}
 			localStorage.removeItem(key);
 			},
 
