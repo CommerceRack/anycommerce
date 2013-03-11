@@ -1101,7 +1101,7 @@ payment options, pricing, etc
 					if(authState == 'authenticated')	{
 //						app.u.dump(" -> Already Authenticated");
 						o = "<ul id='preflightAuthenticatedInputs' class='noPadOrMargin listStyleNone'>";
-						o += "<li><label class='prompt'>Username<\/label><span class='value'>"+username+"<\/span><\/li>";
+						o += "<li><label class='prompt'>Username: <\/label><span class='value'>"+username+"<\/span><\/li>";
 						o += "<input type='hidden'   name='bill/email' id='data-bill_email' value='"+email+"' /><\/ul>";
 						}
 					else	{
