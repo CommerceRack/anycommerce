@@ -372,7 +372,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
  can't think of a reason not to use the default parentID, but just in case, it can be set.
 */
 			showCartInModal : function(P)	{
-//				app.u.dump("BEGIN store_cart.u.showCartInModal");
+//				app.u.dump("BEGIN store_cart.u.showCartInModal"); app.u.dump(P);
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
 					var $modal = $('#modalCart');
 //the modal opens as quick as possible so users know something is happening.

@@ -11,11 +11,13 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201310
 Lots of filename changes
 some file name change and/or relocation: anyplugins, showLoading and jeditable
-introduced 2 new sample apps: wholesale and mobile.
+introduced 2 new sample apps: wholesale and mobile. both are in beta.
 no more httpURL and httpsURL. a testURL is present/required for testing the file locally (has to know where to get config.js from)
 added support for showContent('search',{'TAGS':'IS_BESTSELLER'}); will work for any tag. supported tags are in analyzer
-
+added support for #! in appView links using bindByAnchor class (note - this is the recommended use for SEO)
+cartTemplate updated to include new 'move item to wishlist' button. button ONLY appears if user is logged in.
 * calls nested in authentication {} within the controller are no longer nested.
+
 
 
 201308
