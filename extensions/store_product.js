@@ -393,7 +393,7 @@ addToCart : function (pid,$form){
 //				app.u.dump("BEGIN store_product.renderFormats.atcVariations");
 				var pid = data.value; 
 				var formID = $tag.closest('form').attr('id'); //move up the dom tree till the parent form is found
-
+				$tag.empty(); /* prodlist fix */
 //				app.u.dump(" -> pid: "+pid);
 //				app.u.dump(" -> formID: "+formID);
 				
@@ -402,7 +402,7 @@ addToCart : function (pid,$form){
 					if(!$.isEmptyObject(app.data['appProductGet|'+pid]['@variations']) && app.model.countProperties(app.data['appProductGet|'+pid]['@variations']) > 0)	{
 $("<div \/>").attr('id','JSONpogErrors_'+pid).addClass('zwarn').appendTo($tag);
 
-var $display = $("<div \/>").attr('id','JSONPogDisplay_'+pid); //holds all the pogs and is appended to at the end.
+var $display = $("<div \/>"); //holds all the pogs and is appended to at the end.
 
 pogs = new handlePogs(app.data['appProductGet|'+pid]['@variations'],{"formId":formID,"sku":pid});
 var pog;
