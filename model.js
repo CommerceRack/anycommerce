@@ -81,7 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-		version : "201310",
+		version : "201311",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -149,8 +149,8 @@ function zoovyModel() {
 				QID = QID === undefined ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				dispatch["_uuid"] = uuid;
-				dispatch["status"] = 'queued';
-				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
+				dispatch['_tag']["status"] = 'queued';
+//				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = dispatch;
 				r = uuid;
 				}
@@ -166,7 +166,7 @@ function zoovyModel() {
 				r = false;
 			else	{
 				STATUS = STATUS === undefined ? 'UNSET' : STATUS; //a default, mostly to help track down that this function was run without a status set.
-				app.q[QID][UUID].status = STATUS;
+				app.q[QID][UUID]._tag.status = STATUS;
 				}
 			return r;
 			},
@@ -185,14 +185,14 @@ function zoovyModel() {
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
 //				app.u.dump(" -> CMD: "+app.q[QID][index]['_cmd']);
-				if(app.q[QID][index].status == 'queued')	{
-					app.q[QID][index]['status'] = "requesting";
+				if(app.q[QID][index]._tag.status == 'queued')	{
+					app.q[QID][index]._tag.status = "requesting";
+					if(puuid){app.q[QID][index]._tag.pipeUUID = puuid}
+					
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
-					if(puuid){app.q[QID][index]['pipeUUID'] = puuid}
+					
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
 					delete myQ[c]['_tag']; //blank out rtag to make requests smaller. handleResponse will check if it's set and re-add it to pass into callback.
-					delete myQ[c]['status'];
-					delete myQ[c]['attempts'];
 					c += 1;
 //added on 2012-02-23
 					if(c > app.globalAjax.numRequestsPerPipe){
@@ -359,6 +359,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 //ok to pass admin vars on non-admin session. They'll be ignored.
 		data: JSON.stringify({"_uuid":pipeUUID,"_cartid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
+
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
 		if(textStatus == 'abort')	{
 			delete app.globalAjax.requests[QID][pipeUUID];
@@ -378,11 +379,13 @@ can't be added to a 'complete' because the complete callback gets executed after
 //			setTimeout("app.model.dispatchThis('"+QID+"')",1000); //try again. a dispatch is only attempted three times before it errors out.
 			}
 		});
+
 	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
 		delete app.globalAjax.requests[QID][pipeUUID];
 		app.model.handleResponse(d);}
 		)
 	r = pipeUUID; //return the pipe uuid so that a request can be cancelled if need be.
+
 				}
 
 		return r;
@@ -1018,11 +1021,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return r;
 			}, //whichQAmIFrom
 
-
+//returns an array of UUID's that use the 'pipe' uuid.
 		getUUIDsbyQIDandPipeUUID : function(QID,pipeUUID)	{
 			var r = new Array();
 			for(index in app.q[QID])	{
-				if(app.q[QID][index]['pipeUUID'] == pipeUUID)	{
+				if(app.q[QID][index]._tag && app.q[QID][index]._tag['pipeUUID'] == pipeUUID)	{
 					r.push(app.q[QID][index]['_uuid']);
 					}
 				}
@@ -1032,7 +1035,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 		checkForPipeUUIDInQID : function(QID,pipeUUID)	{
 			var r = false;
 			for(index in app.q[QID])	{
-				if(app.q[QID][index]['pipeUUID'] == pipeUUID)	{
+				if(app.q[QID][index].tag &&app.q[QID][index].tag['pipeUUID'] == pipeUUID)	{
 					r = true;
 					break; //end once we have a match. pipeuuid is specific to one Q
 					}

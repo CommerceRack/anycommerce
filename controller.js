@@ -105,7 +105,8 @@ copying the template into memory was done for two reasons:
 			numRequestsPerPipe : 50,
 			requests : {"mutable":{},"immutable":{},"passive":{}} //'holds' each ajax request. completed requests are removed.
 			}; //holds ajax related vars.
-		app.sessionId = null;
+		app.vars.sessionId = app.u.guidGenerator(); //!!! HERE FOR TESTING
+		app.u.dump(app.vars.sessionId);
 		app.vars.extensions = app.vars.extensions || [];
 		
 		if(app.vars.thisSessionIsAdmin)	{
@@ -115,6 +116,10 @@ copying the template into memory was done for two reasons:
 
 		}, //initialize
 
+
+	createSession : function()	{
+		app.vars._session = app.model.version+app.u.guidGenerator();
+		},
 
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
 //after login, the admin vars are set in the model.
@@ -976,22 +981,13 @@ it'll then set app.rq.push to mirror this function.
 			return (S4()+S4()+S4()+S4()+S4()+S4()+S4()+S4());
 			},
 
-//when sending the user into a waiting pattern, pass true.  This changes the cursor into the browser 'waiting' state
-//don't forget to turn this off when done.
-		handleWait : function (tfu){
-			if(tfu == true)	{
-				$('body').css({'cursor':'wait'})
-				}
-			else	{
-				$('body').css({'cursor':'auto'})
-				}
-			},
-			
+		
 
 //jump to an anchor. can use a name='' or id=''.  anchor is used in function name because that's the common name for this type of action. do not need to pass # sign.
 		jumpToAnchor : function(id)	{
 			window.location.hash=id;
 			},
+
 //uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
 //this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
 		throwGMessage : function(err,parentID){
@@ -1238,30 +1234,6 @@ URI PARAM
 			return r;
 			},
 		
-//will create an object of a series of key/value pairs in URI format.
-//if nothing is passed in, will get string directly from URL.
-//commented on 2013-01-15
-/*
-		getParametersAsObject : function(string)	{
-			app.u.dump("BEGIN control.u.getParametersAsObject");
-			app.u.dump(" -> string: "+string);
-			var tmp = string ? string : location.search;
-			app.u.dump(" -> tmp: "+tmp);
-			var url = tmp.split('#')[0]; //split at hash and only use relevant segment. otherwise last param is key:value#something
-			var params = {};
-//check for ? to avoid js error which results when no uri params are present
-			if(string || url.indexOf('?') > 0)	{
-				url = url.replace('?', '').replace(/&amp;/g, '&').replace(/\+/g, " "); //uri may be encoded or not. normalize.
-				url = decodeURIComponent(url);
-				app.u.dump(" -> URL after tweaking: "+url);
-				if(app.u.isSet(url))	{
-					params = this.kvp2Array(url);
-					}
-				}
-//			app.u.dump(" -> params: "); app.u.dump(params);
-			return params;
-			},
-*/
 
 /*
 
