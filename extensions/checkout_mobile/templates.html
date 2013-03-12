@@ -3,6 +3,7 @@
 IN DEVELOPMENT - DO NOT USE
 
 Each panel (fieldset) loads it's own template within the panelContent so that as needed, the panel can be easily updated.
+This also allows for messaging to be easily added to the fieldset that is NOT impacted by a template being updated.
 The name of the role in the fieldset matches the template (ex: chkoutPreflight = chkoutPreflightTemplate).
 The chkout prefix is reserved for checkout.
 
@@ -15,22 +16,22 @@ item list and summary are separate just to give more control over location.
 	<input type='hidden' name='ship/shortcut' data-bind="var: cart(ship/shortcut); format:popVal;" />
 
 <!-- define panel order -->
-	<fieldset data-app-role='chkoutPreflight'>
-		<legend>Email / Account Login</legend>
+	<fieldset data-app-role='chkoutPreflight' class='marginBottom'>
+		<legend class='headerPadding' >Email / Account Login</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutPreflightTemplate; useParentData:true;'></div>
 	</fieldset>
 
 
 
-	<fieldset data-app-role='chkoutAccountCreate' class='displayNone'>
-		<legend>Account Creation</legend>
+	<fieldset data-app-role='chkoutAccountCreate' class='displayNone marginBottom'>
+		<legend class='headerPadding' >Account Creation</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAccountCreateTemplate; '></div>
 	</fieldset>
 
 
 
-	<fieldset data-app-role='chkoutAddressBill' data-app-addresstype='bill'>
-		<legend>Billing Address</legend>
+	<fieldset data-app-role='chkoutAddressBill' data-app-addresstype='bill' class='marginBottom'>
+		<legend class='headerPadding' >Billing Address</legend>
 		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='var: buyer(@bill); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for new customers -->
 		
@@ -44,47 +45,47 @@ item list and summary are separate just to give more control over location.
 
 
 
-	<fieldset data-app-role='chkoutAddressShip'  data-app-addresstype='ship' class='displayNone'>
-		<legend>Shipping Address</legend>
+	<fieldset data-app-role='chkoutAddressShip'  data-app-addresstype='ship' class='displayNone marginBottom'>
+		<legend class='headerPadding' >Shipping Address</legend>
 		<div class='panelContent displayNone' data-app-role='addressSelect' data-bind='var: buyer(@ship); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for new customers -->
 	</fieldset>
 
 
 
-	<fieldset data-app-role='chkoutMethodsShip'>
-		<legend>Shipping Methods</legend>
+	<fieldset data-app-role='chkoutMethodsShip' class='marginBottom'>
+		<legend class='headerPadding' >Shipping Methods</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsShipTemplate;'></div>
 	</fieldset>
 
 
 	
-	<fieldset data-app-role='chkoutMethodsPay'>
-		<legend>Payment Choices</legend>
+	<fieldset data-app-role='chkoutMethodsPay' class='marginBottom'>
+		<legend class='headerPadding' >Payment Choices</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsPayTemplate;'></div>
 	</fieldset>
 
 
 
 <!-- totals et all -->
-	<fieldset data-app-role='chkoutNotes'>
-		<legend>Order Notes/Special Instructions</legend>
+	<fieldset data-app-role='chkoutNotes' class='marginBottom'>
+		<legend class='headerPadding' >Order Notes/Special Instructions</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutNotesTemplate;'></div>
 	</fieldset>
 
 
 
 <!-- line items -->	
-	<fieldset data-app-role='chkoutCartItemsList'>
-		<legend>Contents</legend>
+	<fieldset data-app-role='chkoutCartItemsList' class='marginBottom'>
+		<legend class='headerPadding' >Contents</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartContentsTemplate;'></div>
 	</fieldset>
 
 
 
 <!-- totals et all -->
-	<fieldset data-app-role='chkoutCartSummary'>
-		<legend>Summary</legend>
+	<fieldset data-app-role='chkoutCartSummary' class='marginBottom'>
+		<legend class='headerPadding' >Summary</legend>
 		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartSummaryTemplate;'></div>
 	</fieldset>
 
@@ -120,40 +121,6 @@ item list and summary are separate just to give more control over location.
 
 
 
-<section id='chkoutCartSummaryTemplate'>
-	
-	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
-	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
-	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
-	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
-	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
-	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; currencySign: $; pretext:Reward Points: ; '></div>
-	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; currencySign: $; pretext:Returns Credit: ; '></div>
-	<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
-
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></div>
-
-	<div class='couponEntryContainer'>
-		<label for='coupon'>Coupon/Promo Code:</label>
-		<input type='text' name='coupon' size='8'  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
-		<button data-app-event="convertSessionToOrder|execCouponAdd" >add</button>
-	</div>
-
-	<button data-app-event="convertSessionToOrder|execCartOrderCreate">
-		Place Order
-	</button>
-
-<div data-app-role='referenceNumber' class='displayNone'>
-	<label>Purchase Order/Reference #: </label>
-	<input type'text' name='want/reference_number' size='12' />
-</div>
-
-
-</section>
-
-
-
 
 <!--
 billing address panel spec
@@ -173,13 +140,13 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<div><input type='text' name='bill/city' placeholder='city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	
-	<div><input type='text'  name='bill/region' placeholder='state/region' size='5' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
+	<div><input type='text'  name='bill/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	<!-- postal not required for international. don't add it. -->
-	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' size='14' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
+	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 
 	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' data-bind='var: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' data-app-event="convertSessionToOrder|execCountryUpdate" ></select></div>
 
-	<div><input type='tel' name='bill/phone' placeholder='phone number' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
+	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
 
 </section>
 
@@ -218,8 +185,8 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 <!-- a panel that only appears in 'nice' -->
 <section id='chkoutAccountCreateTemplate'>
 
-<div><input type='password' placeholder='password' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /><span class='hint'>must be at least X characters</span></div>
-<div><input type='password' placeholder='verify password' name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></div>
+<div><input type='password' data-minlength='8' placeholder='password' required='required' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /><span class='hint'>must be at least X characters</span></div>
+<div><input type='password' data-minlength='8' placeholder='verify password' required='required'  name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></div>
 <label>Recovery Question
 <select name='want/recovery_hint' data-bind='var: cart(want/recovery_hint); format:popVal;'>
 	<option value='2'>Name of your favorite childhood pet?</option>
@@ -229,7 +196,7 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 </select>
 </label>
 
-<input type='text' placeholder='recovery answer' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
+<input type='text' placeholder='recovery answer' required='required' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
 
 </section>
 
@@ -242,7 +209,7 @@ messaging are hidden by default, then displayed if needed. keeps panel from bein
 -->
 
 <div id='chkoutMethodsShipTemplate'>
-	<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;' data-app-event='convertSessionToOrder|execShipMethodUpdate'></ul>
+	<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: convertSessionToOrder;' data-app-event='convertSessionToOrder|addTriggerShipMethodUpdate'></ul>
 </div>
 
 
@@ -262,8 +229,8 @@ do NOT change any div id's or messaging will not work properly.
 
 	<div class='giftCardContainer'>
 	<label for='giftcardCode'>Gift Certificate Code:</label>
-	<input type='text' name='giftcard' id='giftcardCode' size='8'  onKeyPress="if(event.keyCode==13){$('#addGiftcardBtn').click();}" />
-	<button data-app-event="convertSessionToOrder|execCouponAdd">add</button>
+	<input type='text' name='giftcard' size='16'  data-app-event='convertSessionToOrder|addTriggerButtonClick' />
+	<button data-app-event='convertSessionToOrder|execGiftcardAdd'>add</button>
 	</div>
 
 	<div data-app-role='paymentQContainer' class='marginBottom'>
@@ -279,7 +246,7 @@ do NOT change any div id's or messaging will not work properly.
 			<table data-bind="var: buyerWalletList(@wallets); format:processList; loadsTemplate: buyerWalletsListItem;"></table>
 		</div>
 		<div data-anytab-content='nonStoredPaymentsContainer'>
-			<div data-app-event="convertSessionToOrder|execPayMethodUpdate" data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
+			<div data-app-event="convertSessionToOrder|addTriggerPayMethodUpdate" data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: convertSessionToOrder;'></div>
 		</div>
 	</div>
 
@@ -327,6 +294,50 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 
 
+
+
+
+
+<section id='chkoutCartSummaryTemplate'>
+	
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
+	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; currencySign: $; pretext:Returns Credit: ; '></div>
+	<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
+
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></div>
+
+	<div class='couponEntryContainer' data-app-role='couponContainer'>
+		<label for='coupon'>Coupon/Promo Code:</label>
+		<input type='text' name='coupon' size='8'  data-app-event='convertSessionToOrder|addTriggerButtonClick' />
+		<button data-app-event="convertSessionToOrder|execCouponAdd" >add</button>
+	</div>
+
+	<button data-app-event="convertSessionToOrder|execCartOrderCreate">
+		Place Order
+	</button>
+
+<div data-app-role='referenceNumber' class='displayNone'>
+	<label>Purchase Order/Reference #: </label>
+	<input type'text' name='want/reference_number' size='12' />
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
 <address id='chkoutBuyerAddressTemplate' class='ui-widget ui-widget-content ui-corner-all'>
 	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
 	<div>
@@ -367,6 +378,10 @@ do NOT change the input name or id or checkout will likely break.
 <p>Please include any special instructions or comments here:</p>
 <textarea class='chkoutOrderNotes' id='chkout-order_notes' name='want/order_notes' onChange='app.calls.cartSet.init({"want/order_notes":this.value}); app.model.dispatchThis("immutable");' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
 </div>
+
+
+
+
 
 
 

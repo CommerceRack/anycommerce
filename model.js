@@ -149,6 +149,7 @@ function zoovyModel() {
 				QID = QID === undefined ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				dispatch["_uuid"] = uuid;
+				dispatch._tag = dispatch._tag || {}; //the following line will error if tag is not an object. define as such if not already defined.
 				dispatch['_tag']["status"] = 'queued';
 //				dispatch["attempts"] = dispatch["attempts"] === undefined ? 0 : dispatch["attempts"];
 				app.q[QID][uuid] = dispatch;

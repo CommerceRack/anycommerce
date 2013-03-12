@@ -558,39 +558,37 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //paymentID is the payment that is selected.
 //data is a data object, such as cartDetail or an invoice.
 //isAdmin is used to determine if additional output is included (flag as paid checkbox and some other inputs)
-
+// SANITY -> checkout uses the required attribute for validation. do not remove!
 			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
 				
-				var $o = $("<ul />").addClass("paybySupplemental"), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
+				var $o = $("<div />").addClass("paybySupplemental").attr('data-app-role','supplementalPaymentInputsContainer'), //what is returned. a jquery object (ul) w/ list item for each input of any supplemental data.
 				tmp = '', //tmp var used to put together string of html to append to $o
-				payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
+				payStatusCB = "<div><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/div>"
 				
 				
 				switch(paymentID)	{
 	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 	//expiration is less of a concern
-					case 'PAYPALEC' :
-						break;
 					case 'CREDIT':
-						tmp += "<li><label>Credit Card #<input type='text' size='20' name='payment/CC' class=' creditCard' value='";
+						tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' class=' creditCard' value='";
 						if(data['payment/CC']){tmp += data['payment/CC']}
-						tmp += "' onKeyPress='return app.u.numbersOnly(event);' /><\/label><\/li>";
+						tmp += "' onKeyPress='return app.u.numbersOnly(event);' required='required' /><\/label><\/div>";
 						
-						tmp += "<li><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
+						tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
 						tmp += app.u.getCCExpMonths(data['payment/MM']);
 						tmp += "<\/select>";
-						tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/li>";
+						tmp += "<select name='payment/YY' class='creditCardYearExp'  required='required'><option value=''><\/option>"+app.u.getCCExpYears(data['payment/YY'])+"<\/select><\/div>";
 						
-						tmp += "<li><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
+						tmp += "<div><label for='payment/CV'>CVV/CID<input type='text' size='4' name='payment/CV' class=' creditCardCVV' onKeyPress='return app.u.numbersOnly(event);' value='";
 						if(data['payment/CV']){tmp += data['payment/CV']}
-						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/li>";
+						tmp += "'  required='required' /><\/label> <span class='ui-icon ui-icon-help' onClick=\"$('#cvvcidHelp').dialog({'modal':true,height:400,width:550});\"></span><\/div>";
 						
 						if(isAdmin === true)	{
-							tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
-							tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
-							tmp += "<li><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/li>"
+							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
+							tmp += "<div><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/div>"
 							}
 						
 						
@@ -605,13 +603,14 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						if(isAdmin === true)	{
 							tmp += payStatusCB;
 							}
+						else	{$o = false;} //inputs are only present in admin interface.
 						break;
 	
 					case 'PO':
-						tmp += "<li><label for='payment-po'>PO #<input type='text' size='10' name='payment/PO' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+						tmp += "<div title='PO Number'><input type='text' size='30' placeholder='po number' required='required' name='payment/PO' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
 						if(data['payment/PO'])
 								tmp += data['payment/PO'];
-						tmp += "' /><\/label><\/li>";
+						tmp += "' /><\/div>";
 						if(isAdmin === true)	{
 							tmp += payStatusCB;
 							}
@@ -620,21 +619,20 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					case 'ECHECK':
 						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
 						for(var key in echeckFields) {
-							safeid = app.u.makeSafeHTMLId(key);
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
 //The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							tmp += "<li><label for='"+safeid+"'>"+echeckFields[key]+"<input type='text' size='2' name='"+key+"' class=' echeck'  value='";
+							tmp += "<div title='"+echeckFields[key]+"'><input type='text' required='required' size='30' name='"+key+"' placeholder='"+echeckFields[key].toLowerCase()+"' class=' echeck'  value='";
 //if the value for this field is set in the data object (cart or invoice), set it here.
 							if(data[key])
 								tmp += data[key];
-							tmp += "' /><\/label><\/li>";
+							tmp += "' /><\/div>";
 							}
 						break;
 					default:
 //if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
 						$o = false; //return false if there is no supplemental fields
 					}
-				if($o != false)	{$o.append(tmp)} //put the li contents into the ul for return.
+				if($o)	{$o.append(tmp)} //put the li contents into the ul for return.
 				return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);

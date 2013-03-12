@@ -105,8 +105,8 @@ copying the template into memory was done for two reasons:
 			numRequestsPerPipe : 50,
 			requests : {"mutable":{},"immutable":{},"passive":{}} //'holds' each ajax request. completed requests are removed.
 			}; //holds ajax related vars.
-		app.vars.sessionId = app.u.guidGenerator(); //!!! HERE FOR TESTING
-		app.u.dump(app.vars.sessionId);
+			
+//		app.vars.sessionId = app.u.guidGenerator(); //!!! HERE FOR TESTING
 		app.vars.extensions = app.vars.extensions || [];
 		
 		if(app.vars.thisSessionIsAdmin)	{
@@ -1204,6 +1204,12 @@ BROWSER/OS
 			}, //getOSInfo
 
 
+
+
+
+
+
+
 /*
 
 TIME/DATE
@@ -1311,6 +1317,72 @@ VALIDATION
 			var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     		return re.test(str);				
 			}, //isValidEmail
+
+//Currently, a fairly simple validation script. The browsers aren't always implementing their form validation for the dynamically generated content, so this
+//is simple validator which can be extended over time.
+//also, you can pass a fieldset in instead of the entire form (or any other jquery object) to validate just a portion of a form.
+// checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
+//
+		validateForm : function($form)	{
+			app.u.dump("BEGIN admin.u.validateForm");
+			if($form && $form instanceof jQuery)	{
+				var r = true; //what is returned. false if any required fields are empty.
+				$form.showLoading({'message':'Validating'});
+				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
+				$('input',$form).each(function(){
+					var $input = $(this),
+					$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
+					
+					$input.removeClass('ui-state-error'); //remove previous error class
+
+//					app.u.dump(" -> validating input."+$input.attr('name'));
+					
+					function removeClass($t){
+						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
+						}
+					
+					if($input.attr('required') == 'required' && !$input.val())	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('required'));
+						removeClass($input);
+						}
+					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('not a valid email address'));
+						removeClass($input);
+						}
+					else if($input.attr('maxlength') && $input.val().length > $input.attr('maxlength'))	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+						removeClass($input);
+						}
+					else if($input.data('minlength') && $input.val().length < $input.data('minlength'))	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+						removeClass($input);
+						}
+					else	{
+						$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
+						}
+					});
+				$form.hideLoading();
+				}
+			else	{
+				$('#globalMessaging').anymessage({'message':'Object passed into admin.u.validateForm is empty or not a jquery object','gMessage':true});
+				}
+//			app.u.dump(" -> r in validateForm: "+r);
+			return r;
+			},
+
+
+
+
+
+
 
 //used frequently to throw errors or debugging info at the console.
 //called within the throwError function too
