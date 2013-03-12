@@ -62,7 +62,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 //					app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
-					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object')	{
+					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object' && app.ext.store_checkout && app.ext.store_checkout.checkoutCompletes)	{
 
 //app.u.dump(" -> adding triggers");
 app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/index.html']); app.ext.google_analytics.u.handleAntiBounceEvent(P);})
