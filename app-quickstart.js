@@ -623,26 +623,22 @@ need to be customized on a per-ria basis.
 
 //if first char is a !, hide that char, then render as text. used in breadcrumb
 //likely to be used in prodcats if/when it's built.s
+//here, on 'could' disable the display if they didn't want hidden cats to show in the breadcrumb.
 			catText : function($tag,data)	{
 				if(data.value[0] == '!')	{data.value = data.value.substring(1)}
 				app.renderFormats.text($tag,data)
 				},
+
 //### later, we could make this more advanced to actually search the attribute. add something like elasticAttr:prod_mfg and if set, key off that.
 			searchLink : function($tag,data){
-				var keywords = data.value.replace(/ /g,"+");
+				var keywords = data.value.replace(/ /g,"+"),
+				infoObj = {'KEYWORDS':keywords}
 				if(data.bindData.elasticAttr){
-					app.u.dump(data.bindData.elasticAttr.split(" "));
-					var attributes = data.bindData.elasticAttr.split(" ");
-					
-					
-					$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
-						showContent('search',{'KEYWORDS':keywords, 'ATTRIBUTES' : attributes})
-						});
-				} else {
-					$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
-						showContent('search',{'KEYWORDS':keywords})
-						});
-				}
+					infoObj.ATTRIBUTES = data.bindData.elasticAttr.split(" ");
+					}
+				$tag.append("<span class='underline pointer'>"+data.value+"<\/span>").bind('click',function(){
+					showContent('search',infoObj)
+					});
 				}, //searchLink
 
 
@@ -661,11 +657,11 @@ need to be customized on a per-ria basis.
 						}
 					}
 				},
-
+//no click event is added to this. do that on a parent element so that this can be recycled.
 			youtubeThumbnail : function($tag,data)	{
 				$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
 				return true;
-				}, //legacyURLToRIA
+				}, //youtubeThumbnail
 
 // used for a product list of an elastic search results set. a results object and category page product list array are structured differently.
 // when using @products in a categoryDetail object, use productList as the renderFormat
@@ -692,7 +688,7 @@ need to be customized on a per-ria basis.
 						}
 					}
 				else	{} //no value, so do nothing.
-				},
+				}, //productSearch
 
 /*
 data.value in a banner element is passed in as a string of key value pairs:
@@ -703,12 +699,9 @@ fallback is to just output the value.
 
 			banner : function($tag, data)	{
 //				app.u.dump("begin myRIA.renderFormats.banner");
-				var obj = app.u.kvp2Array(data.value); //returns an object LINK, ALT and IMG
-				var hash; //used to store the href value in hash syntax. ex: #company?show=return
-				var pageInfo = {};
-				
-				
-//				app.u.dump(" -> obj.LINK: "+obj.LINK);
+				var obj = app.u.kvp2Array(data.value), //returns an object LINK, ALT and IMG
+				hash, //used to store the href value in hash syntax. ex: #company?show=return
+				pageInfo = {};
 				
 //if value starts with a #, then most likely the hash syntax is being used.
 				if(obj.LINK && obj.LINK.indexOf('#') == 0)	{
@@ -766,7 +759,6 @@ fallback is to just output the value.
 //use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
 // render format will also hide the button if the user is not logged in.
 			moveToWishlistButton : function($tag,data)	{
-				
 				if(app.u.buyerIsAuthenticated())	{
 					$tag.show().button({icons: {primary: "ui-icon-heart"},text: false});
 					$tag.off('click.moveToWishlist').on('click.moveToWishList',function(){
@@ -774,7 +766,6 @@ fallback is to just output the value.
 						});
 					}
 				else	{$tag.hide();}
-				
 				},
 
 
@@ -1285,34 +1276,6 @@ setTimeout(function(){
 				},
 
 
-//a self contained function which will display a product template within a specified selector.
-//handles call, callback and dispatch.
-//allows for callback override.
-//pid is required and either a selector and a templateID OR a function as the callback (in which it's assumed everything the callback needs is in the function itself)
-
-//function is more or less replaced by anycontent plugin.
-
-/*			showInlineProdDetails : function(infoObj)	{
-				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
-				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{
-					app.u.dump(" -> all required params are present.");
-					var $parent = $(app.u.jqSelector(infoObj.selector.charAt(0),infoObj.selector.substring(1)));
-
-					$parent.append(app.renderFunctions.createTemplateInstance(infoObj.templateID));
-
-					infoObj.callback = infoObj.callback ? infoObj.callback : 'translateSelector';
-					infoObj.extension = infoObj.extension ? infoObj.extension : ''; //translateTemplate is part of controller, not an extension
-
-					app.ext.store_product.calls.appProductGet.init(infoObj.pid,infoObj);
-					app.ext.store_product.calls.appReviewsList.init(infoObj.pid);
-					app.model.dispatchThis();					
-					
-					}
-				else	{
-					app.u.throwGMessage("In myRIA.a.showInlineProdDetails, either infoObj was empty ["+typeof infoObj+"] or infoObj.pid ["+infoObj.pid+"] or infoObj.selector ["+infoObj.selector+"] or infoObj.templateID ["+infoObj.templateID+"] was not set."); app.u.dump(infoObj);
-					}
-				},
-*/
 
 /*
 required:
@@ -1457,10 +1420,10 @@ P.listID (buyer list id)
 				
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
-					app.u.handleResourceQ(app.rq[i]);
+					app.u.loadResourceFile(app.rq[i]);
 					app.rq.splice(i, 1); //remove once handled.
 					}
-				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
 				if(typeof infoObj != 'object')	{infoObj = {}}
 				infoObj = this.detectRelevantInfoToPage(window.location.href); 
 				infoObj.back = 0; //skip adding a pushState on initial page load.
@@ -2544,7 +2507,12 @@ buyer to 'take with them' as they move between  pages.
 //dialog can be set to true and will use default settings or it can be set to an object of supported dialog parameters.
 					infoObj.dialog = $.isEmptyObject(infoObj.dialog) ? {modal: true,width:'86%',height:$(window).height() - 100} : infoObj.dialog; 
 					infoObj.dialog.autoOpen = false; //always set to false, then opened below. fixes some issues with re-opening the same id in a modal.
-					var $parent = app.u.handleParentForDialog(infoObj.dialogID,infoObj.title);
+					var $parent = $(app.u.jqSelector('#',infoObj.dialogID));
+					
+//parent may not exist. empty if it does, otherwise create it.
+					if($parent.length)	{$parent.empty()}
+					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}					
+					
 					infoObj.parentID = infoObj.dialogID+"_content"; //the parentID passed in is the modal ID. this is for the contents and needs to be different so showPage knows whether it has been rendered before or not.
 					this.showPage(infoObj);
 					$parent.dialog(infoObj.dialog);

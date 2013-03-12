@@ -563,9 +563,11 @@ NOTES
 					P.width = P.width ? P.width : 600;
 					P.height = P.height ? P.height : 660;
 					
-					var $parent = app.u.handleParentForDialog(parentID)
+					var $parent = $(app.u.jqSelector('#',parentID));
+//parent may not exist. empty if it does, otherwise create it.
+					if($parent.length)	{$parent.empty()}
+					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}
 
-					if(!P.parentID)	{$parent.empty()} //only empty the parent if no parent was passed in. 
 					if(P.templateID)	{
 						$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"imageViewer_"+parentID));
 						app.renderFunctions.translateTemplate(app.data["appProductGet|"+P.pid],"imageViewer_"+parentID);
@@ -586,7 +588,7 @@ NOTES
 /*
 P is passed in. Guess what? it's an object.
 pid = a product id [REQUIRED]
-template = template id to translate for the viewer. [REQUIRED]
+templateID = template id to translate for the viewer. [REQUIRED]
 parentID = id for parent. [OPTIONAL] template will get translated into that and then the parent will be used to create the modal. if no parent, generic id will be used AND recycled.
 
 NOTES
@@ -596,24 +598,16 @@ NOTES
 */
 			prodDataInModal : function(P)	{
 				if(P.pid && P.templateID)	{
-//					var parentID = P.parentID ? P.parentID : "product-modal";  //### for now, parent is hard coded. only 1 modal at a time becuz of variations.
-					var parentID = "product-modal"
+					var $parent = $("#product-modal");
 					
-					/*
-						!! Note- app.u.handleParentForDialog does not adequately set title.  Edited the dialog call below to pass title.
-					*/
+//parent may not exist. empty if it does, otherwise create it.
+					if($parent.length)	{$parent.empty()}
+					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}
 					
-					var $parent = app.u.handleParentForDialog(parentID,app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']);
-					
-					if(!P.parentID)	{
-						app.u.dump(" -> parent not specified. empty contents.");
-						$parent.empty();
-						} //if no parent is specified, this is a 'recycled' modal window. empty any old product data.
-					
-					$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"productViewer_"+parentID));
+					;
 					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false, title : app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']});
 					$parent.dialog('open');
-					
+					$parent.anycontent(P);
 					var tagObj = {};
 					
 					tagObj.templateID = P.templateID;

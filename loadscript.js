@@ -32,7 +32,7 @@ app.u.loadScript = function(url, callback, params){
 Will load all scripts and extenstions with pass = 0.
 pass with any other value (including blank,null, undefined, etc) will get loaded later.
 this function is overwritten once the myRIA callback occurs with a similar but more powerful function (ignores pass, supports css).
-app.rq.push() = app.u.handleResourceQ so whatever the values in push() are get executed immediately.
+app.rq.push() = app.u.loadResourceFile so whatever the values in push() are get executed immediately.
 */
 
 app.u.handleRQ = function()	{

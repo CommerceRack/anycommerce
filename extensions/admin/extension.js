@@ -1276,10 +1276,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this 
 				var L = app.rq.length-1;
 //load any remaining resources into the app.
 				for(var i = L; i >= 0; i -= 1)	{
-					app.u.handleResourceQ(app.rq[i]);
+					app.u.loadResourceFile(app.rq[i]);
 					app.rq.splice(i, 1); //remove once handled.
 					}
-				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
 
 if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");

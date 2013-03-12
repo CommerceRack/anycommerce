@@ -1315,34 +1315,7 @@ setTimeout(function(){
 				},
 
 
-//a self contained function which will display a product template within a specified selector.
-//handles call, callback and dispatch.
-//allows for callback override.
-//pid is required and either a selector and a templateID OR a function as the callback (in which it's assumed everything the callback needs is in the function itself)
 
-//function is more or less replaced by anycontent plugin.
-
-/*			showInlineProdDetails : function(infoObj)	{
-				app.u.dump("BEGIN myRIA.a.showInlineProdDetails");
-				if(infoObj && infoObj.pid && infoObj.selector && infoObj.templateID)	{
-					app.u.dump(" -> all required params are present.");
-					var $parent = $(app.u.jqSelector(infoObj.selector.charAt(0),infoObj.selector.substring(1)));
-
-					$parent.append(app.renderFunctions.createTemplateInstance(infoObj.templateID));
-
-					infoObj.callback = infoObj.callback ? infoObj.callback : 'translateSelector';
-					infoObj.extension = infoObj.extension ? infoObj.extension : ''; //translateTemplate is part of controller, not an extension
-
-					app.ext.store_product.calls.appProductGet.init(infoObj.pid,infoObj);
-					app.ext.store_product.calls.appReviewsList.init(infoObj.pid);
-					app.model.dispatchThis();					
-					
-					}
-				else	{
-					app.u.throwGMessage("In myRIA.a.showInlineProdDetails, either infoObj was empty ["+typeof infoObj+"] or infoObj.pid ["+infoObj.pid+"] or infoObj.selector ["+infoObj.selector+"] or infoObj.templateID ["+infoObj.templateID+"] was not set."); app.u.dump(infoObj);
-					}
-				},
-*/
 
 /*
 required:
@@ -1486,11 +1459,11 @@ P.listID (buyer list id)
 				
 				var L = app.rq.length-1;
 				for(var i = L; i >= 0; i -= 1)	{
-					app.u.handleResourceQ(app.rq[i]);
+					app.u.loadResourceFile(app.rq[i]);
 					app.rq.splice(i, 1); //remove once handled.
 					}
 
-				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
+				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
 				if(typeof infoObj != 'object')	{infoObj = {}}
 				infoObj = this.detectRelevantInfoToPage(window.location.href); 
 				infoObj.back = 0; //skip adding a pushState on initial page load.
@@ -2590,7 +2563,14 @@ buyer to 'take with them' as they move between  pages.
 //dialog can be set to true and will use default settings or it can be set to an object of supported dialog parameters.
 					infoObj.dialog = $.isEmptyObject(infoObj.dialog) ? {modal: true,width:'86%',height:$(window).height() - 100} : infoObj.dialog; 
 					infoObj.dialog.autoOpen = false; //always set to false, then opened below. fixes some issues with re-opening the same id in a modal.
-					var $parent = app.u.handleParentForDialog(infoObj.dialogID,infoObj.title);
+
+					var $parent = $(app.u.jqSelector('#',infoObj.dialogID));
+					
+//parent may not exist. empty if it does, otherwise create it.
+					if($parent.length)	{$parent.empty()}
+					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}					
+
+
 					infoObj.parentID = infoObj.dialogID+"_content"; //the parentID passed in is the modal ID. this is for the contents and needs to be different so showPage knows whether it has been rendered before or not.
 					this.showPage(infoObj);
 					$parent.dialog(infoObj.dialog);

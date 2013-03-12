@@ -133,7 +133,7 @@ For the list of available params, see the 'options' object below.
 					}
 				else if(msg.errid)	{
 					app.u.dump(" -> msg type is err.");
-					$r = $("<p \/>").addClass('anyMessage').css(amcss).addClass(msg.errtype).text(msg.errmsg+" ["+msg.errid+"]");
+					$r = $("<p \/>").addClass('anyMessage').css(amcss).addClass(msg.errtype).html(msg.errmsg+" ["+msg.errid+"]");
 					
 					if(msg.errtype == 'iseerr')	{
 //					app.u.dump(" -> msg IS iseerr.");
