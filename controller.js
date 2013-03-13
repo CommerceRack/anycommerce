@@ -54,6 +54,8 @@ jQuery.extend(zController.prototype, {
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
+		app.handleSession();
+
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
 			app.u.dump("URI param flush is true. CLEAR LOCAL STORAGE");
@@ -106,7 +108,7 @@ copying the template into memory was done for two reasons:
 			requests : {"mutable":{},"immutable":{},"passive":{}} //'holds' each ajax request. completed requests are removed.
 			}; //holds ajax related vars.
 			
-//		app.vars.sessionId = app.u.guidGenerator(); //!!! HERE FOR TESTING
+		
 		app.vars.extensions = app.vars.extensions || [];
 		
 		if(app.vars.thisSessionIsAdmin)	{
@@ -116,13 +118,26 @@ copying the template into memory was done for two reasons:
 
 		}, //initialize
 
-
-	createSession : function()	{
-		app.vars._session = app.model.version+app.u.guidGenerator();
-		},
+//will load _session from localStorage or create a new one.
+	handleSession : function()	{
+		if(app.vars._session)	{} //already defined. 
+		else	{
+			app.vars._session = app.storageFunctions.readLocal('_session');
+			if(app.vars._session)	{
+				app.u.dump(" -> session found in localStorage: "+app.vars._session);
+				//use the local session id.
+				}
+			else	{
+				//create a new session id.
+				app.vars._session = app.u.guidGenerator();
+				app.storageFunctions.writeLocal('_session',app.vars._session);
+				app.u.dump(" -> generated new session: "+app.vars._session);
+				}
+			}
+		}, //handleSession
 
 //This is run on init, BEFORE a user has logged in to see if login info is in localstorage or on URI.
-//after login, the admin vars are set in the model.
+//after login, the admin vars are set in the model. 
 	handleAdminVars : function(){
 //		app.u.dump("BEGIN handleAdminVars");
 		var localVars = {}
@@ -150,7 +165,7 @@ copying the template into memory was done for two reasons:
 
 		app.vars.username = app.vars.username.toLowerCase();
 		
-		},
+		}, //handleAdminVars
 
 	onReady : function()	{
 		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
@@ -468,12 +483,34 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			},
 
+		buyerAddressAddUpdate  : {
+			init : function(cmdObj,_tag,Q)	{
+				var r = 0;
+				if(cmdObj && cmdObj.shortcut)	{
+					_tag = _tag || {};
+					tagObj.datapointer = "buyerAddressAddUpdate|"+cmdObj.shortcut
+					cmdObj['_cmd'] = 'buyerAddressAddUpdate';
+					cmdObj['_tag'] = tagObj;
+					r = 1;
+					this.dispatch(cmdObj,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerAddressAddUpdate requires obj and obj.shortcut','gMessage':true});
+					}
+				return 1;
+				},
+			dispatch : function(cmdObj,Q)	{
+				app.model.addDispatchToQ(cmdObj,Q || 'immutable');	
+				}
+			},//buyerAddressAddUpdate 
+
 		buyerLogout : {
 			init : function(_tag)	{
 				this.dispatch(_tag);
 				return 1;
 				},
 			dispatch : function(_tag)	{
+				obj = {};
 				obj["_cmd"] = "buyerLogout";
 				obj["_tag"] = _tag || {};
 				obj["_tag"]["datapointer"] = "buyerLogout";
@@ -988,27 +1025,26 @@ and model that needed to be permanently displayed had to be converted into an ob
 					$target = $('.appMessaging');
 					}
 				else	{
-					$target = $globalDefault;
-					$target.dialog('open');
+					$target = $('#globalMessaging');
 					}
 				msg = this.youErrObject(msg,"#"); //put message into format anymessage can understand.
 				$target.anymessage(msg);
 				}
 			else if(typeof msg === 'object')	{
+//				app.u.dump(" -> msg: "); app.u.dump(msg);
 				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
-					if(msg._rtag.parentID)	{$target = app.u.jqSelector('#',msg._rtag.parentID)}
-					else if(msg._rtag.targetID)	{$target = app.u.jqSelector('#',msg._rtag.targetID)}
+					if(msg._rtag.parentID)	{$target = $(app.u.jqSelector('#',msg._rtag.parentID))}
+					else if(msg._rtag.targetID)	{$target = $(app.u.jqSelector('#',msg._rtag.targetID))}
 					else	{
-						$target = app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector);
+						$target = $(app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector));
 						}
 					}
-				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging'); app.u.dump(" -> using .appMessaging");}
+				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
 				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
 				else	{
 					//tried and tried and tried. unable to find a good location.
-					$target = $globalDefault;
-					$target.dialog('open');
+					$target = $('#globalMessaging');
 					}
 				$target.anymessage(msg);
 				}

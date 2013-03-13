@@ -120,21 +120,23 @@ app.u.loadScript(app.vars.baseURL+"app-wholesale-init.js");
 </form>
 </div>
 
-	
-<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+
+<div id='bodyContentContainer' class='ui-corner-bottom'>
+	<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
-<div id='appNav'>
-	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
-	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+	<div id='appNav'>
+		<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+		<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+	</div>
+
+	<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+
 </div>
-
-<div id='mainContentArea' class='ui-corner-bottom'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
-
 
 
 <div class='clearfix alignRight' id='mastFoot'>
-	<div>Copyright 2013, All Rights Reserved</div>
+	<div>Copyright &copy; 2013, All Rights Reserved</div>
 	<a href='http://www.zoovy.com' target="_blank">e-commerce by Zoovy</a>
 </div>
 
@@ -1541,7 +1543,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
 		<li><a href='#' onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
-		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
+		<li><a href='#' onClick="app.model.destroy('cartDetail'); app.calls.cartDetail.init({},'immutable'); app.model.dispatchThis('immutable');">cartDetail</a></li>
 	</ul>
 	</li>
 </ul>

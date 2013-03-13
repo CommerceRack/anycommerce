@@ -5,9 +5,9 @@ body	{background:#F4F0EC; padding:6px; margin:0; color:#333333; font-family:Verd
 
 #appView	{margin:0;}
 
-#mastHead, #mainContentArea, mastFoot	{padding:6px;}
+#mastHead, #bodyContentContainer, #mastFoot	{padding:6px;}
 
-#mainContentArea	{border:1px solid #cccccc; background:#ffffff; border-top-width:0;}
+#bodyContentContainer	{border:1px solid #cccccc; background:#ffffff; border-top-width:0;}
 
 #mastHead	{margin-bottom:6px;}
 #mastHead a	{text-decoration:none;}

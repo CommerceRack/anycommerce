@@ -36,7 +36,7 @@ app.rq.push() = app.u.loadResourceFile so whatever the values in push() are get 
 */
 
 app.u.handleRQ = function()	{
-	app.u.dump("BEGIN app.u.handleRQ");
+//	app.u.dump("BEGIN app.u.handleRQ");
 	var numIncludes = 0; //what is returned. The total number of includes for this pass.
 	var L = app.rq.length - 1;
 

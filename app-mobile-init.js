@@ -126,7 +126,7 @@ app.u.howManyPassZeroResourcesAreLoaded = function(debug)	{
 //the 'attempts' var is incremented each time the function is executed.
 
 app.u.initMVC = function(attempts){
-	app.u.dump("app.u.initMVC activated ["+attempts+"]");
+//	app.u.dump("app.u.initMVC activated ["+attempts+"]");
 	var includesAreDone = true;
 
 //what percentage of completion a single include represents (if 10 includes, each is 10%).

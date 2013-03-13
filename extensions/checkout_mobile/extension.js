@@ -680,14 +680,15 @@ an existing user gets a list of previous addresses they've used and an option to
 */
 			chkoutAddressBill : function(formObj,$fieldset)	{
 				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
-					$("[data-app-role='addressSelect']",$fieldset).show();
+					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['bill/shortcut'])	{
-						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight');
+//highlight the checked button of the address selected.<<
+						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight'); 
 						}
 					}
 				else	{
-					$("[data-app-role='addressSelect']",$fieldset).hide();
+					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
 					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
@@ -701,7 +702,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				else	{$fieldset.show()}
 				
 				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
-					$("[data-app-role='addressSelect']",$fieldset).show();
+					$("[data-app-role='addressExists']",$fieldset).show();
 					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['ship/shortcut'])	{
@@ -709,7 +710,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						}
 					}
 				else	{
-					$("[data-app-role='addressSelect']",$fieldset).hide();
+					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
 					if(app.data.appCheckoutDestinations['@destinations'].length < 2)	{
@@ -896,8 +897,23 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$input.off('keypress.addTriggerButtonClick').on('keypress.addTriggerButtonClick',function(event){
 					if(event.keyCode==13){$input.parent().find('button').first().trigger('click')}
 					})
-				},
-			
+				}, //addTriggerButtonClick
+
+//ele is likely a div or section. the element around all the inputs.
+			addTriggerPayMethodUpdate : function($ele)	{
+				var $fieldset = $ele.closest('fieldset');
+				$("input[type='radio']",$ele).each(function(){
+					var $input = $(this);
+					
+					$input.off("change.addTriggerPayMethodUpdate").on("change.addTriggerPayMethodUpdate", function(){
+						app.ext.cco.calls.cartSet.init({'want/payby':$input.val()});
+						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
+						app.ext.convertSessionToOrder.u.showSupplementalInputs($input);
+						
+						});
+					})
+				}, //addTriggerPayMethodUpdate
+
 			addTriggerShipMethodUpdate : function($ul)	{
 				$("input",$ul).each(function(){
 
@@ -912,7 +928,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 						});
 					})
 				}, //addTriggerShipMethodUpdate
-
 
 //triggered on specific address inputs. When an address is updated, several things could be impacted, including tax, shipping options and payment methods.
 			execAddressUpdate : function($input)	{
@@ -1027,7 +1042,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $btn.closest('form'),
 					isValid = app.ext.convertSessionToOrder.validate.checkout($form);
 					
-					if(isValid)	{}
+					if(isValid)	{alert('do something')}
 					else	{
 						$('.formValidationError',$form).first().animate({scrollTop : 0},1000); //scroll to first instance of error.
 						}
@@ -1108,21 +1123,77 @@ note - the order object is available at app.data['order|'+P.orderID]
 					})
 				}, //execGiftcardAdd
 
-//ele is likely a div or section. the element around all the inputs.
-			addTriggerPayMethodUpdate : function($ele)	{
-				var $fieldset = $ele.closest('fieldset');
-				$("input[type='radio']",$ele).each(function(){
-					var $input = $(this);
-					
-					$input.off("change.addTriggerPayMethodUpdate").on("change.addTriggerPayMethodUpdate", function(){
-						app.ext.cco.calls.cartSet.init({'want/payby':$input.val()});
-						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
-						app.ext.convertSessionToOrder.u.showSupplementalInputs($input);
+			showBuyerAddressAdd : function($btn)	{
+				console.warn("THIS IS NOT DONE YET. not tested. the cartSet needs a callback to handle the appropriate address panel (which is already in a showLoading state) and clear/populate/etc it. then test.");
+				$btn.button();
+				
+				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
+				$checkoutAddrFieldset = $btn.closest('fieldset');
+				
+				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(){
+					var $addrModal = $('#buyerAddressAdd'),
+					addrType = $btn.data('app-addresstype');
+					if(addrType && (addrType == 'ship' || addrType == 'bill'))	{
+						if($addrModal.length)	{
+							$addrModal.empty();
+							}
+						else	{
+							$addrModal = $("<div \/>",{'id':'buyerAddressAdd','title':'Add a new address'}).appendTo('body');
+							$addrModal.dialog({autoOpen:false, width:($('body').width < 500) ? '100%' : 500,height:400});
+							}
+							
+						$addrModal.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
+//checkout destinations passed in so country list populates. nothing else should populate.
+//NOTE - the address entry form is the same template used by checkout. do NOT run app-events over it or some undesired behaviors may result.
+						$addrModal.anycontent({'templateID':(addrType == 'bill') ? 'chkoutAddressBillTemplate' : 'chkoutAddressShipTemplate','showLoading':'false',data:app.data.appCheckoutDestinations}); 
+						$addrModal.wrap("<form>");
+						$("<button \/>").text('Save').button().on('click',function(event){
+							event.preventDefault();
+							var $form = $(this).closest('form'),
+							formObj = $form.serializeJSON();
+							updateObj = {};
+							if(app.u.validateForm($form))	{
+								$('body').showLoading({'message':'Adding new address.'});
+//create a new address.
+								app.calls.buyerAddressAddUpdate.init(formObj,{'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$addrModal.anymessage({'message':rd});
+										}
+									else	{
+//by here, the new address has been created.
+//set appropriate address panel to loading.
+										app.ext.convertSessionToOrder.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+//update cart and set shortcut as address.
+										updateObj[addrType+'/shortcut'] = formObj.shortcut;
+										app.ext.cco.calls.cartSet.init(updateObj,{'callback':function(rd){
+											app.ext.convertSessionToOrder.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
+											}});
+
+//update DOM/input for shortcut w/ new shortcut value.
+										$("[name='"+addrType+"/shortcut']",$checkoutForm);
+
+//update appropriate address panel plus big three.
+										app.ext.convertSessionToOrder.u.handleCommonPanels($checkoutForm);
+										app.model.dispatchThis('immutable');
+//close modal.
+										$addrModal.dialog('close');
+										
+										}
+									}},'immutable');
+								
+								app.model.dispatchThis('immutable'); //send dispatch to create address.
+
+								}
+							else	{} //validateForm will display issues.
+							}).appendTo($addrModal)
 						
-						});
+						$addrModal.dialog('open');
+						}
+					else	{
+						$btn.closest('fieldset').anymessage({'message':'In convertSessionToOrder.e.showBuyerAddressAdd, addrType is either undefined or an unsupported value ['+addrType+']','gMessage':true});
+						}
 					})
 				},
-
 
 			tagAsAccountCreate : function($cb)	{
 //				$cb.anycb;

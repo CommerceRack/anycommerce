@@ -113,7 +113,6 @@ For the list of available params, see the 'options' object below.
 			$r, //what is returned.
 			amcss = {'margin':'0','paddingBottom':'5px'} //anyMessageCSS - what's applied to P (or each P in the case of _msgs)
 			
-			
 			if(!msg)	{
 //				app.u.dump(" -> msg is blank. could be that message is being handled as a method.");
 				//no message passed. is ok because messages 'could' get handled as a method.
@@ -125,14 +124,14 @@ For the list of available params, see the 'options' object below.
 			else if(typeof msg == 'object')	{
 //				app.u.dump(" -> msg type is object."); app.u.dump(msg);
 				if(msg._msgs)	{
-				app.u.dump(" -> msg format is _msgs.");
+//				app.u.dump(" -> msg format is _msgs.");
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 1; i <= msg['_msgs']; i += 1)	{
 						$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
 						}
 					}
 				else if(msg.errid)	{
-					app.u.dump(" -> msg type is err.");
+//					app.u.dump(" -> msg type is err.");
 					$r = $("<p \/>").addClass('anyMessage').css(amcss).addClass(msg.errtype).html(msg.errmsg+" ["+msg.errid+"]");
 					
 					if(msg.errtype == 'iseerr')	{
@@ -157,7 +156,7 @@ For the list of available params, see the 'options' object below.
 //the validate order request returns a list of issues.
 				else if(msg['@issues'])	{
 					var L = msg['@issues'].length;
-					console.dir("Got to @issues, length: "+L);
+//					console.dir("Got to @issues, length: "+L);
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 0; i < L; i += 1)	{
 						$r.append("<p>"+msg['@issues'][i][3]+"<\/p>");
@@ -835,6 +834,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					if(o.showLoading){$t.showLoading();}
 					}
 				//appevents should happen outside this so that any other manipulation can occur prior to running them.
+				//and also so that in cases where the events are not desired, there's no problem (recycled templates, for example)
 				//they'll get executed as part of the callback if a call is specified.
 				self._handleInitialState();
 				}

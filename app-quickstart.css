@@ -451,7 +451,7 @@ CHECKOUT
 .paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
 .paybySupplemental select {margin-right:12px;}
 
-
+.addressList address	{float:left; margin:0 12px 12px 0;}
 
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */

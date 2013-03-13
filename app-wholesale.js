@@ -902,6 +902,8 @@ fallback is to just output the value.
 								//qty is zero or NAN
 								}
 							});
+						app.model.destroy('cartDetail');
+						app.calls.cartDetail.init({},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
