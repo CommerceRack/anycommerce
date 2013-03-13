@@ -1779,7 +1779,7 @@ $('.editable',$container).each(function(){
 										formJSON[index.substr(4)] = "~"+formJSON[index]
 										}
 //strip pog_ but no tildae, which is ONLY needed for text based sogs.
-									else if(index.substring(0,4) == 'pog_')	{
+									else if(index.length == 2 && index.toUpperCase() == index)	{
 										var pogID = index.substr(4)
 //special handling for checkboxes. If NOT optional and blank, needs to be set to NO.
 //on a checkbox sog, an extra param is passed pog_ID_cb which is set to 1. this is to 'know' that the cb was present so if the value is blank, we can handle accordingly.
