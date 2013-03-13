@@ -61,7 +61,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				}
 			}, //appPaymentMethods
 
-
 		cartCouponAdd : {
 			init : function(coupon,_tag,Q)	{
 				this.dispatch(coupon,_tag,Q);
@@ -139,6 +138,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartSet
+
 
 //uses the cart ID, which is passed on the parent/headers.
 //always immutable.
@@ -324,18 +324,6 @@ left them be to provide guidance later.
 
 
 		u : {
-//when a country is selected, the required attribute must be added or dropped from state/province.
-//this is important because the browser itself will indicate which fields are required.
-//some countries do not have state/province, so for international it is automatically not required.
-			countryChange : function(type,country)	{
-//				app.u.dump('BEGIN convertSessionToOrder.uities.countryChange. type: '+type+' and country: '+country)
-				if(country == 'US')	{
-					$('#data-'+type+'_state').attr('required','required');
-					}
-				else	{
-					$('#data-'+type+'_state').removeAttr('required').parent().removeClass('mandatory');
-					}
-				}, //countryChange
 
 //NOTE TO SELF:
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
@@ -383,7 +371,6 @@ left them be to provide guidance later.
 				return r;
 				},
 
-
 //will get the items from a cart and return them as links. used for social marketing.
 			cartContentsAsLinks : function(datapointer)	{
 //				app.u.dump('BEGIN convertSessionToOrder.uities.cartContentsAsLinks.');
@@ -400,7 +387,6 @@ left them be to provide guidance later.
 //				app.u.dump('links = '+r);
 				return r;
 				}, //cartContentsAsLinks
-
 
 //if checkout succeded but payment failed (cash, cc fail, PO, etc) then this function gets executed.
 			checkoutSuccessPaymentFailure : function(paycode,payby)	{
@@ -435,8 +421,6 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 				
 				return r;
 				}, //checkoutSuccessPaymentFailure
-
-
 
 //This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
@@ -496,7 +480,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return (typeof someFunction == 'function') ? r : inc;
 				},
 			
-			
 			getWalletByID : function(ID)	{
 				var r = false;
 				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
@@ -510,10 +493,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					}
 				return r;
 				},
-			
-
-
-
 
 //paymentID is the payment that is selected.
 //data is a data object, such as cartDetail or an invoice.

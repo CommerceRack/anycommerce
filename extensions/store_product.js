@@ -642,15 +642,17 @@ NOTES
 							$qtyInput = $("input[name='qty']",$form),
 							sku = $("input[name='sku']",$form).val();
 							
-//							app.u.dump(" -> sku: "+sku);
+							app.u.dump(" -> sku: "+sku);
 							
 							if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{
 
 								var obj = $form.serializeJSON();
 								obj['%variations'] = {};
 //here for the admin side of things. Will have no impact on retail as price can't be set.
-								if(formObj.price != ""){}
-								else{delete formObj.price} //if no price is, do not pass blank or the item will be added with a zero price.
+								if(obj.price)	{
+									if(obj.price != ""){}
+									else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
+									}
 
 //								app.u.dump(" -> obj.sku: "+obj.sku);	app.u.dump(obj);
 								for(var index in obj)	{

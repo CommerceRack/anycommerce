@@ -564,7 +564,7 @@ see jquery/api webdoc for required/optional param
 				var r = 0;
 				_tag = _tag || {};
 				_tag.datapointer = "buyerAddressList";
-				if(app.model.fetchData(_tag.datapointer))	{
+				if(app.model.fetchData("buyerAddressList") == false)	{
 					r = 1;
 					this.dispatch(_tag,Q);
 					}
@@ -746,12 +746,11 @@ see jquery/api webdoc for required/optional param
 				_tag = _tag || {};
 				_tag.datapointer = "buyerWalletList";
 				if(app.model.fetchData(_tag.datapointer))	{
-					r = 1;
-					this.dispatch(_tag,Q);
+					app.u.handleCallback(_tag);
 					}
 				else	{
-					app.u.dump("buyerWalletList found in local or memory.");
-					app.u.handleCallback(_tag);
+					r = 1;
+					this.dispatch(_tag,Q);
 					}
 				return r;
 				},
@@ -929,7 +928,7 @@ app.u.throwMessage(responseData); is the default error handler.
 //app.sessionID is set in the method. no need to set it here.
 //use app.sessionID if you need it in the onSuccess.
 //having a callback does allow for behavioral changes (update new session with old cart contents which may still be available.
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleNewSession.onSuccess');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
@@ -941,7 +940,7 @@ app.u.throwMessage(responseData); is the default error handler.
 //app.sessionID is already set by this point. need to reset it onError.
 // onError does NOT need to nuke app.sessionId because it's handled in handleResponse_appCartExists 
 		handleTrySession : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 //				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
 				if(app.data.appCartExists.exists >= 1)	{
@@ -962,19 +961,19 @@ app.u.throwMessage(responseData); is the default error handler.
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
 		anycontent : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN callbacks.anycontent");
-				if(tagObj && tagObj.jqObj && typeof tagObj.jqObj == 'object')	{
+				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
 					
-					var $target = tagObj.jqObj; //shortcut
+					var $target = _rtag.jqObj; //shortcut
 					
 //anycontent will disable hideLoading and loadingBG classes.
-					$target.anycontent({data: app.data[tagObj.datapointer],'templateID':tagObj.templateID});
+					$target.anycontent({data: app.data[_rtag.datapointer],'templateID':_rtag.templateID});
 					app.u.handleAppEvents($target);
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof tagObj.jqObj+'].','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
 					}
 				
 				},
@@ -990,18 +989,18 @@ app.u.throwMessage(responseData); is the default error handler.
 
 
 		translateSelector : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN callbacks.translateSelector");
-				if(typeof jQuery().hideLoading == 'function'){$(tagObj.selector).hideLoading();}
-				app.renderFunctions.translateSelector(tagObj.selector,app.data[tagObj.datapointer]);
+				if(typeof jQuery().hideLoading == 'function'){$(_rtag.selector).hideLoading();}
+				app.renderFunctions.translateSelector(_rtag.selector,app.data[_rtag.datapointer]);
 				}
 			},
 	
 		transmogrify : 	{
-			onSuccess : function(tagObj)	{
-				var $parent = $(app.u.jqSelector('#',tagObj.parentID));
+			onSuccess : function(_rtag)	{
+				var $parent = $(app.u.jqSelector('#',_rtag.parentID));
 				if(typeof jQuery().hideLoading == 'function'){$parent.hideLoading();}
-				$parent.append(app.renderFunctions.transmogrify({'id':tagObj.parentID+"_"+tagObj.datapointer},tagObj.templateID,app.data[tagObj.datapointer]));
+				$parent.append(app.renderFunctions.transmogrify({'id':_rtag.parentID+"_"+_rtag.datapointer},_rtag.templateID,app.data[_rtag.datapointer]));
 				}
 			}, //translateTemplate
 
@@ -1011,34 +1010,33 @@ app.u.throwMessage(responseData); is the default error handler.
 // templateID is the template that will get translated.
 // the app.data.datapointer is what'll get passed in to the translate function as the data src. (ex: getProduct|PID)
 		translateTemplate : 	{
-			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(tagObj);
+			onSuccess : function(_rtag)	{
+//				app.u.dump("BEGIN callbacks.translateTemplate"); app.u.dump(_rtag);
 //				app.u.dump("typeof jQuery.hideLoading: "+typeof jQuery().hideLoading);
-				if(typeof jQuery().hideLoading == 'function'){$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();}
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
+				if(typeof jQuery().hideLoading == 'function'){$(app.u.jqSelector('#',_rtag.parentID)).hideLoading();}
+				app.renderFunctions.translateTemplate(app.data[_rtag.datapointer],_rtag.parentID);
 				}
 			}, //translateTemplate
 
 // a generic callback to allow for success messaging to be added. 
 // pass message for what will be displayed.  For error messages, the system messaging is used.
 		showMessaging : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
-				var msg = app.u.successMsgObject(tagObj.message);
-				msg['_rtag'] = tagObj; //pass in tagObj as well, as that contains info for parentID.
+				var msg = app.u.successMsgObject(_rtag.message);
+				msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
 				app.u.throwMessage(msg);
 				}
 			}, //showMessaging
 		
 		disableLoading : {
-			onSuccess : function(tagObj)	{
-				$('#'+tagObj.targetID).hideLoading();
+			onSuccess : function(_rtag)	{
+				$('#'+_rtag.targetID).hideLoading();
 				},
 			onError : function(responseData)	{
 				app.u.throwMessage(responseData);
-				$('#'+responseData.tagObj.targetID).hideLoading(); //even with the error, it's bad form to leave the loading bg.
+				$('#'+responseData._rtag.targetID).hideLoading(); //even with the error, it's bad form to leave the loading bg.
 				}
-
 			},
 /*
 By default, error messaging is thrown to the appMessaging class. Sometimes, this needs to be suppressed. Add this callback and no errors will show.
@@ -1046,7 +1044,7 @@ ex: whoAmI call executed during app init. Don't want "we have no idea who you ar
 */
 
 		suppressErrors : {
-			onSuccess : function(tagObj)	{
+			onSuccess : function(_rtag)	{
 //dummy callback. do nothing.
 				},
 			onError : function(responseData,uuid)	{

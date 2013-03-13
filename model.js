@@ -1147,6 +1147,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 					}
 				}
 			else	{
+				r = false;
 //				app.u.dump(' -> data not in memory or local storage.');
 				}
 
