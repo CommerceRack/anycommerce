@@ -163,25 +163,6 @@ for(index in obj)	{
 
 
 
-//sfo is serialized form object.
-		cartItemsAdd : {
-			init : function(sfo,tagObj)	{
-				tagObj = tagObj || {}; 
-				tagObj.datapointer = 'atc_'+app.u.unixNow(); //unique datapointer for callback to work off of, if need be.
-				this.dispatch(sfo,tagObj);
-				return 1; //an add to cart always resets the paypal vars.
-				},
-			dispatch : function(sfo,tagObj)	{
-				sfo["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-				sfo["_tag"] = tagObj;
-				app.model.addDispatchToQ(sfo,'immutable');
-
-				}
-			},//addToCart
-
-
-
-
 //formerly createOrder
 		adminOrderCreate : {
 			init : function(callback)	{
@@ -1243,20 +1224,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				else	{
 					app.u.throwGMessage("In order_create.a.printOrder, either profile ["+P.data.profile+"] or domain ["+P.data.domain+"] is required.");
 					}
-				},
-			
-			addToCart : function(formObj){
-				if(formObj.price != ""){}
-				else{delete formObj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-				app.ext.convertSessionToOrder.calls.cartItemsAdd.init(formObj,{}); //add the item first. now get data to update panels.
-				app.ext.store_checkout.calls.appPaymentMethods.init();
-				app.ext.store_checkout.calls.appCheckoutDestinations.init();
-				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
-				app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
-				app.model.dispatchThis('immutable');
 				}
-
-
 
 
 			},
@@ -1931,7 +1899,12 @@ the refreshCart call can come second because none of the following calls are upd
 				$btn.button();
 				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(event){
 					event.preventDefault();
-					app.ext.convertSessionToOrder.a.addToCart($(this).closest('form').serializeJSON())
+					app.ext.store_product.u.handleAddToCart($btn.closest('form').parent());
+					app.ext.store_checkout.calls.appPaymentMethods.init();
+					app.ext.store_checkout.calls.appCheckoutDestinations.init();
+					app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
+					app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
+					app.model.dispatchThis('immutable');
 					});
 				}, //cartItemAddFromForm
 
@@ -1955,7 +1928,12 @@ if($form && $form.length)	{
 				$('#prodFinder').dialog('close');
 				}
 			},'immutable');
-		app.ext.convertSessionToOrder.a.addToCart(sfo);
+		app.ext.store_product.u.handleAddToCart($form.parent());
+		app.ext.store_checkout.calls.appPaymentMethods.init();
+		app.ext.store_checkout.calls.appCheckoutDestinations.init();
+		app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
+		app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
+		app.model.dispatchThis('immutable');
 		}
 	else	{
 		$(this).button('enable'); //prevent doubleclick.

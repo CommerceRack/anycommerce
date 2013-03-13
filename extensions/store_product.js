@@ -86,24 +86,7 @@ var store_product = function() {
 				}
 			}, //appProductGet
 
-//sfo is serialized form object.
-		cartItemsAdd : {
-			init : function(sfo,tagObj)	{
-				tagObj = tagObj || {}; 
-				tagObj.datapointer = 'atc_'+app.u.unixNow(); //unique datapointer for callback to work off of, if need be.
-				this.dispatch(sfo,tagObj);
-				return 2; //an add to cart always resets the paypal vars.
-				},
-			dispatch : function(sfo,tagObj)	{
-				app.u.dump("BEGIN store_product.calls.cartItemsAdd.dispatch.");
-				sfo["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-				sfo["_tag"] = tagObj;
-//				app.u.dump("GOT HERE!"); app.u.dump(sfo); app.u.dump(tagObj);
-				app.model.addDispatchToQ(sfo,'immutable');
-				if(app.data.cartDetail && app.data.cartDetail.payment)
-					app.calls.cartSet.init({'payment':{'pt':null}}); //nuke paypal token anytime the cart is updated.
-				}
-			},//addToCart
+
 
 
 //formerly appReviewsList
@@ -367,13 +350,20 @@ addToCart : function (pid,$form){
 
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
-				app.u.dump(" -> data.bindData.defaultValue: "+data.bindData.defaultValue);
+//				onKeyUp="if(Number($(this).val()) > 0){$(this).addClass('qtyChanged');}" 
+				var $input = $("<input \/>",{'name':'qty'});
 				if(app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
-					$tag.append("<input type='number' value='"+(data.bindData.defaultValue || 0)+"' size='3' name='qty' min='0' step='1' />");
+					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
+					$input.on('keyup.classChange',function(){
+						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
+						});
+//					$tag.append("<input type='number' value='"+(data.bindData.defaultValue || 0)+"'  />");
 					}
-				else
-					$tag.append("<input type='hidden' value='0' name='qty' />"); //add so that handleaddtocart doesn't throw error that no qty input is present
-					$tag.hide().addClass('displayNone'); //hide input if item is not purchaseable.
+				else	{
+					$input.attr({'type':'hidden'}).appendTo($tag); //add so that handleaddtocart doesn't throw error that no qty input is present
+					}
+//set this. because the name is shared by (potentially) a lot of inputs, the browser 'may' use the previously set value (like if you add 1 then go to another page, all the inputs will be set to 1. bad in a prodlist format)
+				$input.val(data.bindData.defaultValue || 0); 
 				},
 
 
@@ -644,7 +634,7 @@ NOTES
 				app.u.dump("BEGIN store_product.u.handleAddToCart");
 				if(typeof $FP == 'object')	{
 					var $forms = $('form',$FP);
-					app.u.dump(" -> $forms.length: "+$forms.length);
+//					app.u.dump(" -> $forms.length: "+$forms.length);
 					if($forms.length)	{
 						$forms.each(function(){
 
@@ -652,28 +642,35 @@ NOTES
 							$qtyInput = $("input[name='qty']",$form),
 							sku = $("input[name='sku']",$form).val();
 							
-							app.u.dump(" -> sku: "+sku);
+//							app.u.dump(" -> sku: "+sku);
 							
 							if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{
 
 								var obj = $form.serializeJSON();
-								app.u.dump(" -> obj.sku: "+obj.sku);
 								obj['%variations'] = {};
-								for(index in obj)	{
-									//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase. pids must be longer.
+//here for the admin side of things. Will have no impact on retail as price can't be set.
+								if(formObj.price != ""){}
+								else{delete formObj.price} //if no price is, do not pass blank or the item will be added with a zero price.
+
+//								app.u.dump(" -> obj.sku: "+obj.sku);	app.u.dump(obj);
+								for(var index in obj)	{
+//									app.u.dump(" -> index: "+index);
+//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
+//pids must be longer and qty (the other supported input) won't conflict.
 									if(index.length == 2 && index.toUpperCase() == index)	{
-										obj['%variations'][index] == obj[index];
+										obj['%variations'][index] = obj[index];
 										delete obj[index];
 										}
 									}
+//								app.u.dump(obj);
 								app.calls.cartItemAppend.init(obj,_tag);
 								}
 							else if($qtyInput.length === 0)	{
 								$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
 								}
 							else	{
-								app.u.dump("qty");
-								} //do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
+//do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
+								} 
 
 
 							});

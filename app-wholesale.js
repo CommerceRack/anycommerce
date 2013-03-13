@@ -2866,36 +2866,31 @@ else	{
 			
 //obj currently supports one param w/ two values:  action: modal|message
 			handleAddToCart : function($form,obj)	{
-
-app.u.dump("BEGIN myRIA.u.handleAddToCart")
-
-obj = obj || {};
-
-if($form && $form.length)	{
-	var sfo = $form.serializeJSON(); //Serialized Form Object.
-	var pid = sfo.product_id;  //shortcut
-	$('.atcButton',$form).addClass('disabled ui-disabled').attr('disabled','disabled');
-	if(app.ext.store_product.validate.addToCart(pid,$form))	{
-//this product call displays the messaging regardless, but the modal opens over it, so that's fine.
-		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
-		if(obj.action && obj.action == 'modal')	{
-// ??? update to use showCart instead of handling templateFunctions here?			
-			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
-			app.ext.store_cart.u.showCartInModal({'showLoading':true});
-			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
-			}
-		else	{
-			app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
-			}
-		app.model.dispatchThis('immutable');
-		}
-	else	{
-		$('.atcButton',$form).removeClass('disabled ui-disabled').removeAttr('disabled');
-		}
-	}
-else	{
-	app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
-	}
+				app.u.dump("BEGIN myRIA.u.handleAddToCart");
+				obj = obj || {'action':''}
+				if($form && $form.length)	{
+					var $page = $form.closest("[data-app-pagetype]"),
+					pid = $("input[name='sku']",$form).val();
+//In this case, we don't want any 'adds' to occur unless the primary one does. so only continue if it passes validation.
+					if(app.ext.store_product.validate.addToCart(pid,$form))	{
+						app.u.dump(" -> addToCart validated");
+						app.ext.store_product.u.handleAddToCart($page);
+						app.model.destroy('cartDetail');
+						if(obj.action && obj.action == 'modal')	{
+							app.ext.store_cart.u.showCartInModal({'showLoading':true});
+							app.calls.cartDetail.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
+							}
+						else	{
+							app.calls.cartDetail.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
+							}
+						app.model.dispatchThis('immutable');
+						
+						}
+					else	{} //do nothing, the validation handles displaying the errors.
+					}
+				else	{
+					app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+					}
 
 				}, //handleAddToCart
 				

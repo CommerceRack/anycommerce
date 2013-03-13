@@ -919,9 +919,10 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 						break;
 		
 					case 'addSerializedDataToCart': //no break is present here so that case addSerializedDataToCart and case addToCart execute the same code.
-					case 'cartItemsAdd':
-						if(responseData['_msgs'] > 0)	{r = true};
-						break;
+//call deprecated in 201311
+//					case 'cartItemsAdd':
+//						if(responseData['_msgs'] > 0)	{r = true};
+//						break;
 		
 					case 'cartOrderCreate':
 		//				app.u.dump(' -> case = createOrder');

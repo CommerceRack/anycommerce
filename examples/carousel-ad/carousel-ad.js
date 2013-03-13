@@ -425,32 +425,34 @@ app.model.dispatchThis();
 				app.ext.store_cart.u.showCartInModal('cartTemplate');
 				},
 	
-			handleAddToCart : function(formID)	{
+			handleAddToCart : function($form,obj)	{
+				app.u.dump("BEGIN myRIA.u.handleAddToCart");
+				obj = obj || {'action':''}
+				if($form && $form.length)	{
+					var $page = $form.closest("[data-app-pagetype]"),
+					pid = $("input[name='sku']",$form).val();
+//In this case, we don't want any 'adds' to occur unless the primary one does. so only continue if it passes validation.
+					if(app.ext.store_product.validate.addToCart(pid,$form))	{
+						app.u.dump(" -> addToCart validated");
+						app.ext.store_product.u.handleAddToCart($page);
+						app.model.destroy('cartDetail');
+						if(obj.action && obj.action == 'modal')	{
+							app.ext.store_cart.u.showCartInModal({'showLoading':true});
+							app.calls.cartDetail.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
+							}
+						else	{
+							app.calls.cartDetail.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
+							}
+						app.model.dispatchThis('immutable');
+						
+						}
+					else	{} //do nothing, the validation handles displaying the errors.
+					}
+				else	{
+					app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+					}
 
-app.u.dump("BEGIN store_product.calls.cartItemsAdd.init");
-$('.checkoutNowButton').show();
-$('#'+formID+' .atcButton').addClass('disabled').attr('disabled','disabled');
-if(!formID)	{
-	//app error
-	app.u.dump("APP ERROR - no form id handed to myRIA.u.handleAddToCart");
-	}
-else	{
-	var pid = $('#'+formID+'_product_id').val();
-	
-	if(app.ext.store_product.validate.addToCart(pid))	{
-		app.ext.store_product.calls.cartItemsAdd.init(formID);
-		app.calls.refreshCart.init({'callback':'cartUpdated','extension':'myRIA'},'immutable');
-		app.ext.store_cart.calls.cartShippingMethods.init({},'immutable'); //get shipping methods into memory for quick use.
-		app.model.dispatchThis('immutable');
-		}
-	else	{
-		$('#'+formID+' .atcButton').removeClass('disabled').removeAttr('disabled');
-		}
-	}
-return r;				
-
-
-				}
+				} //handleAddToCart
 
 			
 			} //util

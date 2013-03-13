@@ -9,8 +9,12 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201311
 includes.js/variations update to remove 'pog_' from input names (for new add to cart command)
-action on addtocart form in productTemplate
-atcQuantityInput renderformat changed.
+
+The add to cart forms updated. replace all. templates may include (but are not limited to): 
+productTemplate
+productTemplateQuickView
+productListTemplateATC (the qty render format for this is slightly different. take a look)
+
 loginFormForModal template changed.
 contactArticle form action changed.
 

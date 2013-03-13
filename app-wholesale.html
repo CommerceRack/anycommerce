@@ -255,14 +255,16 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</td>
 
 	<td>
-	<form action='#' onSubmit="return false;">
-	<input type='hidden' name='sku' value='' data-bind='var:product(pid); format:popVal;' size='4' />
-	<label class='floatRight' data-bind="var: product(zoovy:grp_children); format:hideIfSet;">qty: <input type='number' class='numberInput' min='0' step="1" name='qty' value='0' onKeyUp="if(Number($(this).val()) > 0){$(this).addClass('qtyChanged');}" /></label>
+
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="return false;">
+
+	<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
 	
 	<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
 	<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
 	
 	<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+
 	
 	</form>
 	</td>
