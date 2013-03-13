@@ -551,7 +551,7 @@ NOTES
 					var $parent = $(app.u.jqSelector('#',parentID));
 //parent may not exist. empty if it does, otherwise create it.
 					if($parent.length)	{$parent.empty()}
-					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}
+					else	{$parent = $("<div \/>").attr({"id":parentID,"title":"Product Images"}).appendTo('body');}
 
 					if(P.templateID)	{
 						$parent.append(app.renderFunctions.createTemplateInstance(P.templateID,"imageViewer_"+parentID));

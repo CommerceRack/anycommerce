@@ -2635,7 +2635,6 @@ buyer to 'take with them' as they move between  pages.
 				}, //showPage
 
 
-
 //required params include templateid and either: P.navcat or P.pid  navcat can = . for homepage.
 //load in a template and the necessary queries will be built.
 //currently, only works on category and home page templates.
@@ -2666,7 +2665,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 		
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind')) ;
 //		app.u.dump(bindData);
-		var namespace = bindData['var'].split('(')[0];
+		var namespace = app.u.isSet(bindData['var']) ? bindData['var'].split('(')[0] : "";
 		var attribute = app.renderFunctions.parseDataVar(bindData['var']);
 		var tmpAttr; //recycled. used when a portion of the attribute is stipped (page.) and multiple references to trimmed var are needed.
 //these get used in prodlist and subcat elements (anywhere loadstemplate is used)
@@ -2676,8 +2675,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //		app.u.dump(" -> namespace: "+namespace);
 //		app.u.dump(" -> attribute: "+attribute);
 		
-
-		if(namespace == 'elastic-native')	{
+		if(bindData.useParentData)	{}
+		else if(namespace == 'elastic-native')	{
 //			app.u.dump(" -> Elastic-native namespace");
 			elementID = $focusTag.attr('id');
 			if(elementID)	{
@@ -2786,6 +2785,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 				return numRequests;
 				}, //buildQueriesFromTemplate
+
 
 
 
