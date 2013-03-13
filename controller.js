@@ -263,6 +263,29 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			}, //appBuyerLogin
 
+//formerly customerPasswordRecover
+		appBuyerPasswordRecover : {
+			init : function(login,_tag,Q)	{
+				var r = 0;
+				if(login)	{
+					r = 1;
+					this.dispatch(login,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'appBuyerPasswordRecover requires login','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(login,_tag,Q)	{
+				var obj = {};
+				obj['_cmd'] = 'appBuyerPasswordRecover';
+				obj.login = login;
+				obj.method = 'email';
+				obj['_tag'] = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			},//appBuyerPasswordRecover
+
 		appCartCreate : {
 			init : function(_tag)	{
 				this.dispatch(_tag); 
@@ -328,6 +351,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			},//appCategoryDetail		
 
+
 //get a list of newsletter subscription lists. partition specific.
 		appNewsletterList : {
 			init : function(_tag,Q)	{
@@ -349,6 +373,19 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			},//getNewsletters	
 
+		appSendMessage : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj.msgtype = "feedback"
+				obj["_cmd"] = "appSendMessage";
+				obj['_tag'] = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			},//appSendMessage
+			
 //get a product record.
 //required params: obj.pid.
 //optional params: obj.withInventory and obj.withVariations
@@ -419,6 +456,24 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ(obj,Q);
 				} // dispatch
 			}, //appProfileInfo
+
+/*
+obj is most likely a form object serialized to json.
+see jquery/api webdoc for required/optional param
+*/
+		appReviewAdd : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = 'appReviewAdd';
+				obj['_tag'] = _tag || {};
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			},//appReviewAdd
+			
+
 
 //the authentication through FB sdk has already taken place and this is an internal server check to verify integrity.	
 //the getFacebookUserData function also updates bill_email and adds the fb.user info into memory in a place quickly accessed
@@ -504,6 +559,173 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				}
 			},//buyerAddressAddUpdate 
 
+		buyerAddressList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {};
+				_tag.datapointer = "buyerAddressList";
+				if(app.model.fetchData(_tag.datapointer))	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag": _tag},Q || 'mutable');
+				}
+			}, //buyerAddressList	
+
+		buyerNewsletters: {
+			init : function(_tag,Q)	{
+				this.dispatch(_tag,Q);
+				return 1;
+				},
+			dispatch : function(_tag,Q)	{
+				obj = {};
+				obj['_tag'] = _tag;
+				obj['_cmd'] = "buyerNewsletters";
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //buyerNewsletters
+
+		buyerPasswordUpdate : {
+			init : function(password,_tag,Q)	{
+				var r = 0;
+				if(password)	{
+					r = 1;
+					this.dispatch(password,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerPasswordUpdate requires password','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(password,_tag,Q)	{
+				var obj = {};
+				obj.password = password;
+				obj['_tag'] = _tag;
+				obj['_cmd'] = "buyerPasswordUpdate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //buyerPasswordUpdate
+
+		buyerProductLists : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "buyerProductLists"
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag,Q);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag" : _tag});	
+				}
+			},//buyerProductLists
+
+		buyerProductListDetail : {
+			init : function(listID,_tag,Q)	{
+				var r = 0;
+				if(listID)	{
+					_tag = _tag || {};
+					_tag.datapointer = "buyerProductListDetail|"+listID
+					this.dispatch(listID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listID','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(listID,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : _tag},Q);	
+				}
+			},//buyerProductListDetail
+
+//obj must include listid
+//obj can include sku, qty,priority, note and replace. see github for more info.
+//sku can be a fully qualified stid (w/ options)
+		buyerProductListAppendTo : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.listID)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listID','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = "buyerProductListAppendTo"
+				obj['_tag'] = _tag || {};
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			},//buyerProductListAppendTo
+
+//formerly removeFromCustomerList
+		buyerProductListRemoveFrom : {
+			init : function(listID,stid,_tag,Q)	{
+				var r = 0;
+				if(listID)	{
+					r = 1;
+					this.dispatch(listID,stid,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerProductListRemoveFrom requires listID','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(listID,stid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerProductListRemoveFrom","listid":listID,"sku":stid,"_tag" : _tag},Q || 'immutable');	
+				}
+			},//buyerProductListRemoveFrom
+
+//a request for order history should always request latest list (as per B)
+//formerly getCustomerOrderList
+		buyerPurchaseHistory : {
+			init : function(_tag,Q)	{
+				var r = 1;
+				_tag = _tag || {};
+				_tag.datapointer = "buyerPurchaseHistory"
+				this.dispatch(_tag,Q);
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_tag" : _tag},Q || 'mutable');	
+				}			
+			}, //buyerPurchaseHistory
+
+//a request for order details should always request latest list (as per B)
+		buyerPurchaseHistoryDetail : {
+			init : function(orderid,_tag,Q)	{
+				var r = 0;
+				if(orderid)	{
+					r = 1;
+					_tag = _tag || {}; 
+					_tag.datapointer = "buyerPurchaseHistoryDetail|"+orderid;
+					this.dispatch(orderid,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerPurchaseHistoryDetail requires orderid','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(orderid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_tag" : _tag},Q || 'mutable');	
+				}			
+			}, //buyerPurchaseHistoryDetail
+
 		buyerLogout : {
 			init : function(_tag)	{
 				this.dispatch(_tag);
@@ -517,6 +739,26 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //appBuyerLogout
+
+		buyerWalletList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {};
+				_tag.datapointer = "buyerWalletList";
+				if(app.model.fetchData(_tag.datapointer))	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.dump("buyerWalletList found in local or memory.");
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag": _tag},Q || 'mutable');
+				}
+			}, //buyerWalletList
 
 		canIUse : {
 			init : function(flag,Q)	{
@@ -636,6 +878,27 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.calls.cartDetail.init(_tag,Q);
 				}
 			}, // refreshCart removed comma from here line 383
+
+
+		whereAmI : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = $.isEmptyObject(_tag) ? {} : _tag; 
+				_tag.datapointer = "whereAmI"
+				if(app.model.fetchData('whereAmI') == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"whereAmI","_tag" : _tag},Q || 'mutable');	
+				}
+			},//whereAmI
 
 //for now, no fetch is done here. it's assumed if you execute this, you don't know who you are dealing with.
 		whoAmI : {

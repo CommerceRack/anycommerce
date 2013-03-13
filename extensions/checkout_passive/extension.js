@@ -135,8 +135,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 //only send the request for addresses if the user is logged in or the request will return an error.
 				if(app.u.determineAuthentication() == 'authenticated')	{
-					app.ext.store_checkout.calls.buyerAddressList.init();
-					app.ext.store_checkout.calls.buyerWalletList.init();
+					app.calls.buyerAddressList.init({},'immutable');
+					app.calls.buyerWalletList.init({},'immutable');
 					}
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
 				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init();

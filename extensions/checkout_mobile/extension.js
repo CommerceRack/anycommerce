@@ -841,8 +841,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 					if(app.u.buyerIsAuthenticated())	{
 						
-						app.ext.cco.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
-						app.ext.cco.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
+						app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
+						app.calls.buyerWalletList.init({'callback':'suppressErrors'},'immutable');
 						
 						}
 
@@ -1001,13 +1001,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //can't piggyback these on login because they'll error at the API side (and will kill the login request)
 
-							app.ext.cco.calls.buyerAddressList.init({'callback':function(){
+							app.calls.buyerAddressList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero addesses, the function below will just show the new address form.
 								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
 								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 								}},'immutable');
 
-							app.ext.cco.calls.buyerWalletList.init({'callback':function(){
+							app.calls.buyerWalletList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero wallets, the function below will just show the new default payment options.
 								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 								}},'immutable');

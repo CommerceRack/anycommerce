@@ -360,7 +360,7 @@ document.write = function(v){
 									cmdObj.type = $parent.attr('data-addressclass');
 //									app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
 									$('.changeLog',$parent).append("<div class='alignRight'><span class='wait'></span><span>Saving</span></div>");
-									app.ext.store_crm.calls.buyerAddressAddUpdate.init(cmdObj, {'callback':'handleBuyerAddressUpdate','extension':'myRIA','parentID':$parent.attr('id')},'immutable');
+									app.calls.buyerAddressAddUpdate.init(cmdObj, {'callback':'handleBuyerAddressUpdate','extension':'myRIA','parentID':$parent.attr('id')},'immutable');
 									app.model.dispatchThis('immutable')
 									}
 								else	{
@@ -468,7 +468,7 @@ if(app.data[tagObj.datapointer]['@lists'].length > 0)	{
 		var listID = $li.data('buyerlistid');
 		$li.wrapInner("<a href='#"+listID+"Contents'></a>"); //adds href for tab selection
 		$parent.append($("<div>").attr({'id':listID+'Contents','data-buyerlistid':listID}).append($("<ul>").addClass('listStyleNone clearfix noPadOrMargin lineItemProdlist').attr('id','prodlistBuyerList_'+listID))); //containers for list contents and ul for productlist
-		numRequests += app.ext.store_crm.calls.buyerProductListDetail.init(listID,{'callback':'buyerListAsProdlist','extension':'myRIA','parentID':'prodlistBuyerList_'+listID})
+		numRequests += app.calls.buyerProductListDetail.init(listID,{'callback':'buyerListAsProdlist','extension':'myRIA','parentID':'prodlistBuyerList_'+listID})
 		});
 	$parent.prepend($ul).tabs();
 	app.model.dispatchThis('mutable');
@@ -1088,7 +1088,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //					var sku = app.ext.store_cart.u.getSkuByUUID(obj.uuid);
 					//adds item to wishlist. cart removal ONLY occurs if this is successful.
 					$('#modalCartContents').showLoading({'message':'Moving item '+obj.stid+' from your cart to your wishlist'});
-					app.ext.store_crm.calls.buyerProductListAppendTo.init({sku:obj.stid,'listid':'wishlist'},{'callback':function(rd){
+					app.calls.buyerProductListAppendTo.init({sku:obj.stid,'listid':'wishlist'},{'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){
 							$('#modalCartContents').hideLoading(); //only close on error. otherwise leave for removal in subsequent call.
 							$('#cartMessaging').anymessage({'message':rd});
@@ -1285,8 +1285,8 @@ P.listID (buyer list id)
 			removeItemFromBuyerList : function(P,tagObj)	{
 //				app.u.dump(P);
 				if(P.stid && P.listID)	{
-					app.ext.store_crm.calls.buyerProductListRemoveFrom.init(P.listID,P.stid,tagObj,'immutable');
-					app.ext.store_crm.calls.buyerProductListDetail.init(P.listID,{},'immutable'); //update list in memory
+					app.calls.buyerProductListRemoveFrom.init(P.listID,P.stid,tagObj,'immutable');
+					app.calls.buyerProductListDetail.init(P.listID,{},'immutable'); //update list in memory
 					app.model.dispatchThis('immutable');
 					if(tagObj.parentID) {$('#'+tagObj.parentID).empty().remove();}
 					_gaq.push(['_trackEvent','Manage buyer list','User Event','item removed',P.stid]);
@@ -1365,7 +1365,7 @@ P.listID (buyer list id)
 					var msg = app.u.statusMsgObject('adding item '+P.sku+' to list: '+P.listid);
 					msg.parentID = parentID;
 					app.u.throwMessage(msg);
-					app.ext.store_crm.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
+					app.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
 					app.model.dispatchThis('immutable');
 					_gaq.push(['_trackEvent','Manage buyer list','User Event','item added',P.sku]);
 					}
@@ -2338,15 +2338,15 @@ elasticsearch.size = 50;
 						
 						
 						case 'orders':
-							app.ext.store_crm.calls.buyerPurchaseHistory.init({'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'});
+							app.calls.buyerPurchaseHistory.init({'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'});
 							break;
 						case 'lists':
 
-							app.ext.store_crm.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
+							app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
 							break;
 						case 'myaccount':
 //							app.u.dump(" -> myaccount article loaded. now show addresses...");
-							app.ext.store_crm.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
+							app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
 							break;
 						default:
 							app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
@@ -2743,7 +2743,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 $orderEle.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
 $orderEle.append(app.renderFunctions.createTemplateInstance('invoiceTemplate','orderContentsTable_'+safeID))
 $('#orderContentsTable_'+safeID).addClass('loadingBG');
-if(app.ext.store_crm.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':'orderContentsTable_'+safeID}))
+if(app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':'orderContentsTable_'+safeID}))
 	app.model.dispatchThis();
 	
 $orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
@@ -2794,7 +2794,7 @@ else	{
 				if(errors == ''){
 					app.calls.appBuyerLogin.init({"login":email,"password":password},{'callback':'authenticateBuyer','extension':'myRIA'});
 					app.calls.refreshCart.init({},'immutable'); //cart needs to be updated as part of authentication process.
-//					app.ext.store_crm.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
+//					app.calls.buyerProductLists.init('forgetme',{'callback':'handleForgetmeList','extension':'store_prodlist'},'immutable');
 					
 					app.model.dispatchThis('immutable');
 					}

@@ -216,7 +216,7 @@ addToCart : function (pid,$form){
 			inventorySogPrompts = '',//the prompts for sogs with inventory. used to report inventory messaging if inventory checks are performed
 			errors = '', pogid, pogType;
 			
-			app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
+//			app.u.dump(" -> formJSON: "); app.u.dump(formJSON);
 			
 //No work to do if there are no sogs. 
 			if(sogJSON)	{

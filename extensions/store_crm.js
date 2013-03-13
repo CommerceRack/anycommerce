@@ -38,26 +38,6 @@ var store_crm = function() {
 	calls : {
 
 
-		whereAmI : {
-			init : function(tagObj)	{
-				var r = 0;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "whereAmI"
-				if(app.model.fetchData('whereAmI') == false)	{
-					app.u.dump(" -> whereAmI is not local. go get her Ray!");
-					r = 1;
-					this.dispatch(tagObj);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(tagObj);
-					}
-				return r;
-				},
-			dispatch : function(tagObj)	{
-				app.model.addDispatchToQ({"_cmd":"whereAmI","_tag" : tagObj});	
-				}
-			},//whereAmI
 
 		appFAQsAll : {
 			init : function(tagObj)	{
@@ -77,21 +57,7 @@ var store_crm = function() {
 				app.model.addDispatchToQ({"_cmd":"appFAQs","method":"all","_tag" : tagObj});	
 				}
 			},//appFAQsTopics	
-//sendMessages always are sent thru the immutable Q
-		appSendMessage : {
-			init : function(obj,tagObj,Q)	{
-				app.u.dump("store_crm.calls.appSendMessage");
-				app.u.dump(obj);
-				obj.msgtype = "feedback"
-				obj["_cmd"] = "appSendMessage";
-				obj['_tag'] = tagObj;
-				this.dispatch(obj,Q);
-				return 1;
-				},
-			dispatch : function(obj,Q)	{
-				app.model.addDispatchToQ(obj,'immutable');	
-				}
-			},//appFAQsTopics
+
 			
 
 //always uses immutable q so that an order update is not cancelled.
@@ -121,195 +87,6 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 			},//buyerOrderMacro
 
 
-		buyerAddressAddUpdate  : {
-			init : function(cmdObj,tagObj,Q)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerAddressAddUpdate|"+cmdObj.shortcut+"|"+app.u.unixNow();
-				cmdObj['_cmd'] = 'buyerAddressAddUpdate';
-				cmdObj['_tag'] = tagObj;
-				if(!Q)	{Q = 'immutable'}
-				this.dispatch(cmdObj,Q);
-				return 1;
-				},
-			dispatch : function(cmdObj,Q)	{
-				app.model.addDispatchToQ(cmdObj,Q);	
-				}
-			},//buyerAddressAddUpdate 
-
-
-//formerly getAllCustomerLists
-		buyerProductLists : {
-			init : function(tagObj,Q)	{
-				var r = 0;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerProductLists"
-				if(app.model.fetchData(tagObj.datapointer) == false)	{
-					r = 1;
-					this.dispatch(tagObj);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(tagObj,Q);
-					}
-				return r;
-				},
-			dispatch : function(tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerProductLists","_tag" : tagObj});	
-				}
-			},//buyerProductLists
-
-
-//formerly getCustomerList. always get lists.
-		buyerProductListDetail : {
-			init : function(listID,tagObj,Q)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerProductListDetail|"+listID
-				this.dispatch(listID,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(listID,tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerProductListDetail","listid":listID,"_tag" : tagObj},Q);	
-				}
-			},//buyerProductListDetail
-
-
-//obj must include listid
-//obj can include sku, qty,priority, note and replace. see webdoc for more info.
-//sku can be a fully qualified stid (w/ options)
-//formerly addToCustomerList
-		buyerProductListAppendTo : {
-			init : function(obj,tagObj,Q)	{
-				this.dispatch(obj,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(obj,tagObj,Q)	{
-				obj['_cmd'] = "buyerProductListAppendTo"
-				obj['_tag'] = tagObj;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			},//buyerProductListAppendTo
-
-//formerly removeFromCustomerList
-		buyerProductListRemoveFrom : {
-			init : function(listID,stid,tagObj,Q)	{
-				this.dispatch(listID,stid,tagObj,Q);
-				return 1;
-				},
-			dispatch : function(listID,stid,tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerProductListRemoveFrom","listid":listID,"sku":stid,"_tag" : tagObj},Q);	
-				}
-			},//buyerProductListRemoveFrom
-
-
-//Get a list of previously used payment methods.
-		buyerWalletList : {
-			init : function(tagObj,Q)	{
-				var r = 0;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerWalletList";
-				if(app.model.fetchData('buyerWalletList') == false)	{
-					r = 1;
-					this.dispatch(tagObj,Q);
-					}
-				else	{
-					app.u.handleCallback(tagObj);
-					}
-				return r;
-				},
-			dispatch : function(tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag" : tagObj},Q);	
-				}
-			},//buyerProductListRemoveFrom
-
-
-
-
-//!!! INCOMPLETE
-/*
-this will allow a shopper to be notified by email when an items is back in stock.
-requires the user to be logged in/have an account.
-a stid (pid + options can be passed) or just a pid.
-*/
-/*		eventPinstock : {
-			init : function(stid,tagObj)	{
-				obj['_tag'] = typeof tagObj == 'object' ? tagObj : {};
-				tagObj.datapointer = "addEvent"
-				this.dispatch(tagObj);
-				return 1;
-				},
-			dispatch : function(tagObj)	{
-				app.model.addDispatchToQ({"_cmd":"whereAmI","_tag" : tagObj});	
-				}
-			},//eventPinstock
-*/
-/*
-obj is most likely a form object serialized to json.
-see jquery/api webdoc for required/optional param
-!!! the review piece needs testing.
-
-//formerly addReview
-*/
-		appReviewAdd : {
-			init : function(obj,tagObj)	{
-				this.dispatch(obj,tagObj);
-				return 1;
-				},
-			dispatch : function(obj,tagObj)	{
-				obj['_cmd'] = 'appReviewAdd';
-				obj['_tag'] = tagObj;
-				app.model.addDispatchToQ(obj);
-				}
-			},//appReviewAdd
-			
-//formerly customerPasswordRecover
-		appBuyerPasswordRecover : {
-			init : function(login,tagObj)	{
-				this.dispatch(login,tagObj);
-				return 1;
-				},
-			dispatch : function(login,tagObj)	{
-				var obj = {};
-				obj['_cmd'] = 'appBuyerPasswordRecover';
-				obj.login = login;
-				obj.method = 'email';
-				obj['_tag'] = tagObj;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			},//addReview
-			
-//as part of tagObj, pass parentID so the success/error message knows where to go.
-//will be prepended to parentID
-/*		tellAFriend : {
-			init : function(pid,tagObj)	{
-				this.dispatch(pid,tagObj);
-				return 1;
-				},
-			dispatch : function(pid,tagObj)	{
-				var obj = {};
-				obj['_cmd'] = 'sendEmail';
-				obj['method'] = 'tellafriend';
-				obj['SENDER_BODY'] = 'THIS IS CONTENT I ADDED. WOOT!';
-				obj['product'] = pid;
-				obj['_tag'] = tagObj;
-				app.model.addDispatchToQ(obj);
-				}
-			},//addReview
-*/
-
-
-		buyerNewsletters: {
-			init : function(tagObj,Q)	{
-				app.u.dump("BEGIN store_crm.calls.buyerNewsletters.init");
-				this.dispatch(tagObj,Q);
-				return 1;
-				},
-			dispatch : function(tagObj,Q)	{
-				obj = {};
-				obj['_tag'] = tagObj;
-				obj['_cmd'] = "buyerNewsletters";
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //buyerNewsletters
 //obj should contain cartid and orderid
 		buyerOrderGet : {
 			init : function(obj,tagObj,Q)	{
@@ -340,77 +117,6 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //setNewsletters
 
-//get a list of newsletter subscription lists.
-		getNewsletters : {
-			init : function(tagObj)	{
-//				app.u.dump("BEGIN store_crm.calls.getNewsletters.init");
-//				app.u.dump(tagObj);
-				var r = 0;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "getNewsletters"
-				if(app.model.fetchData('getNewsletters') == false)	{
-//					app.u.dump(" -> getNewsletters is not local. go get her Ray!");
-					r = 1;
-					this.dispatch(tagObj);
-					}
-				else	{
-//					app.u.dump(' -> data is local');
-					app.u.handleCallback(tagObj);
-					}
-				return r;
-				},
-			dispatch : function(tagObj)	{
-				app.model.addDispatchToQ({"_cmd":"getNewsletters","_tag" : tagObj});	
-				}
-			},//getNewsletters			
-
-		buyerPasswordUpdate : {
-			init : function(password,tagObj)	{
-				app.u.dump("BEGIN store_crm.calls.buyerPasswordUpdate.init");
-				this.dispatch(password,tagObj);
-				return 1;
-				},
-			dispatch : function(password,tagObj)	{
-				var obj = {};
-				obj.password = password;
-				obj['_tag'] = tagObj;
-				obj['_cmd'] = "buyerPasswordUpdate";
-				app.u.dump(obj);
-				app.model.addDispatchToQ(obj,'immutable');	
-				}
-			},
-//a request for order history should always request latest list (as per B)
-//formerly getCustomerOrderList
-		buyerPurchaseHistory : {
-			init : function(tagObj,Q)	{
-				var r = 1;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerPurchaseHistory"
-				this.dispatch(tagObj,Q);
-				return r;
-				},
-			dispatch : function(tagObj,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistory","DETAIL":"5","_tag" : tagObj},Q);	
-				}			
-			}, //buyerPurchaseHistory
-
-
-//a request for order details should always request latest list (as per B)
-		buyerPurchaseHistoryDetail : {
-			init : function(orderid,tagObj,Q)	{
-				var r = 0;
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid;
-				this.dispatch(orderid,tagObj,Q);
-				r = 1;
-				return r;
-				},
-			dispatch : function(orderid,tagObj,Q)	{
-				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
-				tagObj.datapointer = "buyerPurchaseHistoryDetail|"+orderid
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_tag" : tagObj},Q);	
-				}			
-			}, //buyerPurchaseHistoryDetail
 		buyerAddressList : {
 			init : function(tagObj,Q)	{
 				tagObj = $.isEmptyObject(tagObj) ? {} : tagObj; 
@@ -643,7 +349,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				$('#'+formID+' .zMessage').empty().remove(); //clear any existing error messages.
 				var isValid = app.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
 				if(isValid === true)	{
-					app.ext.store_crm.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
+					app.ext.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
 					app.model.dispatchThis();
 					$('reviewFrm').hide(); //hide existing form to avoid confusion.
 					}
@@ -665,7 +371,7 @@ will output a newsletter form into 'parentid' using 'templateid'.
 //					$('#'+P.parentID);  //if a loadingBG class is needed, add it outside this function.
 // ### modify this so callback and extension can be passed in, but are defaulted if none.
 //in this case, the template is not populated until the call comes back. otherwise, the form would show up but no subscribe list.
-					if(app.ext.store_crm.calls.getNewsletters.init({"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm"}))	{app.model.dispatchThis()}
+					if(app.calls.appNewsletterList.init({"parentID":P.parentID,"templateID":P.templateID,"callback":"showSubscribeForm","extension":"store_crm"}))	{app.model.dispatchThis()}
 					}
 				},
 
@@ -693,7 +399,7 @@ var data = app.data[datapointer]['@lists']; //shortcut
 var L = data.length;
 var numRequests = 0;
 for(var i = 0; i < L; i += 1)	{
-	numRequests += app.ext.store_crm.calls.buyerProductListDetail.init(data[i].id,tagObj)
+	numRequests += app.calls.buyerProductListDetail.init(data[i].id,tagObj)
 	}
 return numRequests;
 				},
@@ -734,7 +440,7 @@ This is used to get add an array of skus, most likely for a product list.
 $('#'+formID+' .appMessage').empty().remove(); //clear any existing messaging
 var formObj = $('#'+formID).serializeJSON();
 if(app.ext.store_crm.validate.changePassword(formObj)){
-	app.ext.store_crm.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
+	app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
 	app.model.dispatchThis('immutable');
 	}
 else{

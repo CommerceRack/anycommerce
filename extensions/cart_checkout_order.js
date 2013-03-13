@@ -61,46 +61,6 @@ a callback was also added which just executes this call, so that checkout COULD 
 				}
 			}, //appPaymentMethods
 
-		buyerAddressList : {
-			init : function(_tag,Q)	{
-//				app.u.dump("BEGIN cco.calls.buyerAddressList ");
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "buyerAddressList";
-//				if(app.model.fetchData(_tag.datapointer))	{
-//					r = 1;
-					this.dispatch(_tag,Q);
-//					}
-//				else	{
-//					app.u.dump("buyerAddressList found in local or memory.");
-//					app.u.handleCallback(_tag);
-//					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerAddressList","_tag": _tag},Q || 'mutable');
-				}
-			}, //buyerAddressList	
-
-		buyerWalletList : {
-			init : function(_tag,Q)	{
-				var r = 0;
-				_tag = _tag || {};
-				_tag.datapointer = "buyerWalletList";
-//				if(app.model.fetchData(_tag.datapointer))	{
-					r = 1;
-					this.dispatch(_tag,Q);
-//					}
-//				else	{
-//					app.u.dump("buyerWalletList found in local or memory.");
-//					app.u.handleCallback(_tag);
-//					}
-				return r;
-				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerWalletList","_tag": _tag},Q || 'mutable');
-				}
-			}, //buyerWalletList	
 
 		cartCouponAdd : {
 			init : function(coupon,_tag,Q)	{
