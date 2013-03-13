@@ -107,7 +107,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	</div>
 
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id); return false;">
-		<input type="hidden" data-bind='var: product(pid); format:atcFixedQuantity; extension:store_product;' name="quantity" value="1">
+		<input type="hidden" name="qty" value="1" />
 		<div class='atcSuccessMessage' data-bind='var:product(pid);format:assignAttribute; attribute:id; valuePretext:atcMessaging_;'></div>
 		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 			<button data-bind='var: product(pogs); format:addToCartButton; extension:myRIA;' class='ui-button-text ui-button ui-state-active ui-corner-all' id='addToCartBtn'>Add To Cart</button>

@@ -192,8 +192,8 @@ a parentID being passed may indicate the messaging is being throw to a minicart 
 //this'll change going forward.
 
 addToCart : function (pid,$form){
-	app.u.dump("BEGIN store_product.validate.addToCart");
-	app.u.dump(" -> pid: "+pid);
+//	app.u.dump("BEGIN store_product.validate.addToCart");
+//	app.u.dump(" -> pid: "+pid);
 	var valid = true; //what is returned.
 	if(pid && $form)	{
 		//copied locally for quick reference.
@@ -203,13 +203,13 @@ addToCart : function (pid,$form){
 	//	app.u.dump('BEGIN validate_pogs. Formid ='+formId);
 	
 		if($.isEmptyObject(sogJSON))	{
-			app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
+//			app.u.dump('no sogs present (or empty object)'); //valid. product may not have sogs.
 			}
 		else if($.isEmptyObject(formJSON))	{
-			app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
+//			app.u.throwGMessage("In store_product.validate.addToCart, formJSON is empty.");
 			} //this shouldn't be empty. if it is, likely $form not valid or on DOM.
 		else	{
-			app.u.dump(" -> everything is accounted for. Start validating.");	
+//			app.u.dump(" -> everything is accounted for. Start validating.");	
 			$('.appMessage',$form).empty().remove(); //clear all existing errors/messages.
 		
 			var thisSTID = pid, //used to compose the STID for inventory lookup.
@@ -234,7 +234,7 @@ addToCart : function (pid,$form){
 		//Okay, validate what's left.
 					else	{
 		//If the option IS required (not set to optional) AND the option value is blank, AND the option type is not attribs (finder) record an error
-						if(formJSON['pog_'+pogid]){}
+						if(formJSON[pogid]){}
 						else	{
 							valid = false;
 							errors += "<li>"+sogJSON[i]['prompt']+"<!--  id: "+pogid+" --><\/li>";
@@ -244,7 +244,7 @@ addToCart : function (pid,$form){
 					
 					//compose the STID
 					if(sogJSON[i]['inv'] == 1)	{
-						thisSTID += ':'+pogid+formJSON['pog_'+pogid];
+						thisSTID += ':'+pogid+formJSON[pogid];
 						inventorySogPrompts += "<li>"+sogJSON[i]['prompt']+"<\/li>";
 						}
 					
@@ -278,7 +278,7 @@ addToCart : function (pid,$form){
 		app.u.throwGMessage("in store_product.validate.addToCart, either pid ("+pid+") not set or $form was not passed.");
 		valid = false;
 		}
-	app.u.dump('STID = '+thisSTID);
+//	app.u.dump('STID = '+thisSTID);
 	return valid;
 
 	} //validate.addToCart
@@ -305,7 +305,7 @@ addToCart : function (pid,$form){
 //the ID on the product_id input should NOT be changed without updating the addToCart call (which uses this id to obtain the pid).
 
 			atcForm : function($tag,data)	{
-				$tag.append("<input type='hidden' name='add' value='yes' /><input type='hidden' name='product_id' value='"+data.value+"' />");
+				$tag.append("<input type='hidden' name='sku' value='"+data.value+"' />");
 				},
 			
 			reviewList : function($tag,data)	{
@@ -367,22 +367,14 @@ addToCart : function (pid,$form){
 
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
-				if(app.ext.store_product.u.productIsPurchaseable(data.value))	{
-					var o = '';
-					o += "<input type='number' value='1' size='3' name='quantity' min='1' class='zform_number' id='quantity_"+data.value+"' />";
-					$tag.append(o);
+				app.u.dump(" -> data.bindData.defaultValue: "+data.bindData.defaultValue);
+				if(app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
+					$tag.append("<input type='number' value='"+(data.bindData.defaultValue || 0)+"' size='3' name='qty' min='0' step='1' />");
 					}
 				else
+					$tag.append("<input type='hidden' value='0' name='qty' />"); //add so that handleaddtocart doesn't throw error that no qty input is present
 					$tag.hide().addClass('displayNone'); //hide input if item is not purchaseable.
 				},
-
-
-//add all the necessary fields for quantity inputs.
-			atcFixedQuantity : function($tag,data)	{
-				$tag.attr('id','quantity_'+data.value);
-				},
-
-
 
 
 
@@ -434,15 +426,8 @@ $display.appendTo($tag);
 // atcButton class is added as well, so that the addToCart call can disable and re-enable the buttons.
 				$tag.addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(app.ext.store_product.u.productIsPurchaseable(pid))	{
-//product is purchaseable. make sure button is visible and enabled.
-//					if(pData && pData['%attribs']['is:colorful'])	{
-//						$tag.addClass('colorfulButton').prop('value', 'Choose Color');
-//						}
-//					else if(pData && pData['%attribs']['is:sizeable'])	{
-//						$tag.addClass('sizeableButton').prop('value', 'Choose Size');
-//						}
-					if(pData && pData['%attribs']['is:preorder'])	{
-						$tag.addClass('preorderButton').prop('value', 'Preorder');
+					if(pData && pData['%attribs'] && pData['%attribs']['is:preorder'])	{
+						$tag.addClass('preorderButton').text('value', 'Preorder');
 						}
 					else	{
 						$tag.addClass('addToCartButton');
@@ -502,7 +487,7 @@ it has no inventory AND inventory matters to merchant
 						}
 					}
 				return r;
-				},
+				}, //productIsPurchaseable
 				
 
 
@@ -540,7 +525,7 @@ it has no inventory AND inventory matters to merchant
 //					app.u.dump(" -> item HAS variations. inv = "+inv);
 					}
 				return inv;
-				},
+				}, //getProductInventory
 
 /*
 P is passed in. Guess what? it's an object.
@@ -582,7 +567,7 @@ NOTES
 				else	{
 					app.u.dump(" -> no pid specified for image viewer.  That little tidbit is required.");
 					}
-				},
+				}, //showPicsInModal
 
 			
 /*
@@ -654,31 +639,57 @@ NOTES
 					}
 				}, //showProductDataIn
 
+//$FP should be a form's parent element. Can contain 1 or several forms.
+			handleAddToCart : function($FP,_tag)	{
+				app.u.dump("BEGIN store_product.u.handleAddToCart");
+				if(typeof $FP == 'object')	{
+					var $forms = $('form',$FP);
+					app.u.dump(" -> $forms.length: "+$forms.length);
+					if($forms.length)	{
+						$forms.each(function(){
 
-//F can be a form ID or a jquery object of the form
-			handleAddToCart : function(F,tagObj)	{
-			
-//by now, F is a jquery object or invalid.				
-				if(typeof F == 'object')	{
-//some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
-//then create a callback that does nothing. IMHO, you should always let the user know the item was added.
-//this easily allows for an override to do something more elaborate.
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
-					tagObj.callback = tagObj.callback ? tagObj.callback : 'itemAddedToCart';
-					tagObj.extension = tagObj.extension ? tagObj.extension : 'store_product';
-					
-					app.ext.store_product.calls.cartItemsAdd.init(F,tagObj)
-					app.calls.refreshCart.init({},'immutable'); //piggyback an update cart so that next time 'view cart' is pushed, it's accurate.
-					app.model.dispatchThis('immutable');
+							var $form = $(this);
+							$qtyInput = $("input[name='qty']",$form),
+							sku = $("input[name='sku']",$form).val();
+							
+							app.u.dump(" -> sku: "+sku);
+							
+							if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{
 
+								var obj = $form.serializeJSON();
+								app.u.dump(" -> obj.sku: "+obj.sku);
+								obj['%variations'] = {};
+								for(index in obj)	{
+									//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase. pids must be longer.
+									if(index.length == 2 && index.toUpperCase() == index)	{
+										obj['%variations'][index] == obj[index];
+										delete obj[index];
+										}
+									}
+								app.calls.cartItemAppend.init(obj,_tag);
+								}
+							else if($qtyInput.length === 0)	{
+								$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
+								}
+							else	{
+								app.u.dump("qty");
+								} //do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
+
+
+							});
+//						app.model.destroy('cartDetail');
+//						app.calls.cartDetail.init({},'immutable');
+//						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'handleAddToCart requires $FP to contain at least 1 form.','gMessage':true});
+						}
 					}
-				
 				else	{
-					app.u.throwGMessage("WARNING! unknown type for F in handleAddToCart ["+typeof F+"]");
+					$('#globalMessaging').anymessage({'message':'handleAddToCart received an unknown type for $FP ['+typeof $FP+'] (should be object)','gMessage':true});
 					}
+				}, //handleAddToCart
 
-
-				},
 //will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
 //data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.
 //NOTE - this function is also in store_prodlist. probably ought to merge prodlist and product, as they're sharing more and more.

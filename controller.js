@@ -2442,7 +2442,10 @@ return $r;
 //used in template creation and also in some UI stuff, like product finder.
 		parseDataVar : function(v)	{
 			var r; //what is returned.
-			r = v.replace(/.*\(|\)/gi,'');
+			if(v)	{
+				r = v.replace(/.*\(|\)/gi,'');
+				}
+			else	{r = false;}
 			return r;
 			},
 

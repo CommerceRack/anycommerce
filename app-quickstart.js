@@ -221,7 +221,7 @@ document.write = function(v){
 //
 		handleCart : 	{
 			onSuccess : function(tagObj)	{
-				app.u.dump("BEGIN myRIA.callbacks.handleCart.onSuccess");
+//				app.u.dump("BEGIN myRIA.callbacks.handleCart.onSuccess");
 //				app.u.dump(" -> tagObj: ");	app.u.dump(tagObj);
 				app.ext.myRIA.u.handleMinicartUpdate(tagObj);
 				//empty is to get rid of loading gfx.
@@ -2124,7 +2124,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					
 //no need to render template again.
 					if(!$('#'+parentID).length){
-						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID)
+						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'});
 						$content.addClass('displayNone'); //hidden by default for page transitions
 						$('#mainContentArea').append($content);
 
@@ -2606,7 +2606,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 		
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind')) ;
 //		app.u.dump(bindData);
-		var namespace = bindData['var'].split('(')[0];
+		var namespace = app.u.isSet(bindData['var']) ? bindData['var'].split('(')[0] : "";
 		var attribute = app.renderFunctions.parseDataVar(bindData['var']);
 		var tmpAttr; //recycled. used when a portion of the attribute is stipped (page.) and multiple references to trimmed var are needed.
 //these get used in prodlist and subcat elements (anywhere loadstemplate is used)
@@ -2616,8 +2616,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //		app.u.dump(" -> namespace: "+namespace);
 //		app.u.dump(" -> attribute: "+attribute);
 		
-
-		if(namespace == 'elastic-native')	{
+		if(bindData.useParentData)	{}
+		else if(namespace == 'elastic-native')	{
 //			app.u.dump(" -> Elastic-native namespace");
 			elementID = $focusTag.attr('id');
 			if(elementID)	{
@@ -2805,37 +2805,33 @@ else	{
 			
 			
 //obj currently supports one param w/ two values:  action: modal|message
+
 			handleAddToCart : function($form,obj)	{
-
-app.u.dump("BEGIN myRIA.u.handleAddToCart")
-
-obj = obj || {};
-
-if($form && $form.length)	{
-	var sfo = $form.serializeJSON(); //Serialized Form Object.
-	var pid = sfo.product_id;  //shortcut
-	$('.atcButton',$form).addClass('disabled ui-disabled').attr('disabled','disabled');
-	if(app.ext.store_product.validate.addToCart(pid,$form))	{
-//this product call displays the messaging regardless, but the modal opens over it, so that's fine.
-		app.ext.store_product.calls.cartItemsAdd.init(sfo,{'callback':'itemAddedToCart','extension':'myRIA'});
-		if(obj.action && obj.action == 'modal')	{
-// ??? update to use showCart instead of handling templateFunctions here?			
-			app.ext.myRIA.u.handleTemplateFunctions({'state':'onInits','templateID':'cartTemplate'}); //oncompletes handled in callback.
-			app.ext.store_cart.u.showCartInModal({'showLoading':true});
-			app.calls.refreshCart.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
-			}
-		else	{
-			app.calls.refreshCart.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
-			}
-		app.model.dispatchThis('immutable');
-		}
-	else	{
-		$('.atcButton',$form).removeClass('disabled ui-disabled').removeAttr('disabled');
-		}
-	}
-else	{
-	app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
-	}
+				app.u.dump("BEGIN myRIA.u.handleAddToCart");
+				obj = obj || {'action':''}
+				if($form && $form.length)	{
+					var $page = $form.closest("[data-app-pagetype]"),
+					pid = $("input[name='sku']",$form).val();
+//In this case, we don't want any 'adds' to occur unless the primary one does. so only continue if it passes validation.
+					if(app.ext.store_product.validate.addToCart(pid,$form))	{
+						app.u.dump(" -> addToCart validated");
+						app.ext.store_product.u.handleAddToCart($page);
+						app.model.destroy('cartDetail');
+						if(obj.action && obj.action == 'modal')	{
+							app.ext.store_cart.u.showCartInModal({'showLoading':true});
+							app.calls.cartDetail.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
+							}
+						else	{
+							app.calls.cartDetail.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
+							}
+						app.model.dispatchThis('immutable');
+						
+						}
+					else	{} //do nothing, the validation handles displaying the errors.
+					}
+				else	{
+					app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
+					}
 
 				}, //handleAddToCart
 				

@@ -322,7 +322,7 @@ $tag.one('click',function(event){
 
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
-				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
+//				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
 				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
 				var L = data.value.length;
@@ -330,7 +330,7 @@ $tag.one('click',function(event){
 					id = data.value[i].id; //shortcut of this shipping methods ID.
 					isSelectedMethod = (id == app.data.cartDetail['want'].shipping_id) ? true : false; //is this iteration for the method selected.
 					safeid = app.u.makeSafeHTMLId(data.value[i].id);
-					app.u.dump(" -> id: "+id+" and isSelected: "+isSelectedMethod);
+//					app.u.dump(" -> id: "+id+" and isSelected: "+isSelectedMethod);
 
 //app.u.dump(' -> id = '+id+' and want/shipping_id = '+app.data.cartDetail['want/shipping_id']);
 					

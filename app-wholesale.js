@@ -2180,7 +2180,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					
 //no need to render template again.
 					if(!$('#'+parentID).length){
-						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID)
+						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'});
 						$content.addClass('displayNone'); //hidden by default for page transitions
 						$('#mainContentArea').append($content);
 
