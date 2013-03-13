@@ -66,18 +66,31 @@ var cubworld = function() {
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'width':800, height:550});
 				},
-				
+			
 			showDropDown : function ($tag) {
+				app.u.dump('showing');
 				var $dropdown = $(".dropdown", $tag);
 				var height = 0;
+				$dropdown.show();
 				$dropdown.children().each(function(){
-					height += $(this).outerHeight(true);
+					height += $(this).outerHeight();
 				});
+				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
+					clearTimeout($tag.data('timeout'));
+					$tag.data('timeout','false');
+					
+				}
 				$dropdown.stop().animate({"height":height+"px"}, 500);
 				},
 				
 			hideDropDown : function ($tag) {
+				app.u.dump('hiding');
 				$(".dropdown", $tag).stop().animate({"height":"0px"}, 500);
+				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
+					$tag.data('timeout')
+					$tag.data('timeout','false');
+				}
+				$tag.data('timeout',setTimeout(function(){$(".dropdown", $tag).hide();},500));
 				}
 			}, //Actions
 
