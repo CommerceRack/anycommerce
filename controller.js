@@ -488,18 +488,18 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				var r = 0;
 				if(cmdObj && cmdObj.shortcut)	{
 					_tag = _tag || {};
-					tagObj.datapointer = "buyerAddressAddUpdate|"+cmdObj.shortcut
-					cmdObj['_cmd'] = 'buyerAddressAddUpdate';
-					cmdObj['_tag'] = tagObj;
+					_tag.datapointer = "buyerAddressAddUpdate|"+cmdObj.shortcut
 					r = 1;
-					this.dispatch(cmdObj,Q);
+					this.dispatch(cmdObj,_tag,Q);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'buyerAddressAddUpdate requires obj and obj.shortcut','gMessage':true});
 					}
-				return 1;
+				return r;
 				},
-			dispatch : function(cmdObj,Q)	{
+			dispatch : function(cmdObj,_tag,Q)	{
+				cmdObj['_cmd'] = 'buyerAddressAddUpdate';
+				cmdObj._tag = _tag;
 				app.model.addDispatchToQ(cmdObj,Q || 'immutable');	
 				}
 			},//buyerAddressAddUpdate 

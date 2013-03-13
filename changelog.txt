@@ -7,6 +7,13 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
 
+201311
+includes.js/variations update to remove 'pog_' from input names (for new add to cart command)
+
+* A new add to cart command. old command is deprecated.
+* Introduction of '_session' to split session data from cart data.
+
+
 
 201310
 Lots of filename changes
