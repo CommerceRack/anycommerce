@@ -68,7 +68,7 @@ var cubworld = function() {
 				},
 			
 			showDropDown : function ($tag) {
-				app.u.dump('showing');
+				//app.u.dump('showing');
 				var $dropdown = $(".dropdown", $tag);
 				var height = 0;
 				$dropdown.show();
@@ -84,7 +84,7 @@ var cubworld = function() {
 				},
 				
 			hideDropDown : function ($tag) {
-				app.u.dump('hiding');
+				//app.u.dump('hiding');
 				$(".dropdown", $tag).stop().animate({"height":"0px"}, 500);
 				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
 					$tag.data('timeout')
