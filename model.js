@@ -768,7 +768,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 				}
 			var fromQ = app.model.whichQAmIFrom(uuid);
 			if(fromQ && app.q[fromQ] && app.q[fromQ][Number(uuid)])	{
-				app.q[app.model.whichQAmIFrom(uuid)][Number(uuid)]['status'] = status;
+				app.q[app.model.whichQAmIFrom(uuid)][Number(uuid)]._tag['status'] = status;
 				}
 			return status;
 		},
@@ -861,6 +861,14 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				app.storageFunctions.writeLocal('cartid',null);
 				app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 				}
+			},
+
+		handleResponse_adminUIExecuteCGI : function(responseData)	{
+			if(responseData.html)	{
+				app.ext.admin.u.uiHandleContentUpdate(responseData.uri,responseData,viewObj);
+				//app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
+				}
+
 			},
 
 //this function gets executed upon a successful request for a new session id.

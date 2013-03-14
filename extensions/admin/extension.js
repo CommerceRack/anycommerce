@@ -803,10 +803,12 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "adminUIDomainPanelExecute";
+			dispatch : function(uri,vars,_tag,Q)	{
+				obj = {};
+				obj['_cmd'] = "adminUIExecuteCGI";
+				if(vars)	{obj['%vars'] = vars} //only pass vars if present. would be a form post.
 				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);	
+				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}
 			}, //adminUIProductPanelList
 
@@ -2619,6 +2621,7 @@ var chart = new Highcharts.Chart({
 					$target.empty().append("<div class='loadingBG'></div>");
 //					alert(path);
 					app.model.fetchAdminResource(path,P);
+//					app.ext.admin.calls.adminUIExecuteCGI.init(path,{infoObj:P})
 					}
 				}, //handleShowSection
 
