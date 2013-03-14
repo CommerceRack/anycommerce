@@ -353,7 +353,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 //clear the message entirely. run after a close. removes element from DOM.
 		destroy : function(){
-			this.element.empty().remove();
+			this.element.empty();
+			this.element.removeClass("ui-tabs");
+			this.element.removeClass("ui-widget");
+			this.element.removeClass("ui-widget-anytabs");
+			this.element.attr("widget","");
 			}
 		}); // create the widget
 })(jQuery); 
