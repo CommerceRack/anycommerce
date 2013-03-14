@@ -22,14 +22,16 @@ var convertSessionToOrder = function() {
 	'checkoutTemplate', //container for whole checkout page.
 	'chkoutPreflightTemplate',
 	'chkoutCartContentsTemplate', //cart contents
-	'chkoutCartItemTemplate', //cart contents product template
+	'chkoutCartItemTemplate', //cart contents list item template
 	'chkoutCartSummaryTemplate', //panel for order summary (subtotal, shipping, etc)
 	'chkoutAddressBillTemplate', //billing address
 	'chkoutAddressShipTemplate', //duh
 	'chkoutMethodsShipTemplate',
 	'chkoutNotesTemplate',
 	'chkoutBuyerAddressTemplate',
-	'chkoutMethodsPayTemplate' //payment option panel
+	'chkoutMethodsPayTemplate', //payment option panel
+	'chkoutCompletedTemplate', //used after checkout to display order information.
+	'chkoutInvoiceItemTemplate'
 	);
 	var r = {
 	vars : {
@@ -39,66 +41,6 @@ var convertSessionToOrder = function() {
 		},
 
 					////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\		
-
-/*
-unlike other extensions, checkout calls rarely do a 'fetchData'. The thought here is to make sure we always have the most recent data.
-calls should always return the number of dispatches needed. allows for cancelling a dispatchThis if not needed.
-   so in most of these, a hard return of 1 is set.
-
-initially, this extension auto-executed. Later, after callbacks were added to the extension object
-the startCheckout call was added, which contains the code that was auto-executed as part of the INIT callback.
-a callback was also added which just executes this call, so that checkout COULD be auto-started onload.
-*/
-	calls : {
-		
-/*
-Run once checkout form has been filled out (or is thought to be filled out).
-add all form fields to the session/cart (whether form validates or not)
- -> thought being to collect and store all that information as often as possible.
-does a client-side validation of the form.
- -> if errors, they're displayed on screen as part of the individual panel validation scripts.
- -> if success, server-side validation takes place. those errors are handled in the callback (if present).
-if server validation passes, the callback handles what to do next (callback is most likely "finishedValidatingCheckout")
-*/
-		processCheckout : {
-			init : function(callback)	{
-
-				// !!!! 201308. need to get $form set. by here.
-//the buyer could be directed away from the store at this point, so save everything to the session/cart.
-				
-
-//if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
-				if($("#want-payby_PAYPALEC").is(':checked') && !app.ext.convertSessionToOrder.vars['payment-pt'])	{
-					$('#modalProcessCheckout').append("<h2>Redirecting to PayPal...</h2>");
-					app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
-					}
-				else	{
-					var checkoutIsValid = app.ext.convertSessionToOrder.validate.isValid();
-					app.u.dump(' -> checkoutIsValid = '+checkoutIsValid);
-					if(checkoutIsValid)	{
-						this.dispatch(callback);
-						}
-					else	{
-//originally, instead of attr(disabled,false) i removed the disabled attribute. This didn't work in ios 5 safari.					
-						$('#chkoutPlaceOrderBtn').attr('disabled',false).removeClass('ui-state-disabled');
-						$('#modalProcessCheckout').dialog('close');
-//without this jump, the create order button jumps up slightly. 
-//this needs to be at the end so all the content above is manipulated BEFORE jumping to the id. otherwise, the up-jump still occurs.
-						app.u.jumpToAnchor('chkoutSummaryErrors');
-						}
-					}
-
-
-_gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
-				
-				return 1;
-				},
-			dispatch : function(callback)	{
-				app.model.addDispatchToQ({"_cmd":"cartCheckoutValidate","_tag" : {"callback":callback,"extension":"convertSessionToOrder"}},'immutable');
-				}
-			}
-		}, //calls
-
 
 
 
@@ -224,32 +166,32 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 		showInvoice : {
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
+				$('body').hideLoading();
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
-				var $zContent = $('#'+app.ext.convertSessionToOrder.vars.containerID).empty();
-				var oldSession = app.sessionId;
-				var orderID = app.data[tagObj.datapointer].orderid;
+				var $checkout = tagObj.jqObj,
+				oldSession = app.sessionId,
+				orderID = app.data[tagObj.datapointer].orderid;
 
-				app.u.jumpToAnchor(app.ext.convertSessionToOrder.vars.containerID);
-//this generates the post-checkout message from the template in the view file.
-				$zContent.append(app.renderFunctions.createTemplateInstance('checkoutSuccess','checkoutSuccessContent')); 
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],'checkoutSuccessContent');
-				$('#modalProcessCheckout').dialog('close');
+// SLIDE UP to top of checkout here.
+
+//show post-checkout invoice and success messaging.
+				$checkout.empty();
+				$checkout.anycontent({'templateID':'chkoutInvoiceTemplate',data: $.extend(true,app.data[tagObj.datapointer],{'invoice':app.data.cartDetail})}); //
+				app.u.handleAppEvents($checkout)
+
 
 /*
 note - the click prevent default is because the renderFormat adds an onclick that passes both order and cart id.
 */
 				$('.paymentRequired').append(app.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
 
-//				$('.paymentRequired').append(app.ext.cco.u.checkoutSuccessPaymentFailure(app.data[tagObj.datapointer].payment_success,app.data['order|'+orderID].cart['want/payby']));
-				
-				
-				
 				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID))
 				
 				$('.ocmTwitterComment').click(function(){
 					window.open('http://twitter.com/home?status='+cartContentsAsLinks,'twitter');
 					_gaq.push(['_trackEvent','Checkout','User Event','Tweeted about order']);
 					});
+
 //the fb code only works if an appID is set, so don't show banner if not present.				
 				if(zGlobals.thirdParty.facebook.appId)	{
 					$('.ocmFacebookComment').click(function(){
@@ -258,21 +200,23 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 						});
 					}
 				else	{$('.ocmFacebookComment').addClass('displayNone')}
+				
+//time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
 				app.model.destroy('cartDetail');
 				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
-				app.calls.refreshCart.init({},'immutable'); //!IMPORTANT! will reset local cart object. 
+				app.calls.cartDetail.init({},'immutable');
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
 _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
 
-				var L = app.ext.cco.checkoutCompletes.length;
-				for(var i = 0; i < L; i += 1)	{
-					app.ext.cco.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+				if(app.ext.convertSessionToOrder.checkoutCompletes)	{
+					var L = app.ext.convertSessionToOrder.checkoutCompletes.length;
+					for(var i = 0; i < L; i += 1)	{
+						app.ext.convertSessionToOrder.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+						}
 					}
 
-
-				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
 
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
@@ -283,12 +227,9 @@ else	{
 	}
 
 				},
-			onError : function(responseData,uuid)	{
-				$('#modalProcessCheckout').dialog('close');
-				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled '); //make place order button appear and be clickable.
-				responseData['_rtag'] = $.isEmptyObject(responseData['_rtag']) ? {} : responseData['_rtag'];
-				responseData['_rtag'].targetID = 'chkoutSummaryErrors';
-				app.u.throwMessage(responseData,uuid); //!!! test this to make sure it works.
+			onError : function(rd)	{
+				$('body').hideLoading();
+				$('#globalMessaging').anymessage(rd);
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
