@@ -788,6 +788,29 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminUIProductPanelList
 
+
+//obj requires panel and pid and sub.  sub can be LOAD or SAVE
+		adminUIExecuteCGI : {
+			init : function(uri,vars,_tag,Q)	{
+				var r = 0;
+				if(uri)	{
+					r = 1;
+					_tag = _tag || {};
+					this.dispatch(uri,vars,_tag,Q);
+					}
+				else	{
+					$("#globalMessaging").anymessage({'message':'in adminUIExecuteCGI, uri not specified.','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj['_cmd'] = "adminUIDomainPanelExecute";
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminUIProductPanelList
+
+
 		adminUIProductPanelList : {
 			init : function(pid,_tag,Q)	{
 				var r = 0;

@@ -139,7 +139,7 @@ For the list of available params, see the 'options' object below.
 
 					o.persistant = true; //iseErr should be persistant
 					this.outputArr[instance].addClass('ui-state-error');
-					$('button',this.outputArr[instance]).button('disable');
+//					$('button',this.outputArr[instance]).button('disable'); //I don't think we want to disable the ability to close this, we just don't want it to auto-close.
 
 					this.outputArr[instance].addClass('ui-state-error');
 						var msgDetails = "<ul>";
