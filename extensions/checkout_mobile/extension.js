@@ -486,8 +486,8 @@ payment options, pricing, etc
 			chkoutPreflight : function(formObj,$fieldset)	{
 //				app.u.dump("BEGIN convertSessionToOrder.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
-				if(app.u.buyerIsAuthenticated())	{
-					app.u.dump(" -> user is authenticated");
+				if(app.u.buyerIsAuthenticated() || app.ext.cco.u.thisSessionIsPayPal())	{
+					app.u.dump(" -> session is authenticated OR this is an authorized paypal transaction.");
 					$("[data-app-role='login']",$fieldset).hide();
 					$("[data-app-role='username']",$fieldset).show();
 					}
@@ -534,7 +534,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['bill/shortcut'])	{
 //highlight the checked button of the address selected.<<
-						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight'); 
+						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}}); 
 						}
 					}
 				else	{
@@ -556,7 +556,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['ship/shortcut'])	{
-						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight');
+						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}});
 						}
 					}
 				else	{
@@ -575,9 +575,13 @@ an existing user gets a list of previous addresses they've used and an option to
 				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
 
+				if(app.ext.cco.u.thisSessionIsPayPal())	{
+					$fieldset.hide();
+					}
+
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
-				if(L == 0 && app.u.buyerIsAuthenticated())	{
+				else if(L == 0 && app.u.buyerIsAuthenticated())	{
 					if(formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true){
 						$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
 						}
@@ -766,23 +770,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.dispatchThis('immutable');
 					})
 				}, //execAddressUpdate
-
-//immediately update cart anytime the email address is added/changed. for remarketing purposes.
-//no need to refresh the cartDetail here.
-			execBuyerEmailUpdate : function($input)	{
-				$input.off('blur.execEmailUpdate').on('blur.execEmailUpdate',function(){
-					if(app.u.isValidEmail($input.val()))	{
-						app.ext.cco.calls.cartSet.init({'bill/email':$input.val()},{},'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					});
-				},
 			
 //executed when an predefined address (from a buyer who is logged in) is selected.
 			execBuyerAddressSelect : function($btn)	{
-				$btn.button();
+				$btn.button({icons: {primary: "ui-icon-none"}});
 				$btn.off('click.execBuyerAddressUpdate').on('click.execBuyerAddressUpdate',function(event){
 					event.preventDefault();
+					$btn.button({icons: {primary: "ui-icon-circle-check"}});
 					var addressType = $btn.closest('fieldset').data('app-addresstype'), //will be ship or bill.
 					$form = $btn.closest('form');
 					addressID = $btn.closest('address').data('_id');
@@ -802,6 +796,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					});
 				},
+
+//immediately update cart anytime the email address is added/changed. for remarketing purposes.
+//no need to refresh the cartDetail here.
+			execBuyerEmailUpdate : function($input)	{
+				$input.off('blur.execEmailUpdate').on('blur.execEmailUpdate',function(){
+					if(app.u.isValidEmail($input.val()))	{
+						app.ext.cco.calls.cartSet.init({'bill/email':$input.val()},{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					});
+				},
 			
 			execBuyerLogin : function($btn)	{
 				$btn.button();
@@ -817,6 +822,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 						app.model.destroy('buyerAddressList');
 						app.model.destroy('buyerWalletList');
+						app.model.destroy('cartDetail');
 
 						app.calls.appBuyerLogin.init({"login":$email.val(),"password":$password.val()},{'callback':function(rd){
 //							app.u.dump("BEGIN exeBuyerLogin anonymous callback");
@@ -847,6 +853,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 								}
 							}});
+						app.calls.cartDetail.init({},'immutable'); //update cart so that if successful, the refresh on preflight panel has updated info.
 						app.model.dispatchThis('immutable');
 						}
 					else {
@@ -997,7 +1004,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						else	{
 							$addrModal = $("<div \/>",{'id':'buyerAddressAdd','title':'Add a new address'}).appendTo('body');
-							$addrModal.dialog({autoOpen:false, width:($('body').width < 500) ? '100%' : 500,height:500});
+							$addrModal.dialog({autoOpen:false, modal:true, width:($('body').width < 500) ? '100%' : 500,height:500});
 							}
 							
 						$addrModal.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");

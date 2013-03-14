@@ -145,7 +145,7 @@ do NOT change any input names or id's or checkout will likely break.
 
 	<div><input type='text' name='bill/city' placeholder='city' required='required' value='' data-bind='var: cart(bill/city); format:popVal;'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	
-	<div><input type='text'  name='bill/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' required='required' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
+	<div><input type='text' name='bill/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(bill/region); format:popVal;' maxlength='10' data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 	<!-- postal not required for international. don't add it. -->
 	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); format:popVal;' maxlength='10'  data-app-event='convertSessionToOrder|execAddressUpdate' /></div>
 

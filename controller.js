@@ -1631,9 +1631,19 @@ VALIDATION
 		validateForm : function($form)	{
 			app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
+
+				
 				var r = true; //what is returned. false if any required fields are empty.
 				$form.showLoading({'message':'Validating'});
+
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
+
+//nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
+				$(".ui-widget-anymessage",$form).each(function(){
+					$(this).anymessage('close');
+					});				
+				
+				
 				$('input',$form).each(function(){
 					var $input = $(this),
 					$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');

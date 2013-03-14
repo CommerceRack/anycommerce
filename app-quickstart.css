@@ -415,7 +415,7 @@ HELP PAGES
 /***************************************************
 
 CART
-NOTE - Some of these classes are also shared with the cart summary that appears during checkout.
+
 
 ***************************************************/
 
@@ -452,6 +452,11 @@ CHECKOUT
 .paybySupplemental select {margin-right:12px;}
 
 .addressList address	{float:left; margin:0 12px 12px 0;}
+
+.ui-icon-none.ui-icon { background-image: none; } /* allows for icon to be enabled but have nothing show up. means button widths won't change when an icon (selected, for instance) is turned on/off.
+
+
+
 
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */
