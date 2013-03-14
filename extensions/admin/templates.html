@@ -137,9 +137,13 @@ PRODUCT FINDER/CHOOSER
 	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
 	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+	
+	
+	
 	</td>
 </tr>
 </table>
+<div data-bind='useParentData:true; format:detailedInvDisplay; extension:store_product;' class='inventory'></div>
 	<form action='#' onSubmit="return false;">
 	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='sku' />
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>

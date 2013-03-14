@@ -78,7 +78,7 @@ var store_product = function() {
 				obj["_cmd"] = "appProductGet";
 				obj["withVariations"] = 1;
 //only get inventory if it matters. inv_mode of 1 means inventory is not important.
-				if(typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1)
+				if(app.vars.thisSessionIsAdmin || (typeof zGlobals == 'object' && zGlobals.globalSettings.inv_mode != 1))
 					obj["withInventory"] = 1;
 				obj["pid"] = pid;
 				obj["_tag"] = tagObj;
@@ -347,6 +347,29 @@ addToCart : function (pid,$form){
 					$tag.addClass('outofstock').append("Sold Out");
 				},
 
+//data.value should be entire product object.
+			detailedInvDisplay : function($tag,data)	{
+				var pid = data.value.pid;
+				if(pid && data.value['@inventory'] && data.value['@inventory'][pid])	{
+					$tag.append("<div>Available Inventory: "+data.value['@inventory'][pid].inv+"<\/div>");
+					}
+				else if(pid && data.value['@inventory'])	{
+					var inventory = data.value['@inventory'],
+					vlt = app.ext.store_product.u.buildVariationLookup(data.value['@variations']), //variation lookup table.
+					$table = $("<table class='gridTable fullWidth marginBottom' \/>");
+					$table.append("<thead><tr><th class='alignLeft'>Variation<\/th><th class='alignRight'>Inv. Available<\/th><\/tr>");
+					for(var index in inventory)	{
+//						var pretty = vlt[index.split(':')[1].substr[0,2]];
+//						pretty += 
+						$table.append("<tr><td>"+app.ext.store_product.u.inventoryID2Pretty(index,vlt)+"<\/td><\/tr>");
+						}
+					$table.appendTo($tag);
+					$table.anytable();
+					}
+				else	{
+					$tag.append("Unable to determine inventory count");
+					}
+				}, //detailedInvDisplay
 
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
@@ -480,6 +503,44 @@ it has no inventory AND inventory matters to merchant
 				}, //productIsPurchaseable
 				
 
+//in some cases, it's handy to have a way to look up sog prompt based on id. This will return an object where the key is the sogID and the value an object of sog value/prompts. there is also a 'prompt' in the child object for what the sogID prompt is. ex: {'prompt':'Color: ','00':'blue','01':'red'}.
+//does all options, not just inventory-able.
+			buildVariationLookup : function(variations)	{
+				var r = false; //what is returned. either false or an object
+				if(variations && variations.length)	{
+					r = {}; //variation lookup table.
+					var L = variations.length;
+					for(var i = 0; i < L; i += 1)	{
+						r[variations[i].id] = {'prompt':variations[i].prompt};
+						var OL = variations[i].options.length;
+						for(var oi = 0; oi < OL; oi += 1)	{
+							r[variations[i].id][variations[i].options[oi].v] = variations[i].options[oi].prompt;
+							}
+						}
+					}
+				else	{
+					app.u.dump("WARNING! in store_product.u.buildVariationLookup, variations was empty.");
+					}
+				return r;
+				},
+//pass variation lookup table into this. The thought there is that building the lookup table could be expensive, so better to do it once
+//someplace else then, potentially a lot of times when this function is called within a loop.
+			inventoryID2Pretty : function(ID,VLT)	{
+				var r = ""; //set to blank or undefined will be prepended to value.
+				if(ID && VLT)	{
+					var splitID = ID.split(':'),
+					L = splitID.length;
+					for(var i = 1; i < L; i += 1)	{
+//						app.u.dump(" -> splitID[i].substr(0,2): "+splitID[i].substr(0,2)); 
+						r += VLT[splitID[i].substr(0,2)][splitID[i].substr(2,2)]+" ";
+						}
+					}
+				else	{
+					app.u.dump("In store_product.u.inventoryID2Pretty, ID or VLT not defined");
+					r = false;
+					}
+				return r;
+				},
 
 //fairly straightforward way of getting a list of csv and doing nothing with it.
 //or, a followup 'ping' could be added to perform an action once this data is obtained.
