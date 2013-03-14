@@ -1640,7 +1640,7 @@ VALIDATION
 
 //nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
 				$(".ui-widget-anymessage",$form).each(function(){
-					$(this).anymessage('close');
+					$(this).empty().remove();
 					});				
 				
 				
