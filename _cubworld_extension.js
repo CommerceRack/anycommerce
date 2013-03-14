@@ -72,9 +72,13 @@ var cubworld = function() {
 				var $dropdown = $(".dropdown", $tag);
 				var height = 0;
 				$dropdown.show();
-				$dropdown.children().each(function(){
-					height += $(this).outerHeight();
-				});
+				if($dropdown.data('height')){
+					height = $dropdown.data('height');
+				} else{
+					$dropdown.children().each(function(){
+						height += $(this).outerHeight();
+					});
+				}
 				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
 					clearTimeout($tag.data('timeout'));
 					$tag.data('timeout','false');
@@ -84,9 +88,11 @@ var cubworld = function() {
 				},
 				
 			showDropDownClick : function($tag){
+				app.u.dump('showClick');
 				this.showDropDown($tag);
 				$('.dropdown',$tag).unbind('click');
 				$('.dropdown',$tag).click(function(event){event.stopPropagation()});
+				$tag.attr('onClick','').unbind('click');
 				setTimeout(function(){$('body').click(function(){
 					app.ext.cubworld.a.hideDropDownClick($tag);
 					});}, 500);
@@ -103,7 +109,9 @@ var cubworld = function() {
 				},
 				
 			hideDropDownClick : function($tag){
+				app.u.dump('hideClick');
 				this.hideDropDown($tag);
+				$tag.click(function(){app.ext.cubworld.a.showDropDownClick($(this));});
 				$('body').unbind('click');
 				}
 			}, //Actions

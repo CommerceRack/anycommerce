@@ -150,7 +150,7 @@ HEADER STYLES
     box-shadow: 0 3px 5px 1px #CCCCCC;
 
 	position: absolute;
-	z-index:10;
+	z-index:99999;
 }
 #catNavRow1 > div > .dropdown {
 	top: 24px;
@@ -162,7 +162,7 @@ HEADER STYLES
 	top:24px;
 	left:0px;
 	
-	width: 520px;
+	width: 500px;
 }
 
 #catNavRow3 > div > .dropdown > .dropdownLink{width:220px;margin-right:10px;}
