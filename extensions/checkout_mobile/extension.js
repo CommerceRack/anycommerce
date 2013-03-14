@@ -484,7 +484,7 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			chkoutPreflight : function(formObj,$fieldset)	{
-				app.u.dump("BEGIN convertSessionToOrder.panelDisplayLogic.chkoutPreflight");
+//				app.u.dump("BEGIN convertSessionToOrder.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
 				if(app.u.buyerIsAuthenticated())	{
 					app.u.dump(" -> user is authenticated");
@@ -828,17 +828,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //can't piggyback these on login because they'll error at the API side (and will kill the login request)
 
-							app.calls.buyerAddressList.init({'callback':function(){
+								app.calls.buyerAddressList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero addesses, the function below will just show the new address form.
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-								}},'immutable');
-
-							app.calls.buyerWalletList.init({'callback':function(){
+									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									}},'immutable');
+	
+								app.calls.buyerWalletList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero wallets, the function below will just show the new default payment options.
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
-								}},'immutable');
-							app.model.dispatchThis('immutable');
+									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									}},'immutable');
+								app.model.dispatchThis('immutable');
 
 //no content changes here, but potentially some display changes.
 								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAccountCreate',['handleDisplayLogic']);
@@ -888,6 +888,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 					})
 				}, //execCartOrderCreate
+
+//update the cart. no callbacks or anything like that, just get the data to the api.
+//used on notes and could be recyled if needed.
+			execCartSet : function($ele)	{
+				$ele.off('blur.execCartSet').on('blur.execCartSet',function(){
+					var obj = {};
+					obj[$ele.attr('name')] = $ele.val();
+					app.calls.cartSet.init(obj);
+					app.model.dispatchThis('immutable');
+					})
+				}, //execCartSet
 
 			execCountryUpdate : function($sel)	{
 				//recalculate the shipping methods and payment options.
@@ -962,8 +973,16 @@ note - the order object is available at app.data['order|'+P.orderID]
 					})
 				}, //execGiftcardAdd
 
+			execInvoicePrint : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-print"},text: false});
+				
+				$btn.off('click.execInvoicePrint').on('click.execInvoicePrint',function(){
+					app.u.printByjqObj($btn.closest("[data-app-role='invoiceContainer']"));
+					});
+				
+				},
+
 			showBuyerAddressAdd : function($btn)	{
-				console.warn("THIS IS NOT DONE YET. not tested. the cartSet needs a callback to handle the appropriate address panel (which is already in a showLoading state) and clear/populate/etc it. then test.");
 				$btn.button();
 				
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
@@ -1041,7 +1060,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				},
 
 			tagAsAccountCreate : function($cb)	{
-//				$cb.anycb;
+				$cb.anycb;
 				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
 					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
 					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
@@ -1139,7 +1158,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}},'immutable');
 				}, //handleCommonPanels
 
-
 			handlePaypalInit : function()	{
 
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
@@ -1191,7 +1209,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 				}, //showSupplementalInputs
 
-
 //201308 added to replace call: saveCheckoutFields
 //may need to sanitize out payment vars.
 			saveAllCheckoutFields : function($form,_tag)	{
@@ -1217,7 +1234,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				}, //saveAllCheckoutFields
 
-
 			handleChangeFromPayPalEC : function()	{
 //				app.ext.cco.u.nukePayPalEC(); //kills all local and session paypal payment vars
 				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
@@ -1227,9 +1243,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
 				app.model.dispatchThis('immutable');
 				}, //handleChangeFromPayPalEC
-
-
-
 
 /*
 paypal returns a user to the checkout page, not the order complete page.

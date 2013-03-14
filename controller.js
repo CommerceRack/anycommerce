@@ -1199,11 +1199,10 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 				
 				}, //handleAppEvents
 
-		printByElementID : function(id)	{
-//				app.u.dump("BEGIN myRIA.a.printByElementID");
-			if(id && $(app.u.jqSelector('#',id)).length)	{
+		printByjqObj : function($ele)	{
+			if($ele && $ele.length)	{
 				var html="<html><style>@media print{.pageBreak {page-break-after:always}}</style><body style='font-family:sans-serif;'>";
-				html+= document.getElementById(id).innerHTML;
+				html+= $ele.html();
 				html+="</body></html>";
 				
 				var printWin = window.open('','','left=0,top=0,width=600,height=600,toolbar=0,scrollbars=0,status=0');
@@ -1214,7 +1213,16 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					printWin.focus();
 					printWin.print();
 					printWin.close();
-					}
+					}				
+				}
+			else	{
+				$('#globalMessaging').anymessage({'message':'In app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
+				}
+			},
+
+		printByElementID : function(id)	{
+			if(id && $(app.u.jqSelector('#',id)).length)	{
+				this.printBySelector($(app.u.jqSelector('#',id)));
 				}
 			else	{
 				app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");
