@@ -116,23 +116,31 @@ HEADER STYLES
 	left: 30px;
 }
 
-#catNavRow1 div {
+#catNavRow3 {
+	position: absolute;
+	bottom: 14px;
+	left: 30px;
+}
+
+#catNavRow1 > div {
 	float: left;
 	position: relative;
 }
 
-#catNavRow2 div {
+#catNavRow2 > div {
 	float: left;
 	margin: 0px 10px;
 }
 
-.dropdown {height: 0px; overflow: hidden;}
-#catNavRow1 > div > .dropdown {
-	position: absolute;
-	top: 24px;
-	left:0px;
-	z-index:10;
-	width: 260px;
+#catNavRow3 > div {
+	float: left;
+	position: relative;
+	margin-right: 12px;
+}
+
+.dropdown {
+	height: 0px; 
+	overflow: hidden;
 	
 	background: none repeat scroll 0 0 #FFFFFF;
     border-color: #7088D3;
@@ -140,7 +148,24 @@ HEADER STYLES
     border-style: solid;
     border-width: 1px 1px 3px;
     box-shadow: 0 3px 5px 1px #CCCCCC;
+
+	position: absolute;
+	z-index:10;
 }
+#catNavRow1 > div > .dropdown {
+	top: 24px;
+	left:0px;
+	width: 260px;
+}
+
+#catNavRow3 > div > .dropdown {
+	top:24px;
+	left:0px;
+	
+	width: 520px;
+}
+
+#catNavRow3 > div > .dropdown > .dropdownLink{width:220px;margin-right:10px;}
 
 .dropdownLink {
 	background: url("img/cw12_drpmenu_arr-6x7.png") no-repeat scroll 5px 9px transparent;
@@ -152,9 +177,16 @@ HEADER STYLES
     padding: 1px 4px 1px 16px;
 	width: 100%;
 	float: left;
-	clear: left;
 }
 
+.dropdownSeeMore{
+	color: white;
+	background: #002675;
+	clear:both;
+	text-indent: 16px;
+	padding: 4px 0px;
+	width: 100%;
+}
 .dropdownLink:hover{color:#A40000;}
 /****************************************************************
 

@@ -83,6 +83,15 @@ var cubworld = function() {
 				$dropdown.stop().animate({"height":height+"px"}, 500);
 				},
 				
+			showDropDownClick : function($tag){
+				this.showDropDown($tag);
+				$('.dropdown',$tag).unbind('click');
+				$('.dropdown',$tag).click(function(event){event.stopPropagation()});
+				setTimeout(function(){$('body').click(function(){
+					app.ext.cubworld.a.hideDropDownClick($tag);
+					});}, 500);
+				},
+				
 			hideDropDown : function ($tag) {
 				//app.u.dump('hiding');
 				$(".dropdown", $tag).stop().animate({"height":"0px"}, 500);
@@ -91,6 +100,11 @@ var cubworld = function() {
 					$tag.data('timeout','false');
 				}
 				$tag.data('timeout',setTimeout(function(){$(".dropdown", $tag).hide();},500));
+				},
+				
+			hideDropDownClick : function($tag){
+				this.hideDropDown($tag);
+				$('body').unbind('click');
 				}
 			}, //Actions
 
