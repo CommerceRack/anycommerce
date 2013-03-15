@@ -188,6 +188,12 @@ HEADER STYLES
 	width: 100%;
 }
 .dropdownLink:hover{color:#A40000;}
+
+#headerLiveCam {
+	position:absolute;
+	bottom:14px;
+	right:8px;
+}
 /****************************************************************
 
 FOOTER STYLES
