@@ -69,33 +69,39 @@ var cubworld = function() {
 			
 			showDropDown : function ($tag) {
 				//app.u.dump('showing');
-				var $dropdown = $(".dropdown", $tag);
-				var height = 0;
-				$dropdown.show();
-				if($dropdown.data('height')){
-					height = $dropdown.data('height');
-				} else{
-					$dropdown.children().each(function(){
-						height += $(this).outerHeight();
-					});
-				}
-				if($tag.data('timeout') && $tag.data('timeout')!== "false"){
-					clearTimeout($tag.data('timeout'));
-					$tag.data('timeout','false');
-					
-				}
-				$dropdown.stop().animate({"height":height+"px"}, 500);
+				//console.log($tag.data('timeoutNoShow'));
+				if(!$tag.data('timeoutNoShow') || $tag.data('timeoutNoShow')=== "false") {
+					var $dropdown = $(".dropdown", $tag);
+					var height = 0;
+					$dropdown.show();
+					if($dropdown.data('height')){
+						height = $dropdown.data('height');
+					} else{
+						$dropdown.children().each(function(){
+							height += $(this).outerHeight();
+						});
+					}
+					if($tag.data('timeout') && $tag.data('timeout')!== "false"){
+						clearTimeout($tag.data('timeout'));
+						$tag.data('timeout','false');
+						
+					}
+					$dropdown.stop().animate({"height":height+"px"}, 500);
+					return true;
+					}
+				return false;
 				},
 				
 			showDropDownClick : function($tag){
-				app.u.dump('showClick');
-				this.showDropDown($tag);
-				$('.dropdown',$tag).unbind('click');
-				$('.dropdown',$tag).click(function(event){event.stopPropagation()});
-				$tag.attr('onClick','').unbind('click');
-				setTimeout(function(){$('body').click(function(){
-					app.ext.cubworld.a.hideDropDownClick($tag);
-					});}, 500);
+				//app.u.dump('showClick');
+				if(this.showDropDown($tag)){
+					$('.dropdown',$tag).unbind('click');
+					$('.dropdown',$tag).click(function(event){event.stopPropagation()});
+					$tag.attr('onClick','').unbind('click');
+					setTimeout(function(){$('body').click(function(){
+						app.ext.cubworld.a.hideDropDownClick($tag);
+						});}, 500);
+					}
 				},
 				
 			hideDropDown : function ($tag) {
@@ -106,13 +112,20 @@ var cubworld = function() {
 					$tag.data('timeout','false');
 				}
 				$tag.data('timeout',setTimeout(function(){$(".dropdown", $tag).hide();},500));
+				return true;
 				},
 				
 			hideDropDownClick : function($tag){
-				app.u.dump('hideClick');
+				//app.u.dump('hideClick');
+				if(this.hideDropDown($tag)){
+					$tag.click(function(){app.ext.cubworld.a.showDropDownClick($(this));});
+					$('body').unbind('click');
+					}
+				},
+				
+			hideDropDownOnSelect : function($tag){
 				this.hideDropDown($tag);
-				$tag.click(function(){app.ext.cubworld.a.showDropDownClick($(this));});
-				$('body').unbind('click');
+				$tag.data('timeoutNoShow', setTimeout(function(){$tag.data('timeoutNoShow', 'false');}, 500));
 				}
 			}, //Actions
 
