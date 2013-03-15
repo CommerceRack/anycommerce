@@ -46,18 +46,16 @@
 //
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 3a. # node demo1.js
+// 3a. change any of these variables:
+var TESTING_DOMAIN = "www.zoovy.com";
+var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
+// 3b. run: node nodeproxy.js
+// 3c. (as instructed) - configure your browser's proxy port
 
 
-// CREDITS
-// BASED HEAVILY ON:
-// HTTP forward proxy server that can also proxy HTTPS requests
-// using the CONNECT method
  
-// requires https://github.com/nodejitsu/node-http-proxy
- 
-
- 
+// these are all modules you may need to install 
+//	npm install modulename 
 var path = require('path'),
     fs = require('fs'),
 	httpProxy = require('http-proxy'),
@@ -65,100 +63,65 @@ var path = require('path'),
 	net = require('net'),
 	http = require('http'),
 	https = require('https'),
+	util = require('util'),
+	colors = require('colors'),
 	crypto = require('crypto');
  
- 
- 
+ var welcome = [
+'                     ______                                            ',
+'  ____  ____  __  __/ ____/___  ____ ___  ____ ___  ___  _____________ ',
+' / __ `/ __ \\/ / / / /   / __ \\/ __ `__ \\/ __ `__ \\/ _ \\/ ___/ ___/ _ \\',
+'/ /_/ / / / / /_/ / /___/ /_/ / / / / / / / / / / /  __/ /  / /__/  __/',
+'\__,_/_/ /_/\\__, /\\____/\\____/_/ /_/ /_/_/ /_/ /_/\\___/_/   \\___/\\___/ ',
+'           /____/   '
+].join('\n');
+util.puts(welcome.rainbow.bold);
+
+console.log("\n");
+console.log("INTERCEPT DOMAIN => "+TESTING_DOMAIN);
+console.log("HTTP/HTTPS Proxy => 127.0.0.1:8081");
+console.log("FILES SERVED FROM=> "+PROJECT_DIRECTORY);
+  
  var WEBSERVERoptions = {
   https: {
     key: fs.readFileSync('test.key', 'utf8'),
-    cert: fs.readFileSync('www.zoovy.com.crt', 'utf8')
+    cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
   }
-};
- 
-
-//
-// generic function to load the credentials context from disk
-//
-function getCredentialsContext (cer) {
-  return crypto.createCredentials({
-    // key:  fs.readFileSync(path.join(__dirname, 'certs', cer + '.key')),
-    key:  fs.readFileSync(path.join(__dirname, './', 'test.key')),
-    cert: fs.readFileSync(path.join(__dirname, './', cer + '.crt'))
-  }).context;
-}
-
-//
-// A certificate per domain hash
-//
-var certs = {
-  "www.zoovy.com":  getCredentialsContext("www.zoovy.com"),
-  };
-
-
-//
-// Proxy options
-//
-var REALHOST_PROXYoptions = {
-  target: {
-	https: true,
-	port : 8000, 
-    host : 'localhost',
-	},
- enable : {
-    xforward: true // enables X-Forwarded-For
-  },
 };
 
 //
 // LOCAL *FAKE* WEBSERVER - PORT 127.0.0.1:9000
 // https://gist.github.com/rpflorence/701407
 //
+//
+// Create a new instance of HttProxy to use in your server
+//
 var localWebserverPort = 9000;
+var FILEMISSINGproxy = new httpProxy.RoutingProxy();
 
-var subProxy = new httpProxy.RoutingProxy();
- http.createServer(function(req, res) {
-   var uri = url.parse(req.url).pathname, filename = path.join(process.cwd(), "../..", uri);
+http.createServer(function(req, res) {
+
+	var uri = url.parse(req.url).pathname, filename = path.join(PROJECT_DIRECTORY, uri);
    
-    
-  fs.exists(filename, function(exists) {
-    // if (!exists) {
-      // response.writeHead(404, {"Content-Type": "text/plain"});
-      // response.write("404 Not Found\n");
-      // response.end();
-      // return;
-    // }
-	if (!exists) {
-	  // no local file, so we 'll try and grab it remotely!
-	  if (req.headers.host) {
-			console.log("!!!!!!!!!!!!!!!!!!** FORWARDING MAGIC => "+req.headers.host+" **!!!!!!!!!!!!!!!!!!!!!!!!!");
-			
-			var buffer = httpProxy.buffer(req);
-			subProxy.proxyRequest(req, res, {
-				host: '192.168.99.100',
-				port: 81,
-				buffer: buffer
-				});
+	if (! fs.existsSync(filename)) {
+		// no local file, so we 'll try and grab it remotely!
+		console.log("!!!!!!!!!!!!!!!!!! FORWARD MAGIC "+req.headers.host+uri);
 
-			console.log(res);
-			console.log("!!!!!!!!!!!!!!!!!!** FINISHED FORWARDING MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
+		// if you want to simulate files not working.
+		// res.writeHead(404, {"Content-Type": "text/plain"});
+		// res.write("404 Local File Not Found - Additionally \"Host:\" Header Missing - forwarding not possible.\n");
+		// res.end();
+		// return
+		
+		// for now we'll do all our requests http (we still need a way to know if origin request was http or https)
+		FILEMISSINGproxy.proxyRequest(req, res, {
+			host: req.headers.host,
+			port: 80
+			});
 			
-			// var conn = net.connect(80, request.headers.host, function() {
-				// respond to the client that the connection was made
-				// socket.write("HTTP/1.1 200 OK\r\n\r\n");
-				// create a tunnel between the two hosts
-				// socket.pipe(conn);
-				// conn.pipe(socket);
-				// });
-			}
-		else {
-			res.writeHead(404, {"Content-Type": "text/plain"});
-			res.write("404 Local File Not Found - Additionally \"Host:\" Header Missing - forwarding not possible.\n");
-			res.end();
-			}
-		return;			
+		return;
 		}
- 
+	
 	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
  
     fs.readFile(filename, "binary", function(err, file) {
@@ -172,35 +135,48 @@ var subProxy = new httpProxy.RoutingProxy();
       res.writeHead(200);
       res.write(file, "binary");
       res.end();
-    });
-  });
-}).listen(parseInt(localWebserverPort, 10));
- 
- console.log("Static file server running at\n  => http://localhost:" + localWebserverPort + "/\nCTRL + C to shutdown");
+	});
+}).listen(parseInt(localWebserverPort));
+ // console.log("Static file server running at => http://localhost:" + localWebserverPort);
 
 // LOCAL *FAKE* HTTPS/HTTP PROXY SERVER (CONNECTS TO LOCAL *FAKE* WEBSERVER)
  var FAKEHOST_HTTPS_PROXY_options = {
 	https: {
 		key: fs.readFileSync('test.key', 'utf8'),
-		cert: fs.readFileSync('www.zoovy.com.crt', 'utf8')
+		cert: fs.readFileSync(TESTING_DOMAIN+'.crt', 'utf8')
 	}
 };
 httpProxy.createServer(localWebserverPort, 'localhost', FAKEHOST_HTTPS_PROXY_options).listen(9002);
-
-
-
+ // console.log("HTTPS proxy to static file server running at => http://localhost:9002");
 
 
 //
 // Create a standalone HTTP/HTTPS proxy server that will receive connections from port 8081
 //
 // https proxy
+//
+// Proxy options
+//
+var REALHOST_PROXYoptions = {
+  target: {
+	https: true,
+	port : 8000, 
+    host : 'localhost',
+	},
+ enable : {
+    xforward: true // enables X-Forwarded-For
+  },
+};
 httpProxy.createServer(REALHOST_PROXYoptions).listen(8001);
+ //console.log("Realhost proxy running at => http://localhost:8001");
+
 http.createServer(function (req, res) {
   res.writeHead(200, { 'Content-Type': 'text/plain' });
   res.write('hello https\n');
   res.end();
 }).listen(8000);
+  //console.log("Routing proxy running at => http://localhost:8000");
+
  
 process.on('uncaughtException', logError);
  
@@ -231,9 +207,9 @@ var proxyWebServer = http.createServer(function (req, res) {
 
   var parts = req.url.split(':', 2);
   console.log('REQ HOST:'+uri.host);
-  if (uri.host == "www.zoovy.com") {
+  if (uri.host == TESTING_DOMAIN) {
 	// we'll send this to the local server
-	console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
+	//console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
 	regularProxy.proxyRequest(req, res, {
 		host: '127.0.0.1',
 		port: 9000		
@@ -251,7 +227,7 @@ var proxyWebServer = http.createServer(function (req, res) {
 // when a CONNECT request comes in, the 'upgrade'
 // event is emitted
 proxyWebServer.on('upgrade', function(req, socket, head) {
-	console.log('running UPGRADE');
+	//console.log('running UPGRADE');
 	logRequest(req);
 	// URL is in the form 'hostname:port'
 	var parts = req.url.split(':', 2);
@@ -268,7 +244,7 @@ proxyWebServer.on('upgrade', function(req, socket, head) {
 // when a CONNECT request comes in, the 'upgrade'
 // event is emitted
 proxyWebServer.on('connect', function(req, socket, head) {
-	console.log('running CONNECT');
+	// console.log('running CONNECT');
 	logRequest(req);
 	// URL is in the form 'hostname:port'
 	var parts = req.url.split(':', 2);
@@ -277,8 +253,8 @@ proxyWebServer.on('connect', function(req, socket, head) {
 	// open a TCP connection to the remote host
 
 	console.log('REQ 0:'+parts[0]+" 1:"+parts[1]);
-	if (parts[0] == "www.zoovy.com") {
-		console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** HTTP MAGIC **!!!!!!!!!!!!!!!!!!!!!");
+	if (parts[0] == TESTING_DOMAIN) {
+		// console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!** HTTP MAGIC **!!!!!!!!!!!!!!!!!!!!!");
 		parts[0] = "127.0.0.1"; parts[1] = "9002";
 		}
 	
@@ -292,4 +268,14 @@ proxyWebServer.on('connect', function(req, socket, head) {
 });
 // proxyWebServer will accept connections on port 8081
 proxyWebServer.listen(8081);
+console.log("Ready to work\n .. use ctrl+C to exit\n");
+
+// CREDITS
+// BASED HEAVILY ON:
+// HTTP forward proxy server that can also proxy HTTPS requests
+// using the CONNECT method
+// requires https://github.com/nodejitsu/node-http-proxy
+
+// Copyright Zoovy, Inc. 2013
+// MIT-LICENSE
 
