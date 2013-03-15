@@ -18,10 +18,23 @@ body {
 }
 
 .clear{clear:both;}
-.previewListContainer{position:relative; z-index: 10001; background: white;}
-.previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
-.productQuickview{background: white; min-height: 469px;}
-#resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}
+
+
+.hideDialog .ui-dialog-titlebar-close,
+.hideDialog .ui-dialog-titlebar {
+	display: none;
+}
+
+.hideDialog.ui-dialog.ui-widget-content {
+	background: none;
+	border:none;
+}
+
+#appPreView {
+	background: white;
+	border: 2px solid #002675;
+}
+
 /****************************************************************
 
 HEADER STYLES
@@ -280,3 +293,33 @@ FOOTER STYLES
 	font-size: 8pt;
 	margin-bottom: 20px;
 }
+
+/****************************************************************
+
+HOMEPAGE STYLES
+
+****************************************************************/
+
+
+
+/****************************************************************
+
+CATEGORY STYLES
+
+****************************************************************/
+
+/****************************************************************
+
+PRODUCT STYLES
+
+****************************************************************/
+
+/****************************************************************
+
+SEARCH STYLES
+
+****************************************************************/
+.previewListContainer{position:relative; z-index: 10001; background: white;}
+.previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
+.productQuickview{background: white; min-height: 469px;}
+#resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}

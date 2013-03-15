@@ -1047,10 +1047,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					app.ext.myRIA.pageTransition($('#appPreView'),$('#appView'));
-					$('#appPreView').slideUp(1000,function(){
-						$('#'+infoObj.parentID).show(); //have to show content area here because the slideDown will only make the parent visible
-						$('#appView').slideDown(3000);
-						});
+					$('#appPreView').dialog('close');
+					$('#'+infoObj.parentID).show(); //have to show content area here because the slideDown will only make the parent visible
 					}
 				else if(infoObj.performTransition == false)	{
 					
