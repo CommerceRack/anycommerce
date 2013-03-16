@@ -8,8 +8,8 @@
 
      http://www.apache.org/licenses/LICENSE-2.0
 
-   Unless required by applicable law or agreed to in writing, software
    distributed under the License is distributed on an "AS IS" BASIS,
+   Unless required by applicable law or agreed to in writing, software
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -226,7 +226,13 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				qObj.type = 'product';
 				qObj.mode = 'elastic-native';
 				qObj.size = 250;
-				qObj.query =  {"query_string" : {"query" : keywords}};
+//				qObj.query =  {"query_string" : {"query" : keywords}};
+				qObj.query =  {
+					"filtered" : {
+						"query" : {"query_string" : {"query" : keywords}},
+						"filter" : {"not" : { "term" : {"tags":"IS_DISCONTINUED"}}}
+					}
+				};
 				if(typeof tagObj != 'object')	{tagObj = {}};
 				tagObj.datapointer = "appPublicSearch|"+keywords
 				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
@@ -238,7 +244,13 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				qObj.type = 'product';
 				qObj.mode = 'elastic-native';
 				qObj.size = 250;
-				qObj.query =  {"query_string" : {"query" : keywords, "fields" : attributes}};
+//				qObj.query =  {"query_string" : {"query" : keywords, "fields" : attributes}};
+				qObj.query =  {
+					"filtered" : {
+						"query" : {"query_string" : {"query" : keywords, "fields" : attributes}},
+						"filter" : {"not" : { "term" : {"tags":"IS_DISCONTINUED"}}}
+					}
+				};
 				if(typeof tagObj != 'object')	{tagObj = {}};
 				tagObj.datapointer = "appPublicSearch|"+keywords+"|"+attributes;
 				app.u.dump(" --> datapointer for filterByAttributes query: "+tagObj.datapointer);
