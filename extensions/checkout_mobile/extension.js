@@ -29,6 +29,7 @@ var orderCreate = function() {
 	'chkoutMethodsShipTemplate',
 	'chkoutNotesTemplate',
 	'chkoutBuyerAddressTemplate',
+	'chkoutBuyerWalletListItem', //used for each wallet in the stored payments section.
 	'chkoutMethodsPayTemplate', //payment option panel
 	'chkoutCompletedTemplate', //used after checkout to display order information.
 	'chkoutInvoiceItemTemplate'
@@ -653,10 +654,22 @@ an existing user gets a list of previous addresses they've used and an option to
 				else	{
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
 					if(app.u.buyerIsAuthenticated() && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
-						$("[data-app-role='paymentOptionsContainer']",$fieldset).anytabs();
+						
+						$("[data-app-role='storedPaymentsHeader']",$fieldset).show();
+						$("[data-app-role='storedPaymentsContent']",$fieldset).show();
+						$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).show();
+						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
+						
+						$("[data-app-role='paymentOptionsContainer']",$fieldset).accordion({
+							heightStyle: "content",
+						    active: 1 //show stores payments. new
+							});
 						}
 					else	{
-						$("[data-anytab-content='storedPaymentsContainer']").hide();
+						$("[data-app-role='storedPaymentsHeader']",$fieldset).hide();
+						$("[data-app-role='storedPaymentsContent']",$fieldset).hide();
+						$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).hide(); //header only needed if stored payments are present.
+						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
 						}
 					
 					}

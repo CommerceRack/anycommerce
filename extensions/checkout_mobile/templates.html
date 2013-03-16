@@ -241,20 +241,24 @@ do NOT change any div id's or messaging will not work properly.
 	<div data-app-role='paymentQContainer' class='marginBottom'>
 		<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@PAYMENTQ); format:processList; loadsTemplate:cartPaymentQTemplate;'></ul>
 	</div>
+	
+<!-- used in paypal transactions to cancel as paypal -->	
 	<div data-app-event='orderCreate|execChangeFromPayPal' class='displayNone'>
 	Choose Alternate Payment Method
 	</div>
+
+<!-- more payment types is first but, when applicable, stored payments is shown. That way stored payments are easily selected but it's hard to miss that other payment choices are available. -->
 	<div data-app-role='paymentOptionsContainer'>
-		<ul class='displayNone' data-app-role='paymentOptionsTabs'>
-			<li><a href="#storedPaymentsContainer">Existing Payments</a></li>
-			<li><a href="#nonStoredPaymentsContainer">More Options</a></li>
-		</ul>
-		<div data-anytab-content='storedPaymentsContainer'>
-			<table data-bind="var: buyerWalletList(@wallets); format:processList; loadsTemplate: buyerWalletsListItem;"></table>
-		</div>
-		<div data-anytab-content='nonStoredPaymentsContainer'>
+		
+		<h2 data-app-role='nonStoredPaymentsHeader' class='displayNone'>More Payment Choices</h2>
+		<div data-app-role='nonStoredPaymentsContent'>
 			<div data-app-event="orderCreate|addTriggerPayMethodUpdate" data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
 		</div>
+		
+		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Your Stored Payments</h2>
+		<div data-app-role='storedPaymentsContent' class='displayNone' data-bind="var: buyerWalletList(@wallets); format:processList; loadsTemplate: chkoutBuyerWalletListItem;"></div>
+
+
 	</div>
 
 </div>
@@ -367,13 +371,14 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 </ul>
 
 <!-- radio name is same as rest of payments so that only 1 can be selected and form still easily passes validation -->
-<table>
-	<tr id='buyerWalletsListItem'>
-		<td><input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" /></td>
-		<td data-bind="var: wallet(TD); format:text;"></td>
-		<td data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></td>
-	</tr>
-</table>
+
+<div id='chkoutBuyerWalletListItem'>
+	<label>
+		<input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" />
+		<span data-bind="var: wallet(TD); format:text;"></span>
+		<span data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></span>
+	</label>
+</div>
 
 
 <!--

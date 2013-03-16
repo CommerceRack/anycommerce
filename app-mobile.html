@@ -1437,7 +1437,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<li>Some JS test links
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
-		<li><a href='#' onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
+		<li><a href='#' onClick="app.ext.orderCreate.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
 	</ul>
 	</li>
@@ -1448,6 +1448,9 @@ The 'data-action' attribute is used to assign an onclick.
 	<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" />
 	<button>Search</button>
 </form>
+	</td>
+	<td>
+	<input type='text' name='destroy' placeholder='destroy' onBlur="app.model.destroy($(this).val());" />
 	</td>
 </tr>
 </table>
