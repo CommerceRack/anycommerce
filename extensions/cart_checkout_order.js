@@ -442,7 +442,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 */
 			nukePayPalEC : function() {
 //				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
-				$('#returnFromThirdPartyPayment').hide(); //used to display a 'welcome back' message. should be hidden if paypal is no longer active payment.
 				app.ext.convertSessionToOrder.vars['payment-pt'] = null;
 				app.ext.convertSessionToOrder.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){

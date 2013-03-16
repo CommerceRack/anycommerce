@@ -232,7 +232,7 @@ do NOT change any div id's or messaging will not work properly.
 
 <div id='chkoutMethodsPayTemplate'>
 
-	<div class='giftCardContainer'>
+	<div class='giftCardContainer' data-app-role="giftcardContainer">
 	<label for='giftcardCode'>Gift Certificate Code:</label>
 	<input type='text' name='giftcard' size='16'  data-app-event='convertSessionToOrder|addTriggerButtonClick' />
 	<button data-app-event='convertSessionToOrder|execGiftcardAdd'>add</button>
@@ -241,7 +241,9 @@ do NOT change any div id's or messaging will not work properly.
 	<div data-app-role='paymentQContainer' class='marginBottom'>
 		<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@PAYMENTQ); format:processList; loadsTemplate:cartPaymentQTemplate;'></ul>
 	</div>
-
+	<div data-app-event='convertSessionToOrder|execChangeFromPayPal' class='displayNone'>
+	Choose Alternate Payment Method
+	</div>
 	<div data-app-role='paymentOptionsContainer'>
 		<ul class='displayNone' data-app-role='paymentOptionsTabs'>
 			<li><a href="#storedPaymentsContainer">Existing Payments</a></li>
@@ -381,7 +383,7 @@ do NOT change the input name or id or checkout will likely break.
 
 <div id='chkoutNotesTemplate'>
 <p>Please include any special instructions or comments here:</p>
-<textarea class='chkoutOrderNotes' name='want/order_notes' data-app-event='convertSessionToOrder|execCartSet' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
+<textarea class='chkoutOrderNotes fullWidth' name='want/order_notes' data-app-event='convertSessionToOrder|execCartSet' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
 </div>
 
 

@@ -510,7 +510,7 @@ payment options, pricing, etc
 				var authState = app.u.determineAuthentication(),
 				createCustomer = formObj['want/create_customer'];
 
-				if(authState == 'authenticated' || authState == 'thirdPartyGuest')	{
+				if(authState == 'authenticated' || authState == 'thirdPartyGuest'  || app.ext.cco.u.thisSessionIsPayPal())	{
 					$fieldset.hide();
 					}
 				else {
@@ -529,7 +529,16 @@ a guest checkout gets just a standard address entry.
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
 			chkoutAddressBill : function(formObj,$fieldset)	{
-				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
+				if(app.ext.cco.u.thisSessionIsPayPal()){
+					$("[data-app-role='addressExists']",$fieldset).hide();
+					$("[data-app-role='addressNew']",$fieldset).show();
+					
+					$("[name='want/bill_to_ship']",$fieldset).attr({'disabled':'disabled'}).removeAttr('checked'); //!! may want to set this to 0 as part of return from paypal scripts.
+					//name is provided by facebook and can't be changed.
+					$("[name='bill/firstname'], [name='bill/lastname']",$fieldset).attr('disabled','disabled');
+
+					}
+				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['bill/shortcut'])	{
@@ -548,10 +557,21 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressBill
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
-				if(formObj['want/bill_to_ship'] == 'on')	{$fieldset.hide()}
+				
+				if(formObj['want/bill_to_ship'] == 'on' && !app.ext.cco.u.thisSessionIsPayPal())	{$fieldset.hide()}
 				else	{$fieldset.show()}
 				
-				if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
+				if(app.ext.cco.u.thisSessionIsPayPal()){
+					$("[data-app-role='addressExists']",$fieldset).hide();
+					$("[data-app-role='addressNew']",$fieldset).show();
+//disable all shipping address inputs that are populated (by paypal) and select lists
+					$("input,select",$fieldset).each(function(){
+						if($(this).val() != '')	{
+							$(this).attr('disabled','disabled')
+							}
+						});
+					}
+				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
 					$("[data-app-role='addressExists']",$fieldset).show();
 					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
@@ -574,7 +594,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
-
+//if it is decided not to hide the panel, the radio buttons must be locked/disabled.
 				if(app.ext.cco.u.thisSessionIsPayPal())	{
 					$fieldset.hide();
 					}
@@ -626,6 +646,9 @@ an existing user gets a list of previous addresses they've used and an option to
 				if(app.ext.cco.u.thisSessionIsPayPal())	{
 //this is a paypal session. payment methods are not available any longer. stored payments are irrelevant. show paymentQ
 //also show a message to allow the merchant to remove the paypal payment option and use a different method?
+					$("[data-app-role='giftcardContainer']",$fieldset).hide();
+					$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
+					$("[data-app-event='convertSessionToOrder|execChangeFromPayPal']").show();
 					}
 				else	{
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
@@ -870,7 +893,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				}, //execBuyerLogin
 
 			execCartOrderCreate : function($btn)	{
-//				$btn.button();
+				$btn.addClass('ui-state-highlight').button();
+
 				$btn.off('click.execCartOrderCreate').on('click.execCartOrderCreate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
@@ -906,6 +930,21 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.dispatchThis('immutable');
 					})
 				}, //execCartSet
+
+			execChangeFromPayPal : function($ele)	{
+				$ele.off('click.execChangeFromPayPal').on('click.execChangeFromPayPal',function(){
+					app.ext.cco.u.nukePayPalEC();
+					var $form = $ele.closest('form');
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({callback:function(){
+						app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.convertSessionToOrder.u.handleCommonPanels($form);
+						}},'immutable');
+					});
+					app.model.dispatchThis('immutable');
+				
+				},
 
 			execCountryUpdate : function($sel)	{
 				//recalculate the shipping methods and payment options.
@@ -1090,7 +1129,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 		u : {
 			
-			
+//Combines the various data objects into one, so that they can be fed into the translator and rendered in one pass.
 			extendedDataForCheckout : function()	{
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				if(app.u.buyerIsAuthenticated())	{
