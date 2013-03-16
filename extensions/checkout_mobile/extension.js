@@ -17,7 +17,7 @@
 
 ************************************************************** */
 
-var convertSessionToOrder = function() {
+var orderCreate = function() {
 	var theseTemplates = new Array(
 	'checkoutTemplate', //container for whole checkout page.
 	'chkoutPreflightTemplate',
@@ -53,7 +53,7 @@ var convertSessionToOrder = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.init.onSuccess');
+//				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
 				if(app.vars._clientid == '1pc')	{
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
@@ -71,7 +71,7 @@ var convertSessionToOrder = function() {
 //messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
 					$('#globalMessaging').anymessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'});
-					$('#'+app.ext.convertSessionToOrder.vars.containerID).append("");
+					$('#'+app.ext.orderCreate.vars.containerID).append("");
 					r = true;
 					}
 				else	{
@@ -84,12 +84,12 @@ var convertSessionToOrder = function() {
 					this.onError();
 					}
 				return r;
-//				app.u.dump('END app.ext.convertSessionToOrder.init.onSuccess');
+//				app.u.dump('END app.ext.orderCreate.init.onSuccess');
 				},
 			onError : function()	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.init.error');
+				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
 				//This would be reached if a templates was not defined in the view.
-				$('#'+app.ext.convertSessionToOrder.vars.containerID);
+				$('#'+app.ext.orderCreate.vars.containerID);
 				}
 			}, //init
 
@@ -97,7 +97,7 @@ var convertSessionToOrder = function() {
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
+				app.u.dump('BEGIN orderCreate[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
 				window.location = app.data[tagObj.datapointer].URL
 				},
 			onError : function(responseData,uuid)	{
@@ -109,19 +109,19 @@ var convertSessionToOrder = function() {
 //mostly used for the error handling.
 		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
+				app.ext.orderCreate.calls.showCheckoutForm.init();
 				app.model.dispatchThis('immutable');
 				},
 			onError : function(responseData,uuid)	{
-				app.u.dump('BEGIN convertSessionToOrder[nice].callbacks.handlePayPalIntoPaymentQ.onError');
+				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onError');
 				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
 				responseData.persistant = true;
 				app.u.throwMessage(responseData);
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
 				app.ext.cco.u.nukePayPalEC();
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();
+				app.ext.orderCreate.calls.showCheckoutForm.init();
 				app.model.dispatchThis('immutable');
 				}
 			},		
@@ -150,7 +150,7 @@ var convertSessionToOrder = function() {
 				},
 			onError : function(responseData,uuid)	{
 				app.u.dump("handleInventoryUpdate.error");
-				app.ext.convertSessionToOrder.panelContent.paymentOptions();
+				app.ext.orderCreate.panelContent.paymentOptions();
 //global errors are emptied when 'complete order' is pushed, so do not empty in the responses or any other errors will be lost.
 				app.u.throwMessage(responseData);
 				}
@@ -165,7 +165,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 */
 		showInvoice : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
+				app.u.dump('BEGIN app.ext.orderCreate.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
 				$('body').hideLoading();
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $checkout = tagObj.jqObj,
@@ -210,17 +210,17 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 _gaq.push(['_trackEvent','Checkout','App Event','Order created']);
 _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')']);
 
-				if(app.ext.convertSessionToOrder.checkoutCompletes)	{
-					var L = app.ext.convertSessionToOrder.checkoutCompletes.length;
+				if(app.ext.orderCreate.checkoutCompletes)	{
+					var L = app.ext.orderCreate.checkoutCompletes.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.ext.convertSessionToOrder.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+						app.ext.orderCreate.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
 						}
 					}
 
 
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-	setTimeout("$('#"+app.ext.convertSessionToOrder.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
+	setTimeout("$('#"+app.ext.orderCreate.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
 	}
 else	{
 	//roi code should be handled by the app itself, not use the output from the UI
@@ -269,8 +269,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						var $fieldset = $(this),
 						role = $(this).data('app-role');
 						
-						if(role && typeof app.ext.convertSessionToOrder.validate[role] === 'function')	{
-							sum += app.ext.convertSessionToOrder.validate[role]($fieldset,formObj);
+						if(role && typeof app.ext.orderCreate.validate[role] === 'function')	{
+							sum += app.ext.orderCreate.validate[role]($fieldset,formObj);
 							}
 						else	{
 							errors += "<div>validate role ["+role+"] is not a function<\/div>";
@@ -280,7 +280,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					
 					if(errors != '')	{
 						r = false;
-						$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
 						}
 					else if(sum == $fieldsets.length)	{
 						r = true;
@@ -292,7 +292,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					r = false;
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.checkout, $form was not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, $form was not passed.','gMessage':true});
 					}
 
 				return r;
@@ -307,7 +307,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					else {valid = 0}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
 					}
 				app.u.dump(" -> cs2o.validate.chkoutPreflight: "+valid);
 				return valid;
@@ -329,7 +329,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					else	{valid = 0;} //didn't pass the basic validation.
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
 					}
 				app.u.dump(" -> cs2o.validate.chkoutAccountCreate: "+valid);
 				return valid;
@@ -349,7 +349,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
 					}
 
 				app.u.dump(" -> cs2o.validate.chkoutMethodsShip: "+valid);
@@ -371,7 +371,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
 					}
 				app.u.dump(" -> cs2o.validate.chkoutMethodsPay: "+valid);
 				return valid;
@@ -409,7 +409,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
 					}
 
 				app.u.dump(" -> cs2o.validate.chkoutAddressBill: "+valid);
@@ -441,7 +441,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					valid = 0;
-					$('#globalMessaging').anymessage({'message':'In convertSessionToOrder.validate.chkoutAddressShip, $form or formObj not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressShip, $form or formObj not passed.','gMessage':true});
 					}
 
 				app.u.dump(" -> cs2o.validate.chkoutAddressShip: "+valid);
@@ -484,7 +484,7 @@ after a login occurs, all the panels are updated because the users account could
 payment options, pricing, etc
 */
 			chkoutPreflight : function(formObj,$fieldset)	{
-//				app.u.dump("BEGIN convertSessionToOrder.panelDisplayLogic.chkoutPreflight");
+//				app.u.dump("BEGIN orderCreate.panelDisplayLogic.chkoutPreflight");
 //If the user is logged in, no sense showing password or create account prompts.
 				if(app.u.buyerIsAuthenticated() || app.ext.cco.u.thisSessionIsPayPal())	{
 					app.u.dump(" -> session is authenticated OR this is an authorized paypal transaction.");
@@ -505,7 +505,7 @@ payment options, pricing, etc
 				}, //preflight
 
 			chkoutAccountCreate : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN convertSessionToOrder.panelDisplayLogic.chkoutAccountCreate');
+//				app.u.dump('BEGIN orderCreate.panelDisplayLogic.chkoutAccountCreate');
 				
 				var authState = app.u.determineAuthentication(),
 				createCustomer = formObj['want/create_customer'];
@@ -590,7 +590,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressShip
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.panelContent.shipMethods');
+//				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
 
 				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
@@ -648,7 +648,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //also show a message to allow the merchant to remove the paypal payment option and use a different method?
 					$("[data-app-role='giftcardContainer']",$fieldset).hide();
 					$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
-					$("[data-app-event='convertSessionToOrder|execChangeFromPayPal']").show();
+					$("[data-app-event='orderCreate|execChangeFromPayPal']").show();
 					}
 				else	{
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
@@ -686,7 +686,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 		a : {
 			
 			startCheckout : function($chkContainer)	{
-				app.u.dump("BEGIN convertSessionToOrder.a.startCheckout");
+				app.u.dump("BEGIN orderCreate.a.startCheckout");
 				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length)	{
@@ -705,7 +705,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 					app.model.destroy('cartDetail');
 					
-					app.ext.convertSessionToOrder.u.handlePaypalInit(); //handles paypal code, including paymentQ update.
+					app.ext.orderCreate.u.handlePaypalInit(); //handles paypal code, including paymentQ update.
 					
 					app.calls.cartDetail.init({'callback':function(rd){
 						$chkContainer.hideLoading(); //always hideloading, errors or no, so interface is still usable.
@@ -715,14 +715,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							if(app.data.cartDetail['@ITEMS'].length)	{
 //NOTE - this should only be done once. panels should be updated individually from there forward.
-								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.convertSessionToOrder.u.extendedDataForCheckout()}); 
+								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()}); 
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
 									
 									$fieldset.addClass('ui-corner-all');
 									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
-									app.ext.convertSessionToOrder.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
+									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
 									});
 								}
 							else	{
@@ -734,7 +734,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.model.dispatchThis('immutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'in convertSessionToOrder.a.startCheckout, no $chkContainer not passed or does not exist.'});
+					$('#globalMessaging').anymessage({'message':'in orderCreate.a.startCheckout, no $chkContainer not passed or does not exist.'});
 					}
 				} //startCheckout
 			
@@ -762,7 +762,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$input.off("change.addTriggerPayMethodUpdate").on("change.addTriggerPayMethodUpdate", function(){
 						app.ext.cco.calls.cartSet.init({'want/payby':$input.val()});
 						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
-						app.ext.convertSessionToOrder.u.showSupplementalInputs($input);
+						app.ext.orderCreate.u.showSupplementalInputs($input);
 						
 						});
 					})
@@ -777,7 +777,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$rb.off("change.addTriggerShipMethodUpdate").on("change.addTriggerShipMethodUpdate", function(){
 						app.calls.cartSet.init({'want/shipping_id':shipID}); 
 						//destroys cart and updates big three panels (shipping, payment and summary)
-						app.ext.convertSessionToOrder.u.handleCommonPanels($ul.closest('form'));
+						app.ext.orderCreate.u.handleCommonPanels($ul.closest('form'));
 						app.model.dispatchThis("immutable");
 						});
 					})
@@ -789,7 +789,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var obj = {};
 					obj[$input.attr('name')] = $input.val();
 					app.calls.cartSet.init(obj); //update the cart
-					app.ext.convertSessionToOrder.u.handleCommonPanels($input.closest('form'));
+					app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
 					app.model.dispatchThis('immutable');
 					})
 				}, //execAddressUpdate
@@ -811,11 +811,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						var cartUpdate = {};
 						cartUpdate[addressType+"/shortcut"] = addressID; 
 						app.calls.cartSet.init(cartUpdate); //no need to populate address fields, shortcut handles that.
-						app.ext.convertSessionToOrder.u.handleCommonPanels($form);
+						app.ext.orderCreate.u.handleCommonPanels($form);
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$btn.closest('fieldset').anymessage({'message':'In convertSessionToOrder.e.execBuyerAddressSelect','gMessage':true});
+						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect','gMessage':true});
 						}
 					});
 				},
@@ -859,20 +859,20 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 								app.calls.buyerAddressList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero addesses, the function below will just show the new address form.
-									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
-									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 									}},'immutable');
 	
 								app.calls.buyerWalletList.init({'callback':function(){
 //no error handling needed. if call fails or returns zero wallets, the function below will just show the new default payment options.
-									app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+									app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 									}},'immutable');
 								app.model.dispatchThis('immutable');
 
 //no content changes here, but potentially some display changes.
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAccountCreate',['handleDisplayLogic']);
+								app.ext.orderCreate.u.handlePanel($form,'chkoutAccountCreate',['handleDisplayLogic']);
 //here, content does change. the cart will now contain a username, which is needed on the display.
-								app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
+								app.ext.orderCreate.u.handlePanel($form,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
 								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 								}
 							}});
@@ -900,14 +900,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $btn.closest('form');
 					
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
-					if($("input[name='want/payby']").val() == 'PAYPALEC' && !app.ext.convertSessionToOrder.vars['payment-pt'])	{
+					if($("input[name='want/payby']").val() == 'PAYPALEC' && !app.ext.orderCreate.vars['payment-pt'])	{
 						$('body').showLoading({'message':'Transferring you to PayPal to authorize payment'});
 						app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
 						}
 					else	{
 					
-						if(app.ext.convertSessionToOrder.validate.checkout($form))	{
-							app.ext.convertSessionToOrder.u.saveAllCheckoutFields($form);
+						if(app.ext.orderCreate.validate.checkout($form))	{
+							app.ext.orderCreate.u.saveAllCheckoutFields($form);
 							app.ext.cco.u.buildPaymentQ();
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'showInvoice','jqObj':$form});
 							app.model.dispatchThis('immutable');						
@@ -937,9 +937,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $ele.closest('form');
 					app.model.destroy('cartDetail');
 					app.calls.cartDetail.init({callback:function(){
-						app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
-						app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-						app.ext.convertSessionToOrder.u.handleCommonPanels($form);
+						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+						app.ext.orderCreate.u.handleCommonPanels($form);
 						}},'immutable');
 					});
 					app.model.dispatchThis('immutable');
@@ -952,7 +952,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var obj = {};
 					obj[$sel.attr('name')] = $sel.val();
 					app.calls.cartSet.init(obj); //update the cart w/ the country.
-					app.ext.convertSessionToOrder.u.handleCommonPanels($sel.closest('form'));
+					app.ext.orderCreate.u.handleCommonPanels($sel.closest('form'));
 					app.model.dispatchThis('immutable');
 					})
 				}, //execCountryUpdate
@@ -979,12 +979,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							$input.val(''); //reset input only on success.  allows for a typo to be corrected.
 							$fieldset.anymessage(app.u.successMsgObject('Your coupon has been added.'));
-							app.ext.convertSessionToOrder.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
 //							_gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added']);
 							}
 
 						}});
-					app.ext.convertSessionToOrder.u.handleCommonPanels($form);
+					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					})
 				}, //execCouponAdd
@@ -1014,7 +1014,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 
 						}});
-					app.ext.convertSessionToOrder.u.handleCommonPanels($input.closest('form'));
+					app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
 					app.model.dispatchThis('immutable');
 					})
 				}, //execGiftcardAdd
@@ -1068,7 +1068,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									else	{
 //by here, the new address has been created.
 //set appropriate address panel to loading.
-										app.ext.convertSessionToOrder.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+										app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
 //update cart and set shortcut as address.
 										updateObj[addrType+'/shortcut'] = formObj.shortcut;
 										app.ext.cco.calls.cartSet.init(updateObj,{});
@@ -1079,11 +1079,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 //get the updated address list and update the address panel.
 										app.model.destroy('buyerAddressList');
 										app.calls.buyerAddressList.init({'callback':function(rd){
-											app.ext.convertSessionToOrder.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
+											app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
 											}},'immutable');
 
 //update appropriate address panel plus big three.
-										app.ext.convertSessionToOrder.u.handleCommonPanels($checkoutForm);
+										app.ext.orderCreate.u.handleCommonPanels($checkoutForm);
 										app.model.dispatchThis('immutable');
 //close modal.
 										$addrModal.dialog('close');
@@ -1100,7 +1100,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$addrModal.dialog('open');
 						}
 					else	{
-						$btn.closest('fieldset').anymessage({'message':'In convertSessionToOrder.e.showBuyerAddressAdd, addrType is either undefined or an unsupported value ['+addrType+']','gMessage':true});
+						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.showBuyerAddressAdd, addrType is either undefined or an unsupported value ['+addrType+']','gMessage':true});
 						}
 					})
 				},
@@ -1109,14 +1109,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$cb.anycb;
 				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
 					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
-					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
 					});
 				},
 			
 			tagAsBillToShip : function($cb)	{
 				$cb.anycb();
 				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
-					app.ext.convertSessionToOrder.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
+					app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
 					app.calls.cartSet.init({'want/bill_to_ship':($cb.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
 					app.model.dispatchThis('immutable');
 					});
@@ -1159,17 +1159,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 					ao.empty = function(formObj, $fieldset){app.u.dump(" -> emptying "+role);$(".panelContent",$fieldset).empty()},
 					ao.handleAppEvents = function(formObj, $fieldset){app.u.handleAppEvents($fieldset)},
 					ao.handleDisplayLogic = function(formObj, $fieldset){
-						if(typeof app.ext.convertSessionToOrder.panelDisplayLogic[role] === 'function')	{
-							app.ext.convertSessionToOrder.panelDisplayLogic[role](formObj,$fieldset);
+						if(typeof app.ext.orderCreate.panelDisplayLogic[role] === 'function')	{
+							app.ext.orderCreate.panelDisplayLogic[role](formObj,$fieldset);
 							}
 						else	{
-							$fieldset.anymessage({'message':'In convertSessionToOrder.u.handlePanel, panelDisplayLogic['+role+'] not a function','gMessage':true});
+							$fieldset.anymessage({'message':'In orderCreate.u.handlePanel, panelDisplayLogic['+role+'] not a function','gMessage':true});
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
 						app.u.dump(" -> translating "+role);
-//						app.u.dump("app.ext.convertSessionToOrder.u.extendedDataForCheckout()"); app.u.dump(app.ext.convertSessionToOrder.u.extendedDataForCheckout());
-						$fieldset.anycontent({'data' : app.ext.convertSessionToOrder.u.extendedDataForCheckout()});
+//						app.u.dump("app.ext.orderCreate.u.extendedDataForCheckout()"); app.u.dump(app.ext.orderCreate.u.extendedDataForCheckout());
+						$fieldset.anycontent({'data' : app.ext.orderCreate.u.extendedDataForCheckout()});
 						} //populates the template.
 					
 					for(var i = 0; i < L; i += 1)	{
@@ -1177,13 +1177,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 							ao[actions[i]](formObj, $fieldset);
 							}
 						else	{
-							$('#globalMessaging').anymessage({'message':"In convertSessionToOrder.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
+							$('#globalMessaging').anymessage({'message':"In orderCreate.u.handlePanel, undefined action ["+actions[i]+"]",'gMessage':true});
 							}
 						}
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':"In convertSessionToOrder.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
+					$('#globalMessaging').anymessage({'message':"In orderCreate.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
 					}
 				},
 
@@ -1191,16 +1191,16 @@ note - the order object is available at app.data['order|'+P.orderID]
 //sets payment options, shipping options and cart summary to loading, then adds immutable dispatches/callbacks/etc for updating.
 //does NOT dispatch. That way, other requests can be piggy-backed.
 			handleCommonPanels : function($context)	{
-				app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
-				app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
-				app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
+				app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['showLoading']);
+				app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['showLoading']);
+				app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
 				
 				app.model.destroy('cartDetail');
 				app.ext.cco.calls.appPaymentMethods.init({},{},'immutable'); //update pay and ship anytime either address changes.
 				app.calls.cartDetail.init({'callback':function(){
-					app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-					app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
-					app.ext.convertSessionToOrder.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
+					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+					app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					}},'immutable');
 				}, //handleCommonPanels
 
@@ -1214,9 +1214,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var payerid = app.u.getParameterByName('PayerID');
 				if(token && payerid)	{
 					app.u.dump("It appears we've just returned from PayPal.");
-					app.ext.convertSessionToOrder.vars['payment-pt'] = token;
-					app.ext.convertSessionToOrder.vars['payment-pi'] = payerid;
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"convertSessionToOrder","callback":"handlePayPalIntoPaymentQ"});
+					app.ext.orderCreate.vars['payment-pt'] = token;
+					app.ext.orderCreate.vars['payment-pi'] = payerid;
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
 				else if(app.ext.cco.u.thisSessionIsPayPal())	{
@@ -1240,7 +1240,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
 					$("[data-app-role='supplementalPaymentInputsContainer']",$fieldset).empty().remove(); //must be removed so form inputs are not present.
 					
-					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.convertSessionToOrder.vars);
+					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars);
 					if($supplementalOutput)	{
 						$label.addClass("ui-state-active ui-corner-top");
 						$supplementalOutput.addClass('ui-corner-bottom ui-widget ui-widget-content').appendTo($pmc);
@@ -1262,7 +1262,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					_tag = _tag || {};
 					var formObj = $form.serializeJSON();
 //po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
-					if(app.ext.convertSessionToOrder.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
+					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
 						}
 //these aren't valid checkout field. used only for some logic processing.
@@ -1282,11 +1282,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			handleChangeFromPayPalEC : function()	{
 //				app.ext.cco.u.nukePayPalEC(); //kills all local and session paypal payment vars
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutPayOptions');
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutBillAddress');
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutShipAddress');
-				app.ext.convertSessionToOrder.u.handlePanel('chkoutShipMethods');
-				app.ext.convertSessionToOrder.calls.showCheckoutForm.init();  //handles all calls.
+				app.ext.orderCreate.u.handlePanel('chkoutPayOptions');
+				app.ext.orderCreate.u.handlePanel('chkoutBillAddress');
+				app.ext.orderCreate.u.handlePanel('chkoutShipAddress');
+				app.ext.orderCreate.u.handlePanel('chkoutShipMethods');
+				app.ext.orderCreate.calls.showCheckoutForm.init();  //handles all calls.
 				app.model.dispatchThis('immutable');
 				}, //handleChangeFromPayPalEC
 
@@ -1307,7 +1307,7 @@ note - predefined addresses are hidden and the form is shown so that if the user
 
 */
 			handlePaypalFormManipulation : function()	{
-			app.u.dump("BEGIN convertSessionToOrder.u.handlePaypalFormManipulation ");
+			app.u.dump("BEGIN orderCreate.u.handlePaypalFormManipulation ");
 			if(app.data.cartPaypalGetExpressCheckoutDetails && app.data.cartPaypalGetExpressCheckoutDetails['_msgs'])	{
 				//an error occured. error message is displayed as part of callback.
 				}
@@ -1322,7 +1322,7 @@ $billToShipCB.attr('disabled','disabled')
 if($billToShipCB.is(':checked'))	{
 //code didn't like running a .click() here. the trigered function registered the checkbox as checked.
 	$billToShipCB.removeAttr("checked");
-	app.ext.convertSessionToOrder.u.toggleShipAddressPanel();
+	app.ext.orderCreate.u.toggleShipAddressPanel();
 	}
 //hide all bill/ship predefined addresses.
 $('#chkoutBillAddressFieldset address').hide();
@@ -1398,7 +1398,7 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 				}, //shipMethodsAsRadioButtons
 
 			payMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.payOptionsAsRadioButtons');
+//				app.u.dump('BEGIN app.ext.orderCreate.renderFormats.payOptionsAsRadioButtons');
 //				app.u.dump(data);
 
 				var L = data.value.length,
@@ -1429,7 +1429,7 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 //if a payment method has been selected, show the supplemental inputs.
 					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
 						var $radio = $("input[value='"+app.data.cartDetail.want.payby+"']",$tag),
-						$supplemental = app.ext.convertSessionToOrder.u.showSupplementalInputs($radio,app.ext.convertSessionToOrder.vars);
+						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
 						
 						app.u.dump(" -> $radio.length: "+$radio.length);
 						app.u.dump(" -> $supplemental: "+$supplemental);

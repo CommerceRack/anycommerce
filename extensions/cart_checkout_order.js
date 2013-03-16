@@ -193,7 +193,7 @@ left them be to provide guidance later.
 				return 1;
 				},
 			dispatch : function(getBuyerAddress)	{
-				var _tag = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
+				var _tag = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"orderCreate"}
 				app.model.addDispatchToQ({
 					"_cmd":"cartPaypalSetExpressCheckout",
 					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
@@ -240,9 +240,8 @@ left them be to provide guidance later.
 				return r;
 				},
 			onError : function()	{
-				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.init.error');
+				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
 				//This would be reached if a templates was not defined in the view.
-				$('#'+app.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG');
 				}
 			}, //init
 
@@ -373,7 +372,7 @@ left them be to provide guidance later.
 
 //will get the items from a cart and return them as links. used for social marketing.
 			cartContentsAsLinks : function(datapointer)	{
-//				app.u.dump('BEGIN convertSessionToOrder.uities.cartContentsAsLinks.');
+//				app.u.dump('BEGIN cco.u.cartContentsAsLinks.');
 //				app.u.dump(' -> datapointer = '+datapointer);
 				var r = "";
 				var L = app.model.countProperties(app.data.cartDetail['@ITEMS']);
@@ -442,8 +441,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 */
 			nukePayPalEC : function() {
 //				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
-				app.ext.convertSessionToOrder.vars['payment-pt'] = null;
-				app.ext.convertSessionToOrder.vars['payment-pi'] = null;
+				app.ext.orderCreate.vars['payment-pt'] = null;
+				app.ext.orderCreate.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
 					});
@@ -497,6 +496,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //data is a data object, such as cartDetail or an invoice.
 //isAdmin is used to determine if additional output is included (flag as paid checkbox and some other inputs)
 // SANITY -> checkout uses the required attribute for validation. do not remove!
+// when switching between payment types and supplemental inputs, always REMOVE the old supplemental inputs. keeps it clean & checkout doesn't like extra vars.
 			getSupplementalPaymentInputs : function(paymentID,data,isAdmin)	{
 //				app.u.dump("BEGIN control.u.getSupplementalPaymentInputs ["+paymentID+"]");
 //				app.u.dump(" -> data:"); app.u.dump(data);
@@ -623,7 +623,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
 //so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
 			countriesAsOptions : function($tag,data)	{
-//				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
+//				app.u.dump("BEGIN app.ext.cco.renderFormats.countriesAsOptions");
 //				app.u.dump(" -> Country: "+data.value);
 				var r = '';
 				var L = app.data.appCheckoutDestinations['@destinations'].length;
@@ -641,7 +641,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				
 				
 			secureLink : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.secureLink');
+//				app.u.dump('BEGIN app.ext.cco.renderFormats.secureLink');
 //				app.u.dump(" -> data.windowName = '"+data.windowName+"'");
 //if data.windowName is set, the link will open a new tab/window. otherwise, it just changes the page/tab in focus.
 				if(app.u.isSet(data.windowName))
@@ -652,7 +652,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 
 			orderStatusLink : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.renderFormats.orderStatusLink');
+//				app.u.dump('BEGIN app.ext.cco.renderFormats.orderStatusLink');
 				var orderCartID = app.data['order|'+data.value].cart.cartid;
 //				https://ssl.zoovy.com/s=sporks.zoovy.com/customer/order/status?cartid=SESSION&orderid=data.value
 				$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+"customer/order/status?cartid="+orderCartID+"&orderid="+data.value,'orderStatus'});
@@ -683,7 +683,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				}, //shipInfoById
 
 			shipMethodsAsOptions : function($tag,data)	{
-//				app.u.dump('BEGIN app.ext.convertSessionToOrder.formats.shipMethodsAsOptions');
+//				app.u.dump('BEGIN app.ext.cco.formats.shipMethodsAsOptions');
 				var o = '';
 				var L = data.value.length;
 
@@ -705,7 +705,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 					o += "<option "
 					if(isSelectedMethod)
 						o+= " selected='selected' ";
-					o += " value = '"+id+"' id='ship-selected_id_"+safeid+"' >"+shipName+" - "+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/option>";
+					o += " value = '"+id+"' >"+shipName+" - "+app.u.formatMoney(data.value[i].amount,'$','',false)+"<\/option>";
 					}
 				$tag.html(o);
 				},
