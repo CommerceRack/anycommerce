@@ -664,7 +664,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div class="catNavContent">
 				<!--<p class="prevCat navCats"></p>-->
 				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
-				<p class="currentCat">All Categories</p>
+				<p class="currentCat">The Hobbit</p>
 				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
 				<!--<p class="nextCat navCats"></p>-->
 			</div>
@@ -672,8 +672,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		<div class="catCarousel">
 			<div class="ccItem">
-				<h2>All Categories</h2>
-				<ul id="carCat1" data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+				<h2>The Hobbit</h2>
+				<ul id="carCat1" data-bind='var: elastic-native({"size":"10","mode":"elastic-native","query":{"query_string":{"query":"hobbit"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA;loadsTemplate: productListTemplateResults; withInventory: 1;before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>Star Wars</h2>
