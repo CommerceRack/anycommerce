@@ -936,7 +936,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(app.ext.orderCreate.validate.checkout($form))	{
 							app.ext.orderCreate.u.saveAllCheckoutFields($form);
 							app.ext.cco.u.buildPaymentQ();
-							app.ext.cco.calls.cartOrderCreate.init({'callback':'showInvoice','jqObj':$form});
+							app.ext.cco.calls.cartOrderCreate.init({'callback':'showInvoice','extension':'orderCreate','jqObj':$form});
 							app.model.dispatchThis('immutable');						
 							
 							}
