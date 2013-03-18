@@ -59,7 +59,7 @@ The startExtension will re-execute if this script isn't loaded until it has fini
 
 			startExtension : {
 				onSuccess : function(){
-//					app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
+					app.u.dump("BEGIN google_analytics.callbacks.startExtension.onSuccess");
 
 //make sure that not only has myRIA been loaded, but that the createTemplateFunctions has executed
 					if(app.ext.myRIA && app.ext.myRIA.template && typeof _gaq == 'object' && app.ext.store_checkout && app.ext.store_checkout.checkoutCompletes)	{
