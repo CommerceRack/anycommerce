@@ -107,7 +107,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 			dispatch : function(stid,qty,_tag)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
 				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": _tag},'immutable');
-				app.ext.store_checkout.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
+				app.ext.cco.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
 				}
 			 }, //cartItemUpdate
 
@@ -179,7 +179,7 @@ left them be to provide guidance later.
 					"analyticsdata":"", //must be set, even if blank.
 					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
 					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId,
-					'_tag':{'callback':'proceedToGoogleCheckout','extension':'store_checkout','datapointer':'cartGoogleCheckoutURL'}
+					'_tag':{'callback':'proceedToGoogleCheckout','extension':'cco','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
 			}, //cartGoogleCheckoutURL	
@@ -187,7 +187,7 @@ left them be to provide guidance later.
 		cartPaypalSetExpressCheckout : {
 			init : function()	{
 				var getBuyerAddress = 0;
-				if(app.ext.store_checkout.u.taxShouldGetRecalculated())
+				if(app.ext.cco.u.taxShouldGetRecalculated())
 					getBuyerAddress = 1;
 				this.dispatch(getBuyerAddress);
 				return 1;
@@ -247,7 +247,7 @@ left them be to provide guidance later.
 
 		proceedToGoogleCheckout : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN store_checkout.callbacks.proceedToGoogleCheckout.onSuccess');
+				app.u.dump('BEGIN cco.callbacks.proceedToGoogleCheckout.onSuccess');
 //code for tracking the google wallet payment in GA as a conversion.
 				_gaq.push(function() {
 					var pageTracker = _gaq._getAsyncTracker();
@@ -264,7 +264,7 @@ left them be to provide guidance later.
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN store_checkout.callbacks.handleCartPaypalSetECResponse.onSuccess');
+				app.u.dump('BEGIN cco.callbacks.handleCartPaypalSetECResponse.onSuccess');
 				window.location = app.data[tagObj.datapointer].URL
 				},
 			onError : function(responseData,uuid)	{
@@ -294,7 +294,7 @@ left them be to provide guidance later.
 					return (errors.length) ? errors : false;
 					}
 				else	{
-					app.u.throwGMessage("in store_checkout.u.validate.CREDIT, vars is empty or not an object.");
+					app.u.throwGMessage("in cco.u.validate.CREDIT, vars is empty or not an object.");
 					return false;
 					}
 				
@@ -328,21 +328,21 @@ left them be to provide guidance later.
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
 			buildPaymentQ : function()	{
-//				app.u.dump("BEGIN store_checkout.u.buildPaymentQ");
+//				app.u.dump("BEGIN cco.u.buildPaymentQ");
 				var payby = $('input:radio[name="want/payby"]:checked').val()
 				app.u.dump(" -> payby: "+payby);
 				if(payby.indexOf('WALLET') == 0)	{
-					app.ext.store_checkout.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.store_checkout.u.getWalletByID(payby)));
-//					app.u.dump(app.ext.store_checkout.u.getWalletByID (payby));
+					app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
+//					app.u.dump(app.ext.cco.u.getWalletByID (payby));
 					}
 				else if(payby == 'CREDIT')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
 					}				
 				else if(payby == 'PO')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
 					}				
 				else if(payby == 'ECHECK')	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({
+					app.ext.cco.calls.cartPaymentQ.init({
 "cmd":"insert",
 "TN":"ECHECK",
 "EA":$('#paymentea').val(),
@@ -354,7 +354,7 @@ left them be to provide guidance later.
 						});
 					}
 				else	{
-					app.ext.store_checkout.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
 					}
 				},
 
@@ -387,40 +387,6 @@ left them be to provide guidance later.
 				return r;
 				}, //cartContentsAsLinks
 
-//if checkout succeded but payment failed (cash, cc fail, PO, etc) then this function gets executed.
-			checkoutSuccessPaymentFailure : function(paycode,payby)	{
-				app.u.dump('BEGIN app.ext.store_checkout.u.checkoutSuccessPaymentFailure');
-				app.u.dump(' -> paycode = '+paycode);
-				app.u.dump(' -> payby = '+payby);
-				var r;
-
-/*
-0 = success (unequivicable)
-1 = pending
-4 = got money, but its under review. this is legacy from before fraud status was added. not used much. treat as zero.
-
-payment_success will be undef if fail.
-payment_success will be set to payment_status. CC
-*/
-
-		
-		if(typeof paycode == 'undefined')	{
-					switch(payby)	{
-						case 'CREDIT':
-							r = "There was a problem processing your credit card. Please contact us or click here for details.";
-							break;
-						default:
-							r = 'Payment is still required for this order. Please click here for details.'; //rather than replicate all the sysmessages, we'll direct traffic to the invoice page. 
-						}
-
-_gaq.push(['_trackEvent','Checkout','User Event','Payment failure ('+payby+')']);
-_gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
-					
-					}
-				
-				return r;
-				}, //checkoutSuccessPaymentFailure
-
 //This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
 				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
@@ -429,7 +395,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
 //according to B, there will be only 1 paypal tender in the paymentQ.
 			aValidPaypalTenderIsPresent : function()	{
-				app.u.dump("BEGIN store_checkout.aValidPaypalTenderIsPresent");
+				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					return (Math.round(+new Date(PQI.TIMESTAMP)) > +new Date()) ? true : false;
 					});
@@ -440,11 +406,11 @@ payment methods or they may add something new to the cart. If they do, execute t
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
 			nukePayPalEC : function() {
-//				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
+//				app.u.dump("BEGIN cco.u.nukePayPalEC");
 				app.ext.orderCreate.vars['payment-pt'] = null;
 				app.ext.orderCreate.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
-					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
+					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
 
@@ -454,7 +420,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //the value returned gets added to an array, which is returned by this function.
 //the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
-//				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
+//				app.u.dump("BEGIN cco.u.modifyPaymentQbyTender");
 				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
 				var r = new Array(); //what is returned if someFunction returns anything.
 				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
@@ -593,7 +559,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //this function checks to see if they're populated and, if so, returns true.
 //also used in cartPaypalSetExpressCheckout call to determine whether or not address should be requested on paypal side or not.
 			taxShouldGetRecalculated : function(formObj)	{
-//				app.u.dump("BEGIN app.ext.store_checkout.u.taxShouldGetRecalculated");
+//				app.u.dump("BEGIN app.ext.cco.u.taxShouldGetRecalculated");
 				var r = true;//what is returned. set to false if errors > 0
 				if(!formObj['bill/address1'])	{r = false;}
 				else if(!formObj['bill/city']){r = false;}

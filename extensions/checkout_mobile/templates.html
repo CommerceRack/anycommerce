@@ -248,11 +248,11 @@ do NOT change any div id's or messaging will not work properly.
 	</div>
 
 <!-- more payment types is first but, when applicable, stored payments is shown. That way stored payments are easily selected but it's hard to miss that other payment choices are available. -->
-	<div data-app-role='paymentOptionsContainer'>
+	<div data-app-role='paymentOptionsContainer' data-app-event="orderCreate|addTriggerPayMethodUpdate">
 		
 		<h2 data-app-role='nonStoredPaymentsHeader' class='displayNone'>More Payment Choices</h2>
 		<div data-app-role='nonStoredPaymentsContent'>
-			<div data-app-event="orderCreate|addTriggerPayMethodUpdate" data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
+			<div data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
 		</div>
 		
 		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Your Stored Payments</h2>

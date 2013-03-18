@@ -423,11 +423,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				if($fieldset && formObj)	{
 					
 					if(formObj['want/bill_to_ship'])	{valid = 1}
-					else if(formObj['ship/shortcut'].val())	{valid = 1}
+					else if(formObj['ship/shortcut'])	{valid = 1}
 					else	{
 
 //postal and region are only required for domestic orders.	
-						if($("input[name='ship/countrycode']",$fieldset).val == "US")	{
+						if(formObj['ship/countrycode'] == "US")	{
 							$("input[name='ship/postal']",$fieldset).attr('required','required');
 							$("input[name='ship/region']",$fieldset).attr('required','required');
 							}
@@ -577,7 +577,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					if(formObj['ship/shortcut'])	{
-						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}});
+						$("[data-_id='"+formObj['ship/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}});
 						}
 					}
 				else	{
@@ -662,7 +662,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						
 						$("[data-app-role='paymentOptionsContainer']",$fieldset).accordion({
 							heightStyle: "content",
-						    active: 1 //show stores payments. new
+						    active: (app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby && app.data.cartDetail.want.payby.indexOf('WALLET') == -1) ? 0 : 1 //unless a buyer has already selected a non-wallet payment method, show stores payments as open.
 							});
 						}
 					else	{
@@ -671,7 +671,21 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='nonStoredPaymentsHeader']",$fieldset).hide(); //header only needed if stored payments are present.
 						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
 						}
-					
+
+
+//if a payment method has been selected, show the supplemental inputs and check the selected payment.
+					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
+						var $radio = $("input[value='"+app.data.cartDetail.want.payby+"']",$fieldset),
+						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
+						$radio.attr('checked','checked');
+						if($supplemental)	{
+							app.u.dump(" -> payment method HAS supplemental inputs");
+							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
+							}
+						}
+
+
+
 					}
 
 				}, //chkoutMethodsPay
@@ -1416,7 +1430,6 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 
 				var L = data.value.length,
 				o = "", //the output appended to $tag
-				isSelectedMethod, //toggle t/f in loop based on if iteration is for selected payment method.
 				id = ''; //recycled.
 
 //ZERO will be in the list of payment options if customer has a zero due (giftcard or paypal) order.
@@ -1428,29 +1441,11 @@ $('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext
 					for(var i = 0; i < L; i += 1)	{
 						id = data.value[i].id;
 
-						if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby == id)	{isSelectedMethod =  true;}
-						else	{isSelectedMethod =  false;}
-
-
 //onClick event is added through an app-event. allows for app-specific events.
 						o += "<div class='headerPadding' data-app-role='paymentMethodContainer'><label><input type='radio' name='want/payby' value='"+id+"' ";
-						if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby == id)	{ o += " checked='checked' "}
 						o += " />"+data.value[i].pretty+"<\/label></div>";
 						}
 					$tag.html(o);
-
-//if a payment method has been selected, show the supplemental inputs.
-					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
-						var $radio = $("input[value='"+app.data.cartDetail.want.payby+"']",$tag),
-						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
-						
-						app.u.dump(" -> $radio.length: "+$radio.length);
-						app.u.dump(" -> $supplemental: "+$supplemental);
-						if($supplemental)	{
-							app.u.dump(" -> payment method HAS supplemental inputs");
-							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
-							}
-						}
 					
 					}
 				else	{
