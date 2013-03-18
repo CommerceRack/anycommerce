@@ -9,10 +9,10 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 201311
 includes.js/variations update to remove 'pog_' from input names (for new add to cart command)
-some new classes in quickstart
+some new classes in quickstart. all old checkout classes gone.
 Massive update to checkout. most important, the namespace changed from convertSessionToOrder to orderCreate
 
-The add to cart forms updated. replace all. templates may include (but are not limited to): 
+The add to cart forms/renderFormat updated. replace all. templates may include (but are not limited to): 
 productTemplate
 productTemplateQuickView
 productListTemplateATC (the qty render format for this is slightly different. take a look)
