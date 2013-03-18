@@ -1366,7 +1366,7 @@ two of it's children are rendered each time the panel is updated (the prodlist a
 				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
 					$('#paymentOptionsContainer ul').show();
 //if a payment type not wallet has already been selected, be sure to open that tab when panel reloads.
-					$('#paymentOptionsContainer').tabs({
+					$('#paymentOptionsContainer').anytabs({
 						selected: ((app.ext.convertSessionToOrder.vars['want/payby'] && app.ext.convertSessionToOrder.vars['want/payby'].indexOf('WALLET') == 0) || !app.ext.convertSessionToOrder.vars['want/payby']) ? 0 : 1
 						});
 					app.renderFunctions.translateTemplate(app.data.buyerWalletList,'storedPaymentsContainer');
