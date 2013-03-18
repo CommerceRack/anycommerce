@@ -923,6 +923,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 				if(!$.isEmptyObject(app.ext.myRIA.vars.hotw[0]))	{
 					app.ext.myRIA.u.handleTemplateFunctions($.extend(app.ext.myRIA.vars.hotw[0],{"state":"onDeparts"}))
 					}
+
 				app.ext.myRIA.u.handleSandHOTW(infoObj);
 //handles the appnav. the ...data function must be run first because the display function uses params set by the function.
 				app.ext.myRIA.u.handleAppNavData(infoObj);

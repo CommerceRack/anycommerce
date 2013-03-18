@@ -22,7 +22,7 @@ contactArticle form action changed.
 
 * A new add to cart command. old command is deprecated.
 * Introduction of '_session' to split session data from cart data.
-
+* attempts and pipeUUID moved from req obj into _tag
 
 
 201310
