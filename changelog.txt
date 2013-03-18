@@ -11,18 +11,23 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 includes.js/variations update to remove 'pog_' from input names (for new add to cart command)
 some new classes in quickstart. all old checkout classes gone.
 Massive update to checkout. most important, the namespace changed from convertSessionToOrder to orderCreate
+productListTemplateBuyerList template changed (was missing an onclick on the more info button)
+loginFormForModal template changed.
+contactArticle form action changed.
+
 
 The add to cart forms/renderFormat updated. replace all. templates may include (but are not limited to): 
 productTemplate
 productTemplateQuickView
 productListTemplateATC (the qty render format for this is slightly different. take a look)
 
-loginFormForModal template changed.
-contactArticle form action changed.
 
 * A new add to cart command. old command is deprecated.
 * Introduction of '_session' to split session data from cart data.
 * attempts and pipeUUID moved from req obj into _tag
+* update to quickview/viewProductInModal.
+
+
 
 
 201310
@@ -34,6 +39,9 @@ added support for showContent('search',{'TAGS':'IS_BESTSELLER'}); will work for 
 added support for #! in appView links using bindByAnchor class (note - this is the recommended use for SEO)
 cartTemplate updated to include new 'move item to wishlist' button. button ONLY appears if user is logged in.
 * calls nested in authentication {} within the controller are no longer nested.
+
+
+
 
 
 

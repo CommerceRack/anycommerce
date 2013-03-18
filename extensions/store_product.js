@@ -638,23 +638,24 @@ NOTES
 					
 //parent may not exist. empty if it does, otherwise create it.
 					if($parent.length)	{$parent.empty()}
-					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}
+					else	{
+						$parent = $("<div \/>").attr({"id":'product-modal',"title":""}).appendTo('body');
+						$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false});
+						}
 					
-					;
-					$parent.dialog({modal: true,width:'86%',height:$(window).height() - 100,autoOpen:false, title : app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name']});
+					
 					$parent.dialog('open');
-					$parent.anycontent(P);
-					var tagObj = {};
-					
-					tagObj.templateID = P.templateID;
-					tagObj.parentID = "productViewer_"+parentID; //in the callback, the parent ID is the 'target id' that gets translated. hhmm. rename ???
 
-					tagObj.callback = P.callback ? P.callback : 'translateTemplate';
-					tagObj.extension = P.extension ? P.extension : ''; //translateTemplate is part of controller, not an extension
-					
-					app.ext.store_product.calls.appProductGet.init(P.pid,tagObj);
+					app.ext.store_product.calls.appProductGet.init(P.pid,{'callback': function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$parent.anymessage({'message':rd});
+							}
+						else	{
+							$parent.dialog( "option", "title", app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'] );
+							$parent.anycontent({'templateID':P.templateID,'datapointer':"appProductGet|"+P.pid});
+							}
+						}});
 					app.ext.store_product.calls.appReviewsList.init(P.pid); //
-
 					app.model.dispatchThis();
 
 					}

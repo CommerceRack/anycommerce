@@ -1460,7 +1460,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 				else if(typeof callback == 'string')	{
 					app.u.dump("WARNING! callback ["+callback+"] defined for namespace: "+namespace+" but something went wrong");
 					app.u.dump(" -> typeof app.ext[namespace]: "+typeof app.ext[namespace]);
-					if(typeof app.ext[namespace] == 'object')	{app.u.dump(app.ext[namespace].callbacks[callback]);}
+					if(typeof app.ext[namespace] == 'object')	{app.u.dump(" -> typeof app.ext[namespace].callbacks[callback]"+typeof app.ext[namespace].callbacks[callback]);}
 					}
 				else	{app.u.dump("!Unknown type ["+typeof callback+"] for extension callback ");}
 				}
