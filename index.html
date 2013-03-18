@@ -435,13 +435,15 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 	</div>
 </div>
 
-<div id="content">	
-	<div id='globalMessaging' class='appMessaging'></div>
-	<div id='appNav'>
-		<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
-		<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+<div id="contentBG">
+	<div id="content">	
+		<div id='globalMessaging' class='appMessaging'></div>
+		<div id='appNav'>
+			<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+		</div>
+		<div id='mainContentArea'></div>
 	</div>
-	<div id='mainContentArea'></div>
 </div>
 
 <div id="footer">
@@ -542,15 +544,20 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
+	<div class="wideColumn floatLeft">
+		<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withInventory:1; withVariations:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	</div>
 	
-
-<ul id="wideSlideshow" class="pics slideshow">
+	<div class="thinColumn floatRight">
+		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+	</div>
+	
+	
+	<ul id="wideSlideshow" class="pics slideshow">
 		<img src='images/blank.gif' width='712' height='400' data-bind="var: category(%page.banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
 	</ul>
 	
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withInventory:1; withVariations:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 <!-- a sample of how to format an elastic native search in a data-bind -->

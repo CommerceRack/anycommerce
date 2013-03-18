@@ -11,13 +11,15 @@ body {
 }
 
 #content {
-	background: white;
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
-	overflow: hidden;
+	margin-top: -10px;
+	position:relative;
+	z-index: 100;
 }
-
-.clear{clear:both;}
+#contentBG{
+	background:white;
+}
 
 
 .hideDialog .ui-dialog-titlebar-close,
@@ -35,6 +37,7 @@ body {
 	border: 2px solid #002675;
 }
 
+.clear{clear:both;}
 /****************************************************************
 
 HEADER STYLES
@@ -299,7 +302,8 @@ FOOTER STYLES
 HOMEPAGE STYLES
 
 ****************************************************************/
-
+.thinColumn{ width:215px; margin:3px;}
+.wideColumn{ width:789px; margin:3px;}
 
 
 /****************************************************************
