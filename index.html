@@ -545,6 +545,23 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 -->
 <div id='homepageTemplate' class='homeTemplate'>
 	<div class="wideColumn floatLeft">
+		<div id="homepageLeftHeader" class="marginTop floatLeft">
+			<img src="img/homepage/personalized.png" width='197' height='242'/>
+		</div>
+		<div id="hompageRightHeader" class="floatRight">
+			<img src="img/homepage/sportsworldchicago_shipping_1.png" width='589' height='57'/>
+			<div id="slideshowContainer">
+				<div id="slideshowNav"></div>
+				<ul id="wideSlideshow" class="pics slideshow">
+					<li><img src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
+					<li><img src='img/homepage/slideshow/st_patricks_day_banner.jpg' width='589' height='193'/></li>
+					<li><img src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
+					<li><img src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
+				</ul>
+			</div>
+		</div>
+		<div class="clear"></div>
+		
 		<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withInventory:1; withVariations:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	</div>
 	
@@ -553,9 +570,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</div>
 	
 	
-	<ul id="wideSlideshow" class="pics slideshow">
-		<img src='images/blank.gif' width='712' height='400' data-bind="var: category(%page.banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-	</ul>
 	
 	
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>

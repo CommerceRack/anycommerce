@@ -48,7 +48,33 @@ var cubworld = function() {
 			
 		startExtension : {
 			onSuccess : function() {
-				
+				if(app.ext.myRIA && app.ext.myRIA.template){
+					app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
+						if($('#wideSlideshow').data('slideshow') !== 'true'){
+							$('#wideSlideshow').data('slideshow','true').cycle({
+								fx:     'fade',
+								speed:  'slow',
+								timeout: 5000,
+								pager:  '#slideshowNav',
+								slideExpr: 'li'
+								});
+							}							
+						});
+					if($("#appView #homepageTemplate_").length > 0){
+						if($('#wideSlideshow').data('slideshow') !== 'true'){
+							$('#wideSlideshow').data('slideshow','true').cycle({
+								fx:     'fade',
+								speed:  'slow',
+								timeout: 5000,
+								pager:  '#slideshowNav',
+								slideExpr: 'li'
+								});
+							}	
+						}
+					}
+				else {
+					setTimeout(function(){app.ext.cubworld.callbacks.startExtension.onSuccess()},250);
+					}
 				},
 			onError : function() { 
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.startExtension.onError');
