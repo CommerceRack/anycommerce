@@ -86,6 +86,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				return 1;
 				},
 			dispatch : function(_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "cartItemsInventoryVerify";
 				app.model.addDispatchToQ({"_cmd":"cartItemsInventoryVerify","_tag": _tag},Q || 'immutable');
 				}
 			}, //cartItemsInventoryVerify	

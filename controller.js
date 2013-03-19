@@ -828,7 +828,7 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(stid,qty,_tag)	{
 //				app.u.dump(' -> adding to PDQ. callback = '+callback)
 				app.model.addDispatchToQ({"_cmd":"cartItemUpdate","stid":stid,"quantity":qty,"_tag": _tag},'immutable');
-				app.ext.store_checkout.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
+				app.ext.cco.u.nukePayPalEC(); //nuke paypal token anytime the cart is updated.
 				}
 			 },
 
@@ -2746,7 +2746,7 @@ $tmp.empty().remove();
 //only use this on fields where the value is boolean
 //if setting checked=checked by default, be sure to pass hideZero as false.
 		popCheckbox : function($tag,data){
-			app.u.dump(" -> popCheckbox data.value: "+data.value);
+//			app.u.dump(" -> popCheckbox data.value: "+data.value);
 			if(Number(data.value))	{$tag.attr('checked',true);}
 			else if(data.value === 'on')	{$tag.attr('checked',true);}
 			else if(data.value == true)	{$tag.attr('checked',true);}

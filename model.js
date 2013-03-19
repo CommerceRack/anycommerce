@@ -596,7 +596,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //execute this on a field prior to a call when you want to ensure memory/local is not used (fresh data).
 //admittedly, this isn't the best way to handle this. for 2013XX we'll have something better. ###
 		destroy : function(key)	{
-			app.u.dump(" -> destroying "+key);
+//			app.u.dump(" -> destroying "+key);
 			if(app.data[key])	{
 				delete app.data[key];
 				}
@@ -659,6 +659,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 				case 'appBuyerLogin': //should be session specific. close/open will exec whoAmI which will put into memory if user is logged in.
 				case 'appPageGet': //
 				case 'buyerWalletList': //conains some cc info.
+				case 'cartItemsInventoryVerify': //these adjustments are never stored.
 				case 'cartOrderCreate': //may contain cc
 				case 'cartPaymentQ': //may contain cc
 				case 'cartSet': //changes are reflected in cart object.

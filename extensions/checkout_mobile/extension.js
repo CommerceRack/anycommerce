@@ -135,25 +135,32 @@ var orderCreate = function() {
 			onSuccess : function(_rtag)	{
 				var r = false; //if false is returned, then no inventory update occured.
 				if(app.data[_rtag.datapointer] && !$.isEmptyObject(app.data[_rtag.datapointer]['%changes']))	{
-					app.u.dump(' -> adjustments are present');
+					var $form = _rtag.jqObj;
 					r = "<p>It appears that some inventory adjustments needed to be made:<ul>";
 					for(var key in app.data[_rtag.datapointer]['%changes']) {
 						r += "<li>sku: "+key+" was set to "+app.data[_rtag.datapointer]['%changes'][key]+" due to availability<\/li>";
-						app.calls.cartItemUpdate.init({"stid":key,"quantity":app.data[_rtag.datapointer]['%changes'][key]});
+						app.calls.cartItemUpdate.init(key,app.data[_rtag.datapointer]['%changes'][key]);
 						}
+					app.u.dump(" -> SANITY: an extra cartDetail call is occuring because inventory availability required some cartUpdates to occur.");
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							app.ext.orderCreate.u.handlePanel($form,'chkoutCartItemsList',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}
+						}},'immutable');
 					app.model.dispatchThis('immutable');
 					r += "<\/ul><\/p>";
-					$('#globalMessaging').anymessage({'message':r});
+					$('#globalMessaging').anymessage({'message':r,'persistant':true});
 					}
 
 				return r;
 				
-				},
-			onError : function(responseData,uuid)	{
-				app.u.dump("handleInventoryUpdate.error");
-				app.ext.orderCreate.panelContent.paymentOptions();
-//global errors are emptied when 'complete order' is pushed, so do not empty in the responses or any other errors will be lost.
-				app.u.throwMessage(responseData);
 				}
 			},	//handleInventoryUpdate
 
@@ -235,7 +242,7 @@ else	{
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
 				}
-			} //checkoutSuccess
+			} //showInvoice
 
 		}, //callbacks
 
@@ -719,7 +726,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
-
+					if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
+						app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
+						app.ext.cco.calls.cartItemsInventoryVerify.init({'callback':'handleInventoryUpdate','extension':'orderCreate','jqObj':$chkContainer});
+						}
 					if(app.u.buyerIsAuthenticated())	{
 						
 						app.calls.buyerAddressList.init({'callback':'suppressErrors'},'immutable');
@@ -1183,7 +1193,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 					ao.showLoading = function (formObj, $fieldset){$(".panelContent",$fieldset).showLoading({'message':'Fetching updated content'})},
 					ao.hideLoading = function (formObj, $fieldset){$(".panelContent",$fieldset).hideLoading()},
-					ao.empty = function(formObj, $fieldset){app.u.dump(" -> emptying "+role);$(".panelContent",$fieldset).empty()},
+					ao.empty = function(formObj, $fieldset){$(".panelContent",$fieldset).empty()},
 					ao.handleAppEvents = function(formObj, $fieldset){app.u.handleAppEvents($fieldset)},
 					ao.handleDisplayLogic = function(formObj, $fieldset){
 						if(typeof app.ext.orderCreate.panelDisplayLogic[role] === 'function')	{
@@ -1194,7 +1204,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						}, //perform things like locking form fields, hiding/showing the panel based on some setting. never pass in the setting, have it read from the form or cart.
 					ao.translate = function(formObj, $fieldset)	{
-						app.u.dump(" -> translating "+role);
+//						app.u.dump(" -> translating "+role);
 //						app.u.dump("app.ext.orderCreate.u.extendedDataForCheckout()"); app.u.dump(app.ext.orderCreate.u.extendedDataForCheckout());
 						$fieldset.anycontent({'data' : app.ext.orderCreate.u.extendedDataForCheckout()});
 						} //populates the template.
