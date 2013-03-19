@@ -1177,9 +1177,11 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 		a : {
 			
 			openCreateOrderForm : function(){
-				app.calls.appCartCreate.init({'callback':'disableLoading','targetID':app.ext.admin.vars.tab+'Content'},'immutable');
-				app.model.dispatchThis('immutable');
 				$target = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty();
+				app.calls.appCartCreate.init({'callback':function(rd){
+					$target.hideLoading();
+					}},'immutable');
+				app.model.dispatchThis('immutable');
 				$target.append("<div id='appCreateOrderMessaging' \/><h1>Create order<\/h1>");
 				
 				var $buttonBar = $("<div \/>").attr('id','createOrderButtonBar');

@@ -128,16 +128,15 @@ else if ("onhashchange" in window)	{ // does the browser support the hashchange 
 		}
 	}
 else	{
-	app.u.throwMessage("You appear to be running a very old browser. Our app will run, but may not be an optimal experience.");
+	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistant':true});
 	// wow. upgrade your browser. should only get here if older than:
 	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
-	
 	//NOTE: does not trigger in IE9 running IE7 or IE8 standards mode
 	}
 
 
 document.write = function(v){
-	if(console && console.warn){console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();")}
+	app.u.dump("document.write was executed. That's bad mojo. Rewritten to $('body').append();",'warn');
 	$("body").append(v);
 	}
 
@@ -384,7 +383,7 @@ document.write = function(v){
 				}
 			}, //showAddresses
 
-//used as part of showContent for the home and category pages.
+//used as part of showContent for the home and category pages. goes and gets all the data.
 		fetchPageContent : {
 			onSuccess : function(tagObj)	{
 				var catSafeID = tagObj.datapointer.split('|')[1];
@@ -400,7 +399,7 @@ document.write = function(v){
 			}, //fetchPageContent
 
 
-//used as part of showContent for the home and category pages.
+//used as part of showContent for the home and category pages. Will display the data retrieved from fetch.
 		showPageContent : {
 			onSuccess : function(tagObj)	{
 //when translating a template, only 1 dataset can be passed in, so detail and page are merged and passed in together.
@@ -515,6 +514,7 @@ else	{
 					}
 				}
 			}, //showList
+
 		authenticateBuyer : {
 			onSuccess : function(tagObj)	{
 				app.vars.cid = app.data[tagObj.datapointer].cid; //save to a quickly referencable location.
@@ -582,11 +582,7 @@ need to be customized on a per-ria basis.
 			else	{
 				$n.fadeIn(1000)
 				}
-
-//This is another example transition. old content slides out and new content slides in.
-//			$n.slideDown(3000);
-//			$o.slideUp(1000);
-			},
+			}, //pageTransition
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -641,7 +637,6 @@ need to be customized on a per-ria basis.
 					});
 				}, //searchLink
 
-
 			addPicSlider : function($tag,data)	{
 //				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
 				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
@@ -657,6 +652,7 @@ need to be customized on a per-ria basis.
 						}
 					}
 				},
+
 //no click event is added to this. do that on a parent element so that this can be recycled.
 			youtubeThumbnail : function($tag,data)	{
 				$tag.attr('src',"https://i3.ytimg.com/vi/"+data.value+"/default.jpg");
@@ -759,6 +755,7 @@ fallback is to just output the value.
 //use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
 // render format will also hide the button if the user is not logged in.
 			moveToWishlistButton : function($tag,data)	{
+				//!!! needs to better handle coupons and assemblies
 				if(app.u.buyerIsAuthenticated())	{
 					$tag.show().button({icons: {primary: "ui-icon-heart"},text: false});
 					$tag.off('click.moveToWishlist').on('click.moveToWishList',function(){
@@ -1101,7 +1098,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 						else	{
 							//by now, item has been added to wishlist. So remove it from the cart.
 							app.model.destroy('cartDetail');
-							app.ext.store_cart.calls.cartItemUpdate.init(obj.stid,0,{callback:function(rd){
+							app.calls.cartItemUpdate.init(obj.stid,0,{callback:function(rd){
 								$('#modalCartContents').hideLoading();
 								if(app.model.responseHasErrors(rd)){
 									$('#cartMessaging').anymessage({'message':rd});
@@ -1278,7 +1275,7 @@ setTimeout(function(){
 						});
 					app.model.dispatchThis();
 					}
-				},
+				}, //handleProdPreview
 
 
 
@@ -1572,7 +1569,7 @@ if(ps.indexOf('?') >= 1)	{
 				$('html, body').css('cursor',style);
 				},
 
-
+//used in results page if the preview mode feature is enabled.
 			revertPageFromPreviewMode : function($parent)	{
 				if(typeof $parent == 'object')	{
 					$liContainer = $('.previewListContainer',$parent), //div around UL with search results.
@@ -2263,11 +2260,28 @@ elasticsearch.size = 50;
 			showCart : function(infoObj)	{
 				if(typeof infoObj != 'object'){var infoObj = {}}
 //				app.u.dump("BEGIN myRIA.u.showCart");
-// ### update. if mainContentArea is empty, put the cart there. if not, show in modal.
 				infoObj.templateID = 'cartTemplate'
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				app.ext.store_cart.u.showCartInModal(infoObj);
+				if(infoObj.show == 'inline')	{
+
+//only create instance once.
+					if($('#mainContentArea_cart').length)	{
+						//show cart
+						infoObj.state = 'onCompletes';
+						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
+						}
+					else	{
+						var $cart = $("<div \/>",{'id':'mainContentArea_cart'});
+						$cart.anycontent({'templateID':infoObj.templateID});
+						}
+
+
+
+					}
+				else	{
+					app.ext.store_cart.u.showCartInModal(infoObj);
+					}
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				}, //showCart

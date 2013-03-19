@@ -132,16 +132,15 @@ else if ("onhashchange" in window)	{ // does the browser support the hashchange 
 		}
 	}
 else	{
-	app.u.throwMessage("You appear to be running a very old browser. Our app will run, but may not be an optimal experience.");
+	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistant':true});
 	// wow. upgrade your browser. should only get here if older than:
 	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
-	
 	//NOTE: does not trigger in IE9 running IE7 or IE8 standards mode
 	}
 
 
 document.write = function(v){
-	if(console && console.warn){console.warn("document.write was executed. That's bad mojo. Rewritten to $('body').append();")}
+	app.u.dump("document.write was executed. That's bad mojo. Rewritten to $('body').append();",'warn')
 	$("body").append(v);
 	}
 
@@ -169,7 +168,7 @@ document.write = function(v){
 				app.model.dispatchThis('passive');
 
 //adds submit functionality to search form. keeps dom clean to do it here.
-				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
+				app.ext.myRIA.u.bindAppViewForms('#appView');
 				app.ext.myRIA.vars.mcSetInterval = setInterval(function(){app.ext.myRIA.u.handleMinicartUpdate({'datapointer':'cartDetail'})},4000); //make sure minicart stays up to date.
 				showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.

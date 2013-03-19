@@ -278,8 +278,6 @@ left them be to provide guidance later.
 
 		
 
-
-
 //Pass in an object (typically based on $form.serializeJSON) and 
 //this will make sure that specific fields are populated based on tender type.
 //rather than returning specific error messages (which may need to change based on where this is used, an array of which fields are missing is returned
@@ -546,31 +544,50 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 
 
 
+/*
+executing when quantities are adjusted for a given cart item.
+call is made to update quantities.
+When a cart item is updated, it'll end up getting re-rendered, so data-request-state doesn't need to be updated after the request.
+Since theres no 'submit' or 'go' button on the form, there was an issue where the 'enter' keypress would double-execute the onChange event.
+so now, the input is disabled the first time this function is executed and a disabled class is added to the element. The presence of this class
+allows us to check and make sure no request is currently in progress.
+*/
+			updateCartQty : function($input,_tag)	{
+				
+				var stid = $input.attr('data-stid');
+				var qty = $input.val();
+				
+				if(stid && qty && !$input.hasClass('disabled'))	{
+					$input.attr('disabled','disabled').addClass('disabled').addClass('loadingBG');
+					app.u.dump('got stid: '+stid);
+//some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
+//then create a callback that does nothing. IMHO, you should always let the user know the item was modified.
+//you can do something more elaborate as well, just by passing a different callback.
+					_tag = _tag || {};
+					_tag.callback = _tag.callback ? _tag.callback : 'updateCartLineItem';
+					_tag.extension = _tag.extension ? _tag.extension : 'store_cart';
+					_tag.parentID = 'cartViewer_'+app.u.makeSafeHTMLId(stid);
+/*
+the request for quantity change needs to go first so that the request for the cart reflects the changes.
+the dom update for the lineitem needs to happen last so that the cart changes are reflected, so a ping is used.
+*/
+					app.ext.store_cart.calls.cartItemUpdate.init(stid,qty);
+					this.updateCartSummary();
+//lineitem template only gets updated if qty > 1 (less than 1 would be a 'remove').
+					if(qty >= 1)	{
+						app.calls.ping.init(_tag,'immutable');
+						}
+					else	{
+						$('#cartViewer_'+app.u.makeSafeHTMLId(stid)).empty().remove();
+						}
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					app.u.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
+					}
+				},
 
 
-
-
-
-
-
-
-
-
-			
-//for tax to accurately be computed, several fields may be required.
-//this function checks to see if they're populated and, if so, returns true.
-//also used in cartPaypalSetExpressCheckout call to determine whether or not address should be requested on paypal side or not.
-			taxShouldGetRecalculated : function(formObj)	{
-//				app.u.dump("BEGIN app.ext.cco.u.taxShouldGetRecalculated");
-				var r = true;//what is returned. set to false if errors > 0
-				if(!formObj['bill/address1'])	{r = false;}
-				else if(!formObj['bill/city']){r = false;}
-				else if(!formObj['bill/region']){r = false;}
-				else if(!formObj['bill/postal']){r = false;}
-				else if(!formObj['bill/countrycode']){r = false;}
-				else {} //All the fields required for accurate tax calculation are present.
-				return r;
-				} //taxShouldGetRecalculated
 
 			}, //util
 
@@ -606,8 +623,49 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				
 				$tag.html(r);
 				},
+
+//data.value should be the item object from the cart.
+			cartItemRemoveButton : function($tag,data)	{
+
+				if(data.value.stid[0] == '%')	{$tag.remove()} //no remove button for coupons.
+				else if(data.value.asm_master)	{$tag.remove()} //no remove button for assembly 'children'
+				else	{
+if($tag.is('button')){$tag.button({icons: {primary: "ui-icon-closethick"},text: false})}
+$tag.attr({'data-stid':data.value.stid}).val(0); //val is used for the updateCartQty
+
+//the click event handles all the requests needed, including updating the totals panel and removing the stid from the dom.
+$tag.one('click',function(event){
+	event.preventDefault();
+	app.ext.store_cart.u.updateCartQty($tag);
+	app.model.dispatchThis('immutable');
+	});
+					}
+				},
 				
+//for displaying order balance in checkout order totals.
+//changes value to 0 for negative amounts. Yes, this can happen.			
+			orderBalance : function($tag,data)	{
+				var o = '';
+				var amount = data.value;
+//				app.u.dump('BEGIN app.renderFunctions.format.orderBalance()');
+//				app.u.dump('amount * 1 ='+amount * 1 );
+//if the total is less than 0, just show 0 instead of a negative amount. zero is handled here too, just to avoid a formatMoney call.
+//if the first character is a dash, it's a negative amount.  JS didn't like amount *1 (returned NAN)
 				
+				if(amount * 1 <= 0){
+//					app.u.dump(' -> '+amount+' <= zero ');
+					o += data.bindData.currencySign ? data.bindData.currencySign : '$';
+					o += '0.00';
+					}
+				else	{
+//					app.u.dump(' -> '+amount+' > zero ');
+					o += app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
+					}
+				
+				$tag.text(o);  //update DOM.
+//				app.u.dump('END app.renderFunctions.format.orderBalance()');
+				}, //orderBalance
+
 			secureLink : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.cco.renderFormats.secureLink');
 //				app.u.dump(" -> data.windowName = '"+data.windowName+"'");
@@ -617,7 +675,6 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				else
 					$tag.click(function(){window.location = zGlobals.appSettings.https_app_url+$.trim(data.value)});
 				}, //secureLink
-
 
 //displays the shipping method followed by the cost.
 //is used in cart summary total during checkout.
@@ -670,34 +727,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				$tag.html(o);
 				},
 
-
 			walletName2Icon : function($tag,data)	{
 				$tag.addClass('paycon_'+data.value.substring(0,4).toLowerCase());
-				},
+				}
 
-//for displaying order balance in checkout order totals.
-//changes value to 0 for negative amounts. Yes, this can happen.			
-			orderBalance : function($tag,data)	{
-				var o = '';
-				var amount = data.value;
-//				app.u.dump('BEGIN app.renderFunctions.format.orderBalance()');
-//				app.u.dump('amount * 1 ='+amount * 1 );
-//if the total is less than 0, just show 0 instead of a negative amount. zero is handled here too, just to avoid a formatMoney call.
-//if the first character is a dash, it's a negative amount.  JS didn't like amount *1 (returned NAN)
-				
-				if(amount * 1 <= 0){
-//					app.u.dump(' -> '+amount+' <= zero ');
-					o += data.bindData.currencySign ? data.bindData.currencySign : '$';
-					o += '0.00';
-					}
-				else	{
-//					app.u.dump(' -> '+amount+' > zero ');
-					o += app.u.formatMoney(amount,data.bindData.currencySign,'',data.bindData.hideZero);
-					}
-				
-				$tag.text(o);  //update DOM.
-//				app.u.dump('END app.renderFunctions.format.orderBalance()');
-				} //orderBalance
 			} //renderFormats
 		
 		} // r

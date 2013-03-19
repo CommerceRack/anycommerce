@@ -97,7 +97,7 @@ copying the template into memory was done for two reasons:
 
 //queues are arrays, not objects, because order matters here. the model.js file outlines what each of these is used for.
 		app.q = {mutable : new Array(), passive: new Array(), immutable : new Array()};
-		
+
 		app.globalAjax = {
 			dataType : 'json',
 			overrideAttempts : 0, //incremented when an override occurs. allows for a cease after X attempts.
@@ -122,6 +122,7 @@ copying the template into memory was done for two reasons:
 		if(app.vars._session)	{} //already defined. 
 		else if(app.u.getParameterByName('_session'))	{ //get from URI, if set.
 			app.vars._session = app.u.getParameterByName('_session');
+			app.u.dump(" -> session found on URI: "+app.vars._session);
 			}
 		else	{
 			app.vars._session = app.storageFunctions.readLocal('_session');
@@ -196,7 +197,7 @@ copying the template into memory was done for two reasons:
 			}
 		else	{
 			app.u.dump(" -> go get a new session id.");
-			app.calls.getValidSessionID.init('handleNewSession');
+			app.calls.appCartCreate.init({'callback':'handleNewSession'});
 			app.model.dispatchThis('immutable');
 			}
 		
@@ -280,7 +281,8 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 			dispatch : function(_tag)	{
 				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},'immutable');
 				}
-			},//getValidSessionID
+			},//appCartCreate
+
 //always uses immutable Q
 //formerly canIHaveSession
 		appCartExists : {
@@ -771,7 +773,6 @@ see jquery/api webdoc for required/optional param
 				return r;
 				},
 			dispatch : function(_tag,Q)	{
-//				app.u.dump('BEGIN app.ext.store_cart.calls.cartDetail.dispatch');
 				app.model.addDispatchToQ({"_cmd":"cartDetail","_tag": _tag},Q || 'mutable');
 				} 
 			}, // refreshCart removed comma from here line 383
@@ -826,24 +827,38 @@ see jquery/api webdoc for required/optional param
 				return 1;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				if(!Q)	{Q = 'immutable'}
 				obj["_cmd"] = "cartSet";
-				if(_tag)	{obj["_tag"] = _tag;}
-				app.model.addDispatchToQ(obj,Q);
+				obj["_tag"] = _tag || {};
+				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartSet
 
-//always uses immutable Q
-// ### need to migrate anything using this to use appCartCreate.
-		getValidSessionID : {
-			init : function(callback)	{
-				this.dispatch(callback); 
-				return 1;
+
+
+		cartShippingMethods : {
+			init : function(_tag,Q)	{
+				var r = 0
+				_tag = _tag || {}; //makesure _tag is an object so that datapointer can be added w/o causing a JS error
+				_tag.datapointer = "cartShippingMethods";
+				
+				if(app.model.fetchData('cartShippingMethods') == false)	{
+					r = 1;
+					Q = Q ? Q : 'immutable'; //allow for muted request, but default to immutable. it's a priority request.
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
 				},
-			dispatch : function(callback)	{
-				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":{"callback":callback}},'immutable');
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"cartShippingMethods","_tag": _tag},Q);
 				}
-			},//getValidSessionID
+			}, //cartShippingMethods
+
+
+
+
 
 		ping : {
 			init : function(_tag,Q)	{

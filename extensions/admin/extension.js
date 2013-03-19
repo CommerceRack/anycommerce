@@ -790,6 +790,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 //obj requires panel and pid and sub.  sub can be LOAD or SAVE
+/*
 		adminUIExecuteCGI : {
 			init : function(uri,vars,_tag,Q)	{
 				var r = 0;
@@ -811,7 +812,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}
 			}, //adminUIProductPanelList
-
+*/
 
 		adminUIProductPanelList : {
 			init : function(pid,_tag,Q)	{

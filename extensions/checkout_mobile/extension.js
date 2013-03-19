@@ -185,7 +185,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
-				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: $.extend(true,checkoutData,{'invoice':app.data.cartDetail})}); //
+				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData}); // $.extend(true,checkoutData,{'invoice':app.data.cartDetail})
 				app.u.handleAppEvents($checkout)
 
 				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID))
@@ -232,7 +232,7 @@ if(app.vars._clientid == '1pc')	{
 	}
 else	{
 	//the code below is to disable any links in the payment messaging for apps.
-	$("[data-app-role='paymentMessaging'] a",$form).on('click',function(event){event.preventDefault();});
+	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){event.preventDefault();});
 	$tag.click(function(){
 		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
 		showContent('customer',{'show':'invoice','uriParams':{'cartid':orderCartID,'orderid':orderID}});
@@ -270,7 +270,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 //there are six validated fields, so summing up the values will = 6 if all panels pass.
 			checkout : function($form)	{
 				var r = undefined; //what is returned. Either true or false.
-				if($form)	{
+				if(app.u.buyerIsAuthenticated())	{r = 1}
+				else if($form)	{
 					
 					var formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
 					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
