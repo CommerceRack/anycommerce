@@ -443,6 +443,7 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 		</div>
 		<div id='mainContentArea'></div>
+		<div class="clear"></div>
 	</div>
 </div>
 
@@ -562,7 +563,36 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 		<div class="clear"></div>
 		
-		<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withInventory:1; withVariations:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+		<div id="homepageProdLists">
+			<ul data-bind="var: list($featured_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<div class='titleRed'>Most Popular Items</div>; withInventory:1; withVariations:1; size:4;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			
+			<ul data-bind="var: list($new_arrivals.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<div class='titleBlue'>Featured Chicago Cubs Players</div>; withInventory:1; withVariations:1; size:4;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+		
+		</div>
+		
+		<div class="description">
+			<h2>Your One Stop Shop For Chicago Cubs Gear in Wrigleyville</h2>
+			<p>
+				SportsWorldChicago.com is the online home to Sports World, a Chicago Cubs, Wrigleyville, clothing and accessories supplier with a great 
+				selection and affordable prices.  Our large selection of 
+				<a title="Chicago Cubs shirts" href="http://www.sportsworldchicago.com/category/chicago-cubs-shirts/">Chicago Cubs shirts</a>, hats and 
+				<a title="Chicago Cubs jerseys" href="http://www.sportsworldchicago.com/category/chicago-cubs-jerseys/">Chicago Cubs jerseys</a> is just 
+				what you need to show your support throughout the season or to proudly display your team`s colors year-round. As one of the most popular 
+				retailers of Chicago Cubs apparel, our website is designed to make sure that Cub fans everywhere can get their gear. SportsWorldChicago.com 
+				offers Chicago Cubs merchandise at low prices so you do not need to overspend in order to support your favorite team.  Whether you`re looking 
+				for a <a title="Cubs hat" href="http://www.sportsworldchicago.com/category/chicago-cubs-hats/">Cubs hat</a>, an 
+				<a title="authentic Cubs jersey" href="http://www.sportsworldchicago.com/category/chicago-cubs-jerseys/">authentic Cubs jersey</a> or any 
+				other Cubs apparel, you`ll find it at SportsWorldChicago.com. And don`t forget our 
+				<a title="Cubs baby clothing" href="http://www.sportsworldchicago.com/category/chicago-cubs-shirts.infant-toddler-newborn/">Cubs baby clothing</a> 
+				for your little Cubs fans!
+			</p>
+			<p>
+				In addition to great deals on Cubs merchandise, SportsWorldChicago.com is also your source for all other things Cubbie.  We`ve also got your 
+				connection to MLB and <a title="Cubs tickets" href="http://www.sportsworldchicago.com/category/aa.chicago_cubs_tickets/">Cubs tickets</a>, 
+				and when it`s game day, plan your trip or feel like your`re there with our 
+				<a title="live Wrigley Field web cam" href="http://www.sportsworldchicago.com/category/wrigley_field_cam/">live Wrigley Field web cam</a>.
+			</p>
+		</div>
 	</div>
 	
 	<div class="thinColumn floatRight">
@@ -572,14 +602,13 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	
 	
-	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
-
+	
 <!-- a sample of how to format an elastic native search in a data-bind -->
-	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
-	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
 
 <!-- a sample of how to get a 'list' src onto the page.
+	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
+			<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<div class="titleBlue">Best Sellers</div>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
  -->
 
@@ -652,16 +681,16 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onClick' container or two events will occur onClick.
 -->
-<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+<li id='productListTemplate' class='loadingBG productListItem' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='180' height='124' />
 		</div>
 
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 56;'></h5>
 
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 		
@@ -669,7 +698,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
 	</div>
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#'>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
 		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 	
@@ -782,7 +811,6 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 
 		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
 	</div>
-	<div class='hideInMinimalMode pointer moreDetails' onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>
 </ul>
 

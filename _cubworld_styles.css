@@ -13,12 +13,18 @@ body {
 #content {
 	border-left: 2px solid #002675;
 	border-right: 2px solid #002675;
+	/*
 	margin-top: -10px;
+	*/
 	position:relative;
 	z-index: 100;
 }
 
-#mainContentArea { margin-top: -10px;}
+#mainContentArea {
+	/*
+	margin-top: -10px;
+	*/
+}
 
 #contentBG{
 	background:white;
@@ -40,6 +46,30 @@ body {
 	border: 2px solid #002675;
 }
 
+
+/****************************************************************
+
+UTILITY CLASSES AND UNIVERSAL STYLES
+
+****************************************************************/
+a {
+    color: #990000;
+}
+
+.titleBlue{
+	background: url("cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
+    color: #FFFFFF;
+    font: bold 15px/23px Arial,Helvetica,sans-serif;
+    margin-bottom: 8px;
+    padding-left: 11px;
+}
+.titleRed{
+	background: url("cw12_home_titbgred-1x23.gif") repeat-x scroll center bottom #C60000;
+    color: #FFFFFF;
+    font: bold 15px/23px Arial,Helvetica,sans-serif;
+    margin-bottom: 8px;
+    padding-left: 11px;
+}
 .clear{clear:both;}
 /****************************************************************
 
@@ -52,6 +82,7 @@ HEADER STYLES
 	background: url(img/cw12_header_bg-1020x163.png) bottom left no-repeat;
 	width: 1020px;
 	height: 206px;
+	margin-bottom: -8px;
 }
 #header .livechat {
 	position: absolute;
@@ -324,6 +355,38 @@ HOMEPAGE STYLES
 	padding: 0px 4px;
 	text-decoration: none;
 }
+
+.description {
+	color: #58595B;
+    font: 12px Arial,Helvetica,sans-serif;
+    text-align: justify;
+}
+
+.description h2{
+	background: url("img/cw12_hm_texttit_bg-30x29.png") no-repeat scroll left top transparent;
+    color: #31539C;
+    line-height: 30px;
+    margin: 0 0 5px;
+    padding: 0 0 10px 35px;
+	font-size: 1.4em;
+}
+
+#homepageProdLists {
+	padding: 12px 0px;
+}
+
+#homepageProdLists li.productListItem {
+	height: 212px;
+	width: 185px;
+	margin: 6px;
+}
+
+#homepageProdLists h5.prodName{
+	color: #0D2D66; 
+	font-weight: normal; 
+	font: 11px Arial,Helvetica,sans-serif;
+}
+#homepageProdLists li:hover h5.prodName{color: #BE0000;}
 
 /****************************************************************
 

@@ -2540,6 +2540,7 @@ $tmp.empty().remove();
 		
 		truncText : function($tag,data){
 			var o = app.u.truncate(data.value,data.bindData.numCharacters)
+			$tag.attr('title',data.value);
 			$tag.text(o);
 			}, //truncText
 
