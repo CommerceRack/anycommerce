@@ -579,7 +579,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 
 					}//ends 'if' for whether cart has more than zero items in it.
 				else	{
-					app.u.dump(" -> cart has no contents: "+app.sessionid);
+					app.u.dump(" -> cart has no contents: "+app.vars.cartID);
 					_gaq.push(['_trackEvent','Checkout','App Event','Empty Cart Message Displayed']);
 					app.u.throwMessage("It appears your cart is empty. If you think you are receiving this message in error, please contact the site administrator.");				
 					}
@@ -612,7 +612,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
 //empty old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $zContent = $('#'+app.ext.convertSessionToOrder.vars.containerID).empty();
-				var oldSession = app.sessionId;
+				var oldSession = app.vars.cartID;
 				var orderID = app.data[tagObj.datapointer].orderid;
 
 				app.u.jumpToAnchor(app.ext.convertSessionToOrder.vars.containerID);

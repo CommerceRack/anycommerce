@@ -180,7 +180,7 @@ formerly showCart
 				app.model.addDispatchToQ({
 "_cmd":"cartAmazonPaymentURL",
 "shipping":1,
-"CancelUrl":zGlobals.appSettings.https_app_url+"cart.cgis?sessionid="+app.sessionId,
+"CancelUrl":zGlobals.appSettings.https_app_url+"cart.cgis?cartID="+app.vars.cartID,
 "ReturnUrl":zGlobals.appSettings.https_app_url,
 "YourAccountUrl": zGlobals.appSettings.https_app_url+"customer/orders/",
 '_tag':tagObj},'immutable');

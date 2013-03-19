@@ -54,7 +54,7 @@ jQuery.extend(zController.prototype, {
 		app.vars.fbUser = {};
 		app.vars.protocol = document.location.protocol == 'https:' ? 'https:' : 'http:';
 
-		app.handleSession();
+		app.handleSession(); //get existing session or create a new one.
 
 //used in conjunction with support/admin login. nukes entire local cache.
 		if(app.u.getParameterByName('flush') == 1)	{
@@ -83,7 +83,7 @@ jQuery.extend(zController.prototype, {
 // += is used so that this is appended to anything passed in P.
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
 		
-		app.ext = app.ext || {}; //for holding extensions, including checkout.
+		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
 		
 /*
@@ -95,7 +95,6 @@ copying the template into memory was done for two reasons:
 */
 		app.templates = {};
 
-		app.q = {};
 //queues are arrays, not objects, because order matters here. the model.js file outlines what each of these is used for.
 		app.q = {mutable : new Array(), passive: new Array(), immutable : new Array()};
 		
@@ -109,7 +108,7 @@ copying the template into memory was done for two reasons:
 			}; //holds ajax related vars.
 			
 		
-		app.vars.extensions = app.vars.extensions || [];
+		app.vars.extensions = app.vars.extensions || []; //the list of extensions that are/will be loaded
 		
 		if(app.vars.thisSessionIsAdmin)	{
 			app.handleAdminVars(); //needs to be late because it'll use some vars set above.
@@ -121,6 +120,9 @@ copying the template into memory was done for two reasons:
 //will load _session from localStorage or create a new one.
 	handleSession : function()	{
 		if(app.vars._session)	{} //already defined. 
+		else if(app.u.getParameterByName('_session'))	{ //get from URI, if set.
+			app.vars._session = app.u.getParameterByName('_session');
+			}
 		else	{
 			app.vars._session = app.storageFunctions.readLocal('_session');
 			if(app.vars._session)	{
@@ -169,42 +171,26 @@ copying the template into memory was done for two reasons:
 
 	onReady : function()	{
 		this.u.dump(" -> onReady executed. V: "+app.model.version+"|"+app.vars.release);
-/*
-
-session ID can be passed in via the params (for use in one page checkout on a non-ajax storefront). If one is passed, it must be validated as active session.
-if no session id is passed, the getValidSessionID function will look to see if one is in local storage and use it or request a new one.
-Exception - the controller is used for admin sessions too. if an admin session is being instantiated, forget about session id (cartid) for now.
-
-A session ID could be passed in through vars, but app.sessionId isn't set until the session id has been verified OR the app is explicitly told to not validate the session.
-*/
-		if(app.vars.thisSessionIsAdmin && app.vars.sessionId)	{
-			app.u.dump(" -> admin session and session id set.");
-//you'd get here in the UI.
-			app.sessionId = app.vars.sessionId
+		if(app.vars.thisSessionIsAdmin)	{
 			app.model.addExtensions(app.vars.extensions);
 			}
-		else if(app.vars.thisSessionIsAdmin)	{
-			app.u.dump(" -> admin session. no session id.");
-			//for now, do nothing.  this may change later.
-			app.model.addExtensions(app.vars.extensions);
-			}
-		else if(app.vars.sessionId)	{
-			app.u.dump(" -> session id set.");
-			app.calls.appCartExists.init(app.vars.sessionId,{'callback':'handleTrySession','datapointer':'appCartExists'});
+		else if(app.vars.cartID)	{
+			app.u.dump(" -> app.vars.cartID set. verify.");
+			app.calls.appCartExists.init(app.vars.cartID,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
-//if sessionId is set on URI, there's a good chance a redir just occured from non secure to secure.
-		else if(app.u.isSet(app.u.getParameterByName('sessionId')))	{
-			app.u.dump(" -> session id from URI used.");
-			app.calls.appCartExists.init(app.u.getParameterByName('sessionId'),{'callback':'handleTrySession','datapointer':'appCartExists'});
+//if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
+		else if(app.u.isSet(app.u.getParameterByName('cartID')))	{
+			app.u.dump(" -> cartID from URI used.");
+			app.calls.appCartExists.init(app.u.getParameterByName('cartID'),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
-		else if(app.model.fetchSessionId())	{
+		else if(app.model.fetchCartID())	{
 			app.u.dump(" -> session retrieved from localstorage..");
-			app.calls.appCartExists.init(app.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.calls.appCartExists.init(app.model.fetchCartID(),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
@@ -300,7 +286,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 		appCartExists : {
 			init : function(cartid,_tag)	{
 //					app.u.dump('BEGIN app.calls.appCartExists');
-				app.sessionId = cartid; //needed for the request. may get overwritten if not valid.
+				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
 				this.dispatch(cartid,_tag);
 				return 1;
 				},
@@ -492,7 +478,7 @@ see jquery/api webdoc for required/optional param
 				},
 			dispatch : function(partner,_tag,Q)	{
 //note - was using FB['_session'].access_token pre v-1202. don't know how long it wasn't working, but now using _authRepsonse.accessToken
-				app.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':partner,'appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':app.sessionID,"_tag":_tag},Q || 'immutable');
+				app.model.addDispatchToQ({'_cmd':'appVerifyTrustedPartner','partner':partner,'appid':zGlobals.thirdParty.facebook.appId,'token':FB['_authResponse'].accessToken,'state':app.vars.cartID,"_tag":_tag},Q || 'immutable');
 				}
 			}, //facebook			
 			
@@ -925,8 +911,8 @@ app.u.throwMessage(responseData); is the default error handler.
 
 
 		handleNewSession : {
-//app.sessionID is set in the method. no need to set it here.
-//use app.sessionID if you need it in the onSuccess.
+//app.vars.cartID is set in the method. no need to set it here.
+//use app.vars.cartID if you need it in the onSuccess.
 //having a callback does allow for behavioral changes (update new session with old cart contents which may still be available.
 			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleNewSession.onSuccess');
@@ -937,8 +923,8 @@ app.u.throwMessage(responseData); is the default error handler.
 			},//convertSessionToOrder
 
 //executed when appCartExists is requested.
-//app.sessionID is already set by this point. need to reset it onError.
-// onError does NOT need to nuke app.sessionId because it's handled in handleResponse_appCartExists 
+//app.app.vars.cartID is already set by this point. need to reset it onError.
+// onError does NOT need to nuke app.vars.cartID because it's handled in handleResponse_appCartExists 
 		handleTrySession : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');

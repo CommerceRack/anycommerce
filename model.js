@@ -358,7 +358,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 		contentType : "text/json",
 		dataType:"json",
 //ok to pass admin vars on non-admin session. They'll be ignored.
-		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cartid": app.sessionId,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
+		data: JSON.stringify({"_uuid":pipeUUID,"_session":app.vars._session,"_cartid": app.vars.cartID,"_cmd":"pipeline","@cmds":Q,"_clientid":app.vars._clientid,"_domain":app.vars.domain,"_userid":app.vars.userid,"_deviceid":app.vars.deviceid,"_authtoken":app.vars.authtoken,"_version":app.model.version})
 		});
 
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
@@ -858,7 +858,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 				}
 			else	{
 /* nuke references to old, invalid session id. if this doesn't happen, the old session ID gets passed and will be re-issued. */				
-				app.sessionId = null;
+				app.vars.cartID = null;
 				app.storageFunctions.writeLocal('cartid',null);
 				app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 				}
@@ -886,11 +886,11 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
 //save session id locally to maintain session id throughout user experience.	
-			app.storageFunctions.writeLocal('sessionId',responseData['_cartid']);
+			app.storageFunctions.writeLocal('cartID',responseData['_cartid']);
 //			app.storageFunctions.writeLocal(app.vars['username']+"-cartid",responseData['_cartid']);  
-			app.sessionId = responseData['_cartid']; //saved to object as well for easy access.
+			app.vars.cartID = responseData['_cartid']; //saved to object as well for easy access.
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
-			app.u.dump("sessionID = "+responseData['_cartid']);
+			app.u.dump("cartID = "+responseData['_cartid']);
 			return responseData['_cartid'];
 			}, //handleResponse_appCartCreate
 	
@@ -1091,31 +1091,16 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 			return r;
 			},
 	
-	//gets session id. The session id is used a ton.  It is saved to app.sessionId as well as a cookie and, if supported, localStorage.
+	//gets session id. The session id is used a ton.  It is saved to app.vars.cartID as well as a cookie and, if supported, localStorage.
 	//Check to see if it's already set. If not, request a new session via ajax.
-		fetchSessionId : function(callback)	{
-//			app.u.dump('BEGIN: model.fetchSessionId');
+		fetchCartID : function(callback)	{
+//			app.u.dump('BEGIN: model.fetchCartID');
 			var s = false;
-			if(app.sessionId)	{
-//				app.u.dump(' -> sessionId is set in control');
-				s = app.sessionId
+			if(s = app.storageFunctions.readLocal('cartID'))	{
+//				app.u.dump(' -> cartID is set in local from previous ajax session');										 
 				}
-//sets s as part of else if so getLocal doesn't need to be run twice.
-			else if(s = app.storageFunctions.readLocal('sessionId'))	{
-//				app.u.dump(' -> sessionId is set in local from previous ajax session');										 
-				}
-//see note in handleResponse_appCartCreate to learn why this is commented out.
-//			else if(s = app.storageFunctions.readLocal(app['username']+"-cartid"))	{
-//				app.u.dump(' -> sessionId is set in local from cookie. possibly from storefront session (non-ajax)');
-//				}
-			else	{
-//catch all.  returns false.
-//				app.u.dump(' -> no session id in control or local.');
-				}
-	//		app.u.dump("//END: fetchSessionId. s = "+s);
-			
 			return s;
-			}, //fetchSessionId
+			}, //fetchCartID
 	
 /*
 Returns T or F.

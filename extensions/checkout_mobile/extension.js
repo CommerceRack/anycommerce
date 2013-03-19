@@ -171,27 +171,22 @@ var orderCreate = function() {
 this callback is executed after a successful checkout.  'success' is defined as an order created, the order may contain 'payment required' warnings.
 this is what would traditionally be called an 'invoice' page, but certainly not limited to just showing the invoice.
 */
-		showInvoice : {
-			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN app.ext.orderCreate.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
+		cart2OrderIsComplete : {
+			onSuccess : function(_rtag)	{
+//				app.u.dump('BEGIN app.ext.orderCreate.callbacks.checkoutSuccess.onSuccess   datapointer = '+_rtag.datapointer);
 				$('body').hideLoading();
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
-				var $checkout = tagObj.jqObj,
-				oldSession = app.sessionId,
-				orderID = app.data[tagObj.datapointer].orderid;
+				var $checkout = _rtag.jqObj,
+				checkoutData = app.data[_rtag.datapointer],
+				oldSession = app.vars.cartID,
+				orderID = app.data[_rtag.datapointer].orderid;
 
 // SLIDE UP to top of checkout here.
 
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
-				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: $.extend(true,app.data[tagObj.datapointer],{'invoice':app.data.cartDetail})}); //
+				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: $.extend(true,checkoutData,{'invoice':app.data.cartDetail})}); //
 				app.u.handleAppEvents($checkout)
-
-
-/*
-note - the click prevent default is because the renderFormat adds an onclick that passes both order and cart id.
-*/
-				$('.paymentRequired').append(app.data[tagObj.datapointer].payment_status_detail).find('a').click(function(event){event.preventDefault();});
 
 				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID))
 				
@@ -208,7 +203,8 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 						});
 					}
 				else	{$('.ocmFacebookComment').addClass('displayNone')}
-				
+
+
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
 				app.model.destroy('cartDetail');
 				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
@@ -221,17 +217,26 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 				if(app.ext.orderCreate.checkoutCompletes)	{
 					var L = app.ext.orderCreate.checkoutCompletes.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.ext.orderCreate.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+						app.ext.orderCreate.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':_rtag.datapointer});
 						}
 					}
 
 
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
-	setTimeout("$('#"+app.ext.orderCreate.vars.containerID+"').append(app.data['"+tagObj.datapointer+"']['html:roi']); app.u.dump('wrote html:roi to DOM.');",2000); 
+//this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
+	setTimeout(function(){
+		$checkout.append(checkoutData['html:roi']);
+		app.u.dump('wrote html:roi to DOM.');
+		},2000); 
 	}
 else	{
-	//roi code should be handled by the app itself, not use the output from the UI
+	//the code below is to disable any links in the payment messaging for apps.
+	$("[data-app-role='paymentMessaging'] a",$form).on('click',function(event){event.preventDefault();});
+	$tag.click(function(){
+		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
+		showContent('customer',{'show':'invoice','uriParams':{'cartid':orderCartID,'orderid':orderID}});
+		});
 	}
 
 				},
@@ -242,7 +247,7 @@ else	{
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
 				}
-			} //showInvoice
+			} //cart2OrderIsComplete
 
 		}, //callbacks
 
@@ -708,12 +713,12 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			}, //panelContent
 	
-//push onto this (cco.checkoutCompletes.push(function(P){});
+//push onto this (orderCreate.checkoutCompletes.push(function(P){});
 //after checkout, these will be iterated thru and executed.
 /*
 Parameters included are as follows:
 P.orderID
-P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
+P.cartID (this would be the cartID associated w/ the order. immediately after checkout, this is dumped by the mvc and a new cart id is generated/used)
 P.datapointer - pointer to cartOrderCreate
 
 note - the order object is available at app.data['order|'+P.orderID]
@@ -951,7 +956,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(app.ext.orderCreate.validate.checkout($form))	{
 							app.ext.orderCreate.u.saveAllCheckoutFields($form);
 							app.ext.cco.u.buildPaymentQ();
-							app.ext.cco.calls.cartOrderCreate.init({'callback':'showInvoice','extension':'orderCreate','jqObj':$form});
+							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
 							app.model.dispatchThis('immutable');						
 							
 							}

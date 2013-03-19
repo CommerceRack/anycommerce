@@ -24,6 +24,7 @@ productListTemplateATC (the qty render format for this is slightly different. ta
 
 * A new add to cart command. old command is deprecated.
 * Introduction of '_session' to split session data from cart data.
+* all references to app.sessionId and app.vars.sessionId are gone. replaced with cartID.
 * attempts and pipeUUID moved from req obj into _tag
 * update to quickview/viewProductInModal.
 

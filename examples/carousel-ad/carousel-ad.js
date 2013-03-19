@@ -416,7 +416,7 @@ app.model.dispatchThis();
 
 			handleCheckout : function()	{
 				$('#modalCart').empty().addClass('loadingBG').html("<br><br><br>Transfering to Secure Checkout");
-				var checkoutURL = zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/checkout.cgis?META=BLOGAPP";
+				var checkoutURL = zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?META=BLOGAPP";
 				window.location = checkoutURL;
 				},
 			

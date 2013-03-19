@@ -82,7 +82,7 @@ and offMenu is toggle off, hiding the change button.
 	filter: alpha(opacity=50);
 	opacity:0.5;
 	}
-.formValidationError	{color:#cc0000;} /* applied to errors displayed in form validation */
+.formValidationError, .zwarn	{color:#cc0000;} /* applied to errors displayed in form validation or generic warnings */
 .pointer	{cursor:pointer;}
 
 /* used when an element needs to start of hidden. this is used frequently. */

@@ -1007,7 +1007,7 @@ fallback is to just output the value.
 								}
 							else	{
 								$('#mainContentArea').empty().addClass('loadingBG').html("<h1>Transferring to Secure Login...</h1>");
-								var SSLlocation = app.vars.secureURL+"?sessionId="+app.sessionId;
+								var SSLlocation = app.vars.secureURL+"?cartID="+app.vars.cartID;
 								SSLlocation += "#customer?show="+infoObj.show
 								_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 								document.location = SSLlocation; //redir to secure url
@@ -1030,7 +1030,7 @@ fallback is to just output the value.
 								app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 	// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
 								$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
-								var SSLlocation = zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#checkout?show=checkout";
+								var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout";
 								_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 								document.location = SSLlocation;
 								}
@@ -1191,8 +1191,8 @@ else	{
 //use this when linking from one store to another when you want to share the cart.
 			linkToStore : function(url,type){
 
-				if(type == 'vstore') {window.open(url+'c='+app.sessionId+'/');}
-				else if(type == 'app') {window.open(url+'?sessionId='+app.sessionId+'/');}
+				if(type == 'vstore') {window.open(url+'c='+app.vars.cartID+'/');}
+				else if(type == 'app') {window.open(url+'?cartID='+app.vars.cartID+'/');}
 				else {
 					$('#globalMessage').anymessage({'message':'unknown type passed into myRIA.a.linkToStore.','gMessage':true});
 					}

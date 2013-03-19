@@ -37,7 +37,7 @@ var myRIA = function() {
 					},
 				dispatch : function(obj,tagObj)	{
 					obj["_cmd"] = "cartItemsAdd"; //cartItemsAddSerialized
-					obj["_zjsid"] = app.sessionId; 
+					obj["_zjsid"] = app.vars.cartID; 
 					obj["_tag"] = tagObj;
 					app.model.addDispatchToQ(obj,'immutable');
 					app.calls.cartSet.init({'payment-pt':null}); //nuke paypal token anytime the cart is updated.
