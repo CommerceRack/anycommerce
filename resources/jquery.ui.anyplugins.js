@@ -246,7 +246,6 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			
 			if($t.attr('widget') == 'anytabs')	{} //id has already been set as tabs.
 			else	{
-				console.log('got into init else');
 				$t.attr('widget','anytabs')
 				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
 				self.tabs = $("ul",$t).first();
@@ -410,7 +409,7 @@ either templateID or (data or datapointer) are required.
 				self._anyContent();
 				}
 			else if(o.data || (o.datapointer && !$.isEmptyObject(app.data[o.datapointer])))	{
-//				app.u.dump(" -> passed data check.");
+//				app.u.dump(" -> passed data check."); app.u.dump(o.data);
 				self._anyContent();
 				}
 			else	{

@@ -937,6 +937,10 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 						if($.inArray(infoObj.pid,app.ext.myRIA.vars.session.recentlyViewedItems) < 0)	{
 							app.ext.myRIA.vars.session.recentlyViewedItems.unshift(infoObj.pid);
 							}
+						else	{
+							//the item is already in the list. move it to the front.
+							app.ext.myRIA.vars.session.recentlyViewedItems.splice(0, 0, app.ext.myRIA.vars.session.recentlyViewedItems.splice(app.ext.myRIA.vars.session.recentlyViewedItems.indexOf(infoObj.pid), 1)[0]);
+							}
 						infoObj.parentID = app.ext.myRIA.u.showProd(infoObj);
 						break;
 	
@@ -2040,7 +2044,7 @@ effects the display of the nav buttons only. should be run just after the handle
 				$nextBtn = $("[data-app-role='prodDetailNextItemButton']","#appNav"),
 				$prevBtn = $("[data-app-role='prodDetailPrevItemButton']","#appNav");
 				
-				app.u.dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
+//				app.u.dump(" -> $prevBtn.data('datapointer'): "+$prevBtn.data('datapointer'));
 				
 //The buttons are only shown on product detail pages. if no datapointer is set, no reason to show the buttons because there's no reference for what product would be 'next'.		
 				if(infoObj.pageType == 'product' && $prevBtn.data('datapointer'))	{

@@ -1235,7 +1235,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 //http://stackoverflow.com/questions/5240785/split-abc/5240797#5240797
 		getObjValFromString : function (s,obj,char)	{
-			cart = char || '.';
+			char = char || '.';
 			var o=obj, attrs=s.split(char);
 			while (attrs.length > 0) {
 				o = o[attrs.shift()];
@@ -2476,7 +2476,7 @@ return $r;
 				}
 			else	{
 //				app.u.dump(' -> attribute info and data are both set.');
-
+				
 				var value;
 				var attributeID = this.parseDataVar(v); //used to store the attribute id (ex: zoovy:prod_name), not the actual value.
 				var namespace = v.split('(')[0];
