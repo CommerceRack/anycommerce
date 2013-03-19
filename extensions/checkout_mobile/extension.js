@@ -702,7 +702,8 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutMethodsPay
 
 			chkoutNotes : function(formObj,$fieldset)	{
-
+				if(zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
+				else	{$fieldset.hide()}
 				} //chkoutNotes
 
 			}, //panelContent
