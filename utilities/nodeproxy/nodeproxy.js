@@ -1,14 +1,21 @@
 
-
-// anyCommerce Local Webserver + Testing Proxy 
+//
+// anyCommerce Developer Proxy+Webserver
+//
 // purpose: serves app files off the local system via http & https
-//			create a realistic simulation environment for testing/diagnostics without needing to commit/sync/wait/wait/wait/test
+//			create a semi-realistic simulation environment for testing/diagnostics without needing to commit/sync/wait/wait/wait/test
+//			especially useful for testing IE, Safari, iPad's, and other things which can't load files locally.
+//
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // STEP1: setup & test proxy
 // 1a. download + install node.js 
-// 1b. npm install http-proxy
-// 1c. open cmd window and run "node demo1.js"
+//		* node is a server side javascript engine based on chromes v8 javascript engine.
+//		* node can be downloaded from http://www.nodejs.org
+// 1b. in a dos cmd window:
+//		# npm install http-proxy colors mime
+// 1c. open dos/cmd window, then change directory to where the proxy is installed then run:
+//		# node nodeproxy.js
 // 1d. open firefox, chrome, ie, etc. on your machine go to the proxy settings and put in 127.0.0.1:8081 and select 'proxy all protocols'
 // 1e. visit any website on the internet - you will see url/requests passing through your local proxy
 //     make sure you test https://www.paypal.com 
@@ -17,9 +24,12 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // STEP2: install openssl and generate TEST ssl keys
-//	  * skip this step if keys were already generated in the project (check for domain.com.key and domain.com.cert files)
+//	  * SKIP THIS STEP if keys were already generated in the project (check for domain.com.key and domain.com.cert files)
+//	  * If you aren't sure look in the folder nodeproxy.js (this file) is in for files like www.the-domain-you-are-working-on.com.crt and .key 
+//
+// IF YOU ARE GOING TO CONTINUE:
 //    * openssl is NOT necessary for running the proxy
-//	  * openssl is ONLY necessary for creating self signed test keys for a domain (this step can often be skipped)
+//	  * openssl is ONLY necessary for creating self signed test keys for a domain (this step can often be skipped) - it can be found on most linux boxen.
 //	  * we recommend developers use SELF SIGNED KEYS so they cannot accidentally compromise (upload) the real ssl keys
 //	    (this is handy because test keys can be included with this script in the github folder, whereas real [ca signed] keys must be protected!)
 //	  * openssl will already be installed on most unix systems, if you have access to a unix/linux or macos system that's cool, no need to continue.
@@ -27,14 +37,18 @@
 //	    (any version with an installer is probably fine -- we're only going to use this once, 32 or 64 bit doesn't matter)
 //	  * when using openssl for windows you will probably need to type C:\openssl-win32\bin\openssl.exe  instead of just "openssl" in the commands below
 // 	    if all else fails - try to find the openssl.exe using your windows finder.
-// 2a. Generate a Test Key:
+//
+// 2a. Generate a Test Key:  (skip this step if test.key is already present)
 //		# openssl genrsa -out test.key 2048
+
 // 2b. Create a self signed certificate
 //		# openssl req -new -key test.key -out WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM.csr
-//	   You will be asked questions to create a key - use any values for each prompt EXCEPT "Common Name" which **MUST** be the
-//	   the fully qualified host.domain.com -- ex: WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM
-//	   the domain does not need to be uppercase, leave password blank
-//	   Example: Common Name (eg, your name or your server's hostname) []:WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM
+//
+//     HINTS:
+//	   * You will be asked questions to create a key - use any values for each prompt EXCEPT "Common Name" which **MUST** be the
+//	   * the fully qualified host.domain.com -- ex: WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM
+//	   * the domain does not need to be uppercase, leave password blank
+//	   * Example: Common Name (eg, your name or your server's hostname) []:WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM
 // 2c. Generate & Self sign a certificate
 //		# openssl x509 -req -in WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM.csr -signkey test.key -out WWW.DOMAIN-THE-APP-WILL-BE-HOSTED-AT.COM.crt
 // 2d. **OPTIONAL** open your browser and import the CA certificate "test.key" 
@@ -46,9 +60,10 @@
 //
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 3a. change any of these variables:
+// 3a. change any of these variables to match your project:
 var TESTING_DOMAIN = "www.zoovy.com";
 var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
+
 // 3b. run: node nodeproxy.js
 // 3c. (as instructed) - configure your browser's proxy port
 
@@ -65,6 +80,7 @@ var path = require('path'),
 	https = require('https'),
 	util = require('util'),
 	colors = require('colors'),
+	mime = require('mime'),
 	crypto = require('crypto');
  
  var welcome = [
@@ -125,16 +141,21 @@ http.createServer(function(req, res) {
 	if (fs.statSync(filename).isDirectory()) filename += '/index.html';
  
     fs.readFile(filename, "binary", function(err, file) {
-      if(err) {        
-        res.writeHead(500, {"Content-Type": "text/plain"});
-        res.write(err + "\n");
-        res.end();
-        return;
-      }
- 
-      res.writeHead(200);
-      res.write(file, "binary");
-      res.end();
+	if(err) {        
+		res.writeHead(500, {"Content-Type": "text/plain"});
+		res.write(err + "\n");
+		res.end();
+		return;
+		}
+
+	var content_type = mime.lookup(filename); 
+	if ((content_type == "text/html") || (content_type == "text/css")) {
+		// tell the webbrowser the files we're working on are utf8 by appending to Content-Type
+		content_type = content_type + "; charset=utf-8";
+		}
+	res.writeHead(200, {"Content-Type": content_type});
+	res.write(file, "binary");
+	res.end();
 	});
 }).listen(parseInt(localWebserverPort));
  // console.log("Static file server running at => http://localhost:" + localWebserverPort);
