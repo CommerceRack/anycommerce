@@ -437,7 +437,7 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 
 <div id="contentBG">
 	<div id="content">	
-		<div id='globalMessaging' class='appMessaging'></div>
+		
 		<div id='appNav'>
 			<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
 			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
@@ -503,6 +503,13 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 
 <div class="smallPrint">Copyright © 2013, All Rights Reserved.</div>
 
+
+
+<!--
+used for error message testing
+onClick="app.u.throwMessage('hello world');" 
+-->
+<div id='globalMessaging' class='appMessaging'></div>
 </div>
 
 
@@ -692,7 +699,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 
 		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 56;'></h5>
 
-		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		<h6 class="prodPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
 		
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 <!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->

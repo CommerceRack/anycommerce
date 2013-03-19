@@ -46,6 +46,22 @@ body {
 	border: 2px solid #002675;
 }
 
+#globalMessaging {
+	position: fixed;
+	bottom: 4px;
+	right: 4px;
+	display: block;
+	/*
+	border: 2px solid #002675;
+	background: white;
+	*/
+}
+
+#globalMessaging > .appMessage {
+	padding-right: 48px;
+	margin: 8px;
+	z-index: 10001
+}
 
 /****************************************************************
 
@@ -380,13 +396,21 @@ HOMEPAGE STYLES
 	width: 185px;
 	margin: 6px;
 }
-
-#homepageProdLists h5.prodName{
+.productListItem .prodThumbContainer {
+	border: 1px solid #CDCDCD;
+}
+#homepageProdLists .prodName{
 	color: #0D2D66; 
 	font-weight: normal; 
 	font: 11px Arial,Helvetica,sans-serif;
 }
-#homepageProdLists li:hover h5.prodName{color: #BE0000;}
+#homepageProdLists .prodPrice {
+	color: #7F0000;
+    font: bold 13px Helvetica,Arial;
+	margin-bottom: 4px;
+}
+
+#homepageProdLists li:hover .prodName{color: #BE0000;}
 
 /****************************************************************
 
