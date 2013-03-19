@@ -184,7 +184,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
-				$checkout.anycontent({'templateID':'chkoutInvoiceTemplate',data: $.extend(true,app.data[tagObj.datapointer],{'invoice':app.data.cartDetail})}); //
+				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: $.extend(true,app.data[tagObj.datapointer],{'invoice':app.data.cartDetail})}); //
 				app.u.handleAppEvents($checkout)
 
 
@@ -271,7 +271,12 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
 					sum = 0,
 					errors = "";
-					
+
+//nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
+					$(".ui-widget-anymessage",$form).each(function(){
+						$(this).empty().remove();
+						});	
+
 					$fieldsets.each(function(){
 						
 						var $fieldset = $(this),
@@ -317,10 +322,9 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> cs2o.validate.chkoutPreflight: "+valid);
+				app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
 				return valid;
 				}, //chkoutPreflightFieldset
-
 
 			chkoutAccountCreate : function($fieldset,formObj)	{
 				var valid = undefined; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
@@ -339,7 +343,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> cs2o.validate.chkoutAccountCreate: "+valid);
+				app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
 				return valid;
 				}, //validate.chkoutAccountInfoFieldset
 				
@@ -360,7 +364,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
 					}
 
-				app.u.dump(" -> cs2o.validate.chkoutMethodsShip: "+valid);
+				app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
 				
@@ -381,7 +385,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					valid = 0;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> cs2o.validate.chkoutMethodsPay: "+valid);
+				app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
 				return valid;
 				}, //chkoutPayOptionsFieldset
 				
@@ -420,7 +424,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
 					}
 
-				app.u.dump(" -> cs2o.validate.chkoutAddressBill: "+valid);
+				app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
 				return valid;
 				}, //chkoutBillAddressFieldset
 				
@@ -951,7 +955,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 							
 							}
 						else	{
-							$('.formValidationError',$form).first().animate({scrollTop : 0},1000); //scroll to first instance of error.
+							//scrolls up to first instance of an error.
+							$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage',$form).first().offset().top},1000); //scroll to first instance of error.
 							}
 						}
 					})

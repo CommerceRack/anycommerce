@@ -1627,7 +1627,7 @@ VALIDATION
 //is simple validator which can be extended over time.
 //also, you can pass a fieldset in instead of the entire form (or any other jquery object) to validate just a portion of a form.
 // checks for 'required' attribute and, if set, makes sure field is set and, if max-length is set, that the min. number of characters has been met.
-//
+// if you do any validation outside of this and use anymessage to report those errors, you'll need to clear them yourself.
 		validateForm : function($form)	{
 			app.u.dump("BEGIN admin.u.validateForm");
 			if($form && $form instanceof jQuery)	{
@@ -1637,12 +1637,6 @@ VALIDATION
 				$form.showLoading({'message':'Validating'});
 
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
-
-//nuke any exising anymessage errors within the form. otherwise, a report of "you didn't select..." would stay present and be confusing.
-				$(".ui-widget-anymessage",$form).each(function(){
-					$(this).empty().remove();
-					});				
-				
 				
 				$('input',$form).each(function(){
 					var $input = $(this),
