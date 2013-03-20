@@ -96,7 +96,7 @@ ajaxRequest.success(function(){
 				$('.atcButton').removeAttr('disabled').removeClass('disabled'); //makes all atc buttons clickable again.
 				$('.checkoutNowButton').show();
 				var htmlid = 'atcMessaging_'+app.data[tagObj.datapointer].product1;
-				$('#atcMessaging_'+app.data[tagObj.datapointer].product1).append(app.u.formatMessage({'message':'Item Added','htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"}));
+				$('#atcMessaging_'+app.data[tagObj.datapointer].product1).anymessage({'message':'Item Added','htmlid':htmlid,'uiIcon':'check'});
 				},
 			onError : function(responseData,uuid)	{
 				app.u.dump('BEGIN app.ext.store_product.callbacks.init.onError');
@@ -150,7 +150,7 @@ ajaxRequest.success(function(){
 //				app.u.dump("BEGIN myRIA.callbacks.showProdList");
 //				app.u.dump(app.data[tagObj.datapointer]);
 				if(app.data[tagObj.datapointer]['@products'].length < 1)	{
-					$('#'+tagObj.targetID).append(app.u.formatMessage('This list ('+listID+') appears to be empty.'));
+					$('#'+tagObj.targetID).anymessage({'message':'This list ('+listID+') appears to be empty.'});
 					}
 				else	{
 					app.ext.store_prodlist.u.buildProductList({"withInventory":1,"withVariations":1,"templateID":tagObj.templateID,"parentID":tagObj.targetID,"csv":app.data[tagObj.datapointer]['@products']})

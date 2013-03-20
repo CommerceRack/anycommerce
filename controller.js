@@ -1175,7 +1175,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //obj is some optional data. obj.$content would be a common use.
 // !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
 		handleAppEvents : function($target,obj)	{
-//				app.u.dump("BEGIN admin.u.handleAppEvents");
+				app.u.dump("BEGIN admin.u.handleAppEvents");
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
 					$("[data-app-event]",$target).each(function(){
@@ -1183,7 +1183,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						obj = obj || {},
 						extension = $ele.data('app-event').split("|")[0],
 						action = $ele.data('app-event').split("|")[1];
-//						app.u.dump(" -> action: "+action);
+						app.u.dump(" -> action: "+action);
 						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
@@ -2803,7 +2803,7 @@ $tmp.empty().remove();
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
 //doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
-//			app.u.dump("BEGIN renderFormats.processList");
+			app.u.dump("BEGIN renderFormats.processList");
 			$tag.removeClass('loadingBG');
 			if(data.bindData.loadsTemplate)	{
 				var $o, //recycled. what gets added to $tag for each iteration.

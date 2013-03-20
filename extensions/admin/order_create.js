@@ -423,7 +423,7 @@ app.u.throwMessage(msg);
 						r += "<\/ul><\/div>";
 						
 						
-						$('#appCreateOrderMessaging').toggle(true).append(app.u.formatMessage({'message':r,'uiIcon':'alert'}));
+						$('#appCreateOrderMessaging').toggle(true).anymessage({'message':r,'uiIcon':'alert'});
 
 						}
 
@@ -612,7 +612,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 				var $globalErrors = $('#chkoutSummaryErrors').empty();
 				var r = true;
 				var sum = 0;
-				sum += app.data.cartDetail['@ITEMS'].length > 0 ? 1 : function(){$globalErrors.append(app.u.formatMessage("Cart must have at least one item in it")); return 0;}; //cart needs to have at least one item in it.
+				sum += app.data.cartDetail['@ITEMS'].length > 0 ? 1 : function(){$globalErrors.anymessage({'message':"Cart must have at least one item in it"}); return 0;}; //cart needs to have at least one item in it.
 				sum += this.chkoutShipMethodsFieldset(); //app.u.dump('ship methods done. sum = '+sum);
 				sum += this.chkoutPayOptionsFieldset(); //app.u.dump('pay options done. sum = '+sum);
 				sum += this.chkoutBillAddressFieldset(); //app.u.dump('bill address done. sum = '+sum);
@@ -622,7 +622,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 //				app.u.dump('END app.ext.convertSessionToOrder.validate.isValid. sum = '+sum);
 				if(sum != 6)	{
 					r = false;
-					$globalErrors.append(app.u.formatMessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"})).toggle(true);
+					$globalErrors.anymessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"}).toggle(true);
 					}
 //				r = true; //for testing error handling. do not deploy with this line uncommented.
 				return r;
@@ -685,7 +685,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 						}
 
 					if(valid == 0)	{
-						$fieldsetErrors.toggle(true).append(app.u.formatMessage("<ul>"+errMsg+"<\/ul>"));
+						$fieldsetErrors.toggle(true).anymessage({'message':"<ul>"+errMsg+"<\/ul>"});
 						}
 					}
 //				app.u.dump(' -> accountInfo valid = '+valid);
@@ -703,7 +703,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipMethodsFieldsetErrors').toggle(true).append(app.u.formatMessage("Please select a shipping method. Cart must have items in it"));
+					$('#chkoutShipMethodsFieldsetErrors').toggle(true).anymessage({'message':"Please select a shipping method. Cart must have items in it"});
 					$('#chkoutShipMethodsFieldset').removeClass('validatedFieldset');
 					}
 				if(valid == 1)	{
@@ -770,7 +770,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 				if(valid == 0){
 					$('#chkoutPayOptionsFieldset').removeClass('validatedFieldset');
 //					app.u.dump(' -> payment options did not pass validation');
-					$errorDiv.toggle(true).append(app.u.formatMessage(errMsg));
+					$errorDiv.toggle(true).anymessage({'message':errMsg});
 					}
 				else{
 //					app.u.dump(' -> payment options passed validation');
@@ -794,7 +794,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 					}
 				else	{
 					valid = 0;
-					$('#chkoutBillAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutBillAddressFieldsetErrors').anymessage({'message':"Some required fields were left blank or are invalid"}).toggle(true);
 					$('#chkoutBillAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -823,7 +823,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutShipAddressFieldsetErrors').anymessage({'message':"Some required fields were left blank or are invalid"}).toggle(true);
 					$('#chkoutShipAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -858,27 +858,7 @@ in this case, toggle the address entry form on so that the corrections can be ma
 					$state.parent().addClass('mandatory'); r = false;
 					}
 app.u.dump("REMINDER!!! phone number requirements are disabled because zglobals not available.");
-/*
-				if(zGlobals.checkoutSettings.chkout_phone == 'REQUIRED'){
-//					app.u.dump(' -> phone number IS required');
-					var $phone = $('#data-'+TYPE+'_phone').removeClass('mandatory');
-					if(app.u.isValidPhoneNumber($phone.val(),$country.val()) == true)	{
-//						app.u.dump(' -> phone number IS valid');
-						//don't override what r is already set to if this validates. only override if it DOESN'T validate.
-						}
-					else if(TYPE == 'ship' && ($('#data-bill_phone').val()))	{
-						//set the shipping phone to the billing phone to expedite checkout.
-							$phone.val($('#data-bill_phone').val())
-						}
-					else	{
-//						app.u.dump(' -> phone number is NOT valid');
-						$errorDiv.append(app.u.formatMessage("Please provide a valid phone number with area code."));
-						$phone.parent().addClass('mandatory');
-						r = false;
-						}
-					}
-				
-*/				
+			
 				if(!app.u.isValidPostalCode($zip.val(),$country.val())){$zip.parent().addClass('mandatory'); r = false;}
 				return r;
 				} //addressIsPopulated

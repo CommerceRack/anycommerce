@@ -268,6 +268,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	</div>
 	
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#'>
+		<input type='hidden' name='qty' value='1' \/>
 		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 	
@@ -411,7 +412,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div id='productTemplate'>
+<div id='productTemplate' class='productPage'>
 
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
@@ -463,7 +464,7 @@ this will likely become more flexible in the future. ###
 	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
 
 
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.store_product.u.handleBulkAddToCart($(this).closest('.productPage'),{'action':'modal'}); return false;">
 
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
@@ -802,6 +803,7 @@ if you change these, you should move them above this comment so that when you (o
 		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
 		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
+		<li class='hideIfLoggedOut'><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -815,9 +817,8 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
-			<div><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></div>
 
-			<section class='clearfix'>
+			<section>
 
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
 	<h2>Billing Address(es)</h2>
@@ -838,7 +839,7 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div id='ordersArticle' class='displayNone textContentArea'>
 			<h1>Order History</h1>
-			<div id='orderHistoryContainer' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+			<div data-bind="var: orders(@orders); format:processList; loadsTemplate:orderLineItemTemplate;" data-app-role='orderList' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
 		</div>
 
 
@@ -1228,15 +1229,15 @@ used for store_crm.js
 
 <!-- used in the /customer section for order view -->
 
-<section id='orderLineItemTemplate' class='appAccordianesque'>
+<section id='orderLineItemTemplate' class='appAccordianesque' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
 
-	<div onClick="app.ext.myRIA.u.showOrderDetails($(this).attr('data-orderid'));" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
-	<span class="ui-icon ui-icon-triangle-1-e"></span>
+	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
 	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
 	</div>
 
-	<div data-bind='var:order(ORDERID);format:assignAttribute; attribute:id; valuePretext:orderContents_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
 
 </section>
 
@@ -1275,7 +1276,7 @@ The 'data-action' attribute is used to assign an onclick.
 -->
 
 <address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-event="store_crm|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
@@ -1296,7 +1297,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- used in the my account area -->
 <address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-event="store_crm|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>
@@ -1317,7 +1318,68 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
+<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
+<tr>
+	<td colspan='2'>
+<div class='floatRight'>
+<button data-app-event="myRIA|execOrder2Cart">Re-order</button>
+<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
+</div>
 
+<h3 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h3>
+
+	</td>
+</tr>
+<tr>
+	<td>
+<hgroup class='marginBottom'>
+<!-- print icon -->
+
+
+<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+
+<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+</hgroup>
+
+<address class='marginBottom'>
+<h4>
+	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(bill/lastname);format:text;'></span>
+</h4>
+<div data-bind='var:order(bill/address1);format:text;'></div>
+<div data-bind='var:order(bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(bill/countrycode);format:text;'></div>
+</address>
+
+<address class='marginBottom'>
+<h4>
+	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(ship/lastname);format:text;'></span>
+</h4>
+<div data-bind='var:order(ship/address1);format:text;'></div>
+<div data-bind='var:order(ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+</div>
+<div data-bind='var:order(ship/countrycode);format:text;'></div>
+</address>
+
+
+	</td>
+	<td class='orderContentsProdlistContainer'>
+	<ul data-bind='var:order(tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+	<ul data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	</td>
+</tr>
+</table>
 
 
 
@@ -1422,7 +1484,7 @@ The 'data-action' attribute is used to assign an onclick.
 	<li>Some JS test links
 	<ul>
 		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
-		<li><a href='#' onClick="app.ext.convertSessionToOrder.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
+		<li><a href='#' onClick="app.ext.orderCreate.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
 		<li><a href='#' onClick="app.u.throwGMessage('All your base are belong to us','mainContentArea');">throwGmessage</a></li>
 	</ul>
 	</li>

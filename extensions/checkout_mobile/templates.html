@@ -550,7 +550,7 @@ If this gets recycled, test in order history after making changes.
 
 	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
 
-<button class='ui-button-text ui-button ui-state-default ui-corner-all writeReview' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+<button class='writeReview' data-app-event="store_crm|showWriteReview" data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 
 	
 </div>

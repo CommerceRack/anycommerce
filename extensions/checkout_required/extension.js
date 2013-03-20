@@ -255,12 +255,12 @@ _gaq.push(['_trackEvent','Checkout','User Event','Create order button pushed']);
 				
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
-					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Uh Oh!<\/strong> It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'}));
+					$('#globalMessaging').toggle(true).anymessage({'message':'<strong>Uh Oh!<\/strong> It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
 					r = false;					
 					}
 //messaging for the test harness 'success'.
 				else if(app.u.getParameterByName('_testharness'))	{
-					$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'}));
+					$('#globalMessaging').toggle(true).anymessage({'message':'<strong>Excellent!<\/strong> Your store meets the requirements to use this one page checkout extension.','uiIcon':'circle-check','uiClass':'success'});
 					$('#'+app.ext.convertSessionToOrder.vars.containerID).removeClass('loadingBG').append("");
 					r = true;
 					}
@@ -418,7 +418,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added'])
 						r += "<\/ul><\/div>";
 						
 						
-						$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':r,'uiIcon':'alert'}));
+						$('#globalMessaging').toggle(true).anymessage({'message':r,'uiIcon':'alert'});
 
 						}
 
@@ -695,7 +695,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 //				app.u.dump('END app.ext.convertSessionToOrder.validate.isValid. sum = '+sum);
 				if(sum != 5)	{
 					r = false;
-					$globalErrors.append(app.u.formatMessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"})).toggle(true);
+					$globalErrors.anymessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"}).toggle(true);
 					}
 //				r = true; //for testing error handling. do not deploy with this line uncommented.
 				return r;
@@ -716,14 +716,14 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					if($email.val() == '')	{
 //						app.u.dump(' -> email is blank');
 						$email.addClass('mandatory');
-						$errorDiv.append(app.u.formatMessage("Please provide an email address")).toggle(true);
+						$errorDiv.anymessage({'message':"Please provide an email address"}).toggle(true);
 						app.ext.convertSessionToOrder.vars.validPreflight = 0;
 						$('#chkoutPreflightFieldset').removeClass('validatedFieldset');
 						valid = 0;
 						}
 					else if(!app.u.isValidEmail($email.val()))	{
 //						app.u.dump(' -> email is not valid');
-						$errorDiv.append(app.u.formatMessage("An invalid email address was used, please try again.")).toggle(true);
+						$errorDiv.anymessage({'message':"An invalid email address was used, please try again."}).toggle(true);
 						$email.addClass('mandatory');
 						$('#chkoutPreflightFieldset').removeClass('validatedFieldset');
 						valid = 0;
@@ -763,7 +763,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipMethodsFieldsetErrors').toggle(true).append(app.u.formatMessage("Please select a shipping method."));
+					$('#chkoutShipMethodsFieldsetErrors').toggle(true).anymessage({'message':"Please select a shipping method."});
 					$('#chkoutShipMethodsFieldset').removeClass('validatedFieldset');
 					}
 				if(valid == 1)	{
@@ -833,7 +833,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 				if(valid == 0){
 					$('#chkoutPayOptionsFieldset').removeClass('validatedFieldset');
 //					app.u.dump(' -> payment options did not pass validation');
-					$errorDiv.toggle(true).append(app.u.formatMessage(errMsg));
+					$errorDiv.toggle(true).anymessage({'message':errMsg});
 					}
 				else{
 //					app.u.dump(' -> payment options passed validation');
@@ -863,7 +863,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Payment method validated ('+$pa
 					}
 				else	{
 					valid = 0;
-					$('#chkoutBillAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutBillAddressFieldsetErrors').anymessage({'message':"Some required fields were left blank or are invalid"}).toggle(true);
 					$('#chkoutBillAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -897,7 +897,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','billing address obtained']);
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutShipAddressFieldsetErrors').anymessage({'message':"Some required fields were left blank or are invalid"}).toggle(true);
 					$('#chkoutShipAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -949,7 +949,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 						}
 					else	{
 //						app.u.dump(' -> phone number is NOT valid');
-						$errorDiv.append(app.u.formatMessage("Please provide a valid phone number with area code."));
+						$errorDiv.anymessage({'message':"Please provide a valid phone number with area code."});
 						$phone.parent().addClass('mandatory');
 						r = false;
 						}
@@ -1341,7 +1341,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					app.model.dispatchThis('immutable');
 					}
 				else {
-					$("#chkoutPreflightFieldsetErrors").empty().toggle(true).append(app.u.formatMessage("please provide a valid email address")); //remove any previous error message. display error.
+					$("#chkoutPreflightFieldsetErrors").empty().toggle(true).anymessage({'message':"please provide a valid email address"}); //remove any previous error message. display error.
 					}
 				},
 
@@ -1367,7 +1367,7 @@ don't toggle the panel till after preflight has occured. preflight is done once 
 					$('#chkoutPreflightFieldsetErrors').empty().addClass('loadingBG').show();
 					}
 				else {
-					$errorDiv.toggle(true).append(app.u.formatMessage("<ul>"+errors+"<\/ul>"));
+					$errorDiv.toggle(true).anymessage({'message':"<ul>"+errors+"<\/ul>"});
 					}
 				}, //handleUserLogin
 

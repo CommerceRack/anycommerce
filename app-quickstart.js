@@ -52,6 +52,7 @@ var myRIA = function() {
 			'reviewFrmTemplate',
 			'subscribeFormTemplate',
 			'orderLineItemTemplate',
+			'invoiceTemplate',
 			'faqTopicTemplate',
 			'faqQnATemplate',
 			'billAddressTemplate',
@@ -418,7 +419,7 @@ else	{
 				var prods = app.ext.store_crm.u.getSkusFromBuyerList(listID);
 				if(prods.length < 1)	{
 //list is empty.
-					app.u.formatMessage('This list ('+listID+') appears to be empty.');
+					$(app.u.jqSelector('#',tagObj.parentID)).anymessage({'message':'This list ('+listID+') appears to be empty.'});
 					}
 				else	{
 //					app.u.dump(prods);
@@ -435,7 +436,7 @@ else	{
 //				app.u.dump("BEGIN myRIA.callbacks.showProdList");
 //				app.u.dump(app.data[tagObj.datapointer]);
 				if(app.data[tagObj.datapointer]['@products'].length < 1)	{
-					$('#'+tagObj.targetID).append(app.u.formatMessage('This list ('+listID+') appears to be empty.'));
+					$('#'+tagObj.targetID).anymessage({'message':'This list ('+listID+') appears to be empty.'});
 					}
 				else	{
 					app.ext.store_prodlist.u.buildProductList({"templateID":tagObj.templateID,"parentID":tagObj.targetID,"csv":app.data[tagObj.datapointer]['@products']})
@@ -705,7 +706,10 @@ fallback is to just output the value.
 				
 				var className, price, buttonState, buttonText = 'Add to Cart',
 				pid = data.value.pid, //...pid set in both elastic and appProductGet
-				inv = app.ext.store_product.u.getProductInventory(pid);
+				inv = app.ext.store_product.u.getProductInventory(pid),
+				$form = $tag.closest('form');
+				
+				app.u.dump(" -> $form.length: "+$form.length);
 				
 //				if(app.model.fetchData('appProductGet|'+pid))	{}
 				if(data.bindData.isElastic)	{
@@ -753,7 +757,7 @@ fallback is to just output the value.
 					if(buttonText.toLowerCase() == 'add to cart')	{
 						$tag.on('click.detailsOrAdd',function(event){
 							event.preventDefault();
-							app.ext.myRIA.u.handleAddToCart($(this).closest('form'),{'action':'modal'}); 
+							app.ext.myRIA.u.addItemToCart($form,{'action':'modal'}); 
 							})
 						}
 					else	{
@@ -917,7 +921,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 
 //for local, don't jump to secure. ### this may have to change for a native app. what's the protocol? is there one?
 						if('file:' == document.location.protocol)	{
-							app.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
+							app.ext.orderCreate.a.startCheckout($('#mainContentArea'));
 							}
 						else if('https:' != document.location.protocol)	{
 							app.u.dump(" -> nonsecure session. switch to secure for checkout.");
@@ -928,7 +932,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							document.location = SSLlocation;
 							}
 						else	{
-							app.ext.convertSessionToOrder.calls.startCheckout.init('mainContentArea');
+							app.ext.orderCreate.a.startCheckout($('#mainContentArea'));
 							}
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
@@ -2283,10 +2287,12 @@ elasticsearch.size = 50;
 							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':parentSafeID},'mutable');
 							app.model.dispatchThis('mutable');
 						
-						
-						
 						case 'orders':
-							app.calls.buyerPurchaseHistory.init({'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'});
+						//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
+							app.calls.buyerPurchaseHistory.init({'callback':function(rd){
+								app.u.dump(" -> $('#ordersArticle').length: "+$('#ordersArticle').length);
+								$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
+								}},'mutable');
 							break;
 						case 'lists':
 
@@ -2681,35 +2687,45 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 
 
 
-			showOrderDetails : function(orderID)	{
+			showOrderDetails : function($orderParent)	{
 //				app.u.dump("BEGIN myRIA.u.showOrderDetails");
-				var safeID = app.u.makeSafeHTMLId(orderID);
-				$orderEle = $('#orderContents_'+safeID);
-//if the element is empty, then this is the first time it's been clicked. Go get the data and display it, changing classes as needed.
-				if($orderEle.is(':empty'))	{
+				
+				var $orderHeader = $("[data-app-role='orderHeader']",$orderParent).first(),
+				$orderContents = $("[data-app-role='orderContents']",$orderParent).first(),
+				orderID = $orderParent.data('orderid');
 
-//app.u.dump(" -> first time viewing order. go get it");
-$orderEle.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
-$orderEle.append(app.renderFunctions.createTemplateInstance('invoiceTemplate','orderContentsTable_'+safeID))
-$('#orderContentsTable_'+safeID).addClass('loadingBG');
-if(app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':'orderContentsTable_'+safeID}))
-	app.model.dispatchThis();
+//if the element is empty, then this is the first time it's been clicked. Go get the data and display it, changing classes as needed.
+				if($orderContents.is(':empty'))	{
+
+					$orderContents.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
+					$orderContents.showLoading();
+					
+					app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':function(rd){
+						$orderContents.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$orderContents.anymessage({'message':rd});
+							}
+						else	{
+							$orderContents.anycontent({'templateID':'invoiceTemplate','datapointer':rd.datapointer});
+							app.u.handleAppEvents($orderContents);
+							}
+						}})
+					app.model.dispatchThis();
 	
-$orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
+					$orderContents.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s');
 
 					}
 
 				else	{
 //will only get here if the data is already loaded. show/hide panel and adjust classes.
 
-//app.u.dump("$orderEle.is(':visible') = "+$orderEle.is(':visible'));
-if($orderEle.is(':visible'))	{
-	$orderEle.removeClass('ui-corner-bottom ui-accordion-content-active').hide();
-	$orderEle.siblings().removeClass('ui-state-active').addClass('ui-corner-bottom').find('.ui-icon-triangle-1-s').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
+if($orderContents.is(':visible'))	{
+	$orderContents.hide();
+	$orderHeader.removeClass('ui-state-active').addClass('ui-corner-bottom').find('.ui-icon-triangle-1-s').removeClass('ui-icon-triangle-1-s').addClass('ui-icon-triangle-1-e')
 	}
 else	{
-	$orderEle.addClass('ui-corner-bottom ui-accordion-content-active').show();
-	$orderEle.siblings().addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
+	$orderContents.show();
+	$orderHeader.addClass('ui-state-active').removeClass('ui-corner-bottom').find('.ui-icon-triangle-1-e').removeClass('ui-icon-triangle-1-e').addClass('ui-icon-triangle-1-s')
 	}
 					}
 				
@@ -2748,41 +2764,37 @@ else	{
 					app.model.dispatchThis('immutable');
 					}
 				else {
-					$errorDiv.append(app.u.formatMessage(errors));
+					$errorDiv.anymessage({'message':errors});
 					}
 				}, //loginFrmSubmit
 			
-			
-//obj currently supports one param w/ two values:  action: modal|message
 
-			handleAddToCart : function($form,obj)	{
-				app.u.dump("BEGIN myRIA.u.handleAddToCart");
+//obj currently supports one param w/ two values:  action: modal|message
+//used for adding a single item to the cart, such as from a prodlist w/ an add to cart but no quantity inputs for bulk adding.
+			addItemToCart : function($form,obj)	{
+				app.u.dump("BEGIN myRIA.u.addItemToCart");
 				obj = obj || {'action':''}
 				if($form && $form.length)	{
-					var $page = $form.closest("[data-app-pagetype]"),
-					pid = $("input[name='sku']",$form).val();
-//In this case, we don't want any 'adds' to occur unless the primary one does. so only continue if it passes validation.
-					if(app.ext.store_product.validate.addToCart(pid,$form))	{
-						app.u.dump(" -> addToCart validated");
-						app.ext.store_product.u.handleAddToCart($page);
-						app.model.destroy('cartDetail');
-						if(obj.action && obj.action == 'modal')	{
-							app.ext.store_cart.u.showCartInModal({'showLoading':true});
-							app.calls.cartDetail.init({'callback':'handleCart','extension':'myRIA','parentID':'modalCartContents','templateID':'cartTemplate'},'immutable');
+					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
+					if(cartObj)	{
+						if(cartObj)	{
+							app.calls.cartItemAppend.init(cartObj,{},'immutable');
+							app.model.destroy('cartDetail');
+							app.calls.cartDetail.init({'callback':function(rd){
+								showContent('cart');
+								}},'immutable');
+							app.model.dispatchThis('immutable');
 							}
-						else	{
-							app.calls.cartDetail.init({'callback':'updateMCLineItems','extension':'myRIA'},'immutable');
-							}
-						app.model.dispatchThis('immutable');
-						
 						}
 					else	{} //do nothing, the validation handles displaying the errors.
 					}
 				else	{
 					app.u.throwGMessage("WARNING! add to cart $form has no length. can not add to cart.");
 					}
-
 				}, //handleAddToCart
+
+
+
 				
 //app.ext.myRIA.u.handleMinicartUpdate();			
 			handleMinicartUpdate : function(tagObj)	{
@@ -2919,66 +2931,45 @@ else	{
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
-			showBuyerAddressUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
-					var $editor = $("<div \/>"),
-					addressID = $btn.closest("address").data('_id'),
-					addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype'),
-					addrData = app.ext.cco.u.getAddrObjByID(addressType,addressID);
-					
-					if(addressID && addressType && addrData)	{
-						$editor.anycontent({'templateID':'chkoutAddressBillTemplate','data':addrData});
-						$editor.append("<input type='hidden' name='shortcut' value='"+addressID+"' \/>");
-						$editor.append("<input type='hidden' name='type' value='"+addressType+"' \/>");
-						$editor.wrapInner('<form \/>'); //needs this for serializeJSON 
-						
-						$editor.dialog({
-							width:500,
-							height:500,
-							modal: true,
-							title: 'edit address',
-							buttons : {
-								'cancel' : function(event){
-									event.preventDefault();
-									$(this).dialog('close');
-									},
-								'save' : function(event,ui) {
-									event.preventDefault();
-									var $form = $('form',$(this)).first();
-									
-									if(app.u.validateForm($form))	{
-										$('body').showLoading('Updating Address');
-//save and then refresh the page to show updated info.
-										app.calls.buyerAddressAddUpdate.init($form.serializeJSON(),{'callback':function(rd){
-											$('body').hideLoading(); //always hide loading, regardless of errors.
-											if(app.model.responseHasErrors(rd)){
-												$form.anymessage({'message':rd});
-												}
-											else	{
-												$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-												showContent('customer',{'show':'myaccount'});
-												}
-											}},'immutable');
-//dump data in memory and local storage. get new copy up updated address list for display.
-										app.model.destroy('buyerAddressList');
-										app.calls.buyerAddressList.init({},'immutable');
-										app.model.dispatchThis('immutable');
+			execOrder2Cart : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-cart"},text: false});
+				$btn.off('click.execOrder2Cart').on('click.execOrder2Cart',function(event){
+					event.preventDefault();
+					var orderID = $btn.closest("[data-orderid]").data('orderid');
+					if(orderID)	{
+						app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								var orderList = app.data[rd.datapointer]['@ITEMS'],
+								L = orderList.length;
+								for(var i = 0; i < L; i += 1)	{
+									var obj = {'sku':orderList[i].product,'qty':orderList[i].qty}
+									if(!$.isEmptyObject(orderList[i]['%options']))	{
+										var variations = orderList[i]['%options'];
+										obj['%variations'] = {};
+										for(index in variations)	{
+											obj['%variations'][variations[index].id] = variations[index].v
+											}
 										}
-									else	{} //errors handled in validateForm
-									
+									app.calls.cartItemAppend.init(obj,{},'immutable');
+									app.model.destroy('cartDetail');
+									app.calls.cartDetail.init({'callback':function(rd){
+										showContent('cart');
+										}},'immutable');
+									app.model.dispatchThis('immutable');
 									}
-								},
-							close : function(event, ui) {$(this).dialog('destroy').remove()}
-							});
+								}
+							}},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':"In myRIE.e.showBuyerAddressUpdate, unable to determine addressID ["+addressID+"], addressType ["+addressType+"] or addrData  ["+typeof addrData+"]",'gMessage':true});
+						$('#globalMessaging').anymessage({'message':"In myRIA.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
 						}
-
 					});
 				}
-			}
+			} // e/events
 		
 		} //r object.
 	return r;

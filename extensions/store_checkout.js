@@ -552,7 +552,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 						o += "<li>"+responseData['@issues'][i][3]+"<\/li>";
 						}
 					o += "<\/ul>";
-					$errorDiv.append(app.u.formatMessage({"message":o,"uiClass":"error","uiIcon":"alert"})).toggle(true);
+					$errorDiv.anymessage({"message":o,"uiClass":"error","uiIcon":"alert"}).toggle(true);
 					}
 				else	{
 					app.u.throwMessage(responseData);

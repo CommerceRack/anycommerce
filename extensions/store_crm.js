@@ -437,7 +437,7 @@ This is used to get add an array of skus, most likely for a product list.
 
 			handleChangePassword : function(formID,tagObj)	{
 				
-$('#'+formID+' .appMessage').empty().remove(); //clear any existing messaging
+$('#'+formID+' .ui-widget-anymessage').empty().remove(); //clear any existing messaging
 var formObj = $('#'+formID).serializeJSON();
 if(app.ext.store_crm.validate.changePassword(formObj)){
 	app.calls.buyerPasswordUpdate.init(formObj.password,tagObj);
@@ -473,7 +473,90 @@ else{
 					app.u.throwMessage(errObj);
 					}
 				}
-			} //util		
+			}, //util		
+		
+		
+		
+		e : {
+			
+			showWriteReview : function($btn)	{
+				$btn.button();
+				$btn.off('click.showWriteReview').on('click.showWriteReview',function(event){
+					event.preventDefault();
+					var pid = $btn.attr("data-pid") || $btn.closest("[data-stid]").data('stid');
+					if(pid)	{
+						app.ext.store_crm.u.showReviewFrmInModal({"pid":pid,"templateID":"reviewFrmTemplate"});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In store_crm.e.showWriteReview, unable to determine pid/stid','gMessage':true});
+						}
+					})
+				},
+			
+			showBuyerAddressUpdate : function($btn)	{
+				$btn.button();
+				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
+					var $editor = $("<div \/>"),
+					addressID = $btn.closest("address").data('_id'),
+					addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype'),
+					addrData = app.ext.cco.u.getAddrObjByID(addressType,addressID);
+					
+//					app.u.dump(" -> addressID: "+addressID+" and addressType: "+addressType); app.u.dump(addrData);
+					
+					if(addressID && addressType && addrData)	{
+						$editor.anycontent({'templateID':(addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':addrData});
+						$editor.append("<input type='hidden' name='shortcut' value='"+addressID+"' \/>");
+						$editor.append("<input type='hidden' name='type' value='"+addressType+"' \/>");
+						$editor.wrapInner('<form \/>'); //needs this for serializeJSON 
+						
+						$editor.dialog({
+							width:500,
+							height:500,
+							modal: true,
+							title: 'edit address',
+							buttons : {
+								'cancel' : function(event){
+									event.preventDefault();
+									$(this).dialog('close');
+									},
+								'save' : function(event,ui) {
+									event.preventDefault();
+									var $form = $('form',$(this)).first();
+									
+									if(app.u.validateForm($form))	{
+										$('body').showLoading('Updating Address');
+//save and then refresh the page to show updated info.
+										app.calls.buyerAddressAddUpdate.init($form.serializeJSON(),{'callback':function(rd){
+											$('body').hideLoading(); //always hide loading, regardless of errors.
+											if(app.model.responseHasErrors(rd)){
+												$form.anymessage({'message':rd});
+												}
+											else	{
+												$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+												showContent('customer',{'show':'myaccount'});
+												}
+											}},'immutable');
+//dump data in memory and local storage. get new copy up updated address list for display.
+										app.model.destroy('buyerAddressList');
+										app.calls.buyerAddressList.init({},'immutable');
+										app.model.dispatchThis('immutable');
+										}
+									else	{} //errors handled in validateForm
+									
+									}
+								},
+							close : function(event, ui) {$(this).dialog('destroy').remove()}
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In store_crm.e.showBuyerAddressUpdate, unable to determine addressID ["+addressID+"], addressType ["+addressType+"] or addrData  ["+typeof addrData+"]",'gMessage':true});
+						}
+
+					});
+				}
+			
+			} //e/events
+		
 		} //r object.
 	return r;
 	}

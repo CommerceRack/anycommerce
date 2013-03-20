@@ -691,56 +691,61 @@ NOTES
 					}
 				}, //showProductDataIn
 
+			buildCartItemAppendObj : function($form)	{
+				var obj = false; //what is returned. either the obj or false.
+				if($form)	{
+					var $qtyInput = $("input[name='qty']",$form),
+					sku = $("input[name='sku']",$form).val();
+
+					if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{ //if validation fails, it will display errors.
+
+						obj = $form.serializeJSON();
+						obj['%variations'] = {};
+//here for the admin side of things. Will have no impact on retail as price can't be set.
+						if(obj.price)	{
+							if(obj.price != ""){}
+							else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
+							}
+
+						for(var index in obj)	{
+//							app.u.dump(" -> index: "+index);
+//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
+//pids must be longer and qty (the other supported input) won't conflict.
+							if(index.length == 2 && index.toUpperCase() == index)	{
+								obj['%variations'][index] = obj[index];
+								delete obj[index];
+								}
+							}
+						}
+					else if($qtyInput.length === 0)	{
+						$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
+						}
+					else	{
+//do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
+						} 					
+					}
+				else	{
+					
+					}
+				return obj;
+				}, //buildCartItemAppendObj
+
 //$FP should be a form's parent element. Can contain 1 or several forms.
-			handleAddToCart : function($FP,_tag)	{
-				app.u.dump("BEGIN store_product.u.handleAddToCart");
+			handleBulkAddToCart : function($FP,_tag)	{
+				app.u.dump("BEGIN store_product.u.handleBulkAddToCart");
 				if(typeof $FP == 'object')	{
 					var $forms = $('form',$FP);
-//					app.u.dump(" -> $forms.length: "+$forms.length);
+					app.u.dump(" -> $forms.length: "+$forms.length);
 					if($forms.length)	{
 						$forms.each(function(){
 
-							var $form = $(this);
-							$qtyInput = $("input[name='qty']",$form),
-							sku = $("input[name='sku']",$form).val();
-							
-							app.u.dump(" -> sku: "+sku);
-							
-							if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{
-
-								var obj = $form.serializeJSON();
-								obj['%variations'] = {};
-//here for the admin side of things. Will have no impact on retail as price can't be set.
-								if(obj.price)	{
-									if(obj.price != ""){}
-									else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-									}
-
-//								app.u.dump(" -> obj.sku: "+obj.sku);	app.u.dump(obj);
-								for(var index in obj)	{
-//									app.u.dump(" -> index: "+index);
-//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
-//pids must be longer and qty (the other supported input) won't conflict.
-									if(index.length == 2 && index.toUpperCase() == index)	{
-										obj['%variations'][index] = obj[index];
-										delete obj[index];
-										}
-									}
-//								app.u.dump(obj);
-								app.calls.cartItemAppend.init(obj,_tag);
+							var $form = $(this),
+							cartObj = app.ext.store_product.u.buildCartItemAppendObj($form); //handles error display.
+							if(cartObj)	{
+								app.calls.cartItemAppend.init(cartObj,_tag);
 								}
-							else if($qtyInput.length === 0)	{
-								$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
-								}
-							else	{
-//do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
-								} 
-
-
 							});
-//						app.model.destroy('cartDetail');
-//						app.calls.cartDetail.init({},'immutable');
-//						app.model.dispatchThis('immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
 						$('#globalMessaging').anymessage({'message':'handleAddToCart requires $FP to contain at least 1 form.','gMessage':true});
@@ -749,7 +754,7 @@ NOTES
 				else	{
 					$('#globalMessaging').anymessage({'message':'handleAddToCart received an unknown type for $FP ['+typeof $FP+'] (should be object)','gMessage':true});
 					}
-				}, //handleAddToCart
+				}, //handleBulkAddToCart
 
 //will generate some useful review info (total number of reviews, average review, etc ) and put it into appProductGet|PID	
 //data saved into appProductGet so that it can be accessed from a product databind. helpful in prodlists where only summaries are needed.

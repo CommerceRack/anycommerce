@@ -162,7 +162,7 @@ $('#kb_form :button').each(function(index){
 					app.u.dump('BEGIN app.ext.store_product.callbacks.itemAddedToCart.onSuccess');
 					$('.atcButton').removeAttr('disabled').removeClass('disabled'); //makes all atc buttons clickable again.
 					var htmlid = 'atcMessaging_'+app.data[tagObj.datapointer].product1;
-					$('#atcMessaging_'+app.data[tagObj.datapointer].product1).append(app.u.formatMessage({'message':'Item Added','htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"}));
+					$('#atcMessaging_'+app.data[tagObj.datapointer].product1).anymessage({'message':'Item Added','htmlid':htmlid,'uiIcon':'check','timeoutFunction':"$('#"+htmlid+"').slideUp(1000);"});
 					},
 				onError : function(responseData,uuid)	{
 					app.u.dump('BEGIN app.ext.store_product.callbacks.init.onError');

@@ -493,7 +493,7 @@ else	{
 				var prods = app.ext.store_crm.u.getSkusFromBuyerList(listID);
 				if(prods.length < 1)	{
 //list is empty.
-					app.u.formatMessage('This list ('+listID+') appears to be empty.');
+					$(app.u.jqSelector('#',tagObj.parentID)).anymessage({'message':'This list ('+listID+') appears to be empty.'});
 					}
 				else	{
 //					app.u.dump(prods);
@@ -510,7 +510,7 @@ else	{
 //				app.u.dump("BEGIN myRIA.callbacks.showProdList");
 //				app.u.dump(app.data[tagObj.datapointer]);
 				if(app.data[tagObj.datapointer]['@products'].length < 1)	{
-					$('#'+tagObj.targetID).append(app.u.formatMessage('This list ('+listID+') appears to be empty.'));
+					$(app.u.jqSelector('#',tagObj.targetID)).anymessage({'message':'This list ('+listID+') appears to be empty.'});
 					}
 				else	{
 					app.ext.store_prodlist.u.buildProductList({"templateID":tagObj.templateID,"parentID":tagObj.targetID,"csv":app.data[tagObj.datapointer]['@products']})
@@ -2858,7 +2858,7 @@ else	{
 					app.model.dispatchThis('immutable');
 					}
 				else {
-					$errorDiv.append(app.u.formatMessage(errors));
+					$errorDiv.anymessage({'message':errors});
 					}
 				}, //loginFrmSubmit
 			

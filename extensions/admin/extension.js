@@ -1625,7 +1625,7 @@ else	{
 		pidFinderChangesSaved : {
 			onSuccess : function(tagObj)	{
 				app.u.dump("BEGIN admin.callbacks.pidFinderChangesSaved");
-				$('#finderMessaging').prepend(app.u.formatMessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
+				$('#finderMessaging').anymessage({'message':'Your changes have been saved.','htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"})
 				app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 				},
 			onError : function(responseData)	{
@@ -1664,11 +1664,11 @@ $('#finderTargetList, #finderRemovedList').find("li[data-status]").each(function
 app.u.dump(" -> items updated: "+uCount);
 app.u.dump(" -> errors: "+eCount);
 if(uCount > 0)	{
-	$('#finderMessaging').prepend(app.u.formatMessage({'message':'Items Updated: '+uCount,'htmlid':'finderRequestResponse','uiIcon':'check','timeoutFunction':"$('#finderRequestResponse').slideUp(1000);"}))
+	$('#finderMessaging').anymessage({'message':'Items Updated: '+uCount,'htmlid':'finderRequestResponse','uiIcon':'check'})
 	}
 
 if(eCount > 0)	{
-	$('#finderMessaging').prepend(app.u.formatMessage(eCount+' errors occured!<ul>'+eReport+'<\/ul>'));
+	$('#finderMessaging').anymessage({'message':eCount+' errors occured!<ul>'+eReport+'<\/ul>'});
 	}
 
 app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
