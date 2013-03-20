@@ -44,7 +44,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 			dispatch : function(_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = 'appCheckoutDestinations';
-				app.model.addDispatchToQ({"_cmd":"appCheckoutDestinations","_tag": _tag},'immutable');
+				app.model.addDispatchToQ({"_cmd":"appCheckoutDestinations","_tag": _tag},Q || 'immutable');
 				}
 			}, //appCheckoutDestinations
 

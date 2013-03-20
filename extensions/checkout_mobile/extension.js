@@ -186,7 +186,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 //show post-checkout invoice and success messaging.
 				$checkout.empty();
 				$checkout.anycontent({'templateID':'chkoutCompletedTemplate',data: checkoutData}); // $.extend(true,checkoutData,{'invoice':app.data.cartDetail})
-				app.u.handleAppEvents($checkout)
+				app.u.handleAppEvents($checkout);
 
 				var cartContentsAsLinks = encodeURI(app.ext.cco.u.cartContentsAsLinks('order|'+orderID))
 				

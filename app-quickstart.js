@@ -303,83 +303,12 @@ document.write = function(v){
 				}
 			}, //handleBuyerAddressUpdate
 
-//used in /customer
+//used in /customer to show the lists of addresses. This displays on the my account page.
 		showAddresses : {
-			onSuccess : function(tagObj)	{
-//				app.u.dump("BEGIN myRIA.callbacks.showAddresses.onSuccess");
-//clean the workspace.
-				var authState = app.u.determineAuthentication();
-				$('#buyerAddresses .shipAddresses, #buyerAddresses .billAddresses ').empty(); //empty no matter what, so if user was logged in and isn't, addresses go away.
-				var $buyerAddresses; //recycled. use as target for bill and ship addresses. the target of this changes in the loop below
-//only show addresses if user is logged in.
-				if(authState == 'authenticated')	{
-					var types = new Array('@ship','@bill');
-					var L,type;
-//yes, it's a loop inside a loop.  bad mojo, i know.
-//but there's only two types of addresses and, typically, not a lot of addresses per user.
-					for(var j = 0; j < 2; j += 1)	{
-						type = types[j];
-						$buyerAddresses = $("."+type.substring(1)+"Addresses",$('#buyerAddresses'))
-						app.u.dump(" -> address type: "+type);
-//						app.u.dump(app.data.buyerAddressList[type]);
-						L = app.data.buyerAddressList[type].length;
-//						app.u.dump(" -> # addresses: "+L);
-						if(L)	{
-//							$buyerAddresses.append(type == '@bill' ? '<h2>Billing Address(es)</h2>' : '<h2>Shipping Address(es)</h2>');
-							var addressClass = type == '@bill' ? 'BILL' : 'SHIP';
-							for(var i = 0; i < L; i += 1)	{
-								$buyerAddresses.append(app.renderFunctions.transmogrify({
-									'id':addressClass+'_address_'+app.data.buyerAddressList[type][i]['_id'], //_id may not be unique between classes, so class is part of ID (ex: DEFAULT)
-									'addressclass': addressClass, //appBuyerAddressAddUpdate wants this as UC w/ no @
-									'addressid':app.data.buyerAddressList[type][i]['_id']
-									},type.substring(1)+'AddressTemplate',app.data.buyerAddressList[type][i]))
-								} //for loop for addresses
-							}// L if
-						} //for loop for address types
-
-					$('button',$('#buyerAddresses')).each(function(){
-						var $button = $(this);
-						if($button.data('action') == 'cancelAddressChanges'){
-							$button.click(function(){
-								$button.closest('.buttonMenu').find('.offMenu').show();
-								$button.closest('.buttonMenu').find('.onMenu').hide();
-								var $parent = $button.closest('.buyerAddressContainer');
-								app.ext.myRIA.u.destroyEditable($parent);
-								});
-							} //if for cancelAddressChanges
-							
-						else if($button.data('action') == 'saveAddressChanges'){
-							$button.click(function(){
-								var $parent = $(this).closest('.buyerAddressContainer');
-//								alert($('.edited',$parent).length)
-								var cmdObj = app.ext.myRIA.u.getAllDataFromEditable($parent);
-								if(!$.isEmptyObject(cmdObj))	{
-									$('button',$parent).addClass('ui-state-disabled').attr('disabled','disabled');
-									cmdObj.shortcut = $parent.attr('data-addressid');
-									cmdObj.type = $parent.attr('data-addressclass');
-//									app.u.dump(" -> cmdObj: "); app.u.dump(cmdObj);
-									$('.changeLog',$parent).append("<div class='alignRight'><span class='wait'></span><span>Saving</span></div>");
-									app.calls.buyerAddressAddUpdate.init(cmdObj, {'callback':'handleBuyerAddressUpdate','extension':'myRIA','parentID':$parent.attr('id')},'immutable');
-									app.model.dispatchThis('immutable')
-									}
-								else	{
-									$('.changeLog',$parent).empty().append("<div>no changes have been made</div>");
-									}
-								});
-							} //else if for saveAddressChanges
-							
-						else if($button.data('action') == 'displayOnMenu')	{
-							$button.click(function(){
-								$(this).closest('.buttonMenu').find('.offMenu').hide();
-								$(this).closest('.buttonMenu').find('.onMenu').show();
-								app.ext.myRIA.u.makeRegionEditable($(this).closest('.buyerAddressContainer'));
-								});
-							} //else if for displayOnMenu
-						else	{
-							app.u.dump("WARNING! unknown data-action set on customer address button");
-							}
-						})
-					}
+			onSuccess : function(_tag)	{
+				var $myAccountPage = $('#myaccountArticle');
+				$myAccountPage.anycontent({'data':app.data.buyerAddressList});
+				app.u.handleAppEvents($myAccountPage);
 				}
 			}, //showAddresses
 
@@ -2365,6 +2294,7 @@ elasticsearch.size = 50;
 							break;
 						case 'myaccount':
 //							app.u.dump(" -> myaccount article loaded. now show addresses...");
+							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
 							app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
 							break;
 						default:
@@ -2984,9 +2914,72 @@ else	{
 				} //bindAppViewForms
 
 			
-			} //util
+			}, //util
 
+////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
+		e : {
+			showBuyerAddressUpdate : function($btn)	{
+				$btn.button();
+				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
+					var $editor = $("<div \/>"),
+					addressID = $btn.closest("address").data('_id'),
+					addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype'),
+					addrData = app.ext.cco.u.getAddrObjByID(addressType,addressID);
+					
+					if(addressID && addressType && addrData)	{
+						$editor.anycontent({'templateID':'chkoutAddressBillTemplate','data':addrData});
+						$editor.append("<input type='hidden' name='shortcut' value='"+addressID+"' \/>");
+						$editor.append("<input type='hidden' name='type' value='"+addressType+"' \/>");
+						$editor.wrapInner('<form \/>');
+						
+						$editor.dialog({
+							width:500,
+							height:500,
+							modal: true,
+							title: 'edit address',
+							buttons : {
+								'cancel' : function(event){
+									event.preventDefault();
+									$(this).dialog('close');
+									},
+								'save' : function(event,ui) {
+									event.preventDefault();
+									var $form = $('form',$(this)).first();
+									
+									app.u.dump(" -> $form.length: "+$form.length);
+									if(app.u.validateForm($form))	{
+										$('body').showLoading('Updating Address');
+//save and then refresh the page to show updated info.
+										app.calls.buyerAddressAddUpdate.init($form.serializeJSON(),{'callback':function(rd){
+											$('body').hideLoading(); //always hide loading, regardless of errors.
+											if(app.model.responseHasErrors(rd)){
+												$form.anymessage({'message':rd});
+												}
+											else	{
+												$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+												showContent('customer',{'show':'myaccount'});
+												}
+											}},'immutable');
+//dump data in memory and local storage. get new copy up updated address list for display.
+										app.model.destroy('buyerAddressList');
+										app.calls.buyerAddressList.init({},'immutable');
+										app.model.dispatchThis('immutable');
+										}
+									else	{} //errors handled in validateForm
+									
+									}
+								},
+							close : function(event, ui) {$(this).dialog('destroy').remove()}
+							});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In myRIE.e.showBuyerAddressUpdate, unable to determine addressID ["+addressID+"], addressType ["+addressType+"] or addrData  ["+typeof addrData+"]",'gMessage':true});
+						}
+
+					});
+				}
+			}
 		
 		} //r object.
 	return r;

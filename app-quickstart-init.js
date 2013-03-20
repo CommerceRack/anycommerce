@@ -4,14 +4,13 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 
 
 
-app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
+//app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
+//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_active/extension.js']);
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
 
-// ### NOTE - mobile does NOT work. it's in development.
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_mobile/extension.js']);
-//app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
+app.rq.push(['extension',0,'orderCreate','extensions/checkout_mobile/extension.js']);
+app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 
 app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
@@ -35,8 +34,7 @@ app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':functi
 
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
-app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
-app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used for making text editable (customer address). non-essential. loaded late.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
 

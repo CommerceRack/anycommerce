@@ -14,7 +14,8 @@ Massive update to checkout. most important, the namespace changed from convertSe
 productListTemplateBuyerList template changed (was missing an onclick on the more info button)
 loginFormForModal template changed.
 contactArticle form action changed.
-
+myaccountArticle changed. requires new checkout and cco includes.
+jeditable plugin no longer required. removed from init.
 
 The add to cart forms/renderFormat updated. replace all. templates may include (but are not limited to): 
 productTemplate
