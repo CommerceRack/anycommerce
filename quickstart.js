@@ -1017,7 +1017,8 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					default:		//uh oh. what are we? default to 404.
 						infoObj.pageType = '404';
 						infoObj.back = 0;
-						infoObj.templateID = 'pageNotFoundTemplate'
+						infoObj.templateID = 'pageNotFoundTemplate';
+						infoObj.parentID = 'pageNotFoundTemplate';
 						infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 

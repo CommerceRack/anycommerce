@@ -60,6 +60,18 @@ var cubworld = function() {
 								});
 							}							
 						});
+						
+					for(var template in app.ext.myRIA.template){
+						app.u.dump("Template: "+template);
+						app.ext.myRIA.template[template].onCompletes.push(function(P){
+							app.u.dump(app.u.jqSelector('#',P.parentID));
+							var $context = $(app.u.jqSelector('#',P.parentID));
+							if(!$context.data('columncontent')){
+								$context.data('columncontent','helpfulLinks');
+							}
+							app.u.dump($context.data('columncontent'));
+						});
+					}
 					if($("#appView #homepageTemplate_").length > 0){
 						if($('#wideSlideshow').data('slideshow') !== 'true'){
 							$('#wideSlideshow').data('slideshow','true').cycle({

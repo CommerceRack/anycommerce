@@ -442,7 +442,22 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 			<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
 			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 		</div>
-		<div id='mainContentArea'></div>
+		<div class="wideColumn floatLeft">
+			<div id='mainContentArea'></div>
+		</div>
+		
+		
+		<div class="thinColumn floatRight">
+			<div id="hotItemList">
+			
+			</div>
+			
+			<div id="helpfulLinks">
+			
+			</div>
+		</div>
+		
+		
 		<div class="clear"></div>
 	</div>
 </div>
@@ -551,8 +566,8 @@ COMMONLY EDITED TEMPLATES
 <!--
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
-<div id='homepageTemplate' class='homeTemplate'>
-	<div class="wideColumn floatLeft">
+<div id='homepageTemplate' class='homeTemplate' data-columncontent='hotItemList'>
+	
 		<div id="homepageLeftHeader" class="marginTop floatLeft">
 			<img src="img/homepage/personalized.png" width='197' height='242'/>
 		</div>
@@ -566,7 +581,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 					<li><img src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
 					<li><img src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
 					<li><img src='img/homepage/slideshow/chicag_cubs_spring_training_banner.jpg' width='589' height='193'/></li>
-				</ul>
 				</ul>
 			</div>
 		</div>
@@ -604,9 +618,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		</div>
 	</div>
 	
-	<div class="thinColumn floatRight">
-		
-	</div>
+	
 </div>
 
 
