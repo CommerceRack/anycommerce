@@ -27,14 +27,14 @@ fieldsets 'can' be defined here if a specific order is desired. If fieldsets are
 		<td>
 
 <div class='marginBottom'>
-<form name='addPid2CartForm' action='#' onSubmit="return false">
+<form name='addPid2CartForm' action='#' onSubmit="return false" data-skipvalidation='true'>
 <fieldset class='ui-widget ui-widget-content ui-corner-all'>
 	<legend class='ui-widget-header ui-corner-all'>Add Item to Order</legend>
 	<input type="hidden" name="add" value="yes" />
 	<input type="hidden" name="override" value="1" />
 	
-	<label><span>Qty:</span><input type="text" name="quantity" size="3" value="1"  /></label>
-	<label><span>Product id:</span><input type='text' name='product_id' size='10' /></label>
+	<label><span>Qty:</span><input type="text" name="qty" size="3" value="1"  /></label>
+	<label><span>Product id:</span><input type='text' name='sku' size='10' /></label>
 	<label><span>Price: </span><input type='number' class='price' size='5' name='price' step='0.01' min='0' /></label>
 	<button data-app-event="convertSessionToOrder|cartItemAddFromForm">Add</button>
 	<hr />

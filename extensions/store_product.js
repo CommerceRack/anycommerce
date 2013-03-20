@@ -693,42 +693,67 @@ NOTES
 
 			buildCartItemAppendObj : function($form)	{
 				var obj = false; //what is returned. either the obj or false.
-				if($form)	{
+				if($form && $form.is('form'))	{
 					var $qtyInput = $("input[name='qty']",$form),
 					sku = $("input[name='sku']",$form).val();
 
-					if(sku && $qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{ //if validation fails, it will display errors.
-app.u.dump(" -> sku ("+sku+") and qty set");
-						obj = $form.serializeJSON();
-						obj['%variations'] = {};
-//here for the admin side of things. Will have no impact on retail as price can't be set.
-						if(obj.price)	{
-							if(obj.price != ""){}
-							else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-							}
-
-						for(var index in obj)	{
-//							app.u.dump(" -> index: "+index);
-//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
-//pids must be longer and qty (the other supported input) won't conflict.
-							if(index.length == 2 && index.toUpperCase() == index)	{
-								obj['%variations'][index] = obj[index];
-								delete obj[index];
+					if(sku && $qtyInput.val() >= 1)	{
+//There are use cases for skipping validation, such as admin, quick order, etc.
+						if($form.data('skipvalidation') || app.ext.store_product.validate.addToCart(sku,$form))	{
+							obj = $form.serializeJSON();
+							obj['%variations'] = {};
+	//here for the admin side of things. Will have no impact on retail as price can't be set.
+							if(obj.price)	{
+								if(obj.price != ""){}
+								else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
 								}
+	
+							for(var index in obj)	{
+	//							app.u.dump(" -> index: "+index);
+	//move variations into the %variaitons object. this isn't 100% reliable, but there isn't much likelyhood of non-variations 2 character inputs that are all uppercase.
+	//pids must be longer and qty (the other supported input) won't conflict.
+								if(index.length == 2 && index.toUpperCase() == index)	{
+									obj['%variations'][index] = obj[index];
+									delete obj[index];
+									}
+								}
+
 							}
-						}
-					else if(sku && $qtyInput.length === 0)	{ //if sku isn't set in this form, it may not be a product add to cart form.
-						$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
+						else	{
+							//the validation itself will display the errors.
+							}
 						}
 					else	{
-//do nothing. no quantity. could be a bulk add w/ some items at a zero quantity.
-						} 					
+						$form.anymessage({'message':'The form for store_product.u.handleAddToCart was either missing a sku ['+sku+'] or qty input ['+$qtyInput.length+'].','gMessage':true});
+						}
+		
 					}
 				else	{
-					
+					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form not passed.','gMessage':true});
 					}
 				return obj;
 				}, //buildCartItemAppendObj
+
+//a no frills add to cart.
+			handleAddToCart : function($form)	{
+				app.u.dump("BEGIN store_product.u.handleAddToCart");
+				if($form && $form.length && $form.is('form'))	{
+					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
+					if(cartObj)	{
+						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
+						if(cartObj)	{
+							app.calls.cartItemAppend.init(cartObj,{},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						}
+					else	{
+						app.u.dump(" -> cart object is not valid");
+						} //do nothing, the validation handles displaying the errors.
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In store_product.u.handleAddToCart, $form ["+typeof $form+"] not set, has no length ["+$form.length+"] or is not a form ["+$form.is('form')+"].",'gMessage':true});
+					}
+				}, //handleAddToCart
 
 //$FP should be a form's parent element. Can contain 1 or several forms.
 			handleBulkAddToCart : function($FP,_tag)	{

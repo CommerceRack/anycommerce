@@ -1881,7 +1881,7 @@ the refreshCart call can come second because none of the following calls are upd
 				$btn.button();
 				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(event){
 					event.preventDefault();
-					app.ext.store_product.u.handleAddToCart($btn.closest('form').parent());
+					app.ext.store_product.u.handleAddToCart($btn.closest('form'));
 					app.ext.store_checkout.calls.appPaymentMethods.init();
 					app.ext.store_checkout.calls.appCheckoutDestinations.init();
 					app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
@@ -1910,7 +1910,7 @@ if($form && $form.length)	{
 				$('#prodFinder').dialog('close');
 				}
 			},'immutable');
-		app.ext.store_product.u.handleAddToCart($form.parent());
+		app.ext.store_product.u.handleAddToCart($form);
 		app.ext.store_checkout.calls.appPaymentMethods.init();
 		app.ext.store_checkout.calls.appCheckoutDestinations.init();
 		app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
