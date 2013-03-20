@@ -702,6 +702,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 
 
+
 <!--
 
 ############################
@@ -709,6 +710,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
 if modified, be careful about changing id's or classes.
 adding classes is not likely to have any bad effects.
+if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
 
 ############################
 
@@ -856,14 +858,10 @@ adding classes is not likely to have any bad effects.
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
 <!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
 		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-		
 		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-		
 		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
 		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
-		
-		<li class='hideIfLoggedIn'><a href='#customer?show=create' id='navLink_orders'>Create Account</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -875,64 +873,20 @@ adding classes is not likely to have any bad effects.
 			<div id='newsletterFormContainer'></div>
 		</div>
 
-
-		<div id='createaccountArticle' class='displayNone textContentArea'>
-			<h1>Create a Wholesale Account</h1>
-			<div>
-
-<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
-<input type='hidden' name='form' value='wholesale' />
-
-<fieldset class='marginBottom'>
-	<legend>Account Information</legend>
-	<input name='firstname' type='text' size='30' placeholder='First Name' required='required' />
-	<input name='lastname' type='text' size='30' placeholder='Last Name' required='required' />
-	<input name='company' type='text' size='30' placeholder='Company Name' />
-	<input name='email' type='email' size='30' placeholder='Email' required='required' />
-	<input name='address1' type='text' size='30' placeholder='Address 1'  required='required' />
-	<input name='address2' type='text' size='30' placeholder='Address 2' />
-	<input name='city' type='text' size='30' placeholder='City' required='required' />
-	<input name='region' type='text' size='5' placeholder='State' />
-	<input name='postal' type='text' size='10' placeholder='Zip' />	
-	<input name='ar_contact' type='text' size='30' placeholder='AR Contact' />
-	<input name='ar_phone' type='tel' size='12' placeholder='AR Phone #' />
-</fieldset>
-
-<fieldset class='marginBottom'>
-	<legend>About Your Business</legend>
-	
-	<input name='order_volume' type='text' size='30' placeholder='Anticipated Order Volume' />
-	<input name='resaleid' type='text' size='30' placeholder='State Resale Permit' />
-	<input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
-	<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' />
-	
-</fieldset>
-
-<button>Create Account</button>
-
-</form>
-
-			</div>
-		</div>
-
-
-
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
-			<div id='logMessaging'></div>
 			<div><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></div>
 
-			<section id='buyerAddresses' class='clearfix'>
+			<section class='clearfix'>
 
-<div class='billAddressContainer'>
+<div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
 	<h2>Billing Address(es)</h2>
-<!--	<button class='floatRight ui-state-default ui-corner-all'><span class='ui-icon ui-icon-plusthick floatLeft'></span> Add </button> coming soon -->
-	<div class='billAddresses'></div><!-- billing addresses are loaded into here using billAddressTemplate -->
+	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
 </div>
 
-<div class='shipAddressContainer'>
+<div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
 	<h2>Shipping Address(es)</h2>
-	<div class='shipAddresses'></div><!-- shipping addresses are loaded into here using shipAddressTemplate -->
+	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
 </div>
 
 
@@ -995,9 +949,7 @@ adding classes is not likely to have any bad effects.
 
 	<div class='previewListContainer'>
 		<!-- productListTemplateResults gets loaded into here -->
-		<table class='fullWidth gridTable'>
-		<tbody id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></tbody>
-		</table>
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
 	</div>
 
 </div>
@@ -1175,6 +1127,7 @@ So the cart template should contain these two elements and the extension should 
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
 		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 
@@ -1183,7 +1136,7 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' step='0.01' min='0' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1381,25 +1334,19 @@ The 'data-action' attribute is used to assign an onclick.
 
 -->
 
-<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerBillAddressContainer '>
-	<menu class='buttonMenu alignRight floatRight'>
-		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
-		<div class='onMenu'>
-			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
-			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>Save</button>
-		</div>
-		<div class='changeLog'></div>
-	</menu>
+<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(bill_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(bill_lastname);format:text;" class='editable' title='last name'></span>
+		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(bill_address1);format:text;" class='editable' title='address'></div>
-		<div data-bind="var: address(bill_address2);format:text;" class='editable' title='address 2'></div>
+		<div data-bind="var: address(bill_address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(bill_address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(bill_city);format:text;" class='editable' title='city'></span>,
-		<span data-bind="var: address(bill_region);format:text;" class='editable' title='state'></span>.
-		<span data-bind="var: address(bill_postal);format:text;" class='editable' title='zip'></span>
+		<span data-bind="var: address(bill_city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(bill_region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(bill_postal);format:text;"  title='zip'></span>
 		<div data-bind="var: address(bill_countrycode);format:text;" title='country'></div>
 
 	</div>
@@ -1408,29 +1355,28 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 <!-- used in the my account area -->
-<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerShipAddressContainer'>
-	<menu class='buttonMenu alignRight floatRight'>
-		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
-		<div class='onMenu'>
-			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
-			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default  ui-corner-all'>Save</button>
-		</div>
-		<div class='changeLog'></div>
-	</menu>
+<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(ship_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(ship_lastname);format:text;" class='editable' title='last name'></span>
+		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(ship_address1);format:text;" class='editable' title='address'></div>
-		<div data-bind="var: address(ship_address2);format:text;" class='editable' title='address 2'></div>
+		<div data-bind="var: address(ship_address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(ship_address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(ship_city);format:text;" class='editable' title='city'></span>,
-		<span data-bind="var: address(ship_region);format:text;" class='editable' title='state'></span>.
-		<span data-bind="var: address(ship_postal);format:text;" class='editable' title='zip'></span>
+		<span data-bind="var: address(ship_city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(ship_region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(ship_postal);format:text;"  title='zip'></span>
 		<div data-bind="var: address(ship_countrycode);format:text;" title='country'></div>
 
 	</div>
+
 </address>
+
+
+
+
 
 
 

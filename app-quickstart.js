@@ -2931,7 +2931,7 @@ else	{
 						$editor.anycontent({'templateID':'chkoutAddressBillTemplate','data':addrData});
 						$editor.append("<input type='hidden' name='shortcut' value='"+addressID+"' \/>");
 						$editor.append("<input type='hidden' name='type' value='"+addressType+"' \/>");
-						$editor.wrapInner('<form \/>');
+						$editor.wrapInner('<form \/>'); //needs this for serializeJSON 
 						
 						$editor.dialog({
 							width:500,
@@ -2947,7 +2947,6 @@ else	{
 									event.preventDefault();
 									var $form = $('form',$(this)).first();
 									
-									app.u.dump(" -> $form.length: "+$form.length);
 									if(app.u.validateForm($form))	{
 										$('body').showLoading('Updating Address');
 //save and then refresh the page to show updated info.
