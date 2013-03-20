@@ -62,6 +62,9 @@ body {
 	margin: 8px;
 	z-index: 10001
 }
+#appNav {
+	z-index: 10001;
+}
 
 /****************************************************************
 
@@ -71,6 +74,36 @@ UTILITY CLASSES AND UNIVERSAL STYLES
 a {
     color: #990000;
 }
+
+.breadcrumb {
+	display:block;
+	font: 11px Arial,Helvetica,sans-serif;
+    margin-bottom: 5px;
+    padding-left: 213px;
+	height: 14px;
+}
+
+li.productListItem {
+	height: 212px;
+	width: 185px;
+	margin: 6px;
+}
+.productListItem .prodThumbContainer {
+	border: 1px solid #CDCDCD;
+}
+.prodName{
+	color: #0D2D66; 
+	font-weight: normal;
+	height: 30px;
+	font: 11px Arial,Helvetica,sans-serif;
+}
+.prodPrice {
+	color: #7F0000;
+    font: bold 13px Helvetica,Arial;
+	margin-bottom: 4px;
+}
+
+li:hover .prodName{color: #BE0000;}
 
 .titleBlue{
 	background: url("cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
@@ -400,26 +433,7 @@ HOMEPAGE STYLES
 	padding: 12px 0px;
 }
 
-#homepageProdLists li.productListItem {
-	height: 212px;
-	width: 185px;
-	margin: 6px;
-}
-.productListItem .prodThumbContainer {
-	border: 1px solid #CDCDCD;
-}
-#homepageProdLists .prodName{
-	color: #0D2D66; 
-	font-weight: normal; 
-	font: 11px Arial,Helvetica,sans-serif;
-}
-#homepageProdLists .prodPrice {
-	color: #7F0000;
-    font: bold 13px Helvetica,Arial;
-	margin-bottom: 4px;
-}
 
-#homepageProdLists li:hover .prodName{color: #BE0000;}
 
 /****************************************************************
 

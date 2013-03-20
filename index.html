@@ -438,11 +438,11 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 <div id="contentBG">
 	<div id="content">	
 		
-		<div id='appNav'>
-			<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
-			<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
-		</div>
 		<div class="wideColumn floatLeft">
+			<div id='appNav'>
+				<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+				<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+			</div>
 			<div id='mainContentArea'></div>
 		</div>
 		
@@ -616,9 +616,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<a title="live Wrigley Field web cam" href="#" onClick="return showContent('category',{'navcat':'.wrigley_field_cam'});">live Wrigley Field web cam</a>.
 			</p>
 		</div>
-	</div>
-	
-	
 </div>
 
 
@@ -696,16 +693,18 @@ remember to NOT put the button inside the 'onClick' container or two events will
 		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='180' height='124' />
 		</div>
 
-		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 56;'></h5>
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
 
 		<h6 class="prodPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
 		
+<!-- 	
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+		<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+-->
 	</div>
 	
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
-		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 	
 </li>

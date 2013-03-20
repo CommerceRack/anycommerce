@@ -833,6 +833,7 @@ fallback is to just output the value.
 							})
 						}
 					}
+				$tag.show();
 //				app.u.dump(" -> ID at end: "+$tag.attr('id'));
 				}, //addToCartButton
 
