@@ -697,8 +697,8 @@ NOTES
 					var $qtyInput = $("input[name='qty']",$form),
 					sku = $("input[name='sku']",$form).val();
 
-					if($qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{ //if validation fails, it will display errors.
-
+					if(sku && $qtyInput.val() >= 1 && app.ext.store_product.validate.addToCart(sku,$form))	{ //if validation fails, it will display errors.
+app.u.dump(" -> sku ("+sku+") and qty set");
 						obj = $form.serializeJSON();
 						obj['%variations'] = {};
 //here for the admin side of things. Will have no impact on retail as price can't be set.
@@ -717,7 +717,7 @@ NOTES
 								}
 							}
 						}
-					else if($qtyInput.length === 0)	{
+					else if(sku && $qtyInput.length === 0)	{ //if sku isn't set in this form, it may not be a product add to cart form.
 						$form.anymessage({'message':'The form for store_product.u.handleAddToCart has no input for qty.','gMessage':true});
 						}
 					else	{
@@ -736,13 +736,13 @@ NOTES
 				if(typeof $FP == 'object')	{
 					var $forms = $('form',$FP);
 					app.u.dump(" -> $forms.length: "+$forms.length);
+					_tag = _tag || {};
 					if($forms.length)	{
 						$forms.each(function(){
 
-							var $form = $(this),
-							cartObj = app.ext.store_product.u.buildCartItemAppendObj($form); //handles error display.
+							var cartObj = app.ext.store_product.u.buildCartItemAppendObj($(this)); //handles error display.
 							if(cartObj)	{
-								app.calls.cartItemAppend.init(cartObj,_tag);
+								app.calls.cartItemAppend.init(cartObj,_tag,'immutable');
 								}
 							});
 						app.model.dispatchThis('immutable');

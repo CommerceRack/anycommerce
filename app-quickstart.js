@@ -2781,7 +2781,7 @@ else	{
 							app.calls.cartItemAppend.init(cartObj,{},'immutable');
 							app.model.destroy('cartDetail');
 							app.calls.cartDetail.init({'callback':function(rd){
-								showContent('cart');
+								showContent('cart',obj);
 								}},'immutable');
 							app.model.dispatchThis('immutable');
 							}
