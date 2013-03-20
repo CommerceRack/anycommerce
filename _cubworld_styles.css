@@ -371,7 +371,16 @@ HOMEPAGE STYLES
 	padding: 0px 4px;
 	text-decoration: none;
 }
-
+#slideshowNav a:hover,#slideshowNav a.activeSlide:hover{
+	background: #000066;
+	border-color: #000066;
+	color: #FFFFFF;
+} 
+#slideshowNav a.activeSlide {
+	font-weight: bold;
+	border-color: #000066;
+	color: #000066;
+}
 .description {
 	color: #58595B;
     font: 12px Arial,Helvetica,sans-serif;
