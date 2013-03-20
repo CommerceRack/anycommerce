@@ -174,7 +174,7 @@ else	{
 				$modal.dialog('open');
 				if(obj && obj.CID)	{
 					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
-					app.ext.admin.u.handleAppEvents($modal,{'$context':$walletPanel});
+					app.u.handleAppEvents($modal,{'$context':$walletPanel});
 					}
 				else	{
 					$modal.anymessage({'message':'In admin_customer.a.showAddWalletModal, no CID defined.',gMessage:true});
@@ -334,7 +334,7 @@ else	{
 							}});
 
 						$("[data-app-role='wallets']",$customerEditor).anypanel('option','settingsMenu',{'Add Wallet':function(){
-							app.ext.admin_customer.a.showAddWalletModal(obj,$customerEditor);
+							app.ext.admin_customer.a.showAddWalletModal(obj,$("[data-app-role='wallets']",$customerEditor));
 							}});
 
 						$("[data-app-role='giftcards']",$customerEditor).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
@@ -704,7 +704,10 @@ else	{
 				$btn.button();
 				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
 					event.preventDefault();
-					
+					var $panel = false; //if passed in o, will be the parent panel.
+					if(o && o['$context'])	{
+						$panel = o['$context']; //shortcut and and to identify what the context is.
+						}
 					var $form = $btn.closest('form'),
 					CID = $btn.closest("[data-cid]").data('cid');
 					
@@ -722,11 +725,14 @@ else	{
 								}
 							else	{
 								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
-								if(o && o['$context'])	{
-									var $panel = o['$context']; //shortcut and and to identify what the context is.
+								if($panel)	{
+									app.u.dump(" -> $panel IS set");
 									$("tbody",$panel).empty(); //clear wallets
 									$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
 									app.ext.admin.u.handleAppEvents($panel);
+									}
+								else	{
+									app.u.dump(" -> $panel is NOT set");
 									}
 								}
 							}},'immutable');

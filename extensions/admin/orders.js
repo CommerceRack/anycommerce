@@ -658,9 +658,9 @@ app.ext.admin.u.handleAppEvents($target);
 
 
 		showOrderEditorInDialog : function(orderID,CID)	{
-//app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
-//app.u.dump(" -> orderID : "+orderID);
-//app.u.dump(" -> CID : "+CID);
+app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
+app.u.dump(" -> orderID : "+orderID);
+app.u.dump(" -> CID : "+CID);
 
 if(orderID)	{
 

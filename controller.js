@@ -1084,7 +1084,7 @@ app.u.handleCallback(tagObj);
 
 		handleCallback : function(_rtag)	{
 			if(_rtag && _rtag.callback){
-				if(typeof _rtag.callback == 'function')	{app.u.dump(" -> executing anonymous function."); _rtag.callback(_rtag);}
+				if(typeof _rtag.callback == 'function')	{_rtag.callback(_rtag);}
 				else	{
 //				app.u.dump(" -> callback is not an anonymous function.");
 					var callback;
@@ -1176,14 +1176,13 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 // !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
 		handleAppEvents : function($target,obj)	{
 				app.u.dump("BEGIN admin.u.handleAppEvents");
+				obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
 					$("[data-app-event]",$target).each(function(){
 						var $ele = $(this),
-						obj = obj || {},
 						extension = $ele.data('app-event').split("|")[0],
 						action = $ele.data('app-event').split("|")[1];
-						app.u.dump(" -> action: "+action);
 						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
@@ -1267,8 +1266,9 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //uses throwMessage, but always adds the same generic message. value of 'err' is output w/ dump.
 //this should only be used for app errors (errors thrown from within the MVC, not as a result of an API call, in which case throwMessage should be used (handles request errors nicely)
 		throwGMessage : function(err,parentID){
-			var msg = this.youErrObject("Something bad just happened. If this error persists, please contact the site administrator with these details:<br \/>Err: "+err+"<br \/>URI: "+document.location+"<br \/>Dev: console may contain additional details.","#");
-			$(app.u.jqSelector('#',parentID)).anymessage(msg);
+			var msg = this.youErrObject("Err: "+err+"<br \/>URI: "+document.location+"<br \/>Dev: console may contain additional details.","#");
+			msg.gMessage = true;
+			$(app.u.jqSelector('#',parentID || 'globalMessaging')).anymessage(msg);
 			},
 /*
 msg could be a string or an object.
@@ -2803,7 +2803,7 @@ $tmp.empty().remove();
 // _index is used instead of -index because of how data works (removes dashes and goes to camel case, which is nice but not consistent and potentially confusing)
 //doing a for(i in instead of a +=1 style loop makes it work on both arrays and objects.
 		processList : function($tag,data){
-			app.u.dump("BEGIN renderFormats.processList");
+//			app.u.dump("BEGIN renderFormats.processList");
 			$tag.removeClass('loadingBG');
 			if(data.bindData.loadsTemplate)	{
 				var $o, //recycled. what gets added to $tag for each iteration.

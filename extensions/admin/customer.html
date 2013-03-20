@@ -279,7 +279,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
 </tr>
 
-<tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('id'),$(this).closest('[data-cid]').data('cid'));">
+<tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
 	<td data-bind="var:order(ORDERID); format:text;" class='lookLikeLink'></td>
 	<td class='alignRight' data-bind="var:order(ITEMS); format:text;"></td>
 	<td class='alignRight' data-bind="var:order(ORDER_PAYMENT_METHOD); format:text;"></td>

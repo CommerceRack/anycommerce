@@ -170,6 +170,10 @@ For the list of available params, see the 'options' object below.
 //				app.u.dump(" -> app.u.formatResponsethis.span 'else' hit. Should not have gotten to this point");
 				$r = $("<p \/>").addClass('anyMessage').text('unknown error has occured'); //don't want to have our error handler generate an error on screen.
 				}
+//gMessage is generic message, used for 'soft' errors. and ISEERR should have messaging this is a little less generic (or more severe)
+			if(o.gMessage && msg.errtype != 'iseerr')	{
+				$r.prepend("<p>An error has occured (details below). If you continue to experience this error, please contact the site administrator.<\/p>");
+				}
 			return $r;
 
 			},
