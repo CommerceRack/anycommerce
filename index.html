@@ -562,9 +562,11 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 				<div id="slideshowNav"></div>
 				<ul id="wideSlideshow" class="pics slideshow">
 					<li><img src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
-					<li><img src='img/homepage/slideshow/st_patricks_day_banner.jpg' width='589' height='193'/></li>
+					<li><img src='img/homepage/slideshow/cubs_authentic_gear_banner.png' width='589' height='193'/></li>
 					<li><img src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
 					<li><img src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
+					<li><img src='img/homepage/slideshow/chicag_cubs_spring_training_banner.jpg' width='589' height='193'/></li>
+				</ul>
 				</ul>
 			</div>
 		</div>
@@ -603,23 +605,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	</div>
 	
 	<div class="thinColumn floatRight">
-		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+		
 	</div>
-	
-	
-	
-	
-	
-<!-- a sample of how to format an elastic native search in a data-bind -->
-
-
-<!-- a sample of how to get a 'list' src onto the page.
-	<a href="#" onClick="return showContent('search',{'elasticsearch':{'query':{'term':{'tags':'IS_BESTSELLER'}}}});">See all Best Sellers</a>
-			<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<div class="titleBlue">Best Sellers</div>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
- -->
-
-
 </div>
 
 
