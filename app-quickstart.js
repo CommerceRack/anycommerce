@@ -1016,8 +1016,37 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 				}, //showContent
 
 
+
+
+//context should be a container element that has 1 or more forms within it.
+//will look for inputs w/ qtyChanged class. Anything with that class is assumed to be an add to cart form and is treated as such.
+// the atcQuantityInput renderFormat in store_product will auto-add that class on change.
+			bulkAddItemsToCart : function($context)	{
+				if($context)	{
+					var $inputs = $(".qtyChanged",$context);
+					if($inputs.length)	{
+						$inputs.each(function(){
+							var obj = app.ext.store_product.u.buildCartItemAppendObj($(this).closest('form'));
+							if(obj)	{
+								app.calls.cartItemAppend.init(obj,{});
+								}
+							});
+						app.model.destroy('cartDetail');
+						app.calls.cartDetail.init({},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$context.anymessage({'message':'Please set quantities before adding items to the cart.'});
+						}
+					}
+				else	{
+					$("#globalMessaging").anymessage({'message':'In myRIA.a.bulkAddItemsToCart, no $context passed.'});
+					}
+				},
+
+
+
 //each item in the cart has a UUID. The UUID is used (not the stid) to modify the cart
-// !!! INCOMPLETE
 			moveItemFromCartToWishlist : function(obj)	{
 				if(obj && obj.uuid && obj.stid)	{
 //					var sku = app.ext.store_cart.u.getSkuByUUID(obj.uuid);

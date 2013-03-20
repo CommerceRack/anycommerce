@@ -204,7 +204,7 @@ check if at iteration 1 (inc = 0) each time in the loop. this is gives us a tigh
 
 //upgraded to jquery.
 renderOptionIMGSELECT: function(pog) {
-	app.u.dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
+//	app.u.dump('BEGIN renderOptionIMGSELECT for pog '+pog.id);
 	var pogid = pog.id;
 	var $parentDiv = $("<span \/>").addClass('imgSelectContainer');
 	var $selectList = $("<select>").attr({"name":pogid}).addClass('zform_select').bind('change', function(e){
@@ -240,7 +240,7 @@ renderOptionIMGSELECT: function(pog) {
 	$imageDiv = $('<div>').addClass('imageselect_image');
 	$imageDiv.html(app.u.makeImage({"w":pog.width,"h":pog.height,"name":"blank.gif","b":"FFFFFF","tag":true,"lib":app.username,"id":"selectImg_"+pogid}));
 	$imageDiv.appendTo($parentDiv);
-	app.u.dump('END renderOptionIMGSELECT for pog '+pog.id);
+//	app.u.dump('END renderOptionIMGSELECT for pog '+pog.id);
 	return $parentDiv;
 	},
 

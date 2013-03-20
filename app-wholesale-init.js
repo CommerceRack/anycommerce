@@ -40,7 +40,7 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
 
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.ui.jeditable.js']); //used for making text editable (customer address). non-essential. loaded late.
-app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used for making text editable (customer address). non-essential. loaded late.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used for making text editable (customer address). non-essential. loaded late.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
 
@@ -49,8 +49,8 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); 
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
-	var safePID = app.u.makeSafeHTMLId(P.pid); //can't use jqSelector because productTEmplate_pid still used makesafe. planned Q1-2013 update ###
-	var $tabContainer = $( ".tabbedProductContent",$('#productTemplate_'+safePID));
+	var $context = $(app.u.jqSelector('#',P.parentID));
+	var $tabContainer = $( ".tabbedProductContent",$context);
 		if($tabContainer.length)	{
 			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
 			else	{
@@ -63,7 +63,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 
 //controls display of add to cart button. won't show up if no prodlist.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	var $context = app.u.jqSelector('#',app.u.makeSafeHTMLId('categoryTemplate_'+P.navcat));
+	var $context = app.u.jqSelector('#',P.parentID);
 	if($('.prodlistTable tbody tr',$context).length)	{
 		$('.bulkAddItemsButtonContainer',$context).show();
 		$('button',$context).button();
@@ -75,19 +75,11 @@ app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 
 //make table headers clickable.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	var $context = app.u.jqSelector('#',app.u.makeSafeHTMLId('categoryTemplate_'+P.navcat));
+	var $context = app.u.jqSelector('#',P.parentID);
 	if($('.prodlistTable thead',$context).length)	{
 		$('.prodlistTable',$context).anytable();
 		}
 	}]);
-
-
-
-//sample of an onDeparts. executed any time a user leaves this page/template type.
-app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
-
-
-
 
 
 

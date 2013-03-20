@@ -373,14 +373,12 @@ addToCart : function (pid,$form){
 
 //add all the necessary fields for quantity inputs.
 			atcQuantityInput : function($tag,data)	{
-//				onKeyUp="if(Number($(this).val()) > 0){$(this).addClass('qtyChanged');}" 
 				var $input = $("<input \/>",{'name':'qty'});
 				if(app.ext.store_product.u.productIsPurchaseable(data.value.pid))	{
 					$input.attr({'size':3,'min':0,'step':1,'type':'number'}).appendTo($tag);
 					$input.on('keyup.classChange',function(){
 						if(Number($(this).val()) > 0){$(this).addClass('qtyChanged ui-state-highlight');}
 						});
-//					$tag.append("<input type='number' value='"+(data.bindData.defaultValue || 0)+"'  />");
 					}
 				else	{
 					$input.attr({'type':'hidden'}).appendTo($tag); //add so that handleaddtocart doesn't throw error that no qty input is present
@@ -523,6 +521,7 @@ it has no inventory AND inventory matters to merchant
 					}
 				return r;
 				},
+
 //pass variation lookup table into this. The thought there is that building the lookup table could be expensive, so better to do it once
 //someplace else then, potentially a lot of times when this function is called within a loop.
 			inventoryID2Pretty : function(ID,VLT)	{

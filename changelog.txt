@@ -18,12 +18,12 @@ orderLineItemTemplate was changed.
 customerTemplate was changed.
 myaccountArticle changed. requires new checkout and cco includes.
 jeditable plugin no longer required. removed from init.
-
+add items from order to cart added on order view page. (essentially, re-order)
 The add to cart forms/renderFormat updated. replace all. templates may include (but are not limited to): 
 productTemplate
 productTemplateQuickView
 productListTemplateATC (the qty render format for this is slightly different. take a look)
-
+showLoading script is being used more. move to pass 0 in init to avoid errors onload.
 
 * A new add to cart command. old command is deprecated.
 * Introduction of '_session' to split session data from cart data.
