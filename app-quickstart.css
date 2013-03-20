@@ -118,6 +118,19 @@ and offMenu is toggle off, hiding the change button.
 .fullWidth	{width:100%;}
 
 
+
+
+.buyerLoggedIn .hideIfLoggedIn	{display:none;}
+
+.hideIfLoggedOut	{display:none;}
+
+.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
+.buyerLoggedIn span.hideIfLoggedOut, .buyerLoggedIn a.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
+
+
+
+
+
 /****** APP specific styles ******/
 
 
@@ -453,7 +466,6 @@ CHECKOUT
 
 .addressList address	{float:left; margin:0 12px 12px 0;}
 
-.ui-icon-none.ui-icon { background-image: none; } /* allows for icon to be enabled but have nothing show up. means button widths won't change when an icon (selected, for instance) is turned on/off.
 
 
 

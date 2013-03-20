@@ -196,13 +196,13 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 					});
 
 //the fb code only works if an appID is set, so don't show banner if not present.				
-				if(zGlobals.thirdParty.facebook.appId)	{
+				if(zGlobals.thirdParty.facebook.appId && typeof FB == 'object')	{
 					$('.ocmFacebookComment').click(function(){
 						app.thirdParty.fb.postToWall(cartContentsAsLinks);
 						_gaq.push(['_trackEvent','Checkout','User Event','FB message about order']);
 						});
 					}
-				else	{$('.ocmFacebookComment').addClass('displayNone')}
+				else	{$('.ocmFacebookComment').hide()}
 
 
 //time for some cleanup. Nuke the old cart from memory and local storage, then obtain a new cart.				
@@ -232,8 +232,8 @@ if(app.vars._clientid == '1pc')	{
 	}
 else	{
 	//the code below is to disable any links in the payment messaging for apps.
-	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){event.preventDefault();});
-	$tag.click(function(){
+	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
+		event.preventDefault();
 		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
 		showContent('customer',{'show':'invoice','uriParams':{'cartid':orderCartID,'orderid':orderID}});
 		});
@@ -559,9 +559,11 @@ an existing user gets a list of previous addresses they've used and an option to
 				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
+					$("address button",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['bill/shortcut'])	{
+						app.u.dump("Bill shortcut is set: "+formObj['bill/shortcut']);
 //highlight the checked button of the address selected.<<
-						$("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}}); 
+						var $button = $("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -590,11 +592,14 @@ an existing user gets a list of previous addresses they've used and an option to
 						});
 					}
 				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
+					$fieldset.prepend("<p>Click the checkmark of the address you would like to use<\/p>");
 					$("[data-app-role='addressExists']",$fieldset).show();
-					//need logic here to select address if only 1 predefined exists.
 					$("[data-app-role='addressNew']",$fieldset).hide();
+					$("address button",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['ship/shortcut'])	{
-						$("[data-_id='"+formObj['ship/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button({icons: {primary: "ui-icon-circle-check"}});
+						app.u.dump("Ship shortcut is set: "+formObj['ship/shortcut']);
+//highlight the checked button of the address selected.<<
+						var $button = $("[data-_id='"+formObj['ship/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -691,7 +696,8 @@ an existing user gets a list of previous addresses they've used and an option to
 
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
-					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
+//additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
+					if(formObj['want/payby'])	{
 						var $radio = $("input[value='"+app.data.cartDetail.want.payby+"']",$fieldset),
 						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
 						$radio.attr('checked','checked');
@@ -699,7 +705,18 @@ an existing user gets a list of previous addresses they've used and an option to
 							app.u.dump(" -> payment method HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
+						
+						if(formObj['want/payby'] == 'PO')	{
+							$("[data-app-role='referenceNumber']",$fieldset).empty(); //nuke the input. the 'name' is shared w/ PO supplemental input
+							}
+						else if(formObj['bill/company'])	{
+							$("[data-app-role='referenceNumber']",$fieldset).show();
+							}
+						else	{
+							$("[data-app-role='referenceNumber']",$fieldset).hide();
+							}
 						}
+
 
 
 
@@ -811,7 +828,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.ext.cco.calls.cartSet.init({'want/payby':$input.val()});
 						app.model.dispatchThis('immutable'); //any reason to obtain a new cart object here? don't think so.
 						app.ext.orderCreate.u.showSupplementalInputs($input);
-						
+						app.ext.orderCreate.u.handlePanel($input.closest('form'),'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']); //for toggling display of ref. # field.
 						});
 					})
 				}, //addTriggerPayMethodUpdate
@@ -836,29 +853,45 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$input.off('blur.execAddressUpdate').on('blur.execAddressUpdate',function(){
 					var obj = {};
 					obj[$input.attr('name')] = $input.val();
+					//if bill/ship are the same, duplicate data in both places OR shipping methods won't update.
+					if($input.closest('form').find("input[name='want/bill_to_ship']").is(':checked') && $input.attr('name').indexOf('bill/') >= 0)	{
+						obj[$input.attr('name').replace('bill/','ship/')] = $input.val();
+						}
 					app.calls.cartSet.init(obj); //update the cart
 					app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
 					app.model.dispatchThis('immutable');
 					})
 				}, //execAddressUpdate
-			
+
 //executed when an predefined address (from a buyer who is logged in) is selected.
 			execBuyerAddressSelect : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-none"}});
+				$btn.button();
 				$btn.off('click.execBuyerAddressUpdate').on('click.execBuyerAddressUpdate',function(event){
 					event.preventDefault();
-					$btn.button({icons: {primary: "ui-icon-circle-check"}});
 					var addressType = $btn.closest('fieldset').data('app-addresstype'), //will be ship or bill.
 					$form = $btn.closest('form');
 					addressID = $btn.closest('address').data('_id');
 					
 					if(addressType && addressID)	{
-						$btn.closest('fieldset').find('button').removeClass('ui-state-highlight'); //remove highlight from all the select buttons
-						$btn.addClass('ui-state-highlight');
 						$("[name='"+addressType+"/shortcut']",$form).val(addressID);
 						var cartUpdate = {};
-						cartUpdate[addressType+"/shortcut"] = addressID; 
-						app.calls.cartSet.init(cartUpdate); //no need to populate address fields, shortcut handles that.
+						cartUpdate[addressType+"/shortcut"] = addressID;
+						
+						if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
+//							app.u.dump("Ship to billing address checked. set fields in billing.");
+//copy the address into the shipping fields.
+							var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
+							if(!$.isEmptyObject(addrObj))	{
+								for(index in addrObj)	{
+									cartUpdate[index.replace('bill_','ship/')] = addrObj[index];
+									}
+								}
+							}
+						
+						
+						app.calls.cartSet.init(cartUpdate,{'callback':function(){
+							app.ext.orderCreate.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}}); //no need to populate address fields, shortcut handles that.
 						app.ext.orderCreate.u.handleCommonPanels($form);
 						app.model.dispatchThis('immutable');
 						}
@@ -1071,7 +1104,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 			execInvoicePrint : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-print"},text: false});
 				
-				$btn.off('click.execInvoicePrint').on('click.execInvoicePrint',function(){
+				$btn.off('click.execInvoicePrint').on('click.execInvoicePrint',function(event){
+					event.preventDefault();
 					app.u.printByjqObj($btn.closest("[data-app-role='invoiceContainer']"));
 					});
 				
@@ -1083,7 +1117,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
 				
-				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(){
+				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(event){
+					event.preventDefault();
 					var $addrModal = $('#buyerAddressAdd'),
 					addrType = $btn.data('app-addresstype');
 					if(addrType && (addrType == 'ship' || addrType == 'bill'))	{
@@ -1155,18 +1190,25 @@ note - the order object is available at app.data['order|'+P.orderID]
 				},
 
 			tagAsAccountCreate : function($cb)	{
-				$cb.anycb;
+				$cb.anycb();
 				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
 					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
-					app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({'callback':function(rd){
+						app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
+						}},'immutable');
+					app.model.dispatchThis('immutable');
 					});
 				},
 			
 			tagAsBillToShip : function($cb)	{
 				$cb.anycb();
 				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
-					app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
 					app.calls.cartSet.init({'want/bill_to_ship':($cb.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
+					app.model.destroy('cartDetail');
+					app.calls.cartDetail.init({'callback':function(rd){
+						app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
+						}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				}

@@ -41,7 +41,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div>
 		<label>
-		<input type='checkbox' name='want/ship_to_bill' data-bind="var: cart(want/bill_to_ship); format:popCheckbox; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
+		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popCheckbox; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
 		ship to billing address
 		</label>
 		</div>
@@ -107,7 +107,7 @@ item list and summary are separate just to give more control over location.
 
 <div data-app-role='login'>
 
-	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' />
+	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' />
 	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
 	
 	<div data-app-role='loginPasswordContainer' class='displayNone'>
@@ -351,9 +351,9 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 
 <address id='chkoutBuyerAddressTemplate' class='ui-widget ui-widget-content ui-corner-all'>
 	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
-	<div>
-		<span data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></span>
-		<button data-app-event="orderCreate|execBuyerAddressSelect">use this address</button>
+	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
+	<div class='clearfix'>
+		<button class='floatRight' data-app-event="orderCreate|execBuyerAddressSelect">Use This Address</button>
 	</div>
 </address>
 
@@ -405,11 +405,11 @@ do NOT change the input name or id or checkout will likely break.
 <div id='chkoutCompletedTemplate' class='checkoutSuccess'>
 
 	<div class='floatRight ocmThirdParty'>
-		<h2>What would you like to do next?</h2>
+		<h2>What next?</h2>
 <!-- the twitter and facebook actions are added post checkout. The order contents are included as part of the message -->
-		<div class='ocm ocmFacebookComment pointer zlink'><img src='fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
-		<div class='ocm ocmTwitterComment pointer zlink' ><img src='tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
-		<div class='ocm ocmContinue pointer zlink'><img src='continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></div>
+		<div class='ocm ocmFacebookComment pointer zlink marginBottom'><img src='fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
+		<div class='ocm ocmTwitterComment pointer zlink marginBottom' ><img src='tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
+		<div class='ocm ocmContinue pointer zlink marginBottom'><img src='continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></div>
 
 	</div>
 
@@ -417,7 +417,7 @@ do NOT change the input name or id or checkout will likely break.
 	<div class='orderSummaryDetails'>
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-bind='var: order(orderid); format:text; pretext:Your order id is ;'></h3>
-		<div class='pointer marginBottom' data-bind='var:order(orderid); format:orderStatusLink; extension: cco;'>
+		<div class='pointer marginBottom'>
 			Click here to view/print your invoice.
 			<div class='zwarn' data-app-role='paymentMessaging' data-bind="var: order(payment_status_msg); format:text;"></div><!-- displays payment issues/errors -->
 		</div>
@@ -438,7 +438,7 @@ do NOT change the input name or id or checkout will likely break.
 	<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
 	</div>
 	
-	<h3 data-bind='var:order(invoice/data/pool);format:text; pretext:Order Status: ;'></h3>
+	<h3 data-bind='var:order(order/data/pool);format:text; pretext:Order Status: ;'></h3>
 	
 		</td>
 	</tr>
@@ -450,45 +450,45 @@ do NOT change the input name or id or checkout will likely break.
 	
 	<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 	
-	<h5 class='orderTotal' data-bind='var:order(invoice/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-	<h5 class='balanceDue' data-bind='var:order(invoice/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+	<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+	<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 	</hgroup>
 	
 	<address>
 	<h4>
-		<span data-bind='var:order(invoice/invoice/bill/firstname);format:text; pretext:Bill To: ;'></span>
-		<span data-bind='var:order(invoice/bill/lastname);format:text;'></span>
+		<span data-bind='var:order(order/order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+		<span data-bind='var:order(order/bill/lastname);format:text;'></span>
 	</h4>
-	<div data-bind='var:order(invoice/bill/address1);format:text;'></div>
-	<div data-bind='var:order(invoice/bill/address2);format:text;'></div>
+	<div data-bind='var:order(order/bill/address1);format:text;'></div>
+	<div data-bind='var:order(order/bill/address2);format:text;'></div>
 	<div>
-		<span data-bind='var:order(invoice/bill/city);format:text;posttext:, ;'></span>
-		<span data-bind='var:order(invoice/bill/region);format:text;posttext:. ;'></span>
-		<span data-bind='var:order(invoice/bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+		<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+		<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+		<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
 	</div>
-	<div data-bind='var:order(invoice/bill/countrycode);format:text;'></div>
+	<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
 	</address>
 	
 	<address>
 	<h4>
-		<span data-bind='var:order(invoice/ship/firstname);format:text; pretext:Ship To: ;'></span>
-		<span data-bind='var:order(invoice/ship/lastname);format:text;'></span>
+		<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+		<span data-bind='var:order(order/ship/lastname);format:text;'></span>
 	</h4>
-	<div data-bind='var:order(invoice/ship/address1);format:text;'></div>
-	<div data-bind='var:order(invoice/ship/address2);format:text;'></div>
+	<div data-bind='var:order(order/ship/address1);format:text;'></div>
+	<div data-bind='var:order(order/ship/address2);format:text;'></div>
 	<div>
-		<span data-bind='var:order(invoice/ship/city);format:text;posttext:, ;'></span>
-		<span data-bind='var:order(invoice/ship/region);format:text;posttext:. ;'></span>
-		<span data-bind='var:order(invoice/ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+		<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+		<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+		<span data-bind='var:order(order/ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
 	</div>
-	<div data-bind='var:order(invoice/ship/countrycode);format:text;'></div>
+	<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
 	</address>
 	
 	
 		</td>
 		<td class='orderContentsProdlistContainer'>
-		<ul data-bind='var:order(invoice/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-		<ul data-bind="var: order(invoice/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+		<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+		<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
 		</td>
 	</tr>
 	</table>

@@ -444,6 +444,29 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				return (typeof someFunction == 'function') ? r : inc;
 				},
 			
+			getAddrObjByID : function(type,id)	{
+				var r = false; //what is returned.
+				if(type && id)	{
+					if(app.data.buyerAddressList && app.data.buyerAddressList['@'+type] && app.data.buyerAddressList['@'+type].length)	{
+						var L = app.data.buyerAddressList['@'+type].length;
+						for(var i = 0; i < L; i += 1)	{
+							if(app.data.buyerAddressList['@'+type][i]._id == id)	{
+								r = app.data.buyerAddressList['@'+type][i];
+								break;
+								}
+							else	{}//not a match. continue loop.
+							}
+						}
+					else	{
+						//addresses not available or do not exist.
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':"In cco.u.getAddrObjByID, type or id not passed.",'gMessage':true});
+					}
+				return r;
+				},
+			
 			getWalletByID : function(ID)	{
 				var r = false;
 				if(app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
@@ -623,6 +646,8 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				
 				$tag.html(r);
 				},
+
+
 
 //data.value should be the item object from the cart.
 			cartItemRemoveButton : function($tag,data)	{

@@ -19,12 +19,6 @@ body	{background:#F4F0EC; padding:6px; margin:0; color:#333333; font-family:Verd
 #searchBar .productSearchKeyword	{width:50%; font-size:1.2em;}
 #searchBar.ui-widget-header	{padding:3px 6px !important;}
 
-.buyerLoggedIn .hideIfLoggedIn	{display:none;}
-
-.hideIfLoggedOut	{display:none;}
-
-.buyerLoggedIn .hideIfLoggedOut	{display: block;} /* may be 'block' */
-.buyerLoggedIn span.hideIfLoggedOut	{display: inline;} /* ensures inline on span elements */
 
 a	{color:#1c94c4;}
 a:hover	{color:#eb8f00;}
