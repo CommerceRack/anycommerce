@@ -358,9 +358,9 @@ HOMEPAGE STYLES
 #hompageRightHeader { width: 589px; }
 #hompageLeftHeader { width: 197px; }
 
-#slideshowContainer { position: relative; }
+#slideshowContainer { position: relative; width:589px; height:193px; padding-top: 4px; overflow: hidden;}
 #slideshowNav { position: absolute; bottom: 10px; left: 10px; z-index: 100;}
-#wideSlideshow { padding: 0px; margin: 0px; margin-top: 4px;}
+#wideSlideshow { padding: 0px; margin: 0px;}
 #slideshowNav a{ 
 	background: white;
 	border: 1px solid red;
