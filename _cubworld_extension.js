@@ -50,39 +50,34 @@ var cubworld = function() {
 			onSuccess : function() {
 				if(app.ext.myRIA && app.ext.myRIA.template){
 					app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-						if($('#wideSlideshow').data('slideshow') !== 'true'){
-							$('#wideSlideshow').data('slideshow','true').cycle({
-								fx:     'fade',
-								speed:  'slow',
-								timeout: 5000,
-								pager:  '#slideshowNav',
-								slideExpr: 'li'
-								});
-							}							
+						app.ext.cubworld.u.showHomepageSlideshow();							
 						});
+					if($("#appView #homepageTemplate_").length > 0){
+						app.ext.cubworld.u.showHomepageSlideshow();
+						}
 						
 					for(var template in app.ext.myRIA.template){
-						app.u.dump("Template: "+template);
-						app.ext.myRIA.template[template].onCompletes.push(function(P){
-							app.u.dump(app.u.jqSelector('#',P.parentID));
-							var $context = $(app.u.jqSelector('#',P.parentID));
-							if(!$context.data('columncontent')){
-								$context.data('columncontent','helpfulLinks');
-							}
-							app.u.dump($context.data('columncontent'));
-						});
-					}
-					if($("#appView #homepageTemplate_").length > 0){
-						if($('#wideSlideshow').data('slideshow') !== 'true'){
-							$('#wideSlideshow').data('slideshow','true').cycle({
-								fx:     'fade',
-								speed:  'slow',
-								timeout: 5000,
-								pager:  '#slideshowNav',
-								slideExpr: 'li'
-								});
-							}	
+						if(template !== 'cartTemplate'){
+							app.ext.myRIA.template[template].onCompletes.push(function(P){
+								var $context = $(app.u.jqSelector('#',P.parentID));
+								if(!$context.data('columncontent')){
+									$context.data('columncontent','hotItemList');
+								}
+								app.ext.cubworld.u.showColumnContent($context.data('columncontent'));
+							});
 						}
+					}
+					$('#variableColumn div').hide();
+					if($('#mainContentArea > div:visible').length === 1){
+						app.u.dump($('#mainContentArea div:visible').attr('id'));
+						if(!$('#mainContentArea div:visible').data('columncontent')){
+							$('#mainContentArea div:visible').data('columncontent','hotItemList');
+						}
+						app.ext.cubworld.u.showColumnContent($('#mainContentArea div:visible').data('columncontent'));
+					} else {
+						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
+						app.ext.cubworld.u.showColumnContent('hotItemList');
+					}
 						
 					app.u.throwMessage = function(msg,persistant){
 			//			app.u.dump("BEGIN app.u.throwMessage");
@@ -256,6 +251,23 @@ var cubworld = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			showHomepageSlideshow : function(){
+				if($('#wideSlideshow').data('slideshow') !== 'true'){
+					$('#wideSlideshow').data('slideshow','true').cycle({
+						fx:     'fade',
+						speed:  'slow',
+						timeout: 5000,
+						pager:  '#slideshowNav',
+						slideExpr: 'li'
+						});
+					}
+				},
+				
+			showColumnContent : function(content){
+				app.u.dump('Showing column content: '+content);
+				$('#variableColumn .activeColumn').hide().removeClass('activeColumn');
+				$('#variableColumn #'+content).show().addClass('activeColumn');
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"

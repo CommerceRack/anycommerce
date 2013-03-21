@@ -955,11 +955,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 	
 					case 'search':
 	//					app.u.dump(" -> Got to search case.");	
-						app.ext.myRIA.u.showSearch(infoObj);
 						infoObj.parentID = 'mainContentArea_search';
+						app.ext.myRIA.u.showSearch(infoObj);
 						break;
 	
 					case 'customer':
+						infoObj.parentID = 'mainContentArea_customer';
 						if('file:' == document.location.protocol || 'https:' == document.location.protocol)	{
 							var performJumpToTop = app.ext.myRIA.u.showCustomer(infoObj);
 							infoObj.performJumpToTop = infoObj.performJumpToTop || performJumpToTop;
@@ -971,7 +972,6 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 							document.location = SSLlocation; //redir to secure url
 							}
-						infoObj.parentID = 'mainContentArea_customer';
 						break;
 	
 					case 'checkout':
@@ -1206,8 +1206,8 @@ else	{
 					$detail.css({'float':'right'});
 					$liContainer.css({'float':'left','overflow':'auto','height':'500px'});
 					
-					$detail.animate({'width':'65%'},'slow');
-					$liContainer.animate({'width':'30%'},'slow');
+					$detail.animate({'width':'639px'},'slow');
+					$liContainer.animate({'width':'150px'},'slow');
 					}
 
 				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
@@ -2132,6 +2132,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					infoObj.templateID = infoObj.templateID || 'productTemplate';
 					infoObj.state = 'onInits'
 					parentID = infoObj.templateID+"_"+app.u.makeSafeHTMLId(pid);
+					infoObj.parentID = parentID;
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					
 
@@ -2552,6 +2553,7 @@ buyer to 'take with them' as they move between  pages.
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
 						app.u.dump(" -> "+parentID+" already exists. Use it");
+						infoObj.parentID = parentID;
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}

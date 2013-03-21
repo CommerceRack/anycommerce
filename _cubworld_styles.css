@@ -295,6 +295,27 @@ HEADER STYLES
 }
 /****************************************************************
 
+COLUMN STYLES
+
+****************************************************************/
+
+#hotItemList{
+	height: 400px;
+	background: blue;
+}
+#helpfulLinks{
+	height: 600px;
+	background: red;
+}
+.thinColumn > img {
+	margin: 4px auto;
+}
+
+.thinColumn{ width:215px; margin:3px; margin-top: 0px; }
+.thinColumn, .thinColumn * {position: relative; z-index: 0;}
+.wideColumn{ width:789px; margin:3px; margin-top: 0px;}
+/****************************************************************
+
 FOOTER STYLES
 
 ****************************************************************/
@@ -385,8 +406,7 @@ FOOTER STYLES
 HOMEPAGE STYLES
 
 ****************************************************************/
-.thinColumn{ width:215px; margin:3px; margin-top: 0px;}
-.wideColumn{ width:789px; margin:3px; margin-top: 0px;}
+
 
 #hompageRightHeader { width: 589px; }
 #hompageLeftHeader { width: 197px; }
@@ -452,6 +472,7 @@ PRODUCT STYLES
 SEARCH STYLES
 
 ****************************************************************/
+.searchResultsPage{margin-top: 14px;}
 .previewListContainer{position:relative; z-index: 10001; background: white;}
 .previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
 .productQuickview{background: white; min-height: 469px;}
