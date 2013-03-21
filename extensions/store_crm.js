@@ -472,6 +472,141 @@ else{
 					errObj.parentID = formID
 					app.u.throwMessage(errObj);
 					}
+				},
+			
+//vars needs addressID AND addressType (bill or ship)
+			showAddressEditModal : function(vars,onSuccessCallback)	{
+				var r = false; //what is returned. true if editor is displayed, false if an error occured.
+
+				if(typeof vars === 'object' && vars.addressID && vars.addressType)	{
+					var addressData = app.ext.cco.u.getAddrObjByID(vars.addressType,vars.addressID);
+					if(addressData)	{
+						r = true;
+						var $editor = $("<div \/>");
+						$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':addressData});
+						$editor.append("<input type='hidden' name='shortcut' value='"+vars.addressID+"' \/>");
+						$editor.append("<input type='hidden' name='type' value='"+vars.addressType+"' \/>");
+						$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
+						
+					
+						$editor.dialog({
+							width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
+							height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
+							modal: true,
+							title: 'edit address',
+							buttons : {
+								'cancel' : function(event){
+									event.preventDefault();
+									$(this).dialog('close');
+									},
+								'save' : function(event,ui) {
+									event.preventDefault();
+									var $form = $('form',$(this)).first();
+									
+									if(app.u.validateForm($form))	{
+										$('body').showLoading('Updating Address');
+										var serializedForm = $form.serializeJSON();
+//save and then refresh the page to show updated info.
+										app.calls.buyerAddressAddUpdate.init(serializedForm,{'callback':function(rd){
+											$('body').hideLoading(); //always hide loading, regardless of errors.
+											if(app.model.responseHasErrors(rd)){
+												$form.anymessage({'message':rd});
+												}
+											else if(typeof onSuccessCallback === 'function')	{
+												onSuccessCallback(rd,serializedForm);
+												$editor.dialog('close');
+												}
+											else	{
+												//no callback defined 
+												$editor.dialog('close');
+												}
+											}},'immutable');
+//dump data in memory and local storage. get new copy up updated address list for display.
+										app.model.destroy('buyerAddressList');
+										app.calls.buyerAddressList.init({},'immutable');
+										app.model.dispatchThis('immutable');
+										}
+									else	{} //errors handled in validateForm
+									
+									}
+								},
+							close : function(event, ui) {$(this).dialog('destroy').remove()}
+							});
+						
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressEditModal, unable to determine address data.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressEditModal, either vars was undefined/not an object ['+typeof vars+'] or addressID and/or addressType not set.','gMessage':true});
+					}
+				return r;
+				}, //showAddressEditModal
+
+//vars needs addressType (bill or ship)			
+			showAddressAddModal : function(vars,onSuccessCallback)	{
+				var r = false; //what is returned. true if editor is displayed, false if an error occured.
+
+				if(typeof vars === 'object' && vars.addressType && (vars.addressType.toLowerCase() == 'bill' || vars.addressType.toLowerCase() == 'ship'))	{
+
+					r = true;
+					var $editor = $("<div \/>");
+					$editor.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
+					$editor.append("<input type='hidden' name='type' value='"+vars.addressType.toUpperCase()+"' \/>");
+					$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':{},'showLoading':false});
+					$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
+					
+				
+					$editor.dialog({
+						width: ($(window).width() < 500) ? ($(window).width() - 50) : 500, //check window width/height to accomodate mobile devices.
+						height: ($(window).height() < 500) ? ($(window).height() - 50) : 500,
+						modal: true,
+						title: 'edit address',
+						buttons : {
+							'cancel' : function(event){
+								event.preventDefault();
+								$(this).dialog('close');
+								},
+							'save' : function(event,ui) {
+								event.preventDefault();
+								var $form = $('form',$(this)).first();
+								
+								if(app.u.validateForm($form))	{
+									$('body').showLoading('Adding Address');
+									var serializedForm = $form.serializeJSON();
+//save and then refresh the page to show updated info.
+									app.calls.buyerAddressAddUpdate.init(serializedForm,{'callback':function(rd){
+										$('body').hideLoading(); //always hide loading, regardless of errors.
+										if(app.model.responseHasErrors(rd)){
+											$form.anymessage({'message':rd});
+											}
+										else if(typeof onSuccessCallback === 'function')	{
+											onSuccessCallback(rd,serializedForm);
+											$editor.dialog('close');
+											}
+										else	{
+											//no callback defined or an error occured and has been reported.
+											$editor.dialog('close');
+											}
+										}},'immutable');
+//dump data in memory and local storage. get new copy up updated address list for display.
+									app.model.destroy('buyerAddressList');
+									app.calls.buyerAddressList.init({},'immutable');
+									app.model.dispatchThis('immutable');
+									}
+								else	{} //errors handled in validateForm
+								
+								}
+							},
+						close : function(event, ui) {$(this).dialog('destroy').remove()}
+						});
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_crm.u.showAddressAddModal, either vars was undefined/not an object ['+typeof vars+'] or  addressType not set to bill or ship.','gMessage':true});
+					}
+				return r;
 				}
 			}, //util		
 		
@@ -492,68 +627,8 @@ else{
 						}
 					})
 				},
-			
-			showBuyerAddressUpdate : function($btn)	{
-				$btn.button();
-				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
-					var $editor = $("<div \/>"),
-					addressID = $btn.closest("address").data('_id'),
-					addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype'),
-					addrData = app.ext.cco.u.getAddrObjByID(addressType,addressID);
-					
-//					app.u.dump(" -> addressID: "+addressID+" and addressType: "+addressType); app.u.dump(addrData);
-					
-					if(addressID && addressType && addrData)	{
-						$editor.anycontent({'templateID':(addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':addrData});
-						$editor.append("<input type='hidden' name='shortcut' value='"+addressID+"' \/>");
-						$editor.append("<input type='hidden' name='type' value='"+addressType+"' \/>");
-						$editor.wrapInner('<form \/>'); //needs this for serializeJSON 
-						
-						$editor.dialog({
-							width:500,
-							height:500,
-							modal: true,
-							title: 'edit address',
-							buttons : {
-								'cancel' : function(event){
-									event.preventDefault();
-									$(this).dialog('close');
-									},
-								'save' : function(event,ui) {
-									event.preventDefault();
-									var $form = $('form',$(this)).first();
-									
-									if(app.u.validateForm($form))	{
-										$('body').showLoading('Updating Address');
-//save and then refresh the page to show updated info.
-										app.calls.buyerAddressAddUpdate.init($form.serializeJSON(),{'callback':function(rd){
-											$('body').hideLoading(); //always hide loading, regardless of errors.
-											if(app.model.responseHasErrors(rd)){
-												$form.anymessage({'message':rd});
-												}
-											else	{
-												$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
-												showContent('customer',{'show':'myaccount'});
-												}
-											}},'immutable');
-//dump data in memory and local storage. get new copy up updated address list for display.
-										app.model.destroy('buyerAddressList');
-										app.calls.buyerAddressList.init({},'immutable');
-										app.model.dispatchThis('immutable');
-										}
-									else	{} //errors handled in validateForm
-									
-									}
-								},
-							close : function(event, ui) {$(this).dialog('destroy').remove()}
-							});
-						}
-					else	{
-						$('#globalMessaging').anymessage({'message':"In store_crm.e.showBuyerAddressUpdate, unable to determine addressID ["+addressID+"], addressType ["+addressType+"] or addrData  ["+typeof addrData+"]",'gMessage':true});
-						}
 
-					});
-				}
+
 			
 			} //e/events
 		

@@ -821,12 +821,18 @@ if you change these, you should move them above this comment so that when you (o
 			<section>
 
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
-	<h2>Billing Address(es)</h2>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<h2>Billing Address(es)</h2>
+	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
 </div>
 
 <div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
-	<h2>Shipping Address(es)</h2>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<h2>Shipping Address(es)</h2>
+	</div>
 	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
 </div>
 
@@ -1276,7 +1282,7 @@ The 'data-action' attribute is used to assign an onclick.
 -->
 
 <address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-event="store_crm|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
@@ -1297,7 +1303,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- used in the my account area -->
 <address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
-	<button data-app-event="store_crm|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
 		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
 		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>

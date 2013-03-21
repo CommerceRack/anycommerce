@@ -481,7 +481,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 		
 
 
-////////////////////////////////////   						panelContent			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+////////////////////////////////////   						panelDisplayLogic			    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
 
@@ -563,7 +563,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					if(formObj['bill/shortcut'])	{
 						app.u.dump("Bill shortcut is set: "+formObj['bill/shortcut']);
 //highlight the checked button of the address selected.<<
-						var $button = $("[data-_id='"+formObj['bill/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
+						var $button = $("[data-_id='"+formObj['bill/shortcut']+"'] button[data-app-event='orderCreate|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -599,7 +599,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					if(formObj['ship/shortcut'])	{
 						app.u.dump("Ship shortcut is set: "+formObj['ship/shortcut']);
 //highlight the checked button of the address selected.<<
-						var $button = $("[data-_id='"+formObj['ship/shortcut']+"'] button",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
+						var $button = $("[data-_id='"+formObj['ship/shortcut']+"'] button[data-app-event='orderCreate|execBuyerAddressSelect']",$fieldset).addClass('ui-state-highlight').button( "option", "icons", { primary: "ui-icon-check"} );
 						}
 					}
 				else	{
@@ -899,7 +899,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect','gMessage':true});
 						}
 					});
-				},
+				}, //execBuyerAddressSelect
 
 //immediately update cart anytime the email address is added/changed. for remarketing purposes.
 //no need to refresh the cartDetail here.
@@ -910,7 +910,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.dispatchThis('immutable');
 						}
 					});
-				},
+				}, //execBuyerEmailUpdate
 			
 			execBuyerLogin : function($btn)	{
 				$btn.button();
@@ -1119,81 +1119,68 @@ note - the order object is available at app.data['order|'+P.orderID]
 				
 				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(event){
 					event.preventDefault();
-					var $addrModal = $('#buyerAddressAdd'),
-					addrType = $btn.data('app-addresstype');
-					if(addrType && (addrType == 'ship' || addrType == 'bill'))	{
-						if($addrModal.length)	{
-							$addrModal.empty();
-							}
-						else	{
-							$addrModal = $("<div \/>",{'id':'buyerAddressAdd','title':'Add a new address'}).appendTo('body');
-							$addrModal.dialog({autoOpen:false, modal:true, width:($('body').width < 500) ? '100%' : 500,height:500});
-							}
-							
-						$addrModal.append("<input type='text' maxlength='6' data-minlength='6' name='shortcut' placeholder='address id (6 characters)' \/>");
-						$addrModal.append("<input type='hidden' name='type' value='"+addrType.toUpperCase()+"' \/>");
-//checkout destinations passed in so country list populates. nothing else should populate.
-//NOTE - the address entry form is the same template used by checkout. do NOT run app-events over it or some undesired behaviors may result.
-						$addrModal.anycontent({'templateID':(addrType == 'bill') ? 'chkoutAddressBillTemplate' : 'chkoutAddressShipTemplate','showLoading':'false',data:app.data.appCheckoutDestinations}); 
-						$addrModal.wrap("<form>");
-						$("<button \/>").text('Save').button().on('click',function(event){
-							event.preventDefault();
-							var $form = $(this).closest('form'),
-							formObj = $form.serializeJSON();
-							updateObj = {};
-							if(app.u.validateForm($form))	{
-								$('body').showLoading({'message':'Adding new address.'});
-//create a new address.
-								app.calls.buyerAddressAddUpdate.init(formObj,{'callback':function(rd){
-									$('body').hideLoading();
-									if(app.model.responseHasErrors(rd)){
-										$addrModal.anymessage({'message':rd});
-										}
-									else	{
+					var addressType = $btn.data('app-addresstype').toLowerCase();
+					app.ext.store_crm.u.showAddressAddModal({'addressType':addressType},function(rd,serializedForm){
 //by here, the new address has been created.
 //set appropriate address panel to loading.
-										app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
-//update cart and set shortcut as address.
-										updateObj[addrType+'/shortcut'] = formObj.shortcut;
-										app.ext.cco.calls.cartSet.init(updateObj,{});
-
-//update DOM/input for shortcut w/ new shortcut value.
-										$("[name='"+addrType+"/shortcut']",$checkoutForm);
-
-//get the updated address list and update the address panel.
-										app.model.destroy('buyerAddressList');
-										app.calls.buyerAddressList.init({'callback':function(rd){
-											app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
-											}},'immutable');
-
-//update appropriate address panel plus big three.
-										app.ext.orderCreate.u.handleCommonPanels($checkoutForm);
-										app.model.dispatchThis('immutable');
-//close modal.
-										$addrModal.dialog('close');
-										
-										}
-									}},'immutable');
-								
-								app.model.dispatchThis('immutable'); //send dispatch to create address.
-
-								}
-							else	{} //validateForm will display issues.
-							}).appendTo($addrModal)
-						
-						$addrModal.dialog('open');
-						}
-					else	{
-						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.showBuyerAddressAdd, addrType is either undefined or an unsupported value ['+addrType+']','gMessage':true});
-						}
+						app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+	//update cart and set shortcut as address.
+						var updateObj = {}
+						updateObj[addressType+'/shortcut'] = serializedForm.shortcut;
+						app.ext.cco.calls.cartSet.init(updateObj,{},'immutable');
+	
+	//update DOM/input for shortcut w/ new shortcut value.
+						$("[name='"+addressType+"/shortcut']",$checkoutForm);
+	
+	//get the updated address list and update the address panel.
+						app.model.destroy('buyerAddressList');
+						app.calls.buyerAddressList.init({'callback':function(rd){
+							app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}},'immutable');
+	
+	//update appropriate address panel plus big three.
+						app.ext.orderCreate.u.handleCommonPanels($checkoutForm);
+						app.model.dispatchThis('immutable');
+						});
 					})
 				},
+
+			showBuyerAddressUpdate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+
+				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
+				$checkoutAddrFieldset = $btn.closest('fieldset');
+
+				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
+					
+					var addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype');
+					
+					app.ext.store_crm.u.showAddressEditModal({
+						'addressID' : $btn.closest("address").data('_id'),
+						'addressType' : addressType
+						},function(){
+//by here, the new address has been edited.
+//set appropriate address panel to loading.
+//editing and address does NOT auto-select it.
+						app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['showLoading']);
+	
+	//get the updated address list and update the address panel.
+						app.model.destroy('buyerAddressList');
+						app.calls.buyerAddressList.init({'callback':function(rd){
+							app.ext.orderCreate.u.handlePanel($checkoutForm,$checkoutAddrFieldset.data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}},'immutable');
+	
+						app.model.dispatchThis('immutable');
+						})
+					});
+				}, //showBuyerAddressUpdate
 
 			tagAsAccountCreate : function($cb)	{
 				$cb.anycb();
 				$cb.off('change.tagAsAccountCreate').on('change.tagAsAccountCreate',function()	{
 					app.ext.cco.calls.cartSet.init({'want/create_customer': $cb.is(':checked') ? 1 : 0}); //val of a cb is on or off, but we want 1 or 0.
 					app.model.destroy('cartDetail');
+					app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutPreflight',['handleDisplayLogic']);
 					app.calls.cartDetail.init({'callback':function(rd){
 						app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAccountCreate',['handleDisplayLogic']);
 						}},'immutable');
@@ -1369,91 +1356,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
 					}
-				}, //saveAllCheckoutFields
-
-			handleChangeFromPayPalEC : function()	{
-//				app.ext.cco.u.nukePayPalEC(); //kills all local and session paypal payment vars
-				app.ext.orderCreate.u.handlePanel('chkoutPayOptions');
-				app.ext.orderCreate.u.handlePanel('chkoutBillAddress');
-				app.ext.orderCreate.u.handlePanel('chkoutShipAddress');
-				app.ext.orderCreate.u.handlePanel('chkoutShipMethods');
-				app.ext.orderCreate.calls.showCheckoutForm.init();  //handles all calls.
-				app.model.dispatchThis('immutable');
-				}, //handleChangeFromPayPalEC
-
-/*
-paypal returns a user to the checkout page, not the order complete page.
-if token and payerid are set on URI, then user has just returned to checkout, so do the following:
-0. show welcome back message.
-1. get checkout details (will include paypal info like address)
-2. if address is not populated already, populate address. (if logged in, show form, not predefined addresses)
-3. lock down address fields so they are not editable.
-note - predefined addresses are hidden and the form is shown so that if the user used a paypal address, we don't have to try to 'map' it back to an account address.
-
-4. lock down payment options so they are not editable.
-5. select paypal EC as payment option.
-6. lock down shipping (a method is selected in paypal)
-7. add button near 'place order' that says 'change from paypal to other payment option'.
-
-
-*/
-			handlePaypalFormManipulation : function()	{
-			app.u.dump("BEGIN orderCreate.u.handlePaypalFormManipulation ");
-			if(app.data.cartPaypalGetExpressCheckoutDetails && app.data.cartPaypalGetExpressCheckoutDetails['_msgs'])	{
-				//an error occured. error message is displayed as part of callback.
-				}
-			else	{
-			$('#returnFromThirdPartyPayment').show();
-//when paypal redirects back to checkout, these two vars will be on URI: token=XXXX&PayerID=YYYY
-
-//uncheck the bill to ship option so that user can see the paypal-set shipping address.
-//
-var $billToShipCB = $('#want-bill_to_ship_cb');
-$billToShipCB.attr('disabled','disabled')
-if($billToShipCB.is(':checked'))	{
-//code didn't like running a .click() here. the trigered function registered the checkbox as checked.
-	$billToShipCB.removeAttr("checked");
-	app.ext.orderCreate.u.toggleShipAddressPanel();
-	}
-//hide all bill/ship predefined addresses.
-$('#chkoutBillAddressFieldset address').hide();
-$('#chkoutShipAddressFieldset address').hide();
-//show bill/ship address form
-$('#billAddressUL').show();
-$('#shipAddressUL').show();
-//disable all shipping address inputs that are populated (by paypal) and select lists except phone number (which isn't populated by paypal)
-$('#chkoutShipAddressFieldset input, #chkoutShipAddressFieldset select').each(function(){
-	if($(this).val() != '')	{
-		$(this).attr('disabled','disabled')
-		}
-	});
-$('#data-ship_phone').removeAttr('disabled');
-
-//name and email are disabled for billing address. They'll be populated by paypal and are not allowed to be different.
-$('#data-bill_firstname, #data-bill_lastname, #data-bill_email').attr('disabled','disabled');
-$('.addressListPrompt').hide(); //this text needs to be hidden if a user is logged in cuz it doesn't make sense at this point.
+				} //saveAllCheckoutFields
 
 
 
-//make sure paypal is selected payment option. this will trigger a request to select it as well.
-//disable all other payment optins.
-$('#want-payby_PAYPALEC').click(); //payby is not set by default, plus the 'click' is needed to open the subpanel
-$('#chkoutPayOptionsFieldset input[type=radio]').attr('disabled','disabled');
-
-//disable all ship methods.
-$('#chkoutShipMethodsFieldset input[type=radio]').attr('disabled','disabled');
-
-//disable giftcards
-$('#giftcardMessaging').text('PayPal not compatible with giftCards');
-//$('#couponMessaging').show().text('PayPal is not compatible with Coupons');
-$('#giftcardCode').attr('disabled','disabled'); //, #couponCode
-$('#addGiftcardBtn').attr('disabled','disabled').addClass('ui-state-disabled'); //, #addCouponBtn
-
-$('#paybySupplemental_PAYPALEC').empty().append("<a href='#top' onClick='app.ext.cco.u.nukePayPalEC();'>Choose Alternate Payment Method<\/a>");
-					}
-				}
 				
-			},
+			}, // u/utilities
 
 
 

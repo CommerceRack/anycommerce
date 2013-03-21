@@ -53,7 +53,7 @@ item list and summary are separate just to give more control over location.
 		<legend class='headerPadding' >Shipping Address</legend>
 		<div class='panelContent displayNone addressList' data-app-role='addressExists' data-bind='var: buyer(@ship); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for new customers -->
-		<div class='clearfix' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='ship'>Add New Address</button></div>
+		<div class='clearfix' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='ship'>Add New Shipping Address</button></div>
 	</fieldset>
 
 
@@ -353,7 +353,8 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div data-bind="var:address(bill_address1); defaultVar: address(ship_address1); format:text;"></div>
 	<div data-bind="var:address(bill_postal); defaultVar: address(ship_postal); format:text;"></div>
 	<div class='clearfix'>
-		<button class='floatRight' data-app-event="orderCreate|execBuyerAddressSelect">Use This Address</button>
+		<button class='floatRight' data-app-event='orderCreate|execBuyerAddressSelect'>Use This Address</button>
+		<button class='floatRight marginRight' data-app-event="orderCreate|showBuyerAddressUpdate">Edit This Address</button>
 	</div>
 </address>
 

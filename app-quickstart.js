@@ -3003,6 +3003,7 @@ else	{
 ////////////////////////////////////   app Events [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
+
 			execOrder2Cart : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-cart"},text: false});
 				$btn.off('click.execOrder2Cart').on('click.execOrder2Cart',function(event){
@@ -3040,7 +3041,33 @@ else	{
 						$('#globalMessaging').anymessage({'message':"In myRIA.e.execOrder2Cart, unable to determine orderID",'gMessage':true});
 						}
 					});
-				}
+				}, //execOrder2Cart
+
+			showBuyerAddressUpdate : function($btn)	{
+				$btn.button();
+				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
+					app.ext.store_crm.u.showAddressEditModal({
+						'addressID' : $btn.closest("address").data('_id'),
+						'addressType' : $btn.closest("[data-app-addresstype]").data('app-addresstype')
+						},function(){
+						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+						showContent('customer',{'show':'myaccount'});
+						})
+					});
+				}, //showBuyerAddressUpdate
+
+			showBuyerAddressAdd : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: false});
+				$btn.off('click.showBuyerAddressAdd').on('click.showBuyerAddressAdd',function(){
+					app.ext.store_crm.u.showAddressAddModal({
+						'addressType' : $btn.closest("[data-app-addresstype]").data('app-addresstype')
+						},function(rd){
+						$('#mainContentArea_customer').empty().remove(); //kill so it gets regenerated. this a good idea?
+						showContent('customer',{'show':'myaccount'});
+						})
+					});
+				} //showBuyerAddressAdd
+
 			} // e/events
 		
 		} //r object.
