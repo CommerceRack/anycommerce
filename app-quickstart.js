@@ -567,6 +567,26 @@ need to be customized on a per-ria basis.
 					});
 				}, //searchLink
 
+			cpsiaWarning : function($tag,data)	{
+
+				var warnings = {
+					'choking_hazard_balloon' : 'Choking Hazard Balloon',
+					'choking_hazard_contains_a_marble' : 'Choking Hazard contains a marble',
+					'choking_hazard_contains_small_ball' : 'Choking Hazard contains a small ball',
+					'choking_hazard_is_a_marble' : 'Choking Hazard is a marble', 
+					'choking_hazard_is_a_small_ball' : 'Choking Hazard is a small ball',
+					'choking_hazard_small_parts' : 'Choking Hazard small parts',
+					'no_warning_applicable' : 'No Warning Applicable'
+					};
+				if(warnings[data.value])	{
+					$tag.append(warnings[data.value]);
+					}
+				else	{
+					$tag.append(data.value);
+					}
+
+				},
+
 			addPicSlider : function($tag,data)	{
 //				app.u.dump("BEGIN myRIA.renderFormats.addPicSlider: "+data.value);
 				if(typeof app.data['appProductGet|'+data.value] == 'object')	{
@@ -685,8 +705,10 @@ fallback is to just output the value.
 //use in a cart item spec.  When clicked, button will first add the item to the wishlist and then, if that's succesful, remove the item from the cart.
 // render format will also hide the button if the user is not logged in.
 			moveToWishlistButton : function($tag,data)	{
-				//!!! needs to better handle coupons and assemblies
-				if(app.u.buyerIsAuthenticated())	{
+//nuke remove button for coupons.
+				if(data.value.stid[0] == '%')	{$tag.remove()} //coupon.
+				else if(data.value.asm_master)	{$tag.remove()} //assembly 'child'.
+				else if(app.u.buyerIsAuthenticated())	{
 					$tag.show().button({icons: {primary: "ui-icon-heart"},text: false});
 					$tag.off('click.moveToWishlist').on('click.moveToWishList',function(){
 						app.ext.myRIA.a.moveItemFromCartToWishlist(data.value);
@@ -709,7 +731,7 @@ fallback is to just output the value.
 				inv = app.ext.store_product.u.getProductInventory(pid),
 				$form = $tag.closest('form');
 				
-				app.u.dump(" -> $form.length: "+$form.length);
+//				app.u.dump(" -> $form.length: "+$form.length);
 				
 //				if(app.model.fetchData('appProductGet|'+pid))	{}
 				if(data.bindData.isElastic)	{
@@ -2082,6 +2104,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					infoObj.templateID = infoObj.templateID || 'productTemplate';
 					infoObj.state = 'onInits'
 					parentID = infoObj.templateID+"_"+app.u.makeSafeHTMLId(pid);
+					infoObj.parentID = parentID;
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					
 
@@ -2119,19 +2142,20 @@ effects the display of the nav buttons only. should be run just after the handle
 			showCompany : function(infoObj)	{
 				infoObj.show = infoObj.show ? infoObj.show : 'about'; //what page to put into focus. default to 'about us' page
 //				$('#mainContentArea').empty(); //clear Existing content.
+				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
 				
 				infoObj.templateID = 'companyTemplate';
 				infoObj.state = 'onInits';
+				infoObj.parentID = parentID;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				
-				var parentID = 'mainContentArea_company'; //this is the id that will be assigned to the companyTemplate instance.
+				
 
 //only create instance once.
 				if($('#mainContentArea_company').length)	{
 					app.ext.myRIA.u.showArticle(infoObj);
 					infoObj.state = 'onCompletes';
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-					
 					}
 				else	{
 					var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID);
@@ -2150,9 +2174,10 @@ effects the display of the nav buttons only. should be run just after the handle
 //				app.u.dump("BEGIN myRIA.u.showSearch. infoObj follows: ");
 //				app.u.dump(infoObj);
 				infoObj.templateID = 'searchTemplate';
+				infoObj.parentID = 'mainContentArea_search';
 				infoObj.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				var $page = $('#mainContentArea_search'),
+				var $page = $('#'+infoObj.parentID),
 				elasticsearch = {};
 				
 				
@@ -2222,11 +2247,11 @@ elasticsearch.size = 50;
 			showCart : function(infoObj)	{
 				if(typeof infoObj != 'object'){var infoObj = {}}
 //				app.u.dump("BEGIN myRIA.u.showCart");
-				infoObj.templateID = 'cartTemplate'
+				infoObj.templateID = 'cartTemplate';
+				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				if(infoObj.show == 'inline')	{
-
 //only create instance once.
 					if($('#mainContentArea_cart').length)	{
 						//show cart
@@ -2235,9 +2260,21 @@ elasticsearch.size = 50;
 						}
 					else	{
 						var $cart = $("<div \/>",{'id':'mainContentArea_cart'});
-						$cart.anycontent({'templateID':infoObj.templateID});
+						$cart.appendTo("#mainContentArea");
 						}
-
+					$cart.showLoading({'message':'loading cart'});
+//This will load the cart from memory, if set. otherwise it will fetch it.
+//so if you need to update the cart, run a destroy prior to showCart.
+					app.calls.cartDetail.init({'callback':function(rd){
+						$cart.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$cart.anymessage({'message':rd});
+							}
+						else	{
+							$cart.anycontent({'templateID':infoObj.templateID,'datapointer':'cartDetail'});
+							}
+						}},'mutable');
+						app.model.dispatchThis();
 
 
 					}
@@ -2268,6 +2305,7 @@ elasticsearch.size = 50;
 //				$('#mainContentArea').empty();
 //				app.u.dump(" -> infoObj follows:"); app.u.dump(infoObj);
 				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
+				infoObj.parentID = parentID;
 //only create instance once.
 				if($('#mainContentArea_customer').length)	{}
 				else	{
@@ -2361,6 +2399,10 @@ elasticsearch.size = 50;
 					}
 				return r;
 				},
+
+
+
+
 
 
 //pass in a bindNav anchor and the 'pageInfo' will be returned.
@@ -2529,9 +2571,10 @@ buyer to 'take with them' as they move between  pages.
 						infoObj.templateID = 'categoryTemplate'
 						}
 					infoObj.state = 'onInits';
-					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					var parentID = infoObj.parentID || infoObj.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
-					app.u.dump(" -> parentID: "+parentID);
+					infoObj.parentID = parentID;
+					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
+
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
 						app.u.dump(" -> "+parentID+" already exists. Use it");

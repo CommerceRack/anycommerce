@@ -324,11 +324,9 @@ cartTemplate
 ***************************************************/
 
 
-
-
 .cartContainer	{width:100%;}
 
-
+#mainContentArea_cart .continueShoppingButton	{display:none;} /* used in modal cart only */
 
 /***************************************************
 
