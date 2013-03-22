@@ -108,14 +108,14 @@ li.productListItem {
 li:hover .prodName{color: #BE0000;}
 
 .titleBlue{
-	background: url("cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
+	background: url("img/cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
     color: #FFFFFF;
     font: bold 15px/23px Arial,Helvetica,sans-serif;
     margin-bottom: 8px;
     padding-left: 11px;
 }
 .titleRed{
-	background: url("cw12_home_titbgred-1x23.gif") repeat-x scroll center bottom #C60000;
+	background: url("img/cw12_home_titbgred-1x23.gif") repeat-x scroll center bottom #C60000;
     color: #FFFFFF;
     font: bold 15px/23px Arial,Helvetica,sans-serif;
     margin-bottom: 8px;
