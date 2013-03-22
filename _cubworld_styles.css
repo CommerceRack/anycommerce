@@ -4,7 +4,9 @@ body {
 	margin: 0px;
 	font-family: Tahoma,arial,sans-serif;
 }
-
+h1,h2,h3,h4,h5,h6{
+	font-family: Arial,​Helvetica,​sans-serif;
+}
 #appView {
 	width: 1020px;
 	margin: 0px auto;
@@ -306,10 +308,18 @@ COLUMN STYLES
 	background: blue;
 }
 #helpfulLinks{
-	height: 600px;
 	background: #002675;
+	color: white;
 }
+.sideline {
+    float: none;
+    margin: 0px;
+    width: 100%;
+}
+#helpfulLinks ul { margin-bottom: 20px; text-indent: 15px;}
 #helpfulLinks a {color: #FEDF46;}
+#helpfulLinks a.ui-state-highlight {color: #002675;}
+#helpfulLinks a.ui-state-highlight:hover {color: #002675;}
 #helpfulLinks a:hover {color: white;}
 
 .thinColumn > img {

@@ -450,29 +450,31 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="thinColumn floatRight">
 			<div id="variableColumn">
 				<div id="hotItemList" class="displayNone">
-				
+					<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<div class='titleBlue'>Featured Chicago Cubs Players</div>; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+		
 				</div>
 				
-				<div id="helpfulLinks" class="displayNone">
-					
+				<div id="helpfulLinks" class="displayNone sideline">
+					<h3>Useful Links</h3>
 					<ul class='listStyleNone noPadOrMargin'>
-						<li><a href='#' onClick="return showContent('company',{'show':'about'});" >About Us</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'contact'});" >Contact Information</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'faq'});"  >FAQ</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'payment'});">Payment Policy</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'privacy'});" >Privacy Statement</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'return'});">Return Policy</a></li>
-						<li><a href='#' onClick="return showContent('company',{'show':'shipping'});">Shipping Information</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'about'});"  class='navLink navLink_about'>About Us</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'contact'});"  class='navLink navLink_contact'>Contact Information</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'faq'});"  class='navLink navLink_faq'>FAQ</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'payment'});" class='navLink navLink_payment'>Payment Policy</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'privacy'});" class='navLink navLink_privacy'>Privacy Statement</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'return'});" class='navLink navLink_return'>Return Policy</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'shipping'});" class='navLink navLink_shipping'>Shipping Information</a></li>
 					</ul>
 					
+					<h3>My Cubworld</h3>
 					<ul class='listStyleNone noPadOrMargin'>
 					<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-					<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-						<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-						<li><a href='#' onClick="return showContent('customer',{'show':'myaccount'});" >My Account</a></li>
-						<li><a href='#' onClick="return showContent('customer',{'show':'changepassword'});">Change Password</a></li>
-						<li><a href='#' onClick="return showContent('customer',{'show':'orders'});" >Order History</a></li>
-						<li><a href='#' onClick="return showContent('customer',{'show':'lists'});" >Manage Lists</a></li>
+					<!--		<li><a href='#newsletter' class='navLink navLink_newsletter'>Newsletter Subscription</a></li>
+						<li><a href='#recoverpassword' class='navLink navLink_recoverpassword'>Recover Password</a></li> -->
+						<li><a href='#' onClick="return showContent('customer',{'show':'myaccount'});" class='navLink navLink_myaccount'>My Account</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'changepassword'});" class='navLink navLink_changepassword'>Change Password</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'orders'});" class='navLink navLink_orders'>Order History</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'lists'});" class='navLink navLink_orders'>Manage Lists</a></li>
 					</ul>
 					
 					
