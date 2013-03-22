@@ -2293,29 +2293,22 @@ elasticsearch.size = 50;
 			showCustomer : function(infoObj)	{
 //				app.u.dump("BEGIN showCustomer. infoObj: "); app.u.dump(infoObj);
 				var r = true; //what is returned. set to false if content not shown (because use is not logged in)
-				if(infoObj && infoObj.uriParams && infoObj.uriParams.cartid && infoObj.uriParams.orderid)	{
-					infoObj.show = 'invoice'; //force to order view if these params are set (most likely invoice view).
-					}
-				else if (infoObj.show)	{
+				if (infoObj.show)	{
 					//infoObj.show is already set.
 					}
 				else	{
 					infoObj.show = 'newsletter';
 					}
-//				$('#mainContentArea').empty();
-//				app.u.dump(" -> infoObj follows:"); app.u.dump(infoObj);
-				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
-				infoObj.parentID = parentID;
+
+				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
 //only create instance once.
-				if($('#mainContentArea_customer').length)	{}
+				if($('#'+infoObj.parentID).length)	{}
 				else	{
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
+					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID))
 					app.ext.myRIA.u.bindNav('#customerNav a');
 					}
-				
+
 				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
-				var authState = app.u.determineAuthentication();
-				app.u.dump(" -> authState:"+authState);
 				
 				infoObj.templateID = 'customerTemplate';
 				infoObj.state = 'onInits';
@@ -2323,7 +2316,7 @@ elasticsearch.size = 50;
 
 				
 				
-				if((authState != 'authenticated' && authState != 'admin') && this.thisArticleRequiresLogin(infoObj))	{
+				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
 					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
@@ -2347,17 +2340,29 @@ elasticsearch.size = 50;
 						
 							var orderID = infoObj.uriParams.orderid
 							var cartID = infoObj.uriParams.cartid
-							var parentSafeID = 'orderContentsTable_'+app.u.makeSafeHTMLId(orderID);
-							var $invoice = $("<article />").attr('id','orderInvoiceSoloPage');
-							$invoice.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',parentSafeID));
-							$invoice.appendTo($('#mainContentArea_customer .mainColumn'));
-							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':parentSafeID},'mutable');
-							app.model.dispatchThis('mutable');
+							var $invoice = $("#invoiceArticle")
+							if(cartID && orderID)	{
+								$invoice.showLoading({'message':'Retrieving order information'});
+								app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
+									$invoice.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$invoice.anymessage({'message':rd});
+										}
+									else	{
+										$invoice.anycontent({'datapointer':rd.datapointer});
+										app.u.handleAppEvents($invoice);
+										}
+									}},'mutable');
+								app.model.dispatchThis('mutable');
+								}
+							else	{
+								$invoice.anymessage({'message':'Both a cart id and an order id are required (for security reasons) and one is not available. Please try your link again or, if the error persists, contact us for additional help.'});
+								}
+
 						
 						case 'orders':
 						//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
 							app.calls.buyerPurchaseHistory.init({'callback':function(rd){
-								app.u.dump(" -> $('#ordersArticle').length: "+$('#ordersArticle').length);
 								$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
 								}},'mutable');
 							break;
@@ -2772,7 +2777,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 					$orderContents.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
 					$orderContents.showLoading();
 					
-					app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':function(rd){
+					app.calls.buyerOrderGet.init({'orderid':orderID},{'callback':function(rd){
 						$orderContents.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$orderContents.anymessage({'message':rd});
