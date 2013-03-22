@@ -78,7 +78,11 @@ var cubworld = function() {
 						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
 						app.ext.cubworld.u.showColumnContent('hotItemList');
 					}
-						
+					
+//Dispatches a call to get the productList for the hotItems List
+					app.ext.store_navcats.calls.appNavcatDetail.init('$hot_items', {'list':'$hot_items','callback':'populateHotItemsList','extension':'cubworld', 'parentID':'hotItemList'});
+					app.model.dispatchThis();
+					
 					app.u.throwMessage = function(msg,persistant){
 			//			app.u.dump("BEGIN app.u.throwMessage");
 			//			app.u.dump(" -> msg follows: "); app.u.dump(msg);
@@ -161,6 +165,20 @@ var cubworld = function() {
 				},
 			onError : function() { 
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.startExtension.onError');
+				}
+			},
+			
+		populateHotItemsList : {
+			onSuccess : function(tagObj){
+				app.u.dump('BEGIN app.ext.cubworld.callbacks.populateHotItemsList.onSuccess');
+				app.u.dump(tagObj);
+				var tmp = {};
+				tmp[tagObj.list] = app.data['appNavcatDetail|'+tagObj.list];
+				
+				app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
+				},
+			onError : function(){
+				app.u.dump('BEGIN app.ext.cubworld.callbacks.populateHotItemsList.onError');
 				}
 			}
 		}, //callbacks
