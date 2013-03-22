@@ -67,7 +67,7 @@ var cubworld = function() {
 							});
 						}
 					}
-					$('#variableColumn div').hide();
+					$('#variableColumn > div').hide();
 					if($('#mainContentArea > div:visible').length === 1){
 						app.u.dump($('#mainContentArea div:visible').attr('id'));
 						if(!$('#mainContentArea div:visible').data('columncontent')){

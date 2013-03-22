@@ -298,15 +298,20 @@ HEADER STYLES
 COLUMN STYLES
 
 ****************************************************************/
-
+#variableColumn > div {
+	padding: 4px;
+}
 #hotItemList{
 	height: 400px;
 	background: blue;
 }
 #helpfulLinks{
 	height: 600px;
-	background: red;
+	background: #002675;
 }
+#helpfulLinks a {color: #FEDF46;}
+#helpfulLinks a:hover {color: white;}
+
 .thinColumn > img {
 	margin: 4px auto;
 }

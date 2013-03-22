@@ -454,7 +454,28 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 				</div>
 				
 				<div id="helpfulLinks" class="displayNone">
-				
+					
+					<ul class='listStyleNone noPadOrMargin'>
+						<li><a href='#' onClick="return showContent('company',{'show':'about'});" >About Us</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'contact'});" >Contact Information</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'faq'});"  >FAQ</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'payment'});">Payment Policy</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'privacy'});" >Privacy Statement</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'return'});">Return Policy</a></li>
+						<li><a href='#' onClick="return showContent('company',{'show':'shipping'});">Shipping Information</a></li>
+					</ul>
+					
+					<ul class='listStyleNone noPadOrMargin'>
+					<!-- before restoring this, test cuz news form on left was causing some conflicts -->
+					<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
+						<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
+						<li><a href='#' onClick="return showContent('customer',{'show':'myaccount'});" >My Account</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'changepassword'});">Change Password</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'orders'});" >Order History</a></li>
+						<li><a href='#' onClick="return showContent('customer',{'show':'lists'});" >Manage Lists</a></li>
+					</ul>
+					
+					
 				</div>
 			</div>
 			<img class="pointer" src="img/sports_world_contest_drawing.png" onClick="return showContent('category',{'navcat':'.contest'});" />
@@ -1114,21 +1135,9 @@ adding classes is not likely to have any bad effects.
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='companyTemplate' class='clearfix loadingBG' data-columncontent='helpfulLinks'>
 
-	<div class='sideline' >
-<nav id='companyNav'>
-<ul class='listStyleNone noPadOrMargin'>
-	<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
-	<li><a href='#company?show=contact'  id='navLink_contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'  id='navLink_faq'>FAQ</a></li>
-	<li><a href='#company?show=payment' id='navLink_payment'>Payment Policy</a></li>
-	<li><a href='#company?show=privacy' id='navLink_privacy'>Privacy Statement</a></li>
-	<li><a href='#company?show=return' id='navLink_return'>Return Policy</a></li>
-	<li><a href='#company?show=shipping' id='navLink_shipping'>Shipping Information</a></li>
-</ul>
-</nav>
-	</div>
 
-	<div class='mainColumn'>
+
+	
 <!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
 		<div id='aboutArticle' class='textContentArea article'>
 			<h1>About Us</h1>
@@ -1224,28 +1233,16 @@ adding classes is not likely to have any bad effects.
 			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
 		</div>
 
-	</div>
+	
 
 </div><!-- /companyTemplate -->
 
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='customerTemplate' class='clearfix loadingBG' data-column-content='helpfulLinks'>
+<div id='customerTemplate' class='clearfix loadingBG' data-columncontent='helpfulLinks'>
 
-	<div class='sideline' >
-	<nav id='customerNav'>
-	<ul class='listStyleNone noPadOrMargin'>
-<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
-		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
-		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
-	</ul>
-	</nav>
-	</div>
+
 
 	<div class='mainColumn'>
 <!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
