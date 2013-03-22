@@ -433,17 +433,19 @@ either templateID or (data or datapointer) are required.
 //			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
 			r = true; // what is returned. false if not able to create template.
-			
+			//isTranslated is added as a data() var to any template that's been translated. A way to globally identify if translation has already occured.
 			
 			if(o.templateID && o.datapointer && app.data[o.datapointer])	{
 //				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[o.datapointer]));
+				this.element.data('isTranslated',true);
 				}
 			else if(o.templateID && o.data)	{
 //				app.u.dump(" -> template and data present. transmogrify.");
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+				this.element.data('isTranslated',true);
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
@@ -458,12 +460,14 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,o.data);
 				this.element.hideLoading().removeClass('loadingBG');
+				this.element.data('isTranslated',true);
 				}
 //if just translating because the template has already been rendered
 			else if(o.datapointer  && app.data[o.datapointer])	{
 //				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,app.data[o.datapointer]);
 				this.element.hideLoading().removeClass('loadingBG');
+				this.element.data('isTranslated',true);
 				}
 			else	{
 				//should never get here. error handling handled in _init before this is called.

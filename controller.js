@@ -575,7 +575,7 @@ see jquery/api webdoc for required/optional param
 				obj = {};
 				obj['_tag'] = _tag;
 				obj['_cmd'] = "buyerNewsletters";
-				app.model.addDispatchToQ(obj,Q);
+				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}
 			}, //buyerNewsletters
 

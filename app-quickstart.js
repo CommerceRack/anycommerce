@@ -2329,61 +2329,74 @@ elasticsearch.size = 50;
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
 					$('#newsletterArticle').hide(); //hide the default.
-					$('#'+infoObj.show+'Article').show(); //only show content if page doesn't require authentication.
-					switch(infoObj.show)	{
-						case 'newsletter':
-							$('#newsletterFormContainer').empty();
-							app.ext.store_crm.u.showSubscribe({'parentID':'newsletterFormContainer','templateID':'subscribeFormTemplate'});
-							break;
+					var $article = $('#'+infoObj.show+'Article')
+					$article.show(); //only show content if page doesn't require authentication.
 
-						case 'invoice':
-						
-							var orderID = infoObj.uriParams.orderid
-							var cartID = infoObj.uriParams.cartid
-							var $invoice = $("#invoiceArticle")
-							if(cartID && orderID)	{
-								$invoice.showLoading({'message':'Retrieving order information'});
-								app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
-									$invoice.hideLoading();
+//already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
+					if($article.data('isTranslated') || infoObj.show == 'orders')	{}
+					else	{
+					
+						switch(infoObj.show)	{
+							case 'newsletter':
+								$article.showLoading({'message':'Fetching newsletter list'});
+								app.calls.appNewsletterList.init({callback : function(rd){
+									$article.hideLoading();
 									if(app.model.responseHasErrors(rd)){
-										$invoice.anymessage({'message':rd});
+										$article.anymessage({'message':rd});
 										}
 									else	{
-										$invoice.anycontent({'datapointer':rd.datapointer});
-										app.u.handleAppEvents($invoice);
-										}
+										$article.anycontent({'datapointer':rd.datapointer});
+										app.u.handleAppEvents($article);
+										$(":checkbox",$article).anycb();
+										}									
+									}},'mutable'); app.model.dispatchThis();
+								break;
+	
+							case 'invoice':
+							
+								var orderID = infoObj.uriParams.orderid;
+								var cartID = infoObj.uriParams.cartid;
+								if(cartID && orderID)	{
+									$article.showLoading({'message':'Retrieving order information'});
+									app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
+										$article.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$article.anymessage({'message':rd});
+											}
+										else	{
+											$article.anycontent({'datapointer':rd.datapointer});
+											app.u.handleAppEvents($article);
+											}
+										}},'mutable');
+									app.model.dispatchThis('mutable');
+									}
+								else	{
+									$article.anymessage({'message':'Both a cart id and an order id are required (for security reasons) and one is not available. Please try your link again or, if the error persists, contact us for additional help.'});
+									}
+							
+							case 'orders':
+							//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
+								app.calls.buyerPurchaseHistory.init({'callback':function(rd){
+									$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
 									}},'mutable');
-								app.model.dispatchThis('mutable');
-								}
-							else	{
-								$invoice.anymessage({'message':'Both a cart id and an order id are required (for security reasons) and one is not available. Please try your link again or, if the error persists, contact us for additional help.'});
-								}
-
-						
-						case 'orders':
-						//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
-							app.calls.buyerPurchaseHistory.init({'callback':function(rd){
-								$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
-								}},'mutable');
-							break;
-						case 'lists':
-
-							app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
-							break;
-						case 'myaccount':
-//							app.u.dump(" -> myaccount article loaded. now show addresses...");
-							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
-							app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
-							break;
-						default:
-							app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
+								break;
+							case 'lists':
+	
+								app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
+								break;
+							case 'myaccount':
+	//							app.u.dump(" -> myaccount article loaded. now show addresses...");
+								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
+								app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
+								break;
+							default:
+								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
+							}
+						app.model.dispatchThis();
 						}
-					app.model.dispatchThis();
 					}
-
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				$('#mainContentArea_customer').removeClass('loadingBG');
 				return r;
 				},  //showCustomer
 				

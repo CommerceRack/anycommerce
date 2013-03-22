@@ -245,47 +245,30 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 				else
 					return errors;
 				},
+
 			changePassword : function(obj)	{
 //				app.u.dump(obj);
 				var valid = true;
 				if(obj.password == ''){valid = false}
 				if(obj.password != obj.password2)	{valid = false}
 				return valid;
-				},
-			subscribe : function(obj)	{
-//				app.u.dump(obj);
-				var errors = '';
-				if(!obj.login)
-					errors += '<li>please enter an email address.</li>';
-				else if(!app.u.isValidEmail(obj.login))
-					errors += '<li>please enter a valid email address.</li>';
+				}
 
-//name is not required, but if something is there, make sure its the full name.
-				if(obj.fullname.toLowerCase == 'full name')
-					errors += '<li>please enter your full name.</li>';					
-				else if(obj.fullname && obj.fullname.indexOf(' ') < 0)
-					errors += '<li>please enter your full name.</li>';
-				if(!errors)
-					return true;
-				else
-					return errors;
-
-				} //subscribe
 			}, //validate
 
 
 		renderFormats : {
-//displays an li
+//Displays a list of the merchants newsletters.
 			subscribeCheckboxes : function($tag,data)	{
 //				app.u.dump('BEGIN app.ext.store_prodlist.renderFormats.mpPagesAsListItems');
 //				app.u.dump(data);
-				var o = "<ul class='subscriberLists'>";
+				var o = "";
 				for(var index in data.value)	{
-					o += "<li title='"+data.value[index].EXEC_SUMMARY+"'>";
-					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' id='newsletter-"+data.value[index].ID+"' \/>";
-					o += "<label for='newsletter-"+data.value[index].ID+"'>"+data.value[index].NAME+"<\/label><\/li>";
+					o += "<div><label title='"+data.value[index].EXEC_SUMMARY+"'>";
+					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' \/>";
+					o += data.value[index].NAME+"<\/label><\/div>";
 					}
-				o += '<\/ul>';
+				
 				$tag.append(o);		
 				},
 
@@ -451,26 +434,27 @@ else{
 				
 				}, //handleChangePassword
 
-			handleSubscribe : function(formID,tagObj)	{
-				app.u.dump("BEGIN store_crm.u.handleSubscribe");
-				frmObj = $('#'+formID).serializeJSON();
-				$('#'+formID+' .zMessage').empty().remove(); //clear any existing messaging
-				var isValid = app.ext.store_crm.validate.subscribe(frmObj); //returns true or an li's of errors.
-				if(isValid === true)	{
-					tagObj = $.isEmptyObject(tagObj) ? {} : tagObj;
-					tagObj.callback = tagObj.callback ? tagObj.callback : 'showMessaging';
-					tagObj.message = tagObj.message ? tagObj.message : 'Thank you, you have been added to our newsletter.';
-					tagObj.parentID = tagObj.parentID ? tagObj.parentID : formID; //don't look for parent, because it may not have an id.
-
-					app.ext.store_crm.calls.setNewsletters.init(frmObj,tagObj);
-					app.model.dispatchThis();
+			handleSubscribe : function($form)	{
+//				app.u.dump("BEGIN store_crm.u.handleSubscribe");
+				if($form)	{
+//					app.u.dump(" -> $form is set.");
+					frmObj = $form.serializeJSON();
+					if(app.u.validateForm($form))	{
+//						app.u.dump(" -> $form validated.");
+						app.ext.store_crm.calls.setNewsletters.init(frmObj,{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd});
+								}
+							else	{
+								$form.anymessage(app.u.successMsgObject("Thank you, you are now subscribed."));
+								}
+							}});
+						app.model.dispatchThis();
+						}
+					else	{}
 					}
 				else	{
-					$('#'+formID+' .appMessage').empty().remove(); //clear any existing messaging
-//report errors
-					var errObj = app.u.youErrObject("<ul>"+isValid+"<\/ul>",'42');
-					errObj.parentID = formID
-					app.u.throwMessage(errObj);
+					$('#globalMessaging').anymessage({'message':'In store_crm.u.handleSubscribe, $form not passed.','gMessage':true});
 					}
 				},
 			
