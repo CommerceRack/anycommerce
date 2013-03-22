@@ -265,8 +265,20 @@ var cubworld = function() {
 				
 			showColumnContent : function(content){
 				app.u.dump('Showing column content: '+content);
-				$('#variableColumn .activeColumn').hide().removeClass('activeColumn');
-				$('#variableColumn #'+content).show().addClass('activeColumn');
+				
+				var $colContainer = $('#variableColumn');
+				var $prevCol = $('.activeColumn', $colContainer);
+				if($prevCol.attr('id') !== content){
+					var $nextCol = $('#'+content, $colContainer);
+					
+					$colContainer.animate({'height':$nextCol.outerHeight()}, 500);
+					if($prevCol.length > 0){
+						$prevCol.fadeOut(500).removeClass('activeColumn');
+					}
+					setTimeout(function(){
+						$nextCol.fadeIn(500).addClass('activeColumn');
+						}, 500);
+					}
 				}
 			}, //u [utilities]
 
