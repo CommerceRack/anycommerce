@@ -304,8 +304,20 @@ COLUMN STYLES
 	padding: 4px;
 }
 #hotItemList{
-	height: 400px;
-	background: blue;
+	background: #002675;
+}
+
+#hotItemSpotlightContainer{
+	width: 207px;
+	height:359px;
+	overflow: hidden;
+	background: white;
+}
+#hotItemSpotlightContainer li.productListItem{
+	height:310px;
+	width: 185px;
+	padding: 19px 11px;
+	margin: 0px;
 }
 #helpfulLinks{
 	background: #002675;

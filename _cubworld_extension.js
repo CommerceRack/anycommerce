@@ -16,7 +16,30 @@
 
 ************************************************************** */
 
-
+(function($){
+ 
+    $.fn.shuffle = function() {
+ 
+        var allElems = this.get(),
+            getRandom = function(max) {
+                return Math.floor(Math.random() * max);
+            },
+            shuffled = $.map(allElems, function(){
+                var random = getRandom(allElems.length),
+                    randEl = $(allElems[random]).clone(true)[0];
+                allElems.splice(random, 1);
+                return randEl;
+           });
+ 
+        this.each(function(i){
+            $(this).replaceWith($(shuffled[i]));
+        });
+ 
+        return $(shuffled);
+ 
+    };
+ 
+})(jQuery);
 
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
@@ -176,6 +199,9 @@ var cubworld = function() {
 				tmp[tagObj.list] = app.data['appNavcatDetail|'+tagObj.list];
 				
 				app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
+				setTimeout(function(){
+					app.ext.cubworld.u.startHotItemSlideshow()
+					}, 250);
 				},
 			onError : function(){
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.populateHotItemsList.onError');
@@ -280,7 +306,23 @@ var cubworld = function() {
 						});
 					}
 				},
-				
+			startHotItemSlideshow : function(){
+				if($('#hotItemSpotlightContainer ul').children().length > 0){
+					var $itemList = $('#hotItemSpotlightContainer ul')
+					var $tmp = $itemList.children().shuffle();
+					$itemList.empty().append($tmp).cycle({
+						fx:     'fade',
+						speed:  'slow',
+						timeout: 5500,
+						pause : 1
+						});
+					}
+				else {
+					setTimeout(function(){
+						app.ext.cubworld.u.startHotItemSlideshow()
+						}, 250);
+					}
+				},
 			showColumnContent : function(content){
 				app.u.dump('Showing column content: '+content);
 				

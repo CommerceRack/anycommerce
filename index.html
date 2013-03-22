@@ -450,8 +450,13 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 		<div class="thinColumn floatRight">
 			<div id="variableColumn">
 				<div id="hotItemList" class="displayNone">
-					<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<div class='titleBlue'>Featured Chicago Cubs Players</div>; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-		
+					<div id="hotItemSpotlightContainer">
+						<img width="207" height="30" alt="Hot Item" src="img/cw_tit_hotitem-207x30.gif">
+						<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+					</div>
+					<!--
+					<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotLineItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+					-->
 				</div>
 				
 				<div id="helpfulLinks" class="displayNone sideline">
@@ -736,6 +741,53 @@ remember to NOT put the button inside the 'onClick' container or two events will
 	
 </li>
 
+<li id='productListTemplateHotItem' class='loadingBG productListItem' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='183' height='184' />
+		</div>
+
+		<h6 class="prodPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Price: ;'></h6>
+		<h6 class="prodMSRP" data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; className:price; pretext: Retail Price: ;'></h6>
+		<h6 class='prodSavings' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: Your savings: ;'></h6>
+			
+		
+<!-- 	
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+-->
+	</div>
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
+		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+	</form>
+	
+</li>
+
+<li id='productListTemplateHotLineItem' class='loadingBG productListItem' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='183' height='184' />
+		</div>
+
+		<h6 class="prodPrice" data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Price: ;'></h6>
+		<h6 class="prodMSRP" data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; className:price; pretext: Retail Price: ;'></h6>
+		<h6 class='prodSavings' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: Your savings: ;'></h6>
+			
+		
+<!-- 	
+		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+-->
+	</div>
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
+		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+	</form>
+	
+</li>
 
 <!--
 for product lists with addToCart feature (accessories, for example)
