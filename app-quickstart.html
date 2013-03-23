@@ -797,8 +797,7 @@ if you change these, you should move them above this comment so that when you (o
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
-<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
+		<li><a href='#customer?show=subscriberLists' id='navLink_subscriberLists'>Newsletter Subscription</a></li>
 		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
@@ -818,6 +817,17 @@ subscribeListsArticle is used for authenticated buyers
 		<div id='newsletterArticle' class='displayNone textContentArea'>
 			<h1>Subscribe to our Newsletter and Save!</h1>
 			<div data-bind="format:loadsTemplate; loadsTemplate:subscribeFormTemplate;"></div>
+		</div>
+
+		<div id='subscriberListsArticle' class='displayNone textContentArea'>
+			<h1>Manage your Subscriptions</h1>
+<!-- save onchange -->
+<form action='#' name='subscribeFrm'>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+</form>
+
 		</div>
 
 		<div id='myaccountArticle' class='displayNone textContentArea'>

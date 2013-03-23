@@ -268,8 +268,8 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' \/>";
 					o += data.value[index].NAME+"<\/label><\/div>";
 					}
-				
-				$tag.append(o);		
+				$tag.append(o);
+
 				},
 
 			

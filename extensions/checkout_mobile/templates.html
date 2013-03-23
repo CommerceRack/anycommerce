@@ -32,6 +32,7 @@ item list and summary are separate just to give more control over location.
 
 	<fieldset data-app-role='chkoutAddressBill' data-app-addresstype='bill' class='marginBottom'>
 		<legend class='headerPadding' >Billing Address</legend>
+		<p data-app-role='addressExists' class='displayNone clearfix'>Click the checkmark of the address you would like to use</p>
 		
 		<div class='panelContent displayNone addressList' data-app-role='addressExists' data-bind='var: buyer(@bill); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		

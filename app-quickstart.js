@@ -1437,7 +1437,7 @@ if(ps.indexOf('?') >= 1)	{
 					app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
-				if(app.u.determineAuthentication() != 'none')  {
+				if(app.u.buyerIsAuthenticated())  {
 					app.ext.myRIA.u.handleLoginActions();
 					}
 
@@ -2347,11 +2347,25 @@ elasticsearch.size = 50;
 									else	{
 										$article.anycontent({'datapointer':rd.datapointer});
 										app.u.handleAppEvents($article);
-										$(":checkbox",$article).anycb();
+										$(":checkbox",$article).each(function(){$(this).closest('label').anycb()});
 										}									
 									}},'mutable'); app.model.dispatchThis();
 								break;
-	
+							
+							case 'subscriberLists':
+								app.calls.buyerNewsletters.init({},'mutable');
+								app.calls.appNewsletterList.init({callback : function(rd){
+									$article.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$article.anymessage({'message':rd});
+										}
+									else	{
+										$article.anycontent({'datapointer':rd.datapointer});
+										app.u.handleAppEvents($article);
+										$("label",$article).anycb();
+										}									
+									}},'mutable'); app.model.dispatchThis();
+								break;	
 							case 'invoice':
 							
 								var orderID = infoObj.uriParams.orderid;
