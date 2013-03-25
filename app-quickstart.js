@@ -359,6 +359,20 @@ document.write = function(v){
 				else if(tagObj.pid)	{
 // the bulk of the product translation has already occured by now (attribs, reviews and session) via callbacks.showProd.
 // product lists are being handled through 'buildProductList'.
+					var pData = app.data['appProductGet|'+tagObj.pid] //shortcut.
+					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
+						if(pData['%attribs']['zoovy:grp_parent'] && app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
+							app.u.dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
+							$(app.u.jqSelector('#',tagObj.siblingsID)).anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]['%attribs']});
+							}
+						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
+							app.u.dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
+							}
+						else	{
+							app.u.dump("WARNING! Got into showPageContent callback for a CHILD item, but PARENT ["+pData['%attribs']['zoovy:grp_parent']+"] data not in memory.");
+							}
+						}
+					else 	{} //not a child.
 					}
 				else	{
 					app.u.dump("WARNING! showPageContent has no pid or navcat defined");
@@ -2637,7 +2651,7 @@ buyer to 'take with them' as they move between  pages.
 
 //required params include templateid and either: P.navcat or P.pid  navcat can = . for homepage.
 //load in a template and the necessary queries will be built.
-//currently, only works on category and home page templates.
+//currently, only works on product, category and home page templates.
 			buildQueriesFromTemplate : function(P)	{
 //app.u.dump("BEGIN myRIA.u.buildQueriesFromTemplate");
 //app.u.dump(P);
@@ -2695,7 +2709,14 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 // are supported that may require a request for additional data, something will need to be added to showPageContent to handle the display.
 // don't re-render entire layout. Inefficient AND will break some extensions, such as powerreviews.
 		else if(P.pid)	{
-			if(bindData.format == 'productList')	{
+//on a child page, need to go get the 'siblings' (on a small, go get med, large, etc)
+//don't just look at children, ALWAYS look at ['zoovy:grp_type'] to verify it's set as a CHILD (or PARENT in some cases)
+			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof app.data['appProductGet|'+P.pid] === 'object' && app.data['appProductGet|'+P.pid]['%attribs'] && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent'])	{
+				numRequests += app.calls.appProductGet.init({'pid':app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
+				tagObj.siblingsID = 'siblingsOf_'+P.pid+'_'+app.u.guidGenerator();
+				$focusTag.attr('id',tagObj.siblingsID); //unique ID added. necessary so callback can render it as a prodlist.
+				}
+			else if(bindData.format == 'productList')	{
 //a product list takes care of getting all it's own data.
 //get the data for all the items in this attibutes list. no callback is executed because no parentID is set in params.
 //					numRequests += app.ext.store_prodlist.u.getProductDataForList({'csv':app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute])});
@@ -2775,7 +2796,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 					numRequests += app.ext.store_navcats.calls.appPageGet.init({'PATH':catSafeID,'@get':myAttributes});
 					}
 			//app.u.dump(" -> numRequests AFTER appPageGet: "+numRequests);
-//queries are compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
+//queries are all compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
 				if(numRequests > 0)	{
 					app.calls.ping.init(tagObj);
 					}
