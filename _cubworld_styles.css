@@ -57,12 +57,12 @@ h1,h2,h3,h4,h5,h6{
 	border: 2px solid #002675;
 	background: white;
 	*/
+	z-index: 10001;
 }
 
 #globalMessaging > .appMessage {
 	padding-right: 48px;
 	margin: 8px;
-	z-index: 10001
 }
 #appNav {
 	z-index: 10001;
