@@ -170,6 +170,19 @@ li:hover .prodName{color: #BE0000;}
 .prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
 .prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
 
+.reviewSprite	{background: url(img/mutedstars_110w.jpg) no-repeat; width:110px; height:25px; display:none;} /* display none hides the reviews for the 'zero' reviews graphic */
+.review_1, .review_2, .review_3, .review_4, .review_5, .review_6, .review_7, .review_8, .review_9, .review_10	{display:inline-block;} /* show 1/2 - 10 stars */
+.review_1 	{background-position:0 -25px;}
+.review_2	{background-position:0 -50px;}
+.review_3	{background-position:0 -75px;}
+.review_4	{background-position:0 -100px;}
+.review_4	{background-position:0 -125px;}
+.review_6	{background-position:0 -150px;}
+.review_7	{background-position:0 -175px;}
+.review_8	{background-position:0 -200px;}
+.review_9	{background-position:0 -225px;}
+.review_10	{background-position:0 -250px;}
+
 /****************************************************************
 
 HEADER STYLES
@@ -541,7 +554,37 @@ CATEGORY STYLES
 PRODUCT STYLES
 
 ****************************************************************/
-
+.prodTitle {
+	color: #404041;
+    font: bold 17px Arial,Helvetica,sarif;
+    margin: 0px 0px 5px;
+    padding: 0px;
+}
+.prodSKU {
+	color: #58595B;
+    font: 12px Arial,Helvetica,sarif;
+    margin-bottom: 10px;
+}
+.prodMfg {
+	color: #58595B;
+    font: 12px/23px Arial,Helvetica,sarif;
+    margin-bottom: 8px;
+}
+.prodMfg span{
+	color: #31539C;
+    text-decoration: none;
+}
+.prodReviewsSummary span {
+	display: inline-block;
+	height: 25px;
+	line-height: 25px;
+	vertical-align: middle;
+}
+.prodReviewTotal{
+	color: #58595B;
+	font-size: 12px;
+    padding-left: 10px;
+}
 /****************************************************************
 
 SEARCH STYLES
