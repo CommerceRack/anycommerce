@@ -594,7 +594,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $zContent = $('#'+app.ext.convertSessionToOrder.vars.containerID).empty();
-				var oldSession = app.vars.cartID;
+				var oldCartID = app.vars.cartID;
 				var orderID = app.data[tagObj.datapointer].orderid;
 
 				app.u.jumpToAnchor(app.ext.convertSessionToOrder.vars.containerID);
@@ -636,7 +636,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 
 				var L = app.ext.store_checkout.checkoutCompletes.length;
 				for(var i = 0; i < L; i += 1)	{
-					app.ext.store_checkout.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+					app.ext.store_checkout.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':tagObj.datapointer});
 					}
 
 

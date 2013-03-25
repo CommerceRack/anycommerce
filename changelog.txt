@@ -6,7 +6,8 @@
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
-
+201312
+param passed into checkoutCompletes changes. was 'sessionID' and is now cartID
 
 
 201311

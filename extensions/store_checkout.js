@@ -299,7 +299,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 /*
 Parameters included are as follows:
 P.orderID
-P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
+P.cartID (this would be the cartID associated w/ the order, not the newly generated cart id - reset immediately after checkout )
 P.datapointer - pointer to cartOrderCreate
 
 note - the order object is available at app.data['order|'+P.orderID]
