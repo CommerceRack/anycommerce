@@ -601,18 +601,18 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div id='homepageTemplate' class='homeTemplate' data-columncontent='hotItemList'>
 	
 		<div id="homepageLeftHeader" class="marginTop floatLeft">
-			<img src="img/homepage/personalized.png" width='197' height='242'/>
+			<img class="pointer" onClick="return showContent('category',{'navcat':'.chicago-cubs-jerseys.custom'});" src="img/homepage/personalized.png" width='197' height='242'/>
 		</div>
 		<div id="hompageRightHeader" class="floatRight">
-			<img src="img/homepage/sportsworldchicago_shipping_1.png" width='589' height='57'/>
+			<img class="pointer" onClick="return showContent('category',{'navcat':'.help_desk'});" src="img/homepage/sportsworldchicago_shipping_1.png" width='589' height='57'/>
 			<div id="slideshowContainer">
 				<div id="slideshowNav"></div>
 				<ul id="wideSlideshow" class="pics slideshow">
-					<li><img src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
-					<li><img src='img/homepage/slideshow/cubs_authentic_gear_banner.png' width='589' height='193'/></li>
-					<li><img src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
-					<li><img src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
-					<li><img src='img/homepage/slideshow/chicag_cubs_spring_training_banner.jpg' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return showContent('search',{'KEYWORS':'Nike','fields':'prod_brand'});" src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.on-field-gear'});" src='img/homepage/slideshow/cubs_authentic_gear_banner.png' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.ww'});" src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.new-arrivals.z_custom_design_studio'});" src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return false" src='img/homepage/slideshow/chicag_cubs_spring_training_banner.jpg' width='589' height='193'/></li>
 				</ul>
 			</div>
 		</div>
