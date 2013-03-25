@@ -433,17 +433,19 @@ either templateID or (data or datapointer) are required.
 //			app.u.dump(" -> _anyContent executed.");
 			var o = this.options,
 			r = true; // what is returned. false if not able to create template.
-			
+			//isTranslated is added as a data() var to any template that's been translated. A way to globally identify if translation has already occured.
 			
 			if(o.templateID && o.datapointer && app.data[o.datapointer])	{
 //				app.u.dump(" -> template and datapointer present. transmogrify.");
 				this.element.hideLoading().removeClass('loadingBG');
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,app.data[o.datapointer]));
+				this.element.data('isTranslated',true);
 				}
 			else if(o.templateID && o.data)	{
 //				app.u.dump(" -> template and data present. transmogrify.");
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+				this.element.data('isTranslated',true);
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
@@ -458,12 +460,14 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,o.data);
 				this.element.hideLoading().removeClass('loadingBG');
+				this.element.data('isTranslated',true);
 				}
 //if just translating because the template has already been rendered
 			else if(o.datapointer  && app.data[o.datapointer])	{
 //				app.u.dump(" -> data specified, translate selector");
 				app.renderFunctions.translateSelector(this.element,app.data[o.datapointer]);
 				this.element.hideLoading().removeClass('loadingBG');
+				this.element.data('isTranslated',true);
 				}
 			else	{
 				//should never get here. error handling handled in _init before this is called.
@@ -698,10 +702,15 @@ and it'll turn the cb into an ios-esque on/off switch.
 			},
 		_init : function(){
 			var self = this,
-			$label = self.element;
+			$label;
+			
+			if(self.element.is('label'))	{$label = self.element}
+			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label')}
+			else	{}
+			
 			
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
-			else	{
+			else if($label.length)	{
 				var $input = $("input",$label).first(),
 				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
@@ -718,6 +727,9 @@ and it'll turn the cb into an ios-esque on/off switch.
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
 					});
+				}
+			else	{
+				app.u.dump("Warning! anycb() run on an element where it is NOT a label or no parent label found. non critical issue.");
 				}
 
 			}, //_init

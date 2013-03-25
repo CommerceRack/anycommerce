@@ -26,6 +26,8 @@ productListTemplateATC (the qty render format for this is slightly different. ta
 showLoading script is being used more. move to pass 0 in init to avoid errors onload.
 new support for cart to display inline. cart?show=inline
 new renderFormat for cpsia warning (important for toy sellers). sample in productTemplate.
+new article in company section - invoice. linked to post-checkout and from order emails.
+productListTemplateChildren - template updated and changed from li to tr. this is called from productTemplate and the parent element (zoovy:grp_children) should be updated
 
 * A new add to cart command. old command is deprecated.
 * Introduction of '_session' to split session data from cart data.

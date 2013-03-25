@@ -178,30 +178,6 @@ document.write = function(v){
 				}
 			}, //startMyProgram 
 
-
-
-		itemAddedToCart :	{
-			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN app.ext.store_product.callbacks.itemAddedToCart.onSuccess');
-				$('.atcButton').removeAttr('disabled').removeClass('disabled'); //makes all atc buttons clickable again.
-				
-				var msgObj = app.u.successMsgObject('Item Added')
-				msgObj.parentID = 'atcMessaging_'+app.data[tagObj.datapointer].product1
-				var htmlid = app.u.throwMessage(msgObj);
-				setTimeout(function(){
-					$("#"+htmlid).slideUp(1000);
-					},5000);
-			
-				_gaq.push(['_trackEvent','Add to cart','User Event','success',app.data[tagObj.datapointer].product1]);
-			
-				},
-			onError : function(responseData,uuid)	{
-				app.u.dump('BEGIN app.ext.myRIA.callbacks.itemAddedToCart.onError');
-				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //remove the disabling so users can push the button again, if need be.
-				app.u.throwMessage(responseData);
-				_gaq.push(['_trackEvent','Add to cart','User Event','fail',responseData['_msg_1_txt']]);
-				}
-			}, //itemAddedToCart
 			
 //optional callback  for appCategoryList in app init which will display the root level categories in element w/ id: tier1categories 
 		showRootCategories : {
@@ -359,6 +335,20 @@ document.write = function(v){
 				else if(tagObj.pid)	{
 // the bulk of the product translation has already occured by now (attribs, reviews and session) via callbacks.showProd.
 // product lists are being handled through 'buildProductList'.
+					var pData = app.data['appProductGet|'+tagObj.pid] //shortcut.
+					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
+						if(pData['%attribs']['zoovy:grp_parent'] && app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
+							app.u.dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
+							$("[app-data-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
+							}
+						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
+							app.u.dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
+							}
+						else	{
+							app.u.dump("WARNING! Got into showPageContent callback for a CHILD item, but PARENT ["+pData['%attribs']['zoovy:grp_parent']+"] data not in memory.");
+							}
+						}
+					else 	{} //not a child.
 					}
 				else	{
 					app.u.dump("WARNING! showPageContent has no pid or navcat defined");
@@ -989,6 +979,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
+
 //				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
 				r = app.ext.myRIA.u.addPushState(infoObj);
 				
@@ -1437,7 +1428,7 @@ if(ps.indexOf('?') >= 1)	{
 					app.calls.cartSet.init({'want/refer_src':infoObj.uriParams.meta_src},{},'passive');
 					}
 
-				if(app.u.determineAuthentication() != 'none')  {
+				if(app.u.buyerIsAuthenticated())  {
 					app.ext.myRIA.u.handleLoginActions();
 					}
 
@@ -1461,6 +1452,25 @@ if(ps.indexOf('?') >= 1)	{
 				},
 
 
+//will look at the thisPageIsPublic variable to see if the info/show in infoObj is a publicly viewable page.
+//used in B2B
+			thisPageIsViewable : function(infoObj)	{
+				var r = false, //what is returned. true if page IS viewable. false if not.
+				pvo = app.ext.myRIA.vars.thisPageIsPublic, //shortcut
+				ns; //namespace.  will = value of show, navcat or pid
+				
+				if(typeof infoObj === 'object')	{
+					if(infoObj.show){ns = 'show'}
+					else if(infoObj.navcat)	{ns='navcat'}
+					else if(infoObj.pid)	{ns='pid'}
+					else{}
+					if(infoObj.pageType && ns && pvo[infoObj.pageType] && pvo[infoObj.pageType].indexOf(infoObj[ns]) > -1)	{r = true}
+					}
+				else	{}
+				
+				
+				return r;
+				}, //thisPageIsViewable
 
 //handle State and History Of The World.
 //will change what state of the world is (infoObj) and add it to History of the world.
@@ -1480,7 +1490,7 @@ if(ps.indexOf('?') >= 1)	{
 //				app.u.dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(infoObj.pageType == 'cart'){r = false; app.u.dump('fail 0');}
+				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; app.u.dump('fail 0');}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 1");}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 2");}
 				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("transition fail 3");}
@@ -1622,7 +1632,7 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
-				else if(url.indexOf('quickstart.html') > -1)	{
+				else if(url.indexOf('app-quickstart.html') > -1)	{
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
 					msg.persistant = true;
 					app.u.throwMessage(msg);
@@ -1666,6 +1676,10 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
+					else if(infoObj.pageType == 'search' && (infoObj.TAG || infoObj.KEYWORDS))	{
+						r = '#search?';
+						r += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
+						}
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
 						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
@@ -1789,9 +1803,16 @@ if(ps.indexOf('?') >= 1)	{
 					break;
 
 				case 'search':
-					app.u.dump("BUILDRELATIVEPATH");
-					app.u.dump(infoObj.elasticsearch);
-					relativePath = '#search?elasticsearch='+JSON.stringify(infoObj.elasticsearch);
+//					app.u.dump("BUILDRELATIVEPATH");
+//					app.u.dump(infoObj.elasticsearch);
+					relativePath = '#search?elasticsearch=';
+					if(infoObj.KEYWORDS || infoObj.TAG)	{
+						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
+						}
+					else	{
+						relativePath += JSON.stringify(infoObj.elasticsearch);
+						}
+					
 					break;
 
 				case 'company':
@@ -1848,7 +1869,7 @@ if(ps.indexOf('?') >= 1)	{
 // ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
 
 			handleHashState : function()	{
-				app.u.dump("BEGIN myRIA.u.handleHashState");
+//				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash;
 				var pio = this.getPageInfoFromHash(hash); //if not valid pageInfo hash, false is returned
 //				app.u.dump(" -> hash: "+hash);
@@ -2253,13 +2274,14 @@ elasticsearch.size = 50;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				if(infoObj.show == 'inline')	{
 //only create instance once.
-					if($('#mainContentArea_cart').length)	{
+					var $cart = $('#mainContentArea_cart')
+					if($cart.length)	{
 						//show cart
 						infoObj.state = 'onCompletes';
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}
 					else	{
-						var $cart = $("<div \/>",{'id':'mainContentArea_cart'});
+						$cart = $("<div \/>",{'id':'mainContentArea_cart'});
 						$cart.appendTo("#mainContentArea");
 						}
 					$cart.showLoading({'message':'loading cart'});
@@ -2293,29 +2315,22 @@ elasticsearch.size = 50;
 			showCustomer : function(infoObj)	{
 //				app.u.dump("BEGIN showCustomer. infoObj: "); app.u.dump(infoObj);
 				var r = true; //what is returned. set to false if content not shown (because use is not logged in)
-				if(infoObj && infoObj.uriParams && infoObj.uriParams.cartid && infoObj.uriParams.orderid)	{
-					infoObj.show = 'invoice'; //force to order view if these params are set (most likely invoice view).
-					}
-				else if (infoObj.show)	{
+				if (infoObj.show)	{
 					//infoObj.show is already set.
 					}
 				else	{
 					infoObj.show = 'newsletter';
 					}
-//				$('#mainContentArea').empty();
-//				app.u.dump(" -> infoObj follows:"); app.u.dump(infoObj);
-				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
-				infoObj.parentID = parentID;
+
+				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
 //only create instance once.
-				if($('#mainContentArea_customer').length)	{}
+				if($('#'+infoObj.parentID).length)	{}
 				else	{
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',parentID))
+					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance('customerTemplate',infoObj.parentID))
 					app.ext.myRIA.u.bindNav('#customerNav a');
 					}
-				
+
 				$('#mainContentArea .textContentArea').hide(); //hide all the articles by default and we'll show the one in focus later.
-				var authState = app.u.determineAuthentication();
-				app.u.dump(" -> authState:"+authState);
 				
 				infoObj.templateID = 'customerTemplate';
 				infoObj.state = 'onInits';
@@ -2323,7 +2338,7 @@ elasticsearch.size = 50;
 
 				
 				
-				if((authState != 'authenticated' && authState != 'admin') && this.thisArticleRequiresLogin(infoObj))	{
+				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
 					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
@@ -2336,49 +2351,88 @@ elasticsearch.size = 50;
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
 					$('#newsletterArticle').hide(); //hide the default.
-					$('#'+infoObj.show+'Article').show(); //only show content if page doesn't require authentication.
-					switch(infoObj.show)	{
-						case 'newsletter':
-							$('#newsletterFormContainer').empty();
-							app.ext.store_crm.u.showSubscribe({'parentID':'newsletterFormContainer','templateID':'subscribeFormTemplate'});
-							break;
+					var $article = $('#'+infoObj.show+'Article')
+					$article.show(); //only show content if page doesn't require authentication.
 
-						case 'invoice':
-						
-							var orderID = infoObj.uriParams.orderid
-							var cartID = infoObj.uriParams.cartid
-							var parentSafeID = 'orderContentsTable_'+app.u.makeSafeHTMLId(orderID);
-							var $invoice = $("<article />").attr('id','orderInvoiceSoloPage');
-							$invoice.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',parentSafeID));
-							$invoice.appendTo($('#mainContentArea_customer .mainColumn'));
-							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':parentSafeID},'mutable');
-							app.model.dispatchThis('mutable');
-						
-						case 'orders':
-						//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
-							app.calls.buyerPurchaseHistory.init({'callback':function(rd){
-								app.u.dump(" -> $('#ordersArticle').length: "+$('#ordersArticle').length);
-								$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
-								}},'mutable');
-							break;
-						case 'lists':
-
-							app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
-							break;
-						case 'myaccount':
-//							app.u.dump(" -> myaccount article loaded. now show addresses...");
-							app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
-							app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
-							break;
-						default:
-							app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
+//already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
+					if($article.data('isTranslated') || infoObj.show == 'orders')	{}
+					else	{
+					
+						switch(infoObj.show)	{
+							case 'newsletter':
+								$article.showLoading({'message':'Fetching newsletter list'});
+								app.calls.appNewsletterList.init({callback : function(rd){
+									$article.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$article.anymessage({'message':rd});
+										}
+									else	{
+										$article.anycontent({'datapointer':rd.datapointer});
+										app.u.handleAppEvents($article);
+										$(":checkbox",$article).each(function(){$(this).closest('label').anycb()});
+										}									
+									}},'mutable'); app.model.dispatchThis();
+								break;
+							
+							case 'subscriberLists':
+								app.calls.buyerNewsletters.init({},'mutable');
+								app.calls.appNewsletterList.init({callback : function(rd){
+									$article.hideLoading();
+									if(app.model.responseHasErrors(rd)){
+										$article.anymessage({'message':rd});
+										}
+									else	{
+										$article.anycontent({'datapointer':rd.datapointer});
+										app.u.handleAppEvents($article);
+										$("label",$article).anycb();
+										}									
+									}},'mutable'); app.model.dispatchThis();
+								break;	
+							case 'invoice':
+							
+								var orderID = infoObj.uriParams.orderid;
+								var cartID = infoObj.uriParams.cartid;
+								if(cartID && orderID)	{
+									$article.showLoading({'message':'Retrieving order information'});
+									app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
+										$article.hideLoading();
+										if(app.model.responseHasErrors(rd)){
+											$article.anymessage({'message':rd});
+											}
+										else	{
+											$article.anycontent({'datapointer':rd.datapointer});
+											app.u.handleAppEvents($article);
+											}
+										}},'mutable');
+									app.model.dispatchThis('mutable');
+									}
+								else	{
+									$article.anymessage({'message':'Both a cart id and an order id are required (for security reasons) and one is not available. Please try your link again or, if the error persists, contact us for additional help.'});
+									}
+							
+							case 'orders':
+							//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
+								app.calls.buyerPurchaseHistory.init({'callback':function(rd){
+									$("[data-app-role='orderList']",'#ordersArticle').empty().anycontent({'datapointer':rd.datapointer});
+									}},'mutable');
+								break;
+							case 'lists':
+	
+								app.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
+								break;
+							case 'myaccount':
+	//							app.u.dump(" -> myaccount article loaded. now show addresses...");
+								app.ext.cco.calls.appCheckoutDestinations.init({},'mutable'); //needed for country list in address editor.
+								app.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
+								break;
+							default:
+								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
+							}
+						app.model.dispatchThis();
 						}
-					app.model.dispatchThis();
 					}
-
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				$('#mainContentArea_customer').removeClass('loadingBG');
 				return r;
 				},  //showCustomer
 				
@@ -2605,7 +2659,7 @@ buyer to 'take with them' as they move between  pages.
 
 //required params include templateid and either: P.navcat or P.pid  navcat can = . for homepage.
 //load in a template and the necessary queries will be built.
-//currently, only works on category and home page templates.
+//currently, only works on product, category and home page templates.
 			buildQueriesFromTemplate : function(P)	{
 //app.u.dump("BEGIN myRIA.u.buildQueriesFromTemplate");
 //app.u.dump(P);
@@ -2663,7 +2717,13 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 // are supported that may require a request for additional data, something will need to be added to showPageContent to handle the display.
 // don't re-render entire layout. Inefficient AND will break some extensions, such as powerreviews.
 		else if(P.pid)	{
-			if(bindData.format == 'productList')	{
+//on a child page, need to go get the 'siblings' (on a small, go get med, large, etc)
+//don't just look at children, ALWAYS look at ['zoovy:grp_type'] to verify it's set as a CHILD (or PARENT in some cases)
+			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof app.data['appProductGet|'+P.pid] === 'object' && app.data['appProductGet|'+P.pid]['%attribs'] && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent'])	{
+				app.u.dump(" -> Fetch parent product record.");
+				numRequests += app.calls.appProductGet.init({'pid':app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
+				}
+			else if(bindData.format == 'productList')	{
 //a product list takes care of getting all it's own data.
 //get the data for all the items in this attibutes list. no callback is executed because no parentID is set in params.
 //					numRequests += app.ext.store_prodlist.u.getProductDataForList({'csv':app.ext.store_prodlist.u.cleanUpProductList(app.data['appProductGet|'+P.pid]['%attribs'][attribute])});
@@ -2737,13 +2797,12 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 	}); //ends each
 
 
-
 			//app.u.dump(" -> numRequests b4 appPageGet: "+numRequests);
 				if(myAttributes.length > 0)	{
 					numRequests += app.ext.store_navcats.calls.appPageGet.init({'PATH':catSafeID,'@get':myAttributes});
 					}
 			//app.u.dump(" -> numRequests AFTER appPageGet: "+numRequests);
-//queries are compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
+//queries are all compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
 				if(numRequests > 0)	{
 					app.calls.ping.init(tagObj);
 					}
@@ -2772,7 +2831,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 					$orderContents.show().addClass('ui-corner-bottom ui-accordion-content-active'); //object that will contain order detail contents.
 					$orderContents.showLoading();
 					
-					app.calls.buyerPurchaseHistoryDetail.init(orderID,{'callback':function(rd){
+					app.calls.buyerOrderGet.init({'orderid':orderID},{'callback':function(rd){
 						$orderContents.hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$orderContents.anymessage({'message':rd});

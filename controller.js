@@ -575,9 +575,36 @@ see jquery/api webdoc for required/optional param
 				obj = {};
 				obj['_tag'] = _tag;
 				obj['_cmd'] = "buyerNewsletters";
-				app.model.addDispatchToQ(obj,Q);
+				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}
 			}, //buyerNewsletters
+
+
+//obj should always have orderid.
+//may also have cartid for soft-auth (invoice view)
+		buyerOrderGet : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.orderid)	{
+					r = 1;
+					_tag = _tag || {}; 
+					_tag.datapointer = "buyerOrderGet|"+obj.orderid;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'buyerPurchaseHistoryDetail requires orderid','gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				if(!Q)	{Q = 'mutable'}
+				obj["_cmd"] = "buyerOrderGet";
+				obj['softauth'] = "order";
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,Q);
+				}
+			}, //buyerOrderGet
+
 
 		buyerPasswordUpdate : {
 			init : function(password,_tag,Q)	{
@@ -694,25 +721,6 @@ see jquery/api webdoc for required/optional param
 				}			
 			}, //buyerPurchaseHistory
 
-//a request for order details should always request latest list (as per B)
-		buyerPurchaseHistoryDetail : {
-			init : function(orderid,_tag,Q)	{
-				var r = 0;
-				if(orderid)	{
-					r = 1;
-					_tag = _tag || {}; 
-					_tag.datapointer = "buyerPurchaseHistoryDetail|"+orderid;
-					this.dispatch(orderid,_tag,Q);
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'buyerPurchaseHistoryDetail requires orderid','gMessage':true});
-					}
-				return r;
-				},
-			dispatch : function(orderid,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"buyerPurchaseHistoryDetail","orderid":orderid,"_tag" : _tag},Q || 'mutable');	
-				}			
-			}, //buyerPurchaseHistoryDetail
 
 		buyerLogout : {
 			init : function(_tag)	{

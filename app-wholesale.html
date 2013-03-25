@@ -101,6 +101,7 @@ app.u.loadScript(app.vars.baseURL+"app-wholesale-init.js");
 		<div class='floatLeft pointer' onClick="showContent('homepage',{});">YOUR LOGO HERE</div>
 		<div class='floatRight menu alignRight'>
 
+<a href='#cart?show=inline' class='bindByAnchor'>Cart</a> | 
 <a href='#company?show=contact' class='bindByAnchor'>Contact Us</a> | 
 <a href='#company?show=about' class='bindByAnchor'>About Us</a> | 
 <span class='hideIfLoggedIn'>
@@ -720,6 +721,25 @@ if you change these, you should move them above this comment so that when you (o
 
 
 
+
+
+<!--
+
+############################
+
+MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
+if modified, be careful about changing id's or classes.
+adding classes is not likely to have any bad effects.
+if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
+
+############################
+
+-->
+
+
+
+
+
 <!--  used in breadcrumb -->
 <ul>
 	<li id='breadcrumbTemplate'>
@@ -736,13 +756,13 @@ if you change these, you should move them above this comment so that when you (o
 	<div class='sideline' >
 <nav id='companyNav'>
 <ul class='listStyleNone noPadOrMargin'>
-	<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
-	<li><a href='#company?show=contact'  id='navLink_contact'>Contact Information</a></li>
-	<li><a href='#company?show=faq'  id='navLink_faq'>FAQ</a></li>
-	<li><a href='#company?show=payment' id='navLink_payment'>Payment Policy</a></li>
-	<li><a href='#company?show=privacy' id='navLink_privacy'>Privacy Statement</a></li>
-	<li><a href='#company?show=return' id='navLink_return'>Return Policy</a></li>
-	<li><a href='#company?show=shipping' id='navLink_shipping'>Shipping Information</a></li>
+	<li><a href='#company?show=about'>About Us</a></li>
+	<li><a href='#company?show=contact'>Contact Information</a></li>
+	<li><a href='#company?show=faq'>FAQ</a></li>
+	<li><a href='#company?show=payment'>Payment Policy</a></li>
+	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
+	<li><a href='#company?show=return'>Return Policy</a></li>
+	<li><a href='#company?show=shipping'>Shipping Information</a></li>
 </ul>
 </nav>
 	</div>
@@ -771,6 +791,9 @@ if you change these, you should move them above this comment so that when you (o
 			</form>
 			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
 		</div>
+
+
+
 
 
 
@@ -850,42 +873,106 @@ if you change these, you should move them above this comment so that when you (o
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='customerTemplate' class='clearfix loadingBG'>
+<div id='customerTemplate' class='clearfix'>
 
 	<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
-<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
-		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
-		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
+		<li><a href='#customer?show=myaccount'>My Account</a></li>
+		<li><a href='#customer?show=changepassword'>Change Password</a></li>
+		<li><a href='#customer?show=orders'>Order History</a></li>
+		<li><a href='#customer?show=lists'>Manage Lists</a></li>
+		<li class='hideIfLoggedOut'><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></li>
 	</ul>
 	</nav>
 	</div>
 
 	<div class='mainColumn'>
 <!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
+
+<!--
+newsletterArticle is used for buyers who are not logged in or do not have an account.
+subscribeListsArticle is used for authenticated buyers
+-->
 		<div id='newsletterArticle' class='displayNone textContentArea'>
 			<h1>Subscribe to our Newsletter and Save!</h1>
-			<div id='newsletterFormContainer'></div>
+			<div data-bind="format:loadsTemplate; loadsTemplate:subscribeFormTemplate;"></div>
+		</div>
+
+
+
+	<div id='createaccountArticle' class='displayNone textContentArea'>
+	<h1>Create a Wholesale Account</h1>
+	<div>
+	
+	<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
+	<input type='hidden' name='form' value='wholesale' />
+	
+	<fieldset class='marginBottom'>
+	<legend>Account Information</legend>
+	<input name='firstname' type='text' size='30' placeholder='First Name' required='required' />
+	<input name='lastname' type='text' size='30' placeholder='Last Name' required='required' />
+	<input name='company' type='text' size='30' placeholder='Company Name' />
+	<input name='email' type='email' size='30' placeholder='Email' required='required' />
+	<input name='address1' type='text' size='30' placeholder='Address 1' required='required' />
+	<input name='address2' type='text' size='30' placeholder='Address 2' />
+	<input name='city' type='text' size='30' placeholder='City' required='required' />
+	<input name='region' type='text' size='5' placeholder='State' />
+	<input name='postal' type='text' size='10' placeholder='Zip' />	
+	<input name='ar_contact' type='text' size='30' placeholder='AR Contact' />
+	<input name='ar_phone' type='tel' size='12' placeholder='AR Phone #' />
+	</fieldset>
+	
+	<fieldset class='marginBottom'>
+	<legend>About Your Business</legend>
+	
+	<input name='order_volume' type='text' size='30' placeholder='Anticipated Order Volume' />
+	<input name='resaleid' type='text' size='30' placeholder='State Resale Permit' />
+	<input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
+	<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' />
+	
+	</fieldset>
+	
+	<button>Create Account</button>
+	
+	</form>
+	
+	</div>
+	</div>
+
+
+
+		<div id='subscriberListsArticle' class='displayNone textContentArea'>
+			<h1>Manage your Subscriptions</h1>
+<!-- save onchange -->
+<form action='#' name='subscribeFrm'>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+</form>
+
 		</div>
 
 		<div id='myaccountArticle' class='displayNone textContentArea'>
 			<h1>My Account</h1>
-			<div><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></div>
 
-			<section class='clearfix'>
+			<section>
 
 <div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
-	<h2>Billing Address(es)</h2>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<h2>Billing Address(es)</h2>
+	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
 </div>
 
 <div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
-	<h2>Shipping Address(es)</h2>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<h2>Shipping Address(es)</h2>
+	</div>
 	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
 </div>
 
@@ -898,7 +985,12 @@ if you change these, you should move them above this comment so that when you (o
 
 		<div id='ordersArticle' class='displayNone textContentArea'>
 			<h1>Order History</h1>
-			<div id='orderHistoryContainer' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+			<div data-bind="var: orders(@orders); format:processList; loadsTemplate:orderLineItemTemplate;" data-app-role='orderList' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+		</div>
+
+
+		<div id='invoiceArticle' class='displayNone textContentArea'>
+			<div data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
 		</div>
 
 
@@ -1104,8 +1196,6 @@ So the cart template should contain these two elements and the extension should 
 
 </section>
 
-<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed PostIt 170x52"></span>
-
 		</div>
 	</div>
 	</td>
@@ -1129,14 +1219,14 @@ So the cart template should contain these two elements and the extension should 
 		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
+		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1155,12 +1245,22 @@ So the cart template should contain these two elements and the extension should 
 used on a product layout. Some product have 'children' which may represent the same item in a different color (variations are commonly used for sizing)
 -->
 
-<ul>
-<li id='productListTemplateChildren' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' />
-	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
-</li>
-</ul>
+<table>
+<tr id='productListTemplateChildren'>
+	<td><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='45' height='45' /></td>
+	<td data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></td>
+	<td>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+	</td>
+</tr>
+</table>
+
 
 
 
@@ -1190,13 +1290,13 @@ used on a product layout. Some product have 'children' which may represent the s
 
 <table>
 <tr>
-	<td><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
+	<td><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
 	</td>
 </tr>
 </table>
@@ -1220,20 +1320,20 @@ used for store_crm.js
 
 <label for='reviewsCustomerName'>Your Name:</label>
 <input type="text" name="CUSTOMER_NAME" id='reviewsCustomerName' value="" MAXLENGTH="30" />
-<br />
+<br>
 
 <label for='reviewsLocation'>Location:</label>
 <input type="text" MAXLENGTH="30" name="LOCATION" id='reviewsLocation' value="" />
-<br />
+<br>
 
 <label for='reviewsSubject'>Subject:</label>
 <input type="text" MAXLENGTH="60" name="SUBJECT" id='reviewsSubject' />
-<br />
+<br>
 
 
 <label for='reviewsMessage'>Review:</label>
 <textarea name="MESSAGE" id='reviewsMessage'></textarea>
-<br />
+<br>
 
 <label for='reviewsRating'>Score:</label>
 <select name="RATING" id='reviewsRating'>
@@ -1248,7 +1348,7 @@ used for store_crm.js
 	<option value="2">1</option>
 	<option value="1">.5</option>
 </select>
-<br />
+<br>
 
 <input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
 
@@ -1260,23 +1360,21 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 
 <fieldset class='userInfo borderNone'>
 <div>
-<label for='subscribeLogin'>Email Address</label>
-<input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
 </div>
 
 <div>
-<label for='subscribeFullname'>Full Name</label>
-<input type='text'  maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
 </div>
 </fieldset>
 
 <fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
 
-<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe'>
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
 
 </form>
 </div>
@@ -1288,15 +1386,15 @@ used for store_crm.js
 
 <!-- used in the /customer section for order view -->
 
-<section id='orderLineItemTemplate' class='appAccordianesque'>
+<section id='orderLineItemTemplate' class='appAccordianesque' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
 
-	<div onClick="app.ext.myRIA.u.showOrderDetails($(this).attr('data-orderid'));" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
-	<span class="ui-icon ui-icon-triangle-1-e"></span>
+	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
 	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
 	</div>
 
-	<div data-bind='var:order(ORDERID);format:assignAttribute; attribute:id; valuePretext:orderContents_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
 
 </section>
 
@@ -1311,11 +1409,11 @@ used for store_crm.js
 <section  id='faqTopicTemplate'>
 
 	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="app.ext.myRIA.a.showFAQbyTopic($(this).attr('data-topicid'));">
-	<span class="ui-icon ui-icon-triangle-1-e"></span>
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
 	</div>
 
-	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content displayNone'></div>
 
 </section>
 
@@ -1377,12 +1475,6 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
-
-
-
-
-
-
 <table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
 <tr>
 	<td colspan='2'>
@@ -1391,7 +1483,7 @@ The 'data-action' attribute is used to assign an onclick.
 <button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
 </div>
 
-<h3 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h3>
+<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
 
 	</td>
 </tr>
@@ -1403,48 +1495,50 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 
-<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 </hgroup>
 
 <address class='marginBottom'>
-<h4>
-	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
-	<span data-bind='var:order(bill/lastname);format:text;'></span>
-</h4>
-<div data-bind='var:order(bill/address1);format:text;'></div>
-<div data-bind='var:order(bill/address2);format:text;'></div>
+<b>
+	<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/bill/address1);format:text;'></div>
+<div data-bind='var:order(order/bill/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+	<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
 </div>
-<div data-bind='var:order(bill/countrycode);format:text;'></div>
+<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
 </address>
 
 <address class='marginBottom'>
-<h4>
-	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
-	<span data-bind='var:order(ship/lastname);format:text;'></span>
-</h4>
-<div data-bind='var:order(ship/address1);format:text;'></div>
-<div data-bind='var:order(ship/address2);format:text;'></div>
+<b>
+	<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/ship/address1);format:text;'></div>
+<div data-bind='var:order(order/ship/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+	<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/ship/postal);format:text;'></span>
 </div>
-<div data-bind='var:order(ship/countrycode);format:text;'></div>
+<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
 </address>
 
 
 	</td>
 	<td class='orderContentsProdlistContainer'>
-	<ul data-bind='var:order(tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
 	</td>
 </tr>
 </table>
+
+
 
 
 

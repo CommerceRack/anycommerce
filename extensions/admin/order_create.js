@@ -315,6 +315,7 @@ if server validation passes, the callback handles what to do next (callback is m
 		printById : {
 			
 			onSuccess : function(tagObj){
+				$('body').hideLoading();
 				
 				var tmpData = {};
 				//merge is another data pointer, in this case the profile pointer. both data sets are merged and passed into transmogrify
@@ -331,7 +332,6 @@ if server validation passes, the callback handles what to do next (callback is m
 				if(app.u.getParameterByName('debug'))	{
 					$('#printContainer').show();
 					}
-				$('body').hideLoading();
 				app.u.printByElementID('printContainer');
 				}
 			

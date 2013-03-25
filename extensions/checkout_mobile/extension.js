@@ -559,7 +559,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
-					$("address button",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
+					$("address button[data-app-event='orderCreate|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['bill/shortcut'])	{
 						app.u.dump("Bill shortcut is set: "+formObj['bill/shortcut']);
 //highlight the checked button of the address selected.<<
@@ -592,10 +592,9 @@ an existing user gets a list of previous addresses they've used and an option to
 						});
 					}
 				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true)	{
-					$fieldset.prepend("<p>Click the checkmark of the address you would like to use<\/p>");
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
-					$("address button",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
+					$("address button[data-app-event='orderCreate|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
 					if(formObj['ship/shortcut'])	{
 						app.u.dump("Ship shortcut is set: "+formObj['ship/shortcut']);
 //highlight the checked button of the address selected.<<
