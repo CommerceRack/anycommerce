@@ -352,7 +352,10 @@ the row with the logo and text links
 NOTE - the overflow hidden on headerTop and the display inlineblock/width are to solve an errant spacing issue appearin between the two elments using these classes.
 */
 .headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656; overflow:hidden;}
-.mhTabsContainer	{background:#757779; position:relative; display:inline-block; width:100%;}
+.mhTabsContainer	{
+	position:relative; display:inline-block; width:100%;
+	background:#757779;
+	}
 
 
 
