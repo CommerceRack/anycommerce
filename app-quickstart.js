@@ -1451,6 +1451,25 @@ if(ps.indexOf('?') >= 1)	{
 				},
 
 
+//will look at the thisPageIsPublic variable to see if the info/show in infoObj is a publicly viewable page.
+//used in B2B
+			thisPageIsViewable : function(infoObj)	{
+				var r = false, //what is returned. true if page IS viewable. false if not.
+				pvo = app.ext.myRIA.vars.thisPageIsPublic, //shortcut
+				ns; //namespace.  will = value of show, navcat or pid
+				
+				if(typeof infoObj === 'object')	{
+					if(infoObj.show){ns = 'show'}
+					else if(infoObj.navcat)	{ns='navcat'}
+					else if(infoObj.pid)	{ns='pid'}
+					else{}
+					if(infoObj.pageType && ns && pvo[infoObj.pageType] && pvo[infoObj.pageType].indexOf(infoObj[ns]) > -1)	{r = true}
+					}
+				else	{}
+				
+				
+				return r;
+				}, //thisPageIsViewable
 
 //handle State and History Of The World.
 //will change what state of the world is (infoObj) and add it to History of the world.
@@ -1470,7 +1489,7 @@ if(ps.indexOf('?') >= 1)	{
 //				app.u.dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-				if(infoObj.pageType == 'cart'){r = false; app.u.dump('fail 0');}
+				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; app.u.dump('fail 0');}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 1");}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 2");}
 				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("transition fail 3");}
@@ -2250,13 +2269,14 @@ elasticsearch.size = 50;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				if(infoObj.show == 'inline')	{
 //only create instance once.
-					if($('#mainContentArea_cart').length)	{
+					var $cart = $('#mainContentArea_cart')
+					if($cart.length)	{
 						//show cart
 						infoObj.state = 'onCompletes';
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}
 					else	{
-						var $cart = $("<div \/>",{'id':'mainContentArea_cart'});
+						$cart = $("<div \/>",{'id':'mainContentArea_cart'});
 						$cart.appendTo("#mainContentArea");
 						}
 					$cart.showLoading({'message':'loading cart'});
