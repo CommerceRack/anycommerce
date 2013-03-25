@@ -721,8 +721,10 @@ remember to NOT put the button inside the 'onClick' container or two events will
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
-		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='180' height='124' />
+		<div class='prodThumbContainer positionRelative' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='180' height='124' />
+			<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodListTagsContainer'></div>
+	
 		</div>
 
 		<h5 class="prodName" data-bind='var: product(zoovy:prod_name); format:truncText; numCharacters: 54;'></h5>
@@ -936,9 +938,9 @@ this will likely become more flexible in the future. ###
 	<td class='imageContainer'>
 <!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
 
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='positionRelative pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='prodPageTagsContainer'></div>
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 
 </div>
@@ -1007,13 +1009,10 @@ this will likely become more flexible in the future. ###
 	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
+<!--
 <tr>
 	<td colspan='2' class="tabbedProductContentTD">
-<!--
-the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
-or the tab clicked won't open the right content.
-It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
--->
+
 <div class='prodTabs tabbedProductContent'>
 
 	<ul class='tabs'>
@@ -1058,16 +1057,34 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 
 
-
 </div>
 
 	</td>
 </tr>
+-->
 </table>
-<div class='prodlistRelatedContainer'>
-	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+
+<div class="prodDescContainer">
+	<img src='blank.gif' class='floatRight' data-bind='var: product(zoovy:prod_image99); format:imageURL;'  height='100' />
+	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 </div>
 
+<div class="prodDetailContainer clearAll">
+	<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+</div>
+
+<div class='prodlistRelatedContainer clearAll'>
+	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2 class='titleBlue'>You may also like</h2>; withReviews:1;"></ul>
+</div>
+
+<div class="prodCustomerReviewsContainer clearAll">
+	<div class='clearfix alignRight'>
+		<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+	</div>
+
+	<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+</div>
 
 </div><!-- productTemplate -->
 

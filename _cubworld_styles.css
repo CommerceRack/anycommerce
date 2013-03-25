@@ -122,6 +122,54 @@ li:hover .prodName{color: #BE0000;}
     padding-left: 11px;
 }
 .clear{clear:both;}
+.positionRelative{position: relative;}
+
+.prodPageTagsContainer {
+	height: 26px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+.prodPageTagsContainer span{
+	display: inline-block;
+	height: 26px;
+	background: url(img/spans/cubworld_bigtags.png) no-repeat;
+}
+.prodPageTagsContainer .is_fresh{background-position:0px 0px; width:83px;}
+.prodPageTagsContainer .is_bestseller{background-position:0px -26px; width:79px;}
+.prodPageTagsContainer .is_user1{background-position:0px -52px; width:98px;}
+.prodPageTagsContainer .is_sale{background-position:0px -78px; width:98px;}
+.prodPageTagsContainer .is_specialorder{background-position:0px -104px; width:116px;}
+.prodPageTagsContainer .is_preorder{background-position:0px -130px; width:135px;}
+.prodPageTagsContainer .is_discontinued{background-position:0px -156px; width: 128px;}
+.prodPageTagsContainer .is_outofstock{background-position:0px -156px; width: 128px;}
+.prodPageTagsContainer .is_shipfree{background-position:0px -182px; width: 208px;}
+
+
+.prodListTagsContainer {
+	height: 16px;
+	overflow: hidden;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+	z-index: 99;
+}
+.prodListTagsContainer span{
+	display: inline-block;
+	height: 16px;
+	background: url(img/spans/cubworld_smalltags.png) no-repeat;
+}
+.prodListTagsContainer .is_fresh{background-position:0px 0px; width:51px;}
+.prodListTagsContainer .is_bestseller{background-position:0px -16px; width:49px;}
+.prodListTagsContainer .is_user1{background-position:0px -32px; width:61px;}
+.prodListTagsContainer .is_sale{background-position:0px -48px; width:61px;}
+.prodListTagsContainer .is_specialorder{background-position:0px -64px; width:71px;}
+.prodListTagsContainer .is_preorder{background-position:0px -80px; width:83px;}
+.prodListTagsContainer .is_discontinued{background-position:0px -96px; width: 78px;}
+.prodListTagsContainer .is_outofstock{background-position:0px -96px; width: 78px;}
+.prodListTagsContainer .is_shipfree{background-position:0px -112px; width: 108px;}
+
 /****************************************************************
 
 HEADER STYLES
