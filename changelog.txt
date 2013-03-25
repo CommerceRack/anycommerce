@@ -7,7 +7,10 @@
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
 
 
+
+
 201311
+store_checkout not used. namespace for checkoutCompletes changed to orderCreate
 includes.js/variations update to remove 'pog_' from input names (for new add to cart command)
 some new classes in quickstart. all old checkout classes gone.
 Massive update to checkout. most important, the namespace changed from convertSessionToOrder to orderCreate
