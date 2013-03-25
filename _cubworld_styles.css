@@ -574,6 +574,7 @@ PRODUCT STYLES
 	color: #31539C;
     text-decoration: none;
 }
+.prodReviewsSummary span.displayNone {display:none;}
 .prodReviewsSummary span {
 	display: inline-block;
 	height: 25px;
@@ -584,6 +585,10 @@ PRODUCT STYLES
 	color: #58595B;
 	font-size: 12px;
     padding-left: 10px;
+}
+.writeReview a{
+	color: #31539C;
+    font-size: 12px;
 }
 /****************************************************************
 

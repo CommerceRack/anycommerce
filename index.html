@@ -966,8 +966,13 @@ this will likely become more flexible in the future. ###
 	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	-->
 	<section class='prodReviewsSummary marginBottom'>
-		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-		<span class="prodReviewTotal" data-bind='var: reviews(reviews.total); format:text; pretext:Reviewed ;posttext: times; className:numReviews;'></span>
+		<span class="displayNone" data-bind="var:reviews(reviews.total); format:showIfSet;">
+			<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+			<span class="prodReviewTotal" data-bind='var: reviews(reviews.total); format:text; pretext:Reviewed ;posttext: times; className:numReviews;'></span>
+		</span>
+		<div class="alignCenter writeReview" data-bind="var:reviews(reviews.total); format:showReviewLink; extension:cubworld;">
+			<span data-bind="var:product(pid);format:assignAttribute; attribute:data-pid;"><a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Be the first person to review this product</a></span>
+		</div>
 	</section>
 
 	<div class='priceContainer'>
