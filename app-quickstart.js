@@ -979,6 +979,7 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 					}
 //this is low so that the individual 'shows' above can set a different default and if nothing is set, it'll default to true here.
 				infoObj.performJumpToTop = (infoObj.performJumpToTop === false) ? false : true; //specific instances jump to top. these are passed in (usually related to modals).
+
 //				app.u.dump(" -> infoObj.performJumpToTop: "+infoObj.performJumpToTop);
 				r = app.ext.myRIA.u.addPushState(infoObj);
 				
@@ -1631,7 +1632,7 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
-				else if(url.indexOf('quickstart.html') > -1)	{
+				else if(url.indexOf('app-quickstart.html') > -1)	{
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
 					msg.persistant = true;
 					app.u.throwMessage(msg);
@@ -1675,6 +1676,10 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
+					else if(infoObj.pageType == 'search' && (infoObj.TAG || infoObj.KEYWORDS))	{
+						r = '#search?';
+						r += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
+						}
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
 						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
@@ -1801,8 +1806,8 @@ if(ps.indexOf('?') >= 1)	{
 //					app.u.dump("BUILDRELATIVEPATH");
 //					app.u.dump(infoObj.elasticsearch);
 					relativePath = '#search?elasticsearch=';
-					if(infoObj.KEYWORDS || infoObj.TAGS)	{
-						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAGS='+infoObj.TAGS;
+					if(infoObj.KEYWORDS || infoObj.TAG)	{
+						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
 						}
 					else	{
 						relativePath += JSON.stringify(infoObj.elasticsearch);
@@ -1864,7 +1869,7 @@ if(ps.indexOf('?') >= 1)	{
 // ex: showContent changes hash state executed and location.hash doesn't match new pageInfo hash. but we don't want to retrigger showContent from the hash change.
 
 			handleHashState : function()	{
-				app.u.dump("BEGIN myRIA.u.handleHashState");
+//				app.u.dump("BEGIN myRIA.u.handleHashState");
 				var hash = window.location.hash;
 				var pio = this.getPageInfoFromHash(hash); //if not valid pageInfo hash, false is returned
 //				app.u.dump(" -> hash: "+hash);

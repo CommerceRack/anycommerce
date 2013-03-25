@@ -1696,6 +1696,10 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
+					else if(infoObj.pageType == 'search' && (infoObj.TAG || infoObj.KEYWORDS))	{
+						r = '#search?';
+						r += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
+						}
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
 						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
@@ -1786,7 +1790,6 @@ if(ps.indexOf('?') >= 1)	{
 				},
 
 
-
 //pass in a pageInfo obj and a relative path will be returned.
 //EX:  pass: {pageType:category,navcat:.something} 		return: /category/something/
 //used in add push state and also for addthis.
@@ -1822,8 +1825,8 @@ if(ps.indexOf('?') >= 1)	{
 //					app.u.dump("BUILDRELATIVEPATH");
 //					app.u.dump(infoObj.elasticsearch);
 					relativePath = '#search?elasticsearch=';
-					if(infoObj.KEYWORDS || infoObj.TAGS)	{
-						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAGS='+infoObj.TAGS;
+					if(infoObj.KEYWORDS || infoObj.TAG)	{
+						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
 						}
 					else	{
 						relativePath += JSON.stringify(infoObj.elasticsearch);
