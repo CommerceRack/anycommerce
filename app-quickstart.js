@@ -178,30 +178,6 @@ document.write = function(v){
 				}
 			}, //startMyProgram 
 
-
-
-		itemAddedToCart :	{
-			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN app.ext.store_product.callbacks.itemAddedToCart.onSuccess');
-				$('.atcButton').removeAttr('disabled').removeClass('disabled'); //makes all atc buttons clickable again.
-				
-				var msgObj = app.u.successMsgObject('Item Added')
-				msgObj.parentID = 'atcMessaging_'+app.data[tagObj.datapointer].product1
-				var htmlid = app.u.throwMessage(msgObj);
-				setTimeout(function(){
-					$("#"+htmlid).slideUp(1000);
-					},5000);
-			
-				_gaq.push(['_trackEvent','Add to cart','User Event','success',app.data[tagObj.datapointer].product1]);
-			
-				},
-			onError : function(responseData,uuid)	{
-				app.u.dump('BEGIN app.ext.myRIA.callbacks.itemAddedToCart.onError');
-				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //remove the disabling so users can push the button again, if need be.
-				app.u.throwMessage(responseData);
-				_gaq.push(['_trackEvent','Add to cart','User Event','fail',responseData['_msg_1_txt']]);
-				}
-			}, //itemAddedToCart
 			
 //optional callback  for appCategoryList in app init which will display the root level categories in element w/ id: tier1categories 
 		showRootCategories : {
@@ -363,7 +339,7 @@ document.write = function(v){
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							app.u.dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
-							$(app.u.jqSelector('#',tagObj.siblingsID)).anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]['%attribs']});
+							$("[app-data-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
 							}
 						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
 							app.u.dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
@@ -1803,9 +1779,16 @@ if(ps.indexOf('?') >= 1)	{
 					break;
 
 				case 'search':
-					app.u.dump("BUILDRELATIVEPATH");
-					app.u.dump(infoObj.elasticsearch);
-					relativePath = '#search?elasticsearch='+JSON.stringify(infoObj.elasticsearch);
+//					app.u.dump("BUILDRELATIVEPATH");
+//					app.u.dump(infoObj.elasticsearch);
+					relativePath = '#search?elasticsearch=';
+					if(infoObj.KEYWORDS || infoObj.TAGS)	{
+						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAGS='+infoObj.TAGS;
+						}
+					else	{
+						relativePath += JSON.stringify(infoObj.elasticsearch);
+						}
+					
 					break;
 
 				case 'company':
@@ -2712,9 +2695,8 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 //on a child page, need to go get the 'siblings' (on a small, go get med, large, etc)
 //don't just look at children, ALWAYS look at ['zoovy:grp_type'] to verify it's set as a CHILD (or PARENT in some cases)
 			if(namespace == 'product' && attribute == 'zoovy:grp_children' && typeof app.data['appProductGet|'+P.pid] === 'object' && app.data['appProductGet|'+P.pid]['%attribs'] && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_type'] == 'CHILD' && app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent'])	{
+				app.u.dump(" -> Fetch parent product record.");
 				numRequests += app.calls.appProductGet.init({'pid':app.data['appProductGet|'+P.pid]['%attribs']['zoovy:grp_parent']},{},'mutable');
-				tagObj.siblingsID = 'siblingsOf_'+P.pid+'_'+app.u.guidGenerator();
-				$focusTag.attr('id',tagObj.siblingsID); //unique ID added. necessary so callback can render it as a prodlist.
 				}
 			else if(bindData.format == 'productList')	{
 //a product list takes care of getting all it's own data.
@@ -2788,7 +2770,6 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 			}
 		} //ends isset(databind).
 	}); //ends each
-
 
 
 			//app.u.dump(" -> numRequests b4 appPageGet: "+numRequests);

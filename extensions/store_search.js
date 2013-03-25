@@ -192,7 +192,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 //list is the UL or whatever element type contains the list of product.
 			buildResultsHeader : function($list,datapointer)	{
-				app.u.dump("BEGIN store_search.u.buildMultipageHeader");
+//				app.u.dump("BEGIN store_search.u.buildMultipageHeader");
 				
 				var $header = false, //will be a jquery object IF the necesarry data is present.
 				EQ = $list.data('elastic-query'); //Elastic Query
@@ -300,7 +300,10 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						data = app.data[_tag.datapointer],
 						totalPageCount = Math.ceil(data.hits.total / EQ.size) //total # of pages for this list.
 						
-						if(totalPageCount <= 1)	{app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);} //if there is only 1 page or something went wrong, don't show pagination.
+						if(totalPageCount <= 1)	{
+							//if there is only 1 page or something went wrong, don't show pagination.
+//							app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);
+							}
 						else	{
 							$pagination = $("<ul \/>").addClass('pagination resultsMenu');
 							$pagination.addClass('hideInMinimalMode').append($("<li \/>").html("<a href='#'>Page "+pageInFocus+" of "+totalPageCount+"<\/a>"));

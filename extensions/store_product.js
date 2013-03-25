@@ -137,29 +137,9 @@ var store_product = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN app.ext.store_product.callbacks.init.onError');
 				}
-			}, //init
+			} //init
 
-/*
-for this call, if parentID isn't set, the messaging is defaulted to a pid specific id (for use in both lists and/or product detail page).
-a parentID being passed may indicate the messaging is being throw to a minicart or cart modal
-*/
 
-		itemAddedToCart :	{
-			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN app.ext.store_product.callbacks.itemAddedToCart.onSuccess');
-				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //makes atc button clickable again.
-				var msgObj = app.u.successMsgObject('Item(s) added to the cart!');
-				msgObj.parentID = (tagObj.parentID) ? tagObj.parentID : 'atcMessaging_'+app.data[tagObj.datapointer].product1
-				app.u.throwMessage(msgObj);
-				},
-			onError : function(responseData,uuid)	{
-				app.u.dump('BEGIN app.ext.myRIA.callbacks.itemAddedToCart.onError');
-//				app.u.dump(responseData);
-				$('.addToCartButton').removeAttr('disabled').removeClass('disabled').removeClass('ui-state-disabled'); //remove the disabling so users can push the button again, if need be.
-				if(responseData.tagObj && !responseData.tagObj.parentID)	{responseData.tagObj.parentID = 'atcMessaging_'+app.data[tagObj.datapointer].product1}
-				app.u.throwMessage(responseData);
-				}
-			} //itemAddedToCart
 
 
 		}, //callbacks
@@ -381,6 +361,7 @@ addToCart : function (pid,$form){
 						});
 					}
 				else	{
+					$tag.hide(); //hide tag so any pre/post text isn't displayed. 
 					$input.attr({'type':'hidden'}).appendTo($tag); //add so that handleaddtocart doesn't throw error that no qty input is present
 					}
 //set this. because the name is shared by (potentially) a lot of inputs, the browser 'may' use the previously set value (like if you add 1 then go to another page, all the inputs will be set to 1. bad in a prodlist format)
@@ -432,10 +413,6 @@ $display.appendTo($tag);
 //				app.u.dump(" -> ID before any manipulation: "+$tag.attr('id'));
 				var pid = data.value;
 				var pData = app.data['appProductGet|'+pid];
-// add _pid to end of atc button to make sure it has a unique id.
-// add a success message div to be output before the button so that messaging can be added to it.
-// atcButton class is added as well, so that the addToCart call can disable and re-enable the buttons.
-				$tag.addClass('atcButton').before("<div class='atcSuccessMessage' id='atcMessaging_"+pid+"'><\/div>"); 
 				if(app.ext.store_product.u.productIsPurchaseable(pid))	{
 					if(pData && pData['%attribs'] && pData['%attribs']['is:preorder'])	{
 						$tag.addClass('preorderButton').text('value', 'Preorder');
