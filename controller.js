@@ -1230,7 +1230,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 		printByElementID : function(id)	{
 			if(id && $(app.u.jqSelector('#',id)).length)	{
-				this.printBySelector($(app.u.jqSelector('#',id)));
+				app.u.printByjqObj($(app.u.jqSelector('#',id)));
 				}
 			else	{
 				app.u.dump("WARNING! - myRIA.a.printByElementID executed but not ID was passed ["+id+"] or was not found on DOM [$('#'+"+id+").length"+$('#'+id).length+"].");

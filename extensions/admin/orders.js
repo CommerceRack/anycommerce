@@ -1457,7 +1457,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
 							else if(sdomain)	{
 								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								app.calls.appProfileInfo.init({'sdomain':sdomain},{},'immutable');
+								app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
 								}
 							else	{
 								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
