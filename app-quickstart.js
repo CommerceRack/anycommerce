@@ -2200,8 +2200,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				var $page = $('#'+infoObj.parentID),
 				elasticsearch = {};
-				
-				
 
 //only create instance once.
 				if($page.length)	{
