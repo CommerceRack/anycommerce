@@ -178,7 +178,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 //nuke old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $checkout = _rtag.jqObj,
 				checkoutData = app.data[_rtag.datapointer],
-				oldSession = app.vars.cartID,
+				oldCartID = app.vars.cartID,
 				orderID = app.data[_rtag.datapointer].orderid;
 
 // SLIDE UP to top of checkout here.
@@ -217,7 +217,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 				if(app.ext.orderCreate.checkoutCompletes)	{
 					var L = app.ext.orderCreate.checkoutCompletes.length;
 					for(var i = 0; i < L; i += 1)	{
-						app.ext.orderCreate.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':_rtag.datapointer});
+						app.ext.orderCreate.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':_rtag.datapointer});
 						}
 					}
 

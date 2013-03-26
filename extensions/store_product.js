@@ -711,14 +711,17 @@ NOTES
 				}, //buildCartItemAppendObj
 
 //a no frills add to cart.
-			handleAddToCart : function($form)	{
+			handleAddToCart : function($form,_tag)	{
 				app.u.dump("BEGIN store_product.u.handleAddToCart");
+				_tag = _tag || {};
 				if($form && $form.length && $form.is('form'))	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
 						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
 						if(cartObj)	{
-							app.calls.cartItemAppend.init(cartObj,{},'immutable');
+							app.calls.cartItemAppend.init(cartObj,_tag,'immutable');
+//if you don't destroy before running this function, this won't dispatch. allows for add to cart without cart update, should the need arise.
+							app.calls.cartDetail.init({},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						}
