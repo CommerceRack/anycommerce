@@ -769,7 +769,7 @@ fallback is to just output the value.
 					if(buttonText.toLowerCase() == 'add to cart')	{
 						$tag.on('click.detailsOrAdd',function(event){
 							event.preventDefault();
-							app.ext.myRIA.u.addItemToCart($form,{'action':'modal'}); 
+							$form.trigger('submit'); //submitting the form (which has an add to cart action) instead of directly executing some action here, makes this more versatile. allows the action to be changed to support other add to cart/display cart actions.
 							})
 						}
 					else	{
