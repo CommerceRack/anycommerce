@@ -79,9 +79,9 @@ app.ext.myRIA.template.searchTemplate.onInits.push(function(P) {
 //404's don't execute the anti-bounce event because if you go homepage then 404 and leave, it should register as a bounce.
 app.ext.myRIA.template.pageNotFoundTemplate.onCompletes.push(function(P) {_gaq.push(['_trackPageview', '/404.html?page=' + document.location.pathname + document.location.search + '&from=' + document.referrer]);})
 							
-app.ext.store_checkout.checkoutCompletes.push(function(P){
+app.ext.orderCreate.checkoutCompletes.push(function(P){
 	
-	app.u.dump("BEGIN google_analytics code pushed on store_checkout.checkoutCompletes");
+	app.u.dump("BEGIN google_analytics code pushed on orderCreate.checkoutCompletes");
 	var order = app.data['order|'+P.orderID];
 	_gaq.push(['_addTrans',
 		  P.orderID,           // order ID - required

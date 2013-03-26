@@ -79,9 +79,9 @@ if(buySAFE.Hash.length > 0)	{
 		})
 	
 								
-	app.ext.store_checkout.checkoutCompletes.push(function(P){
+	app.ext.orderCreate.checkoutCompletes.push(function(P){
 		
-		app.u.dump("BEGIN buysafe_guarantee code pushed on store_checkout.checkoutCompletes");
+		app.u.dump("BEGIN buysafe_guarantee code pushed on orderCreate.checkoutCompletes");
 		var order = app.data['order|'+P.orderID].cart;
 	
 	   buySAFE.Guarantee.order = P.orderID;
