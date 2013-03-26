@@ -71,7 +71,7 @@ var cubworld = function() {
 			
 		startExtension : {
 			onSuccess : function() {
-				if(app.ext.myRIA && app.ext.myRIA.template){
+				if(app.ext.myRIA && app.ext.myRIA.template && typeof $.cycle === 'function'){
 					app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
 						app.ext.cubworld.u.showHomepageSlideshow();							
 						});
