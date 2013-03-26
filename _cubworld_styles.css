@@ -554,6 +554,8 @@ CATEGORY STYLES
 PRODUCT STYLES
 
 ****************************************************************/
+.imageContainer img {border:1px solid #CDCDCD;}
+.prodBigImage{margin-bottom:4px;}
 .prodTitle {
 	color: #404041;
     font: bold 17px Arial,Helvetica,sarif;
@@ -590,6 +592,55 @@ PRODUCT STYLES
 	color: #31539C;
     font-size: 12px;
 }
+fieldset.variationsFieldset{
+	margin-bottom: 3px;
+	font-size: 9pt;
+}
+.buyBoxContainer {
+	background: linear-gradient(to bottom, #F7F7F7 0%, #ECEEF0 100%) repeat scroll 0 0 transparent;
+    border: 1px solid #D9DADB;
+    border-radius: 5px 5px 5px 5px;
+    min-height: 76px;
+    padding: 5px;
+	padding-top: 15px;
+}
+.buyBox{
+	display: table;
+	width: 100%;
+	vertical-align: middle;
+}
+.buyBox > div {
+	display: table-cell;
+	vertical-align: middle;
+}
+
+.prodLabel {
+	color: #58595B;
+    font-size: 11px;
+    font-weight: normal;
+}
+.basePrice {
+	color: #F05A28;
+    font-size: 26px;
+    font-weight: bold;
+}
+.prodMSRP{font-size: 17px;}
+.savingsPercentage {
+	color: #58595B;
+    font-size: 13px;
+    line-height: 17px;
+}
+.qtyInput input{
+	width: 28px;
+}
+
+.addToCartButton {
+	width: 163px;
+	height: 42px;
+	background: url(img/prodPage/cw12_add_to_cart.png) top left no-repeat;
+	border: none;
+}
+
 /****************************************************************
 
 SEARCH STYLES

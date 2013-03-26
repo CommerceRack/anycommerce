@@ -946,14 +946,16 @@ this will likely become more flexible in the future. ###
 	<!--
 	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
 	-->
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='340' height='340' />
+	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:fancybox; extension:fancybox;' width='296' height='296' />
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 	
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image2); format:fancybox; extension:fancybox;' width='100' height='100' />
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image3); format:fancybox; extension:fancybox;' width='100' height='100' />
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='100' height='100' />
+	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:fancybox; extension:fancybox;' width='54' height='54' />
+	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:fancybox; extension:fancybox;' width='54' height='54' />
+	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='54' height='54' />
+	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image5); format:fancybox; extension:fancybox;' width='54' height='54' />
+	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image6); format:fancybox; extension:fancybox;' width='54' height='54' />
 <!--
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
 
@@ -983,32 +985,45 @@ this will likely become more flexible in the future. ###
 		</div>
 	</section>
 
-	<div class='priceContainer'>
-		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
-		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
-		<span class='savings'>
-			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
-			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
-		</span>
-	</div>
-	<div class="socialLinks"></div>
 
 	<ul title='please choose' id='prodlistChildren' class='listStyleNone fluidList clearfix noPadOrMargin productList smallProdlist' data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true;"></ul>
 
 
-<!--	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> -->
+<!--	
+	<div data-bind='var: product(@inventory.inv); format:simpleInvDisplay; extension:store_product;' class='inventory'></div> 
 	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+-->
 
 
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">
 
-		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
-		<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; pretext:Quantity: ;' class='borderNone'></fieldset>
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
+		<div class="buyBoxContainer">
+		<div class="buyBox">
+			<div class='priceContainer'>
+				<div>
+					<span class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; before: <span class="prodLabel">Our Price: </span>;'></span>
+				</div>
+				<div>
+					<span class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; before: <span class="prodLabel">MSRP: </span>;'></span>
+					<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext: Savings);'></span>
+				</div>
+			</div>
+			
+			<div>
+				<fieldset data-bind='var: product(pid); format:atcQuantityInput; extension:store_product; before:<div class="prodLabel">Qty:</div>;' class='borderNone qtyInput'></fieldset>
+			</div>
+			
+			<div class="alignRight">
+				<input type='submit' value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
+			</div>
+		</div>
+		</div>
 
-		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' />
 	</form>
+	<div class="socialLinks"></div>
 
-
+<!--
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 
 
@@ -1019,7 +1034,7 @@ this will likely become more flexible in the future. ###
 	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
 
 	</menu>
-
+-->
 	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
