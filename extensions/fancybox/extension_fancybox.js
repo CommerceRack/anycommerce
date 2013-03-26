@@ -36,7 +36,15 @@ var fancybox = function() {
 				app.rq.push(['script',0,'extensions/fancybox/jquery.fancybox.js',function(){
 					app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 						var $context = $(app.u.jqSelector('#',P.parentID)); 
-						$('.fancybox', $context).fancybox();
+						$('.fancybox', $context).fancybox({
+							'helpers': {
+								'overlay' : {
+									'css' : {
+										'background': 'rgba(0,38,117,.45)'
+										}
+									}
+								}
+							});
 						}]);
 					}]);
 				},
