@@ -82,7 +82,7 @@ var admin_user = function() {
 				$table.empty();
 				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data.bossUserList);
 				app.ext.admin.u.handleAppEvents($table);
-				app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
+				app.ext.admin.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
 
 				},
 
