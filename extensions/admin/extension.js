@@ -3284,8 +3284,8 @@ else	{
 
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
-				app.u.dump(" -> old mode: "+oldMode);
-				app.u.dump(" -> mode: "+mode);
+//				app.u.dump(" -> old mode: "+oldMode);
+//				app.u.dump(" -> mode: "+mode);
 				
 				if(mode == 'detail')	{
 					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
@@ -3674,7 +3674,7 @@ just lose the back button feature.
 				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
 				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
 					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']")).first();
+					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
 					});
 				}, //toggleDualMode
 
