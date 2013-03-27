@@ -718,7 +718,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 -->
 <li id='productListTemplate' class='loadingBG productListItem' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
 
-	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+	<button class='floatRight pointer quickView ui-button ui-state-default displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer positionRelative' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>

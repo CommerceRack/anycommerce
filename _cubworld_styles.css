@@ -183,6 +183,12 @@ li:hover .prodName{color: #BE0000;}
 .review_9	{background-position:0 -225px;}
 .review_10	{background-position:0 -250px;}
 
+
+button.quickView{
+	position: absolute;
+}
+
+.quickView.ui-state-default { display:none; }
 /****************************************************************
 
 HEADER STYLES
