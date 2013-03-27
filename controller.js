@@ -2132,7 +2132,7 @@ later, it will handle other third party plugins as well.
 					case 'WALLET':
 						if(isAdmin === true)	{
 							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
-							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
+							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
 							}
 						else	{$o = false;} //inputs are only present in admin interface.
 					break;
