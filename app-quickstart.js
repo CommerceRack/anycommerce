@@ -88,6 +88,8 @@ var myRIA = function() {
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
+//This will create the arrays for the template[templateID].onCompletes and onInits
+				app.ext.myRIA.u.createTemplateFunctions(); //should happen early so that the myRIA.template object exists, specifically for app.u..appInitComplete
 				return r;
 				},
 			onError : function()	{
@@ -102,8 +104,7 @@ var myRIA = function() {
 //			app.u.dump("BEGIN myRIA.callback.startMyProgram");
 //			app.u.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			app.u.dump(" -> window.history.pushState: "+typeof window.history.pushState);
-//This will create the arrays for the template[templateID].onCompletes and onInits
-			app.ext.myRIA.u.createTemplateFunctions(); //should happen early so that the myRIA.template object exists, specifically for app.u..appInitComplete
+
 				
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
