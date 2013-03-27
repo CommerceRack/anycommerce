@@ -74,7 +74,13 @@ var cubworld = function() {
 				//app.u.dump(typeof jQuery.fn.cycle);
 				if(app.ext.myRIA && app.ext.myRIA.template && typeof jQuery.fn.cycle === 'function'){
 					app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-						app.ext.cubworld.u.showHomepageSlideshow();							
+						var $context = $(app.u.jqSelector('#',P.parentID));
+						
+						app.ext.cubworld.u.showHomepageSlideshow();
+						
+						$('.randomList', $context).each(function(){
+							app.ext.cubworld.u.randomizeList($(this));
+						});
 						});
 					if($("#appView #homepageTemplate_").length > 0){
 						app.ext.cubworld.u.showHomepageSlideshow();
@@ -314,8 +320,8 @@ var cubworld = function() {
 			startHotItemSlideshow : function(){
 				if($('#hotItemSpotlightContainer ul').children().length > 0){
 					var $itemList = $('#hotItemSpotlightContainer ul')
-					var $tmp = $itemList.children().shuffle();
-					$itemList.empty().append($tmp).cycle({
+					app.ext.cubworld.u.randomizeList($itemList);
+					$itemList.cycle({
 						fx:     'fade',
 						speed:  'slow',
 						timeout: 5500,
@@ -344,6 +350,10 @@ var cubworld = function() {
 						$nextCol.fadeIn(500).addClass('activeColumn');
 						}, 500);
 					}
+				},
+			randomizeList : function($list){
+				var $tmp = $list.children().shuffle();
+				$list.empty().append($tmp)
 				}
 			}, //u [utilities]
 

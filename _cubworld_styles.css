@@ -541,7 +541,10 @@ HOMEPAGE STYLES
 	padding: 12px 0px;
 }
 
-
+.randomList {
+	overflow: hidden;
+	height: 224px;
+}
 
 /****************************************************************
 
