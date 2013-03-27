@@ -25,7 +25,7 @@ Dependencies:
 store_prodlist (for variable generation).
 
 To implement, change the renderFormat on a product list to infiniteProductList
-ex: <ul data-bind="var: category(@products); format: infiniteProductList;" ...
+ex: <ul data-bind="var: category(@products); format: infiniteProductList; extension:prodlist_infinite;" ...
 
 Some of the params supported in the default product list are supported here as well. Any that are similar/shared use the same names.
 items_per_page, for instance, will determine how many items are fetched each time the buyer nears the bottom.
@@ -56,7 +56,7 @@ var prodlist_infinite = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.store_prodlist.init.onSuccess ');
+				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
 				return true;  //currently, there are no config or extension dependencies, so just return true. may change later.
 //unbind this from window anytime a category page is left.
 //NOTE! if infinite prodlist is used on other pages, remove run this on that template as well.

@@ -1232,13 +1232,13 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								}
 
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
-
+app.u.dump(" -> liIndex: "+liIndex)
 setTimeout(function(){
 	if(liIndex === 0)	{
 		$('.prevButton',$parent).button("option", "disabled", true);
 		$('.nextButton',$parent).button("option", "disabled", false);
 		}
-	else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
+	else if(liIndex == ($("ul",$liContainer).children().length))	{
 		$('.prevButton',$parent).button("option", "disabled", false);
 		$('.nextButton',$parent).button("option", "disabled", true);
 		}

@@ -1,0 +1,471 @@
+@charset "utf-8";
+/* CSS Document */
+
+body {
+	background: white;	font-family: Arial, Helvetica, sans-serif; color:#666666;
+}
+
+#appPreview, #appView {
+	background: white;
+	margin: 0px auto;
+	width: 1020px;	
+}
+
+
+#appPreView	{margin-top:10%; border:3px solid #a3033d; padding:12px;}
+#mainContentArea	{min-height:300px;}
+
+
+
+a	{color:#a3033d;}
+a:hover	{color:#666666;}
+
+
+/*************************
+
+PERSISTENT CONTENT
+
+*************************/
+
+/*************************************************************************************
+
+HEADER
+
+*************************************************************************************/
+
+.topNavLinkStyle {
+	color: white;
+	text-decoration: none;
+	font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.topNavLinkStyle:hover {
+	color: white;
+	text-decoration: underline;
+	font-family: "Arial Black", Gadget, sans-serif;
+}
+
+.topNav {
+	height: 34px;
+	background: #a3033d;
+	margin-left: auto;
+  	margin-right: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	font-weight: bold;	
+	color: white;
+}
+
+#welcome {
+	margin-top: 10px;
+	margin-left: 25px;
+	float: left;	
+}
+
+.itemsInCart {
+	color: white;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;	
+}
+
+#cart {
+	margin-top: 10px;
+	margin-right: 25px;
+	float: right;	
+}
+
+.logoSearchContainer {	
+	background: white;
+	margin-left: auto;
+  	margin-right: auto;
+	padding: 20px 0;
+	}
+
+#logo {
+	float: left;	
+}
+
+.searchBarContainer {
+	margin-top: 6px;
+	float: right;
+	height: 20px;	
+}
+
+#searchBar {
+	height: 29px;
+	width: 275px;
+}	
+
+#searchButton {
+	float: right;
+	height: 35px;
+	width: 100px
+	text-align: center;
+	font-weight: bold;
+	background: #a3033d;
+	border: 0 none;
+	color: white;
+}
+
+
+
+.mainNavContainer	{
+	background: #a3033d;
+	height: 34px;
+	position:relative;
+	overflow:visible;
+	z-index:100;
+	}
+
+.mainNavContainer ul, .mainNavContainer li	{list-style:none; margin:0; padding:0;}
+
+
+.mainNavContainer a:hover	{
+	color: #a3033d;
+	background:#fff;
+	}
+
+.mainNavContainer a {
+	font-weight: bold;
+	text-decoration:none;
+	font-size:1.2em;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+	color: 	#fff;
+	line-height: 34px;
+	width: 20%;
+	float: left;
+	}
+
+#browseMenuContent	{
+	background:#ffffff; 
+	border:1px solid #a3033d; border-top-width:0; 
+	position:absolute; top:34px; right:0; left:0; 
+	z-index:10000;
+	}
+
+#browseMenuContent ul.columnify	{
+	-moz-column-count:4; /* Firefox */
+	-webkit-column-count:4; /* Safari and Chrome */
+	column-count:4;
+	-moz-column-gap:40px; /* Firefox */
+	-webkit-column-gap:40px; /* Safari and Chrome */
+	column-gap:40px;
+	}
+#tier1categories	{margin:12px;}
+#tier1categories li	{color:#a3033d; padding:4px;}
+#tier1categories li:hover	{color:#fff; background-color:#a3033d;}
+/*
+HOMEPAGE
+*/
+
+.mainBannerContainer {
+	height: 295px;
+	}
+
+.mainBannerGraphic {
+	width: 703px;	
+	height: 295px;
+	float: left;
+	}
+
+
+.mainBannerNewsletter {
+	background-color: #ce004e;
+	width: 317px;
+	height: 295px;
+	float: right;
+	text-align: center;
+	color: white;
+}
+
+#scoop {
+	margin-top: 10px;
+	font-family: Arial, Helvetica, sans-serif;	
+}
+
+#latest {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+
+.headerNewsletterSignUpContainer {
+	width: 95%;
+	heigth: 75px;
+	background: #ce004e;
+	margin-right: auto;
+	margin-left: auto;	
+}
+
+.headerSubscribeFrm {
+	height: 29px;
+	width: 230px;
+	margin-top: 10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#headerSignUpButton {
+	height: 35px;
+	width: 70px;
+	text-align: center;
+	background: #a3033d;
+	border: 0 none;
+	color: white;
+	margin-top: 10px;
+	margin-right: 10px;
+	float: right;
+}
+
+#followUs { 
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 65px;	
+}
+
+.socialIconContainer {
+	height: 50px;
+	margin-top: 15px;
+	margin-left: auto;
+	margin-right: auto;	
+}
+
+#facebook {
+	float: left;
+	width: 25%;	
+}
+
+#twitter {
+	float: left;
+	width: 25%;	
+}
+
+#youtube {
+	float: left;
+	width: 25%;	
+}
+
+#tumbler {
+	float: left;
+	width: 25%;	
+}
+
+.catagorySelectNavContainer {
+	background-color: white;
+	width: 92%;
+	height: 110px;
+	padding-top: 15;
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+
+/*************************************************************************************
+
+FOOTER
+
+**************************************************************************************/
+
+
+.footerNewsletter {
+	background: #ce004e;
+	height: 60px;
+	margin-left: auto;
+  	margin-right: auto;
+	padding-bottom: 10px;
+}
+
+#upToDate {
+	color: white;
+	padding-top: 25px;
+	padding-left: 40px;
+	float: left;
+	font-family: "Arial Black", Gadget, sans-serif;	
+}
+
+.footerFieldContainer {
+	width: 565px;
+	float: right;	
+}
+
+.footerFormFrm {
+	height: 29px;
+	width: 240px;
+	margin-top: 0px;
+}
+
+.footerSubscribeFrm {
+	height: 29px;
+	width: 220px;
+	margin-top: 16px;
+}
+
+.footerNameBar{
+	float: left;
+	width: 240px;
+	background: #ce004e;	
+}
+
+.footerEmailBar{
+	float: left;
+	width: 240px;
+	background: #ce004e;
+}
+
+.footerButtonContainer {
+	margin-top: 16px;
+	float: left;
+	width: 80px;	
+}
+
+#footerSignUpButton {
+	height: 35px;
+	width: 70px;
+	text-align: center;
+	background: #a3033d;
+	border: 0 none;
+	color: white;
+	margin-top: 0px;
+	margin-right: 10px;
+	float: right;
+}
+
+.footerLinkStyle {
+	color: white;
+	text-decoration: none;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.footerLinkStyle:hover {
+	color: white;
+	text-decoration: underline;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+#footerLinks {
+	background: #a3033d;
+	height: 300px;
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+.listHead {
+	font-family: "Arial Black", Gadget, sans-serif;
+	color: white;	
+}
+
+.bottomLinkListContainer {
+	float: left;
+	width:25%;	
+	padding: 5px;
+}
+
+.bottomLinkList {
+	list-style-type: none;
+	color: white;	
+	
+}
+
+#catagories { 
+	float: left; 
+	width: 23%;
+	padding: 5px;
+}
+
+#help {
+	float: left; 
+	width: 23%;
+	padding: 5px;
+}
+
+#myaccount {
+	float: left; 
+	width: 23%;
+	padding: 5px;
+}
+
+#morefashion {
+	float: left; 
+	width: 23%;	
+	padding: 5px;
+}
+
+#footerInformation {
+	padding-top: 20px;
+	height: 35px;
+	width: 100%;
+	text-align: center;
+	color: #a3033d;
+}
+
+#footerInformation a {
+	color: black;	
+}
+
+
+
+/*
+
+Product list styles 
+
+*/
+
+li.productListItem	{width:25%; margin:0 0 24px 0;}
+.productListItem .cents	{
+	position: relative; bottom: 0.2em; font-size: 70%;	
+	}
+.productListItem .prodContainer	{width:190px; margin:0 auto;}
+.productListItem .prodThumbContainer	{height:190px; width:190px; position:relative;}
+.productListItem .prodThumb	{position:absolute; top:0; left:0; z-index:20;}
+.productListItem .prodName	{
+	position:absolute; bottom:0; left:0; right:0; background:#ffffff; font-size:.95em; color:#000000; z-index:25;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+	padding:6px;
+	}
+/* this height only impacts prodlists, not results, for addition of reviews summary */
+.productList li.productListItem 	{height:270px;}
+
+.productListItem .priceDetail {
+	margin-top: 12px;		
+	}
+
+
+.productListItem .price {
+	width: 60%;
+	float: left;
+	font-family: "Arial Black", Gadget, sans-serif;
+	color: 	#b1ad8f;
+	text-align: center;
+	font-size: large;
+	padding-top: 3px;
+}
+
+.detailButton {
+	width: 40%;
+	float: right;
+	height: 30px;
+	text-align: center;
+	padding-top: 10px;
+	font-family: "Arial Black", Gadget, sans-serif;
+	font-size-adjust: 80%;
+	color: white;
+	background-color: #b1ad8f;	
+}
+
+
+
+/*************************************************************************************
+
+NON PERSISTEN CONTENT
+
+*************************************************************************************/
+
+
+
+
+
+
+
+
+

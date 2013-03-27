@@ -130,7 +130,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 						var $parent;
 						if($list.is('tbody'))	{$parent = $list.closest('table').parent(); app.u.dump("LIST is a tbody");}
 						else if($list.is('table'))	{$parent = $list.parent();}
-						else	{$parent = $list}
+						else	{$parent = $list.parent()}
 
 //put items into list (most likely a ul or tbody
 						$list.append(app.ext.store_search.u.getElasticResultsAsJQObject(_rtag)); //prioritize w/ getting product in front of buyer
