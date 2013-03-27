@@ -174,7 +174,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		</div>
 	
 		<div class='mhTabsContainer'>
-		<ul class='showIcons'>
+		<ul class='showIcons navIcons'>
 			<li class='toggleArrow alignCenter' onClick="app.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
 			<li class='setupTab' onClick="navigateTo('#:setup');"><span class='text'>Setup</span><span class='icon'></span></li>
 			<li class='sitesTab' onClick="navigateTo('#:sites');"><span class='text'>Sites</span><span class='icon'></span></li>
@@ -210,6 +210,19 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<div id='reportsContent' class='displayNone tabContent' data-section='reports'></div>
 		<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
 		<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
+		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'>
+			<section id='launchpadTiles'>
+
+			</section>
+<!--
+				<li class='tileAdmin'><span class='tilename'>Admin</span></li>
+				<li class='tileDomainAdd' onClick="navigateTo('/biz/setup/domain/index.cgi?VERB=NEW');"><span class='tilename'>Add a New Domain</span></li>
+				<li class='tileProjectAdd'><span class='tilename'>Add a Project</span></li>
+				<li class='tileHelp' onClick="app.ext.admin.a.showHelpInterface($('#setupContent'));"><span class='tilename'>A little help here please?</span></li>
+				<li class='tileZoovyLive'></li>
+				<li class='tileZoovyCommunity' onClick="window.open('https://plus.google.com/communities/108928399105730273026');"></li>
+-->
+		</div>
 		<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
 	
 	</div>
@@ -323,6 +336,8 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
+		<li><a href='#' onClick="navigateTo('#!launchpad');">Launchpad</a></li>
+		<li><a href='#' onClick="navigateTo('#!batchManager');">batchjobs</a></li>
 		<li><a href='#' onClick="navigateTo('#!supplierManager');">Supplier Manager</a></li>
 		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
 		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
@@ -368,32 +383,6 @@ This is content that isn't template worthy, but still necessary (most likely for
 -->
 
 
-
-<div id='achievementAddProductModal' class='achievementModal displayNone' title="Achievement: Add a product">
-
-	<table>
-	<tr>
-		<td></td>
-		<td>
-		<h2>Add some product to your store</h2>
-		<p>For the purpose of this achievement, there are three ways to get product into your store (in actuality, there are more).</p>
-		<ol>
-			<li>Using the product editor</li>
-			<li>Through a CSV import</li>
-			<li>Add test product</li>
-		</ol>
-		
-		<p>#1. This is the manual process, but fairly simple.  Click the product tab and then the 'create new' link on the left. Fill in the appropriate fields and press save. That's all there is to it. Once the product is created, go into the editor to add pictures and more detailed information.<br />
-		Watch | <a href='http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=50788' target='webdoc' class='webdoc'>Read</a></p>
-		<p>#2. For adding in bulk, this is the best way to do it. Prepare your CSV with the appropriate headers (described in the link below) and then import through setup > import tools.<br />
-		Watch | <a href='http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=50285' target="webdoc" class='webdoc'>Read</a></p>
-		<p>#3. By far the easiest method, but also the least likely to get you selling (good for testing purposes). Simply click the link below and we'll add a few sample product to your store.<br />
-		Watch | Read | Do It!</p>
-		</td>
-	</tr>
-	</table>
-
-</div>
 
 
 <div id='orderListTab' class='ui-widget ui-widget-content displayNone'>

@@ -247,8 +247,30 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+/*
 
+The Launch Pad
 
+*/
+
+#launchpadTiles span.tilename	{position:absolute; bottom:6px; left:6px;}
+
+.tileDomainAdd	{background:url(images/tile_domainadd-120x120.png) no-repeat #ffffff;}
+.tileDomainAdd:hover	{background-color:#FCF;}
+.tileDomainSelect	{background:url(images/tile_domainselect-120x120.png) no-repeat #ffffff;}
+.tileDomainAdd:hover	{background-color:#39F;}
+
+.tileDomainSelect .active	{display:none;}
+.tileDomainSelect.active .active	{display:block; position:absolute; top:6px; right:6px;  height:20px; width:20px;}
+.tileDomainSelect.active .active:before	{content:"\2713\0020"; font-size:1.5em;}
+.tileDomainSelect.active	{border:#749986; background-color:#B7CEC2;}
+
+.tileZoovyLive	{background:url(images/tile_zoovylive-120x120.png) no-repeat;}
+.tileZoovyCommunity	{background:url(images/tile_zoovycommuity-120x120.png) no-repeat;}
+
+.tileProjectAdd	{background:url(images/tile_projectadd-120x120.png) no-repeat;}
+.tileHelp	{background:url(images/tile_help-120x120.png) no-repeat #f9f2f2; border-color:#c92229;}
+.tileAdmin	{background:url(images/tile_admin-120x120.png) no-repeat;}
 /* css for a three column layout. will be used on dashboard and in customer editor. */
 
 /* three column panel layout (homepage) */
@@ -367,6 +389,7 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 #navTabs a	{color: #333333;}
 .mhTabsContainer .toggleArrow	{width:1%;}
 
+.mhTabsContainer ul.navIcons	{max-width:1150px;} /* as the browser gets very wide, the icon/tabs don't look as good stretched out. cap em */
 .mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
 .mhTabsContainer ul.showIcons li	{height:55px;}
 .mhTabsContainer ul.hideIcons .icon	{display:none;}
