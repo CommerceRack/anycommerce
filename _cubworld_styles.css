@@ -93,19 +93,19 @@ li.productListItem {
 .productListItem .prodThumbContainer {
 	border: 1px solid #CDCDCD;
 }
-.prodName{
+.productListItem .prodName{
 	color: #0D2D66; 
 	font-weight: normal;
 	height: 30px;
 	font: 11px Arial,Helvetica,sans-serif;
 }
-.prodPrice {
+.productListItem .prodPrice {
 	color: #7F0000;
     font: bold 13px Helvetica,Arial;
 	margin-bottom: 4px;
 }
 
-li:hover .prodName{color: #BE0000;}
+li.productListItem:hover .prodName{color: #BE0000;}
 
 .titleBlue{
 	background: url("img/cw12_home_titbgblue-1x23.gif") repeat-x scroll center bottom #003295;
@@ -408,6 +408,13 @@ COLUMN STYLES
 .thinColumn{ width:215px; margin:3px; margin-top: 0px; }
 .thinColumn, .thinColumn * {position: relative; z-index: 0;}
 .wideColumn{ width:789px; margin:3px; margin-top: 0px;}
+
+.hotLineItemList {height: 408px; overflow:hidden;}
+li.productListTemplateHotLineItem {width: 203px;height: 60px; margin:4px 2px;}
+li.productListTemplateHotLineItem img{margin-right:4px;}
+li.productListTemplateHotLineItem .prodName {color: #FEDF46; font-size: .8em; max-height: 45px; width: 139px;}
+li.productListTemplateHotLineItem:hover .prodName {color: #FFFFFF;}
+li.productListTemplateHotLineItem .prodPrice {color: #FFFFFF; font-weight: bold; width: 139px;}
 /****************************************************************
 
 FOOTER STYLES

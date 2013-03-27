@@ -347,8 +347,16 @@ var cubworld = function() {
 						$prevCol.fadeOut(500).removeClass('activeColumn');
 					}
 					setTimeout(function(){
+						if(typeof app.ext.cubworld.u.columnCompletes[$nextCol.attr('id')] === 'function'){
+							app.ext.cubworld.u.columnCompletes[$nextCol.attr('id')]();
+							}
 						$nextCol.fadeIn(500).addClass('activeColumn');
 						}, 500);
+					}
+				},
+			columnCompletes : {
+				hotItemList : function(){
+					app.ext.cubworld.u.randomizeList($("#hotItemList .hotLineItemList"));
 					}
 				},
 			randomizeList : function($list){
