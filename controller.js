@@ -2095,7 +2095,11 @@ later, it will handle other third party plugins as well.
 			
 			var payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
 			
-			
+			app.u.dump(" -> paymentID.substr(0,6): "+paymentID.substr(0,7));
+			if(paymentID.substr(0,7) == 'WALLET:')	{
+				paymentID = 'WALLET';
+				}			
+			app.u.dump(" -> PAYMENTID: "+paymentID);
 			switch(paymentID)	{
 //for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 //expiration is less of a concern
@@ -2125,6 +2129,14 @@ later, it will handle other third party plugins as well.
 					
 					break;
 
+					case 'WALLET':
+						if(isAdmin === true)	{
+							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
+							}
+						else	{$o = false;} //inputs are only present in admin interface.
+					break;
+					
 					case 'CASH':
 					case 'MO':
 					case 'CHECK':

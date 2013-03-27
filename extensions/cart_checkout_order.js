@@ -494,6 +494,9 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 				tmp = '', //tmp var used to put together string of html to append to $o
 				payStatusCB = "<div><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/div>"
 				
+				if(paymentID.substr(0,7) == 'WALLET:')	{
+					paymentID = 'WALLET';
+					}	
 				
 				switch(paymentID)	{
 	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
@@ -517,8 +520,14 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/div>"
 							tmp += "<div><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/div>"
 							}
-						
-						
+						break;
+
+						case 'WALLET':
+							if(isAdmin === true)	{
+								tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+								tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+								}
+							else	{$o = false;} //inputs are only present in admin interface.
 						break;
 	
 						case 'CASH':
