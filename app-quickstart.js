@@ -1000,6 +1000,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					app.ext.myRIA.pageTransition($('#appPreView'),$('#appView'));
+//appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
+					var $bg = $('#appPreViewBG');
+					if($bg.length)	{
+						$bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
+						}
+
 					$('#appPreView').slideUp(1000,function(){
 						$('#'+infoObj.parentID).show(); //have to show content area here because the slideDown will only make the parent visible
 						$('#appView').slideDown(3000);

@@ -51,7 +51,12 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	}]);
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
-app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.u.dump("just left the homepage")}]);
+app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
+	app.u.dump("just left the homepage");
+	if(app.data[P.datapointer]['@products'].length == 0)	{
+		$('.homeHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no product.
+		}
+	}]);
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
@@ -146,9 +151,3 @@ app.u.appInitComplete = function(P)	{
 $(document).ready(function(){
 	app.u.handleRQ(0)
 	});
-
-
-
-
-
-

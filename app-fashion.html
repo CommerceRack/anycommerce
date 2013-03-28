@@ -23,7 +23,7 @@ var app = {vars:{
 	"release":"201312.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"",
-	"testURL":"http://www.sporks.zoovy.com/"
+	"testURL":"http://www.summitfashions.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -63,9 +63,9 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-	<div class='marginBottom'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></div>
-	<div id="loader">
-		<h3>One moment please.</h3>
+	<div class='logo'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></div>
+	<div id="loader" class='alignCenter'>
+		<h3>Loading Your Shopping Experience</h3>
 
 		<div class='alignCenter'>
 		<progress id="appPreViewProgressBar" max="100" value="0" /><br />
@@ -74,19 +74,19 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 	</div>
 	<div class='appMessaging'></div>
 </div>
+<div id='appPreViewBG' class="ui-widget-overlay ui-front"></div>
 
 
-
-<div id='appView' class='displayNone'>
+<div id='appView'>
 
 <!-- HEADER -->
     
     <div id='header'>
     	<div class='topNav'>        
-            <div id='cart' ><b><span class="cartItemCount"></span>	
-            	<a href='#!cart?show=cart' class='itemsInCart bindByAnchor'>Items</b> in your Cart  |   
-            	<a href='#!cart?show=cart' class='topNavLinkStyle bindByAnchor'><b>VIEW SHOPPING CART</b></a>
-            	<a href='#!company?show=contact' class='topNavLinkStyle bindByAnchor'><b>HELP</b></a>
+            <div id='cart'>
+<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>CART</b></a>  |            	
+<a href='#!company?show=contact' class='bindByAnchor'><b>HELP</b></a>  | 
+<a href='#!customer?show=myaccount' class='bindByAnchor'><b>MY ACCOUNT</b></a>
             </div>
     	</div>
         
@@ -281,8 +281,12 @@ COMMONLY EDITED TEMPLATES
         
 
 	<section id='newArrivals'>
-	<a href="#" onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'});" class='floatRight'>See all New Arrivals</a>
-	<h2>New Arrivals</h2>
+		
+		<div class='listHeader'>
+		<a href="#" onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'});" class='floatRight'>See all New Arrivals</a>
+		<h2>New Arrivals</h2>
+		</div>
+		
 	<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	
@@ -290,8 +294,10 @@ COMMONLY EDITED TEMPLATES
 	</section>
 	
 	<section id='bestSellers'>
-	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});" class='floatRight'>See all Best Sellers</a>
-	<h2>Best Sellers</h2>
+		<div class='listHeader'>
+		<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});" class='floatRight'>See all Best Sellers</a>
+		<h2>Best Sellers</h2>
+		</div>
 
 	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
@@ -324,7 +330,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
 
-	<ul data-bind="var: category(@products); format: infiniteProductList; editor: finder; extension: prodlist_infinite; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 32;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+	<h2 class='listHeader'>Featured Items</h2>
+	<ul data-bind="var: category(@products); format: infiniteProductList; editor: finder; extension: prodlist_infinite; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 32; " class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
@@ -339,11 +346,11 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
-<li id='categoryListTemplate'>
-	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
-        <div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='70' /></div>	
-	</div>
+<li id='categoryListTemplate' class='catListItem pointer' onClick="showContent('category',{'navcat':$(this).attr('data-catsafeid')});">
+	<div class='catContainer'>
+		<div class='catName' data-bind='var: category(pretty); format:catText; extension: myRIA;'></div>
+		<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='190' height='190' />
+	</div>	
 </li>
 
 

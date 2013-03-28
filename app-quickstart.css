@@ -40,6 +40,8 @@ input:focus {
 	outline:none;
 	}
 
+input.numberInput	{width:50px}
+
 button:focus	{outline:none;}
 
 .zform_number	{width:50px;}
