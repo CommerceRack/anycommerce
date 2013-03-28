@@ -81,7 +81,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     	<div class='topNav'>
 
             <div class='floatRight'>
-<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>CART</b></a>  |            	
+<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>SHOPPING BAT</b></a>  |            	
 <a href='#!company?show=contact' class='bindByAnchor'><b>CONTACT US</b></a>  | 
 <a href='#!company?show=faq' class='bindByAnchor'><b>FAQ</b></a>
             </div>
@@ -373,7 +373,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div class=' prodContainer' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 <div class='prodThumbContainer pointer'>
 	<h4 class='prodName' data-bind='var: product(zoovy:prod_name); format:text;'></h4>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' />
@@ -714,15 +714,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 <table class='prodViewerContainer'>
 <tr>
-	<td class='imageContainer'>
-<div>
 
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
-
-</div>
-
-	</td>
 
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
@@ -745,9 +737,28 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+
 	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 
 	</td>
+	
+	<td class='imageContainer'>
+<div>
+
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+
+</div>
+
+	</td>
+	
 </tr>
 <tr>
 	<td colspan='2'>

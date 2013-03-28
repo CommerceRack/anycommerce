@@ -2693,7 +2693,7 @@ else	{
 //				app.u.dump("data.value.indexOf(whitelist[i]): "+data.value.indexOf(whitelist[i]));
 				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
 
-					spans += "<span class='"+whitelist[i].toLowerCase()+"'><\/span>";
+					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
 					tagsDisplayed += 1;
 					}
 				}
