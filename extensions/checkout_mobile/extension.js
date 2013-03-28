@@ -97,6 +97,7 @@ var orderCreate = function() {
 		startCheckout : {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
+				app.u.dump("BEGIN startcheckout callback for legacy 1PC");
 				app.ext.orderCreate.a.startCheckout($('#zContent'));
 				}
 			},
