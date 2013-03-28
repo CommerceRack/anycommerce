@@ -94,7 +94,12 @@ var orderCreate = function() {
 				}
 			}, //init
 
-
+		startCheckout : {
+			onSuccess : function(tagObj)	{
+				//used for one page checkout only.
+				app.ext.orderCreate.a.startCheckout($('#zContent'));
+				}
+			},
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{
