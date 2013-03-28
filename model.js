@@ -183,13 +183,18 @@ function zoovyModel() {
 			
 			var c = 0; //used to count how many dispatches are going into q. allows a 'break' if too many are present. is also 'index' of most recently added item in myQ.
 			var myQ = new Array();
+			
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
-//				app.u.dump(" -> CMD: "+app.q[QID][index]['_cmd']);
+				
+				if(QID == 'mutable')	{
+					app.u.dump(" -> "+app.q[QID][index]._uuid+") CMD: "+app.q[QID][index]['_cmd']+" and status: "+app.q[QID][index]._tag.status);
+					}
+					
 				if(app.q[QID][index]._tag.status == 'queued')	{
 					app.q[QID][index]._tag.status = "requesting";
+					app.u.dump(" -> new status: "+app.q[QID][index]._tag.status);
 					if(puuid){app.q[QID][index]._tag.pipeUUID = puuid}
-					
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
 					
 //the following are blanked out because they're not 'supported' vars. eventually, we should move this all into _tag so only one field has to be blanked.
@@ -202,7 +207,6 @@ function zoovyModel() {
 						}
 					}
 				}
-//			app.u.dump("//END: filterQ. myQ length = "+myQ.length+" c = "+c);
 			return myQ;
 			}, //filterQ
 
@@ -293,6 +297,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 			var pipeUUID = app.model.fetchUUID(); 			
 			
 //			app.u.dump(' -> Focus Q = '+QID);
+//			app.u.dump(app.q[QID]);
 
 //by doing our filter first, we can see if there is even anything to BE dispatched before checking for conflicts.
 //this decreases the likelyhood well set a timeout when not needed.
@@ -301,7 +306,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 			
 			var immutableRequestInProgress = $.isEmptyObject(app.globalAjax.requests.immutable) ? false : true; //if empty, no request is in progress.
 			var L = Q.length; //size of Q.
-//			app.u.dump(" -> Q.length = "+Q.length);
+//			app.u.dump(" -> Q.length = "+Q.length); app.u.dump(Q);
 //			app.u.dump("QID = "+QID+" and L = "+L+" and aRequestIsInProgress = "+aRequestIsInProgress);
 			
 			if(L == 0)	{
@@ -309,7 +314,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 				r = false; //nothing to dispatch.
 				}
 			else if(immutableRequestInProgress)	{
-//				app.u.dump(" -> immutable dispatch in process. do NOT override. try again soon.");
+				app.u.dump(" -> immutable dispatch in process. do NOT override. try again soon.");
 
 				app.globalAjax.overrideAttempts += 1; //tracks how many times the request in progress has been attempted to be usurped.
 				this.handleReQ(Q,QID);//changes status back to 'queued'  q.uuid.attempts not incremented (only increment only for requests that failed)
@@ -319,7 +324,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 				}
 
 			else	{
-//				app.u.dump(" -> DQ has queued dispatches. no request in process. Move along... Move along...");
+				app.u.dump(" -> DQ has queued dispatches. no request in process. Move along... Move along...");
 				}
 				
 /*
@@ -362,6 +367,7 @@ can't be added to a 'complete' because the complete callback gets executed after
 		});
 
 	app.globalAjax.requests[QID][pipeUUID].error(function(j, textStatus, errorThrown)	{
+		app.u.dump("UH OH! got into ajaxRequest.error. either call was aborted or something went wrong.");
 		if(textStatus == 'abort')	{
 			delete app.globalAjax.requests[QID][pipeUUID];
 			for(var index in Q) {
@@ -404,6 +410,7 @@ handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.
 set adjustAttempts to true to increment by 1.
 */
 		handleReQ : function(Q,QID,adjustAttempts)	{
+			app.u.dump("BEGIN handleReQ");
 			var uuid;
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];
@@ -680,7 +687,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-			
+			app.u.dump(" -> handleresponse uuid: "+uuid);
 //			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{

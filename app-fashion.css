@@ -445,8 +445,8 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 .productListItem .prodThumb	{position:absolute; top:0; left:0; z-index:20;}
 .productListItem .prodName	{
 	position:absolute; bottom:0; left:0; right:0; background:#ffffff; font-size:.95em; color:#000000; z-index:25;
-	filter: alpha(opacity=50);
-	opacity: 0.5;
+	filter: alpha(opacity=70);
+	opacity: 0.7;
 	padding:6px;
 	}
 /* this height only impacts prodlists, not results, for addition of reviews summary */
@@ -461,7 +461,7 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 	width: 60%;
 	float: left;
 	font-family: "Arial Black", Gadget, sans-serif;
-	color: 	#b1ad8f;
+	color: 	#666666;
 	text-align: center;
 	font-size: large;
 	padding-top: 3px;
@@ -471,12 +471,12 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 	width: 40%;
 	float: right;
 	height: 30px;
+	line-height:30px;
 	text-align: center;
-	padding-top: 10px;
 	font-family: "Arial Black", Gadget, sans-serif;
 	font-size-adjust: 80%;
 	color: white;
-	background-color: #b1ad8f;	
+	background-color: #666666;	
 }
 
 
