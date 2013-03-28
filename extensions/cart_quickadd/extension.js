@@ -115,7 +115,7 @@ var cart_quickadd = function() {
 				var $QC = $("#quickaddCart");
 				if($QC.length)	{$QC.empty()}
 				else	{
-					$QC = $("<div \/>",{'id':'quickaddCart'}).css({'display':'none','position':'absolute','font-size':'.75em','top':100,'right':-250,'z-index':10000,'min-height':100,'width':270}).addClass('ui-widget ui-widget-content ui-corner-left');
+					$QC = $("<div \/>",{'id':'quickaddCart'}).css({'display':'none','position':'fixed','font-size':'.75em','top':100,'right':-250,'z-index':10000,'min-height':100,'width':270}).addClass('ui-widget ui-widget-content ui-corner-left');
 					$QC.appendTo('body');
 					}
 				

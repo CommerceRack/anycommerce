@@ -540,17 +540,20 @@ it has no inventory AND inventory matters to merchant
 //				app.u.dump("BEGIN store_product.u.getProductInventory ["+pid+"]");
 				var inv = false;
 //if variations are NOT present, inventory count is readily available.
-				if($.isEmptyObject(app.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
-					inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].inv);
-//					app.u.dump(" -> item has no variations. inv = "+inv);
-					}
-//if variations ARE present, inventory must be summed from each inventory-able variation.
-				else	{
-					for(var index in app.data['appProductGet|'+pid]['@inventory']) {
-						inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].inv)
+				if(app.data['appProductGet|'+pid])	{
+					if((app.data['appProductGet|'+pid]['@variations'] && $.isEmptyObject(app.data['appProductGet|'+pid]['@variations'])) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
+						inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].inv);
+	//					app.u.dump(" -> item has no variations. inv = "+inv);
 						}
-//					app.u.dump(" -> item HAS variations. inv = "+inv);
+	//if variations ARE present, inventory must be summed from each inventory-able variation.
+					else	{
+						for(var index in app.data['appProductGet|'+pid]['@inventory']) {
+							inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].inv)
+							}
+	//					app.u.dump(" -> item HAS variations. inv = "+inv);
+						}
 					}
+				else	{} //cant get inventory without a product record.
 				return inv;
 				}, //getProductInventory
 

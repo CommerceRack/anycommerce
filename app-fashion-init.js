@@ -14,6 +14,7 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
+app.rq.push(['extension',0,'cart_quickadd','extensions/cart_quickadd/extension.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
 
@@ -33,7 +34,9 @@ app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
-
+//used for image enlargement in product layout
+app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
 
 //add tabs to product data.
@@ -50,11 +53,35 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		else	{} //couldn't find the tab to tabificate.
 	}]);
 
+
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	
+	$('.gallery a[data-gallery]',app.u.jqSelector('#',P.parentID)).each(function(){
+		if($('img',$(this)).length < 1)	{
+			$(this).empty().remove(); //nuke any hrefs with no images. otherwise next/previous in gallery will show an empty spot
+			}
+		else	{
+			$(this).attr('title',app.data[P.datapointer]['%attribs']['zoovy:prod_name']); //title is used in gallery modal.
+			}
+		});
+//init gallery.
+	$('.gallery',app.u.jqSelector('#',P.parentID)).imagegallery({
+		show: 'fade',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: false
+		});
+	}]);
+
+
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	app.u.dump("just left the homepage");
-	if(app.data[P.datapointer]['@products'].length == 0)	{
-		$('.homeHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no product.
+	app.u.dump("subcat count: "+app.data[P.datapointer]['subcategoryCount']);
+	if(app.data[P.datapointer]['@products'] && app.data[P.datapointer]['@products'].length == 0)	{
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no product.
+		}
+	else if(app.data[P.datapointer]['subcategoryCount'] == 0)	{
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no subcats. header not necessary (and potentially confusing).
 		}
 	}]);
 

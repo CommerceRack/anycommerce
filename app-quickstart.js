@@ -443,6 +443,7 @@ else	{
 				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
+				app.ext.myRIA.u.handleLoginActions();
 				}
 			} //authenticateBuyer
 
@@ -734,7 +735,7 @@ fallback is to just output the value.
 					else	{}
 					//look in tags for tags. indexOf
 					}
-				else	{
+				else if(data.value['%attribs'])	{
 					var pData = data.value['%attribs']; //shortcut
 					price = pData['zoovy:base_price'];
 					if(pData['is:preorder'])	{
@@ -1041,7 +1042,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //context should be a container element that has 1 or more forms within it.
 //will look for inputs w/ qtyChanged class. Anything with that class is assumed to be an add to cart form and is treated as such.
 // the atcQuantityInput renderFormat in store_product will auto-add that class on change.
-			bulkAddItemsToCart : function($context)	{
+			bulkAddItemsToCart : function($context,_tag)	{
 				if($context)	{
 					var $inputs = $(".qtyChanged",$context);
 					if($inputs.length)	{
@@ -1051,7 +1052,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								app.calls.cartItemAppend.init(obj,{});
 								}
 							});
-						app.model.destroy('cartDetail');
+						app.model.destroy('cartDetail',_tag);
 						app.calls.cartDetail.init({},'immutable');
 						app.model.dispatchThis('immutable');
 						}
@@ -1447,7 +1448,9 @@ if(ps.indexOf('?') >= 1)	{
 
 			handleLoginActions : function()  {
 				$('body').addClass('buyerLoggedIn');
-				$('.username').text(app.u.getUsernameFromCart());
+				if(app.u.getUsernameFromCart())	{
+					$('.username').text(app.u.getUsernameFromCart());
+					}
 				},
 			
 			

@@ -43,42 +43,17 @@ HEADER
 
 *************************************************************************************/
 
-.topNavLinkStyle {
-	color: white;
-	text-decoration: none;
-	font-family: "Arial Black", Gadget, sans-serif;
-}
-
-.topNavLinkStyle:hover {
-	color: white;
-	text-decoration: underline;
-	font-family: "Arial Black", Gadget, sans-serif;
-}
-
+/* links above logo/search */
 .topNav {
 	height: 34px;
 	background: #a3033d;
-	}
-
-#welcome {
-	margin-top: 10px;
-	margin-left: 25px;
-	float: left;	
-}
-
-.itemsInCart {
 	color: white;
-	text-decoration: none;
-	font-family: Arial, Helvetica, sans-serif;	
-}
-
-#cart {
-	line-height:34px;
-	float: right;
-	color:#ffffff;
 	font-size:.75em;
+	line-height:34px;
 	}
-#cart a	{color:#ffffff; text-decoration:none; padding:0 12px;}
+
+.topNav a	{color:#ffffff; text-decoration:none; padding:0 12px;}
+
 
 .logoSearchContainer {	
 	background: white;
@@ -87,33 +62,34 @@ HEADER
 	padding: 20px 0;
 	}
 
-#logo {
-	float: left;	
-}
+
+/* logo and search */
+
+#logo {float: left;}
 
 .searchBarContainer {
 	margin-top: 6px;
 	float: right;
 	height: 20px;	
-}
+	}
 
 #searchBar {
 	height: 29px;
 	width: 275px;
-}	
+	}
 
 #searchButton {
 	float: right;
 	height: 35px;
-	width: 100px
 	text-align: center;
 	font-weight: bold;
 	background: #a3033d;
 	border: 0 none;
 	color: white;
-}
+	}
 
 
+/* links under logo and search */
 
 .mainNavContainer	{
 	background: #a3033d;
@@ -124,7 +100,7 @@ HEADER
 	}
 
 .mainNavContainer ul, .mainNavContainer li	{list-style:none; margin:0; padding:0;}
-
+.mainNavContainer ul.topLinks li	{width:20%; float:left; display:block;}
 
 .mainNavContainer a:hover	{
 	color: #a3033d;
@@ -139,13 +115,13 @@ HEADER
 	text-align: center;
 	color: 	#fff;
 	line-height: 34px;
-	width: 20%;
-	float: left;
+	display:block;
+	margin:2px 2px 0 2px;
 	}
 
 #browseMenuContent	{
 	background:#ffffff; 
-	border:1px solid #a3033d; border-top-width:0; 
+	border:2px solid #a3033d; border-top-width:0; 
 	position:absolute; top:34px; right:0; left:0; 
 	z-index:10000;
 	}
@@ -463,15 +439,15 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 	font-family: "Arial Black", Gadget, sans-serif;
 	color: 	#666666;
 	text-align: center;
-	font-size: large;
-	padding-top: 3px;
-}
+	font-size: 1.2em;
+	line-height:1em; /* reduced line-height to nestle reviews in closer */
+	}
 
 .detailButton {
 	width: 40%;
 	float: right;
-	height: 30px;
-	line-height:30px;
+	height: 34px;
+	line-height:34px;
 	text-align: center;
 	font-family: "Arial Black", Gadget, sans-serif;
 	font-size-adjust: 80%;
@@ -483,7 +459,25 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 
 
 
+/* product layout */
+
+.prodThumbs a	{margin:6px 6px 0 0; float:left; display:block;}
+.productPage h1	{font-size:1.4em; margin-bottom:12px;}
+
+.tbodyAlt tbody:nth-child(odd)	{background:#ffffff;}
+.tbodyAlt tbody:nth-child(event)	{background:#F0F0F0;}
 
 
 
 
+.reviewSprite	{background: url(app-fashion/stars_small-85x255.png) no-repeat; width:85px; height:12px;} /* display none hides the reviews for the 'zero' reviews graphic */
+.review_1 	{background-position:0 -18px;}
+.review_2	{background-position:0 -35px;}
+.review_3	{background-position:0 -53px;}
+.review_4	{background-position:0 -70px;}
+.review_5	{background-position:0 -88px;}
+.review_6	{background-position:0 -105px;}
+.review_7	{background-position:0 -122px;}
+.review_8	{background-position:0 -139px;}
+.review_9	{background-position:0 -157px;}
+.review_10	{background-position:0 -174px;}

@@ -187,13 +187,9 @@ function zoovyModel() {
 	//go through this backwards so that as items are removed, the changing .length is not impacting any items index that hasn't already been iterated through. 
 			for(var index in app.q[QID]) {
 				
-				if(QID == 'mutable')	{
-					app.u.dump(" -> "+app.q[QID][index]._uuid+") CMD: "+app.q[QID][index]['_cmd']+" and status: "+app.q[QID][index]._tag.status);
-					}
-					
 				if(app.q[QID][index]._tag.status == 'queued')	{
 					app.q[QID][index]._tag.status = "requesting";
-					app.u.dump(" -> new status: "+app.q[QID][index]._tag.status);
+//					app.u.dump(" -> new status: "+app.q[QID][index]._tag.status);
 					if(puuid){app.q[QID][index]._tag.pipeUUID = puuid}
 					myQ.push($.extend(true,{},app.q[QID][index])); //creates a copy so that myQ can be manipulated without impacting actual Q. allows for _tag to be removed.
 					
@@ -687,7 +683,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 			var datapointer = null; //a callback can be set with no datapointer.
 			var status = null; //status of request. will get set to 'error' or 'completed' later. set to null by defualt to track cases when not set to error or completed.
 			var hasErrors = app.model.responseHasErrors(responseData);
-			app.u.dump(" -> handleresponse uuid: "+uuid);
+//			app.u.dump(" -> handleresponse uuid: "+uuid);
 //			app.u.dump(" -> responseData:"); app.u.dump(responseData);
 
 			if(!$.isEmptyObject(responseData['_rtag']) && app.u.isSet(responseData['_rtag']['callback']))	{
