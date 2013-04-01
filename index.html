@@ -1021,6 +1021,12 @@ this will likely become more flexible in the future. ###
 		</div>
 
 	</form>
+	<div class="prodUtils" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+		<img class="pointer" width="87" height="25" src="img/prodPage/sizing_chart-87x25.png" onClick="app.ext.cubworld.a.showSizeChart(); return false;" />
+		<img class="pointer" width="87" height="25" src="img/prodPage/tell_friend-87x25.png" onClick="app.ext.cubworld.a.showTellAFriendBox({'pid':$(this).parent().data('pid'),'templateID':'tellafriendFrmTemplate'}); return false;" />
+		<img class="pointer" width="98" height="25" src="img/prodPage/review-98x25.png" onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;' />
+		<img class="pointer" width="94" height="25" src="img/prodPage/printpage-94x25.png" onClick="app.u.printByElementID('productTemplate_'+app.u.makeSafeHTMLId($(this).parent().data('pid')));return false;" />
+	</div>
 	<div class="socialLinks"></div>
 
 <!--
@@ -1734,7 +1740,26 @@ used for store_crm.js
 </form>
 </div>
 
+<div id='tellafriendFrmTemplate'>
 
+	<form name="tellafriendFrm" id="tellafriendFrm" action="#" onSubmit="app.ext.cubworld.u.handleTellAFriend('tellafriendFrm'); return false;">
+	<input type='hidden' name='PRODUCT' id='tellafriendPID' value='' data-bind='var: product(pid); format:popVal;' />
+	<input type="hidden" name="subject" id='tellafriendSubject' value="" data-bind='var: product(zoovy:prod_name); format:popVal;'/>
+
+	<label for='tellafriendSender'>Your email:</label>
+	<input type="email" name="sender" id='tellafriendSender' value="" MAXLENGTH="30" />
+	<br />
+	
+	<label for='tellafriendRecipient'>Your friend's email:</label>
+	<input type="email" name="recipient" id='tellafriendRecipient' value="" MAXLENGTH="30" />
+	<br />
+	
+	
+
+	<input type="submit" value="Tell your Friend" class='ui-button-text ui-button ui-state-default ui-corner-all' />
+
+	</form>
+</div>
 
 
 

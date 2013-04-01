@@ -46,7 +46,27 @@
 var cubworld = function() {
 	var r = {
 
-
+	calls : {
+		// ------obj params------
+		// sender: user@domain.com [the sender of the message]
+		// subject: subject of the message
+		// body: body of the message
+		// PRODUCT (optional) : product-id-this-tellafriend-is-about
+		appTellAFriend : {
+			init : function(obj,tagObj,Q)	{
+				app.u.dump("store_crm.calls.appSendMessage");
+				app.u.dump(obj);
+				obj.msgtype = "tellafriend"
+				obj["_cmd"] = "appSendMessage";
+				obj['_tag'] = tagObj;
+				this.dispatch(obj,Q);
+				return 1;
+				},
+			dispatch : function(obj,Q)	{
+				app.model.addDispatchToQ(obj,'immutable');	
+				}
+			},
+		},
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -226,6 +246,29 @@ var cubworld = function() {
 			showSizeChart : function(){
 				$('#size-chart').dialog({'modal':'true', 'width':800, height:550});
 				},
+				
+			showTellAFriendBox : function(infoObj){
+				if(!infoObj.pid || !infoObj.templateID)	{
+					app.u.dump(" -> pid or template id left blank");
+					}
+				else	{
+					var $parent = $('#tellafriend-modal');
+//if no review modal has been created before, create one. 
+					if($parent.length == 0)	{
+						app.u.dump(" -> modal window doesn't exist. create it.");
+						$parent = $("<div \/>").attr({"id":"tellafriend-modal",'data-pid':infoObj.pid}).appendTo(document.body);
+						}
+					else	{
+						app.u.dump(" -> use existing modal. empty it.");
+//this is a new product being displayed in the viewer.
+						$parent.empty();
+						}
+					$parent.dialog({modal: true,width:500,height:500,autoOpen:false,"title":"Tell a friend about: "+infoObj.pid});
+//the only data needed in the reviews form is the pid.
+//the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
+					$parent.dialog('open').append(app.renderFunctions.transmogrify({id:'tellafriend-modal_'+infoObj.pid},infoObj.templateID,{'pid':infoObj.pid}));
+					}
+				},
 			
 			showDropDown : function ($tag) {
 				//app.u.dump('showing');
@@ -306,6 +349,22 @@ var cubworld = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			handleTellAFriend : function(formID){
+				frmObj = $('#'+formID).serializeJSON();
+				$('#'+formID+' .zMessage').empty().remove(); //clear any existing error messages.
+				var isValid = app.ext.cubworld.validate.tellAFriend(frmObj); //returns true or some errors.
+				if(isValid === true)	{
+					app.ext.cubworld.calls.appTellAFriend.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Your message has been sent!"});
+					app.model.dispatchThis('immutable');
+					$('reviewFrm').hide(); //hide existing form to avoid confusion.
+					}
+				else	{
+					//report errors.
+					var errObj = app.u.youErrObject(isValid,'42');
+					errObj.parentID = formID
+					app.u.throwMessage(errObj);
+					}
+				},
 			showHomepageSlideshow : function(){
 				if($('#wideSlideshow').data('slideshow') !== 'true'){
 					$('#wideSlideshow').data('slideshow','true').cycle({
@@ -371,7 +430,25 @@ var cubworld = function() {
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
-			} //e [app Events]
+			}, //e [app Events]
+		validate : {
+			tellAFriend : function(obj)	{
+//				app.u.dump(obj);
+				var errors = '';
+				/*
+				if(!obj.SUBJECT)
+					errors += 'please enter a subject.<br \/>';
+				if(!obj.RATING)
+					errors += 'please enter a rating<br \/>';
+				if(!obj.MESSAGE)
+					errors += 'please enter a review<br \/>';
+				*/
+				if(errors == '')
+					return true;
+				else
+					return errors;
+				}
+			}
 		} //r object.
 	return r;
 	}
