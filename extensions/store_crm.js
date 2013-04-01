@@ -644,7 +644,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				var isValid = app.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
 				if(isValid === true)	{
 					app.ext.store_crm.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
-					app.model.dispatchThis();
+					app.model.dispatchThis('mutable');
 					$('reviewFrm').hide(); //hide existing form to avoid confusion.
 					}
 				else	{
