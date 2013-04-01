@@ -189,6 +189,10 @@ button.quickView{
 }
 
 .quickView.ui-state-default { display:none; }
+
+.prodViewerAddToCartForm {
+    margin-bottom: 0px;
+}
 /****************************************************************
 
 HEADER STYLES
