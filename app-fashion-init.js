@@ -76,7 +76,6 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	app.u.dump("subcat count: "+app.data[P.datapointer]['subcategoryCount']);
 	if(app.data[P.datapointer]['@products'] && app.data[P.datapointer]['@products'].length == 0)	{
 		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no product.
 		}

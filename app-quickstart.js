@@ -2639,7 +2639,9 @@ buyer to 'take with them' as they move between  pages.
 
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
-						app.u.dump(" -> "+parentID+" already exists. Use it");
+//set datapointer OR it won't be present on an oncomplete for a page already rendered.
+						infoObj.datapointer = infoObj.datapointer || "appCategoryDetail|"+catSafeID; 
+//						app.u.dump(" -> "+parentID+" already exists. Use it");
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}
