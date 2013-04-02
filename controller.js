@@ -41,7 +41,7 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
-//		this.u.dump(" -> initialize executed.");
+		this.u.dump(" -> initialize executed.");
 
 //		app = this;
 //		this.u.dump(P);
