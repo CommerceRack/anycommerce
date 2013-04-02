@@ -296,8 +296,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				var obj = {};
 				obj["_cmd"] = "appCartExists";
 				obj["_cartid"] = cartid;
-				obj["cartid"] = cartid;
-				obj["cart"] = cartid;
 				obj["_tag"] = _tag;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
