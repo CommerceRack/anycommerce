@@ -288,13 +288,14 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 		appCartExists : {
 			init : function(cartid,_tag)	{
 //					app.u.dump('BEGIN app.calls.appCartExists');
-				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
+//				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
 				this.dispatch(cartid,_tag);
 				return 1;
 				},
 			dispatch : function(cartid,_tag)	{
 				var obj = {};
-				obj["_cmd"] = "appCartExists"; 
+				obj["_cmd"] = "appCartExists";
+				obj["cartid"] = cartid;
 				obj["_tag"] = _tag;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
@@ -953,13 +954,13 @@ app.u.throwMessage(responseData); is the default error handler.
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 //				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
 				if(app.data.appCartExists.exists >= 1)	{
-					app.u.dump(' -> valid session id.  Proceed.');
+					app.u.dump(' -> valid cart id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
 					}
 				else	{
-					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
+					app.u.dump(' -> UH OH! invalid cart ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
 					app.calls.appCartCreate.init({'callback':'handleNewSession'});
 					app.model.dispatchThis('immutable');
 					}
