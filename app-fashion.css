@@ -153,12 +153,13 @@ HOMEPAGE
 	height: 294px;
 	overflow:hidden;
 	margin-bottom:1px;
+	position:relative;
 	}
 
 .mainBannerGraphic {
 	width: 703px;	
 	height: 294px;
-	float: left;
+	position:absolute; left:0; top:0;
 	}
 
 
@@ -272,48 +273,24 @@ FOOTER
 	padding-bottom: 10px;
 }
 
+.footerNewsletter .marginTop	{
+	margin-top:20px;
+	}
+#subscribeFrm	{margin:0 34px;}
 #upToDate {
+	padding-top:4px;
 	color: white;
-	padding-top: 25px;
-	padding-left: 40px;
-	float: left;
+	line-height:29px;
+	height:29px;
+	font-weight:bold;
 	font-family: "Arial Black", Gadget, sans-serif;	
-}
-
-.footerFieldContainer {
-	width: 565px;
-	float: right;	
-}
+	}
 
 .footerFormFrm {
 	height: 29px;
+	line-height:29px;
 	width: 240px;
-	margin-top: 0px;
-}
-
-.footerSubscribeFrm {
-	height: 29px;
-	width: 220px;
-	margin-top: 16px;
-}
-
-.footerNameBar{
-	float: left;
-	width: 240px;
-	background: #ce004e;	
-}
-
-.footerEmailBar{
-	float: left;
-	width: 240px;
-	background: #ce004e;
-}
-
-.footerButtonContainer {
-	margin-top: 16px;
-	float: left;
-	width: 80px;	
-}
+	}
 
 #footerSignUpButton {
 	height: 35px;
@@ -322,10 +299,7 @@ FOOTER
 	background: #a3033d;
 	border: 0 none;
 	color: white;
-	margin-top: 0px;
-	margin-right: 10px;
-	float: right;
-}
+	}
 
 .footerLinkStyle {
 	color: white;
@@ -348,7 +322,7 @@ FOOTER
 
 .listHead {
 	font-family: "Arial Black", Gadget, sans-serif;
-	color: white;	
+	color: white; font-weight:bold;
 }
 
 .bottomLinkListContainer {
@@ -398,6 +372,29 @@ FOOTER
 #footerInformation a {
 	color: black;	
 }
+
+
+
+
+
+
+/*
+CART
+*/
+
+
+.checkoutButton	{
+	cursor:pointer;
+	border:0 !important;
+	background:url(app-fashion/checkout-150x50.png) no-repeat !important; 
+	padding:0; margin:0; 
+	text-indent:-10000px; 
+	width:150px; height:50px;
+	z-index:95;
+	}
+
+
+
 
 
 /*
@@ -463,6 +460,11 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 	background-color: #666666;	
 }
 
+/* search results */
+#mainContentArea_search.minimalMode .productListItem	{width:120px; height:120px; box-sizing:content-box;}
+/* the images are already loaded, so ok to resize (and use a little processor power) in this case */
+#mainContentArea_search.minimalMode .productListItem img 	{width:118px; height:118px;} 
+#mainContentArea_search.minimalMode .productListItem {font-size:.01em;}
 
 
 
@@ -476,6 +478,7 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 .tbodyAlt tbody:nth-child(event)	{background:#F0F0F0;}
 
 .addToCartButton	{
+	cursor:pointer;
 	border:0 !important;
 	background:url(app-fashion/addtobag-120x40.png) no-repeat !important; 
 	padding:0; margin:0; 
@@ -484,7 +487,7 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 	z-index:95;
 	}
 
-button.quickView	{border:0; background:url(app-fashion/quickview-90x30.png) no-repeat; padding:0; margin:0; text-indent:-10000px; width:90px; height:30px; z-index:95;}
+button.quickView	{border:0; background:url(app-fashion/quickview-90x30.png) no-repeat; padding:0; margin:0; text-indent:-10000px; width:90px; height:30px; z-index:95; cursor:pointer;}
 
 .reviewSprite	{background: url(app-fashion/stars_small-85x255.png) no-repeat; width:85px; height:12px;} /* display none hides the reviews for the 'zero' reviews graphic */
 .review_1 	{background-position:0 -18px;}

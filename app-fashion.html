@@ -81,7 +81,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     	<div class='topNav'>
 
             <div class='floatRight'>
-<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>SHOPPING BAT</b></a>  |            	
+<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>SHOPPING BAG</b></a>  |            	
 <a href='#!company?show=contact' class='bindByAnchor'><b>CONTACT US</b></a>  | 
 <a href='#!company?show=faq' class='bindByAnchor'><b>FAQ</b></a>
             </div>
@@ -130,21 +130,18 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 	
 	<!-- FOOTER -->
     <div class='footerNewsletter'>
-		<div id='upToDate'>Join and Save!</div>
-       	<div class='footerFieldContainer'>
-        	<div class='footerNameBar'>
-              	<form action='#' class='footerFormFrm' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
-					<input type='text'  maxlength='50' size='30' name='fullname' class='footerSubscribeFrm' placeholder='Full Name' />
-			
-					<div class='footerEmailBar'>
-                    <input type='email'  maxlength='50' size='30' name='login' class='footerSubscribeFrm' placeholder='E-mail Address' />
-					</div>
-            		<div class='footerButtonContainer'>
-						<input type='submit' value='SIGN UP!' id='footerSignUpButton'>
-            		</div>
-				</form>
+		<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+			<div id='upToDate' class=' floatLeft marginLeft marginTop marginRight'>Join and Save!</div>
+			<div class='floatLeft marginRight marginTop '>
+			<input type='text'  maxlength='50' size='30' name='fullname' class='footerFormFrm' placeholder='Full Name' />
 			</div>
-		</div>	
+			<div class='floatLeft marginRight marginTop '>
+			<input type='email'  maxlength='50' size='30' name='login' class='footerFormFrm' placeholder='E-mail Address' />
+			</div>
+			<div class='floatLeft marginRight marginTop '>
+			<input type='submit' value='SIGN UP!' id='footerSignUpButton'>
+			</div>
+		</form>
 	</div>	
 
     <div id='footerLinks'>
@@ -213,7 +210,6 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
 
 
-
 <!--
 *************************************************************************************************************
 **
@@ -242,7 +238,7 @@ COMMONLY EDITED TEMPLATES
 
 
 <div id='homepageTemplate' class='homeTemplate'>
-	<div class='mainBannerContainer'>
+	<div class='mainBannerContainer clearfix'>
 		
 		<div class='mainBannerGraphic'><img src='app-fashion/fall_collection-703x294.jpg' width='703' height='294' alt='' /></div>
 		
@@ -253,7 +249,7 @@ COMMONLY EDITED TEMPLATES
 				   
 			<div class='headerNewsletterSignUpContainer'>              
 				<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
-					<fieldset>
+					<fieldset class='borderNone noPadOrMargin'>
 						<div>
 							<input type='text'  maxlength='50' size='30' name='fullname' class='headerSubscribeFrm' placeholder='Full Name' />
 						</div>	
@@ -269,13 +265,13 @@ COMMONLY EDITED TEMPLATES
 			</div>
 			
 			<div id='followUs'>
-				<img src='FollowUs.png'>
+				<img src='app-fashion/FollowUs.png'>
 			</div>
 			<div class='socialIconContainer'>
-				<a href='https://www.facebook.com/'><div id='facebook'><img src='facebook.png'></div></a>
-				<a href='https://twitter.com/'><div id='twitter'><img src='twitter.png'></div></a>
-				<a href='http://www.youtube.com/'><div id='youtube'><img src='youtube.png'></div></a>
-				<a href='http://www.tumblr.com'><div id='tumbler'><img src='tumblr.png'></div></a>
+				<a href='https://www.facebook.com/'><div id='facebook'><img src='app-fashion/facebook.png'></div></a>
+				<a href='https://twitter.com/'><div id='twitter'><img src='app-fashion/twitter.png'></div></a>
+				<a href='http://www.youtube.com/'><div id='youtube'><img src='app-fashion/youtube.png'></div></a>
+				<a href='http://www.tumblr.com'><div id='tumbler'><img src='app-fashion/tumblr.png'></div></a>
 			</div> 
 			
 		</div>
@@ -310,10 +306,6 @@ COMMONLY EDITED TEMPLATES
 	
 
 </div>
-
-
-
-
 
 
 
@@ -374,12 +366,13 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
 
 	<div class=' prodContainer' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+
+<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 <div class='prodThumbContainer pointer'>
 	<h4 class='prodName' data-bind='var: product(zoovy:prod_name); format:text;'></h4>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' />
 </div>
-<div class='priceDetail' class='hideInMinimalMode'>
+<div class='priceDetail hideInMinimalMode'>
 	<div class='price'>
 		<div data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true;'></div>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
@@ -387,10 +380,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<div class='detailButton pointer' >DETAILS</div>
 </div>
 
-
-
 	</div>
-
 </li>
 
 
@@ -447,15 +437,6 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 
 
-
-<table>
-
-
-
-
-
-
-
 <!--
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
@@ -504,7 +485,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
 </div>
-<div class='priceDetail' class='hideInMinimalMode'>
+<div class='priceDetail hideInMinimalMode'>
 	<div class='price' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></div>
 	<div class='detailButton pointer' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>DETAILS</div>
 </div>
@@ -1721,6 +1702,8 @@ function handleCategoryMenu(state)	{
 		}
 	}
 </script>
+
+
 
 </body>
 </html>
