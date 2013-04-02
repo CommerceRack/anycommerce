@@ -711,7 +711,7 @@ an existing user gets a list of previous addresses they've used and an option to
 							app.u.dump(" -> payment method HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
-						
+//NOTE -> this impacts the summary panel and should be moved. 
 						if(formObj['want/payby'] == 'PO')	{
 							$("[data-app-role='referenceNumber']",$fieldset).empty(); //nuke the input. the 'name' is shared w/ PO supplemental input
 							}
