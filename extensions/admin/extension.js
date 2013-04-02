@@ -2166,7 +2166,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 			login : function($form){
 				$('body').showLoading({"message":"Authenticating credentials. One moment please."});
-				app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
+				app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //login
 

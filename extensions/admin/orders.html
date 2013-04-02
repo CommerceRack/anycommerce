@@ -382,7 +382,6 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<th>Date</th>
 		<th>Action</th>
 		<th>Amt. Paid</th>
-		<th>Amt. Due</th>
 		<th>Tender</th>
 		<th title='Transaction ID'>TID</th>
 		<th>Notes</th>
@@ -473,7 +472,6 @@ The following templates are used in the 'order detail' modal/view.
 	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
 	<td><div data-bind="format:paymentActions; extension:admin_orders; useParentData:true;"></div></td>
 	<td><span data-bind='var: payment(amt); format:money;'></span></td>
-	<td><span data-bind='var: payment(due); format:money;'></span></td>
 	<td><span data-bind='var: payment(tender); format:text;'></span></td>
 	<td><span data-bind='var: payment(uuid); format:text;'></span></td>
 	<td>

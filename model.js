@@ -310,7 +310,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 				r = false; //nothing to dispatch.
 				}
 			else if(immutableRequestInProgress)	{
-				app.u.dump(" -> immutable dispatch in process. do NOT override. try again soon.");
+//				app.u.dump(" -> immutable dispatch in process. do NOT override. try again soon.");
 
 				app.globalAjax.overrideAttempts += 1; //tracks how many times the request in progress has been attempted to be usurped.
 				this.handleReQ(Q,QID);//changes status back to 'queued'  q.uuid.attempts not incremented (only increment only for requests that failed)
@@ -320,7 +320,7 @@ either false (if no dispatch occurs) or the pipe uuid are returned. The pipe uui
 				}
 
 			else	{
-				app.u.dump(" -> DQ has queued dispatches. no request in process. Move along... Move along...");
+//				app.u.dump(" -> DQ has queued dispatches. no request in process. Move along... Move along...");
 				}
 				
 /*
