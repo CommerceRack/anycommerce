@@ -177,27 +177,32 @@ copying the template into memory was done for two reasons:
 			}
 		else if(app.vars.cartID)	{
 			app.u.dump(" -> app.vars.cartID set. verify.");
-			app.calls.appCartExists.init(app.vars.cartID,{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.model.destroy('cartDetail'); //do not use a cart from localstorage
+			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(app.u.isSet(app.u.getParameterByName('cartID')))	{
 			app.u.dump(" -> cartID from URI used.");
-			app.calls.appCartExists.init(app.u.getParameterByName('cartID'),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.vars.cartID = app.u.getParameterByName('cartID');
+			app.model.destroy('cartDetail'); //do not use a cart from localstorage
+			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
 		else if(app.model.fetchCartID())	{
 			app.u.dump(" -> session retrieved from localstorage..");
-			app.calls.appCartExists.init(app.model.fetchCartID(),{'callback':'handleTrySession','datapointer':'appCartExists'});
+			app.vars.cartID = app.model.fetchCartID();
+			app.model.destroy('cartDetail'); //do not use a cart from localstorage
+			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 		else	{
-			app.u.dump(" -> go get a new session id.");
-			app.calls.appCartCreate.init({'callback':'handleNewSession'});
+			app.u.dump(" -> go get a new cart id.");
+			app.calls.appCartCreate.init({'callback':'handleNewSession'},'immutable');
 			app.model.dispatchThis('immutable');
 			}
 		
@@ -282,24 +287,6 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},'immutable');
 				}
 			},//appCartCreate
-
-//always uses immutable Q
-//formerly canIHaveSession
-		appCartExists : {
-			init : function(cartid,_tag)	{
-//					app.u.dump('BEGIN app.calls.appCartExists');
-//				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
-				this.dispatch(cartid,_tag);
-				return 1;
-				},
-			dispatch : function(cartid,_tag)	{
-				var obj = {};
-				obj["_cmd"] = "appCartExists";
-				obj["_cartid"] = cartid;
-				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,'immutable');
-				}
-			}, //appCartExists
 
 		appCategoryDetail : {
 			init : function(obj,_tag,Q)	{
@@ -949,7 +936,8 @@ app.u.throwMessage(responseData); is the default error handler.
 //executed when appCartExists is requested.
 //app.app.vars.cartID is already set by this point. need to reset it onError.
 // onError does NOT need to nuke app.vars.cartID because it's handled in handleResponse_appCartExists 
-		handleTrySession : {
+// NOTE - may be obsolete 201314+
+/*		handleTrySession : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 //				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
@@ -966,7 +954,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					}
 				}
 			}, //handleTrySession
-		
+*/		
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
