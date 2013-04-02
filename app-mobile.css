@@ -4,7 +4,7 @@ body, html	{background:#000000; color:#666; margin:0; padding:0; font-family: 'O
 
 a, .lookLikeLink	{color:#fb880d;}
 
-.sprite	{background:url(app-mobile-images/sprites-500x500.png) no-repeat;}
+.sprite	{background:url(app-mobile/sprites-500x500.png) no-repeat;}
 
 .logoAndSearch, #catCarousel	{
 background: rgb(23,23,23); /* Old browsers */
