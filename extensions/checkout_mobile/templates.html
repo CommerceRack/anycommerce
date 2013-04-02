@@ -108,13 +108,15 @@ item list and summary are separate just to give more control over location.
 
 <div data-app-role='login'>
 
-	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' />
-	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
-	
-	<div data-app-role='loginPasswordContainer' class='displayNone'>
+	<div data-app-role='loginPasswordContainer' class='displayNone floatRight'>
 		<div>If you have an account with us, please enter your password below to login</div>
 		<input type='password' placeholder='password' size='30' name='password' /><button data-app-event='orderCreate|execBuyerLogin'>login</button>
 	</div>
+
+	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /><br />
+	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
+	
+
 
 </div>
 
@@ -282,21 +284,21 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
 	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</td>
-	<td><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span></td>
-	<td><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
-	<td><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td class='alignRight'><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span></td>
+	<td class='alignRight'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
+	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 </tr>
 </table>
 
 
 <section id='chkoutCartContentsTemplate'>
-<table>
+<table class='fullWidth gridTable'>
 <thead>
 <tr>
-	<th colspan='2'>product information</th>
-	<th>qty</th>
-	<th>price</th>
-	<th>item total</th>
+	<th colspan='2' class='alignLeft'>product information</th>
+	<th class='alignRight'>qty</th>
+	<th class='alignRight'>price</th>
+	<th class='alignRight'>item total</th>
 </tr>
 </thead>
 <tbody data-bind='var: cart(@ITEMS); format:processList; loadsTemplate:chkoutCartItemTemplate;'></tbody>
