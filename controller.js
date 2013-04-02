@@ -41,7 +41,7 @@ jQuery.extend(zController.prototype, {
 
 	
 	initialize: function(P) {
-//		this.u.dump(" -> initialize executed.");
+		this.u.dump(" -> initialize executed.");
 
 //		app = this;
 //		this.u.dump(P);
@@ -227,7 +227,7 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //appBuyerCreate
-			
+
 		appBuyerLogin : {
 			init : function(obj,_tag)	{
 				var r = 0;
@@ -288,13 +288,14 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 		appCartExists : {
 			init : function(cartid,_tag)	{
 //					app.u.dump('BEGIN app.calls.appCartExists');
-				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
+//				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
 				this.dispatch(cartid,_tag);
 				return 1;
 				},
 			dispatch : function(cartid,_tag)	{
 				var obj = {};
-				obj["_cmd"] = "appCartExists"; 
+				obj["_cmd"] = "appCartExists";
+				obj["_cartid"] = cartid;
 				obj["_tag"] = _tag;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
@@ -953,13 +954,13 @@ app.u.throwMessage(responseData); is the default error handler.
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 //				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
 				if(app.data.appCartExists.exists >= 1)	{
-					app.u.dump(' -> valid session id.  Proceed.');
+					app.u.dump(' -> valid cart id.  Proceed.');
 // if there are any  extensions(and most likely there will be) add then to the controller.
 // This is done here because a valid cart id is required.
 					app.model.addExtensions(app.vars.extensions);
 					}
 				else	{
-					app.u.dump(' -> UH OH! invalid session ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
+					app.u.dump(' -> UH OH! invalid cart ID. Generate a new session. nuke localStorage if domain is ssl.zoovy.com.');
 					app.calls.appCartCreate.init({'callback':'handleNewSession'});
 					app.model.dispatchThis('immutable');
 					}
@@ -2095,7 +2096,11 @@ later, it will handle other third party plugins as well.
 			
 			var payStatusCB = "<li><label><input type='checkbox' name='flagAsPaid' \/>Flag as paid<\/label><\/li>"
 			
-			
+			app.u.dump(" -> paymentID.substr(0,6): "+paymentID.substr(0,7));
+			if(paymentID.substr(0,7) == 'WALLET:')	{
+				paymentID = 'WALLET';
+				}			
+			app.u.dump(" -> PAYMENTID: "+paymentID);
 			switch(paymentID)	{
 //for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 //expiration is less of a concern
@@ -2125,6 +2130,14 @@ later, it will handle other third party plugins as well.
 					
 					break;
 
+					case 'WALLET':
+						if(isAdmin === true)	{
+							tmp += "<div><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/div>"
+							tmp += "<div><label><input type='radio' name='VERB' value='CHARGE' checked='checked'>Charge<\/label><\/div>"
+							}
+						else	{$o = false;} //inputs are only present in admin interface.
+					break;
+					
 					case 'CASH':
 					case 'MO':
 					case 'CHECK':
@@ -2538,6 +2551,13 @@ return $r;
 
 
 	renderFormats : {
+		imageURL2Href : function($tag,data)	{
+			data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
+			data.bindData.w = $tag.attr('width');
+			data.bindData.h = $tag.attr('height');
+			data.bindData.tag = 0;
+			$tag.attr('href',app.u.makeImage(data.bindData)); //passing in bindData allows for using
+			},
 
 		imageURL : function($tag,data){
 //			app.u.dump('got into displayFunctions.image: "'+data.value+'"');
@@ -2674,7 +2694,7 @@ else	{
 //				app.u.dump("data.value.indexOf(whitelist[i]): "+data.value.indexOf(whitelist[i]));
 				if(data.value.indexOf(whitelist[i]) >= 0 && (tagsDisplayed <= maxTagsShown))	{
 
-					spans += "<span class='"+whitelist[i].toLowerCase()+"'><\/span>";
+					spans += "<span class='tagSprite "+whitelist[i].toLowerCase()+"'><\/span>";
 					tagsDisplayed += 1;
 					}
 				}

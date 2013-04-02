@@ -19,3 +19,47 @@
 	<p>This panel will not update automatically. Please go to reports &#187; Batch Jobs for status</p>
 
 </section>
+
+
+
+
+
+<div id='batchJobManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<h3 class='heading'>Batch Jobs</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<table class='gridTable fullWidth' >
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Job Name</th>
+			<th>Job Type</th>
+			<th>User</th> <!--  class='hideInDetailMode' -->
+			<th>Created</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		</div>
+	</section>
+</div>
+
+
+<table>
+<tr id='batchJobRowTemplate'>
+	<td data-bind="var: user(ID); format:text;"></td>
+	<td data-bind="var: user(TITLE); format:text;"></td>
+	<td data-bind="var: user(JOB_TYPE); format:text;"></td>
+	<td data-bind="var: user(LUSERNAME); format:text;"></td>
+	<td data-bind="var: user(CREATED_TS); format:text;"></td>
+	<td>loading gfx</td>
+	<td><button data-app-event="admin_batchJob|showJobDetail">Details</button>
+</tr>
+</table>

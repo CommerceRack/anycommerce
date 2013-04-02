@@ -54,9 +54,10 @@ var orderCreate = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-//				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
+				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
 				if(app.vars._clientid == '1pc')	{
+					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 					}
 				else {
@@ -94,7 +95,13 @@ var orderCreate = function() {
 				}
 			}, //init
 
-
+		startCheckout : {
+			onSuccess : function(tagObj)	{
+				//used for one page checkout only.
+				app.u.dump("BEGIN startcheckout callback for legacy 1PC");
+				app.ext.orderCreate.a.startCheckout($('#zContent'));
+				}
+			},
 
 		handleCartPaypalSetECResponse : {
 			onSuccess : function(tagObj)	{

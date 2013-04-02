@@ -88,6 +88,8 @@ var myRIA = function() {
 		init : {
 			onSuccess : function()	{
 				var r = true; //return false if extension won't load for some reason (account config, dependencies, etc).
+//This will create the arrays for the template[templateID].onCompletes and onInits
+				app.ext.myRIA.u.createTemplateFunctions(); //should happen early so that the myRIA.template object exists, specifically for app.u..appInitComplete
 				return r;
 				},
 			onError : function()	{
@@ -102,8 +104,7 @@ var myRIA = function() {
 //			app.u.dump("BEGIN myRIA.callback.startMyProgram");
 //			app.u.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			app.u.dump(" -> window.history.pushState: "+typeof window.history.pushState);
-//This will create the arrays for the template[templateID].onCompletes and onInits
-			app.ext.myRIA.u.createTemplateFunctions(); //should happen early so that the myRIA.template object exists, specifically for app.u..appInitComplete
+
 				
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
@@ -442,6 +443,7 @@ else	{
 				$('#loginMessaging').empty().show().append("Thank you, you are now logged in."); //used for success and fail messaging.
 				$('#loginFormContainer').hide(); //contains actual form.
 				$('#recoverPasswordContainer').hide(); //contains password recovery form.
+				app.ext.myRIA.u.handleLoginActions();
 				}
 			} //authenticateBuyer
 
@@ -733,7 +735,7 @@ fallback is to just output the value.
 					else	{}
 					//look in tags for tags. indexOf
 					}
-				else	{
+				else if(data.value['%attribs'])	{
 					var pData = data.value['%attribs']; //shortcut
 					price = pData['zoovy:base_price'];
 					if(pData['is:preorder'])	{
@@ -769,7 +771,7 @@ fallback is to just output the value.
 					if(buttonText.toLowerCase() == 'add to cart')	{
 						$tag.on('click.detailsOrAdd',function(event){
 							event.preventDefault();
-							app.ext.myRIA.u.addItemToCart($form,{'action':'modal'}); 
+							$form.trigger('submit'); //submitting the form (which has an add to cart action) instead of directly executing some action here, makes this more versatile. allows the action to be changed to support other add to cart/display cart actions.
 							})
 						}
 					else	{
@@ -999,6 +1001,12 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 //transition appPreView out on init.
 				if($('#appPreView').is(':visible'))	{
 //					app.ext.myRIA.pageTransition($('#appPreView'),$('#appView'));
+//appPreViewBG is an optional element used to create a layer between the preView and the view when the preView is loaded 'over' the view.
+					var $bg = $('#appPreViewBG');
+					if($bg.length)	{
+						$bg.animate({left:$(window).width(),top:$(window).height()},function(){$bg.hide();});
+						}
+
 					$('#appPreView').slideUp(1000,function(){
 						$('#'+infoObj.parentID).show(); //have to show content area here because the slideDown will only make the parent visible
 						$('#appView').slideDown(3000);
@@ -1034,7 +1042,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 //context should be a container element that has 1 or more forms within it.
 //will look for inputs w/ qtyChanged class. Anything with that class is assumed to be an add to cart form and is treated as such.
 // the atcQuantityInput renderFormat in store_product will auto-add that class on change.
-			bulkAddItemsToCart : function($context)	{
+			bulkAddItemsToCart : function($context,_tag)	{
 				if($context)	{
 					var $inputs = $(".qtyChanged",$context);
 					if($inputs.length)	{
@@ -1044,7 +1052,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								app.calls.cartItemAppend.init(obj,{});
 								}
 							});
-						app.model.destroy('cartDetail');
+						app.model.destroy('cartDetail',_tag);
 						app.calls.cartDetail.init({},'immutable');
 						app.model.dispatchThis('immutable');
 						}
@@ -1231,13 +1239,13 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								}
 
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
-
+app.u.dump(" -> liIndex: "+liIndex)
 setTimeout(function(){
 	if(liIndex === 0)	{
 		$('.prevButton',$parent).button("option", "disabled", true);
 		$('.nextButton',$parent).button("option", "disabled", false);
 		}
-	else if(liIndex == ($("ul",$liContainer).children().length - 1))	{
+	else if(liIndex == ($("ul",$liContainer).children().length))	{
 		$('.prevButton',$parent).button("option", "disabled", false);
 		$('.nextButton',$parent).button("option", "disabled", true);
 		}
@@ -1440,7 +1448,9 @@ if(ps.indexOf('?') >= 1)	{
 
 			handleLoginActions : function()  {
 				$('body').addClass('buyerLoggedIn');
-				$('.username').text(app.u.getUsernameFromCart());
+				if(app.u.getUsernameFromCart())	{
+					$('.username').text(app.u.getUsernameFromCart());
+					}
 				},
 			
 			
@@ -2200,8 +2210,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				var $page = $('#'+infoObj.parentID),
 				elasticsearch = {};
-				
-				
 
 //only create instance once.
 				if($page.length)	{
@@ -2631,7 +2639,9 @@ buyer to 'take with them' as they move between  pages.
 
 //only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
 					if($('#'+parentID).length > 0){
-						app.u.dump(" -> "+parentID+" already exists. Use it");
+//set datapointer OR it won't be present on an oncomplete for a page already rendered.
+						infoObj.datapointer = infoObj.datapointer || "appCategoryDetail|"+catSafeID; 
+//						app.u.dump(" -> "+parentID+" already exists. Use it");
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}

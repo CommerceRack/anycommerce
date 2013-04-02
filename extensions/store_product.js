@@ -540,17 +540,20 @@ it has no inventory AND inventory matters to merchant
 //				app.u.dump("BEGIN store_product.u.getProductInventory ["+pid+"]");
 				var inv = false;
 //if variations are NOT present, inventory count is readily available.
-				if($.isEmptyObject(app.data['appProductGet|'+pid]['@variations']) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
-					inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].inv);
-//					app.u.dump(" -> item has no variations. inv = "+inv);
-					}
-//if variations ARE present, inventory must be summed from each inventory-able variation.
-				else	{
-					for(var index in app.data['appProductGet|'+pid]['@inventory']) {
-						inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].inv)
+				if(app.data['appProductGet|'+pid])	{
+					if((app.data['appProductGet|'+pid]['@variations'] && $.isEmptyObject(app.data['appProductGet|'+pid]['@variations'])) && !$.isEmptyObject(app.data['appProductGet|'+pid]['@inventory']))	{
+						inv = Number(app.data['appProductGet|'+pid]['@inventory'][pid].inv);
+	//					app.u.dump(" -> item has no variations. inv = "+inv);
 						}
-//					app.u.dump(" -> item HAS variations. inv = "+inv);
+	//if variations ARE present, inventory must be summed from each inventory-able variation.
+					else	{
+						for(var index in app.data['appProductGet|'+pid]['@inventory']) {
+							inv += Number(app.data['appProductGet|'+pid]['@inventory'][index].inv)
+							}
+	//					app.u.dump(" -> item HAS variations. inv = "+inv);
+						}
 					}
+				else	{} //cant get inventory without a product record.
 				return inv;
 				}, //getProductInventory
 
@@ -710,18 +713,17 @@ NOTES
 				return obj;
 				}, //buildCartItemAppendObj
 
-//a no frills add to cart.
+//a no frills add to cart. returns false unless a dispatch occurs, then true.
 			handleAddToCart : function($form,_tag)	{
+				var r = false; //what is returned. True if a dispatch occurs.
 				app.u.dump("BEGIN store_product.u.handleAddToCart");
-				_tag = _tag || {};
 				if($form && $form.length && $form.is('form'))	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
 						app.u.dump(" -> have a valid cart object"); app.u.dump(cartObj);
 						if(cartObj)	{
-							app.calls.cartItemAppend.init(cartObj,_tag,'immutable');
-//if you don't destroy before running this function, this won't dispatch. allows for add to cart without cart update, should the need arise.
-							app.calls.cartDetail.init({},'immutable');
+							r = true;
+							app.calls.cartItemAppend.init(cartObj,_tag || {},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						}
@@ -732,7 +734,9 @@ NOTES
 				else	{
 					$('#globalMessaging').anymessage({'message':"In store_product.u.handleAddToCart, $form ["+typeof $form+"] not set, has no length ["+$form.length+"] or is not a form ["+$form.is('form')+"].",'gMessage':true});
 					}
+				return r;
 				}, //handleAddToCart
+
 
 //$FP should be a form's parent element. Can contain 1 or several forms.
 			handleBulkAddToCart : function($FP,_tag)	{

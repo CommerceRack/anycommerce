@@ -74,25 +74,14 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 	calls : {
 
-
+//status is optional
 		adminBatchJobList : {
 			init : function(status,_tag,Q)	{
 				var r = 0;
-				if(status)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminBatchJobList|"+status;
-	//comment out local storage for testing.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(status,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In admin.calls.adminBatchJobList, no status defined.");
-					}
+				_tag = _tag || {};
+				_tag.datapointer = "adminBatchJobList|"+status;
+//comment out local storage for testing.
+				this.dispatch(status,_tag,Q);
 				return r;
 				},
 			dispatch : function(status,_tag,Q)	{
@@ -1250,6 +1239,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 
+
 					////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -1270,7 +1260,7 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 //SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
 //this is the leser of two weevils.
-app.rq.push(['css',0,'http://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
+app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 
 
@@ -1307,7 +1297,7 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 	}
-
+//app.ext.admin.u.buildDomainTiles4Launchpad(); //uh oh. this breaks login.
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this for orders.
 
 //get list of domains and show chooser.
@@ -2176,7 +2166,7 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 			login : function($form){
 				$('body').showLoading({"message":"Authenticating credentials. One moment please."});
-				app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'});
+				app.calls.authAdminLogin.init($form.serializeJSON(),{'callback':'showHeader','extension':'admin'},'immutable');
 				app.model.dispatchThis('immutable');
 				}, //login
 
@@ -2408,6 +2398,38 @@ var chart = new Highcharts.Chart({
 				}, //whatPageToShow
 
 
+			addTileToLaunchpad : function($content)	{
+				$content.css({height:120,width:120,overflow:'hidden','float':'left','border':'1px solid #666','position':'relative','margin':'0 12px 12px 0'})
+				$content.appendTo($('#launchpadTiles'));
+				},
+
+
+			buildDomainTiles4Launchpad : function()	{
+				
+				app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+
+					if(app.model.responseHasErrors(rd)){
+						$('#launchpadContent').anymessage({'message':rd});
+						}
+					else	{
+						var domains = app.data.adminDomainList['@DOMAINS'],
+						L = domains.length;
+						
+						for(var i = 0; i < L; i += 1)	{
+							
+							app.ext.admin.u.addTileToLaunchpad($("<div \/>").on('click.domainSelect',function(){
+								app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
+								$('.tileDomainSelect.active','#launchpadTiles').removeClass('active');
+								$(this).addClass('active');
+								}).addClass('tileDomainSelect').addClass((app.vars.domain == domains[i].id) ? 'active' : '').data(domains[i]).append("<span class='tilename'>"+domains[i].id+"<\/span><span class='active'></span>"));
+								
+							}
+						}
+
+					}},'immutable'); 
+
+				},
+
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
 			getDomain : function(){
 				var domain = false;
@@ -2466,7 +2488,12 @@ var chart = new Highcharts.Chart({
 					app.ext.admin.a.showDomainConfig();
 					}
 				else if(path == '#!dashboard')	{app.ext.admin.a.showDashboard();}
+				else if(path == '#!launchpad')	{
+					app.ext.admin.vars.tab = '';
+					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
+					}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
+				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
@@ -3284,8 +3311,8 @@ else	{
 
 //go into detail mode. This expands the detail column and shrinks the list col. 
 //this also toggles a specific class in the list column off
-				app.u.dump(" -> old mode: "+oldMode);
-				app.u.dump(" -> mode: "+mode);
+//				app.u.dump(" -> old mode: "+oldMode);
+//				app.u.dump(" -> mode: "+mode);
 				
 				if(mode == 'detail')	{
 					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
@@ -3674,7 +3701,7 @@ just lose the back button feature.
 				$btn.hide(); //editor opens in list mode. so button is hidden till detail mode is activated by edit/detail button.
 				$btn.off('click.toggleDualMode').on('click.toggleDualMode',function(event){
 					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']")).first();
+					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
 					});
 				}, //toggleDualMode
 
