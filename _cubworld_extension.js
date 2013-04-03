@@ -89,9 +89,10 @@ var cubworld = function() {
 							app.ext.myRIA.template[template].onCompletes.push(function(P){
 								var $context = $(app.u.jqSelector('#',P.parentID));
 								if(!$context.data('columncontent')){
-									$context.data('columncontent','hotItemList');
+									app.ext.cubworld.u.hideColumnContent();
+								} else {
+									app.ext.cubworld.u.showColumnContent($context.data('columncontent'));
 								}
-								app.ext.cubworld.u.showColumnContent($context.data('columncontent'));
 							});
 						}
 					}
@@ -99,9 +100,10 @@ var cubworld = function() {
 					if($('#mainContentArea > div:visible').length === 1){
 						app.u.dump($('#mainContentArea div:visible').attr('id'));
 						if(!$('#mainContentArea div:visible').data('columncontent')){
-							$('#mainContentArea div:visible').data('columncontent','hotItemList');
+							app.ext.cubworld.u.hideColumnContent();
+						} else {
+							app.ext.cubworld.u.showColumnContent($('#mainContentArea div:visible').data('columncontent'));
 						}
-						app.ext.cubworld.u.showColumnContent($('#mainContentArea div:visible').data('columncontent'));
 					} else {
 						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
 						app.ext.cubworld.u.showColumnContent('hotItemList');
@@ -333,9 +335,21 @@ var cubworld = function() {
 						}, 250);
 					}
 				},
+			hideColumnContent : function(){
+				if(!$('.thinColumn').hasClass('hiddenColumn')){
+					$('.thinColumn').animate({'width':'0'}, 500).addClass('hiddenColumn');
+					setTimeout(function(){$('.thinColumn').hide();}, 500);
+					$('.wideColumn').animate({'width':'1007'},550);
+					}
+				},
 			showColumnContent : function(content){
 				app.u.dump('Showing column content: '+content);
-				
+				if($('.thinColumn').hasClass('hiddenColumn')){
+					$('.wideColumn').animate({'width':'789'},550);
+					setTimeout(function(){
+						$('.thinColumn').show().animate({'width':'215'}, 500).removeClass('hiddenColumn');
+						},50);
+					}
 				var $colContainer = $('#variableColumn');
 				var $prevCol = $('.activeColumn', $colContainer);
 				if($prevCol.attr('id') !== content){
