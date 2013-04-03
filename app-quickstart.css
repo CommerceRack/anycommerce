@@ -350,7 +350,7 @@ CUSTOMER PAGES
 #subscribeFormContainer .userInfo div	{margin-bottom:6px;}
 #subscribeFormContainer li	{list-style:none;}
 #subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
-.subscriberLists label	{width:300px;}
+.subscribeListItem	{display:block; height:30px;}
 
 
 /****** ORDER HISTORY AND INVOICE ******/

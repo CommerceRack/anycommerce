@@ -74,17 +74,67 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 	}]);
 
 
-//sample of an onDeparts. executed any time a user leaves this page/template type.
+//hide the prodlist header if there are no product. Also hide it if there are no subcategories.
+//on a page w/ no subcats, the product are likely the feature element and the 'featured items' could be confusing.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 	if(app.data[P.datapointer]['@products'] && app.data[P.datapointer]['@products'].length == 0)	{
-		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list header if there's no product.
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide();
 		}
 	else if(app.data[P.datapointer]['subcategoryCount'] == 0)	{
-		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list header if there's no subcats. header not necessary (and potentially confusing).
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide();
 		}
 	}]);
 
 
+//toggle the social icons based on whether they're set in the profile.
+//if you hard code the social icons, delete this code block.
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	var profile = zGlobals.appSettings.profile;
+	var $page = $(app.u.jqSelector('#',P.parentID));
+//recycleable function for disabling all social icons.
+	var disable = function()	{
+		$(".socialIcons",$page).hide();
+		}
+	
+	if(profile)	{
+		var proData = app.data['appProfileInfo|'+profile];
+		if(proData)	{
+			if(proData["facebook:fanpage_url"] || proData["twitter:userid"] || proData["youtube:url"])	{
+				
+if(proData["facebook:fanpage_url"])	{
+	$(".facebookIcon",$page).off('click.facebook').on('click.facebook',function(){
+		window.open(proData["facebook:fanpage_url"]);
+		})
+	}
+else	{
+	$(".facebookIcon",$page).hide();
+	}				
+
+if(proData["facebook:fanpage_url"])	{
+	$(".twitterIcon",$page).off('click.twitter').on('click.twitter',function(){
+		window.open("https://twitter.com/"+proData["twitter:userid"]);
+		})
+	}
+else	{
+	$(".twitterIcon",$page).hide();
+	}
+
+if(proData["youtube:url"])	{
+	$(".youtubeIcon",$page).off('click.youtube').on('click.youtube',function(){
+		window.open(proData["youtube:url"]);
+		})
+	}
+else	{
+	$(".youtubeIcon",$page).hide();
+	}	
+
+				}
+			else	{disable();} //none of the necessary partner data is set.
+			}
+		else	{disable();} //no profile data
+		}
+	else	{disable();} //no profile
+	}]);
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.

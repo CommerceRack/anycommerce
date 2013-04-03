@@ -264,7 +264,7 @@ obj['softauth'] = "order"; // [OPTIONAL]. if user is logged in, this gets ignore
 //				app.u.dump(data);
 				var o = "";
 				for(var index in data.value)	{
-					o += "<div><label title='"+data.value[index].EXEC_SUMMARY+"'>";
+					o += "<div class='subscribeListItem'><label title='"+data.value[index].EXEC_SUMMARY+"'>";
 					o += "<input type='checkbox' checked='checked' name='newsletter-"+data.value[index].ID+"' \/>";
 					o += data.value[index].NAME+"<\/label><\/div>";
 					}

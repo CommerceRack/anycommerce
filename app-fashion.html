@@ -41,7 +41,7 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="app-fashion.css" />
-<link rel="stylesheet" type="text/css" href="app-fashion/jquery-ui-1.10.0.custom.css" />
+<link rel="stylesheet" type="text/css" href="app-fashion/jquery-ui-1.10.2.custom.css" />
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script>
@@ -81,14 +81,14 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     	<div class='topNav'>
 
             <div class='floatRight'>
-<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>SHOPPING BAG</b></a>  |            	
-<a href='#!company?show=contact' class='bindByAnchor'><b>CONTACT US</b></a>  | 
-<a href='#!company?show=faq' class='bindByAnchor'><b>FAQ</b></a>
+<a href='#!cart?show=cart' class='bindByAnchor'><span class="cartItemCount"></span> Items in your <b>shopping bag</b></a>  |            	
+<a href='#!company?show=contact' class='bindByAnchor'>Contact</a>  | 
+<a href='#!company?show=faq' class='bindByAnchor'>Help</a>
             </div>
 
 			
-			<div class='floatLeft hideIfLoggedIn marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome Guest. Click here to log in</div>
-			<div class='floatLeft hideIfLoggedOut marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome Back <span class='username'></span>. Click here for account details</div>
+			<div class='floatLeft hideIfLoggedIn marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome guest. Click here to log in</div>
+			<div class='floatLeft hideIfLoggedOut marginLeft' onClick="showContent('customer',{'show':'myaccount'});">Welcome back <span class='username'></span>. Click here for account details</div>
 		    
     	</div>
         
@@ -97,7 +97,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
         	<div class='searchBarContainer'>
 				<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
 					<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault" placeholder="Find it here..." id="searchBar"/>
-					<input class="search pointer" type="submit" value="SEARCH" id="searchButton" />
+					<input class="search pointer" type="submit" value="Search" id="searchButton" />
    		    	</form>
 			</div>
         </div>
@@ -105,11 +105,11 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
         <div class='mainNavContainer'>
 		<ul class='topLinks'>
-			<li><a href='#' onClick='handleCategoryMenu(); return false;'>BROWSE</a></li>
-			<li><a href='#!search?TAG=IS_BESTSELLER' class='bindByAnchor'>WHAT'S HOT</a></li>
-			<li><a href='#!search?TAG=IS_NEWARRIVAL' class='bindByAnchor'>NEW ARRIVALS</a></li>
-			<li><a href='#!search?TAG=IS_SALE' class='bindByAnchor'>ON SALE</a></li>
-			<li><a href='#!search?TAG=IS_CLEARANCE' class='bindByAnchor'>CLEARANCE</a></li>
+			<li><a href='#' onClick='handleCategoryMenu(); return false;'>Browse</a></li>
+			<li><a href='#!search?TAG=IS_BESTSELLER' class='bindByAnchor'>What's Hot</a></li>
+			<li><a href='#!search?TAG=IS_NEWARRIVAL' class='bindByAnchor'>New Arrivals</a></li>
+			<li><a href='#!search?TAG=IS_SALE' class='bindByAnchor'>On Sale</a></li>
+			<li><a href='#!search?TAG=IS_CLEARANCE' class='bindByAnchor'>Clearance</a></li>
 		</ul>
 		<div id='browseMenuContent' class='displayNone'>
 			<ul id='tier1categories' class='columnify'></ul>
@@ -125,7 +125,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     
     <!-- WHERE THE MAGIC HAPPENS -->
 	<div id='globalMessaging' class='appMessaging'></div>
-    <div id='mainContentArea'></div>
+    <div id='mainContentArea' class='marginBottom clearfix'></div>
     
 	
 	<!-- FOOTER -->
@@ -144,53 +144,55 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 		</form>
 	</div>	
 
-    <div id='footerLinks'>
+    <div id='footerLinks' class='clearfix'>
 	    <div id='categories' class="bottomLinkListContainer">
     		<ul class='bottomLinkList'>
                	<li class='listHead'>SHOP</li>
-		        	<!-- place holder links, will need to replace safe.name later -->                
-                    <li><a href='#' class='footerLinkStyle bindByAnchor'>Browse By Category</a></li>
-                    <li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's Hot</a></li>
-                    <li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New Arrivals</a></li>
-                    <li><a href='#!search?TAG=IS_SALE' class='footerLinkStyle bindByAnchor'>Sale</a></li>
-                    <li><a href='#!search?TAG=IS_CLEARANCE' class='footerLinkStyle bindByAnchor'>Clearance</a></li>
-                </ul>    
+		        	<!-- place holder links, will need to replace safe.name later -->  
+				<li><a href='#top' class='footerLinkStyle' onClick="handleCategoryMenu('show');">Browse By Category</a></li>
+				<li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's Hot</a></li>
+				<li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New Arrivals</a></li>
+				<li><a href='#!search?TAG=IS_SALE' class='footerLinkStyle bindByAnchor'>Sale</a></li>
+				<li><a href='#!search?TAG=IS_CLEARANCE' class='footerLinkStyle bindByAnchor'>Clearance</a></li>
+			</ul>    
 		</div>
         <div id='help' class="bottomLinkListContainer">
         	<ul class='bottomLinkList'>
             	<li class='listHead'>HELP</li>
-                	<li><a href='#!company?show=about' class='footerLinkStyle bindByAnchor'>About</a></li>
-                    <li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact Us</a></li>
-                    <li><a href='#!company?show=faq' class='footerLinkStyle bindByAnchor'>FAQ</a></li>
-                    <li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping Policy</a></li>
-                    <li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return Policy</a></li>
-                    <li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment Policy</a></li>
-                    <li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy Policy</a></li>
+				<li><a href='#!company?show=about' class='footerLinkStyle bindByAnchor'>About</a></li>
+				<li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact Us</a></li>
+				<li><a href='#!company?show=faq' class='footerLinkStyle bindByAnchor'>FAQ</a></li>
+				<li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping Policy</a></li>
+				<li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return Policy</a></li>
+				<li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment Policy</a></li>
+				<li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy Policy</a></li>
             </ul>
 		</div>
         <div id='myaccount' class="bottomLinkListContainer">
             <ul class='bottomLinkList'>
                 <li class='listHead'>MY ACCOUNT</li>
-                <li><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create An Acount</a></li>
+                <li><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create An Account</a></li>
                 <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Sign In</a></li>
                 <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Change Password</a></li>
                 <li><a href='#!customer?show=lists' class='footerLinkStyle bindByAnchor'>Wishlist Items</a></li>
                 <li><a href='#!customer?show=orders' class='footerLinkStyle bindByAnchor'>Order Tracking</a></li>
             </ul>
         </div>
+<!--
+uncomment and set links
         <div id='morefashion' class="bottomLinkListContainer">
             <ul class='bottomLinkList'>
                 <li class='listHead'>MORE FASHION</li>
-               	<!-- place holder links, will need to later -->
-				<li><a href='#' class='footerLinkStyle'>Blog</a></li>
+				<li><a href='#' target='_blank' class='footerLinkStyle'>Blog</a></li>
 				<li><a href='#' class='footerLinkStyle'>Tutorials</a></li>
 				<li><a href='#' class='footerLinkStyle'>Tips and Tricks</a></li>
 				
-				<li><a href='http://www.youtube.com/' class='footerLinkStyle'>You Tube</a></li>
-				<li><a href='https://www.facebook.com/' class='footerLinkStyle'>Facebook</a></li>
-				<li><a href='https://twitter.com/' class='footerLinkStyle'>Twitter</a></li>
+				<li><a  target='_blank' href='http://www.youtube.com/' class='footerLinkStyle'>You Tube</a></li>
+				<li><a  target='_blank' href='https://www.facebook.com/' class='footerLinkStyle'>Facebook</a></li>
+				<li><a  target='_blank' href='https://twitter.com/' class='footerLinkStyle'>Twitter</a></li>
             </ul>
         </div>
+		-->
     </div>
         
     <div id='footerInformation'>
@@ -247,7 +249,7 @@ COMMONLY EDITED TEMPLATES
 			<div id='scoop'>GET THE SCOOP ON</div>
 			<div id='latest'>THE LATEST IN FASHION</div>
 				   
-			<div class='headerNewsletterSignUpContainer'>              
+			<div class='headerNewsletterSignUpContainer marginBottom'>              
 				<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
 					<fieldset class='borderNone noPadOrMargin'>
 						<div>
@@ -264,15 +266,15 @@ COMMONLY EDITED TEMPLATES
 				</form>
 			</div>
 			
-			<div id='followUs'>
-				<img src='app-fashion/FollowUs.png'>
+			<div class='socialIcons clearfix '>
+
+<div id='followUs'><img src='app-fashion/followus-190x11.png' width='190' height='11' alt='follow us...'></div>
+<div class='socialIconContainer'>
+	<div class='facebookIcon'><img src='app-fashion/facebook-32x32.png' width='32' height='32' alt='Facebook' ></div>
+	<div class='twitterIcon'><img src='app-fashion/twitter-32x32.png' width='32' height='32' alt='twitter' ></div>
+	<div class='youtubeIcon'><img src='app-fashion/youtube-32x32.png' width='32' height='32' alt='youtube' ></div>
+</div>
 			</div>
-			<div class='socialIconContainer'>
-				<a href='https://www.facebook.com/'><div id='facebook'><img src='app-fashion/facebook.png'></div></a>
-				<a href='https://twitter.com/'><div id='twitter'><img src='app-fashion/twitter.png'></div></a>
-				<a href='http://www.youtube.com/'><div id='youtube'><img src='app-fashion/youtube.png'></div></a>
-				<a href='http://www.tumblr.com'><div id='tumbler'><img src='app-fashion/tumblr.png'></div></a>
-			</div> 
 			
 		</div>
 				
@@ -387,12 +389,6 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 
 
-
-
-
-
-
-
 <li id='productListTemplateBuyerList' class='loadingBG clearfix' >
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
 
@@ -483,9 +479,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResults' class='loadingBG productListItem searchResultsProduct' >
 	<div class=' prodContainer' onClick="app.ext.myRIA.a.handleProdPreview($(this).closest('li').attr('data-pid'));">
 
-<div class='prodThumbContainer pointer'>
-	<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+<div class='imageAndTags'>
+	<div data-bind="var: product(tags); format:addTagSpans;" class='tagsContainer hideInMinimalMode'></div>
+	<div class='prodThumbContainer pointer'>
+		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+	</div>
 </div>
 <div class='priceDetail hideInMinimalMode'>
 	<div class='price' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></div>
@@ -500,9 +499,11 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplateResultsNoPreview' class='loadingBG productListItem ' >
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer prodContainer'>
 
-<div class='prodThumbContainer'>
-	<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+<div class='imageAndTags'>
+	<div class='prodThumbContainer pointer'>
+		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+	</div>
 </div>
 <div class='priceDetail'>
 	<div class='price' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price;'></div>
@@ -558,7 +559,9 @@ this will likely become more flexible in the future. ###
 <div>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div class='image1'>
 	<a href='blank.gif' data-bind='var: product(zoovy:prod_image1); format:imageURL2Href; h:; w:;' data-gallery="gallery"  ><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' /></a>
+	</div>
 
 </div>
 
@@ -662,7 +665,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodVideo'>
-		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodAccessories'>
@@ -729,14 +732,13 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<input type='submit' value='Add to Cart' class='addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 
-	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 
 	</td>
 	
 	<td class='imageContainer'>
 <div>
 
-	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
 
 </div>
@@ -942,8 +944,8 @@ if you change these, you should move them above this comment so that when you (o
 	<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
-<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
+<!-- before restoring this, test cuz news form on left was causing some conflicts
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
 		<li><a href='#customer?show=myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders'>Order History</a></li>
@@ -988,8 +990,8 @@ subscribeListsArticle is used for authenticated buyers
 	</div>
 	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
 </div>
-
-<div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
+<br>
+<div class='shipAddressContainer clearfix' data-app-role='addressContainer' data-app-addresstype='ship'>
 	<div class='marginBottom'>
 		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
 		<h2>Shipping Address(es)</h2>
