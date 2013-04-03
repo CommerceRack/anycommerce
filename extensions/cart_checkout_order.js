@@ -331,31 +331,36 @@ left them be to provide guidance later.
 //				app.u.dump("BEGIN cco.u.buildPaymentQ");
 				var payby = $('input:radio[name="want/payby"]:checked').val()
 				app.u.dump(" -> payby: "+payby);
-				if(payby.indexOf('WALLET') == 0)	{
-					app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
-//					app.u.dump(app.ext.cco.u.getWalletByID (payby));
+				if(payby)	{
+					if(payby.indexOf('WALLET') == 0)	{
+						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
+	//					app.u.dump(app.ext.cco.u.getWalletByID (payby));
+						}
+					else if(payby == 'CREDIT')	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
+						}				
+					else if(payby == 'PO')	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
+						}				
+					else if(payby == 'ECHECK')	{
+						app.ext.cco.calls.cartPaymentQ.init({
+	"cmd":"insert",
+	"TN":"ECHECK",
+	"EA":$('#paymentea').val(),
+	"ER":$('#paymenter').val(),
+	"EN":$('#paymenten').val(),
+	"EB":$('#paymenteb').val(),
+	"ES":$('#paymentes').val(),
+	"EI":$('#paymentei').val()
+							});
+						}
+					else	{
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
+						}
 					}
-				else if(payby == 'CREDIT')	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
-					}				
-				else if(payby == 'PO')	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
-					}				
-				else if(payby == 'ECHECK')	{
-					app.ext.cco.calls.cartPaymentQ.init({
-"cmd":"insert",
-"TN":"ECHECK",
-"EA":$('#paymentea').val(),
-"ER":$('#paymenter').val(),
-"EN":$('#paymenten').val(),
-"EB":$('#paymenteb').val(),
-"ES":$('#paymentes').val(),
-"EI":$('#paymentei').val()
-						});
-					}
-				else	{
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":payby });
-					}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In cco.u.buildPaymentQ, unable to determine payby value','gMessage':true});
+						}
 				},
 
 

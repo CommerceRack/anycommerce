@@ -62,7 +62,7 @@ var admin_wholesale = function() {
 					else	{
 						$smTarget.anycontent({'templateID':'wholesaleSupplierManagerTemplate','datapointer':rd.datapointer});
 						app.ext.admin.u.handleAppEvents($smTarget);
-						$("[app-data-role='wholesaleSupplierList']",$smTarget).anytable();
+						$("[data-app-role='wholesaleSupplierList']",$smTarget).anytable();
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');

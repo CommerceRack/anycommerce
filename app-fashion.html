@@ -64,7 +64,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 		<h3>Loading Your Shopping Experience</h3>
 
 		<div class='alignCenter'>
-		<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br />
 		</div>
 		<div id='appPreViewProgressText'>0% Complete</div>
 	</div>
@@ -93,7 +93,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     	</div>
         
         <div class='logoSearchContainer clearfix'>
-        	<div id='logo'><a href='#!homepage' class='bindByAnchor'><img id='logo' src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></a></div>
+        	<div id='logo'><a href='#!homepage' class='bindByAnchor'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></a></div>
         	<div class='searchBarContainer'>
 				<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
 					<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault" placeholder="Find it here..." id="searchBar"/>
@@ -130,7 +130,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 	
 	<!-- FOOTER -->
     <div class='footerNewsletter'>
-		<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+		<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 			<div id='upToDate' class=' floatLeft marginLeft marginTop marginRight'>Join and Save!</div>
 			<div class='floatLeft marginRight marginTop '>
 			<input type='text'  maxlength='50' size='30' name='fullname' class='footerFormFrm' placeholder='Full Name' />
@@ -251,7 +251,7 @@ COMMONLY EDITED TEMPLATES
 			<div id='latest'>THE LATEST IN FASHION</div>
 				   
 			<div class='headerNewsletterSignUpContainer marginBottom'>              
-				<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+				<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 					<fieldset class='borderNone noPadOrMargin'>
 						<div>
 							<input type='text'  maxlength='50' size='30' name='fullname' class='headerSubscribeFrm' placeholder='Full Name' />
@@ -347,7 +347,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <li id='categoryListTemplate' class='catListItem pointer' onClick="showContent('category',{'navcat':$(this).attr('data-catsafeid')});">
 	<div class='catContainer'>
 		<div class='catName' data-bind='var: category(pretty); format:catText; extension: myRIA;'></div>
-		<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='190' height='190' />
+		<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='190' height='190' alt='' />
 	</div>	
 </li>
 
@@ -374,7 +374,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
 	<div class='prodThumbContainer pointer'>
 		<h4 class='prodName' data-bind='var: product(zoovy:prod_name); format:text;'></h4>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;bgcolor:ffffff;' width='190' height='190' alt='' />
 	</div>
 </div>
 <div class='priceDetail hideInMinimalMode'>
@@ -395,7 +395,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
-				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' alt='' />
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 
 <button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
@@ -444,7 +444,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 <tr id='productListTemplateATC'>
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' alt='' />
 	</td>
 
 	<td>
@@ -454,8 +454,8 @@ container ul should have lineItemProdlist class on it instead of productList
 		
 		<h6 data-bind='var:product(pid); format:text; pretext: sku: ;'></h6>
 		<h6 data-bind='var:product(zoovy:prod_mfg); format:text; pretext: by: ;'></h6>
-		<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
 	</hgroup>
+	<div data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></div>
 	</td>
 	<td>
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.cart_quickadd.a.addItemToCart($(this)); return false;">
@@ -484,7 +484,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	<div data-bind="var: product(tags); format:addTagSpans;" class='tagsContainer hideInMinimalMode'></div>
 	<div class='prodThumbContainer pointer'>
 		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' alt='' />
 	</div>
 </div>
 <div class='priceDetail hideInMinimalMode'>
@@ -503,7 +503,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <div class='imageAndTags'>
 	<div class='prodThumbContainer pointer'>
 		<h4 class='prodName' data-bind='var: product(prod_name); format:text;'></h4>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='190' height='190' alt='' />
 	</div>
 </div>
 <div class='priceDetail'>
@@ -590,7 +590,7 @@ this will likely become more flexible in the future. ###
 
 	<h3 class='basePrice marginBottom' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h3>
 
-	<table class='marginBottom fullWidth gridTable' app-data-role='childrenSiblingsContainer'>
+	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
 		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
 	</table>
 
@@ -740,7 +740,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	<td class='imageContainer'>
 <div>
 
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' alt='' /></div>
 
 </div>
 
@@ -1559,7 +1559,9 @@ The 'data-action' attribute is used to assign an onclick.
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<table  class='listStyleNone lineItemProdlist'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
 	</td>
 </tr>
 </table>

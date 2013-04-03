@@ -358,7 +358,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
 				
 //can't build a prodlist without product.				
-				if(obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
+				if(obj && obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
 
 					var L = obj.csv.length;
 
