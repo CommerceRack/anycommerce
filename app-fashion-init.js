@@ -77,12 +77,14 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 //sample of an onDeparts. executed any time a user leaves this page/template type.
 app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
 	if(app.data[P.datapointer]['@products'] && app.data[P.datapointer]['@products'].length == 0)	{
-		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no product.
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list header if there's no product.
 		}
 	else if(app.data[P.datapointer]['subcategoryCount'] == 0)	{
-		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list if there's no subcats. header not necessary (and potentially confusing).
+		$('.listHeader',app.u.jqSelector('#',P.parentID)).hide(); //hide the product list header if there's no subcats. header not necessary (and potentially confusing).
 		}
 	}]);
+
+
 
 
 //group any third party files together (regardless of pass) to make troubleshooting easier.
