@@ -1,0 +1,399 @@
+
+
+
+<div id='wholesaleSupplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
+
+	<section class='soloModeListContainer'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='floatRight smallPadding'>
+			<button class='floatRight marginLeft' data-app-event="admin_wholesale|showSupplierCreate">Add Supplier</button>
+			</div>
+			
+			<h3 class='heading'>Supplier Manager</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='soloModeListMessaging marginBottom'></div>
+			<div class='soloModeListContent' data-app-role='soloModeContentContainer'>
+			<table data-app-role='wholesaleSupplierList' class='fullWidth gridTable'>
+			<thead>
+			<tr>
+				<th class='alignLeft'>Name</th>
+				<th class='alignLeft'>ID</th>
+				<th class='alignLeft hideInMinimalMode'>Type</th>
+				<th class='alignLeft hideInMinimalMode'>Mode</th>
+				<th></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:wholesaleSupplierListTemplate;"></tbody>
+			</table>
+				
+			</div>
+		</div>
+	</section>
+</div>
+
+
+
+
+<!-- used in the list mode for each supplier -->
+<table>
+<tr id='wholesaleSupplierListTemplate'>
+	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
+	<td data-bind="var:supplier(CODE); format:text;"></td>
+	<td data-bind="var:supplier(FORMAT); format:text;" hideInMinimalMode></td>
+	<td data-bind="var:supplier(MODE); format:text;" hideInMinimalMode></td>
+	<td class='alignRight'>
+	<button class='marginRight hideInMinimalMode' data-app-event='admin_wholesale|execSupplierDelete'>Remove this Supplier</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierEditor'>Edit this Supplier</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierItemList'>Products</button>
+	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierOrderList'>Orders</button>
+	</td>
+	
+</tr>
+</table>
+
+
+
+
+<!-- template for adding a new supplier -->
+
+<div id='wholesaleSupplierAddTemplate'>
+
+<form action='#' autocomplete="on">
+<fieldset class='labelsAsBreaks'>
+	<legend>Add a New Supplier</legend>
+	
+	<div class='label'>
+	<input placeholder='supplier id' type="text" name="CODE" value="" maxlength="6" data-min-length='6' size="6" data-app-event="admin|alphaNumeric" />
+	<span class='hint'>A unique 6 character alphanumeric code used for this supplier.</span>
+	</div>
+	
+	<div class='label'>some inputs for contact info</div>
+
+	<div class='label'><input type="text" placeholder='supplier name' maxlength="60" value="" name="NAME" required='required' /></div>
+	<div class='label'><input type="text" placeholder='account' maxlength="60" value="" name="ACCOUNT" required='required' /></div>
+	<div class='label'><input type="tel" placeholder='phone' maxlength="12" value="" name="PHONE"  /></div>
+	<div class='label'><input type="email" placeholder='email' maxlength="65" value="" name="EMAIL"  required='required' /></div>
+	<div class='label'><input type="text" placeholder='website' maxlength="65" value="" name="WEBSITE"  /></div>
+	
+	<div class='alignCenter'><button data-app-event='admin_wholesale|execSupplierCreate'>Add Supplier</button></div>
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+
+<div id='wholesaleSupplierUpdateTemplate' class='clearfix'>
+
+
+	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
+		
+		<button class='floatRight'>Order List</button>
+		<button class='floatRight'>Product List</button>
+		<button class='floatRight'>Add Product</button>
+		
+		<h2 class='floatLeft ui-widget-header-padding'>
+		Supplier: <span data-bind="var:supplier(CODE); format:text;"></span>
+		(created on <span data-bind="var:supplier(CREATED_GMT); format:unix2mdy;"></span>)
+		</h2>
+	</div>
+
+
+	<div class='twoColumn marginRight' data-app-column='1'>
+
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='general'>
+	<h2>General Settings</h2>
+	<div class='clearfix'>
+	<form autocomplete="on" action='#'>
+	<fieldset>
+
+<label>
+	<span>Markup</span>
+	<input name='MARKUP' value='' size='10' maxlength='15' type='text' data-bind='var: supplier(MARKUP); format:popVal;' />
+</label>
+
+<label>
+	<span>Name:</span>
+	<input name='NAME' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(NAME); format:popVal;' />
+</label>
+
+<label>
+	<span>Phone:</span>
+	<input name='PHONE' value='' size='12' maxlength='12' type='text' data-bind='var: supplier(PHONE); format:popVal;' />
+</label>
+
+<label>
+	<span>Email:</span>
+	<input name='EMAIL' value='j' size='30' maxlength='40' type='text' data-bind='var: supplier(EMAIL); format:popVal;' />
+</label>
+
+<label>
+	<span>Account:</span>
+	<input name='ACCOUNT' value='' size='30' maxlength='40' type='text' data-bind='var: supplier(ACCOUNT); format:popVal;' />
+</label>
+
+<label>
+	<span>Website:</span>
+	<input name='WEBSITE' value='' size='30' maxlength='40' type='url' data-bind='var: supplier(WEBSITE); format:popVal;' />
+</label>
+
+<label>
+	<input name='ITEM_NOTES' type='checkbox' data-bind='var: supplier(ITEM_NOTES); format:popCheckbox;' />
+	<span>Item notes:</span>
+</label>
+<div class='hint'>Choose to display supplier code / tracking info on invoice (under each Item)</div />
+
+
+<label>
+	<span>Quickbooks vendor name:</span>
+	<input name='.partner.vendor' value='' size='' maxlength='' type='text' />
+</label>
+
+<label>
+	<span>Partner:</span>
+	<select name='PARTNER' data-bind="var:vendor(PARTNER); format:popVal;">
+		<option value=''>None</option>
+	</select />
+</label>
+
+	</fieldset>
+	<button class='floatRight' data-app-event='admin_wholesale|execSupplierUpdate'>Save <span class='numChanges'></span> Changes</button>
+	</form>
+	</div>
+</div><!-- /general panel -->
+
+
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='productUpdates'>
+	<h2>Setup: Product Updates</h2>
+	<div>
+	<fieldset>
+<label>
+	<span>Connector:</span>
+	<select name='PRODUCT_CONNECTOR' data-bind="var:vendor(PRODUCT_CONNECTOR); format:popVal;">
+		<option value='NONE'>None</option>
+	</select />
+</label>
+
+	</fieldset>
+	</div>
+</div><!-- /productUpdates panel -->
+
+
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='shippingCalculations'>
+	<h2>Setup: Shipping Calculations</h2>
+	<div>
+
+	<fieldset>
+<label>
+	<span>Connector:</span>
+	<select name='SHIP_CONNECTOR' data-app-event='admin_wholesale|showConnectorFieldset' data-bind="var:vendor(SHIP_CONNECTOR); format:popVal;">
+		<option value='NONE'>None</option>
+		<option value='GENERIC'>Generic</option>
+	</select />
+</label>
+
+	</fieldset>
+
+
+
+<section data-app-role='connectorFieldsetContainer'>
+	<fieldset data-app-role='NONE' class='displayNone'>Will use your store configuration</fieldset>
+	<fieldset data-app-role='GENERIC' class='displayNone'>LINK to something</fieldset>
+</section>
+
+	</div>
+</div>
+
+
+	</div><!-- end column 1 -->
+
+
+
+
+	<div class='twoColumn column2' data-app-column='2'>
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='InventoryDownload'>
+	<h2>Setup: Inventory Download</h2>
+	<div>
+
+	<fieldset>
+<label>
+	<span>Connector:</span>
+	<select name='INVENTORY_CONNECTOR' data-app-event='admin_wholesale|showConnectorFieldset' data-bind="var:vendor(INVENTORY_CONNECTOR); format:popVal;">
+		<option value='NONE'>None</option>
+		<option value='GENERIC'>Generic</option>
+	</select />
+</label>
+
+	</fieldset>
+
+
+
+<section data-app-role='connectorFieldsetContainer'>
+	<fieldset data-app-role='NONE' class='displayNone'></fieldset>
+	<fieldset data-app-role='GENERIC' class='displayNone'>
+
+<label>
+	<span>FTP/HTTP URL</span>
+	<input name='inv_url' type='url' data-bind="var:vendor(inv_url); format:popVal;" />
+</label>
+
+<label>
+	<span>Import frequency</span>
+	<select name='inv_updateauto' data-bind="var:vendor(inv_updateauto); format:popVal;">
+		<option value='0'>Manual</option>
+		<option value='1'>Daily</option>
+	</select>
+</label>
+
+<label>
+	<span>Inventory header</span>
+	<textarea name='inv_header' data-bind="var:vendor(inv_header); format:popVal;"></textarea>
+</label>
+
+<button>Start Import</button>
+
+	</fieldset>
+</section>
+
+	</div>
+</div>
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='automaticOrdering'>
+	<h2>Setup: Automatic Ordering</h2>
+	
+	<div>
+	<fieldset>
+<label><span>Order formatting:</span>
+<select name='FORMAT' data-bind="var:vendor(FORMAT); format:popVal;">
+	<option value='NONE'>None</option>
+	<option value='STOCK'>Stock</option>
+	<option value='DROPSHIP'>Dropship</option>
+	<option value='FULFILL'>Fulfill</option>
+</select>
+</label>
+
+<label><input type='checkbox' name='auto_approve' data-bind="var: supplier(%ORDER.auto_approve); format:popCheckbox;" />Automatic Ordering</label>
+<div class='hint'>Orders will not be transmitted to the supplier until they are closed</div>
+
+<label><input type='checkbox' name='notes' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Include order notes</label>
+<label><input type='checkbox' name='field_cost' data-bind="var: supplier(%ORDER.field_cost); format:popCheckbox;" />Show cost field</label>
+<label><input type='checkbox' name='dont_show_zezro_qtys' data-bind="var: supplier(%ORDER.notes); format:popCheckbox;" />Hide zero quantity items</label>
+<label><input type='checkbox' name='dispatch_on_create' data-bind="var: supplier(%ORDER.dispatch_on_create); format:popCheckbox;" />Dispatch on create (off recommended)</label>
+<label><input type='checkbox' name='dispatch_full_order' data-bind="var: supplier(%ORDER.dispatch_full_order); format:popCheckbox;" />Transmit full order contents (off recommended)</label>
+
+<label>
+	<span>Connector: </span>
+	<select name="ORDER_CONNECTOR" data-bind="var:vendor(ORDER_CONNECTOR); format:popVal;" data-app-event='admin_wholesale|showConnectorFieldset'>
+		<option value="NONE">None</option>
+		<option value="EMAIL">Email</option>
+		<option value="FTP">FTP</option>
+		<option value="API">API</option>
+		<option value="AMZSQS">Amazon SQS</option>
+	</select>
+</label>
+	</fieldset>
+
+<section data-app-role='connectorFieldsetContainer'>
+
+	<fieldset data-app-role='NONE' class='displayNone'><!-- no extra fields for none at this time --></fieldset>
+	
+	
+	<fieldset data-app-role='EMAIL' class='displayNone'>
+		<label>
+			<span>Email from:</span>
+			<input type='email' name='email_src' data-bind="var: supplier(%ORDER.email_src); format:popVal;" />
+		</label>
+
+		<label>
+			<span>Email to:</span>
+			<input type='email' name='email' data-bind="var: supplier(%ORDER.email); format:popVal;" />
+		</label>
+
+		<label>
+			<span>Email BCC:</span>
+			<input type='email' name='bcc' data-bind="var: supplier(%ORDER.bcc); format:popVal;" />
+		</label>
+
+		<label>
+			<span>Email format:</span>
+			<select name='format' data-bind="var: supplier(%ORDER.email_format); format:popVal;">
+				<option value="TXT">TXT</option>
+				<option value="HTML">HTML</option>
+				<option value="WIKI">WIKI</option>
+			</select>
+		</label>
+
+		<label>
+			<span>Email subject:</span>
+			<input type='text' name='subject' data-bind="var: supplier(%ORDER.email_subject); format:popVal;" />
+		</label>
+		
+		<label>
+			<span>Email body:</span>
+			<textarea name='body' data-bind="var: supplier(%ORDER.email_body); format:popVal;"></textarea>
+		</label>
+	</fieldset>
+	
+	<fieldset data-app-role='FTP' class='displayNone'>
+		<label>
+			<span>FTP URL:</span>
+			<input type='url' name='ftp_url' data-bind="var: supplier(%ORDER.ftp_url); format:popVal;" />
+		</label>
+	</fieldset>
+	
+	<fieldset data-app-role='API' class='displayNone'>
+		<label>
+			<span>API URL:</span>
+			<input type='url' name='api_url' data-bind="var: supplier(%ORDER.api_url); format:popVal;" />
+		</label>
+	</fieldset>
+	
+	<fieldset data-app-role='AMZSQS' class='displayNone'>
+		<label>
+			<span>Amazon AWS access key</span>
+			<input type='text' name='' data-bind="var:vendor(%ORDER.aws_access_key); format:popVal;" />
+		</label>
+		<label title="Double Secret Probation Key">
+			<span>Amazon AWS secret key</span>
+			<input type='text' name='' data-bind="var:vendor(%ORDER.aws_secret_key); format:popVal;" />
+		</label>
+		<label>
+			<span>Amazon SQS channel</span>
+			<input type='text' name='' data-bind="var:vendor(%ORDER.aws_sqs_key); format:popVal;" />
+		</label>
+	</fieldset>
+
+
+</section>
+
+	</div>
+</div>
+
+
+
+<div class='panel labelsAsBreaks alignedLabels alignedInputs' data-app-role='trackingConfirmation'>
+	<h2>Setup: Tracking/Confirmation</h2>
+	<div>
+	<fieldset>
+<select name="TRACK_CONNECTOR" data-bind="var:vendor(TRACK_CONNECTOR); format:popVal;">
+	<option value="NONE">NONE</option>
+	<option value="API">API</option>
+</select>
+	</fieldset>
+	</div>
+</div>
+
+
+
+	</div><!-- end column 2 -->
+
+</form>
+</div>

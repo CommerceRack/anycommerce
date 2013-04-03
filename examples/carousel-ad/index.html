@@ -98,16 +98,16 @@ remember to NOT put the button inside the 'onclick' container or two events will
 <li id='productListTemplate' class='loadingBG fourColListItem fourColProdListItem' >
 	<div onClick="app.ext.myRIA.u.showProd($(this).attr('data-pid'));" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='250' height='160' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='250' height='160' />
 		</div>
 		
 		<h5 data-bind='var: product(prod_name); format:text;'></h5>
 	
-		<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
+		<h6 data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: only ;'></h6>
 	</div>
 
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm' id='prodListAddToCartFrm' action='' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id); return false;">
-		<input type="hidden" data-bind='var: product(pid); format:atcFixedQuantity; extension:store_product;' name="quantity" value="1">
+		<input type="hidden" name="qty" value="1" />
 		<div class='atcSuccessMessage' data-bind='var:product(pid);format:assignAttribute; attribute:id; valuePretext:atcMessaging_;'></div>
 		<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 			<button data-bind='var: product(pogs); format:addToCartButton; extension:myRIA;' class='ui-button-text ui-button ui-state-active ui-corner-all' id='addToCartBtn'>Add To Cart</button>

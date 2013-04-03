@@ -135,8 +135,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.ext.store_checkout.calls.appPaymentMethods.init();
 //only send the request for addresses if the user is logged in or the request will return an error.
 				if(app.u.determineAuthentication() == 'authenticated')	{
-					app.ext.store_checkout.calls.buyerAddressList.init();
-					app.ext.store_checkout.calls.buyerWalletList.init();
+					app.calls.buyerAddressList.init({},'immutable');
+					app.calls.buyerWalletList.init({},'immutable');
 					}
 				app.ext.store_checkout.calls.appCheckoutDestinations.init();
 				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init();
@@ -464,7 +464,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Cart updated - coupon added'])
 						r += "<\/ul><\/div>";
 						
 						
-						$('#globalMessaging').toggle(true).append(app.u.formatMessage({'message':r,'uiIcon':'alert'}));
+						$('#globalMessaging').toggle(true).anymessage({'message':r,'uiIcon':'alert'});
 
 						}
 
@@ -579,7 +579,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Valid email address obtained'])
 
 					}//ends 'if' for whether cart has more than zero items in it.
 				else	{
-					app.u.dump(" -> cart has no contents: "+app.sessionid);
+					app.u.dump(" -> cart has no contents: "+app.vars.cartID);
 					_gaq.push(['_trackEvent','Checkout','App Event','Empty Cart Message Displayed']);
 					app.u.throwMessage("It appears your cart is empty. If you think you are receiving this message in error, please contact the site administrator.");				
 					}
@@ -612,7 +612,7 @@ this is what would traditionally be called an 'invoice' page, but certainly not 
 				app.u.dump('BEGIN app.ext.convertSessionToOrder.callbacks.checkoutSuccess.onSuccess   datapointer = '+tagObj.datapointer);
 //empty old form content. not needed anymore. gets replaced with invoice-ish content.
 				var $zContent = $('#'+app.ext.convertSessionToOrder.vars.containerID).empty();
-				var oldSession = app.sessionId;
+				var oldCartID = app.vars.cartID;
 				var orderID = app.data[tagObj.datapointer].orderid;
 
 				app.u.jumpToAnchor(app.ext.convertSessionToOrder.vars.containerID);
@@ -648,7 +648,7 @@ note - the click prevent default is because the renderFormat adds an onclick tha
 						});
 					}
 				else	{$('.ocmFacebookComment').addClass('displayNone')}
-
+				app.model.destroy('cartDetail');
 				app.calls.appCartCreate.init(); //!IMPORTANT! after the order is created, a new cart needs to be created and used. the old cart id is no longer valid. 
 				app.calls.refreshCart.init({},'immutable'); //!IMPORTANT! will reset local cart object. 
 				app.model.dispatchThis('immutable'); //these are auto-dispatched because they're essential.
@@ -661,7 +661,7 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 
 				var L = app.ext.store_checkout.checkoutCompletes.length;
 				for(var i = 0; i < L; i += 1)	{
-					app.ext.store_checkout.checkoutCompletes[i]({'sessionID':oldSession,'orderID':orderID,'datapointer':tagObj.datapointer});
+					app.ext.store_checkout.checkoutCompletes[i]({'cartID':oldCartID,'orderID':orderID,'datapointer':tagObj.datapointer});
 					}
 
 				$('#invoiceContainer').append(app.renderFunctions.transmogrify({'id':'invoice_'+orderID,'orderid':orderID},'invoiceTemplate',app.data['order|'+orderID]));
@@ -721,7 +721,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				app.u.dump('END app.ext.convertSessionToOrder.validate.isValid. sum = '+sum);
 				if(sum != 4)	{
 					r = false;
-					$globalErrors.append(app.u.formatMessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"})).toggle(true);
+					$globalErrors.anymessage({"message":"Some required fields were left blank or contained errors. (please scroll up)","uiClass":"error","uiIcon":"alert"}).toggle(true);
 					}
 //				r = true; //for testing error handling. do not deploy with this line uncommented.
 				return r;
@@ -748,7 +748,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipMethodsFieldsetErrors').toggle(true).append(app.u.formatMessage("Please select a shipping method."));
+					$('#chkoutShipMethodsFieldsetErrors').toggle(true).anymessage({'message':"Please select a shipping method."});
 					$('#chkoutShipMethodsFieldset').removeClass('validatedFieldset');
 					}
 				if(valid == 1)	{
@@ -818,7 +818,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Shipping method validated']);
 				if(valid == 0){
 					$('#chkoutPayOptionsFieldset').removeClass('validatedFieldset');
 //					app.u.dump(' -> payment options did not pass validation');
-					$errorDiv.toggle(true).append(app.u.formatMessage(errMsg));
+					$errorDiv.toggle(true).anymessage({'message':errMsg});
 					}
 				else{
 //					app.u.dump(' -> payment options passed validation');
@@ -849,7 +849,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','Payment method validated ('+$pa
 					}
 				else	{
 					valid = 0;
-					$('#chkoutBillAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutBillAddressFieldsetErrors').toggle(true).anymessage({'message':"Some required fields were left blank or are invalid"});
 					$('#chkoutBillAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -884,7 +884,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','billing address obtained']);
 					}
 				else	{
 					valid = 0;
-					$('#chkoutShipAddressFieldsetErrors').append(app.u.formatMessage("Some required fields were left blank or are invalid")).toggle(true);
+					$('#chkoutShipAddressFieldsetErrors').toggle(true).anymessage({'message':"Some required fields were left blank or are invalid"});
 					$('#chkoutShipAddressFieldset').removeClass('validatedFieldset');
 /*
 sometimes, a preexisting address may be selected but not have all required fields.
@@ -928,13 +928,13 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 					if($email.val() == '')	{
 	//						app.u.dump(' -> email is blank');
 						$email.parent().addClass('mandatory');
-						$errorDiv.append(app.u.formatMessage("Please provide an email address")).toggle(true);
+						$errorDiv.toggle(true).anymessage({'message':"Please provide an email address"});
 						app.ext.convertSessionToOrder.vars.validPreflight = 0;
 						r = false;
 						}
 					else if(!app.u.isValidEmail($email.val()))	{
 	//						app.u.dump(' -> email is not valid');
-						$errorDiv.append(app.u.formatMessage("Please provide a valid email address")).toggle(true);
+						$errorDiv.toggle(true).anymessage({'message':"Please provide a valid email address"});
 						$email.parent().addClass('mandatory');
 						r = false;
 						}
@@ -954,7 +954,7 @@ _gaq.push(['_trackEvent','Checkout','Milestone','shipping address obtained']);
 						}
 					else	{
 //						app.u.dump(' -> phone number is NOT valid');
-						$errorDiv.append(app.u.formatMessage("Please provide a valid phone number with area code."));
+						$errorDiv.anymessage({'message':"Please provide a valid phone number with area code."});
 						$phone.parent().addClass('mandatory');
 						r = false;
 						}
@@ -1074,7 +1074,7 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
-				if(app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
+				if(app.data.cartDetail && app.data.cartDetail['@SHIPMETHODS'].length == 0)	{
 					$('#noShipMethodsAvailable').toggle(true);
 					}
 				else if(!$('#data-bill_zip').val() && !$('ship_zip').val()) {

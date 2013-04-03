@@ -31,6 +31,8 @@ table.orderManagerTable	{
 
 .orderManagerTable	td.leftCol .fixedWidth	{width: 150px;} /* for use on inputs and selects */
 
+.orderManagerTable .ui-accordion-header	{border-right:0} /* right border not needed. bounding box handles it */
+
 #orderListTableContainer	{min-height:450px;} /* decreases 'jumpiness' between loading and loaded */
 .filterGroup ul	{margin:4px 0 12px 0px; padding:0; list-style:none;}
 .filterGroup li	{padding:3px 24px; margin:0;} /* vertical padding is present for mobile-friendlyness */
@@ -50,7 +52,11 @@ table.orderManagerTable	{
 
 
 .orderManagerTable .leftCol .ui-accordion .ui-accordion-header:first-child	{margin-top:0px;}
-.orderManagerTable .bulkEditMenu li li	{width:150px;}
+.orderManagerTable .bulkEditMenu 	{font-size:.75em}
+.orderManagerTable .bulkEditMenu li li	{width:160px;}
+.orderManagerTable .bulkEditMenu li li li	{width:190px;}
+
+.orderManagerTable .bulkEditMenu .emailmsg_custommessage	{display:none;}
 
 .ui-selectee .selectedIcon	{display:none; width:16px;} /* setting a width keeps the table from 'jumping' when something is selected */
 .ui-selected .selectedIcon	{display:block !important;}
@@ -89,13 +95,20 @@ order detail
 .orderStuffItemRow td	{padding:0 12px 12px 0;}
 
 .orderDetailButtonBar	{margin-bottom:12px;}
-.orderDetailButtonBar button	{padding:2px 6px;}
 
 .orderDetails fieldset	{border:0; margin:0;padding:0;}
 
 
 .orderDetails .shipAddressContainer .email	{display:none;}
 
+<<<<<<< HEAD
+=======
+.orderMailMenuList a	{text-decoration:none; padding:3px 6px; font-size:.75em;} /* the list of emails in the dropdown for send mail */
+
+/* compensate for some default styling to make supplemental contain wrap up right against the corresponding payment type */
+#adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
+ul.paybySupplemental	{margin-top:0;}
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* payment panel */
 
@@ -119,3 +132,45 @@ order detail
 
 /* cart edit */
 .orderItemAddBasic label span	{text-align: right;}
+
+
+
+
+/* quickview styles */
+.orderQuickviewMenu h3	{padding:3px; margin:0;}
+.orderQuickviewMenu li	{border-top:1px solid #E4E4E4; padding: 3px;}
+.orderQuickviewContent .orderContentsTable, .orderQuickviewContent .gridTable	{width:100%;}
+
+
+/* custom email tool */
+.orderEmailCustomMessage ul	{width:150px;}
+
+
+
+
+
+/* tab for left side of screen after leaving order list mode */
+
+#orderListTab 	{position:fixed; left:0px; top:120px;  z-index:500; }
+#orderListTab .positionRelative	{width:400px;}
+/* positioning and text rotation was barfing. so only the span within the tab is rotated */
+#orderListTab .tab	{
+	position:absolute; cursor:pointer; z-index:510; 
+	text-align:center;
+	width:20px;
+	height:100px;
+	top:10px;
+	right:-30px; /* positioning takes into account there's some padding */
+	text-indent:6px;
+	}
+
+#orderListTab .tab span	{
+	display:block; /* block required for rotation, at least in FF.  */
+	-webkit-transform: rotate(90deg);/* Safari */
+	-moz-transform: rotate(90deg);/* Firefox */
+	-ms-transform: rotate(90deg);/* IE */
+	-o-transform: rotate(90deg);/* Opera */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	/* Internet Explorer */	
+	}
+#orderListTab .ordersContainer	{overflow:auto; width:400px; height:300px;}
+#orderListTab table	{font-size:.75em; width:100%;}

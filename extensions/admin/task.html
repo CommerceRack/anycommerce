@@ -19,12 +19,12 @@
 	<tr>
 		<th class='hideInMinifyMode'><input type='checkbox' onChange="$(this).closest('fieldset').find(':checkbox').attr('checked', this.checked);" /></th>
 		<th class='hideInMinifyMode'>Created</th>
-		<th >Task</th>
+		<th>Task</th>
 		<th class='hideInMinifyMode'>Due Date</th>
 		<th class='hideInMinifyMode'>Priority</th>
 <!--		<th class='hideInMinifyMode'>Quick Link</th> -->
 		<th class='hideInMinifyMode'>Assigned To</th>
-		<th >Actions</th>
+		<th>Actions</th>
 	</tr>
 	</thead>
 	<tbody id='taskListTbody' data-bind="var: task(@TASKS); format:processList; loadsTemplate:taskListRowTemplate;" class='loadingBG'>
@@ -57,7 +57,7 @@ reminder: you can't have a template for a tr without a parent table (same for li
 -->
 <table>
 <!-- tr will be assigned all key/value pairs in data- attributes (keys will be all lowercase) -->
-<tr id='taskListRowTemplate' class='taskRow' data-bind="var: task(id); format:assignAttribute; attribute:title;">
+<tr id='taskListRowTemplate' class='taskRow' data-bind="useParentData:true; format:taskClass; extension:admin_task;">
 	<td class='hideInMinifyMode'><input type='checkbox' /></td><!-- bind a change event that adds/remves ui-selected class on tr -->
 	<td class='hideInMinifyMode' data-bind="var: task(created_gmt); format:unix2mdy;"></td>
 	<td data-bind="var: task(completed_gmt); format:addClass; className: lineThrough gmt_; hideZero:true;"><span data-bind="var: task(title); format:text;"></span></td>

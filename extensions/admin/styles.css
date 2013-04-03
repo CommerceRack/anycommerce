@@ -1,3 +1,16 @@
+@font-face	{
+	font-family: barcode3of9;
+	src: url('resources/z3of9.ttf') /* will not work in IE9 w/out eot font file */
+	} 
+
+body {line-height: 1;} /* helps to reduce some errant whitespace issues */
+
+body	{margin:0; padding:0; background:#f1f1f1; } 
+body, html	{font-size:100%; font-family:Tahoma, Geneva, sans-serif; color:#565656;height:100%; margin:0; padding:0;} /* height is for showLoading on body */
+
+img {border:0px;}
+
+
 /*
 items that are floated may cause their containers to 'shrink'. apply this class to the container
 class can also be applied to a 1 item per row list.
@@ -20,19 +33,32 @@ class can also be applied to a 1 item per row list.
 .alignCenter	{text-align:center;}
 
 
+<<<<<<< HEAD
 .valignMiddle	{vertical-align:middle;}
 
 /* hideForApp or Vstore gets toggle on based on account/domain setting. toggle on instead of off to avoid popping. */
 /* .showForVstoreOnly, .showForAppOnly	{display:none;} - not used yet. soon. */
 
 .displayNone	{display:none;}
+=======
+.valignTop	{vertical-align:top;}
+.valignMiddle	{vertical-align:middle;}
+
+
+.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly, .minimalMode .hideInMinimalMode	{display:none;}
+.isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
 
 
 /* for small buttons */
+<<<<<<< HEAD
 .smallButton .ui-button-text	{padding:2px 4px !important; line-height:normal !important; font-size:.85em;}
+=======
+.smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 .ui-selectee	{cursor:pointer;}
 
@@ -42,11 +68,49 @@ class can also be applied to a 1 item per row list.
 
 .ui-accordion .ui-accordion-header	{padding-left:30px;}
 
-.lookLikeLink, .ui-widget-content a	{cursor:pointer; color:#0066CC;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a, .lookLikeLink	{cursor:pointer; color:#7398a5;} /* apply to text that has an onClick but needs to look like an href. override ui style which isn't as noticeable. */
+a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 .pointer	{cursor:pointer;} /* apply to anything that is clickable via an onClick. */
 
 
 
+<<<<<<< HEAD
+=======
+
+
+/* text styling */
+
+
+
+.barcode	{font-family: barcode3of9 !important;}
+/*section or page header. There should only be one of these per page and it should be at the very top.*/
+h1	{font-size: 1.4em;  margin: 0px 0px 15px 0px;}
+
+/* used for the heading of section of text blocks each with it's own sub heading.
+must be followed by 2+ h3's. can be directly followed by a P ONLY if it is introductory text, followed by a series of h3's */
+h2	{font-size: 1.3em; margin: 0px 0px 6px 0px;}
+
+/* used for a subsection of a text block.  Should be preceded by a h2, though not necessarily immediately.
+should be followed by a P , TABLE or LIST. */
+h3	{font-size: 1.2em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+/* used in lists to denote sections.  For instance, to separate DIV's in layouts and emails */
+h4	{font-size: 1.1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+
+h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
+/* if you want to display a hint or tip, give it the hint class */
+
+
+.hint, .helper	{font-size:.75em;} /* NOTE - 'hint' is reserved. change these to help as you come across them */
+
+
+
+
+
+
+
+
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 /* some positioning classes */
 
 .positionRelative	{position:relative;}
@@ -71,7 +135,7 @@ Generic text styles
 .blue	{color:#000066;}
 .green	{color:#006600;}
 
-
+.smallTxt	{font-size:.75em;}
 
 /*
 some global padding and margins.
@@ -95,9 +159,16 @@ using these shared margins will help make the UI more consistent.
 .marginRight	{margin-right:12px;}
 .marginTop	{margin-top:12px;}
 .marginBottom	{margin-bottom:12px;}
+
+.paddingRight	{padding-right:12px;} /* used to create space between horizontally listed spans, among other things */
+
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}
+<<<<<<< HEAD
+=======
+.ui-widget-header-padding	{padding:3px 6px !important;}
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
@@ -121,7 +192,10 @@ if you want the list responsive, apply the .fluidList class.
 /* for non-datagrid tables. ex: setup page. */
 table.stdCellSpacing	{border-spacing: 12px; border-collapse: separate;} 
 
-table.fullWidth	{width:100%;}
+table.fullWidth, iframe.fullWidth	{width:100%;}
+iframe.noBorders	{overflow:hidden; border:none;}
+
+iframe.ad-300x250	{height:250px;}
 
 /*
 Use this in a table where you want clear separation between rows and cells. This includes color differntiation in the rows. you don't need padded table set.
@@ -130,6 +204,10 @@ Use this in a table where you want clear separation between rows and cells. This
 .gridTable td, .gridTable th, .gridTable tf	{padding:2px 10px 2px 2px; vertical-align:top;}
 .gridTable tr:nth-child(odd)	{background:#ffffff;}
 .gridTable tr:nth-child(even)	{background:#f0f0f0;}
+
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+.gridTable tr.ui-state-highlight	{background: inherit !important;}
+
 .gridTable th, .gridTable .tf	{background:#cccccc;}
 
 
@@ -138,23 +216,23 @@ Use this in a table where you want clear separation between rows and cells. This
 /* a global 'handle' class for now. for consistency. 
 later if more variety is needed, we can either create exceptions or more rules to handle all cases.
 */
-.handle { background: #f8f8f8; position: absolute; right: 0; top: 0; bottom: 0; padding:14px 6px 0 6px; cursor:pointer; }
+.finderProdlistContainer .handle	{position: absolute; right: 0; top: 0; bottom: 0;background: #f8f8f8; padding:14px 6px 0 6px;}
+.handle { padding:6px; cursor:pointer; }
 
 .simpleListItem .removeProd, .simpleListItem .handle	{padding-top:3px;} /* less padding on top because lineitem is shorter (no image) */
 
 
 
 /* loading classes. do NOT change class name. change styling as needed */
-.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:100px; min-width:100px;}
+.loadingBG	{background:url(images/loading.gif) no-repeat center center  !important; min-height:30px; min-width:115px;}
 li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center center  !important; min-height:25px; min-width:25px;}
 
 .wait	{display:inline-block; background:url(images/small_wait.gif) no-repeat center center  !important; min-height:16px; min-width:16px;}
 
 
 /* This gets applied to the parent containers around each tabs content area.  */
-.tabContent	{margin:12px auto; width:90%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
+.tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
 
-#appView	{background:#ffffff;}
 
 
 /* multipage controls */
@@ -166,24 +244,72 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .finderProdlistContainer .mpControls	{border:0; border-bottom-width:1px; line-height:24px;}
 
 
-
-
+/* use this in combo with ui-widget, ui-corner-all and ui-widget-content to create a horizontal bar of buttons with a container around them. */
+.ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
+.ui-widget-buttonbar button	{margin:0 2px;}
 
 .ui-widget fieldset	{margin:0; padding:0; border:0;}
 .ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
 
 /* used for the wiki header 1 & 2 */
-.ui-widget h2	{font-size:1.4em; color:#333333; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h3, .ui-widget  legend	{font-size:1.3em; color:#616161; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h4	{font-size:1.2em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h5	{font-size:1.1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
-.ui-widget h6	{font-size:1em; color:#666666; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h4	{font-size:1.2em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h5	{font-size:1.1em; font-weight:bold; margin: 0; padding: 0;}
+.ui-widget h6	{font-size:1em; font-weight:bold; margin: 0; padding: 0;}
 
 #headerSearchFrm	{float:right;}
 #headerSearchFrm legend {display:none;}
 #headerSearchFrm fieldset	{text-align:right}
 #headerKeywordsInput	{width:350px;}
 
+
+
+
+/*
+
+The Launch Pad
+
+*/
+
+#launchpadTiles span.tilename	{position:absolute; bottom:6px; left:6px;}
+
+.tileDomainAdd	{background:url(images/tile_domainadd-120x120.png) no-repeat #ffffff;}
+.tileDomainAdd:hover	{background-color:#FCF;}
+.tileDomainSelect	{background:url(images/tile_domainselect-120x120.png) no-repeat #ffffff;}
+.tileDomainAdd:hover	{background-color:#39F;}
+
+.tileDomainSelect .active	{display:none;}
+.tileDomainSelect.active .active	{display:block; position:absolute; top:6px; right:6px;  height:20px; width:20px;}
+.tileDomainSelect.active .active:before	{content:"\2713\0020"; font-size:1.5em;}
+.tileDomainSelect.active	{border:#749986; background-color:#B7CEC2;}
+
+.tileZoovyLive	{background:url(images/tile_zoovylive-120x120.png) no-repeat;}
+.tileZoovyCommunity	{background:url(images/tile_zoovycommuity-120x120.png) no-repeat;}
+
+.tileProjectAdd	{background:url(images/tile_projectadd-120x120.png) no-repeat;}
+.tileHelp	{background:url(images/tile_help-120x120.png) no-repeat #f9f2f2; border-color:#c92229;}
+.tileAdmin	{background:url(images/tile_admin-120x120.png) no-repeat;}
+/* css for a three column layout. will be used on dashboard and in customer editor. */
+
+/* three column panel layout (homepage) */
+.twoColumn{  
+	width:49%;  
+	min-height:300px;  
+	float:left;  
+	}  
+
+.twoColumn.column2 {float:right;}
+
+.twoColumn .placeholder{  
+	background: #ffffff;  
+	}  
+
+
+
+
+
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
 
 
 
@@ -244,6 +370,138 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 	}
 	
 
+/*
+
+########################################################
+
+HEADER
+
+########################################################
+
+*/
+
+
+#mastHead	{position:relative; min-width:700px;}
+#mastHead .logo	{float:left; margin-left:12px; margin-top:5px;}
+#mastHead .menu	{float:right; margin-right:12px; white-space: nowrap;}
+#mastHead .menu span	{display:inline;}
+#mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
+
+/*
+the row with the logo and text links
+
+NOTE - the overflow hidden on headerTop and the display inlineblock/width are to solve an errant spacing issue appearin between the two elments using these classes.
+*/
+.headerTop	{background:#b7b9bb; height:40px; line-height:40px; font-size:.8em; color:#565656; overflow:hidden;}
+.mhTabsContainer	{
+	position:relative; display:inline-block; width:100%;
+	background:#757779;
+	}
+
+
+
+.mhTabsContainer ul	{width:100%; padding:0; margin:0; display:inline-block; position:relative; z-index:100; float:left;}
+.mhTabsContainer li	{display:block; float:left; list-style:none;border-right:1px solid #ededed; width:8%; padding:1px 4px 0 4px; margin:0; font-size:.75em; position:relative; color:#ffffff; cursor:pointer;}
+.mhTabsContainer li:last-child	{border-right:0px;}
+.mhTabsContainer li:hover	{background:#7398a5;}
+.mhTabsContainer li.active, #navTabs	{background:#c0d2d8; color:#565656;}
+#navTabs a	{color: #333333;}
+.mhTabsContainer .toggleArrow	{width:1%;}
+
+.mhTabsContainer ul.navIcons	{max-width:1150px;} /* as the browser gets very wide, the icon/tabs don't look as good stretched out. cap em */
+.mhTabsContainer ul.showIcons .icon	{display:block; float:right;}
+.mhTabsContainer ul.showIcons li	{height:55px;}
+.mhTabsContainer ul.hideIcons .icon	{display:none;}
+.mhTabsContainer ul.hideIcons li	{height:20px;}
+
+.mhTabsContainer .text	{position:relative; z-index:10;}
+.mhTabsContainer .icon	{background-image:url(images/tab_sprites-1000x250.png); background-repeat:no-repeat; position:absolute; bottom:0; right:0; height:55px; width:55px; z-index:9;}
+.mhTabsContainer .setupTab .icon	{} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab .icon	{background-position: -55px 0;}
+.mhTabsContainer .productsTab .icon	{background-position: -110px 0;}
+.mhTabsContainer .ordersTab .icon	{background-position: -165px 0;}
+.mhTabsContainer .crmTab .icon	{background-position: -220px 0;}
+.mhTabsContainer .syndicationTab .icon	{background-position: -275px 0;}
+.mhTabsContainer .reportsTab .icon	{background-position: -330px 0;}
+.mhTabsContainer .kpiTab .icon	{background-position: -385px 0;}
+.mhTabsContainer .utilitiesTab .icon	{background-position: -440px 0;}
+.mhTabsContainer .supportTab .icon	{background-position: -495px 0;}
+
+
+.mhTabsContainer .setupTab.active .icon	{background-position: 0px -55px;} /* uses default position 0,0 */
+.mhTabsContainer .sitesTab.active .icon	{background-position: -55px -55px;}
+.mhTabsContainer .productsTab.active .icon	{background-position: -110px -55px;}
+.mhTabsContainer .ordersTab.active .icon	{background-position: -165px -55px;}
+.mhTabsContainer .crmTab.active .icon	{background-position: -220px -55px;}
+.mhTabsContainer .syndicationTab.active .icon	{background-position: -275px -55px;}
+.mhTabsContainer .reportsTab.active .icon	{background-position: -330px -55px;}
+.mhTabsContainer .kpiTab.active .icon	{background-position: -385px -55px;}
+.mhTabsContainer .utilitiesTab.active .icon	{background-position: -440px -55px;}
+.mhTabsContainer .supportTab.active .icon	{background-position: -495px -55px;}
+
+
+.mhTabsContainer .messageCount	{
+	color:#ffffff; font-size:12px; font-weight:normal; line-height:18px;
+	display:block; position:absolute; top:-2px; right:-3px;
+	z-index:110;
+	height:20px; width:20px;
+	-webkit-border-radius: 10px;
+	border-radius: 10px;
+	text-align:center;
+	border:1px solid #ffffff;
+	-webkit-box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
+	background: #fcfcfc; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  #fcfcfc 0%, #b74040 4%, #cc0000 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#fcfcfc), color-stop(4%,#b74040), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#cc0000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+
+	}
+
+#navTabs	{text-align:center; font-size:.75em; line-height:1.7em;}
+#navTabs a	{padding:0px 12px; text-decoration:none;}
+#navTabs a:hover	{text-decoration:underline;}
+
+#breadcrumb	{border-bottom:1px solid #ededed; font-size:.8em; text-indent:12px;}
+
+.mhTabsContainer li.messagesTab:hover, #messagesContent, .mhTabsContainer li.messagesTabActive	{background:#565656 !important;}
+#messagesContent	{position:absolute; top:65px; left:0; right:0; height:200px;  z-index:99;}
+
+@media screen and (max-width: 1000px) {
+/* changing to 7% keeps list from line-wrapping. */
+	.mhTabsContainer li	{width:7.5%;}
+	}
+
+
+.pageContentContainer	{line-height:100%;} /* compensate for the body line-height1 */
+
+
+
+
+/*
+
+########################################################
+
+LOGIN and preView
+
+########################################################
+
+*/
+
+
+#appPreView, #appLogin, #createAccountContainer	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
+
+#appLogin label	{display:block; text-align:left; margin-bottom:12px;}
+#appLogin .hint	{font-size:14px;}
+#appLogin legend	{display:none;}
+#appLogin fieldset	{border:0; padding:0; margin:0;}
+
+
+#appLogin .createAccount	{border:1px solid #006600; background:#696; color:#ffffff;}
 
 
 
@@ -328,7 +586,6 @@ a background on the target element may require an implicit override here.
 
 
 
-
 /*
 
 ####################
@@ -383,17 +640,53 @@ Messaging Styles
 .ui-state-z-ise, .ui-state-z-error	{border:1px solid #CC0000; background:#CC0000; color:#ffffff;}
 .ui-state-z-debug	{border:1px solid #000000; background:#333333; color:#ffffff;}
 
-.ui-state-z-success .success	{background:none;} /* compensates for bg image for standard.css */
+.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center !important; width:29px; height:29px;}
 
-.ui-icon-z-ise	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
-.ui-icon-z-error	{background: url(images/error-25x25.png) no-repeat center center; width:29px; height:29px;}
+.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat !important; width:25px; height:22px;}
+.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
+.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
+.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
+.ui-icon-z-youerr	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
+.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 
-.ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat; width:25px; height:22px;}
-.ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat; width:25px; height:25px;}
-.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat; width:25px; height:29px;}
-.ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat; width:25px; height:24px;}
-.ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center; width:29px; height:26px;}
+
+.anyIcon	{background:url(images/ui_anyicon_set-612x792.png) no-repeat; width:55px; height:55px; display:inline-block;}
+
+/* row 1 */
+.anyIconFloat	{background-position:0 0;}
+.anyIconTools	{background-position:-57px 0px;}
+.anyIconEnvelope	{background-position:-122px 0px;}
+.anyIconHeart	{background-position:-185px 0px;}
+.anyIconHeartAdd	{background-position:-250px 0px;}
+.anyIconDownload	{background-position:-315px 0px;}
+.anyIconGears	{background-position:-378px 0px;}
+.anyIconCertificate	{background-position:-438px 0px;}
+
+/* row 2 */
+.anyIconNetwork	{background-position:0 -60px;}
+.anyIconPage	{background-position:-57px -60px;}
+.anyIconBookmark	{background-position:-122px -60px;}
+.anyIconChain	{background-position:-185px -60px;}
+.anyIconMagGlass	{background-position:-250px -60px;}
+.anyIconPlusSign	{background-position:-315px -60px;}
+.anyIconI	{background-position:-378px -60px;}
+.anyIconMinusSign	{background-position:-438px -60px;}
+
+/* row 3 */
+
+
+
+/* row 5 */
+.anyIconVertArrows	{background-position:0 -280px;}
+.anyIconHorArrows	{background-position:-57px -280px;}
+
+
+/* row 6 */
+.anyIconMug	{background-position:0 -342px;}
+.anyIconComputer	{background-position:-438px -342px;}
+
 
 /*
 
@@ -455,23 +748,29 @@ DEBUGGER
 
 */
 
-#debugPanel	{position:fixed; bottom:0; right:0; left:0; height:125px; border:1px solid #cccccc;}
-#debugPanel .debugContent	{position:relative; z-index:10; padding:12px;}
-#debugPanel .debugBG	{
-	height:125px;
-	z-index:1;
-	position:absolute; top:0; bottom:0; left:0; right:0;
-	background: -moz-linear-gradient(top,  rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(0,0,0,0.35)), color-stop(100%,rgba(0,0,0,0.1))); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* IE10+ */
-	background: linear-gradient(to bottom,  rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.1) 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#59000000', endColorstr='#1a000000',GradientType=0 ); /* IE6-9 */
-	}
+#debugPanel	{position:fixed; bottom:100px; left:-15px; width:125px; padding-left:25px; display:none;}
+#debugPanel .debugMenu ul	{width:250px;}
+#debugPanel h5 {margin:4px 0;}
+#debugPanel h6 {margin:4px 0;}
 
 
+/*
 
+########################################################
+
+
+STYLES FOR SPECIFIC UI LAYOUTS (dualMode and soloMode)
+
+########################################################
+
+*/
+
+
+/* the container for the detail column. */
+.dualModeDetailContainer	{float:right; display:none;}
+
+.dualModeListContainer .heading, .soloModeListContainer .heading	{text-indent:12px; line-height:35px;}
+.dualModeListContainer .buttonSet, .soloModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
 
 
 
@@ -493,8 +792,14 @@ for use in forms where the label is the row container.
 put the prompt into a span
 <label><span>prompt</span>input</label>
 */
+<<<<<<< HEAD
 .labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
 .labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
+=======
+
+.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
+.labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* 
 within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
@@ -506,6 +811,7 @@ see shipping panel in product editor for example
 .labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
+<<<<<<< HEAD
 .alignedLabels label span	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
@@ -515,3 +821,74 @@ see shipping panel in product editor for example
 .alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
 
 
+=======
+.alignedLabels label span:first-of-type	{width:30%;}
+.alignedInputs textarea,
+.alignedInputs input[type=email],
+.alignedInputs input[type=url],
+.alignedInputs input[type=password],
+.alignedInputs input[type=url],
+.alignedInputs input[type=text]	{width:60%; }
+
+.alignedInputs input[type=number], 
+.alignedInputs select	{max-width:60%;} /* shrink to fit widest option, but stay under threshold */
+
+
+
+
+
+
+/* landing page (aka recent news) */
+
+/* .pageLanding .ui-widget-content	{max-height:400px; overflow:auto; min-height:75px;} /* if/when browsers support it, check out  overflow-style */
+
+.pageLanding .ui-anypanel-header .ui-button	{display:none;} /* temporarily disabled buttons till state is supported */
+
+/* three column panel layout (homepage) */
+#dashboardColumn1	{width:65%; float:left;}
+#dashboardColumn2	{width:33%; float:right;}
+
+#dashboardColumn2 .varImage	{max-width:300px; width:100%;}
+
+.recentNewsContainer	{height:450px; overflow:auto;}
+.recentNewsContainer article	{margin-bottom:24px;}
+
+/* achievements page */
+table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-collapse: collapse;}
+.achievementList td	{vertical-align:top;border-bottom:1px solid #efefef; padding:6px 12px;}
+.achievementList p	{font-size:1em; margin:0px;}
+.achievementList h3	{font-size:1.5em; font-weight:normal; font-family: 'PT Sans', sans-serif;}
+
+
+/* ebay reports page */
+.ebayListingsReportPage fieldset.oneThird	{width:30%}
+
+
+
+/* help documentation styles */
+
+.helpDoc h1	{margin-bottom:12px;} /* document title */
+.helpDoc h2	{margin-bottom:4px;} /* title for each article (used to be SECTION) */
+.helpDoc article {margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #efefef;}
+
+
+
+/*
+http://codepad.co/s/7cca38#select
+some pad (more or less)specific styles.
+*/
+@media screen and (max-width: 1024px) {
+	.domainList li {padding:0 4px;}
+	}
+
+
+@media screen and (max-width: 800px) {
+	.twoColumn{  
+		width:100%;
+		clear:both;
+		}  
+	
+	.twoColumn.column2 {clear:both;}
+
+	}
+>>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6

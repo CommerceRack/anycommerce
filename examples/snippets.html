@@ -3,19 +3,18 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title>Snippets</title>
-<script src="../jquery-1.7.2.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 <script type='text/javascript'>
 
 $(function() {
 	$('code').each(function(){
 		var $this = $(this);
-		var html = $this.html();
-		var str = html.split('\n');
-		$this.empty().append($("<textarea>").attr('rows',(str.length+1)).val(html));
+		var html = $this.html().trim();
+		$this.empty().css({'white-space':'pre-wrap'}).text(html);
 		})
 	});
-
 </script>
 
 <style type='text/css'>
@@ -24,6 +23,8 @@ textarea	{width:90%; height:auto; font-size:.9em; line-height:1.3em; clear:both;
 h1,h2,h3,h4,h5,h6	{margin:12px 0}
 h3	{color:#333333;}
 section	{margin:12px 0;}
+
+code	{white-space:pre-wrap; padding:6px; background:#efefef; font-size:.90em; display:block; border:1px solid #cccccc;}
 </style>
 </head>
 
@@ -44,7 +45,6 @@ section	{margin:12px 0;}
 	<fieldset>
 	<legend>Search</legend>
 	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
-	<input type='hidden' name='CATALOG' value='' class="productSearchCatalog" />
 	</fieldset>
 	<input class="search" id='headerSearchSubmit' type="submit" value="Search" />
 </form>
@@ -80,9 +80,9 @@ section	{margin:12px 0;}
 <h2>Product lists and embedded search results</h2>
 A product list has a variety of parameters that can be turned on/off using data-bind. a full list of these parameter is in store_prodlist.u.setProdlistVars. Common parameters would be:
 <ul>
-	<li>loadsTemplate - tells the product list what template to use per product</li>
-	<li>hide_multipage - will turn of the entire product list header</li>
-	<li>hide_multipage_controls - will turn off just the next, previous and list of pages</li>
+	<li>loadsTemplate - tells the product list what template to use for each product</li>
+	<li>hide_summary - will turn of the entire product list header</li>
+	<li>hide_pagination - will turn off just the next, previous and list of pages</li>
 	<li>before - some html to appear before the product list IF list has items</li>
 	<li>after - some html to appear after the product list IF list has items</li>
 	<li>wrap - uses jquery wrap() to wrap around product list</li>
@@ -90,8 +90,6 @@ A product list has a variety of parameters that can be turned on/off using data-
 	<li>withInventory - will get inventory record for each product (slower - recommended if add to cart button is present)</li>
 	<li>withVariations - will get variations (size, color, etc) for each product (slower - required for add to cart button)</li>
 </ul>
-
-<h4>Please note that an element ID is REQUIRED on all elements that have a format: productList or productSearch.</h4>
 
 <h3>Your basic product list</h3>
 <code>

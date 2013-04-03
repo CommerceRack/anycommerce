@@ -18,7 +18,7 @@
 
 
 var admin_batchJob = function() {
-	var theseTemplates = new Array('batchJobStatusTemplate');
+	var theseTemplates = new Array('batchJobStatusTemplate','batchJobManagerPageTemplate','batchJobRowTemplate');
 	var r = {
 
 
@@ -63,7 +63,25 @@ var admin_batchJob = function() {
 
 		a : {
 			
-			showBatchJobManager : function(){},
+			showBatchJobManager : function(){
+				
+				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
+//generate some of the task list content right away so the user knows something is happening.
+				$tabContent.empty();
+				$tabContent.showLoading({'message':'Fetching your list of batch jobs'});
+				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
+					$tabContent.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$tabContent.anymessage({'message':rd});
+						}
+					else	{
+						$tabContent.anycontent({'templateID':'batchJobManagerPageTemplate','dataAttribs':{'id':'batchJobManagerContent'},'datapointer':rd.datapointer});
+						$(".gridTable",$tabContent).anytable();
+						app.u.handleAppEvents($tabContent);
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				},
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.
 			adminBatchJobCreate : function(opts){
@@ -125,7 +143,18 @@ var admin_batchJob = function() {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {} //u
+		u : {}, //u
+		e : {
+			
+			showJobDetail : function($btn)	{
+				$btn.button();
+				$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
+					event.preventDefault();
+					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
+					});
+				}
+			
+			} //u
 
 
 		} //r object.
