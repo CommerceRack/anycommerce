@@ -139,7 +139,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 			<input type='email'  maxlength='50' size='30' name='login' class='footerFormFrm' placeholder='E-mail Address' />
 			</div>
 			<div class='floatLeft marginRight marginTop '>
-			<input type='submit' value='SIGN UP!' id='footerSignUpButton'>
+			<input type='submit' value='Sign Up!' id='footerSignUpButton'>
 			</div>
 		</form>
 	</div>	
@@ -149,9 +149,9 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     		<ul class='bottomLinkList'>
                	<li class='listHead'>SHOP</li>
 		        	<!-- place holder links, will need to replace safe.name later -->  
-				<li><a href='#top' class='footerLinkStyle' onClick="handleCategoryMenu('show');">Browse By Category</a></li>
-				<li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's Hot</a></li>
-				<li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New Arrivals</a></li>
+				<li><a href='#top' class='footerLinkStyle' onClick="handleCategoryMenu('show');">Browse by category</a></li>
+				<li><a href='#!search?TAG=IS_BESTSELLER' class='footerLinkStyle bindByAnchor'>What's hot</a></li>
+				<li><a href='#!search?TAG=IS_NEWARRIVAL' class='footerLinkStyle bindByAnchor'>New arrivals</a></li>
 				<li><a href='#!search?TAG=IS_SALE' class='footerLinkStyle bindByAnchor'>Sale</a></li>
 				<li><a href='#!search?TAG=IS_CLEARANCE' class='footerLinkStyle bindByAnchor'>Clearance</a></li>
 			</ul>    
@@ -160,22 +160,23 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
         	<ul class='bottomLinkList'>
             	<li class='listHead'>HELP</li>
 				<li><a href='#!company?show=about' class='footerLinkStyle bindByAnchor'>About</a></li>
-				<li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact Us</a></li>
+				<li><a href='#!company?show=contact' class='footerLinkStyle bindByAnchor'>Contact us</a></li>
 				<li><a href='#!company?show=faq' class='footerLinkStyle bindByAnchor'>FAQ</a></li>
-				<li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping Policy</a></li>
-				<li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return Policy</a></li>
-				<li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment Policy</a></li>
-				<li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy Policy</a></li>
+				<li><a href='#!company?show=shipping' class='footerLinkStyle bindByAnchor'>Shipping policy</a></li>
+				<li><a href='#!company?show=return' class='footerLinkStyle bindByAnchor'>Return policy</a></li>
+				<li><a href='#!company?show=payment' class='footerLinkStyle bindByAnchor'>Payment policy</a></li>
+				<li><a href='#!company?show=privacy' class='footerLinkStyle bindByAnchor'>Privacy policy</a></li>
             </ul>
 		</div>
         <div id='myaccount' class="bottomLinkListContainer">
             <ul class='bottomLinkList'>
                 <li class='listHead'>MY ACCOUNT</li>
-                <li><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create An Account</a></li>
-                <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Sign In</a></li>
-                <li><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Change Password</a></li>
-                <li><a href='#!customer?show=lists' class='footerLinkStyle bindByAnchor'>Wishlist Items</a></li>
-                <li><a href='#!customer?show=orders' class='footerLinkStyle bindByAnchor'>Order Tracking</a></li>
+                <li class='hideIfLoggedIn'><a href='#!customer?show=newsletter'  class='footerLinkStyle bindByAnchor'>Create account</a></li>
+                <li class='hideIfLoggedIn'><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>Sign In</a></li>
+                <li class='hideIfLoggedOut'><a href='#!customer?show=myaccount' class='footerLinkStyle bindByAnchor'>My account</a></li>
+                <li class='hideIfLoggedOut'><a href='#!customer?show=changepassword' class='footerLinkStyle bindByAnchor'>Change password</a></li>
+                <li><a href='#!customer?show=lists' class='footerLinkStyle bindByAnchor'>Wishlist</a></li>
+                <li><a href='#!customer?show=orders' class='footerLinkStyle bindByAnchor'>Order tracking</a></li>
             </ul>
         </div>
 <!--
