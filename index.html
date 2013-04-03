@@ -667,7 +667,11 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
 
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
-
+	
+	<div class="alignCenter">
+		<img src="img/large_shipping_banner.png" class="pointer" onClick="return showContent('company',{'show':'shipping'});"/>
+	</div>
+	
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
 	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>

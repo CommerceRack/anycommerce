@@ -346,9 +346,7 @@ var cubworld = function() {
 				app.u.dump('Showing column content: '+content);
 				if($('.thinColumn').hasClass('hiddenColumn')){
 					$('.wideColumn').animate({'width':'789'},550);
-					setTimeout(function(){
-						$('.thinColumn').show().animate({'width':'215'}, 500).removeClass('hiddenColumn');
-						},50);
+					$('.thinColumn').show().animate({'width':'215'}, 550).removeClass('hiddenColumn');
 					}
 				var $colContainer = $('#variableColumn');
 				var $prevCol = $('.activeColumn', $colContainer);
