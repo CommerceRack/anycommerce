@@ -457,8 +457,6 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 					}
 				return $r.children();
 				},
-<<<<<<< HEAD
-
 			handleElasticSimpleQuery : function(keywords,tagObj)	{
 				var qObj = {}; //query object
 				qObj.type = 'product';
@@ -494,46 +492,6 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 				app.u.dump(" --> datapointer for filterByAttributes query: "+tagObj.datapointer);
 				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
 				app.model.dispatchThis();
-=======
-			
-	
-//Adds elastic search params to a new raw elasticsearch object
-//Example of an obj would be {'filter':{'term':{'tags':'IS_BESTSELLER'}}} -- IE a full query or filter- just adding the required params here.
-			buildElasticRaw : function(elasticsearch) {
-				var es = $.extend(true, {}, elasticsearch);
-				
-				es.type = 'product';
-				es.mode = 'elastic-native';
-				es.size = 250;
-				
-				return es;
-			},
-			
-//Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
-			buildElasticSimpleQuery : function(obj)	{
-				var query = {}; //what is returned. false if error occurs.
-				if(obj && obj.query)	{
-					query.type = 'product';
-					query.mode = 'elastic-native';
-					query.size = 250;
-					query.query =  {"query_string" : obj};
-					}
-				else	{
-					$('#globalMessaging').anymessage({'message':'In store_search.u.buildElasticSimpleQuery, obj.query was empty. ',gMessage:true});
-					query = false;
-					}
-				return query;
-				},
-
-//not used by quickstart anymore. Still in use by analyzer and admin product editor.
-			handleElasticSimpleQuery : function(keywords,_tag)	{
-				var qObj = this.buildElasticSimpleQuery({'query':keywords});
-				_tag = _tag || {};
-				_tag.datapointer = "appPublicSearch|"+keywords;
-				var r = app.ext.store_search.calls.appPublicSearch.init(qObj,_tag);
-				app.model.dispatchThis();
-				return r;
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				}
 				
 			} //util

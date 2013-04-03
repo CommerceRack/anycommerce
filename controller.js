@@ -192,17 +192,12 @@ copying the template into memory was done for two reasons:
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
-<<<<<<< HEAD
-		else if(app.model.fetchSessionId())	{
-			app.calls.appCartExists.init(app.model.fetchSessionId(),{'callback':'handleTrySession','datapointer':'appCartExists'});
-=======
 		else if(app.model.fetchCartID())	{
 			app.u.dump(" -> session retrieved from localstorage..");
 			app.vars.cartID = app.model.fetchCartID();
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 			app.model.dispatchThis('immutable');
 			}
 		else	{
@@ -573,100 +568,6 @@ see jquery/api webdoc for required/optional param
 			}, //buyerNewsletters
 
 
-<<<<<<< HEAD
-
-
-
-		appCategoryDetail : {
-			init : function(obj,_tag,Q)	{
-				if(obj && obj.safe)	{
-					var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-					_tag = _tag || {};
-					_tag.datapointer = 'appCategoryDetail|'+obj.safe;
-					
-//the model will add the value of _tag.detail into the response so it is stored in the data and can be referenced for future comparison.
-					if(obj.detail)	{_tag.detail = obj.detail} else {}
-					
-//if no detail or detail = fast, but anything is in memory, use it.
-					if(app.model.fetchData(_tag.datapointer) && (!obj.detail || obj.detail=='fast'))	{
-						app.u.handleCallback(_tag)
-						}
-//max is the highest level, so if we have that already, just use it.
-					else if(app.data[_tag.datapointer] && app.data[_tag.datapointer].detail == 'max')	{
-						app.u.handleCallback(_tag);
-						}
-					else if (obj.detail == 'more' && (app.data[_tag.datapointer] && (!app.data[_tag.datapointer].detail == 'more' || app.data[_tag.datapointer].detail == 'max')))	{
-						app.u.handleCallback(_tag);
-						}
-					else 	{
-						r += 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In calls.appCategoryDetail, obj.safe not passed.");
-					app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "appCategoryDetail";
-				obj._tag = _tag;
-				app.model.addDispatchToQ(obj,Q);	
-				}
-			},//appCategoryDetail
-
-
-
-//get a product record.
-//required params: obj.pid.
-//optional params: obj.withInventory and obj.withVariations
-		appProductGet : {
-			init : function(obj,_tag,Q)	{
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				if(obj && obj.pid)	{
-					if(typeof obj.pid === 'string')	{obj.pid = obj.pid.toUpperCase();} //will error if obj.pid is a number.
-					
-					_tag = _tag || {};
-					_tag.datapointer = "appProductGet|"+obj.pid;
-//The fetchData will put the data into memory if present, so safe to check app.data... after here.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(obj,_tag,Q)
-						}
-//if variations or options are requested, check to see if they've been retrieved before proceeding.
-					else if((obj.withVariations && app.data[_tag.datapointer]['@variations'] === undefined) || (obj.withInventory && app.data[_tag.datapointer]['@inventory'] === undefined))	{
-						r = 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					else 	{
-						app.u.handleCallback(_tag);
-						}
-					}
-				else	{
-					app.u.throwGMessage("In calls.appProductGet, required parameter pid was not passed");
-					app.u.dump(obj);
-					}
-				return r;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj["_cmd"] = "appProductGet";
- 				obj["_tag"] = _tag;
-				app.model.addDispatchToQ(obj,Q);
-				}
-			}, //appProductGet
-
-
-
-
-
-//always uses immutable Q
-// ### need to migrate anything using this to use appCartCreate.
-		getValidSessionID : {
-			init : function(callback)	{
-				this.dispatch(callback); 
-				return 1;
-=======
 //obj should always have orderid.
 //may also have cartid for soft-auth (invoice view)
 		buyerOrderGet : {
@@ -682,7 +583,6 @@ see jquery/api webdoc for required/optional param
 					$('#globalMessaging').anymessage({'message':'buyerPurchaseHistoryDetail requires orderid','gMessage':true});
 					}
 				return r;
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				},
 			dispatch : function(obj,_tag,Q)	{
 				if(!Q)	{Q = 'mutable'}
@@ -966,27 +866,6 @@ see jquery/api webdoc for required/optional param
 				}
 			}, //ping
 
-<<<<<<< HEAD
-			
-		appProfileInfo : {
-			init : function(obj,_tag,Q)	{
-				var r = 0; //will return 1 if a request is needed. if zero is returned, all data needed was in local.
-				if(typeof obj == 'object' && (obj.profile || obj.sdomain))	{
-					_tag = _tag || {};
-					_tag.datapointer = 'appProfileInfo|'+(obj.profile || obj.sdomain);
-
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(obj,_tag,Q);
-						}
-					else 	{
-						app.u.handleCallback(_tag)
-						}
-					}
-				else	{
-					app.u.throwGMessage("In calls.appProfileGet, obj either missing or missing profile or sdomain var.");
-					app.u.dump(obj);
-=======
 //used to get a clean copy of the cart. ignores local/memory. used for logout.
 //this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. !!! fix during cleanup or big release.
 		refreshCart : {
@@ -1009,24 +888,13 @@ see jquery/api webdoc for required/optional param
 				else	{
 //					app.u.dump(' -> data is local');
 					app.u.handleCallback(_tag);
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					}
 				return r;
-<<<<<<< HEAD
-				}, // init
-			dispatch : function(obj,_tag,Q)	{
-				obj['_cmd'] = "appProfileInfo";
-				obj['_tag'] = _tag;
-				app.model.addDispatchToQ(obj,Q);
-				} // dispatch
-			}, //appProfileInfo
-=======
 				},
 			dispatch : function(_tag,Q)	{
 				app.model.addDispatchToQ({"_cmd":"whereAmI","_tag" : _tag},Q || 'mutable');	
 				}
 			},//whereAmI
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 //for now, no fetch is done here. it's assumed if you execute this, you don't know who you are dealing with.
 		whoAmI : {
@@ -1211,19 +1079,9 @@ allow for global manipulation if needed later.
 app.u.handleCallback(tagObj);
 */
 
-<<<<<<< HEAD
-		handleCallback : function(tagObj)	{
-//			app.u.dump("BEGIN u.handleCallback");
-//			if(tagObj && tagObj.datapointer && ){app.data[tagObj.datapointer]['_rtag'] = tagObj} //updates obj in memory to have latest callback. -> commented out 2012-12-21. this shouldn't be needed in data.
-			if(tagObj && tagObj.callback){
-//				app.u.dump(" -> callback exists");
-//				app.u.dump(tagObj.callback);
-				if(typeof tagObj.callback == 'function')	{app.u.dump(" -> executing anonymous function."); tagObj.callback(tagObj);}
-=======
 		handleCallback : function(_rtag)	{
 			if(_rtag && _rtag.callback){
 				if(typeof _rtag.callback == 'function')	{_rtag.callback(_rtag);}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				else	{
 //				app.u.dump(" -> callback is not an anonymous function.");
 					var callback;
@@ -1789,7 +1647,7 @@ VALIDATION
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
-					
+					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.attr('required') == 'required' && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');
@@ -2154,11 +2012,7 @@ name Mod 10 or Modulus 10. */
 			}, //isValidPhoneNumber
 
 		//found here: http://www.blog.zahidur.com/usa-and-canada-zip-code-validation-using-javascript/
-<<<<<<< HEAD
-		 isValidPostalCode : function(postalCode,countryCode) {
-=======
 		isValidPostalCode : function(postalCode,countryCode) {
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 			 app.u.dump("BEGIN app.u.isValidPostalCode. countryCode: "+countryCode);
 			var postalCodeRegex;
 			switch (countryCode) {
@@ -2615,10 +2469,6 @@ return $r;
 			return r;
 			},
 
-<<<<<<< HEAD
-
-=======
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 //as part of the data-bind is a var: for the data location (product: or cart:).
 //this is used to parse that to get to the data.
 //if no namespace is passed (zoovy: or user:) then the 'root' of the object is used.
@@ -2698,14 +2548,6 @@ return $r;
 			},
 
 		imageURL : function($tag,data){
-<<<<<<< HEAD
-//				app.u.dump('got into displayFunctions.image: "'+data.value+'"');
-			data.bindData.bgcolor = data.bindData.bgcolor || 'ffffff'
-//			app.u.dump(" -> width: "+$tag.width());
-			if(data.value)	{
-//set some recommended/required params.
-				data.bindData.name = data.value;
-=======
 //			app.u.dump('got into displayFunctions.image: "'+data.value+'"');
 			data.bindData.b = data.bindData.bgcolor || 'ffffff'; //default to white.
 			
@@ -2716,7 +2558,6 @@ return $r;
 			if(data.value)	{
 //set some recommended/required params.
 				data.bindData.name = (data.bindData.valuePretext) ? data.bindData.valuePretext+data.value : data.value;
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				data.bindData.w = $tag.attr('width');
 				data.bindData.h = $tag.attr('height');
 				data.bindData.tag = 0;
@@ -2913,17 +2754,6 @@ $tmp.empty().remove();
 			$tag.val(data.value);
 			}, //text
 
-<<<<<<< HEAD
-//only use this on fields where the value is b
-		popCheckbox : function($tag,data){
-//			app.u.dump(" -> data.value: "+data.value);
-			if(Number(data.value))	{$tag.attr('checked',true);}
-			else if(data.value === 'on')	{$tag.attr('checked',true);}
-			else if(data.value == true)	{$tag.attr('checked',true);}
-			else{} //shouldn't get here if data.value isn't populated.
-			},
-
-=======
 //only use this on fields where the value is boolean
 //if setting checked=checked by default, be sure to pass hideZero as false.
 		popCheckbox : function($tag,data){
@@ -2936,7 +2766,6 @@ $tmp.empty().remove();
 				}
 			else{}
 			},
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 //will allow an attribute to be set on the tag. attribute:data-stid;var: product(sku); would set data-stid='sku' on tag
 //pretext and posttext are added later in the process, but this function needed to be able to put some text before the output

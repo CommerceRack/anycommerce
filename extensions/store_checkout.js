@@ -66,13 +66,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-<<<<<<< HEAD
 					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
 					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId,
-=======
-					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
-					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID,
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'store_checkout','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -106,13 +101,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
 				app.model.addDispatchToQ({
 					"_cmd":"cartPaypalSetExpressCheckout",
-<<<<<<< HEAD
 					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
 					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#checkout?show=checkout",
-=======
-					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
-					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout",
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					"getBuyerAddress":getBuyerAddress,'_tag':tagObj
 					},'immutable');
 				}
@@ -697,14 +687,6 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 					else {}// no match. carry on.
 					}
 
-<<<<<<< HEAD
-=======
-//app.u.dump(" -> a[addressType+'_region']: "+a[addressType+'_region']);
-//app.u.dump(" -> a[addressType+'_postal']: "+a[addressType+'_postal']);
-//app.u.dump(" -> $('#data-'+addressType+'_zip').length: "+$('#data-'+addressType+'_zip').length);
-//app.u.dump(" -> $('#data-'+addressType+'_state').length: "+$('#data-'+addressType+'_state').length);
-
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
 				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
 				$('#data-'+addressType+'_city').val(a[addressType+'_city']);

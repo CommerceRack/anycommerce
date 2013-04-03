@@ -81,11 +81,7 @@ app.globalAjax.lastDispatch - keeps track of when the last dispatch occurs. Not 
 function zoovyModel() {
 	var r = {
 	
-<<<<<<< HEAD
-		version : "201252",
-=======
-		version : "201314",
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
+		version : "201312",
 	// --------------------------- GENERAL USE FUNCTIONS --------------------------- \\
 	
 	//pass in a json object and the last item id is returned.
@@ -789,7 +785,7 @@ uuid is more useful because on a high level error, rtag isn't passed back in res
 		handleResponse_authNewAccountCreate : function(responseData)	{
 			app.model.handleResponse_authAdminLogin(responseData); //this will have the same response as a login if successful.
 			},
-
+	
 	//this function gets executed upon a successful request for a create order.
 	//saves a copy of the old cart object to order|ORDERID in both local and memory for later reference (invoice, upsells, etc).
 		handleResponse_cartOrderCreate : function(responseData)	{
@@ -859,22 +855,22 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
 			},
 
-<<<<<<< HEAD
 		handleResponse_appCartExists : function(responseData)	{
 			if(responseData.exists >= 1)	{
 				this.handleResponse_appCartCreate(responseData); //saves session data locally and into control.
 				}
 			else	{
 /* nuke references to old, invalid session id. if this doesn't happen, the old session ID gets passed and will be re-issued. */				
-				app.sessionId = null;
+				app.vars.cartID = null;
 				app.storageFunctions.writeLocal('cartid',null);
 				app.model.handleResponse_defaultAction(responseData); //datapointer ommited because data already saved.
-=======
+				}
+			},
+
 		handleResponse_adminUIExecuteCGI : function(responseData)	{
 			if(responseData.html)	{
 				app.ext.admin.u.uiHandleContentUpdate(responseData.uri,responseData,viewObj);
 				//app.ext.admin.u.uiHandleContentUpdate(path,data,viewObj)
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				}
 
 			},
@@ -886,6 +882,10 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 //			app.u.dump(" --> appCartCreate Response executed. ("+responseData['_uuid']+")");
 //			app.u.dump("RESPONSE DATA:");
 //			app.u.dump(responseData);
+
+//ensure no cross-account data polution on shared domain. this only happens if cart is not valid. If valid, local data should be for account in focus.
+//the cart/session will immediately get added back to local storage below.
+			if(window.location.href.indexOf('ssl.zoovy') > -1)	{localStorage.clear();}
 
 //no error handling at this level. If a connection or some other critical error occured, this point would not have been reached.
 //save session id locally to maintain session id throughout user experience.	
