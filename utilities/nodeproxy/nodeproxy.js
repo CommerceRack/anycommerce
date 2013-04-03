@@ -61,7 +61,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3a. change any of these variables to match your project:
-var TESTING_DOMAIN = "www.zoovy.com";
+var TESTING_DOMAIN = "www.toywars.com";
 var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
 
 // 3b. run: node nodeproxy.js
