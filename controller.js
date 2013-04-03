@@ -1172,7 +1172,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //obj is some optional data. obj.$content would be a common use.
 // !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
 		handleAppEvents : function($target,obj)	{
-				app.u.dump("BEGIN admin.u.handleAppEvents");
+//				app.u.dump("BEGIN app.u.handleAppEvents");
 				obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
