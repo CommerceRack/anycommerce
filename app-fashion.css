@@ -120,7 +120,6 @@ HEADER
 	font-weight: bold;
 	text-decoration:none;
 	font-size:1.2em;
-	font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
 	color: 	#fff;
 	line-height: 34px;
@@ -209,7 +208,6 @@ FOOTER
 
 #footerLinks {
 	background: #a3033d;
-	height: 300px;
 	margin-left: auto;
   	margin-right: auto;
 }
@@ -295,7 +293,7 @@ HOMEPAGE
 	float: right;
 	text-align: center;
 	color: white;
-}
+	}
 
 
 .listHeader	{line-height:34px; padding:0 12px; margin-bottom:6px; background-color: #F0F0F0; color:#ce004e;}
@@ -340,48 +338,22 @@ HOMEPAGE
 	float: right;
 }
 
+
+
 #followUs { 
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: 65px;	
-}
+	}
 
 .socialIconContainer {
 	height: 50px;
 	margin-top: 15px;
 	margin-left: auto;
 	margin-right: auto;	
-}
+	}
 
-#facebook {
-	float: left;
-	width: 25%;	
-}
-
-#twitter {
-	float: left;
-	width: 25%;	
-}
-
-#youtube {
-	float: left;
-	width: 25%;	
-}
-
-#tumbler {
-	float: left;
-	width: 25%;	
-}
-
-.catagorySelectNavContainer {
-	background-color: white;
-	width: 92%;
-	height: 110px;
-	padding-top: 15;
-	margin-left: auto;
-  	margin-right: auto;
-}
-
+.socialIconContainer div	{display:inline-block; cursor:pointer; margin:0 6px;}
 
 
 
@@ -480,7 +452,7 @@ li.productListItem	{width:25%; margin:0 0 24px 0;}
 
 /* product layout */
 
-.prodBigImage	{z-index:11; border:1px solid #efefef;} /* zindex is so tags appear behind image */
+.image1	{z-index:11; border:1px solid #efefef; position:relative;} /* zindex is so tags appear behind image */
 .prodThumbs a	{margin:6px 6px 0 0; float:left; display:block;}
 .productPage h1	{font-size:1.4em; margin-bottom:12px;}
 
@@ -522,7 +494,7 @@ button.quickView	{border:0; background:url(app-fashion/quickview-90x30.png) no-r
 
 
 
-.tagsContainer	{position:absolute; left:-60px; top:15px;width: 65px; z-index:10;}
+.tagsContainer	{position:absolute; left:-65px; top:15px;width: 65px; z-index:10;}
 .tagSprite	{background-image:url(app-fashion/tags-100x129.png); background-repeat:no-repeat; display:none; width:65px; height:30px;}
 .is_newarrival	{background-position: 0 0; display:inline-block;}
 .is_bestseller	{background-position: 0 -33px; display:inline-block;}
