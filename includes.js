@@ -255,7 +255,7 @@ renderOptionRADIO: function(pog)	{
     var i = 0;
     var len = pog['options'].length;
 	while (i < len) {
-		$parentDiv.append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt']).wrap($("<label \/>")));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt'])));
 		i++;
 		}
 	return $parentDiv;
@@ -463,7 +463,7 @@ renderOption: function(pog,pid) {
 	var pogid = pog.id;
 
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").addClass("zform_div").addClass("pogType_"+pog.type);
+	var $formFieldDiv = $("<div>").addClass("variation").addClass("pogType_"+pog.type);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;
