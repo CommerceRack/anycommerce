@@ -243,7 +243,7 @@ COMMONLY EDITED TEMPLATES
 <div id='homepageTemplate' class='homeTemplate'>
 	<div class='mainBannerContainer clearfix'>
 		
-		<div class='mainBannerGraphic'><img src='app-fashion/fall_collection-703x294.jpg' width='703' height='294' alt='' /></div>
+		<div class='mainBannerGraphic pointer' onClick="showContent('search',{'TAG':'IS_NEWARRIVAL'});"><img src='app-fashion/new_arrivals-703x294.jpg' width='703' height='294' alt='' /></div>
 		
 		<div class='mainBannerNewsletter'>
 		
@@ -285,11 +285,11 @@ COMMONLY EDITED TEMPLATES
 	<section id='newArrivals'>
 		
 		<div class='listHeader'>
-		<a href="#" onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'});" class='floatRight'>See all New Arrivals</a>
-		<h2>New Arrivals</h2>
+		<a href="#" onClick="return showContent('search',{'TAG':'IS_SALE'});" class='floatRight'>See all Sale Items</a>
+		<h2>Now On Sale</h2>
 		</div>
 		
-	<ul id='homeProdSearchNewArrivals' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_NEWARRIVAL"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul id='homeProdSearchSale' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_SALE"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 	
 

@@ -1323,7 +1323,7 @@ P.listID (buyer list id)
 //P.listid and p.sku are required.
 //optional params include: qty, priority, note, and replace. see API docs for explanation.
 			add2BuyerList : function(P){
-				app.u.dump("BEGIN myria.a.add2BuyerList");
+				app.u.dump("BEGIN myria.a.add2BuyerList: "+P.listid);
 				var authState = app.u.determineAuthentication();
 				app.u.dump("authState: "+authState);
 				if(typeof P != 'object' || !P.sku || !P.listid)	{
@@ -1350,7 +1350,9 @@ P.listID (buyer list id)
 					var msg = app.u.statusMsgObject('adding item '+P.sku+' to list: '+P.listid);
 					msg.parentID = parentID;
 					app.u.throwMessage(msg);
+					app.model.destroy('buyerProductListDetail|'+P.listid);
 					app.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
+					app.calls.buyerProductListDetail.init(P.listid,{},'immutable')
 					app.model.dispatchThis('immutable');
 					_gaq.push(['_trackEvent','Manage buyer list','User Event','item added',P.sku]);
 					}

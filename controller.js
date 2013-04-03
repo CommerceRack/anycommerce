@@ -660,12 +660,12 @@ see jquery/api webdoc for required/optional param
 		buyerProductListAppendTo : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(obj && obj.listID)	{
+				if(obj && obj.listid)	{
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listID','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listid','gMessage':true});
 					}
 				return r;
 				},
