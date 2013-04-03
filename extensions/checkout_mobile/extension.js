@@ -871,7 +871,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //triggered on specific address inputs. When an address is updated, several things could be impacted, including tax, shipping options and payment methods.
 			execAddressUpdate : function($input)	{
-				$input.off('blur.execAddressUpdate').on('blur.execAddressUpdate',function(){
+				$input.off('change.execAddressUpdate').on('change.execAddressUpdate',function(){
 					var obj = {};
 					obj[$input.attr('name')] = $input.val();
 					//if bill/ship are the same, duplicate data in both places OR shipping methods won't update.
@@ -881,6 +881,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.calls.cartSet.init(obj); //update the cart
 					app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
 					app.model.dispatchThis('immutable');
+
 					})
 				}, //execAddressUpdate
 
@@ -1213,11 +1214,22 @@ note - the order object is available at app.data['order|'+P.orderID]
 			tagAsBillToShip : function($cb)	{
 				$cb.anycb();
 				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
+					var $form = $cb.closest('form');
+
 					app.calls.cartSet.init({'want/bill_to_ship':($cb.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
+//when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
+// re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
+// originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
+					if($cb.is(':checked'))	{
+						app.calls.cartSet.init({'ship/postal': ""},{'callback':function(rd){
+							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+							}},'immutable'); //update ship zip to bill zip.
+						}
+					else	{
+						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
+						}
 					app.model.destroy('cartDetail');
-					app.calls.cartDetail.init({'callback':function(rd){
-						app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
-						}},'immutable');
+					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					});
 				}
