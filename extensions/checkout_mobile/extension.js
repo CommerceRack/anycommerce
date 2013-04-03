@@ -238,18 +238,23 @@ if(app.vars._clientid == '1pc')	{
 		},2000); 
 	}
 else	{
-	//the code below is to disable any links in the payment messaging for apps.
+	app.u.dump("Not 1PC.");
+	app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
+	//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
 	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
 		event.preventDefault();
+		});
+	$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
+		event.preventDefault();
 		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-		showContent('customer',{'show':'invoice','uriParams':{'cartid':orderCartID,'orderid':orderID}});
+		showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
 		});
 	}
 
 				},
 			onError : function(rd)	{
 				$('body').hideLoading();
-				$('#globalMessaging').anymessage(rd);
+				$('#globalMessaging').anymessage({'message':rd});
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
@@ -276,9 +281,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 //order notes is NOT validated
 //there are six validated fields, so summing up the values will = 6 if all panels pass.
 			checkout : function($form)	{
-				var r = undefined; //what is returned. Either true or false.
-				if(app.u.buyerIsAuthenticated())	{r = 1}
-				else if($form)	{
+				var r = false; //what is returned. Either true or false.
+				if($form)	{
 					
 					var formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
 					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
@@ -303,7 +307,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							}
 						});
 					
-					
+					//errors would only be set if something went wrong in validation, not for missing fields which are handled within the individual panel validation.
 					if(errors != '')	{
 						r = false;
 						$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
@@ -320,13 +324,13 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					r = false;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, $form was not passed.','gMessage':true});
 					}
-
+				app.u.dump("validate.checkout: "+r);
 				return r;
 				}, //isValid
 //validation function should be named the same as the data-app-role of the fieldset. 
 
 			chkoutPreflight : function($fieldset,formObj)	{
-				var valid = undefined; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
+				var valid = 0; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
 				
 				if($fieldset && formObj)	{
 					if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
@@ -340,7 +344,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutPreflightFieldset
 
 			chkoutAccountCreate : function($fieldset,formObj)	{
-				var valid = undefined; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
+				var valid = 0; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
 				
 				if($fieldset && formObj)	{
 					if(!formObj['want/create_customer'])	{valid = 1}
@@ -362,7 +366,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				
 //make sure a shipping method is selected
 			chkoutMethodsShip : function($fieldset,formObj)	{
-				var valid = undefined;
+				var valid = 0;
 				if($fieldset && formObj)	{
 					if($("[name='want/shipping_id']:checked").length)	{
 						if(app.u.validateForm($fieldset)){valid = 1;}
@@ -383,7 +387,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				
 //in addition to selecting a pay option, certain extra fields may be present and must be checked for.
 			chkoutMethodsPay : function($fieldset,formObj)	{
-				var valid = undefined;
+				var valid = 0;
 				if($fieldset && formObj)	{
 					if($('[name="want/payby"]:checked',$fieldset).length)	{
 						if(app.u.validateForm($fieldset))	{valid = 1;}
@@ -403,11 +407,16 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutPayOptionsFieldset
 				
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = undefined;
+				var valid = 0;
 
 				if($fieldset && formObj)	{
-					
-					if(formObj['bill/shortcut'])	{valid = 1}
+//if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
+					if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
+						if(formObj['bill/shortcut'])	{valid = 1}
+						else	{
+							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
+							}
+						}
 					else	{
 
 //handle phone number input based on zGlobals setting.
@@ -442,12 +451,18 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutBillAddressFieldset
 				
 			chkoutAddressShip: function($fieldset,formObj)	{
-				var valid = undefined;
+				var valid = 0;
 
 				if($fieldset && formObj)	{
 					
 					if(formObj['want/bill_to_ship'])	{valid = 1}
-					else if(formObj['ship/shortcut'])	{valid = 1}
+//if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
+					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@ship'] && app.data.buyerAddressList['@ship'].length)	{
+						if(formObj['ship/shortcut'])	{valid = 1}
+						else	{
+							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
+							}
+						}
 					else	{
 
 //postal and region are only required for domestic orders.	
@@ -994,6 +1009,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 					
 						if(app.ext.orderCreate.validate.checkout($form))	{
+							$('body').showLoading({'message':'Creating order...'});
 							app.ext.orderCreate.u.saveAllCheckoutFields($form);
 							app.ext.cco.u.buildPaymentQ();
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});

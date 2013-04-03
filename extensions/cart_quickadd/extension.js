@@ -163,6 +163,7 @@ var cart_quickadd = function() {
 				$btn.button();
 				$btn.off('click.execCheckout').on('click.execCheckout',function(event){
 					event.preventDefault();
+					app.ext.cart_quickadd.u.cartHide();
 					showContent('checkout',{'show':'checkout'});
 					});
 				} //execCheckoutShow

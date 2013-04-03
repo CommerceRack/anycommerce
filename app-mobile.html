@@ -66,7 +66,7 @@ app.u.loadScript(app.vars.baseURL+"app-mobile-init.js");
 			<h3>Loading our Wholesale Shopping App.</h3>
 	
 			<div class='alignCenter'>
-			<progress id="appPreViewProgressBar" max="100" value="0" /><br />
+			<progress id="appPreViewProgressBar" max="100" value="0" ></progress><br />
 			</div>
 			<div id='appPreViewProgressText'>0% Complete</div>
 		</div>
@@ -215,7 +215,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <ul>
 <li id='categoryListTemplate'>
 	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' alt='' /></div>
 		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
 	</div>
 </li>
@@ -241,7 +241,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
 		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' alt='' />
 		</div>
 
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
@@ -253,7 +253,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 	</div>
 	
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
-		<input type='hidden' name='qty' value='1' \/>
+		<input type='hidden' name='qty' value='1' />
 		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 	
@@ -268,7 +268,7 @@ container ul should have lineItemProdlist class on it instead of productList
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 		<div class='prodThumbContainer floatLeft'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' alt='' />
 		</div>
 
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
@@ -294,7 +294,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
-				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' alt='' />
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 
 <button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
@@ -344,7 +344,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' alt='' />
 		</div>
 
 		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
@@ -357,7 +357,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 <li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
 	<div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
 		<div class='prodThumbContainer'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' alt='' />
 		</div>
 
 		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
@@ -408,17 +408,17 @@ this will likely become more flexible in the future. ###
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
+	<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' alt='' />
 
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' alt='' /></div>
 
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' alt='' /></div>
 
-<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' /></div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' alt='' /></div>
 
 	</div>
 
@@ -472,7 +472,6 @@ this will likely become more flexible in the future. ###
 
 	</menu>
 
-	<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed Transparent 33 175x30"></span>
 	</td>
 </tr>
 <tr>
@@ -512,7 +511,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 		</div>
 
-		<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
 
 	</div>
 
@@ -548,7 +547,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <div>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' alt='' /></div>
 
 </div>
 
@@ -592,7 +591,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 <tr>
 	<td colspan='2'>
 
-	<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+	<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
 
 	</td>
 </tr>
@@ -789,12 +788,12 @@ if you change these, you should move them above this comment so that when you (o
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
-<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-		<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-		<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-		<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
-		<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
-		<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
+<!--		<li><a href='#newsletter'>Newsletter Subscription</a></li>
+		<li><a href='#recoverpassword'>Recover Password</a></li> -->
+		<li><a href='#customer?show=myaccount'>My Account</a></li>
+		<li><a href='#customer?show=changepassword'>Change Password</a></li>
+		<li><a href='#customer?show=orders'>Order History</a></li>
+		<li><a href='#customer?show=lists'>Manage Lists</a></li>
 	</ul>
 	</nav>
 	</div>
@@ -1037,7 +1036,6 @@ So the cart template should contain these two elements and the extension should 
 
 </section>
 
-<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed PostIt 170x52"></span>
 
 		</div>
 	</div>
@@ -1062,14 +1060,14 @@ So the cart template should contain these two elements and the extension should 
 		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
 		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
 
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' alt='' /></div>
 
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1090,7 +1088,7 @@ used on a product layout. Some product have 'children' which may represent the s
 
 <ul>
 <li id='productListTemplateChildren' onClick="showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' alt='' />
 	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
 </li>
 </ul>
@@ -1123,13 +1121,13 @@ used on a product layout. Some product have 'children' which may represent the s
 
 <table>
 <tr>
-	<td><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
+	<td><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' alt='' /></td>
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' alt='' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' alt='' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' alt='' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' alt='' />
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' alt='' />
 	</td>
 </tr>
 </table>
@@ -1193,7 +1191,7 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 
 <fieldset class='userInfo borderNone'>
 <div>
@@ -1310,6 +1308,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
+
 <table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
 <tr>
 	<td colspan='2'>
@@ -1318,7 +1317,7 @@ The 'data-action' attribute is used to assign an onclick.
 <button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
 </div>
 
-<h3 data-bind='var:order(flow/pool);format:text; pretext:Order Status: ;'></h3>
+<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
 
 	</td>
 </tr>
@@ -1330,45 +1329,47 @@ The 'data-action' attribute is used to assign an onclick.
 
 <!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
 
-<h5 class='orderTotal' data-bind='var:order(sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
-<h5 class='balanceDue' data-bind='var:order(sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 </hgroup>
 
 <address class='marginBottom'>
-<h4>
-	<span data-bind='var:order(bill/firstname);format:text; pretext:Bill To: ;'></span>
-	<span data-bind='var:order(bill/lastname);format:text;'></span>
-</h4>
-<div data-bind='var:order(bill/address1);format:text;'></div>
-<div data-bind='var:order(bill/address2);format:text;'></div>
+<b>
+	<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/bill/address1);format:text;'></div>
+<div data-bind='var:order(order/bill/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(bill/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(bill/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+	<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
 </div>
-<div data-bind='var:order(bill/countrycode);format:text;'></div>
+<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
 </address>
 
 <address class='marginBottom'>
-<h4>
-	<span data-bind='var:order(ship/firstname);format:text; pretext:Ship To: ;'></span>
-	<span data-bind='var:order(ship/lastname);format:text;'></span>
-</h4>
-<div data-bind='var:order(ship/address1);format:text;'></div>
-<div data-bind='var:order(ship/address2);format:text;'></div>
+<b>
+	<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/ship/address1);format:text;'></div>
+<div data-bind='var:order(order/ship/address2);format:text;'></div>
 <div>
-	<span data-bind='var:order(ship/city);format:text;posttext:, ;'></span>
-	<span data-bind='var:order(ship/region);format:text;posttext:. ;'></span>
-	<span data-bind='var:order(ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+	<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/ship/postal);format:text;'></span>
 </div>
-<div data-bind='var:order(ship/countrycode);format:text;'></div>
+<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
 </address>
 
 
 	</td>
 	<td class='orderContentsProdlistContainer'>
-	<ul data-bind='var:order(tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+	<table  class='listStyleNone lineItemProdlist'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
 	</td>
 </tr>
 </table>
