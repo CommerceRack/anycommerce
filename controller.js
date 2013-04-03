@@ -1647,7 +1647,7 @@ VALIDATION
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
-					
+					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.attr('required') == 'required' && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');

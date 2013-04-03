@@ -478,7 +478,7 @@ CHECKOUT
 .checkoutFormContainer input, checkoutFormContainer select	{margin:2px 6px 2px 0;}
 .checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
 
-
+.headerPadding label	{padding:2px 6px;}
 
 /* Pure CSS3 Multi Level Drop Down Navigation Menu */
 /*             http://www.bloggermint.com/demos/darknavmenu/#            */

@@ -428,7 +428,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							}
 
 //postal and region are only required for domestic orders.	
-						if($("input[name='bill/countrycode']",$fieldset).val == "US")	{
+						if(formObj['bill/countrycode'] == "US" || !formObj['bill/countrycode'])	{
 							$("input[name='bill/postal']",$fieldset).attr('required','required');
 							$("input[name='bill/region']",$fieldset).attr('required','required');
 							}
