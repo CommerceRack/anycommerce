@@ -116,7 +116,7 @@ and offMenu is toggle off, hiding the change button.
 .marginBottom	{margin-bottom:12px;}
 .stdMargin	{margin:12px;}
 .headerPadding	{padding: 3px 6px;} /* for use in headings or legends that use the ui-state classes and need a little padding within. */
-
+.stdPadding	{padding:12px;}
 .fullWidth	{width:100%;}
 
 

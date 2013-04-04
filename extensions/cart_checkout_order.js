@@ -187,21 +187,21 @@ left them be to provide guidance later.
 			}, //cartGoogleCheckoutURL	
 
 		cartPaypalSetExpressCheckout : {
-			init : function()	{
-				var getBuyerAddress = 0;
-				if(app.ext.cco.u.taxShouldGetRecalculated())
-					getBuyerAddress = 1;
-				this.dispatch(getBuyerAddress);
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
-			dispatch : function(getBuyerAddress)	{
-				var _tag = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"orderCreate"}
-				app.model.addDispatchToQ({
-					"_cmd":"cartPaypalSetExpressCheckout",
-					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
-					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout",
-					"getBuyerAddress":getBuyerAddress,'_tag':_tag
-					},'immutable');
+			dispatch : function(obj,_tag,Q)	{
+				
+				obj = obj || {};
+				obj._cmd = "cartPaypalSetExpressCheckout";
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout"
+				
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
+				
+				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //cartPaypalSetExpressCheckout	
 

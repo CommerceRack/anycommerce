@@ -110,16 +110,6 @@ var orderCreate = function() {
 				}
 			},
 
-		handleCartPaypalSetECResponse : {
-			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN orderCreate[nice].callbacks.handleCartPaypalSetECResponse.onSuccess');
-				window.location = app.data[tagObj.datapointer].URL
-				},
-			onError : function(responseData,uuid)	{
-				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on cart page.
-				app.u.throwMessage(responseData);
-				}
-			},
 
 //mostly used for the error handling.
 		handlePayPalIntoPaymentQ : {
@@ -703,7 +693,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //also show a message to allow the merchant to remove the paypal payment option and use a different method?
 					$("[data-app-role='giftcardContainer']",$fieldset).hide();
 					$("[data-app-role='paymentOptionsContainer']",$fieldset).hide();
-					$("[data-app-event='orderCreate|execChangeFromPayPal']").show();
+					$("[data-app-event='orderCreate|execChangeFromPayPal']",$fieldset).show();
 					}
 				else	{
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
@@ -729,9 +719,13 @@ an existing user gets a list of previous addresses they've used and an option to
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
+
 					if(formObj['want/payby'])	{
-						var $radio = $("input[value='"+app.data.cartDetail.want.payby+"']",$fieldset),
+						var $radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
 						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
+						
+						app.u.dump(" -> $radio.length: "+$radio.length);
+						
 						$radio.attr('checked','checked');
 						if($supplemental)	{
 							app.u.dump(" -> payment method HAS supplemental inputs");
@@ -1014,9 +1008,19 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $btn.closest('form');
 					
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
-					if($("input[name='want/payby']").val() == 'PAYPALEC' && !app.ext.orderCreate.vars['payment-pt'])	{
-						$('body').showLoading({'message':'Transferring you to PayPal to authorize payment'});
-						app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
+					if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.orderCreate.vars['payment-pt'])	{
+						$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
+						app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
+							$('body').hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
+								$fieldset.anymessage({'message':rd});
+								}
+							else	{
+								window.location = app.data[rd.datapointer].URL
+								}
+							},"extension":"orderCreate"},'immutable');
+						app.model.dispatchThis('immutable');
 						}
 					else	{
 					
@@ -1143,7 +1147,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.u.printByjqObj($btn.closest("[data-app-role='invoiceContainer']"));
 					});
 				
-				},
+				}, //execInvoicePrint
 
 			showBuyerAddressAdd : function($btn)	{
 				$btn.button();
@@ -1177,7 +1181,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.dispatchThis('immutable');
 						});
 					})
-				},
+				}, //showBuyerAddressAdd
 
 			showBuyerAddressUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -1220,7 +1224,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
-				},
+				}, //tagAsAccountCreate
 			
 			tagAsBillToShip : function($cb)	{
 				$cb.anycb();
@@ -1243,7 +1247,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					});
-				}
+				} //tagAsBillToShip
 			},
 
 
@@ -1263,6 +1267,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				return obj;
 				}, //extendedDataForCheckout
+
 //will turn the placeholder into a label for browsers that don't support it.
 			handlePlaceholder : function($fieldset)	{
 				if(!$.support.placeholder) {
@@ -1276,7 +1281,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							}
 						});
 					}
-				},
+				}, //handlePlaceholder
 			
 //$content could be the parent form or the forms container. just something around this checkout. (so that multiple checkout forms are possible. imp in UI
 //role is the value of data-app-role on the fieldset.
@@ -1322,7 +1327,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				else	{
 					$('#globalMessaging').anymessage({'message':"In orderCreate.u.handlePanel, either $context ["+typeof $context+"], role ["+role+"] or actions ["+actions+"] not defined or not an object ["+typeof actions+"]",'gMessage':true});
 					}
-				},
+				}, //handlePanel
 
 //this code was executed often enough to justify putting it into a function for recycling.
 //sets payment options, shipping options and cart summary to loading, then adds immutable dispatches/callbacks/etc for updating.
@@ -1478,7 +1483,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 						o += " />"+data.value[i].pretty+"<\/label></div>";
 						}
 					$tag.html(o);
-					
+					if(app.data.cartDetail && app.data.cartDetail.want && app.data.cartDetail.want.payby)	{
+						$("input[value='"+app.data.cartDetail.want.payby+"']",$tag).attr('checked','checked');
+						}
 					}
 				else	{
 					app.u.dump("No payment methods are available. This happens if the session is non-secure and CC is the only payment option. Other circumstances could likely cause this to happen too.",'warn');
