@@ -1482,17 +1482,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
 	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
-		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>
+		<span data-bind="var: address(ship/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(ship/lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(ship_address1);format:text;"  title='address'></div>
-		<div data-bind="var: address(ship_address2);format:text;"  title='address 2'></div>
+		<div data-bind="var: address(ship/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(ship/address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(ship_city);format:text;"  title='city'></span>,
-		<span data-bind="var: address(ship_region);format:text;"  title='state'></span>.
-		<span data-bind="var: address(ship_postal);format:text;"  title='zip'></span>
-		<div data-bind="var: address(ship_countrycode);format:text;" title='country'></div>
+		<span data-bind="var: address(ship/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(ship/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(ship/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(ship/countrycode);format:text;" title='country'></div>
 
 	</div>
 

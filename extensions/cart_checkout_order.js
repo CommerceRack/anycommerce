@@ -415,6 +415,7 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //				app.u.dump("BEGIN cco.u.nukePayPalEC");
 				app.ext.orderCreate.vars['payment-pt'] = null;
 				app.ext.orderCreate.vars['payment-pi'] = null;
+				app.calls.cartSet.init({'want/payby':""}); //adds dispatches.
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
 					});
@@ -624,6 +625,63 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					app.u.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
 					}
 				},
+//run this just prior to creating an order.
+//will clean up cart object.
+			sanitizeAndUpdateCart : function($form,_tag)	{
+				if($form)	{
+					_tag = _tag || {};
+					var formObj = $form.serializeJSON();
+//po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
+					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
+						formObj['want/po_number'] = formObj['want/reference_number'];
+						}
+
+// !!! Tighten this code up (for addresses). should be a function to set the address instead of three duplicated code blocks.
+//if a shortcut is selected, save the address info into the cart.
+				if(formObj['bill/shortcut'])	{
+					var billAddr = app.ext.cco.u.getAddrObjByID('bill',formObj['bill/shortcut']);
+					for(index in billAddr)	{
+						if(index.indexOf('bill/') == 0)	{
+							formObj[index] = billAddr[index];
+							}
+						}
+					}
+
+//if a shortcut is selected, save the address info into the cart.
+				if(formObj['ship/shortcut'])	{
+					app.u.dump(" -> shipping shortcut set ["+formObj['ship/shortcut']+". update cart fields..");
+					var shipAddr = app.ext.cco.u.getAddrObjByID('ship',formObj['ship/shortcut']);
+					for(index in shipAddr)	{
+						if(index.indexOf('ship/') == 0)	{
+							formObj[index] = shipAddr[index];
+							}
+						}
+					}
+//if ship to billing address is enabled, copy the billing address into the shipping fields.
+				else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
+					app.u.dump(" -> bill to ship enabled. save billing address to shipping.");
+					var billAddr = app.ext.cco.u.getAddrObjByID('bill',formObj['bill/shortcut']);
+					for(index in billAddr)	{
+						if(index.indexOf('bill/') == 0)	{
+							formObj[index.replace('bill/','ship/')] = billAddr[index];
+							}
+						}				
+					}
+
+//these aren't valid checkout field. used only for some logic processing.
+					delete formObj['want/reference_number'];
+					delete formObj['want/bill_to_ship_cb'];
+//cc and cv should never go. They're added as part of cartPaymentQ
+					delete formObj['payment/cc'];
+					delete formObj['payment/cv'];
+/* these fields are in checkout/order create but not 'supported' fields. don't send them */				
+					delete formObj['giftcard'];
+					delete formObj['want/bill_to_ship_cb'];
+					delete formObj['coupon'];	
+
+					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
+					}
+				} //sanitizeAndUpdateCart
 
 
 

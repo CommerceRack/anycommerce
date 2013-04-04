@@ -803,7 +803,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						}
 
 					app.ext.orderCreate.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
-					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
+					app.ext.cco.calls.appPaymentMethods.init({_cartid:app.vars.cartID},{},'immutable');
 					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
 					
 					app.model.destroy('cartDetail');
@@ -907,7 +907,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$btn.off('click.execBuyerAddressUpdate').on('click.execBuyerAddressUpdate',function(event){
 					event.preventDefault();
 					var addressType = $btn.closest('fieldset').data('app-addresstype'), //will be ship or bill.
-					$form = $btn.closest('form');
+					$form = $btn.closest('form'),
 					addressID = $btn.closest('address').data('_id');
 					
 					if(addressType && addressID)	{
@@ -934,7 +934,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						app.model.dispatchThis('immutable');
 						}
 					else	{
-						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect','gMessage':true});
+						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});
 						}
 					});
 				}, //execBuyerAddressSelect
@@ -1037,7 +1037,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					
 						if(app.ext.orderCreate.validate.checkout($form))	{
 							$('body').showLoading({'message':'Creating order...'});
-							app.ext.orderCreate.u.saveAllCheckoutFields($form);
+							app.ext.cco.u.sanitizeAndUpdateCart($form);
 							app.ext.cco.u.buildPaymentQ();
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
 							app.model.dispatchThis('immutable');						
@@ -1364,13 +1364,15 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['showLoading']);
 				
 				app.model.destroy('cartDetail');
-				app.ext.cco.calls.appPaymentMethods.init({},{},'immutable'); //update pay and ship anytime either address changes.
+				app.ext.cco.calls.appPaymentMethods.init({_cartid:app.vars.cartID},{},'immutable'); //update pay and ship anytime either address changes.
 				app.calls.cartDetail.init({'callback':function(){
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					}},'immutable');
 				}, //handleCommonPanels
+
+
 
 			handlePaypalInit : function($context)	{
 				
@@ -1385,7 +1387,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.u.dump("It appears we've just returned from PayPal.");
 					app.ext.orderCreate.vars['payment-pt'] = token;
 					app.ext.orderCreate.vars['payment-pi'] = payerid;
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
+					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
 				else if(app.ext.cco.u.thisSessionIsPayPal())	{
@@ -1423,32 +1425,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('#globalMessaging').anymessage({'message':'In cco.u.showSupplementalInputs, $input not defined or not a jquery object.','gMessage':true});
 					}
 
-				}, //showSupplementalInputs
+				} //showSupplementalInputs
 
-//201308 added to replace call: saveCheckoutFields
-//may need to sanitize out payment vars.
-			saveAllCheckoutFields : function($form,_tag)	{
-				if($form)	{
-					_tag = _tag || {};
-					var formObj = $form.serializeJSON();
-//po number is used for purchase order payment method, but also allowed for a reference number (if company set and po not payment method).
-					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
-						formObj['want/po_number'] = formObj['want/reference_number'];
-						}
-//these aren't valid checkout field. used only for some logic processing.
-					delete formObj['want/reference_number'];
-					delete formObj['want/bill_to_ship_cb'];
-//cc and cv should never go. They're added as part of cartPaymentQ
-					delete formObj['payment/cc'];
-					delete formObj['payment/cv'];
-/* these fields are in checkout/order create but not 'supported' fields. don't send them */				
-					delete formObj['giftcard'];
-					delete formObj['want/bill_to_ship_cb'];
-					delete formObj['coupon'];	
-
-					app.calls.cartSet.init(formObj,_tag); //adds dispatches.
-					}
-				} //saveAllCheckoutFields
 
 
 
