@@ -114,6 +114,7 @@ a callback was also added which just executes this call, so that checkout COULD 
 			 }, //cartItemUpdate
 
 //cmdObj - see http://www.zoovy.com/webdoc/?VERB=DOC&DOCID=51609 for details.
+//Q not an option. MUST always be immutable.
 		cartPaymentQ : 	{
 			init : function(cmdObj,_tag)	{
 //make sure id is set for inserts.

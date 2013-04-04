@@ -862,7 +862,7 @@ see jquery/api webdoc for required/optional param
 				return 1;
 				},
 			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"ping","_tag":_tag},Q); //get new session id.
+				app.model.addDispatchToQ({"_cmd":"ping","_tag":_tag},Q || 'mutable'); //get new session id.
 				}
 			}, //ping
 

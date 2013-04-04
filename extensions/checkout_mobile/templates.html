@@ -40,7 +40,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for new customers -->
 		
-		<div>
+		<div data-app-role='billToShipContainer' >
 		<label>
 		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popCheckbox; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
 		ship to billing address
@@ -246,7 +246,7 @@ do NOT change any div id's or messaging will not work properly.
 	</div>
 	
 <!-- used in paypal transactions to cancel as paypal -->	
-	<div data-app-event='orderCreate|execChangeFromPayPal' class='displayNone'>
+	<div data-app-event='orderCreate|execChangeFromPayPal' class='displayNone pointer zlink'>
 	Choose Alternate Payment Method
 	</div>
 

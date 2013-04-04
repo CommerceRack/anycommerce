@@ -582,9 +582,9 @@ an existing user gets a list of previous addresses they've used and an option to
 					app.u.dump("This is a paypal session");
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
-					
-					$("[name='want/bill_to_ship']",$fieldset).attr({'disabled':'disabled'}).removeAttr('checked'); //!! may want to set this to 0 as part of return from paypal scripts.
-					//name is provided by facebook and can't be changed.
+					$("[data-app-role='billToShipContainer']").hide(); //though locked below, we hide this to avoid confusion.
+					$("[name='want/bill_to_ship']",$fieldset).attr({'disabled':'disabled'}).removeAttr('checked'); //set val 
+					//name is provided by paypal and can't be changed.
 					$("[name='bill/firstname'], [name='bill/lastname']",$fieldset).attr('disabled','disabled');
 
 					}
@@ -1064,16 +1064,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 			execChangeFromPayPal : function($ele)	{
 				$ele.off('click.execChangeFromPayPal').on('click.execChangeFromPayPal',function(){
+					app.u.dump("execChangeFromPayPal has been Executed");
 					app.ext.cco.u.nukePayPalEC();
 					var $form = $ele.closest('form');
-					app.model.destroy('cartDetail');
-					app.calls.cartDetail.init({callback:function(){
+					app.ext.orderCreate.u.handleCommonPanels($form);
+					app.calls.ping.init({callback:function(){
 						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
 						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-						app.ext.orderCreate.u.handleCommonPanels($form);
 						}},'immutable');
-					});
 					app.model.dispatchThis('immutable');
+					});
+					
 				
 				},
 
@@ -1276,6 +1277,20 @@ note - the order object is available at app.data['order|'+P.orderID]
 				else	{
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
 					}
+//when a buyer returns from paypal, the shipping is populated, but the billing is not always.
+//this will put the ship info into the bill fields if they're blank.
+				if(app.ext.cco.u.thisSessionIsPayPal())	{
+					if(obj.bill && obj.ship)	{
+						if(!obj.bill.company)	{obj.bill.company = obj.ship.company}
+						if(!obj.bill.address1)	{obj.bill.address1 = obj.ship.address1}
+						if(!obj.bill.address2)	{obj.bill.address2 = obj.ship.address2}
+						if(!obj.bill.city)	{obj.bill.city = obj.ship.city}
+						if(!obj.bill.region)	{obj.bill.region = obj.ship.region}
+						if(!obj.bill.postal)	{obj.bill.postal = obj.ship.postal}
+						if(!obj.bill.countrycode)	{obj.bill.countrycode = obj.ship.countrycode}
+						}
+					}
+				
 				return obj;
 				}, //extendedDataForCheckout
 
