@@ -156,8 +156,8 @@ and offMenu is toggle off, hiding the change button.
 /*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
 .appMessage .appMessageTxt	{float:left;}
 
-.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae; background:#dff6df; color:#333333;}
-.ui-state-warning	{border:1px solid #f58d48; background:#ffdfc9; color:#333333;}
+.ui-state-success, .ui-state-statusupdate	{border:1px solid #aecdae !important; background:#e3f6e3 !important; color:#333333 !important;}
+.ui-state-warning	{border:1px solid #f58d48 !important; background:#ffdfc9 !important; color:#333333 !important;}
 
 
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */

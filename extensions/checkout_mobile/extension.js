@@ -345,7 +345,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutPreflight, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
+//				app.u.dump(" -> orderCreate.validate.chkoutPreflight: "+valid);
 				return valid;
 				}, //chkoutPreflightFieldset
 
@@ -366,7 +366,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				else	{
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAccountCreate, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
+//				app.u.dump(" -> orderCreate.validate.chkoutAccountCreate: "+valid);
 				return valid;
 				}, //validate.chkoutAccountInfoFieldset
 				
@@ -387,7 +387,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsShip, $form or formObj not passed.','gMessage':true});
 					}
 
-				app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
+//				app.u.dump(" -> orderCreate.validate.chkoutMethodsShip: "+valid);
 				return valid;
 				}, //validate.chkoutShipMethodsFieldset
 				
@@ -408,7 +408,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					valid = 0;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutMethodsPay, $form or formObj not passed.','gMessage':true});
 					}
-				app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
+//				app.u.dump(" -> orderCreate.validate.chkoutMethodsPay: "+valid);
 				return valid;
 				}, //chkoutPayOptionsFieldset
 				
@@ -452,7 +452,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.chkoutAddressBill, $form or formObj not passed.','gMessage':true});
 					}
 
-				app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
+//				app.u.dump(" -> orderCreate.validate.chkoutAddressBill: "+valid);
 				return valid;
 				}, //chkoutBillAddressFieldset
 				
@@ -802,7 +802,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						
 						}
 
-					app.ext.orderCreate.u.handlePaypalInit(); //handles paypal code, including paymentQ update. should be before any callbacks.
+					app.ext.orderCreate.u.handlePaypalInit($chkContainer); //handles paypal code, including paymentQ update. should be before any callbacks.
 					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
 					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
 					
@@ -1095,7 +1095,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					event.preventDefault();
 					
 					var $fieldset = $btn.closest('fieldset'),
-					$form = $input.closest('form'),
+					$form = $btn.closest('form'),
 					$input = $("[name='coupon']",$fieldset);
 					
 					$btn.button('disable');
@@ -1372,8 +1372,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}},'immutable');
 				}, //handleCommonPanels
 
-			handlePaypalInit : function()	{
-
+			handlePaypalInit : function($context)	{
+				
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1381,6 +1381,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var token = app.u.getParameterByName('token');
 				var payerid = app.u.getParameterByName('PayerID');
 				if(token && payerid)	{
+					$context.anymessage({'message':'Welcome Back! you are almost done. Simply verify the information below and push the place order button to complete your transaction.','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'});
 					app.u.dump("It appears we've just returned from PayPal.");
 					app.ext.orderCreate.vars['payment-pt'] = token;
 					app.ext.orderCreate.vars['payment-pi'] = payerid;

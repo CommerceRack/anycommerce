@@ -1332,18 +1332,19 @@ and model that needed to be permanently displayed had to be converted into an ob
 // pass in a message and the entire success object is returned.
 // keep this simple. don't add support for icons or message type. If that degree of control is needed, build your own object and pass that in.
 // function used in store_product (and probably more)
+// once throwMessage is gone completely, we can nuke the uiClass and uiIcon
 		successMsgObject : function(msg)	{
-			return {'errid':'#','errmsg':msg,'errtype':'success','uiIcon':'check','uiClass':'success'}
+			return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','uiIcon':'check','uiClass':'success','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'}
 			},
 
 		errMsgObject : function(msg,errid)	{
-			return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','uiIcon':'alert','uiClass':'error'}
+			return {'errid':errid || '#','errmsg':msg,'errtype':'apperr','uiIcon':'alert','uiClass':'error','iconClass':'ui-icon-alert','containerClass':'ui-state-error'}
 			},
 		statusMsgObject : function(msg)	{
-			return {'errid':'#','errmsg':msg,'errtype':'statusupdate','uiIcon':'transferthick-e-w','uiClass':'statusupdate'}
+			return {'errid':'#','errmsg':msg,'errtype':'statusupdate','uiIcon':'transferthick-e-w','uiClass':'statusupdate','iconClass':'ui-icon-transferthick-e-w','containerClass':'ui-state-highlight ui-state-statusupdate'}
 			},
 		youErrObject : function(errmsg,errid)	{
-			return {'errid':errid,'errmsg':errmsg,'errtype':'youerr','uiIcon':'alert','uiClass':'highlight'}
+			return {'errid':errid,'errmsg':errmsg,'errtype':'youerr','uiIcon':'alert','uiClass':'highlight','iconClass':'ui-icon-alert','containerClass':'ui-state-highlight'}
 			},
 
 
