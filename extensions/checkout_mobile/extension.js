@@ -64,7 +64,14 @@ var orderCreate = function() {
 					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_mobile/templates.html',theseTemplates);
 					}
 				var r; //returns false if checkout can't load due to account config conflict.
-				
+
+//update jQuery.support with whether or not placeholder is supported.
+
+				$.support.placeholder = false;
+				var test = document.createElement('input');
+				if('placeholder' in test) {$.support.placeholder = true};
+
+
 				if(typeof _gaq === 'undefined')	{
 //					app.u.dump(" -> _gaq is undefined");
 					$('#globalMessaging').anymessage({'message':'It appears you are not using the Asynchronous version of Google Analytics. It is required to use this checkout.','uiClass':'error','uiIcon':'alert'});
@@ -542,6 +549,7 @@ payment options, pricing, etc
 					$("[data-app-role='username']",$fieldset).hide();
 					$("[data-app-role='loginPasswordContainer']",$fieldset).show();
 					}
+				app.ext.orderCreate.u.handlePlaceholder($fieldset);
 				}, //preflight
 
 			chkoutAccountCreate : function(formObj,$fieldset)	{
@@ -562,6 +570,7 @@ payment options, pricing, etc
 						$fieldset.hide();
 						}
 					}
+				app.ext.orderCreate.u.handlePlaceholder($fieldset);
 				}, //chkoutAccountCreate
 				
 /*
@@ -596,6 +605,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='billCountry']",$fieldset).hide();
 						}
 					}
+				app.ext.orderCreate.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressBill
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
@@ -631,6 +641,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='shipCountry']",$fieldset).hide();
 						}
 					}
+				app.ext.orderCreate.u.handlePlaceholder($fieldset);
 				}, //chkoutAddressShip
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
@@ -1252,6 +1263,20 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 				return obj;
 				}, //extendedDataForCheckout
+//will turn the placeholder into a label for browsers that don't support it.
+			handlePlaceholder : function($fieldset)	{
+				if(!$.support.placeholder) {
+					$('input',$fieldset).each(function(){
+						var $input = $(this);
+//placeholderIntoLabel is added once this action is performed. Keeps labels from being double added if this is run more than once.
+						if($input.attr('placeholder') && !$input.data('placeholderIntoLabel'))	{
+							$input.wrap($("<label>"));
+							$input.before("<span class='marginRight labelText'>"+$input.attr('placeholder')+":<\/span>");
+							$input.data('placeholderIntoLabel',true);
+							}
+						});
+					}
+				},
 			
 //$content could be the parent form or the forms container. just something around this checkout. (so that multiple checkout forms are possible. imp in UI
 //role is the value of data-app-role on the fieldset.
@@ -1360,6 +1385,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 						$label.addClass("ui-state-active ui-corner-all");
 						}
+					app.ext.orderCreate.u.handlePlaceholder($pmc);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In cco.u.showSupplementalInputs, $input not defined or not a jquery object.','gMessage':true});
