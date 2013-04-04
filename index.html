@@ -19,11 +19,11 @@
 var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
 var myCreole;
 
-var app = {vars:{ 
-	"release":"20130103195600",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
-	"baseURL":"",
-	"httpsURL":"https://ssl.zoovy.com/s=www.toywars.com/",
-	"httpURL":"http://www.toywars.com/"
+var app = {vars:{
+	"release":"201314.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"_clientid":"zmvc",
+	"baseURL":"", //used in non-local mode.
+	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
