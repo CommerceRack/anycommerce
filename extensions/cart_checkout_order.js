@@ -192,11 +192,11 @@ left them be to provide guidance later.
 				return 1;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				
+				var parentID = _tag.parentID || '';
 				obj = obj || {};
 				obj._cmd = "cartPaypalSetExpressCheckout";
-				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=inline";
-				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout"
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout"
 				
 				obj._tag = _tag || {};
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
@@ -410,12 +410,12 @@ once paypalEC has been approved by paypal, a lot of form fields lock down, but t
 payment methods or they may add something new to the cart. If they do, execute this function. It will remove the paypal params from the session/cart and the re-initiate checkout. Be sure to do an immutable dispatch after executing this if value returned is > 0.
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
-			nukePayPalEC : function() {
+			nukePayPalEC : function(_tag) {
 //				app.u.dump("BEGIN cco.u.nukePayPalEC");
 				app.ext.orderCreate.vars['payment-pt'] = null;
 				app.ext.orderCreate.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
-					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
+					app.ext.cco.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},_tag || {'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
 

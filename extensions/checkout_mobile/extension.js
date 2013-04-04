@@ -111,25 +111,34 @@ var orderCreate = function() {
 			},
 
 
-//mostly used for the error handling.
+//Rather than a call to see if transaction is authorized, then another call to add to q, we go straight into adding to the paymentQ
+//if the transaction failed, then we remove the transaction from the payment q.
+//this gives us a 1 call model for success and 2 calls for failure (instead of 2 and 2).
 		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
-				app.ext.orderCreate.calls.showCheckoutForm.init();
-				app.model.dispatchThis('immutable');
 				},
 			onError : function(responseData,uuid)	{
-				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onError');
+				$('body').showLoading({'message':'Updating order...'});
 				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
-				responseData.persistant = true;
-				app.u.throwMessage(responseData);
+				$('#globalMessaging').anymessage({'message':responseData,'persistant':true});
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
-				app.ext.cco.u.nukePayPalEC();
-				app.ext.orderCreate.calls.showCheckoutForm.init();
+				app.ext.cco.u.nukePayPalEC({'callback':function(rd){
+//suppress errors but unlock all the panels.
+$('body').hideLoading();
+var $context = $(app.u.jqSelector('#',app.u.getParameterByName('parentID')));
+app.u.dump(" -> $context.length: "+$context.length);
+app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
+app.ext.orderCreate.u.handlePanel($context,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
+app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+					}});
+				app.model.destroy('cartDetail');
+				app.calls.cartDetail.init({},'immutable');
 				app.model.dispatchThis('immutable');
 				}
-			},		
+			},		 //handlePayPalIntoPaymentQ
 
 //executing this will not only return which items have had an inventory update (in a pretty format) but also create the dispatches
 // to update the cart and then to actually update it as well.
@@ -568,7 +577,9 @@ a guest checkout gets just a standard address entry.
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
 			chkoutAddressBill : function(formObj,$fieldset)	{
+				app.u.dump("BEGIN displayLogic.chkoutAddressBill");
 				if(app.ext.cco.u.thisSessionIsPayPal()){
+					app.u.dump("This is a paypal session");
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 					
@@ -791,12 +802,12 @@ note - the order object is available at app.data['order|'+P.orderID]
 						
 						}
 
+					app.ext.orderCreate.u.handlePaypalInit(); //handles paypal code, including paymentQ update. should be before any callbacks.
 					app.ext.cco.calls.appPaymentMethods.init({},{},'immutable');
 					app.ext.cco.calls.appCheckoutDestinations.init({},'immutable');
 					
 					app.model.destroy('cartDetail');
 					
-					app.ext.orderCreate.u.handlePaypalInit(); //handles paypal code, including paymentQ update.
 					
 					app.calls.cartDetail.init({'callback':function(rd){
 						$chkContainer.hideLoading(); //always hideloading, errors or no, so interface is still usable.
@@ -1019,7 +1030,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							else	{
 								window.location = app.data[rd.datapointer].URL
 								}
-							},"extension":"orderCreate"},'immutable');
+							},"extension":"orderCreate",'parentID': $btn.closest("[data-app-role='checkout']").parent().attr('id')},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
