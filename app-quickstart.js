@@ -1401,7 +1401,7 @@ P.listID (buyer list id)
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
 			handleAppInit : function(infoObj)	{
-
+app.u.dump("BEGIN myRIA.u.handleAppInit");
 //!!! need to write/test this in IE7
 //				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
 				
@@ -1428,6 +1428,7 @@ if(ps.indexOf('?') >= 1)	{
 	}
 //	app.u.dump(uriParams);
 	}
+//app.u.dump("infoObj: "); app.u.dump(infoObj);
 
 //				app.u.dump(" -> infoObj.uriParams:"); app.u.dump(infoObj.uriParams);
 				if(infoObj.uriParams.meta)	{
@@ -1598,6 +1599,7 @@ if(ps.indexOf('?') >= 1)	{
 // if no page content can be determined based on the url, the hash is examined and if appropriately formed, used (ex: #company?show=contact or #category?navcat=.something)
 // should be renamed getPageInfoFromURL
 			detectRelevantInfoToPage : function(URL)	{
+//				app.u.dump("BEGIN myRIA.u.detectRelevantInfoToPage. url: "+URL);
 				var r = {}; //what is returned. r.pageInfo and r.navcat or r.show or r.pid
 				var url = URL; //leave original intact.
 				var hashObj;
@@ -1713,6 +1715,8 @@ if(ps.indexOf('?') >= 1)	{
 //will return a t/f based on whether or not the object passed in is a valid pageInfo object.
 //ex: category requires navcat. company requires show.
 			thisPageInfoIsValid : function(infoObj)	{
+//				app.u.dump("BEGIN myRIA.u.thisPageInfoIsValid. ");
+//				app.u.dump(" -> infoObj: "); app.u.dump(infoObj);
 				var r = false; //what is returned. boolean.
 				if($.isEmptyObject(infoObj))	{
 					//can't have an empty object.
@@ -1724,7 +1728,7 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = true}
 					else if(infoObj.pageType == 'cart')	{r = true}
 					else if(infoObj.pageType == 'checkout')	{r = true}
-					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{r = true}
+					else if(infoObj.pageType == 'search' && (infoObj.KEYWORDS || infoObj.TAG))	{r = true}
 					else if(infoObj.pageType == 'customer' && infoObj.show)	{r = true}
 					else if(infoObj.pageType == 'company' && infoObj.show)	{r = true}
 					else	{
