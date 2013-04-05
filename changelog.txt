@@ -12,6 +12,7 @@ billAddressTemplate template changed
 shipAddressTemplate template changed
 
 * app-fashion added and in beta
+* app-wholesale renamed app-b2b
 * after adding an item to the wishlist, the 'view wishlist' page will reflect change. (bug fix)
 * appCartExists no longer supported. check removed from init. cartDetail will now create cart if cart id doesn't exist.
 
