@@ -167,21 +167,21 @@ don't add required to any inputs because if bill to ship is checked, NONE of the
 
 <section id='chkoutAddressShipTemplate'>
 
-	<div><input type='text' placeholder='first name' name='ship/firstname'  value='' data-bind='var: cart(ship/firstname); defaultVar: cart(ship/firstname); format:popVal;'  /></div>
-	<div><input type='text' placeholder='last name' name='ship/lastname'  value='' data-bind='var: cart(ship/lastname); defaultVar: cart(ship/lastname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='first name' name='ship/firstname' required='required' value='' data-bind='var: cart(ship/firstname); defaultVar: cart(ship/firstname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='last name' name='ship/lastname' required='required' value='' data-bind='var: cart(ship/lastname); defaultVar: cart(ship/lastname); format:popVal;'  /></div>
 
 	<div class='bill_company'><input type='text' name='ship/company' placeholder='company' value='' data-bind='var: cart(ship/company); defaultVar: cart(ship/company); format:popVal;'  /></div><!-- class is added so it can be easily disabled w/ css -->
 
-	<div><input type='text' name='ship/address1' placeholder='address'  value='' data-bind='var: cart(ship/address1); defaultVar: cart(ship/address1); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
+	<div><input type='text' name='ship/address1' placeholder='address' required='required' value='' data-bind='var: cart(ship/address1); defaultVar: cart(ship/address1); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
 
 	<div><input type='text' name='ship/address2' placeholder='address 2' value='' data-bind='var: cart(ship/address2); defaultVar: cart(ship/address2); format:popVal;' /></div>
 
-	<div><input type='text' name='ship/city' placeholder='city'  value='' data-bind='var: cart(ship/city); defaultVar: cart(ship/city); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
+	<div><input type='text' name='ship/city' placeholder='city' required='required' value='' data-bind='var: cart(ship/city); defaultVar: cart(ship/city); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
 	
-	<div><input type='text'  name='ship/region' placeholder='state/region' size='5' value='' data-bind='var: cart(ship/region); defaultVar: cart(ship/region); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate' /></div>
+	<div><input type='text'  name='ship/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(ship/region); defaultVar: cart(ship/region); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate' /></div>
 
 	
-	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship/postal); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate'/></div>
+	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship/postal); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate'/></div>
 
 	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;'  data-app-event="orderCreate|execCountryUpdate" ></select></div>
 

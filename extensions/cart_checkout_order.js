@@ -509,9 +509,10 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 	//for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 	//expiration is less of a concern
 					case 'CREDIT':
+
 						tmp += "<div><label>Credit Card #<input type='text' size='30' name='payment/CC' class=' creditCard' value='";
 						if(data['payment/CC']){tmp += data['payment/CC']}
-						tmp += "' onKeyPress='return app.u.numbersOnly(event);' required='required' /><\/label><\/div>";
+						tmp += "' onKeyPress='' required='required' /><\/label><\/div>";
 						
 						tmp += "<div><label>Expiration<\/label><select name='payment/MM' class='creditCardMonthExp' required='required'><option><\/option>";
 						tmp += app.u.getCCExpMonths(data['payment/MM']);
@@ -550,32 +551,47 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 						break;
 	
 					case 'PO':
-						tmp += "<div title='PO Number'><input type='text' size='30' placeholder='po number' required='required' name='payment/PO' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
-						if(data['payment/PO'])
-								tmp += data['payment/PO'];
-						tmp += "' /><\/div>";
+						tmp = $("<div \/>",{'title':'PO Number'});
+
+						var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':'payment/PO','placeholder':'PO Number'}).addClass('purchaseOrder');
+						if(data['payment/PO'])	{$input.val(data['payment/PO'])}
+						$input.appendTo(tmp);
 						if(isAdmin === true)	{
-							tmp += payStatusCB;
+							tmp.append(payStatusCB);
 							}
 						break;
 	
 					case 'ECHECK':
-						var echeckFields = {"payment/EA" : "Account #","payment/ER" : "Routing #","payment/EN" : "Account Name","payment/EB" : "Bank Name","payment/ES" : "Bank State","payment/EI" : "Check #"}
+						var echeckFields = {
+							"payment/EA" : "Account #",
+							"payment/ER" : "Routing #",
+							"payment/EN" : "Account Name",
+							"payment/EB" : "Bank Name",
+							"payment/ES" : "Bank State",
+							"payment/EI" : "Check #"
+							}
+						tmp = $("<div \/>");
 						for(var key in echeckFields) {
 //the info below is added to the pdq but not immediately dispatched because it is low priority. this could be changed if needed.
 //The field is required in checkout. if it needs to be optional elsewhere, remove the required attribute in that code base after this has rendered.
-							tmp += "<div title='"+echeckFields[key]+"'><input type='text' required='required' size='30' name='"+key+"' placeholder='"+echeckFields[key].toLowerCase()+"' class=' echeck'  value='";
-//if the value for this field is set in the data object (cart or invoice), set it here.
-							if(data[key])
-								tmp += data[key];
-							tmp += "' /><\/div>";
+							var $input = $("<input \/>",{'type':'text','required':'required','size':30,'name':key,'placeholder':echeckFields[key].toLowerCase()}).addClass('echeck');
+							if(data[key])	{$input.val(data[key])}
+							$("<div \/>",{'title':echeckFields[key]}).append($input).appendTo(tmp);
 							}
 						break;
 					default:
 //if no supplemental material is present, return false. That'll make it easy for any code executing this to know if there is additional inputs or not.
 						$o = false; //return false if there is no supplemental fields
 					}
-				if($o)	{$o.append(tmp)} //put the li contents into the ul for return.
+				if($o)	{
+					$o.append(tmp);
+//set events to save values to memory. this will ensure data repopulates as panels get reloaded in 1PC.
+					$('input, select',$o).each(function(){
+						$(this).off('change.save').on('change.save',function(){
+							data[$(this).attr('name')] = $(this).val();
+							});
+						});
+					} //put the li contents into the ul for return.
 				return $o;
 //				app.u.dump(" -> $o:");
 //				app.u.dump($o);

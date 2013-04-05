@@ -8,13 +8,16 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 201314
 invoiceContainer template changed.
 handleSubscribe value should NOT be a form id anymore, but the form itself handleSubscribe($(this)) on the form tag
+billAddressTemplate template changed
+shipAddressTemplate template changed
+
 * app-fashion added and in beta
 * after adding an item to the wishlist, the 'view wishlist' page will reflect change. (bug fix)
 * appCartExists no longer supported. check removed from init. cartDetail will now create cart if cart id doesn't exist.
 
 
 201312
-param passed into checkoutCompletes changes. was 'sessionID' and is now cartID
+* param passed into checkoutCompletes changes. was 'sessionID' and is now cartID
 
 
 201311

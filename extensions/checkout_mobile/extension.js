@@ -37,6 +37,7 @@ var orderCreate = function() {
 	var r = {
 	vars : {
 		willFetchMyOwnTemplates : true, //1pc loads it's templates locally to avoid XSS issue.
+		payment : {}, //used in checkout to store payment info that doesn't get added to cart till orderCreate (paymentQ)
 //though most extensions don't have the templates specified, checkout does because so much of the code is specific to these templates.
 		templates : theseTemplates
 		},
@@ -1411,7 +1412,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					$('.ui-state-active',$fieldset).removeClass('ui-state-active ui-corner-top ui-corner-all');
 					$("[data-app-role='supplementalPaymentInputsContainer']",$fieldset).empty().remove(); //must be removed so form inputs are not present.
 					
-					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars);
+					var $supplementalOutput = app.ext.cco.u.getSupplementalPaymentInputs($input.val(),app.ext.orderCreate.vars.payment);
 					if($supplementalOutput)	{
 						$label.addClass("ui-state-active ui-corner-top");
 						$supplementalOutput.addClass('ui-corner-bottom ui-widget ui-widget-content').appendTo($pmc);
