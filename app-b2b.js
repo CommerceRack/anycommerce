@@ -1652,7 +1652,7 @@ if(ps.indexOf('?') >= 1)	{
 					r.pageType = 'homepage'
 					r.navcat = zGlobals.appSettings.rootcat; //left with category.safe.id or category.safe.id/
 					}
-				else if(url.indexOf('quickstart.html') > -1)	{
+				else if(url.indexOf('app-b2b.html') > -1)	{
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
 					msg.persistant = true;
 					app.u.throwMessage(msg);
