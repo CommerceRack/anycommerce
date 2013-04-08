@@ -86,6 +86,7 @@ var orderCreate = function() {
 					}
 				else	{
 					r = true;
+					if(window.location.indexOf('app-hosted.com') >= 0)	{localStorage('clear')} //clear localStorage for shared domain to avoid cross-store contamination.
 					}
 
 				if(r == false)	{
