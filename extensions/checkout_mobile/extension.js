@@ -86,7 +86,7 @@ var orderCreate = function() {
 					}
 				else	{
 					r = true;
-					if(document.domain.indexOf('app-hosted.com') >= 0)	{window.localStorage('clear')} //clear localStorage for shared domain to avoid cross-store contamination.
+					if(document.domain.indexOf('app-hosted.com') >= 0)	{window.localStorage.clear()} //clear localStorage for shared domain to avoid cross-store contamination.
 					}
 
 				if(r == false)	{
