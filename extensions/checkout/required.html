@@ -105,15 +105,18 @@ item list and summary are separate just to give more control over location.
 <h4 class='displayNone' data-app-role='username' data-bind="var:cart(bill/email); defaultVar: cart(customer/login); format:text;"></h4>
 
 <div data-app-role='login'>
-
+<!--
+not used in required
 	<div data-app-role='loginPasswordContainer' class='displayNone floatRight'>
 		<div>If you have an account with us, please enter your password below to login</div>
-		<input type='password' placeholder='password' size='30' name='password' /><button data-app-event='orderCreate|execBuyerLogin'>login</button>
+		
 	</div>
-
-	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:cart(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /><br />
+-->
+	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:cart(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /> 	<input type='password' placeholder='password' size='30' name='password' /> <button data-app-event='orderCreate|execBuyerLogin'>login</button>
+<!--
+not used in required
 	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
-	
+-->	
 
 
 </div>
