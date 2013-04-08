@@ -1395,6 +1395,7 @@ AUTHENTICATION/USER
 			app.model.destroy('cartDetail'); //need the cart object to update again w/out customer details.
 			app.model.destroy('whoAmI'); //need this nuked too.
 			app.vars.cid = null; //used in soft-auth.
+			localStorage.clear(); //clear everything from localStorage.
 			
 			app.calls.buyerLogout.init({'callback':'showMessaging','message':'Thank you, you are now logged out'});
 			app.calls.refreshCart.init({},'immutable');
