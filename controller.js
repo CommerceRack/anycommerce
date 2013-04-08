@@ -2359,9 +2359,10 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 //				app.u.dump(' -> used defaultValue ("'+bindData.defaultValue+'") because var had no value.');
 				}
 			}
-		
-		
 		}
+
+
+
 	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
 	else	{bindData.hideZero = true}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.

@@ -365,6 +365,26 @@ left them be to provide guidance later.
 				},
 
 
+			paymentMethodsIncludesGiftcard : function(datapointer)	{
+				var r = false;
+				if(app.data[datapointer] && app.data[datapointer]['@methods'] && app.data[datapointer]['@methods'].length)	{
+					var payMethods = app.data[datapointer]['@methods'],
+					L = app.data[datapointer]['@methods'].length;
+
+					for(var i = 0; i < L; i += 1)	{
+						if(payMethods[i].id.indexOf('GIFTCARD:') === 0)	{
+							r = true;
+							break;
+							}
+						}
+					}
+				else	{
+					//app.data.datapointer is empty
+					}
+				return r;
+				},
+
+
 //A simple check to make sure that all the required inputs are populated for a given address.  
 //returns boolean
 //this is used in checkout for pre-existing addresses, to make sure they're complete.

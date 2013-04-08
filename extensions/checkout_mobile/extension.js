@@ -660,13 +660,20 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressShip
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
-//				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
+				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
+//close any existing error messages
+				if($('.ui-widget-anymessage',$fieldset).length)	{
+					$fieldset.anymessage('close');
+					}
+					
 				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
-				isAuthenticated = app.u.buyerIsAuthenticated();
-				
-				
-				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
+				isAuthenticated = app.u.buyerIsAuthenticated(),
+				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
+				
+				app.u.dump(' -> shipMethods.length: '+L); // app.u.dump(shipMethods);
+				
+				
 //if it is decided not to hide the panel, the radio buttons must be locked/disabled.
 				if(!isAuthenticated && checkoutMode == 'required')	{
 					//do nothing. panel is hidden by default, so no need to 'show' it.
@@ -683,25 +690,38 @@ an existing user gets a list of previous addresses they've used and an option to
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
 // the panel content IS rendered even if not shown. ship method needs to be set for paypal
-					if(L == 0 && app.u.buyerIsAuthenticated())	{
-						$fieldset.empty(); //clear any old messaging.
-						if(formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true){
-							$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
-							}
-						else if(!formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true){
-							$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
-							}
-						else	{
-							$fieldset.prepend("<p>Please enter an address for a list of shipping options.</p>");
-							}
+				if(L >= 1)	{
+					app.u.dump(" -> buyer is logged in and shipping methods are present.");
+					}
+//no shipping methods and buyer is logged in.
+				else if(app.u.buyerIsAuthenticated())	{
+					var hasPredefBillAddr = app.ext.cco.u.buyerHasPredefinedAddresses('bill'),
+					hasPredefShipAddr = app.ext.cco.u.buyerHasPredefinedAddresses('ship');
+					
+					if(formObj['want/bill_to_ship'] && hasPredefBillAddr && formObj['bill/shortcut']){
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
 						}
-					else if(L == 0) {
-						$fieldset.prepend("<p>Please enter an address for a list of shipping options.</p>");
+					else if(!formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true && formObj['ship/shortcut']){
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
 						}
 					else	{
-						//can only get here if shipping options are available.
-						//the renderformat handles selecting the shipping option.
+						$fieldset.anymessage({"message":"<p>Please enter/select an address for a list of shipping options.</p>","persistant":true});
 						}
+					}
+//no shipping methods present and buyer is logged out.
+				else {
+
+					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
+						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistant":true});
+						}
+					else if(!formObj['want/bill_to_ship'] && formObj['ship/postal'])	{
+						$fieldset.anymessage({"message":"<p>Please enter a shipping zip code for a list of shipping options.</p>","persistant":true});
+						}
+					else	{
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
+						}
+					}
+
 
 
 				
@@ -757,6 +777,14 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 				else	{
 					$fieldset.show();
+
+
+//if the user is logged in and has giftcards, show a message about partial GC payments.
+					if(app.u.buyerIsAuthenticated() && app.ext.cco.u.paymentMethodsIncludesGiftcard('appPaymentMethods')){
+						$("[data-app-role='giftcardHint']",$fieldset).show();
+						}
+					else {} //user is not logged in.
+					
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
 					if(app.u.buyerIsAuthenticated() && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
 						
@@ -777,6 +805,8 @@ an existing user gets a list of previous addresses they've used and an option to
 						$("[data-app-role='nonStoredPaymentsContent']",$fieldset).show();
 						}
 
+
+//data-app-role='giftcardHint'
 
 //if a payment method has been selected, show the supplemental inputs and check the selected payment.
 //additionally, if the payment is NOT Purchase Order AND the company field is populated, show the reference # input.
@@ -1092,6 +1122,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 							
 							}
 						else	{
+							//even though validation failed, take this opportunity to update the cart on the server.
+							app.ext.cco.u.sanitizeAndUpdateCart($form);
+							app.model.dispatchThis('immutable');
 							//scrolls up to first instance of an error.
 							$('html, body').animate({scrollTop : $('.formValidationError, .ui-widget-anymessage',$form).first().offset().top},1000); //scroll to first instance of error.
 							}
@@ -1414,6 +1447,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.model.destroy('cartDetail');
 				app.ext.cco.calls.appPaymentMethods.init({_cartid:app.vars.cartID},{},'immutable'); //update pay and ship anytime either address changes.
 				app.calls.cartDetail.init({'callback':function(){
+//					app.u.dump('cartDetail: '); app.u.dump(app.data.cartDetail);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
 					app.ext.orderCreate.u.handlePanel($context,'chkoutCartSummary',['empty','translate','handleDisplayLogic','handleAppEvents']);
@@ -1478,7 +1512,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 
-				
+
 			}, // u/utilities
 
 
@@ -1491,7 +1525,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 		renderFormats : {
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
-//				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
+				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
 				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
 				var L = data.value.length;
