@@ -99,8 +99,6 @@ var orderCreate = function() {
 				},
 			onError : function()	{
 				app.u.dump('BEGIN app.ext.orderCreate.callbacks.init.error');
-				//This would be reached if a templates was not defined in the view.
-				$('#'+app.ext.orderCreate.vars.containerID);
 				}
 			}, //init
 
@@ -837,6 +835,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
+					$chkContainer.css('min-height','300'); //set min height so loading shows up.
 					$chkContainer.showLoading({'message':'Fetching cart contents and payment options'});
 					if(Number(zGlobals.globalSettings.inv_mode) > 1)	{
 						app.u.dump(" -> inventory mode set in such a way that an inventory check will occur.");
