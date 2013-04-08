@@ -696,38 +696,43 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 					if(app.ext.orderCreate.vars['want/payby'] != "PO" && formObj['want/reference_number'])	{
 						formObj['want/po_number'] = formObj['want/reference_number'];
 						}
-
-// !!! Tighten this code up (for addresses). should be a function to set the address instead of three duplicated code blocks.
-//if a shortcut is selected, save the address info into the cart.
-				if(formObj['bill/shortcut'])	{
-					var billAddr = app.ext.cco.u.getAddrObjByID('bill',formObj['bill/shortcut']);
-					for(index in billAddr)	{
-						if(index.indexOf('bill/') == 0)	{
-							formObj[index] = billAddr[index];
+// to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
+					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
+						var addr = app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
+						for(index in addr)	{
+							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
+								if(fromAddr == toAddr)	{
+									formObj[index] = addr[index];
+									}
+								else	{
+									formObj[index.replace(fromAddr+'/',toAddr+'/')] = addr[index]; //when copying bill to ship, change index accordingly.
+									}
+								}
 							}
 						}
-					}
 
 //if a shortcut is selected, save the address info into the cart.
-				if(formObj['ship/shortcut'])	{
-					app.u.dump(" -> shipping shortcut set ["+formObj['ship/shortcut']+". update cart fields..");
-					var shipAddr = app.ext.cco.u.getAddrObjByID('ship',formObj['ship/shortcut']);
-					for(index in shipAddr)	{
-						if(index.indexOf('ship/') == 0)	{
-							formObj[index] = shipAddr[index];
-							}
+					if(formObj['bill/shortcut'])	{
+						populateAddressFromShortcut('bill','bill');
 						}
-					}
+
+//if a shortcut is selected, save the address info into the cart.
+					if(formObj['ship/shortcut'])	{
+						populateAddressFromShortcut('ship','ship');
+						}
 //if ship to billing address is enabled, copy the billing address into the shipping fields.
-				else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
-					app.u.dump(" -> bill to ship enabled. save billing address to shipping.");
-					var billAddr = app.ext.cco.u.getAddrObjByID('bill',formObj['bill/shortcut']);
-					for(index in billAddr)	{
-						if(index.indexOf('bill/') == 0)	{
-							formObj[index.replace('bill/','ship/')] = billAddr[index];
+					else if(formObj['want/bill_to_ship'] && formObj['bill/shortcut'])	{
+						populateAddressFromShortcut('bill','ship');	
+						}
+//bill to ship, but no short cut (not logged in)
+					else if(formObj['want/bill_to_ship'])	{
+						for(index in formObj)	{
+//copy billing fields into shipping. not email tho.
+							if(index.indexOf('bill/') == 0 && index != 'bill/email')	{ 
+								formObj[index.replace('bill/','ship/')] = formObj[index]
+								}
 							}
-						}				
-					}
+						}
 
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
