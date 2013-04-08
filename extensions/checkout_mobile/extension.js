@@ -578,9 +578,16 @@ a guest checkout gets just a standard address entry.
 an existing user gets a list of previous addresses they've used and an option to enter a new address.
 */
 			chkoutAddressBill : function(formObj,$fieldset)	{
-				app.u.dump("BEGIN displayLogic.chkoutAddressBill");
-				if(app.ext.cco.u.thisSessionIsPayPal()){
+//				app.u.dump("BEGIN displayLogic.chkoutAddressBill");
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else if(app.ext.cco.u.thisSessionIsPayPal()){
 					app.u.dump("This is a paypal session");
+					$fieldset.show(); //make sure panel is visible.
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 					$("[data-app-role='billToShipContainer']").hide(); //though locked below, we hide this to avoid confusion.
@@ -589,7 +596,8 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("[name='bill/firstname'], [name='bill/lastname']",$fieldset).attr('disabled','disabled');
 
 					}
-				else if(app.u.buyerIsAuthenticated() && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
+				else if(isAuthenticated && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true)	{
+					$fieldset.show(); //make sure panel is visible.
 					$("[data-app-role='addressExists']",$fieldset).show();
 					$("[data-app-role='addressNew']",$fieldset).hide();
 					$("address button[data-app-event='orderCreate|execBuyerAddressSelect']",$fieldset).removeClass('ui-state-highlight').button({icons: {primary: "ui-icon-check"},text:false}); //content was likely cleared, so button() these again.
@@ -600,6 +608,7 @@ an existing user gets a list of previous addresses they've used and an option to
 						}
 					}
 				else	{
+					$fieldset.show(); //make sure panel is visible.
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
 //from a usability perspective, we don't want a single item select list to show up. so hide if only 1 or 0 options are available.
@@ -611,10 +620,15 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressBill
 
 			chkoutAddressShip : function(formObj,$fieldset)	{
-				
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+
+//determine if panel should be visible or not.
 				if(formObj['want/bill_to_ship'] == 'on' && !app.ext.cco.u.thisSessionIsPayPal())	{$fieldset.hide()}
+				else if(!isAuthenticated && checkoutMode == 'required')	{} //do nothing. panel is hidden by default in required mode.
 				else	{$fieldset.show()}
-				
+
+//update display of panel contents.				
 				if(app.ext.cco.u.thisSessionIsPayPal()){
 					$("[data-app-role='addressExists']",$fieldset).hide();
 					$("[data-app-role='addressNew']",$fieldset).show();
@@ -648,59 +662,94 @@ an existing user gets a list of previous addresses they've used and an option to
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
 //				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
-
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				
+				
 				var shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
 //if it is decided not to hide the panel, the radio buttons must be locked/disabled.
-				if(app.ext.cco.u.thisSessionIsPayPal())	{
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else if(app.ext.cco.u.thisSessionIsPayPal())	{
 					$fieldset.hide();
 					}
+				else	{
+					$fieldset.show();
+					}
+
+
 
 //must appear after panel is loaded because otherwise the divs don't exist.
 //per brian, use shipping methods in cart, not in shipping call.
-				else if(L == 0 && app.u.buyerIsAuthenticated())	{
-					if(formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true){
-						$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
+// the panel content IS rendered even if not shown. ship method needs to be set for paypal
+					if(L == 0 && app.u.buyerIsAuthenticated())	{
+						if(formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true){
+							$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
+							}
+						else if(!formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true){
+							$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
+							}
+						else	{
+							$fieldset.prepend("<p>Please enter an address for a list of shipping options.</p>");
+							}
 						}
-					else if(!formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true){
-						$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
-						}
-					else	{
+					else if(L == 0) {
 						$fieldset.prepend("<p>Please enter an address for a list of shipping options.</p>");
 						}
-					}
-				else if(L == 0) {
-					$fieldset.prepend("<p>Please enter an address for a list of shipping options.</p>");
-					}
-				else	{
-					//can only get here if shipping options are available.
-					//the renderformat handles selecting the shipping option.
-					}
+					else	{
+						//can only get here if shipping options are available.
+						//the renderformat handles selecting the shipping option.
+						}
+
+
 				
 				}, //chkoutMethodsShip
 
 			chkoutCartItemsList : function(formObj,$fieldset){
-				
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else	{
+					$fieldset.show();
+					}
 				}, //chkoutCartItemsList
 
 			chkoutCartSummary : function(formObj,$fieldset)	{
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else	{
+					$fieldset.show();
 //The reference # only shows up IF company is populated and payby isn't PO.
 //The input isn't shown till a payment is selected to avoid displaying it, then hiding it.
 //the input is removed entirely because the field name is used if payment type = PO.
-
-				if(formObj['bill/company'] && formObj['want/payby'] && formObj['want/payby'] != "PO")	{
-					$("[data-app-role='referenceNumber']",$fieldset).show();
-					}
-				else	{
-					$("[data-app-role='referenceNumber']",$fieldset).empty().remove();
+					if(formObj['bill/company'] && formObj['want/payby'] && formObj['want/payby'] != "PO")	{
+						$("[data-app-role='referenceNumber']",$fieldset).show();
+						}
+					else	{
+						$("[data-app-role='referenceNumber']",$fieldset).empty().remove();
+						}
 					}
 				
 				}, //chkoutCartSummary
 
 			chkoutMethodsPay : function(formObj,$fieldset)	{
 //the renderformat will handle the checked=checked. however some additional payment inputs may need to be added. that happens here.
-
-				if(app.ext.cco.u.thisSessionIsPayPal())	{
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else if(app.ext.cco.u.thisSessionIsPayPal())	{
+					$fieldset.show();
 //this is a paypal session. payment methods are not available any longer. stored payments are irrelevant. show paymentQ
 //also show a message to allow the merchant to remove the paypal payment option and use a different method?
 					$("[data-app-role='giftcardContainer']",$fieldset).hide();
@@ -708,6 +757,7 @@ an existing user gets a list of previous addresses they've used and an option to
 					$("[data-app-event='orderCreate|execChangeFromPayPal']",$fieldset).show();
 					}
 				else	{
+					$fieldset.show();
 //if the user is logged in and has wallets, they are displayed in a tabbed format.
 					if(app.u.buyerIsAuthenticated() && app.data.buyerWalletList && app.data.buyerWalletList['@wallets'].length)	{
 						
@@ -763,7 +813,12 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutMethodsPay
 
 			chkoutNotes : function(formObj,$fieldset)	{
-				if(zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
+				var checkoutMode = $fieldset.closest('form').data('app-checkoutmode'), //='required'
+				isAuthenticated = app.u.buyerIsAuthenticated();
+				if(!isAuthenticated && checkoutMode == 'required')	{
+					//do nothing. panel is hidden by default, so no need to 'show' it.
+					}
+				else if(zGlobals.checkoutSettings.chkout_order_notes)	{$fieldset.show()}
 				else	{$fieldset.hide()}
 				} //chkoutNotes
 
@@ -973,26 +1028,25 @@ note - the order object is available at app.data['order|'+P.orderID]
 							if(app.model.responseHasErrors(rd)){$fieldset.anymessage({'message':rd})}
 							else	{
 								app.u.dump(" -> no errors. user is logged in.");
-								var $form = $fieldset.closest('form');
+								var $form = $fieldset.closest('form'),
+								$fieldsets = $('fieldset',$form);
+//set all panels to loading.
+								$fieldsets.each(function(){
+									app.ext.orderCreate.u.handlePanel($form,$(this).data('app-role'),['showLoading']);
+									});
 
 //can't piggyback these on login because they'll error at the API side (and will kill the login request)
 
 								app.calls.buyerAddressList.init({'callback':function(){
-//no error handling needed. if call fails or returns zero addesses, the function below will just show the new address form.
-									app.ext.orderCreate.u.handlePanel($form,'chkoutAddressBill',['empty','translate','handleDisplayLogic','handleAppEvents']);
-									app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+//no error handling needed. if call fails or returns zero addesses, the panels still need to be rendered.
+//re-render all panels. each could be affected by a login (either just on the display side or new/updated info for discounts, addresses, giftcards, etc)
+									$fieldsets.each(function(){
+										app.ext.orderCreate.u.handlePanel($form,$(this).data('app-role'),['empty','translate','handleDisplayLogic','handleAppEvents']);
+										});
 									}},'immutable');
 	
-								app.calls.buyerWalletList.init({'callback':function(){
-//no error handling needed. if call fails or returns zero wallets, the function below will just show the new default payment options.
-									app.ext.orderCreate.u.handlePanel($form,'chkoutMethodsPay',['empty','translate','handleDisplayLogic','handleAppEvents']);
-									}},'immutable');
+								app.calls.buyerWalletList.init({},'immutable');
 								app.model.dispatchThis('immutable');
-
-//no content changes here, but potentially some display changes.
-								app.ext.orderCreate.u.handlePanel($form,'chkoutAccountCreate',['handleDisplayLogic']);
-//here, content does change. the cart will now contain a username, which is needed on the display.
-								app.ext.orderCreate.u.handlePanel($form,'chkoutPreflight',['empty','translate','handleDisplayLogic','handleAppEvents']);
 								$fieldset.anymessage({'message':'Thank you, you are now logged in.','_msg_0_type':'success'});
 								}
 							}});
