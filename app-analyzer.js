@@ -195,7 +195,28 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 			changeDomains : function()	{
 				localStorage.clear(); //make sure local storage is empty so a new cart is automatically obtained.
 				location.reload(true); //refresh page to restart experience.
+				},
+				
+			
+			showPageGetDetailsInModal : function(catSafeID)	{
+				if(catSafeID)	{
+					var $div = $("<div \/>",{'title':'Detail for: '+catSafeID});
+					
+					$div.appendTo('body')
+					$div.dialog({'modal':true,'width':'90%','height':500});
+					$div.showLoading({'message':'fetching category data'});
+					app.ext.store_navcats.calls.appPageGet.init({'PATH':catSafeID,'@get':[],'all':1},{'callback':function(rd){
+						$div.hideLoading();
+						$div.append(app.ext.analyzer.u.objExplore(app.data[rd.datapointer]['%page']));
+						}},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					//error
+					app.u.dump("No catsafeid passed into showPageGetDetailsinModal");
+					}
 				}
+			
 
 			}, //actions
 		u : {

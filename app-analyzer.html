@@ -277,7 +277,7 @@ ul .prompt	{display:inline-block; width:250px;}
 
 <ul>
 <li id='catInfoTemplate'>
-	<img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='45' height='45' alt='' />
+	<a href='#' onClick="app.ext.analyzer.a.showPageGetDetailsInModal($(this).parent().data('catsafeid'));"><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='45' height='45' alt='' /></a>
 	<div>
 		pretty: <span data-bind='var: category(pretty); format:text;'></span><br />
 		id: <span data-bind='var: category(id); format:text;'></span> 
