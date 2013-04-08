@@ -62,7 +62,7 @@ var orderCreate = function() {
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 					}
 				else {
-					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout_mobile/templates.html',theseTemplates);
+					app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/checkout/'+app.vars.checkoutAuthMode+'.html',theseTemplates);
 					}
 				var r; //returns false if checkout can't load due to account config conflict.
 
@@ -660,7 +660,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				}, //chkoutAddressShip
 
 			chkoutMethodsShip : function(formObj,$fieldset)	{
-				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
+//				app.u.dump('BEGIN app.ext.orderCreate.panelContent.shipMethods');
 //close any existing error messages
 				if($('.ui-widget-anymessage',$fieldset).length)	{
 					$fieldset.anymessage('close');
@@ -671,7 +671,7 @@ an existing user gets a list of previous addresses they've used and an option to
 				shipMethods = app.data.cartDetail['@SHIPMETHODS'],
 				L = shipMethods.length;
 				
-				app.u.dump(' -> shipMethods.length: '+L); // app.u.dump(shipMethods);
+//				app.u.dump(' -> shipMethods.length: '+L); // app.u.dump(shipMethods);
 				
 				
 //if it is decided not to hide the panel, the radio buttons must be locked/disabled.
@@ -691,7 +691,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //per brian, use shipping methods in cart, not in shipping call.
 // the panel content IS rendered even if not shown. ship method needs to be set for paypal
 				if(L >= 1)	{
-					app.u.dump(" -> buyer is logged in and shipping methods are present.");
+//					app.u.dump(" -> Shipping methods are present.");
 					}
 //no shipping methods and buyer is logged in.
 				else if(app.u.buyerIsAuthenticated())	{
@@ -710,7 +710,6 @@ an existing user gets a list of previous addresses they've used and an option to
 					}
 //no shipping methods present and buyer is logged out.
 				else {
-
 					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
 						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistant":true});
 						}
@@ -721,10 +720,6 @@ an existing user gets a list of previous addresses they've used and an option to
 						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
 						}
 					}
-
-
-
-				
 				}, //chkoutMethodsShip
 
 			chkoutCartItemsList : function(formObj,$fieldset){

@@ -6,7 +6,7 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
 //app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_required/extension.js']);
 
-app.rq.push(['extension',0,'orderCreate','extensions/checkout_mobile/extension.js']);
+app.rq.push(['extension',0,'orderCreate','extensions/checkout/extension.js']);
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 

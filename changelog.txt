@@ -10,6 +10,8 @@ invoiceContainer template changed.
 handleSubscribe value should NOT be a form id anymore, but the form itself handleSubscribe($(this)) on the form tag
 billAddressTemplate template changed
 shipAddressTemplate template changed
+checkout_passive, _active and _required extensions gone. Replaced w/ checkout and a var set in app.vars to determine which templates get loaded.
+
 
 * app-fashion added and in beta
 * app-wholesale renamed app-b2b

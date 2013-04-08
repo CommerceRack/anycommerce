@@ -292,7 +292,7 @@ else	{
 //					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
 						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
-						$("<label \/>").append($("<input \/>",{
+						$("<label \/>").addClass('clearfix').append($("<input \/>",{
 							'type':'checkbox',
 							'name':'newsletter_'+app.data.adminNewsletterList['@lists'][i].ID
 							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
