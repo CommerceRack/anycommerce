@@ -991,7 +991,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 //			app.u.dump(" -> this.options.persistent: "+this.options.persistent);
 //			app.u.dump(" -> value: "+value);
 			if(this.options.persistent && value)	{
-//				app.u.dump("GOT HERE!!!!!!!!!!!! ")
 				if(this.options.extension && this.options.name)	{
 					var settings = {};
 					settings[this.options.name] = {'state':value};

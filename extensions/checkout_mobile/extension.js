@@ -55,10 +55,10 @@ var orderCreate = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
+//				app.u.dump('BEGIN app.ext.orderCreate.init.onSuccess');
 //1PC can't load the templates remotely. causes XSS issue.
 				if(app.vars._clientid == '1pc')	{
-					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
+//					app.u.dump(" -> _cliendID = 1pc. load templates from TOXML file");
 					app.model.loadTemplates(theseTemplates); //loaded from local file (main.xml)
 					}
 				else {
@@ -684,6 +684,7 @@ an existing user gets a list of previous addresses they've used and an option to
 //per brian, use shipping methods in cart, not in shipping call.
 // the panel content IS rendered even if not shown. ship method needs to be set for paypal
 					if(L == 0 && app.u.buyerIsAuthenticated())	{
+						$fieldset.empty(); //clear any old messaging.
 						if(formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('bill') == true){
 							$fieldset.prepend("<p>Please select an address for a list of shipping options.</p>");
 							}
@@ -784,18 +785,12 @@ an existing user gets a list of previous addresses they've used and an option to
 						var $radio = $("input[value='"+formObj['want/payby']+"']",$fieldset),
 						$supplemental = app.ext.orderCreate.u.showSupplementalInputs($radio,app.ext.orderCreate.vars);
 						
-						app.u.dump(" -> $radio.length: "+$radio.length);
-						
 						$radio.attr('checked','checked');
 						if($supplemental)	{
-							app.u.dump(" -> payment method HAS supplemental inputs");
+							app.u.dump(" -> payment method ["+formObj['want/payby']+"] HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
-
 						}
-
-
-
 
 					}
 
@@ -830,8 +825,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 		a : {
 			
 			startCheckout : function($chkContainer)	{
-				app.u.dump("BEGIN orderCreate.a.startCheckout");
-				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
+//				app.u.dump("BEGIN orderCreate.a.startCheckout");
+//				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
@@ -957,27 +952,35 @@ note - the order object is available at app.data['order|'+P.orderID]
 					addressID = $btn.closest('address').data('_id');
 					
 					if(addressType && addressID)	{
-						$("[name='"+addressType+"/shortcut']",$form).val(addressID);
-						var cartUpdate = {};
-						cartUpdate[addressType+"/shortcut"] = addressID;
 						
-						if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
-//							app.u.dump("Ship to billing address checked. set fields in billing.");
-//copy the address into the shipping fields.
-							var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
-							if(!$.isEmptyObject(addrObj))	{
-								for(index in addrObj)	{
-									cartUpdate[index.replace('bill_','ship/')] = addrObj[index];
+						if(app.ext.cco.u.verifyAddressIsComplete(addressType,addressID))	{
+							$("[name='"+addressType+"/shortcut']",$form).val(addressID);
+							var cartUpdate = {};
+							cartUpdate[addressType+"/shortcut"] = addressID;
+							
+							if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
+	//							app.u.dump("Ship to billing address checked. set fields in billing.");
+	//copy the address into the shipping fields.
+								var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
+								if(!$.isEmptyObject(addrObj))	{
+									for(index in addrObj)	{
+										cartUpdate[index.replace('bill/','ship/')] = addrObj[index];
+										}
 									}
 								}
+							
+							
+							app.calls.cartSet.init(cartUpdate,{'callback':function(){
+								app.ext.orderCreate.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+								}}); //no need to populate address fields, shortcut handles that.
+							app.ext.orderCreate.u.handleCommonPanels($form);
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$btn.closest('fieldset').anymessage({'message':"It appears the address you've selected is missing some required information. Please edit the address (click the pencil icon) to supply the required information."});
 							}
 						
-						
-						app.calls.cartSet.init(cartUpdate,{'callback':function(){
-							app.ext.orderCreate.u.handlePanel($form,(addressType == 'bill') ? 'chkoutAddressBill' : 'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-							}}); //no need to populate address fields, shortcut handles that.
-						app.ext.orderCreate.u.handleCommonPanels($form);
-						app.model.dispatchThis('immutable');
+
 						}
 					else	{
 						$btn.closest('fieldset').anymessage({'message':'In orderCreate.e.execBuyerAddressSelect, either addressType ['+addressType+'] and/or addressID ['+addressID+'] not set. Both are required.','gMessage':true});

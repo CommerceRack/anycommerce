@@ -365,6 +365,31 @@ left them be to provide guidance later.
 				},
 
 
+//A simple check to make sure that all the required inputs are populated for a given address.  
+//returns boolean
+//this is used in checkout for pre-existing addresses, to make sure they're complete.
+			verifyAddressIsComplete : function(addressType,addressID)	{
+				var r = true;
+				if(addressType && addressID)	{
+					var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID);
+					if(!addrObj[addressType+'/address1'])	{r = false}
+					else if(!addrObj[addressType+'/city'])	{r = false}
+					else if(!addrObj[addressType+'/countrycode'])	{r = false}
+					else	{}
+	//we're returning boolean, so if we already a false, no need to verify further. if true, make sure postal and region are set for US
+					if(r == true && addrObj[addressType+'/countrycode'] == 'US')	{
+						if(!addrObj[addressType+'/postal'])	{r = false}
+						else if(!addrObj[addressType+'/region'])	{r = false}
+						else	{}
+						}
+					}
+				else	{
+					r = false;
+					$('#globalMessaging').anymessage({'message':'In cco.u.verifyAddressIsComplete, either addressType ['+addressType+'] or addressID ['+addressID+'] not set','gMessage':true});
+					}
+				return r;
+				},
+
 //pass in either 'bill' or 'ship' to determine if any predefined addresses for that type exist.
 //buyerAddressList data should already have been retrieved by the time this is executed.
 			buyerHasPredefinedAddresses : function(TYPE)	{
