@@ -23,7 +23,7 @@ app.rq.push(['extension',1,'admin_batchJob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',1,'admin_customer','extensions/admin/customer.js']);
 app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']); //is zero at init for testing.
 app.rq.push(['extension',1,'admin_user','extensions/admin/user.js']);
-app.rq.push(['extension',1,'convertSessionToOrder','extensions/admin/order_create.js']); 
+app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.
 
 

@@ -677,15 +677,17 @@ NOTES
 					sku = $("input[name='sku']",$form).val();
 
 					if(sku && $qtyInput.val() >= 1)	{
+						obj = $form.serializeJSON();
+						app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
+//here for the admin side of things. Will have no impact on retail as price can't be set.
+						if(obj.price == "")	{delete obj.price; app.u.dump("Deleting price");}
+						else{}
+
+
 //There are use cases for skipping validation, such as admin, quick order, etc.
 						if($form.data('skipvalidation') || app.ext.store_product.validate.addToCart(sku,$form))	{
-							obj = $form.serializeJSON();
+							
 							obj['%variations'] = {};
-	//here for the admin side of things. Will have no impact on retail as price can't be set.
-							if(obj.price)	{
-								if(obj.price != ""){}
-								else{delete obj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-								}
 	
 							for(var index in obj)	{
 	//							app.u.dump(" -> index: "+index);
