@@ -1247,7 +1247,7 @@ adding classes is not likely to have any bad effects.
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='companyTemplate' class='clearfix loadingBG' data-columncontent='helpfulLinks'>
+<div id='companyTemplate' class='clearfix loadingBG companyPage' data-columncontent='helpfulLinks'>
 		<div class="topSpacer"></div>
 
 
@@ -1264,7 +1264,8 @@ adding classes is not likely to have any bad effects.
 				<img src="img/company/cw09_r_head_contact-243x31.gif" width="243" height="31" />
 			</div>
 			<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
-			<fieldset>
+			<div class="alignRight marginBottom" data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
+			<fieldset class="marginTop">
 				<legend>Contact Us</legend>
 				<div id='contactFormMessaging'></div>
 				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
@@ -1275,15 +1276,14 @@ adding classes is not likely to have any bad effects.
 				</div>
 			</fieldset>
 			</form>
-			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
-			
 			<div class="alignCenter marginBottom">
-			<img class="marginTop" src="img/company/sportsworld2012_1.jpg" width="480" height="259"/>
-			
-			<iframe width="640" scrolling="no" height="480" frameborder="0" src="http://maps.google.com/maps?f=q&amp;q=Sports+World+near+Chicago,+IL&amp;ie=UTF8&amp;hq=Sports+World&amp;hnear=Chicago,+Cook,+Illinois&amp;ll=41.947781,-87.655814&amp;spn=0.001915,0.003433&amp;t=h&amp;z=18&amp;iwloc=A&amp;output=embed" marginwidth="0" marginheight="0"></iframe>
-			<br/>
-			<a target="_blank" href="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=cubworld&amp;sll=37.0625,-95.677068&amp;sspn=30.819956,56.25&amp;ie=UTF8&amp;cid=17283758047006430063&amp;s=AARTsJrixmyUrzkiOQzSNP0T0PKhZhJyBw&amp;ll=41.956937,-87.652102&amp;spn=0.030637,0.054932&amp;z=14&amp;iwloc=A&amp;output=embed">View Map</a>
+				<img class="marginTop marginBottom" src="img/company/sportsworld2012_1.jpg" width="480" height="259" />
+				<iframe width="480" scrolling="no" height="360" frameborder="0" src="http://maps.google.com/maps?f=q&amp;q=Sports+World+near+Chicago,+IL&amp;ie=UTF8&amp;hq=Sports+World&amp;hnear=Chicago,+Cook,+Illinois&amp;ll=41.947781,-87.655814&amp;spn=0.001915,0.003433&amp;t=h&amp;z=18&amp;iwloc=A&amp;output=embed" marginwidth="0" marginheight="0"></iframe>
+				<br/>
+				<a target="_blank" href="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=cubworld&amp;sll=37.0625,-95.677068&amp;sspn=30.819956,56.25&amp;ie=UTF8&amp;cid=17283758047006430063&amp;s=AARTsJrixmyUrzkiOQzSNP0T0PKhZhJyBw&amp;ll=41.956937,-87.652102&amp;spn=0.030637,0.054932&amp;z=14&amp;iwloc=A&amp;output=embed">View Map</a>
 			</div>
+			
+			
 		</div>
 
 

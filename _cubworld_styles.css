@@ -77,6 +77,25 @@ a {
     color: #990000;
 }
 
+h1 {
+    color: #666666;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 5px 0 2px;
+}
+h2 {
+    color: #666666;
+    font-size: 12pt;
+    font-weight: bold;
+    margin: 5px 0 2px;
+}
+h3 {
+    color: #666666;
+    font-size: 11pt;
+    font-weight: bold;
+    margin: 2px 0 1px;
+}
+
 .breadcrumb {
 	display:block;
 	font: 11px Arial,Helvetica,sans-serif;
@@ -398,10 +417,10 @@ COLUMN STYLES
 	padding: 19px 11px;
 	margin: 0px;
 }
-#helpfulLinks{
-	background: #002675;
-	color: white;
-}
+#helpfulLinks{background: #002675;}
+
+#helpfulLinks h3{color: white;}
+
 .sideline {
     float: none;
     margin: 0px;
@@ -727,4 +746,10 @@ COMPANY PAGE STYLES
 ****************************************************************/
 .redbar {
 	background: url(img/company/cw09_r_head_bg-1x31.gif) repeat-x;
+}
+
+.companyPage {
+	color: #000000;
+    font-family: arial,helvetica;
+    font-size: 9pt;
 }
