@@ -668,21 +668,23 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
-	<div class="alignCenter">
+	<div class="alignCenter marginBottom">
 		<img src="img/large_shipping_banner.png" class="pointer" onClick="return showContent('company',{'show':'shipping'});"/>
 	</div>
 	
 	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
 
-	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
+	<h1 class="page_title" >
+		<span data-bind="var: category(%page.page_title); format: text; editor: text;"></span>
+	</h1>
 
-	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
-	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList subcats'></ul><!-- outputs a list of subcategories -->
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; withInventory:1; withVariations:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
 
-	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<p class="description" data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 
 
 </div>
@@ -697,8 +699,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 <ul>
 <li id='categoryListTemplate'>
 	<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
-		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
+		<h4 class='subCatTitle white2LGray alignCenter'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></h4>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='180' height='180' /></div>
 	</div>
 </li>
 
@@ -933,7 +935,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div id='productTemplate'>
+<div id='productTemplate' data-columncontent="hotItemList">
 
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
@@ -1246,7 +1248,7 @@ adding classes is not likely to have any bad effects.
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='companyTemplate' class='clearfix loadingBG' data-columncontent='helpfulLinks'>
-
+		<div class="topSpacer"></div>
 
 
 	
@@ -1258,7 +1260,9 @@ adding classes is not likely to have any bad effects.
 
 
 		<div id='contactArticle' class='displayNone textContentArea'>
-			<h1>Contact Information</h1>
+			<div class="redbar">
+				<img src="img/company/cw09_r_head_contact-243x31.gif" width="243" height="31" />
+			</div>
 			<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
 			<fieldset>
 				<legend>Contact Us</legend>
@@ -1272,25 +1276,38 @@ adding classes is not likely to have any bad effects.
 			</fieldset>
 			</form>
 			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
+			
+			<div class="alignCenter marginBottom">
+			<img class="marginTop" src="img/company/sportsworld2012_1.jpg" width="480" height="259"/>
+			
+			<iframe width="640" scrolling="no" height="480" frameborder="0" src="http://maps.google.com/maps?f=q&amp;q=Sports+World+near+Chicago,+IL&amp;ie=UTF8&amp;hq=Sports+World&amp;hnear=Chicago,+Cook,+Illinois&amp;ll=41.947781,-87.655814&amp;spn=0.001915,0.003433&amp;t=h&amp;z=18&amp;iwloc=A&amp;output=embed" marginwidth="0" marginheight="0"></iframe>
+			<br/>
+			<a target="_blank" href="http://maps.google.com/maps?f=q&amp;source=s_q&amp;hl=en&amp;geocode=&amp;q=cubworld&amp;sll=37.0625,-95.677068&amp;sspn=30.819956,56.25&amp;ie=UTF8&amp;cid=17283758047006430063&amp;s=AARTsJrixmyUrzkiOQzSNP0T0PKhZhJyBw&amp;ll=41.956937,-87.652102&amp;spn=0.030637,0.054932&amp;z=14&amp;iwloc=A&amp;output=embed">View Map</a>
+			</div>
 		</div>
 
 
 
 		<div id='faqArticle' class='displayNone textContentArea'>
-			<h1>Frequently Asked Questions</h1>
+			<div class="redbar">
+				<img src="img/company/cw09_r_head_faq-265x28.gif" width="265" height="28" />
+			</div>
 			<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
 		</div>
 
 
 
 		<div class='displayNone textContentArea' id='paymentArticle'>
-			<h1>Payment Policy</h1>
+			<div class="redbar">
+				<img src="img/company/cw09_r_head_payment-243x31.gif" width="243" height="31" />
+			</div>
 			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
 		</div>
 
 
 		<div class='displayNone textContentArea' id='privacyArticle'>
 			<h1>Privacy Statement</h1>
+	<!-- 
 	<h4>About this Privacy Policy:</h4>
 	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
 
@@ -1327,21 +1344,47 @@ adding classes is not likely to have any bad effects.
 
 	<h3>We provide the ability to Correct/Update YOUR information.</h3>
 	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
-	<!-- !!! load amendments here -->
+	!!! load amendments here -->
+	
+	<h4>Privacy</h4>
+	<p>
+		We keep your personal information private and secure. When you make a purchase from our site, you provide your name, email address, credit card information, address, phone number, and a password. We use this information to process your orders, to keep you updated on your orders and to personalize your shopping experience.
+	</p>
+	<p>
+		Our secure servers protect your information using advanced encryption techniques and firewall technology. 
+	</p>
+	<p>
+		To keep you informed about our latest offers, we may notify you of current promotions, specials and new additions to the Cubworld Online site. You may unsubscribe from our newsletters by following the unsubscribe instructions in any email you receive from us.
+	</p>
+	<p>
+		When entering any of our contests or prize drawings, you provide your name, email address and mailing address. If you win, we will send the prize to the address entered and notify you by email. When you enter a contest or drawing you are also included in our newsletter list to receive notice of promotions, specials and new additions to the Cubworld Online site. You may unsubscribe from this news list by following the unsubscribe instructions in any email received.
+	</p>
+	<p>
+		We use "cookies" to keep track of your current shopping session to personalize your experience and so that you may retrieve your shopping cart at any time. 
+	</p>
+	<h4>Privacy on Other Web Sites</h4>
+	<p>
+		Other sites accessible through our site have their own privacy policies and data collection practices. Please consult each site's privacy policy. Cubworld Online is not responsible for the actions of third parties. 
+	</p>
+	
 		</div>
 
 
 
 
 		<div class='displayNone textContentArea' id='returnArticle'>
-			<h1>Return Policy</h1>
+			<div class="redbar">
+				<img src="img/company/cw09_r_head_returns-243x31.gif" width="243" height="31" />
+			</div>
 			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
 		</div>
 
 
 
 		<div class='displayNone textContentArea' id='shippingArticle'>
-			<h1>Shipping Information</h1>
+			<div class="redbar">
+				<img src="img/company/cw09_r_head_shipping-243x31.gif" width="243" height="31" />
+			</div>
 			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
 		</div>
 
@@ -1825,7 +1868,7 @@ used for store_crm.js
 	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
 	</div>
 
-	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class=' displayNone ui-accordion-content ui-helper-reset ui-widget-content '></div>
 
 </section>
 

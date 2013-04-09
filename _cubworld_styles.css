@@ -193,6 +193,14 @@ button.quickView{
 .prodViewerAddToCartForm {
     margin-bottom: 0px;
 }
+
+.topSpacer{
+	height: 19px;
+}
+
+.ui-accordion-header span {
+	display: inline-block;
+}
 /****************************************************************
 
 HEADER STYLES
@@ -568,7 +576,47 @@ HOMEPAGE STYLES
 CATEGORY STYLES
 
 ****************************************************************/
+.page_title {
+	background: url("img/cw12_pagetitle_bg-1156x132.png") no-repeat scroll left top transparent;
+    color: #404041;
+    font: bold 17px Arial,Helvetica,sans-serif;
+    height: 66px;
+    margin: 0 0 5px;
+    padding: 0 0 0 8px;
+}
+.page_title span {
+	background: url("img/cw12_pagetitle_bg-1156x132.png") no-repeat scroll right bottom transparent;
+    color: #404041;
+    display: block;
+    font: bold 17px/66px Arial,Helvetica,sans-serif;
+    height: 66px;
+    margin: 0;
+    padding: 0 0 0 10px;
+}
 
+.subcats > li {
+	background: url("img/cw12_hm_catbgstr-1x254.gif") repeat-x scroll center top #FFFFFF;
+    border: 1px solid #DADADA;
+    color: #002774;
+    height: 254px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+    width: 182px;
+}
+
+h4.subCatTitle {
+	font: bold 13px Tahoma,Geneva,sans-serif;
+    height: 35px;
+    margin: 5px 0 0;
+    padding: 0;
+	color: #002774;
+}
+
+div:hover > h4.subCatTitle {
+	color: #7f0000;
+}
 /****************************************************************
 
 PRODUCT STYLES
@@ -671,3 +719,12 @@ SEARCH STYLES
 .previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
 .productQuickview{background: white; min-height: 469px;}
 #resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}
+
+/****************************************************************
+
+COMPANY PAGE STYLES
+
+****************************************************************/
+.redbar {
+	background: url(img/company/cw09_r_head_bg-1x31.gif) repeat-x;
+}
