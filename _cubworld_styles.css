@@ -220,6 +220,10 @@ button.quickView{
 .ui-accordion-header span {
 	display: inline-block;
 }
+
+.indent {
+	text-indent:3em;
+}
 /****************************************************************
 
 HEADER STYLES
@@ -752,4 +756,61 @@ COMPANY PAGE STYLES
 	color: #000000;
     font-family: arial,helvetica;
     font-size: 9pt;
+}
+.returnLink {
+	font-size: 1.8em;
+	padding: 10px;
+}
+#rma-form {
+	font-size: .8em;
+	padding: 20px;
+}
+#rma-form label {
+	display: inline-block;
+	width: 150px;
+	text-align: right;
+	font-weight: bold;
+	margin-bottom: 10px;
+	margin-top: 10px;
+	margin-right: 15px;
+}
+#rma-form textarea {
+	width: 100%;
+}
+#rmaItems label {
+	font-weight: normal;
+	font-size: .8em;
+}
+
+#rmaItems { padding-left: 40px;}
+
+#rmaItems .col1,
+#rmaItems .col2,
+#rmaItems .col3,
+#rmaItems .col4,
+#rmaItems .col5{
+	display: inline-block;
+	text-align: left;
+	margin: 0px;
+	padding: 0px;
+}
+
+#rmaItems .col1{width:20px;}
+#rmaItems .col2{width:200px;}
+#rmaItems .col3{width:60px; text-align: center;}
+#rmaItems .col4{width:60px; text-align: center; margin-right: 14px;}
+#rmaItems .col5{width:200px;}
+.addRMAItemButton {
+	margin-left: 40px;
+	margin-top: 20px;
+}
+.rmaItem  button{
+	position:relative;
+	top:-2px;
+	width: 20px;
+	height: 20px;
+}
+
+.mailingAddress {
+	margin: 20px 0px;
 }

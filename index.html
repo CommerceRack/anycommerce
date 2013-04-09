@@ -468,6 +468,7 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 						<li><a href='#' onClick="return showContent('company',{'show':'payment'});" class='navLink navLink_payment'>Payment Policy</a></li>
 						<li><a href='#' onClick="return showContent('company',{'show':'privacy'});" class='navLink navLink_privacy'>Privacy Statement</a></li>
 						<li><a href='#' onClick="return showContent('company',{'show':'return'});" class='navLink navLink_return'>Return Policy</a></li>
+							<li class="indent"><a href='#' onClick="app.ext.cubworld.a.showRMAForm(); return false;" class='navLink navLink_rma'>RMA Form</a></li>
 						<li><a href='#' onClick="return showContent('company',{'show':'shipping'});" class='navLink navLink_shipping'>Shipping Information</a></li>
 					</ul>
 					
@@ -1376,6 +1377,8 @@ adding classes is not likely to have any bad effects.
 			<div class="redbar">
 				<img src="img/company/cw09_r_head_returns-243x31.gif" width="243" height="31" />
 			</div>
+			<a class="returnLink floatRight" href="#" onClick="app.ext.cubworld.a.showRMAForm(); return false;">RMA Form</a>
+			
 			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
 		</div>
 
@@ -2063,6 +2066,68 @@ The 'data-action' attribute is used to assign an onClick.
 </table>
 
 </div>
+
+<div id="rma-form" class="displayNone">
+	<form onSubmit="return false;">
+		
+			
+			<div><label for='RMAFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='RMAFormSender' /></div>
+			<div><label for='RMAFormOID'>Order ID: </label><input type='text' name='OID' id='RMAFormOID' required='required'/></div>
+			<div><label for='RMAFormPhone'>Phone number: </label><input type='text' name='phone' id='RMAFormPhone' required='required' /></div>
+			<div><label for='RMAFormEmail'>Email address: </label><input type='text' name='email' id='RMAFormEmail' required='required' /></div>
+			
+			<div>
+				<label>Return/refund:</label>
+				<div id="rmaItems">
+					<div class="rmaItemLabels"><label class="col1">#</label><label class="col2">Sku/manufacturer's id</label><label class="col3">Refund</label><label class="col4">Exchange</label><label class="col5">Exchange for sku</label></div>
+					<div class="rmaItem"><label class="col1">1</label><input class="col2" type="text" value="" name="returnid_1" id="returnid_1" /><input class="col3" type="radio" name="retex_1" id="retex_1" value="refund" /><input class="col4" type="radio" name="retex_1" id="retex_1" value="exchange" /><input class="col5" type="text" name="exchangeid_1" id="exchangeid_1" value="" /><button onClick="app.ext.cubworld.a.removeRMAItem($(this).parent()); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span></button></div>
+				</div>
+				<button onClick="app.ext.cubworld.a.addRMAItem(); return false;" class="addRMAItemButton ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+					<span class="ui-button-text">Add an Item</span>
+				</button>
+				
+								
+			</div>
+			
+			<div><label for='RMAFormBody'>Questions/Comments: </label>
+			<textarea name='body' required='required' id='contactFormBody'></textarea></div>
+			<h4>Easy Exchange / Return Instructions</h4>
+			<ul class="wiki_list">
+				<li class="wiki_listitem"> Please enclose a check / cashiers check / money order for $4.95 for any exchanges (not returns) (This amount covers the reshipping & restocking charges)</li>
+				<li class="wiki_listitem"> No payment for $4.95 is necessary for exchanges based on a SportsWorldChicago.com shipping error of the wrong product</li>
+				<li class="wiki_listitem"> All returns (not exchanges) are subject to a 15% restocking fee, unless items were received in error from SportsWorldChicago.com</li>
+				<li class="wiki_listitem"> All orders being returned (not exchanged) that qualified for free shipping are also subject to the original shipping charges</li>
+				<li class="wiki_listitem"> All custom items returned or exchanged are subject to a 20% restocking fee and subject to the original shipping charges. </li>
+				<li class="wiki_listitem"> We will gladly accept the return of products that are defective due to defects in manufacturing and/or workmanship for 30 days from the date of purchase</li>
+				<li class="wiki_listitem"> ALL SALES ARE FINAL ON CUSTOM JERSEYS, DATED ITEMS & TRADED CHICAGO CUBS PLAYERS</li>
+			</ul>
+			
+			<hr/>
+			If exchanging items and there is a price difference, do you give us permission to charge / refund your credit card accordingly?
+			<div><label>Yes</label> <input type='radio' name='cc_charge_confirm' id='cc_charge_confirm' value="yes" /></div>
+			<div><label>No</label> <input type='radio' name='cc_charge_confirm' id='cc_charge_confirm' value="no" /></div>
+			<hr />
+			
+			
+			<div class='alignCenter'>
+				<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Submit Return Request' />
+			</div>
+			
+			<div class="mailingAddress">
+				<h5>
+				Please mail your return / exchange to the following address:
+				</h5>
+				SportsWorldChicago.com
+				<br />
+				c/o Returns & Exchanges
+				<br />
+				3555 N. Clark Street
+				<br />
+				Chicago, IL 60657
+			</div>
+	</form>
+</div>
+
 
 <div id="size-chart" class="displayNone">
 	<p></p><center><em></em></center><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><strong><font size="3"></font></strong></div><div class="h3" align="left"><font><font></font></font><font><font></font></font><strong><font size="3">Sizing Tips</font></strong></div><div align="left"><font size="2">Use these tips as a general guide when finding your measurements:</font></div><ol><li><div align="left"><font size="2">Chest/Bust: With your arms at your sides, measure around the fullest part of your chest, across shoulder blades and under arms.</font></div></li><li><div align="left"><font size="2">Waist: To measure your natural waistline, wrap the tape so it intersects your navel. Keep tape flat, but comfortably loose.</font></div></li><li><div align="left"><font size="2">Hips: Stand with your heels together and measure the fullest part of your hips, keeping the measuring tape level and parallel to the floor, front, and back.</font></div></li><li><div align="left"><font size="2">Inseam: Stand up straight, and start tape measure high in your crotch. Straighten the tape down the inside of your leg to the top of your shoe/foot.</font></div></li></ol>

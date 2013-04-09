@@ -224,9 +224,39 @@ var cubworld = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showSizeChart : function(){
-				$('#size-chart').dialog({'modal':'true', 'width':800, height:550});
+				$('#size-chart').dialog({'modal':'true', 'title':'Sizing Chart','width':800, height:550});
 				},
-			
+			showRMAForm : function(){
+				$('#rma-form').dialog({'modal':'true', 'title':'RMA Form','width':800, height:550});
+				},
+			addRMAItem : function(){
+				var index = $("#rmaItems .rmaItem").length + 1;
+				var $rmaItem = $('<div class="rmaItem"></div>');
+				$rmaItem.append($('<label class="col1">'+index+'</label>'));
+				$rmaItem.append($('<input class="col2" type="text" value="" name="returnid_'+index+'" id="returnid_'+index+'" />'));
+				$rmaItem.append($('<input class="col3" type="radio" name="retex_'+index+'" id="retex_'+index+'" value="refund" />'));
+				$rmaItem.append($('<input class="col4" type="radio" name="retex_'+index+'" id="retex_'+index+'" value="exchange" />'));
+				$rmaItem.append($('<input class="col5" type="text" name="exchangeid_'+index+'" id="exchangeid_'+index+'" value="" />'));
+				$rmaItem.append($('<button onClick="app.ext.cubworld.a.removeRMAItem($(this).parent()); return false;" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only"><span class="ui-button-icon-primary ui-icon ui-icon-closethick"></span></button>'));
+				$('#rmaItems').append($rmaItem);
+				},
+			removeRMAItem : function($rmaItem){
+				$rmaItem.remove();
+				var index = 1;
+				$("#rmaItems .rmaItem").each(function(){
+					var $this = $(this);
+					$('.col1',$this).text(index);
+					$('.col2',$this).attr('name','returnid_'+index);
+					$('.col2',$this).attr('id','returnid_'+index);
+					$('.col3',$this).attr('name','retex_'+index);
+					$('.col3',$this).attr('id','retex_'+index);
+					$('.col4',$this).attr('name','retex_'+index);
+					$('.col4',$this).attr('id','retex_'+index);
+					$('.col5',$this).attr('name','exchangeid_'+index);
+					$('.col5',$this).attr('id','exchangeid_'+index);
+					index++;
+					});
+				},
 			showDropDown : function ($tag) {
 				//app.u.dump('showing');
 				//console.log($tag.data('timeoutNoShow'));
