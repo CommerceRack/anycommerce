@@ -361,7 +361,31 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			},//appSendMessage
-			
+//obj should contain @products (array of pids), ship_postal (zip/postal code) and ship_country (as 2 digit country code)
+		appShippingTransitEstimate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ship_postal && obj.ship_country && typeof obj['@products'] === 'object')	{
+					this.dispatch(obj,_tag,Q);
+					r = 1;
+					}
+				else if(obj)	{
+					$('#globalMessaging').anymessage({'message':'In app.calls.appShippingTransitEstimate requires ship_postal ['+obj.ship_postal+'], ship_country ['+obj.ship_country+'] and @products ['+typeof obj['@products']+']','gMessage':true});
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In app.calls.appShippingTransitEstimate, no obj passed.','gMessage':true});
+					}
+				
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'appShippingTransitEstimate';
+				obj._cmd = "appShippingTransitEstimate"
+				app.model.addDispatchToQ(obj,Q || 'passive');	
+				}
+			},//appShippingTransitEstimate
+
 //get a product record.
 //required params: obj.pid.
 //optional params: obj.withInventory and obj.withVariations
@@ -867,13 +891,25 @@ see jquery/api webdoc for required/optional param
 			}, //ping
 
 //used to get a clean copy of the cart. ignores local/memory. used for logout.
-//this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. !!! fix during cleanup or big release.
+//this is old and, arguably, should be a utility. however it's used a lot so for now, left as is. ### search and destroy when convenient.
 		refreshCart : {
 			init : function(_tag,Q)	{
 				app.model.destroy('cartDetail');
 				app.calls.cartDetail.init(_tag,Q);
 				}
-			}, // refreshCart removed comma from here line 383
+			}, // refreshCart
+
+		time : {
+			init : function(_tag,Q)	{
+				this.dispatch(_tag,Q);
+				return true;
+				},
+			dispatch : function(_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = 'time';
+				app.model.addDispatchToQ({"_cmd":"time","_tag":_tag},Q || 'mutable');	
+				}
+			}, //time
 
 
 		whereAmI : {
