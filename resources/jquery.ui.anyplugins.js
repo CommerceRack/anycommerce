@@ -712,15 +712,12 @@ and it'll turn the cb into an ios-esque on/off switch.
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
 			else if($label.length)	{
 				var $input = $("input",$label).first(),
-				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left'}),
+				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'inline-block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0}),
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em'});
 	
 				$label.data('anycb',true);
 				self.span = $span; //global (within instance) for easy reference.
 
-				$label.contents().filter(function() {
-					return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
-					}).wrap("<span class='label anycb-label' style='display:inline-block; height:24px; line-height:24px; float:left;'></span>"); //wrap around just the text. text().wrap() didn't work.
 				$input.hide();
 				$container.append($span);
 				$label.prepend($container);

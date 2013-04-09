@@ -95,18 +95,11 @@ var admin_prodEdit = function() {
 //panelData is an object with panel ids as keys and value TFU for whether or not so load/show the panel content.
 		loadAndShowPanels :	{
 			onSuccess : function(_rtag)	{
-<<<<<<< HEAD
-				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
-//the device preferences are how panels are open/closed by default.
-				var settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
-				settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
-=======
 //				app.u.dump("BEGIN admin_prodEdit.callbacks.loadAndShowPanels");
 //the device preferences are how panels are open/closed by default.
 				var settings = app.ext.admin.u.dpsGet('admin_prodEdit','openPanel');
 //				app.u.dump(" -> settings: "); app.u.dump(settings);
 				settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 				var pid = app.data[_rtag.datapointer].pid;
 				var $target = $('#productTabMainContent');
@@ -124,11 +117,7 @@ var admin_prodEdit = function() {
 					//pid is assigned to the panel so a given panel can easily detect (data-pid) what pid to update on save.
 						$target.append(app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate',app.data[_rtag.datapointer]['@PANELS'][i]));
 						}
-<<<<<<< HEAD
-					if(settings && settings.openPanel[panelid])	{
-=======
 					if(settings && settings[panelid])	{
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 						$('.panelHeader','#panel_'+panelid).click(); //open panel. This function also adds the dispatch.
 						}
 					}
@@ -159,36 +148,21 @@ var admin_prodEdit = function() {
 //run when a panel header is clicked. a 'click' may be triggered by the app when the list of panels appears.
 //view can equal 'show' or 'hide'. This is to force a panel open or closed. if blank, panel will toggle.
 		handlePanel : function(t)	{
-<<<<<<< HEAD
-			app.u.dump("BEGIN admin_prodEdit.a.handlePanel");
-=======
 //			app.u.dump("BEGIN admin_prodEdit.a.handlePanel");
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 			
 			var $header = $(t), //if not already a jquery object
 			$panel = $('.panelContents',$header.parent()),
 			pid = $panel.data('pid'),
 			panelid = $header.parent().data('panelid'),
-<<<<<<< HEAD
-			settings = app.ext.admin.u.devicePreferencesGet('admin_prodEdit');
-
-			settings = $.extend(true,settings,{"openPanel":{"general":true}}); //make sure panel object exits. general panel is always open.
-=======
 			settings = app.ext.admin.u.dpsGet('admin_prodEdit',"openPanel");
 
 			settings = $.extend(true,settings,{"general":true}); //make sure panel object exits. general panel is always open.
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 			$panel.toggle(); //will close an already opened panel or open a closed. the visibility state is used to determine what action to take.
 
 			if($panel.is(":visible"))	{
-<<<<<<< HEAD
-				app.u.dump(" -> into the code to show the panel");
-				settings.openPanel[panelid] = true;
-=======
 //				app.u.dump(" -> into the code to show the panel");
 				settings[panelid] = true;
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				$header.addClass('ui-accordion-header-active ui-state-active').removeClass('ui-corner-bottom');
 				$('.ui-icon-circle-arrow-e',$header).removeClass('ui-icon-circle-arrow-e').addClass('ui-icon-circle-arrow-s');
 //panel contents generated already. just open. form and fieldset generated automatically, so check children of fieldset not the panel itself.
@@ -203,11 +177,7 @@ var admin_prodEdit = function() {
 					}
 				}
 			else	{
-<<<<<<< HEAD
-				settings.openPanel[panelid] = false;
-=======
 				settings[panelid] = false;
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				$header.removeClass('ui-accordion-header-active ui-state-active').addClass('ui-corner-bottom');
 				$('.ui-icon-circle-arrow-s',$header).removeClass('ui-icon-circle-arrow-s').addClass('ui-icon-circle-arrow-e')
 				}
@@ -301,25 +271,6 @@ var admin_prodEdit = function() {
 
 		u : {
 
-<<<<<<< HEAD
-//app.ext.admin_prodEdit.u.getPanelContents(pid,panelid)
-			getPanelContents : function(pid,panelid)	{
-				var r;  //what is returned. Either a jquery object of the panel contents OR false, if not all required params are passed.
-				if(pid && panelid)	{
-					r = app.renderFunctions.transmogrify({'id':'panel_'+panelid,'panelid':panelid,'pid':pid},'productEditorPanelTemplate_'+panelid,app.data['appProductGet|'+pid]);
-					app.ext.admin.u.handleAppEvents(r);
-					}
-				else	{
-					r = false;
-					app.u.throwGMessage("In admin_prodEdit.a.showAppPanel, no panelid specified.");
-					}
-				return r;
-				}, //getPanelContents
-
-
-			showProductEditor : function(path,P)	{
-			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor ["+path+"]");
-=======
 
 		handleProductListTab : function(process)	{
 			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
@@ -395,7 +346,6 @@ var admin_prodEdit = function() {
 
 		showProductEditor : function(path,P)	{
 //			app.u.dump("BEGIN admin_prodEdit.u.showProductEditor ["+path+"]");
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 //			app.u.dump(" -> P: "); app.u.dump(P);
 			
 			window.savePanel = app.ext.admin_prodEdit.a.saveProductPanel;  
@@ -492,92 +442,6 @@ var admin_prodEdit = function() {
 			}
 
 		}, //u
-<<<<<<< HEAD
-
-//e is for 'events'. This are used in handleAppEvents.
-		e : {
-
-			"configOptions" : function($t)	{
-				$t.button();
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{navigateTo('/biz/product/options2/index.cgi?product='+pid);}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
-					});
-				},
-			"enterSyndicationSpecifics" : function($t)	{
-				$t.button().addClass('smallButton');
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid'),
-					syndicateTo = $(this).data('ui-syndicateto');
-					if(pid && syndicateTo)	{navigateTo("/biz/product/definition.cgi?_PRODUCT="+pid+"&amp;_DOCID="+syndicateTo+".listing",{dialog:true});}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid ["+pid+"] or syndicateTo ["+syndicateTo+"].");}
-					});
-				},
-//not currently in use. planned for when html4/5, wiki and text editors are available.
-			"textareaEditorMode" : function($t)	{
-//				$t.addClass('ui-widget-header ui-corner-bottom');
-				$("button :first",$t).addClass('ui-corner-left');
-				$("button :last",$t).addClass('ui-corner-right');
-				$("button",$t).each(function(){
-
-					var $btn = $(this),
-					jhtmlVars = {
-						toolbar: [["bold", "italic", "underline"],["h1", "h2", "h3", "h4", "h5", "h6"],["link", "unlink"]]
-						}
-					
-					$btn.button().removeClass('ui-corner-all'); //only the first and last buttons should have corners.
-					$btn.css({'margin':'0 -2px'}).addClass('smallButton');  //reduce margins so buttons 'merge'.
-
-					$btn.off('click.textareaEditorMode').on('click.textareaEditorMode',function(event){
-						app.u.dump(" -> a click occured.");
-						event.preventDefault();
-						var mode = $btn.data('ui-edit-mode');
-						$('#html_you_have_been_warned').hide();
-						$('.ui-state-active',$t).removeClass('ui-state-active');
-						if(mode == 'wiki')	{
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
-							$(this).addClass('ui-state-active');
-							}
-						else if(mode == 'html')	{
-						$('#html_you_have_been_warned').show();
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea(jhtmlVars);
-							$(this).addClass('ui-state-active');
-							}
-						else if(mode == 'text')	{
-							$("[name='"+$t.data('ui-target-name')+"']",$t.closest('fieldset')).htmlarea();
-							$(this).addClass('ui-state-active');
-							}
-						else	{
-							app.u.throwGMessage("In admin_prodEdit.buttonActions.textareaEditorMode, unsupported or blank mode ["+mode+"]");
-							}
-						});
-					});
-				},
-
-			"viewProductOnWebsite" : function($t)	{
-				$t.button();
-				$t.off('click.configOptions').on('click.configOptions',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{window.open("http://"+app.vars.domain+"/product/"+pid+"/")}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.configOptions, unable to determine pid.");}
-					});
-				},
-
-			"webPageEditor" : function($t)	{
-				$t.button();
-				$t.off('click.webPageEditor').on('click.webPageEditor',function(event){
-					event.preventDefault();
-					var pid = $(this).closest("[data-pid]").data('pid');
-					if(pid)	{navigateTo('/biz/product/builder/index.cgi?ACTION=INITEDIT&amp;FORMAT=PRODUCT&amp;FS=P&amp;SKU='+pid);}
-					else	{app.u.throwGMessage("In admin_prodEdit.uiActions.webPageEditor, unable to determine pid.");}
-					});
-				},
-
-=======
 
 //e is for 'events'. This are used in handleAppEvents.
 		e : {
@@ -690,7 +554,6 @@ var admin_prodEdit = function() {
 					});
 				},
 
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 			"serializeAndAdminProductUpdate" : function($t)	{
 //				app.u.dump("BEGIN admin_prodEdit.uiActions.serializeAndAdminProductUpdate");
 				$t.button();
@@ -717,26 +580,15 @@ var admin_prodEdit = function() {
 						});			
 					
 					if(pid && panelid && !$.isEmptyObject(formJSON))	{
-<<<<<<< HEAD
-						$panel.showLoading();
-						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
-						app.model.destroy('appProductGet|'+pid);
-						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
-=======
 						$panel.showLoading({'message':'Updating product '+pid});
 						app.ext.admin.calls.adminProductUpdate.init(pid,formJSON,{});
 						app.model.destroy('appProductGet|'+pid);
 						app.calls.appProductGet.init({'pid':pid,'withInventory':true,'withVariations':true},{'callback':function(responseData){
 							$panel.hideLoading();
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 							if(app.model.responseHasErrors(responseData)){
 								app.u.throwMessage(responseData);
 								}
 							else	{
-<<<<<<< HEAD
-								$panel.hideLoading();
-=======
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 								$panel.replaceWith(app.ext.admin_prodEdit.u.getPanelContents(pid,panelid));
 //								app.u.dump("$('.panelHeader',$panel)"); app.u.dump($('.panelHeader',$panel));
 								$('.panelHeader','#panel_'+panelid).click(); //using $panel instead of #panel... didn't work.

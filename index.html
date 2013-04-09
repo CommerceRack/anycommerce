@@ -1,17 +1,17 @@
-<!DOCTYPE HTML> 
+<!DOCTYPE HTML>
 <html>
 <head>
 <meta charset="utf-8">
-<!-- 201314 test branch -->
+
 <!-- do not populate or add meta data or title, the SEO layer will add it -->
 
 <!-- used for optional social media extensions -->
-<meta property="og:type" content="" id='ogType' />
-<meta property="og:image" content="" id='ogImage' />
-<meta property="og:description" content="" id='ogDescription' />
+<meta property="og:type" content="" id='ogType' >
+<meta property="og:image" content="" id='ogImage' >
+<meta property="og:description" content="" id='ogDescription' >
 
 
-<base href='' /><!-- leave blank so it works for a local file -->
+<base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
 
 
 
@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201314.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130404122920",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -29,516 +29,522 @@ var app = {vars:{
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL; 
+	app.vars.baseURL  = "/";
 	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 	}
 </script>
 
 
-<!-- 
-all css includes need to be after the js that changes the base url. 
+<!--
+all css includes need to be after the js that changes the base url.
 css files should be included before any .js file to ensure they are downloaded in parallel
 -->
-<link rel="stylesheet" type="text/css" href="qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="site/styles/_qs_styles.css" />
-<link rel="stylesheet" type="text/css" href="site/styles/jScrollPane.css" />
-<link href='http://fonts.googleapis.com/css?family=Anton' rel='stylesheet' type='text/css'>
-
+<link rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="site/styles/jquery.ad-gallery.css"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-<script src="jquery.ui.widget.min.js"></script> 
-<script src="customTabs.js"></script>
+<script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
-<script type="text/javascript" src="site/scripts/jquery.flippy.min.js"></script>
-<script type="text/javascript" src="site/scripts/jScrollPane.js"></script>
-<script type="text/javascript" src="site/scripts/jquery.mousewheel.js"></script>
-<script type="text/javascript" src="site/scripts/modernizr-2.6.2-custom.js"></script>
-<script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0.js"></script>
 
 
+  <!--
+<script type="text/javascript" src="site/script/jquery.ad-gallery.js"></script>
+  <script type="text/javascript" src="site/script/photogallery.js"> </script>
+-->
+
+<script type="text/javascript" src="jquery_actions.js"></script>
+<script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
 
 <script type="text/javascript">
-app.u.loadScript(app.vars.baseURL+"_init.js");
+app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
-<style type="text/css">
-	@font-face
-	{
-		font-family: BebasNeue;
-		src: url('fonts/BebasNeue.otf');
-	}
-	.catCarousel h2 { display:none }
-</style>
+<script>
+
+</script>
+
+
+
 </head>
 
 <body>
 <!-- DELETE THIS WHEN YOU GET STARTED -->
+<!--
+<h1>WELCOME TO QUICKSTART</h1>
+This file is intended to go along with the 10-step tutorial at:
+<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
+-->
+<!-- /DELETE THIS WHEN YOU GET STARTED -->
+
+
+
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-
-	<table>
-		<tr>
-			<td align='center'><img src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" /></td>
-		</tr>
-		<tr>
-			<td>&nbsp;</td>
-		</tr>
-		<tr>
-			<td>
-			
-			<div id="loader">
-				<div>
-					<div class='alignCenter'>
-						<progress id="appPreViewProgressBar" max="100" value="0" /><br />
-					</div>
-				<div>
-				<!--<div id='appPreViewProgressText'>0% Complete</div>-->
-				<span>LOADING... PLEASE WAIT</span>				
-			</div>
-			<div id="tenFourGoodBuddy" class="displayNone pointer">
-				Click here to load your totally kickass shopping experience!
-			<div>
-			<div class='appMessaging'></div>
-			</td>
-		</tr>
-	</table>
+<table>
+<tr>
+    <td align="center">
+	  <img src="images/logo.png" width="304" alt="Toy Wars" title="Toy Wars" height="88" style="margin:10px 0 50px 0;"></td>
+    
+    </td>
+    </tr>
+    <tr>
+	<td align="center">
+  
+	<div id="loader">
+		<div class='alignCenter'>
+		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
+		</div>
+        <h3>LOADING... PLEASE WAIT</h3>
+		<!--<div id='appPreViewProgressText'>0% Complete</div>-->
+	</div>
+	<div id="clickToLoad" class="displayNone pointer">
+		Click here to load your shopping experience!
+	</div>
+	<div class='appMessaging'></div>
+	</td>
+</tr>
+</table>
 </div>
 
 
 
 <div id='appView' class='displayNone'>
-	<div id="container">
-		<div id="topNav">
+
+<!-- VIEW CONTENT -->
+<!-- leave the appView div, put your your html here ...  -->
+
+	<!--
+	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
+	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
+	-->
+    <div id="container">
+	<div id="topNav">
 			<div id="topNavContent">
-				<img src="site/images/header-top-nav-account-icon.png" alt="Account Icon" />
-				<p>Welcome, Guest! <a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">LOGIN</a> or <a href="#" onClick="return showContent('customer',{'show':'newsletter'});">SIGN-UP</a></p>
-				<img src="site/images/header-top-nav-view-cart-icon.png" alt="View Cart Icon" />
-				<p><span class="cartItemCount"></span> Items in your Shopping Cart <a href="#" onClick="return showContent('cart',{});">VIEW CART</a></p>
-				<img src="site/images/header-top-nav-contact-us-icon.png" alt="Contact Us Icon" />
-				<p><a href="#" onClick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
-				<img src="site/images/header-top-nav-questions-icon.png" alt="Questions Icon" />
-				<p>Questions? <a href="#" onClick="return showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
+				<img src="images/account-icon.png" alt="">
+				<p>Welcome, Guest! <a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">LOGIN</a> or <a href="#" onclick="return showContent('customer',{'show':'newsletter'});">SIGN-UP</a></p>
+				<img src="images/view-cart-icon.png" alt="View Cart">
+				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onclick="return showContent('cart',{});">VIEW CART</a></p>
+				<img src="images/contact-us-icon.png" alt="Contact Us">
+				<p><a href="#" onclick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
+				<img src="images/questions-icon.png" alt="Questions">
+				<p>Questions? <a href="#" onclick="return showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
 			</div>
 		</div>
-		<div id="header">
+        <div id="header">
 			<div id="headerContent">
-				<img id="logo" src="site/images/toy-wars-logo.png" alt="Toy Wars Logo" onClick="return showContent('category',{'navcat' : '.'});" />
-				<form id="headerSearchFrm" name="headerSearchFrm" action="#" class="productSearchForm" method="get">
-					<input id="txtSearch" class="productSearchKeyword handleDefault" name="KEYWORDS" type="search" value="Find it here..." />
-					<img id="btnTopNavSearch" src="site/images/button-top-nav-search.png" alt="Search Button" />
-				</form>
+				<img id="logo" src="images/logo.png" alt="Toy Wars" title="Toy Wars" onclick="return showContent('category',{'navcat' : '.'});">
+                <form id='headerSearchFrm' name='headerSearchFrm' action='#' class='productSearchForm' method="get">
+						<input type='search' name='KEYWORDS' id='txtSearch' class="productSearchKeyword handleDefault" value="Find it here..." />
+						<input id="btnTopNavSearch" type="image" src="images/nav-search.png" value=""/>
+					</form>
+                    
+				
 				<div id="headerFreeShipping">
-					<img src="blank.gif" alt="Free Shipping on Orders of $50 or Higher" />
+					<img style="display: block;" data-note="2" src="blank.gif" alt="">
 				</div>
-				<a id="btnSocialFacebook" href="http://www.facebook.com/shoptoywars"><img src="site/images/social-button-facebook.png" alt="Social Button Facebook" /></a>
-				<a id="btnSocialTwitter" href="#"><img src="site/images/social-button-twitter.png" alt="Social Button Twitter" /></a>
-				<a id="btnSocialYoutube" href="#"><img src="site/images/social-button-youtube.png" alt="Social Button Youtube" /></a>
-				<a id="btnSocialMail" href="#" onclick="return showContent('company',{'show':'contact'});"><img src="site/images/social-button-mail.png" alt="Social Button Mail" /></a>
+				<a id="btnSocialFacebook" href="http://www.facebook.com/shoptoywars"><img src="images/facebook.png" alt="Facebook"></a>
+				<a id="btnSocialTwitter" href="#"><img src="images/twitter.png" alt="Twitter"></a>
+				<a id="btnSocialYoutube" href="#"><img src="images/youtube.png" alt="Youtube"></a>
+				<a id="btnSocialMail" href="#"><img src="images/mail.png" alt="Mail"></a>
 			</div>
 		</div>
-		<div id="content">
-			<div class="nav">
+        
+        
+        <div class="nav">
 				<div class="navContent"> 
 					<ul>
 						<li>
-							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
+							<a href="#" onclick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
 								    <ul>
-										<li>Action Figures</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'diamond select figure'});">Diamond Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay figure'});">Enterbay</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'funko figure'});">Funko</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro figure'});">Hasbro</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hot toys figure'});">Hot Toys</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'kotobukiya figure'});">Kotobukiya</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select figure'});">Marvel Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane figure'});">McFarlane</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
+										<li>COMIC BOOKS</li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										
 									</ul>
 									<ul>
 										<li>Statues</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
 									</ul>
 									<ul>
 										<li>Comics</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Prop Replicas</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
 									</ul>
 									<ul>
 										<li>Everything Else</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Barware</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22cologne\x22'});">Cologne and Fragrances</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22costume\x22'});">Costume</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22ice tray\x22'});">Ice Trays</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Barware</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22cologne\x22'});">Cologne and Fragrances</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22costume\x22'});">Costume</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22ice tray\x22'});">Ice Trays</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#" onClick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="https://static.zoovy.com/img/redford/W900-H100/toywars/dropdownfunkopop4.jpg" /></a>
+									<a href="#" onclick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="images/dropdownfunkopop4.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'action figures'});">ACTION FIGURES</a>
+							<a href="#" onclick="return showContent('search',{KEYWORDS: 'whats hot'});">WHAT'S HOT</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
 								    <ul>
 								        <li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New This Week</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New This Month</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Last Two Months</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New Last Year</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Collecting Dust</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New This Week</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New This Month</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Last Two Months</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New Last Year</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman figure'});">Batman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america figure'});">Captain America</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader figure'});">Darth Vader</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man figure'});">Iron Man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker figure'});">Joker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk figure'});">Hulk</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master chief figure'});">Master Chief</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker figure'});">Luke Skaywalker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man figure'});">Spider-man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper figure'});">Stormtrooper</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'superman figure'});">Superman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman figure'});">Batman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america figure'});">Captain America</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader figure'});">Darth Vader</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man figure'});">Iron Man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker figure'});">Joker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk figure'});">Hulk</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master chief figure'});">Master Chief</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker figure'});">Luke Skaywalker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man figure'});">Spider-man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'storm trooper figure'});">Stormtrooper</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'superman figure'});">Superman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who figure'});">Dr. Who</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo figure'});">Halo</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings figure'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect figure'});">Mass Effect</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator figure'});">Predator</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead figure'});">Walking Dead</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek figure'});">Star Trek</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars figure'});">Star Wars</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who figure'});">Dr. Who</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo figure'});">Halo</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings figure'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mass effect figure'});">Mass Effect</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'predator figure'});">Predator</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead figure'});">Walking Dead</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek figure'});">Star Trek</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars figure'});">Star Wars</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bandai figure'});">Bandai</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'diamond select figure'});">Diamond Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay figure'});">Enterbay</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'funko figure'});">Funko</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro figure'});">Hasbro</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hot toys figure'});">Hot Toys</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'kotobukiya figure'});">Kotobukiya</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select figure'});">Marvel Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane figure'});">McFarlane</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'medicom figure'});">Medicom</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca figure'});">NECA</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bandai figure'});">Bandai</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'diamond select figure'});">Diamond Select</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay figure'});">Enterbay</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'funko figure'});">Funko</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hasbro figure'});">Hasbro</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hot toys figure'});">Hot Toys</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'kotobukiya figure'});">Kotobukiya</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select figure'});">Marvel Select</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mcfarlane figure'});">McFarlane</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'medicom figure'});">Medicom</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca figure'});">NECA</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#"onClick="return showContent('search',{KEYWORDS: 'walking dead figure'});"><img src="https://static.zoovy.com/img/redford/W314-H220/toywars/dropdown_walking_dead2.jpg" /></a>
+									<a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead figure'});"><img src="images/dropdown_walking_dead2.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">STATUES</a>
-							<div class="subMenu">
+							<a href="#" onclick="return showContent('search',{KEYWORDS: 'new arrivals'});">NEW ARRIVALS</a>
+							<div style="display: none; overflow: hidden; height: 0px;" class="subMenu">
 								<div class="dropDownListHolder">
 									<ul>
 										<li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america'});">Captain America</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader'});">Darth Vader</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man'});">Iron Man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker'});">Joker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk'});">Hulk</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker'});">Luke Skaywalker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america'});">Captain America</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader'});">Darth Vader</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man'});">Iron Man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker'});">Joker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk'});">Hulk</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker'});">Luke Skaywalker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who statue'});">Dr. Who</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo statue'});">Halo</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings statue'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead statue'});">Walking Dead</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek statue'});">Star Trek</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars statue'});">Star Wars</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who statue'});">Dr. Who</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo statue'});">Halo</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings statue'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead statue'});">Walking Dead</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek statue'});">Star Trek</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars statue'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics'});">DC Comics</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane'});">McFarlane</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mcfarlane'});">McFarlane</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
 									</ul>
 									<ul>
 										<li>Type</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ArtFX'});">ArtFX</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mini bust'});">Mini Bust</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'maquette'});">Maquette</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'ArtFX'});">ArtFX</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mini bust'});">Mini Bust</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'maquette'});">Maquette</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $10</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $20</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $50</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $100</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Over $100</a></li>										
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $10</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $20</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $50</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $100</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Over $100</a></li>										
 									</ul>
-									<a href="#" onClick="return showContent('search',{KEYWORDS: 'gentle giant preorder'});"><img src="https://static.zoovy.com/img/redford/W314-H220/toywars/dropdown_bibfortuna.jpg" /></a>
+									<a style="display: inline;" href="#" onclick="return showContent('search',{KEYWORDS: 'gentle giant preorder'});"><img src="images/dropdown_bibfortuna.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'collectibles'});">COLLECTIBLES</a>
+							<a href="#" onclick="return showContent('search',{KEYWORDS: 'item type'});">ITEM TYPE</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
                                     <ul>
 										<li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Categories</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bank'});">Banks</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'tote'});">Lunch Totes</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mini mate'});">Mini Mates</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bank'});">Banks</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'tote'});">Lunch Totes</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mini mate'});">Mini Mates</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'beatles'});">Beatles</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'beatles'});">Beatles</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-				  						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'official pix'});">Official Pix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
+				  						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'official pix'});">Official Pix</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
 									</ul>
-									<a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="https://static.zoovy.com/img/redford/W314-H250/toywars/dropdowngandalf3.jpg" /></a>
+									<a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="images/dropdowngandalf3.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'comics'});">COMICS</a>
+							<a href="#" onclick="return showContent('search',{KEYWORDS: 'by manufacturer'});">BY MANUFACTURER</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
 								    <ul>
 								        <li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130307'});">New for 3/7</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130228'});">New for 2/28</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130221'});">New for 2/21</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130307'});">New for 3/7</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130228'});">New for 2/28</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130221'});">New for 2/21</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america comic'});">Captain America</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'deadpool comic'});">Deadpool</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'flash comic'});">Flash</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker comic'});">Joker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk comic'});">Hulk</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man comic'});">Spider-man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'superman comic'});">Superman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'thor comic'});">Thor</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wonder woman comic'});">Wonder Woman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america comic'});">Captain America</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'deadpool comic'});">Deadpool</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'flash comic'});">Flash</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker comic'});">Joker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk comic'});">Hulk</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man comic'});">Spider-man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'superman comic'});">Superman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'thor comic'});">Thor</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'wonder woman comic'});">Wonder Woman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'avengers comic'});">Avengers</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'chew comic'});">Chew</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'green lantern comic'});">Green Lantern</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'invincible comic'});">Invincible</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'justice league comic'});">Justice League</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars comic'});">Star Wars</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spawn comic'});">Spawn</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead comic'});">Walking Dead</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'x-men comic'});">X-Men</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wolverine comic'});">Wolverine</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'avengers comic'});">Avengers</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'chew comic'});">Chew</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'green lantern comic'});">Green Lantern</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'invincible comic'});">Invincible</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'justice league comic'});">Justice League</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars comic'});">Star Wars</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spawn comic'});">Spawn</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead comic'});">Walking Dead</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'x-men comic'});">X-Men</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'wolverine comic'});">Wolverine</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Publishers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#"><img src="https://static.zoovy.com/img/redford/W801-H80/toywars/dropdowncomics.jpg" /></a>
+									<a href="#"><img src="images/dropdowncomics.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'prop replicas'});">PROP REPLICAS</a>
+							<a href="#" onclick="return showContent('search',{KEYWORDS: 'clearance'});">CLEARANCE</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
                                     <ul>
 										<li>New</li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman prop'});">Batman</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america prop'});">Captain America</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader prop'});">Darth Vader</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'harry potter prop'});">Harry Potter</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man prop'});">Iron Man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'james bond prop'});">James Bond</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker prop'});">Luke Skaywalker</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man prop'});">Spider-man</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'stormtrooper prop'});">Stormtrooper</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'thor prop'});">Thor</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman prop'});">Batman</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america prop'});">Captain America</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader prop'});">Darth Vader</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'harry potter prop'});">Harry Potter</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man prop'});">Iron Man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'james bond prop'});">James Bond</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker prop'});">Luke Skaywalker</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man prop'});">Spider-man</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'stormtrooper prop'});">Stormtrooper</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'thor prop'});">Thor</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr doctor who prop'});">Dr. Who</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings prop'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek prop'});">Star Trek</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars prop'});">Star Wars</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr doctor who prop'});">Dr. Who</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings prop'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek prop'});">Star Trek</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars prop'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
 									</ul>
-									<a href="#" onClick="return showContent('product',{'pid':'EF01110009-RF'})"><img src="https://static.zoovy.com/img/redford/W241-H338/toywars/dropdown_vader.jpg" /></a>
+									<a href="#" onclick="return showContent('product',{'pid':'EF01110009-RF'})"><img src="images/dropdown_vader.jpg"></a>
 								<div>
 							</div>
-						</li>
+						</div></div></li>
 					</ul>
 				</div>
 			</div>
-			<!-- VIEW CONTENT -->
-			<!-- leave the appView div, put your your html here ...  -->
-			
-				<!-- 
-				** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
-				**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
-				-->
-			<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
-			<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
-			
-			
-			<!-- ... your html ends -->
-			<!-- /VIEW CONTENT -->
-		</div>
-		<div id="footer">
+            
+            
+<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+
+<!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
+<div id='appNav'>
+	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+</div>
+
+<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+
+<!-- ... your html ends -->
+<!-- /VIEW CONTENT -->
+
+<div id="footer">
 			<div id="footerContent">
 				<div id="footerLinks">
 					<ul>
 						<li>NEED HELP?</li>
 						<li><a href="#" onClick="return showContent('category',{'navcat' : '.'});">Home</a></li>
-						<li><a href="#">About</a></li>
+						<li><a href="#" onclick="return showContent('company',{'show':'about'});">About</a></li>
 						<li><a href="#" onclick="return showContent('company',{'show':'contact'});">Contact</a></li>
 						<li><a href="#">Policies</a></li>
 						<li><a href="#" onclick="return showContent('company',{'show':'faq'});">FAQs</a></li>
@@ -547,12 +553,13 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 					<ul>
 						<li>FIND IT HERE</li>
 						<li><a href="#" onclick="return showContent('category',{'navcat' : '.'});">All Categories</a></li>	
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'action figures'});">Action Figures</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Statues</a></li>	
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'collectibles'});">Collectibles</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comics'});">Comics</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'prop replicas'});">Prop Replicas</a></li>	
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'whats hot'});">What's Hot</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'new arrivals'});">New Arrivals</a></li>	
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'item type'});">Item Type</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'by manufacturer'});">By Manufacturer</a></li>
+						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'clearance items'});">Clearance Items</a></li>	
 					</ul>
+                 
 					<ul>
 						<li>MY ACCOUNT</li>
 						<li><a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
@@ -575,7 +582,7 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 								<td><input type="email" id="subscribeLogin" name="login" size="30" maxlength="50"  value="Email Address" /></td>
 							</tr>
 							<tr>
-								<td><img id="btnFooterSubscribe" src="site/images/button-footer-subscribe.png" alt="Get Me In The Loop Button" /></td>
+								<td><img id="btnFooterSubscribe" src="images/button-footer-subscribe.png" alt="Get Me In The Loop" /></td>
 							</tr>
 						</table>
 						</form>	
@@ -586,7 +593,9 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 				</div>
 			</div>
 		</div>
-	</div>
+        
+</div>
+
 </div>
 
 
@@ -596,9 +605,7 @@ app.u.loadScript(app.vars.baseURL+"_init.js");
 
 
 
-
-
-<!-- 
+<!--
 *************************************************************************************************************
 **
 **
@@ -629,23 +636,247 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
+	<script>
+$outer_container=$("#outer_container");
+$thumbScroller=$("#thumbScroller");
+$thumbScroller_container=$("#thumbScroller .container");
+$thumbScroller_content=$("#thumbScroller .content");
+$thumbScroller_thumb=$("#thumbScroller .thumb");
+$preloader=$("#preloader");
+$toolbar=$("#toolbar");
+$toolbar_a=$("#toolbar a");
+$bgimg="#bgimg";
+
+$(window).load(function() {
+	//thumbnail scroller
+	sliderLeft=$thumbScroller_container.position().left;
+	padding=$outer_container.css("paddingRight").replace("px", "");
+	sliderWidth=$(window).width()-padding;
+	$thumbScroller.css("width",sliderWidth);
+	var totalContent=0;
+	fadeSpeed=200;
 	
-	<div id="featuredItems">
-		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-		
-		<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-		
-		<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"statue"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->		
-		
-		<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>	
+	$thumbScroller_content.each(function () {
+		var $this=$(this);
+		totalContent+=$this.innerWidth();
+		$thumbScroller_container.css("width",totalContent);
+		$this.children().children().children(".thumb").fadeTo(fadeSpeed, 0.6);
+	});
+
+	$thumbScroller.mousemove(function(e){
+		if($thumbScroller_container.width()>sliderWidth){
+	  		var mouseCoords=(e.pageX - this.offsetLeft);
+	  		var mousePercentX=mouseCoords/sliderWidth;
+	  		var destX=-(((totalContent-(sliderWidth))-sliderWidth)*(mousePercentX));
+	  		var thePosA=mouseCoords-destX;
+	  		var thePosB=destX-mouseCoords;
+	  		var animSpeed=600; //ease amount
+	  		var easeType="easeOutCirc";
+	  		if(mouseCoords>destX){
+		  		//$thumbScroller_container.css("left",-thePosA); //without easing
+		  		$thumbScroller_container.stop().animate({left: -thePosA}, animSpeed,easeType); //with easing
+	  		} else if(mouseCoords<destX){
+		  		//$thumbScroller_container.css("left",thePosB); //without easing
+		  		$thumbScroller_container.stop().animate({left: thePosB}, animSpeed,easeType); //with easing
+	  		} else {
+				$thumbScroller_container.stop();  
+	  		}
+		}
+	});
+
+	$outer_container.fadeTo(fadeSpeed, 0.8);
+	$outer_container.hover(
+		function(){ //mouse over
+			var $this=$(this);
+			$this.stop().fadeTo("slow", 1);
+		},
+		function(){ //mouse out
+			var $this=$(this);
+			$this.stop().fadeTo("slow", 0);
+		}
+	);
+
+	$thumbScroller_thumb.hover(
+		function(){ //mouse over
+			var $this=$(this);
+			$this.stop().fadeTo(fadeSpeed, 1);
+		},
+		function(){ //mouse out
+			var $this=$(this);
+			$this.stop().fadeTo(fadeSpeed, 0.6);
+		}
+	);
+
+	//on window resize scale image and reset thumbnail scroller
+	$(window).resize(function() {
+		FullScreenBackground($bgimg);
+		$thumbScroller_container.stop().animate({left: sliderLeft}, 400,"easeOutCirc"); 
+		var newWidth=$(window).width()-padding;
+		$thumbScroller.css("width",newWidth);
+		sliderWidth=newWidth;
+	});
+
+	FullScreenBackground($bgimg); //scale 1st image
+});
+
+$($bgimg).load(function() {
+	$preloader.fadeOut("fast"); //hide preloader
+	var $this=$(this);
+	$this.removeAttr("width").removeAttr("height").css({ width: "", height: "" });
+	FullScreenBackground($this);
+	var imageTitle=$("#img_title").data("imageTitle");
+	if(imageTitle){
+		$this.attr("alt", imageTitle).attr("title", imageTitle);
+		$("#img_title").html(imageTitle);
+	} else {
+		$("#img_title").html($(this).attr("title"));
+	}
+	$this.fadeIn("slow"); //fadein background image
+});
+
+//mouseover toolbar
+$toolbar.fadeTo("fast", 0.4);
+$toolbar.hover(
+	function(){ //mouse over
+		var $this=$(this);
+		$this.stop().fadeTo("fast", 1);
+	},
+	function(){ //mouse out
+		var $this=$(this);
+		$this.stop().fadeTo("fast", 0.4);
+	}
+);
+
+//Clicking on thumbnail changes the background image
+$("#outer_container a").click(function(event){
+	event.preventDefault();
+	$preloader.fadeIn("fast"); //show preloader
+	var $this=$(this);
+	var title_attr=$this.children("img").attr("title"); //get image title attribute
+	$("#img_title").data("imageTitle", title_attr); //store image title
+	$($bgimg).css("display","none").attr("src", this); //change image source
+}); 
+
+//Image scale function
+function FullScreenBackground(theItem){
+var winWidth=$(window).width();
+var winHeight=$(window).height();
+var imageWidth=$(theItem).width();
+var imageHeight=$(theItem).height();
+var picHeight = imageHeight / imageWidth;
+var picWidth = imageWidth / imageHeight;
+if($toolbar.data("imageViewMode")=="full"){ //fullscreen size image mode
+	if ((winHeight / winWidth) < picHeight) {
+		$(theItem).css("width",winWidth);
+		$(theItem).css("height",picHeight*winWidth);
+	} else {
+		$(theItem).css("height",winHeight);
+		$(theItem).css("width",picWidth*winHeight);
+	};
+} else { //normal size image mode
+	if ((winHeight / winWidth) > picHeight) {
+		$(theItem).css("width",winWidth);
+		$(theItem).css("height",picHeight*winWidth);
+	} else {
+		$(theItem).css("height",winHeight);
+		$(theItem).css("width",picWidth*winHeight);
+	};
+}
+$(theItem).css("margin-left",(winWidth-$(theItem).width())/2);
+$(theItem).css("margin-top",(winHeight-$(theItem).height())/2);
+}
+
+//Image view mode function - fullscreen or normal size
+function ImageViewMode(theMode){
+	$toolbar.data("imageViewMode", theMode);
+	FullScreenBackground($bgimg);
+	if(theMode=="full"){
+		$toolbar_a.html("<img src='toolbar_n_icon.png' width='50' height='50'  />").attr("onClick", "ImageViewMode('normal');return false").attr("title", "Restore");
+	} else {
+		$toolbar_a.html("<img src='toolbar_fs_icon.png' width='50' height='50'  />").attr("onClick", "ImageViewMode('full');return false").attr("title", "Maximize");
+	}
+}
+</script>
+<div class="sliderM">
+<div class="bannerS"><img src="images/slider.jpg" width="620" height="346"></div>
+
+<div class="rightB"><img src="images/cyber.jpg" width="300" height="346"></div><div class="cb"></div>    
+<div id="bg"><img src="images/Universe_and_planets_digital_art_wallpaper_denebola.jpg" width="1680" height="1050" alt="Denebola" title="Denebola" id="bgimg" /></div>
+<div id="preloader"><img src="ajax-loader_dark.gif" width="32" height="32" /></div>
+<div id="img_title"></div>
+<div id="toolbar"><a href="#" title="Maximize" onClick="ImageViewMode('full');return false"><img src="toolbar_fs_icon.png" width="50" height="50"  /></a></div>
+<div id="outer_container">
+<div id="thumbScroller">
+	<div class="container">
+    	<div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_denebola.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_denebola_thumb.jpg" title="Denebola" alt="Denebola" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_lux.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_lux_thumb.jpg" title="Lux Aeterna" alt="Lux Aeterna" class="thumb" /></a></div>
+        </div>
+    	<div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_dk.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_dk_thumb.jpg" title="X-Wing on patrol" alt="X-Wing on patrol" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_albireo.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_albireo_thumb.jpg" title="Albireo Outpost" alt="Albireo Outpost" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_church.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_church_thumb.jpg" title="Church of Heaven" alt="Church of Heaven" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_Decampment.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_Decampment_thumb.jpg" title="Decampment" alt="Decampment" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_Hibernaculum.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_Hibernaculum_thumb.jpg" title="Hibernaculum" alt="Hibernaculum" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_lucernarium.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_lucernarium_thumb.jpg" title="Supremus Lucernarium" alt="Supremus Lucernarium" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_moons.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_moons_thumb.jpg" title="Aurea Mediocritas" alt="Aurea Mediocritas" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_praedestinatio.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_praedestinatio_thumb.jpg" title="Praedestinatio" alt="Praedestinatio" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_transitorius.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_transitorius_thumb.jpg" title="Transitorius" alt="Transitorius" class="thumb" /></a></div>
+        </div>
+        <div class="content">
+        	<div><a href="images/Universe_and_planets_digital_art_wallpaper_victimofgravity.jpg"><img src="images/Universe_and_planets_digital_art_wallpaper_victimofgravity_thumb.jpg" title="Victim of Gravity" alt="Victim of Gravity" class="thumb" /></a></div>
+        </div>
 	</div>
-	<div class="featuredCategories">
+</div>
+</div>
+</div>
+
+	<div class="midmain">
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2></h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<!--
+<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+-->
+   
+<!-- a sample of how to format an elastic native search in a data-bind -->
+	<!--
+<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+-->
+
+	<!--
+<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
+-->
+
+<!-- a sample of how to get a 'list' src onto the page. -->
+	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul></div>
+
+<div class="featuredCategories">
 		<div class="catNav">
 			<div class="catNavContent">
-				<!--<p class="prevCat navCats"></p>-->
-				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
+				<!--<p class="prevCat navCats"></p>--><p class="prevCat"></p>
+				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" />
+                
 				<p class="currentCat">The Hobbit</p>
-				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
+				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" />
 				<!--<p class="nextCat navCats"></p>-->
 			</div>
 			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
@@ -680,14 +911,6 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 		
 		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
 	</div>
-	<!--<h5 data-bind='var: nothing(); defaultValue: blue; elasticAttr: pid; format:searchLink; extension:myRIA;'></h5>
-	-->
-
-	<!--<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-
-<!-- a sample of how to get a 'list' src onto the page. -->
-	<!--<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-
 </div>
 
 
@@ -705,20 +928,22 @@ each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
-	<!--<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>-->
 
-	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" />
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+
+	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
 
 	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
-	
+
 	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
-	
+
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
 
 	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
-	
+
 	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
-	
+
+
 </div>
 
 
@@ -729,19 +954,21 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
-	<li id='categoryListTemplate'>
-		<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
-			<div class='catName white2LGray'><span data-bind='var: category(pretty); format:text;'></span></div>
-		</div>
-	</li>
+<li id='categoryListTemplate'>
+	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' alt='' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
+		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
+	</div>
+</li>
 
-	<li id='categoryListTemplateRootCats'>
-		<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-			<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
-			<div class='catName'><span data-bind='var: category(pretty); format:text;'></span></div>
-		</div>
-	</li>
+
+<li id='categoryListTemplateRootCats'>
+	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' alt='' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
+		<div class='catName'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
+	</div>
+</li>
+
 </ul>
 
 
@@ -752,34 +979,33 @@ Used for the product in a product list (prodlist), usually in the body of a cate
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
 -->
-	<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show(); if($(this).closest('div.prodRelatedItems').length < 1){$('.btnViewProdDetails',$(this)).show();}" onMouseOut="$('.quickView').hide(); if($(this).closest('div.prodRelatedItems').length < 1){$('.btnViewProdDetails').hide();}">
-		
-		<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
-		<!--<button class='btnViewProdDetails' onClick="productFlip($(this).parent());">Details</button>-->
-		
-		<div class="prodItemPane">
-			<div class='pointer prodThumbContainer' data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})">
-				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='216' height='216' />
-			</div>
-			<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-				<div class="prodThumbBackground"></div>
-				<h5 data-bind='var: product(zoovy:prod_name); format:text;' onClick="if($(this).closest('div.prodRelatedItems').length > 0){showContent('product',{'pid':$(this).parent().attr('data-pid')})}"></h5>
-			
-				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-				<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;">			
-					<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>		
-					<button class="prodATCButton" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'><img src="site/images/button-product-list-preorder.png" alt="Preorder" /></button>
-					<!--<img src="site/images/button-product-list-add-to-cart.png" onClick="$(this).parent().submit();" class='pointer' alt="Add To Cart" />-->
-					<input type='hidden' value='1' size='3' name='quantity' />
-				</form>
-			</div>
-			
-			<!--<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>-->
-	<!-- 	<span data-bind='var: reviews(total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+
+	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+
+	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'  style="width:215px;">
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
 		</div>
-		<div class="prodItemAltData"><p data-bind='var: product(zoovy:prod_desc); format: text;'></p></div>
-		<div class="prodItemHoldData"></div>
-	</li>
+
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;' style="width:130px; min-height:46px; margin:0 0 0 5px; padding:5px 7px 0 0; text-align:left; float:left;"></h5>
+
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;' style="font-size:16px; float:left; width:52px; padding:5px 0 0 0;"></h6>
+        <p style="float:left; margin:4px 0 0 2px;"> <img class="pointer" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})" alt="View Item" src="images/details.png">
+</p>
+		
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+	</div>
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+		<input type='hidden' name='qty' value='1' />
+		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;' class="addcart">more details</button>
+	</form>
+	
+</li>
+
+
 <!--
 for product lists with addToCart feature (accessories, for example)
 container ul should have lineItemProdlist class on it instead of productList
@@ -788,30 +1014,21 @@ container ul should have lineItemProdlist class on it instead of productList
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
 		<div class='prodThumbContainer floatLeft'>
-		<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
 		</div>
-		<div class="prodThumbDesc">
-			<div class="prodThumbBackground"></div>
-				<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
-			
-				<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-				<img src="site/images/button-buy-now.png"  onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'/>
-		</div>		
-		
-		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
-	
-		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
-		
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 
-		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodListAddToCartForm marginBottom clearfix' id='accessoriesAddToCartFrm' action='#' onSubmit="app.ext.myRIA.u.handleAddToCart(this.id,{'action':'modal'}); return false;">
-		
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+	
+		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+	
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
-			
-			<input type='submit' value='Add to Cart' data-bind='var: product(pid); format:addToCartButton; extension:store_product;' id='addToCartBtn' class='displayNone ui-button ui-button-text ui-corner-all ui-state-default addToCartButton atcButton' />
-			
-			<input type='hidden' value='1' size='3' name='quantity' />
-		
+			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+	
+			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 		</form>
 
 	</div>
@@ -823,14 +1040,14 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<div class='prodThumbContainer floatLeft'>
 			<div class='ui-widget ui-widget-content ui-corner-all'>
-				<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
 				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
 
-<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="return showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
+<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
 <span class="ui-icon ui-icon-cart"></span>
 </button>
-		
-<button class='ui-state-default ui-corner-all' title='more information'>
+
+<button class='ui-state-default ui-corner-all' title='more information' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
 <span class="ui-icon ui-icon-info"></span>
 </button>
 
@@ -841,16 +1058,16 @@ container ul should have lineItemProdlist class on it instead of productList
 <button class='ui-state-default ui-corner-all' title='remove item from list' onClick="app.ext.myRIA.a.removeItemFromBuyerList({'stid':$(this).closest('[data-pid]').attr('data-pid'),'listID':$(this).closest('[data-buyerlistid]').attr('data-buyerlistid')},{'parentID':$(this).closest('li').attr('id')});">
 <span class="ui-icon ui-icon-trash"></span>
 </button>
-			
+
 				</div>
 			</div>
 		</div>
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
 
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
-	
+
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
-		
+
 
 	</div>
 </li>
@@ -867,21 +1084,33 @@ container ul should have lineItemProdlist class on it instead of productList
 Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
 the loadingBG class is removed (must be that classname) when the template is translated.
 remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
--->
-<li id='productListTemplateResults' class='loadingBG  ' >
-	<div class=''>
-		<div class='pointer prodThumbContainer' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-			<img src='blank.gif' class='prodThumb' data-bind='var: product(images); format:elasticImage1URL;bgcolor:ffffff;' width='216' height='216' />
-		</div>
-		
-		<div class="prodThumbDesc" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-			<div class="prodThumbBackground"></div>
-			<h5 data-bind='var: product(prod_name); format:text;'></h5>
-			<h6 data-bind='var: product(base_price); format:elasticMoney; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
-			<img src="site/images/button-product-list-view-item.png" class='pointer' alt="View Item" onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})" />
-		</div>	
 
+SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
+-->
+<li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
+	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
+		<div class='prodThumbContainer' style="height:120px;">
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		</div>
+
+		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
+
+		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext:;'></h6>
 	</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});"><img src="images/buynowsmall.png" width="85" height="30"></div>
+</li>
+
+<li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
+	<div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
+		<div class='prodThumbContainer'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		</div>
+
+		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
+
+		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+	</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
 </li>
 </ul>
 
@@ -897,16 +1126,12 @@ remember to NOT put the button inside the 'onclick' container or two events will
 form - the form id gets modified to be unique in case multiple viewers are open at the same time. _pid is appended to it.
 NOTE - currently, variations.js supports only 1 viewer at a time. this will change.
 2 fieldsets are present:
- -> One is for variations/options and really ought to be present. 
+ -> One is for variations/options and really ought to be present.
  -> The other is for a quantity input and is optional
 
-the submit button does not need to be within the form (a button could be used elsewhere if needed. 
+the submit button does not need to be within the form (a button could be used elsewhere if needed.
  -> use the button to submit the form, not execute the call or utility separately. That way if additional
  actions are added to the submit, they only have to be managed in one place.
-
-note - this is draft 1. currently, the view in modal utility has the reviewsummary and reviews content ID's hard coded.
-reviewSummaryID='prodViewerReviewSummary' 
-reviewsID='prodViewerReviews'
 
 Additionally, the cross selling features also have hard coded id's, though they're specified within this extension in the xsell callback.
 
@@ -914,88 +1139,154 @@ this will likely become more flexible in the future. ###
 -->
 
 
-<div id='productTemplate'>
-	
+<div id='productTemplate' class='productPage'>
+
 <ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 
-<div class="prodDetailView">
-	<div class="prodImages" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
-		<img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
-		<!--<div class="prodThumbs" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>-->
-		<div class="prodThumbs" data-bind='var: product(zoovy:prod_image2); format:showIfSet;'>
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"2"});' class='pointer' /></div>
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100'  onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"3"});' class='pointer' /></div>
-			<div class="prodThumb"><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().parent().parent().attr("data-pid"),"int":"4"});' class='pointer' /></div>
-			<div class="prodThumbsBG"></div>
-			<div class="prodThumbBackButton">
-				<div class="prodThumbsBG"></div>
-				<img src="site/images/button-prod-thumb-back.png"  />
-			</div>
-			<div class="prodThumbNextButton">
-				<div class="prodThumbsBG"></div>
-				<img src="site/images/button-prod-thumb-next.png" />
-			</div>
-		</div>
-	</div>
-	<div class="prodRelatedItems">
-		<ul class='listStyleNone fluidList clearfix noPadOrMargin productList relatedItems' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:; withReviews:1;"></ul>
-	</div>
-	<div class="prodDetailDesc">
-		<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
-	
-		<h3 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Manufactured by ;'></h3>
-		<h3 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h3>		
-		<h3 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Manufacturer ID: ;'></h3>
-		
-		<p data-bind="var: product(zoovy:prod_desc); extension:myRIA; format:text;"></p>
-	</div>
-	<div class="prodBuyDetails">
-		<div class="prodBuyDetailsPrices">			
-			<table>
-				<tr>
-					<td class='prodMSRP'>
-						<span data-bind='var: product(zoovy:prod_msrp); format:showIfSet;' class='priceTitle'>WAS</span>
-						<span data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $; hideZero:true; className: price; pretext:;'></span>
-					</td>
-					<td class='basePrice'>
-						<span data-bind='var: product(zoovy:prod_msrp); format:showIfSet;' class='priceTitle'>NOW</span>
-						<span data-bind='var: product(zoovy:base_price); format:money; currencySign: $; hideZero:true; className: price; pretext:;'></span>
-					</td>
-				</tr>
-			</table>		
-		</div>
-		<div class="prodBuyDetailsReviews">
-			<section class='marginBottom'>
-				<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-				<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
-			</section>
-			<a class="writeReview" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>See reviews or write one!</a>			
-		</div>
-		<div class="prodBuyDetailsOptions">
-			<form onsubmit="app.ext.myRIA.u.handleAddToCart($(this),{'action':'modal'}); return false;" action="#" class="prodViewerAddToCartForm clearfix" data-bind="var: product(pid); format:atcForm; extension:store_product;">
-				<div data-bind="var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);" class="latency"></div>
-				<fieldset class="borderNone" data-bind="var: product(pid); format:atcVariations; extension:store_product;"></fieldset>
+<table class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+<!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
 
-				<div id="atcMessaging_FC5171-DS" class="atcSuccessMessage"></div>
-	
-				<div data-bind="var: product(pid); format:addToCartButton; extension:store_product;">
-					Quantity <input type="number" id="quantity_FC5171-DS" class="zform_number" min="1" name="quantity" size="3" value="1" />
-					<img id="btnAddToCart" src="site/images/button-add-to-cart.png" alt="Add To Cart" onClick="$(this).parent().submit();" />
-				</div>
-				<input type="hidden" value="yes" name="add">
-				<input type="hidden" value="FC5171-DS" name="product_id">
-			</form>
-			<div class="prodBuyDetailsOptionsSharing">
-				<img id="btnProdShare" src="site/images/button-share-product.png" alt="Share Product" />
-				<img id="btnProdAddToWishlist" src="site/images/button-add-to-wishlist.png" alt="Add To Wishlist" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' onClick="app.ext.myRIA.a.add2BuyerList({pid:$(this).attr('data-pid'),'listid':'wishlist'}); return false;" />
-			</div>
-		</div>
-	</div>
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='300' height='340' />
+
 </div>
 
-<!--<div class='prodlistRelatedContainer'>
-	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='50' height='50' /></div>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='50' height='50' /></div>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='50' height='50' /></div>
+
+	</div>
+
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<div style="background:#c9bca8; padding:20px; margin-right:20px;"><h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+    <hgroup class='marginBottom'>
+		<!--<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>-->
+		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+		<!--<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>-->
+	</hgroup>
+    <div class='tabContent' data-anytab-content='prodDesc'>
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div></div>
+
+	</td>
+    
+    <td class="RightPcol">
+	<div class='priceContainer marginBottom'>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: <span>NOW</span><br> ;'></h4>
+	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: <span>WAS</span><br> ;'></h5>
+		<div class="cb"></div>
+        <!--<span class='savings'>
+			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
+			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+		</span>-->
+        
+	</div>
+    <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
+ <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>See reviews or write one!</a>
+ </menu>
+	<div class="socialLinks"></div>
+
+
+	<table class='marginBottom fullWidth gridTable' app-data-role='childrenSiblingsContainer'>
+		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
+	</table>
+
+
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
+
+
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+
+		<input type='image' src="images/addtocart.png" value='' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+
+	<!--<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>-->
+	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
+	<img src="images/share.png" width="88" height="42"><a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/wishlist.png"></a>
+
+	</menu>
+	<section class='marginBottom'>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+	</section>
+
+	</td>
+    
+</tr>
+<tr>
+	<td colspan='2' class="tabbedProductContentTD">
+<!--
+the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
+or the tab clicked won't open the right content.
+It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
+-->
+<!--<div class='prodTabs tabbedProductContent'>
+
+	<ul class='tabs'>
+		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
+	</ul>
+
+	<div class='tabContent' data-anytab-content='prodDesc'>
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodSpecs'>
+		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodFeatures'>
+		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+
+	<div  class='tabContent' data-anytab-content='prodReviews'>
+
+		<div class='clearfix alignRight'>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+		</div>
+
+		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodVideo'>
+		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodAccessories'>
+<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
+	</div>
+
+
+
+
 </div>-->
+
+	</td>
+</tr>
+</table>
+<div class='prodlistRelatedContainer'>
+	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+</div>
 
 
 </div><!-- productTemplate -->
@@ -1012,7 +1303,7 @@ this will likely become more flexible in the future. ###
 <div>
 
 	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
-	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
 
 </div>
 
@@ -1021,8 +1312,8 @@ this will likely become more flexible in the future. ###
 	<td class='prodSummaryContainer marginBottom no_underline'>
 	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
 	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
-	
-	
+
+
 	<div class='priceContainer'>
 		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
 		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
@@ -1031,22 +1322,22 @@ this will likely become more flexible in the future. ###
 			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
 		</span>
 	</div>
-	
+
 	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
-	
-	<section id='prodViewerReviewSummary' class='marginBottom'>
-		<span data-bind='var: product(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-		<span data-bind='var: reviews(total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+
+	<section class='marginBottom'>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
-	
+
 	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 
 	</td>
 </tr>
 <tr>
 	<td colspan='2'>
-		
-	<ul class='listStyleNone clearfix productReviewsList' id='prodViewerReviews' data-bind="var: reviews(@reviews); format:reviewList; extension:store_product; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	<ul class='listStyleNone clearfix productReviewsList'  data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
 
 	</td>
 </tr>
@@ -1096,6 +1387,7 @@ this will likely become more flexible in the future. ###
 MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
 if modified, be careful about changing id's or classes.
 adding classes is not likely to have any bad effects.
+if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
 
 ############################
 
@@ -1108,7 +1400,7 @@ adding classes is not likely to have any bad effects.
 <!--  used in breadcrumb -->
 <ul>
 	<li id='breadcrumbTemplate'>
-	<a href='#' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" data-bind='var: category(pretty); format:text;'></a>
+	<a href='#' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" data-bind='var: category(pretty); format:catText; extension: myRIA;'></a>
 	</li>
 </ul>
 
@@ -1117,263 +1409,252 @@ adding classes is not likely to have any bad effects.
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='companyTemplate' class='clearfix loadingBG'>
-	<div class="contentPage">
-		<div class='sideline' >
-			<nav id='companyNav'>
-				<p>NEED HELP?</p>
-				<ul class='listStyleNone noPadOrMargin'>
-					<li><a href='#company?show=about'  id='navLink_about'>About Us</a></li>
-					<li><a href='#company?show=contact'  id='navLink_contact'>Contact Information</a></li>
-					<li><a href='#company?show=faq'  id='navLink_faq'>FAQ</a></li>
-					<li><a href='#company?show=payment' id='navLink_payment'>Payment Policy</a></li>
-					<li><a href='#company?show=privacy' id='navLink_privacy'>Privacy Statement</a></li>
-					<li><a href='#company?show=return' id='navLink_return'>Return Policy</a></li>
-					<li><a href='#company?show=shipping' id='navLink_shipping'>Shipping Information</a></li>
-				</ul>
-			</nav>
-			<nav id='myAccountNav'>
-				<p>MY ACCOUNT</p>
-				<ul class='listStyleNone noPadOrMargin'>
-					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
-					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>
-					<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
-					<li><a href="#" onClick="return showContent('checkout',{});">Checkout</a></li>
-					<li><a href="#">Recently Viewed Items</a></li>
-					<li><a href="#">Previous Orders</a></li>
-				</ul>
-			</nav>			
+
+	<div class='sideline' >
+<nav id='companyNav'>
+<ul class='listStyleNone noPadOrMargin'>
+<h1>NEED HELP?</h1>
+	<li><a href='#company?show=about'>About Us</a></li>
+	<li><a href='#company?show=contact'>Contact Us</a></li>
+	<li><a href='#company?show=faq'>FAQ</a></li>
+	<li><a href='#company?show=payment'>Payment Policy</a></li>
+	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
+	<li><a href='#company?show=return'>Return Policy</a></li>
+	<li><a href='#company?show=shipping'>Shipping Information</a></li>
+</ul>
+</nav>
+	</div>
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
+		<div id='aboutArticle' class='textContentArea article'>
+			<h1>About Us</h1>
+			<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
 		</div>
 
-		<div class='mainColumn'>
-		<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
-			<div id='aboutArticle' class='textContentArea article'>
-				<h1>About Us</h1>
-				<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
-			</div>
-		
-		
-			<div id='contactArticle' class='displayNone textContentArea'>
-				<h1>CONTACT US</h1>
-				<span>Please use the form to contact us with any questions.</span>
-				<form action='#' onSubmit="app.ext.store_crm.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
-					<fieldset>
-						<div id='contactFormMessaging'></div>
-						<div><input type='email' name='sender' required='required' id='contactFormSender' value='Email Address' /></div>
-						<div><input type='text' name='subject' id='contactFormSubject' value='Subject' /></div>
-						<div><input type='text' name='OID' id='contactFormOID' value='Order Number (if applicable)' /></div>
-						<div>
-							<textarea name='body' required='required' id='contactFormBody'>Message/Notes</textarea>
-							<img class='pointer' src='site/images/button-send-message.png' onClick='$("form#contactForm").submit();' />
-						</div>
-					</fieldset>
-				</form>
-				<p><span>Order Status</span><br />If you'd like to check the status of an order, (or cancel one that hasn't been processed), please sign in to your customer account.<br /><br /><span>Phone</span><br />To place an order over the phone call +1 (760) 295-2752 between 9:30am - 5:00pm PST. If you have a specific question about an existing product or order please email us at help@toywars.com.<br /><br /><span>Email</span><br />For general product questions and order inquiries you can also email us at help@toywars.com. </p>
-				<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
-			</div>
-		
-			
-		
-			<div id='faqArticle' class='displayNone textContentArea'>
-				<h1>Frequently Asked Questions</h1>
-				<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
-			</div>
-		
-	
-		
-			<div class='displayNone textContentArea' id='paymentArticle'>
-				<h1>Payment Policy</h1>
-				<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
-			</div>
-			
-			
-			<div class='displayNone textContentArea' id='privacyArticle'>
-				<h1>Privacy Statement</h1>
-		<h4>About this Privacy Policy:</h4>
-		<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
-		
-		<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
-		
-		<h5>Zoovy.com tracks IP Addresses</h5>
-		<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
-		
-		
-		<h3>This site may contains links to other sites.</h3>
-		<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
-		
-		<h3>This site requires Unique Identifiers.</h3>
-		<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
-		
-		<h3>This site requires Financial Information.</h3>
-		<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
-		
-		<h3>This site may have Surveys and/or Contests.</h3>
-		<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
-		
-			
-		<h3>Third Party Cookies</h3>
-		<p>Third party vendors, including Google, use cookies to serve the badge on the website and to serve ads based on a user's prior visits to the website.  Users may opt out of Google's use of cookies by visiting the Google advertising opt-out page.</p>
-		
-		<h3>This site may contain Public Forums</h3>
-		<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
-		
-		<h3>About our System Security</h3>
-		<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
-		
-		<h3>This site provides the choice to Opt In or Out</h3>
-		<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
-		
-		<h3>We provide the ability to Correct/Update YOUR information.</h3>
-		<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
-		<!-- !!! load amendments here -->
-			</div>
-			
-			
-			
-			
-			<div class='displayNone textContentArea' id='returnArticle'>
-				<h1>Return Policy</h1>
-				<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
-			</div>
-		
-		
-			
-			<div class='displayNone textContentArea' id='shippingArticle'>
-				<h1>Shipping Information</h1>
-				<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
-			</div>
-		
+
+		<div id='contactArticle' class='displayNone textContentArea'>
+			<h1>Contact Us</h1>
+            <p class="titlebT">Please use the form to contact us with any questions.</p>
+			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
+			<fieldset style="border:0px;">
+				<div id='contactFormMessaging'></div>
+				<div><input type='email' name='sender' required='required' id='contactFormSender' value='E-mail Address'/></div>
+				<div><input type='text' name='subject' id='contactFormSubject' value='Subject'/></div>
+				<div><input type='text' name='OID' id='contactFormOID' value='Order Number (if applicable)'/></div>
+				<div><textarea name='body' required='required' id='contactFormBody' value='Message/Notes'></textarea></div>
+				<div class='alignRight'><input type='image' src="images/sendmessage.png" class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' style="width:308px; height:42px; margin:0 0 0 -2px; box-shadow:none; border:0px; background:none; padding:0px;"/>
+				</div>
+			</fieldset>
+			</form>
+			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'>
+<strong>Order Status</strong><br>
+If you'd like to check the status of an order, (or cancel one<br>
+ that hasn't been processed), please <a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">sign in</a> to your <br>
+customer account.<br><br>
+
+
+<strong>Phone</strong><br>
+To place an order over the phone call <span style="font-weight:bold; color:#770000;">+1 (760) 814-5647</span> <br>
+between 9:30am - 5:00pm PST. If you have a specific <br>
+question about an existing product or order please email us <br>
+at <a href="mailto:help@toywars.com">help@toywars.com</a>.
+<br><br>
+<strong>Email</strong><br>
+For general product questions and order inquiries you can <br>
+also email us at <a href="mailto:help@toywars.com">help@toywars.com</a>. </div>
 		</div>
-	</div>
-	<div class="featuredCategories">
-		<div class="catNav">
-			<div class="catNavContent">
-				<p class="prevCat navCats">Previous</p>
-				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
-				<p class="currentCat">Current</p>
-				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
-				<p class="nextCat navCats">Next</p>
-			</div>
-			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
+
+
+
+		<div id='faqArticle' class='displayNone textContentArea'>
+			<h1>Frequently Asked Questions</h1>
+			<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
 		</div>
-		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
-		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />
+
+
+
+		<div class='displayNone textContentArea' id='paymentArticle'>
+			<h1>Payment Policy</h1>
+			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
+		</div>
+
+
+		<div class='displayNone textContentArea' id='privacyArticle'>
+			<h1>Privacy Statement</h1>
+	<h4>About this Privacy Policy:</h4>
+	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
+
+	<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
+
+	<h5>Zoovy.com tracks IP Addresses</h5>
+	<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
+
+
+	<h3>This site may contains links to other sites.</h3>
+	<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
+
+	<h3>This site requires Unique Identifiers.</h3>
+	<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
+
+	<h3>This site requires Financial Information.</h3>
+	<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
+
+	<h3>This site may have Surveys and/or Contests.</h3>
+	<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
+
+
+	<h3>Third Party Cookies</h3>
+	<p>Third party vendors, including Google, use cookies to serve the badge on the website and to serve ads based on a user's prior visits to the website.  Users may opt out of Google's use of cookies by visiting the Google advertising opt-out page.</p>
+
+	<h3>This site may contain Public Forums</h3>
+	<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
+
+	<h3>About our System Security</h3>
+	<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
+
+	<h3>This site provides the choice to Opt In or Out</h3>
+	<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
+
+	<h3>We provide the ability to Correct/Update YOUR information.</h3>
+	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
+	<!-- !!! load amendments here -->
+		</div>
+
+
+
+
+		<div class='displayNone textContentArea' id='returnArticle'>
+			<h1>Return Policy</h1>
+			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
+		</div>
+
+
+
+		<div class='displayNone textContentArea' id='shippingArticle'>
+			<h1>Shipping Information</h1>
+			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
+		</div>
+
 	</div>
+
 </div><!-- /companyTemplate -->
 
 
 
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
-<div id='customerTemplate' class='clearfix loadingBG'>
-	<div class="contentPage">
-		<div class='sideline' >
-			<nav id='customerNav'>
-				<p>NEED HELP?</p>
-				<ul class='listStyleNone noPadOrMargin'>
-			<!-- before restoring this, test cuz news form on left was causing some conflicts -->
-			<!--		<li><a href='#newsletter' id='navLink_newsletter'>Newsletter Subscription</a></li>
-					<li><a href='#recoverpassword' id='navLink_recoverpassword'>Recover Password</a></li> -->
-					<li><a href='#customer?show=myaccount' id='navLink_myaccount'>My Account</a></li>
-					<li><a href='#customer?show=changepassword' id='navLink_changepassword'>Change Password</a></li>
-					<li><a href='#customer?show=orders' id='navLink_orders'>Order History</a></li>
-					<li><a href='#customer?show=lists' id='navLink_orders'>Manage Lists</a></li>
-				</ul>
-			</nav>
-			<nav id='myAccountNav'>
-				<p>MY ACCOUNT</p>
-				<ul class='listStyleNone noPadOrMargin'>
-					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
-					<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>
-					<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
-					<li><a href="#" onClick="return showContent('checkout',{});">Checkout</a></li>
-					<li><a href="#">Recently Viewed Items</a></li>
-					<li><a href="#">Previous Orders</a></li>
-				</ul>
-			</nav>				
-		</div>
-	
-		<div class='mainColumn'>
-	<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
-			<div id='newsletterArticle' class='displayNone textContentArea'>
-				<h1>Subscribe to our Newsletter and Save!</h1>
-				<div id='newsletterFormContainer'></div>
-			</div>
-		
-			<div id='myaccountArticle' class='displayNone textContentArea'>
-				<h1>My Account</h1>
-				<div id='logMessaging'></div>
-				<div><a href="#" onClick="app.u.logBuyerOut(); showContent('homepage',{}); return false;">Log Out</a></div>
-				
-				<section id='buyerAddresses' class='clearfix'>
-	
-					<div class='billAddressContainer'>
-						<h2>Billing Address(es)</h2>
-					<!--	<button class='floatRight ui-state-default ui-corner-all'><span class='ui-icon ui-icon-plusthick floatLeft'></span> Add </button> coming soon -->
-						<div class='billAddresses'></div><!-- billing addresses are loaded into here using billAddressTemplate -->
-					</div>
-					
-					<div class='shipAddressContainer'>
-						<h2>Shipping Address(es)</h2>
-						<div class='shipAddresses'></div><!-- shipping addresses are loaded into here using shipAddressTemplate -->
-					</div>
-						
-				</section>
-		
-			</div>
-		
-		
-			<div id='ordersArticle' class='displayNone textContentArea'>
-				<h1>Order History</h1>
-				<div id='orderHistoryContainer' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
-			</div>
-		
-		
-		
-			<div id='changepasswordArticle' class='displayNone textContentArea'>
-				<h1>Change Password</h1>
-				<div id='changepasswordContainer'>
-	
-					<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
-					<fieldset class='borderNone'>
-					
-					<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
-					<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
-					<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
-					
-					</fieldset>
-					</form>
-				</div>
-			</div>
-		
-			<div id='listsArticle' class='displayNone textContentArea'>
-				<h1>List Manager</h1>
-				<div id='listsContainer' class='prodlist loadingBG'></div>
-				
-				<div id='listEditorContainer' class='displayNone loadingBG'></div><!-- editor for a given list gets added here -->
-				
-			</div>
-		
-			<div id='forgetmeArticle' class='displayNone textContentArea'>
-				<h1>Your 'Forget Me' list</h1>
-				<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
-				<ul id='forgetmeContainer' class='prodlist loadingBG'>
-				</ul>
-			</div>
-		</div>
+<div id='customerTemplate' class='clearfix'>
+
+	<div class='sideline' >
+	<nav id='customerNav'>
+	<ul class='listStyleNone noPadOrMargin'>
+<!-- before restoring this, test cuz news form on left was causing some conflicts -->
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
+		<li><a href='#customer?show=myaccount'>My Account</a></li>
+		<li><a href='#customer?show=changepassword'>Change Password</a></li>
+		<li><a href='#customer?show=orders'>Order History</a></li>
+		<li><a href='#customer?show=lists'>Manage Lists</a></li>
+		<li class='hideIfLoggedOut'><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></li>
+	</ul>
+	</nav>
 	</div>
-	<div class="featuredCategories">
-		<div class="catNav">
-			<div class="catNavContent">
-				<p class="prevCat navCats">Previous</p>
-				<img class="btnCatBack catButton" src="site/images/button-featured-cat-nav-back.png" alt="Back" />
-				<p class="currentCat">Current</p>
-				<img class="btnCatNext catButton" src="site/images/button-featured-cat-nav-next.png" alt="Next" />
-				<p class="nextCat navCats">Next</p>
-			</div>
-			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
+
+<!--
+newsletterArticle is used for buyers who are not logged in or do not have an account.
+subscribeListsArticle is used for authenticated buyers
+-->
+		<div id='newsletterArticle' class='displayNone textContentArea'>
+			<h1>Subscribe to our Newsletter and Save!</h1>
+			<div data-bind="format:loadsTemplate; loadsTemplate:subscribeFormTemplate;"></div>
 		</div>
-		<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>	
-		<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />	
-	</div>			
+
+		<div id='subscriberListsArticle' class='displayNone textContentArea'>
+			<h1>Manage your Subscriptions</h1>
+<!-- save onchange -->
+<form action='#' name='subscribeFrm'>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+</form>
+
+		</div>
+
+		<div id='myaccountArticle' class='displayNone textContentArea'>
+			<h1>My Account</h1>
+
+			<section>
+
+<div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<h2>Billing Address(es)</h2>
+	</div>
+	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
+</div>
+
+<div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<h2>Shipping Address(es)</h2>
+	</div>
+	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
+</div>
+
+
+			</section>
+
+
+		</div>
+
+
+		<div id='ordersArticle' class='displayNone textContentArea'>
+			<h1>Order History</h1>
+			<div data-bind="var: orders(@orders); format:processList; loadsTemplate:orderLineItemTemplate;" data-app-role='orderList' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+		</div>
+
+
+		<div id='invoiceArticle' class='displayNone textContentArea'>
+			<div data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
+		</div>
+
+
+
+		<div id='changepasswordArticle' class='displayNone textContentArea'>
+			<h1>Change Password</h1>
+			<div id='changepasswordContainer'>
+
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<fieldset class='borderNone'>
+
+<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
+<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
+<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+
+</fieldset>
+</form>
+			</div>
+		</div>
+
+		<div id='listsArticle' class='displayNone textContentArea'>
+			<h1>List Manager</h1>
+			<div id='listsContainer' class='prodlist loadingBG'></div>
+
+			<div id='listEditorContainer' class='displayNone loadingBG'></div><!-- editor for a given list gets added here -->
+
+		</div>
+
+		<div id='forgetmeArticle' class='displayNone textContentArea'>
+			<h1>Your 'Forget Me' list</h1>
+			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
+			<ul id='forgetmeContainer' class='prodlist loadingBG'>
+			</ul>
+		</div>
+
+	</div>
+
 </div>
 
 
@@ -1381,26 +1662,40 @@ adding classes is not likely to have any bad effects.
 
 
 <div id='searchTemplate' class='searchResultsPage clearfix'>
-	<div class='contentPage'>
-		<div class='sideline' >
-			<nav id='searchNav'>
-				<ul class='listStyleNone noPadOrMargin'><!--
-					<li id='altSearchesContainer'>
-					<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Alternative Searches</h3>
-					<ul id='altSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-					</li>
-				-->
-					<li id='recentSearchesContainer'>
-					<h3 class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top '>Recent Searches</h3>
-					<ul id='recentSearchesList' class='ui-corner-bottom ui-accordion-content ui-helper-reset ui-widget-content'></ul>
-					</li>
-				</ul>
-			</nav>
-		</div>
+
+	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
+	<div class='previewProductDetail displayNone'></div>
+
+	<div class='previewListContainer'>
+    <ul class="sortby">
+                                      <h2>Sort By Price</h2>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$100 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$50 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$25 <span>and under</span></a></li>	
+                                         <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$10 <span>and under</span></a></li>	
+                                        <h2>Sort By Size</h2>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">32" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">24" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">18" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">12" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">6" <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">4" <span>and under</span></a></li>
+                                        <h2>Sort By Size</h2>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
+										
+                                        
+  </ul>
+		<!-- productListTemplateResults gets loaded into here -->
+		<ul style="float: right; width: 729px;" id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
 	</div>
-	<div class='mainColumn'>
-		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul><!-- productListTemplateResults gets loaded into here -->
-	</div>
+
 </div>
 
 
@@ -1440,7 +1735,7 @@ onclicks are recursive, so only add it to the parent element.
 
 <span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='previous' title="previous page">
 	<span class="ui-icon ui-icon-circle-triangle-w"></span>
-</span>	
+</span>
 
 
 <span data-bind='var:prodlistmeta(page_start_point); format:text; pretext:items ;'></span>
@@ -1492,93 +1787,66 @@ So the cart template should contain these two elements and the extension should 
 <tr>
 	<td class='cartStuffContainer'>
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
-	<div>
-		<p>HELPFUL LINKS</p>
-		<ul>
-			<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact Us</a></li>
-			<li><a href="#" onClick="return showContent('company',{'show':'shipping'});">Shipping Policy</a></li>
-			<li><a href="#" onClick="return showContent('company',{'show':'return'});">Return Policy</a></li>
-			<li><a href="#" onClick="return showContent('company',{'show':'payment'});">Payment Policy</a></li>
-			<li><a href="#" onClick="return showContent('company',{'show':'privacy'});">Privacy Policy</a></li>
-			<li><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQs</a></li>
-		</ul>
-	</div>	
-	<p>
-		<span>FREE Shipping on all orders over $50</span><br />
-		All orders of $50 and more qualify for free standard shipping. Applicable only to address in the continental United States (HI and AK are not included). Free shipping does not apply to orders shipped to PO Boxes or international destinations. Not applicable to eBay or Amazon purchases.
-	</p>
-	<p>
-		<span>Preorders</span><br />
-		All preorders paid with a credit card will be charged at the time of shipment. All preorders paid with Google Checkout, Paypal or Amazon Payments will be charged when your order is placed. If you do not wish to pay for your preorder until it ships then you must use the checkout button and pay with a credit card. Orders that have both preorder and instock items we be shipped at the same time in one shipment. We recommend that you do not order in stock items with preorder items. 
-	</p>
 	</td>
 
 	<td class='cartSummaryTotalsContainer'>
 	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
-		<!--<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>-->
+		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
 		<div class='cartSummaryContainer'>
-		
+
 <section id='cartTemplateCostSummary' class='cartSummary'>
-	<span id="lblTotal">CART TOTAL</span>
-	
+
 	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
-	
-	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:false;currencySign: $; pretext:Tax: ; '></div>
-	
-	<section id='cartTemplateShippingContainer'>
-		<h3>Shipping:</h3>
-		<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
-	</section>	
-	
-	<div class='cartZipCodeContainer'>
-		<label for='data-ship_zip'>Zip/Postal Code:</label>
-		<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(%ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value});
-		app.ext.store_cart.u.updateCartSummary();
-		app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-		app.model.dispatchThis('immutable');"  />
-	</div>	
-	
-	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; extension:store_cart; pretext:Shipping: '></div>	
-	
+
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+
 	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
-	
+
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
 	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
-	
+
 	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
 
 </section>
-		
+
+<section id='cartTemplateShippingContainer'>
+	<h3>Shipping:</h3>
+	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+</section>
+
 <section class='stdMargin'>
 
+	<div class='cartZipCodeContainer'>
+	<label for='data-ship_zip'>Zip/Postal Code:</label>
+	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+	app.ext.store_cart.u.updateCartSummary();
+	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+	app.model.dispatchThis('immutable');"  />
+	</div>
 
 
-	
 
 	<!-- some buttons that are alternatives to checkout. fewer is better -->
+	<menu class='cartAltButtonsContainer noPadOrMargin'>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+	</menu>
 
-	<img id="btnCartShare" class="pointer" src="site/images/button-share-cart.png" alt="Share Cart" />
-	<img id="btnCartContinueShopping" class="pointer" src="site/images/button-continue-shopping.png" alt="Continue Shopping" onClick="$('#modalCart').dialog('close');" />
-	
 	<div class='checkoutButtonsContainer'>
 
-		<!--<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick= "return showContent('checkout',{});">Store Checkout</button></span>-->
-		<img class="pointer" src="site/images/button-checkout.png" alt="Checkout" onClick="return showContent('checkout',{});" />
-		
-		<img src="site/images/cart-credit-cards-accepted.png" alt="Credit Cards Accepted" />
+		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+
+		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 
 		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
-		
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-		
+
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
 
 	</div>
-			
-</section>
 
-<span id="buySAFE_Kicker" name="buySAFE_Kicker" type="Kicker Guaranteed PostIt 170x52"></span>
+</section>
 
 		</div>
 	</div>
@@ -1600,23 +1868,23 @@ So the cart template should contain these two elements and the extension should 
 <ul>
 	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
 
-		<span class='ui-state-default ui-corner-all floatRight removeButton' data-bind='var: product(stid); format:removeItemBtn; extension:store_cart;' >
-		<span class='ui-icon ui-icon-closethick'></span>
-		</span>
-		
-		<div class='floatLeft'><img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
-	
+		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
+
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+
 		<h4 data-bind='var: product(prod_name); format:text; '></h4>
-		<p>PRODUCT DESCRIPTION</p>
+
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
-		
-		<div class='cartQty'>
-			<input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
-			<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-			<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-			<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+
+		<div>
+		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
+		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
+		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+
 		</div>
-		
+
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</li>
 </ul>
@@ -1629,12 +1897,22 @@ So the cart template should contain these two elements and the extension should 
 used on a product layout. Some product have 'children' which may represent the same item in a different color (variations are commonly used for sizing)
 -->
 
-<ul>
-<li id='productListTemplateChildren' onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" class='floatLeft pointer'>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='75' height='75' />
-	<div data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></div>
-</li>
-</ul>
+<table>
+<tr id='productListTemplateChildren'>
+	<td><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='45' height='45' /></td>
+	<td data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></td>
+	<td>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+	</td>
+</tr>
+</table>
+
 
 
 
@@ -1647,7 +1925,7 @@ used on a product layout. Some product have 'children' which may represent the s
 		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
 		<li data-bind='var:review(LOCATION); format:text; pretext:of ;'></li>
 		<li data-bind='var:review(CREATED_GMT); format:unix2mdy; pretext:on ;'></li>
-		
+
 	</ul>
 	<blockquote>
 		<h2 data-bind='var:review(SUBJECT); format:text;'></h2>
@@ -1664,13 +1942,13 @@ used on a product layout. Some product have 'children' which may represent the s
 
 <table>
 <tr>
-	<td><img src='blank.gif' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
+	<td><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
 	<td>
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
-	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
 	</td>
 </tr>
 </table>
@@ -1694,20 +1972,20 @@ used for store_crm.js
 
 <label for='reviewsCustomerName'>Your Name:</label>
 <input type="text" name="CUSTOMER_NAME" id='reviewsCustomerName' value="" MAXLENGTH="30" />
-<br />
+<br>
 
 <label for='reviewsLocation'>Location:</label>
 <input type="text" MAXLENGTH="30" name="LOCATION" id='reviewsLocation' value="" />
-<br />
+<br>
 
 <label for='reviewsSubject'>Subject:</label>
 <input type="text" MAXLENGTH="60" name="SUBJECT" id='reviewsSubject' />
-<br />
+<br>
 
 
 <label for='reviewsMessage'>Review:</label>
 <textarea name="MESSAGE" id='reviewsMessage'></textarea>
-<br />
+<br>
 
 <label for='reviewsRating'>Score:</label>
 <select name="RATING" id='reviewsRating'>
@@ -1722,7 +2000,7 @@ used for store_crm.js
 	<option value="2">1</option>
 	<option value="1">.5</option>
 </select>
-<br />
+<br>
 
 <input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
 
@@ -1734,23 +2012,21 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' id='subscribeFrm' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false">
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 
 <fieldset class='userInfo borderNone'>
 <div>
-<label for='subscribeLogin'>Email Address</label>
-<input type='email'  maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
+<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
 </div>
 
 <div>
-<label for='subscribeFullname'>Full Name</label>
-<input type='text'  maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
+<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
 </div>
 </fieldset>
 
 <fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
 
-<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe'>
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
 
 </form>
 </div>
@@ -1762,15 +2038,15 @@ used for store_crm.js
 
 <!-- used in the /customer section for order view -->
 
-<section id='orderLineItemTemplate' class='appAccordianesque'>
-	
-	<div onClick="app.ext.myRIA.u.showOrderDetails($(this).attr('data-orderid'));" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
-	<span class="ui-icon ui-icon-triangle-1-e"></span>
+<section id='orderLineItemTemplate' class='appAccordianesque' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
+
+	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
 	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
 	</div>
-	
-	<div data-bind='var:order(ORDERID);format:assignAttribute; attribute:id; valuePretext:orderContents_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+
+	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
 
 </section>
 
@@ -1783,13 +2059,13 @@ used for store_crm.js
 
 
 <section  id='faqTopicTemplate'>
-	
+
 	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="app.ext.myRIA.a.showFAQbyTopic($(this).attr('data-topicid'));">
-	<span class="ui-icon ui-icon-triangle-1-e"></span>
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
 	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
 	</div>
-	
-	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content '></div>
+
+	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content displayNone'></div>
 
 </section>
 
@@ -1808,26 +2084,20 @@ The 'data-action' attribute is used to assign an onclick.
 
 -->
 
-<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerBillAddressContainer '>
-	<menu class='buttonMenu alignRight floatRight'>
-		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
-		<div class='onMenu'>
-			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
-			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>Save</button>
-		</div>
-		<div class='changeLog'></div>
-	</menu>
+<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(bill_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(bill_lastname);format:text;" class='editable' title='last name'></span>
+		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(bill_address1);format:text;" class='editable' title='address'></div>
-		<div data-bind="var: address(bill_address2);format:text;" class='editable' title='address 2'></div>
-		
-		<span data-bind="var: address(bill_city);format:text;" class='editable' title='city'></span>, 
-		<span data-bind="var: address(bill_state);format:text;" class='editable' title='state'></span>. 
-		<span data-bind="var: address(bill_zip);format:text;" class='editable' title='zip'></span>
-		<div data-bind="var: address(bill_country);format:text;" title='country'></div>
+		<div data-bind="var: address(bill_address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(bill_address2);format:text;"  title='address 2'></div>
+
+		<span data-bind="var: address(bill_city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(bill_region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(bill_postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(bill_countrycode);format:text;" title='country'></div>
 
 	</div>
 
@@ -1835,34 +2105,90 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 <!-- used in the my account area -->
-<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all buyerAddressContainer buyerShipAddressContainer'>
-	<menu class='buttonMenu alignRight floatRight'>
-		<div class='offMenu'><button data-action="displayOnMenu" class='ui-button-text ui-button ui-state-default ui-corner-all'>edit</button></div>
-		<div class='onMenu'>
-			<button data-action="cancelAddressChanges" class='ui-button-text ui-button ui-state-default ui-corner-all'>cancel changes</button>
-			<button data-action="saveAddressChanges" class='ui-button-text ui-button ui-state-default  ui-corner-all'>Save</button>
-		</div>
-		<div class='changeLog'></div>
-	</menu>
+<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(ship_firstname);format:text;" class='editable' title='first name'></span> <span data-bind="var: address(ship_lastname);format:text;" class='editable' title='last name'></span>
+		<span data-bind="var: address(ship_firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(ship_lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(ship_address1);format:text;" class='editable' title='address'></div>
-		<div data-bind="var: address(ship_address2);format:text;" class='editable' title='address 2'></div>
-		
-		<span data-bind="var: address(ship_city);format:text;" class='editable' title='city'></span>, 
-		<span data-bind="var: address(ship_state);format:text;" class='editable' title='state'></span>. 
-		<span data-bind="var: address(ship_zip);format:text;" class='editable' title='zip'></span>
-		<div data-bind="var: address(ship_country);format:text;" title='country'></div>
+		<div data-bind="var: address(ship_address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(ship_address2);format:text;"  title='address 2'></div>
+
+		<span data-bind="var: address(ship_city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(ship_region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(ship_postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(ship_countrycode);format:text;" title='country'></div>
 
 	</div>
+
 </address>
 
 
 
 
+<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
+<tr>
+	<td colspan='2'>
+<div class='floatRight'>
+<button data-app-event="myRIA|execOrder2Cart">Re-order</button>
+<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
+</div>
 
+<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
+
+	</td>
+</tr>
+<tr>
+	<td>
+<hgroup class='marginBottom'>
+<!-- print icon -->
+
+
+<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+
+<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+</hgroup>
+
+<address class='marginBottom'>
+<b>
+	<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/bill/address1);format:text;'></div>
+<div data-bind='var:order(order/bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
+</address>
+
+<address class='marginBottom'>
+<b>
+	<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/ship/address1);format:text;'></div>
+<div data-bind='var:order(order/ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/ship/postal);format:text;'></span>
+</div>
+<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
+</address>
+
+
+	</td>
+	<td class='orderContentsProdlistContainer'>
+	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	</td>
+</tr>
+</table>
 
 
 
@@ -1895,24 +2221,49 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
-	<div id="gotAccount"> 
-		<p>GOT AN ACCOUNT?</p>
-		<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginLogin").val(),$("#modalLoginPassword").val()); return false;' id='modalLoginForm'>
-			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
-			<fieldset>
-				<input type='email' class='zform_textbox zform_email' name='login' id='modalLoginLogin' value='E-mail Address' size='25' />
-				<input type='password' class='zform_textbox zform_password' name='password' id='modalLoginPassword' value='' size='25' />	
-			    <span id="lblLoginPassword">Password</span>	
-			</fieldset>
-		</form>
-		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
-		<img class="pointer" src="site/images/button-login-to-my-account.png" alt="Login to my Account" onClick="$('form#modalLoginForm').submit();" />
+<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+	<fieldset>
+
+	<div>
+	<label for='modalLoginlogin'>Login/Email</label>
+	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
 	</div>
-	<div id="createAccount">
-		<p>FIRST-TIMER?</p>
-		<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing kist, please choose this option.</p>
-		<img class="pointer" src="site/images/button-create-account.png" onClick="return showContent('customer',{'show':'newsletter'});" alt="Create Account" />
+
+	<div>
+	<label for='modalLoginpassword'>Password</label>
+	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
 	</div>
+
+	<div>
+	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
+	</div>
+	</fieldset>
+</form>
+
+<div id='recoverPasswordContainer'>
+<hr />
+
+<h3 class='marginBottom'>Recover Password</h3>
+<div id='recoverPasswordMessaging'></div>
+<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
+<fieldset>
+<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
+
+<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
+
+</fieldset>
+</form>
+
+</div><!-- /recoverPasswordContainer -->
+
+<div>
+<hr />
+<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+</div>
+
+
+
 </div>
 
 <!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
@@ -1924,34 +2275,41 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 <div class='debug displayNone'>
-
-<menu>
-	<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
-	<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
-	<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
-	<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
-	<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
-	<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
-	<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
-	
-</menu>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="localStorage.clear(); return false;">Clear Local Storage</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.dump(app); return false;">Control to Console</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.loadCSSFile('examples/red.css','bg');">load red css</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="alert(app.ext.store_checkout.u.thisSessionIsPayPal());">Alert isPaypal</button>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="alert(app.ext.store_checkout.u.aValidPaypalTenderIsPresent());">Alert aValidPaypalTenderIsPresent</button>
-	
-<form name='headerSearchFrm' action='#' class='productSearchForm' method="get">
-	<fieldset>
-	<legend>Search</legend>
-	<input type='search' name='KEYWORDS' value='Enter Search Term' class="productSearchKeyword handleDefault" />
-	</fieldset>
-	<input class="search" type="submit" value="Search" />
+<table>
+<tr>
+	<td>
+<ul class='debugQuickLinks'>
+	<li>Store Links
+	<ul>
+		<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
+		<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
+		<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
+		<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
+		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
+	</ul>
+	</li>
+	<li>Some JS test links
+	<ul>
+		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
+		<li><a href='#' onClick="app.ext.orderCreate.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
+		<li><a href='#' onClick="app.u.throwGMessage('All your base are belong to us','mainContentArea');">throwGmessage</a></li>
+	</ul>
+	</li>
+</ul>
+	</td>
+	<td>
+<form name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
+	<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" />
+	<button>Search</button>
 </form>
-
+	</td>
+</tr>
+</table>
 
 </div>
 
-	<script type="text/javascript" src="site/scripts/jquery_actions.js"></script>
+
 </body>
 </html>

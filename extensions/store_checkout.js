@@ -66,8 +66,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
-					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId,
+					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
+					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID,
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'store_checkout','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -101,8 +101,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
 				app.model.addDispatchToQ({
 					"_cmd":"cartPaypalSetExpressCheckout",
-					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
-					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#checkout?show=checkout",
+					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
+					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout",
 					"getBuyerAddress":getBuyerAddress,'_tag':tagObj
 					},'immutable');
 				}
@@ -669,9 +669,9 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 
 //allows for setting of 'ship' address when 'ship to bill' is clicked and a predefined address is selected.
 			setAddressFormFromPredefined : function(addressType,addressId)	{
-				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
-				app.u.dump(' -> address type = '+addressType);
-				app.u.dump(' -> address id = '+addressId);
+//				app.u.dump('BEGIN store_checkout.u.setAddressFormFromPredefined');
+//				app.u.dump(' -> address type = '+addressType);
+//				app.u.dump(' -> address id = '+addressId);
 				
 				var L = app.data.buyerAddressList['@'+addressType].length,
 				a, //shortcut to address object.
@@ -686,6 +686,11 @@ _gaq.push(['_trackEvent','Checkout','User Event','Pre-defined address selected (
 						}
 					else {}// no match. carry on.
 					}
+
+//app.u.dump(" -> a[addressType+'_region']: "+a[addressType+'_region']);
+//app.u.dump(" -> a[addressType+'_postal']: "+a[addressType+'_postal']);
+//app.u.dump(" -> $('#data-'+addressType+'_zip').length: "+$('#data-'+addressType+'_zip').length);
+//app.u.dump(" -> $('#data-'+addressType+'_state').length: "+$('#data-'+addressType+'_state').length);
 
 				$('#data-'+addressType+'_address1').val(a[addressType+'_address1']);
 				if(app.u.isSet(a[addressType+'_address2'])){$('#data-'+addressType+'_address2').val(a[addressType+'_address2'])};
@@ -867,8 +872,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
 //so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
 			countriesAsOptions : function($tag,data)	{
-				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
-				app.u.dump(" -> Country: "+data.value);
+//				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
+//				app.u.dump(" -> Country: "+data.value);
 				var r = '';
 				var L = app.data.appCheckoutDestinations['@destinations'].length;
 //				app.u.dump(" -> number of countries = "+L);

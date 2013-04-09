@@ -1,17 +1,10 @@
 #
-# This file will  be updated with each release
+# This file will be updated with each release
 # It will contain a list of the changes that apply to quickstart.html to facilitate an easier upgrade process on custom apps.
 # Items indicated with an asterisk indiciate a feature or enhancement that may not directly impact quickstart.html, but deserves attention.
 #
 
 Any time you are upgrading to a new version of the MVC, you should create a new branch.
-201314
-invoiceContainer template changed.
-handleSubscribe value should NOT be a form id anymore, but the form itself handleSubscribe($(this)) on the form tag
-* app-fashion added and in beta
-* after adding an item to the wishlist, the 'view wishlist' page will reflect change. (bug fix)
-* appCartExists no longer supported. check removed from init. cartDetail will now create cart if cart id doesn't exist.
-
 
 201312
 param passed into checkoutCompletes changes. was 'sessionID' and is now cartID

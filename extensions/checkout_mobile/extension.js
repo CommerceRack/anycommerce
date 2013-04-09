@@ -238,23 +238,18 @@ if(app.vars._clientid == '1pc')	{
 		},2000); 
 	}
 else	{
-	app.u.dump("Not 1PC.");
-	app.u.dump(" -> [data-app-role='paymentMessaging'],$checkout).length: "+("[data-app-role='paymentMessaging']",$checkout).length);
-	//the code below is to disable any links in the payment messaging for apps. there may be some legacy links depending on the message.
+	//the code below is to disable any links in the payment messaging for apps.
 	$("[data-app-role='paymentMessaging'] a",$checkout).on('click',function(event){
 		event.preventDefault();
-		});
-	$("[data-app-role='paymentMessaging']",$checkout).on('click',function(event){
-		event.preventDefault();
 		//cart and order id are in uriParams to keep data locations in sync in showCustomer. uriParams is where they are when landing on this page directly.
-		showContent('customer',{'show':'invoice','uriParams':{'cartid':oldCartID,'orderid':orderID}});
+		showContent('customer',{'show':'invoice','uriParams':{'cartid':orderCartID,'orderid':orderID}});
 		});
 	}
 
 				},
 			onError : function(rd)	{
 				$('body').hideLoading();
-				$('#globalMessaging').anymessage({'message':rd});
+				$('#globalMessaging').anymessage(rd);
 
 _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occured. ('+d['_msg_1_id']+')']);
 
@@ -281,8 +276,9 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 //order notes is NOT validated
 //there are six validated fields, so summing up the values will = 6 if all panels pass.
 			checkout : function($form)	{
-				var r = false; //what is returned. Either true or false.
-				if($form)	{
+				var r = undefined; //what is returned. Either true or false.
+				if(app.u.buyerIsAuthenticated())	{r = 1}
+				else if($form)	{
 					
 					var formObj = $form.serializeJSON(), //done here and passed into validation funcitons so serialization only occurs once. (more efficient)
 					$fieldsets = $('fieldset[data-app-role]',$form), //The number of fieldsets. must match value of sum to be valid.
@@ -307,7 +303,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							}
 						});
 					
-					//errors would only be set if something went wrong in validation, not for missing fields which are handled within the individual panel validation.
+					
 					if(errors != '')	{
 						r = false;
 						$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, the following errors occured:<br>'+errors,'gMessage':true});
@@ -324,13 +320,13 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 					r = false;
 					$('#globalMessaging').anymessage({'message':'In orderCreate.validate.checkout, $form was not passed.','gMessage':true});
 					}
-				app.u.dump("validate.checkout: "+r);
+
 				return r;
 				}, //isValid
 //validation function should be named the same as the data-app-role of the fieldset. 
 
 			chkoutPreflight : function($fieldset,formObj)	{
-				var valid = 0; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
+				var valid = undefined; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
 				
 				if($fieldset && formObj)	{
 					if(app.u.validateForm($fieldset))	{valid = 1;} //the validateForm field takes care of highlighting necessary fields and hints.
@@ -344,7 +340,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutPreflightFieldset
 
 			chkoutAccountCreate : function($fieldset,formObj)	{
-				var valid = 0; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
+				var valid = undefined; //used to return validation state. 0 = false, 1 = true. integers used to sum up panel validation.
 				
 				if($fieldset && formObj)	{
 					if(!formObj['want/create_customer'])	{valid = 1}
@@ -366,7 +362,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				
 //make sure a shipping method is selected
 			chkoutMethodsShip : function($fieldset,formObj)	{
-				var valid = 0;
+				var valid = undefined;
 				if($fieldset && formObj)	{
 					if($("[name='want/shipping_id']:checked").length)	{
 						if(app.u.validateForm($fieldset)){valid = 1;}
@@ -387,7 +383,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				
 //in addition to selecting a pay option, certain extra fields may be present and must be checked for.
 			chkoutMethodsPay : function($fieldset,formObj)	{
-				var valid = 0;
+				var valid = undefined;
 				if($fieldset && formObj)	{
 					if($('[name="want/payby"]:checked',$fieldset).length)	{
 						if(app.u.validateForm($fieldset))	{valid = 1;}
@@ -407,16 +403,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutPayOptionsFieldset
 				
 			chkoutAddressBill: function($fieldset,formObj)	{
-				var valid = 0;
+				var valid = undefined;
 
 				if($fieldset && formObj)	{
-//if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
-					if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@bill'] && app.data.buyerAddressList['@bill'].length)	{
-						if(formObj['bill/shortcut'])	{valid = 1}
-						else	{
-							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
-							}
-						}
+					
+					if(formObj['bill/shortcut'])	{valid = 1}
 					else	{
 
 //handle phone number input based on zGlobals setting.
@@ -451,18 +442,12 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				}, //chkoutBillAddressFieldset
 				
 			chkoutAddressShip: function($fieldset,formObj)	{
-				var valid = 0;
+				var valid = undefined;
 
 				if($fieldset && formObj)	{
 					
 					if(formObj['want/bill_to_ship'])	{valid = 1}
-//if the buyer is logged in AND has pre-existing billing addresses, make sure one is selected.
-					else if(app.u.buyerIsAuthenticated() && app.data.buyerAddressList && app.data.buyerAddressList['@ship'] && app.data.buyerAddressList['@ship'].length)	{
-						if(formObj['ship/shortcut'])	{valid = 1}
-						else	{
-							$fieldset.anymessage({'message':'Please select the address you would like to use (push the checkmark button)'});
-							}
-						}
+					else if(formObj['ship/shortcut'])	{valid = 1}
 					else	{
 
 //postal and region are only required for domestic orders.	
@@ -726,7 +711,7 @@ an existing user gets a list of previous addresses they've used and an option to
 							app.u.dump(" -> payment method HAS supplemental inputs");
 							$radio.closest("[data-app-role='paymentMethodContainer']").append($supplemental);
 							}
-//NOTE -> this impacts the summary panel and should be moved. 
+						
 						if(formObj['want/payby'] == 'PO')	{
 							$("[data-app-role='referenceNumber']",$fieldset).empty(); //nuke the input. the 'name' is shared w/ PO supplemental input
 							}
@@ -871,7 +856,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 //triggered on specific address inputs. When an address is updated, several things could be impacted, including tax, shipping options and payment methods.
 			execAddressUpdate : function($input)	{
-				$input.off('change.execAddressUpdate').on('change.execAddressUpdate',function(){
+				$input.off('blur.execAddressUpdate').on('blur.execAddressUpdate',function(){
 					var obj = {};
 					obj[$input.attr('name')] = $input.val();
 					//if bill/ship are the same, duplicate data in both places OR shipping methods won't update.
@@ -881,7 +866,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 					app.calls.cartSet.init(obj); //update the cart
 					app.ext.orderCreate.u.handleCommonPanels($input.closest('form'));
 					app.model.dispatchThis('immutable');
-
 					})
 				}, //execAddressUpdate
 
@@ -1010,7 +994,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 					else	{
 					
 						if(app.ext.orderCreate.validate.checkout($form))	{
-							$('body').showLoading({'message':'Creating order...'});
 							app.ext.orderCreate.u.saveAllCheckoutFields($form);
 							app.ext.cco.u.buildPaymentQ();
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
@@ -1214,22 +1197,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 			tagAsBillToShip : function($cb)	{
 				$cb.anycb();
 				$cb.off('change.tagAsBillToShip').on('change.tagAsBillToShip',function()	{
-					var $form = $cb.closest('form');
-
 					app.calls.cartSet.init({'want/bill_to_ship':($cb.is(':checked')) ? 1 : 0},{},'immutable'); //adds dispatches.
-//when toggling back to ship to bill, update shipping zip BLANK to re-compute shipping.
-// re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
-// originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
-					if($cb.is(':checked'))	{
-						app.calls.cartSet.init({'ship/postal': ""},{'callback':function(rd){
-							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-							}},'immutable'); //update ship zip to bill zip.
-						}
-					else	{
-						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);
-						}
 					app.model.destroy('cartDetail');
-					app.ext.orderCreate.u.handleCommonPanels($form);
+					app.calls.cartDetail.init({'callback':function(rd){
+						app.ext.orderCreate.u.handlePanel($cb.closest('form'),'chkoutAddressShip',['handleDisplayLogic']);
+						}},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				}

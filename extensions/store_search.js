@@ -8,8 +8,8 @@
 
      http://www.apache.org/licenses/LICENSE-2.0
 
-   distributed under the License is distributed on an "AS IS" BASIS,
    Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
@@ -457,41 +457,44 @@ P.parentID - The parent ID is used as the pointer in the multipage controls obje
 					}
 				return $r.children();
 				},
-			handleElasticSimpleQuery : function(keywords,tagObj)	{
-				var qObj = {}; //query object
-				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
-				qObj.size = 250;
-//				qObj.query =  {"query_string" : {"query" : keywords}};
-				qObj.query =  {
-					"filtered" : {
-						"query" : {"query_string" : {"query" : keywords}},
-						"filter" : {"not" : { "term" : {"tags":"IS_DISCONTINUED"}}}
-					}
-				};
-				if(typeof tagObj != 'object')	{tagObj = {}};
-				tagObj.datapointer = "appPublicSearch|"+keywords
-				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
-				app.model.dispatchThis();
-				},
+			
+	
+//Adds elastic search params to a new raw elasticsearch object
+//Example of an obj would be {'filter':{'term':{'tags':'IS_BESTSELLER'}}} -- IE a full query or filter- just adding the required params here.
+			buildElasticRaw : function(elasticsearch) {
+				var es = $.extend(true, {}, elasticsearch);
 				
-			handleElasticQueryFilterByAttributes : function(keywords, attributes, tagObj) {
-				var qObj = {}; //query object
-				qObj.type = 'product';
-				qObj.mode = 'elastic-native';
-				qObj.size = 250;
-//				qObj.query =  {"query_string" : {"query" : keywords, "fields" : attributes}};
-				qObj.query =  {
-					"filtered" : {
-						"query" : {"query_string" : {"query" : keywords, "fields" : attributes}},
-						"filter" : {"not" : { "term" : {"tags":"IS_DISCONTINUED"}}}
+				es.type = 'product';
+				es.mode = 'elastic-native';
+				es.size = 250;
+				
+				return es;
+			},
+			
+//Example of an obj would be: {'query':'some search string'} OR {'query':'some search string','fields':'prod_keywords'}
+			buildElasticSimpleQuery : function(obj)	{
+				var query = {}; //what is returned. false if error occurs.
+				if(obj && obj.query)	{
+					query.type = 'product';
+					query.mode = 'elastic-native';
+					query.size = 250;
+					query.query =  {"query_string" : obj};
 					}
-				};
-				if(typeof tagObj != 'object')	{tagObj = {}};
-				tagObj.datapointer = "appPublicSearch|"+keywords+"|"+attributes;
-				app.u.dump(" --> datapointer for filterByAttributes query: "+tagObj.datapointer);
-				app.ext.store_search.calls.appPublicSearch.init(qObj,tagObj);
+				else	{
+					$('#globalMessaging').anymessage({'message':'In store_search.u.buildElasticSimpleQuery, obj.query was empty. ',gMessage:true});
+					query = false;
+					}
+				return query;
+				},
+
+//not used by quickstart anymore. Still in use by analyzer and admin product editor.
+			handleElasticSimpleQuery : function(keywords,_tag)	{
+				var qObj = this.buildElasticSimpleQuery({'query':keywords});
+				_tag = _tag || {};
+				_tag.datapointer = "appPublicSearch|"+keywords;
+				var r = app.ext.store_search.calls.appPublicSearch.init(qObj,_tag);
 				app.model.dispatchThis();
+				return r;
 				}
 				
 			} //util

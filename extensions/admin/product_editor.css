@@ -43,22 +43,6 @@
 	text-indent:6px;
 	}
 
-<<<<<<< HEAD
-#panelContents_general textarea	{width:80%;} /* override brians cols='80' */
-
-/* panel specific styles */
-
-.prodEditGeneralPanelLeftCol	{width:1%; padding-right:12px;}
-
-
-@media screen and (max-width: 1180px) {
-/* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-	#panel_general .alignedLabels label span	{display:block; width:100%;}
-	#panel_general .alignedInputs textarea,
-	#panel_general .alignedInputs input[type=email],
-	#panel_general .alignedInputs input[type=text]	{width:100%;}
-	}
-=======
 #productListTab .tab span	{
 	display:block; /* block required for rotation, at least in FF.  */
 	-webkit-transform: rotate(90deg);/* Safari */
@@ -69,4 +53,3 @@
 	}
 #productListTab .productContainer	{overflow:auto; width:400px; height:300px;}
 #productListTab table	{font-size:.75em; width:100%;}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6

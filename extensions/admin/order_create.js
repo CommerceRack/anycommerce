@@ -299,11 +299,7 @@ if server validation passes, the callback handles what to do next (callback is m
 				if(app.data[tagObj.datapointer] && app.data[tagObj.datapointer].CID)	{
 					//Match FOund.
 					app.calls.cartSet.init({"customer/cid":app.data[tagObj.datapointer].CID});
-<<<<<<< HEAD
-					app.ext.admin.calls.customer.adminCustomerGet.init(app.data[tagObj.datapointer].CID,{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
-=======
 					app.ext.admin.calls.adminCustomerDetail.init({'CID':app.data[tagObj.datapointer].CID},{'callback':'startCheckout','extension':'convertSessionToOrder'},'immutable');
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -1190,22 +1186,6 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump(" -> P: "); app.u.dump(P);
 				$('#printContainer').empty();
 				$('body').showLoading(); //indicate to client that button was pressed.
-<<<<<<< HEAD
-				app.calls.appProfileInfo.init({'profile':P.data.profile},{},'immutable');				
-				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':'appProfileInfo|'+P.data.profile,'extension':'convertSessionToOrder','templateID':P.data.type.toLowerCase()+'Template'});
-				app.model.dispatchThis('immutable');
-				},
-			
-			addToCart : function(formObj){
-				if(formObj.price != ""){}
-				else{delete formObj.price} //if no price is, do not pass blank or the item will be added with a zero price.
-				app.ext.convertSessionToOrder.calls.cartItemsAdd.init(formObj,{}); //add the item first. now get data to update panels.
-				app.ext.store_checkout.calls.appPaymentMethods.init();
-				app.ext.store_checkout.calls.appCheckoutDestinations.init();
-				app.ext.store_checkout.calls.cartShippingMethodsWithUpdate.init('updateCheckoutShipMethods');
-				app.calls.refreshCart.init({"callback":"updateCheckoutOrderContents","extension":"convertSessionToOrder"},'immutable');
-				app.model.dispatchThis('immutable');
-=======
 				var profileDatapointer = undefined;
 				if(P.data.profile)	{
 					app.calls.appProfileInfo.init({'profile':P.data.profile},{},'immutable');
@@ -1226,7 +1206,6 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 				else	{
 					app.u.throwGMessage("In order_create.a.printOrder, either profile ["+P.data.profile+"] or domain ["+P.data.domain+"] is required.");
 					}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 				}
 
 
@@ -1408,13 +1387,8 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 				if(app.data.cartDetail.bill && app.data.cartDetail.bill.email)	{
 					$('#data-bill_email').val(app.data.cartDetail['bill/email']);
 					}
-<<<<<<< HEAD
-				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid])	{
-					$('#data-bill_email').val(app.data['adminCustomerGet|'+app.data.cartDetail.customer.cid]['%CUSTOMER']._EMAIL);
-=======
 				else if(app.data.cartDetail.customer && app.data.cartDetail.customer.cid && app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid])	{
 					$('#data-bill_email').val(app.data['adminCustomerDetail|'+app.data.cartDetail.customer.cid]._EMAIL);
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					}
 				else	{}; //no email recorded yet.
 
@@ -1901,17 +1875,6 @@ the refreshCart call can come second because none of the following calls are upd
 					}
 				} //payMethodsAsRadioButtons
 			}, //renderFomrats
-<<<<<<< HEAD
-
-		e : {
-			
-			"cartItemAdd" : function($btn)	{
-				$btn.button();
-				$btn.off('click.cartItemAdd').on('click.cartItemAdd',function(){
-					var $button = $("<button>").text("Add to Order").button().on('click',function(){
-						$form = $('form','#chooserResultContainer');
-						});
-=======
 
 		e : {
 			"cartItemAddFromForm" : function($btn)	{
@@ -1967,7 +1930,6 @@ else	{
 
 						});
 
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 					app.ext.admin.a.showFinderInModal('CHOOSER','','',{'$buttons' : $button})
 					});
 				}

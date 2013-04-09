@@ -10,12 +10,6 @@ app.rq.push(['extension',0,'orderCreate','extensions/checkout_mobile/extension.j
 app.rq.push(['extension',0,'cco','extensions/cart_checkout_order.js']);
 
 
-<<<<<<< HEAD:init.js
-app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_passive/extension.js']);
-//app.rq.push(['extension',0,'convertSessionToOrder','extensions/checkout_nice/extension.js']);
-app.rq.push(['extension',0,'store_checkout','extensions/store_checkout.js']);
-=======
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-wholesale-init.js
 app.rq.push(['extension',0,'store_prodlist','extensions/store_prodlist.js']);
 app.rq.push(['extension',0,'store_navcats','extensions/store_navcats.js']);
 app.rq.push(['extension',0,'store_search','extensions/store_search.js']);
@@ -57,22 +51,7 @@ app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
 		if($tabContainer.length)	{
 			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
 			else	{
-<<<<<<< HEAD:init.js
-				$("div.tabContent",$tabContainer).each(function (index) {
-					$(this).attr("id", "spec_"+safePID+"_" + index.toString());
-					})
-				$(".tabs li a",$tabContainer).each(function (index) {
-					$(this).attr('id','href_'+safePID+"_" + index.toString());
-					if( $.browser.msie){
-						$(this).attr("href", "#spec_"+safePID+"_" + index.toString());            
-					} else {
-						$(this).attr("href", "app://#spec_"+safePID+"_" + index.toString());            
-					}
-					});
-				$tabContainer.localtabs();
-=======
 				$tabContainer.anytabs();
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-wholesale-init.js
 				}
 			}
 		else	{} //couldn't find the tab to tabificate.

@@ -61,7 +61,7 @@
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 3a. change any of these variables to match your project:
-var TESTING_DOMAIN = "www.toywars.com";
+var TESTING_DOMAIN = "www.zoovy.com";
 var PROJECT_DIRECTORY = process.cwd() + "/../..";		// the root directory where your project files are located
 
 // 3b. run: node nodeproxy.js
@@ -148,13 +148,11 @@ http.createServer(function(req, res) {
 		return;
 		}
 
-	console.log("!!!!!!!!!!!!!!!!!! FILE: "+filename+"  ("+content_type+")");
 	var content_type = mime.lookup(filename); 
 	if ((content_type == "text/html") || (content_type == "text/css")) {
 		// tell the webbrowser the files we're working on are utf8 by appending to Content-Type
 		content_type = content_type + "; charset=utf-8";
 		}
-	console.log("!!!!!!!!!!!!!!!!!! FILE: "+filename+"  ("+content_type+")");
 	res.writeHead(200, {"Content-Type": content_type});
 	res.write(file, "binary");
 	res.end();
@@ -232,7 +230,7 @@ var proxyWebServer = http.createServer(function (req, res) {
   console.log('REQ HOST:'+uri.host);
   if (uri.host == TESTING_DOMAIN) {
 	// we'll send this to the local server
-	console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
+	//console.log("!!!!!!!!!!!!!!!!!!** HTTPS MAGIC **!!!!!!!!!!!!!!!!!!!!!!!!!");
 	regularProxy.proxyRequest(req, res, {
 		host: '127.0.0.1',
 		port: 9000		
@@ -240,7 +238,6 @@ var proxyWebServer = http.createServer(function (req, res) {
 	}
   else {
 	// a regular connection to another non-local host
-	console.log("!!!!!!!!!!!!!!!!!!** HTTP HANDOFF **!!!!!!!!!!!!!!!!!!!!!!!!!");
 	regularProxy.proxyRequest(req, res, {
 		host: uri.hostname,
 		port: uri.port || 80		

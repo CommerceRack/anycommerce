@@ -101,14 +101,11 @@ order detail
 
 .orderDetails .shipAddressContainer .email	{display:none;}
 
-<<<<<<< HEAD
-=======
 .orderMailMenuList a	{text-decoration:none; padding:3px 6px; font-size:.75em;} /* the list of emails in the dropdown for send mail */
 
 /* compensate for some default styling to make supplemental contain wrap up right against the corresponding payment type */
 #adminOrdersPaymentMethodsContainer .labelsAsBreaks label	{margin-bottom:0;}
 ul.paybySupplemental	{margin-top:0;}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* payment panel */
 

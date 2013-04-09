@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201314.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201312.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.sporks.zoovy.com/" //used ONLY if protocol is file: (for testing)
@@ -407,6 +407,7 @@ this will likely become more flexible in the future. ###
 <table class='prodViewerContainer'>
 <tr>
 	<td class='imageContainer'>
+<!--	<img src='blank.gif' id='bobWasHere' class='prodBigImage' data-bind='var: product(zoovy:prod_image1); format: magicZoomPlus; extension: magicToolBox_mzp;' width='340' height='340' /> -->
 
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
 
@@ -447,7 +448,7 @@ this will likely become more flexible in the future. ###
 	<div class="socialLinks"></div>
 
 
-	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
+	<table class='marginBottom fullWidth gridTable' app-data-role='childrenSiblingsContainer'>
 		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
 	</table>
 
@@ -523,7 +524,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodVideo'>
-		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+		<div id="prodVideo" data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
 	</div>
 
 	<div class='tabContent' data-anytab-content='prodAccessories'>
@@ -584,7 +585,7 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
 
-	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	<div id="prodDesc" data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 
 	</td>
 </tr>
@@ -786,8 +787,8 @@ if you change these, you should move them above this comment so that when you (o
 	<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
-<!-- before restoring this, test cuz news form on left was causing some conflicts
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
+<!-- before restoring this, test cuz news form on left was causing some conflicts -->
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
 		<li><a href='#customer?show=myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders'>Order History</a></li>
@@ -1398,9 +1399,7 @@ The 'data-action' attribute is used to assign an onclick.
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<table  class='listStyleNone lineItemProdlist'>
-		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
-	</table>
+	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
 	</td>
 </tr>
 </table>

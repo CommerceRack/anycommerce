@@ -1,9 +1,92 @@
-body,html	{font-size:100%;}
+body,html	{font-size:100%; background:#B7A58B; margin:0px; padding:0px;  font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;}
+@font-face {
+  font-family: 'Anton';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Anton'), url(http://themes.googleusercontent.com/static/fonts/anton/v3/tilmJBBU81h1G7ZsdY3Hmw.woff) format('woff');
+}
+@font-face {
+	font-family: 'Conv_BebasNeue';
+	src: url('fonts/BebasNeue.eot');
+	src: local('☺'), url('fonts/BebasNeue.woff') format('woff'), url('fonts/BebasNeue.ttf') format('truetype'), url('fonts/BebasNeue.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+@font-face {
+	font-family: 'Conv_HelveticaNeueLTPro-Roman';
+	src: url('fonts/HelveticaNeueLTPro-Roman.eot');
+	src: local('☺'), url('fonts/HelveticaNeueLTPro-Roman.woff') format('woff'), url('fonts/HelveticaNeueLTPro-Roman.ttf') format('truetype'), url('fonts/HelveticaNeueLTPro-Roman.svg') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
 
 #appTemplates {display:none;} /* container for all templates. should be hidden */
 
-#appPreView	{width:550px; margin:0 auto;}
-
+progress, progress[role] {
+    -moz-appearance: none;
+    background-size: auto auto;
+    border: medium none;
+}
+progress[role]:after {
+    background-image: none;
+}
+progress[role] strong {
+    display: none;
+}
+progress, progress[role][aria-valuenow] {
+    background: none repeat scroll 0 0 #938269 !important;
+}
+progress {
+    color: #BD0000;
+}
+progress::-moz-progress-bar {
+    background: none repeat scroll 0 0 #BD0000;
+}
+progress[aria-valuenow]:before {
+    background: none repeat scroll 0 0 #BD0000;
+}
+div#appPreView {
+   /* border-radius: 8px 8px 8px 8px;
+    box-shadow: 0 0 6px 2px #555555;*/
+    margin: 100px auto;
+    padding: 20px;
+    width: 462px;
+}
+div#appPreView table {
+    margin: 0 auto;
+}
+div#appPreView table div#loader {
+    text-align: center;
+	color: #63503B;
+    font-size: 12px;
+}
+div#appPreView table div#loader span {
+    color: #63503B;
+    font-size: 12px;
+}
+div#appPreView h3{ font-size:12px; color:#63503B;}
+div#appPreView table div#loader > div {
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    height: 31px;
+    width: 459px;
+}
+div#appPreView table div#loader > div > div.alignCenter {
+    border-color: #494134 #655948 #C4BAAD;
+    border-style: solid;
+    border-width: 1px;
+    height: 29px;
+    width: 457px;
+}
+div#appPreView table div#loader > div.alignCenter > progress {
+    border-color: #352820 #352820 #c7baaa #352820;
+    border-style: solid;
+    border-width: 2px;
+    height: 27px;
+    width: 455px;
+}
 
 /*
 loading class. add class to your templates if you want a loading graphic to appear while data is requested. add only to the parent element. 
@@ -11,6 +94,8 @@ loadingBG classname is removed once template is rendered.
 note - wait should only be used in cases where the entire template is being reloaded. the class is NOT automatically removed ever.
 note - background- are use instead of background in case element this is applied to has a bgcolor and it's !important. (like a modal parent)
 */
+
+
 .loadingBG	{background-image:url(loading.gif) !important; background-repeat: no-repeat !important; background-position: center center; min-height:100px !important; min-width:100px;}
 li.loadingBG, .wait	{background:url(wait.gif) no-repeat top center !important; min-height:20px !important; min-width:20px;}
 span.wait	{display:inline-block;}
@@ -32,7 +117,7 @@ td.valignMiddle	{vertical-align: middle;}
 
 
 /* feel free to delete these or override in your own .css file */
-h1, h2, h3, h4, h5, h6	{padding:0; margin:0;}
+h1, h2, h3, h4, h5, h6	{padding:0; margin:0; font-family:}
 p	{margin:0 0 12px 0;}
 
 /* chrome and safari add an outer border/glow to the input in focus. this removes it. */
@@ -54,8 +139,423 @@ and offMenu is toggle off, hiding the change button.
 .onMenu	{display:none;}
 .offMenu	{}
 
-
+.cb{ clear:both;}
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
+
+#mainContentArea{ background:#b7a58b;}
+.sliderM{width:948px; margin:20px auto;}
+.bannerS{ width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
+.rightB{ float:left; width:300px;box-shadow:0px 0px 9px #000;}
+    box-shadow: 1px 1px 5px 1px #222222;
+    height: 216px;
+    margin-left: 0;
+    margin-right: 20px;
+    position: relative;
+    text-align: center;
+    width: 216px;}
+div#container
+	{
+		margin: 0px auto;
+		position: relative;
+		width: 1020px;
+		
+	}
+		div#container div#topNav
+		{
+			background: url(images/background-top-nav.png) repeat-x;
+			height: 30px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#topNav div#topNavContent
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				height: 30px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+			div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p
+			{
+				float: left;
+				position: relative;
+			}
+			div#container div#topNav div#topNavContent img
+			{
+				margin-top: 7px;
+				padding-right: 11px;
+			}
+			div#container div#topNav div#topNavContent img:first-child
+			{
+				margin-left: 12px;
+			}
+			div#container div#topNav div#topNavContent p
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				font-size: 12px;
+				margin-top: 8px;
+			}
+			div#container div#topNav div#topNavContent p:not(:last-child)
+			{
+				padding-right: 51px;
+			}
+				div#container div#topNav div#topNavContent p a
+				{
+					color: #FFFFFF;
+					font-weight:bold;
+				}
+		div#container div#header
+		{
+			background: url(images/background-header.png) repeat-x;
+			height: 124px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#header div#headerContent
+			{
+				height: 124px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div#header div#headerContent img#logo
+				{
+					cursor: pointer;
+					left: 10px;
+					position: relative;
+					top: 11px;
+				}
+				div#container div#header div#headerContent input#txtSearch
+				{
+					height: 33px;
+					left: 470px;
+					position: absolute;
+					top: 45px;
+					width: 160px;
+					color:#999;
+					font-size:14px;
+					padding:0 10px;
+				}
+				#btnTopNavSearch
+				{	
+					cursor: pointer;
+					height: 33px;
+					left: 617px;
+					position: absolute;
+					top: 47px;
+					width: 35px;
+				
+					
+				}
+				div#container div#header div#headerContent div#headerFreeShipping
+				{
+					background: url(images/header-free-shipping.png);
+					height: 54px;
+					left: 730px;
+					position: absolute;
+					width: 220px;
+					top: 20px;
+				}
+					div#container div#header div#headerContent div#headerFreeShipping img
+					{
+						left: -20px;
+						position: absolute;
+						top: -10px;
+					}
+				div#container div#header div#headerContent a#btnSocialFacebook
+				{
+					cursor: pointer;
+					left: 776px;
+					position: absolute;
+					top: 94px;
+				}
+				div#container div#header div#headerContent a#btnSocialTwitter
+				{
+					cursor: pointer;
+					left: 823px;
+					position: absolute;
+					top: 94px;
+				}
+				div#container div#header div#headerContent a#btnSocialYoutube
+				{
+					cursor: pointer;
+					left: 869px;
+					position: absolute;
+					top: 94px;
+				}				
+				div#container div#header div#headerContent a#btnSocialMail
+				{
+					cursor: pointer;
+					left: 916px;
+					position: absolute;
+					top: 94px;
+				}
+
+div#container div#footer
+		{
+			background: url(images/background-footer.png);
+			height: 358px;
+			width: 100%;
+		}
+			div#container div#footer div#footerContent
+			{
+				height: 358px;
+				margin: 0px auto;
+				width: 960px;
+			}
+				div#container div#footer div#footerContent div#footerLinks
+				{
+					height: 290px;
+					width: 960px;
+				}	
+					div#container div#footer div#footerContent div#footerLinks > ul
+					{
+						float: left;
+						padding-right: 52px;
+						margin-top:60px;
+						width: 150px;
+					}
+						div#container div#footer div#footerContent div#footerLinks > ul li
+						{
+							color: #FFFFFF;
+							font-size: 14px;
+							list-style: none;
+						}		
+						div#container div#footer div#footerContent div#footerLinks > ul li:not(:first-child)
+						{
+							padding-top:8px;
+						}			
+							div#container div#footer div#footerContent div#footerLinks > ul li a
+							{
+								color: #FFFFFF;
+								text-decoration: none;
+							}
+								div#container div#footer div#footerContent div#footerLinks > ul li a:hover
+								{
+									text-decoration: underline;
+								}
+						div#container div#footer div#footerContent div#footerLinks > ul li:first-child, div#container div#footer div#footerContent div#footerSubscribe table tr td:first-child
+						{
+							color: #666666;
+							font-family:'Conv_BebasNeue',Sans-Serif;
+							font-size: 30px;
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe 
+						{
+							float: left;
+							position: relative;
+							top:60px;
+						}						
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table
+						{
+
+						}					
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td
+						{
+							
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td
+						{
+							padding-top: 6px;
+						}						
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input
+							{
+								height: 35px;
+								width: 177px;
+								padding:0 10px;
+								color:#999999;
+							}
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe
+							{
+								cursor: pointer;
+								margin:4px 0 0;
+								
+							}
+					div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage
+					{
+						left: 1px;
+						opacity: 1;
+						position: absolute;
+						top: 9px;
+						width: 312px;
+						z-index: 1000;
+					}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin
+						{
+							left: 280px;
+							position: absolute;
+							top: 10px;
+							z-index: 1001;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					color: #FFFFFF;
+					width: 960px;
+				}
+					div#container div#footer div#footerContent div#copyright p
+					{
+						font-family: Helvetica;
+						font-size: 12px;
+						margin-top: 27px;
+						text-align: center;
+					}
+					div#container div#footer div#footerContent div#copyright p a
+					{
+						font-weight: bold;
+						text-decoration: none;
+					}					
+						div#container div#footer div#footerContent div#copyright p a:hover
+						{
+							text-decoration: underline;
+						}					
+						div#container div#footer div#footerContent div#copyright p a:visited
+						{
+							color: #FFFFFF;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					height: 68px;
+					width: 960px;
+				}
+				
+
+
+div#container div.nav
+		{
+			background: url(images/background-nav.png) repeat-x;
+			height: 50px;
+			position: relative;
+			width: 100%;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;				
+		}
+			div#container div.nav div.navContent
+			{
+				height: 50px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div.nav div.navContent > ul
+				{
+					height: 50px;
+					margin: 0px auto;
+					width: 850px;
+					padding:0px;
+				}
+					div#container div.nav div.navContent > ul > li
+					{
+						float: left;
+						height: 50px;
+						list-style: none;
+						overflow: show;
+						padding-left: 20px;
+						padding-right: 20px;
+						line-height:16px;
+					}				
+						div#container div.nav div.navContent > ul > li > a
+						{
+							color: #FFFFFF;
+							font-family: "Bebas Neue","Anton", Arial, Helvetica, sans-serif;
+							font-size: 20px;
+							/*font-weight: bold;*/
+							position: relative;
+							text-decoration: none;
+							top: 18px;
+						}
+						.no-fontface div#container div.nav div.navContent > ul > li > a
+						{
+							font-family: Arial, Helvetica, sans-serif;
+							font-size: 14px;						
+						}
+							div#container div.nav div.navContent > ul > li > a:hover
+							{
+								
+							}
+						div#container div.nav div.navContent ul li div.subMenu
+						{
+							background-color: #FFFFFF;
+							display: none;
+							height: 0px;
+							left: 25px;
+							position: absolute;
+							top: 50px;
+							width: 905px;
+							z-index: 2000;
+							
+							-moz-box-shadow:    0px 1px 5px 1px #222222;
+							-webkit-box-shadow: 0x 1px 5px 1px #222222;
+							box-shadow:         0px 1px 5px 1px #222222;								
+						}
+							div#container div.nav div.navContent ul li div.subMenu > div.dropDownListHolder
+							{
+								height: 100%;
+								position: relative;
+								width: 100%;
+							}						
+							div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *
+							{
+								cursor: default;
+								position: relative;
+							}
+							div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul
+							{
+								float: left;
+								list-style-position: inside;
+								list-style-type: disc;
+								padding: 20px 15px 20px 25px;
+								z-index: 2002;
+							}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+								{
+									color: #770000;
+									font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;
+									font-size: 12px;
+								}					
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li
+								{								
+									
+									font-size:18px;
+									list-style-type: none;
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before
+								{
+									content: "» ";
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child
+								{
+									color: #000000;
+									font-family:'Conv_BebasNeue',Sans-Serif;
+									font-size:18px;
+									list-style: none;
+									margin-bottom:7px;
+								}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+									{
+										cursor: pointer;
+										text-decoration: none;
+									}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover
+									{									
+										text-decoration: underline;
+									}
+									div.dropDownListHolder > a
+									{
+										bottom: 0px;
+										clear: both;
+										display: none;
+										position: absolute;
+										right: 0px; 		
+										z-index: 2001;								
+									}
+
+
+
+
 
 
 
@@ -63,6 +563,11 @@ and offMenu is toggle off, hiding the change button.
 /* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
 
 
+.sortby{ margin:0px 0 0 30px; padding:0px;float: left; background:#ffffff; width:220px; list-style:none;}
+.sortby li{ line-height:25px; padding:0 0 0 30px;}
+.sortby li a{ font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; color:#000000; font-size:14px; text-decoration:none; font-weight:bold;}
+.sortby li a span{ font-size:12px; font-weight:normal; color:#707070;}
+.sortby h2{ background: url(images/leftbg.gif) repeat-x; font-size:18px; color:#fff;font-family:'Conv_BebasNeue',Sans-Serif; padding:3px 20px;}
 
 /******* positioning *******/
 
@@ -163,13 +668,17 @@ and offMenu is toggle off, hiding the change button.
 /* used in order history and faq (possibly other places) in a format similar to an accordian, but more than one panel can be open. */
 .appAccordianesque .ui-accordion-header {padding:3px 24px;}
 
-
+#companyNav h1{ font-size:30px; font-family:'Conv_BebasNeue',Sans-Serif; color:#770000; margin-bottom:15px;}
+#companyNav ul{ background:#c9bca8; width:161px; padding:30px; line-height:13px;}
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
-.mainColumn	{width:75%;}
-.sideline	{float:right; width:20%; margin:0 0 24px 0px;}
-.sideline a	{padding:5px 0; text-decoration:none; display:block;} /* recommend at least 5px vert padding for mobile/pad */
+.mainColumn	{width:67%; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; margin-left:30px; padding-top:18px;}
+.mainColumn h1{ font-family:'Conv_BebasNeue',Sans-Serif; font-size:36px;}
+.sideline	{float:right; width:20%; margin:24px 50px 24px;}
+.sideline a	{padding:5px 0; text-decoration:underline; display:block; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; color:#000000; font-size:14px;}
+.sideline a:hover	{text-decoration:none;}
+ /* recommend at least 5px vert padding for mobile/pad */
 
 
 
@@ -197,7 +706,9 @@ and override using classes or id's as needed.
 .quickView	{position:absolute; top:5px; right:5px; z-index:1001;} /* jqui modal has zindex 1002 */
 
 /* over rides - height and width ensure each row is the same height. percentages could be used for width */
-.productList > li	{width:150px; height:250px; position:relative;}
+/*
+ .productList > li	{width:150px; height:250px; position:relative;}
+ */
 .lineItemProdlist > li	{position:relative; display:block; padding:12px 0; width:100% !important; height:auto !important; border-bottom:1px dotted #efefef;} /* single column product list - used in cart, checkout, etc. productList class is also defined in these cases. */
 
 .lineItemProdlist .prodThumb	{margin-right:12px;}
@@ -205,13 +716,26 @@ and override using classes or id's as needed.
 .categoryList > li	{width:150px; height:200px;}
 
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
-
+.midmain{ margin:0px auto; width:948px;}
+.midmain .productList li{font-size:.8em;border: 2px solid #FFFFFF;
+    box-shadow: 1px 1px 5px 1px #222222;
+	background:#fff;
+    height: 225px;
+    margin-left: 0;
+    margin-right: 20px;
+    position: relative;
+    text-align: center;
+    width: 213px;}
+.midmain .productList li img.prodThumb{ width:213px;}
+.midmain .prodThumbContainer{ width:215px !important;}
 .productList li, .categoryList li	{font-size:.8em;}
-
+.productList h5{ min-height:50px; width:180px; margin:10px auto 0;}
+.productList h6{font-size:18px; width:100px; float:left;}
+.moreDetails{ float:right; margin:0 2px 0 0;}
 .productList h4, .categoryList h4	{font-size:1em;}
-.productList h5, .categoryList h5	{font-size:.9em;}
-.productList h6, .categoryList h6	{font-size:.85em;}
-
+.categoryList h5	{font-size:.9em;}
+.categoryList h6	{font-size:.85em;}
+.productList h6 .cents{ font-size:11px; vertical-align:super;}
 
 /* multpage header for lists (product list) - most styling handled by jqueryUI */
 
@@ -230,21 +754,13 @@ and override using classes or id's as needed.
 
 
 
-/* for variations */
-
-.variation	{margin-bottom:6px;} /* class applied to div containing a variation group */
-.pogType_radio span label	{display:block; margin-bottom:4px; margin-left:12px;}
-
-
-
-
 /***************************************************
 
 PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
-
-.prodViewerContainer	{width:100%;}
+#container{ width:1000px; margin:0px auto;}
+.prodViewerContainer	{width:948px; margin:0px auto;}
 
 .breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 
@@ -253,24 +769,36 @@ PRODUCT DETAIL PAGE (productTemplate)
 .prodViewerContainer .prodThumbs div	{float:left; margin:12px 12px 0 0;}
 
 
-.prodSummaryContainer	{width:90%;}
-
-
+.prodSummaryContainer	{width:382px;}
+.prodSummaryContainer h1{ font-size:18px; margin-bottom:14px;}
+.prodViewerContainer .addToCartButton{ padding:0px; border:none !important; background:none !important;}
+.basePrice span{ font-size:10px; color:#000000;}
+.RightPcol .prodMSRP span{font-size:10px;}
+.RightPcol{background:#fff; padding:20px; width:180px;}
+.RightPcol h4{float:right; text-align:center;font-size:18px; font-weight:bold;}
+.RightPcol h5{float:left;text-align:center;font-size:18px; color:#999999;}
+.RightPcol .cents{ vertical-align:super;}
+.RightPcol .marginBottom{border-bottom:1px solid #CCCCCC; padding:0 0 15px;}
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
-
+.tabContent{ font-size:12px;}
 /*
 the child list and loading graphic should only show up IF the product is a parent.
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
 */
 .grpType_PARENT	{display:block; margin-bottom:12px;}
 #prodlistChildren li	{width:75px; height:120px; overflow:hidden; margin-left:0;}
-
-.prodViewerAddToCartForm	{margin-bottom:24px;}
+.addcart{background: url("images/buynow.png") no-repeat !important;
+    border: 0 none !important;
+    height: 40px;
+    text-indent: -10000px;
+	margin:-40px 2px 0 0; float:right;
+    width: 106px;}
+.prodViewerAddToCartForm	{margin-bottom:-7px;}
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
-.variation > label:after	{content:":"; padding-right:12px;} /* applies to first label in a group. so no impact on radio labels */
+.prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
-.CRMButtonMenu	{margin:0; padding:0; margin-bottom:12px;}
-
+.CRMButtonMenu	{margin:0; padding:12px 0 0; margin-bottom:0px;text-align:center;}
+.CRMButtonMenu a{ color:#770000; font-size:12px; }
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
 /****** REVIEW GFX - used for review summary and in list of reviews on product detail page ******/
@@ -358,7 +886,7 @@ CUSTOMER PAGES
 #subscribeFormContainer .userInfo div	{margin-bottom:6px;}
 #subscribeFormContainer li	{list-style:none;}
 #subscribeFormContainer .userInfo label, #changePasswordForm label	{width:120px; display:inline-block; margin-right:10px;}
-.subscribeListItem	{display:block; height:30px;}
+.subscriberLists label	{width:300px;}
 
 
 /****** ORDER HISTORY AND INVOICE ******/
@@ -412,14 +940,18 @@ HELP PAGES
 ***************************************************/
 
 /***** CONTACT US ******/
-#contactForm {float:right; margin: 0 0 12px 12px;}
-#contactForm fieldset	{border:1px solid #cccccc; padding:10px;}
-#contactForm div	{margin-bottom:5px}
+#contactForm {float:left; width:300px; margin: 0 0 12px 0px;}
+#contactForm fieldset	{border:1px solid #cccccc; padding:0px;}
+#contactForm div	{margin-bottom:10px}
 #contactForm label	{width:105px; display:inline-block; margin-right:6px; vertical-align:top; text-align:right;}
-#contactForm input, #contactForm textarea	{width:145px;}
-#contactForm textarea	{height:125px;}
-
-
+#contactForm input, #contactForm textarea	{width:280px; height:30px; border:1px solid #A49C92; -moz-box-shadow:    0 1px 3px #555555 inset;
+   -webkit-box-shadow: 0 1px 3px #555555 inset;box-shadow:0 1px 3px #555555 inset; padding:0 10px; color:#999999;}
+#contactForm textarea	{height:135px; padding:10px;}
+#contactContent{ font-size:12px; line-height:20px; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; padding:0 0 0 350px;}
+#contactContent strong{ font-size:14px;}
+#contactContent a{color:#770000;}
+.titlebT{ font-size:12px; margin:10px 0 0 0px;}
+#contactFormMessaging{ margin:10px 0;}
 
 /**** FAQ *****/
 .faqQuestion:before, .faqAnswer:before	{font-size:1.4em; font-weight:bold; padding-right:10px; color:#CCCCCC; display:inline-block;}
@@ -475,8 +1007,7 @@ CHECKOUT
 .addressList address	{float:left; margin:0 12px 12px 0;}
 
 
-.checkoutFormContainer input, checkoutFormContainer select	{margin:2px 6px 2px 0;}
-.checkoutFormContainer input[type='password']	{width:200px;} /* class affects both login password and create account passwords */
+
 
 
 
@@ -536,3 +1067,139 @@ CHECKOUT
 
 
 .debug	{position:fixed; bottom:0; left:0; right:0; background:#ffffff; color:#000000; border-top:1px solid #666666; padding:5px;}
+
+
+/*added by vilas */
+
+.featuredCategories {
+    background: url("images/background-featured-categories.png") repeat scroll 0 0 transparent;
+    clear: both;
+    position: relative;
+    text-align: center;
+}
+.featuredCategories div.catNav {
+    background: url("images/background-homepage-category-navigation.png") repeat-x scroll 0 0 transparent;
+    box-shadow: 1px 1px 5px 1px #222222;
+    height: 62px;
+    position: relative;
+    width: 100%;
+}
+.featuredCategories div.catNavContent {
+    height: 62px;
+    margin: 0 auto;
+    position: relative;
+    width: 350px;
+}
+.featuredCategories div.catNavContent p.navCats {
+    color: #FFFFFF;
+    float: left;
+    font-family: "Bebas Neue",Arial,Helvetica,sans-serif;
+    font-size: 20px;
+    padding-right: 18px;
+    position: relative;
+    top: 22px;
+}
+.featuredCategories div.catNavContent p.currentCat {
+    color: #FFFFFF;
+    float: left;
+    font-family: "Bebas Neue",Arial,Helvetica,sans-serif;
+    font-size: 30px;
+    position: relative;
+    top: 16px;
+}
+.featuredCategories div.catNavContent p:not(:last-child) {
+    padding-right: 18px;
+    width: 250px;
+}
+.featuredCategories div.catNavContent img.catButton {
+    cursor: pointer;
+    float: left;
+    padding-right: 18px;
+    position: relative;
+    top: 14px;
+}
+.featuredCategories img.btnViewAllCategories {
+    cursor: pointer;
+    padding-bottom: 30px;
+    padding-top: 8px;
+}
+ul.categoryList {
+    margin: 0 auto;
+    width: 960px;
+}
+ul.categoryList li {
+    background-color: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    box-shadow: 1px 1px 5px 1px #222222;
+    height: 138px;
+    margin-left: 0;
+    margin-right: 20px;
+    position: relative;
+    width: 138px;
+}
+ul.categoryList div.thumbContainer {
+    text-align: center;
+}
+ul.categoryList div.thumbContainer img {
+    height: 93px;
+    margin-top: 1px;
+    width: 136px;
+}
+ul.categoryList li div.catName {
+    background: url("images/background-homepage-category-list-name.png") repeat scroll 0 0 transparent;
+    border: 1px solid #FFFFFF;
+    bottom: 0;
+    color: #000000;
+    height: 41px;
+    left: 0;
+    line-height: 12px;
+    overflow: hidden;
+    position: absolute;
+    text-align: center;
+    width: 136px;
+}
+ul.categoryList li div.catName span {
+    font-family: Helvetica;
+    font-size: 14px;
+    font-weight: bold;
+    position: relative;
+    top: 16px;
+}
+.caroufredsel_wrapper
+{
+	margin: 0px auto;
+	overflow: hidden;
+	width: 1000px;
+}
+
+.caroufredsel_wrapper div.ccItem
+{
+	float: left;
+	height: auto;
+	overflow: hidden;
+	padding-left: 16px;
+	/*width: 970px;*/
+	width: 977px;
+}
+.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ width:948px; margin:0px auto; padding:10px 0 0 9px;}
+
+div.catCarousel h2
+{
+	margin-top: 10px;
+	display:none;
+}
+.productList > li {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 2px solid #FFFFFF;
+    box-shadow: 1px 1px 5px 1px #222222;
+    font-size: 0.8em;
+    height: 216px;
+    margin-left: 0;
+    margin-right: 20px;
+    position: relative;
+    text-align: center;
+    width: 213px;
+}
+
+#resultsProductListContainer{}
+#resultsProductListContainer li{width:216px;}

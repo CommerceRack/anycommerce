@@ -70,12 +70,6 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 
 					app.ext.analyzer.calls.appResource.init('flexedit.json',{'callback':'handleFlexedit','extension':'analyzer'});
 //request profile data (company name, logo, policies, etc)
-<<<<<<< HEAD:examples/site-analyzer/site_analyzer.js
-					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'myRIA'});
-					app.ext.store_navcats.calls.appCategoryList.init({"callback":"showRootCategories","extension":"myRIA"});
-					app.model.dispatchThis();
-					
-=======
 					app.calls.appProfileInfo.init({'profile':zGlobals.appSettings.profile},{'callback':'handleProfile','parentID':'profileSummaryList','extension':'analyzer'});
 					if(zGlobals && zGlobals.appSettings && zGlobals.appSettings.rootcat)	{
 						app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"analyzer"});
@@ -85,7 +79,6 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 						$("#globalMessaging").anyMessage({'message':'Could not load category tree because zGlobals.appSettings.rootcat was not present/accessable.'});
 						}
 
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-analyzer.js
 					},
 				onError : function(responseData,uuid)	{
 //error handling is a case where the response is delivered (unlike success where datapointers are used for recycling purposes)

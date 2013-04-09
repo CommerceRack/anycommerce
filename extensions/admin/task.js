@@ -387,10 +387,7 @@ if(numChecked)	{
 		}
 	else if(cmd == 'adminTaskComplete')	{
 		$('#taskListContainer .taskManagerListTable input:checkbox:checked').each(function(){
-<<<<<<< HEAD
-=======
 			app.u.dump(" -> $(this).closest('[data-id]').data('id'): "+$(this).closest('[data-id]').data('id'));
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 			app.ext.admin.calls.adminTaskComplete.init($(this).closest('[data-id]').data('id'),{},'immutable');
 			});
 		app.ext.admin_task.u.clearAndUpdateTaskManager();

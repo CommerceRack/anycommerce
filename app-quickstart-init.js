@@ -32,6 +32,31 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.j
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
 
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
+app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
+}]);
+
 
 
 //add tabs to product data.

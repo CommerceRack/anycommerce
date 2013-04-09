@@ -33,32 +33,19 @@ class can also be applied to a 1 item per row list.
 .alignCenter	{text-align:center;}
 
 
-<<<<<<< HEAD
-.valignMiddle	{vertical-align:middle;}
-
-/* hideForApp or Vstore gets toggle on based on account/domain setting. toggle on instead of off to avoid popping. */
-/* .showForVstoreOnly, .showForAppOnly	{display:none;} - not used yet. soon. */
-
-.displayNone	{display:none;}
-=======
 .valignTop	{vertical-align:top;}
 .valignMiddle	{vertical-align:middle;}
 
 
 .displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly, .minimalMode .hideInMinimalMode	{display:none;}
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
 /* .plainList	{margin:0; padding:0; list-style:none;} - deprecated. use list classes below */
 
 
 /* for small buttons */
-<<<<<<< HEAD
-.smallButton .ui-button-text	{padding:2px 4px !important; line-height:normal !important; font-size:.85em;}
-=======
 .smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 .ui-selectee	{cursor:pointer;}
 
@@ -74,8 +61,6 @@ a:hover, .lookLikeLink:hover	{text-decoration:underline; color:#000000;}
 
 
 
-<<<<<<< HEAD
-=======
 
 
 /* text styling */
@@ -110,7 +95,6 @@ h5,h6	{font-size: 1em; margin: 0px 0px 3px 0px; font-weight: bold;}
 
 
 
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 /* some positioning classes */
 
 .positionRelative	{position:relative;}
@@ -165,10 +149,7 @@ using these shared margins will help make the UI more consistent.
 .stdMargin	{margin:12px;}
 .stdPadding	{padding:12px;}
 .smallPadding	{padding:4px;}
-<<<<<<< HEAD
-=======
 .ui-widget-header-padding	{padding:3px 6px !important;}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
@@ -792,14 +773,9 @@ for use in forms where the label is the row container.
 put the prompt into a span
 <label><span>prompt</span>input</label>
 */
-<<<<<<< HEAD
-.labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top;}
-.labelsAsBreaks label span	{padding-right:12px; display:inline-block; vertical-align:top;}
-=======
 
 .labelsAsBreaks label, .labelsAsBreaks div.label	{display:block; margin:6px 0; vertical-align:top; }
 .labelsAsBreaks label span:first-of-type	{padding-right:12px; display:inline-block; vertical-align:top;}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6
 
 /* 
 within a labelAsBreaks, if a row of inputs is needed, add a div with class label and clearfix around it and an h4 as the header. 
@@ -811,17 +787,6 @@ see shipping panel in product editor for example
 .labelsAsBreaks div.label label	{ margin:0 12px 0 0;}
 
 /* optional classes to put on same container that has labelsAsBreaks. Will make labels into a column and input into another, horizontally lined up. */
-<<<<<<< HEAD
-.alignedLabels label span	{width:30%;}
-.alignedInputs textarea,
-.alignedInputs input[type=email],
-.alignedInputs input[type=text]	{width:65%;}
-
-.alignedInputs input[type=number], 
-.alignedInputs select	{max-width:65%;} /* shrink to fit widest option, but stay under threshold */
-
-
-=======
 .alignedLabels label span:first-of-type	{width:30%;}
 .alignedInputs textarea,
 .alignedInputs input[type=email],
@@ -891,4 +856,3 @@ some pad (more or less)specific styles.
 	.twoColumn.column2 {clear:both;}
 
 	}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6

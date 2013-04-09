@@ -36,7 +36,7 @@ item list and summary are separate just to give more control over location.
 		
 		<div class='panelContent displayNone addressList' data-app-role='addressExists' data-bind='var: buyer(@bill); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
 		
-		<div class='clearfix marginBottom' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='bill'>Add New Address</button></div>
+		<div class='clearfix' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='bill'>Add New Address</button></div>
 		
 		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for new customers -->
 		
@@ -104,19 +104,17 @@ item list and summary are separate just to give more control over location.
 
 <section id='chkoutPreflightTemplate'>
 
-<h4 class='displayNone' data-app-role='username' data-bind="var:cart(bill/email); defaultVar: cart(customer/login); format:text;"></h4>
+<h4 class='displayNone' data-app-role='username' data-bind="var:cart(bill/email); format:text;"></h4>
 
 <div data-app-role='login'>
 
-	<div data-app-role='loginPasswordContainer' class='displayNone floatRight'>
+	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' />
+	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
+	
+	<div data-app-role='loginPasswordContainer' class='displayNone'>
 		<div>If you have an account with us, please enter your password below to login</div>
 		<input type='password' placeholder='password' size='30' name='password' /><button data-app-event='orderCreate|execBuyerLogin'>login</button>
 	</div>
-
-	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:cart(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /><br />
-	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
-	
-
 
 </div>
 
@@ -284,21 +282,21 @@ the defaultVar on prodName & image is for promotions, which have a 'description'
 	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
 	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</td>
-	<td class='alignRight'><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span></td>
-	<td class='alignRight'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
-	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+	<td><span data-bind='var: product(qty); format:text; pretext: qty: ;'></span></td>
+	<td><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
+	<td><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 </tr>
 </table>
 
 
 <section id='chkoutCartContentsTemplate'>
-<table class='fullWidth gridTable'>
+<table>
 <thead>
 <tr>
-	<th colspan='2' class='alignLeft'>product information</th>
-	<th class='alignRight'>qty</th>
-	<th class='alignRight'>price</th>
-	<th class='alignRight'>item total</th>
+	<th colspan='2'>product information</th>
+	<th>qty</th>
+	<th>price</th>
+	<th>item total</th>
 </tr>
 </thead>
 <tbody data-bind='var: cart(@ITEMS); format:processList; loadsTemplate:chkoutCartItemTemplate;'></tbody>
@@ -421,9 +419,9 @@ do NOT change the input name or id or checkout will likely break.
 	<div class='orderSummaryDetails'>
 		<h2>Thank you! Your order has been placed.</h2>
 		<h3 data-bind='var: order(orderid); format:text; pretext:Your order id is ;'></h3>
-		<div class='pointer marginBottom' data-app-role='paymentMessaging'>
+		<div class='pointer marginBottom'>
 			Click here to view/print your invoice.
-			<div class='zwarn' data-bind="var: order(payment_status_msg); format:text;"></div><!-- displays payment issues/errors -->
+			<div class='zwarn' data-app-role='paymentMessaging' data-bind="var: order(payment_status_msg); format:text;"></div><!-- displays payment issues/errors -->
 		</div>
 		<div data-bind="var:order(payment_status_detail); format:text;" class='marginBottom'></div>
 		<div>You will receive an order confirmation email with details of your order</div>
@@ -435,10 +433,10 @@ do NOT change the input name or id or checkout will likely break.
 	<div class='clearAll'></div>
 
 <div data-app-role='invoiceContainer'>
-	<table class='orderContentsTable fullWidth'>
+	<table class='orderContentsTable'>
 	<tr>
 		<td colspan='2'>
-	<div class='floatRight hide4Print'>
+	<div class='floatRight'>
 	<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
 	</div>
 	
@@ -492,9 +490,7 @@ do NOT change the input name or id or checkout will likely break.
 		</td>
 		<td class='orderContentsProdlistContainer'>
 		<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-		<table  class='listStyleNone lineItemProdlist'>
-		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
-		</table>
+		<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
 		</td>
 	</tr>
 	</table>
@@ -537,20 +533,15 @@ note - on the write review button, var:product(product) will use the pid, not th
 'product' is how the pid is stored in buyerPurchaseHistoryDetail.
 If this gets recycled, test in order history after making changes.
 -->
-<table>
-	<tr id='chkoutInvoiceItemTemplate' class='padMargBorderBottom'>
-	
-	<td>
-	<div class='prodThumbContainer marginRight'>
+<ul>
+	<li id='chkoutInvoiceItemTemplate' class='padMargBorderBottom'>
+	<div class='prodThumbContainer'>
 	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
 	</div>
-	</td>
-	
-	<td class='valignTop ztable_row'>
 	
 <div class='infoContainer'>
 
-	<h3 data-bind='var: product(prod_name); format:text; '></h3>
+	<h5 data-bind='var: product(prod_name); format:text; '></h5>
 	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 	<div>
@@ -561,19 +552,13 @@ If this gets recycled, test in order history after making changes.
 
 	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
 
-
+<button class='writeReview' data-app-event="store_crm|showWriteReview" data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>
 
 	
 </div>
-	</td>
-	
-	<td class='alignRight hide4Print'>
-	<button class='writeReview' data-app-event="store_crm|showWriteReview" data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>	
-	</td>
 
-
-	</tr>
-</table>
+	</li>
+</ul>
 
 
 

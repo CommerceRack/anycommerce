@@ -177,32 +177,27 @@ copying the template into memory was done for two reasons:
 			}
 		else if(app.vars.cartID)	{
 			app.u.dump(" -> app.vars.cartID set. verify.");
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
+			app.calls.appCartExists.init(app.vars.cartID,{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
 		else if(app.u.isSet(app.u.getParameterByName('cartID')))	{
 			app.u.dump(" -> cartID from URI used.");
-			app.vars.cartID = app.u.getParameterByName('cartID');
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
+			app.calls.appCartExists.init(app.u.getParameterByName('cartID'),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
 		else if(app.model.fetchCartID())	{
 			app.u.dump(" -> session retrieved from localstorage..");
-			app.vars.cartID = app.model.fetchCartID();
-			app.model.destroy('cartDetail'); //do not use a cart from localstorage
-			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
+			app.calls.appCartExists.init(app.model.fetchCartID(),{'callback':'handleTrySession','datapointer':'appCartExists'});
 			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 		else	{
-			app.u.dump(" -> go get a new cart id.");
-			app.calls.appCartCreate.init({'callback':'handleNewSession'},'immutable');
+			app.u.dump(" -> go get a new session id.");
+			app.calls.appCartCreate.init({'callback':'handleNewSession'});
 			app.model.dispatchThis('immutable');
 			}
 		
@@ -287,6 +282,24 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 				app.model.addDispatchToQ({"_cmd":"appCartCreate","_tag":_tag},'immutable');
 				}
 			},//appCartCreate
+
+//always uses immutable Q
+//formerly canIHaveSession
+		appCartExists : {
+			init : function(cartid,_tag)	{
+//					app.u.dump('BEGIN app.calls.appCartExists');
+//				app.vars.cartID = cartid; //needed for the request. may get overwritten if not valid.
+				this.dispatch(cartid,_tag);
+				return 1;
+				},
+			dispatch : function(cartid,_tag)	{
+				var obj = {};
+				obj["_cmd"] = "appCartExists";
+				obj["_cartid"] = cartid;
+				obj["_tag"] = _tag;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //appCartExists
 
 		appCategoryDetail : {
 			init : function(obj,_tag,Q)	{
@@ -660,12 +673,12 @@ see jquery/api webdoc for required/optional param
 		buyerProductListAppendTo : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(obj && obj.listid)	{
+				if(obj && obj.listID)	{
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listid','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'buyerProductListDetail requires listID','gMessage':true});
 					}
 				return r;
 				},
@@ -936,8 +949,7 @@ app.u.throwMessage(responseData); is the default error handler.
 //executed when appCartExists is requested.
 //app.app.vars.cartID is already set by this point. need to reset it onError.
 // onError does NOT need to nuke app.vars.cartID because it's handled in handleResponse_appCartExists 
-// NOTE - may be obsolete 201314+
-/*		handleTrySession : {
+		handleTrySession : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump('BEGIN app.callbacks.handleTrySession.onSuccess');
 //				app.u.dump(" -> exists: "+app.data.appCartExists.exists);
@@ -954,7 +966,7 @@ app.u.throwMessage(responseData); is the default error handler.
 					}
 				}
 			}, //handleTrySession
-*/		
+		
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
 //jqObj is required and should be a jquery object.
@@ -1172,7 +1184,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //obj is some optional data. obj.$content would be a common use.
 // !!! this code is duplicated in the controller now. change all references in the version after 201308 (already in use in UI)
 		handleAppEvents : function($target,obj)	{
-//				app.u.dump("BEGIN app.u.handleAppEvents");
+				app.u.dump("BEGIN admin.u.handleAppEvents");
 				obj = obj || {}; //needs to be outside 'each' or obj gets set to blank.
 				if($target && $target.length && typeof($target) == 'object')	{
 //					app.u.dump(" -> target exists"); app.u.dump($target);
@@ -1198,7 +1210,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 		printByjqObj : function($ele)	{
 			if($ele && $ele.length)	{
-				var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
+				var html="<html><style>@media print{.pageBreak {page-break-after:always}}</style><body style='font-family:sans-serif;'>";
 				html+= $ele.html();
 				html+="</body></html>";
 				
@@ -1647,7 +1659,7 @@ VALIDATION
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
-					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
+					
 					if($input.attr('required') == 'required' && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');

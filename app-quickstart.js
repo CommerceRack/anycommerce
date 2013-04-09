@@ -109,10 +109,7 @@ var myRIA = function() {
 //if ?debug=anything is on URI, show all elements with a class of debug.
 if(app.u.getParameterByName('debug'))	{
 	$('.debug').show().append("<div class='clearfix'>Model Version: "+app.model.version+" and release: "+app.vars.release+"</div>");
-<<<<<<< HEAD:quickstart.js
-=======
 	$('.debugQuickLinks','.debug').menu().css({'width':'150px'});
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 	$('button','.debug').button();
 	app.ext.myRIA.u.bindAppViewForms('.debug');
 	app.ext.myRIA.u.bindNav('.debug .bindByAnchor');
@@ -343,7 +340,7 @@ document.write = function(v){
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							app.u.dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
-							$("[data-app-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
+							$("[app-data-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
 							}
 						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
 							app.u.dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
@@ -721,7 +718,7 @@ fallback is to just output the value.
 
 //if price is not set, item isn't purchaseable. buttonState is set to 'disabled' if item isn't purchaseable or is out of stock.
 				
-				var className, price, buttonState, buttonText = 'Add to Cart',
+				var className, price, buttonState, buttonText = 'Buy Now',
 				pid = data.value.pid, //...pid set in both elastic and appProductGet
 				inv = app.ext.store_product.u.getProductInventory(pid),
 				$form = $tag.closest('form');
@@ -1326,17 +1323,10 @@ P.listID (buyer list id)
 //P.listid and p.sku are required.
 //optional params include: qty, priority, note, and replace. see API docs for explanation.
 			add2BuyerList : function(P){
-<<<<<<< HEAD:quickstart.js
 				app.u.dump("BEGIN myria.a.add2BuyerList");
 				var authState = app.u.determineAuthentication();
 				app.u.dump("authState: "+authState);
-				if(typeof P != 'object' || !P.pid || !P.listid)	{
-=======
-				app.u.dump("BEGIN myria.a.add2BuyerList: "+P.listid);
-				var authState = app.u.determineAuthentication();
-				app.u.dump("authState: "+authState);
 				if(typeof P != 'object' || !P.sku || !P.listid)	{
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					app.u.throwMessage("Uh Oh! Something went wrong. Please try that again or contact the site administrator if error persists. err: required param for add2buyerList was missing. see console for details.");
 					app.u.dump("ERROR! params missing for add2BuyerList. listid and pid required. params: "); app.u.dump(P);
 					}
@@ -1360,9 +1350,7 @@ P.listID (buyer list id)
 					var msg = app.u.statusMsgObject('adding item '+P.sku+' to list: '+P.listid);
 					msg.parentID = parentID;
 					app.u.throwMessage(msg);
-					app.model.destroy('buyerProductListDetail|'+P.listid);
 					app.calls.buyerProductListAppendTo.init(P,{'parentID':parentID,'callback':'showMessaging','message':'Item '+P.sku+' successfully added to list: '+P.listid},'immutable');
-					app.calls.buyerProductListDetail.init(P.listid,{},'immutable')
 					app.model.dispatchThis('immutable');
 					_gaq.push(['_trackEvent','Manage buyer list','User Event','item added',P.sku]);
 					}
@@ -1420,24 +1408,11 @@ P.listID (buyer list id)
 					app.u.loadResourceFile(app.rq[i]);
 					app.rq.splice(i, 1); //remove once handled.
 					}
-<<<<<<< HEAD:quickstart.js
-				app.rq.push = app.u.handleResourceQ; //reassign push function to auto-add the resource.
-=======
 				app.rq.push = app.u.loadResourceFile; //reassign push function to auto-add the resource.
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				if(typeof infoObj != 'object')	{infoObj = {}}
 				infoObj = this.detectRelevantInfoToPage(window.location.href); 
 				infoObj.back = 0; //skip adding a pushState on initial page load.
 //getParams wants string to start w/ ? but doesn't need/want all the domain url crap.
-<<<<<<< HEAD:quickstart.js
-				infoObj.uriParams = app.u.getParametersAsObject('?'+window.location.href.split('?')[1]);
-				if(infoObj.uriParams.meta)	{
-					app.calls.cartSet.init({'cart/refer':infoObj.uriParams.meta},{},'passive');
-					}
-
-				if(infoObj.uriParams.meta_src)	{
-					app.calls.cartSet.init({'cart/refer_src':infoObj.uriParams.meta_src},{},'passive');
-=======
 infoObj.uriParams = {};
 var ps = window.location.href; //param string. find a regex for this to clean it up.
 if(ps.indexOf('?') >= 1)	{
@@ -1463,7 +1438,6 @@ if(ps.indexOf('?') >= 1)	{
 
 				if(app.u.buyerIsAuthenticated())  {
 					app.ext.myRIA.u.handleLoginActions();
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					}
 
 //				app.u.dump(" -> infoObj follows:");
@@ -1512,10 +1486,7 @@ if(ps.indexOf('?') >= 1)	{
 //will change what state of the world is (infoObj) and add it to History of the world.
 //will make sure history keeps only last 15 states.
 			handleSandHOTW : function(infoObj){
-<<<<<<< HEAD:quickstart.js
-=======
 				infoObj.dateObj = new Date(); //milliseconds timestamp
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				app.ext.myRIA.vars.sotw = infoObj;
 				app.ext.myRIA.vars.hotw.unshift(infoObj);
 				app.ext.myRIA.vars.hotw.pop(); //remove last entry in array. is created with array(15) so this will limit the size.
@@ -1529,15 +1500,6 @@ if(ps.indexOf('?') >= 1)	{
 //				app.u.dump(" -> infoObj.navcat: "+infoObj.navcat);
 //search, customer and company contain 'articles' (pages within pages) so when moving from one company to another company, skip the transition
 // or the content is likely to be hidden. execute scroll to top unless transition implicitly turned off (will happen with modals).
-<<<<<<< HEAD:quickstart.js
-				if(infoObj.pageType == 'cart'){r = false; app.u.dump('fail 0');}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("fail 1");}
-				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("fail 2");}
-				else if(infoObj.pageType == 'product' && $old.data('templateid') == 'productTemplate' && $old.data('pid') == infoObj.pid){r = false; app.u.dump("fail 3");}
-				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; app.u.dump("fail 4");}
-				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; app.u.dump("fail 5");}
-				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; app.u.dump("fail 6");}
-=======
 				if(infoObj.pageType == 'cart' && infoObj.show != 'inline'){r = false; app.u.dump('fail 0');}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'categoryTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 1");}
 				else if(infoObj.pageType == 'category' && $old.data('templateid') == 'homepageTemplate' && $old.data('catsafeid') == infoObj.navcat){r = false; app.u.dump("transition fail 2");}
@@ -1545,7 +1507,6 @@ if(ps.indexOf('?') >= 1)	{
 				else if($old.data('templateid') == 'companyTemplate' && infoObj.pageType == 'company')	{r = false; app.u.dump("transition fail 4");}
 				else if($old.data('templateid') == 'customerTemplate' && infoObj.pageType == 'customer')	{r = false; app.u.dump("transition fail 5");}
 				else if($old.data('templateid') == 'searchTemplate' && infoObj.pageType == 'search')	{r = false; app.u.dump("transition fail 6");}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				else if(!app.u.determineAuthentication() && this.thisArticleRequiresLogin(infoObj))	{
 					r = false; //if the login modal is displayed, don't animate or it may show up off screen.
 					}
@@ -1725,9 +1686,6 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = ''}
 					else if(infoObj.pageType == 'cart')	{r = '#cart?show='+infoObj.show}
 					else if(infoObj.pageType == 'checkout')	{r = '#checkout?show='+infoObj.show}
-<<<<<<< HEAD:quickstart.js
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = '#search?KEYWORDS='+infoObj.KEYWORDS}
-=======
 					else if(infoObj.pageType == 'search' && (infoObj.TAG || infoObj.KEYWORDS))	{
 						r = '#search?';
 						r += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
@@ -1736,7 +1694,6 @@ if(ps.indexOf('?') >= 1)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
 						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
 						}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
 						//shouldn't get here because pageInfo was already validated. but just in case...
@@ -1765,11 +1722,7 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'homepage')	{r = true}
 					else if(infoObj.pageType == 'cart')	{r = true}
 					else if(infoObj.pageType == 'checkout')	{r = true}
-<<<<<<< HEAD:quickstart.js
-					else if(infoObj.pageType == 'search' && infoObj.KEYWORDS)	{r = true}
-=======
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{r = true}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					else if(infoObj.pageType == 'customer' && infoObj.show)	{r = true}
 					else if(infoObj.pageType == 'company' && infoObj.show)	{r = true}
 					else	{
@@ -1796,11 +1749,6 @@ if(ps.indexOf('?') >= 1)	{
 //make sure first character isn't a #. location.hash is used a lot and ie8 (maybe more) include # in value.
 				if(myHash.indexOf('#') == 0)	{myHash = myHash.substring(1);}
 				var infoObj = {}; //what is returned. infoObj.pageType and based on value of page type, infoObj.show or infoObj.pid or infoObj.navcat, etc
-<<<<<<< HEAD:quickstart.js
-				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
-				infoObj = app.u.getParametersAsObject(splits[1]); //will set infoObj.show=something or infoObj.pid=PID
-				infoObj.pageType = splits[0];
-=======
 				
 				var splits = myHash.split('?'); //array where 0 = 'company' or 'search' and 1 = show=returns or keywords=red
 //				app.u.dump(" -> splits: "); app.u.dump(splits);
@@ -1825,7 +1773,6 @@ if(ps.indexOf('?') >= 1)	{
 				
 				
 				
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				if(!infoObj.pageType || !this.thisPageInfoIsValid(infoObj))	{
 					infoObj = false;
 					}
@@ -1866,9 +1813,6 @@ if(ps.indexOf('?') >= 1)	{
 					break;
 
 				case 'search':
-<<<<<<< HEAD:quickstart.js
-					relativePath = '#search?KEYWORDS='+infoObj.KEYWORDS
-=======
 //					app.u.dump("BUILDRELATIVEPATH");
 //					app.u.dump(infoObj.elasticsearch);
 					relativePath = '#search?elasticsearch=';
@@ -1879,7 +1823,6 @@ if(ps.indexOf('?') >= 1)	{
 						relativePath += JSON.stringify(infoObj.elasticsearch);
 						}
 					
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					break;
 
 				case 'company':
@@ -1997,11 +1940,7 @@ if(ps.indexOf('?') >= 1)	{
 					else	{
 						fullpath += this.buildRelativePath(infoObj);
 						}
-<<<<<<< HEAD:quickstart.js
-					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams} //add params back on to url.
-=======
 					if(typeof infoObj.uriParams == 'string' && app.u.isSet(infoObj.uriParams) )	{fullpath += '?'+infoObj.uriParams.encodeURI()} //add params back on to url.
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					else if(typeof infoObj.uriParams == 'object' && !$.isEmptyObject(infoObj.uriParams)) {
 //will convert uri param object into uri friendly key value pairs.						
 						fullpath += '?';
@@ -2196,12 +2135,6 @@ effects the display of the nav buttons only. should be run just after the handle
 					infoObj.templateID = infoObj.templateID || 'productTemplate';
 					infoObj.state = 'onInits'
 					parentID = infoObj.templateID+"_"+app.u.makeSafeHTMLId(pid);
-<<<<<<< HEAD:quickstart.js
-					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-//no need to render template again.
-					if(!$('#'+parentID).length){
-						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID)
-=======
 					infoObj.parentID = parentID;
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 					
@@ -2210,7 +2143,6 @@ effects the display of the nav buttons only. should be run just after the handle
 //no need to render template again.
 					if(!$('#'+parentID).length){
 						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'});
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 						$content.addClass('displayNone'); //hidden by default for page transitions
 						$('#mainContentArea').append($content);
 
@@ -2248,12 +2180,6 @@ effects the display of the nav buttons only. should be run just after the handle
 				infoObj.parentID = parentID;
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				
-<<<<<<< HEAD:quickstart.js
-				infoObj.templateID = 'companyTemplate';
-				infoObj.state = 'onInits';
-				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-=======
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				
 
 //only create instance once.
@@ -2261,10 +2187,6 @@ effects the display of the nav buttons only. should be run just after the handle
 					app.ext.myRIA.u.showArticle(infoObj);
 					infoObj.state = 'onCompletes';
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-<<<<<<< HEAD:quickstart.js
-					
-=======
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					}
 				else	{
 					var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,parentID);
@@ -2282,50 +2204,23 @@ effects the display of the nav buttons only. should be run just after the handle
 			showSearch : function(infoObj)	{
 //				app.u.dump("BEGIN myRIA.u.showSearch. infoObj follows: ");
 //				app.u.dump(infoObj);
-<<<<<<< HEAD:quickstart.js
-				infoObj.templateID = 'searchTemplate'
-				infoObj.state = 'onInits';
-				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-=======
 				infoObj.templateID = 'searchTemplate';
 				infoObj.parentID = 'mainContentArea_search';
 				infoObj.state = 'onInits';
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				var $page = $('#'+infoObj.parentID),
 				elasticsearch = {};
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 
 //only create instance once.
 				if($page.length)	{
 					app.ext.myRIA.u.revertPageFromPreviewMode($('#mainContentArea_search'));
 					}
 				else	{
-<<<<<<< HEAD:quickstart.js
-					$('#mainContentArea').append(app.renderFunctions.createTemplateInstance(infoObj.templateID,'mainContentArea_search'))
-=======
 					$('#mainContentArea').anycontent({'templateID':infoObj.templateID,'showLoading':false,'dataAttribs':{'id':'mainContentArea_search'}});
 					$page = $('#mainContentArea_search');
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					}
 
 //add item to recently viewed list IF it is not already in the list.
-<<<<<<< HEAD:quickstart.js
-
-//I believe this should build datapointer and use fetchData?  Otherwise more complex queries will not be accessible.
-				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
-					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
-					}
-				app.ext.myRIA.u.showRecentSearches();
-				if(infoObj.ATTRIBUTES) {
-					app.u.dump("GOT HERE");
-					app.ext.store_search.u.handleElasticQueryFilterByAttributes(infoObj.KEYWORDS,infoObj.ATTRIBUTES,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
-				} else {
-					app.ext.store_search.u.handleElasticSimpleQuery(infoObj.KEYWORDS,{'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','parentID':'resultsProductListContainer'});
-				}
-//legacy search.
-//				app.ext.store_search.calls.searchResult.init(infoObj,{'callback':'showResults','extension':'myRIA'});
-				// DO NOT empty altSearchesLis here. wreaks havoc.
-=======
 				if($.inArray(infoObj.KEYWORDS,app.ext.myRIA.vars.session.recentSearches) < 0)	{
 					app.ext.myRIA.vars.session.recentSearches.unshift(infoObj.KEYWORDS);
 					}
@@ -2365,7 +2260,6 @@ elasticsearch.size = 50;
 				
 				app.ext.store_search.u.updateDataOnListElement($('#resultsProductListContainer'),elasticsearch,1);
 				app.ext.store_search.calls.appPublicSearch.init(elasticsearch,_tag);
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				app.model.dispatchThis();
 
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
@@ -2382,13 +2276,6 @@ elasticsearch.size = 50;
 			showCart : function(infoObj)	{
 				if(typeof infoObj != 'object'){var infoObj = {}}
 //				app.u.dump("BEGIN myRIA.u.showCart");
-<<<<<<< HEAD:quickstart.js
-// ### update. if mainContentArea is empty, put the cart there. if not, show in modal.
-				infoObj.templateID = 'cartTemplate'
-				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
-				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				app.ext.store_cart.u.showCartInModal(infoObj);
-=======
 				infoObj.templateID = 'cartTemplate';
 				infoObj.parentID = (infoObj.show == 'inline') ? 'mainContentArea_cart' : 'modalCart';
 				infoObj.state = 'onInits'; //needed for handleTemplateFunctions.
@@ -2424,7 +2311,6 @@ elasticsearch.size = 50;
 				else	{
 					app.ext.store_cart.u.showCartInModal(infoObj);
 					}
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 				}, //showCart
@@ -2437,20 +2323,6 @@ elasticsearch.size = 50;
 			showCustomer : function(infoObj)	{
 //				app.u.dump("BEGIN showCustomer. infoObj: "); app.u.dump(infoObj);
 				var r = true; //what is returned. set to false if content not shown (because use is not logged in)
-<<<<<<< HEAD:quickstart.js
-				if(infoObj && infoObj.uriParams && infoObj.uriParams.cartid && infoObj.uriParams.orderid)	{
-					infoObj.show = 'invoice'; //force to order view if these params are set (most likely invoice view).
-					}
-				else if (infoObj.show)	{
-					//infoObj.show is already set.
-					}
-				else	{
-					infoObj.show = 'newsletter'
-					}
-//				$('#mainContentArea').empty();
-//				app.u.dump(" -> infoObj follows:"); app.u.dump(infoObj);
-				var parentID = 'mainContentArea_customer'; //this is the id that will be assigned to the companyTemplate instance.
-=======
 				if (infoObj.show)	{
 					//infoObj.show is already set.
 					}
@@ -2459,7 +2331,6 @@ elasticsearch.size = 50;
 					}
 
 				infoObj.parentID = 'mainContentArea_customer'; //used for templateFunctions
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 //only create instance once.
 				if($('#'+infoObj.parentID).length)	{}
 				else	{
@@ -2475,11 +2346,7 @@ elasticsearch.size = 50;
 
 				
 				
-<<<<<<< HEAD:quickstart.js
-				if(authState != 'authenticated' && this.thisArticleRequiresLogin(infoObj))	{
-=======
 				if(!app.u.buyerIsAuthenticated() && this.thisArticleRequiresLogin(infoObj))	{
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					r = false; // don't scroll.
 					app.ext.myRIA.u.showLoginModal();
 					$('#loginSuccessContainer').empty(); //empty any existing login messaging (errors/warnings/etc)
@@ -2492,40 +2359,6 @@ elasticsearch.size = 50;
 //should only get here if the page does not require authentication or the user is logged in.
 				else	{
 					$('#newsletterArticle').hide(); //hide the default.
-<<<<<<< HEAD:quickstart.js
-					$('#'+infoObj.show+'Article').show(); //only show content if page doesn't require authentication.
-					switch(infoObj.show)	{
-						case 'newsletter':
-							$('#newsletterFormContainer').empty();
-							app.ext.store_crm.u.showSubscribe({'parentID':'newsletterFormContainer','templateID':'subscribeFormTemplate'});
-							break;
-
-						case 'invoice':
-						
-							var orderID = infoObj.uriParams.orderid
-							var cartID = infoObj.uriParams.cartid
-							var parentSafeID = 'orderContentsTable_'+app.u.makeSafeHTMLId(orderID);
-							var $invoice = $("<article />").attr('id','orderInvoiceSoloPage');
-							$invoice.append(app.renderFunctions.createTemplateInstance('invoiceTemplate',parentSafeID));
-							$invoice.appendTo($('#mainContentArea_customer .mainColumn'));
-							app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback':'translateTemplate','templateID':'invoiceTemplate','parentID':parentSafeID},'mutable');
-							app.model.dispatchThis('mutable');
-						
-						
-						
-						case 'orders':
-							app.ext.store_crm.calls.buyerPurchaseHistory.init({'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'});
-							break;
-						case 'lists':
-							app.ext.store_crm.calls.buyerProductLists.init({'parentID':'listsContainer','callback':'showBuyerLists','extension':'myRIA'});
-							break;
-						case 'myaccount':
-//							app.u.dump(" -> myaccount article loaded. now show addresses...");
-							app.ext.store_crm.calls.buyerAddressList.init({'callback':'showAddresses','extension':'myRIA'},'mutable');
-							break;
-						default:
-							app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
-=======
 					var $article = $('#'+infoObj.show+'Article')
 					$article.show(); //only show content if page doesn't require authentication.
 
@@ -2604,18 +2437,10 @@ elasticsearch.size = 50;
 								app.u.dump("WARNING - unknown article/show ["+infoObj.show+" in showCustomer. ");
 							}
 						app.model.dispatchThis();
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 						}
 					}
-<<<<<<< HEAD:quickstart.js
-
 				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-				$('#mainContentArea_customer').removeClass('loadingBG');
-=======
-				infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
-				app.ext.myRIA.u.handleTemplateFunctions(infoObj);
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 				return r;
 				},  //showCustomer
 				
@@ -2770,16 +2595,12 @@ buyer to 'take with them' as they move between  pages.
 //dialog can be set to true and will use default settings or it can be set to an object of supported dialog parameters.
 					infoObj.dialog = $.isEmptyObject(infoObj.dialog) ? {modal: true,width:'86%',height:$(window).height() - 100} : infoObj.dialog; 
 					infoObj.dialog.autoOpen = false; //always set to false, then opened below. fixes some issues with re-opening the same id in a modal.
-<<<<<<< HEAD:quickstart.js
-					var $parent = app.u.handleParentForDialog(infoObj.dialogID,infoObj.title);
-=======
 					var $parent = $(app.u.jqSelector('#',infoObj.dialogID));
 					
 //parent may not exist. empty if it does, otherwise create it.
 					if($parent.length)	{$parent.empty()}
 					else	{$parent = $("<div \/>").attr({"id":ID,"title":"Product Images"}).appendTo('body');}					
 					
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 					infoObj.parentID = infoObj.dialogID+"_content"; //the parentID passed in is the modal ID. this is for the contents and needs to be different so showPage knows whether it has been rendered before or not.
 					this.showPage(infoObj);
 					$parent.dialog(infoObj.dialog);
@@ -2812,14 +2633,6 @@ buyer to 'take with them' as they move between  pages.
 						infoObj.templateID = 'categoryTemplate'
 						}
 					infoObj.state = 'onInits';
-<<<<<<< HEAD:quickstart.js
-					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-					var parentID = infoObj.parentID || infoObj.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
-					app.u.dump(" -> parentID: "+parentID);
-//only have to create the template instance once. showContent takes care of making it visible again. but the oncompletes are handled in the callback, so they get executed here.
-					if($('#'+parentID).length > 0){
-						app.u.dump(" -> "+parentID+" already exists. Use it");
-=======
 					var parentID = infoObj.parentID || infoObj.templateID+'_'+app.u.makeSafeHTMLId(catSafeID);
 					infoObj.parentID = parentID;
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
@@ -2829,7 +2642,6 @@ buyer to 'take with them' as they move between  pages.
 //set datapointer OR it won't be present on an oncomplete for a page already rendered.
 						infoObj.datapointer = infoObj.datapointer || "appCategoryDetail|"+catSafeID; 
 //						app.u.dump(" -> "+parentID+" already exists. Use it");
->>>>>>> a0f785ebb6d8cb187fc2c7bb450983199e3f8be6:app-quickstart.js
 						infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 						app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 						}

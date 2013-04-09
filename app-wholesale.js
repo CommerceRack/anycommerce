@@ -343,7 +343,7 @@ document.write = function(v){
 					if(pData && pData['%attribs'] && pData['%attribs']['zoovy:grp_type'] == 'CHILD')	{
 						if(pData['%attribs']['zoovy:grp_parent'] && app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']])	{
 							app.u.dump(" -> this is a child product and the parent prod is available. Fetch child data for siblings.");
-							$("[data-app-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
+							$("[app-data-role='childrenSiblingsContainer']",$(app.u.jqSelector('#',tagObj.parentID))).show().anycontent({'data':app.data['appProductGet|'+pData['%attribs']['zoovy:grp_parent']]});
 							}
 						else if(!pData['%attribs']['zoovy:grp_parent']) 	{
 							app.u.dump("WARNING! this item is a child, but no parent is set. Not a critical error.");
