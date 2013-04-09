@@ -680,9 +680,9 @@ NOTES
 						obj = $form.serializeJSON();
 						app.u.dump(" -> buildCartItemAppendObj into sku/qtyInput section");
 //here for the admin side of things. Will have no impact on retail as price can't be set.
+//should always occur, validating or not.
 						if(obj.price == "")	{delete obj.price; app.u.dump("Deleting price");}
 						else{}
-
 
 //There are use cases for skipping validation, such as admin, quick order, etc.
 						if($form.data('skipvalidation') || app.ext.store_product.validate.addToCart(sku,$form))	{
