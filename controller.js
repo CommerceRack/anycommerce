@@ -179,7 +179,7 @@ copying the template into memory was done for two reasons:
 			app.u.dump(" -> app.vars.cartID set. verify.");
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
+			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //if cartID is set on URI, there's a good chance a redir just occured from non secure to secure.
@@ -188,7 +188,7 @@ copying the template into memory was done for two reasons:
 			app.vars.cartID = app.u.getParameterByName('cartID');
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
+			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 //check localStorage
@@ -197,7 +197,7 @@ copying the template into memory was done for two reasons:
 			app.vars.cartID = app.model.fetchCartID();
 			app.model.destroy('cartDetail'); //do not use a cart from localstorage
 			app.calls.cartDetail.init({'callback':'handleNewSession'},'immutable');
-			app.calls.whoAmI.init({'callback':'suppressErrors'},'immutable'); //get this info when convenient.
+			app.calls.whoAmI.init({},{'callback':'suppressErrors'},'immutable'); //get this info when convenient.
 			app.model.dispatchThis('immutable');
 			}
 		else	{
@@ -904,8 +904,7 @@ see jquery/api webdoc for required/optional param
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj = obj || {};
-				obj._cmd = "";
-
+				obj._cmd = "whoAmI";
 				obj._tag = obj._tag || {}; 
 				obj._tag.datapointer = "whoAmI"
 				app.model.addDispatchToQ(obj,Q);
