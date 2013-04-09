@@ -898,14 +898,17 @@ see jquery/api webdoc for required/optional param
 
 //for now, no fetch is done here. it's assumed if you execute this, you don't know who you are dealing with.
 		whoAmI : {
-			init : function(_tag,Q)	{
-				this.dispatch(_tag,Q);
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
 				return 1;
 				},
-			dispatch : function(_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "whoAmI"
-				app.model.addDispatchToQ({"_cmd":"whoAmI","try_old_school":true,"_tag" : _tag},Q);	
+			dispatch : function(obj,_tag,Q)	{
+				obj = obj || {};
+				obj._cmd = "";
+
+				obj._tag = obj._tag || {}; 
+				obj._tag.datapointer = "whoAmI"
+				app.model.addDispatchToQ(obj,Q);
 				}
 			}//whoAmI
 
