@@ -564,6 +564,7 @@ else	{
 //if you are reusing a targetID, do your own empty before running this.
 var $target = $(app.u.jqSelector('#',targetID)),
 $order = $(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID+"_order",'orderid':orderID,'cid':CID}));
+
 $order.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
@@ -591,6 +592,9 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 		orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 
 		app.renderFunctions.translateSelector(selector,orderData);
+		
+		$(".gridTable",selector).anytable();
+		
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
 		app.ext.admin.calls.adminOrderPaymentMethods.init({
 			'orderid':orderID,
