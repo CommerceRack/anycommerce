@@ -925,6 +925,19 @@ else	{
 			return true;
 			}, //paystatus
 
+
+		orderEditQtyInput : function($tag,data)	{
+			var $input = $("<input \/>",{'type':'number','name':'qty','size':4,'step':'0.01','min':0}).val(data.value.qty).css('width',35);
+			if(data.value.stid.charAt(0) == '%')	{$input.attr('readonly','readonly').css('border-width','0');} //make field not-editable and not look editable.
+			$tag.append($input);
+			},
+
+		orderEditPriceInput : function($tag,data)	{
+			var $input = $("<input \/>",{'type':'number','name':'price','size':4,'step':'0.01','min':0}).val(data.value.price).css('width',50);
+			if(data.value.stid.charAt(0) == '%')	{$input.attr('readonly','readonly').css('border-width','0');} //make field not-editable and not look editable.
+			$tag.append($input);
+			},
+
 		
 		paystatusDetailed : function($tag,data){
 //			app.u.dump("BEGIN admin_orders.renderFormats.paystatusDetailed");
@@ -1712,46 +1725,51 @@ $('.editable',$container).each(function(){
 				
 
 			"orderItemUpdate" : function($btn)	{
-				$btn.button();
-				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
-				$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
-					var $parent = $btn.closest("[data-order-view-parent]"),
-					orderID = $parent.data('order-view-parent'),
-					$row = $btn.closest('tr'),
-					uuid = $row.data('uuid'),
-					qty = $("[name='qty']",$row).val(),
-					price = $("[name='price']",$row).val();
-					
-					if(uuid && orderID && qty && price)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
-						$parent.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
-						}
-					});
+				var $row = $btn.closest('tr');
+				if($row.data('stid') && $row.data('stid').charAt(0) == '%')	{$btn.hide()} //coupons can't be removed this way.
+				else	{
+					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
+					$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent'),
+						uuid = $row.data('uuid'),
+						qty = $("[name='qty']",$row).val(),
+						price = $("[name='price']",$row).val();
+						if(uuid && orderID && qty && price)	{
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
+							$parent.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+							}
+						});
+					}
 				}, //orderItemUpdate
 
 			"orderItemRemove" : function($btn)	{
-				$btn.button();
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
-					var $parent = $btn.closest("[data-order-view-parent]"),
-					orderID = $parent.data('order-view-parent'),
-					$row = $(this).closest('tr'),
-					stid = $row.data('stid');
-					if(stid && orderID)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
-						$parent.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
-						}
-					});
+				var $row = $btn.closest('tr');
+				if($row.data('stid') && $row.data('stid').charAt(0) == '%')	{$btn.hide()} //coupons can't be removed this way.
+				else	{
+					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+					$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent'),
+						stid = $row.data('stid');
+						if(stid && orderID)	{
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
+							$parent.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+							}
+						});
+					}
 				}, //orderItemRemove
 
 			"orderItemAddStructured" : function($btn)	{
