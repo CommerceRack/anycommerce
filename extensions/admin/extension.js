@@ -1938,6 +1938,48 @@ else	{
 				return this.showUI(path,$t ? $t : {});
 				},
 
+
+
+/* loading content and adding a new 'page' */
+
+/*
+load page looks in app.ext.admin.pages to see if a 'page' exists.
+pages only exists for apps. the absense of a page in the page object will be treated as legacy compatibility.
+vars allows for overrides of default page variables. Out of the gate, tab will be supported. don't know about any others.
+ -> tab being set determines whether breadcrumb and navtabs are reset. no tab, no reset. allows pages to be loaded inside another tab.
+ -> set vars.tab to 'current' to open page in current tab/tabcontent.
+
+			loadPage : function(pageID,vars)	{
+				var pages = app.ext.admin.pages; //shortcut
+				if(pageID && pages[pageID])	{
+					
+					}
+				else if(pageID)	{
+					//pageID set, but does not exists in pages var. report error.
+					}
+				else	{
+					//no pageID passed. report error.
+					}
+				},
+
+			addPage : function(pageID,obj){
+				if(pageID && typeof obj === 'object' && typeof obj.exec === 'function'){
+					var pages = app.ext.admin.pages;
+					if(!pages[pageID])	{
+						//required vars present
+						pages[pageID] = obj;
+						}
+					else	{
+						//HHmmmmmm... do we allow pages to be overwritten?
+						}
+					}
+				else	{
+					//page ID and obj.exec as a function are required.
+					}
+				
+				},
+*/
+
 /*
 HEADER CODE
 */
@@ -3612,7 +3654,7 @@ just lose the back button feature.
 				$btn.button();
 				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
 					event.preventDefault();
-					var $parent = $btn.closest(['data-appid']);
+					var $parent = $btn.closest("[data-appid]");
 					})
 				},
 
@@ -3620,7 +3662,7 @@ just lose the back button feature.
 				$btn.button();
 				$btn.off('click.appChooserFork').on('click.appChooserFork',function(event){
 					event.preventDefault();
-					var $parent = $(this).closest(['data-appid']);
+					var $parent = $btn.closest("[data-appid]");
 					app.u.dump("$parent.length: "+$parent.length);
 					app.u.dump("$parent.data: "); app.u.dump($parent.data());
 					window.open($parent.data('app-repo')+"archive/master.zip");
@@ -3631,10 +3673,29 @@ just lose the back button feature.
 				$btn.button();
 				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
 					event.preventDefault();
-					var $parent = $btn.closest(['data-appid']);
+					var $parent = $btn.closest("[data-appid]");
 					alert("Open a confirm dialog that shows the app id AND the domain in focus. after confirm, 'this may take a few moments...' then go through process.. creating project, adding files to project, selecting app for domain xyz.com, etc");
 					})
 				},
+
+
+
+			appChooserAppPreview : function($btn)	{
+				$btn.button();
+				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+					event.preventDefault();
+					var $parent = $btn.closest("[data-appid]"),
+					appID = $parent.data('appid');
+					app.u.dump("$parent.length: "+$parent.length);
+					$("<div \/>").append("<img src='https://static.zoovy.com/graphics/wrappers/2011_"+appID+"/preview.jpg' width='500' height='500' alt='Fashion' />").dialog({
+						title: 'Preview of '+appID,
+						width: '90%',
+						height: 600,
+						close: function(event, ui){$(this).dialog('destroy').remove()} //no need to keep content. destroy when done.
+						});
+					});
+				},
+
 
 /* login and create account */
 
