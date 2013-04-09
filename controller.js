@@ -905,7 +905,7 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(_tag,Q)	{
 				_tag = _tag || {}; 
 				_tag.datapointer = "whoAmI"
-				app.model.addDispatchToQ({"_cmd":"whoAmI","_tag" : _tag},Q);	
+				app.model.addDispatchToQ({"_cmd":"whoAmI","try_old_school":true,"_tag" : _tag},Q);	
 				}
 			}//whoAmI
 
