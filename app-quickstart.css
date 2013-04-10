@@ -8,6 +8,7 @@ body,html	{font-size:100%; background:#B7A58B; margin:0px; padding:0px;  font-fa
 @font-face {
 	font-family: 'Conv_BebasNeue';
 	src: url('fonts/BebasNeue.eot');
+	src: url('fonts/BebasNeue.otf');
 	src: local('☺'), url('fonts/BebasNeue.woff') format('woff'), url('fonts/BebasNeue.ttf') format('truetype'), url('fonts/BebasNeue.svg') format('svg');
 	font-weight: normal;
 	font-style: normal;
@@ -673,8 +674,8 @@ div#container div.nav
 
 /* pages like  company and/or customer are in a two column format. by default, a narrow right w/ nav and the main column w/ content. */
 
-.mainColumn	{width:67%; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; margin-left:30px; padding-top:18px;}
-.mainColumn h1{ font-family:'Conv_BebasNeue',Sans-Serif; font-size:36px;}
+.mainColumn	{font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; margin-left:30px; margin-right:30px; padding-top:18px;}
+.mainColumn h1{ font-family:'Conv_BebasNeue',Sans-Serif; font-size:36px; font-weight:normal;}
 .sideline	{float:right; width:20%; margin:24px 50px 24px;}
 .sideline a	{padding:5px 0; text-decoration:underline; display:block; font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif; color:#000000; font-size:14px;}
 .sideline a:hover	{text-decoration:none;}
@@ -760,7 +761,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
 #container{ width:1000px; margin:0px auto;}
-.prodViewerContainer	{width:948px; margin:0px auto;}
+.prodViewerContainer	{width:938px; margin:20px auto 28px;}
 
 .breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
 
@@ -775,12 +776,167 @@ PRODUCT DETAIL PAGE (productTemplate)
 .basePrice span{ font-size:10px; color:#000000;}
 .RightPcol .prodMSRP span{font-size:10px;}
 .RightPcol{background:#fff; padding:20px; width:180px;}
-.RightPcol h4{float:right; text-align:center;font-size:18px; font-weight:bold;}
-.RightPcol h5{float:left;text-align:center;font-size:18px; color:#999999;}
-.RightPcol .cents{ vertical-align:super;}
+.RightPcol h4{float:right; text-align:center;font-size:18px; padding:0 16px 0 0; font-weight:bold;}
+.RightPcol h5{float:left;text-align:center;font-size:18px; color:#999999; text-decoration:line-through;}
+.RightPcol .cents{ vertical-align:super;margin: 2px 0 0;position: absolute;}
 .RightPcol .marginBottom{border-bottom:1px solid #CCCCCC; padding:0 0 15px;}
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
 .tabContent{ font-size:12px;}
+.bottomP{ margin:100px 0 0 0px; line-height:25px; padding:0px; font-size:12px; list-style:none;}
+.bottomP img{ margin:5px 10px 0 0;}
+.protitle{ background:#fff; margin:20px 0 0 0;}
+.protitle ul{ margin:0px; padding:0px; list-style:none;}
+.protitle ul li{ margin:0px; padding:13px 20px; font-size:12px; color:#000; border-bottom:#cccccc solid 1px;}
+.protitle ul li img{ float:left;}
+.ui-widget-header {
+    background: url(images/ui-bg_highlight-soft_75_cccccc_1x100.png) repeat-x scroll 50% 50% #cccccc !important;
+    border: 1px solid #AAAAAA !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+.CreatAccount{}
+.CreatAccount #gotAccount1
+{
+	background: url(images/box-got-account.png) no-repeat;
+	height: 280px;
+	width: 300px;
+	float:right;
+}
+#gotAccount1 p{ font-size:12px; color:#fff; padding:7px 0 0; text-align:center; width:240px;}
+#gotAccount1 p a{ color:#fff;}
+#gotAccount1 h1{ font-size:36px; padding:10px 0 0; text-align:center;  font-family: "Bebas Neue",Arial,Helvetica,sans-serif; color:#fff;}
+	div#gotAccount1 img
+	{
+		left: 30px;
+		position: absolute;
+		top: 186px;
+	}
+		div#gotAccount1 input
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			height: 24px;
+			width: 237px;
+			margin:0 0 20px;
+		}
+	div#gotAccount1 input#modalLoginLogin
+	{
+		left: 30px;
+		top: 80px;
+	}
+	div#gotAccount1 input#modalLoginPassword
+	{
+		left: 30px;
+		top: 132px;
+	}
+	div#gotAccount1 span#lblLoginPassword
+	{
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 32px;
+		position: absolute;
+		top: 138px;
+	}
+#loginFormForModal{ background:#b7a58b;}
+.Account{ width:622px; background:url(images/createbg.jpg) no-repeat; margin-bottom:20px; float:left;}
+.Account h1{ text-align:center; padding:10px 0 30px 0; color:#fff;}
+.Account b{ font-weight:bold; font-size:12px;}
+.fieldM{ margin:0px auto; padding:0px 0 10px; width:570px;}
+.textf{ width:232px; height:26px; border:#cccccc solid 1px; margin:0 0 8px !important; padding:0 9px;}
+.field{ width:72px; font-weight:bold; font-size:12px; text-align:right; display:inline-block;}
+.textfname{ width:100px; height:30px; border:1px solid #7F7F7F; margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfmiddle{ width:12px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textflast{ width:116px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfadd{ width:253px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfadd1{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textcity{ width:112px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:inset 0 1px 2px #000000;}
+.textfstate{ width:62px; height:30px; border:1px solid #7F7F7F;margin:0 14px 0 7px; padding:0 3px; box-shadow:0 1px 2px #000000 inset;}
+.textfzip{ width:148px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfcountry{ width:245px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:3px; box-shadow:0 1px 2px #000000 inset;}
+.textfmail{ width:142px; height:30px; border:1px solid #7F7F7F;margin:0 26px 0 7px !important; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfphone{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px; padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfpass{ width:142px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.textfcpass{ width:162px; height:30px; border:1px solid #7F7F7F;margin:0 7px;padding:0 9px; box-shadow:0 1px 2px #000000 inset;}
+.stayup{ padding:0 0 0 70px;}
+.createButton{ margin:54px 0 40px 178px; border:0px; background:none}
+#gotAccount
+{
+	background: url(images/box-got-account.png) no-repeat;
+	height: 280px;
+	left: 337px;
+	position: absolute;
+	width: 300px;
+}
+#gotAccount p{ font-size:12px; color:#fff; padding:7px 0 0; text-align:center; width:240px;}
+#gotAccount p a{ color:#fff;}
+#gotAccount h1, #createAccount h1{ font-size:36px; padding:10px 0 0; text-align:center;  font-family: "Bebas Neue",Arial,Helvetica,sans-serif; color:#fff;}
+	div#gotAccount img
+	{
+		left: 30px;
+		position: absolute;
+		top: 186px;
+	}
+		div#gotAccount input
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			height: 24px;
+			width: 237px;
+			margin:0 0 20px;
+		}
+	div#gotAccount input#modalLoginLogin
+	{
+		left: 30px;
+		top: 80px;
+	}
+	div#gotAccount input#modalLoginPassword
+	{
+		left: 30px;
+		top: 132px;
+	}
+	div#gotAccount span#lblLoginPassword
+	{
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 32px;
+		position: absolute;
+		top: 138px;
+	}
+	
+	div#createAccount
+{
+	background: url(images/box-create-account.png) no-repeat;
+	height: 281px;
+	position: relative;
+	width: 300px;
+}
+	div#createAccount img
+	{
+		position: absolute;
+		left: 30px;
+		top: 187px;
+	}
+	div#createAccount p
+	{
+		font-family: Helvetica;
+		position: absolute;
+	}
+	div#createAccount p:first-child
+	{
+		color: #FFFFFF;
+		font-size: 22px;
+		left: 77px;
+		top: 20px;
+	}
+	div#createAccount p:not(:first-child)
+	{
+		color: #000000;
+		font-size: 14px;
+		left: 24px;
+		top: 87px;
+		width: 254px;
+	}
+	
 /*
 the child list and loading graphic should only show up IF the product is a parent.
 so the displayNone class is used, then a .grpType_PARENT class is added if the item is a parent.
@@ -876,7 +1032,7 @@ CUSTOMER PAGES
 
 
 /****** LOGIN MODAL ******/
-#loginFormForModal fieldset	{border:0}
+#loginFormForModal fieldset	{border:0; margin:30px 0 0 16px;}
 .loginOption fieldset div	{margin-bottom:12px;}
 .loginOption label	{width:120px; text-align:right; display:block; float:left; clear:left;}
 .loginOption label:after	{margin-right:12px; content:":"}
@@ -1203,3 +1359,12 @@ div.catCarousel h2
 
 #resultsProductListContainer{}
 #resultsProductListContainer li{width:216px;}
+
+.loginShow {display:none;}
+
+.buyerLoggedIn span.loginShow {display:inline-block;}
+
+.buyerLoggedIn .loginHide {display:none;}
+
+.hideIfLoggedIn{display:block;}
+.fl{float:left;}

@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130409054820",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130410023320",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -41,16 +41,10 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="site/styles/jquery.ad-gallery.css"/>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
-
-
-  <!--
-<script type="text/javascript" src="site/script/jquery.ad-gallery.js"></script>
-  <script type="text/javascript" src="site/script/photogallery.js"> </script>
--->
 
 <script type="text/javascript" src="jquery_actions.js"></script>
 <script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
@@ -60,10 +54,10 @@ app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
 <script>
-
+$("button").click(function () {
+$("li").slideToggle("slow");
+});
 </script>
-
-
 
 </head>
 
@@ -122,7 +116,11 @@ This file is intended to go along with the 10-step tutorial at:
 	<div id="topNav">
 			<div id="topNavContent">
 				<img src="images/account-icon.png" alt="">
-				<p>Welcome, Guest! <a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">LOGIN</a> or <a href="#" onclick="return showContent('customer',{'show':'newsletter'});">SIGN-UP</a></p>
+				<span class="fl">
+Welcome,
+<span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span><span class="loginShow"><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+<span class="loginHide">Guest(<a href="#" onclick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span><a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign Up</a>)</span>
+        </span>
 				<img src="images/view-cart-icon.png" alt="View Cart">
 				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onclick="return showContent('cart',{});">VIEW CART</a></p>
 				<img src="images/contact-us-icon.png" alt="Contact Us">
@@ -166,12 +164,35 @@ This file is intended to go along with the 10-step tutorial at:
 									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 										
 									</ul>
+                                     <ul>
+										<li>BY MANUFACTURER</li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										
+									</ul>
+                                    <ul>
+										<li>STAR WARS</li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+									</ul>
+                                    <ul>
+										<li>ACTION FIGURES</li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+									</ul>
 									<ul>
-										<li>Statues</li>
+										<li>DEALS </li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
 									</ul>
+                                    <div style="clear:both;"></div>
 									<ul>
 										<li>Comics</li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
@@ -201,6 +222,14 @@ This file is intended to go along with the 10-step tutorial at:
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
 										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
+									</ul>
+                                    <ul>
+										<li>Graphic Novels</li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										
 									</ul>
 									<ul>
 										<li>Price</li>
@@ -528,10 +557,12 @@ This file is intended to go along with the 10-step tutorial at:
 <div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
 
 <!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
+<!--
 <div id='appNav'>
 	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
 	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
 </div>
+-->
 
 <div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
 
@@ -639,8 +670,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 <div class="sliderM">
 <div class="bannerS"><img src="images/slider.jpg" width="620" height="346"></div>
-
-<div class="rightB"><img src="images/cyber.jpg" width="300" height="346"></div><div class="cb"></div>    
+<div class="rightB"><img src="images/cyber.jpg" width="300" height="346"></div><div class="cb"></div>
 </div>
 
 	<div class="midmain">
@@ -666,7 +696,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div class="featuredCategories">
 		<div class="catNav">
 			<div class="catNavContent">
-				<!--<p class="prevCat navCats"></p>--><p class="prevCat"></p>
+				<!--<p class="prevCat navCats"></p>-->
+                <p class="prevCat"></p>
 				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" />
                 
 				<p class="currentCat">The Hobbit</p>
@@ -958,6 +989,18 @@ this will likely become more flexible in the future. ###
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='50' height='50' /></div>
 
 	</div>
+    <div class="cb"></div>
+    <div class="protitle">
+    <ul>
+    <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
+#017 Harley Quinn Black Queen, Third
+Product Line</li>
+    <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
+    <li><img src="images/grayb.gif" width="20" height="21" style="margin:5px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
+#017 Black Queen, Third Product Line</li>
+    <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
+    </ul>
+    </div>
 
 	</td>
 
@@ -1017,7 +1060,12 @@ this will likely become more flexible in the future. ###
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
-
+<ul class="bottomP">
+<li><img src="images/redalert.gif" width="20" height="17">Choking Hazard Warning</li>
+<li><img src="images/grayalert.gif" width="20" height="17">Usually Ships in 1-2 Days</li>
+<li><img src="images/grayalert.gif" width="20" height="17">Eligible for FREE Shipping</li>
+<li><img src="images/grayalert.gif" width="20" height="17">Available for Store Pick-up</li>
+</ul>
 	</td>
     
 </tr>
@@ -1216,6 +1264,19 @@ if you change these, you should move them above this comment so that when you (o
 	<li><a href='#company?show=return'>Return Policy</a></li>
 	<li><a href='#company?show=shipping'>Shipping Information</a></li>
 </ul>
+
+<div style="clear: both;"></div>
+<br />
+<ul class='listStyleNone noPadOrMargin'>
+<h1>My Account</h1>
+	<li><a href='#customer?show=myaccount'>Login Or Sign Up</a></li>
+	<li><a href='#customer?show=myaccount'>View My Account</a></li>
+	<li><a href='#cart?show=cart'>View Shopping Cart</a></li>
+	<li><a href='#cart?show=cart'>Checkout</a></li>
+	<li><a href="#">Recently Viewed Items</a></li>
+	<li><a href="#">Previous Orders</a></li>
+	</ul>
+
 </nav>
 	</div>
 
@@ -1331,7 +1392,49 @@ also email us at <a href="mailto:help@toywars.com">help@toywars.com</a>. </div>
 		</div>
 
 	</div>
-
+<div class="featuredCategories">
+		<div class="catNav">
+			<div class="catNavContent">
+				<!--<p class="prevCat navCats"></p>-->
+                <p class="prevCat"></p>
+				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" />
+                
+				<p class="currentCat">The Hobbit</p>
+				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" />
+				<!--<p class="nextCat navCats"></p>-->
+			</div>
+			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
+		</div>
+		<div class="catCarousel">
+			<div class="ccItem">
+				<h2>The Hobbit</h2>
+				<ul id="carCat1" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"hobbit weta"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA;loadsTemplate: productListTemplateResults; withInventory: 1;before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Star Wars</h2>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"star wars prop"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Doctor Who</h2>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"sonic screwdriver"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Walking Dead</h2>
+				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"walking dead"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem">
+				<h2>Avengers</h2>
+				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"avengers figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>			
+		</div>
+		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
+		
+		
+		<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
+		
+		
+		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
+	</div>
 </div><!-- /companyTemplate -->
 
 
@@ -1339,19 +1442,23 @@ also email us at <a href="mailto:help@toywars.com">help@toywars.com</a>. </div>
 <!-- loadingBG needed on this for app init (content may take a moment to load) -->
 <div id='customerTemplate' class='clearfix'>
 
-	<div class='sideline' >
+	<!--
+<div class='sideline' >
 	<nav id='customerNav'>
 	<ul class='listStyleNone noPadOrMargin'>
 <!-- before restoring this, test cuz news form on left was causing some conflicts -->
-		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
+		<!--
+<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li>
 		<li><a href='#customer?show=myaccount'>My Account</a></li>
 		<li><a href='#customer?show=changepassword'>Change Password</a></li>
 		<li><a href='#customer?show=orders'>Order History</a></li>
 		<li><a href='#customer?show=lists'>Manage Lists</a></li>
 		<li class='hideIfLoggedOut'><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></li>
+
 	</ul>
 	</nav>
 	</div>
+-->
 
 	<div class='mainColumn'>
 <!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
@@ -1364,6 +1471,59 @@ subscribeListsArticle is used for authenticated buyers
 			<h1>Subscribe to our Newsletter and Save!</h1>
 			<div data-bind="format:loadsTemplate; loadsTemplate:subscribeFormTemplate;"></div>
 		</div>
+
+<span class="hideIfLoggedIn">
+<div class="CreatAccount">
+            
+<div id="gotAccount1"> 
+		<h1>GOT AN ACCOUNT?</h1>
+	
+<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+			<fieldset style="margin:0 0 0 20px; border:0px;">
+				
+	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
+	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+        <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:0px; margin:0px;"/>
+        <p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+			</fieldset>
+		</form>
+		
+		
+	</div>
+<div class="Account" >
+<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return true;">
+<h1>WELCOME, FIRST-TIMERS!</h1><input type='hidden' name='form' value='Business' />
+<div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
+<b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
+<div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
+<input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
+<div class="fieldM"><span class="field">City</span> <input name='city' type='text' size='30' placeholder='City' required='required' class='textcity'/> 	<b>State</b> <input name='region' type='text' size='5' placeholder='State' class='textfstate' /> <b>Zip</b> <input name='postal' type='text' size='10' placeholder='00000-0000' class='textfzip'/></div>
+
+<div class="fieldM"><span class="field">Country</span> <select name="Country" class="textfcountry"><option>United States of America</option></select></div>
+
+<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='ar_phone' type='text' size='12' placeholder='Phone Number' class='textfphone'/> </div>
+<!--
+<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='confirm_email' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'/> </div>
+-->
+<!--<fieldset class='marginBottom'>
+	<legend>About Your Business</legend>
+	
+	<div class="fieldM"><input name='order_volume' type='text' size='30' placeholder='Anticipated Order Volume' />
+	<input name='resaleid' type='text' size='30' placeholder='State Resale Permit' /></div>
+	<div class="fieldM"><input name='ein' type='text' size='30' placeholder='Company EIN/Tax ID' />
+	<input name='credit_limit' type='number' step='0.01' min='0' placeholder='Requested Credit Limit' /></div>
+	
+</fieldset>-->
+
+<button class="createButton"><img src="images/createaccount.png"></button>
+
+</form>
+
+            </div>
+		</div>
+        
+        </span>
 
 		<div id='subscriberListsArticle' class='displayNone textContentArea'>
 			<h1>Manage your Subscriptions</h1>
@@ -1484,7 +1644,8 @@ subscribeListsArticle is used for authenticated buyers
 										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
 										
-                                        
+                                        <div class="clearfix"></div>
+                                        <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif"/></a></li>                                   
   </ul>
 		<!-- productListTemplateResults gets loaded into here -->
 		<ul style="float: right; width: 729px;" id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
@@ -2015,27 +2176,29 @@ The 'data-action' attribute is used to assign an onclick.
 <p id='loginMessaging' class='marginBottom appMessaging'></p>
 
 <div id='loginFormContainer'>
+	<div id="gotAccount"> 
+		<h1>GOT AN ACCOUNT?</h1>
+	
 <form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
-<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
-	<fieldset>
-
-	<div>
-	<label for='modalLoginlogin'>Login/Email</label>
+			<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+			<fieldset>
+				
 	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
-	</div>
-
-	<div>
-	<label for='modalLoginpassword'>Password</label>
 	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+        <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:0px; margin:0px;"/>
+        <p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+			</fieldset>
+		</form>
+		
+		
+	</div>
+	<div id="createAccount">
+		<h1>FIRST-TIMER?</h1>
+		<p>If you have never made a purchase at this web site and have never subscribed to this store's mailing kist, please choose this option.</p>
+		<img class="pointer" src="images/button-create-account.png" onClick="return showContent('customer',{'show':'crateaccount'});" alt="Create Account" />
 	</div>
 
-	<div>
-	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
-	</div>
-	</fieldset>
-</form>
-
-<div id='recoverPasswordContainer'>
+<!--<div id='recoverPasswordContainer'>
 <hr />
 
 <h3 class='marginBottom'>Recover Password</h3>
@@ -2049,12 +2212,12 @@ The 'data-action' attribute is used to assign an onclick.
 </fieldset>
 </form>
 
-</div><!-- /recoverPasswordContainer -->
+</div>--><!-- /recoverPasswordContainer -->
 
-<div>
+<!--<div>
 <hr />
 <button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
-</div>
+</div>-->
 
 
 
