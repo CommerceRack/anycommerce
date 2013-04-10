@@ -941,7 +941,7 @@ see jquery/api webdoc for required/optional param
 			dispatch : function(obj,_tag,Q)	{
 				obj = obj || {};
 				obj._cmd = "whoAmI";
-				obj._tag = obj._tag || {}; 
+				obj._tag = _tag || {}; 
 				obj._tag.datapointer = "whoAmI"
 				app.model.addDispatchToQ(obj,Q);
 				}
