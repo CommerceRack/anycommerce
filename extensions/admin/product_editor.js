@@ -138,7 +138,7 @@ var admin_prodEdit = function() {
 			if($modal.length < 1)	{
 				$modal = $("<div>").attr({'id':'createProductDialog','title':'Create a New Product'});
 				$modal.appendTo('body');
-				$modal.dialog({width:500,height:500,modal:true,autoOpen:false});
+				$modal.dialog({width:600,height:500,modal:true,autoOpen:false});
 				}
 			$modal.empty().append(app.renderFunctions.createTemplateInstance('ProductCreateNewTemplate'))
 			$modal.dialog('open');
@@ -407,11 +407,38 @@ var admin_prodEdit = function() {
 			}, //showProductTab 
 
 
-		handleCreateNewProduct : function(P)	{
-			var pid = P.pid;
-			delete P.pid;
-//				app.u.dump("Here comes the P ["+pid+"]: "); app.u.dump(P);
-			app.ext.admin.calls.adminProductCreate.init(pid,P,{'callback':'showMessaging','message':'Created!','parentID':'prodCreateMessaging'});
+		handleCreateNewProduct : function(vars)	{
+			var pid = vars.pid;
+			delete vars.pid;
+			$target = $('#createProductDialog');
+			$target.showLoading({'message':'Creating product '+pid});
+			app.ext.admin.calls.adminProductCreate.init(pid,vars,{'callback':function(rd){
+				$target.hideLoading();
+				if(app.model.responseHasErrors(rd)){
+					app.u.throwMessage(rd);
+					}
+				else	{
+					$target.empty();
+					$target.append("<p>Thank you, "+pid+" has now been created. What would you like to do next?<\/p>");
+					
+					$("<button \/>").text('Edit '+pid).button().on('click',function(){
+						app.ext.admin_prodEdit.a.showPanelsFor(pid);
+						$target.dialog('close');
+						}).appendTo($target);
+
+					$("<button \/>").text('Add another product').button().on('click',function(){
+						app.ext.admin_prodEdit.a.showCreateProductDialog();
+						}).appendTo($target);
+					
+					$("<button \/>").text('Close Window').button().on('click',function(){
+						$target.dialog('close');
+						}).appendTo($target);
+
+
+
+					
+					}
+				}});
 			app.model.dispatchThis('immutable');
 			},
 //clears existing content and creates the table for the search results. Should be used any time an elastic result set is going to be loaded into the product content area WITH a table as parent.
