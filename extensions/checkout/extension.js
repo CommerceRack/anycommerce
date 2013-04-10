@@ -1111,7 +1111,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(app.ext.orderCreate.validate.checkout($form))	{
 							$('body').showLoading({'message':'Creating order...'});
 							app.ext.cco.u.sanitizeAndUpdateCart($form);
-							app.ext.cco.u.buildPaymentQ();
+							app.ext.cco.u.buildPaymentQ($form);
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
 							app.model.dispatchThis('immutable');						
 							

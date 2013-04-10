@@ -30,7 +30,7 @@ var app = {vars:{
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
 if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "https:" == document.location.protocol ? app.vars.httpsURL : app.vars.httpURL;
+	app.vars.baseURL  = "/";
 	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 	}
 </script>
@@ -1462,17 +1462,17 @@ The 'data-action' attribute is used to assign an onclick.
 <address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
 	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
 	<div class='addressFullname'>
-		<span data-bind="var: address(bill_firstname);format:text;"  title='first name'></span>
-		<span data-bind="var: address(bill_lastname);format:text;"  title='last name'></span>
+		<span data-bind="var: address(bill/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(bill/lastname);format:text;"  title='last name'></span>
 	</div>
 	<div class='address'>
-		<div data-bind="var: address(bill_address1);format:text;"  title='address'></div>
-		<div data-bind="var: address(bill_address2);format:text;"  title='address 2'></div>
+		<div data-bind="var: address(bill/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(bill/address2);format:text;"  title='address 2'></div>
 
-		<span data-bind="var: address(bill_city);format:text;"  title='city'></span>,
-		<span data-bind="var: address(bill_region);format:text;"  title='state'></span>.
-		<span data-bind="var: address(bill_postal);format:text;"  title='zip'></span>
-		<div data-bind="var: address(bill_countrycode);format:text;" title='country'></div>
+		<span data-bind="var: address(bill/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(bill/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(bill/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(bill/countrycode);format:text;" title='country'></div>
 
 	</div>
 
@@ -1676,6 +1676,11 @@ The 'data-action' attribute is used to assign an onclick.
 	</ul>
 	</li>
 </ul>
+	</td>
+	
+	
+	<td>
+	<input type='text' onBlur="app.model.destroy($(this).val()); $(this).val('');" placeholder='destroy' />
 	</td>
 </tr>
 </table>

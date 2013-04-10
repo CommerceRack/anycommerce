@@ -328,31 +328,31 @@ left them be to provide guidance later.
 //NOTE TO SELF:
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
-			buildPaymentQ : function()	{
+			buildPaymentQ : function($form)	{
 //				app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var payby = $('input:radio[name="want/payby"]:checked').val()
-				app.u.dump(" -> payby: "+payby);
+				var sfo = $form.serializeJSON(),
+				payby = $('input:radio[name="want/payby"]:checked').val();
+//				app.u.dump(" -> payby: "+payby);
 				if(payby)	{
 					if(payby.indexOf('WALLET') == 0)	{
 						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
-	//					app.u.dump(app.ext.cco.u.getWalletByID (payby));
 						}
 					else if(payby == 'CREDIT')	{
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":$('#payment-cc').val(),"CV":$('#payment-cv').val(),"YY":$('#payment-yy').val(),"MM":$('#payment-mm').val()});
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"CREDIT","CC":sfo['payment/CC'],"CV":sfo['payment/CV'],"YY":sfo['payment/YY'],"MM":sfo['payment/MM']});
 						}				
 					else if(payby == 'PO')	{
-						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":$('#payment-po').val()});
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","TN":"PO","PO":sfo['payment/PO']});
 						}				
 					else if(payby == 'ECHECK')	{
 						app.ext.cco.calls.cartPaymentQ.init({
 	"cmd":"insert",
 	"TN":"ECHECK",
-	"EA":$('#paymentea').val(),
-	"ER":$('#paymenter').val(),
-	"EN":$('#paymenten').val(),
-	"EB":$('#paymenteb').val(),
-	"ES":$('#paymentes').val(),
-	"EI":$('#paymentei').val()
+	"EA":sfo['payment/EA'],
+	"ER":sfo['payment/ER'],
+	"EN":sfo['payment/EN'],
+	"EB":sfo['payment/EB'],
+	"ES":sfo['payment/ES'],
+	"EI":sfo['payment/EI']
 							});
 						}
 					else	{
