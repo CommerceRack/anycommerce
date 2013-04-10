@@ -690,7 +690,10 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 </div>
 
-
+<div id='categoryTemplateHTML' class='loadingBG categoryTemplate'>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+</div>
 
 
 

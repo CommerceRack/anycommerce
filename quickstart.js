@@ -30,6 +30,7 @@ var myRIA = function() {
 //the list of templates that are commonly edited (same order as they appear in appTemplates
 			'homepageTemplate',	'categoryTemplate',
 			'categoryListTemplate',
+			'categoryTemplateHTML',
 			'categoryListTemplateRootCats',
 			'productListTemplate',
 			'productListTemplateATC',
@@ -2544,6 +2545,9 @@ buyer to 'take with them' as they move between  pages.
 					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
 						infoObj.templateID = 'homepageTemplate'
 						}
+					else if(app.ext.cubworld.vars.catTemplates[catSafeID]){
+						infoObj.templateID = app.ext.cubworld.vars.catTemplates[catSafeID];
+						}
 					else	{
 						infoObj.templateID = 'categoryTemplate'
 						}
@@ -2874,7 +2878,7 @@ else	{
 			createTemplateFunctions : function()	{
 
 				app.ext.myRIA.template = {};
-				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
+				var pageTemplates = new Array('categoryTemplateHTML','categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
 					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[],"onDeparts":[]};
