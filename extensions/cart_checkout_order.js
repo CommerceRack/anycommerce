@@ -329,10 +329,10 @@ left them be to provide guidance later.
 //use if/elseif for payments with special handling (cc, po, etc) and then the else should handle all the other payment types.
 //that way if a new payment type is added, it's handled (as long as there's no extra inputs).
 			buildPaymentQ : function($form)	{
-//				app.u.dump("BEGIN cco.u.buildPaymentQ");
-				var sfo = $form.serializeJSON(),
-				payby = $('input:radio[name="want/payby"]:checked').val();
-//				app.u.dump(" -> payby: "+payby);
+				app.u.dump("BEGIN cco.u.buildPaymentQ");
+				var sfo = $form.serializeJSON() || {},
+				payby = sfo["want/payby"];
+				app.u.dump(" -> payby: "+payby);
 				if(payby)	{
 					if(payby.indexOf('WALLET') == 0)	{
 						app.ext.cco.calls.cartPaymentQ.init($.extend({'cmd':'insert'},app.ext.cco.u.getWalletByID(payby)));
