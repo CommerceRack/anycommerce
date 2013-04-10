@@ -1464,7 +1464,7 @@ if(ps.indexOf('?') >= 1)	{
 				showContent('homepage',{});
 				},
 
-
+/*
 
 			fetchTimeInTransit : function($context,products)	{
 				if(typeof products == 'object' && $context)	{
@@ -1473,8 +1473,12 @@ if(ps.indexOf('?') >= 1)	{
 							if(app.model.responseHasErrors(rd)){
 								$context.anymessage({'message':rd});
 								}
-							else	{
+							else if(app.data[rd.datapointer]['@services'])	{
 								//show time in transit.
+//								$("[data-app-role='timeInTransit']",$context).anyContent({'templateID':'timeInTransitTemplate',datapointer:rd.datapointer});
+								}
+							else	{
+								//call succeeded, but no transit times provided.
 								}
 							}},'passive');
 						app.model.dispatchThis('passive');
@@ -1489,7 +1493,7 @@ if(ps.indexOf('?') >= 1)	{
 					}
 				},
 
-
+*/
 
 //will look at the thisPageIsPublic variable to see if the info/show in infoObj is a publicly viewable page.
 //used in B2B
