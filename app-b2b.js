@@ -2374,7 +2374,7 @@ elasticsearch.size = 50;
 					$article.show(); //only show content if page doesn't require authentication.
 
 //already rendered the page and it's visible. do nothing. Orders is always re-rendered cuz the data may change.
-					if($article.data('isTranslated') || infoObj.show == 'orders')	{}
+					if($article.data('isTranslated') && infoObj.show != 'orders')	{}
 					else	{
 					
 						switch(infoObj.show)	{
@@ -2416,7 +2416,7 @@ elasticsearch.size = 50;
 							
 								var orderID = infoObj.uriParams.orderid;
 								var cartID = infoObj.uriParams.cartid;
-								if(cartID && orderID)	{
+								if((cartID && orderID))	{
 									$article.showLoading({'message':'Retrieving order information'});
 									app.ext.store_crm.calls.buyerOrderGet.init({'orderid':orderID,'cartid':cartID},{'callback': function(rd){
 										$article.hideLoading();
@@ -2433,7 +2433,7 @@ elasticsearch.size = 50;
 								else	{
 									$article.anymessage({'message':'Both a cart id and an order id are required (for security reasons) and one is not available. Please try your link again or, if the error persists, contact us for additional help.'});
 									}
-							
+								break;
 							case 'orders':
 							//{'parentID':'orderHistoryContainer','templateID':'orderLineItemTemplate','callback':'showOrderHistory','extension':'store_crm'}
 								app.calls.buyerPurchaseHistory.init({'callback':function(rd){

@@ -1476,7 +1476,7 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
-<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
+<table class='orderContentsTable fullWidth' data-app-role='invoiceContainer' id='invoiceTemplate'>
 <tr>
 	<td colspan='2'>
 <div class='floatRight'>
@@ -1494,8 +1494,7 @@ The 'data-action' attribute is used to assign an onclick.
 <!-- print icon -->
 
 
-<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
-
+<h3 class='orderID' data-bind='var:order(order/our/orderid);format:text;'></h3>
 <h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
 <h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
 </hgroup>
@@ -1534,7 +1533,9 @@ The 'data-action' attribute is used to assign an onclick.
 	</td>
 	<td class='orderContentsProdlistContainer'>
 	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
-	<ul data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;" class='listStyleNone lineItemProdlist'></ul>
+	<table  class='listStyleNone lineItemProdlist fullWidth'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
 	</td>
 </tr>
 </table>
