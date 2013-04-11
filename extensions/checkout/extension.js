@@ -1277,8 +1277,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var $checkoutForm = $btn.closest('form'), //used in some callbacks later.
 				$checkoutAddrFieldset = $btn.closest('fieldset');
 
-				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(){
-					
+				$btn.off('click.showBuyerAddressUpdate').on('click.showBuyerAddressUpdate',function(event){
+					event.preventDefault();
 					var addressType = $btn.closest("[data-app-addresstype]").data('app-addresstype');
 					
 					app.ext.store_crm.u.showAddressEditModal({
