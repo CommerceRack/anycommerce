@@ -1114,6 +1114,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$('body').showLoading({'message':'Creating order...'});
 							app.ext.cco.u.sanitizeAndUpdateCart($form);
 //paypal payments are added to the q as soon as the user returns from paypal.
+//This will solve the double-add to the payment Q
 							if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC')	{}
 							else	{
 								app.ext.cco.u.buildPaymentQ($form);
