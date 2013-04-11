@@ -437,6 +437,12 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminOrderDetail
 			
 //do not store this. if you do, update order editor and be sure datapointer is orderid specific.
+/*
+This is also true for appPaymentMethods
+if order total is zero, zero is only payment method.
+if paypalEC is on order, only paypalEC shows up. (paypal restriction of payment and order MUST be equal)
+if giftcard is on there, no paypal will appear.
+*/
 		adminOrderPaymentMethods	: {
 			
 			init : function(obj,_tag,Q)	{
