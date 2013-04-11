@@ -106,6 +106,7 @@ var orderCreate = function() {
 			onSuccess : function(tagObj)	{
 				//used for one page checkout only.
 				app.u.dump("BEGIN startcheckout callback for legacy 1PC");
+				app.model.destroy('buyerAddressList'); //list 'may' have been updated in vstore UI.
 				app.ext.orderCreate.a.startCheckout($('#zContent'));
 				}
 			},
