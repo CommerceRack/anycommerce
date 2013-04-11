@@ -118,6 +118,7 @@ var orderCreate = function() {
 		handlePayPalIntoPaymentQ : {
 			onSuccess : function(tagObj)	{
 				app.u.dump('BEGIN orderCreate[nice].callbacks.handlePayPalIntoPaymentQ.onSuccess');
+				//this is the callback AFTER the payment is added to the Q, so no success is needed, only specific error handling.
 				},
 			onError : function(responseData,uuid)	{
 				$('body').showLoading({'message':'Updating order...'});
@@ -1096,8 +1097,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 					if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.orderCreate.vars['payment-pt'])	{
 						$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
 						app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
-							$('body').hideLoading();
 							if(app.model.responseHasErrors(rd)){
+								$('body').hideLoading();
 								$('html, body').animate({scrollTop : $fieldset.offset().top},1000); //scroll to first instance of error.
 								$fieldset.anymessage({'message':rd});
 								}
@@ -1112,7 +1113,11 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(app.ext.orderCreate.validate.checkout($form))	{
 							$('body').showLoading({'message':'Creating order...'});
 							app.ext.cco.u.sanitizeAndUpdateCart($form);
-							app.ext.cco.u.buildPaymentQ($form);
+//paypal payments are added to the q as soon as the user returns from paypal.
+							if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC')	{}
+							else	{
+								app.ext.cco.u.buildPaymentQ($form);
+								}
 							app.ext.cco.calls.cartOrderCreate.init({'callback':'cart2OrderIsComplete','extension':'orderCreate','jqObj':$form});
 							app.model.dispatchThis('immutable');						
 							

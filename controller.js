@@ -2133,6 +2133,7 @@ later, it will handle other third party plugins as well.
 //for credit cards, we can't store the # or cid in local storage. Save it in memory so it is discarded on close, reload, etc
 //expiration is less of a concern
 				case 'PAYPALEC' :
+				
 				//paypal supplemental is used for some messaging (select another method or change due to error). leave this here.
 					break;
 				case 'CREDIT':
@@ -2152,7 +2153,7 @@ later, it will handle other third party plugins as well.
 					if(isAdmin === true)	{
 						tmp += "<li><label><input type='radio' name='VERB' value='AUTHORIZE'>Authorize<\/label><\/li>"
 						tmp += "<li><label><input type='radio' name='VERB' value='CHARGE'>Charge<\/label><\/li>"
-						tmp += "<li><label><input type='radio' name='VERB' value='REFUND'>Refund<\/label><\/li>"
+						tmp += "<li class='hint'>Use refund action in transaction history to issue refund.<\/li>"
 						}
 					
 					

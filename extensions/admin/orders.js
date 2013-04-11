@@ -574,6 +574,8 @@ $('body').showLoading({'message':'Fetching order'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+app.model.destroy('adminOrderPaymentMethods'); //though not stored in local, be sure the last orders methods aren't by accident.
+
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 //	app.u.dump("Executing callback for adminOrderDetail");
 	
@@ -1243,12 +1245,13 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				else if (pref['tender'] == 'PAYPALEC') {
 					// PAYPALEC is a separate tender type (but short term it's basically a credit card)
 					// long term it will have some specialized actions that are unique exclusively to paypal
+					// old orders may have a payment type of PAYPAL (IPN) but those are old and these actions are not applicable. no actions are.
 					if (pref['ps'] == '189') {	actions.push('capture') }
 					if (pref['ps'] == '199') {	actions.push('capture') }
 					if (pref['ps'] == '259') { actions.push('retry') }
 					if (pref['ps'].substring(0,1) == '0' || pref['ps'].substring(0,1) == '4') { 
-						actions.push('refund') 
-						actions.push('void')
+						actions.push('refund');
+						actions.push('void');
 						}
 					}
 				else if (pref['tender'] == 'CREDIT') {
@@ -1284,9 +1287,6 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				else if (pref['tender'] == 'LAYAWAY') {
 					actions.push('layaway')
 					actions.push('void')
-					}
-				else if (pref['tender'] == 'PAYPALEC') {
-					if (pref['ps'] == '199') { actions.push('capture') };
 					}
 				else{
 					app.u.dump(" -> no tender conditions met.");

@@ -436,7 +436,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminOrderDetail
 			
-			
+//do not store this. if you do, update order editor and be sure datapointer is orderid specific.
 		adminOrderPaymentMethods	: {
 			
 			init : function(obj,_tag,Q)	{
