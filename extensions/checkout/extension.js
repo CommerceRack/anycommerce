@@ -237,13 +237,34 @@ _gaq.push(['_trackEvent','Checkout','User Event','Order created ('+orderID+')'])
 					}
 
 
+
+
 if(app.vars._clientid == '1pc')	{
 //add the html roi to the dom. this likely includes tracking scripts. LAST in case script breaks something.
 //this html roi is only generated if clientid = 1PC OR model version is pre 2013. for apps, add code using checkoutCompletes.
 	setTimeout(function(){
 		$checkout.append(checkoutData['html:roi']);
 		app.u.dump('wrote html:roi to DOM.');
+
+//GTS for apps is handled in google extension
+		if(typeof window.GoogleTrustedStore)	{
+			delete window.GoogleTrustedStore; //delete existing object or gts conversion won't load right.
+//running this will reload the script. the 'span' will be added as part of html:roi
+//if this isn't run in the time-out, the 'span' w/ order totals won't be added to DOM and this won't track as a conversion.
+			(function() {
+			var scheme = (("https:" == document.location.protocol) ? "https://" : "http://");
+			var gts = document.createElement("script");
+			gts.type = "text/javascript";
+			gts.async = true;
+			gts.src = scheme + "www.googlecommerce.com/trustedstores/gtmp_compiled.js";
+			var s = document.getElementsByTagName("script")[0];
+			s.parentNode.insertBefore(gts, s);
+			})();
+			}
+
 		},2000); 
+
+
 	}
 else	{
 	app.u.dump("Not 1PC.");
