@@ -714,7 +714,9 @@ PAGE STYLES
 
 
 /* styles for csv import pages */
+/* this was a horrible idea. at some point, these should be removed */
 .page section	{display:block; padding:0; margin:0 0 24px 0}
+.page section.displayNone	{display:none;}
 .page fieldset	{border:none; padding:0; margin-bottom:12px;}
 
 

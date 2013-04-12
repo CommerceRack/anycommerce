@@ -3685,19 +3685,23 @@ just lose the back button feature.
 				},
 
 
-
-			appChooserAppPreview : function($btn)	{
-				$btn.button();
-				$btn.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+//$ele is probably an li.
+			appChooserAppPreview : function($ele)	{
+				$ele.off('click.appChooserAppChoose').on('click.appChooserAppChoose',function(event){
+					
 					event.preventDefault();
-					var $parent = $btn.closest("[data-appid]"),
-					appID = $parent.data('appid');
-					app.u.dump("$parent.length: "+$parent.length);
-					$("<div \/>").append("<img src='https://static.zoovy.com/graphics/wrappers/2011_"+appID+"/preview.jpg' width='500' height='500' alt='Fashion' />").dialog({
-						title: 'Preview of '+appID,
-						width: '90%',
-						height: 600,
-						close: function(event, ui){$(this).dialog('destroy').remove()} //no need to keep content. destroy when done.
+					var appID = $ele.data('appid'),
+					$panel = $('#appChooserDetailPanel');
+
+					app.u.dump("Show preview for: "+appID);
+					//set all preview li's to default state then the new active one to active.
+					$ele.closest('ul').find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
+					$ele.addClass('ui-state-active').removeClass('ui-state-default');
+					
+					
+					$("section:visible",$panel).first().hide('scale',function(){
+						app.u.dump('got here');
+						$("section[data-appid='"+appID+"']:first",$panel).show('scale')
 						});
 					});
 				},
