@@ -397,7 +397,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 			chkoutMethodsShip : function($fieldset,formObj)	{
 				var valid = 0;
 				if($fieldset && formObj)	{
-					if($("[name='want/shipping_id']:checked").length)	{
+					if(app.ext.cco.u.thisSessionIsPayPal())	{valid = 1} //ship address comes back from paypal. panel is hidden. auto-approve.
+					else if($("[name='want/shipping_id']:checked").length)	{
 						if(app.u.validateForm($fieldset)){valid = 1;}
 						else	{valid = 0;}
 						}
