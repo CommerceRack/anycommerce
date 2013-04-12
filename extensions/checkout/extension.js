@@ -1121,7 +1121,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 					var $form = $btn.closest('form');
 					
 //if paypalEC is selected, skip validation and go straight to paypal. Upon return, bill and ship will get populated automatically.
-					if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.orderCreate.vars['payment-pt'])	{
+					if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC' && !app.ext.cco.u.thisSessionIsPayPal())	{
 						$('body').showLoading({'message':'Transferring you to PayPal payment authorization'});
 						app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress': (app.u.buyerIsAuthenticated()) ? 0 : 1},{'callback':function(rd){
 							if(app.model.responseHasErrors(rd)){
