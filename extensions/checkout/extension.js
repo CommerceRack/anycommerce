@@ -420,6 +420,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				var valid = 0;
 				if($fieldset && formObj)	{
 					if(app.ext.cco.u.thisSessionIsPayPal() && app.ext.cco.u.aValidPaypalTenderIsPresent())	{valid = 1;} //if paypal
+//should only get match here for expired paypal payments or some unexpected paypal related issue.
 					else if(app.ext.cco.u.thisSessionIsPayPal()){
 						$fieldset.anymessage({'message':"It appears something has gone wrong with your paypal authorization. Perhaps it expired. Please click the 'choose alternate payment method' link and either re-authorize through paypal or choose an alternate payment method. We apologize for the inconvenience. "})
 						}
@@ -1141,7 +1142,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 							app.ext.cco.u.sanitizeAndUpdateCart($form);
 //paypal payments are added to the q as soon as the user returns from paypal.
 //This will solve the double-add to the payment Q
-							if($("input[name='want/payby']:checked",$form).val() == 'PAYPALEC')	{}
+//payment method validation ensures a valid tender is present.
+							if(app.ext.cco.u.thisSessionIsPayPal())	{}
 							else	{
 								app.ext.cco.u.buildPaymentQ($form);
 								}
