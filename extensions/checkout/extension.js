@@ -1487,7 +1487,6 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 			handlePaypalInit : function($context)	{
-				
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1495,11 +1494,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var token = app.u.getParameterByName('token');
 				var payerid = app.u.getParameterByName('PayerID');
 				if(token && payerid)	{
-					$context.anymessage({'message':'Welcome Back! you are almost done. Simply verify the information below and push the place order button to complete your transaction.','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'});
-					app.u.dump("It appears we've just returned from PayPal.");
-					app.ext.orderCreate.vars['payment-pt'] = token;
-					app.ext.orderCreate.vars['payment-pi'] = payerid;
-					app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
+					if(app.ext.cco.u.aValidPaypalTenderIsPresent())	{} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.
+					else	{
+						$context.anymessage({'message':'Welcome Back! you are almost done. Simply verify the information below and push the place order button to complete your transaction.','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'});
+						app.u.dump("It appears we've just returned from PayPal.");
+						app.ext.orderCreate.vars['payment-pt'] = token;
+						app.ext.orderCreate.vars['payment-pi'] = payerid;
+						app.ext.cco.calls.cartPaymentQ.init({"cmd":"insert","PT":token,"ID":token,"PI":payerid,"TN":"PAYPALEC"},{"extension":"orderCreate","callback":"handlePayPalIntoPaymentQ"});
+						}
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
 				else if(app.ext.cco.u.thisSessionIsPayPal())	{
