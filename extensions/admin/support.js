@@ -23,13 +23,13 @@ An extension for managing the media library in addition to ALL other file upload
 
 
 var admin_support = function() {
-	var theseTemplates = new Array('supportFileUploadTemplate');
+	var theseTemplates = new Array('supportFileUploadTemplate','supportPageTemplate','supportTicketRowTemplate','supportTicketCreateTemplate');
 	var r = {
 
 ////////////////////////////////////   CALLS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 	calls : {
-		
+// in next odd release, move this to admin. !!!
 		adminTicketFileAttach : {
 			init : function(obj,tagObj)	{
 				this.dispatch(obj,tagObj);
@@ -82,6 +82,24 @@ var admin_support = function() {
 
 		a : {
 			
+			showTicketManager : function($target)	{
+				app.u.dump("BEGIN admin_support.a.showTicketManager");
+				$target.css('min-height',300); //so showLoading has a little room.
+				$target.showLoading({'message':'Fetching list of open tickets'});
+				
+				app.ext.admin.calls.adminTicketList.init({'detail':'open'},{callback : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd});
+						}
+					else	{
+						$target.anycontent({templateID:'supportPageTemplate','datapointer':rd.datapointer});
+						app.u.handleAppEvents($target);
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				
+				},
+			
 			addSupportFileUploadToID : function(id,ticketid,uuid)	{
 				var $target = $(app.u.jqSelector('#',id));
 				$target.empty(); //clear any previous instantiations of the uploader. (in case of doubleclick)
@@ -121,8 +139,33 @@ var admin_support = function() {
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {} //u
+		u : {}, //u
 
+
+		e : {
+			
+			showTicketCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(){
+					var $target = $("<div \/>",{'title':'Create a new support ticket'}).appendTo('body');
+					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
+					$target.dialog({'width':500,'height':500});
+					app.u.handleAppEvents($target);
+					});
+				},
+			
+			showTopicInputs : function($select)	{
+				app.u.dump(" -> event showTopicInputs has been added.");
+				$select.off('change.showTopicInputs').on('change.showTopicInputs',function(){
+					var $form = $select.closest('form');
+					app.u.dump('got here');
+					$('fieldset.topicInputs',$form).hide(); //hide all the other topic input fields.
+					$("fieldset[data-app-role='"+$select.val()+"_inputs']",$form).show();
+					});
+				
+				}
+			
+			}
 
 		} //r object.
 	return r;

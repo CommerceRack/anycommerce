@@ -10,3 +10,126 @@
 </form>
 
 </div>
+
+
+
+<div id='supportPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button data-app-event='admin_support|showTicketCreate'>Create A New Ticket</button>
+			</div>
+			<h3 class='heading'>Ticket Disposition: <select>
+				<option>Recent</option>
+				<option>Open/Waiting</option>
+				<option>All</option>
+			</select>
+			</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<table class='gridTable fullWidth marginBottom' >
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th class='alignLeft'>Opened</th>
+			<th class='hideInDetailMode alignLeft'>Last Update</th>
+			<th class='alignLeft'>Subject</th>
+			<th class='alignLeft'>User</th>
+			<th class='alignLeft'>Date Closed</th>
+			<th></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@TICKETS); format:processList; loadsTemplate:supportTicketRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		</div>
+	</section>
+</div>
+
+
+
+
+<table>
+
+	<tr id='supportTicketRowTemplate'>
+		<td data-bind="var: ticket(CREATED_GMT); format:unix2mdy;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(LAST_FOLLOWUP); format:text;"></td>
+		<td data-bind="var: ticket(SUBJECT); format:text;"></td>
+		<td data-bind="var: ticket(LUSER); format:text;"></td>
+		<td data-bind="var: ticket(CLOSED_GMT); format:unix2mdy;"></td>
+		
+		<td class='alignRight'>
+		<button>update</button>
+		<button class='hideInDetailMode'>close</button>
+		</td>
+	</tr>
+
+
+</table>
+
+
+
+<div id='supportTicketCreateTemplate' class='labelsAsBreaks alignedInputs alignedLabels'>
+
+<form action='#'>
+<fieldset class=' marginBottom'>
+	<label><span>Created by:</span>USER</label>
+	<label><span>Subject: </span><input type='text' name='SUBJECT'  required='required' /></label>
+	<label><span>Topic: </span><select name='TOPIC' required='required' data-app-event='admin_support|showTopicInputs'>
+		<option></option>
+		<option value='admin'>Admin/User Interface</option>
+		<option value='zid'>Desktop Client</option>
+		<option value='storefront'>Website (not checkout)</option>
+		<option value='checkout'>Checkout</option>
+		<option value='billing'>Billing</option>
+		<option value='DNS'>Domain name</option>
+		<option value='other '>Other</option>
+		</select>
+</fieldset>
+
+
+<fieldset class='displayNone topicInputs marginBottom' data-app-role='storefront_inputs'>
+	<legend>Storefront</legend>
+	<label><span>Domain: </span><input type='url' name='storefront_domain'  /></label>
+	<label><span>Order, PID, batch id, etc: </span><input type='text' name='storefront_id'  /></label>
+	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce'></textarea></label>
+	<div class='hint'>To more easily allow you to recreate the steps, you can navigate away from the support interface and this panel will come with you. Drag it using title bar.</div>
+	<label><span>Description of issue: </span><textarea name='storefront_description'></textarea></label>
+</fieldset>
+
+
+<fieldset class='displayNone topicInputs marginBottom' data-app-role='DNS_inputs'>
+	<legend>Domain/DNS</legend>
+	<label><span>Domain: </span><input type='url' name='DNS_domain'  /></label>
+	<label><span>Description of issue: </span><textarea name='DNS_description'></textarea></label>
+</fieldset>
+
+<fieldset class='displayNone topicInputs marginBottom' data-app-role='zid_inputs'>
+	<legend>Desktop Client</legend>
+	<label><span>Description of issue: </span><textarea name='zid_description'></textarea></label>
+	<label><span>ID (order, product, etc): </span><input type='text' name='zid_id' /></label>
+	<label><span>Steps to reproduce: </span><textarea name='zid_steps2reproduce'></textarea></label>
+</fieldset>
+
+
+
+
+<fieldset>
+		Priority:
+		<label><input type='radio' name='PRIORITY' value='low' /><b>Normal:</b> information needed.</label>
+		<label><input type='radio' name='PRIORITY' value='med' /><b>Escalated:</b> need assistance as soon as possible.</label>
+		<label><input type='radio' name='PRIORITY' value='low' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
+</fieldset>
+
+
+<button>Cancel</button>
+<button>Review</button>
+<p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
+<p class='hint'>Also, remember that the more details you provide, the more likely we are to be able to reproduce and resolve.</p>
+</div>
+</form>
+
+</div>

@@ -147,9 +147,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminBatchJobCleanup","jobid":jobid,"_tag":_tag},Q);	
 				}
 			}, //adminBatchJobStatus
-			
-
-
 
 
 		adminCustomerDetail : {
@@ -203,7 +200,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag},Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
-
 //email is required in macro
 		adminCustomerCreate : {
 			init : function(updates,_tag)	{
@@ -227,7 +223,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
-
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -318,9 +313,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'mutable');
 				}			
 			}, //adminEmailList
-
-
-
 		adminEmailSave : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -337,8 +329,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //adminDataQuery
-
-
 
 
 //get a list of newsletter subscription lists.
@@ -766,6 +756,97 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ(obj,q);	
 				}
 			}, //adminTaskUpdate
+
+
+//obj accepts the following params: disposition, body, subject, callback, private and/or priority [low, med, warn]
+		adminTicketCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.body && obj.subject && obj.priority)	{
+					this.dispatch(obj,_tag,Q);
+					}
+				else if(obj)	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, a required param was left blank. body: ["+typeof obj.body+"]<br>subject: ["+obj.subject+"]<br>priority: ["+obj.priority+"]","gMessage":true});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, no variables/obj passed","gMessage":true});
+					}
+				
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminTicketCreate"
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTicketCreate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminTicketCreate
+		adminTicketDetail : {
+			init : function(ticketid,_tag,Q)	{
+				var r = 0;
+				if(ticketid)	{
+					this.dispatch(ticketid,_tag,Q);
+					}
+				else	{
+					r = 0;
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketDetail, no ticketID passed","gMessage":true});
+					}
+				return r;
+				},
+			dispatch : function(ticketid,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTicketDetail";
+				obj._cmd = "adminTicketDetail";
+				obj.ticketid = ticketid;
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminTicketDetail
+// !!!! THIS CALL IS NOT DONE ON THE API SIDE. the params here are placeholders and will need to be updated, most likely.
+		adminTicketUpdate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ticketid)	{
+					this.dispatch(obj,_tag,Q);
+					}
+				else if(obj)	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, a required param was left blank. body: ["+typeof obj.body+"]<br>subject: ["+obj.subject+"]<br>priority: ["+obj.priority+"]","gMessage":true});
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, no variables/obj passed","gMessage":true});
+					}
+				
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminTaskCreate"
+				obj._tag = _tag || {};
+				obj._tag.datapointer = "adminTaskCreate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminTicketUpdate
+
+//obj could contain a 'detail' level. values are open, all or waiting.
+		adminTicketList : {
+			init : function(obj,_tag,Q)	{
+				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
+				_tag = _tag || {};
+				_tag.datapointer = "adminTicketList";
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj = obj || {};
+				obj._tag = _tag;
+				obj._cmd = "adminTicketList";
+				app.model.addDispatchToQ(obj,Q);	
+				}
+			}, //adminTicketList
 
 
 //obj requires panel and pid and sub.  sub can be LOAD or SAVE
@@ -2543,6 +2624,14 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
+				else if(path == '#!support')	{
+					$('#supportContent').empty(); //here just for testing. won't need at deployment.
+					this.bringTabIntoFocus('support');
+					this.bringTabContentIntoFocus($('#supportContent'));
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_support.a.showTicketManager($('#supportContent'));
+					}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
 				else if(path == '#!orderPrint')	{app.ext.convertSessionToOrder.a.printOrder(opts.data.oid,opts);}
 				else if(path == '#!supplierManager')	{app.ext.admin_wholesale.a.showSupplierManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty())}
@@ -2584,6 +2673,23 @@ var chart = new Highcharts.Chart({
 				return false;
 				},
 
+//should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
+//this will replace handleShowSection
+			bringTabContentIntoFocus : function($target){
+				if($target.is('visible'))	{
+					//target is already visible. do nothing.
+					}
+				else if($target.attr('id') == 'messagesContent')	{
+					this.toggleMessagePane(); //message tab is handled separately.
+					}
+				else	{
+					app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
+					$('.tabContent').hide();
+					$target.show();
+					}
+				},
+
+
 
 			toggleMessagePane : function(state){
 
@@ -2601,23 +2707,6 @@ var chart = new Highcharts.Chart({
 					}
 
 				}, //toggleMessagePane
-
-//should only get run if NOT in dialog mode. This will bring a tab content into focus and hide all the rest.
-//this will replace handleShowSection
-			bringTabContentIntoFocus : function($target){
-				if($target.is('visible'))	{
-					//target is already visible. do nothing.
-					}
-				else if($target.attr('id') == 'messagesContent')	{
-					this.toggleMessagePane(); //message tab is handled separately.
-					}
-				else	{
-					app.ext.admin.u.toggleMessagePane('hide'); //make sure messages pane hides itself.
-					$('.tabContent').hide();
-					$target.show();
-					}
-				},
-
 
 //will create the dialog if it doesn't already exist.
 //will also open the dialog. does not handle content population.
@@ -3698,9 +3787,8 @@ just lose the back button feature.
 					$ele.closest('ul').find('li').each(function(){$(this).removeClass('ui-state-active').addClass('ui-state-default')});
 					$ele.addClass('ui-state-active').removeClass('ui-state-default');
 					
-					
+//hide the current preview and show the new one.					
 					$("section:visible",$panel).first().hide('scale',function(){
-						app.u.dump('got here');
 						$("section[data-appid='"+appID+"']:first",$panel).show('scale')
 						});
 					});
