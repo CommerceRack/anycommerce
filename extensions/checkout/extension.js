@@ -418,7 +418,11 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 			chkoutMethodsPay : function($fieldset,formObj)	{
 				var valid = 0;
 				if($fieldset && formObj)	{
-					if($('[name="want/payby"]:checked',$fieldset).length)	{
+					if(app.ext.cco.u.thisSessionIsPayPal() && app.ext.cco.u.aValidPaypalTenderIsPresent())	{valid = 1;} //if paypal
+					else if(app.ext.cco.u.thisSessionIsPayPal()){
+						$fieldset.anymessage({'message':"It appears something has gone wrong with your paypal authorization. Perhaps it expired. Please click the 'choose alternate payment method' link and either re-authorize through paypal or choose an alternate payment method. We apologize for the inconvenience. "})
+						}
+					else if($('[name="want/payby"]:checked',$fieldset).length)	{
 						if(app.u.validateForm($fieldset))	{valid = 1;}
 						else	{valid = 0}
 						}
