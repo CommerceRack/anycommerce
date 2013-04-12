@@ -446,7 +446,7 @@ left them be to provide guidance later.
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
 //according to B, there will be only 1 paypal tender in the paymentQ.
 			aValidPaypalTenderIsPresent : function()	{
-				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
+//				app.u.dump("BEGIN cco.aValidPaypalTenderIsPresent");
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
 					return (Math.round(+new Date(PQI.TIMESTAMP)) > +new Date()) ? true : false;
 					});
@@ -473,27 +473,35 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
 //				app.u.dump("BEGIN cco.u.modifyPaymentQbyTender");
-				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
-				var r = new Array(); //what is returned if someFunction returns anything.
+				var inc = 0, //what is returned if someFunction not present. # of items in paymentQ affected.
+				r = new Array(), //what is returned if someFunction returns anything.
+				returned; //what is returned by this function.
+				
 				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
-//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
-					var L = app.data.cartDetail['@PAYMENTQ'].length;
-//					app.u.dump(" -> paymentQ.length: "+L);
-					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
-						if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
-							inc += 1;
-							if(typeof someFunction == 'function')	{
-								r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
+					if(app.data.cartDetail['@PAYMENTQ'].length)	{
+	//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
+						var L = app.data.cartDetail['@PAYMENTQ'].length;
+	//					app.u.dump(" -> paymentQ.length: "+L);
+						for(var i = 0; i < L; i += 1)	{
+	//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
+							if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
+								inc += 1;
+								if(typeof someFunction == 'function')	{
+									r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
+									}
 								}
 							}
+						returned = (typeof someFunction == 'function') ? r : inc;
 						}
+					else	{
+						returned = inc;
+						} //paymentQ is empty. no error or warning.
 					}
 				else	{
 					app.u.dump("WARNING! getPaymentQidByTender failed because tender ["+tender+"] not set or @PAYMENTQ does not exist.");
 					}
 //				app.u.dump(" -> num tender matches: "+r);
-				return (typeof someFunction == 'function') ? r : inc;
+				return returned;
 				},
 			
 			getAddrObjByID : function(type,id)	{

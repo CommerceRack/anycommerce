@@ -1487,14 +1487,19 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 			handlePaypalInit : function($context)	{
+				app.u.dump("BEGIN checkout.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
 //calls are piggybacked w/ this. do not add dispatch here.
 				var token = app.u.getParameterByName('token');
 				var payerid = app.u.getParameterByName('PayerID');
+//				app.u.dump(" -> aValidPaypalTenderIsPresent(): "+app.ext.cco.u.aValidPaypalTenderIsPresent());
 				if(token && payerid)	{
-					if(app.ext.cco.u.aValidPaypalTenderIsPresent())	{} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.
+					app.u.dump(" -> both token and payerid are set.");
+					if(app.ext.cco.u.aValidPaypalTenderIsPresent())	{
+						app.u.dump(" -> token and payid are set but a valid paypal tender is already present.");
+						} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.
 					else	{
 						$context.anymessage({'message':'Welcome Back! you are almost done. Simply verify the information below and push the place order button to complete your transaction.','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'});
 						app.u.dump("It appears we've just returned from PayPal.");
