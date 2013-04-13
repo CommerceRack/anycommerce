@@ -1194,7 +1194,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$sel.off('change.execCountryUpdate').on('change.execCountryUpdate',function(){
 					var obj = {}, $form = $sel.closest('form');
 //temporary workaround. setting bill country to int isn't updating ship methods correctly.
+					app.u.dump(" -> $sel.attr('name'): "+$sel.attr('name'));
+					app.u.dump(" -> is(:checked): "+$("[name='want/bill_to_ship']",$form).is(':checked'));
 					if($sel.attr('name') == 'bill/countrycode' && $("[name='want/bill_to_ship']",$form).is(':checked'))	{
+						app.u.dump(" -> ship to bill is enabled. update ship country. TMP workaround",'warn');
 						obj['ship/countrycode'] = $sel.val();
 						}
 					
