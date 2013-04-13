@@ -2254,7 +2254,7 @@ Then we'll be in a better place to use data() instead of attr().
 
 */
 		transmogrify : function(eleAttr,templateID,data)	{
-//			app.u.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
+			app.u.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
 //			app.u.dump(eleAttr);
 
 //If a template ID is specified but does not exist, try to make one. added 2012-06-12
@@ -2265,7 +2265,7 @@ Then we'll be in a better place to use data() instead of attr().
 					}
 				else{} //do nothing. Error will get thrown later.
 				}
-//			app.u.dump(" -> got past templateID");
+			app.u.dump(" -> got past templateID");
 			if(!templateID || typeof data != 'object' || !app.templates[templateID])	{
 //product lists get rendered twice, the first time empty and always throw this error, which clutters up the console, so they're suppressed.
 				app.u.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof app.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
@@ -2274,16 +2274,18 @@ Then we'll be in a better place to use data() instead of attr().
 //				app.u.dump(eleAttr);
 				}
 			else	{
+				app.u.dump(" -> transmogrify has everything it needs.");
 //we have everything we need. proceed.
 
 var $r = app.templates[templateID].clone(); //clone is always used so original is 'clean' each time it's used. This is what is returned.
+app.u.dump(" -> template cloned");
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
 if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
-//	app.u.dump(' -> eleAttr is a string.');
+	app.u.dump(' -> eleAttr is a string.');
 	$r.attr('id',app.u.makeSafeHTMLId(eleAttr))  
 	}
 else if(typeof eleAttr == 'object')	{
-//	app.u.dump(' -> eleAttr is an object.');
+	app.u.dump(' -> eleAttr is an object.');
 //NOTE - eventually, we want to get rid of this check and just use the .data at the bottom.
 	for(var index in eleAttr)	{
 		if(typeof eleAttr[index] == 'object')	{
@@ -2299,7 +2301,7 @@ else if(typeof eleAttr == 'object')	{
 	$r.data(eleAttr);
 	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
-//app.u.dump("GOT HERE");
+app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
 return this.handleTranslation($r,data);
 
 
@@ -2367,7 +2369,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 
 //NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
 		handleTranslation : function($r,data)	{
-//app.u.dump("BEGIN app.renderFunctions.handleTranslation");
+app.u.dump("BEGIN app.renderFunctions.handleTranslation");
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
 //
 $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
@@ -2375,7 +2377,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 	var $focusTag = $(this);
 	var value;
 
-//	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
+	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'));
@@ -2405,7 +2407,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
 	else	{bindData.hideZero = true}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
-//	app.u.dump(" -> value: "+value);
+	app.u.dump(" -> value: "+value);
 
 	if(Number(value) == 0 && bindData.hideZero)	{
 //do nothing. value is zero and zero should be skipped.
