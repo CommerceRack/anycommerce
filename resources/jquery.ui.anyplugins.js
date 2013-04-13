@@ -443,6 +443,7 @@ either templateID or (data or datapointer) are required.
 				}
 			else if(o.templateID && o.data)	{
 				app.u.dump(" -> template and data present. transmogrify.");
+				app.u.dump(" -> element.tagname: "+this.element.prop("tagName"));
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
 				app.u.dump(" -> hideLoading has run.");
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));

@@ -879,7 +879,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 		a : {
 			
 			startCheckout : function($chkContainer)	{
-				app.u.dump("BEGIN orderCreate.a.startCheckout");
+//				app.u.dump("BEGIN orderCreate.a.startCheckout");
 //				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length)	{
@@ -914,7 +914,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 							if(app.data.cartDetail['@ITEMS'].length)	{
 								app.u.dump(" -> cart has items. 2013-14-13a");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
-								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
+//								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
+								app.u.dump("NOT using anycontent plugin.");
+								$chkContainer.append(app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout()));
+								
 								app.u.dump(" -> anycontent has run on cart for initial translation.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
@@ -1445,10 +1448,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 //actions are rendered in the order they're passed.
 
 			handlePanel : function($context, role, actions)	{
-				app.u.dump("BEGIN handlePanel"); //app.u.dump(actions);
+//				app.u.dump("BEGIN handlePanel"); //app.u.dump(actions);
 
 				if($context && role && actions && typeof actions === 'object')	{
-					app.u.dump(" -> role: "+role);
+//					app.u.dump(" -> role: "+role);
 					var L = actions.length,
 					formObj = $context.is('form') ? $context.serializeJSON() : $("form",$context).serializeJSON(),
 					$fieldset = $("[data-app-role='"+app.u.jqSelector('',role)+"']",$context),
