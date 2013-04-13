@@ -2287,18 +2287,22 @@ if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 else if(typeof eleAttr == 'object')	{
 	app.u.dump(' -> eleAttr is an object.');
 //NOTE - eventually, we want to get rid of this check and just use the .data at the bottom.
-	for(var index in eleAttr)	{
-		if(typeof eleAttr[index] == 'object')	{
-			//can't output an object as a string. later, if/when data() is used, this may be supported.
+	if($.isEmptyObject(eleAttr))	{app.u.dump(" -> eleAttr is empty");}
+	else	{
+		app.u.dump(" -> eleAttr is NOT empty");
+		for(var index in eleAttr)	{
+			if(typeof eleAttr[index] == 'object')	{
+				//can't output an object as a string. later, if/when data() is used, this may be supported.
+				}
+			else if(index.match("^[a-zA-Z0-9_\-]*$"))	{
+				$r.attr('data-'+index,eleAttr[index]) //for now, this is being added via attr data-. later, it may use data( but I want it in the DOM for now.
+				}
+			else	{
+				//can't have non-alphanumeric characters in 
+				}
 			}
-		else if(index.match("^[a-zA-Z0-9_\-]*$"))	{
-			$r.attr('data-'+index,eleAttr[index]) //for now, this is being added via attr data-. later, it may use data( but I want it in the DOM for now.
-			}
-		else	{
-			//can't have non-alphanumeric characters in 
-			}
+		$r.data(eleAttr);
 		}
-	$r.data(eleAttr);
 	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
 app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
