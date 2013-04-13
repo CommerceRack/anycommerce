@@ -912,8 +912,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
+								app.u.dump(" -> cart has items.");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
-								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()}); 
+								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
+								app.u.dump(" -> anycontent has run on cart for initial translation.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
@@ -922,6 +924,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
 									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
 									});
+								app.u.dump(" -> handlePanel has been run over all fieldsets.");
 								}
 							else	{
 								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
@@ -1393,14 +1396,20 @@ note - the order object is available at app.data['order|'+P.orderID]
 				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout");
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				if(app.u.buyerIsAuthenticated())	{
+					app.u.dump(" -> buyer is authenticated");
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
 					}
 				else	{
+					app.u.dump(" -> buyer is not authenticated.");
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
 					}
+
+				app.u.dump(" -> data object has been extended. ");
+
 //when a buyer returns from paypal, the shipping is populated, but the billing is not always.
 //this will put the ship info into the bill fields if they're blank.
 				if(app.ext.cco.u.thisSessionIsPayPal())	{
+					app.u.dump(" -> session is paypal. copy some data around.");
 					if(obj.bill && obj.ship)	{
 						if(!obj.bill.company)	{obj.bill.company = obj.ship.company}
 						if(!obj.bill.address1)	{obj.bill.address1 = obj.ship.address1}
@@ -1411,7 +1420,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(!obj.bill.countrycode)	{obj.bill.countrycode = obj.ship.countrycode}
 						}
 					}
-				
+				app.u.dump("END orderCreate.u.extendedDataForCheckout");
 				return obj;
 				}, //extendedDataForCheckout
 
@@ -1436,8 +1445,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 //actions are rendered in the order they're passed.
 
 			handlePanel : function($context, role, actions)	{
+				app.u.dump("BEGIN handlePanel"); //app.u.dump(actions);
+
 				if($context && role && actions && typeof actions === 'object')	{
-//					app.u.dump("BEGIN handlePanel for role: "+role); //app.u.dump(actions);
+					app.u.dump(" -> role: "+role);
 					var L = actions.length,
 					formObj = $context.is('form') ? $context.serializeJSON() : $("form",$context).serializeJSON(),
 					$fieldset = $("[data-app-role='"+app.u.jqSelector('',role)+"']",$context),
