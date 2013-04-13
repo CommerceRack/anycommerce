@@ -912,7 +912,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
-								app.u.dump(" -> cart has items. 2013-14-13d");
+								app.u.dump(" -> cart has items. 2013-14-13e");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 //								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
 								app.u.dump("NOT using anycontent plugin.");

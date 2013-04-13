@@ -2254,7 +2254,7 @@ Then we'll be in a better place to use data() instead of attr().
 
 */
 		transmogrify : function(eleAttr,templateID,data)	{
-			app.u.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
+//			app.u.dump("BEGIN control.renderFunctions.transmogrify (tid: "+templateID+")");
 //			app.u.dump(eleAttr);
 
 //If a template ID is specified but does not exist, try to make one. added 2012-06-12
@@ -2265,7 +2265,7 @@ Then we'll be in a better place to use data() instead of attr().
 					}
 				else{} //do nothing. Error will get thrown later.
 				}
-			app.u.dump(" -> got past templateID");
+//			app.u.dump(" -> got past templateID");
 			if(!templateID || typeof data != 'object' || !app.templates[templateID])	{
 //product lists get rendered twice, the first time empty and always throw this error, which clutters up the console, so they're suppressed.
 				app.u.dump(" -> templateID ["+templateID+"] is not set or not an object ["+typeof app.templates[templateID]+"] or typeof data ("+typeof data+") not object.");
@@ -2274,14 +2274,14 @@ Then we'll be in a better place to use data() instead of attr().
 //				app.u.dump(eleAttr);
 				}
 			else	{
-				app.u.dump(" -> transmogrify has everything it needs.");
+//				app.u.dump(" -> transmogrify has everything it needs.");
 //we have everything we need. proceed.
 
 var $r = app.templates[templateID].clone(); //clone is always used so original is 'clean' each time it's used. This is what is returned.
-app.u.dump(" -> template cloned");
+//app.u.dump(" -> template cloned");
 $r.attr('data-templateid',templateID); //note what templateID was used. handy for troubleshooting or, at some point, possibly re-rendering template
 if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
-	app.u.dump(' -> eleAttr is a string.');
+//	app.u.dump(' -> eleAttr is a string.');
 	$r.attr('id',app.u.makeSafeHTMLId(eleAttr))  
 	}
 else if(typeof eleAttr == 'object')	{
