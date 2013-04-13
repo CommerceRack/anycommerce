@@ -1393,8 +1393,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 //Combines the various data objects into one, so that they can be fed into the translator and rendered in one pass.
 			extendedDataForCheckout : function()	{
-				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout");
-//				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
+				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout - 2013-04-13");
+				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				if(app.u.buyerIsAuthenticated())	{
 					app.u.dump(" -> buyer is authenticated");
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
