@@ -879,8 +879,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 		a : {
 			
 			startCheckout : function($chkContainer)	{
-//				app.u.dump("BEGIN orderCreate.a.startCheckout");
-//				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
+				app.u.dump("BEGIN orderCreate.a.startCheckout");
+				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
@@ -910,6 +910,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
+							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()}); 
@@ -927,7 +928,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 								}
 							}
 						}},'immutable');
-
+					app.u.dump(" -> made it past adding calls to Q for startCheckout. now dispatch.");
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -1389,6 +1390,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 //Combines the various data objects into one, so that they can be fed into the translator and rendered in one pass.
 			extendedDataForCheckout : function()	{
+				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout");
 //				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				if(app.u.buyerIsAuthenticated())	{
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
@@ -1495,7 +1497,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 			handlePaypalInit : function($context)	{
-				app.u.dump("BEGIN checkout.u.handlePaypalInit");
+				app.u.dump("BEGIN orderCreate.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1518,11 +1520,17 @@ note - the order object is available at app.data['order|'+P.orderID]
 					}
 //if token and/or payerid is NOT set on URI, then this is either not yet a paypal order OR is/was paypal and user left checkout and has returned.
 				else if(app.ext.cco.u.thisSessionIsPayPal())	{
-					if(!app.ext.cco.u.aValidPaypalTenderIsPresent())	{app.ext.cco.u.nukePayPalEC();}
+					app.u.dump(" -> no token or payerid set. nuke all paypal if present.");
+					if(!app.ext.cco.u.aValidPaypalTenderIsPresent())	{
+						app.u.dump(" -> validPayalTender found. Nuke it.");
+						app.ext.cco.u.nukePayPalEC();
+						}
+					app.u.dump(" -> paypal nuked ");
 					}
 				else	{
 					//do nothing.
 					}
+				app.u.dump("END orderCreate.u.handlePaypalInit");
 				}, //handlePaypalInit
 
 //run when a payment method is selected or when payment panel is re-rendered.
