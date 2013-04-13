@@ -912,13 +912,13 @@ note - the order object is available at app.data['order|'+P.orderID]
 						else	{
 //							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
-								app.u.dump(" -> cart has items. 2013-14-13a");
+								app.u.dump(" -> cart has items. 2013-14-13b");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 //								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
 								app.u.dump("NOT using anycontent plugin.");
 								$chkContainer.append(app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout()));
 								
-								app.u.dump(" -> anycontent has run on cart for initial translation.");
+//								app.u.dump(" -> anycontent has run on cart for initial translation.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
@@ -927,14 +927,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 									$("legend",$fieldset).addClass('ui-widget-header ui-corner-all');
 									app.ext.orderCreate.u.handlePanel($chkContainer,role,['handleDisplayLogic','handleAppEvents']);
 									});
-								app.u.dump(" -> handlePanel has been run over all fieldsets.");
+//								app.u.dump(" -> handlePanel has been run over all fieldsets.");
 								}
 							else	{
 								$chkContainer.anymessage({'message':'It appears your cart is empty. If you think you are receiving this message in error, please refresh the page or contact us.'});
 								}
 							}
 						}},'immutable');
-					app.u.dump(" -> made it past adding calls to Q for startCheckout. now dispatch.");
+//					app.u.dump(" -> made it past adding calls to Q for startCheckout. now dispatch.");
 					app.model.dispatchThis('immutable');
 					}
 				else	{
@@ -1511,7 +1511,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 
 
 			handlePaypalInit : function($context)	{
-				app.u.dump("BEGIN orderCreate.u.handlePaypalInit");
+//				app.u.dump("BEGIN orderCreate.u.handlePaypalInit");
 //paypal code need to be in this startCheckout and not showCheckoutForm so that showCheckoutForm can be 
 // executed w/out triggering the paypal code (which happens when payment method switches FROM paypal to some other method) because
 // the paypalgetdetails cmd only needs to be executed once per session UNLESS the cart contents change.
@@ -1520,7 +1520,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 				var payerid = app.u.getParameterByName('PayerID');
 //				app.u.dump(" -> aValidPaypalTenderIsPresent(): "+app.ext.cco.u.aValidPaypalTenderIsPresent());
 				if(token && payerid)	{
-					app.u.dump(" -> both token and payerid are set.");
+//					app.u.dump(" -> both token and payerid are set.");
 					if(app.ext.cco.u.aValidPaypalTenderIsPresent())	{
 						app.u.dump(" -> token and payid are set but a valid paypal tender is already present.");
 						} //already have paypal in paymentQ. could be user refreshed page. don't double-add to Q.
@@ -1592,7 +1592,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 		renderFormats : {
 
 			shipMethodsAsRadioButtons : function($tag,data)	{
-				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
+//				app.u.dump('BEGIN store_cart.renderFormat.shipMethodsAsRadioButtons');
 				var o = '';
 				var shipName,id,isSelectedMethod,safeid;  // id is actual ship id. safeid is id without any special characters or spaces. isSelectedMethod is set to true if id matches cart shipping id selected.;
 				var L = data.value.length;
