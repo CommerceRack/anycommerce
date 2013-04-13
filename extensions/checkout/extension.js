@@ -1192,10 +1192,15 @@ note - the order object is available at app.data['order|'+P.orderID]
 			execCountryUpdate : function($sel)	{
 				//recalculate the shipping methods and payment options.
 				$sel.off('change.execCountryUpdate').on('change.execCountryUpdate',function(){
-					var obj = {};
+					var obj = {}, $form = $sel.closest('form');
+//temporary workaround. setting bill country to int isn't updating ship methods correctly.
+					if($sel.attr('name') == 'bill/countrycode' && $("[name='want/bill_to_ship']",$form).is(':checked'))	{
+						obj['ship/countrycode'] = $sel.val();
+						}
+					
 					obj[$sel.attr('name')] = $sel.val();
 					app.calls.cartSet.init(obj); //update the cart w/ the country.
-					app.ext.orderCreate.u.handleCommonPanels($sel.closest('form'));
+					app.ext.orderCreate.u.handleCommonPanels($form);
 					app.model.dispatchThis('immutable');
 					})
 				}, //execCountryUpdate
