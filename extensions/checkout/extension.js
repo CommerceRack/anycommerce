@@ -880,7 +880,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 			startCheckout : function($chkContainer)	{
 				app.u.dump("BEGIN orderCreate.a.startCheckout");
-				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
+//				app.u.dump(" -> app.u.buyerIsAuthenticated(): "+app.u.buyerIsAuthenticated());
 
 				if($chkContainer && $chkContainer.length)	{
 					$chkContainer.empty();
@@ -910,9 +910,9 @@ note - the order object is available at app.data['order|'+P.orderID]
 							$('#globalMessaging').anymessage({'message':rd});
 							}
 						else	{
-							app.u.dump(" -> cartDetail callback for startCheckout reached.");
+//							app.u.dump(" -> cartDetail callback for startCheckout reached.");
 							if(app.data.cartDetail['@ITEMS'].length)	{
-								app.u.dump(" -> cart has items.");
+								app.u.dump(" -> cart has items. 2013-14-13a");
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
 								app.u.dump(" -> anycontent has run on cart for initial translation.");
@@ -1393,23 +1393,23 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 //Combines the various data objects into one, so that they can be fed into the translator and rendered in one pass.
 			extendedDataForCheckout : function()	{
-				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout - 2013-04-13");
-				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
+//				app.u.dump("BEGIN orderCreate.u.extendedDataForCheckout - 2013-04-13");
+//				app.u.dump("app.data.cartDetail:"); app.u.dump(app.data.cartDetail);
 				if(app.u.buyerIsAuthenticated())	{
-					app.u.dump(" -> buyer is authenticated");
+//					app.u.dump(" -> buyer is authenticated");
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.buyerAddressList,app.data.buyerWalletList,app.data.cartDetail);
 					}
 				else	{
-					app.u.dump(" -> buyer is not authenticated.");
+//					app.u.dump(" -> buyer is not authenticated.");
 					var obj = $.extend(true,app.data.appPaymentMethods,app.data.appCheckoutDestinations,app.data.cartDetail);
 					}
 
-				app.u.dump(" -> data object has been extended. ");
+//				app.u.dump(" -> data object has been extended. ");
 
 //when a buyer returns from paypal, the shipping is populated, but the billing is not always.
 //this will put the ship info into the bill fields if they're blank.
 				if(app.ext.cco.u.thisSessionIsPayPal())	{
-					app.u.dump(" -> session is paypal. copy some data around.");
+//					app.u.dump(" -> session is paypal. copy some data around.");
 					if(obj.bill && obj.ship)	{
 						if(!obj.bill.company)	{obj.bill.company = obj.ship.company}
 						if(!obj.bill.address1)	{obj.bill.address1 = obj.ship.address1}
@@ -1420,7 +1420,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 						if(!obj.bill.countrycode)	{obj.bill.countrycode = obj.ship.countrycode}
 						}
 					}
-				app.u.dump("END orderCreate.u.extendedDataForCheckout");
+//				app.u.dump("END orderCreate.u.extendedDataForCheckout");
 				return obj;
 				}, //extendedDataForCheckout
 

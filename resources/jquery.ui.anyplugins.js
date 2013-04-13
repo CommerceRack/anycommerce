@@ -444,8 +444,11 @@ either templateID or (data or datapointer) are required.
 			else if(o.templateID && o.data)	{
 				app.u.dump(" -> template and data present. transmogrify.");
 				if(typeof jQuery().hideLoading == 'function'){this.element.hideLoading().removeClass('loadingBG')}
+				app.u.dump(" -> hideLoading has run.");
 				this.element.append(app.renderFunctions.transmogrify(o.dataAttribs,o.templateID,o.data));
+				app.u.dump(" -> transmogrified");
 				this.element.data('isTranslated',true);
+				app.u.dump(" -> data.isTranslated set to true.");
 				}
 //a templateID was specified, just add the instance. This likely means some process outside this plugin itself is handling translation.
 			else if(o.templateID)	{
