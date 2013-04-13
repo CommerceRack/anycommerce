@@ -1014,7 +1014,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 							
 							if(addressType == 'bill' && $btn.closest('form').find("input[name='want/bill_to_ship']").is(':checked'))	{
 	//							app.u.dump("Ship to billing address checked. set fields in billing.");
-	//copy the address into the shipping fields.
+//copy the address into the shipping fields so shipping rates update.
 								var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
 								if(!$.isEmptyObject(addrObj))	{
 									for(index in addrObj)	{
@@ -1194,10 +1194,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 				$sel.off('change.execCountryUpdate').on('change.execCountryUpdate',function(){
 					var obj = {}, $form = $sel.closest('form');
 //temporary workaround. setting bill country to int isn't updating ship methods correctly.
-					app.u.dump(" -> $sel.attr('name'): "+$sel.attr('name'));
-					app.u.dump(" -> is(:checked): "+$("[name='want/bill_to_ship']",$form).is(':checked'));
+//					app.u.dump(" -> $sel.attr('name'): "+$sel.attr('name'));
+//if bill to ship is enabled, must update ship country or shipping won't update.
 					if($sel.attr('name') == 'bill/countrycode' && $("[name='want/bill_to_ship']",$form).is(':checked'))	{
-						app.u.dump(" -> ship to bill is enabled. update ship country. TMP workaround",'warn');
+//						app.u.dump(" -> ship to bill is enabled. update ship country.");
 						obj['ship/countrycode'] = $sel.val();
 						}
 					
