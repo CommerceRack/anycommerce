@@ -916,9 +916,10 @@ note - the order object is available at app.data['order|'+P.orderID]
 //NOTE - this should only be done once. panels should be updated individually from there forward.
 //								$chkContainer.anycontent({'templateID':'checkoutTemplate',data: app.ext.orderCreate.u.extendedDataForCheckout()});
 								app.u.dump("NOT using anycontent plugin.");
-								$chkContainer.append(app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout()));
-								
-//								app.u.dump(" -> anycontent has run on cart for initial translation.");
+								var $checkoutContents = app.renderFunctions.transmogrify({},'checkoutTemplate',app.ext.orderCreate.u.extendedDataForCheckout());
+								app.u.dump("transmogrify saved to var");
+								$chkContainer.append($checkoutContents);
+								app.u.dump(" -> checkout appended to container.");
 								$("fieldset[data-app-role]",$chkContainer).each(function(index, element) {
 									var $fieldset = $(element),
 									role = $fieldset.data('app-role');
