@@ -532,7 +532,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 				},
 			chkoutCartSummary : function($fieldset,formObj)	{
 				return 1;
-				},				
+				}
 				
 			}, //validate
 		

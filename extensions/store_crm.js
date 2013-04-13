@@ -610,10 +610,8 @@ else{
 						$('#globalMessaging').anymessage({'message':'In store_crm.e.showWriteReview, unable to determine pid/stid','gMessage':true});
 						}
 					})
-				},
+				}
 
-
-			
 			} //e/events
 		
 		} //r object.

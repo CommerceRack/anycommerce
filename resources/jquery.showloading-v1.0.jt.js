@@ -60,7 +60,7 @@
 			// Create the overlay
 			//
 			$overlayDiv.css({
-				'display':'none',
+				'display':'none'
 				}).addClass('ui-widget-overlay');
 			
 			// Append to parent. add a position-relative for continued absolute position support.
