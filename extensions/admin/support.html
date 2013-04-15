@@ -35,6 +35,8 @@
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
+			<th class='alignLeft'></th>
+			<th class='alignLeft'>Ticket #</th>
 			<th class='alignLeft'>Opened</th>
 			<th class='hideInDetailMode alignLeft'>Last Update</th>
 			<th class='alignLeft'>Subject</th>
@@ -55,14 +57,16 @@
 <table>
 
 	<tr id='supportTicketRowTemplate'>
-		<td data-bind="var: ticket(CREATED_GMT); format:unix2mdy;"></td>
-		<td class='hideInDetailMode' data-bind="var: ticket(LAST_FOLLOWUP); format:text;"></td>
+		<td data-bind="var: ticket(DISPOSITION); format:text;"></td>
+		<td data-bind="var: ticket(ID); format:text;"></td>
+		<td data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
+		<td class='hideInDetailMode lookLikeLink' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-event='admin_support|showTicketLastUpdate'></td>
 		<td data-bind="var: ticket(SUBJECT); format:text;"></td>
 		<td data-bind="var: ticket(LUSER); format:text;"></td>
-		<td data-bind="var: ticket(CLOSED_GMT); format:unix2mdy;"></td>
+		<td data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
 		
 		<td class='alignRight'>
-		<button>update</button>
+		<button onClick='alert(app.ext.admin_support.u.gatherIntel());'>update</button>
 		<button class='hideInDetailMode'>close</button>
 		</td>
 	</tr>
@@ -72,7 +76,8 @@
 
 
 
-<div id='supportTicketCreateTemplate' class='labelsAsBreaks alignedInputs alignedLabels'>
+
+<div id='supportTicketCreateTemplate' class='labelsAsBreaks  alignedLabels'>
 
 <form action='#'>
 <fieldset class=' marginBottom'>
@@ -88,48 +93,56 @@
 		<option value='DNS'>Domain name</option>
 		<option value='other '>Other</option>
 		</select>
+	</label>
 </fieldset>
 
 
 <fieldset class='displayNone topicInputs marginBottom' data-app-role='storefront_inputs'>
 	<legend>Storefront</legend>
-	<label><span>Domain: </span><input type='url' name='storefront_domain'  /></label>
-	<label><span>Order, PID, batch id, etc: </span><input type='text' name='storefront_id'  /></label>
-	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce'></textarea></label>
+	<label><span>Domain: </span><input type='url' name='storefront_domain' data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Order, PID, batch id, etc: </span><input type='text' name='storefront_id'  data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 	<div class='hint'>To more easily allow you to recreate the steps, you can navigate away from the support interface and this panel will come with you. Drag it using title bar.</div>
-	<label><span>Description of issue: </span><textarea name='storefront_description'></textarea></label>
+	<label><span>Description of issue: </span><textarea name='storefront_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 
 <fieldset class='displayNone topicInputs marginBottom' data-app-role='DNS_inputs'>
 	<legend>Domain/DNS</legend>
-	<label><span>Domain: </span><input type='url' name='DNS_domain'  /></label>
-	<label><span>Description of issue: </span><textarea name='DNS_description'></textarea></label>
+	<label><span>Domain: </span><input type='url' name='DNS_domain'  data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Description of issue: </span><textarea name='DNS_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 <fieldset class='displayNone topicInputs marginBottom' data-app-role='zid_inputs'>
 	<legend>Desktop Client</legend>
-	<label><span>Description of issue: </span><textarea name='zid_description'></textarea></label>
-	<label><span>ID (order, product, etc): </span><input type='text' name='zid_id' /></label>
-	<label><span>Steps to reproduce: </span><textarea name='zid_steps2reproduce'></textarea></label>
+	<label><span>Description of issue: </span><textarea name='zid_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
+	<label><span>ID (order, product, etc): </span><input type='text' name='zid_id' data-validation-rules='skipIfHidden' required='required' /></label>
+	<label><span>Steps to reproduce: </span><textarea name='zid_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 
 
 
 <fieldset>
+		<div class='marginBottom'>
 		Priority:
-		<label><input type='radio' name='PRIORITY' value='low' /><b>Normal:</b> information needed.</label>
+		<label><input type='radio' name='PRIORITY' value='low' checked='checked' /><b>Normal:</b> information needed.</label>
 		<label><input type='radio' name='PRIORITY' value='med' /><b>Escalated:</b> need assistance as soon as possible.</label>
 		<label><input type='radio' name='PRIORITY' value='low' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
+		</div>
+		
+		<div class='marginBottom'>
+<label class='clearfix marginBottom'><input type='checkbox' name='private' />Private: hide ticket for other users.</label>
+<label class='clearfix marginBottom'><input type='checkbox' name='callback' />Callback: please have a support technician contact me.</label>
+		</div>
 </fieldset>
 
+<button class='floatRight' data-app-event="admin_support|execTicketCreate">Create Ticket</button>
+<button data-app-event="admin|execDialogClose">Cancel</button>
 
-<button>Cancel</button>
-<button>Review</button>
 <p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
 <p class='hint'>Also, remember that the more details you provide, the more likely we are to be able to reproduce and resolve.</p>
-</div>
+
 </form>
 
 </div>

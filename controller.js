@@ -1676,7 +1676,7 @@ VALIDATION
 
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
 				
-				$('input',$form).each(function(){
+				$('input, select, textarea',$form).each(function(){
 					var $input = $(this),
 					$span = $("<span \/>").css('padding-left','6px').addClass('formValidationError');
 					
@@ -1688,7 +1688,10 @@ VALIDATION
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
 //					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
-					if($input.attr('required') == 'required' && !$input.val())	{
+					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
+						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
+						}
+					else if($input.attr('required') == 'required' && !$input.val())	{
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('required'));
@@ -2284,12 +2287,15 @@ if(app.u.isSet(eleAttr) && typeof eleAttr == 'string')	{
 //	app.u.dump(' -> eleAttr is a string.');
 	$r.attr('id',app.u.makeSafeHTMLId(eleAttr))  
 	}
-else if(typeof eleAttr == 'object')	{
-	app.u.dump(' -> eleAttr is an object.');
 //NOTE - eventually, we want to get rid of this check and just use the .data at the bottom.
-	if($.isEmptyObject(eleAttr))	{app.u.dump(" -> eleAttr is empty");}
+else if(typeof eleAttr == 'object')	{
+//	app.u.dump(' -> eleAttr is an object.');
+// applying an empty object as .data caused a JS error in IE8
+	if($.isEmptyObject(eleAttr))	{
+//		app.u.dump(" -> eleAttr is empty");
+		}
 	else	{
-		app.u.dump(" -> eleAttr is NOT empty");
+//		app.u.dump(" -> eleAttr is NOT empty");
 		for(var index in eleAttr)	{
 			if(typeof eleAttr[index] == 'object')	{
 				//can't output an object as a string. later, if/when data() is used, this may be supported.
@@ -2305,7 +2311,7 @@ else if(typeof eleAttr == 'object')	{
 		}
 	if(eleAttr.id)	{$r.attr('id',app.u.makeSafeHTMLId(eleAttr.id))} //override the id with a safe id, if set.
 	}
-app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
+//app.u.dump(" -> got through transmogrify. now move on to handle translation and return it.");
 return this.handleTranslation($r,data);
 
 
@@ -2373,7 +2379,7 @@ most likely, this will be expanded to support setting other data- attributes. ##
 
 //NEVER call this function directly.  It gets executed in transmogrify and translate element. it has no error handling (gets handled in parent function)
 		handleTranslation : function($r,data)	{
-app.u.dump("BEGIN app.renderFunctions.handleTranslation");
+//app.u.dump("BEGIN app.renderFunctions.handleTranslation");
 //locates all children/grandchildren/etc that have a data-bind attribute within the parent id.
 //
 $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
@@ -2381,7 +2387,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 	var $focusTag = $(this);
 	var value;
 
-	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
+//	app.u.dump(' -> data-bind match found: '+$focusTag.data('bind'));
 //proceed if data-bind has a value (not empty).
 	if(app.u.isSet($focusTag.attr('data-bind'))){
 		var bindData = app.renderFunctions.parseDataBind($focusTag.attr('data-bind'));
@@ -2411,7 +2417,7 @@ $r.find('[data-bind]').addBack('[data-bind]').each(function()	{
 	if(bindData.hideZero == 'false') {bindData.hideZero = false} //passed as string. treat as boolean.
 	else	{bindData.hideZero = true}
 // SANITY - value should be set by here. If not, likely this is a null value or isn't properly formatted.
-	app.u.dump(" -> value: "+value);
+//	app.u.dump(" -> value: "+value);
 
 	if(Number(value) == 0 && bindData.hideZero)	{
 //do nothing. value is zero and zero should be skipped.
@@ -2778,10 +2784,8 @@ $tmp.empty().remove();
 			},
 
 		epoch2pretty : function($tag,data)	{
-			var myDate = new Date( data.value*1000),
-			minutes = (myDate.getMinutes().length == 1 || myDate.getMinutes() == 0)  ? "0" + myDate.getMinutes() : myDate.getMinutes(); //JS stripping the 0 for 06
-//			app.u.dump(" -> myDate.getMinutes(): "+myDate.getMinutes()+" and minutes: "+minutes);
-			$tag.append(myDate.getFullYear()+"/"+(myDate.getMonth()+1)+"/"+myDate.getDate()+" "+myDate.getHours()+":"+minutes); //+":"+myDate.getSeconds() pulled seconds in 201307. really necessary?
+			var myDate = new Date( data.value*1000);
+			$tag.append(myDate.getFullYear()+"/"+((myDate.getMonth()+1) < 10 ? '0'+(myDate.getMonth()+1) : (myDate.getMonth()+1))+"/"+(myDate.getDate() < 10 ? '0'+myDate.getDate() : myDate.getDate())+" "+(myDate.getHours() < 10 ? '0'+myDate.getHours() : myDate.getHours())+":"+(myDate.getMinutes() < 10 ? '0'+myDate.getMinutes() : myDate.getMinutes())); //+":"+myDate.getSeconds() pulled seconds in 201307. really necessary?
 			},
 
 		unix2mdy : function($tag,data)	{

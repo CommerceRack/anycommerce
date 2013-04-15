@@ -373,9 +373,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 
-
-
-
 		adminOrderList : {
 			init : function(obj,_tag,Q)	{
 				_tag = _tag || {};
@@ -794,6 +791,7 @@ if giftcard is on there, no paypal will appear.
 				return r;
 				},
 			dispatch : function(ticketid,_tag,Q)	{
+				obj = {};
 				obj._tag = _tag || {};
 				obj._tag.datapointer = "adminTicketDetail";
 				obj._cmd = "adminTicketDetail";
@@ -1598,7 +1596,7 @@ else	{
 				app.u.throwMessage(msg);
 
 				if(app.ext.admin.vars.tab)	{
-					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
+//					app.u.dump("GOT HERE! app.ext.admin.vars.tab: "+app.ext.admin.vars.tab);
 					$(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')).empty().append(app.data[tagObj.datapointer].html)
 					}			
 				}
@@ -3794,6 +3792,14 @@ just lose the back button feature.
 					});
 				},
 
+
+			execDialogClose : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-close"}});
+				$btn.off('click.execDialogClose').on('click.execDialogClose',function(event){
+					event.preventDefault();
+					$btn.closest(".ui-dialog-content").dialog('close');
+					});
+				},
 
 /* login and create account */
 

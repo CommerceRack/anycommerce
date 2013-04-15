@@ -86,7 +86,7 @@ var admin_support = function() {
 				app.u.dump("BEGIN admin_support.a.showTicketManager");
 				$target.css('min-height',300); //so showLoading has a little room.
 				$target.showLoading({'message':'Fetching list of open tickets'});
-				
+				app.model.destroy('adminTicketList');
 				app.ext.admin.calls.adminTicketList.init({'detail':'open'},{callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$target.anymessage({'message':rd});
@@ -94,6 +94,7 @@ var admin_support = function() {
 					else	{
 						$target.anycontent({templateID:'supportPageTemplate','datapointer':rd.datapointer});
 						app.u.handleAppEvents($target);
+						$('.gridTable',$target).anytable();
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -135,30 +136,94 @@ var admin_support = function() {
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {}, //renderFormats
+		renderFormats : {
+			
+			
+			
+			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {}, //u
+		u : {
+
+//gather some information about the browser/computer that submitted the ticket.
+			gatherIntel : function()	{
+				var r = "" //what is returned.
+				r += "\n\nThe following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
+				
+				r += "MVC version: "+app.model.version;
+				r += "\nMVC release: "+app.vars.release;
+				r += "\nlogged in to: "+app.vars.domain;
+				r += "\n\nuserAgent: "+navigator.userAgent;
+				r += "\nappVersion: "+navigator.appVersion;
+				r += "\noscpu: "+navigator.oscpu;
+				r += "\nscreen size: "+screen.width+" X "+screen.height;
+				r += "\nbrowser size: "+$('body').width()+" X "+$('body').height();
+				return r;
+				}
+			
+			}, //u
 
 
 		e : {
 			
+			execTicketCreate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-arrow-e"}});
+				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						alert('do something');
+						}
+					else	{} //validation handles error display
+					});
+				},
+			
+			execDispositionChange : function($ele)	{
+				$ele.off('change.execDispositionChange').on('change.execDispositionChange',function(){
+					var $target = $ele.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']");
+					$target.showLoading({'message':'Fetching updated ticket list.'});
+					
+					
+					});
+				},
+			
+			showTicketLastUpdate : function($ele)	{
+				$ele.off('click.showTicketLastUpdate').on('click.showTicketLastUpdate',function(){
+					var $tr = $ele.closest('tr'),
+					ticketID = $tr.data('id');
+					
+					app.ext.admin.calls.adminTicketDetail.init(ticketID,{'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){
+							$('#globalMessaging').anymessage({'message':rd});
+							}
+						else	{
+							$tr.after("<tr><td colspan='3'><\/td><td colspan='5'>CONTENT<\/td><\/tr>");
+							}
+						}},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
+			
 			showTicketCreate : function($btn)	{
 				$btn.button();
-				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(){
+				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
+					event.preventDefault();
 					var $target = $("<div \/>",{'title':'Create a new support ticket'}).appendTo('body');
 					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
 					$target.dialog({'width':500,'height':500});
 					app.u.handleAppEvents($target);
+					$(':checkbox',$target).each(function(){
+						$(this).closest('label').anycb();
+						});
 					});
 				},
 			
 			showTopicInputs : function($select)	{
 				app.u.dump(" -> event showTopicInputs has been added.");
-				$select.off('change.showTopicInputs').on('change.showTopicInputs',function(){
+				$select.off('change.showTopicInputs').on('change.showTopicInputs',function(event){
+					event.preventDefault();
 					var $form = $select.closest('form');
-					app.u.dump('got here');
 					$('fieldset.topicInputs',$form).hide(); //hide all the other topic input fields.
 					$("fieldset[data-app-role='"+$select.val()+"_inputs']",$form).show();
 					});
