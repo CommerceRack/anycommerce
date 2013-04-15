@@ -729,8 +729,9 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$input.hide();
 				$container.append($span);
 				$label.prepend($container);
-				$input.is(':checked') ? self._turnOn() :self._turnOff(); //set default
-				$input.on('change.anycb',function(){
+				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
+				
+				$input.on('click.anycb',function(){
 					app.u.dump(" -> anycb is toggled");
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
