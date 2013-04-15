@@ -800,25 +800,29 @@ if giftcard is on there, no paypal will appear.
 				}
 			}, //adminTicketDetail
 // !!!! THIS CALL IS NOT DONE ON THE API SIDE. the params here are placeholders and will need to be updated, most likely.
-		adminTicketUpdate : {
-			init : function(obj,_tag,Q)	{
+// @updates holds the macros.
+// CLOSE -> no params
+// APPEND -> pass note.
+
+		adminTicketMacro : {
+			init : function(ticketid,macro,_tag,Q)	{
 				var r = 0;
-				if(obj && obj.ticketid)	{
-					this.dispatch(obj,_tag,Q);
-					}
-				else if(obj)	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, a required param was left blank. body: ["+typeof obj.body+"]<br>subject: ["+obj.subject+"]<br>priority: ["+obj.priority+"]","gMessage":true});
+				if(ticketid && typeof macro === 'object')	{
+					r = 1;
+					this.dispatch(ticketid,macro,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, no variables/obj passed","gMessage":true});
+					$('#gloobjbalMessaging').anymessage({"message":"In admin.calls.adminTicketCreate, either ticketid ["+ticketid+"] or macro ["+typeof macro+"] not defined.","gMessage":true});
 					}
-				
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
-				obj._cmd = "adminTaskCreate"
+			dispatch : function(ticketid,macro,_tag,Q)	{
+				var obj = {};
+				obj._cmd = "adminTicketMacro"
+				obj.ticketid = ticketid
+				obj['@updates'] = macro;
 				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTaskCreate";
+				obj._tag.datapointer = "adminTicketMacro";
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			}, //adminTicketUpdate

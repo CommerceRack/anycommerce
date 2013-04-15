@@ -2876,7 +2876,7 @@ $tmp.empty().remove();
 			if(data.bindData.loadsTemplate)	{
 				var $o, //recycled. what gets added to $tag for each iteration.
 				int = 0;
-				for(i in data.value)	{
+				for(var i in data.value)	{
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
 					else	{
 						$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);

@@ -21,11 +21,12 @@
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
 				<button data-app-event='admin_support|showTicketCreate'>Create A New Ticket</button>
+				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			</div>
-			<h3 class='heading'>Ticket Disposition: <select>
-				<option>Recent</option>
-				<option>Open/Waiting</option>
-				<option>All</option>
+			<h3 class='heading'>Ticket Disposition: <select name='disposition' data-app-event='admin_support|execTicketListDispositionChange'>
+				<option value='open'>Open</option>
+				<option value='waiting'>Waiting</option>
+				<option value='all'>All</option>
 			</select>
 			</h3>
 		</div>
@@ -37,11 +38,11 @@
 		<tr>
 			<th class='alignLeft'></th>
 			<th class='alignLeft'>Ticket #</th>
-			<th class='alignLeft'>Opened</th>
+			<th class='alignLeft hideInDetailMode'>Opened</th>
 			<th class='hideInDetailMode alignLeft'>Last Update</th>
 			<th class='alignLeft'>Subject</th>
-			<th class='alignLeft'>User</th>
-			<th class='alignLeft'>Date Closed</th>
+			<th class='alignLeft hideInDetailMode'>User</th>
+			<th class='alignLeft hideInDetailMode'>Date Closed</th>
 			<th></th>
 		</tr>
 		</thead>
@@ -59,15 +60,15 @@
 	<tr id='supportTicketRowTemplate'>
 		<td data-bind="var: ticket(DISPOSITION); format:text;"></td>
 		<td data-bind="var: ticket(ID); format:text;"></td>
-		<td data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
 		<td class='hideInDetailMode lookLikeLink' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-event='admin_support|showTicketLastUpdate'></td>
 		<td data-bind="var: ticket(SUBJECT); format:text;"></td>
-		<td data-bind="var: ticket(LUSER); format:text;"></td>
-		<td data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(LUSER); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
 		
 		<td class='alignRight'>
-		<button onClick='alert(app.ext.admin_support.u.gatherIntel());'>update</button>
-		<button class='hideInDetailMode'>close</button>
+		<button data-app-event="admin_support|showTicketDetail">Detail/Update</button>
+		<button data-app-event="admin_support|execTicketClose" class='hideInDetailMode'>Close Ticket</button>
 		</td>
 	</tr>
 
@@ -77,18 +78,15 @@
 
 
 
-<div id='supportTicketCreateTemplate' class='labelsAsBreaks  alignedLabels'>
+<div id='supportTicketCreateTemplate' class='labelsAsBreaks  alignedLabels alignedInputs'>
 
 <form action='#'>
 <fieldset class=' marginBottom'>
-	<label><span>Created by:</span>USER</label>
-	<label><span>Subject: </span><input type='text' name='SUBJECT'  required='required' /></label>
-	<label><span>Topic: </span><select name='TOPIC' required='required' data-app-event='admin_support|showTopicInputs'>
+	<label><span>Subject: </span><input type='text' name='subject'  required='required' /></label>
+	<label><span>Topic: </span><select name='topic' required='required' data-app-event='admin_support|showTopicInputs'>
 		<option></option>
 		<option value='admin'>Admin/User Interface</option>
-		<option value='zid'>Desktop Client</option>
-		<option value='storefront'>Website (not checkout)</option>
-		<option value='checkout'>Checkout</option>
+		<option value='storefront'>Website</option>
 		<option value='billing'>Billing</option>
 		<option value='DNS'>Domain name</option>
 		<option value='other '>Other</option>
@@ -100,44 +98,36 @@
 <fieldset class='displayNone topicInputs marginBottom' data-app-role='storefront_inputs'>
 	<legend>Storefront</legend>
 	<label><span>Domain: </span><input type='url' name='storefront_domain' data-validation-rules='skipIfHidden' required='required' /></label>
-	<label><span>Order, PID, batch id, etc: </span><input type='text' name='storefront_id'  data-validation-rules='skipIfHidden' required='required' /></label>
 	<label><span>Steps to reproduce: </span><textarea name='storefront_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
-	<div class='hint'>To more easily allow you to recreate the steps, you can navigate away from the support interface and this panel will come with you. Drag it using title bar.</div>
-	<label><span>Description of issue: </span><textarea name='storefront_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
 
 
 <fieldset class='displayNone topicInputs marginBottom' data-app-role='DNS_inputs'>
 	<legend>Domain/DNS</legend>
 	<label><span>Domain: </span><input type='url' name='DNS_domain'  data-validation-rules='skipIfHidden' required='required' /></label>
-	<label><span>Description of issue: </span><textarea name='DNS_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
 </fieldset>
-
-<fieldset class='displayNone topicInputs marginBottom' data-app-role='zid_inputs'>
-	<legend>Desktop Client</legend>
-	<label><span>Description of issue: </span><textarea name='zid_description' data-validation-rules='skipIfHidden' required='required'></textarea></label>
-	<label><span>ID (order, product, etc): </span><input type='text' name='zid_id' data-validation-rules='skipIfHidden' required='required' /></label>
-	<label><span>Steps to reproduce: </span><textarea name='zid_steps2reproduce' data-validation-rules='skipIfHidden' required='required'></textarea></label>
-</fieldset>
-
-
 
 
 <fieldset>
+
+		<label><span>Description of issue: </span><textarea name='description' required='required' row='10'></textarea></label>
+
 		<div class='marginBottom'>
 		Priority:
-		<label><input type='radio' name='PRIORITY' value='low' checked='checked' /><b>Normal:</b> information needed.</label>
-		<label><input type='radio' name='PRIORITY' value='med' /><b>Escalated:</b> need assistance as soon as possible.</label>
-		<label><input type='radio' name='PRIORITY' value='low' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
+		<label><input type='radio' name='priority' value='low' checked='checked' /><b>Normal:</b> information needed.</label>
+		<label><input type='radio' name='priority' value='med' /><b>Escalated:</b> need assistance as soon as possible.</label>
+		<label><input type='radio' name='priority' value='low' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
 		</div>
-		
+<!--
 		<div class='marginBottom'>
 <label class='clearfix marginBottom'><input type='checkbox' name='private' />Private: hide ticket for other users.</label>
 <label class='clearfix marginBottom'><input type='checkbox' name='callback' />Callback: please have a support technician contact me.</label>
 		</div>
+
+-->
 </fieldset>
 
-<button class='floatRight' data-app-event="admin_support|execTicketCreate">Create Ticket</button>
+<button class='floatRight ui-state-highlight' data-app-event="admin_support|execTicketCreate">Create Ticket</button>
 <button data-app-event="admin|execDialogClose">Cancel</button>
 
 <p class='hint'>Please include one issue per ticket. This allows us to route the ticket appropriately.</p>
@@ -146,3 +136,36 @@
 </form>
 
 </div>
+
+
+
+
+
+
+
+<div id='supportTicketDetailTemplate'>
+
+<table class='fullWidth'>
+	<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;"></tbody>
+</table>
+
+<form>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+	<legend>Provide Additional Information:</legend>
+	<label><span>Message: </span><textarea name='body'></textarea></label>
+</fieldset>
+</form>
+
+</div>
+
+
+<table>
+<tr id='supportTicketFollowupTemplate'>
+	<td class='valignTop'>
+	<div data-bind="var: ticket(who); format:text; pretext: from: ;"></div>
+	<div data-bind="var: ticket(when); format:text; pretext: on: ;" class='smallTxt'></div>
+	</td>
+	<td class='valignTop'>
+	<pre class='marginLeft preformatted' data-bind="var: ticket(txt); format:text;"></pre>
+	</td>
+</tr>

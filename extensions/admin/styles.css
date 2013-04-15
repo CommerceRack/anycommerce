@@ -111,6 +111,21 @@ Generic text styles
 .lineThrough	{text-decoration:line-through}
 .uppercase	{text-transform:uppercase;}
 .spacedLetters	{letter-spacing:.6em;}
+/* apply this class to a pre tag and whitespace formatting will be supporting, but word wraping will occur */
+.preformatted {
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	display:block; 
+	white-space: pre-wrap;  
+	white-space: -moz-pre-wrap; 
+	white-space: -pre-wrap; 
+	white-space: -o-pre-wrap; 
+	word-wrap: break-word; 
+	width:100%; overflow:visible; /* formatting caused scroll bars for a few px */
+	font-family:Tahoma, Geneva, sans-serif; /* have to redeclare for pre default */
+	}
+
 
 /* use these to indicate severity, where red is the highest alert state and green is the 'everything is dandy' state. */
 .red		{color:#660000;}
