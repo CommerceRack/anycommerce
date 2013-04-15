@@ -712,15 +712,15 @@ and it'll turn the cb into an ios-esque on/off switch.
 			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label')}
 			else	{}
 			
-			app.u.dump("ANYCB -> 20130415d - bind.change");
-			
+		
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
+			else if($.browser && $.browser.msie && $.browser.version.substring(0, 2) == "8.")	{} //ie 8 not supported. didn't link binding.
 			else if($label.length)	{
 				var $input = $("input",$label).first(),
 				$container = $("<span \/>").addClass('ui-widget ui-widget-content ui-corner-all ui-widget-header').css({'position':'relative','display':'block','width':'55px','margin-right':'6px','height':'20px','z-index':1,'padding':0,'float':'left','cursor':'pointer'}),
 				$span = $("<span \/>").css({'padding':'0px','width':'30px','text-align':'center','height':'20px','line-height':'20px','position':'absolute','top':-1,'z-index':2,'font-size':'.75em','cursor':'pointer'});
 	
-				$label.data('anycb',true); //allows for plugin to check if it's already been run on this element.
+				$label.data('anycb',true); // allows for plugin to check if it's already been run on this element.
 				self.span = $span; //global (within instance) for easy reference.
 
 				$label.contents().filter(function() {
@@ -729,11 +729,9 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$input.hide();
 				$container.append($span);
 				$label.prepend($container);
-				
-				app.u.dump(" -> $input.length: "+$input.length);
 				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 				
-				$input.bind('change',function(){
+				$input.on('click.anycb',function(){
 					app.u.dump(" -> anycb is toggled");
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
