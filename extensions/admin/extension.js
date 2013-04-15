@@ -1306,13 +1306,13 @@ if giftcard is on there, no paypal will appear.
 					var r = 0;
 					_tag = _tag || {};
 					_tag.datapointer = 'helpDocumentGet|'+docid;
-					if(app.model.fetchData(_tag.datapointer) == false)	{
+//					if(app.model.fetchData(_tag.datapointer) == false)	{
 						this.dispatch(docid,_tag,Q);
-						r = 1;
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
+//						r = 1;
+//						}
+//					else	{
+//						app.u.handleCallback(_tag);
+//						}
 					}
 				else	{
 					app.u.throwGMessage("In admin.calls.helpDocumentGet, docid not specified.");
@@ -3670,7 +3670,7 @@ just lose the back button feature.
 						$target.dialog({width:500, height:500});
 						$target.anycontent({'templateID':'helpDocumentTemplate','showLoadingMessage':'Fetching help documentation...'});
 
-						app.ext.admin.calls.helpDocumentGet.init('prodmgr_detail_ogoverview',{'callback':'anycontent','jqObj':$target},'mutable');
+						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':'anycontent','jqObj':$target},'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					}

@@ -144,7 +144,7 @@
 
 
 <div id='supportTicketDetailTemplate'>
-
+<div data-bind="var: ticket(subject); format:text; pretext: Subject: ;"></div>
 <table class='fullWidth'>
 	<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;"></tbody>
 </table>
@@ -152,6 +152,7 @@
 <form>
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
 	<legend>Provide Additional Information:</legend>
+	<label><span>Attach File: </span>PUTSOMETHINGHERE</label>
 	<label><span>Message: </span><textarea name='body'></textarea></label>
 </fieldset>
 </form>
