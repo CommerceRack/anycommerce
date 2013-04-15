@@ -724,7 +724,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 
 				$label.contents().filter(function() {
 					return this.nodeType === 3 && $.trim(this.nodeValue) !== '';
-					}).wrap("<span class='label anycb-label' style='display:inline-block; height:24px; line-height:24px; float:left;'></span>"); //wrap around just the text. text().wrap() didn't work.
+					}).wrap("<span class='label anycb-label' style='display:block; height:24px; line-height:24px; float:left;'></span>"); //wrap around just the text. text().wrap() didn't work. don't use inline-block or ie8 doesn't work.
 				$input.hide();
 				$container.append($span);
 				$label.prepend($container);
