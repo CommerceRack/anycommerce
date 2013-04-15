@@ -712,7 +712,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 			else if(self.element.is(':checkbox'))	{$label = self.element.closest('label')}
 			else	{}
 			
-			app.u.dump("ANYCB -> 20130415b");
+			app.u.dump("ANYCB -> 20130415c - bind.click");
 			
 			if($label.data('anycb') === true)	{app.u.dump(" -> already anycb-ified");} //do nothing, already anycb-ified
 			else if($label.length)	{
@@ -733,7 +733,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 				app.u.dump(" -> $input.length: "+$input.length);
 				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 				
-				$input.bind('change',function(){
+				$input.bind('click',function(){
 					app.u.dump(" -> anycb is toggled");
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
