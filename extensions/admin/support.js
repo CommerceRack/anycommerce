@@ -197,7 +197,7 @@ var admin_support = function() {
 
 
 		e : {
-			
+
 			execTicketCreate : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-e"}});
 				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
@@ -225,6 +225,7 @@ var admin_support = function() {
 									}
 								else	{
 									$form.empty().anymessage({'message':app.u.successMsgObject("Thank you, your ticket has been created.")});
+									$("<button \/>").text('close').button().on('click.closeDialog',function(event){event.preventDefault(); $(this).closest('ui-dialog-content').dialog('close')}).appendTo($form);
 									}
 								}	
 							},'immutable');
@@ -237,7 +238,7 @@ var admin_support = function() {
 					else	{} //validation handles error display
 					});
 				},
-			
+
 			execTicketClose : function($btn)	{
 				
 				var ticketData = $btn.closest('tr').data();
@@ -262,7 +263,7 @@ var admin_support = function() {
 						});
 					}
 				},
-			
+
 			execTicketListDispositionChange : function($ele)	{
 				$ele.off('change.execDispositionChange').on('change.execDispositionChange',function(){
 					var $tbody = $ele.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']");
@@ -271,7 +272,49 @@ var admin_support = function() {
 					app.model.dispatchThis('mutable');
 					});
 				},
-			
+
+			execTicketUpdate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execTicketUpdate').on('click.execTicketUpdate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					$panelContents = $btn.closest('.ui-widget-content');
+					
+					if(app.u.validateForm($form))	{
+						$panelContents.showLoading({'message':'Updateing ticket'});
+						app.ext.admin.calls.adminTicketMacro.init($panelContents.data('ticketid'),['APPEND?note='+encodeURIComponent($("[name='note']",$form).val())],{'callback':function(rd){
+							$panelContents.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd});
+								}
+							else	{
+								$form.empty().anymessage({'message':app.u.successMsgObject('Ticket '+$panelContents.data('ticketid')+' has been updated')})
+								}
+							}},'immutable');
+							app.model.dispatchThis('immutable');
+						}
+					else	{} //validateForm handles displaying errors.
+					});
+				},
+
+
+			showFileAttachmentModal : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-plus"}});
+				$btn.off('click.showFileAttachmentModal').on('click.showFileAttachmentModal',function(event){
+					event.preventDefault();
+					var $panelContents = $(this).closest('.ui-widget-content');
+					if($panelContents && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
+						app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
+						}
+					else if($panelContents)	{
+						$btn.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to determine ticketid ["+$panelContents.data('ticketid')+"] and/or uuid ["+$panelContents.data('uuid')+"]",'gMessage':true});
+						}
+					else	{
+						$btn.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to locate panelContents container",'gMessage':true});
+						}
+					});
+				},
+
 			showTicketLastUpdate : function($ele)	{
 				if($ele.text().charAt(0) == '0')	{} //value will be 00:00: etc if no update has occured.
 				else	{
@@ -298,7 +341,7 @@ var admin_support = function() {
 						});
 					}
 				},
-			
+
 			showTicketCreate : function($btn)	{
 				$btn.button();
 				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
@@ -309,7 +352,7 @@ var admin_support = function() {
 					app.u.handleAppEvents($target,{'$context':$btn.closest("[data-app-role='dualModeList']")});
 					});
 				},
-			
+
 			showTicketDetail : function($btn)	{
 
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false}); //ui-icon-pencil
@@ -318,36 +361,42 @@ var admin_support = function() {
 //					app.u.dump("BEGIN admin_user.e.bossUserUpdate click event");
 
 					var $target = $btn.closest("[data-app-role='dualModeContainer']").find("[data-app-role='dualModeDetail']").first(),
-					ticketID = $btn.closest('tr').data('id');
+					$tr = $btn.closest('tr'),
+					ticketID = $tr.data('id'),
+					uuid = $tr.data('uuid');
 
 //					app.u.dump(" -> user object["+index+"]: "); app.u.dump(user);
-					if(ticketID)	{
+					if(ticketID && uuid)	{
 					//see bossUserCreateUpdateSave app event to see what usermode is used for.
 
-var panelID = app.u.jqSelector('','ticketDetail_'+ticketID),
-$panel = $("<div\/>").data('ticketid',ticketID).hide().anypanel({
-	'header':'Ticket: '+ticketID,
-	'templateID':'supportTicketDetailTemplate',
-//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-	'dataAttribs': {'id':panelID,'ticketid':ticketID}
-	}).prependTo($target);
+						var panelID = app.u.jqSelector('','ticketDetail_'+ticketID),
+						$panel = $("<div\/>").data({'ticketid':ticketID, 'uuid':uuid}).hide().anypanel({
+							'header':'Ticket: '+ticketID,
+							'templateID':'supportTicketDetailTemplate',
+						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
+							'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
+							}).prependTo($target);
+						
+						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").parent(),'detail');
+						
+						app.ext.admin.calls.adminTicketDetail.init(ticketID,{
+							'callback':function(rd){
+								if(app.model.responseHasErrors(rd)){
+									app.u.throwMessage(rd);
+									}
+								else	{		
+									$panel.anycontent({'datapointer':rd.datapointer});
+									app.u.handleAppEvents($panel);
+									}
+								}
+							},'mutable')
+							$panel.slideDown('fast',function(){$panel.showLoading({'message':'Gathering nuts, berries and user details.'});});
+							app.model.dispatchThis('mutable');
 
-app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").parent(),'detail');
 
-app.ext.admin.calls.adminTicketDetail.init(ticketID,{
-	'callback':function(rd){
-		if(app.model.responseHasErrors(rd)){
-			app.u.throwMessage(rd);
-			}
-		else	{		
-			$panel.anycontent({'datapointer':rd.datapointer});
-			}
-		}
-	},'mutable')
-	$panel.slideDown('fast',function(){$panel.showLoading({'message':'Gathering nuts, berries and user details.'});});
-	app.model.dispatchThis('mutable');
-
-
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':"In admin_support.e.showTicketDetail, unable to determine ticketid ["+ticketid+"] and/or uuid ["+uuid+"]",'gMessage':true});
 						}
 //append detail children before changing modes. descreases 'popping'.
 					app.ext.admin.u.toggleDualMode($('#userManagerContent'),'detail');
