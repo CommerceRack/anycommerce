@@ -84,6 +84,10 @@ var orderCreate = function() {
 					$('#'+app.ext.orderCreate.vars.containerID).append("");
 					r = true;
 					}
+				else if(!app.vars.checkoutAuthMode)	{
+					r = false;
+					$('#globalMessaging').anymessage({'message':'<strong>Uh Oh!<\/strong> app.vars.checkoutAuthMode is not set. should be set to passive, required or active (depending on the checkout behavior desired).'});
+					}
 				else	{
 					r = true;
 					if(document.domain.indexOf('app-hosted.com') >= 0)	{window.localStorage.clear()} //clear localStorage for shared domain to avoid cross-store contamination.

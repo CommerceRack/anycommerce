@@ -107,6 +107,9 @@
 	<label><span>Domain: </span><input type='url' name='DNS_domain'  data-validation-rules='skipIfHidden' required='required' /></label>
 </fieldset>
 
+<fieldset class='displayNone' data-app-role='phoneFieldset'>
+	<label><span>Phone: </span><input type='tel' name='phone' data-validation-rules='skipIfHidden' required='required' /></label>
+</fieldset>
 
 <fieldset>
 
@@ -114,9 +117,9 @@
 
 		<div class='marginBottom'>
 		Priority:
-		<label><input type='radio' name='priority' value='low' checked='checked' /><b>Normal:</b> information needed.</label>
-		<label><input type='radio' name='priority' value='med' /><b>Escalated:</b> need assistance as soon as possible.</label>
-		<label><input type='radio' name='priority' value='low' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
+		<label><input type='radio' name='priority' value='LOW' checked='checked' data-app-event='admin_support|tagAsPriority' /><b>Normal:</b> information needed.</label>
+		<label><input type='radio' name='priority' value='MED' data-app-event='admin_support|tagAsPriority' /><b>Escalated:</b> need assistance as soon as possible.</label>
+		<label><input type='radio' name='priority' value='HIGH' data-app-event='admin_support|tagAsPriority' /><b>Urgent:</b> emergency only (site is down, no work around).</label>
 		</div>
 <!--
 		<div class='marginBottom'>

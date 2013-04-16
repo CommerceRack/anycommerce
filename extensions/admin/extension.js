@@ -331,6 +331,31 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminDataQuery
 
 
+
+		adminMessagesList : {
+//ID will be 0 to start.
+			init : function(MESSAGEID,_tag,Q)	{
+				var r = 0;
+				if(MESSAGEID || MESSAGEID === 0)	{
+					this.dispatch(MESSAGEID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminEmailSave, ID not passed and is required.");
+					}
+				return r;
+				},
+			dispatch : function(MESSAGEID,_tag,Q)	{
+				var obj = {};
+				obj._cmd = 'adminMessagesList';
+				obj.MESSAGEID = MESSAGEID;
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminMessagesList';
+				app.model.addDispatchToQ(obj,Q || 'passive');
+				}
+			},
+
+
 //get a list of newsletter subscription lists.
 		adminNewsletterList : {
 			init : function(_tag,Q)	{
@@ -444,7 +469,7 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			
-			},
+			}, //adminOrderPaymentMethods
 			
 //updating an order is a critical function and should ALWAYS be immutable.
 		adminOrderUpdate : {
@@ -686,8 +711,6 @@ if giftcard is on there, no paypal will appear.
 				}
 			
 			}, //adminSupplierCreate
-
-			
 
 		adminTaskList : {
 			init : function(_tag,q)	{

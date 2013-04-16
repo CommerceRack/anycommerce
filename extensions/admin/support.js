@@ -159,7 +159,7 @@ var admin_support = function() {
 //gather some information about the browser/computer that submitted the ticket.
 			gatherIntel : function()	{
 				var r = "" //what is returned.
-				r += "\n\nThe following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
+				r += "\n\n ##### The following information is for the admin interface and user computer, not necessarily what was used in the issue of the ticket\n";
 				
 				r += "MVC version: "+app.model.version;
 				r += "\nMVC release: "+app.vars.release;
@@ -174,9 +174,12 @@ var admin_support = function() {
 				r += "\nbrowser size: "+$('body').width()+" X "+$('body').height();
 				return r;
 				},
-			
+
 			reloadTicketList : function($tbody,disposition,Q)	{
+				app.u.dump("BEGIN admin_support.u.reloadTicketList");
 				if($tbody && disposition)	{
+					app.u.dump(" -> tbody and disposition ["+disposition+"] are both set.");
+					app.u.dump(" -> Q: "+Q);
 					$tbody.showLoading({'message':'Fetching updated ticket list.'});
 					app.ext.admin.calls.adminTicketList.init({'detail':disposition},{callback : function(rd){
 						$tbody.hideLoading();
@@ -202,23 +205,28 @@ var admin_support = function() {
 
 			execTicketCreate : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-circle-arrow-e"}});
+//					app.u.dump("-> vars: "); app.u.dump(vars)
 				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
 					event.preventDefault();
 					var $form = $btn.closest('form');
+					
 					if(app.u.validateForm($form))	{
 						$form.showLoading({'message':'Creating a new ticket'});
 						var sfo = $form.serializeJSON(),
-						messageBody = "user: "+app.vars.luser;
-						
+						uuid = $btn.closest('.ui-dialog-content').data('uuid'),
+						messageBody = sfo.description; //NOTE -> the user inputted message body should always be first. That way it's at the top of a high priority SMS/page.
 						for(index in sfo)	{
-							if(sfo[index]){messageBody += index+": "+sfo[index]+"\n"}
+							//only pass populated fields and don't pass description again (see above).
+							if(sfo[index] && index != 'description'){messageBody += "\n"+index+": "+sfo[index]}
 							}
 						messageBody += app.ext.admin_support.u.gatherIntel();
 						
 						app.ext.admin.calls.adminTicketCreate.init({
 							'body' : messageBody,
 							'subject' : sfo.subject,
-							priority : sfo.priority
+							'UUID' : uuid,
+							'phone' : sfo.phone,
+							'priority' : sfo.priority
 							},{
 							'callback' : function(rd){
 								$form.hideLoading();
@@ -227,12 +235,22 @@ var admin_support = function() {
 									}
 								else	{
 									$form.empty().anymessage({'message':app.u.successMsgObject("Thank you, your ticket has been created.")});
-									$("<button \/>").text('close').button().on('click.closeDialog',function(event){event.preventDefault(); $(this).closest('ui-dialog-content').dialog('close')}).appendTo($form);
+									$("<button \/>").text('Close Window').button({icons: {primary: "ui-icon-circle-close"}}).on('click',function(event){event.preventDefault(); $(this).closest('ui-dialog-content').dialog('close')}).appendTo($form);
+									
+									if(app.data[rd.datapointer] && app.data[rd.datapointer].TICKETID)	{
+										$("<button \/>").text('Add File(s) To Ticket').button({icons: {primary: "ui-icon-circle-plus"}}).on('click',function(event){
+											event.preventDefault();
+											app.ext.admin_support.a.showFileUploadInModal(app.data[rd.datapointer].TICKETID,app.data[rd.datapointer].UUID);
+											}).appendTo($form);
+										}
+
 									}
 								}	
 							},'immutable');
 //if a context is passed thru the app event, then the list of tickets is updated.
 						if(vars && vars['$context'])	{
+							app.u.dump(" -> context passed. reloading ticket list.");
+							app.model.destroy('adminTicketList');
 							app.ext.admin_support.u.reloadTicketList($("[data-app-role='dualModeListContents']",vars['$context']),$("[name='disposition']",vars['$context']).val(),'immutable');
 							}
 						app.model.dispatchThis('immutable');
@@ -264,7 +282,7 @@ var admin_support = function() {
 						app.model.dispatchThis('immutable');
 						});
 					}
-				},
+				}, //execTicketClose
 
 			execTicketListDispositionChange : function($ele)	{
 				$ele.off('change.execDispositionChange').on('change.execDispositionChange',function(){
@@ -273,7 +291,7 @@ var admin_support = function() {
 					app.ext.admin_support.u.reloadTicketList($tbody,$ele.val(),'mutable');
 					app.model.dispatchThis('mutable');
 					});
-				},
+				}, //execTicketListDispositionChange
 
 			execTicketUpdate : function($btn)	{
 				$btn.button();
@@ -297,7 +315,7 @@ var admin_support = function() {
 						}
 					else	{} //validateForm handles displaying errors.
 					});
-				},
+				}, //execTicketUpdate
 
 
 			showFileAttachmentModal : function($btn)	{
@@ -315,7 +333,7 @@ var admin_support = function() {
 						$btn.parent().anymessage({'message':"In admin_support.e.showFileAttachmentModal, unable to locate panelContents container",'gMessage':true});
 						}
 					});
-				},
+				}, //showFileAttachmentModal
 
 			showTicketLastUpdate : function($ele)	{
 				if($ele.text().charAt(0) == '0')	{} //value will be 00:00: etc if no update has occured.
@@ -342,18 +360,18 @@ var admin_support = function() {
 						app.model.dispatchThis('mutable');
 						});
 					}
-				},
+				}, //showTicketLastUpdate
 
 			showTicketCreate : function($btn)	{
 				$btn.button();
 				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
 					event.preventDefault();
-					var $target = $("<div \/>",{'title':'Create a new support ticket'}).appendTo('body');
+					var $target = $("<div \/>",{'title':'Create a new support ticket'}).data('uuid',app.u.guidGenerator()).appendTo('body');
 					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
 					$target.dialog({'width':'75%','height':500});
 					app.u.handleAppEvents($target,{'$context':$btn.closest("[data-app-role='dualModeList']")});
 					});
-				},
+				}, //showTicketCreate
 
 			showTicketDetail : function($btn)	{
 
@@ -405,8 +423,8 @@ var admin_support = function() {
 
 					});
 
-				},
-			
+				}, //showTicketDetail
+
 			showTopicInputs : function($select)	{
 				app.u.dump(" -> event showTopicInputs has been added.");
 				$select.off('change.showTopicInputs').on('change.showTopicInputs',function(event){
@@ -416,7 +434,23 @@ var admin_support = function() {
 					$("fieldset[data-app-role='"+$select.val()+"_inputs']",$form).show();
 					});
 				
-				}
+				}, //showTopicInputs
+
+			tagAsPriority : function($ele)	{
+
+				$ele.off('change.tagAsPriorityHigh').on('change.tagAsPriorityHigh',function(){
+					var $phoneFieldset = $ele.closest('form').find("[data-app-role='phoneFieldset']");
+					
+					app.u.dump(" -> got into change code");
+
+					if($ele.val() == 'HIGH')	{
+						$phoneFieldset.show();
+						}
+					else	{
+						$phoneFieldset.hide();
+						}
+					});
+				} //tagAsPriority
 			
 			}
 
