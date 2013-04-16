@@ -124,6 +124,8 @@ var admin_support = function() {
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
 					$target.append(app.renderFunctions.transmogrify({},'supportFileUploadTemplate',{'ticketid':ticketid,'uuid':uuid})).dialog('open');
 					$('#supportFileUploadForTicket').append("<input type='hidden' name='domain' value='"+app.vars.domain+"' \/>"); //file upload wants domain specified.
+					$('#supportFileUploadForTicket').append("<input type='hidden' name='ticketid' value='"+ticketid+"' \/>"); //file upload wants domain specified.
+					$('#supportFileUploadForTicket').append("<input type='hidden' name='uuid' value='"+uuid+"' \/>"); //file upload wants domain specified.
 					app.ext.admin_medialib.u.convertFormToJQFU('#supportFileUploadForTicket','adminTicketFileAttach');
 					
 					}
@@ -137,7 +139,7 @@ var admin_support = function() {
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
-			
+//adds a class to the row in list format to make high priority and waiting stand out a bit.
 			ticketRowClass : function($tag, data)	{
 				if(Number($tag.data('is_highpriority')) == 1)	{
 					$tag.addClass('alert');
