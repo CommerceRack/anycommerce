@@ -138,7 +138,15 @@ var admin_support = function() {
 
 		renderFormats : {
 			
-			
+			ticketRowClass : function($tag, data)	{
+				if(Number($tag.data('is_highpriority')) == 1)	{
+					$tag.addClass('alert');
+					}
+				else if($tag.data('disposition') == 'WAITING')	{
+					$tag.addClass('warning');
+					}
+				else	{}
+				}
 			
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -231,18 +239,28 @@ var admin_support = function() {
 				},
 			
 			execTicketClose : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-close"},text: false});
-				$btn.off('click.execTicketClose').on('click.execTicketClose',function(event){
-					event.preventDefault();
-					
-					var $tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
-					ticketID = $btn.closest('tr').data('id');
-					
-					app.model.destroy('adminTicketList');
-					app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
-					app.ext.admin_support.u.reloadTicketList($tbody,$btn.closest("[data-app-role='dualModeList']").find("[name='disposition']").val(),'immutable'); //handles showloading
-					app.model.dispatchThis('immutable');
-					});
+				
+				var ticketData = $btn.closest('tr').data();
+				
+				if(ticketData.closed_gmt != '' || ticketData.disposition == 'closed')	{
+					//ticket is already closed. hide the button.
+					$btn.hide();
+					}
+				else	{
+				
+					$btn.button({icons: {primary: "ui-icon-close"},text: false});
+					$btn.off('click.execTicketClose').on('click.execTicketClose',function(event){
+						event.preventDefault();
+						
+						var $tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
+						ticketID = $btn.closest('tr').data('id');
+						
+						app.model.destroy('adminTicketList');
+						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
+						app.ext.admin_support.u.reloadTicketList($tbody,$btn.closest("[data-app-role='dualModeList']").find("[name='disposition']").val(),'immutable'); //handles showloading
+						app.model.dispatchThis('immutable');
+						});
+					}
 				},
 			
 			execTicketListDispositionChange : function($ele)	{
@@ -255,11 +273,13 @@ var admin_support = function() {
 				},
 			
 			showTicketLastUpdate : function($ele)	{
-				if($ele.text().charAt(0) === 0)	{} //value will be 00:00: etc if no update has occured.
+				if($ele.text().charAt(0) == '0')	{} //value will be 00:00: etc if no update has occured.
 				else	{
 					$ele.off('click.showTicketLastUpdate').on('click.showTicketLastUpdate',function(){
 						var $tr = $ele.closest('tr'),
 						ticketID = $tr.data('id');
+						
+						$ele.addClass('lookLikeLink');
 						$tr.closest('tbody').showLoading({'message':'Retrieving last message for ticket '+ticketID});
 						app.ext.admin.calls.adminTicketDetail.init(ticketID,{'callback':function(rd){
 							$tr.closest('tbody').hideLoading();

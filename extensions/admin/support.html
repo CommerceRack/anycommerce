@@ -57,7 +57,7 @@
 
 <table>
 
-	<tr id='supportTicketRowTemplate'>
+	<tr id='supportTicketRowTemplate' data-bind='useParentData:true; format: ticketRowClass; extension: admin_support;'>
 		<td data-bind="var: ticket(DISPOSITION); format:text;"></td>
 		<td data-bind="var: ticket(ID); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
@@ -67,8 +67,8 @@
 		<td class='hideInDetailMode' data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty;"></td>
 		
 		<td class='alignRight'>
-		<button data-app-event="admin_support|showTicketDetail">Detail/Update</button>
 		<button data-app-event="admin_support|execTicketClose" class='hideInDetailMode'>Close Ticket</button>
+		<button data-app-event="admin_support|showTicketDetail">Detail/Update</button>
 		</td>
 	</tr>
 
@@ -144,8 +144,21 @@
 
 
 <div id='supportTicketDetailTemplate'>
-<div data-bind="var: ticket(subject); format:text; pretext: Subject: ;"></div>
-<table class='fullWidth'>
+
+<h3 data-bind="var: ticket(SUBJECT); format:text; pretext: Subject: ;"></h3>
+<div>
+	Opened on 
+	<span data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></span>
+	<span data-bind="var: ticket(LUSER); format:text; pretext: by ;"></span>
+</div>
+<div data-bind="var: ticket(LAST_FOLLOWUP); format:text; pretext: Last Update: ;"></div>
+<div><b data-bind="var: ticket(CLOSED_GMT); format:epoch2pretty; pretext: Closed: ;"></b></div>
+<div data-bind="var: ticket(DISPOSITION); format:text; pretext: Disposition: ;"></div>
+<h5 class='noPadOrMargin'>Original Message:</h5>
+<pre class='preformatted marginTop marginBottom' data-bind="var: ticket(NOTES); format:text;"></pre>
+
+
+<table class='fullWidth gridTable'>
 	<tbody data-bind="var: ticket(@FOLLOWUPS); format:processList; loadsTemplate:supportTicketFollowupTemplate;"></tbody>
 </table>
 
@@ -165,6 +178,7 @@
 	<td class='valignTop'>
 	<div data-bind="var: ticket(who); format:text; pretext: from: ;"></div>
 	<div data-bind="var: ticket(when); format:text; pretext: on: ;" class='smallTxt'></div>
+	<img src='blank.gif' width='100' height='100' alt='' data-bind="var: ticket(who-pic); format:imageURL;" />
 	</td>
 	<td class='valignTop'>
 	<pre class='marginLeft preformatted' data-bind="var: ticket(txt); format:text;"></pre>

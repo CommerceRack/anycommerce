@@ -793,7 +793,7 @@ if giftcard is on there, no paypal will appear.
 			dispatch : function(ticketid,_tag,Q)	{
 				obj = {};
 				obj._tag = _tag || {};
-				obj._tag.datapointer = "adminTicketDetail";
+				obj._tag.datapointer = "adminTicketDetail|"+ticketid;
 				obj._cmd = "adminTicketDetail";
 				obj.ticketid = ticketid;
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
