@@ -1,5 +1,28 @@
 
 
+<table>
+<tr id='messageListTemplate'>
+	<td class='valignTop'>ICON</td>
+	<td class='valignTop'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:truncText; numCharacters: 75;"></p>
+	<button data-app-event='admin|showMessageDetail'>Details</button>
+	</td>
+	<td class='valignTop'>
+	<button data-app-event='admin|execMessageClear' class='smallButton'>Clear this message</button>
+	</td>
+</tr>
+</table>
+
+
+<div id='messageDetailTemplate'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:text;"></p>
+	<hr />
+	More actions/buttons based on message type.
+</div>
+
+
 <!--
 
 ########################################################

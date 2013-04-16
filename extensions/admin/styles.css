@@ -440,7 +440,8 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 
 .mhTabsContainer .messageCount	{
 	color:#ffffff; font-size:12px; font-weight:normal; line-height:18px;
-	display:block; position:absolute; top:-2px; right:-3px;
+	display:none; /* off by default. will be turned on by app when messages are present */
+	position:absolute; top:-2px; right:-3px;
 	z-index:110;
 	height:20px; width:20px;
 	-webkit-border-radius: 10px;
@@ -449,14 +450,14 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 	border:1px solid #ffffff;
 	-webkit-box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
 	box-shadow:  1px 1px 1px 1px rgba(0, 0, 0, .3);
-	background: #fcfcfc; /* Old browsers */
-	background: -moz-radial-gradient(center, ellipse cover,  #fcfcfc 0%, #b74040 4%, #cc0000 100%); /* FF3.6+ */
-	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,#fcfcfc), color-stop(4%,#b74040), color-stop(100%,#cc0000)); /* Chrome,Safari4+ */
-	background: -webkit-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* Opera 12+ */
-	background: -ms-radial-gradient(center, ellipse cover,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* IE10+ */
-	background: radial-gradient(ellipse at center,  #fcfcfc 0%,#b74040 4%,#cc0000 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#fcfcfc', endColorstr='#cc0000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+background: rgb(153,0,0); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(153,0,0,1) 0%, rgba(204,0,0,1) 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(153,0,0,1)), color-stop(100%,rgba(204,0,0,1))); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* IE10+ */
+background: linear-gradient(to bottom,  rgba(153,0,0,1) 0%,rgba(204,0,0,1) 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#990000', endColorstr='#cc0000',GradientType=0 ); /* IE6-9 */
 
 	}
 
@@ -467,7 +468,12 @@ NOTE - the overflow hidden on headerTop and the display inlineblock/width are to
 #breadcrumb	{border-bottom:1px solid #ededed; font-size:.8em; text-indent:12px;}
 
 .mhTabsContainer li.messagesTab:hover, #messagesContent, .mhTabsContainer li.messagesTabActive	{background:#565656 !important;}
-#messagesContent	{position:absolute; top:65px; left:0; right:0; height:200px;  z-index:99;}
+#messagesContent	{position:absolute; top:65px; left:17px; right:17px; min-height:300px; z-index:99; color:#ffffff; padding:12px;}
+#messagesContent a, #messagesContent .lookLikeLink	{color:#0CF;}
+
+#messagesContent .messagesList	{float:left; width:30%; overflow:auto; height:300px; padding-right:12px; font-size:.75em;}
+#messagesContent .messageDetail	{float:right; width:60%; margin-right:3%;}
+
 
 @media screen and (max-width: 1000px) {
 /* changing to 7% keeps list from line-wrapping. */

@@ -186,9 +186,18 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='kpiTab' onClick="navigateTo('#:kpi');"><span class='text'>KPI</span><span class='icon'></span></li>
 			<li class='utilitiesTab' onClick="navigateTo('#:utilities');"><span class='text'>Utilities</span><span class='icon'></span></li>
 			<li class='supportTab' onClick="navigateTo('/biz/support/index.cgi');"><span class='text'>Support</span><span class='icon'></span></li>
-<!--			<li class='messagesTab' onClick="navigateTo('#:messages');"><span class='text'>Messages</span><span class='messageCount'></span></li>-->
+			<li class='messagesTab' onClick="app.ext.admin.u.toggleMessagePane();"><span class='text'>Messages</span><span class='messageCount'></span></li>
 		</ul>
-		<div id='messagesContent' class='displayNone'></div>
+		<div id='messagesContent' class='displayNone'>
+			<button onClick="app.ext.admin.u.toggleMessagePane();" class='floatRight' id='closePanelButton'>Close Message Panel</button>
+			<div class='messagesList'>
+			<table>
+			<tbody data-app-role='messagesContainer'></tbody>
+			</table>
+			</div>
+			
+			<div class='messageDetail'></div>
+		</div>
 		</div>
 		<div id='navTabs'></div>
 		<div id='breadcrumb'></div>

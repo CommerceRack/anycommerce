@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','helpPageTemplate','helpDocumentTemplate','helpSearchResultsTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','helpPageTemplate','helpDocumentTemplate','messageListTemplate','messageDetailTemplate','helpSearchResultsTemplate'); 
 	var r = {
 		
 		vars : {
@@ -350,7 +350,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				obj._cmd = 'adminMessagesList';
 				obj.MESSAGEID = MESSAGEID;
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminMessagesList';
+				obj._tag.datapointer = 'adminMessagesList|'+MESSAGEID;
 				app.model.addDispatchToQ(obj,Q || 'passive');
 				}
 			},
@@ -984,8 +984,6 @@ if giftcard is on there, no paypal will appear.
 
 
 
-
-
 		adminWholesaleScheduleList : {
 			init : function(_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
@@ -1004,8 +1002,6 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleList","_tag":_tag},q);	
 				}
 			}, //adminWholesaleScheduleList
-
-
 		adminWholesaleScheduleDetail : {
 			init : function(scheduleID,_tag,q)	{
 				var r = 0; //what is returned. a 1 or a 0 based on # of dispatched entered into q.
@@ -1024,8 +1020,6 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ({"_cmd":"adminWholesaleScheduleDetail","schedule":scheduleID,"_tag":_tag},q);	
 				}
 			}, //adminWholesaleScheduleList
-
-
 
 
 //This will get a copy of the config.js file.
@@ -1102,7 +1096,6 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ({"_cmd":"appResource","filename":filename,"_tag" : _tag},Q);
 				}
 			}, //appResource
-
 
 
 		authNewAccountCreate : {
@@ -1345,7 +1338,7 @@ if giftcard is on there, no paypal will appear.
 			dispatch : function(docid,_tag,Q)	{
 				app.model.addDispatchToQ({_cmd : 'helpDocumentGet','_tag':_tag,'docid':docid},Q || 'immutable');
 				}
-			} //bossRoleList
+			} //helpDocumentGet
 		}, //calls
 
 
@@ -1410,6 +1403,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 	}
 //app.ext.admin.u.buildDomainTiles4Launchpad(); //uh oh. this breaks login.
+app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this for orders.
 
 //get list of domains and show chooser.
@@ -1530,6 +1524,11 @@ else	{
 		$('#appLogin').css({'left':'1000px','position':'relative'}).removeClass('displayNone').animate({'left':'0'},'slow');
 		});
 	}
+
+
+
+
+
 				}
 			}, //initExtension
 
@@ -1852,9 +1851,37 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 						}
 					})
 				}
-			} //filterFinderSearchResults
+			}, //filterFinderSearchResults
 
-
+		handleMessaging : {
+			onSuccess : function(_rtag)	{
+//				app.u.dump("BEGIN admin.callbacks.handleMessaging");
+				if(app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@MSGS'] && app.data[_rtag.datapointer]['@MSGS'].length)	{
+					
+					var L = app.data[_rtag.datapointer]['@MSGS'].length,
+					$tbody = $("[data-app-role='messagesContainer']",'#messagesContent');
+					
+					for(var i = 0; i < L; i += 1)	{
+						$tbody.anycontent({
+							'templateID':'messageListTemplate',
+							'dataAttribs':{'index':i,'datapointer':_rtag.datapointer}, //used in detail view to find data src
+							'data':app.data[_rtag.datapointer]['@MSGS'][i]
+							});
+						}
+					app.u.handleAppEvents($tbody);
+					}
+				else	{} //no new messages.
+				
+				app.ext.admin.u.updateMessageCount(); //update count whether new messages or not, in case the count is off.
+				
+				//add another request. this means with each immutable dispatch, messages get updated.
+				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+				},
+			onError : function()	{
+				//no error display.
+				//should we add another dispatch? Let's see what happens. ???
+				}		
+			}
 
 		}, //callbacks
 
@@ -2514,6 +2541,8 @@ var chart = new Highcharts.Chart({
 
 				$('#appView').show();
 				
+				$("#closePanelButton",'#appView').button({icons: {primary: "ui-icon-triangle-1-n"},text: false});
+				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				$('.username','#appView').text(app.vars.userid);
 				var domain = this.getDomain();
@@ -2551,7 +2580,49 @@ var chart = new Highcharts.Chart({
 				return page;
 				}, //whatPageToShow
 
+			
+			updateMessageCount : function()	{
+				var messageCount = $("[data-app-role='messagesContainer']",'#messagesContent').children().length,
+				$MC = $('.messageCount');
+				
+				$MC.text(messageCount);
+				if(messageCount > 0)	{
+					$MC.show();
+					}
+				else	{
+					$MC.hide();
+					}
+				},
 
+			getMessageDetail : function(datapointer,index)	{
+				var $r = $("<div \/>");
+				if(datapointer && (index || index === 0))	{
+					$r.anycontent({'templateID':'messageDetailTemplate','data':app.data[datapointer]['@MSGS'][index]});
+					}
+				else	{
+					$r.anymessage({'message':'In admin.u.getMessageDetail, both datapointer ['+datapointer+'] and index ['+index+'] are required','gMessage':true});
+					}
+				return $r;
+				},
+
+			getLastMessageID : function()	{
+				var r = 0; //default to zero if no past messageid is present.
+				if(app.model.fetchData('adminMessagesList'))	{
+//					app.u.dump("adminMessagesList WAS IN LOCAL");
+					if(app.data['adminMessagesList']['@MSGS'] && app.data['adminMessagesList']['@MSGS'].length)	{
+						r = app.data['adminMessagesList']['@MSGS'][(app.data['adminMessagesList']['@MSGS'].length - 1)].id;
+						}
+					}
+				return r;
+				},
+/*
+			handleMessagesInit : function()	{
+//				app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
+				app.ext.admin.vars.messageListInterval = setInterval(function(){
+					app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
+					},30000);
+				},
+*/
 			addTileToLaunchpad : function($content)	{
 				$content.css({height:120,width:120,overflow:'hidden','float':'left','border':'1px solid #666','position':'relative','margin':'0 12px 12px 0'})
 				$content.appendTo($('#launchpadTiles'));
@@ -3825,6 +3896,23 @@ just lose the back button feature.
 				$btn.off('click.execDialogClose').on('click.execDialogClose',function(event){
 					event.preventDefault();
 					$btn.closest(".ui-dialog-content").dialog('close');
+					});
+				},
+
+			execMessageClear : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.off('click.execMessageClear').on('click.execMessageClear',function(event){
+					event.preventDefault();
+					$btn.closest('tr').empty().remove();
+					})
+				},
+
+			showMessageDetail : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"}});
+				$btn.off('click.showMessageDetail').on('click.showMessageDetail',function(event){
+					event.preventDefault();
+					var $tr = $btn.closest('tr');
+					$(".messageDetail","#messagesContent").empty().append(app.ext.admin.u.getMessageDetail($tr.data('datapointer'),$tr.data('index')));
 					});
 				},
 
