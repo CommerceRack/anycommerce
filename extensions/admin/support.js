@@ -377,7 +377,7 @@ var admin_support = function() {
 							'dataAttribs': {'id':panelID,'ticketid':ticketID,'uuid':uuid}
 							}).prependTo($target);
 						
-						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").parent(),'detail');
+						app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']"),'detail');
 						
 						app.ext.admin.calls.adminTicketDetail.init(ticketID,{
 							'callback':function(rd){
