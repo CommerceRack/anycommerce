@@ -257,6 +257,63 @@ var cubworld = function() {
 					index++;
 					});
 				},
+			handleRMAForm : function(){
+				var errors = [];
+				var obj = {};
+				var $form = $('#rma-form form');
+				obj.sender = $('#RMAFormEmail',$form).val();
+				obj.subject = "RMA Form Submission";
+				
+				obj.body = "";
+				
+				obj.body += "Customer: "+$('#RMAFormSender',$form).val() +"\n";
+				obj.body += "Order: "+$('#RMAFormOID',$form).val() +"\n";
+				obj.body += "Phone: "+$('#RMAFormPhone',$form).val() +"\n";
+				obj.body += "Email: "+$('#RMAFormEmail',$form).val() +"\n";
+				obj.body += "\n";
+				
+				obj.body += "Questions/Comments:\n";
+				obj.body += $('#RMAFormBody',$form).val()
+				obj.body += "\n";
+				obj.body += "\n";
+				
+				obj.body += "Permission to refund/charge card: "+$('input[name=cc_charge_confirm]:checked', $form).val()+"\n";
+				obj.body += "\n";
+				 var i=1;
+				$('#rmaItems .rmaItem', $form).each(function(){
+					var $rmaItem = $(this);
+					if(typeof $('input[name=returnid_'+i+']',$rmaItem).val() !== "" &&
+						typeof $('input[name=retex_'+i+']:checked',$rmaItem).val() !== "" &&
+						($('input[name=retex_'+i+']:checked',$rmaItem).val()==="refund"||
+							($('input[name=retex_'+i+']:checked',$rmaItem).val()==="exchange" && 
+								typeof $('input[name=exchangeid_'+i+']',$rmaItem).val() !== ""))){
+						obj.body += "SKU: "+$('input[name=returnid_'+i+']',$rmaItem).val()+"\n";
+						obj.body += "Item for "+$('input[name=retex_'+i+']:checked', $rmaItem).val()+"\n";
+						if($('input[name=retex_'+i+']:checked',$rmaItem).val()==="exchange"){
+							obj.body += "Exchange for: "+$('input[name=exchangeid_'+i+']',$rmaItem).val()+"\n";
+							}
+						obj.body += "\n";
+						}
+					else {
+						app.u.dump("ERROR"+i);
+						errors.push("Item number "+i+" contained errors");
+						}
+					i++;
+					});
+				
+				app.u.dump(obj);
+				app.u.dump(errors);
+				if(errors.length == 0){
+					//app.ext.store_crm.calls.appSendMessage.init(obj, {});
+					}
+				else {
+					var message = "";
+					for(var e in errors){
+						message += "<li>"+e+"/<li>";
+					}
+					$('#RMAFormMessaging', $form).anyMessage({'message' : message});
+					}
+				},
 			showDropDown : function ($tag) {
 				//app.u.dump('showing');
 				//console.log($tag.data('timeoutNoShow'));

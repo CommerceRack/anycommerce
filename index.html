@@ -2071,10 +2071,10 @@ The 'data-action' attribute is used to assign an onClick.
 </div>
 
 <div id="rma-form" class="displayNone">
-	<form onSubmit="return false;">
+	<form onSubmit="app.ext.cubworld.a.handleRMAForm(); return false;">
 		
 			
-			<div><label for='RMAFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='RMAFormSender' /></div>
+			<div><label for='RMAFormSender'>Full Name: </label><input type='text' name='sender' required='required' id='RMAFormSender' /></div>
 			<div><label for='RMAFormOID'>Order ID: </label><input type='text' name='OID' id='RMAFormOID' required='required'/></div>
 			<div><label for='RMAFormPhone'>Phone number: </label><input type='text' name='phone' id='RMAFormPhone' required='required' /></div>
 			<div><label for='RMAFormEmail'>Email address: </label><input type='text' name='email' id='RMAFormEmail' required='required' /></div>
@@ -2093,7 +2093,7 @@ The 'data-action' attribute is used to assign an onClick.
 			</div>
 			
 			<div><label for='RMAFormBody'>Questions/Comments: </label>
-			<textarea name='body' required='required' id='contactFormBody'></textarea></div>
+			<textarea name='body' required='required' id='RMAFormBody'></textarea></div>
 			<h4>Easy Exchange / Return Instructions</h4>
 			<ul class="wiki_list">
 				<li class="wiki_listitem"> Please enclose a check / cashiers check / money order for $4.95 for any exchanges (not returns) (This amount covers the reshipping & restocking charges)</li>
@@ -2112,7 +2112,7 @@ The 'data-action' attribute is used to assign an onClick.
 			<hr />
 			
 			
-			<div class='alignCenter'>
+			<div id="RMAFormMessaging" class='alignCenter'>
 				<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Submit Return Request' />
 			</div>
 			
