@@ -1290,32 +1290,32 @@ help documentation styles (aka webdoc)
 ex of cbc, hint and caution: search 'product' and open 'product edit'
 */
 
-.pageHelp aside	{padding:12px; margin:12px 0;}
-.pageHelp aside div	{background:#fff; padding:12px;}
-.pageHelp aside div li	{margin-left:30px; list-style: none; margin-bottom:6px;}
-.pageHelp aside h6	{padding-bottom:12px; font-size:1.5em;}
+.helpDetail aside	{padding:12px; margin:12px 0;}
+.helpDetail aside div	{background:#fff; padding:12px;}
+.helpDetail aside div li	{margin-left:30px; list-style: none; margin-bottom:6px;}
+.helpDetail aside h6	{padding-bottom:12px; font-size:1.5em;}
 
 
-.pageHelp aside.cbc	{background:#C0D2D8;}
-.pageHelp aside.cbc h6:before {content: "\e132"; font-family:iconFont; padding-right:3px;}
+.helpDetail aside.cbc	{background:#C0D2D8;}
+.helpDetail aside.cbc h6:before {content: "\e132"; font-family:iconFont; padding-right:3px;}
 
-.pageHelp aside.hint	{background:#efefef;}
-.pageHelp aside.hint h6:before {content: "\e044"; font-family:iconFont; padding-right:3px;}
-
-
+.helpDetail aside.hint	{background:#efefef;}
+.helpDetail aside.hint h6:before {content: "\e044"; font-family:iconFont; padding-right:3px;}
 
 
-.pageHelp aside.caution	{background:#fe5252;}
-.pageHelp aside.caution h6	{color:#ffffff;}
-.pageHelp aside.caution h6:before {content: "\e145"; font-family:iconFont; padding-right:6px;}
 
 
-.pageHelp .ui-widget-content h1	{margin:0 0 24px 0; font-size:1.5em; color:#000000;} /* document title */
-.pageHelp .ui-widget-content h2	{margin:0 0 12px 0; font-size:1.3em; color:#333333;} /* title for each article (used to be SECTION) */
-.pageHelp .ui-widget-content h3	{margin:0 0 12px 0; font-size:1.1em; color:#666666;} /* title for each section (used to be SUBSECTION) */
+.helpDetail aside.caution	{background:#fe5252;}
+.helpDetail aside.caution h6	{color:#ffffff;}
+.helpDetail aside.caution h6:before {content: "\e145"; font-family:iconFont; padding-right:6px;}
 
-.pageHelp article {margin-bottom:24px; } /* divides each section */
-.pageHelp article, .pageHelp .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
+
+.helpDetail .ui-widget-content h1	{margin:0 0 24px 0; font-size:1.5em; color:#000000;} /* document title */
+.helpDetail .ui-widget-content h2	{margin:0 0 12px 0; font-size:1.3em; color:#333333;} /* title for each article (used to be SECTION) */
+.helpDetail .ui-widget-content h3	{margin:0 0 12px 0; font-size:1.1em; color:#666666;} /* title for each section (used to be SUBSECTION) */
+
+.helpDetail article {margin-bottom:24px; } /* divides each section */
+.helpDetail article, .helpDetail .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
 
 
 /*
