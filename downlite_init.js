@@ -56,7 +56,7 @@ app.rq.push(['templateFunction','homepageTemplate','onDeparts',function(P) {app.
 //group any third party files together (regardless of pass) to make troubleshooting easier.
 app.rq.push(['script',0,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//ajax.googleapis.com/ajax/libs/jqueryui/1.9.0/jquery-ui.js']);
 //for banner slideshow used on homepage.
-app.rq.push(['script',1,app.vars.baseURL+'cycle-2.9998.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
+app.rq.push(['script',0,app.vars.baseURL+'cycle-2.9998.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
 //renders AddThis block on product pages
 //app.rq.push(['script',5,(document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f26cd7d7f87f12', function(P) {var addthis_config = {"data_track_clickback":false,"ui_click":true,"ui_use_image_picker": true};}]);//	'validator':function(){return (typeof addthis == 'object') ? true : false;}
 
@@ -150,7 +150,14 @@ app.u.initMVC = function(attempts){
 
 	}
 
-
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+		var $target=$('#wideSlideshow');
+		if(!$target.hasClass('slideshow')){		
+			$target.addClass('slideshow');
+	//		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return'<a href="#"> </a>';},slideExpr:'li'});	
+			$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return'<a href="#">'+(index+1)+'</a>';}});
+			}
+		}]);
 
 //Any code that needs to be executed after the app init has occured can go here.
 //will pass in the page info object. (pageType, templateID, pid/navcat/show and more)
@@ -186,11 +193,7 @@ app.u.appInitComplete = function(P)	{
 //			});
 //		}) //homepageTemplate.onCompletes
 			
-	app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-		var $target=$('#wideSlideshow');
-//		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return'<a href="#"> </a>';},slideExpr:'li'});	
-		$target.cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav',pagerAnchorBuilder:function(index,el){return' ';},slideExpr:'li'});
-		}]);
+	
 		
 		
 // add link, css, etc to hotel finder.
