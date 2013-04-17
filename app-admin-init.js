@@ -43,6 +43,9 @@ app.rq.push(['script',1,'https://crypto-js.googlecode.com/files/2.5.3-crypto-md5
 //have showLoading as early as possible. pretty handy feature. used everywhere.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']);
 
+//used in the launchpad. needed early.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.js']);
+
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
 

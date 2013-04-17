@@ -270,7 +270,29 @@ The Launch Pad
 
 */
 
-#launchpadTiles span.tilename	{position:absolute; bottom:6px; left:6px;}
+#launchpadContent	{width:100%; padding:0; }
+#launchpad {width:100%; overflow:hidden;background-color:#2462aa; padding-top:36px; padding-left:12px;} /* left padding is to compensate for the ul.li left margin causing a 36 space between tile groups */
+#launchpad:hover	{overflow:auto;}
+#launchpadInner	{position:relative; left:0; width:100%;}
+
+.launchpadTileGroup	{display:block; list-style:none; margin:0 0px 0 24px; width:324px; overflow:hidden; padding:0; float:left;} /* used on each UL for a tilegroup group */
+
+.launchpadTileGroup li	{
+	width:150px; height:150px;
+	border:2px solid #fff;
+	background:#cccccc;
+	overflow: hidden;
+	float:left; margin:0 12px 12px 0;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	}
+.launchpadTileGroup li.tile_2x2	{width:312px; height:312px;}
+.launchpadTileGroup li.tile_2x1	{width:312px; height:150px;}
+
+
+#launchpadTileGroup span.tilename	{position:absolute; bottom:6px; left:6px;}
+/*
 
 .tileDomainAdd	{background:url(images/tile_domainadd-120x120.png) no-repeat #ffffff;}
 .tileDomainAdd:hover	{background-color:#FCF;}
@@ -288,7 +310,12 @@ The Launch Pad
 .tileProjectAdd	{background:url(images/tile_projectadd-120x120.png) no-repeat;}
 .tileHelp	{background:url(images/tile_help-120x120.png) no-repeat #f9f2f2; border-color:#c92229;}
 .tileAdmin	{background:url(images/tile_admin-120x120.png) no-repeat;}
+
+*/
+
 /* css for a three column layout. will be used on dashboard and in customer editor. */
+
+
 
 /* three column panel layout (homepage) */
 .twoColumn{  

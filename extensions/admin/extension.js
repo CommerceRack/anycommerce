@@ -1364,7 +1364,7 @@ app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/templates.html'
 
 
 //SANITY - loading this file async causes a slight pop. but loading it inline caused the text to not show up till the file was done.
-//this is the leser of two weevils.
+//this is the lesser of two weevils.
 app.rq.push(['css',0,'https://fonts.googleapis.com/css?family=PT+Sans:400,700','google_pt_sans']);
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/legacy_compat.js']);
 
@@ -1405,6 +1405,8 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 //app.ext.admin.u.buildDomainTiles4Launchpad(); //uh oh. this breaks login.
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this for orders.
+
+				app.ext.admin.u.initLaunchpad();
 
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');
@@ -2623,11 +2625,51 @@ var chart = new Highcharts.Chart({
 					},30000);
 				},
 */
+
+			initLaunchpad : function()	{
+				app.u.dump("BEGIN admin.u.initLaunchpad");
+				var $LPI = $('#launchpadInner'),
+				$LP = $('#launchpad'),
+				$lastCol = $('.launchpadTileGroup:last','#launchpadInner'),
+				width = 0;
+				
+				//make sure the UL's dont wrap.
+				$('ul',$LPI).each(function(){
+					width += $(this).outerWidth(true);
+					});
+				$LPI.width(width); //extra for margin.
+			
+				$LP.bind('mousewheel', function(event, delta, deltaX, deltaY) {
+//		console.log("delta:"+delta+" deltaX: "+deltaX+" deltaY: "+deltaY);
+//		console.log($LPI.position().left);
+					$LP.css('overflow','hidden'); //once mousescroll is used to slide content, ditch the scroll bar. wheel and scroll don't play well together in chrome.
+//					app.u.dump(" -> $LPI.position().left: "+$LPI.position().left);
+					if(delta > 0)	{ //mouse wheel is going up. move the CONTENT element from right to left.
+						if($LPI.position().left > 0) { //already left-most. don't move it.
+							$LPI.css('left',0); //position correctly in case it's a negative #.
+							}
+						else	{
+							$LPI.css({'left':"+=20"}); //move inner div.
+							}
+						}
+					else	{
+//						app.u.dump('going down '+deltaY);
+			//mouse wheel is going down. move the content from left to right.
+						if((($LPI.width() - $LP.width()) * -1) > $LPI.position().left) {
+							//already right-most. no more scrolling.
+							}
+						else	{
+							$LPI.css({'left':"-=30"}); //to achieve same movement as +left, a larger step needs to occur. not sure why.
+							}
+						}
+					});
+
+				},
+
 			addTileToLaunchpad : function($content)	{
 				$content.css({height:120,width:120,overflow:'hidden','float':'left','border':'1px solid #666','position':'relative','margin':'0 12px 12px 0'})
 				$content.appendTo($('#launchpadTiles'));
 				},
-
 
 			buildDomainTiles4Launchpad : function()	{
 				

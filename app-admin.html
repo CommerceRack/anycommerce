@@ -222,17 +222,71 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
 		<div id='supportContent' class='displayNone tabContent' data-section='support'></div><!-- used for new support app -->
 		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'>
-			<section id='launchpadTiles'>
 
-			</section>
-<!--
-				<li class='tileAdmin'><span class='tilename'>Admin</span></li>
-				<li class='tileDomainAdd' onClick="navigateTo('/biz/setup/domain/index.cgi?VERB=NEW');"><span class='tilename'>Add a New Domain</span></li>
-				<li class='tileProjectAdd'><span class='tilename'>Add a Project</span></li>
-				<li class='tileHelp' onClick="app.ext.admin.a.showHelpInterface($('#setupContent'));"><span class='tilename'>A little help here please?</span></li>
-				<li class='tileZoovyLive'></li>
-				<li class='tileZoovyCommunity' onClick="window.open('https://plus.google.com/communities/108928399105730273026');"></li>
--->
+
+
+<section id='launchpad'>
+	<div id='launchpadInner'><!-- this is what's moved -->
+
+		<ul class='launchpadTileGroup' id='tilesMarketing'>
+			<li class='tile_2x2 tileZoovyCommunity' onClick="window.open('https://plus.google.com/communities/108928399105730273026');">1</li>
+			<li class='tileDomainAdd' onClick="navigateTo('/biz/setup/domain/index.cgi?VERB=NEW');"><span class='tilename'>Add a New Domain</span></li>
+			<li class='tileProjectAdd'><span class='tilename'>Add a Project</span></li>
+			<li class='tileHelp' onClick="app.ext.admin.a.showHelpInterface($('#setupContent'));"><span class='tilename'>A little help here please?</span></li>
+			<li class='tileZoovyLive'></li>
+		</ul>
+		<ul class='launchpadTileGroup' id='tilesDomain'>
+			<li>2</li>
+			<li class='tileAdmin'><span class='tilename'>Admin</span></li>
+			<li class='tile_2x1'></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li class='tile_2x2'>3</li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li class='tile_2x2'>4</li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li>5</li>
+			<li></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li class='tile_2x2'>6</li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li>7</li>
+			<li></li>
+			<li></li>
+			<li class='tile_2x2'></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li class='tile_2x2'>8</li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<ul class='launchpadTileGroup'>
+			<li class='tile_2x2'>9</li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+
+	</div>
+</section>
+
+
 		</div>
 		<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
 	
