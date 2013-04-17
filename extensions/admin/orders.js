@@ -1359,7 +1359,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							break;
 						case 'override':
 							output += "<h4 class='clearfix'>Override: "+pref.uuid+"<\/h4>";
-							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin.u.showHelpInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
+							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin_support.a.showHelpDocInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
 							output += "<br \/>New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
 							output += reasonInput;
 							output += "<button>Override</button>";

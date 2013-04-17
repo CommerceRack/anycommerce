@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','helpPageTemplate','helpDocumentTemplate','messageListTemplate','messageDetailTemplate','helpSearchResultsTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','messageListTemplate','messageDetailTemplate'); 
 	var r = {
 		
 		vars : {
@@ -2381,28 +2381,6 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 
-
-
-
-			showHelpInterface : function($target){
-
-				if($("[data-app-role='dualModeContainer']",$target).length)	{$target.show()} //already an instance of help open in this target. leave as is.
-				else	{
-					$target.empty().append(app.renderFunctions.createTemplateInstance('helpPageTemplate',{})); //clear contents and add help interface
-					app.ext.admin.u.handleAppEvents($target);
-					}
-
-//if the target is a tab, bring that tab/content into focus.
-				if($target.data('section'))	{
-					app.ext.admin.u.bringTabIntoFocus($target.data('section'));
-					app.ext.admin.u.bringTabContentIntoFocus($target);
-					}
-
-				},
-
-
-
-
 //opens a dialog with a list of domains for selection.
 //a domain being selected for their UI experience is important, so the request is immutable.
 //a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
@@ -2762,6 +2740,14 @@ var chart = new Highcharts.Chart({
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
+				else if(path == '#!help')	{
+					$('#supportContent').empty(); //here just for testing. won't need at deployment.
+					this.bringTabIntoFocus('support');
+					this.bringTabContentIntoFocus($('#supportContent'));
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
+					}
 				else if(path == '#!support')	{
 					$('#supportContent').empty(); //here just for testing. won't need at deployment.
 					this.bringTabIntoFocus('support');
@@ -3590,14 +3576,18 @@ else	{
 //				app.u.dump(" -> mode: "+mode);
 				
 				if(mode == 'detail')	{
+					
+					$L.addClass('detailMode');
+					
 					$btn.show().button('destroy').button({icons: {primary: "ui-icon-seek-prev"},text: false});
 					$parent.data('app-mode','detail');
 					if(oldMode == mode)	{} //if mode is forced, could be in same mode. don't animate.
 					else	{
-						$L.animate({width:"49%"},1000); //shrink list side.
-						$D.show().animate({width:"49%"},1000).addClass('expanded').removeClass('collapsed'); //expand detail side.
+						//dualmode-widthpercent can be set on the detail section to allow for a different split than 50/50.
+						//95 - dualmode-widthpercent will result in 5% smaller than the remaining space to allow for some margin between sections.
+						$L.animate({width:($D.data('dualmode-widthpercent')) ? (95 - $D.data('dualmode-widthpercent'))+'%' :"49%"},1000); //shrink list side.
+						$D.show().animate({width: ($D.data('dualmode-widthpercent')) ? $D.data('dualmode-widthpercent')+'%' :"49%"},1000).addClass('expanded').removeClass('collapsed'); //expand detail side.
 						}
-					$('.hideInDetailMode',$L).hide(); //adjust list for minification.
 //when switching from detail to list mode, the detail panels collapse. re-open them IF they were open when the switch to list mode occured.
 					if(numDetailPanels)	{
 						$('.ui-widget-anypanel',$D).each(function(){
@@ -3629,8 +3619,7 @@ else	{
 						$D.show().animate({width:0},1000); //expand detail side.
 						$btn.hide();
 						}
-					
-					$('.hideInDetailMode',$L).show(); //adjust list for minification.
+					$L.removeClass('detailMode');
 					}
 				else	{
 					app.u.throwGMessage("In admin_user.u.toggleDisplayMode, invalid mode ["+mode+"] passed. only list or detail are supported.");
@@ -3755,6 +3744,7 @@ just lose the back button feature.
 					}
 				return obj;
 				},
+
 //Device Persistent Settings (DPS) Set
 //For updating 'session' preferences, which are currently device specific.
 //for instance, in orders, what were the most recently selected filter criteria.
@@ -3787,33 +3777,6 @@ just lose the back button feature.
 				},
 
 
-
-
-
-//does everything. pass in a docid and this 'll handle the call, request and display.
-//will check to see if a dom element already exists and , if so, just open that and make it flash. 
-			showHelpInDialog : function(docid)	{
-				if(docid)	{
-					var targetID = 'helpfile_'+docid
-					var $target = $(app.u.jqSelector('#',targetID));
-//already on the dom. just open it.
-					if($target.length)	{
-						$target.dialog('open')
-						$target.effect("highlight", {}, 1500);
-						}
-					else	{
-						$target = $("<div \/>",{'id':targetID,'title':'help doc: '+docid}).addClass('helpDoc').appendTo('body');
-						$target.dialog({width:500, height:500});
-						$target.anycontent({'templateID':'helpDocumentTemplate','showLoadingMessage':'Fetching help documentation...'});
-
-						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':'anycontent','jqObj':$target},'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					}
-				else	{
-					app.u.throwMessage("In admin.u.showHelpInModal, no docid specified.");
-					}
-				},
 
 
 
@@ -4025,32 +3988,9 @@ just lose the back button feature.
 					event.preventDefault();
 					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
 					});
-				}, //toggleDualMode
+				} //toggleDualMode
 
 
-			"helpSearch" : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
-				$btn.off('click.helpSearch').on('click.helpSearch',function(event){
-					event.preventDefault();
-					
-					var $parent = $btn.closest("[data-app-role='dualModeContainer']"),
-					$form = $("[data-app-role='helpSearch']",$parent).first(),
-					formObj = $form.serializeJSON();
-					
-					if(formObj && formObj.keywords)	{
-						$('.dualModeListMessaging',$parent).first().empty().hide();
-						var $contentArea = $('.gridTable',$parent).first();
-						$contentArea.show().find('tbody').empty(); //empty any previous search results.
-						$contentArea.showLoading({"message":"Searching for help files"});
-						app.ext.admin.calls.helpSearch.init(formObj.keywords,{'callback':'anycontent','jqObj':$contentArea},'mutable');
-						app.model.dispatchThis('mutable');
-						}
-					else	{
-						$('.dualModeListMessaging',$parent).first().empty().show().anymessage({'message':'Please enter some keywords into the form input above to search for.'});
-						$('.gridTable',$parent).hide();
-						}
-					});
-				}
 			
 
 			

@@ -163,6 +163,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<div class='logo pointer alignCenter' onClick="navigateTo('#!dashboard');" title='home'><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></div>
 			<div class='menu floatRight'>
 				<span class='pointer lookLikeLink showForZoovyOnly' onClick="return navigateTo('/biz/downloads/index.cgi');" title='Use our windows clients for managing orders and product'>Downloads</span>
+				| <span class='pointer lookLikeLink' onClick="showUI('#!help',{'tab':'support'})">Help</span>
 				| <span class='pointer lookLikeLink' onClick="return navigateTo('#!taskManager');" title='view and edit your task list'>Tasks</span>
 				| <span class='pointer lookLikeLink' onClick="app.ext.admin.a.logout(); return false;" title='log out of your account' >Exit</span>
 			</div>
@@ -186,7 +187,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='kpiTab' onClick="navigateTo('#:kpi');"><span class='text'>KPI</span><span class='icon'></span></li>
 			<li class='utilitiesTab' onClick="navigateTo('#:utilities');"><span class='text'>Utilities</span><span class='icon'></span></li>
 <!--			<li class='supportTab' onClick="navigateTo('/biz/support/index.cgi');"><span class='text'>Support</span><span class='icon'></span></li> -->
-			<li class='supportTab' onClick="navigateTo('#!support');"><span class='text'>Support</span><span class='icon'></span></li>
+			<li class='supportTab' onClick="navigateTo('#!support',{'tab':'support'});"><span class='text'>Support</span><span class='icon'></span></li>
 			<li class='messagesTab' onClick="app.ext.admin.u.toggleMessagePane();"><span class='text'>Messages</span><span class='messageCount'></span></li>
 		</ul>
 		<div id='messagesContent' class='displayNone'>
@@ -236,7 +237,8 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='green'><span class='iconFont icon-home icon'></span><span class='tilename'>green</span></li>
 		</ul>
 		<ul class='launchpadTileGroup'>
-			<li class='red'><span class='iconFont icon-help icon'></span><span class='tilename'>red</span></li>
+			<li class='red' onClick="app.ext.admin_support.a.showHelpInterfaceInDialog();"><span class='iconFont icon-support icon'></span><span class='tilename'>WebDoc in dialog</span></li>
+			<li class='red' onClick="showUI('#!help',{'tab':'support'})"><span class='iconFont icon-support icon'></span><span class='tilename'>WebDoc in page</span></li>
 			<li class='greenLight'><span class='iconFont icon-camera icon'></span><span class='tilename'>greenLight</span></li>
 			<li class='tile_2x1 greenDark'><span class='iconFont icon-music icon'></span><span class='tilename'>greenDark</span></li>
 			<li class='redLight'><span class='iconFont icon-film icon'></span><span class='tilename'>redLight</span></li>
@@ -248,7 +250,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<li class='pink'><span class='iconFont icon-folder icon'></span><span class='tilename'>pink</span></li>
 		</ul>
 		<ul class='launchpadTileGroup'>
-			<li class='pinkDark tile_2x2'><span class='iconFont icon-support icon'></span><span class='tilename'>pinkDark</span></li>
+			<li class='pinkDark tile_2x2'><span class='iconFont icon-help icon'></span><span class='tilename'>pinkDark</span></li>
 			<li class='purple tile_2x1'><span class='iconFont icon-phone icon'></span><span class='tilename'>purple</span></li>
 		</ul>
 		<ul class='launchpadTileGroup'>
@@ -386,7 +388,7 @@ These two pieces of data are used for mapping after the uploads to set what fold
 		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
 		<li><a href='#' onClick="navigateTo('#!support');">support</a></li>
 		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showHelpInterface($('#setupContent'));">showHelpInterface (in setup)</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin_support.a.showHelpInterface($('#setupContent'));">showHelpInterface (in setup)</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Test</a>

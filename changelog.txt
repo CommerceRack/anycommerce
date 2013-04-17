@@ -9,6 +9,7 @@ Any time you are upgrading to a new version of the MVC, you should create a new 
 
 
 201314
+jquery.showloading-v1.0.jt must be in pass 0 of rq in init file.
 invoiceContainer template changed.
 handleSubscribe value should NOT be a form id anymore, but the form itself handleSubscribe($(this)) on the form tag
 billAddressTemplate template changed

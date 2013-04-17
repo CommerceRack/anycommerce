@@ -15,12 +15,12 @@
 
 <div id='supportPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
 
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail' data-dualmode-widthpercent='70'></section>
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button data-app-event='admin_support|showTicketCreate'>Create A New Ticket</button>
+				<button data-app-event='admin_support|showTicketCreate' class='hideInDetailMode'>Create A New Ticket</button>
 				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			</div>
 			<h3 class='heading'>Ticket Disposition: <select name='disposition' data-app-event='admin_support|execTicketListDispositionChange'>
@@ -36,7 +36,7 @@
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
-			<th class='alignLeft'></th>
+			<th class='alignLeft hideInDetailMode'></th>
 			<th class='alignLeft'>Ticket #</th>
 			<th class='alignLeft hideInDetailMode'>Opened</th>
 			<th class='hideInDetailMode alignLeft'>Last Update</th>
@@ -58,7 +58,7 @@
 <table>
 
 	<tr id='supportTicketRowTemplate' data-bind='useParentData:true; format: ticketRowClass; extension: admin_support;'>
-		<td data-bind="var: ticket(DISPOSITION); format:text;"></td>
+		<td class='hideInDetailMode' data-bind="var: ticket(DISPOSITION); format:text;"></td>
 		<td data-bind="var: ticket(ID); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;"></td>
 		<td class='hideInDetailMode' data-bind="var: ticket(LAST_FOLLOWUP); format:text;" data-app-event='admin_support|showTicketLastUpdate'></td>
@@ -191,3 +191,98 @@
 	<pre class='marginLeft preformatted' data-bind="var: ticket(txt); format:text;"></pre>
 	</td>
 </tr>
+
+</table>
+
+
+
+
+
+
+<!--
+
+########################################################
+
+
+WEBDOC
+
+########################################################
+
+
+-->
+
+
+
+
+
+
+
+<div id='helpPageTemplate' class='page pageHelp' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail' data-dualmode-widthpercent='70'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+		
+			<div class='buttonSet'>
+			<form class='searchBar floatRight' action='#' data-app-role='helpSearch'>
+				<input type='text' name='keywords' class='hideInDetailMode'  />
+				<button data-app-event='admin_support|execHelpSearch' class='hideInDetailMode'>Search</button>
+				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
+			</form>
+			</div>
+			
+			
+			<h3 class='heading'>Documentation</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		
+		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the docs you are looking for.</div>
+		
+		<table class='gridTable fullWidth displayNone marginBottom' >
+		<thead>
+		<tr>
+			<th class='alignLeft'>Title</th>
+			<th class='alignLeft hideInDetailMode'>Summary</th>
+			<th class='alignLeft hideInDetailMode'>Relevance</th>
+			<th ></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		</div>
+	</section>
+</div>
+
+
+<!-- onClick="app.ext.admin_support.a.showHelpDocInDialog($(this).data('docid'));" -->
+<table>
+<tr id='helpSearchResultsTemplate' >
+	<td data-bind='var: help(title); format:text;' class='lookLikeLink' data-app-event="admin_support|showHelpDetail"></td>
+	<td class='hideInDetailMode' data-bind='var: help(summary); format:text;'></td>
+	<td class='hideInDetailMode' data-bind='var: help(score); format:text;'></td>
+	<td class='alignRight'>
+<!-- showHelpInDialog only displayed when help opened within a tabContent -->
+	<span class='hideInDetailMode'><button data-app-event="admin_support|showHelpDetailInDialog" class='showInTabContent'>Open In Dialog</button></span>
+	<button data-app-event="admin_support|showHelpDetail">View</button>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+<div id='helpDocumentTemplate'>
+	<div data-bind="var: help(body); format:text;"></div>
+	
+	<hr />
+	<button data-app-event="admin_support|execHelpDetailEdit">Edit</button>
+	<button data-app-event="admin_support|execHelpDetailHistory">History</button>
+</div>
+
+
+

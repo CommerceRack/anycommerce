@@ -37,7 +37,13 @@ class can also be applied to a 1 item per row list.
 .valignMiddle	{vertical-align:middle;}
 
 
-.displayNone, .debug, .showForZoovyOnly, .showForAnyCommerceOnly, .minimalMode .hideInMinimalMode	{display:none;}
+.displayNone,
+.debug,
+.showForZoovyOnly,
+.showForAnyCommerceOnly,
+.detailMode .hideInDetailMode,
+.minimalMode .hideInMinimalMode 	{display:none;}
+
 .isZoovy .showForZoovyOnly, .isAnyCommerce .showForAnyCommerceOnly	{display:inherit;}
 
 /* for use on lists where no bullets, indents, etc are needed. add on ul */
@@ -46,6 +52,8 @@ class can also be applied to a 1 item per row list.
 
 /* for small buttons */
 .smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
+
+
 
 .ui-selectee	{cursor:pointer;}
 
@@ -211,6 +219,11 @@ Use this in a table where you want clear separation between rows and cells. This
 
 
 
+
+
+
+
+
 /* a global 'handle' class for now. for consistency. 
 later if more variety is needed, we can either create exceptions or more rules to handle all cases.
 */
@@ -230,8 +243,8 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 /* This gets applied to the parent containers around each tabs content area.  */
 .tabContent	{margin:0px auto; padding:12px 0; font-size:90%; width:92%; min-height:200px;} /* min height so showLoading always shows in full. should reduce jitter some too */
-
-
+.showInTabContent	{display:none !important;}
+.tabContent .showInTabContent	{display:inline-block !important; }
 
 /* multipage controls */
 
@@ -296,6 +309,7 @@ The Launch Pad
 	color:#fff;
 	position:relative;
 	overflow: hidden;
+	cursor:pointer;
 	float:left; margin:0 12px 12px 0;
 	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
 	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
@@ -1184,8 +1198,9 @@ STYLES FOR SPECIFIC UI LAYOUTS (dualMode and soloMode)
 .dualModeListContainer .heading, .soloModeListContainer .heading	{text-indent:12px; line-height:35px;}
 .dualModeListContainer .buttonSet, .soloModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
 
+.dualModeListContainer .ui-widget-header	{min-height:35px;} /* this is set so when in minimal mode, if only floating buttons are present, the header doesn't collapse */
 
-
+.dualModeListContainer.detailMode	{font-size:.80em;} /* shrink list text in detail mode */
 
 /*
 
@@ -1261,22 +1276,52 @@ table.achievementList	{width:60%; margin:0 auto; border-spacing: 0px; border-col
 
 
 
-/* help documentation styles */
+/*
 
-.helpDoc h1	{margin-bottom:12px;} /* document title */
-.helpDoc h2	{margin-bottom:4px;} /* title for each article (used to be SECTION) */
-.helpDoc article {margin-bottom:12px; padding-bottom:12px; border-bottom:1px solid #efefef;}
+#########################
 
+help documentation styles (aka webdoc)
+
+#########################
+*/
+
+
+/* asides are used for click by click, caution and hints.
+ex of cbc, hint and caution: search 'product' and open 'product edit'
+*/
+
+.pageHelp aside	{padding:12px; margin:12px 0;}
+.pageHelp aside div	{background:#fff; padding:12px;}
+.pageHelp aside div li	{margin-left:30px; list-style: none; margin-bottom:6px;}
+.pageHelp aside h6	{padding-bottom:12px; font-size:1.5em;}
+
+
+.pageHelp aside.cbc	{background:#C0D2D8;}
+.pageHelp aside.cbc h6:before {content: "\e132"; font-family:iconFont; padding-right:3px;}
+
+.pageHelp aside.hint	{background:#efefef;}
+.pageHelp aside.hint h6:before {content: "\e044"; font-family:iconFont; padding-right:3px;}
+
+
+
+
+.pageHelp aside.caution	{background:#fe5252;}
+.pageHelp aside.caution h6	{color:#ffffff;}
+.pageHelp aside.caution h6:before {content: "\e145"; font-family:iconFont; padding-right:6px;}
+
+
+.pageHelp .ui-widget-content h1	{margin:0 0 24px 0; font-size:1.5em; color:#000000;} /* document title */
+.pageHelp .ui-widget-content h2	{margin:0 0 12px 0; font-size:1.3em; color:#333333;} /* title for each article (used to be SECTION) */
+.pageHelp .ui-widget-content h3	{margin:0 0 12px 0; font-size:1.1em; color:#666666;} /* title for each section (used to be SUBSECTION) */
+
+.pageHelp article {margin-bottom:24px; } /* divides each section */
+.pageHelp article, .pageHelp .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
 
 
 /*
 http://codepad.co/s/7cca38#select
 some pad (more or less)specific styles.
 */
-@media screen and (max-width: 1024px) {
-	.domainList li {padding:0 4px;}
-	}
-
 
 @media screen and (max-width: 800px) {
 	.twoColumn{  
