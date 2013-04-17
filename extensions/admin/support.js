@@ -124,14 +124,6 @@ var admin_support = function() {
 					app.ext.admin.u.handleAppEvents($target);
 					$('.gridTable',$target).anytable();
 					}
-
-//if the target is a tab, bring that tab/content into focus.
-//NOT needed, as long as #!help is run through navigateTo
-/*				if($target.data('section'))	{
-					app.ext.admin.u.bringTabIntoFocus($target.data('section'));
-					app.ext.admin.u.bringTabContentIntoFocus($target);
-					}
-*/
 				},
 
 
@@ -153,7 +145,16 @@ var admin_support = function() {
 						$target.dialog({width:500, height:500});
 						$target.anycontent({'templateID':'helpDocumentTemplate','showLoadingMessage':'Fetching help documentation...'});
 
-						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':'anycontent','jqObj':$target},'mutable');
+						app.ext.admin.calls.helpDocumentGet.init(docid,{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$target.anycontent({'datapointer':rd.datapointer});
+								app.u.handleAppEvents($panel);
+								app.ext.admin_support.u.handleHelpDocOverwrites($panel);
+								}
+							}},'mutable');
 						app.model.dispatchThis('mutable');
 						}
 					}
@@ -257,6 +258,22 @@ var admin_support = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':"In admin_support.u.reloadTicketList, either tbody ["+typeof $tbody+"] or disposition ["+disposition+"] not defined.",'gMessage':true});
 					}
+				},
+
+//overwrite the linkdoc links.  In the future, this will probably do more.
+			handleHelpDocOverwrites : function($target)	{
+				app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
+				app.u.dump("$('.linkdoc',$target).length: "+$('.linkdoc',$target).length);
+				//syllabus_product_basics -> good place to test linkdoc
+				$('.linkdoc',$target).each(function(){
+					var $a = $(this),
+					docID = $a.attr('href').split('=')[1];
+					$a.on('click',function(event){
+						event.preventDefault();
+						app.u.dump(" -> Click got registered.");
+						app.ext.admin_support.a.showHelpDocInDialog(docID);
+						});
+					});
 				}
 			
 			}, //u
@@ -481,19 +498,20 @@ panelID = app.u.jqSelector('','helpDetail_'+docID),
 $panel = $("<div\/>").data('docid',docID).hide().anypanel({
 	'header':'Help file: '+docID,
 	'templateID':'helpDocumentTemplate',
-//	'data':user, //data not passed because it needs req and manipulation prior to translation.
 	'dataAttribs': {'id':panelID,'docid':docID}
 	}).prependTo($dualModeDetail);
 
 app.ext.admin.u.toggleDualMode($dualModeDetail.closest("[data-app-role='dualModeContainer']"),'detail');
+
 app.ext.admin.calls.helpDocumentGet.init(docID,{
 	'callback':function(rd){
 		if(app.model.responseHasErrors(rd)){
 			app.u.throwMessage(rd);
 			}
-		else	{		
+		else	{
 			$panel.anycontent({'datapointer':rd.datapointer});
 			app.u.handleAppEvents($panel);
+			app.ext.admin_support.u.handleHelpDocOverwrites($panel);
 			}
 		}
 	},'mutable');
