@@ -1404,7 +1404,7 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 	}
 
 
-				app.ext.admin.u.initLaunchpad();
+//				app.ext.admin.u.initLaunchpad(); breaks login. move to showHeader.
 
 //get list of domains and show chooser.
 				var $domainChooser = $("<div \/>").attr({'id':'domainChooserDialog','title':'Choose a domain to work on'}).addClass('displayNone').appendTo('body');

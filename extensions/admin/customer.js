@@ -262,6 +262,10 @@ else	{
 						}
 					
 					$select.appendTo($tag);
+					$select.on('change',function(){
+						$select.addClass('edited');
+						app.ext.admin_customer.u.handleChanges($select.closest("form"));
+						});
 					
 					if(data.value.INFO && data.value.INFO.SCHEDULE)	{$select.val(data.value.INFO.SCHEDULE)} //preselect schedule, if set.
 					
@@ -443,7 +447,7 @@ app.model.dispatchThis('immutable');
 						//the validation function puts the errors next to the necessary fields
 						}
 
-					});;
+					});
 				},
 
 //saves all the changes to a customer editor
@@ -517,7 +521,7 @@ app.model.dispatchThis('immutable');
 								$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unable to determine action for update to this panel.'});
 								}
 							}
-						else if($tag.is('input'))	{
+						else if($tag.is('input') || $tag.is('select'))	{
 							if($tag.attr('name') == 'password')	{
 								macros.push("PASSWORDRESET?password="+$tag.val());
 								}

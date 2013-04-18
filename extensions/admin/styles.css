@@ -1202,7 +1202,7 @@ STYLES FOR SPECIFIC UI LAYOUTS (dualMode and soloMode)
 .dualModeListContainer .heading, .soloModeListContainer .heading	{text-indent:12px; line-height:35px;}
 .dualModeListContainer .buttonSet, .soloModeListContainer .buttonSet	{float:right; vertical-align:middle; margin:3px;}
 
-.dualModeListContainer .ui-widget-header	{min-height:35px;} /* this is set so when in minimal mode, if only floating buttons are present, the header doesn't collapse */
+.dualModeListContainer .ui-widget-header div.buttonset	{min-height:35px;} /* this is set so when in minimal mode, if only floating buttons are present, the header doesn't collapse */
 
 .dualModeListContainer.detailMode	{font-size:.80em;} /* shrink list text in detail mode */
 
