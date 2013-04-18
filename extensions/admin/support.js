@@ -265,6 +265,7 @@ var admin_support = function() {
 				app.u.dump("BEGIN admin_support.u.handleHelpDocOverwrites");
 				app.u.dump("$('.linkdoc',$target).length: "+$('.linkdoc',$target).length);
 				//syllabus_product_basics -> good place to test linkdoc
+				// !!! link this to a search, not an individual docs.  build in support for passing keywords in showUI obj var. set as val of keywords in put and submit form.
 				$('.linkdoc',$target).each(function(){
 					var $a = $(this),
 					docID = $a.attr('href').split('=')[1];
@@ -406,7 +407,7 @@ var admin_support = function() {
 						$btn.parent().after().anymessage({'message':'In admin_support.e.execHelpDetailHistory, unable to determine docid','gMessage':true});
 						}
 					});
-				},
+				}, //execHelpDetailEdit
 				
 			execHelpDetailHistory : function($btn)	{
 				$btn.button();
@@ -419,7 +420,7 @@ var admin_support = function() {
 						$btn.parent().after().anymessage({'message':'In admin_support.e.execHelpDetailHistory, unable to determine docid','gMessage':true});
 						}
 					});
-				},
+				}, //execHelpDetailHistory
 
 			execHelpSearch : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
@@ -482,7 +483,7 @@ var admin_support = function() {
 						$('#globalMessaging').anymessage({'message':'In admin_support.e.showHelpDetailInDialog, unable to determine docID.','gMessage':true});
 						}
 					});
-				},
+				}, //showHelpDetailInDialog
 
 //in this case, the event may be applied to a btn OR some text.
 			showHelpDetail : function($ele)	{

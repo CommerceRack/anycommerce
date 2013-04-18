@@ -1402,7 +1402,7 @@ app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0
 if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersion.split("MSIE")[1]) < 10)	{
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 	}
-//app.ext.admin.u.buildDomainTiles4Launchpad(); //uh oh. this breaks login.
+
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this for orders.
 
@@ -2610,7 +2610,7 @@ var chart = new Highcharts.Chart({
 				$LP = $('#launchpad'),
 				$lastCol = $('.launchpadTileGroup:last','#launchpadInner'),
 				width = 0;
-				
+				app.ext.admin.u.buildDomainTiles4Launchpad();
 				//make sure the UL's dont wrap.
 				$('ul',$LPI).each(function(){
 					width += $(this).outerWidth(true);
@@ -2643,36 +2643,68 @@ var chart = new Highcharts.Chart({
 					});
 
 				},
+/*
+obj should contain the following:
+$content
+ -> a jquery object of the content. technically, it could be plain html, not a jquery object, as it's going to be appended.
+ -> if the content is going to link, should contain the onclick event.
 
-			addTileToLaunchpad : function($content)	{
-				$content.css({height:120,width:120,overflow:'hidden','float':'left','border':'1px solid #666','position':'relative','margin':'0 12px 12px 0'})
-				$content.appendTo($('#launchpadTiles'));
+optional
+ -> target. one of the ul's ??? how do we decide what to put where?
+ -> size: 1x1, 2x1 or 2x2
+ -> bgclass: a supported color to use for the bg. alternatively, you can set your own.
+*/
+			addTileToLaunchpad : function(obj)	{
+				var $li = $("<li \/>"),
+				size = 'tile_'+ obj.size || '1x1';
+				
+				obj.bgclass = obj.bgclass || 'blueDark'
+				obj.target = obj.target || 'misc'
+				
+				$li.addClass(size);
+				$li.addClass(obj.bgclass);
+
+				obj['$content'].addClass('tile')
+				$li.append(obj['$content']);
+				$li.appendTo($('#tilegroup_'+obj.target),$('#launchpadTiles'));
 				},
+
 
 			buildDomainTiles4Launchpad : function()	{
 				
 				app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-
 					if(app.model.responseHasErrors(rd)){
-						$('#launchpadContent').anymessage({'message':rd});
+						$('#globalMessaging').anymessage({'message':rd});
 						}
 					else	{
 						var domains = app.data.adminDomainList['@DOMAINS'],
 						L = domains.length;
-						
+
 						for(var i = 0; i < L; i += 1)	{
-							
-							app.ext.admin.u.addTileToLaunchpad($("<div \/>").on('click.domainSelect',function(){
-								app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
-								$('.tileDomainSelect.active','#launchpadTiles').removeClass('active');
-								$(this).addClass('active');
-								}).addClass('tileDomainSelect').addClass((app.vars.domain == domains[i].id) ? 'active' : '').data(domains[i]).append("<span class='tilename'>"+domains[i].id+"<\/span><span class='active'></span>"));
-								
+							app.u.dump(" -> "+i+") "+app.data.adminDomainList['@DOMAINS'][i].id);
+							var $bob = app.ext.admin.u.buildDomainTileObject(app.data.adminDomainList['@DOMAINS'][i]);
+							app.ext.admin.u.addTileToLaunchpad($bob);
 							}
 						}
-
 					}},'immutable'); 
 
+				},
+
+			buildDomainTileObject : function(domainArr)	{
+//show logo or, if not set, some default icon.
+//change color for active domain.
+//show buttons for 'view website', 'edit domain', 'use this domain'
+				var $div = $("<div \/>").addClass('tileDomainSelect');
+				$div.on('click.domainSelect',function(){
+					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
+					$('.tileDomainSelect.greenBG','#launchpadTiles').removeClass('greenBG');
+					$(this).addClass('greenBG');
+					})
+				$div.addClass((app.vars.domain == domainArr.id) ? 'greenBG' : '')
+				$div.data(domainArr);
+//if the domain object ever returns 'broken', use something like this: "+(app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
+				$div.append("<span class='iconFont icon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span><span class='active'><\/span>");
+				return {'$content' : $div, 'size':'1x1','bgclass':'greenLight','target':'domains'};
 				},
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.

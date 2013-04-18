@@ -318,17 +318,21 @@ The Launch Pad
 .launchpadTileGroup li.tile_2x2	{width:312px; height:312px;}
 .launchpadTileGroup li.tile_2x1	{width:312px; height:150px;}
 
+/* add a class of 'tile' to the first child and the width/height will be maximized accordingly */
+.launchpadTileGroup li .tile	{width:100%; height:146px;}
+.launchpadTileGroup li.tile_2x2 .tile	{width:100%; height:308px;}
+
 
 .launchpadTileGroup span.tilename	{position:absolute; bottom:6px; left:6px;}
-.launchpadTileGroup span.icon	{margin:12px auto; font-size:5em; color:#ffffff; display:block; width:100px; height:50px; text-align:center; padding-top:36px;}
+.launchpadTileGroup span.icon	{top:24px; font-size:5em; line-height:1.3em; color:#ffffff; display:block; width:100%; text-align:center;}
 
-.launchpadTileGroup li.tile_2x2 span.icon	{font-size:8em; width:150px; height:150px; padding-top:70px;}
+.launchpadTileGroup li.tile_2x2 span.icon	{font-size:8em;}
 
 
 .launchpadTileGroup li.blue {background-color: #0a59c1;}
 .launchpadTileGroup li.blueLight {background-color: #4888f0;}
 .launchpadTileGroup li.blueDark {background-color: #04408f;}
-.launchpadTileGroup li.green {background-color: #00a300;}
+.launchpadTileGroup li.green, .greenBG {background-color: #00a300;}
 .launchpadTileGroup li.greenLight {background-color: #99b433;}
 .launchpadTileGroup li.greenDark {background-color: #1e7145;}
 .launchpadTileGroup li.red {background-color: #ba1d48;}
@@ -369,7 +373,7 @@ ICON LIBRARY
 	font-style: normal;
 	}
 
-.iconFont	{
+.iconFont, #launchpad .icon	{
 	font-family: "iconFont";
 	font-weight: normal;
 	font-style: normal;
