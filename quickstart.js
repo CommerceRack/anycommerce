@@ -98,7 +98,7 @@ var myRIA = function() {
 
 		startMyProgram : {
 			onSuccess : function()	{
-//			app.u.dump("BEGIN myRIA.callback.startMyProgram");
+			app.u.dump("BEGIN myRIA.callback.startMyProgram");
 //			app.u.dump(" -> window.onpopstate: "+typeof window.onpopstate);
 //			app.u.dump(" -> window.history.pushState: "+typeof window.history.pushState);
 //This will create the arrays for the template[templateID].onCompletes and onInits
@@ -170,6 +170,7 @@ document.write = function(v){
 				window.showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
 				
 				app.u.dump("Showcontent: "+typeof showContent);
+				console.log("Showcontent: "+typeof showContent);
 				
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 				
