@@ -1927,7 +1927,7 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
-					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
+//					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 					if(orderID)	{
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'packslip','profile':app.data['adminOrderDetail|'+orderID].our.profile,'domain':app.data['adminOrderDetail|'+orderID].our.sdomain}});
