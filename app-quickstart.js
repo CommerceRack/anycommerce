@@ -3059,6 +3059,7 @@ else	{
 					});
 
 				$(selector+ '.newsletterSubscriptionForm').submit(function(event){
+				    alert('hi');
 					event.preventDefault(); //stops form from actually submitting.
 					app.ext.store_crm.u.handleSubscribe(this.id);
 					return false;

@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201304112135000",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130417055520",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -53,11 +53,6 @@ css files should be included before any .js file to ensure they are downloaded i
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
-<script>
-$("button").click(function () {
-$("li").slideToggle("slow");
-});
-</script>
 
 </head>
 
@@ -118,20 +113,20 @@ This file is intended to go along with the 10-step tutorial at:
 				<img src="images/account-icon.png" alt="">
 				<span class="fl">
 Welcome,
-<span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span><span class="loginShow"><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
-<span class="loginHide">Guest(<a href="#" onclick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span><a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign Up</a>)</span>
+<span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
+<span class="loginHide">Guest ( <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span> <a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign Up</a> )</span>
         </span>
 				<img src="images/view-cart-icon.png" alt="View Cart">
-				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onclick="return showContent('cart',{});">VIEW CART</a></p>
+				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onClick="return showContent('cart',{});">VIEW CART</a></p>
 				<img src="images/contact-us-icon.png" alt="Contact Us">
-				<p><a href="#" onclick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
+				<p><a href="#" onClick="return showContent('company',{'show':'contact'});">CONTACT US</a></p>
 				<img src="images/questions-icon.png" alt="Questions">
-				<p>Questions? <a href="#" onclick="return showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
+				<p>Questions? <a href="#" onClick="return showContent('company',{'show':'faq'});">VISIT THE FAQs</a></p>
 			</div>
 		</div>
         <div id="header">
 			<div id="headerContent">
-				<img id="logo" src="images/logo.png" alt="Toy Wars" title="Toy Wars" onclick="return showContent('category',{'navcat' : '.'});">
+				<img id="logo" src="images/logo.png" alt="Toy Wars" title="Toy Wars" onClick="return showContent('category',{'navcat' : '.'});">
                 <form id='headerSearchFrm' name='headerSearchFrm' action='#' class='productSearchForm' method="get">
 						<input type='search' name='KEYWORDS' id='txtSearch' class="productSearchKeyword handleDefault" value="Find it here..." />
 						<input id="btnTopNavSearch" type="image" src="images/nav-search.png" value=""/>
@@ -153,399 +148,399 @@ Welcome,
 				<div class="navContent"> 
 					<ul>
 						<li>
-							<a href="#" onclick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
-							<div class="subMenu">
+							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
+							<div class="subMenu" style="height:435px !important;">
 								<div class="dropDownListHolder">
 								    <ul>
 										<li>COMIC BOOKS</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
-									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 										
 									</ul>
                                      <ul>
 										<li>BY MANUFACTURER</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
-									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 										
 									</ul>
                                     <ul>
 										<li>STAR WARS</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
-									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 									</ul>
                                     <ul>
 										<li>ACTION FIGURES</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
-									<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+									<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 									</ul>
 									<ul>
 										<li>DEALS </li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics statue'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Gentle Giant Statue'});">Gentle Giant</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta statue'});">Weta</a></li>
 									</ul>
                                     <div style="clear:both;"></div>
 									<ul>
 										<li>Comics</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Prop Replicas</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
 									</ul>
 									<ul>
 										<li>Everything Else</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Barware</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22cologne\x22'});">Cologne and Fragrances</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22costume\x22'});">Costume</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22ice tray\x22'});">Ice Trays</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bobble head\x22'});">Bobble Heads</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22bottle opener\x22'});">Barware</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22cologne\x22'});">Cologne and Fragrances</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22costume\x22'});">Costume</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22ice tray\x22'});">Ice Trays</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22plush\x22'});">Plush</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22poster\x22'});">Posters</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: '\x22tote\x22'});">Tin Totes</a></li>
 									</ul>
                                     <ul>
 										<li>Graphic Novels</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'someothercompany figure'});">SomeotherCompany</a></li>
 										
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#" onclick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="images/dropdownfunkopop4.jpg"></a>
+									<a href="#" onClick="return showContent('search',{KEYWORDS: 'funko pop'});"><img src="images/dropdownfunkopop4.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onclick="return showContent('search',{KEYWORDS: 'whats hot'});">WHAT'S HOT</a>
-							<div class="subMenu">
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'whats hot'});">WHAT'S HOT</a>
+							<div class="subMenu" style="height:400px !important;">
 								<div class="dropDownListHolder">
 								    <ul>
 								        <li>New</li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New This Week</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New This Month</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Last Two Months</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">New Last Year</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Collecting Dust</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New This Week</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New This Month</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Last Two Months</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">New Last Year</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman figure'});">Batman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america figure'});">Captain America</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader figure'});">Darth Vader</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man figure'});">Iron Man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker figure'});">Joker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk figure'});">Hulk</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master chief figure'});">Master Chief</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker figure'});">Luke Skaywalker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man figure'});">Spider-man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'storm trooper figure'});">Stormtrooper</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'superman figure'});">Superman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman figure'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america figure'});">Captain America</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader figure'});">Darth Vader</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man figure'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker figure'});">Joker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk figure'});">Hulk</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master chief figure'});">Master Chief</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker figure'});">Luke Skaywalker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man figure'});">Spider-man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper figure'});">Stormtrooper</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'superman figure'});">Superman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who figure'});">Dr. Who</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo figure'});">Halo</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings figure'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mass effect figure'});">Mass Effect</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'predator figure'});">Predator</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead figure'});">Walking Dead</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek figure'});">Star Trek</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars figure'});">Star Wars</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who figure'});">Dr. Who</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo figure'});">Halo</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings figure'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect figure'});">Mass Effect</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator figure'});">Predator</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead figure'});">Walking Dead</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek figure'});">Star Trek</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars figure'});">Star Wars</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bandai figure'});">Bandai</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'diamond select figure'});">Diamond Select</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay figure'});">Enterbay</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'funko figure'});">Funko</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hasbro figure'});">Hasbro</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hot toys figure'});">Hot Toys</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'kotobukiya figure'});">Kotobukiya</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select figure'});">Marvel Select</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mcfarlane figure'});">McFarlane</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'medicom figure'});">Medicom</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca figure'});">NECA</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bandai figure'});">Bandai</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bif bang pow figure'});">Bif Bang Pow!</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bridge direct figure'});">Bridge Direct</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'diamond select figure'});">Diamond Select</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay figure'});">Enterbay</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'funko figure'});">Funko</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro figure'});">Hasbro</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hot toys figure'});">Hot Toys</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'kotobukiya figure'});">Kotobukiya</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select figure'});">Marvel Select</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane figure'});">McFarlane</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'medicom figure'});">Medicom</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca figure'});">NECA</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix figure'});">Square Enix</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys figure'});">Underground Toys</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
-									<a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead figure'});"><img src="images/dropdown_walking_dead2.jpg"></a>
+									<a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead figure'});"><img src="images/dropdown_walking_dead2.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onclick="return showContent('search',{KEYWORDS: 'new arrivals'});">NEW ARRIVALS</a>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'new arrivals'});">NEW ARRIVALS</a>
 							<div style="display: none; overflow: hidden; height: 0px;" class="subMenu">
 								<div class="dropDownListHolder">
 									<ul>
 										<li>New</li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america'});">Captain America</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader'});">Darth Vader</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man'});">Iron Man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker'});">Joker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk'});">Hulk</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker'});">Luke Skaywalker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america'});">Captain America</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader'});">Darth Vader</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker'});">Joker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk'});">Hulk</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker'});">Luke Skaywalker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man'});">Spider-man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'storm trooper'});">Stormtrooper</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who statue'});">Dr. Who</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo statue'});">Halo</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings statue'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead statue'});">Walking Dead</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek statue'});">Star Trek</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars statue'});">Star Wars</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who statue'});">Dr. Who</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo statue'});">Halo</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings statue'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead statue'});">Walking Dead</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek statue'});">Star Trek</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars statue'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dc comics'});">DC Comics</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mcfarlane'});">McFarlane</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics'});">DC Comics</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mcfarlane'});">McFarlane</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
 									</ul>
 									<ul>
 										<li>Type</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'ArtFX'});">ArtFX</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mini bust'});">Mini Bust</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'maquette'});">Maquette</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ArtFX'});">ArtFX</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mini bust'});">Mini Bust</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'maquette'});">Maquette</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $10</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $20</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $50</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Under $100</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Over $100</a></li>										
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $10</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $20</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $50</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Under $100</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Over $100</a></li>										
 									</ul>
-									<a style="display: inline;" href="#" onclick="return showContent('search',{KEYWORDS: 'gentle giant preorder'});"><img src="images/dropdown_bibfortuna.jpg"></a>
+									<a style="display: inline;" href="#" onClick="return showContent('search',{KEYWORDS: 'gentle giant preorder'});"><img src="images/dropdown_bibfortuna.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onclick="return showContent('search',{KEYWORDS: 'item type'});">ITEM TYPE</a>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'item type'});">ITEM TYPE</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
                                     <ul>
 										<li>New</li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Categories</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'bank'});">Banks</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'tote'});">Lunch Totes</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mini mate'});">Mini Mates</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'art'});">Artwork</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'bank'});">Banks</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'ice trays'});">Ice Trays</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'tote'});">Lunch Totes</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mini mate'});">Mini Mates</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'key chain'});">Key Chains</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'pop'});">Pop!</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'beatles'});">Beatles</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'big bang theory'});">Big Bang Theory</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'beatles'});">Beatles</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr who'});">Dr. Who</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'halo'});">Halo</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'mass effect'});">Mass Effect</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'predator'});">Predator</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead'});">Walking Dead</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek'});">Star Trek</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
-				  						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'official pix'});">Official Pix</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'acme archives'});">Acme Archives</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'film cells'});">Film Cells</a></li>
+				  						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'enterbay'});">Enterbay</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hasbro'});">Hasbro</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'marvel select'});">Marvel Select</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'official pix'});">Official Pix</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'neca'});">NECA</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'square enix'});">Square Enix</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'underground toys'});">Underground Toys</a></li>
 									</ul>
-									<a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="images/dropdowngandalf3.jpg"></a>
+									<a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit'});"><img src="images/dropdowngandalf3.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onclick="return showContent('search',{KEYWORDS: 'by manufacturer'});">BY MANUFACTURER</a>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'by manufacturer'});">BY MANUFACTURER</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
 								    <ul>
 								        <li>New</li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130307'});">New for 3/7</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130228'});">New for 2/28</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic 20130221'});">New for 2/21</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130307'});">New for 3/7</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130228'});">New for 2/28</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic 20130221'});">New for 2/21</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america comic'});">Captain America</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'deadpool comic'});">Deadpool</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'flash comic'});">Flash</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'joker comic'});">Joker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hulk comic'});">Hulk</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man comic'});">Spider-man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'superman comic'});">Superman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'thor comic'});">Thor</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'wonder woman comic'});">Wonder Woman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america comic'});">Captain America</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'deadpool comic'});">Deadpool</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'flash comic'});">Flash</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'joker comic'});">Joker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hulk comic'});">Hulk</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man comic'});">Spider-man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'superman comic'});">Superman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'thor comic'});">Thor</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wonder woman comic'});">Wonder Woman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'avengers comic'});">Avengers</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'chew comic'});">Chew</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'green lantern comic'});">Green Lantern</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'invincible comic'});">Invincible</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'justice league comic'});">Justice League</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars comic'});">Star Wars</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spawn comic'});">Spawn</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'walking dead comic'});">Walking Dead</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'x-men comic'});">X-Men</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'wolverine comic'});">Wolverine</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'avengers comic'});">Avengers</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman comic'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'chew comic'});">Chew</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'green lantern comic'});">Green Lantern</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'invincible comic'});">Invincible</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man comic'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'justice league comic'});">Justice League</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars comic'});">Star Wars</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spawn comic'});">Spawn</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'walking dead comic'});">Walking Dead</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'x-men comic'});">X-Men</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'wolverine comic'});">Wolverine</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Publishers</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark Horse</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">DC</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dynamite comic'});">Dynamite</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'comic'});">More...</a></li>
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Over $100</a></li>										
 									</ul>
 									<a href="#"><img src="images/dropdowncomics.jpg"></a>
 								</div>
 							</div>
 						</li>
 						<li>
-							<a href="#" onclick="return showContent('search',{KEYWORDS: 'clearance'});">CLEARANCE</a>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'clearance'});">CLEARANCE</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
                                     <ul>
 										<li>New</li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
-									    <li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Week</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New This Month</a></li>
+									    <li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Last Two Months</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">New Last Year</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'statue'});">Collecting Dust</a></li>
 									</ul>
 									<ul>
 										<li>Preorders</li>
 									</ul>																
 									<ul>
 										<li>Characters</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'batman prop'});">Batman</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'captain america prop'});">Captain America</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'darth vader prop'});">Darth Vader</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'harry potter prop'});">Harry Potter</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'iron man prop'});">Iron Man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'james bond prop'});">James Bond</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'luke skywalker prop'});">Luke Skaywalker</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'spider man prop'});">Spider-man</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'stormtrooper prop'});">Stormtrooper</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'thor prop'});">Thor</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'batman prop'});">Batman</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'captain america prop'});">Captain America</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'darth vader prop'});">Darth Vader</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'harry potter prop'});">Harry Potter</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'iron man prop'});">Iron Man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'james bond prop'});">James Bond</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'luke skywalker prop'});">Luke Skaywalker</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'spider man prop'});">Spider-man</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'stormtrooper prop'});">Stormtrooper</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'thor prop'});">Thor</a></li>
 									</ul>
 									<ul>
 										<li>Theme</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'dr doctor who prop'});">Dr. Who</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings prop'});">Hobbit/LOTR</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star trek prop'});">Star Trek</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'star wars prop'});">Star Wars</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dr doctor who prop'});">Dr. Who</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'hobbit lord of the rings prop'});">Hobbit/LOTR</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star trek prop'});">Star Trek</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'star wars prop'});">Star Wars</a></li>
 									</ul>
 									<ul>
 										<li>Manufacturers</li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
-										<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'efx'});">EFX Collectibles</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'factory entertainment'});">Factory Entertainment</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'master replicas'});">Master Replicas</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'museum replicas'});">Museum Replicas</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'noble collection'});">Noble Collection</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'united cutlery'});">United Cutlery</a></li>
+										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'weta'});">Weta</a></li>
 									</ul>
-									<a href="#" onclick="return showContent('product',{'pid':'EF01110009-RF'})"><img src="images/dropdown_vader.jpg"></a>
+									<a href="#" onClick="return showContent('product',{'pid':'EF01110009-RF'})"><img src="images/dropdown_vader.jpg"></a>
 								<div>
 							</div>
 						</div></div></li>
@@ -575,33 +570,33 @@ Welcome,
 					<ul>
 						<li>NEED HELP?</li>
 						<li><a href="#" onClick="return showContent('category',{'navcat' : '.'});">Home</a></li>
-						<li><a href="#" onclick="return showContent('company',{'show':'about'});">About</a></li>
-						<li><a href="#" onclick="return showContent('company',{'show':'contact'});">Contact</a></li>
+						<li><a href="#" onClick="return showContent('company',{'show':'about'});">About</a></li>
+						<li><a href="#" onClick="return showContent('company',{'show':'contact'});">Contact</a></li>
 						<li><a href="#">Policies</a></li>
-						<li><a href="#" onclick="return showContent('company',{'show':'faq'});">FAQs</a></li>
+						<li><a href="#" onClick="return showContent('company',{'show':'faq'});">FAQs</a></li>
 						<li><a href="#">Blog</a></li>	
 					</ul>
 					<ul>
 						<li>FIND IT HERE</li>
-						<li><a href="#" onclick="return showContent('category',{'navcat' : '.'});">All Categories</a></li>	
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'whats hot'});">What's Hot</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'new arrivals'});">New Arrivals</a></li>	
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'item type'});">Item Type</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'by manufacturer'});">By Manufacturer</a></li>
-						<li><a href="#" onclick="return showContent('search',{KEYWORDS: 'clearance items'});">Clearance Items</a></li>	
+						<li><a href="#" onClick="return showContent('category',{'navcat' : '.'});">All Categories</a></li>	
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'whats hot'});">What's Hot</a></li>
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'new arrivals'});">New Arrivals</a></li>	
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'item type'});">Item Type</a></li>
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'by manufacturer'});">By Manufacturer</a></li>
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'clearance items'});">Clearance Items</a></li>	
 					</ul>
                  
 					<ul>
 						<li>MY ACCOUNT</li>
-						<li><a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
-						<li><a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>	
-						<li><a href="#" onclick="return showContent('cart',{});">View Shopping Cart</a></li>
-						<li><a href="#" onclick="return showContent('cart',{});">Checkout</a></li>	
+						<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">Log-in or Sign-Up</a></li>
+						<li><a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">View My Account</a></li>	
+						<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
+						<li><a href="#" onClick="return showContent('cart',{});">Checkout</a></li>	
 						<li><a href="#">Recently Viewed Items</a></li>	
 						<li><a href="#">Previous Orders</a></li>																								
 					</ul>	
 					<div id="footerSubscribe">
-						<form onsubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false" name="subscribeFrm" id="subscribeFrm" action="#">
+						<form onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false" name="subscribeFrm" id="subscribeFrm" action="#">
 						<table>
 							<tr>
 								<td>STAY UP-TO-DATE</td>
@@ -667,16 +662,117 @@ COMMONLY EDITED TEMPLATES
 the homepageTemplate template is loaded into mainContentArea by default when the application loads
 -->
 <div id='homepageTemplate' class='homeTemplate'>
-	
+	<link rel="stylesheet" type="text/css" href="js/jquery.ad-gallery.css">
+  <script type="text/javascript" src="js/jquery.ad-gallery.js"></script>
+  <script type="text/javascript">
+  $(function() {
+    $('img.image1').data('ad-desc', 'Whoa! This description is set through elm.data("ad-desc") instead of using the longdesc attribute.<br>And it contains <strong>H</strong>ow <strong>T</strong>o <strong>M</strong>eet <strong>L</strong>adies... <em>What?</em> That aint what HTML stands for? Man...');
+    $('img.image1').data('ad-title', 'Title through $.data');
+    $('img.image4').data('ad-desc', 'This image is wider than the wrapper, so it has been scaled down');
+    $('img.image5').data('ad-desc', 'This image is higher than the wrapper, so it has been scaled down');
+    var galleries = $('.ad-gallery').adGallery();
+    $('#switch-effect').change(
+      function() {
+        galleries[0].settings.effect = $(this).val();
+        return false;
+      }
+    );
+   
+  });
+  </script>
 <div class="sliderM">
-<div class="bannerS"><img src="images/slider.jpg" width="620" height="346"></div>
+<div class="bannerS">
+<div id="gallery" class="ad-gallery">
+      <div class="ad-image-wrapper">
+      </div>
+      <div class="ad-controls">
+      </div>
+      <div class="ad-nav">
+        <div class="ad-thumbs">
+          <ul class="ad-thumb-list">
+          <li id="pl_0e014eefd4c3_EF01124008RF" class="" onMouseOut="$('.quickView').hide();" onMouseOver="$('.quickView',$(this)).show();" data-templateid="productListTemplate" data-id="pl_0e014eefd4c3_EF01124008RF" data-pid="EF01124008-RF"></li>
+            <li>
+              <a href="images/1.jpg">
+                <img src="images/thumbs/t1.jpg" class="image0">
+              </a>
+            </li>
+            <li>
+              <a href="images/10.jpg">
+                <img src="images/thumbs/t10.jpg" title="A title for 10.jpg" alt="This is a nice, and incredibly descriptive, description of the image 10.jpg" class="image1">
+              </a>
+            </li>
+            <li>
+              <a href="images/11.jpg">
+                <img src="images/thumbs/t11.jpg" title="A title for 11.jpg" longdesc="http://coffeescripter.com" alt="This is a nice, and incredibly descriptive, description of the image 11.jpg" class="image2">
+              </a>
+            </li>
+            <li>
+              <a href="images/12.jpg">
+                <img src="images/thumbs/t12.jpg" title="A title for 12.jpg" alt="This is a nice, and incredibly descriptive, description of the image 12.jpg" class="image3">
+              </a>
+            </li>
+            <li>
+              <a href="images/13.jpg">
+                <img src="images/thumbs/t13.jpg" title="A title for 13.jpg" alt="This is a nice, and incredibly descriptive, description of the image 13.jpg" class="image4">
+              </a>
+            </li>
+            <li>
+              <a href="images/14.jpg">
+                <img src="images/thumbs/t14.jpg" title="A title for 14.jpg" alt="This is a nice, and incredibly descriptive, description of the image 14.jpg" class="image5">
+              </a>
+            </li>
+            <li>
+              <a href="images/2.jpg">
+                <img src="images/thumbs/t2.jpg" title="A title for 2.jpg" alt="This is a nice, and incredibly descriptive, description of the image 2.jpg" class="image6">
+              </a>
+            </li>
+            <li>
+              <a href="images/3.jpg">
+                <img src="images/thumbs/t3.jpg" title="A title for 3.jpg" alt="This is a nice, and incredibly descriptive, description of the image 3.jpg" class="image7">
+              </a>
+            </li>
+            <li>
+              <a href="images/4.jpg">
+                <img src="images/thumbs/t4.jpg" title="A title for 4.jpg" alt="This is a nice, and incredibly descriptive, description of the image 4.jpg" class="image8">
+              </a>
+            </li>
+            <li>
+              <a href="images/5.jpg">
+                <img src="images/thumbs/t5.jpg" title="A title for 5.jpg" alt="This is a nice, and incredibly descriptive, description of the image 5.jpg" class="image9">
+              </a>
+            </li>
+            <li>
+              <a href="images/6.jpg">
+                <img src="images/thumbs/t6.jpg" title="A title for 6.jpg" alt="This is a nice, and incredibly descriptive, description of the image 6.jpg" class="image10">
+              </a>
+            </li>
+            <li>
+              <a href="images/7.jpg">
+                <img src="images/thumbs/t7.jpg" title="A title for 7.jpg" alt="This is a nice, and incredibly descriptive, description of the image 7.jpg" class="image11">
+              </a>
+            </li>
+            <li>
+              <a href="images/8.jpg">
+                <img src="images/thumbs/t8.jpg" title="A title for 8.jpg" alt="This is a nice, and incredibly descriptive, description of the image 8.jpg" class="image12">
+              </a>
+            </li>
+            <li>
+              <a href="images/9.jpg">
+                <img src="images/thumbs/t9.jpg" title="A title for 9.jpg" alt="This is a nice, and incredibly descriptive, description of the image 9.jpg" class="image13">
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+   </div>
 <div class="rightB"><img src="images/cyber.jpg" width="300" height="346"></div><div class="cb"></div>
 </div>
 
 	<div class="midmain">
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
-	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2></h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 	<!--
 <p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 -->
@@ -696,37 +792,44 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 <div class="featuredCategories">
 		<div class="catNav">
 			<div class="catNavContent">
-				<!--<p class="prevCat navCats"></p>-->
-                <p class="prevCat"></p>
-				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" />
+				<p class="prevCat" style="float:left; color:#FFFFFF;   font-size:24px; padding-top:16px;">CLEARANCE</p>
+                <p class="nextCat" style="float:right;  color:#FFFFFF;  font-size:24px; padding-top:16px; margin-right:-8px;">WHAT'S HOT </p>
+				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" style="display:block;"/>
                 
-				<p class="currentCat">The Hobbit</p>
-				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" />
+				<p class="currentCat">FEATURED CATEGORIES</p>
+				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" style="display:block;"  />
 				<!--<p class="nextCat navCats"></p>-->
 			</div>
 			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
 		</div>
 		<div class="catCarousel">
 			<div class="ccItem">
-				<h2>The Hobbit</h2>
-				<ul id="carCat1" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"hobbit weta"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA;loadsTemplate: productListTemplateResults; withInventory: 1;before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<h2>FEATURED CATEGORIES</h2>
+				<ul id="carCat1" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'>
+               
+                </ul>
+                 <p align="center"><img class="btnViewAllCategories" src="images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories"/></p>
 			</div>
 			<div class="ccItem">
-				<h2>Star Wars</h2>
-				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"star wars prop"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<h2>WHAT'S HOT</h2>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
-				<h2>Doctor Who</h2>
-				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"sonic screwdriver"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<h2>NEW ARRIVALS</h2>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
-				<h2>Walking Dead</h2>
-				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"walking dead"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<h2>ITEM TYPE</h2>
+				<ul id="carCat4" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"item type"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
-				<h2>Avengers</h2>
-				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"avengers figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<h2>BY MANUFACTURER</h2>
+				<ul id="carCat5" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"by manufacturer figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>			
+            <div class="ccItem">
+				<h2>CLEARANCE</h2>
+				<ul id="carCat6" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
 		
@@ -816,7 +919,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 		<h5 data-bind='var: product(zoovy:prod_name); format:text;' style="width:130px; min-height:46px; margin:0 0 0 5px; padding:5px 7px 0 0; text-align:left; float:left;"></h5>
 
 		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext:;' style="font-size:16px; float:left; width:52px; padding:5px 0 0 0;"></h6>
-        <p style="float:left; margin:4px 0 0 2px;"> <img class="pointer" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})" alt="View Item" src="images/details.png">
+        <p style="float:left; margin:4px 0 0 2px;"> <img class="pointer" onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})" alt="View Item" src="images/details.png">
 </p>
 		
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
@@ -852,6 +955,8 @@ container ul should have lineItemProdlist class on it instead of productList
 	
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+            <select type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 	
 			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 		</form>
@@ -914,7 +1019,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 -->
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
-		<div class='prodThumbContainer' style="height:120px;">
+		<div class='prodThumbContainer' style="height:120px; text-align:center; margin-top:2px;">
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
 
@@ -988,19 +1093,33 @@ this will likely become more flexible in the future. ###
 
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='50' height='50' /></div>
 
+<!--
 	</div>
+    <div class='prodlistRelatedContainer'>
+	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
+</div>
+-->
+
     <div class="cb"></div>
-    <div class="protitle">
+<div class="protitle">
     <ul>
-    <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
+    <div class='prodlistRelatedContainer'>
+	<li class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true;  withReviews:1;"></li>
+</div>
+</ul>
+</div>
+
+    <!--
+<li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
 #017 Harley Quinn Black Queen, Third
 Product Line</li>
     <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
     <li><img src="images/grayb.gif" width="20" height="21" style="margin:5px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
 #017 Black Queen, Third Product Line</li>
     <li><img src="images/grayb.gif" width="20" height="21" style="margin:-2px 8px 2px 0;">Marvel Super Hero Chess Limited Edition</li>
-    </ul>
-    </div>
+-->
+    
+
 
 	</td>
 
@@ -1028,9 +1147,11 @@ Product Line</li>
 		</span>-->
         
 	</div>
+   
     <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
- <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>See reviews or write one!</a>
+ <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return ;'>See reviews or write one!</a>
  </menu>
+ 
 	<div class="socialLinks"></div>
 
 
@@ -1126,9 +1247,11 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</td>
 </tr>
 </table>
+<!--
 <div class='prodlistRelatedContainer'>
 	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
 </div>
+-->
 
 
 </div><!-- productTemplate -->
@@ -1305,7 +1428,7 @@ if you change these, you should move them above this comment so that when you (o
 			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'>
 <strong>Order Status</strong><br>
 If you'd like to check the status of an order, (or cancel one<br>
- that hasn't been processed), please <a href="#" onclick="return showContent('customer',{'show' : 'myaccount'});">sign in</a> to your <br>
+ that hasn't been processed), please <a href="#" onClick="return showContent('customer',{'show' : 'myaccount'});">sign in</a> to your <br>
 customer account.<br><br>
 
 
@@ -1392,49 +1515,7 @@ also email us at <a href="mailto:help@toywars.com">help@toywars.com</a>. </div>
 		</div>
 
 	</div>
-<div class="featuredCategories">
-		<div class="catNav">
-			<div class="catNavContent">
-				<!--<p class="prevCat navCats"></p>-->
-                <p class="prevCat"></p>
-				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" />
-                
-				<p class="currentCat">The Hobbit</p>
-				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" />
-				<!--<p class="nextCat navCats"></p>-->
-			</div>
-			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
-		</div>
-		<div class="catCarousel">
-			<div class="ccItem">
-				<h2>The Hobbit</h2>
-				<ul id="carCat1" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"hobbit weta"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA;loadsTemplate: productListTemplateResults; withInventory: 1;before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-			</div>
-			<div class="ccItem">
-				<h2>Star Wars</h2>
-				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"star wars prop"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-			</div>
-			<div class="ccItem">
-				<h2>Doctor Who</h2>
-				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"sonic screwdriver"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-			</div>
-			<div class="ccItem">
-				<h2>Walking Dead</h2>
-				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"walking dead"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-			</div>
-			<div class="ccItem">
-				<h2>Avengers</h2>
-				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"avengers figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
-			</div>			
-		</div>
-		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
-		
-		
-		<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
-		
-		
-		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
-	</div>
+
 </div><!-- /companyTemplate -->
 
 
@@ -1484,7 +1565,7 @@ subscribeListsArticle is used for authenticated buyers
 				
 	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
 	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
-        <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:0px; margin:0px;"/>
+        <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:none !important; border-radius:0px !important; margin:0px;"/>
         <p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
 			</fieldset>
 		</form>
@@ -1623,30 +1704,131 @@ subscribeListsArticle is used for authenticated buyers
 	<div class='previewListContainer'>
     <ul class="sortby">
                                       <h2>Sort By Price</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$100 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$50 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$25 <span>and under</span></a></li>	
-                                         <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">$10 <span>and under</span></a></li>	
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$100 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$50 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$25 <span>and under</span></a></li>	
+                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$10 <span>and under</span></a></li>	
                                         <h2>Sort By Size</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">32" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">24" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">18" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">12" <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">6" <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'figure'});">4" <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">32" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">24" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">18" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">12" <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">6" <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">4" <span>and under</span></a></li>
                                         <h2>Sort By Size</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onclick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
 										
                                         <div class="clearfix"></div>
-                                        <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif"/></a></li>                                   
+                                        <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif"/></a></li>   .
+                                        
+                                                                            
+                                    <!--<script type="text/javascript">
+                                    $(document).ready(function(){
+
+	//how much items per page to show
+	var show_per_page = 5;
+	//getting the amount of elements inside content div
+	var number_of_items = $('#content').children().size();
+	//calculate the number of pages we are going to have
+	var number_of_pages = Math.ceil(number_of_items/show_per_page);
+
+	//set the value of our hidden input fields
+	$('#current_page').val(0);
+	$('#show_per_page').val(show_per_page);
+
+	//now when we got all we need for the navigation let's make it '
+
+	/*
+	what are we going to have in the navigation?
+		- link to previous page
+		- links to specific pages
+		- link to next page
+	*/
+	var navigation_html = '<a class="ui-button-text" href="javascript:previous();">Prev</a>';
+	var current_link = 0;
+	while(number_of_pages > current_link){
+		navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
+		current_link++;
+	}
+	navigation_html += '<a class="ui-button-text" href="javascript:next();">Next</a>';
+
+	$('#page_navigation').html(navigation_html);
+
+	//add active_page class to the first page link
+	$('#page_navigation .page_link:first').addClass('active_page');
+
+	//hide all the elements inside content div
+	$('#content').children().css('display', 'none');
+
+	//and show the first n (show_per_page) elements
+	$('#content').children().slice(0, show_per_page).css('display', 'block');
+
+});
+
+function previous(){
+
+	new_page = parseInt($('#current_page').val()) - 1;
+	//if there is an item before the current active link run the function
+	if($('.active_page').prev('.page_link').length==true){
+		go_to_page(new_page);
+	}
+
+}
+
+function next(){
+	new_page = parseInt($('#current_page').val()) + 1;
+	//if there is an item after the current active link run the function
+	if($('.active_page').next('.page_link').length==true){
+		go_to_page(new_page);
+	}
+
+}
+function go_to_page(page_num){
+	//get the number of items shown per page
+	var show_per_page = parseInt($('#show_per_page').val());
+
+	//get the element number where to start the slice from
+	start_from = page_num * show_per_page;
+
+	//get the element number where to end the slice
+	end_on = start_from + show_per_page;
+
+	//hide all children elements of content div, get specific items and show them
+	$('#content').children().css('display', 'none').slice(start_from, end_on).css('display', 'block');
+
+	/*get the page link that has longdesc attribute of the current page and add active_page class to it
+	and remove that class from previously active page link*/
+	$('.page_link[longdesc=' + page_num +']').addClass('active_page').siblings('.active_page').removeClass('active_page');
+
+	//update the current page input field
+	$('#current_page').val(page_num);
+}
+
+                                    </script>-->   
+                                    
+                                    <!--<input type='hidden' id='current_page' />  
+<input type='hidden' id='show_per_page' />  
+  
+<!-- Content div. The child elements will be used for paginating(they don't have to be all the same,  
+    you can use divs, paragraphs, spans, or whatever you like mixed together). '-->  
+<div id='content'>
+
+
+</div>  
+  
+<!-- An empty div which will be populated using jQuery   
+<div id='page_navigation'></div>  -->
+                                                             
   </ul>
+  
+  
 		<!-- productListTemplateResults gets loaded into here -->
 		<ul style="float: right; width: 729px;" id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
 	</div>
@@ -1741,7 +1923,30 @@ So the cart template should contain these two elements and the extension should 
 <table class='cartContainer'>
 <tr>
 	<td class='cartStuffContainer'>
-	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
+	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'>
+    </ul>
+    
+   <div style="border-top:#897c68 solid 1px; margin:10px 0 0;">
+   <div class="right">
+		<p>HELPFUL LINKS</p>
+		<ul>
+			<li><a onClick="return showContent('company',{'show':'contact'});" href="#">Contact Us</a></li>
+			<li><a onClick="return showContent('company',{'show':'shipping'});" href="#">Shipping Policy</a></li>
+			<li><a onClick="return showContent('company',{'show':'return'});" href="#">Return Policy</a></li>
+			<li><a onClick="return showContent('company',{'show':'payment'});" href="#">Payment Policy</a></li>
+			<li><a onClick="return showContent('company',{'show':'privacy'});" href="#">Privacy Policy</a></li>
+			<li><a onClick="return showContent('company',{'show':'faq'});" href="#">FAQs</a></li>
+		</ul>
+	</div>
+    <div class="left"><p>
+		<span>FREE Shipping on all orders over $50</span><br>
+		All orders of $50 and more qualify for free standard shipping. Applicable only to address in the continental United States (HI and AK are not included). Free shipping does not apply to orders shipped to PO Boxes or international destinations. Not applicable to eBay or Amazon purchases.
+	</p>
+	<p>
+		<span>Preorders</span><br>
+		All preorders paid with a credit card will be charged at the time of shipment. All preorders paid with Google Checkout, Paypal or Amazon Payments will be charged when your order is placed. If you do not wish to pay for your preorder until it ships then you must use the checkout button and pay with a credit card. Orders that have both preorder and instock items we be shipped at the same time in one shipment. We recommend that you do not order in stock items with preorder items. 
+	</p></div>
+   </div>
 	</td>
 
 	<td class='cartSummaryTotalsContainer'>
@@ -1751,53 +1956,67 @@ So the cart template should contain these two elements and the extension should 
 
 <section id='cartTemplateCostSummary' class='cartSummary'>
 
-	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	<!--
+<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+-->
 
 	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
 
 	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
 
-	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	<!--
+<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+-->
 
 	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
 	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
 	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
 
-	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext: ; extension:store_cart;'></div>
 
 </section>
 
 <section id='cartTemplateShippingContainer'>
-	<h3>Shipping:</h3>
-	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+	<!--<h3>Shipping:</h3>-->
+	<ul class='noPadOrMargin listStyleNone 	cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
 </section>
 
 <section class='stdMargin'>
-
-	<div class='cartZipCodeContainer'>
-	<label for='data-ship_zip'>Zip/Postal Code:</label>
-	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+<div id='couponContainer'  class='padMargBorderBottom'>	
+				<div id='couponFrmContainer'>
+					<!--<label for='couponCode'>Coupon/Promo Code:</label>-->
+					<input type='text' name='coupon' id='couponCode' size='13' Placeholder="Coupon Code"  onKeyPress="if(event.keyCode==13){$('#addCouponBtn').click();}" />
+					<button class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.ext.store_cart.u.handleCouponSubmit($('#couponCode').val(),'couponContainer'); app.model.dispatchThis('immutable'); return false;" id='addCouponBtn'><img src="images/enter.jpg" height="21" width="57"></button>
+				</div>
+			</div>
+<div class='cartZipCodeContainer'>
+	<!--<label for='data-ship_zip'>Zip/Postal Code:</label>-->
+	<select  name='ship/postal' id='data-ship_zip' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
 	app.ext.store_cart.u.updateCartSummary();
 	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
-	app.model.dispatchThis('immutable');"  />
+	app.model.dispatchThis('immutable');"><option value="Standard Shipping(1-3 Day)">Standard Shipping(1-3 Day)</option></select>
 	</div>
 
 
-
+<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;' style="display:block;"></div>
 	<!-- some buttons that are alternatives to checkout. fewer is better -->
 	<menu class='cartAltButtonsContainer noPadOrMargin'>
-	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+    <img src="images/button-share-cart.png" width="180" height="34">
+<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');" style="background:none; border:0px; margin:10px 0;"><img src="images/button-continue-shopping.png" width="180" height="54"></button>
 	</menu>
 
 	<div class='checkoutButtonsContainer'>
-
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
-
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+		<span title='proceed to secure checkout' style="border-bottom:1px solid #cccccc; padding:0 0 10px;"><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});"><img src="images/button-checkout.png" width="180" height="54"></button></span>
+        <img src="images/cart-credit-cards-accepted.png" width="171" height="23"> 
+        
+        <img src="images/buywith.gif" width="160" height="30" style="margin:15px 0 15px 0px;"> 
+        <span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 
 		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
 
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+        
+        <img src="images/amazon.gif" width="160" height="30" > 
 
 	</div>
 
@@ -1833,7 +2052,8 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 
 		<div>
-		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
+		qty: <select type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
@@ -1861,7 +2081,8 @@ used on a product layout. Some product have 'children' which may represent the s
 
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
-
+<select type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
 	</form>
 	</td>
