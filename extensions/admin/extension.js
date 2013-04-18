@@ -1403,8 +1403,6 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 	app.u.throwMessage("<p>In an effort to provide the best user experience for you and to also keep our development team sane, we've opted to optimize our user interface for webkit based browsers. These include; Safari, Chrome and FireFox. Each of these are free and provide a better experience, including more diagnostics for us to maintain our own app framework.<\/p><p><b>Our store apps support IE8+<\/b><\/p>");
 	}
 
-app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'passive');
-app.ext.admin.calls.appResource.init('shipcodes.json',{},'passive'); //get this for orders.
 
 				app.ext.admin.u.initLaunchpad();
 
@@ -2389,7 +2387,6 @@ once multiple instances of the finder can be opened at one time, this will get u
 //				app.u.dump("BEGIN admin.a.showDomainChooser");
 				$('#domainChooserDialog').dialog('open').showLoading({'message':'Fetching your list of domains.'});
 				app.ext.admin.calls.adminDomainList.init({'callback':'handleDomainChooser','extension':'admin','targetID':'domainChooserDialog'},'immutable'); 
-				app.model.dispatchThis('immutable');
 				},	 //showDomainChooser
 				
 			showDashboard : function()	{
@@ -2526,19 +2523,25 @@ var chart = new Highcharts.Chart({
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
 				$('.username','#appView').text(app.vars.userid);
 				var domain = this.getDomain();
+				
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
+//immutable because that's wha the domain call uses. These will piggy-back.
+app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
+
 
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
 //if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
 				if (!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
-					app.ext.admin.a.showDomainChooser(); 
+					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
 					}
 				else {
-					app.ext.admin.calls.adminDomainList.init({},'passive');
+					app.ext.admin.calls.adminDomainList.init({},'immutable');
 					$('.domain','#appView').text(domain);
 					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
 					}
+				app.model.dispatchThis('immutable');
 				}, //showHeader
 
 //used to determine what page to show when app inits and after the user changes the domain.
