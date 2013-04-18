@@ -1379,9 +1379,14 @@ note - the order object is available at app.data['order|'+P.orderID]
 // re-render the panel as well so that if bill to ship is unchecked, the zip has to be re-entered. makes sure ship quotes are up to date.
 // originally, had ship zip change to bill instead of blank, but seemed like there'd be potential for a buyer to miss that change.
 					if($cb.is(':checked'))	{
-						app.calls.cartSet.init({'ship/postal': ""},{'callback':function(rd){
-							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
-							}},'immutable'); //update ship zip to bill zip.
+//** Fixes bug where if ship to bill is disabled, shipping is populated, then ship to bill is re-enabled, bill address is not used for shipping quotes (entered ship address is)
+						app.ext.cco.u.sanitizeAndUpdateCart($form,{
+							'callback':function(rd){app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents'])}
+							});
+						
+//						app.calls.cartSet.init({'ship/postal': ""},{'callback':function(rd){
+//							app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['empty','translate','handleDisplayLogic','handleAppEvents']);
+//							}},'immutable'); //update ship zip to bill zip.
 						}
 					else	{
 						app.ext.orderCreate.u.handlePanel($form,'chkoutAddressShip',['handleDisplayLogic']);

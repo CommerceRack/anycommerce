@@ -741,6 +741,9 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 								}
 							}
 						}
+//regularize checkbox data.
+					if(formObj['want/bill_to_ship'] == 'ON')	{formObj['want/bill_to_ship'] = 1} 
+					if(formObj['want/create_customer'] == 'ON')	{formObj['want/create_customer'] = 1}
 
 //these aren't valid checkout field. used only for some logic processing.
 					delete formObj['want/reference_number'];
