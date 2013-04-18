@@ -180,7 +180,7 @@ var admin_support = function() {
 					if($target.length){$target.empty();}
 					else	{
 						$target = $("<div \/>").attr('id','ticketFileUploadModal').appendTo('body');
-						$target.dialog({'autoOpen':false,'width':'90%','height':550});
+						$target.dialog({'autoOpen':false,'width':'90%','height':550,'modal':true});
 						}
 					$target.attr('data-ticketid',ticketid);
 					$('.ui-dialog-title',$target.parent()).text("File upload for ticket "+ticketid);
@@ -452,11 +452,12 @@ var admin_support = function() {
 					});
 				}, //execHelpSearch
 
+//this event is used both in create and edit.
 			showFileAttachmentModal : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-plus"}});
 				$btn.off('click.showFileAttachmentModal').on('click.showFileAttachmentModal',function(event){
 					event.preventDefault();
-					var $panelContents = $(this).closest('.ui-widget-content');
+					var $panelContents = $(this).closest('.ui-widget-content'); //in create, the dialog body get this same class, so the selector works in both places.
 					if($panelContents && $panelContents.data('ticketid') && $panelContents.data('uuid'))	{
 						app.ext.admin_support.a.showFileUploadInModal($panelContents.data('ticketid'),$panelContents.data('uuid')); 
 						}
@@ -560,8 +561,9 @@ app.model.dispatchThis('mutable');
 				$btn.button();
 				$btn.off('click.showTicketCreate').on('click.showTicketCreate',function(event){
 					event.preventDefault();
-					var $target = $("<div \/>",{'title':'Create a new support ticket'}).data('uuid',app.u.guidGenerator()).appendTo('body');
+					var $target = $("<div \/>",{'title':'Create a new support ticket'}).appendTo('body');
 					$target.anycontent({data:{},'templateID':'supportTicketCreateTemplate'});
+					$target.data({'ticketid':'0','uuid':app.u.guidGenerator()}); //necessary for file attachment.
 					$target.dialog({'width':'75%','height':500});
 					app.u.handleAppEvents($target,{'$context':$btn.closest("[data-app-role='dualModeList']")});
 					});
