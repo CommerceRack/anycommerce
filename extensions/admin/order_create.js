@@ -1186,7 +1186,7 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 //				app.u.dump(" -> P: "); app.u.dump(P);
 				$('#printContainer').empty();
 				$('body').showLoading(); //indicate to client that button was pressed.
-				var profileDatapointer = undefined;
+				var profileDatapointer = "";
 				if(P.data.profile)	{
 					app.calls.appProfileInfo.init({'profile':P.data.profile},{},'immutable');
 					profileDatapointer = 'appProfileInfo|'+P.data.profile;
@@ -1196,16 +1196,12 @@ after using it, too frequently the dispatch would get cancelled/dominated by ano
 					profileDatapointer = 'appProfileInfo|'+P.data.domain;
 					}
 				else	{
-					//error handling for this is below.
+					$('#globalMessaging').anymessage({'message':'Both domain AND profile were not set on this order. That is unusual. Order will be printed with no branding.'})
 					}
-				
-				if(profileDatapointer)	{
-					app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':profileDatapointer,'extension':'convertSessionToOrder','templateID':P.data.type.toLowerCase()+'Template'});
-					app.model.dispatchThis('immutable');
-					}
-				else	{
-					app.u.throwGMessage("In order_create.a.printOrder, either profile ["+P.data.profile+"] or domain ["+P.data.domain+"] is required.");
-					}
+				//according to B, profile OR domain will always be set and if not, it's an edge case and should be printed w/ no branding.
+				app.ext.convertSessionToOrder.calls.adminOrderDetail.init(orderID,{'callback':'printById','merge':profileDatapointer,'extension':'convertSessionToOrder','templateID':P.data.type.toLowerCase()+'Template'});
+				app.model.dispatchThis('immutable');
+
 				}
 
 

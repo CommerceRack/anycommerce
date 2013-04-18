@@ -314,7 +314,7 @@ var admin_support = function() {
 									}
 								else	{
 									$form.empty().anymessage({'message':app.u.successMsgObject("Thank you, your ticket has been created.")});
-									$("<button \/>").text('Close Window').button({icons: {primary: "ui-icon-circle-close"}}).on('click',function(event){event.preventDefault(); $(this).closest('ui-dialog-content').dialog('close')}).appendTo($form);
+									$("<button \/>").text('Close Window').button({icons: {primary: "ui-icon-circle-close"}}).on('click',function(event){event.preventDefault(); $(this).closest('.ui-dialog-content').dialog('close')}).appendTo($form);
 									
 									if(app.data[rd.datapointer] && app.data[rd.datapointer].TICKETID)	{
 										$("<button \/>").text('Add File(s) To Ticket').button({icons: {primary: "ui-icon-circle-plus"}}).on('click',function(event){
