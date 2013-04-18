@@ -233,14 +233,14 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <fieldset data-role='dropship-bill-address'>
 
 	<legend>Billing Address</legend>
-	<label><span>Contact:</span><input type='text' name='billing_contact' data-bind='var: customer(WS.BILLING_CONTACT); format:popVal;' /></label>
-	<label><span>Phone:</span><input type='text' name='billing_phone' data-bind='var: customer(WS.BILLING_PHONE); format:popVal;' /></label>
-	<label><span>Address 1:</span><input type='text' name='address1' data-bind='var: customer(WS.ws_address1); format:popVal;' /></label>
-	<label><span>Address 2:</span><input type='text' name='address2' data-bind='var: customer(WS.ws_address2); format:popVal;' /></label>
-	<label><span>City:</span><input type='text' name='city' data-bind='var: customer(WS.ws_city); format:popVal;' /></label>
-	<label><span>State/Region:</span><input type='text' name='region' data-bind='var: customer(WS.ws_region); format:popVal;' /></label>
-	<label><span>Zip/Postal:</span><input size='9' type='text' name='postal' data-bind='var: customer(WS.ws_postal); format:popVal;' /></label>
-	<label><span>Country Code:</span><input size='2' type='text' name='country' data-bind='var: customer(WS.ws_country); format:popVal;' /></label>
+	<label><span>Contact:</span><input type='text' name='CONTACT' data-bind='var: customer(WS.CONTACT); format:popVal;' /></label>
+	<label><span>Phone:</span><input type='text' name='phone' data-bind='var: customer(WS.phone); format:popVal;' /></label>
+	<label><span>Address 1:</span><input type='text' name='address1' data-bind='var: customer(WS.address1); format:popVal;' /></label>
+	<label><span>Address 2:</span><input type='text' name='address2' data-bind='var: customer(WS.address2); format:popVal;' /></label>
+	<label><span>City:</span><input type='text' name='city' data-bind='var: customer(WS.city); format:popVal;' /></label>
+	<label><span>State/Region:</span><input type='text' name='region' data-bind='var: customer(WS.region); format:popVal;' /></label>
+	<label><span>Zip/Postal:</span><input size='9' type='text' name='postal' data-bind='var: customer(WS.postal); format:popVal;' /></label>
+	<label><span>Country Code:</span><input size='2' type='text' name='countrycode' data-bind='var: customer(WS.countrycode); format:popVal;' /></label>
 	
 	<p class='hint'>For internal use only</p>
 
@@ -267,7 +267,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 <tr id='customerEditorTicketListTemplate' class='pointer' onClick="navigateTo('/biz/crm/index.cgi?VERB=TICKET-VIEW&TKTCODE=96332');">
 	<td class='alignLeft' data-bind="var:ticket(CREATED_GMT); format:epoch2pretty;"></td>
 	<td class='alignLeft' data-bind="var:ticket(SUBJECT); format:text;"></td>
-	<td class='alignRight' data-bind="var:ticket(TKTCODE); format:text;" class='lookLikeLink'></td>
+	<td class='alignRight lookLikeLink' data-bind="var:ticket(TKTCODE); format:text;"></td>
 	<td class='alignRight' data-bind="var:ticket(STATUS); format:text;"></td>
 </tr>
 
