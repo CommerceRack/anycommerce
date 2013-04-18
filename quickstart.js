@@ -168,6 +168,9 @@ document.write = function(v){
 				app.ext.myRIA.u.bindAppViewForms('#appView'); //added the selector on 20121026. was blank before.
 				app.ext.myRIA.vars.mcSetInterval = setInterval(function(){app.ext.myRIA.u.handleMinicartUpdate({'datapointer':'cartDetail'})},4000); //make sure minicart stays up to date.
 				window.showContent = app.ext.myRIA.a.showContent; //a shortcut for easy execution.
+				
+				app.u.dump("Showcontent: "+typeof showContent);
+				
 				quickView = app.ext.myRIA.a.quickView; //a shortcut for easy execution.
 				
 				app.ext.myRIA.u.bindNav('#appView .bindByAnchor');
