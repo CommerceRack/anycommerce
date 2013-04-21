@@ -68,6 +68,29 @@ var admin_orders = function() {
 			}
 		},
 
+
+	tiles : {
+		
+		mktSummary : function(){
+			
+			app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+			app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
+			app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
+			
+			
+			var obj = {
+				'bgcolor' : 'magenta',
+				'target':'orders',
+				'$content' : $("<div \/>").append("<span class='focon-camera icon'></span><span class='tilename'>marketplace summary</span>"),
+				'size' : '1x1'
+				};
+			
+			return obj;
+			}
+		
+	},
+
+
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 

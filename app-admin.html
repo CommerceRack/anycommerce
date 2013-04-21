@@ -203,7 +203,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		</div>
 		<div id='navTabs'></div>
 		<div id='breadcrumb'></div>
-	</div>
+	</div><!-- /mastHead -->
 	
 	<div class='positionRelative pageContentContainer'>
 	
@@ -225,48 +225,69 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'>
 
 
-
 <section id='launchpad'>
-	<div id='launchpadInner'><!-- this is what's moved -->
+	<div id='launchpadInner'>
 
-		<ul class='launchpadTileGroup' id='tilegroup_marketing'>
-<!--			<li class='tile_2x2 blue' onClick="window.open('https://plus.google.com/communities/108928399105730273026');"><img src='https://s3-us-west-1.amazonaws.com/admin-ui/ads/join_zcmnty-300x250.gif' width='300' height='250' alt='' /></li>-->
-			<li class='blue'><span class='icon-newspaper icon'></span><span class='tilename'>blue</span></li>
-			<li class='blueLight'><span class='icon-pencil icon'></span><span class='tilename'>blue light</span></li>
-			<li class='blueDark'><span class='icon-droplet icon'></span><span class='tilename'>blue dark</span></li>
-			<li class='green'><span class='icon-home icon'></span><span class='tilename'>green</span></li>
-		</ul>
-		<ul class='launchpadTileGroup' id='tilegroup_domains'>
-			<li class='greenDark tile_2x1'>
-				<span class='icon-music icon'></span>
-				<span class='tilename'><input type="text" placeholder='type domain here' ><button>Add Domain</button></span>
-				</li>
-		</ul>
-		<ul class='launchpadTileGroup'>
-			<li class='red' onClick="app.ext.admin_support.a.showHelpInterfaceInDialog();"><span class='icon-support icon'></span><span class='tilename'>WebDoc in dialog</span></li>
-			<li class='red' onClick="showUI('#!help',{'tab':'support'})"><span class='icon-support icon'></span><span class='tilename'>WebDoc in page</span></li>
-			<li class='greenLight'><span class='icon-camera icon'></span><span class='tilename'>greenLight</span></li>
-			<li class='tile_2x1 greenDark'><span class='icon-music icon'></span><span class='tilename'>greenDark</span></li>
-			<li class='redLight'><span class='icon-film icon'></span><span class='tilename'>redLight</span></li>
-		</ul>
-		<ul class='launchpadTileGroup'>
-			<li class='pinkDark tile_2x2'><span class='icon-help icon'></span><span class='tilename'>pinkDark</span></li>
-			<li class='purple tile_2x1'><span class='icon-phone icon'></span><span class='tilename'>purple</span></li>
-			<li class='orangeDark'><span class='icon-copy icon'></span><span class='tilename'>orangeDark</span></li>
-			<li class='pink'><span class='icon-folder icon'></span><span class='tilename'>pink</span></li>
-		</ul>
-		<ul class='launchpadTileGroup'>
-			<li class='white'><span class='icon-mail icon'></span><span class='tilename'>white</span></li>
-			<li class='grayLight'><span class='icon-location icon'></span><span class='tilename'>greyLight</span></li>
-			<li class='grayDark'><span class='icon-comments icon'></span><span class='tilename'>grayDark</span></li>
-			<li class='yellow tile_2x1'><span class='icon-file icon'></span><span class='tilename'>yellow</span></li>
-		</ul>
-		<ul class='launchpadTileGroup'>
-			<li class='magenta tile_2x2'><span class='icon-user icon'></span><span class='tilename'>magenta</span></li>
-			<li class='teal'><span class='icon-busy icon'></span><span class='tilename'>teal</span></li>
-			<li class='orange'><span class='icon-new icon'></span><span class='tilename'>orange</span></li>
-			<li><span class='icon-loading icon'></span><span class='tilename'>no color specified</span></li>
-		</ul>
+	<ul class='launchpad_tiles'>
+		<li class='tile_1x1 pink'>3.0</li>
+		<li class='tile_2x1 pink'><span class='focon-newspaper icon'></span><span class='tilename'>3.1</span></li>
+		<li class='tile_1x1 pink'>3.02</li>
+		<li class='tile_1x1 pink'>3.03</li>
+		<li class='tile_1x1 pink'>3.04</li>
+		<li class='tile_1x1 pink'>3.05</li>
+		<li class='tile_1x1 pink'><a href='#' onClick='alert("boob")'>3.06</a></li>
+		<li class='tile_1x1 pink'>3.07</li>
+		<li class='tile_1x1 pink'>3.08</li>
+		<li class='tile_1x1 pink'>3.09</li>
+		<li class='tile_1x1 pink'>3.10</li>
+	</ul>
+	<ul class='launchpad_tiles' id='tilegroup_domains'>
+		<li class='greenDark tile_2x1'>
+		<span class='icon-music icon'></span>
+		<span class='tilename'><input type="text" placeholder='type domain here' ><button>Add Domain</button></span>
+		</li>
+	</ul>
+	<ul class='launchpad_tiles' id='tilegroup_orders'>
+		<li class='tile_1x1 red'>4.0</li>
+		<li class='tile_2x1 red'>4.01</li>
+		<li class='tile_1x1 red'>4.02</li>
+		<li class='tile_1x1 red'>4.03</li>
+		<li class='tile_1x1 red'>4.04</li>
+		<li class='tile_1x1 red'>4.05</li>
+		<li class='tile_1x1 red'>4.06</li>
+		<li class='tile_2x1 red'>4.07</li>
+		<li class='tile_1x1 red'>4.08</li>
+		<li class='tile_1x1 red'>4.09</li>
+		<li class='tile_1x1 red'>4.10</li>
+	</ul>
+	
+	<ul class='launchpad_tiles'>
+		<li class='tile_1x1 orange'>5.0</li>
+		<li class='tile_2x1 orange'>5.01</li>
+		<li class='tile_1x1 orange'>5.02</li>
+		<li class='tile_1x1 orange'>5.03</li>
+		<li class='tile_1x1 orange'>5.04</li>
+		<li class='tile_1x1 orange'>5.05</li>
+		<li class='tile_1x1 orange'>5.06</li>
+		<li class='tile_2x1 orange'>5.07</li>
+		<li class='tile_1x1 orange'>5.08</li>
+		<li class='tile_1x1 orange'>5.09</li>
+		<li class='tile_1x1 orange'>5.10</li>
+	</ul>
+	
+	<ul class='launchpad_tiles'>
+		<li class='tile_1x1 purple'>6.0</li>
+		<li class='tile_2x1 purple'>6.01</li>
+		<li class='tile_1x1 purple'>6.02</li>
+		<li class='tile_1x1 purple'>6.03</li>
+		<li class='tile_1x1 purple'>6.04</li>
+		<li class='tile_1x1 purple'>6.05</li>
+		<li class='tile_1x1 purple'>6.06</li>
+		<li class='tile_2x1 purple'>6.07</li>
+		<li class='tile_1x1 purple'>6.08</li>
+		<li class='tile_1x1 purple'>6.09</li>
+		<li class='tile_1x1 purple'>6.10</li>
+	</ul>
 
 	</div>
 </section>
@@ -277,6 +298,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 	
 	</div>
 
+	<div id='mastFoot'></div><!-- if a footer is ever introduced, put it here for launchpad compatibility. -->
 </div><!-- /appView -->
 
 
