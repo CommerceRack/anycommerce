@@ -310,7 +310,7 @@ The Launch Pad
 .launchpad_tiles li .tile	{width: 150px; height: 150px; }
 .launchpad_tiles li.tile_2x1, .launchpad_tiles li.tile_2x1 .tile	{width:312px;}
 
-.launchpad_tiles span.tilename	{position:absolute; bottom:6px; left:6px;}
+.launchpad_tiles span.tilename	{position:absolute; bottom:6px; left:6px; text-align:left;}
 .launchpad_tiles span.icon	{top:24px; font-size:5em; line-height:1.3em; color:#ffffff; display:block; width:100%; text-align:center;}
 
 
@@ -319,7 +319,7 @@ The Launch Pad
 .launchpad_tiles .ui-sortable-placeholder * { visibility: hidden; }
 .launchpad_tiles li span.handle	{position:absolute; bottom:0; right:0; background:#900; width:25px; height:25px;}
 
-
+.launchpad_tiles li, .launchpad_tiles li a {color:#ffffff;}
 .launchpad_tiles li.blue {background-color: #0a59c1;}
 .launchpad_tiles li.blueLight {background-color: #4888f0;}
 .launchpad_tiles li.blueDark {background-color: #04408f;}

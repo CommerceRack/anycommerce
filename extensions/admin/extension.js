@@ -2784,7 +2784,7 @@ optional
 				$div.addClass((app.vars.domain == domainArr.id) ? 'greenBG' : '')
 				$div.data(domainArr);
 //if the domain object ever returns 'broken', use something like this: "+(app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
-				$div.append("<span class='iconFont icon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span><span class='active'><\/span>");
+				$div.append("<span class='iconFont focon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span><span class='active'><\/span>");
 				return {'$content' : $div, 'size':'1x1','bgclass':'greenLight','target':'domains'};
 				},
 
