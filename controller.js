@@ -69,7 +69,7 @@ jQuery.extend(zController.prototype, {
 			app.vars.username = zGlobals.appSettings.username.toLowerCase();
 //need to make sure the secureURL ends in a / always. doesn't seem to always come in that way via zGlobals
 			app.vars.secureURL = zGlobals.appSettings.https_app_url;
-			app.vars.sdomain = zGlobals.appSettings.sdomain;
+			app.vars.domain = zGlobals.appSettings.sdomain;
 			if('https:' == app.vars.protocol)	{app.vars.jqurl = zGlobals.appSettings.https_api_url;}
 			else	{app.vars.jqurl = zGlobals.appSettings.http_api_url}
 			}
