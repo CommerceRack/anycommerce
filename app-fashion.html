@@ -24,7 +24,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"checkoutAuthMode" : "active", //can be passive, active or required
 	"baseURL":"",
-	"testURL":"http://www.sporks.zoovy.com/" //put your domain here. you can then test locally in firefox.
+	"testURL":"http://www.ylh.zoovy.com/" //put your domain here. you can then test locally in firefox.
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -60,7 +60,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
-	<div class='logo'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></div>
+	<div class='logo'><!-- PUT YOUR LOGO HERE --></div>
 	<div id="loader" class='alignCenter'>
 		<h3>Loading Your Shopping Experience</h3>
 
@@ -94,7 +94,7 @@ app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
     	</div>
         
         <div class='logoSearchContainer clearfix'>
-        	<div id='logo'><a href='#!homepage' class='bindByAnchor'><img src="app-fashion/logo-375x52.jpg" width='375' height='52' alt='' /></a></div>
+        	<div id='logo' onClick="showContent('homepage');" class='logo pointer'></div>
         	<div class='searchBarContainer'>
 				<form name='headerSearchFrm' action='#' class='productSearchForm' method="get" id="searchFunc">
 					<input type='search' name='KEYWORDS' class="productSearchKeyword handleDefault" placeholder="Find it here..." id="searchBar"/>
@@ -197,8 +197,9 @@ uncomment and set links
 		-->
     </div>
         
-    <div id='footerInformation'>
-        <a>2012 All Rights Reserved. eCommerce by</a> Zoovy
+    <div id='footerInformation' class='clearfix'>
+<div class='floatLeft'>Copyright &copy; 2012 All Rights Reserved.</div>
+<div class='floatRight'><a href='http://www.zoovy.com' target="_blank">eCommerce by Zoovy</a></div>
     </div>
 
 

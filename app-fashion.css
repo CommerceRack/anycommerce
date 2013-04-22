@@ -74,7 +74,7 @@ HEADER
 
 /* logo and search */
 
-#logo {float: left;}
+#logo {float: left; width:375px; height:52px;}
 
 .searchBarContainer {
 	margin-top: 6px;
@@ -253,17 +253,16 @@ FOOTER
 	padding: 5px;
 }
 
-#footerInformation {
-	padding-top: 20px;
-	height: 35px;
+#footerInformation	{	padding: 10px 0;
+	font-size:.75em;
 	width: 100%;
-	text-align: center;
-	color: #a3033d;
-}
+	}
 
+#footerInformation,
 #footerInformation a {
-	color: black;	
-}
+	color: #666666;
+	}
+#footerInformation a	{text-decoration:none;}
 
 
 

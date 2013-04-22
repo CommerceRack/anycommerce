@@ -36,6 +36,9 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.j
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass because it contains essential functions (anymessage & anycontent)
 
 
+//used for image enlargement in product layout
+app.rq.push(['script',0,app.vars.baseURL+'resources/load-image.min.js']); //in zero pass in case product page is first page.
+app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.image-gallery.jt.js']); //in zero pass in case product page is first page.
 
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.touchSwipe-1.3.3.min.js']); //used w/ carouFedSel.
 app.rq.push(['script',1,app.vars.baseURL+'resources/jquery.carouFredSel-6.2.0.min.js']); //used on homepage.
@@ -75,24 +78,41 @@ app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
 	}]);
 
 
-
-
-//add tabs to product data.
-//tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
-	var safePID = app.u.makeSafeHTMLId(P.pid); //can't use jqSelector because productTEmplate_pid still used makesafe. planned Q1-2013 update ###
-	var $tabContainer = $( ".tabbedProductContent",$('#productTemplate_'+safePID));
-		if($tabContainer.length)	{
-			if($tabContainer.data("widget") == 'anytabs'){} //tabs have already been instantiated. no need to be redundant.
-			else	{
-				$tabContainer.anytabs();
-				}
-			}
-		else	{} //couldn't find the tab to tabificate.
+	var $pDetail = app.u.jqSelector('#',P.parentID);
+	$('.productAccordion',$pDetail).accordion({
+		collapsible: true,
+		heightStyle: "content"
+		});
+//hide non-populated sections. 
+if(!$("[data-app-role='prod_detail_container']",$pDetail).text())	{$("[data-app-role='prod_detail_header']",$pDetail).hide()}
+if(!$("[data-app-role='prod_features_container']",$pDetail).text())	{$("[data-app-role='prod_features_header']",$pDetail).hide()}
+if(!$("[data-app-role='prod_accessories_container'] ul",$pDetail).children().length)	{$("[data-app-role='prod_accessories_header']",$pDetail).hide()}
+
+
 	}]);
 
 
 
+
+app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
+	
+	$('.gallery a[data-gallery]',app.u.jqSelector('#',P.parentID)).each(function(){
+		if($('img',$(this)).length < 1)	{
+			$(this).empty().remove(); //nuke any hrefs with no images. otherwise next/previous in gallery will show an empty spot
+			}
+		else	{
+			$(this).attr('title',app.data[P.datapointer]['%attribs']['zoovy:prod_name']); //title is used in gallery modal.
+			}
+		});
+//init gallery.
+	$('.gallery',app.u.jqSelector('#',P.parentID)).imagegallery({
+		show: 'fade',
+		hide: 'fade',
+		fullscreen: false,
+		slideshow: false
+		});
+	}]);
 
 /*
 This function is overwritten once the controller is instantiated. 

@@ -147,7 +147,21 @@ document.write = function(v){
 //The request for appCategoryList is needed early for both the homepage list of cats and tier1.
 //piggyback a few other necessary requests here to reduce # of requests
 				app.ext.store_navcats.calls.appCategoryList.init(zGlobals.appSettings.rootcat,{"callback":"showRootCategories","extension":"myRIA"},'mutable');
-				app.calls.appProfileInfo.init({'profile':app.vars.profile},{},'mutable');
+				app.calls.appProfileInfo.init({'profile':app.vars.profile},{callback : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						$('.logo','#appView').each(function(){
+							var $logo = $(this);
+							if($logo.is('img') || $('img',$logo).length)	{} //the element with the logo class already has an image. do nothing.
+							else if(app.data[rd.datapointer]['zoovy:logo_website'])	{
+								$logo.append(app.u.makeImage({'tag':true,'m':true,'b':'TTTTTT','w':$logo.width(),'h':$logo.height(),'alt':app.data[rd.datapointer]['zoovy:company_name'] || "",'name':app.data[rd.datapointer]['zoovy:logo_website']}))
+								}
+							else	{} //logo field not set.
+							});
+						}
+					}},'mutable');
 				app.model.dispatchThis(); //this dispatch needs to occur prior to handleAppInit being executed.
 
 				var page = app.ext.myRIA.u.handleAppInit(); //checks url and will load appropriate page content. returns object {pageType,pageInfo}
@@ -2580,7 +2594,7 @@ buyer to 'take with them' as they move between  pages.
 				$('#loginSuccessContainer').hide(); //contains 'continue' button.
 				$('#loginMessaging, #recoverPasswordMessaging').empty(); //used for success and fail messaging.
 				$('#loginFormContainer, #recoverPasswordContainer').show(); //contains actual form and password recovery form (second id)
-				$('#loginFormForModal').dialog({modal: true,width:550,autoOpen:false});
+				$('#loginFormForModal').dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',autoOpen:false});
 				$('#loginFormForModal').dialog('open');
 				
 		

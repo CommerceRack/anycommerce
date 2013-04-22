@@ -318,7 +318,7 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 //this is a new product being displayed in the viewer.
 						$parent.empty();
 						}
-					$parent.dialog({modal: true,width:500,height:500,autoOpen:false,"title":"Write a review for "+P.pid});
+					$parent.dialog({modal: true,width: ($(window).width() > 500) ? 500 : '90%',height:500,autoOpen:false,"title":"Write a review for "+P.pid});
 //the only data needed in the reviews form is the pid.
 //the entire product record isn't passed in because it may not be available (such as in invoice or order history, or a third party site).
 					$parent.dialog('open').append(app.renderFunctions.transmogrify({id:'review-modal_'+P.pid},P.templateID,{'pid':P.pid}));
