@@ -955,19 +955,24 @@ for legacy browsers. That means old browsers will use the anchor to retain 'back
 							app.ext.myRIA.u.handleTemplateFunctions(infoObj);
 	
 	//for local, don't jump to secure. ### this may have to change for a native app. what's the protocol? is there one?
-							if('file:' == document.location.protocol)	{
-								app.ext.orderCreate.a.startCheckout($('#mainContentArea'));
-								}
-							else if('https:' != document.location.protocol)	{
+							if('http:' == document.location.protocol)	{
 								app.u.dump(" -> nonsecure session. switch to secure for checkout.");
 	// if we redirect to ssl for checkout, it's a new url and a pushstate isn't needed, so a param is added to the url.
-								$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
+	// * use showloading instead of .html (which could be heavy)
+	//							$('#mainContentArea').addClass('loadingBG').html("<h1>Transferring you to a secure session for checkout.<\/h1><h2>Our app will reload shortly...<\/h2>");
+								$('body').showLoading({'message':'Transferring you to a secure session for checkout'});
 								var SSLlocation = zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"&_session="+app.vars._session+"#checkout?show=checkout";
 								_gaq.push(['_link', SSLlocation]); //for cross domain tracking.
 								document.location = SSLlocation;
 								}
 							else	{
-								app.ext.orderCreate.a.startCheckout($('#mainContentArea'));
+	// * checkout was emptying mainContentArea and that was heavy. This solution is faster and doesn't nuke templates already rendered.
+								var $checkoutContainer = $("#checkoutContainer");
+								if(!$checkoutContainer.length)	{
+									$checkoutContainer = $("<div \/>",{'id':'checkoutContainer'});
+									$('#mainContentArea').append($checkoutContainer );
+									}
+								app.ext.orderCreate.a.startCheckout($checkoutContainer);
 								}
 							infoObj.state = 'onCompletes'; //needed for handleTemplateFunctions.
 							app.ext.myRIA.u.handleTemplateFunctions(infoObj);
