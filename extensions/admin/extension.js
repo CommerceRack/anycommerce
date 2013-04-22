@@ -2524,7 +2524,7 @@ var chart = new Highcharts.Chart({
 				
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
-app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
+//app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
 
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
