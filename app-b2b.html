@@ -32,7 +32,7 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"checkoutAuthMode" : "required", //can be passive, active or required
 	"baseURL":"",
-	"testURL":"http://www.sporks.zoovy.com/"
+	"testURL":"http://www.ylh.zoovy.com/"
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -73,7 +73,7 @@ app.u.loadScript(app.vars.baseURL+"app-b2b-init.js");
 <div id='appPreView' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
 <table>
 <tr>
-	<td><div class='marginRight'>YOUR LOGO HERE</div></td>
+	<td><div class='marginRight'><!-- PUT YOUR LOGO HERE --></div></td>
 	<td>
 	<div class='marginLeft'>
 		<div id="loader">
@@ -99,7 +99,7 @@ app.u.loadScript(app.vars.baseURL+"app-b2b-init.js");
 <div id='appView' class='displayNone'>
 
 	<div id='mastHead' class='clearfix'>
-		<div class='floatLeft pointer' onClick="showContent('homepage',{});">YOUR LOGO HERE</div>
+		<div class='floatLeft pointer logo' onClick="showContent('homepage',{});"></div>
 		<div class='floatRight menu alignRight'>
 
 <a href='#cart?show=inline' class='bindByAnchor'>Cart</a> | 
@@ -190,6 +190,8 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 	
 	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
 
+
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 
 </div>
 
