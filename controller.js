@@ -1476,8 +1476,6 @@ AUTHENTICATION/USER
 			else	{
 				//catch.
 				}
-//				app.u.dump('store_checkout.u.determineAuthentication run. authstate = '+r); 
-
 			return r;
 			}, //determineAuthentication
 
@@ -2671,7 +2669,7 @@ if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
 	var payObj = app.u.which3PCAreAvailable();
 	if(payObj.paypalec)	{
 		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').one('click',function(){
-			app.ext.store_checkout.calls.cartPaypalSetExpressCheckout.init();
+			app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
 			$(this).addClass('disabled').attr('disabled','disabled');
 			app.model.dispatchThis('immutable');
 			});
@@ -2691,7 +2689,7 @@ if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
 	var payObj = app.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
 	if(payObj.googlecheckout)	{
 	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
-		app.ext.store_checkout.calls.cartGoogleCheckoutURL.init();
+		app.ext.cco.calls.cartGoogleCheckoutURL.init();
 		$(this).addClass('disabled').attr('disabled','disabled');
 		app.model.dispatchThis('immutable');
 		});
