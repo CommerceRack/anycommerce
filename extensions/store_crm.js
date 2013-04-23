@@ -464,12 +464,16 @@ else{
 
 				if(typeof vars === 'object' && vars.addressID && vars.addressType)	{
 					var addressData = app.ext.cco.u.getAddrObjByID(vars.addressType,vars.addressID);
+					app.u.dump(addressData);
 					if(addressData)	{
 						r = true;
 						var $editor = $("<div \/>");
 						$editor.anycontent({'templateID':(vars.addressType == 'ship') ? 'chkoutAddressShipTemplate' : 'chkoutAddressBillTemplate','data':addressData});
 						$editor.append("<input type='hidden' name='shortcut' value='"+vars.addressID+"' \/>");
 						$editor.append("<input type='hidden' name='type' value='"+vars.addressType+"' \/>");
+						if(vars.addressType == 'bill')	{
+							$editor.append("<label><span>email:<\/span><input type='email' name='bill/email' data-bind='var: address(bill/email); format:popVal;' value='"+( addressData['bill/email'] || "" )+"' required='required' \/><\/label>");
+							}
 						$editor.wrapInner('<form \/>'); //needs this for serializeJSON later.
 						
 					
