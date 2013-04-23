@@ -2700,7 +2700,7 @@ else	{
 
 		googleCheckoutButton : function($tag,data)	{
 
-if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
+if(zGlobals.checkoutSettings.googleCheckoutMerchantId && typeof _gaq === 'object')	{
 	var payObj = app.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
 	if(payObj.googlecheckout)	{
 	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
@@ -2712,6 +2712,9 @@ if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
 	else	{
 		$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"://checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=disable&loc=en_US' \/>")			
 		}
+	}
+else if(zGlobals.checkoutSettings.googleCheckoutMerchantId)	{
+	app.u.dump("zGlobals.checkoutSettings.googleCheckoutMerchantId is set, but _gaq is not defined (google analytics not loaded but required)",'warn');
 	}
 else	{
 	$tag.addClass('displayNone');
