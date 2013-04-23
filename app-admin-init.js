@@ -6,6 +6,7 @@ app.rq = app.rq || []; //ensure array is defined. rq = resource queue.
 app.rq.push(['extension',0,'admin','extensions/admin/extension.js','initExtension']);
 app.rq.push(['extension',0,'admin_prodEdit','extensions/admin/product_editor.js']);
 app.rq.push(['extension',0,'admin_orders','extensions/admin/orders.js']); 
+app.rq.push(['extension',0,'admin_launchpad','extensions/admin/launchpad.js']); 
 
 //these can be loaded later because none of them are required for a page to load.
 //this will change going forward.
@@ -16,7 +17,7 @@ app.rq.push(['extension',1,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',1,'store_checkout','extensions/store_checkout.js']);
 app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
-app.rq.push(['extension',0,'admin_support','extensions/admin/support.js']);  //is zero at init for testing.
+app.rq.push(['extension',1,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
 app.rq.push(['extension',1,'admin_reports','extensions/admin/reports.js']);
 app.rq.push(['extension',1,'admin_batchJob','extensions/admin/batchjob.js']);
