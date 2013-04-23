@@ -2700,7 +2700,7 @@ else	{
 
 		googleCheckoutButton : function($tag,data)	{
 
-if(zGlobals.checkoutSettings.googleCheckoutMerchantId && typeof _gaq === 'object')	{
+if(zGlobals.checkoutSettings.googleCheckoutMerchantId && (window._gat && window._gat._getTracker))	{
 	var payObj = app.u.which3PCAreAvailable(); //certain product can be flagged to disable googlecheckout as a payment option.
 	if(payObj.googlecheckout)	{
 	$tag.append("<img height=43 width=160 id='googleCheckoutButton' border=0 src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//checkout.google.com/buttons/checkout.gif?merchant_id="+zGlobals.checkoutSettings.googleCheckoutMerchantId+"&w=160&h=43&style=trans&variant=text&loc=en_US' \/>").one('click',function(){
