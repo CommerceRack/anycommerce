@@ -1,0 +1,34 @@
+
+
+.launchpad_tiles li, .launchpad_tiles li a {color:#ffffff;}
+.launchpad_tiles li.blue {background-color: #0a59c1;}
+.launchpad_tiles li.blueLight {background-color: #4888f0;}
+.launchpad_tiles li.blueDark {background-color: #04408f;}
+.launchpad_tiles li.green, .greenBG {background-color: #00a300;}
+.launchpad_tiles li.greenLight {background-color: #99b433;}
+.launchpad_tiles li.greenDark {background-color: #1e7145;}
+.launchpad_tiles li.red {background-color: #ba1d48;}
+.launchpad_tiles li.redLight {background-color: #fe5252;}
+.launchpad_tiles li.yellow {background-color: #ffc40d;}
+.launchpad_tiles li.orange {background-color: #e3a21a;}
+.launchpad_tiles li.orangeDark {background-color: #db552d;}
+.launchpad_tiles li.pink {background-color: #9f00a7;}
+.launchpad_tiles li.pinkDark {background-color: #dc056f;}
+.launchpad_tiles li.purple {background-color: #a100a8;}
+.launchpad_tiles li.white {background-color: #ffffff;}
+.launchpad_tiles li.grayLight {background-color: #cccccc;}
+.launchpad_tiles li.grayDark {background-color: #333333;}
+.launchpad_tiles li.magenta {background-color: #c0387f;}
+.launchpad_tiles li.teal {background-color: #009bad;}
+
+.launchpad_tiles li.white, 
+.launchpad_tiles li.grayLight, 
+.launchpad_tiles li.grayLight span.icon,
+.launchpad_tiles li.white span.icon	{color:#666666;}
+
+
+#launchpad .icon	{
+	font-family: "iconFont";
+	font-weight: normal;
+	font-style: normal;
+	}
