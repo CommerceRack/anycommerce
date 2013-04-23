@@ -41,7 +41,7 @@
 				indicatorID = settings.indicatorID;
 				}
 			else {
-				indicatorID = $this.attr('id');
+				indicatorID = $this.attr('id') || $this.prop("tagName")+"_"+app.u.guidGenerator(); //* was outputting 'undefined'.
 				}
 				
 			$loadingDiv.attr('id', 'loading-indicator-' + indicatorID );
@@ -51,7 +51,7 @@
 				$loadingDiv.addClass(settings.addClass);
 				}
 			if(settings.message)	{
-				$loadingDiv.addClass('ui-widget ui-widget-content ui-corner-all stdPadding alignCenter').text(settings.message);
+				$loadingDiv.addClass('ui-widget ui-widget-content ui-corner-all stdPadding alignCenter').html($("<div \/>").addClass('ui-loading-message').text(settings.message));
 				}
 	
 			$loadingDiv.prepend("<div class='loadingBG'></div>"); //add gfx before txt.

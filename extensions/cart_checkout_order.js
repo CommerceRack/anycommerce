@@ -158,6 +158,25 @@ a callback was also added which just executes this call, so that checkout COULD 
 			},//cartOrderCreate
 
 
+		cartPaypalSetExpressCheckout : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj = obj || {};
+				obj._tag = _tag || {};
+				var parentID = obj._tag.parentID || '';
+				obj._cmd = "cartPaypalSetExpressCheckout";
+				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
+				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout"
+				
+				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
+				
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //cartPaypalSetExpressCheckout	
+
 /*
 
 THESE STILL NEED LOVE
@@ -187,24 +206,6 @@ left them be to provide guidance later.
 				}
 			}, //cartGoogleCheckoutURL	
 
-		cartPaypalSetExpressCheckout : {
-			init : function(obj,_tag,Q)	{
-				this.dispatch(obj,_tag,Q);
-				return 1;
-				},
-			dispatch : function(obj,_tag,Q)	{
-				obj = obj || {};
-				obj._tag = _tag || {};
-				var parentID = obj._tag.parentID || '';
-				obj._cmd = "cartPaypalSetExpressCheckout";
-				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
-				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout"
-				
-				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
-				
-				app.model.addDispatchToQ(obj,Q || 'immutable');
-				}
-			}, //cartPaypalSetExpressCheckout	
 
 		cartAmazonPaymentURL : {
 			init : function()	{
@@ -261,17 +262,6 @@ left them be to provide guidance later.
 				},
 			onError : function(responseData,uuid)	{
 				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on checkout page.
-				app.u.throwMessage(responseData,uuid);
-				}
-			},
-
-		handleCartPaypalSetECResponse : {
-			onSuccess : function(tagObj)	{
-				app.u.dump('BEGIN cco.callbacks.handleCartPaypalSetECResponse.onSuccess');
-				window.location = app.data[tagObj.datapointer].URL
-				},
-			onError : function(responseData,uuid)	{
-				$('#chkoutPlaceOrderBtn').removeAttr('disabled').removeClass('ui-state-disabled'); // re-enable checkout button on cart page.
 				app.u.throwMessage(responseData,uuid);
 				}
 			}

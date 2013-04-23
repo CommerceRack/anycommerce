@@ -2668,8 +2668,23 @@ return $r;
 if(zGlobals.checkoutSettings.paypalCheckoutApiUser)	{
 	var payObj = app.u.which3PCAreAvailable();
 	if(payObj.paypalec)	{
-		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').one('click',function(){
-			app.ext.cco.calls.cartPaypalSetExpressCheckout.init();
+		$tag.empty().append("<img width='145' id='paypalECButton' height='42' border='0' src='"+(document.location.protocol === 'https:' ? 'https:' : 'http:')+"//www.paypal.com/en_US/i/btn/btn_xpressCheckoutsm.gif' alt='' />").addClass('pointer').off('click.paypal').on('click.paypal',function(){
+			app.ext.cco.calls.cartPaypalSetExpressCheckout.init({'getBuyerAddress':1},{'callback':function(rd){
+				$('body').showLoading({'message':'Obtaining secure PayPal URL for transfer...','indicatorID':'paypalShowLoading'});
+				if(app.model.responseHasErrors(rd)){
+					$(this).removeClass('disabled').attr('disabled','').removeAttr('disabled');
+					$('#globalMessaging').anymessage({'message':rd});
+					}
+				else	{
+					if(app.data[rd.datapointer] && app.data[rd.datapointer].URL)	{
+						$('.ui-loading-message','#loading-indicator-paypalShowLoading').text("Transferring you to PayPal to authorize payment. See you soon!");
+						document.location = app.data[rd.datapointer].URL;
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In paypalECButton render format, dispatch to obtain paypal URL was successful, but no URL in the response.","gMessage":true});
+						}
+					}
+				}});
 			$(this).addClass('disabled').attr('disabled','disabled');
 			app.model.dispatchThis('immutable');
 			});
