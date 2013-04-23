@@ -466,7 +466,8 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 							$("input[name='bill/phone']",$fieldset).removeAttr('required');
 							}
 
-//postal and region are only required for domestic orders.	
+//postal and region are only required for domestic orders.
+// * 201314 -> minlength was added to ensure a proper zip supplied.
 						if(formObj['bill/countrycode'] == "US" || !formObj['bill/countrycode'])	{
 							$("input[name='bill/postal']",$fieldset).attr('required','required').attr('data-minlength',5);
 							$("input[name='bill/region']",$fieldset).attr('required','required');
@@ -504,13 +505,14 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						}
 					else	{
 
-//postal and region are only required for domestic orders.	
+//postal and region are only required for domestic orders.
+// * 201314 -> minlength was added to ensure a proper zip supplied. Also provides a low-level of attempting shipping fraud (setting US for Int. shipping addresses)
 						if(formObj['ship/countrycode'] == "US")	{
-							$("input[name='ship/postal']",$fieldset).attr('required','required');
+							$("input[name='ship/postal']",$fieldset).attr('required','required').attr('data-minlength',5);
 							$("input[name='ship/region']",$fieldset).attr('required','required');
 							}
 						else	{
-							$("input[name='ship/postal']",$fieldset).removeAttr('required');
+							$("input[name='ship/postal']",$fieldset).removeAttr('required').removeAttr('data-minlength');
 							$("input[name='ship/region']",$fieldset).removeAttr('required');
 							}
 						

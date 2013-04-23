@@ -41,7 +41,7 @@
 				indicatorID = settings.indicatorID;
 				}
 			else {
-				indicatorID = $this.attr('id') || $this.prop("tagName")+"_"+app.u.guidGenerator(); //* was outputting 'undefined'.
+				indicatorID = $this.attr('id');
 				}
 				
 			$loadingDiv.attr('id', 'loading-indicator-' + indicatorID );

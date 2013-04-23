@@ -1710,7 +1710,7 @@ VALIDATION
 					else if($input.data('minlength') && $input.val().length < $input.data('minlength'))	{
 						r = false;
 						$input.addClass('ui-state-error');
-						$input.after($span.text('requires a max of '+$input.attr('maxlength')+' characters'));
+						$input.after($span.text('requires a minimum of '+$input.data('minlength')+' characters'));
 						removeClass($input);
 						}
 					else	{
