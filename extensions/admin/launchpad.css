@@ -1,4 +1,34 @@
 
+#launchpadContent	{ width:100%; padding:0;}
+
+#launchpad {width:100%; overflow:hidden; background:#600; height:600px; padding-top:12px;}
+#launchpad:hover	{overflow:auto;}
+#launchpadInner	{position:relative; left:0; width:10000px; }
+
+.launchpad_tiles { list-style-type: none; margin: 0 24px; padding: 0; width: 500px; float:left; }
+.launchpad_tiles li {
+	margin: 6px; padding: 0px; float: left; 
+	overflow:hidden;
+	font-size: .9em; text-align: center; 
+	background:#efefef; 
+	position:relative;
+	-webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+	-moz-box-sizing: border-box;    /* Firefox, other Gecko */
+	box-sizing: border-box;         /* Opera/IE 8+ */
+	-webkit-border-radius: 25px 0px 25px 0px;
+	border-radius: 25px 0px 25px 0px; 
+	}
+
+.launchpad_tiles li.tile_1x1	{width: 150px; height: 150px;}
+.launchpad_tiles li.tile_2x1	{width:312px; height:150px;}
+
+.launchpad_tiles li .tilename {position:absolute; bottom:6px; left:6px;}
+.launchpad_tiles li:hover	{
+	-webkit-box-shadow:  3px 3px 4px 3px rgba(0, 0, 0, .2);
+	box-shadow:  3px 3px 4px 3px rgba(0, 0, 0, .2);	
+	}
+
+.launchpad_tiles span.icon	{font-size:5em; line-height:2em;}
 
 .launchpad_tiles li, .launchpad_tiles li a {color:#ffffff;}
 .launchpad_tiles li.blue {background-color: #0a59c1;}
@@ -31,4 +61,5 @@
 	font-family: "iconFont";
 	font-weight: normal;
 	font-style: normal;
+	padding-right:6px;
 	}

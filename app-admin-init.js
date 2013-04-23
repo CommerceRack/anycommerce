@@ -56,7 +56,8 @@ app.rq.push(['css',1,app.vars.baseURL+'extensions/admin/resources/jquery.context
 app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.contextMenu.js']); //must be in first pass in case orders is the landing page.
 app.rq.push(['script',1,app.vars.baseURL+'extensions/admin/resources/jquery.ui.position.js']);
 
-
+//app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.ui.touch-punch.min.js']);
+//app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jquery.shapeshift.js']);
 
 
 

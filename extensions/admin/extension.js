@@ -1375,7 +1375,9 @@ app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.
 //note - the editor.css file that comes with jhtmlarea is NOT needed. just sets the page bgcolor to black.
 
 // colorpicker isn't loaded until jhtmlarea is done to avoid a js error due to load order.
-app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea-0.7.5.min.js',function(){app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])}]);
+app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea-0.7.5.min.js',function(){
+	app.rq.push(['script',0,app.vars.baseURL+'extensions/admin/resources/jHtmlArea-0.7.5.ExamplePlusSource/scripts/jHtmlArea.ColorPickerMenu-0.7.0.min.js'])
+	}]);
 
 
 				return r;
@@ -2604,189 +2606,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				},
 */
 
-			initLaunchpad : function()	{
-				app.u.dump("BEGIN admin.u.initLaunchpad");
-				var $LPI = $('#launchpadInner'),
-				$LP = $('#launchpad')
-			
-			
-				$( ".launchpad_tiles" ).sortable({
-					connectWith: '.launchpad_tiles',
-					helper : 'clone', //keeps click events in dragged item from firing on drag.
-					stop: function( event, ui ) {
-						app.ext.admin.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
-						$('.tileButton').hide();
-						}
-					});
-			
-				$('li','.launchpad_tiles').each(function(){
-					var $li = $(this);
-					$li.append($("<button>").text('remove').addClass('tileButton').css({'position':'absolute','top':0,'right':0}).button({icons: {primary: "ui-icon-close"},text: false}).on('click',function(){
-						$li.empty().remove()
-						app.ext.admin.u.handleTileGroupResize(); //adjust ul's and launchpad inner div for new # of tiles
-						}).hide());
-					$li.on('mouseover',function(){
-						$('.tileButton',$li).show();
-						});
-					$li.on('mouseleave',function(){
-						$('.tileButton',$li).hide();
-						});
-					})
-				app.ext.admin.u.buildDomainTiles4Launchpad();
-				app.model.dispatchThis('immutable');
-				app.ext.admin.u.addMouseWheel2Launchpad();
-				app.ext.admin.u.handleTileGroupResize();
-				},
 
-			handleTileGroupResize : function(){
-
-				app.u.dump("BEGIN admin.u.handleTileGroupResize");
-				var $LP = $('#launchpad'),
-				$LPI = $('#launchpadInner'),
-				tileWidth = $('.tile_1x1',$LPI).first().outerWidth(true),
-				tileHeight = $('.tile_1x1',$LPI).first().outerHeight(true);
-				
-//				console.log(" -> $('body').outerHeight(): "+$('body').outerHeight());
-//				console.log(" -> window.outerHeight: "+$(window).outerHeight(true));
-//				console.log(" -> $('#mastHead').outerHeight(true): "+$('#mastHead').outerHeight(true));
-//				console.log(" ->$('#mastFoot').outerHeight(true): "+$('#mastFoot').outerHeight(true));
-//				console.log(" -> new launchpad height: "+($(window).outerHeight(true) - $('#mastHead').outerHeight(true) - $('#mastFoot').outerHeight(true) - 20));
-			//handle some sizing.
-				$LP.height(($(window).outerHeight(true) - $('#mastHead').outerHeight(true) - $('#mastFoot').outerHeight(true) - 60));  //set height of launchpad to maximize workspace. the xtra 20 is to solve a height issue that cause a window vertical scroll to appear. ### investigate when time permits.
-				$LPI.height($LP.height()); //launchpad height does NOT use outerheight so no padding/margin conflicts
-				$LPI.width('10000px'); //set high so ul's dont wrap. then readjust so no extra scrolling later.
-			
-				var rowsPerGroup = Math.floor(($LPI.height() / tileHeight));
-				$LPI.height(tileHeight * rowsPerGroup); //ensures no vertical scrolling
-			
-			//	console.log("($LPI.height() ["+$LPI.height()+"] / tileHeight ["+tileHeight+"]): "+($LPI.height() / tileHeight));
-			//	console.log("rowsPerGroup: "+rowsPerGroup);
-			//	console.log("LP.height: "+$LP.height());
-			//	console.log("LPI height: "+tileHeight * rowsPerGroup);
-			
-			
-			//resize ul to accomodate # and sizes of tiles.
-				$('ul.launchpad_tiles',$LPI).each(function(){
-					var $ul = $(this),
-			//varying tile sizes mean there could be orpans on rows. so a double-width is counted as 2.5
-			//not uber-accurate, but should solve most cases.
-					count = $('li',$ul).length + ($('.tile_2x1',$ul).length);
-			
-			//3 is the min. # of columns.
-					if(count > (3 * rowsPerGroup))	{
-						var width = Math.ceil(( count / rowsPerGroup )) * $('.tile_1x1',$LPI).first().outerWidth(true);
-						$ul.width(width);
-						}
-					else	{} //do nothing. six is the default size
-			
-					});
-				
-				$lastCol = $('.launchpad_tiles:last','#launchpadInner'); 
-				$LPI.width(($lastCol.position().left + $lastCol.outerWidth(true) + 30)); //for determining total width of all ul's + buffer.
-			//	$('body').append(" -> width: "+($lastCol.position().left + $lastCol.outerWidth(true) + 30)+"<br>");
-
-
-
-				},
-
-			addMouseWheel2Launchpad : function(){
-
-				var $LPI = $('#launchpadInner'),
-				$LP = $('#launchpad')
-				
-			//bind mousewheel event to launchpad.
-				$LP.bind('mousewheel', function(event, delta, deltaX, deltaY) {
-			//		console.log("delta:"+delta+" deltaX: "+deltaX+" deltaY: "+deltaY);
-			//		console.log("width: "+($LPI.width() - $LP.width())); //-1672
-			//		console.log($LPI.position().left);
-			
-			
-					$LP.css('overflow','hidden'); //once mousescroll is used to slide content, ditch the scroll bar. wheel and scroll don't play well together in chrome.
-					if(delta > 0)	{ //mouse wheel is going up. move the CONTENT element from right to left.
-			//			console.log(" -> going up: "+deltaY);
-						if($LPI.position().left > 0) { //already left-most. don't move it.
-							$LPI.css('left',0); //position correctly in case it's a negative #.
-							}
-						else	{
-							$LPI.css({'left':"+=20"}); //move inner div.
-							}
-						}
-					else	{
-			//			console.log(" -> going down: "+deltaY);
-			//mouse wheel is going down. move the content from left to right.
-						if((($LPI.width() - $LP.width()) * -1) > $LPI.position().left) {
-							//already right-most. no more scrolling.
-							}
-						else	{
-							$LPI.css({'left':"-=20"}); //move inner div.
-							}
-						}
-					});	
-				},
-
-/*
-obj should contain the following:
-$content
- -> a jquery object of the content. technically, it could be plain html, not a jquery object, as it's going to be appended.
- -> if the content is going to link, should contain the onclick event.
-
-optional
- -> target. one of the ul's ??? how do we decide what to put where?
- -> size: 1x1, 2x1 or 2x2
- -> bgclass: a supported color to use for the bg. alternatively, you can set your own.
-*/
-			addTileToLaunchpad : function(obj)	{
-				var $li = $("<li \/>"),
-				size = 'tile_'+ obj.size || '1x1';
-				
-				obj.bgclass = obj.bgclass || 'blueDark'
-				obj.target = obj.target || 'misc'
-				
-				$li.addClass(size);
-				$li.addClass(obj.bgclass);
-
-				obj['$content'].addClass('tile')
-				$li.append(obj['$content']);
-				$li.appendTo($('#tilegroup_'+obj.target),$('#launchpadTiles'));
-				},
-
-
-			buildDomainTiles4Launchpad : function()	{
-				
-				app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$('#globalMessaging').anymessage({'message':rd});
-						}
-					else	{
-						var domains = app.data.adminDomainList['@DOMAINS'],
-						L = domains.length;
-
-						for(var i = 0; i < L; i += 1)	{
-							app.u.dump(" -> "+i+") "+app.data.adminDomainList['@DOMAINS'][i].id);
-							var $bob = app.ext.admin.u.buildDomainTileObject(app.data.adminDomainList['@DOMAINS'][i]);
-							app.ext.admin.u.addTileToLaunchpad($bob);
-							}
-						}
-					}},'immutable'); 
-
-				},
-
-			buildDomainTileObject : function(domainArr)	{
-//show logo or, if not set, some default icon.
-//change color for active domain.
-//show buttons for 'view website', 'edit domain', 'use this domain'
-				var $div = $("<div \/>").addClass('tileDomainSelect');
-				$div.on('click.domainSelect',function(){
-					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
-					$('.tileDomainSelect.greenBG','#launchpadTiles').removeClass('greenBG');
-					$(this).addClass('greenBG');
-					})
-				$div.addClass((app.vars.domain == domainArr.id) ? 'greenBG' : '')
-				$div.data(domainArr);
-//if the domain object ever returns 'broken', use something like this: "+(app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
-				$div.append("<span class='iconFont focon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span><span class='active'><\/span>");
-				return {'$content' : $div, 'size':'1x1','bgclass':'greenLight','target':'domains'};
-				},
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
 			getDomain : function(){
@@ -2849,7 +2669,7 @@ optional
 				else if(path == '#!launchpad')	{
 					app.ext.admin.vars.tab = '';
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
-					app.ext.admin.u.initLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
+					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
 					}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
