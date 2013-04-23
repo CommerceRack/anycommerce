@@ -193,13 +193,13 @@ left them be to provide guidance later.
 				return 1;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				var parentID = _tag.parentID || '';
 				obj = obj || {};
+				obj._tag = _tag || {};
+				var parentID = obj._tag.parentID || '';
 				obj._cmd = "cartPaypalSetExpressCheckout";
 				obj.cancelURL = (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#cart?show=inline";
 				obj.returnURL =  (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis?parentID="+parentID : zGlobals.appSettings.https_app_url+"?parentID="+parentID+"&cartID="+app.vars.cartID+"#checkout?show=checkout"
 				
-				obj._tag = _tag || {};
 				obj._tag.datapointer = "cartPaypalSetExpressCheckout";
 				
 				app.model.addDispatchToQ(obj,Q || 'immutable');
