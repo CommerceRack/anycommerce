@@ -1,3 +1,5 @@
+
+
 body,html	{font-size:100%; background:#B7A58B; margin:0px; padding:0px;  font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;}
 @font-face {
   font-family: 'Anton';
@@ -147,13 +149,15 @@ and offMenu is toggle off, hiding the change button.
 .sliderM{width:948px; margin:20px auto;}
 .bannerS{ width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
 .rightB{ float:left; width:300px;box-shadow:0px 0px 9px #000;}
-    box-shadow: 1px 1px 5px 1px #222222;
+   /* box-shadow: 1px 1px 5px 1px #222222;
     height: 216px;
     margin-left: 0;
     margin-right: 20px;
     position: relative;
     text-align: center;
-    width: 216px;}
+    width: 216px;}*/
+#couponCode{ height:15px; width:124px; margin:0 -6px 0 0; padding:2px 6px;}
+#addCouponBtn{ background:none !important; border:none !important; margin:-2px 0 0 0px;}
 div#container
 	{
 		margin: 0px auto;
@@ -230,11 +234,11 @@ div#container
 				}
 				div#container div#header div#headerContent input#txtSearch
 				{
-					height: 33px;
+					height: 32px;
 					left: 470px;
 					position: absolute;
-					top: 45px;
-					width: 160px;
+					top: 46px;
+					width: 125px;
 					color:#999;
 					font-size:14px;
 					padding:0 10px;
@@ -556,11 +560,14 @@ div#container div.nav
 
 
 
+/*.boxP{display: block;
+    margin: 0 auto;
+    padding: 10px;
+    position: relative; width:100%;
+}
+.boxP:after{background:#ff0000; position:absolute;bottom: 0;content: "";left: 0;opacity: 0.7;right: 0;top: 0;z-index: -1;}
 
-
-
-
-
+*/
 /* some general classes used for styling templates. feel free to use these. It's not recommended you delete or rename them */
 
 
@@ -716,10 +723,10 @@ and override using classes or id's as needed.
 .lineItemProdlist button{ margin:0 20px 0 0;}
 
 .categoryList > li	{width:150px; height:200px;}
-#cartStuffList{margin: -10px 0 0 -10px;width: 643px;}
+#cartStuffList{margin: -10px 0 0 -10px;width: 756px;}
 #cartStuffList li{ background:#c9bca8;}
 #cartStuffList li h4{ font-size:14px;}
-.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0;} /* h4 - h6 are used in default templates for name, price, etc */
+.productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0; font-size:12px;} /* h4 - h6 are used in default templates for name, price, etc */
 .midmain{ margin:0px auto; width:948px;}
 .midmain .productList li{font-size:.8em;border: 2px solid #FFFFFF;
     box-shadow: 1px 1px 5px 1px #222222;
@@ -784,6 +791,7 @@ PRODUCT DETAIL PAGE (productTemplate)
 .RightPcol{background:#fff; padding:20px; width:180px;}
 .RightPcol h4{float:right; text-align:center;font-size:18px; padding:0 16px 0 0; font-weight:bold;}
 .RightPcol h5{float:left;text-align:center;font-size:18px; color:#999999; text-decoration:line-through;}
+.RightPcol .prodMSRP span{font-size:10px; color:#999999;}
 .RightPcol .cents{ vertical-align:super;margin: 2px 0 0;position: absolute;}
 .RightPcol .marginBottom{border-bottom:1px solid #CCCCCC; padding:0 0 15px;}
 .tabbedProductContent .prodReviewsTab	{display:block;} /* reviews tab always shows up */
@@ -800,6 +808,9 @@ PRODUCT DETAIL PAGE (productTemplate)
     color: #000 !important;
     font-weight: bold;
 }
+
+#footerSubscribe #subscribeFrm div{position:absolute; margin:0 0 0 -40px; width:260px; font-size:14px !important;}
+.ui-state-default .ui-icon { background-image: url(images/ui-icons_222222_256x240.png) !important;}
 .CreatAccount{}
 .CreatAccount #gotAccount1
 {
@@ -1081,7 +1092,7 @@ SEARCH RESULTS PAGE
 
 .resultsHeader	{position:relative; padding:3px 6px;}
 .resultsMenuContainer	{position:absolute; top:1px; left:3px;}
-.resultsMenuContainer .resultsMenu	{margin:3px 12px 0 0px;} /* used for sorting and pagination menus */
+.resultsMenuContainer .resultsMenu	{margin:615px 4px 24px 86px; position:absolute; width:100px;} /* used for sorting and pagination menus */
 .resultsMenuContainer ul.ui-menu ul	{z-index:10000; width:150px;}
 
 .resultsHeader .nextPageButton, .resultsHeader .prevPageButton	{float:right;}
@@ -1404,7 +1415,8 @@ div.catCarousel h2
 
 /*.productList > li button{display:none;}*/
 #resultsProductListContainer{}
-#resultsProductListContainer li{width:216px;}
+#resultsProductListContainer li{width:216px; min-height:225px;}
+#resultsProductListContainer h6{ margin:0 0 15px 20px;}
 
 .loginShow {display:none;}
 
@@ -1416,3 +1428,16 @@ div.catCarousel h2
 .fl{float:left;font-size: 12px;padding: 8px 50px 0 0;}
 
 .ui-widget-overlay ui-front{opacity:0;}
+
+.prodlistRelatedContainer .prodViewerAddToCartForm button{ display:none;}
+.prodlistRelatedContainer h5{ font-size:12px; width:210px !important; min-height:auto !important;}
+.prodlistRelatedContainer .price{display:none;}
+
+.ui-menu .ui-menu-item a{display: inline;
+    margin: 0;
+    padding: 0;
+    width: 100%;}
+	.ui-menu .ui-menu-item{display:inline; width:100%;}
+	
+.ui-button ui-widget ui-state-default ui-corner-all ui-button-icon-only nextPageButton{background:url(images/next-arrow.gif);}
+..ui-icon, .ui-widget-content .ui-icon{background:url(images/next-arrow.gif);}

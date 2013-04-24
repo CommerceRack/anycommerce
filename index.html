@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130417055520",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130423101720",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -48,12 +48,20 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <script type="text/javascript" src="jquery_actions.js"></script>
 <script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
+<script type="text/javascript" src="site/script/jquery.flippy.min.js"></script>
+<script type="text/javascript" src="site/script/jScrollPane.js"></script>
+<script type="text/javascript" src="site/script/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="site/script/modernizr-2.6.2-custom.js"></script>
+
 
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
 </script>
 
-
+<style type="text/css">
+            body {font-family:Arial, Helvetica, sans-serif; font-size:12px;}
+            .selCont {clear:both; margin-bottom:20px; padding-bottom:40px; float:left; border-bottom:dotted 1px #000; width:600px;}
+        </style>
 </head>
 
 <body>
@@ -301,7 +309,7 @@ Welcome,
 									</ul>
 									<ul>
 										<li>Price</li>
-										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $10</a></li>
+										<li><a href="#" onClick="return showContent('sort'{"price" : {"order" : "asc", "mode" : "avg"}});">Under $10</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $20</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $50</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">Under $100</a></li>
@@ -690,8 +698,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
       <div class="ad-nav">
         <div class="ad-thumbs">
           <ul class="ad-thumb-list">
-          <li id="pl_0e014eefd4c3_EF01124008RF" class="" onMouseOut="$('.quickView').hide();" onMouseOver="$('.quickView',$(this)).show();" data-templateid="productListTemplate" data-id="pl_0e014eefd4c3_EF01124008RF" data-pid="EF01124008-RF"></li>
-            <li>
+                 <li>
               <a href="images/1.jpg">
                 <img src="images/thumbs/t1.jpg" class="image0">
               </a>
@@ -1009,7 +1016,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 
 
-<ul>
+<ul class="content">
 <!--
 Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
 the loadingBG class is removed (must be that classname) when the template is translated.
@@ -1017,6 +1024,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 
 SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
 -->
+
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
 	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
 		<div class='prodThumbContainer' style="height:120px; text-align:center; margin-top:2px;">
@@ -1583,7 +1591,7 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class="fieldM"><span class="field">Country</span> <select name="Country" class="textfcountry"><option>United States of America</option></select></div>
 
-<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='ar_phone' type='text' size='12' placeholder='Phone Number' class='textfphone'/> </div>
+<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='ar_phone' type='text' size='12' placeholder='Phone Number' class='textfphone' required='required'/> </div>
 <!--
 <div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='confirm_email' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'/> </div>
 -->
@@ -1704,7 +1712,7 @@ subscribeListsArticle is used for authenticated buyers
 	<div class='previewListContainer'>
     <ul class="sortby">
                                       <h2>Sort By Price</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS:'price',mode : 'avg'});">$2,500 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
@@ -1726,105 +1734,20 @@ subscribeListsArticle is used for authenticated buyers
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
 										
                                         <div class="clearfix"></div>
-                                        <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif"/></a></li>   .
+                   <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif" style="margin:6px 10px 54px 0px;"/></a></li>
                                         
-                                                                            
-                                    <!--<script type="text/javascript">
-                                    $(document).ready(function(){
-
-	//how much items per page to show
-	var show_per_page = 5;
-	//getting the amount of elements inside content div
-	var number_of_items = $('#content').children().size();
-	//calculate the number of pages we are going to have
-	var number_of_pages = Math.ceil(number_of_items/show_per_page);
-
-	//set the value of our hidden input fields
-	$('#current_page').val(0);
-	$('#show_per_page').val(show_per_page);
-
-	//now when we got all we need for the navigation let's make it '
-
-	/*
-	what are we going to have in the navigation?
-		- link to previous page
-		- links to specific pages
-		- link to next page
-	*/
-	var navigation_html = '<a class="ui-button-text" href="javascript:previous();">Prev</a>';
-	var current_link = 0;
-	while(number_of_pages > current_link){
-		navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link +')" longdesc="' + current_link +'">'+ (current_link + 1) +'</a>';
-		current_link++;
-	}
-	navigation_html += '<a class="ui-button-text" href="javascript:next();">Next</a>';
-
-	$('#page_navigation').html(navigation_html);
-
-	//add active_page class to the first page link
-	$('#page_navigation .page_link:first').addClass('active_page');
-
-	//hide all the elements inside content div
-	$('#content').children().css('display', 'none');
-
-	//and show the first n (show_per_page) elements
-	$('#content').children().slice(0, show_per_page).css('display', 'block');
-
-});
-
-function previous(){
-
-	new_page = parseInt($('#current_page').val()) - 1;
-	//if there is an item before the current active link run the function
-	if($('.active_page').prev('.page_link').length==true){
-		go_to_page(new_page);
-	}
-
-}
-
-function next(){
-	new_page = parseInt($('#current_page').val()) + 1;
-	//if there is an item after the current active link run the function
-	if($('.active_page').next('.page_link').length==true){
-		go_to_page(new_page);
-	}
-
-}
-function go_to_page(page_num){
-	//get the number of items shown per page
-	var show_per_page = parseInt($('#show_per_page').val());
-
-	//get the element number where to start the slice from
-	start_from = page_num * show_per_page;
-
-	//get the element number where to end the slice
-	end_on = start_from + show_per_page;
-
-	//hide all children elements of content div, get specific items and show them
-	$('#content').children().css('display', 'none').slice(start_from, end_on).css('display', 'block');
-
-	/*get the page link that has longdesc attribute of the current page and add active_page class to it
-	and remove that class from previously active page link*/
-	$('.page_link[longdesc=' + page_num +']').addClass('active_page').siblings('.active_page').removeClass('active_page');
-
-	//update the current page input field
-	$('#current_page').val(page_num);
-}
-
-                                    </script>-->   
                                     
-                                    <!--<input type='hidden' id='current_page' />  
-<input type='hidden' id='show_per_page' />  
-  
-<!-- Content div. The child elements will be used for paginating(they don't have to be all the same,  
-    you can use divs, paragraphs, spans, or whatever you like mixed together). '-->  
-<div id='content'>
 
 
-</div>  
-  
-<!-- An empty div which will be populated using jQuery   
-<div id='page_navigation'></div>  -->
+
+
+<!--<script>
+			$(document).ready(function(){
+				$('li:odd, .content > *:odd').css('background-color','#FFD9BF');
+			});
+		</script>			
+-->
+
                                                              
   </ul>
   
@@ -1923,8 +1846,14 @@ So the cart template should contain these two elements and the extension should 
 <table class='cartContainer'>
 <tr>
 	<td class='cartStuffContainer'>
-	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'>
-    </ul>
+   
+	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist' >
+    
+     </ul>
+  
+		
+        
+    
     
    <div style="border-top:#897c68 solid 1px; margin:10px 0 0;">
    <div class="right">
@@ -2031,7 +1960,18 @@ So the cart template should contain these two elements and the extension should 
 </form>
 </div><!-- /cartTemplate -->
 
+<script type="text/javascript">
 
+/*
+function updateCartQty(){
+
+a=document.getElementById('my-dropdown').value;
+alert(a);
+document.getElementById('qtyval').innerHTML=a;
+}
+*/
+
+</script>
 
 
 
@@ -2047,17 +1987,20 @@ So the cart template should contain these two elements and the extension should 
 
 		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
 
-		<h4 data-bind='var: product(prod_name); format:text; '></h4>
+		<h4 data-bind='var: product(prod_name); format:text; ' style="width:450px; min-height:112px; float:left;"></h4>
 
-		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+		<!--<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>-->
 
 		<div>
-		qty: <select type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
+       <!-- <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="change(this.value);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>-->
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
-		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
-
+        <span id='qtyval' class="qtyval" style="font-size:13px; font-weight:bold;">1</span>
+        <span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' style="font-size:13px; font-weight:bold;"></span><br><br>
+<select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+   <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
+		<!--<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+-->
 		</div>
 
 		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>

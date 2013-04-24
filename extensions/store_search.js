@@ -144,11 +144,11 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 							delete _tag.status; //the status would already be 'requesting' or 'completed', which means this request wouldn't run.
 					
 							var $header = app.ext.store_search.u.buildResultsHeader($list,_rtag.datapointer), //# of results and keyword display.
-//							$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
+							$sortMenu = app.ext.store_search.u.buildSortMenu($list,_rtag), //sorting options as ul
 							$pageMenu = app.ext.store_search.u.buildPagination($list,_tag), //pagination as ul
 							$multipage = app.ext.store_search.u.buildPaginationButtons($list,_tag), //next/prev buttons
 							$menuContainer = $("<div \/>").addClass('resultsMenuContainer'), //used to hold menus. imp for abs. positioning.
-							$controlsContainer = $("<div \/>").addClass('ui-widget ui-widget-content resultsHeader clearfix ui-corner-bottom'); //used to hold menus and buttons.
+							$controlsContainer = $("<div \/>").addClass(''); //used to hold menus and buttons.
 							
 //							$menuContainer.append($sortMenu); //sorting not working. commented out for now. !!!
 							$header.prependTo($parent);
@@ -163,7 +163,7 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 								$controlsContainer.prependTo($parent);
 //add to DOM prior to running menu. helps it to not barf.
 								$pageMenu.menu();
-//								$sortMenu.menu();
+								$sortMenu.menu();
 								}
 	
 							
@@ -199,12 +199,12 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				EQ = $list.data('elastic-query'); //Elastic Query
 				
 				if(datapointer && $list && EQ)	{
-					$header = $("<div \/>").addClass('ui-widget ui-widget-header resultsHeader clearfix ui-corner-top hideInMinimalMode');
+					$header = $("<div \/>").addClass('');
 					if(EQ.query && EQ.query.query_string && EQ.query.query_string.query){
-						$header.text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
+						//$header.text(app.data[datapointer].hits.total+" Results for: "+EQ.query.query_string.query);
 						}
 					else {
-						$header.text(app.data[datapointer].hits.total+" Results for your query");
+						//$header.text(app.data[datapointer].hits.total+" Results for your query");
 						}
 					}
 				else if(!EQ)	{
@@ -236,14 +236,14 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 
 app.u.dump(" -> pageInFocus: "+pageInFocus);
 
-					$controls = $("<div \/>").addClass('');
+					$controls = $("<div style='position:absolute; margin-top:650px;' \/>").addClass('');
 
 //SANITY -> the classes on these buttons are used in quickstart. 					
-					var $prevPageBtn = $("<button \/>").text("Previous Page").button({icons: {primary: "ui-icon-circle-triangle-w"},text: false}).addClass('prevPageButton').on('click.multipagePrev',function(event){
+					var $prevPageBtn = $("<div  style='float:left;'\/>").text("Previous Page").button({icons: {primary: ""},text: false}).addClass('').on('click.multipagePrev',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus - 1),_rtag);
 						});
-					var $nextPageBtn = $("<button \/>").text("Next Page").button({icons: {primary: "ui-icon-circle-triangle-e"},text: false}).addClass('nextPageButton').on('click.multipageNext',function(event){
+					var $nextPageBtn = $("<div style='float:right; right:-118px; position:relative;') no-repeat scroll 0 0 transparent' \/>").text("").button({icons: {primary: ""},text: false}).addClass('').on('click.multipageNext',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
 						});
@@ -307,16 +307,16 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 						
 						if(totalPageCount <= 1)	{
 							//if there is only 1 page or something went wrong, don't show pagination.
-//							app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);
+						app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);
 							}
 						else	{
-							$pagination = $("<ul \/>").addClass('pagination resultsMenu');
-							$pagination.addClass('hideInMinimalMode').append($("<li \/>").html("<a href='#'>Page "+pageInFocus+" of "+totalPageCount+"<\/a>"));
-							var $pages = $("<ul \/>");
+							$pagination = $("<div style='display:inline;' \/>").addClass('pagination resultsMenu');
+							$pagination.addClass('hideInMinimalMode').append($("<div \/>").html(""));
+							var $pages = $("<div \/>");
 							for(var i = 1; i <= totalPageCount; i+= 1)	{
-								$("<li \/>").html("<a href='#' data-page='"+i+"'>Page "+i+"<\/a>").appendTo($pages);
+								$("<div  style='display:inline;'\/>").html("<a  style='display:inline;' href='#' data-page='"+i+"'>"+i+"<\/a>").appendTo($pages);
 								}
-							$("li:first",$pagination).append($pages);
+							$("div:first",$pagination).append($pages);
 							$("a",$pages).each(function(){
 								$(this).on('click',function(event){
 									event.preventDefault();

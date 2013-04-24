@@ -386,7 +386,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 					else	{
 						$modal = $("<div \/>").attr({"id":"modalCart","title":"Your Shopping Cart"}).appendTo('body');
 						$modal.append("<div id='cartMessaging' class='appMessaging'><\/div><div id='modalCartContents'><\/div>");
-						$modal.dialog({modal: true,width:'960px',height:'auto'});  //browser doesn't like percentage for height
+						$modal.dialog({modal: true,width:'80%',height:$(window).height() - 200});  //browser doesn't like percentage for height
 						}
 
 					if(P.showLoading === true)	{
@@ -394,6 +394,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						}
 					else	{
 						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
+						$('#modalCartContents',$modal).append("<span class='qtyval' \/>");
 						}
 
 					}
@@ -438,6 +439,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 				$('#modalCartContents').replaceWith(app.renderFunctions.createTemplateInstance('cartTemplate','modalCartContents'));
 				app.calls.refreshCart.init({'callback':'translateTemplate','parentID':'modalCartContents'},'immutable');
 //don't set this up with a getShipping because we don't always need it.  Add it to parent functions when needed.
+
 				},
 /*
 running showStuff will display a list of the items that are in the cart.
@@ -510,12 +512,20 @@ allows us to check and make sure no request is currently in progress.
 */
 			updateCartQty : function($input,tagObj)	{
 				
+				
+				
 				var stid = $input.attr('data-stid');
 				var qty = $input.val();
 				
 				if(stid && qty && !$input.hasClass('disabled'))	{
-					$input.attr('disabled','disabled').addClass('disabled').addClass('loadingBG');
+					a=document.getElementById('my-dropdown').value;
+					document.getElementById('qtyval').innerHTML=a;
+					$var1=$("<span id='qtyval' class='qtyval'\/>");
+					
+            		$input.attr('disabled','disabled').addClass('disabled').addClass('loadingBG');
+					//$input.attr('.qtyInput numberInput').addclass('qtyval');
 					app.u.dump('got stid: '+stid);
+					
 //some defaulting. a bare minimum callback needs to occur. if there's a business case for doing absolutely nothing
 //then create a callback that does nothing. IMHO, you should always let the user know the item was modified.
 //you can do something more elaborate as well, just by passing a different callback.
@@ -523,24 +533,30 @@ allows us to check and make sure no request is currently in progress.
 					tagObj.callback = tagObj.callback ? tagObj.callback : 'updateCartLineItem';
 					tagObj.extension = tagObj.extension ? tagObj.extension : 'store_cart';
 					tagObj.parentID = 'cartViewer_'+app.u.makeSafeHTMLId(stid);
-/*
+					
+/*     
 the request for quantity change needs to go first so that the request for the cart reflects the changes.
 the dom update for the lineitem needs to happen last so that the cart changes are reflected, so a ping is used.
 */
 					app.ext.store_cart.calls.cartItemUpdate.init(stid,qty);
+					
 					this.updateCartSummary();
+					
 //lineitem template only gets updated if qty > 1 (less than 1 would be a 'remove').
 					if(qty >= 1)	{
+						
 						app.calls.ping.init(tagObj,'immutable');
 						}
 					else	{
 						$('#cartViewer_'+app.u.makeSafeHTMLId(stid)).empty().remove();
-						}
+					}
 					app.model.dispatchThis('immutable');
+					
 					}
 				else	{
 					app.u.dump(" -> a stid ["+stid+"] and a quantity ["+qty+"] are required to do an update cart.");
 					}
+					
 				},
 
 /*
