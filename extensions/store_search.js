@@ -243,7 +243,7 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus - 1),_rtag);
 						});
-					var $nextPageBtn = $("<div style='float:right; right:-118px; position:relative;') no-repeat scroll 0 0 transparent' \/>").text("").button({icons: {primary: ""},text: false}).addClass('').on('click.multipageNext',function(event){
+					var $nextPageBtn = $("<div style='float:right; right:-118px; position:relative;background-image:next-arrow.gif;' \/>").text("").button({icons: {primary: ""},text: false}).addClass('').on('click.multipageNext',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
 						});
