@@ -54,7 +54,8 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			help : "", //webdoc ID.
 			navtabs : {}, //array of objects. link, name and selected (boolean)
 			title : {},
-			allowed : ['ts1','ro1'],
+			requireDomain : false,
+			rolesAllowed : ['ts1','ro1'],
 			tab : '', //string. can be blank. if blank, uses tab in focus. use 'home' for no tab/turn all tabs off.
 			exec : function(){}  //executes the code to render the page.
 			},

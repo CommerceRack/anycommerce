@@ -4,10 +4,14 @@
 	<ul class='launchpad_tiles' id='tilegroup0'>
 	
 		<li class='tile_2x2 blue6' id='tileRecentNews'>
-		<div class='recentNewsTileContainer' data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;'></div>
+		<marquee direction="up" class='recentNewsTileContainer'>
+		<div data-bind='var:news(contents); format:processList; loadsTemplate:recentNewsItemTemplate;'></div>
+		</marquee>
 		</li>
 		
-		<li class='tile_1x1 blue4' id='tileJoinCommunity'>Join the Community</li>
+		<li class='tile_1x1 blue4' id='tileJoinCommunity'>
+<table class='fullWidth'><thead><th></th><th>Count</th><th>Sales</th><th>Units</th></thead><tbody id='tileReportTbody'></tbody></table><p>These reports are for all domains since midnight.</p>
+		</li>
 		
 
 	</ul>
@@ -18,11 +22,6 @@
 		<li class='tile_1x1 blue1'><span class='focon-bars icon'></span><span class='tilename'>Sales today: $2.95</span></li>
 		<li class='tile_1x1 blue2'><span class='focon-stats icon'></span><span class='tilename'>Sales trend: looking up</span></li>
 		<li class='tile_1x1 blue3'><span class='focon-gift icon'></span><span class='tilename'>Expedited orders in recent: 9</span></li>
-		<li class='tile_1x1 blue4'><span class='focon-trophy icon'></span><span class='tilename'>Goblet of Fire</span></li>
-		<li class='tile_1x1 blue5'><span class='focon-unlocked icon'></span><span class='tilename'>Private Files</span></li>
-		<li class='tile_1x1 blue6'><span class='focon-amazon icon'></span><span class='tilename'>24 Amazon Sales Today</span></li>
-		<li class='tile_1x1 blue7'><span class='focon-pinterest icon'></span><span class='tilename'>2 Pinterest Sales Today</span></li>
-		<li class='tile_1x1 blue8'><span class='focon-pie icon'></span><span class='tilename'>Cherry or Apple</span></li>
 	</ul>
 
 	
@@ -35,3 +34,11 @@
 	
 	</div>
 </section>
+
+<!--
+groups = {
+//group 0 is ours.
+	'group1' : [{'id':'admin.tile.domain|sporks.com'},{'id':'admin.tile.domain|sporks.zoovy.com',data : {'id':'sporks.zoovy.com'}}]
+	'group2' : []
+	}
+-->

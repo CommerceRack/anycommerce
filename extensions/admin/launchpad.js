@@ -107,6 +107,15 @@ This is all for drag n drop and adding 'close' buttons.
 					});
 */
 app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'translateSelector','extension':'admin','selector':'#tileRecentNews'},'mutable');
+app.ext.admin.calls.appResource.init('quickstats/OGMS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //total sales
+app.ext.admin.calls.appResource.init('quickstats/OWEB.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //web sales
+app.ext.admin.calls.appResource.init('quickstats/OGRT.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //return customer
+app.ext.admin.calls.appResource.init('quickstats/OEXP.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //expedited
+app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
+app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay auction
+app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
+app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'tileReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 
 				app.ext.admin_launchpad.u.buildDomainTiles4Launchpad();
 				app.model.dispatchThis('immutable');
@@ -199,7 +208,7 @@ optional
 					var $ul = $(this),
 			//varying tile sizes mean there could be orpans on rows. so a double-width is counted as 2.3
 			//not uber-accurate, but should solve most cases.
-					count = $('li',$ul).length + ($('.tile_2x1',$ul).length * 1.5);
+					count = $('li',$ul).length + ($('.tile_2x1',$ul).length * 1.5) + ($('.tile_2x2',$ul).length * 2); 
 			
 					if(count === 0)	{
 						$ul.hide();
