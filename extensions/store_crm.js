@@ -457,7 +457,7 @@ else{
 					$('#globalMessaging').anymessage({'message':'In store_crm.u.handleSubscribe, $form not passed.','gMessage':true});
 					}
 				},
-			
+
 //vars needs addressID AND addressType (bill or ship)
 			showAddressEditModal : function(vars,onSuccessCallback)	{
 				var r = false; //what is returned. true if editor is displayed, false if an error occured.

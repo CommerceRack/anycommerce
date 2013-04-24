@@ -1,11 +1,13 @@
 
 #launchpadContent	{ width:100%; padding:0;}
 
-#launchpad {width:100%; overflow:hidden; background:#600; height:600px; padding-top:12px;}
+#launchpad {width:100%; overflow:hidden; height:600px; padding-top:12px;}
 #launchpad:hover	{overflow:auto;}
 #launchpadInner	{position:relative; left:0; width:10000px; }
 
 .launchpad_tiles { list-style-type: none; margin: 0 24px; padding: 0; width: 500px; float:left; }
+
+
 .launchpad_tiles li {
 	margin: 6px; padding: 0px; float: left; 
 	overflow:hidden;
@@ -19,7 +21,7 @@
 	border-radius: 25px 0px 25px 0px; 
 	}
 
-.launchpad_tiles li.tile_1x1	{width: 150px; height: 150px;}
+.launchpad_tiles li.tile_1x1	{width: 150px; height: 150px; border:1px solid #d4d4d4;}
 .launchpad_tiles li.tile_2x1	{width:312px; height:150px;}
 
 .launchpad_tiles li .tilename {position:absolute; bottom:6px; left:6px;}
@@ -30,26 +32,26 @@
 
 .launchpad_tiles span.icon	{font-size:5em; line-height:2em;}
 
-.launchpad_tiles li, .launchpad_tiles li a {color:#ffffff;}
-.launchpad_tiles li.blue {background-color: #0a59c1;}
-.launchpad_tiles li.blueLight {background-color: #4888f0;}
-.launchpad_tiles li.blueDark {background-color: #04408f;}
-.launchpad_tiles li.green, .greenBG {background-color: #00a300;}
-.launchpad_tiles li.greenLight {background-color: #99b433;}
-.launchpad_tiles li.greenDark {background-color: #1e7145;}
-.launchpad_tiles li.red {background-color: #ba1d48;}
-.launchpad_tiles li.redLight {background-color: #fe5252;}
-.launchpad_tiles li.yellow {background-color: #ffc40d;}
-.launchpad_tiles li.orange {background-color: #e3a21a;}
-.launchpad_tiles li.orangeDark {background-color: #db552d;}
-.launchpad_tiles li.pink {background-color: #9f00a7;}
-.launchpad_tiles li.pinkDark {background-color: #dc056f;}
-.launchpad_tiles li.purple {background-color: #a100a8;}
+.launchpad_tiles li, .launchpad_tiles li a {color:#666666;}
+.launchpad_tiles li.blue {background-color: #9fadba;}
+.launchpad_tiles li.blueLight {background-color: #aca0a0;}
+.launchpad_tiles li.blueDark {background-color: #8f98bf;}
+.launchpad_tiles li.green  {background-color: #b1c3d7;}
+.launchpad_tiles li.greenLight {background-color: #d0b29a;}
+.launchpad_tiles li.greenDark {background-color: #bbad93;}
+.launchpad_tiles li.red {background-color: #d6c29f;}
+.launchpad_tiles li.redLight {background-color: #e1d3a2;}
+.launchpad_tiles li.yellow {background-color: #c5c899;}
+.launchpad_tiles li.orange {background-color: #faffe1;}
+.launchpad_tiles li.orangeDark {background-color: #fdefd2;}
+.launchpad_tiles li.pink {background-color: #f5e4dd;}
+.launchpad_tiles li.pinkDark {background-color: #dbe8f9;}
+.launchpad_tiles li.purple {background-color: #d9daec;}
 .launchpad_tiles li.white {background-color: #ffffff;}
-.launchpad_tiles li.grayLight {background-color: #cccccc;}
-.launchpad_tiles li.grayDark {background-color: #333333;}
-.launchpad_tiles li.magenta {background-color: #c0387f;}
-.launchpad_tiles li.teal {background-color: #009bad;}
+.launchpad_tiles li.grayLight {background-color: #efefef;}
+.launchpad_tiles li.grayDark {background-color: #cccccc;}
+.launchpad_tiles li.magenta {background-color: #d8e4d0;}
+.launchpad_tiles li.teal {background-color: #b1c3d7;}
 
 .launchpad_tiles li.white, 
 .launchpad_tiles li.grayLight, 

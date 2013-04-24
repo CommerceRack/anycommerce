@@ -117,7 +117,33 @@ var admin_launchpad = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			
+	
+
+/*
+obj should contain the following:
+$content
+ -> a jquery object of the content. technically, it could be plain html, not a jquery object, as it's going to be appended.
+ -> if the content is going to link, should contain the onclick event.
+
+optional
+ -> target. one of the ul's ??? how do we decide what to put where?
+ -> size: 1x1, 2x1 or 2x2
+ -> bgclass: a supported color to use for the bg. alternatively, you can set your own.
+*/
+			addTileToLaunchpad : function(obj)	{
+				var $li = $("<li \/>"),
+				size = 'tile_'+ obj.size || '1x1';
+				
+				obj.bgclass = obj.bgclass || 'blueDark'
+				obj.target = obj.target || 'misc'
+				
+				$li.addClass(size);
+				$li.addClass(obj.bgclass);
+
+				obj['$content'].addClass('tile')
+				$li.append(obj['$content']);
+				$li.appendTo($('#tilegroup_'+obj.target),$('#launchpadTiles'));
+				},	
 
 			handleTileGroupResize : function(){
 
@@ -205,36 +231,11 @@ var admin_launchpad = function() {
 					});	
 				},
 
-/*
-obj should contain the following:
-$content
- -> a jquery object of the content. technically, it could be plain html, not a jquery object, as it's going to be appended.
- -> if the content is going to link, should contain the onclick event.
-
-optional
- -> target. one of the ul's ??? how do we decide what to put where?
- -> size: 1x1, 2x1 or 2x2
- -> bgclass: a supported color to use for the bg. alternatively, you can set your own.
-*/
-			addTileToLaunchpad : function(obj)	{
-				var $li = $("<li \/>"),
-				size = 'tile_'+ obj.size || '1x1';
-				
-				obj.bgclass = obj.bgclass || 'blueDark'
-				obj.target = obj.target || 'misc'
-				
-				$li.addClass(size);
-				$li.addClass(obj.bgclass);
-
-				obj['$content'].addClass('tile')
-				$li.append(obj['$content']);
-				$li.appendTo($('#tilegroup_'+obj.target),$('#launchpadTiles'));
-				},
 
 
 			buildDomainTiles4Launchpad : function()	{
 				
-				app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+				var r = app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
@@ -246,7 +247,8 @@ optional
 							app.ext.admin_launchpad.u.addTileToLaunchpad(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]));
 							}
 						}
-					}},'immutable'); 
+					}},'immutable');
+				return r; // will be 1 or 0 based on whether or not a dispatch is necessary for domain list.
 
 				}
 	
