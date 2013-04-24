@@ -25,6 +25,18 @@ var admin_launchpad = function() {
 	var r = {
 
 
+
+	vars : {
+
+		tiles : [
+			
+			{'exec' : app.ext.admin_launchpad.t.domain, data : {'id':'www.ylh.zoovy.com'}},
+			{'exec' : app.ext.admin_launchpad.t.domain, data : {'id':'www.domain.com'}},
+			{'exec' : app.ext.admin_launchpad.t.admin}		
+			] //The list of tiles added through the rq will appear here.
+		
+		},
+
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -100,7 +112,7 @@ var admin_launchpad = function() {
 				var $div = $("<div \/>").addClass('tileDomainSelect');
 				$div.on('click.domainSelect',function(){
 					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
-					$('.tileDomainSelect.greenBG','#launchpadTiles').removeClass('greenBG');
+					$('.tileDomainSelect','#launchpadTiles').removeClass('greenBG');
 					$(this).addClass('greenBG');
 					})
 				$div.data(domainArr);
@@ -230,8 +242,6 @@ optional
 						}
 					});	
 				},
-
-
 
 			buildDomainTiles4Launchpad : function()	{
 				
