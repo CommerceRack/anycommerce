@@ -369,20 +369,20 @@
       );
     },
     initNextAndPrev: function() {
-      this.next_link = $('<div class="ad-next"><div class="ad-next-image"></div></div>');
-      this.prev_link = $('<div class="ad-prev"><div class="ad-prev-image"></div></div>');
+      this.next_link = $('<div class="ad-next"><div class="ad-next-image" style="display:block; opacity:1;"></div></div>');
+      this.prev_link = $('<div class="ad-prev"><div class="ad-prev-image" style="display:block; opacity:1;"></div></div>');
       this.image_wrapper.append(this.next_link);
       this.image_wrapper.append(this.prev_link);
       var context = this;
       this.prev_link.add(this.next_link).mouseover(
         function(e) {
           // IE 6 hides the wrapper div, so we have to set it's width
-          $(this).css('height', context.image_wrapper_height);
-          $(this).find('div').show();
+         // $(this).css('height', context.image_wrapper_height);
+          //$(this).find('div').show();
         }
       ).mouseout(
         function(e) {
-          $(this).find('div').hide();
+          //$(this).find('div').hide();
         }
       ).click(
         function() {

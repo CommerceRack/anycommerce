@@ -29,33 +29,40 @@
       position: absolute;
       right: 0;
       top: 0;
-      width: 25%;
-      height: 100%;
+      width: 10%;
+      height: 19%;
       cursor: pointer;
       display: block;
       z-index: 100;
+	  margin-top:270px;
+	  background:#000;
+	  opacity:.8;
+	  
     }
     .ad-gallery .ad-image-wrapper .ad-prev {
       position: absolute;
       left: 0;
       top: 0;
-      width: 25%;
-      height: 100%;
+      width: 10%;
+      height: 19%;
       cursor: pointer;
       display: block;
       z-index: 100;
+	  margin-top:271px;
+	  background:#000;
+	  opacity:0.8;
     }
     .ad-gallery .ad-image-wrapper .ad-prev, .ad-gallery .ad-image-wrapper .ad-next {
       /* Or else IE will hide it */
      /* background: url(non-existing.jpg)\9*/
     }
       .ad-gallery .ad-image-wrapper .ad-prev .ad-prev-image, .ad-gallery .ad-image-wrapper .ad-next .ad-next-image {
-        background: url(../images/prv-arrow.png)no-repeat;
+        background: url(../images/prv-arrow.png);
         width: 30px;
         height: 30px;
         display: none;
         position: absolute;
-        top: 73%;
+        top: 20%;
         left: 0;
         z-index: 101;
       }
