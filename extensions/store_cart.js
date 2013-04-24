@@ -375,6 +375,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 //				app.u.dump("BEGIN store_cart.u.showCartInModal"); app.u.dump(P);
 				if(typeof P == 'object' && (P.templateID || P.showLoading === true)){
 					var $modal = $('#modalCart');
+					//$input.attr('modalCart').addClass('tabContent');
 //the modal opens as quick as possible so users know something is happening.
 //open if it's been opened before so old data is not displayed. placeholder content (including a loading graphic, if set) will be populated pretty quick.
 //the cart messaging is OUTSIDE the template. That way if the template is re-rendered, existing messaging is not lost.
@@ -394,8 +395,7 @@ either templateID needs to be set OR showloading must be true. TemplateID will t
 						}
 					else	{
 						$('#modalCartContents',$modal).append(app.renderFunctions.transmogrify({},P.templateID,app.data['cartDetail']));
-						$('#modalCartContents',$modal).append("<span class='qtyval' \/>");
-						}
+												}
 
 					}
 				else	{

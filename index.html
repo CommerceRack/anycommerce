@@ -1093,7 +1093,8 @@ this will likely become more flexible in the future. ###
 
 </div>
 
-	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
+
+	 <div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
 
 <div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='50' height='50' /></div>
 
@@ -1848,7 +1849,9 @@ So the cart template should contain these two elements and the extension should 
 	<td class='cartStuffContainer'>
    
 	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist' >
-    
+    <div class='tabContent' data-anytab-content='prodDesc'>
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
      </ul>
   
 		
@@ -1995,8 +1998,11 @@ document.getElementById('qtyval').innerHTML=a;
        <!-- <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="change(this.value);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>-->
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-        <span id='qtyval' class="qtyval" style="font-size:13px; font-weight:bold;">1</span>
+        <span id='qtyval' class="qtyval" style="font-size:13px; color:#990000; font-weight:bold;">1</span>
         <span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' style="font-size:13px; font-weight:bold;"></span><br><br>
+        
+        <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
+<br/><br/>
 <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 		<!--<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>

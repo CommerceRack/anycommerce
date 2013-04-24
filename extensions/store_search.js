@@ -226,9 +226,9 @@ P.query = { 'and':{ 'filters':[ {'term':{'profile':'E31'}},{'term':{'tags':'IS_S
 				
 				var $controls,
 				EQ = $list.data('elastic-query'); //Elastic Query
-//				app.u.dump(" -> EQ: "); app.u.dump(EQ);
+				app.u.dump(" -> EQ: "); app.u.dump(EQ);
 				if($list && EQ && _rtag && _rtag.datapointer)	{
-//					app.u.dump("EQ: "); app.u.dump(EQ);
+					app.u.dump("EQ: "); app.u.dump(EQ);
 					var data = app.data[_rtag.datapointer], //shortcut
 					from = EQ.from || 0,
 					pageInFocus = $list.data('page-in-focus') || 1, //start at 1, not zero, so page 1 = 1
@@ -239,11 +239,11 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 					$controls = $("<div style='position:absolute; margin-top:650px;' \/>").addClass('');
 
 //SANITY -> the classes on these buttons are used in quickstart. 					
-					var $prevPageBtn = $("<div  style='float:left;'\/>").text("Previous Page").button({icons: {primary: ""},text: false}).addClass('').on('click.multipagePrev',function(event){
+					var $prevPageBtn = $("<button  style='margin-left:-10px; margin-top:-60px;'\/>").text("").button({icons: {primary: ""},text: false}).addClass('prevPageButton').on('click.multipagePrev',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus - 1),_rtag);
 						});
-					var $nextPageBtn = $("<div style='float:right; right:-118px; position:relative;background-image:next-arrow.gif;' \/>").text("").button({icons: {primary: ""},text: false}).addClass('').on('click.multipageNext',function(event){
+					var $nextPageBtn = $("<button style='right: -203px; margin-top:-60px;' \/>").text("").button({icons: {primary: ""},text: false}).addClass('nextPageButton').on('click.multipageNext',function(event){
 						event.preventDefault();
 						app.ext.store_search.u.changePage($list,(pageInFocus + 1),_rtag);
 						});
@@ -276,12 +276,12 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 			changePage : function($list,newPage,_tag)	{
 				if($list && newPage)	{
 					var EQ = $list.data('elastic-query'); //Elastic Query
-//					app.u.dump(" -> newPage: " + newPage);
+					app.u.dump(" -> newPage: " + newPage);
 					if(EQ)	{
 						var query = EQ;
 						app.u.dump("EQ:");
 						app.u.dump(EQ);
-						//query.size = EQ.size; //use original size, not what's returned in buildSimple...
+						query.size = EQ.size; //use original size, not what's returned in buildSimple...
 						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						app.ext.store_search.u.updateDataOnListElement($list,query,newPage);
 						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
@@ -304,7 +304,7 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 						var pageInFocus = $list.data('page-in-focus') || 1, //start at 1, not zero, so page 1 = 1
 						data = app.data[_tag.datapointer],
 						totalPageCount = Math.ceil(data.hits.total / EQ.size) //total # of pages for this list.
-						
+						//totalPageCount =10;
 						if(totalPageCount <= 1)	{
 							//if there is only 1 page or something went wrong, don't show pagination.
 						app.u.dump(" -> no pagination for results. totalPageCount: "+totalPageCount);
