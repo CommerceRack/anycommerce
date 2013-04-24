@@ -1,0 +1,65 @@
+
+
+<section class='ui-widget marginBottom' id='batchJobStatusTemplate'>
+
+	<hgroup class='marginBottom'>
+		<h3><span data-bind="var: batchjob(jobid); format:text; pretext:Job ID: ;"></span></h3>
+		<h5 data-bind="var: batchjob(status); format:text; pretext:Status: ;"></h5>
+	</hgroup>
+
+	<div data-bind="var: batchjob(started); format:unix2mdy; showtime:1; pretext:Started: ;"></div>
+	<div><span data-bind="var: batchjob(records_done); format:text; pretext:Records done/total: ; hideZero:false;"></span> <span data-bind="var: batchjob(records_total); format:text; pretext:/;"></span></div>
+
+	<p class='marginBottom' data-bind="var: batchjob(status_msg); format:text;"></p>
+
+
+	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
+	<button data-btn-action="adminBatchJobCleanup" class='displayNone' data-bind="var: batchjob(status); format:cleanUpButton; extension:admin_batchJob;">Clean Up/Remove</button>
+
+	<p>This panel will not update automatically. Please go to reports &#187; Batch Jobs for status</p>
+
+</section>
+
+
+
+
+
+<div id='batchJobManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<h3 class='heading'>Batch Jobs</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<table class='gridTable fullWidth' >
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Job Name</th>
+			<th>Job Type</th>
+			<th>User</th> <!--  class='hideInDetailMode' -->
+			<th>Created</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		</div>
+	</section>
+</div>
+
+
+<table>
+<tr id='batchJobRowTemplate'>
+	<td data-bind="var: user(ID); format:text;"></td>
+	<td data-bind="var: user(TITLE); format:text;"></td>
+	<td data-bind="var: user(JOB_TYPE); format:text;"></td>
+	<td data-bind="var: user(LUSERNAME); format:text;"></td>
+	<td data-bind="var: user(CREATED_TS); format:text;"></td>
+	<td>loading gfx</td>
+	<td><button data-app-event="admin_batchJob|showJobDetail">Details</button>
+</tr>
+</table>

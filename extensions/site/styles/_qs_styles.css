@@ -1,0 +1,1744 @@
+@font-face
+{
+	font-family: BebasNeue;
+	src: url('fonts/BebasNeue.otf');
+}
+*{padding: 0; margin: 0;}
+.pointer
+{
+	cursor: pointer;
+}
+body
+{
+	background-color: #b7a58b
+}
+h1
+{
+	font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+}
+progress,          /* All HTML5 progress enabled browsers */
+progress[role]     /* polyfill */
+{
+
+	/* Turns off styling - not usually needed, but good to know. */
+	appearance: none;
+	-moz-appearance: none;
+	-webkit-appearance: none;
+
+	/* gets rid of default border in Firefox and Opera. */ 
+	border: none;
+
+	/* Needs to be in here for Safari polyfill so background images work as expected. */
+	background-size: auto;
+}
+
+/* Polyfill */
+progress[role]:after {
+	background-image: none; /* removes default background from polyfill */
+}
+
+/* Ensure fallback text doesn't appear in polyfill */
+progress[role] strong {
+	display: none;
+}
+progress,                          /* Firefox  */ 
+progress[role][aria-valuenow] {    /* Polyfill */
+   background: #938269 !important; /* !important is needed by the polyfill */
+}
+
+/* Chrome */
+progress::-webkit-progress-bar {
+    background: #938269;
+}
+
+/* IE10 */
+progress {
+    color: #bd0000;
+}
+
+/* Firefox */
+progress::-moz-progress-bar { 
+    background: #bd0000;	
+}
+
+/* Chrome */
+progress::-webkit-progress-value {
+    background: #bd0000;
+}
+
+/* Polyfill */
+progress[aria-valuenow]:before  {
+    background: #bd0000;
+}
+	div#appPreView
+	{
+		border-radius: 8px 8px 8px 8px;
+		box-shadow: 0 0 6px 2px #555;
+		margin: 100px auto;
+		padding: 20px;
+		width: 462px;
+	}
+		div#appPreView table
+		{
+			margin: 0px auto;
+		}
+			div#appPreView table div#loader
+			{
+				text-align: center;
+			}
+				div#appPreView table div#loader span
+				{
+					color: #63503B;
+					font-family: Helvetica;
+					font-size: 12px;
+				}
+				div#appPreView table div#loader > div
+				{
+					border: 1px solid #31281d;
+					border-bottom: 1px solid #afa496;
+					height: 31px;
+					width: 459px;
+				}
+					div#appPreView table div#loader > div > div.alignCenter
+					{
+						border-bottom: 1px solid #c4baad;
+						border-left: 1px solid #655948;
+						border-right: 1px solid #655948;
+						border-top: 1px solid #494134;
+						height: 29px;
+						width: 457px;
+					}
+						div#appPreView table div#loader > div > div.alignCenter > progress
+						{
+							border-bottom: 1px solid #330000;
+							border-left: 1px solid #600000;
+							border-right: 1px solid #6e0000;
+							border-top: 1px solid #965050;
+							height: 27px;
+							width: 455px;					
+						}
+	div#container
+	{
+		margin: 0px auto;
+		position: relative;
+		width: 1000px;
+	}
+		div#container div#topNav
+		{
+			background: url("../images/background-top-nav.png") repeat-x;
+			height: 30px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#topNav div#topNavContent
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				height: 30px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+			div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p
+			{
+				float: left;
+				position: relative;
+			}
+			div#container div#topNav div#topNavContent img
+			{
+				margin-top: 7px;
+				padding-right: 11px;
+			}
+			div#container div#topNav div#topNavContent img:first-child
+			{
+				margin-left: 12px;
+			}
+			div#container div#topNav div#topNavContent p
+			{
+				color: #FFFFFF;
+				font-family: Helvetica;
+				font-size: 12px;
+				margin-top: 8px;
+			}
+			div#container div#topNav div#topNavContent p:not(:last-child)
+			{
+				padding-right: 51px;
+			}
+				div#container div#topNav div#topNavContent p a
+				{
+					color: #FFFFFF;
+				}
+		div#container div#header
+		{
+			background: url("../images/background-header.png") repeat-x;
+			height: 124px;
+			position: relative;
+			width: 100%;
+		}
+			div#container div#header div#headerContent
+			{
+				height: 124px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div#header div#headerContent img#logo
+				{
+					cursor: pointer;
+					left: 10px;
+					position: relative;
+					top: 11px;
+				}
+				div#container div#header div#headerContent input#txtSearch
+				{
+					height: 33px;
+					left: 470px;
+					position: absolute;
+					top: 45px;
+					width: 160px;
+					color:#999;
+					font-size:14px;
+					padding:0 10px;
+				}
+				div#container div#header div#headerContent img#btnTopNavSearch
+				{	
+					cursor: pointer;
+					height: 33px;
+					left: 617px;
+					position: absolute;
+					top: 47px;
+					width: 35px;
+				}
+				div#container div#header div#headerContent div#headerFreeShipping
+				{
+					background: url('../images/header-free-shipping.png');
+					height: 54px;
+					left: 730px;
+					position: absolute;
+					width: 220px;
+					top: 20px;
+				}
+					div#container div#header div#headerContent div#headerFreeShipping img
+					{
+						left: -20px;
+						position: absolute;
+						top: -10px;
+					}
+				div#container div#header div#headerContent a#btnSocialFacebook
+				{
+					cursor: pointer;
+					left: 776px;
+					position: absolute;
+					top: 94px;
+				}
+				div#container div#header div#headerContent a#btnSocialTwitter
+				{
+					cursor: pointer;
+					left: 823px;
+					position: absolute;
+					top: 94px;
+				}
+				div#container div#header div#headerContent a#btnSocialYoutube
+				{
+					cursor: pointer;
+					left: 869px;
+					position: absolute;
+					top: 94px;
+				}				
+				div#container div#header div#headerContent a#btnSocialMail
+				{
+					cursor: pointer;
+					left: 916px;
+					position: absolute;
+					top: 94px;
+				}
+		div#container div#content
+		{
+			background-color: #c5b6a2;
+			position: relative;
+		}
+			div#container div#content div#homepageTemplate_
+			{	
+				position: relative;			
+			}
+				div#container div#content div#featuredItems
+				{
+					margin: 0px auto;
+					width: 960px;
+				}
+				div#container div#content div.featuredCategories
+				{
+					background: url("../images/background-featured-categories.png");	
+					clear: both;					
+					position: relative;
+					text-align: center;		
+				}
+					div#container div#content div.featuredCategories div.catNav
+					{
+						background: url("../images/background-homepage-category-navigation.png") repeat-x;
+						height: 62px;
+						position: relative;	
+						width: 100%;	
+							
+						-moz-box-shadow:    1px 1px 5px 1px #222222;
+						-webkit-box-shadow: 1px 1px 5px 1px #222222;
+						box-shadow:         1px 1px 5px 1px #222222;							
+					}
+					div#container div#content .featuredCategories div.catNavContent
+					{
+						height: 62px;
+						margin: 0px auto;
+						position: relative;	
+						/*width: 440px;*/
+						width: 350px;
+					}	
+						div#container div#content div.featuredCategories div.catNavContent p.navCats
+						{	
+							color: #FFFFFF;
+							float: left;
+							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+							font-size: 20px;
+							padding-right: 18px;
+							position: relative;
+							top: 22px;							
+						}	
+						div#container div#content div.featuredCategories div.catNavContent p.currentCat
+						{	
+							color: #FFFFFF;
+							float: left;
+							font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+							font-size: 30px;
+							position: relative;
+							top: 16px;
+						}	
+						div#container div#content div.featuredCategories div.catNavContent p:not(:last-child)
+						{	
+							padding-right: 18px;
+							width: 250px;
+						}											
+						div#container div#content div.featuredCategories div.catNavContent img.catButton
+						{	
+							cursor: pointer;						
+							float: left;
+							padding-right: 18px;
+							position: relative;
+							top: 14px;
+						}
+						div#container div#content div.featuredCategories img.btnViewAllCategories
+						{
+							cursor: pointer;
+							padding-bottom: 30px;
+							padding-top: 8px;
+						}
+						
+						ul.categoryList
+						{
+							margin: 0px auto;
+							width: 960px;
+						}
+						ul.categoryList li
+						{
+							background-color: #FFFFFF;
+							border: 1px solid #FFFFFF;
+							height: 138px;
+							margin-left: 0;
+							margin-right: 20px;
+							position: relative;
+							width: 138px;
+							
+							-moz-box-shadow:    1px 1px 5px 1px #222222;
+							-webkit-box-shadow: 1px 1px 5px 1px #222222;
+							box-shadow:         1px 1px 5px 1px #222222;							
+						}	
+							ul.categoryList div.thumbContainer
+							{
+								text-align: center;
+							} 
+							ul.categoryList div.thumbContainer img
+							{
+								height: 93px;
+								margin-top: 1px;
+								width: 136px;
+							}
+							ul.categoryList li div.catName
+							{
+								background: url("../images/background-homepage-category-list-name.png");
+								border: 1px solid #FFFFFF;
+								bottom: 0px;
+								color: #000000;
+								height: 41px;
+								left: 0px;
+								line-height: 12px;
+								overflow: hidden;
+								position: absolute;
+								text-align: center;
+								width: 136px;
+							}
+								ul.categoryList li div.catName span
+								{
+									font-family: Helvetica;
+									font-size: 14px;		
+									font-weight: bold;	
+									position: relative;
+									top: 16px;													
+								}										
+			div#container div#content div.categoryTemplate div ul.fluidList
+			{
+				margin: 0px auto;
+				width: 750px;	
+			}
+				div#container div#content div.categoryTemplate div ul.fluidList li, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li, div#container div#content div.searchResultsPage div.mainColumn ul.productList li, div.catCarousel ul.productList li
+				{
+					border: 2px solid #FFFFFF;
+					height: 216px;
+					margin-left: 0;
+					margin-right: 20px;
+					position: relative;
+					width: 216px;	
+					text-align: center;	
+					
+					box-shadow: 1px 1px 5px 1px #222222;							
+				}
+
+				.prodThumbDesc
+				{	
+					height: 87px;
+					left: 0px;
+					position: absolute;
+					width: 216px;
+					top: 129px;
+				}
+				.prodItemPane
+				{
+					background-color: #FFFFFF;
+					overflow: hidden;
+					position: relative;
+					width: 216px;
+					
+				}
+				div.prodRelatedItems .prodItemPane
+				{
+					padding: 3px;
+					width: 275px;
+				}
+					.prodItemPane p
+					{
+						height: 216px;
+						overflow: hidden;
+						padding-left: 5px;
+						padding-top: 3px;
+						text-align: left;
+						width: 216px;
+					}
+				div.prodItemHoldData, div.prodItemAltData
+				{
+					display: none;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc .prodThumbBackground, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc .prodThumbBackground, div.catCarousel ul.productList li div .prodThumbDesc .prodThumbBackground
+				{
+					background-color: #FFFFFF;
+					height: 100%;
+					left: 0px;
+					opacity: .75;
+					position: absolute;
+					top: 0px;
+					width: 100%;
+					z-index: 999;
+				}	
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h5, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h5, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h5, div.catCarousel ul.productList li div .prodThumbDesc h5
+				{
+					font-family: Helvetica;
+					font-size: 12px;
+					left: 0px;
+					position: absolute;
+					text-align: center;
+					top: 10px;
+					width: 216px;
+					z-index: 1000;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc h6, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc h6, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc h6, div.catCarousel ul.productList li div .prodThumbDesc h6
+				{
+					font-family: Helvetica;
+					font-size: 18px;
+					font-weight: bold;
+					left: 10px;
+					position: absolute;
+					bottom: 2px;
+					z-index: 1000;
+				}
+				div#container div#content div.categoryTemplate div ul.fluidList li .prodThumbDesc img
+, div#container div#content div.homeTemplate div#featuredItems ul.fluidList li .prodThumbDesc img, div#container div#content div.searchResultsPage div.mainColumn ul.productList li div .prodThumbDesc img, div.catCarousel ul.productList li div .prodThumbDesc img			
+				{
+					bottom: 3px;
+					cursor: pointer;
+					position: absolute;
+					right: 6px;
+					z-index: 1000;
+										
+					box-shadow: 1px 1px 5px 1px #777777;
+				}			
+				div.searchResultsPage
+				{
+					padding-left: 10px;
+				}
+							
+		div#container div.nav
+		{
+			background: url("../images/background-nav.png") repeat-x;
+			height: 50px;
+			position: relative;
+			width: 100%;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;				
+		}
+			div#container div.nav div.navContent
+			{
+				height: 50px;
+				margin: 0px auto;
+				position: relative;
+				width: 960px;
+			}
+				div#container div.nav div.navContent > ul
+				{
+					height: 50px;
+					margin: 0px auto;
+					width: 770px;
+				}
+					div#container div.nav div.navContent > ul > li
+					{
+						float: left;
+						height: 50px;
+						list-style: none;
+						overflow: show;
+						padding-left: 15px;
+						padding-right: 15px;
+						line-height:16px;
+					}				
+						div#container div.nav div.navContent > ul > li > a
+						{
+							color: #FFFFFF;
+							font-family: "Bebas Neue","Anton", Arial, Helvetica, sans-serif;
+							font-size: 20px;
+							/*font-weight: bold;*/
+							position: relative;
+							text-decoration: none;
+							top: 18px;
+						}
+						.no-fontface div#container div.nav div.navContent > ul > li > a
+						{
+							font-family: Arial, Helvetica, sans-serif;
+							font-size: 14px;						
+						}
+							div#container div.nav div.navContent > ul > li > a:hover
+							{
+								
+							}
+						div#container div.nav div.navContent ul li div.subMenu
+						{
+							background-color: #FFFFFF;
+							display: none;
+							height: 0px;
+							left: 25px;
+							position: absolute;
+							top: 50px;
+							width: 905px;
+							z-index: 2000;
+							
+							-moz-box-shadow:    0px 1px 5px 1px #222222;
+							-webkit-box-shadow: 0x 1px 5px 1px #222222;
+							box-shadow:         0px 1px 5px 1px #222222;								
+						}
+							div#container div.nav div.navContent ul li div.subMenu > div.dropDownListHolder
+							{
+								height: 100%;
+								position: relative;
+								width: 100%;
+							}						
+							div#container div.nav div.navContent ul li div.subMenu ul, div#container div.nav div.navContent ul li div.subMenu ul *
+							{
+								cursor: default;
+								position: relative;
+							}
+							div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul
+							{
+								float: left;
+								list-style-position: inside;
+								list-style-type: disc;
+								padding: 20px 15px 20px 25px;
+								z-index: 2002;
+							}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li, div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+								{
+									color: #770000;
+									font-family: Helvetica;
+									font-size: 12px;
+								}					
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li
+								{								
+									font-family: Helvetica;									
+									list-style-type: none;
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:not(:first-child):before
+								{
+									content: "» ";
+								}
+								div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li:first-child
+								{
+									color: #000000;
+									font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+									font-size: 20px;
+									list-style: none;
+									margin-bottom: 10px;
+								}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a
+									{
+										cursor: pointer;
+										text-decoration: none;
+									}
+									div#container div.nav div.navContent ul li div.subMenu div.dropDownListHolder ul li a:hover
+									{									
+										text-decoration: underline;
+									}
+									div.dropDownListHolder > a
+									{
+										bottom: 0px;
+										clear: both;
+										display: none;
+										position: absolute;
+										right: 0px; 		
+										z-index: 2001;								
+									}
+		div#container div#footer
+		{
+			background: url("../images/background-footer.png");
+			height: 358px;
+			width: 100%;
+		}
+			div#container div#footer div#footerContent
+			{
+				height: 358px;
+				margin: 0px auto;
+				width: 960px;
+			}
+				div#container div#footer div#footerContent div#footerLinks
+				{
+					height: 290px;
+					width: 960px;
+				}	
+					div#container div#footer div#footerContent div#footerLinks > ul
+					{
+						float: left;
+						padding-right: 102px;
+						margin-top: 70px;
+						width: 150px;
+					}
+						div#container div#footer div#footerContent div#footerLinks > ul li
+						{
+							color: #FFFFFF;
+							font-family: Helvetica;
+							font-size: 14px;
+							list-style: none;
+						}		
+						div#container div#footer div#footerContent div#footerLinks > ul li:not(:first-child)
+						{
+							padding-top: 12px;
+						}			
+							div#container div#footer div#footerContent div#footerLinks > ul li a
+							{
+								color: #FFFFFF;
+								text-decoration: none;
+							}
+								div#container div#footer div#footerContent div#footerLinks > ul li a:hover
+								{
+									text-decoration: underline;
+								}
+						div#container div#footer div#footerContent div#footerLinks > ul li:first-child, div#container div#footer div#footerContent div#footerSubscribe table tr td:first-child
+						{
+							color: #666666;
+							font-family: Helvetica;
+							font-size: 20px;
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe 
+						{
+							float: left;
+							position: relative;
+							top: 70px;
+						}						
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table
+						{
+
+						}					
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td
+						{
+							
+						}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr:not(:first-child) td
+						{
+							padding-top: 10px;
+						}						
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td input
+							{
+								height: 20px;
+								width: 194px;
+							}
+							div#container div#footer div#footerContent div#footerLinks div#footerSubscribe table tr td img#btnFooterSubscribe
+							{
+								cursor: pointer;
+							}
+					div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage
+					{
+						left: 1px;
+						opacity: 1;
+						position: absolute;
+						top: 9px;
+						width: 312px;
+						z-index: 1000;
+					}
+						div#container div#footer div#footerContent div#footerLinks div#footerSubscribe .appMessage button.stdMargin
+						{
+							left: 280px;
+							position: absolute;
+							top: 10px;
+							z-index: 1001;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					color: #FFFFFF;
+					width: 960px;
+				}
+					div#container div#footer div#footerContent div#copyright p
+					{
+						font-family: Helvetica;
+						font-size: 12px;
+						margin-top: 27px;
+						text-align: center;
+					}
+					div#container div#footer div#footerContent div#copyright p a
+					{
+						font-weight: bold;
+						text-decoration: none;
+					}					
+						div#container div#footer div#footerContent div#copyright p a:hover
+						{
+							text-decoration: underline;
+						}					
+						div#container div#footer div#footerContent div#copyright p a:visited
+						{
+							color: #FFFFFF;
+						}							
+				div#container div#footer div#footerContent div#copyright
+				{
+					height: 68px;
+					width: 960px;
+				}
+				
+.prodDetailView
+{
+	height: 605px;
+	margin: 0px auto;
+	position: relative;
+	width: 960px;
+}
+.prodDetailView .prodImages
+{
+	height: 337px;
+	position: absolute;
+	width: 300px;
+	z-index: 1000;
+
+	-moz-box-shadow:    1px 1px 5px 1px #222222;
+	-webkit-box-shadow: 1px 1px 5px 1px #222222;
+	box-shadow:         1px 1px 5px 1px #222222;	
+}
+.prodDetailView .prodImages > img
+{
+	height: 337px;
+	width: 300px;
+}
+.prodDetailView .prodImages .prodThumbs
+{
+	bottom: 0px;
+	display: none;
+	height: 70px; 
+	left: 0px;
+	position: absolute;
+	width: 300px; 
+	z-index: 1000;
+}
+	.prodDetailView .prodImages .prodThumbs .prodThumbsBG
+	{
+		background-color: #000000;
+		height: 100%;
+		opacity: .75;
+		position: absolute;
+		width: 100%;	
+		z-index: 999;
+	}
+		.prodDetailView .prodImages .prodThumbs div.prodThumb
+		{
+			float: left;
+			height: 46px;
+			margin: 10px 0px 0px 37px;
+			position: relative;
+			width: 46px;
+			z-index: 1000;
+		}
+			.prodDetailView .prodImages .prodThumbs div.prodThumb img
+			{
+				border: 2px solid #FFFFFF;
+				height: 46px;
+				width: 46px;
+			}
+	.prodDetailView .prodImages .prodThumbs .prodThumbBackButton
+	{
+		display: none;
+		height: 70px;
+		left: 0px;
+		position: absolute;
+		top: 0px;
+		width: 20px;
+		z-index: 1000;
+	}
+		.prodDetailView .prodImages .prodThumbs .prodThumbBackButton img
+		{
+			cursor: pointer;
+			left: 3px;
+			position: absolute;
+			top: 17px;
+			z-index: 1000;
+		}
+	.prodDetailView .prodImages .prodThumbs .prodThumbNextButton
+	{	
+		display: none;
+		right: 0px;
+		height: 70px;
+		position: absolute;
+		top: 0px;
+		width: 20px;
+		z-index: 1000;
+	}
+		.prodDetailView .prodImages .prodThumbs .prodThumbNextButton img
+		{
+			cursor: pointer;
+			right: 3px;
+			position: absolute;
+			top: 17px;
+			z-index: 1000;
+		}
+
+div.prodRelatedItems
+{
+	background-color: #FFFFFF;
+	height: 229px;
+	left: 0px;
+	overflow: auto;
+	position: absolute;
+	width: 300px;
+	top: 356px;
+}
+	div.prodRelatedItems ul.relatedItems
+	{
+		width: 100%;
+		background-color: #FFFFFF;
+	}
+		div.prodRelatedItems ul.relatedItems li
+		{
+			border-bottom: 1px solid #cccccc;
+			height: auto;
+			margin: 0;
+			padding: 0;
+			width: 280px;
+		}			
+			div.prodRelatedItems ul.relatedItems li img.pointer, div.prodRelatedItems form, div.prodRelatedItems button
+			{
+				display: none;
+			}
+			div.prodRelatedItems ul.relatedItems li img.prodThumb
+			{
+				height: 55px;
+				left: 5px;
+				position: absolute;
+				top: 10%;
+				width: 55px;
+			}
+			div.prodThumbContainer
+			{
+			
+			}
+			div.prodRelatedItems ul.relatedItems li div.prodThumbContainer ul.slideMe
+			{
+				height: 55px;
+				width: 55px;
+			}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbContainer ul.slideMe img
+				{
+					height: 55px;
+					width: 55px;
+				}
+			div.prodRelatedItems ul.relatedItems li div.prodThumbDesc
+			{
+				height: auto;
+				left: 0px;
+				overflow: hidden;
+				padding: 5px;
+				position: relative;
+				top: 0px;
+				width: 280px;
+			}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h5
+				{
+					cursor: pointer;
+					font-family: Helvetica;
+					font-size: 13px;
+					font-weight: normal;
+					margin-left: 53px;
+					padding: 10px;
+					width: 212px;
+				}
+				div.prodRelatedItems ul.relatedItems li div.prodThumbDesc h6
+				{
+					display: none;
+				}
+
+.prodDetailDesc
+{
+	background-color: #c9bca8;
+	height: 585px;
+	left: 330px;
+	overflow: hidden;
+	position: absolute;
+	top: 0px;
+	width: 380px;
+}
+
+	.prodDetailDesc h1
+	{
+		font-family: Helvetica;
+		font-size: 18px;
+		font-weight: bold;
+		margin-left: 20px;
+		margin-top: 20px;
+		width: 300px;
+	}
+	
+	.prodDetailDesc h3
+	{
+		font-family: Helvetica;
+		font-size: 13px;
+		margin-left: 20px;
+	}
+	
+	.prodDetailDesc p
+	{
+		font-family: Helvetica;
+		font-size: 13px;
+		height: 465px;
+		margin-left: 20px;
+		margin-top: 20px;
+		overflow: auto;
+		width: 355px;
+	}
+
+.prodBuyDetails
+{
+	background-color: #FFFFFF;
+	height: 585px;
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 220px;
+}
+
+.prodBuyDetails div.prodBuyDetailsPrices
+{
+	border-bottom: 1px solid #999999;
+	height: 55px;
+	margin-left: 20px;
+	margin-top: 20px;
+	position: relative;
+	width: 180px;
+}
+	.prodBuyDetails div.prodBuyDetailsPrices table
+	{
+		width: 100%;
+	}
+		.prodBuyDetails div.prodBuyDetailsPrices table td
+		{
+			text-align: center;
+		}		
+			.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP
+			{
+			
+			}	
+				.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP span
+				{
+					color: #999999;				
+					font-size: 20px;				
+					text-decoration: line-through;								
+				}			
+					.prodBuyDetails div.prodBuyDetailsPrices table td.prodMSRP span.priceTitle
+					{			
+						font-size: 12px;
+					}
+			.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice
+			{
+			
+			}	
+				.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice span
+				{
+					font-size: 20px;							
+				}		
+					.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice span.priceTitle
+					{
+						font-size: 12px;
+					}
+		.prodBuyDetails div.prodBuyDetailsPrices table td.basePrice
+		{
+			color: #000000;
+			font-family: Helvetica;
+		}			
+			.prodBuyDetails div.prodBuyDetailsPrices table td span.priceTitle
+			{
+				display: none;
+			}
+.prodBuyDetails div.prodBuyDetailsPrices span
+{
+	font-family: Helvetica;
+	font-size: 12px;
+}
+.prodBuyDetails div.prodBuyDetailsPrices p
+{
+	float: left;
+	margin-top: 10px;
+}
+	
+	.prodBuyDetails div.prodBuyDetailsReviews
+	{
+		border-bottom: 1px solid #999999;
+		height: 95px;
+		margin-left: 20px;
+		position: relative;
+		width: 180px;
+	}
+	
+	.prodBuyDetails div.prodBuyDetailsReviews a.writeReview
+	{
+		color: #770000;
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 20px;
+		position: absolute;
+		top: 58px;
+	}
+	
+	.prodBuyDetails div.prodBuyDetailsOptions
+	{
+		border-bottom: 1px solid #999999;
+		height: 207px;
+		margin-left: 20px;
+		margin-top: 5px;
+		position: relative;
+		width: 180px;
+	}
+		.prodBuyDetails div.prodBuyDetailsOptions select#ddlOptions
+		{
+			margin-top: 20px;
+			width: 180px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions input#txtQuantity
+		{
+			margin-top: 10px;
+			width: 20px;
+		}		
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnAddToCart
+		{
+			cursor: pointer;
+			margin-top: 10px;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;				
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnProdShare
+		{
+			margin-top: 10px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions img#btnProdAddToWishlist
+		{
+			margin-left: 10px;	
+			margin-top: 10px;
+		}		
+		.prodBuyDetails div.prodBuyDetailsOptions .prodBuyDetailsOptionsSharing
+		{
+			height: 45px;
+			margin-top: 10px;
+			position: relative;
+			width: 180px;
+		}
+		.prodBuyDetails div.prodBuyDetailsOptions .prodBuyDetailsOptionsSharing img
+		{
+			cursor: pointer;
+			float: left;
+			
+			-moz-box-shadow:    1px 1px 5px 1px #222222;
+			-webkit-box-shadow: 1px 1px 5px 1px #222222;
+			box-shadow:         1px 1px 5px 1px #222222;			
+		}			
+		li.shipcon > label > input
+		{
+			margin-right: 5px;
+		}
+		.prodBuyDetails div.latency
+		{
+			margin-bottom: 10px;
+		}
+		
+/* search */
+.mainColumn
+{
+
+}
+
+/* content pages */
+div.contentPage
+{
+	margin-top: 30px;
+	position: relative;
+}
+	div.contentPage div.sideline
+	{
+		margin-right: 40px;
+		position: relative;
+		width: 220px;
+	}
+		div.contentPage div.sideline nav
+		{
+			background-color: #c9bca8;
+			margin-top: 12px;
+			position: relative;
+			width: 220px;
+		}
+			div.contentPage div.sideline nav p
+			{
+				color: #770000;
+				font-family: Helvetica;
+				font-size: 22px;
+				margin-bottom: 0px;
+				padding-left: 30px;
+				padding-top: 30px;
+			}
+			div.contentPage div.sideline nav ul
+			{
+				padding: 1px;
+			}
+				div.contentPage div.sideline nav ul li
+				{
+					
+				}
+					div.contentPage div.sideline nav ul li a
+					{
+						color: #000000;
+						font-family: Helvetica;
+						font-size: 14px;
+						text-decoration: underline;
+					}
+						div.contentPage div.sideline nav ul li a:hover
+						{
+							color: #FFFFFF;
+						}
+	div.contentPage div.mainColumn
+	{
+		padding-left: 10px;
+		position: relative;
+		width: 620px;
+	}
+	
+	div#modalCart
+	{
+		background-color: #b7a58b;
+	}
+		div#modalCart ul#cartStuffList
+		{
+			border-bottom: 1px solid #897c68;
+			clear: both;
+			padding-bottom: 20px;
+		}
+		
+		div#modalCart ul#cartStuffList > li
+		{
+			background-color: #c9bca8;
+			border: 0px solid #FFFFFF;
+			margin: 2px 0px 12px 0px;
+			padding-bottom: 20px;
+			padding-top: 20px;
+			position: relative;
+		}
+		div#modalCart ul#cartStuffList > li:nth-child(even)
+		{
+			background-color: #897c68;
+		}
+			div#modalCart ul#cartStuffList > li img.prodThumb
+			{
+				margin-left: 20px;
+			}
+			div#modalCart ul#cartStuffList > li span.removeButton
+			{
+				cursor: pointer;
+				position: absolute;
+				right: 3px;
+				top: 3px;
+			}
+			div#modalCart ul#cartStuffList li > h4
+			{
+				width: 565px;
+			}
+			div#modalCart ul#cartStuffList li > h4, div#modalCart ul#cartStuffList li > div:not(.floatLeft, .cartQty)
+			{
+				margin-left: 10px;
+			}
+			div#modalCart ul#cartStuffList li div.cartQty
+			{
+				position: absolute;
+				right: 20px; 
+				top: 19px;
+				width: 210px;
+			}
+			div#modalCart td.cartSummaryTotalsContainer
+			{
+				width: 1%;
+			}
+				div#modalCart td.cartSummaryTotalsContainer > div
+				{			
+					height: 710px;
+					margin-bottom: 20px;
+				}
+				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary span#lblTotal
+				{
+					color: #770000;
+					font-family: Helvetica;
+					font-size: 12px;
+					font-weight: bold;
+					margin-left: 63px;
+				}
+				div#modalCart td.cartSummaryTotalsContainer section#cartTemplateCostSummary > div
+				{
+					margin-left: 15px;
+					margin-top: 5px;
+				}
+		div#modalCart td.cartStuffContainer
+		{
+			padding-bottom: 20px;
+		}
+			div#modalCart td.cartStuffContainer > p
+			{
+				font-family: Helvetica;
+				font-size: 12px;
+				margin-top: 20px;
+				width: 450px;
+			}
+				div#modalCart td.cartStuffContainer > p > span
+				{
+					font-size: 15px;
+					font-weight: bold;
+				}		
+			div#modalCart td.cartStuffContainer > div
+			{
+				background-color: #897c68;
+				float: right;
+				margin-top: 20px;
+				position: relative;
+				width: 200px;
+			}
+				div#modalCart td.cartStuffContainer > div > p
+				{
+					color: #770000;
+					margin: 0px;
+					margin-left: 30px;
+					margin-top: 30px;				
+				}
+				div#modalCart td.cartStuffContainer > div > ul
+				{
+					margin-left: 30px;
+					margin-top: 13px;
+					padding-bottom: 30px;
+				}
+					div#modalCart td.cartStuffContainer > div > ul > li
+					{
+						list-style: none;
+						padding-bottom: 5px;
+					}
+						div#modalCart td.cartStuffContainer > div > ul > li > a
+						{
+							color: #000000;
+							font-family: Helvetica;
+							font-size: 12px;
+							text-decoration: underline;
+						}
+						
+div#loginFormForModal
+{
+	background-color: #b7a58b;
+	height: 290px;
+	width: 625px;
+}					
+div#createAccount
+{
+	background: url("../images/box-create-account.png") no-repeat;
+	height: 281px;
+	position: relative;
+	width: 300px;
+}
+	div#createAccount img
+	{
+		position: absolute;
+		left: 30px;
+		top: 187px;
+	}
+	div#createAccount p
+	{
+		font-family: Helvetica;
+		position: absolute;
+	}
+	div#createAccount p:first-child
+	{
+		color: #FFFFFF;
+		font-size: 22px;
+		left: 77px;
+		top: 20px;
+	}
+	div#createAccount p:not(:first-child)
+	{
+		color: #000000;
+		font-size: 14px;
+		left: 24px;
+		top: 87px;
+		width: 254px;
+	}
+div#gotAccount
+{
+	background: url("../images/box-got-account.png") no-repeat;
+	height: 280px;
+	left: 337px;
+	position: absolute;
+	width: 300px;
+}
+	div#gotAccount p
+	{
+		font-size: Helvetica;
+		position: absolute;
+	}
+	div#gotAccount p:first-child
+	{
+		color: #FFFFFF;
+		font-size: 22px;
+		left: 54px;
+		top: 19px;
+	}
+	div#gotAccount p:not(:first-child)
+	{
+		color: #000000;
+		font-size: 12px;
+		left: 46px;
+		top: 251px;
+	}
+	div#gotAccount img
+	{
+		left: 30px;
+		position: absolute;
+		top: 186px;
+	}
+		div#gotAccount input
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			height: 24px;
+			position: absolute;
+			width: 237px;
+		}
+	div#gotAccount input#modalLoginLogin
+	{
+		left: 30px;
+		top: 80px;
+	}
+	div#gotAccount input#modalLoginPassword
+	{
+		left: 30px;
+		top: 132px;
+	}
+	div#gotAccount span#lblLoginPassword
+	{
+		font-family: Helvetica;
+		font-size: 12px;
+		left: 32px;
+		position: absolute;
+		top: 138px;
+	}
+div#checkoutContainer
+{
+	margin-top: 10px;
+}
+	div#checkoutContainer legend
+	{
+		font-size: 18px;
+	}
+	div#checkoutContainer .ui-widget-content
+	{
+		background: #938269;
+		border: 1px solid #938269;
+	}
+	div#checkoutContainer form, div#checkoutContainer div#chkoutCartSummaryContainer
+	{
+		margin: 0px auto;
+		width: 700px;
+	}
+	div#checkoutContainer form
+	{
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+	div#checkoutContainer fieldset
+	{
+		margin: 0px;
+		margin-bottom: 5px;
+		padding: 0px;
+		position: relative;
+	}
+		div#checkoutContainer fieldset legend
+		{
+			background: none;
+			border: 0px solid #000000;
+			clear: both;
+			float: left;
+			margin: 0px;
+			padding: 0px;
+			position: relative;
+			left: 5px;
+			top: 1px;
+		}
+		div#checkoutContainer fieldset > div > p, div#checkoutContainer fieldset > div ul, div#checkoutContainer fieldset > div > div > label
+		{
+			clear: both;
+			margin-left: 5px;
+		}
+		div#checkoutContainer fieldset > div ul:not(#checkoutStuffList)
+		{
+			margin-bottom: 10px;
+			margin-top: 10px;
+		}		
+			div#checkoutContainer fieldset > div ul li.shipcon
+			{
+				margin: 0px;
+			}
+		section#checkoutTemplateCostSummary
+		{
+			background-color: #C9BCA8;
+			float: right;
+			font-size: 14px;
+			margin-right: 10px;
+			padding: 5px;
+			position: relative;
+			top: -2px;
+			width: 145px;
+		}			
+		div#couponContainer 
+		{
+			font-size: 14px;
+			text-align: center;
+			width: 100%;
+		}		
+			div#couponContainer input#couponCode
+			{		
+				width: 100px;
+			}
+		ul.paybySupplemental
+		{
+			border: none;
+			margin: 0;
+			margin-bottom: 0px;
+			margin-left: 0px;
+			margin-right: 0px;
+			margin-top: 0px;
+			padding: 0;
+		}
+		ul#checkoutStuffList
+		{
+			width: 480px;
+		}		
+			ul#checkoutStuffList li
+			{
+				background-color: #C9BCA8;
+				border: none;
+				margin: 10px;
+				padding: 10px;
+				width: auto;
+			}
+			ul#checkoutStuffList li:nth-child(2n)
+			{
+				background-color: #897C68;
+			}
+				ul#checkoutStuffList li img
+				{
+					margin: 0px;
+				}
+				ul#checkoutStuffList li div.floatLeft
+				{
+					padding-left: 5px;
+					width: 346px;					
+				}
+		#giftCardContainer
+		{
+			padding-bottom: 10px;
+		}
+		ul#chkout-shipMethods
+		{
+			padding-top: 10px;
+		}
+	
+	#chkoutPreflightFieldset .preflightInputContainer
+	{
+		clear: both;
+		padding-left: 5px;
+	}
+	
+	img#btnCartShare, img#btnCartContinueShopping
+	{
+		margin-bottom: 10px;
+	}
+	
+	.checkoutButtonsContainer
+	{
+		text-align: center;
+		width: 100%;
+	}
+		.checkoutButtonsContainer > img, .checkoutButtonsContainer > span, .checkoutButtonsContainer > span img
+		{
+			float: none;
+			margin: 0;
+		}
+		.checkoutButtonsContainer > img, .checkoutButtonsContainer > span:not(#googleCheckoutButton) img
+		{
+			margin-bottom: 15px;
+		}		
+	div.checkoutMethods
+	{
+		text-align: center;
+	}
+		div.checkoutMethods > img
+		{
+			padding: 5px;
+		}
+div#contactArticle
+{
+
+}	
+	div#contactArticle span
+	{
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+	div#contactArticle p
+	{
+		font-family: Helvetica;
+		font-size: 14px;
+		position: absolute;
+		left: 383px;
+		top: 72px;
+		width: 320px;
+	}	
+		div#contactArticle p span
+		{
+			font-weight: bold;
+			font-size: 15px;
+		}	
+	div#contactArticle h1
+	{
+		font-family: Helvetica;
+		font-size: 20px;
+		padding-bottom: 15px;
+		text-align: left;
+	}	
+	div#contactArticle #contactForm
+	{
+		float: none;
+		margin: 0;
+		text-align: left;
+	}
+		div#contactArticle #contactForm fieldset
+		{
+			border: none;
+		}
+		div#contactArticle #contactForm div input[type="text"],div#contactArticle #contactForm div input[type="email"]
+		{
+			height: 20px;
+		}
+		div#contactArticle #contactForm div input[type="text"],div#contactArticle #contactForm div input[type="email"],div#contactArticle #contactForm div textarea
+		{
+			font-family: Helvetica;
+			font-size: 12px;
+			margin-bottom: 5px;
+			width: 300px;
+		}
+		div#contactArticle #contactForm div textarea
+		{
+			margin-bottom: 10px;
+		}
+		
+.btnViewProdDetails
+{
+	display: none;
+	left: 5px;
+	position: absolute;
+	top: 5px;
+	z-index: 1000;
+}
+
+div#checkoutSuccessContent
+{
+
+}
+	div#checkoutSuccessContent div#floatRight#ocmThirdParty
+	{
+		width: 280px;
+	}
+	div#checkoutSuccessContent div#orderSummaryDetails
+	{
+		font-family: Helvetica;
+		text-align: center;
+		width: 700px;
+	}
+	div#checkoutSuccessContent div#orderSummaryDetails > div
+	{	
+		font-family: Helvetica;
+		font-size: 14px;
+	}
+		div#checkoutSuccessContent div#orderSummaryDetails h2
+		{
+			color: #770000;
+			font-family: "Bebas Neue", Arial, Helvetica, sans-serif;
+			font-size: 36px;
+			margin: 0 auto;
+			width: 505px;
+		}
+		div#checkoutSuccessContent div#orderSummaryDetails h3 
+		{
+			background-color: #FFFFFF;
+			font-family: Helvetica;
+			font-size: 18px;
+			font-weight: bold;
+			padding: 12px 70px 12px 70px;
+			margin: 0 auto;
+			margin-bottom: 50px;
+			text-align: center;
+			width: 270px;
+			
+		}		
+		div#checkoutSuccessContent div#orderSummaryDetails div#orderSummaryLinkToInvoice
+		{
+			border-bottom: 1px solid #897C68;
+			border-top: 1px solid #897C68;
+			font-family: Helvetica;
+			font-size: 16px;
+			font-weight: bold;
+			margin-bottom: 10px;
+			margin-top: 5px;
+			padding-top: 10px;
+			text-align: left;
+		}
+			div#checkoutSuccessContent div#orderSummaryDetails div#orderSummaryLinkToInvoice > div
+			{
+				font-size: 14px;
+				font-weight: normal;
+				margin-top: 10px;
+			}
+		div#checkoutSuccessContent div#invoiceContainer
+		{
+			
+		}
+			div#checkoutSuccessContent div#invoiceContainer table
+			{
+				
+			}		
+				div#checkoutSuccessContent div#invoiceContainer table tr td
+				{
+					font-family: Helvetica;
+					font-size: 14px;
+					font-style: normal;
+				}	
+					div#checkoutSuccessContent div#invoiceContainer table tr td hgroup, div#checkoutSuccessContent div#invoiceContainer table tr td address
+					{
+						width: 200px;
+					}
+						div#checkoutSuccessContent div#invoiceContainer table tr td hgroup h5
+						{
+							font-size: 18px;
+							margin-bottom: 10px;
+						}					
+						div#checkoutSuccessContent div#invoiceContainer table tr td address
+						{
+							margin-bottom: 5px;
+						}
+					div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer
+					{						
+						width: 490px;
+					}
+						div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer ul.lineItemProdlist li
+						{
+							background-color: #c9bca8;
+							border-bottom: none;
+							height: auto;
+							margin-bottom: 10px;
+							margin-top: 10px;
+							padding: 10px 0px 15px 10px;
+							width: auto;
+						}
+						div#checkoutSuccessContent div#invoiceContainer table tr td.orderContentsProdlistContainer ul.lineItemProdlist li:nth-child(even)
+						{
+							background-color: #897c68;
+						}					
+						
+.caroufredsel_wrapper
+{
+	margin: 0px auto;
+	overflow: hidden;
+	width: 1000px;
+}
+
+.caroufredsel_wrapper div.ccItem
+{
+	float: left;
+	height: auto;
+	overflow: hidden;
+	padding-left: 25px;
+	/*width: 970px;*/
+	width: 977px;
+}
+
+div.catCarousel h2
+{
+	margin-top: 10px;
+}
+
+button.prodATCButton
+{
+	/*background: url("../images/button-product-list-add-to-cart.png") no-repeat;
+	border: medium none;*/
+	border: none;
+	bottom: 4px;
+	height: 23px;	
+	position: absolute;
+	right: 4px;
+	z-index: 1001;
+	/*width: 77px;*/
+	width: 100px;
+	background: url("../images/button-product-list-empty.png") repeat scroll 0 0 transparent;
+	color: #FFFFFF;
+	font-weight: bold;	
+}
+	button.prodATCButton > span.ui-button-text
+	{
+		/*display: none;*/
+		font-size: 12px;
+		padding: 0px;
+	}

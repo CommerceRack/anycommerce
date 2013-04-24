@@ -1,0 +1,18 @@
+
+Zoovy/AnyCommerce MVC JQuery Developer Framework
+
+Rich Internet Application, Model View Controller created using jQuery for creating standalone or 
+pluggable shopping applications that connect to the Zoovy e-Commerce Platform.
+
+WIKI Documentation:
+	https://github.com/zoovy/AnyCommerce-Development/wiki
+
+Official Repository:
+	https://github.com/zoovy/AnyCommerce-Development	
+
+API Calls Input/Output Reference:
+	http://www.zoovy.com/webdoc/index.cgi?VERB=DOC&DOCID=51609
+
+Examples are stored in examples sub-directory.
+Extensions are stored in the extensions sub-directory.
+

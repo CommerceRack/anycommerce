@@ -1,0 +1,128 @@
+@charset "utf-8";
+/* CSS Document */
+
+
+
+/* the padding is needed for buttons that use loadingButtonBG.  this is applied to all buttons for the sake of consistency */
+#zCheckoutContainer button	{padding:3px 20px;}
+.cartTotalLineItem .prodThumb	{margin:0 12px 12px 0;}
+
+.orderCreateTable 	{width:100%; margin:0 auto;}
+.orderCreateTable td	{vertical-align:top; width:50%;}
+
+#zCheckoutContainer h2	{font-size:1em; margin:0; padding:0;}
+
+#paybySupplemental_CREDIT .ui-icon-help	{display:inline-block; margin-left:6px;}
+
+#modalProcessCheckout .loadingBG	{width:100px; height:200px;}
+
+#returnFromThirdParty	{padding:5px;}
+#returnFromThirdParty .ui-icon	{margin-right: .3em;}
+
+
+
+/* -----------------> CHECKOUT  <----------------- */
+
+/* some global styles, within checkout. */
+
+#checkoutFrm label	{vertical-align:top}
+
+.checkoutFormContainer legend	{padding:3px 12px; margin-left:12px;}
+.checkoutFormContainer fieldset	{padding:12px; margin-bottom:12px;}
+
+
+/* these are the errors that appear next to the place order button, typically reporting validation errors */
+#chkoutSummaryErrors	{clear:both;}
+#chkoutSummaryErrors li	{text-align:right;}
+
+#zCheckoutContainer .ui-widget p	{margin:3px;}
+
+/* by defualt, gift card will appear in the payment choices panel, above the other payment options */
+#giftCardContainer	{padding:5px 0px 5px 0px; border-bottom:1px dashed #efefef; display:block; text-align:left;}
+#giftCardContainer	label	{padding-right:12px;}
+#giftCardContainer	button	{margin-left:12px;}
+
+
+#couponContainer	{clear:both; float:right;}
+#couponFrmContainer	{clear:both;}
+
+
+/* preflight panel is used in 'nice' checkout and shows login information */
+#chkoutPreflightFieldset	{width:auto;}
+#chkoutPreflightFieldset .preflightInputContainer	{float:left; margin-right:24px; padding-bottom:12px;}
+#chkoutPreflightFieldset .preflightInputContainer .h2	{margin-bottom:12px;}
+#chkoutPreflightFieldset div button	{margin-left:12px;}
+
+#preflightGuestInputs label,
+#preflightAccountInputs label,
+#preflightAuthenticatedInputs label	{width:140px; display:inline-block;}
+
+
+#checkoutTemplateCostSummary	{text-align:right;}
+
+#chkoutCartSummary #cartSummaryTotalsContainer	{width:auto;}
+.checkoutFormContainer fieldset, #chkoutCartSummary	{margin:0 0px 12px 0; min-height:50px;}
+.checkoutFormContainer fieldset textarea	{width:80%; height:100px;}
+
+#chkoutBillAddressFieldset label:after, 
+#chkoutAccountInfoFieldset label:after, 
+#chkoutPreflightFieldset label:after, 
+#chkoutShipAddressFieldset label:after { content: ":"; }
+
+#chkoutBillAddressFieldset label, 
+#chkoutAccountInfoFieldset label, 
+#chkoutShipAddressFieldset label { width:140px; }
+
+#chkout-create_customerContainer label	{width:auto;}
+#chkout-create_customerContainer label:after	{content: ""}
+
+#chkoutSummaryTotalsContainer	{float:right; width:35%;}
+#checkoutStuffList	{float:left; width:60%}
+#checkoutStuffList .prodThumb	{float:left;}
+
+#chkoutPlaceOrderBtn	{font-size:1.5em; font-weight:bold; 
+	clear:both; margin:12px 0;
+	}
+
+
+#zCheckoutFrm address	{display:block; float:left; margin:12px; border:1px solid #cccccc; padding:10px; font-style:normal; text-align:left;} /* use a white border (if not colored) so elements don't shift when 'selected' class is added. */
+
+#zCheckoutFrm .paybySupplemental, #shipAddressUL li, #billAddressUL li	{margin-bottom:6px;}
+
+/* the entry after the comma below handles 'supplemental' labels (under radio buttons, like in payment) */
+#zCheckoutFrm fieldset li label, #zCheckoutFrm fieldset li.paycon ul label	{text-align:right; padding-right:12px; display:inline-block;}
+
+
+#zCheckoutFrm fieldset input[type=text], #zCheckoutFrm fieldset input[type=tel], #zCheckoutFrm fieldset input[type=password], #zCheckoutFrm fieldset input[type=email]	{width:220px;}
+#zCheckoutFrm .checkbox	label	{text-align:left; width:240px;}
+#zCheckoutFrm .checkbox	{ padding-left:120px; clear:both;}
+
+
+#zCheckoutFrm fieldset li.paycon, #zCheckoutFrm fieldset li.shipcon	{margin-top:10px; }
+#zCheckoutFrm fieldset li.paycon label, #zCheckoutFrm fieldset li.shipcon label	{text-align:left; line-height:1.4em;}
+
+
+#zCheckoutFrm fieldset li.bill_zip input, #zCheckoutFrm fieldset li.ship_zip input	{width:80px;}
+#zCheckoutFrm fieldset li.bill_state input, #zCheckoutFrm fieldset li.ship_state input, #zCheckoutFrm fieldset .bankState	{width:80px;}
+
+/*
+the state textbox could not be 'clicked' into (tab worked) and commenting this line out fixed the issue.
+#zCheckoutFrm fieldset li.bill_state, #zCheckoutFrm fieldset li.ship_state	{float:left;}
+*/
+
+#zCheckoutFrm fieldset p	{clear:both;}
+
+.mandatory input[type=text], .mandatory input[type=number], .mandatory input[type=tel], .mandatory select	{border:1px solid #990000}
+.mandatory label{color:#990000; font-weight:bold;}
+.mandatory span:after	{content: "*";}
+
+
+.paybySupplemental {padding:12px; font-weight:normal; border-top-width:0;}
+.paybySupplemental .zform_select {margin-right:12px;}
+
+
+
+/* for order confirmation page of checkout */
+
+#invoiceContainer .balanceDue	{display:none;} /* in checkout, the cart object is used to display invoice, not an actual invoice. hide balance due, it's reported elsewhere */
+#invoiceContainer .writeReview	{display:none;}
