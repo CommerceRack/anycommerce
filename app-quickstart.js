@@ -3039,6 +3039,7 @@ else	{
 //for now,classes are hard coded. later, we could support an object here that allows for id's and/or classes to be set
 //the selector parameter is optional. allows for the function to be run over  a specific section of html. on init, it's run over #appView
 			bindAppViewForms : function(selector)	{
+			 
 //				app.u.dump("BEGIN myRIA.u.bindAppViewForms");
 				selector = selector ? selector+' ' : ''; //default to blank, not undef, to avoid 'undefined' being part of jquery selectors below
 //				app.u.dump(" -> selector: '"+selector+"'");
@@ -3059,7 +3060,6 @@ else	{
 					});
 
 				$(selector+ '.newsletterSubscriptionForm').submit(function(event){
-				    alert('hi');
 					event.preventDefault(); //stops form from actually submitting.
 					app.ext.store_crm.u.handleSubscribe(this.id);
 					return false;
