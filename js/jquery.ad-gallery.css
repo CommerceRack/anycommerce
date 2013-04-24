@@ -50,17 +50,17 @@
      /* background: url(non-existing.jpg)\9*/
     }
       .ad-gallery .ad-image-wrapper .ad-prev .ad-prev-image, .ad-gallery .ad-image-wrapper .ad-next .ad-next-image {
-        background: url(../images/ad_prev.png);
+        background: url(../images/prv-arrow.png);
         width: 30px;
         height: 30px;
         display: none;
         position: absolute;
-        top: 47%;
+        top: 73%;
         left: 0;
         z-index: 101;
       }
       .ad-gallery .ad-image-wrapper .ad-next .ad-next-image {
-        background: url(../images/ad_next.png);
+        background: url(../images/next-arrow.png);
         width: 30px;
         height: 30px;
         right: 0;
