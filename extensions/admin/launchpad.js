@@ -21,20 +21,12 @@
 //    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
 
 var admin_launchpad = function() {
-	var theseTemplates = new Array('');
+	var theseTemplates = new Array('launchpadTemplate');
 	var r = {
 
 
 
 	vars : {
-
-		tiles : [
-			
-			{'exec' : app.ext.admin_launchpad.t.domain, data : {'id':'www.ylh.zoovy.com'}},
-			{'exec' : app.ext.admin_launchpad.t.domain, data : {'id':'www.domain.com'}},
-			{'exec' : app.ext.admin_launchpad.t.admin}		
-			] //The list of tiles added through the rq will appear here.
-		
 		},
 
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -47,7 +39,26 @@ var admin_launchpad = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				app.rq.push(['css',0,app.vars.baseURL+'extensions/admin/launchpad.css','admin_launchpad']);
+				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/launchpad.html',theseTemplates);
 				r = true;
+//used for browser resize. binding a resize event triggers it throughout the resize, not just at the end.
+//so this is used to make sure the event is only triggered once.
+app.ext.admin_launchpad.u.delay = (function(){
+  var timer = 0;
+  return function(callback, ms){
+    clearTimeout (timer);
+    timer = setTimeout(callback, ms);
+  };
+})();
+
+$(window).resize(function() {
+    app.ext.admin_launchpad.u.delay(function(){
+      console.log('Browser resize. Adjust tilegroups and trigger shapeshifter rearrange');
+	  app.ext.admin_launchpad.u.handleTileGroupResize()
+      //...
+    }, 500);
+});
+
 				return r;
 				},
 			onError : function()	{
@@ -63,10 +74,14 @@ var admin_launchpad = function() {
 		a : {
 
 			showLaunchpad : function()	{
+				app.u.dump("BEGIN admin_launchpad.a.showLaunchpad");
 
-				app.u.dump("BEGIN admin_launchpad.u.initLaunchpad");
+$('#launchpadContent').empty().anycontent({'templateID':'launchpadTemplate','dataAttribs':{'id':'launchpad'},'showLoading':false})
+
+/*
+This is all for drag n drop and adding 'close' buttons.
 				var $LPI = $('#launchpadInner'),
-				$LP = $('#launchpad');
+				$LP = $('#launchpad'); //.css('background','#660000');
 
 				$( ".launchpad_tiles" ).sortable({
 					connectWith: '.launchpad_tiles',
@@ -89,11 +104,15 @@ var admin_launchpad = function() {
 					$li.on('mouseleave',function(){
 						$('.tileButton',$li).hide();
 						});
-					})
+					});
+*/
+app.ext.admin.calls.appResource.init('recentnews.json',{'callback':'translateSelector','extension':'admin','selector':'#tileRecentNews'},'mutable');
+
 				app.ext.admin_launchpad.u.buildDomainTiles4Launchpad();
 				app.model.dispatchThis('immutable');
 				app.ext.admin_launchpad.u.addMouseWheel2Launchpad();
-				app.ext.admin_launchpad.u.handleTileGroupResize();
+				//!!! once we have the tile builder all done, get this out of a timeout.
+				setTimeout(function(){app.ext.admin_launchpad.u.handleTileGroupResize();},500);
 
 
 				}
@@ -109,17 +128,18 @@ var admin_launchpad = function() {
 //show logo or, if not set, some default icon.
 //change color for active domain.
 //show buttons for 'view website', 'edit domain', 'use this domain'
-				var $div = $("<div \/>").addClass('tileDomainSelect');
-				$div.on('click.domainSelect',function(){
-					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'));
-					$('.tileDomainSelect','#launchpadTiles').removeClass('greenBG');
-					$(this).addClass('greenBG');
+				var $ele = $("<li \/>").addClass('tileDomainSelect tile_1x1');
+				$ele.addClass((app.vars.domain == domainArr.id) ? 'blue8' : 'blue2')
+				$ele.on('click.domainSelect',function(){
+					app.ext.admin.a.changeDomain($(this).data('id'),$(this).data('prt'),'#!setup');
+					$(this).closest('ul').children().each(function(){$(this).removeClass('blue8').addClass('blue2');});
+					$(this).addClass('blue8').removeClass('blue2');
 					})
-				$div.data(domainArr);
+				$ele.data(domainArr);
 //if the domain object ever returns 'broken', use something like this: "+(app.vars.domain == domainArr.id ? 'icon-link-2' : 'icon-link')+"
-				$div.append("<span class='iconFont focon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span><span class='active'><\/span>");
-				return {'$content' : $div, 'size':'1x1','bgclass': (app.vars.domain == domainArr.id) ? 'green' : 'greenLight','target':'domains'};
-
+				$ele.append("<span class='iconFont focon-link icon'><\/span><span class='tilename'>"+domainArr.id+"<\/span>");
+//				return {'$content' : $ele, 'size':'1x1','bgclass': (app.vars.domain == domainArr.id) ? 'blue5' : 'blue3','target':'domains'};
+				return $ele;
 				}
 
 			}, //TILES
@@ -164,48 +184,36 @@ optional
 				$LPI = $('#launchpadInner'),
 				tileWidth = $('.tile_1x1',$LPI).first().outerWidth(true),
 				tileHeight = $('.tile_1x1',$LPI).first().outerHeight(true);
-				
-//				console.log(" -> $('body').outerHeight(): "+$('body').outerHeight());
-//				console.log(" -> window.outerHeight: "+$(window).outerHeight(true));
-//				console.log(" -> $('#mastHead').outerHeight(true): "+$('#mastHead').outerHeight(true));
-//				console.log(" ->$('#mastFoot').outerHeight(true): "+$('#mastFoot').outerHeight(true));
-//				console.log(" -> new launchpad height: "+($(window).outerHeight(true) - $('#mastHead').outerHeight(true) - $('#mastFoot').outerHeight(true) - 20));
-			//handle some sizing.
-				$LP.height(($(window).outerHeight(true) - $('#mastHead').outerHeight(true) - $('#mastFoot').outerHeight(true) - 60));  //set height of launchpad to maximize workspace. the xtra 20 is to solve a height issue that cause a window vertical scroll to appear. ### investigate when time permits.
+//handle some sizing.
+				$LP.height(($(window).outerHeight(true) - $('#mastHead').outerHeight(true) - $('#mastFoot').outerHeight(true) - 60));  //set height of launchpad to maximize workspace. the xtra is to solve a height issue that cause a window vertical scroll to appear. ### investigate when time permits.
 				$LPI.height($LP.height()); //launchpad height does NOT use outerheight so no padding/margin conflicts
 				$LPI.width('10000px'); //set high so ul's dont wrap. then readjust so no extra scrolling later.
 			
 				var rowsPerGroup = Math.floor(($LPI.height() / tileHeight));
 				$LPI.height(tileHeight * rowsPerGroup); //ensures no vertical scrolling
 			
-			//	console.log("($LPI.height() ["+$LPI.height()+"] / tileHeight ["+tileHeight+"]): "+($LPI.height() / tileHeight));
-			//	console.log("rowsPerGroup: "+rowsPerGroup);
-			//	console.log("LP.height: "+$LP.height());
-			//	console.log("LPI height: "+tileHeight * rowsPerGroup);
-			
+				app.u.dump(" -> rowsPerGroup: "+rowsPerGroup);
 			
 			//resize ul to accomodate # and sizes of tiles.
 				$('ul.launchpad_tiles',$LPI).each(function(){
 					var $ul = $(this),
-			//varying tile sizes mean there could be orpans on rows. so a double-width is counted as 2.5
+			//varying tile sizes mean there could be orpans on rows. so a double-width is counted as 2.3
 			//not uber-accurate, but should solve most cases.
-					count = $('li',$ul).length + ($('.tile_2x1',$ul).length);
+					count = $('li',$ul).length + ($('.tile_2x1',$ul).length * 1.5);
 			
-			//3 is the min. # of columns.
-					if(count > (3 * rowsPerGroup))	{
-						var width = Math.ceil(( count / rowsPerGroup )) * $('.tile_1x1',$LPI).first().outerWidth(true);
+					if(count === 0)	{
+						$ul.hide();
+						}
+					else	{
+						var width = Math.ceil(( count / rowsPerGroup )) * tileWidth;
+						if(width < (tileWidth * 2))	{width = (tileWidth * 2 )} /* two column minimum */
 						$ul.width(width);
 						}
-					else	{} //do nothing. six is the default size
 			
 					});
 				
 				$lastCol = $('.launchpad_tiles:last','#launchpadInner'); 
 				$LPI.width(($lastCol.position().left + $lastCol.outerWidth(true) + 30)); //for determining total width of all ul's + buffer.
-			//	$('body').append(" -> width: "+($lastCol.position().left + $lastCol.outerWidth(true) + 30)+"<br>");
-
-
-
 				},
 
 			addMouseWheel2Launchpad : function(){
@@ -215,10 +223,6 @@ optional
 				
 			//bind mousewheel event to launchpad.
 				$LP.bind('mousewheel', function(event, delta, deltaX, deltaY) {
-			//		console.log("delta:"+delta+" deltaX: "+deltaX+" deltaY: "+deltaY);
-			//		console.log("width: "+($LPI.width() - $LP.width())); //-1672
-			//		console.log($LPI.position().left);
-			
 			
 					$LP.css('overflow','hidden'); //once mousescroll is used to slide content, ditch the scroll bar. wheel and scroll don't play well together in chrome.
 					if(delta > 0)	{ //mouse wheel is going up. move the CONTENT element from right to left.
@@ -227,7 +231,7 @@ optional
 							$LPI.css('left',0); //position correctly in case it's a negative #.
 							}
 						else	{
-							$LPI.css({'left':"+=20"}); //move inner div.
+							$LPI.css({'left':"+=50"}); //move inner div.
 							}
 						}
 					else	{
@@ -237,7 +241,7 @@ optional
 							//already right-most. no more scrolling.
 							}
 						else	{
-							$LPI.css({'left':"-=20"}); //move inner div.
+							$LPI.css({'left':"-=50"}); //move inner div.
 							}
 						}
 					});	
@@ -254,7 +258,8 @@ optional
 						L = domains.length;
 
 						for(var i = 0; i < L; i += 1)	{
-							app.ext.admin_launchpad.u.addTileToLaunchpad(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]));
+//							app.ext.admin_launchpad.u.addTileToLaunchpad(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]));
+							$('#tilegroup2').append(app.ext.admin_launchpad.t.domain(app.data.adminDomainList['@DOMAINS'][i]))
 							}
 						}
 					}},'immutable');
