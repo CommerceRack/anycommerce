@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate');
+	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIGraphAddEditTemplate');
 	var r = {
 
 
@@ -93,7 +93,62 @@ var admin_reports = function() {
 				$('.datepicker',$content).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
 
 				app.ext.admin.u.handleAppEvents($content);
-				}
+				},
+
+//currently supported modes are:  add or edit
+			showKPIAddEditInModal : function(mode,vars)	{
+				vars = vars || {};
+//error checking...
+				if(mode)	{
+					if((mode == 'edit' && vars.uuid) || mode == 'add')	{
+//by now, we know we have a valid mode and if that mode is edit, uuid is set.
+						$D = $("<div \/>").attr('title',(mode == 'edit') ? "Edit Graph" : "Add a New Graph");
+//guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
+						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
+						$D.dialog({
+							modal: true,
+							width: '90%',
+							autoOpen: false,
+							height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
+							close: function(event, ui)	{
+								$(this).dialog('destroy').remove();
+								}
+							});
+						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':vars});
+						$D.dialog('open');
+
+						$( "ul.kpiSortable",$D).sortable({
+							connectWith: "ul.kpiSortable",
+							placeholder: "ui-state-highlight",
+							stop: function( event, ui ) {
+//once a data axis is chosen, grouping is locked.
+								if($("[data-app-role='dataSetAxisList']",$D).children().length)	{
+									$("[name='datasetGrp']",$D).attr('disabled','disabled'); 
+									}
+//unlock data axis if no children so a user can change their mind.
+								else	{
+									$("[name='datasetGrp']",$D).attr('disabled','').removeAttr('disabled');
+									}
+								}
+							});
+
+						$('.toolTip',$D).tooltip();
+//once a graph is in a collection, it stays there.
+						if(mode == 'edit')	{
+							$("[name='collection']").attr('disabled','disabled');
+							}
+						app.ext.admin.u.handleAppEvents($D);
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_reports.a.showKPIAddEditInModal, either mode is invalid ['+mode+'] (must be edit or add) or mode is edit and no uuid passed.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_reports.a.showKPIAddEditInModal, mode not specified.','gMessage':true});
+					}
+			
+				} //showKPIAddInModal
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -121,7 +176,97 @@ var admin_reports = function() {
 
 		e : {
 			
-			"ebayReportView" : function($btn)	{
+			addTriggerKPIDatasetChange : function($select)	{
+				var $form = $select.closest('form');
+				$select.off('change.addTriggerKPIDatasetChange').on('change.addTriggerKPIDatasetChange',function(){
+					if($select.val())	{
+						$("[data-app-role='axisChooser']",$form).show();
+						}
+					else	{
+						$("[data-app-role='axisChooser']",$form).hide();
+						}
+					});
+				}, //addTriggerKPIDataColumnsChange
+			addTriggerKPIDataColumnsChange : function($radio)	{
+				var $form = $radio.closest('form');
+				$radio.off('click.addTriggerKPIDataColumnsChange').on('click.addTriggerKPIDataColumnsChange',function(){
+
+					var val = $radio.val();
+					$("[data-app-role='datasetTypeContainer']",$form).show();
+					
+					if(val == 'fixed')	{
+						$("[data-app-role='fDatasetContainer']",$form).show();
+						$("[data-app-role='dDatasetContainer']",$form).hide();
+						
+						}
+					else if(val == 'dynamic')	{
+						$("[data-app-role='fDatasetContainer']",$form).hide();
+						$("[data-app-role='dDatasetContainer']",$form).show();
+						$("[data-app-role='axisChooser']",$form).hide();
+						}
+					else	{
+						//throw warning. unrecognized data
+						}
+
+					});
+				},	//addTriggerKPIDataColumnsChange		
+			addTriggerKPIGraphTypeChange : function($select)	{
+				var $form = $select.closest('form');
+				$select.off('change.addTriggerKPIGraphTypeChange').on('change.addTriggerKPIGraphTypeChange',function()	{
+					$("[data-app-role='graphTypePreview']",$form).show();
+					$("[data-app-role='graphTypePreview'] img",$form).attr('src','images/kpi/'+$select.val()+'-300x104.png');
+					$("[data-app-role='graphTypePreview'] .graphType",$form).text($select.val().replace('.',' '));
+					});
+				}, //addTriggerKPIGraphTypeChange
+			addTriggerKPIPeriodChange : function($select)	{
+				var $form = $select.closest('form');
+				$select.off('change.addTriggerKPIPeriodChange').on('change.addTriggerKPIPeriodChange',function(){
+
+					var val = $select.val();
+				//grouping is disabled till a period is chosen.
+					$("[name='grpby']",$form).attr('disabled','').removeAttr('disabled');
+					$("[name='grpby']",$form).val(''); //unselect the grouping
+				//in case period is changed from day to week, clear all disables so previously locked options are available.
+					$("option","#KPIGraphBuilder [name='grpby']").attr('disabled','').removeAttr('disabled');
+				
+				//some general rules for option disabling.
+					if(val.indexOf('day') >= 0)	{
+						$("[value='week'], [value='month'], [value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}
+					else if(val.indexOf('week') >= 0)	{
+						$("[value='month'], [value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}
+					else if(val.indexOf('month') >= 0)	{
+						$("[value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}
+					else	{
+						
+						}
+				
+				//more specific rules
+				//need more than one days data to group by day of week.
+					if(val == 'day.today' || val == 'day.yesterday')	{
+						$("[value='dow']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}
+				//need more than one weeks data to group by week.
+					if(val == 'week.this' || val == 'week.tly' || val == 'week.last')	{
+						$("[value='week']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}	
+				//need more than one months data to group by month.
+					if(val == 'month.this' || val == 'month.tly' || val == 'month.last')	{
+						$("[value='month']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						}
+
+					});
+				}, //addTriggerKPIPeriodChange
+			
+			execAdminKPIDBCollectionUpdate : function($btn)	{
+//				$btn.button();
+//A new graph save or even an existing graph update does NOT save individually. The entire collection must be updated.
+
+				},
+			
+			ebayReportView : function($btn)	{
 				$btn.button();
 				$btn.off('ebayReportCreate').on('click.ebayReportCreate',function(event){
 					event.preventDefault();
@@ -153,9 +298,9 @@ var admin_reports = function() {
 						}},'mutable');
 					app.model.dispatchThis('mutable');
 					});
-				}
+				} //ebayReportView
 			
-			}
+			} //E / Events
 
 		} //r object.
 	return r;

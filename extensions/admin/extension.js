@@ -332,6 +332,168 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminDataQuery
 
 
+//obj requires title and uuid, priority and @GRAPHS are optional.
+		adminKPIDBCollectionCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBCollectionCreate"
+				obj = obj || {};
+				if(obj.title && obj.uuid)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionCreate, uuid or title not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminKPIDBCollectionCreate'
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminKPIDBUserDataSetsList
+		adminKPIDBCollectionDetail : {
+			init : function(uuid,_tag,Q)	{
+				var r = 0;
+				if(uuid)	{
+					_tag = _tag || {}; 
+					_tag.datapointer = "adminKPIDBCollectionDetail|"+uuid
+					if(app.model.fetchData('adminKPIDBCollectionDetail|'+uuid) == false)	{
+						r = 1;
+						this.dispatch(uuid,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(uuid,_tag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionDetail, uuid not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(uuid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionDetail","uuid":uuid,"_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminKPIDBCollectionList
+		adminKPIDBCollectionList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBCollectionList"
+				if(app.model.fetchData('adminKPIDBCollectionList') == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionList","_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminKPIDBCollectionList		
+		adminKPIDBCollectionRemove : {
+			init : function(uuid,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBCollectionRemove"
+				if(uuid)	{
+					r = 1;
+					this.dispatch(uuid,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionRemove, uuid not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(uuid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionRemove","uuid":uuid,"_tag" : _tag},Q || 'immutable');	
+				}
+			}, //adminKPIDBUserDataSetsList
+//obj requires title and uuid, priority and @GRAPHS are optional.
+		adminKPIDBCollectionUpdate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBCollectionUpdate"
+				obj = obj || {};
+				if(obj.title && obj.uuid)	{
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionUpdate, uuid or title not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminKPIDBCollectionUpdate'
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminKPIDBUserDataSetsList
+/*
+<input id="dataset"></input>
+<input id="grpby">day|dow|quarter|month|week|none</input>
+<input id="detail">NONE|RAW</input>
+<input id="column">gms|distinct|total</input>
+<input id="period">a formula ex: months.1, weeks.1</period>
+<input id="startyyyymmdd">(not needed if period is passed)</input>
+<input id="stopyyyymmdd">(not needed if period is passed)</input>
+*/
+// obj required dataset, grupby, column, detail. period or starty/stop date range are needed.
+		adminKPIDBDataQuery : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(!$.isEmptyObject(obj))	{
+					if(obj.dataset && obj.grpby && obj.detail && obj.column)	{
+						if(obj.period || (obj.startyyyymmdd && obj.stopyyyymmdd))	{
+							r = 1;
+							this.dispatch(obj,_tag,Q);
+							}
+						else	{
+							$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, either period ["+obj.period+"] or start/stop ["+["+obj.startyyyymmdd+"]+"/"+obj.stopyyyymmdd+"] date range required.","gMessage":true})
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; dataset ["+obj.dataset+"], grpby ["+obj.grpby+"], detail ["+obj.detail+"] and column ["+obj.column+"] are required","gMessage":true})
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, no object passed","gMessage":true})
+					}
+
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBDataQuery"
+				app.model.addDispatchToQ({"_cmd":"adminKPIDBDataQuery","_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminKPIDBDataQuery
+		adminKPIDBUserDataSetsList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminKPIDBUserDataSetsList"
+				if(app.model.fetchData('adminKPIDBUserDataSetsList') == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminKPIDBUserDataSetsList","_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminKPIDBUserDataSetsList
+
 
 		adminMessagesList : {
 //ID will be 0 to start.

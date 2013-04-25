@@ -38,6 +38,8 @@ class can also be applied to a 1 item per row list.
 
 
 .displayNone,
+.labelsAsBreaks label.displayNone,
+.labelsAsBreaks .label.displayNone,
 .debug,
 .showForZoovyOnly,
 .showForAnyCommerceOnly,
@@ -143,6 +145,14 @@ Generic text styles
 .green	{color:#006600;}
 
 .smallTxt	{font-size:.75em;}
+
+
+
+/* some tooltip styling */
+.toolTip	{color:#F60;} /* add the tooltip class to whatever element is having tooltip applied to it. */
+.ui-tooltip	{font-size:.85em; line-height:1.3em;}
+
+
 
 /*
 some global padding and margins.
@@ -1243,6 +1253,19 @@ ex of cbc, hint and caution: search 'product' and open 'product edit'
 
 .helpDetail article {margin-bottom:24px; } /* divides each section */
 .helpDetail article, .helpDetail .hint	{font-size:1em; line-height:1.3em;} /* compensation for .hint class */
+
+
+
+
+/*
+REPORTING -> KPI
+*/
+ul.kpiSortable	{width:250px; min-height:250px; list-style:none; margin:0; padding:0;}
+ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
+.KPIGraphBuilder	{margin:50px;}
+
+
+
 
 
 /*
