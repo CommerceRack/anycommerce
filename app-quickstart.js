@@ -2989,15 +2989,22 @@ else	{
 //used for adding a single item to the cart, such as from a prodlist w/ an add to cart but no quantity inputs for bulk adding.
 			addItemToCart : function($form,obj)	{
 				app.u.dump("BEGIN myRIA.u.addItemToCart");
-				obj = obj || {'action':''}
+				obj = obj || {'action':'modal'}
 				if($form && $form.length)	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
 						if(cartObj)	{
-							app.calls.cartItemAppend.init(cartObj,{},'immutable');
+							app.calls.cartItemAppend.init(cartObj,{'callback':function(rd){
+								if(obj.action === "message"){
+									app.u.dump(rd);
+									app.u.throwMessage(rd);
+									}
+								}},'immutable');
 							app.model.destroy('cartDetail');
 							app.calls.cartDetail.init({'callback':function(rd){
-								showContent('cart',obj);
+								if(obj.action === "modal"){
+									showContent('cart',obj);
+									}
 								}},'immutable');
 							app.model.dispatchThis('immutable');
 							}
