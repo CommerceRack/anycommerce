@@ -127,7 +127,11 @@ For the list of available params, see the 'options' object below.
 //				app.u.dump(" -> msg format is _msgs.");
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 1; i <= msg['_msgs']; i += 1)	{
-						$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
+						if(msg['_msg_'+i+'_type'] !== null &&
+							msg['_msg_'+i+'_txt'] !== null &&
+							msg['_msg_'+i+'_id'] !== null){
+							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
+							}
 						}
 					}
 				else if(msg.errid)	{
