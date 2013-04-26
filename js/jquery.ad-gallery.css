@@ -7,7 +7,7 @@
 }
   .ad-gallery .ad-image-wrapper {
     width: 100%;
-    height: 400px;
+    height: 390px;
     margin-bottom: 10px;
     position: relative;
     overflow: hidden;
@@ -30,11 +30,11 @@
       right: 0;
       top: 0;
       width: 10%;
-      height: 19%;
+      height:88px;
       cursor: pointer;
       display: block;
       z-index: 100;
-	  margin-top:270px;
+	  margin-top:260px;
 	  background:#000;
 	  opacity:.8;
 	  
@@ -44,11 +44,11 @@
       left: 0;
       top: 0;
       width: 10%;
-      height: 19%;
+      height: 88px;
       cursor: pointer;
       display: block;
       z-index: 100;
-	  margin-top:271px;
+	  margin-top:260px;
 	  background:#000;
 	  opacity:0.8;
     }
@@ -62,7 +62,7 @@
         height: 30px;
         display: none;
         position: absolute;
-        top: 20%;
+        top: 30px;
         left: 0;
         z-index: 101;
       }
@@ -72,6 +72,7 @@
         height: 30px;
         right: 0;
         left: auto;
+		top:30px;
       }
     .ad-gallery .ad-image-wrapper .ad-image {
       position: absolute;
@@ -128,10 +129,12 @@
       font-style: italic;
     }
   .ad-gallery .ad-nav {
-    width: 92%;
+    width: 80%;
     position: relative;
 	margin:-140px auto;
 	z-index:9999;
+	background:#000;
+	opacity:0.8;
   }
     .ad-gallery .ad-forward, .ad-gallery .ad-back {
       position: absolute;
@@ -160,6 +163,7 @@
     .ad-gallery .ad-nav .ad-thumbs {
       overflow: hidden;
       width: 100%;
+	  height:88px;
     }
       .ad-gallery .ad-thumbs .ad-thumb-list {
         float: left;

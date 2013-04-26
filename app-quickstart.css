@@ -1442,3 +1442,15 @@ div.catCarousel h2
 .ui-state-default.nextPageButton{background:url(images/next-arrow.gif)no-repeat; height:35px; width:41px;}
 .ui-state-default.prevPageButton{background:url(images/prev_arrow.gif)no-repeat; height:35px; width:41px;}
 .ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only nextbutton{background:url(images/next-arrow.gif)}
+
+
+.ad-thumbs ul li{height:76px; margin-top:10px;}
+/*.ad-thumbs ul li h5{display:none;}
+.ad-thumbs ul li h6{display:none;}
+.ad-thumbs ul li .hideInMinimalMode pointer moreDetails{display:none;}*/
+.ad-thumbs ul li .prodThumbContainer{height:100px;}
+.ad-thumbs ul li .prodThumbContainer img{height:76px; width:100px; margin-top:6px;}
+	
+.ad-thumbs ul li h3{}
+.ad-thumbs ul li h6.ad-description-title{font-size:15px;}
+.ad-thumbs ul li .ad-description{background: none repeat scroll 0 0 #FFFFFF; height: 150px;margin-top:-327px;position: absolute;right: -55px; width: 200px; border:7px solid #1c1c1c}

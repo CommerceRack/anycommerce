@@ -315,8 +315,8 @@
           var desc = false;
           if(thumb.data('ad-desc')) {
             desc = thumb.data('ad-desc');
-          } else if(thumb.attr('alt') && thumb.attr('alt').length) {
-            desc = thumb.attr('alt');
+          } else if(thumb.addClass('alt') && thumb.attr('alt').length) {
+            desc = thumb.addClass('.ad-description');
           };
           var title = false;
           if(thumb.data('ad-title')) {
@@ -335,6 +335,7 @@
           if(thumb_count == thumbs_loaded) {
             thumb_wrapper_width -= f;
             var list = context.nav.find('.ad-thumb-list');
+					
             list.css('width', thumb_wrapper_width +'px');
             var i = 1;
             var last_height = list.height();
@@ -483,14 +484,14 @@
   	    image_width = this.image_wrapper_width;
   	    image_height = this.image_wrapper_width * ratio;
   	  };
-      return {width: '620px', height: '346px'};
+      return {width: '620px', height: '385px'};
     },
     /**
      * If the image dimensions are smaller than the wrapper, we position
      * it in the middle anyway
      */
     _centerImage: function(img_container, image_width, image_height) {
-      img_container.css('top', '0px');
+      img_container.css('top', '-49px');
       if(image_height < this.image_wrapper_height) {
         var dif = this.image_wrapper_height - image_height;
         img_container.css('top', (dif / 2) +'px');
@@ -506,13 +507,14 @@
       if(image.desc.length || image.title.length) {
         var title = '';
         if(image.title.length) {
-          title = '<strong class="ad-description-title">'+ image.title +'</strong>';
+          title = '<h3 class="ad-description-title">'+ image.title +'</h3>';
         };
         var desc = '';
         if(image.desc.length) {
-          desc = '<span>'+ image.desc +'</span>';
+          desc = '<h3 style="background: none repeat scroll 0 0 red;display: block; height: 165px; margin: -184px;position: absolute;right: 125px;width: 264px;">'+ image.desc +'</h3>';
+		  
         };
-        desc = $('<p class="ad-image-description">'+ title + desc +'</p>');
+        desc = $('<p class="ad-description">'+ title + desc +'</p>');
       };
       return desc;
     },

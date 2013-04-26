@@ -1,9 +1,5 @@
 $(function() {
-    $('img.image1').data('ad-desc', 'Whoa! This description is set through elm.data("ad-desc") instead of using the longdesc attribute.<br>And it contains <strong>H</strong>ow <strong>T</strong>o <strong>M</strong>eet <strong>L</strong>adies... <em>What?</em> That aint what HTML stands for? Man...');
-    $('img.image1').data('ad-title', 'Title through $.data');
-    $('img.image4').data('ad-desc', 'This image is wider than the wrapper, so it has been scaled down');
-    $('img.image5').data('ad-desc', 'This image is higher than the wrapper, so it has been scaled down');
-    var galleries = $('.ad-gallery').adGallery();
+       var galleries = $('.ad-gallery').adGallery();
     setTimeout(function() {
       galleries[0].addImage("images123/thumbs/t7.jpg", "images123/7.jpg");
     }, 1000);

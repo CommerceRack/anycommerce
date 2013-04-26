@@ -674,10 +674,10 @@ the homepageTemplate template is loaded into mainContentArea by default when the
   <script type="text/javascript" src="js/jquery.ad-gallery.js"></script>
   <script type="text/javascript">
   $(function() {
-    $('img.image1').data('ad-desc', 'Whoa! This description is set through elm.data("ad-desc") instead of using the longdesc attribute.<br>And it contains <strong>H</strong>ow <strong>T</strong>o <strong>M</strong>eet <strong>L</strong>adies... <em>What?</em> That aint what HTML stands for? Man...');
-    $('img.image1').data('ad-title', 'Title through $.data');
-    $('img.image4').data('ad-desc', 'This image is wider than the wrapper, so it has been scaled down');
-    $('img.image5').data('ad-desc', 'This image is higher than the wrapper, so it has been scaled down');
+    //$('img.image1').data('ad-desc', 'Whoa! This description is set through elm.data("ad-desc") instead of using the longdesc attribute.<br>And it contains <strong>H</strong>ow <strong>T</strong>o <strong>M</strong>eet <strong>L</strong>adies... <em>What?</em> That aint what HTML stands for? Man...');
+   // $('img.image1').data('ad-title', 'Title through $.data');
+    //$('img.image4').data('ad-desc', 'This image is wider than the wrapper, so it has been scaled down');
+    //$('img.image5').data('ad-desc', 'This image is higher than the wrapper, so it has been scaled down');
     var galleries = $('.ad-gallery').adGallery();
     $('#switch-effect').change(
       function() {
@@ -697,7 +697,68 @@ the homepageTemplate template is loaded into mainContentArea by default when the
       </div>
       <div class="ad-nav">
         <div class="ad-thumbs">
-          <ul class="ad-thumb-list">
+        <!--<ul class="ad-thumb-list" >
+        <li>
+        <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/N/nn7469_1">
+        <img class="image0" width="120" height="400" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/N/nn7469_1"/>
+        </a>
+        </li>
+         <li>
+        <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/W/wdblair02_1">
+        <img class="image1" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/W/wdblair02_1">
+        </a>
+        </li>
+        </ul>-->
+        <ul class='ad-thumb-list'>
+        <li>
+        <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1178_1">
+       <img class="image0" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1178_1"/>
+       
+        </a>
+        <alt  class="ad-description">
+        <h3 class="ad-description-title">US M7 Shoulder Holster</h3>
+        <h6 class="ad-description-title">
+          Our Price:
+           $39
+          <span class="cents" style="vertical-align:super;">.99</span>
+        </h6>
+       <img class="pointer" src="images/details.png" alt="View Item" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
+        </alt>
+        </li>
+        
+         <li>
+          <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1505_1">
+        <img class="image1" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1505_1">
+        </a>
+        <alt  class="ad-description">
+       <h3 class="ad-description-title">German WWII Potato Masher Inert Stick Grenade</h3>
+       <h6 class="ad-description-title">
+Our Price:
+$35
+<span class="cents" style="vertical-align:super;">.99</span>
+</h6>
+<img class="pointer" src="images/details.png" alt="View Item" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
+        </alt>
+        </li>
+     <li>
+        <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/D/dooku_on_stand">
+        <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/D/dooku_on_stand"/>
+        </a>
+        </li>
+        <li>
+        <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/F/fc2012">
+      <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/F/fc2012"/>
+      </a>
+      </li>
+      <li>
+      <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/S/style_c_cap_salutes_you">
+      <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/S/style_c_cap_salutes_you">
+      </a>
+      </li>
+        </ul>
+        
+        
+          <!--<ul class="ad-thumb-list">
                  <li>
               <a href="images/1.jpg">
                 <img src="images/thumbs/t1.jpg" class="image0">
@@ -768,7 +829,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
                 <img src="images/thumbs/t9.jpg" title="A title for 9.jpg" alt="This is a nice, and incredibly descriptive, description of the image 9.jpg" class="image13">
               </a>
             </li>
-          </ul>
+          </ul>-->
         </div>
       </div>
     </div>
@@ -1161,7 +1222,9 @@ Product Line</li>
  <a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return ;'>See reviews or write one!</a>
  </menu>
  
-	<div class="socialLinks"></div>
+	<div class="socialLinks">
+    
+    </div>
 
 
 	<table class='marginBottom fullWidth gridTable' app-data-role='childrenSiblingsContainer'>
@@ -1183,19 +1246,24 @@ Product Line</li>
 	<!--<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>-->
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
-	<img src="images/share.png" width="88" height="42"><a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/wishlist.png"></a>
+
+	<img src="images/share.png" width="88" height="42">
+    <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/wishlist.png"></a>
 
 	</menu>
 	<section class='marginBottom'>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
 	</section>
+    
 <ul class="bottomP">
 <li><img src="images/redalert.gif" width="20" height="17">Choking Hazard Warning</li>
 <li><img src="images/grayalert.gif" width="20" height="17">Usually Ships in 1-2 Days</li>
 <li><img src="images/grayalert.gif" width="20" height="17">Eligible for FREE Shipping</li>
 <li><img src="images/grayalert.gif" width="20" height="17">Available for Store Pick-up</li>
+
 </ul>
+
 	</td>
     
 </tr>
@@ -1713,7 +1781,7 @@ subscribeListsArticle is used for authenticated buyers
 	<div class='previewListContainer'>
     <ul class="sortby">
                                       <h2>Sort By Price</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS:'price',mode : 'avg'});">$2,500 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
