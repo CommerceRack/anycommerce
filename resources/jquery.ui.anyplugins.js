@@ -460,7 +460,7 @@ either templateID or (data or datapointer) are required.
 //				app.u.dump(" -> templateID specified. create Instance.");
 				this.element.append(app.renderFunctions.createTemplateInstance(o.templateID,o.dataAttribs));
 				if(o.showLoading)	{
-					this.element.showLoading(o.showLoadingMessage);
+					this.element.showLoading({'message':o.showLoadingMessage});
 					}
 				}
 //if just translating because the template has already been rendered

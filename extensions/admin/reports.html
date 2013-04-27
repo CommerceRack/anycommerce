@@ -57,6 +57,43 @@
 
 
 
+<div id='KPIManagerPageTemplate' class='page pageUser' data-app-role='slimLeftContainer'>
+
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+
+<ul class='listStyleNone noPadOrMargin roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
+
+	</section>
+
+	<section class='slimLeftContent' data-app-role='slimLeftContent'>
+
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button>Add New Chart</button>
+				<button>Save Chart Position</button>
+			</div>
+			<h3 class='heading'>KPI - Marketplace Sales (collection)</h3>
+		</div>
+		<div class='ui-widget-content ui-corner-bottom'>
+graphs
+		</div>
+
+	</section>
+
+
+</div>
+
+
+
+<ul>
+
+	<li id='KPICollectionListTemplate' class='ui-state-default' data-app-event="admin_reports|addTriggerKPICollectionList">
+	<span data-bind="var:collection(TITLE); format:text;"></span>
+	</li>
+
+</ul>
+
+
 
 
 
@@ -228,8 +265,8 @@
 <div data-app-role='axisChooser' class='label displayNone'>
 <table>
 <tr>
-	<td class='ui-widget-content valignTop'>
-	<div class='ui-widget-header ui-widget-header-padding'>Your Domains:</div>
+	<td class='ui-widget-content valignTop ui-corner-left'>
+	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tl'>Your Domains:</div>
 	<ul class='kpiSortable'>
 		<li>domain 1</li>
 		<li>domain 2</li>
@@ -240,8 +277,8 @@
 	</ul>
 	</td>
 	
-	<td class='ui-widget-content valignTop'>
-	<div class='ui-widget-header ui-widget-header-padding'>Graph Data/Order:</div>
+	<td class='ui-widget-content valignTop ui-corner-right'>
+	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tr'>Graph Data/Order:</div>
 	<ul class='kpiSortable' data-app-role='dataSetAxisList'>
 	</ul>
 	</td>

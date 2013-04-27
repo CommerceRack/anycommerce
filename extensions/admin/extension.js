@@ -2128,8 +2128,9 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 //						app.u.dump(" -> is #:");
 						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
+						opts.tab = opts.tab || path.substring(2);
 						path = "/biz/"+path.substring(2)+"/index.cgi";
-						opts.tab == opts.tab || path.substring(2);
+//						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
@@ -2177,13 +2178,15 @@ if(opts.dialog){
 else if(opts.tab)	{
 	opts.targetID = opts.tab+"Content";
 	$target = $(app.u.jqSelector('#',opts.targetID));
+//this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 	if(opts.tab != 'orders')	{
 		app.ext.admin_orders.u.handleOrderListTab('deactivate');
 		}
 	if(opts.tab != 'product')	{
 		app.ext.admin_prodEdit.u.handleProductListTab('deactivate');
 		}
-	} 
+	}
+//no tab was specified. use the open tab, if it's set.
 else if(app.ext.admin.vars.tab)	{
 	opts.targetID = app.ext.admin.vars.tab+"Content";
 	$target = $(app.u.jqSelector('#',opts.targetID));
@@ -2219,7 +2222,7 @@ if($target && $target.length)	{
 		}
 	}
 else	{
-	app.u.throwGMessage("Warning! target could not be found or does not exist on the DOM for admin.a.showUI.");
+	app.u.throwGMessage("Warning! In in showUI, insuffient data available to determine where content should be displayed. likely no 'tab' was specified or vars.tab is not set.");
 	}
 						} //end 'if' for mode.
 					else	{
@@ -2834,6 +2837,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
 					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
 					}
+				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
@@ -2954,21 +2958,20 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 //executed from within showUI. probably never want to execute this function elsewhere.
 //this is for handling legacy paths.
 			handleShowSection : function(path,P,$target)	{
-				var tab = app.ext.admin.u.getTabFromPath(path);
+				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
 				this.bringTabIntoFocus(tab);
-//				app.u.dump(" -> tab: "+tab);
+				app.u.dump(" -> tab: "+tab);
 				if(tab == 'product' && !P.dialog)	{
 //					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
-//				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
-//					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-//					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-//					$("#ordersContent").empty();
-//					app.ext.admin_orders.a.initOrderManager({"targetID":"ordersContent"});
-//					}
+				else if(tab == 'kpi')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_reports.a.showKPIInterface();
+					}
 				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.

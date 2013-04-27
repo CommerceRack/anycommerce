@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIGraphAddEditTemplate');
+	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddEditTemplate','KPICollectionListTemplate');
 	var r = {
 
 
@@ -93,6 +93,25 @@ var admin_reports = function() {
 				$('.datepicker',$content).change(function(){$(this).val(parseInt($(this).val()) / 1000);}); //strip milliseconds from epoch
 
 				app.ext.admin.u.handleAppEvents($content);
+				},
+
+
+			showKPIInterface : function()	{
+				
+				var $KPI = $('#kpiContent').empty();
+				$KPI.anycontent({'templateID':'KPIManagerPageTemplate','showLoadingMessage':'Fetching list of collections'});
+				
+				app.ext.admin.calls.adminKPIDBCollectionList.init({'callback':function(rd){
+					$KPI.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+							app.u.throwMessage(rd);
+							}
+						else	{
+							$("[data-app-role='slimLeftNav']",$KPI).anycontent({'datapointer':rd.datapointer});
+							
+							}
+					}},'mutable');
+				app.model.dispatchThis();
 				},
 
 //currently supported modes are:  add or edit
@@ -171,10 +190,16 @@ var admin_reports = function() {
 			
 				var table = new google.visualization.Table(document.getElementById(id));
 				table.draw(data, {showRowNumber: true});
-				}
+				} //drawTable
 			}, //u
 
 		e : {
+			
+			addTriggerKPICollectionList : function($ele)	{
+				$ele.off('click.addTriggerKPICollectionList').on('click.addTriggerKPICollectionList',function(){
+					alert('show a chart collection');
+					});
+				},
 			
 			addTriggerKPIDatasetChange : function($select)	{
 				var $form = $select.closest('form');

@@ -273,7 +273,7 @@ var admin_prodEdit = function() {
 
 
 		handleProductListTab : function(process)	{
-			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
+//			app.u.dump("BEGIN admin_prodEdit.u.handleProductListTab");
 			var $target = $('#productListTab');
 			if($target.length)	{
 //init should be run when the extension is loaded. adds click events and whatnot.
