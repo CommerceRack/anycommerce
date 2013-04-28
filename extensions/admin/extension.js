@@ -2961,13 +2961,16 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
 				this.bringTabIntoFocus(tab);
 				app.u.dump(" -> tab: "+tab);
+				app.u.dump(" -> path: "+path);
 				if(tab == 'product' && !P.dialog)	{
 //					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_prodEdit.u.showProductEditor(path,P);
 					}
-				else if(tab == 'kpi')	{
+				else if(tab == 'kpi' || path == '/biz/kpi/index.cgi')	{
+					app.ext.admin.u.bringTabIntoFocus('kpi');
+					app.ext.admin.u.bringTabContentIntoFocus($('#kpiContent'));
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_reports.a.showKPIInterface();

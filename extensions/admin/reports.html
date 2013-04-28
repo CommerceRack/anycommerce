@@ -57,7 +57,7 @@
 
 
 
-<div id='KPIManagerPageTemplate' class='page pageUser' data-app-role='slimLeftContainer'>
+<div id='KPIManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
 
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
@@ -65,16 +65,17 @@
 
 	</section>
 
-	<section class='slimLeftContent' data-app-role='slimLeftContent'>
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
 
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button>Add New Chart</button>
+				<button>Add New Collection</button>
+				<button data-app-event="admin_reports|showChartAdd">Add New Chart</button>
 				<button>Save Chart Position</button>
 			</div>
 			<h3 class='heading'>KPI - Marketplace Sales (collection)</h3>
 		</div>
-		<div class='ui-widget-content ui-corner-bottom'>
+		<div class='ui-widget-content ui-corner-bottom slimLeftContent' data-app-role='slimLeftContent'>
 graphs
 		</div>
 
@@ -87,13 +88,17 @@ graphs
 
 <ul>
 
-	<li id='KPICollectionListTemplate' class='ui-state-default' data-app-event="admin_reports|addTriggerKPICollectionList">
+	<li id='KPICollectionListTemplate' class='ui-state-default pointer' data-app-event="admin_reports|addTriggerKPICollectionList">
 	<span data-bind="var:collection(TITLE); format:text;"></span>
 	</li>
 
 </ul>
 
+<select>
 
+	<option id='KPICollectionOptionTemplate' data-bind="var:collection(TITLE); format:text;"></option>
+
+</select>
 
 
 
@@ -113,11 +118,7 @@ graphs
 <div class='label'><select name='collection' required='required'>
 	<option selected='selected' disabled='disabled'>graph location</option>
 	<option>launchpad</option><!-- if selected, remove 'size' option. add tile group option -->
-	<optgroup label="KPI">
-		<option>Collection 1</option>
-		<option>Collection 2</option>
-		<option>Collection 3</option>
-		<option>Collection 4</option>
+	<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
 	</optgroup>
 	<!-- this is dynamically generated -->
 </select>

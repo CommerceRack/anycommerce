@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddEditTemplate','KPICollectionListTemplate');
+	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddEditTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate');
 	var r = {
 
 
@@ -108,7 +108,7 @@ var admin_reports = function() {
 							}
 						else	{
 							$("[data-app-role='slimLeftNav']",$KPI).anycontent({'datapointer':rd.datapointer});
-							
+							app.u.handleAppEvents($KPI);
 							}
 					}},'mutable');
 				app.model.dispatchThis();
@@ -133,7 +133,9 @@ var admin_reports = function() {
 								$(this).dialog('destroy').remove();
 								}
 							});
-						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':vars});
+							app.u.dump(" -> extended: ");
+							app.u.dump($.extend(true,vars,app.data['adminKPIDBCollectionList']));
+						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'])});
 						$D.dialog('open');
 
 						$( "ul.kpiSortable",$D).sortable({
@@ -194,10 +196,49 @@ var admin_reports = function() {
 			}, //u
 
 		e : {
-			
+
 			addTriggerKPICollectionList : function($ele)	{
 				$ele.off('click.addTriggerKPICollectionList').on('click.addTriggerKPICollectionList',function(){
-					alert('show a chart collection');
+					var $parent = $ele.closest(".slimLeftContainer"),
+					$content = $("[data-app-role='slimLeftContent']",$parent).first();
+					$content.empty().showLoading({'message':'Fetching list of graphs'});
+					app.ext.admin.calls.adminKPIDBCollectionDetail.init($ele.data('id'),{'callback':function(rd){
+						$content.hideLoading();
+						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+						else	{
+							//get detail for each graph
+							}
+						}},'mutable');
+					app.model.dispatchThis('mutable');
+					});
+				},
+			
+			showChartAdd : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
+				$btn.off('click.showChartAdd').on('click.showChartAdd',function(){
+					app.ext.admin_reports.a.showKPIAddEditInModal('add',{});
+					});
+				},
+			//NOT DONE.
+			showAdminKPIDBCollectionCreate : function($btn)	{
+//				$btn.button();
+				$btn.off('click.showAdminKPIDBCollectionCreate').on('click.showAdminKPIDBCollectionCreate',function(){
+
+//by now, we know we have a valid mode and if that mode is edit, uuid is set.
+						$D = $("<div \/>").attr('title',"Add a New Collection");
+//guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
+						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
+						$D.dialog({
+							modal: true,
+							width: '90%',
+							autoOpen: false,
+							height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
+							close: function(event, ui)	{
+								$(this).dialog('destroy').remove();
+								}
+							});
+						$D.dialog('open');
+
 					});
 				},
 			
@@ -247,39 +288,41 @@ var admin_reports = function() {
 				var $form = $select.closest('form');
 				$select.off('change.addTriggerKPIPeriodChange').on('change.addTriggerKPIPeriodChange',function(){
 
-					var val = $select.val();
+					var val = $select.val(),
+					$groupby = $("[name='grpby']",$form);
+					
 				//grouping is disabled till a period is chosen.
-					$("[name='grpby']",$form).attr('disabled','').removeAttr('disabled');
-					$("[name='grpby']",$form).val(''); //unselect the grouping
+					$groupby.attr('disabled','').removeAttr('disabled');
+					$groupby.val(''); //unselect the grouping
 				//in case period is changed from day to week, clear all disables so previously locked options are available.
-					$("option","#KPIGraphBuilder [name='grpby']").attr('disabled','').removeAttr('disabled');
+					$("option",$groupby).attr('disabled','').removeAttr('disabled');
 				
 				//some general rules for option disabling.
 					if(val.indexOf('day') >= 0)	{
-						$("[value='week'], [value='month'], [value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='week'], [value='month'], [value='quarter']",$groupby).attr('disabled','disabled');
 						}
 					else if(val.indexOf('week') >= 0)	{
-						$("[value='month'], [value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='month'], [value='quarter']",$groupby).attr('disabled','disabled');
 						}
 					else if(val.indexOf('month') >= 0)	{
-						$("[value='quarter']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='quarter']",$groupby).attr('disabled','disabled');
 						}
 					else	{
-						
+
 						}
 				
 				//more specific rules
 				//need more than one days data to group by day of week.
 					if(val == 'day.today' || val == 'day.yesterday')	{
-						$("[value='dow']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='dow']",$groupby).attr('disabled','disabled');
 						}
 				//need more than one weeks data to group by week.
 					if(val == 'week.this' || val == 'week.tly' || val == 'week.last')	{
-						$("[value='week']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='week']",$groupby).attr('disabled','disabled');
 						}	
 				//need more than one months data to group by month.
 					if(val == 'month.this' || val == 'month.tly' || val == 'month.last')	{
-						$("[value='month']","#KPIGraphBuilder [name='grpby']").attr('disabled','disabled');
+						$("[value='month']",$groupby).attr('disabled','disabled');
 						}
 
 					});
