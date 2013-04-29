@@ -2994,12 +2994,7 @@ else	{
 					var cartObj = app.ext.store_product.u.buildCartItemAppendObj($form);
 					if(cartObj)	{
 						if(cartObj)	{
-							app.calls.cartItemAppend.init(cartObj,{'callback':function(rd){
-								if(obj.action === "message"){
-									app.u.dump(rd);
-									app.u.throwMessage(rd);
-									}
-								}},'immutable');
+							app.calls.cartItemAppend.init(cartObj,{},'immutable');
 							app.model.destroy('cartDetail');
 							app.calls.cartDetail.init({'callback':function(rd){
 								if(obj.action === "modal"){
