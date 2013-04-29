@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130424123120",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130429064620",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -687,6 +687,9 @@ the homepageTemplate template is loaded into mainContentArea by default when the
     );
    
   });
+  
+	$("div .ad-description").text($(this).data("text"));
+	
   </script>
 <div class="sliderM">
 <div class="bannerS">
@@ -712,47 +715,48 @@ the homepageTemplate template is loaded into mainContentArea by default when the
         <ul class='ad-thumb-list'>
         <li>
         <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1178_1">
-       <img class="image0" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1178_1"/>
+       <img class="image0" width="120" height="120" title=""  alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1178_1"/>
        
         </a>
-        <alt  class="ad-description">
+        
+   <div  class="ad-description">
         <h3 class="ad-description-title">US M7 Shoulder Holster</h3>
         <h6 class="ad-description-title">
           Our Price:
            $39
           <span class="cents" style="vertical-align:super;">.99</span>
         </h6>
-       <img class="pointer" src="images/details.png" alt="View Item" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
-        </alt>
+       <img class="pointer" src="images/details.png" alt="View Item" onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
+        </div>
         </li>
         
          <li>
           <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1505_1">
-        <img class="image1" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1505_1">
+        <img class="image1" width="92" height="65" alt="German WWII Potato Masher Inert Stick Grenade" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/1/1505_1">
         </a>
-        <alt  class="ad-description">
+        <!--<div  class="ad-description">
        <h3 class="ad-description-title">German WWII Potato Masher Inert Stick Grenade</h3>
        <h6 class="ad-description-title">
 Our Price:
 $35
 <span class="cents" style="vertical-align:super;">.99</span>
 </h6>
-<img class="pointer" src="images/details.png" alt="View Item" onclick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
-        </alt>
+<img class="pointer" src="images/details.png" alt="View Item" onClick="return showContent('product',{'pid':$(this).parent().attr('data-pid')})"/>
+        </div>-->
         </li>
      <li>
         <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/D/dooku_on_stand">
-        <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/D/dooku_on_stand"/>
+        <img class="prodThumb" width="92" height="65" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/D/dooku_on_stand"/>
         </a>
         </li>
         <li>
         <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/F/fc2012">
-      <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/F/fc2012"/>
+      <img class="prodThumb" width="92" height="65" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/F/fc2012"/>
       </a>
       </li>
       <li>
       <a href="http://static.zoovy.com/img/redford/W120-H120-Bffffff/S/style_c_cap_salutes_you">
-      <img class="prodThumb" width="120" height="120" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/S/style_c_cap_salutes_you">
+      <img class="prodThumb" width="92" height="65" alt="" src="http://static.zoovy.com/img/redford/W120-H120-Bffffff/S/style_c_cap_salutes_you">
       </a>
       </li>
         </ul>
@@ -857,6 +861,7 @@ $35
 <!-- a sample of how to get a 'list' src onto the page. -->
 	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul></div>
 
+    
 <div class="featuredCategories">
 		<div class="catNav">
 			<div class="catNavContent">
@@ -873,30 +878,30 @@ $35
 		<div class="catCarousel">
 			<div class="ccItem">
 				<h2>FEATURED CATEGORIES</h2>
-				<ul id="carCat1" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'>
+				<ul id="carCat1" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'>
                
                 </ul>
                  <p align="center"><img class="btnViewAllCategories" src="images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories"/></p>
 			</div>
 			<div class="ccItem">
 				<h2>WHAT'S HOT</h2>
-				<ul id="carCat2" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>NEW ARRIVALS</h2>
-				<ul id="carCat3" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>ITEM TYPE</h2>
-				<ul id="carCat4" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"item type"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"item type"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>BY MANUFACTURER</h2>
-				<ul id="carCat5" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"by manufacturer figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"by manufacturer figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>			
             <div class="ccItem">
 				<h2>CLEARANCE</h2>
-				<ul id="carCat6" data-bind='var: elastic-native({"size":"20","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat6" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
@@ -991,7 +996,7 @@ remember to NOT put the button inside the 'onclick' container or two events will
 </p>
 		
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
-<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span>
 	</div>
 	
 	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
@@ -1179,6 +1184,8 @@ this will likely become more flexible in the future. ###
 </ul>
 </div>
 
+
+
     <!--
 <li><img src="images/redb.gif" width="20" height="21" style="margin:10px 8px 2px 0;">Marvel Super Hero Chess Figure Collection
 #017 Harley Quinn Black Queen, Third
@@ -1267,7 +1274,9 @@ Product Line</li>
 	</td>
     
 </tr>
+
 <tr>
+
 	<td colspan='2' class="tabbedProductContentTD">
 <!--
 the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
@@ -1324,11 +1333,14 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 	</td>
 </tr>
 </table>
-<!--
+
+
+
 <div class='prodlistRelatedContainer'>
 	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
 </div>
--->
+
+
 
 
 </div><!-- productTemplate -->
@@ -1591,6 +1603,56 @@ also email us at <a href="mailto:help@toywars.com">help@toywars.com</a>. </div>
 			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
 		</div>
 
+	</div>
+    <div class="featuredCategories">
+		<div class="catNav">
+			<div class="catNavContent">
+				<p class="prevCat" style="float:left; color:#FFFFFF;   font-size:24px; padding-top:16px;">CLEARANCE</p>
+                <p class="nextCat" style="float:right;  color:#FFFFFF;  font-size:24px; padding-top:16px; margin-right:-8px;">WHAT'S HOT </p>
+				<img class="btnCatBack catButton" src="images/button-featured-cat-nav-back.png" alt="Back" style="display:block;"/>
+                
+				<p class="currentCat">FEATURED CATEGORIES</p>
+				<img class="btnCatNext catButton" src="images/button-featured-cat-nav-next.png" alt="Next" style="display:block;" />
+				<!--<p class="nextCat navCats"></p>-->
+			</div>
+			<!--<img id="featuredNav" src="site/images/banner-featured-categories.png" alt="Featured Categories" />-->
+		</div>
+		<div class="catCarousel2">
+			<div class="ccItem1">
+				<h2>FEATURED CATEGORIES</h2>
+				<ul id="carCat1" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'>
+               
+                </ul>
+                 <p align="center"><img class="btnViewAllCategories" src="images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories"/></p>
+			</div>
+			<div class="ccItem1">
+				<h2>WHAT'S HOT</h2>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem1">
+				<h2>NEW ARRIVALS</h2>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem1">
+				<h2>ITEM TYPE</h2>
+				<ul id="carCat4" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"item type"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+			<div class="ccItem1">
+				<h2>BY MANUFACTURER</h2>
+				<ul id="carCat5" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"by manufacturer figure"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>			
+            <div class="ccItem1">
+				<h2>CLEARANCE</h2>
+				<ul id="carCat6" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+			</div>
+		</div>
+		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
+		
+		
+		<!--<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>-->
+		
+		
+		<!--<img class="btnViewAllCategories" src="site/images/button-view-all-categories.png" onClick="return showContent('category',{'navcat' : '.'});" alt="View All Categories" />-->
 	</div>
 
 </div><!-- /companyTemplate -->
@@ -1991,7 +2053,7 @@ So the cart template should contain these two elements and the extension should 
 			</div>
 <div class='cartZipCodeContainer'>
 	<!--<label for='data-ship_zip'>Zip/Postal Code:</label>-->
-	<select  name='ship/postal' id='data-ship_zip' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+	<select  name='ship/postal' class="my-dropdown"  id='data-ship_zip' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
 	app.ext.store_cart.u.updateCartSummary();
 	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
 	app.model.dispatchThis('immutable');"><option value="Standard Shipping(1-3 Day)">Standard Shipping(1-3 Day)</option></select>
@@ -2068,10 +2130,47 @@ document.getElementById('qtyval').innerHTML=a;
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
         <span id='qtyval' class="qtyval" style="font-size:13px; color:#990000; font-weight:bold;">1</span>
         <span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' style="font-size:13px; font-weight:bold;"></span><br><br>
+<style>
+        .black_overlay{
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index:1001;
+            -moz-opacity: 0.8;
+            opacity:.80;
+            filter: alpha(opacity=80);
+        }
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            padding: 16px;
+            border: 16px solid orange;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+    </style>
+<script type="text/javascript">
+document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
+</script>
+<p>This is the main content. To display a lightbox click <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">here</a></p>
+        <div id="light" class="white_content">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>
+        <div id="fade" class="black_overlay"></div>
         
+                <span class="savelater"><a href="#" onClick="popup(this);">Save this for  later!</a></span>
+
         <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
 <br/><br/>
-<select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+
+<select type='number' id="my-dropdown"   class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 		<!--<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 -->

@@ -333,7 +333,7 @@
       var inter = setInterval(
         function() {
           if(thumb_count == thumbs_loaded) {
-            thumb_wrapper_width -= f;
+            thumb_wrapper_width -= t;
             var list = context.nav.find('.ad-thumb-list');
 					
             list.css('width', thumb_wrapper_width +'px');

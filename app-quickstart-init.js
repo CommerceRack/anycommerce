@@ -57,6 +57,31 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 }]);
 
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed1.js']);	
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
+app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
+app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
+app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
+app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
+	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
+}]);
+
 
 
 //add tabs to product data.
