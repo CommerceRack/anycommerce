@@ -58,7 +58,7 @@
 
 
 <div id='KPIManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
-
+	<div class='appMessaging clearfix'></div><!-- used for error display -->
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
 <ul class='listStyleNone noPadOrMargin roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
@@ -224,11 +224,11 @@ graphs
 
 <div class='label displayNone' data-app-role='datasetTypeContainer'>
 	<div class='label'>Data:</div>
-	
+
 	<label><input type='radio' name='dataColumns' value='1' /> Gross Sales</label>
 	<label><input type='radio' name='dataColumns' value='2' /> # Orders</label>
 	<label><input type='radio' name='dataColumns' value='3' /> # Units Sold</label>
-	
+
 </div>
 
 
@@ -249,17 +249,17 @@ graphs
 <div data-app-role='fDatasetContainer' class='label displayNone'>
 <select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange">
 	<option>Dataset By</option>
-	<option value='global'>All Domains/Partitions</option>
-	<option value='affiliate'>Affiliate</option>
-	<option value='coupon'>Coupon</option>
-	<option value='crm'>CRM</option><!-- returns -->
-	<option value='domain'>Domain</option>
-	<option value='mfg'>Manufacturer</option>
-	<option value='mkt'>Marketplace / Syndication</option>
-	<option value='partition'>Partition</option>
-	<option value='prodtag'>Product Tag</option>
-	<option value='supplier'>Supplier</option>
+	<option value='OVERALL'>All Domains/Partitions</option>
+	<option value='COUPON'>Coupon</option>
+	<option value='DOMAIN'>Domain</option>
+	<option value='MANUFACTURER'>Manufacturer</option>
+	<option value='MARKETPLACE'>Marketplace / Syndication</option>
+	<option value='PARTITION'>Partition</option>
+	<option value='PRODUCT_TAG'>Product Tag</option>
+	<option value='SUPPLIER'>Supplier</option>
+	<option value='OTHER'>Other (affiliate, crm, etc)</option><!-- returns -->
 </select>
+<span class='toolTip' title="Determines the list of available axis points. Axis points in a chart can only come from one dataset. Once an axis point is set, this list will disable itself. To change the dataset, remove all selected axis points.">?</span>
 </div>
 
 
@@ -267,20 +267,14 @@ graphs
 <table>
 <tr>
 	<td class='ui-widget-content valignTop ui-corner-left'>
-	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tl'>Your Domains:</div>
-	<ul class='kpiSortable'>
-		<li>domain 1</li>
-		<li>domain 2</li>
-		<li>domain 3</li>
-		<li>domain 4</li>
-		<li>domain 5</li>
-		<li>domain 6</li>
+	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tl'>Available Axis Points:</div>
+	<ul class='kpiSortable' data-app-role='dataSetAxisListAll'>
 	</ul>
 	</td>
 	
 	<td class='ui-widget-content valignTop ui-corner-right'>
-	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tr'>Graph Data/Order:</div>
-	<ul class='kpiSortable' data-app-role='dataSetAxisList'>
+	<div class='ui-widget-header ui-widget-header-padding  ui-corner-tr'>Selected Axis Points/Order:</div>
+	<ul class='kpiSortable' data-app-role='dataSetAxisListSelected'>
 	</ul>
 	</td>
 </tr>

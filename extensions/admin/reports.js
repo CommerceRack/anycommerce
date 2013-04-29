@@ -100,7 +100,7 @@ var admin_reports = function() {
 				
 				var $KPI = $('#kpiContent').empty();
 				$KPI.anycontent({'templateID':'KPIManagerPageTemplate','showLoadingMessage':'Fetching list of collections'});
-				
+				app.ext.admin.calls.adminKPIDBUserDataSetsList.init({},'mutable');
 				app.ext.admin.calls.adminKPIDBCollectionList.init({'callback':function(rd){
 					$KPI.hideLoading();
 					if(app.model.responseHasErrors(rd)){
@@ -128,14 +128,14 @@ var admin_reports = function() {
 							modal: true,
 							width: '90%',
 							autoOpen: false,
-							height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
+							height : ($(window).height() - 100), //accomodate small browsers/mobile devices.
 							close: function(event, ui)	{
 								$(this).dialog('destroy').remove();
 								}
 							});
-							app.u.dump(" -> extended: ");
-							app.u.dump($.extend(true,vars,app.data['adminKPIDBCollectionList']));
-						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'])});
+//							app.u.dump(" -> extended: ");
+//							app.u.dump($.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList']));
+						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList'])});
 						$D.dialog('open');
 
 						$( "ul.kpiSortable",$D).sortable({
@@ -143,7 +143,7 @@ var admin_reports = function() {
 							placeholder: "ui-state-highlight",
 							stop: function( event, ui ) {
 //once a data axis is chosen, grouping is locked.
-								if($("[data-app-role='dataSetAxisList']",$D).children().length)	{
+								if($("[data-app-role='dataSetAxisListSelected']",$D).children().length)	{
 									$("[name='datasetGrp']",$D).attr('disabled','disabled'); 
 									}
 //unlock data axis if no children so a user can change their mind.
@@ -192,7 +192,28 @@ var admin_reports = function() {
 			
 				var table = new google.visualization.Table(document.getElementById(id));
 				table.draw(data, {showRowNumber: true});
-				} //drawTable
+				}, //drawTable
+			
+			getDatasetAxisByTypeAsListItems : function(type)	{
+				if(type && app.data.adminKPIDBUserDataSetsList && app.data.adminKPIDBUserDataSetsList['@DATASETS'])	{
+					var $ul = $("<ul \/>"),
+					DS = app.data.adminKPIDBUserDataSetsList['@DATASETS'], //shortcut
+					L = DS.length
+					
+					for(var i = 0; i < L; i += 1)	{
+						if(DS[i][0] == type)	{$("<li \/>").data(DS[i]).text(DS[i][2]).appendTo($ul)}
+						}
+					
+					}
+				else if(!type)	{
+					$('.appMessaging').anymessage({'message':'In admin_reports.u.getDatasetAxisByTypeAsListItems, type not passed.','gMessage':true});
+					}
+				else	{
+					$('.appMessaging').anymessage({'message':'In admin_reports.u.getDatasetAxisByTypeAsListItems, app.data.adminKPIDBUserDataSetsList not set.','gMessage':true});
+					}
+				return ($ul.children().length) ? $ul.children() : false;
+				}
+			
 			}, //u
 
 		e : {
@@ -247,6 +268,7 @@ var admin_reports = function() {
 				$select.off('change.addTriggerKPIDatasetChange').on('change.addTriggerKPIDatasetChange',function(){
 					if($select.val())	{
 						$("[data-app-role='axisChooser']",$form).show();
+						$("[data-app-role='dataSetAxisListAll']",$form).empty().append(app.ext.admin_reports.u.getDatasetAxisByTypeAsListItems($select.val()));
 						}
 					else	{
 						$("[data-app-role='axisChooser']",$form).hide();

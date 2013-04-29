@@ -1288,8 +1288,9 @@ ex of cbc, hint and caution: search 'product' and open 'product edit'
 /*
 REPORTING -> KPI
 */
-ul.kpiSortable	{width:250px; min-height:250px; list-style:none; margin:0; padding:0;}
+ul.kpiSortable	{width:250px; min-height:200px; max-height:250px; overflow:auto; list-style:none; margin:0; padding:0;}
 ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
+ul.kpiSortable li:last-child	{border-bottom:0;}
 .KPIGraphBuilder	{margin:50px;}
 
 
