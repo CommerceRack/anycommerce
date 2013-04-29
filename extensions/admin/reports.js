@@ -121,7 +121,7 @@ var admin_reports = function() {
 				if(mode)	{
 					if((mode == 'edit' && vars.uuid) || mode == 'add')	{
 //by now, we know we have a valid mode and if that mode is edit, uuid is set.
-						$D = $("<div \/>").attr('title',(mode == 'edit') ? "Edit Graph" : "Add a New Graph");
+						var $D = $("<div \/>").attr('title',(mode == 'edit') ? "Edit Graph" : "Add a New Graph");
 //guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
 						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body');
 						$D.dialog({
@@ -174,7 +174,13 @@ var admin_reports = function() {
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		renderFormats : {}, //renderFormats
+		renderFormats : {
+			
+			collectionAsOptions : function($tag,data)	{
+				$tag.text(data.value.TITLE).val(data.value.ID);
+				}
+			
+			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -201,7 +207,11 @@ var admin_reports = function() {
 					L = DS.length
 					
 					for(var i = 0; i < L; i += 1)	{
-						if(DS[i][0] == type)	{$("<li \/>").data(DS[i]).text(DS[i][2]).appendTo($ul)}
+						if(DS[i][0] == type)	{$("<li \/>").data({
+							'group' : DS[i][0],
+							'dataset' : DS[i][1],
+							'pretty' : DS[i][2]
+							}).text(DS[i][2]).appendTo($ul)}
 						}
 					
 					}
@@ -214,7 +224,7 @@ var admin_reports = function() {
 				return ($ul.children().length) ? $ul.children() : false;
 				},
 			
-			validateAddUpdateCollectionForm : function($form)	{
+			validateAddUpdateCollectionForm : function($form,sfo)	{
 
 				var r = true; //what is returned. boolean.
 				
@@ -236,8 +246,8 @@ var admin_reports = function() {
 					//'fixed' datacolumns requires the user to select data points. The interface for the axis data points is NOT a form input, but draggable list items.
 						if(sfo.dataColumns == 'fixed')	{
 							sfo.datasetGrp = $("[name='datasetGrp']",$form).val(); //can't use sfo because once 'disabled' set, sfo doesn't add field to sfo object.
-							if(datasetGrpVal && $("[data-app-role='dataSetAxisListSelected']",$form).children().length)	{}
-							else if(!datasetGrpVal)	{
+							if(sfo.datasetGrp && $("[data-app-role='dataSetAxisListSelected']",$form).children().length)	{}
+							else if(!sfo.datasetGrp)	{
 								r = false;
 								$('.appMessaging').anymessage({'message':'Please choose the dataset.'});
 								}
@@ -313,16 +323,39 @@ var admin_reports = function() {
 //by now, we know we have a valid mode and if that mode is edit, uuid is set.
 					$D = $("<div \/>").attr('title',"Add a New Collection");
 //guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
-					$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
+					$D.addClass('displayNone').appendTo('body'); 
 					$D.dialog({
 						modal: true,
-						width: '90%',
+						width: ($(window).width() > 300) ? 300 : ($(window).width() - 50),
 						autoOpen: false,
-						height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
+						height : ($(window).height() > 250) ? 250 : ($(window).height() - 50), //accomodate small browsers/mobile devices.
 						close: function(event, ui)	{
 							$(this).dialog('destroy').remove();
-							}
+							},
+						buttons: [ 
+							{ text: "Add Collection", click: function() {
+								var val = $('#newCollectionName').val();
+								if(val)	{
+									app.ext.admin.calls.adminKPIDBCollectionCreate.init({'uuid':app.u.guidGenerator(),'title':val},{callback : function(rd){
+										if(app.model.responseHasErrors(rd)){
+											$('.appMessaging').anymessage({'message':rd,'gMessage':true});
+											}
+										else	{
+											$D.text("Your collection was created.");
+											}
+										}},'immutable');
+									app.model.destroy('adminKPIDBCollectionList');
+									app.ext.admin.calls.adminKPIDBCollectionList.init({},'immutable');
+									app.model.dispatchThis('immutable');
+									}
+								else	{
+									$('.appMessaging').anymessage({'message':"Please enter a collection name."});
+									}
+								}}
+							]
 						});
+					$D.append($("<div \/>").addClass('appMessaging'));
+					$D.append($("<input \/>",{'type':'text','placeholder':'collection name','id':'newCollectionName'}));
 					$D.dialog('open');
 
 					});
@@ -419,17 +452,68 @@ var admin_reports = function() {
 				$btn.button();
 //A new graph save or even an existing graph update does NOT save individually. The entire collection must be updated.
 var $context = $btn.closest("[data-app-role='KPIGraphAddUpdate']"),
-mode = $context.data('app-mode')
-$form = $btn.closest('form'),
-sfo = $form.serializeJSON();
+mode = $context.data('app-mode'),
+$form = $btn.closest('form');
+
+
+
 
 $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollectionUpdate',function(){
 	if(mode)	{
-		if(mode == 'add' || mode == 'edit')	{
+		if(mode == 'add' || mode == 'update')	{
+			var sfo = $form.serializeJSON();
 			if(app.ext.admin_reports.u.validateAddUpdateCollectionForm($form,sfo))	{
 //				app.u.dump("woot! we have everything we need. now do something");
 //By this point, all the data required to add or update a chart is present.
 //now get all the data formatted properly. Once that's done, mode will determine the next course of action.
+
+				var addObject = {
+					'grpby' : sfo.grpby,
+					'column' : sfo.column,
+					'period' : sfo.period,
+					'@datasets' : new Array()
+					};
+
+				if(sfo.dataColumns == 'fixed')	{
+					$("[data-app-role='dataSetAxisListSelected']",$form).children().each(function(){
+						addObject['@datasets'].push($(this).data('dataset'));
+						});
+					}
+				else if(sfo.dataColumns == 'dynamic')	{
+					addObject['@datasets'].push(sfo.ddataset);
+					}
+				else	{} //should never get here. validation makes sure dataColumns is fixed or dynamic.
+
+// need to fetch the collection list detail to make sure it's present. The callback for that will include appending this new chart to the collection.
+// Then, update the collection and fetch a clean copy. If the KPI page is visible AND the collection in question is open, update the view.
+				
+				app.u.dump(" -> All data for creating a new chart is present.  proceed....");
+				
+//make sure we have a copy of the collection. most likely, what's in memory (if already here) is up to date, so no need to destroy.
+				app.ext.admin.calls.adminKPIDBCollectionDetail.init(sfo.collection,{
+					callback : function(rd)	{
+						app.u.dump("BEGIN inline callback on adminKPIDBCollectionDetail _cmd for adding a new chart.");
+						if(app.model.responseHasErrors(rd)){
+							$('.appMessaging').anymessage({'message':rd,'gMessage':true});
+							}
+						else	{
+							var graphs = [];
+							//if there are already graphs in this collection, add then to graphs array as the update is destructive and ALL graphs need to be present.
+							if(app.data[rd.datapointer]['@GRAPHS'])	{
+								graphs = app.data[rd.datapointer]['@GRAPHS'];
+								}
+							graphs.push(addObject);
+							
+							app.model.destroy(rd.datapointer);
+							app.ext.admin.calls.adminKPIDBCollectionUpdate.init({'uuid':sfo.collection,'@GRAPHS':graphs},{},'immutable');
+							app.ext.admin.calls.adminKPIDBCollectionDetail.init(sfo.collection,{},'immutable');//make sure collection is udpated in localstorage and memory
+							app.model.dispatchThis('immutable');
+							
+							}
+						}
+					},'immutable');
+				app.model.dispatchThis('immutable');
+				
 				
 				}
 			else	{} //validateAddUpdateCollectionForm handles error display.

@@ -69,7 +69,7 @@
 
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button>Add New Collection</button>
+				<button data-app-event="admin_reports|showAdminKPIDBCollectionCreate">Add New Collection</button>
 				<button data-app-event="admin_reports|showChartAdd">Add New Chart</button>
 				<button>Save Chart Position</button>
 			</div>
@@ -96,7 +96,7 @@ graphs
 
 <select>
 
-	<option id='KPICollectionOptionTemplate' data-bind="var:collection(TITLE); format:text;"></option>
+	<option id='KPICollectionOptionTemplate' data-bind="useParentData:true; format:collectionAsOptions; extension:admin_reports;"></option>
 
 </select>
 

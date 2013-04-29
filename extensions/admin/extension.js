@@ -344,7 +344,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionCreate, uuid or title not passed","gMessage":true})
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionCreate, uuid or title not passed","gMessage":true})
 					}
 				return r;
 				},
@@ -365,11 +365,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 						this.dispatch(uuid,_tag,Q);
 						}
 					else	{
-						app.u.handleCallback(uuid,_tag);
+						app.u.handleCallback(_tag);
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionDetail, uuid not passed","gMessage":true})
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionDetail, uuid not passed","gMessage":true})
 					}
 				return r;
 				},
@@ -405,7 +405,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					this.dispatch(uuid,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionRemove, uuid not passed","gMessage":true})
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionRemove, uuid not passed","gMessage":true})
 					}
 				return r;
 				},
@@ -416,29 +416,31 @@ if no handler is in place, then the app would use legacy compatibility mode.
 //obj requires title and uuid, priority and @GRAPHS are optional.
 		adminKPIDBCollectionUpdate : {
 			init : function(obj,_tag,Q)	{
+				app.u.dump("BEGIN admin.calls.adminKPIDBCollectionUpdate");
 				var r = 0;
 				_tag = _tag || {}; 
 				_tag.datapointer = "adminKPIDBCollectionUpdate"
 				obj = obj || {};
-				if(obj.title && obj.uuid)	{
+				if(obj.uuid)	{
+					app.u.dump(" -> have UUID. proceed.");
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionUpdate, uuid or title not passed","gMessage":true})
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBCollectionUpdate, uuid not passed","gMessage":true})
 					}
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
+				app.u.dump("GOT TO UPDATE DISPATCH!");
 				obj._cmd = 'adminKPIDBCollectionUpdate'
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
 				}
 			}, //adminKPIDBUserDataSetsList
 /*
-<input id="dataset"></input>
+<input id="@datasets"></input>
 <input id="grpby">day|dow|quarter|month|week|none</input>
-<input id="detail">NONE|RAW</input>
 <input id="column">gms|distinct|total</input>
 <input id="period">a formula ex: months.1, weeks.1</period>
 <input id="startyyyymmdd">(not needed if period is passed)</input>
@@ -449,21 +451,21 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				if(!$.isEmptyObject(obj))	{
-					if(obj.dataset && obj.grpby && obj.detail && obj.column)	{
+					if(obj.dataset && obj.grpby && obj.column)	{
 						if(obj.period || (obj.startyyyymmdd && obj.stopyyyymmdd))	{
 							r = 1;
 							this.dispatch(obj,_tag,Q);
 							}
 						else	{
-							$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, either period ["+obj.period+"] or start/stop ["+["+obj.startyyyymmdd+"]+"/"+obj.stopyyyymmdd+"] date range required.","gMessage":true})
+							$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, either period ["+obj.period+"] or start/stop ["+["+obj.startyyyymmdd+"]+"/"+obj.stopyyyymmdd+"] date range required.","gMessage":true})
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; dataset ["+obj.dataset+"], grpby ["+obj.grpby+"], detail ["+obj.detail+"] and column ["+obj.column+"] are required","gMessage":true})
+						$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; dataset ["+obj.dataset+"], grpby ["+obj.grpby+"], detail ["+obj.detail+"] and column ["+obj.column+"] are required","gMessage":true})
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, no object passed","gMessage":true})
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery, no object passed","gMessage":true})
 					}
 
 				return r;
