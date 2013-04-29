@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130429064620",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130429062920",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -2137,7 +2137,7 @@ document.getElementById('qtyval').innerHTML=a;
             top: 0%;
             left: 0%;
             width: 100%;
-            height: 100%;
+            /*height: 100%;*/
             background-color: black;
             z-index:1001;
             -moz-opacity: 0.8;
@@ -2150,23 +2150,20 @@ document.getElementById('qtyval').innerHTML=a;
             top: 25%;
             left: 25%;
             width: 50%;
-            height: 50%;
+            height: 75%;
             padding: 16px;
-            border: 16px solid orange;
+            border: 3px solid #b70000;
             background-color: white;
+			shadow
             z-index:1002;
             overflow: auto;
         }
     </style>
-<script type="text/javascript">
-document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block';
-</script>
-<p>This is the main content. To display a lightbox click <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">here</a></p>
-        <div id="light" class="white_content">This is the lightbox content. <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'">Close</a></div>
+
+<p><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">Save this for later</a></p>
+        <div id="light" class="white_content"><strong>SAVE THIS FOR LATER.</strong> <br/><br/><span>This adds the selected item to your wishlist and removes it from your shopping cart. You can <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">view your wishlist</a> at any time</span> <br/>  <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/move_wishlist.png"/></a></div>
         <div id="fade" class="black_overlay"></div>
         
-                <span class="savelater"><a href="#" onClick="popup(this);">Save this for  later!</a></span>
-
         <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
 <br/><br/>
 
