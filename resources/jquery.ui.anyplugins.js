@@ -38,6 +38,19 @@ For the list of available params, see the 'options' object below.
 
 */
 
+//.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
+
+// Figure out what browser is being used
+if(typeof typeof jQuery.browser == 'undefined')	{
+	jQuery.browser = {
+		version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+		safari: /webkit/.test( userAgent ),
+		opera: /opera/.test( userAgent ),
+		msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
+		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
+		}
+	}
+
 (function($) {
 	$.widget("ui.anymessage",{
 		options : {
@@ -127,10 +140,15 @@ For the list of available params, see the 'options' object below.
 //				app.u.dump(" -> msg format is _msgs.");
 					$r = $("<div \/>").css({'margin-left':'20px'}); //adds a left margin to make multiple messages all align.
 					for(var i = 1; i <= msg['_msgs']; i += 1)	{
-						if(msg['_msg_'+i+'_type'] !== null &&
-							msg['_msg_'+i+'_txt'] !== null &&
-							msg['_msg_'+i+'_id'] !== null){
-							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type']).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id']+"]"));
+						if(msg['_msg_'+i+'_txt'])	{
+							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type'] || "" ).text(msg['_msg_'+i+'_txt']+" ["+msg['_msg_'+i+'_id'] || "no id set"+"]"));
+							}
+						else if(msg['_msg_'+i+'_txt'] === null)	{
+							//null will only be value if a successful API request went through and the repsonse message was specifically set to null, so we can ignore it.  below, 'blanks' are handled.
+							app.u.dump("CAUTION! response (_msg_"+i+"_tx) contained a null msg text. This is likely a normal part of the response.");
+							}
+						else	{
+							$r.append($("<p \/>").addClass('anyMessage').css(amcss).addClass(msg['_msg_'+i+'_type'] || "" ).text("Uh Oh! An error occured by _msg_"+i+"_txt is blank.  How odd."));
 							}
 						}
 					}

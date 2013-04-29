@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddEditTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate');
+	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate');
 	var r = {
 
 
@@ -123,7 +123,7 @@ var admin_reports = function() {
 //by now, we know we have a valid mode and if that mode is edit, uuid is set.
 						$D = $("<div \/>").attr('title',(mode == 'edit') ? "Edit Graph" : "Add a New Graph");
 //guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
-						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
+						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body');
 						$D.dialog({
 							modal: true,
 							width: '90%',
@@ -135,7 +135,7 @@ var admin_reports = function() {
 							});
 //							app.u.dump(" -> extended: ");
 //							app.u.dump($.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList']));
-						$D.anycontent({'templateID':'KPIGraphAddEditTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList'])});
+						$D.anycontent({'templateID':'KPIGraphAddUpdateTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList']),'dataAttribs':{'app-mode':mode}});
 						$D.dialog('open');
 
 						$( "ul.kpiSortable",$D).sortable({
@@ -212,8 +212,73 @@ var admin_reports = function() {
 					$('.appMessaging').anymessage({'message':'In admin_reports.u.getDatasetAxisByTypeAsListItems, app.data.adminKPIDBUserDataSetsList not set.','gMessage':true});
 					}
 				return ($ul.children().length) ? $ul.children() : false;
-				}
+				},
 			
+			validateAddUpdateCollectionForm : function($form)	{
+
+				var r = true; //what is returned. boolean.
+				
+				if($form && sfo)	{
+					
+					//handle the basic validation.
+					if(app.u.validateForm($form))	{}
+					else	{r = false;} //validateForm handles error display
+					
+					
+					if(sfo.dataColumns)	{
+//the column interface doesn't show up till data columns selection is made, so any error displayed before then could be confusing.
+						if(sfo.column)	{}
+						else	{
+							$('.appMessaging').anymessage({'message':'Please choose a value for data.'});
+							r = false
+							}						
+						
+					//'fixed' datacolumns requires the user to select data points. The interface for the axis data points is NOT a form input, but draggable list items.
+						if(sfo.dataColumns == 'fixed')	{
+							sfo.datasetGrp = $("[name='datasetGrp']",$form).val(); //can't use sfo because once 'disabled' set, sfo doesn't add field to sfo object.
+							if(datasetGrpVal && $("[data-app-role='dataSetAxisListSelected']",$form).children().length)	{}
+							else if(!datasetGrpVal)	{
+								r = false;
+								$('.appMessaging').anymessage({'message':'Please choose the dataset.'});
+								}
+							else if(!$("[data-app-role='dataSetAxisListSelected']",$form).children().length)	{
+								r = false;
+								$('.appMessaging').anymessage({'message':'Please add at least one axis point to the list of selected axis points.'});
+								}
+							else	{
+								//unknown error! Don't fail, but report.
+								$('.appMessaging').anymessage({'message':'An unknown error occured. Reached the else in datasetGrp validation. Will attempt to proceed.'});
+								}
+							}
+					//ddataset isn't set to required because it would return a false negative on validation if 'fixed' was data column selection.
+						else if(sfo.dataColumns == 'dynamic')	{
+							if(sfo.ddataset)	{}
+							else	{
+								r = false;
+								$('.appMessaging').anymessage({'message':'Please choose a data source.'});
+								}
+							}
+						else	{
+							r = false;
+							$('.appMessaging').anymessage({'message':'Invalid value selected for data columns. Only dynamic or fixed is supported.'});
+							}
+						}
+					else	{
+						r = false;
+						$('.appMessaging').anymessage({'message':'Please choose a value for data columns.'});
+						}
+					
+//					app.u.dump("sfo: "); app.u.dump(sfo);
+
+					}
+				else	{
+					r = false;
+					$('.appMessaging').anymessage({'message':'In admin_reports.u.validateAddUpdateCollectionForm, $form and/or sfo were not passed.','gMessage':true});
+					}
+				
+				return r;
+
+				} //validateAddUpdateCollectionForm
 			}, //u
 
 		e : {
@@ -239,29 +304,29 @@ var admin_reports = function() {
 				$btn.off('click.showChartAdd').on('click.showChartAdd',function(){
 					app.ext.admin_reports.a.showKPIAddEditInModal('add',{});
 					});
-				},
+				}, //showChartAdd
 			//NOT DONE.
 			showAdminKPIDBCollectionCreate : function($btn)	{
-//				$btn.button();
+				$btn.button();
 				$btn.off('click.showAdminKPIDBCollectionCreate').on('click.showAdminKPIDBCollectionCreate',function(){
 
 //by now, we know we have a valid mode and if that mode is edit, uuid is set.
-						$D = $("<div \/>").attr('title',"Add a New Collection");
+					$D = $("<div \/>").attr('title',"Add a New Collection");
 //guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
-						$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
-						$D.dialog({
-							modal: true,
-							width: '90%',
-							autoOpen: false,
-							height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
-							close: function(event, ui)	{
-								$(this).dialog('destroy').remove();
-								}
-							});
-						$D.dialog('open');
+					$D.attr('data-uuid',(mode == 'edit') ? vars.uuid : app.u.guidGenerator()).addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						modal: true,
+						width: '90%',
+						autoOpen: false,
+						height : ($(window).height() > 550) ? 500 : ($(window).height() - 100), //accomodate small browsers/mobile devices.
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
+					$D.dialog('open');
 
 					});
-				},
+				}, //showAdminKPIDBCollectionCreate
 			
 			addTriggerKPIDatasetChange : function($select)	{
 				var $form = $select.closest('form');
@@ -349,10 +414,37 @@ var admin_reports = function() {
 
 					});
 				}, //addTriggerKPIPeriodChange
-			
+//executed as part of the save/update interface 'save' button.
 			execAdminKPIDBCollectionUpdate : function($btn)	{
-//				$btn.button();
+				$btn.button();
 //A new graph save or even an existing graph update does NOT save individually. The entire collection must be updated.
+var $context = $btn.closest("[data-app-role='KPIGraphAddUpdate']"),
+mode = $context.data('app-mode')
+$form = $btn.closest('form'),
+sfo = $form.serializeJSON();
+
+$btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollectionUpdate',function(){
+	if(mode)	{
+		if(mode == 'add' || mode == 'edit')	{
+			if(app.ext.admin_reports.u.validateAddUpdateCollectionForm($form,sfo))	{
+//				app.u.dump("woot! we have everything we need. now do something");
+//By this point, all the data required to add or update a chart is present.
+//now get all the data formatted properly. Once that's done, mode will determine the next course of action.
+				
+				}
+			else	{} //validateAddUpdateCollectionForm handles error display.
+			}
+		else	{
+			$('.appMessaging').anymessage({'message':'In admin_reports.e.execAdminKPIDBCollectionUpdate, unsupported mode ['+mode+'] set.','gMessage':true});
+			}
+		}
+	else	{
+		$('.appMessaging').anymessage({'message':'In admin_reports.e.execAdminKPIDBCollectionUpdate, unable to determine mode.','gMessage':true});
+		}	
+	});
+
+
+
 
 				},
 			

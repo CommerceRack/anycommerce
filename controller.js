@@ -82,10 +82,8 @@ jQuery.extend(zController.prototype, {
 
 // += is used so that this is appended to anything passed in P.
 		app.vars.passInDispatchV += 'browser:'+app.u.getBrowserInfo()+";OS:"+app.u.getOSInfo()+';'; //passed in model as part of dispatch Version. can be app specific.
-		
 		app.ext = app.ext || {}; //for holding extensions
 		app.data = {}; //used to hold all data retrieved from ajax requests.
-		
 /*
 app.templates holds a copy of each of the templates declared in an extension but defined in the view.
 copying the template into memory was done for two reasons:
@@ -1524,6 +1522,14 @@ BROWSER/OS
 
 // .browser returns an object of info about the browser (name and version).
 		getBrowserInfo : function()	{
+// *** .browser() is not supported as of jquery 1.9+
+			var r = false,
+			ua= navigator.userAgent,
+			match = /(chrome)[ \/]([\w.]+)/.exec( ua ) || /(webkit)[ \/]([\w.]+)/.exec( ua ) || /(opera)(?:.*version|)[ \/]([\w.]+)/.exec( ua ) || /(msie) ([\w.]+)/.exec( ua ) || ua.indexOf("compatible") < 0 && /(mozilla)(?:.*? rv:([\w.]+)|)/.exec( ua ) || [];
+
+			return match[ 1 ] || "-" + match[ 2 ] || "0";
+			
+		/*			
 			var r;
 			var BI = jQuery.browser; //browser information. returns an object. will set 'true' for value of browser 
 			jQuery.each(BI, function(i, val) {
@@ -1532,6 +1538,7 @@ BROWSER/OS
 			r += '-'+BI.version;
 //			app.u.dump(' r = '+r);
 			return r;
+			*/
 			}, //getBrowserInfo
 			
 		getOSInfo : function()	{
@@ -1748,8 +1755,11 @@ VALIDATION
 					//browser doesn't support writing object to console. probably IE8.
 					console.log('object output not supported');
 					}
-				else
+				else if(console[type])	{
 					console[type](msg);
+					}
+				else	{} //hhhhmm... unsupported type.
+					
 				}
 			}, //dump
 

@@ -58,7 +58,7 @@
 
 
 <div id='KPIManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
-	<div class='appMessaging clearfix'></div><!-- used for error display -->
+	
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
 <ul class='listStyleNone noPadOrMargin roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
@@ -102,7 +102,9 @@ graphs
 
 
 
-<div id='KPIGraphAddEditTemplate' class='KPIGraphAddEditContainer'>
+<div id='KPIGraphAddUpdateTemplate' class='KPIGraphAddUpdateContainer' data-app-role='KPIGraphAddUpdate'>
+
+<div class='appMessaging clearfix'></div><!-- used for error display -->
 
 <form onsubmit="return false;" class='labelsAsBreaks'>
 
@@ -126,7 +128,7 @@ graphs
 </div>
 
 <div class='label'>
-<select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange">
+<select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required'>
 	<option value='' selected='selected' disabled='disabled'>graph type</option>
 	<option value='area'>Area</option>
 	<option value='area.stacked'>Area - Stacked</option>
@@ -155,7 +157,7 @@ graphs
 
 
 <div class='label'>
-<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange">
+<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required'>
 	<option selected='selected' disabled='disabled'>period</option>
 	<optgroup label='daily' >
 		<option value='day.today'>Today</option>
@@ -207,7 +209,7 @@ graphs
 </div>
 
 <div class='label'>
-<select name='grpby' disabled='disabled'>
+<select name='grpby' disabled='disabled' required='required'>
 	<option selected='selected' disabled='disabled' value=''>grouping</option>
 	<option value='none'>None (Merge Datasets)</option>
 	<option value='day'>Date: Day (Full Detail)</option>
@@ -225,9 +227,9 @@ graphs
 <div class='label displayNone' data-app-role='datasetTypeContainer'>
 	<div class='label'>Data:</div>
 
-	<label><input type='radio' name='dataColumns' value='1' /> Gross Sales</label>
-	<label><input type='radio' name='dataColumns' value='2' /> # Orders</label>
-	<label><input type='radio' name='dataColumns' value='3' /> # Units Sold</label>
+	<label><input type='radio' name='column' value='1' /> Gross Sales</label>
+	<label><input type='radio' name='column' value='2' /> # Orders</label>
+	<label><input type='radio' name='column' value='3' /> # Units Sold</label>
 
 </div>
 
@@ -235,7 +237,7 @@ graphs
 <!-- if datacolumns is set to dynamic, show this: -->
 <div class='label displayNone' data-app-role='dDatasetContainer'>
 <select name='ddataset'>
-	<option selected='selected' disabled="disabled">Data Source</option>
+	<option selected='selected' disabled="disabled" value=''>Data Source</option>
 	<option value='PRTS?c=1&amp;ctype=$'>By Partitions</option>
 	<option value='SCHEDULES?c=1&amp;ctype=$'>By Schedules</option>
 	<option value='DOMAINS?c=1&amp;ctype=$' >By Domains</option>
@@ -248,7 +250,7 @@ graphs
 
 <div data-app-role='fDatasetContainer' class='label displayNone'>
 <select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange">
-	<option>Dataset By</option>
+	<option value='' disabled='disabled' selected='selected'>Dataset By</option>
 	<option value='OVERALL'>All Domains/Partitions</option>
 	<option value='COUPON'>Coupon</option>
 	<option value='DOMAIN'>Domain</option>
