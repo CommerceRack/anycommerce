@@ -461,7 +461,7 @@ $form = $btn.closest('form');
 $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollectionUpdate',function(){
 	if(mode)	{
 		if(mode == 'add' || mode == 'update')	{
-			var sfo = $form.serializeJSON();
+			var sfo = $form.serializeJSON(); //needs to be in 'click' or serialization occurs before form is populated.
 			if(app.ext.admin_reports.u.validateAddUpdateCollectionForm($form,sfo))	{
 //				app.u.dump("woot! we have everything we need. now do something");
 //By this point, all the data required to add or update a chart is present.
