@@ -309,7 +309,16 @@ document.write = function(v){
 			onSuccess : function(tagObj)	{
 				var catSafeID = tagObj.datapointer.split('|')[1];
 				tagObj.navcat = catSafeID;
+/*
+*** 201318 -> passing in unsanitized tagObj caused an issue with showPageContent
 				app.ext.myRIA.u.buildQueriesFromTemplate(tagObj);
+*/
+				app.ext.myRIA.u.buildQueriesFromTemplate({
+					'templateID':tagObj.templateID,
+					'parentID':tagObj.parentID,
+					'navcat':tagObj.navcat,
+					'datapointer':tagObj.datapointer});
+
 				app.model.dispatchThis();
 				},
 			onError : function(responseData)	{
@@ -329,6 +338,7 @@ document.write = function(v){
 //cat page handling.
 				if(tagObj.navcat)	{
 //					app.u.dump("BEGIN myRIA.callbacks.showPageContent ["+tagObj.navcat+"]");
+//					app.u.dump(" -> tagObj: "); app.u.dump(tagObj);
 
 					if(typeof app.data['appCategoryDetail|'+tagObj.navcat] == 'object' && !$.isEmptyObject(app.data['appCategoryDetail|'+tagObj.navcat]))	{
 						tmp = app.data['appCategoryDetail|'+tagObj.navcat]
@@ -2834,21 +2844,18 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				tmpAttr = attribute.substring(6);
 				
 //if some attributes for this page have already been fetched, check to see if the attribute in focus in here or not set.
-				if(app.data['appPageGet|'+catSafeID] && app.data['appPageGet|'+catSafeID]['%page'])	{
+// ** 201318 -> the changes below are to make the appGet more efficient (eliminates duplicate %page attribute requests)
+				if(myAttributes.indexOf(tmpAttr) >= 0)	{} //attribute is already in the list of attributes to be fetched.
+				else if(app.data['appPageGet|'+catSafeID] && app.data['appPageGet|'+catSafeID]['%page'])	{
 					if(app.data['appPageGet|'+catSafeID]['%page'][tmpAttr])	{} //already have value
 					else if(app.data['appPageGet|'+catSafeID]['%page'][tmpAttr] === null){} //value has been requested but is not set.
-					else if(myAttributes.indexOf(tmpAttr) >= 0)	{
-						} //attribute is already in the list of attributes to be fetched.
 					else	{
 						myAttributes.push(tmpAttr);  //set value to the actual value
 						}
 					}
 //no attributes are present so go get them pls.
 				else	{
-					if(myAttributes.indexOf(tmpAttr) >= 0)	{} //attribute is already in the list of attributes to be fetched.
-					else	{
-						myAttributes.push(tmpAttr);  //set value to the actual value
-						}
+					myAttributes.push(tmpAttr);  //set value to the actual value
 					}				
 				
 				}
@@ -2894,7 +2901,7 @@ app.templates[P.templateID].find('[data-bind]').each(function()	{
 				if(myAttributes.length > 0)	{
 					numRequests += app.ext.store_navcats.calls.appPageGet.init({'PATH':catSafeID,'@get':myAttributes});
 					}
-			app.u.dump(" -> numRequests AFTER appPageGet: "+numRequests);
+//				app.u.dump(" -> numRequests AFTER appPageGet: "+numRequests);
 //queries are all compiled. if a dispatch is actually needed, add a 'ping' to execute callback, otherwise, just execute the callback now.
 				if(numRequests > 0)	{
 					app.calls.ping.init(tagObj);

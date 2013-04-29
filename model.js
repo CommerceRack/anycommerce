@@ -562,6 +562,7 @@ QID is the dispatchQ ID (either passive, mutable or immutable. required for the 
 //handle all the call specific handlers.
 					for (var i = 0, j = responseData['@rcmds'].length; i < j; i += 1) {
 						responseData['@rcmds'][i].ts = app.u.unixNow()  //set a timestamp on local data
+
 						if(typeof this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']] == 'function')	{
 							this['handleResponse_'+responseData['@rcmds'][i]['_rcmd']](responseData['@rcmds'][i])	//executes a function called handleResponse_X where X = _cmd, if it exists.
 	//						app.u.dump("CUSTOM handleresponse defined for "+responseData['_rcmd']);
