@@ -30,7 +30,7 @@ var admin = function() {
 		
 		vars : {
 			tab : null, //is set when switching between tabs. it outside 'state' because this doesn't get logged into local storage.
-			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities'],
+			tabs : ['setup','sites','jt','product','orders','crm','syndication','reports','utilities','launchpad'],
 			state : {},
 			tab : 'home',
 			templates : theseTemplates,
