@@ -113,6 +113,7 @@ var admin_reports = function() {
 					}},'mutable');
 				app.model.dispatchThis();
 				},
+				
 
 //currently supported modes are:  add or edit
 			showKPIAddEditInModal : function(mode,vars)	{
@@ -199,6 +200,46 @@ var admin_reports = function() {
 				var table = new google.visualization.Table(document.getElementById(id));
 				table.draw(data, {showRowNumber: true});
 				}, //drawTable
+
+//vars will contain a grpby and column.  It will also contain a period OR startyyyymmdd and stopyyyymmdd
+//vars can contain a dataset OR dataset can be passed in as the second param. This is to accomodate the KPI data storage pattern.
+//outside of KPI, there's a good chance dataset will be passed in w/ the vars.
+			addHighChartTo : function($target,vars,dataset)	{
+				var $chartObj = false;
+				if(vars && !$.isEmptyObject(vars) && $target)	{
+//at this point, vars IS an object and is not empty.
+//now get vars.dataset and dataset into sync.
+					if(!vars.dataset && dataset)	{vars.dataset = dataset}
+					else if(!dataset && vars.dataset)	{dataset = vars.dataset}
+					else	{} //no dataset. That'll be handled in error check below.
+					
+
+					if(dataset)	{
+						if(vars.grpby && vars.column && (vars.period || (vars.startyyyymmdd && vars.stopyyyymmdd)))	{
+//everything we need is accounted for. Move along... move along...
+app.ext.admin.calls.adminKPIDBDataQuery.init(vars,{callback:function(rd){
+	if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+	else	{
+		$target.append('woot!');
+		//verify there is data then add the chart.
+		}
+	}},'mutable');
+app.model.dispatchThis();
+							}
+						else	{
+							$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart,  vars.grpby ['+vars.grpby+'] AND vars.column ['+vars.column+'] AND either vars.period ['+vars.period+'] OR (vars.startyyyymmdd ['+vars.startyyyymmdd+'] AND vars.stopyyyymmdd ['+vars.stopyyyymmdd+']) are  required.','gMessage':true});
+							}
+						}
+					else	{
+						$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, both vars.data AND dataset are blank. dataset is required.','gMessage':true});
+						}
+					}
+				else	{
+					$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, vars [typeof '+typeof vars+'] and/or $target not passed or vars is empty object.','gMessage':true});
+					}
+				return $chartObj;
+				},
+
 			
 			getDatasetAxisByTypeAsListItems : function(type)	{
 				if(type && app.data.adminKPIDBUserDataSetsList && app.data.adminKPIDBUserDataSetsList['@DATASETS'])	{

@@ -470,10 +470,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 				return r;
 				},
-			dispatch : function(_tag,Q)	{
-				_tag = _tag || {}; 
-				_tag.datapointer = "adminKPIDBDataQuery"
-				app.model.addDispatchToQ({"_cmd":"adminKPIDBDataQuery","_tag" : _tag},Q || 'mutable');	
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminKPIDBDataQuery";
+				obj._tag = _tag || {}; 
+				obj._tag.datapointer = "adminKPIDBDataQuery"
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminKPIDBDataQuery
 		adminKPIDBUserDataSetsList : {
