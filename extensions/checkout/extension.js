@@ -1031,7 +1031,7 @@ note - the order object is available at app.data['order|'+P.orderID]
 //copy the address into the shipping fields so shipping rates update.
 								var addrObj = app.ext.cco.u.getAddrObjByID(addressType,addressID); //will return address object.
 								if(!$.isEmptyObject(addrObj))	{
-									for(index in addrObj)	{
+									for(var index in addrObj)	{
 										cartUpdate[index.replace('bill/','ship/')] = addrObj[index];
 										}
 									}

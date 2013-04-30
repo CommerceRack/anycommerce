@@ -697,7 +697,7 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 // to save from bill to bill, pass bill,bill. to save from bill to ship, pass bill,ship
 					var populateAddressFromShortcut = function(fromAddr,toAddr)	{
 						var addr = app.ext.cco.u.getAddrObjByID(fromAddr,formObj[fromAddr+'/shortcut']);
-						for(index in addr)	{
+						for(var index in addr)	{
 							if(index.indexOf(fromAddr+'/') == 0)	{ //looking for bill/ means fields like id and shortcut won't come over, which is desired behavior.
 								if(fromAddr == toAddr)	{
 									formObj[index] = addr[index];
@@ -724,7 +724,7 @@ the dom update for the lineitem needs to happen last so that the cart changes ar
 						}
 //bill to ship, but no short cut (not logged in)
 					else if(formObj['want/bill_to_ship'])	{
-						for(index in formObj)	{
+						for(var index in formObj)	{
 //copy billing fields into shipping. not email tho.
 							if(index.indexOf('bill/') == 0 && index != 'bill/email')	{ 
 								formObj[index.replace('bill/','ship/')] = formObj[index]

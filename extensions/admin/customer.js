@@ -91,7 +91,7 @@ else	{
 //this will resort the panels into the order specified in local storage.
 		for(var i = 0; i < L; i += 1)	{
 			var $col = $("[data-app-column='"+(i+1)+"']",$custEditorTarget);
-			for(index in panArr[i])	{
+			for(var index in panArr[i])	{
 				$("[data-app-role='"+panArr[i][index]+"']",$custEditorTarget).first().appendTo($col);
 				}
 			}
@@ -501,7 +501,7 @@ app.model.dispatchThis('immutable');
 									delete addr['_is_default'];
 									delete addr['_id'];
 //strip bill_ ship_ off of front.
-									for(index in addr)	{
+									for(var index in addr)	{
 										addr[index.substring(5)] = addr[index];
 										delete addr[index];
 										}

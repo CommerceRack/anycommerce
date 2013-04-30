@@ -1035,7 +1035,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //returns an array of UUID's that use the 'pipe' uuid.
 		getUUIDsbyQIDandPipeUUID : function(QID,pipeUUID)	{
 			var r = new Array();
-			for(index in app.q[QID])	{
+			for(var index in app.q[QID])	{
 				if(app.q[QID][index]._tag && app.q[QID][index]._tag['pipeUUID'] == pipeUUID)	{
 					r.push(app.q[QID][index]['_uuid']);
 					}
@@ -1045,7 +1045,7 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 
 		checkForPipeUUIDInQID : function(QID,pipeUUID)	{
 			var r = false;
-			for(index in app.q[QID])	{
+			for(var index in app.q[QID])	{
 				if(app.q[QID][index].tag &&app.q[QID][index].tag['pipeUUID'] == pipeUUID)	{
 					r = true;
 					break; //end once we have a match. pipeuuid is specific to one Q

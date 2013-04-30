@@ -1044,7 +1044,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 			sm = this.options.settingsMenu;
 
 			$ul.attr('data-app-role','settingsMenu').hide().css({'position':'absolute','right':0,'zIndex':10000});
-			for(index in sm)	{
+			for(var index in sm)	{
 				$("<li \/>").addClass('ui-state-default').on('click',sm[index]).on('click.closeMenu',function(){
 					$ul.menu( "collapse" ); //close the menu.
 					}).hover(function(){$(this).addClass('ui-state-hover')},function(){$(this).removeClass('ui-state-hover')}).text(index).appendTo($ul);

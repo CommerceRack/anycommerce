@@ -79,7 +79,7 @@ doesn't have to be reloaded. The following code nukes all that so that from one 
 */
 var obj = app.ext.convertSessionToOrder.vars; //shortcut
 
-for(index in obj)	{
+for(var index in obj)	{
 	if(index.substring(0,8) == 'payment/')	{
 		delete obj[index];
 		}

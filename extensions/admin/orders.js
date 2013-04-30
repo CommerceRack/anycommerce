@@ -1060,7 +1060,7 @@ else	{
 						}
 					content += "<\/ul>";
 
-					for(index in data.value)	{
+					for(var index in data.value)	{
 						contents += index+": "+data.value[index]+"<br>";
 						}
 					
@@ -1815,7 +1815,7 @@ $('.editable',$container).each(function(){
 	
 						if(formJSON.sku && orderID)	{
 							if(app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
-								for(index in formJSON)	{
+								for(var index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
 //if the value is more than two characters and not all uppercase, it's likely a text based sog. add a tildae to the front of the value.
 //this is used on the API side to help distinguish what key value pairs are options.
@@ -2319,7 +2319,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 							var msgObj = app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							app.u.throwMessage(msgObj);
-							for(index in errors)	{
+							for(var index in errors)	{
 								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
 								}
 							}
@@ -2330,7 +2330,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 //when you do this, the validate.CREDIT function needs to be updated too.
 //the object used to create the suplementals is shared with checkout and it currently has the data as payment/cc et all.
 //so that's stripped to just cc. 
-								for(index in formJSON)	{
+								for(var index in formJSON)	{
 //									app.u.dump(" -> index.substring(0,8): "+index.substring(0,7));
 //									app.u.dump(" -> index.substr(8): "+index.substr(7));
 									if(index.substring(0,8) == 'payment/')	{

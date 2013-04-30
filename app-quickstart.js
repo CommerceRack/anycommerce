@@ -3183,7 +3183,7 @@ else	{
 									if(!$.isEmptyObject(orderList[i]['%options']))	{
 										var variations = orderList[i]['%options'];
 										obj['%variations'] = {};
-										for(index in variations)	{
+										for(var index in variations)	{
 											obj['%variations'][variations[index].id] = variations[index].v
 											}
 										}
