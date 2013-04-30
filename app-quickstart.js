@@ -374,7 +374,7 @@ document.write = function(v){
 //this is used for showing a customer list of product, such as wish or forget me lists
 		showBuyerLists : {
 			onSuccess : function(tagObj)	{
-//				app.u.dump('BEGIN app.ext.myRIA.showList.onSuccess ');
+			app.u.dump('BEGIN app.ext.myRIA.showList.onSuccess ');
 var $parent = $('#'+tagObj.parentID).removeClass('loadingBG');
 //if the page gets reloaded, de-tab so that running tabs() later re-inits properly.
 if($parent.hasClass("ui-tabs"))	{
@@ -2462,7 +2462,24 @@ elasticsearch.size = 50;
 				return r;
 				},
 
-
+            handleAppBuyerCreate : function($form)	{
+				if($form)	{
+					var formObj = $form.serializeJSON();
+					app.calls.appBuyerCreate.init(formObj,{'callback':function(rd){
+																			   
+						if(app.model.responseHasErrors(rd)){
+							$form.anymessage({'message':rd});
+							}
+						else	{
+							$form.empty().anymessage({'message':'Thank you, your account request has been submitted. you will be notified by email when you are approved.'})
+							}
+						}});
+					app.model.dispatchThis('immutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'$form not passed into myRIA.u.handleBuyerAccountCreate','gMessage':true});
+					}
+				},
 
 
 
@@ -3035,7 +3052,7 @@ else	{
 				else if(htmlObj.value == '')
 					htmlObj.value = htmlObj.defaultValue;
 				}, //handleFormField
-
+	
 //for now,classes are hard coded. later, we could support an object here that allows for id's and/or classes to be set
 //the selector parameter is optional. allows for the function to be run over  a specific section of html. on init, it's run over #appView
 			bindAppViewForms : function(selector)	{

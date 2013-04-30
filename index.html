@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130429062920",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130430101420",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -156,7 +156,7 @@ Welcome,
 				<div class="navContent"> 
 					<ul>
 						<li>
-							<a href="#" onClick="return showContent('category',{'navcat' : '.'});">ALL CATEGORIES</a>
+							<a href="#" onClick="return showContent('search',{KEYWORDS: 'All Categories'});">ALL CATEGORIES</a>
 							<div class="subMenu" style="height:435px !important;">
 								<div class="dropDownListHolder">
 								    <ul>
@@ -1254,9 +1254,14 @@ Product Line</li>
 	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
 <menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
 
-	<img src="images/share.png" width="88" height="42">
-    <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/wishlist.png"></a>
+	
+ <a class="a2a_dd" href="http://www.addtoany.com/share_save"><img src="images/share.png" width="88" height="42"></a>
 
+<script type="text/javascript" src="http://static.addtoany.com/menu/page.js"></script>
+    <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/wishlist.png"></a>
+  <!-- Lockerz Share BEGIN -->
+
+<!-- Lockerz Share END -->
 	</menu>
 	<section class='marginBottom'>
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
@@ -1506,10 +1511,10 @@ if you change these, you should move them above this comment so that when you (o
 			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
 			<fieldset style="border:0px;">
 				<div id='contactFormMessaging'></div>
-				<div><input type='email' name='sender' required='required' id='contactFormSender' value='E-mail Address'/></div>
-				<div><input type='text' name='subject' id='contactFormSubject' value='Subject'/></div>
-				<div><input type='text' name='OID' id='contactFormOID' value='Order Number (if applicable)'/></div>
-				<div><textarea name='body' required='required' id='contactFormBody' value='Message/Notes'></textarea></div>
+				<div><input type='email' name='sender' required='required' id='contactFormSender' Placeholder='E-mail Address'/></div>
+				<div><input type='text' name='subject' id='contactFormSubject' Placeholder='Subject'/></div>
+				<div><input type='text' name='OID' id='contactFormOID' Placeholder='Order Number (if applicable)'/></div>
+				<div><textarea name='body' required='required' id='contactFormBody' Placeholder='Message/Notes'></textarea></div>
 				<div class='alignRight'><input type='image' src="images/sendmessage.png" class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' style="width:308px; height:42px; margin:0 0 0 -2px; box-shadow:none; border:0px; background:none; padding:0px;"/>
 				</div>
 			</fieldset>
@@ -1705,16 +1710,17 @@ subscribeListsArticle is used for authenticated buyers
 	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
 	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
         <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:none !important; border-radius:0px !important; margin:0px;"/>
-        <p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+        
 			</fieldset>
 		</form>
-		
+		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
 		
 	</div>
 <div class="Account" >
-<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return true;">
-<h1>WELCOME, FIRST-TIMERS!</h1><input type='hidden' name='form' value='Business' />
+<form action='#' class='inputsAsBreaks' onSubmit="app.ext.myRIA.u.handleAppBuyerCreate($(this)); return false;">
+<h1>WELCOME, FIRST-TIMERS!</h1><input type='hidden' name='form' value='wholesale' />
 <div class="fieldM"><span class="field">First Name</span> <input name='firstname' type='text' size='30' class='textfname' placeholder='First Name' required='required' />
+<span class="field">Middle Initial</span> <input name='firstname' type='text' size='3' class='textmname' />
 <b>Last Name</b> <input name='lastname' type='text' size='30' placeholder='Last Name' required='required' class='textflast'/></div>
 <div class="fieldM"><span class="field">Address</span> <input name='address1' type='text' size='30' placeholder='Address' class='textfadd' required='required' /> 
 <input name='address2' type='text' size='30' placeholder='Address (Line 2)' class='textfadd1'/></div>
@@ -1722,9 +1728,9 @@ subscribeListsArticle is used for authenticated buyers
 
 <div class="fieldM"><span class="field">Country</span> <select name="Country" class="textfcountry"><option>United States of America</option></select></div>
 
-<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='ar_phone' type='text' size='12' placeholder='Phone Number' class='textfphone' required='required'/> </div>
-<!--
-<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='confirm_email' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'/> </div>
+<div class="fieldM"><span class="field">E-mail</span> <input name='email' type='email' size='30' class='textfmail' placeholder='E-mail Address' required='required' /> <b>Phone Number</b> <input name='ar_phone' type='tel' size='12' placeholder='Phone Number' class='textfphone' required='required'/> </div>
+
+<!--<div class="fieldM"><span class="field">Password</span> <input name='pass' type='password' size='30' class='textfpass' placeholder='7-18 Characters' required='required' /> <b>Confirm Password</b> <input name='pass2' type='password' size='12' placeholder='Must be a match' class='textfphone' required='required'/> </div>
 -->
 <!--<fieldset class='marginBottom'>
 	<legend>About Your Business</legend>
@@ -1865,19 +1871,13 @@ subscribeListsArticle is used for authenticated buyers
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'image comic'});">Image Comics</a></li>
 										
                                         <div class="clearfix"></div>
+                                 
                    <li style="text-align: center; clear:both;"><a href="#"></a><img src="images/reset_option.gif" style="margin:6px 10px 54px 0px;"/></a></li>
-                                        
-                                    
+                    
+                
+                           
+                           <!-- AddThis Button BEGIN -->
 
-
-
-
-<!--<script>
-			$(document).ready(function(){
-				$('li:odd, .content > *:odd').css('background-color','#FFD9BF');
-			});
-		</script>			
--->
 
                                                              
   </ul>
@@ -2128,8 +2128,8 @@ document.getElementById('qtyval').innerHTML=a;
        <!-- <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="change(this.value);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>-->
 		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
-        <span id='qtyval' class="qtyval" style="font-size:13px; color:#990000; font-weight:bold;">1</span>
-        <span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' style="font-size:13px; font-weight:bold;"></span><br><br>
+        <span id='qtyval' class="qtyval" style="font-size:18px; color:#990000; font-weight:bold;">1</span>
+        <span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' style="font-size:18px; font-weight:bold;"></span><br><br>
 <style>
         .black_overlay{
             display: none;
@@ -2147,8 +2147,8 @@ document.getElementById('qtyval').innerHTML=a;
         .white_content {
             display: none;
             position: absolute;
-            top: 25%;
-            left: 25%;
+            top: 35%;
+            left: 18%;
             width: 50%;
             height: 75%;
             padding: 16px;
@@ -2157,17 +2157,20 @@ document.getElementById('qtyval').innerHTML=a;
 			shadow
             z-index:1002;
             overflow: auto;
+			box-shadow: 1px 1px 3px 3px #000000;
         }
+		.savethis{font-size:15px; font-weight:bold;}
+		
     </style>
 
-<p><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'">Save this for later</a></p>
-        <div id="light" class="white_content"><strong>SAVE THIS FOR LATER.</strong> <br/><br/><span>This adds the selected item to your wishlist and removes it from your shopping cart. You can <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">view your wishlist</a> at any time</span> <br/>  <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/move_wishlist.png"/></a></div>
+<p><a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='block';document.getElementById('fade').style.display='block'" style="color:#993300; text-decoration:none;">Save this for later</a></p>
+        <div id="light" class="white_content"><span class="savethis">SAVE THIS FOR LATER.</span> <br/><br/><span>This adds the selected item to your wishlist and removes it from your shopping cart. You can <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;" style="color:#990000;">view your wishlist</a> at any time</span> <br/><br/><div style="float:right;">  <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/move_wishlist.png"/></a></div></div>
         <div id="fade" class="black_overlay"></div>
         
-        <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
+        <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:110px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
 <br/><br/>
 
-<select type='number' id="my-dropdown"   class='qtyInput numberInput' style="width:100px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+<select type='number' id="my-dropdown"   class='qtyInput numberInput' style="width:110px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
 		<!--<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 -->
@@ -2520,11 +2523,11 @@ The 'data-action' attribute is used to assign an onclick.
 	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
 	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
         <input type='image' src="images/button-login-to-my-account.png" value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' style="height:54px; width:240px; padding:0px; border:0px; margin:0px;"/>
-        <p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
+        
 			</fieldset>
 		</form>
 		
-		
+		<p><a href="#" onClick="app.ext.store_crm.calls.appBuyerPasswordRecover.init($('#modalLoginLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'loginMessaging'}); app.model.dispatchThis('immutable'); return false;">Forgot your username or password?</a></p>
 	</div>
 	<div id="createAccount">
 		<h1>FIRST-TIMER?</h1>

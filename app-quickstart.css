@@ -1,4 +1,4 @@
-\
+
 
 body,html	{font-size:100%; background:#B7A58B; margin:0px; padding:0px;  font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;}
 @font-face {
@@ -971,7 +971,7 @@ so the displayNone class is used, then a .grpType_PARENT class is added if the i
 .prodViewerAddToCartForm fieldset	{margin:0 0 12px 0; padding:0;}
 .prodViewerAddToCartForm label:after	{content:":"; padding-right:12px;}
 
-.CRMButtonMenu	{margin:0; padding:12px 0 0; margin-bottom:0px;text-align:center;}
+.CRMButtonMenu	{margin:0; padding:12px 0 0; width:191px; margin-bottom:0px;text-align:center;}
 .CRMButtonMenu a{ color:#770000; font-size:12px; }
 .pogType_attribs	{display:none;} /* don't show finder attributes */
 
@@ -1527,10 +1527,10 @@ div.catCarousel2 h2
 .ad-thumbs ul li h6.ad-description-title{font-size:15px; margin-bottom:20px; margin-top:20px;}
 .ad-thumbs ul li .ad-description{background: none repeat scroll 0 0 #FFFFFF; height: 150px;margin-top:-327px;position: absolute;right: -55px; width: 200px; border:7px solid #1c1c1c;}
 
-#my-dropdown{background: url("images/select-arrow.png") no-repeat scroll right center transparent; text-indent:16px; -webkit-appearance: none;
+#my-dropdown{background:#fff; border:1px solid #9e9e9e;padding:2px; -webkit-appearance: none;
   -moz-appearance: none;  appearance: none; z-index:0;}
   
-.my-dropdown{background: url("images/select-arrow.png") no-repeat scroll right center transparent; text-indent:16px; -webkit-appearance: none;
+.my-dropdown{background:#fff;border:1px solid #9e9e9e; padding:2px; -webkit-appearance: none;
   -moz-appearance: none;  appearance: none; z-index:0;}
 
 #my-dropdown option{ text-align:left;}
@@ -1545,3 +1545,134 @@ div.catCarousel2 h2
     z-index:1000;
 	background:#FFFFFF;
 }
+.a2a_img a2a_img_text a2a_i_a2a{display:none;}
+.a2a_default_style .a2a_img, .a2a_default_style .a2a_dd{float:right; width:100px; height:55px;}
+#a2apage_lockerz_grab{display:none;}
+#a2apage_myspace {display:none;}
+#a2apage_digg{display:none;}
+#a2apage_find_container{display:none;}
+#a2apage_reddit{display:none;}
+#a2apage_stumbleupon{display:none;}
+#a2apage_delicious{display:none;}
+#a2apage_google_bookmarks{display:none;}
+#a2apage_powered_by{display:none;}
+#a2apage_live{display:none;}
+#a2apage_aol_mail{display:none;}
+#a2apage_any_email{display:none;}
+#a2apage_email_client{display:none;}
+#a2apage_vodpod{display:none;}
+#a2apage_yahoo_bookmarks{display:none;}
+#a2apage_bebo{display:none;}
+#a2apage_mister_wong{display:none;}
+#a2apage_wordpress{display:none;}
+#a2apage_google_reader{display:none;}
+#a2apage_orkut{display:none;}
+#a2apage_xing{display:none;}
+#a2apage_buffer{display:none;}
+#a2apage_buffer{display:none;}
+#a2apage_evernote{display:none;}
+#a2apage_netvibes_share{display:none;}
+#a2apage_strands{display:none;}
+#a2apage_posterous{display:none;}
+#a2apage_business_exchange{display:none;}
+#a2apage_arto{display:none;}
+#a2apage_tipd{display:none;}
+#a2apage_smaknews{display:none;}
+#a2apage_plurk{display:none;}
+#a2apage_plurk{display:none;}
+#a2apage_aim{display:none;}
+#a2apage_yahoo_messenger{display:none;}
+#a2apage_identi_ca{display:none;}
+#a2apage_mozillaca{display:none;}
+#a2apage_blogger_post{display:none;}
+#a2apage_typepad_post{display:none;}
+#a2apage_box_net{display:none;}
+#a2apage_kindle_it{display:none;}
+#a2apage_pinterest{display:none;}
+#a2apage_netlog{display:none;}
+#a2apage_technorati_favorites{display:none;}
+#a2apage_citeulike{display:none;}
+#a2apage_jumptags{display:none;}
+#a2apage_hemidemi{display:none;}
+#a2apage_funp{display:none;}
+#a2apage_instapaper{display:none;}
+#a2apage_phonefavs{display:none;}
+#a2apage_xerpi{display:none;}
+#a2apage_netvouz{display:none;}
+#a2apage_wink{display:none;}
+#a2apage_diigo{display:none;}
+#a2apage_bibsonomy{display:none;}
+#a2apage_blogmarks{display:none;}
+#a2apage_tailrank{display:none;}
+#a2apage_startaid{display:none;}
+#a2apage_kledy{display:none;}
+#a2apage_khabbr{display:none;}
+#a2apage_meneame{display:none;}
+#a2apage_yoolink{display:none;}
+#a2apage_bookmarks_fr{display:none;}
+#a2apage_technotizie{display:none;}
+#a2apage_newsvine{display:none;}
+#a2apage_multiply{display:none;}
+#a2apage_friendfeed{display:none;}
+#a2apage_plaxo_pulse{display:none;}
+#a2apage_ping{display:none;}
+#a2apage_squidoo{display:none;}
+#a2apage_protopage_bookmarks{display:none;}
+#a2apage_blinklist{display:none;}
+#a2apage_faves{display:none;}
+#a2apage_yigg{display:none;}
+#a2apage_webnews{display:none;}
+#a2apage_segnalo{display:none;}
+#a2apage_pusha{display:none;}
+#a2apage_youmob{display:none;}
+#a2apage_slashdot{display:none;}
+#a2apage_fark{display:none;}
+#a2apage_allvoices{display:none;}
+#a2apage_jamespot{display:none;}
+#a2apage_imera_brazil{display:none;}
+#a2apage_twiddla{display:none;}
+#a2apage_linkagogo{display:none;}
+#a2apage_unalog{display:none;}
+#a2apage_hugg{display:none;}
+#a2apage_diglog{display:none;}
+#a2apage_nowpublic{display:none;}
+#a2apage_tumblr{display:none;}
+#a2apage_livejournal{display:none;}
+#a2apage_current{display:none;}
+#a2apage_hellotxt{display:none;}
+#a2apage_spurl{display:none;}
+#a2apage_yample{display:none;}
+#a2apage_oneview{display:none;}
+#a2apage_linkatopia{display:none;}
+#a2apage_simpy{display:none;}
+#a2apage_linkedin{display:none;}
+#a2apage_buddymarks{display:none;}
+#a2apage_ask_com_mystuff{display:none;}
+#a2apage_viadeo{display:none;}
+#a2apage_maple{display:none;}
+#a2apage_wists{display:none;}
+#a2apage_connotea{display:none;}
+#a2apage_backflip{display:none;}
+#a2apage_mylinkvault{display:none;}
+#a2apage_sitejot{display:none;}
+#a2apage_sphinn{display:none;}
+#a2apage_dzone{display:none;}
+#a2apage_care2_news{display:none;}
+#a2apage_hyves{display:none;}
+#a2apage_sphere{display:none;}
+#a2apage_bitty_browser{display:none;}
+#a2apage_gabbr{display:none;}
+#a2apage_symbaloo_feeds{display:none;}
+#a2apage_tagza{display:none;}
+#a2apage_folkd{display:none;}
+#a2apage_newstrust{display:none;}
+#a2apage_amazon_wish_list{display:none;}
+#a2apage_printfriendly{display:none;}
+#a2apage_read_it_later{display:none;}
+#a2apage_tuenti{display:none;}
+#a2apage_email{display:none;}
+#a2apage_rediff{display:none;}
+
+
+.a2apage_wide a2a_wide{display:none;opacity:0;}
+
