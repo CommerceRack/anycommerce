@@ -54,11 +54,6 @@ class can also be applied to a 1 item per row list.
 
 /* for small buttons */
 .smallButton .ui-button-text	{line-height:normal !important; font-size:.85em;} /* don't mess with padding. will effect icon buttons */
-
-
-
-.ui-selectee	{cursor:pointer;}
-
 .appMessage P	{padding:0; margin:0;} /* used in app messaging for warnings, alerts, successes, etc */
 .zMessage	{margin:6px; 0}
 
@@ -287,6 +282,22 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+
+/*
+some jquery ui overrides/corrections
+*/
+
+.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
+
+/* if the ul has a fixed width on it, the li's, set to 100%, can flow outside the container. */
+li.ui-menu-item	{
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;	
+	}
+
+
+button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very short. */
 
 
 /*
@@ -699,8 +710,6 @@ ICON LIBRARY
 
 
 
-
-.ui-widget-anypanel ul.ui-menu li	{padding:2px 6px;}
 
 
 

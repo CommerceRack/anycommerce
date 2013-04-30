@@ -61,7 +61,7 @@
 	
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
-<ul class='listStyleNone noPadOrMargin roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
+<ul class='listStyleNone roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
 
 	</section>
 
@@ -71,7 +71,7 @@
 			<div class='buttonSet'>
 				<button data-app-event="admin_reports|showAdminKPIDBCollectionCreate">Add New Collection</button>
 				<button data-app-event="admin_reports|showChartAdd">Add New Chart</button>
-				<button>Save Chart Position</button>
+<!--				<button>Save Chart Position</button> -->
 			</div>
 			<h3 class='heading'>KPI - Marketplace Sales (collection)</h3>
 		</div>
@@ -88,8 +88,9 @@ graphs
 
 <ul>
 
-	<li id='KPICollectionListTemplate' class='ui-state-default pointer' data-app-event="admin_reports|addTriggerKPICollectionList">
-	<span data-bind="var:collection(TITLE); format:text;"></span>
+	<li id='KPICollectionListTemplate' class='ui-state-default'>
+	<span data-bind="var:collection(TITLE); format:text;" class='pointer' data-app-event="admin_reports|addTriggerKPICollectionList"></span>
+	<button data-app-event="admin_reports|handleCollectionMenu"></button>
 	</li>
 
 </ul>
@@ -107,6 +108,7 @@ graphs
 <div class='appMessaging clearfix'></div><!-- used for error display -->
 
 <form onsubmit="return false;" class='labelsAsBreaks'>
+<input type='hidden' name='function' value='sum' /><!-- hard coded for now. may get a chooser later -->
 
 <figure class='floatRight displayNone' data-app-role='graphTypePreview'>
   <figcaption>Graph Type Preview: <span class='graphType'></span></figcaption>
@@ -115,9 +117,9 @@ graphs
 
 
 
-<div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' /> <span class='toolTip' title="Will be used in the graph display. If this graph is intended for your launchpad, keep the title short.">?</span></div>
+<div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' data-bind="var: chart(title); format:popVal;" /> <span class='toolTip' title="Will be used in the graph display. If this graph is intended for your launchpad, keep the title short.">?</span></div>
 
-<div class='label'><select name='collection' required='required'>
+<div class='label'><select name='collection' required='required' data-bind="var: chart(collection); format:popVal;">
 	<option selected='selected' disabled='disabled'>graph location</option>
 	<option>launchpad</option><!-- if selected, remove 'size' option. add tile group option -->
 	<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
@@ -128,7 +130,7 @@ graphs
 </div>
 
 <div class='label'>
-<select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required'>
+<select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required' data-bind="var: chart(graph); format:popVal;">
 	<option value='' selected='selected' disabled='disabled'>graph type</option>
 	<option value='area'>Area</option>
 	<option value='area.stacked'>Area - Stacked</option>
@@ -157,7 +159,7 @@ graphs
 
 
 <div class='label'>
-<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required'>
+<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal();">
 	<option selected='selected' disabled='disabled'>period</option>
 	<optgroup label='daily' >
 		<option value='day.today'>Today</option>
@@ -209,7 +211,7 @@ graphs
 </div>
 
 <div class='label'>
-<select name='grpby' disabled='disabled' required='required'>
+<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
 	<option selected='selected' disabled='disabled' value=''>grouping</option>
 	<option value='none'>None (Merge Datasets)</option>
 	<option value='day'>Date: Day (Full Detail)</option>
@@ -227,9 +229,9 @@ graphs
 <div class='label displayNone' data-app-role='datasetTypeContainer'>
 	<div class='label'>Data:</div>
 
-	<label><input type='radio' name='column' value='1' /> Gross Sales</label>
-	<label><input type='radio' name='column' value='2' /> # Orders</label>
-	<label><input type='radio' name='column' value='3' /> # Units Sold</label>
+	<label><input type='radio' name='column' value='gms' /> Gross Sales</label>
+	<label><input type='radio' name='column' value='distinct' /> # Orders</label>
+	<label><input type='radio' name='column' value='total' /> # Units Sold</label>
 
 </div>
 
@@ -238,11 +240,11 @@ graphs
 <div class='label displayNone' data-app-role='dDatasetContainer'>
 <select name='ddataset'>
 	<option selected='selected' disabled="disabled" value=''>Data Source</option>
-	<option value='PRTS?c=1&amp;ctype=$'>By Partitions</option>
-	<option value='SCHEDULES?c=1&amp;ctype=$'>By Schedules</option>
-	<option value='DOMAINS?c=1&amp;ctype=$' >By Domains</option>
-	<option value='TAGS?c=1&amp;ctype=$'>By Tags</option>
-	<option value='MARKETS?c=1&amp;ctype=$'>By Integrations</option>
+	<option value='PRTS'>By Partitions</option>
+	<option value='SCHEDULES'>By Schedules</option>
+	<option value='DOMAINS' >By Domains</option>
+	<option value='TAGS'>By Tags</option>
+	<option value='MARKETS'>By Integrations</option>
 </select>
 </div>
 
@@ -292,3 +294,31 @@ graphs
 
 </div>
 
+
+
+<div id='KPICollectionEditorTemplate' data-app-role='collectionEditor'>
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th class='alignLeft'>Title</th>
+	<th class='alignLeft'>Graph Type</th>
+	<th class='alignLeft'>Period/Timeframe</th>
+	<th></th>
+</tr>
+</thead>
+<tbody data-bind="var: users(@GRAPHS); format:processList; loadsTemplate:KPICollectionEditorRowTemplate;"></tbody>
+</table>
+</div>
+
+
+<table>
+	<tr id='KPICollectionEditorRowTemplate' data-app-role='datasetContainer'>
+		<td data-bind="var: graph(title); format:text;"></td>
+		<td data-bind="var: graph(graph); format:text;"></td>
+		<td data-bind="var: graph(period); format:text;"></td>		
+		<td class='alignRight'>
+			<button data-app-event="admin_reports|showChartRemove">delete</button>
+			<button data-app-event="admin_reports|showChartUpdate">edit</button>
+		</td>
+	</tr>
+</table>

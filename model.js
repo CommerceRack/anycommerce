@@ -139,8 +139,8 @@ function zoovyModel() {
 	
 	
 		addDispatchToQ : function(dispatch,QID) {
-			app.u.dump('BEGIN: addDispatchToQ');
-			app.u.dump(" -> QID: "+typeof QID);
+//			app.u.dump('BEGIN: addDispatchToQ');
+//			app.u.dump(" -> QID: "+typeof QID);
 			var r; // return value.
 			if(dispatch['_cmd'] == 'undefined')	{
 				r = false;
@@ -415,7 +415,7 @@ handleReQ is used in a few places. Sometimes you want to adjust the attempts (q.
 set adjustAttempts to true to increment by 1.
 */
 		handleReQ : function(Q,QID,adjustAttempts)	{
-			app.u.dump("BEGIN handleReQ");
+//			app.u.dump("BEGIN handleReQ");
 			var uuid;
 			for(var index in Q) {
 				uuid = Q[index]['_uuid'];

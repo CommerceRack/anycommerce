@@ -232,7 +232,7 @@
 
 
 	jQuery.fn.hideLoading = function(options) {
-	
+		var indicatorID;
 		var settings = {};
 		jQuery.extend(settings, options);
 

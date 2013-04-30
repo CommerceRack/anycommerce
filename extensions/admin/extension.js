@@ -413,16 +413,16 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminKPIDBCollectionRemove","uuid":uuid,"_tag" : _tag},Q || 'immutable');	
 				}
 			}, //adminKPIDBUserDataSetsList
-//obj requires title and uuid, priority and @GRAPHS are optional.
+//obj requires uuid, title, priority and @GRAPHS are optional.
 		adminKPIDBCollectionUpdate : {
 			init : function(obj,_tag,Q)	{
-				app.u.dump("BEGIN admin.calls.adminKPIDBCollectionUpdate");
+//				app.u.dump("BEGIN admin.calls.adminKPIDBCollectionUpdate");
 				var r = 0;
 				_tag = _tag || {}; 
 				_tag.datapointer = "adminKPIDBCollectionUpdate"
 				obj = obj || {};
 				if(obj.uuid)	{
-					app.u.dump(" -> have UUID. proceed.");
+//					app.u.dump(" -> have UUID. proceed.");
 					r = 1;
 					this.dispatch(obj,_tag,Q);
 					}
@@ -432,7 +432,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				return r;
 				},
 			dispatch : function(obj,_tag,Q)	{
-				app.u.dump("GOT TO UPDATE DISPATCH!");
 				obj._cmd = 'adminKPIDBCollectionUpdate'
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
@@ -451,7 +450,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				if(!$.isEmptyObject(obj))	{
-					if(obj.dataset && obj.grpby && obj.column)	{
+					if(obj['@datasets'] && obj.grpby && obj.column && obj['function'])	{
 						if(obj.period || (obj.startyyyymmdd && obj.stopyyyymmdd))	{
 							r = 1;
 							this.dispatch(obj,_tag,Q);
@@ -461,7 +460,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 							}
 						}
 					else	{
-						$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; dataset ["+obj.dataset+"], grpby ["+obj.grpby+"], detail ["+obj.detail+"] and column ["+obj.column+"] are required","gMessage":true})
+						$('.appMessaging').anymessage({"message":"In admin.calls.adminKPIDBDataQuery; @datasets ["+typeof obj['@datasets']+"], grpby ["+obj.grpby+"], and column ["+obj.column+"] and function ["+obj['function']+"] are required","gMessage":true})
 						}
 					}
 				else	{
