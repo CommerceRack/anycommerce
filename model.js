@@ -139,14 +139,23 @@ function zoovyModel() {
 	
 	
 		addDispatchToQ : function(dispatch,QID) {
-	//		app.u.dump('BEGIN: addDispatchToQ');
+			app.u.dump('BEGIN: addDispatchToQ');
+			app.u.dump(" -> QID: "+typeof QID);
 			var r; // return value.
 			if(dispatch['_cmd'] == 'undefined')	{
 				r = false;
 	//			zSTdErr(' -> _cmd not set. return false');
 				}
+/** 201318 -> if QID was not a string, a catastropic JS error occured. could (and did) happen if call has bug in it. */				
+			else if(typeof QID != 'string') {
+				r = false;
+				app.u.dump("Unable to add dispatch to Queue. QID passed was not a string. dispatch and QID follow:","warn");
+				//the info below is meant to help troubleshoot where the error occured.
+				app.u.dump("dispatch: "); app.u.dump(dispatch);
+				app.u.dump("QID: "); app.u.dump(QID);
+				}
 			else	{
-				QID = QID === undefined ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
+				QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 				var uuid = app.model.fetchUUID() //uuid is obtained, not passed in.
 				dispatch["_uuid"] = uuid;
 				dispatch._tag = dispatch._tag || {}; //the following line will error if tag is not an object. define as such if not already defined.
