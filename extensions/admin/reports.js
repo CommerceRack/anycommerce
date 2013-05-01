@@ -511,10 +511,33 @@ var admin_reports = function() {
 
 
 var
-	myDataSet = new Array(), //the data for the graph.
-	highChartsObj = {}; //what is passed into highcharts(); varies based on graph type.
+//the data for the graph.
+	myDataSet = new Array(),
+//what is passed into highcharts(); varies based on graph type.
+	highChartObj = {
+		chart: {type: graphVars.graph},
+		title: {text: graphVars.title},
+		subtitle: {text: data.startyyyymmdd + " to " + data.stopyyyymmdd},
+		tooltip: {pointFormat: '{series.name} <b>{point.y:,.0f}</b> on {point.x}'}
+		}; 
 
-if(graphVars.dataColumns == 'fixed')	{
+if(graphVars.graph == 'pie' && graphVars.dataColumns == 'dynamic')	{
+	var L = data['@YAxis'].length;
+	app.u.dump(" -> L: "+L);
+	for(var i = 0; i < L; i += 1)	{
+//		app.u.dump(" -> "+data['@YAxis'][i][1]+" ("+key+") : "+data[key][0]);
+		myDataSet.push([data['@YAxis'][i][1],data[data['@YAxis'][i][0]][0]])
+		}
+	}
+else if(graphVars.graph == 'pie' && graphVars.dataColumns == 'fixed')	{
+	var L = graphVars['@datasets'].length
+	app.u.dump(" -> L: "+L);
+	for(var i = 0; i < L; i += 1)	{
+//		app.u.dump(" -> "+graphVars['@datasets'][i]+" : "+data[graphVars['@datasets'][i]][0]);
+		myDataSet.push([graphVars['@datasets'][i],data[graphVars['@datasets'][i]][0]])
+		}
+	}
+else if(graphVars.dataColumns == 'fixed')	{
 	var L = graphVars['@datasets'].length
 	for(var i = 0; i < L; i += 1)	{
 		myDataSet.push({'name':graphVars['@datasets'][i],'data':data[graphVars['@datasets'][i]]})
@@ -528,29 +551,42 @@ else if(graphVars.dataColumns == 'dynamic')	{
 	}
 else	{
 	
-	}
+	} //catch. really, by now, we should never get here.
 
-if(myDataSet.length)	{
-	$target.highcharts({
-		chart: {
-			type: graphVars.graph
-		},
-		title: {
-			text: graphVars.title
-		},
-		subtitle: {
-			text: data.startyyyymmdd + " to " + data.stopyyyymmdd
-		},
-		xAxis: {
-			categories : data['@xAxis'],
-			tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 ,
-			labels: {
-				formatter: function() {
-					return this.value; // clean, unformatted number for year
+if(graphVars.graph == 'pie')	{
+	highChartObj.plotOptions = {
+		pie: {
+			allowPointSelect: true,
+			cursor: 'pointer',
+			dataLabels: {
+				enabled: true,
+				color: '#000000',
+				connectorColor: '#000000',
+				formatter: function() {return (this.percentage == 0) ? null : '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';}
 				}
 			}
-		},
-		yAxis: {
+		}
+	
+	highChartObj.series = [{
+		type: 'pie',
+		name: 'Browser share',
+		data: myDataSet
+		}]
+
+	app.u.dump("highChartObj "); app.u.dump(highChartObj);
+
+	}
+//the line charts all expect the data about the same.
+else	{
+	highChartObj.xAxis = {
+		categories : data['@xAxis'],
+		tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 ,
+		labels: {
+			formatter: function() {return this.value;} // clean, unformatted number for year
+			}
+		}
+
+	highChartObj.yAxis = {
 			title: {
 				text: '' //runs up left side of chart.
 			},
@@ -559,12 +595,13 @@ if(myDataSet.length)	{
 					return this.value / 1000 +'k';
 				}
 			}
-		},
-		tooltip: {
-			pointFormat: '{series.name} <b>{point.y:,.0f}</b> on {point.x}'
-		},
-		series: myDataSet
-			});
+		}
+	highChartObj.series = myDataSet
+
+	}
+
+if(myDataSet.length)	{
+	$target.highcharts(highChartObj);
 	}
 else	{
 	$target.anymessage({'message':'No data available'});
