@@ -53,8 +53,10 @@ app.ext.admin_launchpad.u.delay = (function(){
 
 $(window).resize(function() {
     app.ext.admin_launchpad.u.delay(function(){
-      console.log('Browser resize. Adjust tilegroups and trigger shapeshifter rearrange');
-	  app.ext.admin_launchpad.u.handleTileGroupResize()
+	  if($('#launchpadContent').is(':visible'))	{
+      	console.log('Browser resize. Adjust tilegroups and trigger shapeshifter rearrange');
+		app.ext.admin_launchpad.u.handleTileGroupResize();
+	  	}
       //...
     }, 500);
 });

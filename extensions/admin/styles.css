@@ -1303,7 +1303,13 @@ ul.kpiSortable li	{padding:6px; border-bottom:1px solid #ccc;}
 ul.kpiSortable li:last-child	{border-bottom:0;}
 .KPIGraphBuilder	{margin:50px;}
 
-
+.kpiGraphContainer .graph	{
+	width:90%;
+	margin:0 auto 12px auto; padding-bottom:12px; border-bottom:1px dashed #ccc;
+	box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	webkit-box-sizing:border-box;
+	}
 
 
 

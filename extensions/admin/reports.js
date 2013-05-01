@@ -465,21 +465,17 @@ var admin_reports = function() {
 //at this point, graphVars IS an object and is not empty.
 //app.u.dump(" -> graphVars: "); app.u.dump(graphVars);
 					if(!app.ext.admin_reports.u.graphVarsIsMissingData(graphVars))	{
+						$target.showLoading({'message':'Fetching graph data'});
 //everything we need is accounted for. Move along... move along...
 						app.ext.admin.calls.adminKPIDBDataQuery.init(graphVars,{callback:function(rd){
-//							app.u.dump('HEY! did you turn off the sample charts that are set to display when response has error?','warn');
+							$target.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$('#globalMessaging').anymessage({'message':rd});
-								
-//								app.ext.admin_reports.u.addGraph($target,graphVars,{})
 								}
 							else	{
-								$target.append('woot!');
-								//verify there is data then add the chart.
 								app.ext.admin_reports.u.addGraph($target,graphVars,app.data[rd.datapointer])
 								}
 							}},'mutable');
-						app.model.dispatchThis();
 						}
 					else	{
 						$('.appMessaging').anymessage({'message':'In admin_reports.u.getKPIChart, graphVars is missing data: <br>'+app.ext.admin_reports.u.graphVarsIsMissingData(graphVars),'gMessage':true});
@@ -508,86 +504,90 @@ var admin_reports = function() {
 					}
 				return r;
 				},
-			
+//This will display the actual graph. requires that data be passed in. executed by getChartData.			
 			addGraph : function($target,graphVars,data)	{
 				
-				if($target && graphVars)	{
+				if($target && graphVars && data)	{
 
 
-$target.highcharts({
-	chart: {
-		type: graphVars.graph
-	},
-	title: {
-		text: graphVars.title
-	},
-	subtitle: {
-		text: ''
-	},
-	xAxis: {
-		labels: {
-			formatter: function() {
-				return this.value; // clean, unformatted number for year
-			}
+var
+	myDataSet = new Array(), //the data for the graph.
+	highChartsObj = {}; //what is passed into highcharts(); varies based on graph type.
+
+if(graphVars.dataColumns == 'fixed')	{
+	var L = graphVars['@datasets'].length
+	for(var i = 0; i < L; i += 1)	{
+		myDataSet.push({'name':graphVars['@datasets'][i],'data':data[graphVars['@datasets'][i]]})
 		}
-	},
-	yAxis: {
-		title: {
-			text: 'Nuclear weapon states'
+	}
+else if(graphVars.dataColumns == 'dynamic')	{
+	var L = data['@YAxis'].length;
+	for(var i = 0; i < L; i += 1)	{
+		myDataSet.push({'name':data['@YAxis'][i][1],'data':data[data['@YAxis'][i][0]]})
+		}
+	}
+else	{
+	
+	}
+
+if(myDataSet.length)	{
+	$target.highcharts({
+		chart: {
+			type: graphVars.graph
 		},
-		labels: {
-			formatter: function() {
-				return this.value / 1000 +'k';
-			}
-		}
-	},
-	tooltip: {
-		pointFormat: '{series.name} produced <b>{point.y:,.0f}</b><br/>warheads in {point.x}'
-	},
-	plotOptions: {
-		area: {
-			pointStart: 1940,
-			marker: {
-				enabled: false,
-				symbol: 'circle',
-				radius: 2,
-				states: {
-					hover: {
-						enabled: true
-					}
+		title: {
+			text: graphVars.title
+		},
+		subtitle: {
+			text: data.startyyyymmdd + " to " + data.stopyyyymmdd
+		},
+		xAxis: {
+			categories : data['@xAxis'],
+			tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 ,
+			labels: {
+				formatter: function() {
+					return this.value; // clean, unformatted number for year
 				}
 			}
-		}
-	},
-	series: [{
-		name: 'USA',
-		data: [null, null, null, null, null, 6 , 11, 32, 110, 235, 369, 640,
-			1005, 1436, 2063, 3057, 4618, 6444, 9822, 15468, 20434, 24126,
-			27387, 29459, 31056, 31982, 32040, 31233, 29224, 27342, 26662,
-			26956, 27912, 28999, 28965, 27826, 25579, 25722, 24826, 24605,
-			24304, 23464, 23708, 24099, 24357, 24237, 24401, 24344, 23586,
-			22380, 21004, 17287, 14747, 13076, 12555, 12144, 11009, 10950,
-			10871, 10824, 10577, 10527, 10475, 10421, 10358, 10295, 10104 ]
-	}, {
-		name: 'USSR/Russia',
-		data: [null, null, null, null, null, null, null , null , null ,null,
-		5, 25, 50, 120, 150, 200, 426, 660, 869, 1060, 1605, 2471, 3322,
-		4238, 5221, 6129, 7089, 8339, 9399, 10538, 11643, 13092, 14478,
-		15915, 17385, 19055, 21205, 23044, 25393, 27935, 30062, 32049,
-		33952, 35804, 37431, 39197, 45000, 43000, 41000, 39000, 37000,
-		35000, 33000, 31000, 29000, 27000, 25000, 24000, 23000, 22000,
-		21000, 20000, 19000, 18000, 18000, 17000, 16000]
-	}]
-        });
+		},
+		yAxis: {
+			title: {
+				text: '' //runs up left side of chart.
+			},
+			labels: {
+				formatter: function() {
+					return this.value / 1000 +'k';
+				}
+			}
+		},
+		tooltip: {
+			pointFormat: '{series.name} <b>{point.y:,.0f}</b> on {point.x}'
+		},
+		series: myDataSet
+			});
+	}
+else	{
+	$target.anymessage({'message':'No data available'});
+	}
+
+
 
 
 					
 					
 					}
-				else	{}
+				else if($target)	{
+					$target.anymessage({'message':'In admin_reports.u.addGraph, graphsvars ['+typeof graphVars+'] and data['+typeof data+'] are both required.','gMessage':true});
+					}
+				else	{
+					
+					$("#globalMessaging").anymessage({'message':'In admin_reports.u.addGraph, $target ['+typeof $target+'] andgraphsvars ['+typeof graphVars+'] and data['+typeof data+'] are both required.','gMessage':true});
+					
+					}
 				
 				},
 
+//This is what displays a collection.  It'll show it in target.
 			addKPICollectionTo : function($target,collection)	{
 				app.u.dump("BEGIN admin_reports.u.addKPICollectionTo $target");
 				if($target && collection)	{
@@ -605,10 +605,10 @@ if(app.data[rd.datapointer]['@GRAPHS'])	{
 	var graphs = app.data[rd.datapointer]['@GRAPHS']; //shortcut
 	for(var index in graphs)	{
 //		app.u.dump(index+"). adding graph."); app.u.dump(graphs[index]);
-		var $div = $("<div\/>").attr('data-graph-uuid',graphs[index].uuid).appendTo($target);
+		var $div = $("<div\/>").attr('data-graph-uuid',graphs[index].uuid).addClass('graph').appendTo($target);
 		app.ext.admin_reports.u.getChartData($div,graphs[index]);
 		}
-	
+	app.model.dispatchThis();
 	}
 else	{
 	$target.append("<P>There are no graphs in this collection.<\/P>");
@@ -905,7 +905,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 		if(mode == 'add' || mode == 'update')	{
 			var sfo = $form.serializeJSON(); //needs to be in 'click' or serialization occurs before form is populated.
 			if(app.ext.admin_reports.u.validateAddUpdateCollectionForm($form,sfo))	{
-//				app.u.dump("woot! we have everything we need. now do something");
+
 //By this point, all the data required to add or update a chart is present.
 
 //now get all the data formatted properly. Once that's done, mode will determine the next course of action.
