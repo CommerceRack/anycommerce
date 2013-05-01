@@ -61,7 +61,7 @@
 	
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
-<ul class='listStyleNone roundedList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
+<ul class='listStyleNone roundedList'  data-app-role='collectionNavList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
 
 	</section>
 
@@ -286,7 +286,7 @@ graphs
 </div>
 
 <div class='buttonset'>
-	<button class='floatLeft'>Preview (locked till enough data to generate)</button>
+<!--	<button class='floatLeft'>Preview (locked till enough data to generate)</button> -->
 	<button class='floatRight' data-app-event="admin_reports|execAdminKPIDBCollectionUpdate">Save</button>
 </div>
 

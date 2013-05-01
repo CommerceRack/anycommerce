@@ -183,7 +183,7 @@ var admin_reports = function() {
 						else	{
 							
 							$target.anycontent({'templateID':'KPICollectionEditorTemplate','datapointer':rd.datapointer,'dataAttribs':{'collection':collection}});
-							$('.gridTable',$target).anytable().sortable({'items':'tr'});
+							$('.gridTable',$target).anytable(); //.sortable({'items':'tr'});
 							app.u.handleAppEvents($target);
 							}
 						}
@@ -429,6 +429,18 @@ var admin_reports = function() {
 				return (r == "") ? false : r;
 				},
 
+//all this does is empty and re-render the collections. you must destroy and re-aquire prior to running this.
+			updateKPICollections : function($context)	{
+				if($context)	{
+					var $UL = $("[data-app-role='collectionNavList']",$context);
+					$UL.empty().parent().anycontent({datapointer : 'adminKPIDBCollectionList'});
+					app.u.handleAppEvents($UL);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_reports.u.updateKPICollections, either $context not passed.','gMessage':true});
+					}
+				},
+
 //vars will contain a grpby and column.  It will also contain a period OR startyyyymmdd and stopyyyymmdd
 //vars can contain a dataset OR dataset can be passed in as the second param. This is to accomodate the KPI data storage pattern.
 //outside of KPI, there's a good chance dataset will be passed in w/ the vars.
@@ -440,7 +452,12 @@ var admin_reports = function() {
 					if(!app.ext.admin_reports.u.graphVarsIsMissingData(graphVars))	{
 //everything we need is accounted for. Move along... move along...
 						app.ext.admin.calls.adminKPIDBDataQuery.init(graphVars,{callback:function(rd){
-							if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+//							app.u.dump('HEY! did you turn off the sample charts that are set to display when response has error?','warn');
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								
+//								app.ext.admin_reports.u.addGraph($target,graphVars,{})
+								}
 							else	{
 								$target.append('woot!');
 								//verify there is data then add the chart.
@@ -484,14 +501,13 @@ var admin_reports = function() {
 
 $target.highcharts({
 	chart: {
-		type: 'area'
+		type: graphVars.graph
 	},
 	title: {
-		text: 'US and USSR nuclear stockpiles'
+		text: graphVars.title
 	},
 	subtitle: {
-		text: 'Source: <a href="http://thebulletin.metapress.com/content/c4120650912x74k7/fulltext.pdf">'+
-			'thebulletin.metapress.com</a>'
+		text: ''
 	},
 	xAxis: {
 		labels: {
@@ -573,7 +589,7 @@ $target.highcharts({
 if(app.data[rd.datapointer]['@GRAPHS'])	{
 	var graphs = app.data[rd.datapointer]['@GRAPHS']; //shortcut
 	for(var index in graphs)	{
-		app.u.dump(index+"). adding graph."); app.u.dump(graphs[index]);
+//		app.u.dump(index+"). adding graph."); app.u.dump(graphs[index]);
 		var $div = $("<div\/>").attr('data-graph-uuid',graphs[index].uuid).appendTo($target);
 		app.ext.admin_reports.u.getChartData($div,graphs[index]);
 		}
@@ -715,14 +731,13 @@ else	{
 							}
 					
 					});
-				}, //showChartAdd
+				}, //showChartUpdate
 			showChartRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: true});
 				$btn.off('click.showChartRemove').on('click.showChartRemove',function(){
 					app.ext.admin_reports.a.showKPIGraphRemove($btn.closest("[data-app-role='collectionEditor']").data('collection'),$btn.closest("tr").data('uuid'),$btn.closest('table'));
 					});
-				//
-				},
+				}, //showChartRemove
 
 			//NOT DONE.
 			showAdminKPIDBCollectionCreate : function($btn)	{
@@ -745,16 +760,20 @@ else	{
 							{ text: "Add Collection", click: function() {
 								var val = $('#newCollectionName').val();
 								if(val)	{
+									$D.showLoading({'message':'Adding collection...'});
+									app.model.destroy('adminKPIDBCollectionList');
 									app.ext.admin.calls.adminKPIDBCollectionCreate.init({'uuid':app.u.guidGenerator(),'title':val},{callback : function(rd){
+										$D.hideLoading();
 										if(app.model.responseHasErrors(rd)){
 											$('.appMessaging').anymessage({'message':rd,'gMessage':true});
 											}
 										else	{
-											$D.text("Your collection was created.");
+											$D.anymessage(app.u.successMsgObject('Your collection has been created.'));
+											$('#newCollectionName').val('');
+											app.ext.admin_reports.u.updateKPICollections($btn.closest("[data-app-role='slimLeftContainer']"));
 											}
 										}},'immutable');
-									app.model.destroy('adminKPIDBCollectionList');
-									app.ext.admin.calls.adminKPIDBCollectionList.init({},'immutable');
+									app.ext.admin.calls.adminKPIDBCollectionList.init({},'immutable')
 									app.model.dispatchThis('immutable');
 									}
 								else	{
@@ -1030,7 +1049,7 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					return false;
 					})
 				
-				}
+				} //handleCollectionMenu
 			
 			} //E / Events
 
