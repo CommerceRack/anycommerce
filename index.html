@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"20130430101420",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201300501095720",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -184,6 +184,7 @@ Welcome,
 									</ul>
                                     <ul>
 										<li>ACTION FIGURES</li>
+                                        
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dc comics figure'});">DC Comics</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comics figure'});">Dark Horse Comics</a></li>
 										<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'image figure'});">Image</a></li>
@@ -601,7 +602,7 @@ Welcome,
 						<li><a href="#" onClick="return showContent('cart',{});">View Shopping Cart</a></li>
 						<li><a href="#" onClick="return showContent('cart',{});">Checkout</a></li>	
 						<li><a href="#">Recently Viewed Items</a></li>	
-						<li><a href="#">Previous Orders</a></li>																								
+						<li><a href="#customer?show=orders">Previous Orders</a></li>																								
 					</ul>	
 					<div id="footerSubscribe">
 						<form onSubmit="app.ext.store_crm.u.handleSubscribe('subscribeFrm'); return false" name="subscribeFrm" id="subscribeFrm" action="#">
@@ -972,7 +973,10 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 </ul>
 
-
+<div id='recentlyViewedItemsContainer' class='displayNone'>
+<h2>Recently Viewed Items</h2>
+<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
 
 <ul>
 <!--
@@ -1490,8 +1494,8 @@ if you change these, you should move them above this comment so that when you (o
 	<li><a href='#customer?show=myaccount'>View My Account</a></li>
 	<li><a href='#cart?show=cart'>View Shopping Cart</a></li>
 	<li><a href='#cart?show=cart'>Checkout</a></li>
-	<li><a href="#">Recently Viewed Items</a></li>
-	<li><a href="#">Previous Orders</a></li>
+	<li><a href="#" data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'>Recently Viewed Items</a></li>
+	<li><a href="#customer?show=orders">Previous Orders</a></li>
 	</ul>
 
 </nav>

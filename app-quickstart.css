@@ -1534,9 +1534,9 @@ div.catCarousel2 h2
   -moz-appearance: none;  appearance: none; z-index:0;}
 
 #my-dropdown option{ text-align:left;}
-.checkoutFormContainer .panelContent select{background: url("images/select-arrow.png") no-repeat scroll right center transparent; text-indent:20px; -webkit-appearance: none;
+/*.checkoutFormContainer .panelContent select{background: url("images/select-arrow.png") no-repeat scroll right center transparent; text-indent:20px; -webkit-appearance: none;
   -moz-appearance: none;  appearance: none; z-index:0;}
-  
+  */
  .savelater{text-align:center; color:#FF0000; text-decoration:none;}
  .popup {
     overflow:hidden;

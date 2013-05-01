@@ -187,7 +187,12 @@ app.u.appInitComplete = function(P)	{
 	app.u.dump("Executing myAppIsLoaded code...");
 	}
 
-
+app.rq.push(['templateFunction','productTemplate','onDeparts',function(P) {
+var $container = $('#recentlyViewedItemsContainer');
+$container.show();
+$("ul",$container).empty(); //empty product list
+$container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
+}]);
 
 
 //don't execute script till both jquery AND the dom are ready.
