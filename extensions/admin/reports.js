@@ -95,7 +95,6 @@ var admin_reports = function() {
 				app.ext.admin.u.handleAppEvents($content);
 				},
 
-
 			showKPIInterface : function()	{
 				
 				var $KPI = $('#kpiContent').empty();
@@ -117,6 +116,8 @@ var admin_reports = function() {
 
 //currently supported modes are:  add or edit
 			showKPIAddUpdateInModal : function(mode,vars)	{
+//				app.u.dump("BEGIN admin_reports.a.showKPIAddUpdateInModal");
+//				app.u.dump(' -> vars: '); app.u.dump(vars);
 				vars = vars || {};
 //error checking...
 				if(mode)	{
@@ -137,6 +138,7 @@ var admin_reports = function() {
 //							app.u.dump($.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList']));
 						$D.anycontent({'templateID':'KPIGraphAddUpdateTemplate','data':$.extend(true,vars,app.data['adminKPIDBCollectionList'],app.data['adminKPIDBUserDataSetsList']),'dataAttribs':{'app-mode':mode}});
 						$D.dialog('open');
+						
 
 						$( "ul.kpiSortable",$D).sortable({
 							connectWith: "ul.kpiSortable",
@@ -154,10 +156,12 @@ var admin_reports = function() {
 							});
 
 						$('.toolTip',$D).tooltip();
-//once a graph is in a collection, it stays there.
-						if(mode == 'update')	{
-							$("[name='collection']").attr('disabled','disabled');
+//collection could be passed in an 'add' mode if adding from a collection.
+//will also be set in update mode. graphs can not be moved between collections.
+						if(vars.collection)	{
+							$("[name='collection']",$D).attr('disabled','disabled').val(vars.collection).parent().hide(); //can't use data-bind because options are added after the select
 							}
+
 						app.ext.admin.u.handleAppEvents($D);
 						}
 					else	{
@@ -183,7 +187,24 @@ var admin_reports = function() {
 						else	{
 							
 							$target.anycontent({'templateID':'KPICollectionEditorTemplate','datapointer':rd.datapointer,'dataAttribs':{'collection':collection}});
-							$('.gridTable',$target).anytable(); //.sortable({'items':'tr'});
+							var $table = $('.gridTable',$target);
+							$table.anytable().sortable({
+								'items':'tr',
+								stop: function( event, ui ) {
+									var graphs = new Array();
+									var result = $(this).sortable('toArray', {attribute: 'data-uuid'});
+									for(var index in result)	{
+//toArray is returning a blank in the zero spot sometimes, so only push it on if index has a value.
+										if(result[index])	{graphs.push(app.ext.admin_reports.u.getGraphByUUID(app.data[rd.datapointer]['@GRAPHS'],result[index]));}
+										}
+									app.u.dump(result);
+									app.u.dump(graphs);
+									app.ext.admin.calls.adminKPIDBCollectionUpdate.init({'uuid':collection,'@GRAPHS':graphs},{},'passive');
+									app.model.destroy(rd.datapointer); //this is the collection detail.
+									app.ext.admin.calls.adminKPIDBCollectionDetail.init(collection,{},'passive');
+									app.model.dispatchThis('passive');
+									}
+								});
 							app.u.handleAppEvents($target);
 							}
 						}
@@ -197,7 +218,7 @@ var admin_reports = function() {
 					}
 				},
 
-			showKPICollectionTitleChange : function(collection)	{
+			showKPICollectionTitleChange : function(collection,$context)	{
 				if(collection)	{
 					var $D = $("<div \/>").attr('title',"Rename Collection");
 					$D.addClass('displayNone').appendTo('body');
@@ -216,30 +237,29 @@ var admin_reports = function() {
 					
 					
 					$D.dialog('open');
-					$D.showLoading({'message':'Fetching collection details'});
+					$D.parent().showLoading({'message':'Fetching collection details'}); //parent used to buttons are encompased.
 					
 					app.ext.admin.calls.adminKPIDBCollectionDetail.init(collection,{'callback':function(rd){
-						$D.hideLoading();
+						$D.parent().hideLoading();
 						if(app.model.responseHasErrors(rd)){
 							$('#globalMessaging').anymessage({'message':rd,'gMessage':true});
 							}
 						else	{
 							var buttons = $D.dialog( "option", "buttons" );
 							buttons.push({text: "Save Changes", click: function() {
-								app.u.dump("GOT HERE!!!!!!!!!!!!!!!!!!!!!!");
 								var CD = {}; //Collection Detail
 								CD['@GRAPHS'] = app.data[rd.datapointer]['@GRAPHS'] || [];
 								CD.title = $('#collectionTitle',$D).val();
 								CD.uuid = collection;
-								
+								$D.parent().showLoading({'message':'Updating collection'});
 								app.ext.admin.calls.adminKPIDBCollectionUpdate.init(CD,{},'immutable');
 								app.model.destroy('adminKPIDBCollectionDetail|'+collection);
 								app.model.destroy('adminKPIDBCollectionList');
 								app.ext.admin.calls.adminKPIDBCollectionList.init({callback : function(rd){
-									$D.hideLoading();
+									$D.parent().hideLoading();
 									if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
 									else	{
-										app.ext.admin_reports.a.showKPIInterface();
+										app.ext.admin_reports.u.updateKPICollections($context);
 										$D.dialog('close');
 										}
 									}},'immutable');
@@ -260,7 +280,7 @@ var admin_reports = function() {
 					}
 				},
 
-			showKPIGraphRemove : function(collection,graphUUID,$context)	{
+			showKPIGraphRemove : function(collection,graphUUID,$slimLeftContainer)	{
 				if(collection && graphUUID)	{
 					
 					var $D = $("<div \/>").attr('title',"Remove Graph ");
@@ -268,16 +288,14 @@ var admin_reports = function() {
 					$D.appendTo('body');
 					$D.dialog({
 						modal: true,
-						width: ($(window).width() < 300) ? '95%' : 300,
 						autoOpen: false,
-						height : ($(window).height() < 300) ? ($(window).height() - 50) : 300, //accomodate small browsers/mobile devices.
 						close: function(event, ui)	{
 							$(this).dialog('destroy').remove();
 							},
 						buttons: [ 
 							{text: 'Cancel', click: function(){$D.dialog('close')}},
 							{text: "Delete Graph", click: function() {
-	$D.showLoading({'message':'Removing graph...'});
+	$D.parent().showLoading({'message':'Removing graph...'});
 	
 	var graphs = app.data['adminKPIDBCollectionDetail|'+collection]['@GRAPHS'];
 
@@ -293,12 +311,11 @@ var admin_reports = function() {
 
 	app.ext.admin.calls.adminKPIDBCollectionUpdate.init({'uuid':collection,'@GRAPHS' : graphs},{},'immutable');
 	app.model.destroy('adminKPIDBCollectionDetail|'+collection);
-	app.model.destroy('adminKPIDBCollectionList');
-	app.ext.admin.calls.adminKPIDBCollectionList.init({callback : function(rd){
-		$D.hideLoading();
+	app.ext.admin.calls.adminKPIDBCollectionDetail.init(collection,{callback : function(rd){
+		$D.parent().hideLoading();
 		if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
 		else	{
-			$("[data-uuid='"+graphUUID+"']",$context).empty().remove(); //remove any elements (like the left side list) w/ this collection id on them.
+			app.ext.admin_reports.a.showKPICollectionEditor($("[data-app-role='slimLeftContent']",$slimLeftContainer).first(), collection);
 			$D.dialog('close');
 			$('#globalMessaging').anymessage(app.u.successMsgObject('Your chart has been removed.'));
 			}
@@ -319,10 +336,10 @@ var admin_reports = function() {
 					
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_reports.a.showKPICollectionRemove, collection ["+collection+"] and/or graph uuid ["+graphUUID+"] not passed.","gMessage":true});
+					$('#globalMessaging').anymessage({"message":"In admin_reports.a.showKPIGraphRemove, collection ["+collection+"] and/or graph uuid ["+graphUUID+"] not passed.","gMessage":true});
 					}
 
-				}, //showKPICollectionRemove
+				}, //showKPIGraphRemove
 
 			showKPICollectionRemove : function(collection,$context)	{
 				if(collection)	{
@@ -339,24 +356,22 @@ var admin_reports = function() {
 					$D.appendTo('body');
 					$D.dialog({
 						modal: true,
-						width: ($(window).width() < 300) ? '95%' : 300,
 						autoOpen: false,
-						height : ($(window).height() < 300) ? ($(window).height() - 50) : 300, //accomodate small browsers/mobile devices.
 						close: function(event, ui)	{
 							$(this).dialog('destroy').remove();
 							},
 						buttons: [ 
 							{text: 'Cancel', click: function(){$D.dialog('close')}},
 							{text: "Delete Collection", click: function() {
-	$D.showLoading({'message':'Removing collection...'});
+	$D.parent().showLoading({'message':'Removing collection...'});
 	app.ext.admin.calls.adminKPIDBCollectionRemove.init(collection,{},'immutable');
 	app.model.destroy('adminKPIDBCollectionDetail|'+collection);
 	app.model.destroy('adminKPIDBCollectionList');
 	app.ext.admin.calls.adminKPIDBCollectionList.init({callback : function(rd){
-		$D.hideLoading();
+		$D.parent().hideLoading();
 		if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
 		else	{
-			$("[data-id='"+collection+"']",$context).empty().remove(); //remove any elements (like the left side list) w/ this collection id on them.
+			app.ext.admin_reports.u.updateKPICollections($context);
 			$D.dialog('close');
 			}
 		}},'immutable');
@@ -477,7 +492,7 @@ var admin_reports = function() {
 				return $chartObj;
 				},
 			
-			getDatasetByGraphID : function(graphs,graphUUID)	{
+			getGraphByUUID : function(graphs,graphUUID)	{
 				var r = false;
 				if(graphs && graphs.length && graphUUID)	{
 					for(var index in graphs)	{
@@ -489,7 +504,7 @@ var admin_reports = function() {
 					}
 				else	{
 					r = undefined;
-					$('#globalMessaging').anymessage({'message':'In admin_reports.u.getDatasetByGraphID, graphs not set/has no children of graphUUID ['+graphUUID+'] not passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_reports.u.getGraphByUUID, graphs not set/has no children of graphUUID ['+graphUUID+'] not passed.','gMessage':true});
 					}
 				return r;
 				},
@@ -702,7 +717,7 @@ else	{
 
 			addTriggerKPICollectionList : function($ele)	{
 				$ele.off('click.addTriggerKPICollectionList').on('click.addTriggerKPICollectionList',function(){
-					app.ext.admin_reports.u.addKPICollectionTo($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']").first(),$ele.closest('li').data('uuid'));
+					app.ext.admin_reports.u.addKPICollectionTo($ele.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']").first(),$ele.data('uuid'));
 					app.model.dispatchThis('mutable');
 					});
 				},
@@ -723,7 +738,8 @@ else	{
 						graph 
 						
 						if(collection && graphUUID && app.data['adminKPIDBCollectionDetail|'+collection])	{
-							graph = app.ext.admin_reports.u.getDatasetByGraphID(app.data['adminKPIDBCollectionDetail|'+collection]['@GRAPHS'],graphUUID);
+							graph = app.ext.admin_reports.u.getGraphByUUID(app.data['adminKPIDBCollectionDetail|'+collection]['@GRAPHS'],graphUUID);
+							graph.collection = collection;  //collection is not stored IN the graph. a graph is part of a collection. but this is needed for the UI.
 							app.ext.admin_reports.a.showKPIAddUpdateInModal('update',graph);
 							}
 						else	{
@@ -735,11 +751,10 @@ else	{
 			showChartRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: true});
 				$btn.off('click.showChartRemove').on('click.showChartRemove',function(){
-					app.ext.admin_reports.a.showKPIGraphRemove($btn.closest("[data-app-role='collectionEditor']").data('collection'),$btn.closest("tr").data('uuid'),$btn.closest('table'));
+					app.ext.admin_reports.a.showKPIGraphRemove($btn.closest("[data-app-role='collectionEditor']").data('collection'),$btn.closest("tr").data('uuid'),$btn.closest("[data-app-role='slimLeftContainer']"));
 					});
 				}, //showChartRemove
 
-			//NOT DONE.
 			showAdminKPIDBCollectionCreate : function($btn)	{
 				$btn.button();
 				$btn.off('click.showAdminKPIDBCollectionCreate').on('click.showAdminKPIDBCollectionCreate',function(){
@@ -750,9 +765,7 @@ else	{
 					$D.addClass('displayNone').appendTo('body'); 
 					$D.dialog({
 						modal: true,
-						width: ($(window).width() > 300) ? 300 : ($(window).width() - 50),
 						autoOpen: false,
-						height : ($(window).height() > 250) ? 250 : ($(window).height() - 50), //accomodate small browsers/mobile devices.
 						close: function(event, ui)	{
 							$(this).dialog('destroy').remove();
 							},
@@ -760,10 +773,10 @@ else	{
 							{ text: "Add Collection", click: function() {
 								var val = $('#newCollectionName').val();
 								if(val)	{
-									$D.showLoading({'message':'Adding collection...'});
+									$D.parent().showLoading({'message':'Adding collection...'});
 									app.model.destroy('adminKPIDBCollectionList');
 									app.ext.admin.calls.adminKPIDBCollectionCreate.init({'uuid':app.u.guidGenerator(),'title':val},{callback : function(rd){
-										$D.hideLoading();
+										$D.parent().hideLoading();
 										if(app.model.responseHasErrors(rd)){
 											$('.appMessaging').anymessage({'message':rd,'gMessage':true});
 											}
@@ -1012,29 +1025,45 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 			handleCollectionMenu : function($btn)	{
 				$btn.button({text: false,icons: {primary: "ui-icon-wrench"}}).addClass('floatRight');
 
-				
 				var 
 					$parentLI = $btn.closest('li'),
 					$ul = $("<ul \/>"),
-					collection = $parentLI.data('uuid');
+					collection = $parentLI.data('uuid'),
+					$slimLeftContainer = $btn.closest("[data-app-role='slimLeftContainer']");
 
 				$parentLI.css('position','relative');
 
-				$("<li \/>").text('Add new graph').on('click',function(){
+				$("<li \/>").append($("<a \/>",{'href':'#'}).text('Add new graph').on('click',function(event){
+					event.preventDefault();
+					event.stopPropagation(); //keeps this click from firing the click event on the li
 					app.ext.admin_reports.a.showKPIAddUpdateInModal('add',{'collection' : $parentLI.data('uuid')});
-					}).appendTo($ul);
+					$ul.hide()
+					return false;
+					})).appendTo($ul);
 
-				$("<li \/>").text('Edit Collection').on('click',function(){
+				$("<li \/>").append($("<a \/>",{'href':'#'}).text('Edit Collection').on('click',function(event){
+					event.preventDefault();
+					event.stopPropagation();
 					app.ext.admin_reports.a.showKPICollectionEditor($btn.closest("[data-app-role='slimLeftContainer']").find("[data-app-role='slimLeftContent']").first(), collection);
-					}).appendTo($ul);
+					$ul.hide()
+					return false;
+					})).appendTo($ul);
 
-				$("<li \/>").text('Rename collection').on('click',function(){
-					app.ext.admin_reports.a.showKPICollectionTitleChange(collection);
-					}).appendTo($ul);
+				$("<li \/>").append($("<a \/>",{'href':'#'}).text('Rename collection').on('click',function(event){
+					event.preventDefault();
+					event.stopPropagation();
+					app.ext.admin_reports.a.showKPICollectionTitleChange(collection,$slimLeftContainer);
+					$ul.hide()
+					return false;
+					})).appendTo($ul);
 
-				$("<li \/>").text('Delete collection').on('click',function(){
-					app.ext.admin_reports.a.showKPICollectionRemove(collection,$btn.closest('ul'));
-					}).appendTo($ul);
+				$("<li \/>").append($("<a \/>",{'href':'#'}).text('Delete collection').on('click',function(event){
+					event.preventDefault();
+					event.stopPropagation();
+					app.ext.admin_reports.a.showKPICollectionRemove(collection,$slimLeftContainer);
+					$ul.hide()
+					return false;
+					})).appendTo($ul);
 
 				$ul.insertAfter($btn);
 				$ul.menu().css({'position':'absolute','width':'200','z-index':'100'}).hide();

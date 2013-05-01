@@ -61,7 +61,7 @@
 	
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
-<ul class='listStyleNone roundedList'  data-app-role='collectionNavList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
+<ul class='listStyleNone roundedList noPadOrMargin'  data-app-role='collectionNavList' data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionListTemplate;"></ul>
 
 	</section>
 
@@ -73,10 +73,11 @@
 				<button data-app-event="admin_reports|showChartAdd">Add New Chart</button>
 <!--				<button>Save Chart Position</button> -->
 			</div>
-			<h3 class='heading'>KPI - Marketplace Sales (collection)</h3>
+			<h3 class='heading'>KPI</h3>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent' data-app-role='slimLeftContent'>
-graphs
+LOAD THE FIRST SET OF GRAPHS HERE.
+
 		</div>
 
 	</section>
@@ -88,13 +89,14 @@ graphs
 
 <ul>
 
-	<li id='KPICollectionListTemplate' class='ui-state-default'>
-	<span data-bind="var:collection(TITLE); format:text;" class='pointer' data-app-event="admin_reports|addTriggerKPICollectionList"></span>
+	<li id='KPICollectionListTemplate' class='ui-state-default pointer' data-app-event="admin_reports|addTriggerKPICollectionList">
+	<span data-bind="var:collection(TITLE); format:text;"></span>
 	<button data-app-event="admin_reports|handleCollectionMenu"></button>
 	</li>
 
 </ul>
 
+<!-- this select is just a container for the option template -->
 <select>
 
 	<option id='KPICollectionOptionTemplate' data-bind="useParentData:true; format:collectionAsOptions; extension:admin_reports;"></option>
@@ -119,8 +121,8 @@ graphs
 
 <div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' data-bind="var: chart(title); format:popVal;" /> <span class='toolTip' title="Will be used in the graph display. If this graph is intended for your launchpad, keep the title short.">?</span></div>
 
-<div class='label'><select name='collection' required='required' data-bind="var: chart(collection); format:popVal;">
-	<option selected='selected' disabled='disabled'>graph location</option>
+<div class='label'><select name='collection' required='required' ><!-- data-bind to select value won't work because options are not added till later. uses JS in add/update function -->
+	<option selected='selected' disabled='disabled'>collection/graph location</option>
 	<option>launchpad</option><!-- if selected, remove 'size' option. add tile group option -->
 	<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
 	</optgroup>
@@ -159,7 +161,7 @@ graphs
 
 
 <div class='label'>
-<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal();">
+<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal;">
 	<option selected='selected' disabled='disabled'>period</option>
 	<optgroup label='daily' >
 		<option value='day.today'>Today</option>
@@ -300,6 +302,7 @@ graphs
 <table class='gridTable fullWidth'>
 <thead>
 <tr>
+	<th></th>
 	<th class='alignLeft'>Title</th>
 	<th class='alignLeft'>Graph Type</th>
 	<th class='alignLeft'>Period/Timeframe</th>
@@ -313,6 +316,7 @@ graphs
 
 <table>
 	<tr id='KPICollectionEditorRowTemplate' data-app-role='datasetContainer'>
+		<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
 		<td data-bind="var: graph(title); format:text;"></td>
 		<td data-bind="var: graph(graph); format:text;"></td>
 		<td data-bind="var: graph(period); format:text;"></td>		
