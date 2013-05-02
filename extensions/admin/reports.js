@@ -488,6 +488,25 @@ var admin_reports = function() {
 				return $chartObj;
 				},
 			
+			getTextGraph : function(graphVars,highChartObj)	{
+				var
+					$C = $("<div \/>"),
+					L = highChartObj.series.length,
+					$T = $("<table \/>");
+				
+				$C.append("<h3>"+highChartObj.title.text+"<\/h3>");
+				$C.append("<h5>"+highChartObj.subtitle.text+"<\/h5>");
+				
+				for(var i = 0; i < L; i += 1)	{
+//skip data with zero value.
+					if(highChartObj.series[i].data[0])	{
+						$T.append("<tr \/><td>"+highChartObj.series[i].name+"<\/td><td>"+(graphVars.column == 'gms' ? '$' : '#')+highChartObj.series[i].data[0]+"<\/td><\/tr>");
+						}
+					}
+				$T.appendTo($C);
+				return $C;
+				},
+			
 			getGraphByUUID : function(graphs,graphUUID)	{
 				var r = false;
 				if(graphs && graphs.length && graphUUID)	{
@@ -562,27 +581,25 @@ if(graphVars.graph == 'pie')	{
 				enabled: true,
 				color: '#000000',
 				connectorColor: '#000000',
-				formatter: function() {return (this.percentage == 0) ? null : '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';}
+				formatter: function() {return (this.percentage == 0) ? null : '<b>'+ this.point.name +'</b>: '+ (Math.round(this.percentage*100)/100 ) +' %';}
 				}
 			}
 		}
 	
 	highChartObj.series = [{
 		type: 'pie',
-		name: 'Browser share',
+		name: '',
 		data: myDataSet
 		}]
-
-	app.u.dump("highChartObj "); app.u.dump(highChartObj);
 
 	}
 //the line charts all expect the data about the same.
 else	{
 	highChartObj.xAxis = {
 		categories : data['@xAxis'],
-		tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 ,
+		tickInterval : (data['@xAxis'].length > 35) ? 15 : 1 , //will skip ticks in graphs w/ lots of x-axis values.
 		labels: {
-			formatter: function() {return this.value;} // clean, unformatted number for year
+			formatter: function() {return this.value;} // clean, unformatted value
 			}
 		}
 
@@ -601,7 +618,12 @@ else	{
 	}
 
 if(myDataSet.length)	{
-	$target.highcharts(highChartObj);
+	if(graphVars.graph == 'text')	{
+		$target.append(app.ext.admin_reports.u.getTextGraph(highChartObj));
+		}
+	else	{
+		$target.highcharts(highChartObj);
+		}
 	}
 else	{
 	$target.anymessage({'message':'No data available'});
@@ -610,8 +632,8 @@ else	{
 
 
 
-					
-					
+
+
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_reports.u.addGraph, graphsvars ['+typeof graphVars+'] and data['+typeof data+'] are both required.','gMessage':true});
