@@ -338,8 +338,8 @@ These two pieces of data are used for mapping after the uploads to set what fold
 <ul class='debugMenu'>
 	<li><a href='#'>Tools</a>
 	<ul>
-		<li><a href='#' onClick="app.ext.admin.u.selectivelyNukeLocalStorage();">Selectively Clear LocalStorage (keep login &amp; preferences)</a></li>
-		<li><a href='#' onClick="localStorage.clear();">Clear LocalStorage for domain</a></li>
+		<li><a href='#' onClick="app.ext.admin.u.selectivelyNukeLocalStorage(); return false;">Selectively Clear LocalStorage (keep login &amp; preferences)</a></li>
+		<li><a href='#' onClick="localStorage.clear(); return false;">Clear LocalStorage for domain</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Pages</a>

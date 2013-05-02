@@ -70,14 +70,13 @@
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
 				<button data-app-event="admin_reports|showAdminKPIDBCollectionCreate">Add New Collection</button>
-				<button data-app-event="admin_reports|showChartAdd">Add New Chart</button>
+				<button data-app-event="admin_reports|showChartAdd">Explore Data</button>
 <!--				<button>Save Chart Position</button> -->
 			</div>
 			<h3 class='heading'>KPI</h3>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent kpiGraphContainer' data-app-role='slimLeftContent'>
 LOAD THE FIRST SET OF GRAPHS HERE.
-
 		</div>
 
 	</section>
@@ -112,24 +111,12 @@ LOAD THE FIRST SET OF GRAPHS HERE.
 <form onsubmit="return false;" class='labelsAsBreaks'>
 <input type='hidden' name='function' value='sum' /><!-- hard coded for now. may get a chooser later -->
 
+<!--
 <figure class='floatRight displayNone' data-app-role='graphTypePreview'>
   <figcaption>Graph Type Preview: <span class='graphType'></span></figcaption>
   <img src='blank.gif' width='300' height='104' alt='' />
 </figure> 
-
-
-
-<div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' data-bind="var: chart(title); format:popVal;" /> <span class='toolTip' title="Will be used in the graph display. If this graph is intended for your launchpad, keep the title short.">?</span></div>
-
-<div class='label'><select name='collection' required='required' ><!-- data-bind to select value won't work because options are not added till later. uses JS in add/update function -->
-	<option selected='selected' disabled='disabled'>collection/graph location</option>
-	<option>launchpad</option><!-- if selected, remove 'size' option. add tile group option -->
-	<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
-	</optgroup>
-	<!-- this is dynamically generated -->
-</select>
-<span class='toolTip' title="Determines where the graph will appear.">?</span>
-</div>
+-->
 
 <div class='label'>
 <select name='graph' data-app-event="admin_reports|addTriggerKPIGraphTypeChange" required='required' data-bind="var: chart(graph); format:popVal;">
@@ -150,97 +137,114 @@ LOAD THE FIRST SET OF GRAPHS HERE.
 </select>
 </div>
 
+<div class='marginBottom clearfix'>
 
-<div class='label'>
-	<div class='label'>Data Columns:</div>
+
+	<div class='floatLeft marginRight'>
 	
-	<label><input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" /> Dynamic <span class='toolTip' title="Will provide a fixed set of data choices displayed with a predetermined number of columns.">?</span></label>
-	
-	<label><input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" /> Fixed <span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
+		<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal;">
+			<option selected='selected' disabled='disabled'>period</option>
+			<optgroup label='daily' >
+				<option value='day.today'>Today</option>
+				<option value='day.yesterday'>Yesterday</option>
+				<option value='days.7'>Last 7 Days</option>
+				<option value='days.10'>Last 10 Days</option>
+				<option value='days.14'>Last 14 Days</option>
+				<option value='days.21'>Last 21 Days</option>
+				<option value='days.28'>Last 28 Days</option>
+				<option value='days.90'>Last 90 Days</option>
+			</optgroup>
+			
+			<optgroup label='weekly' >
+				<option value='week.this'>This Week</option>
+				<option value='week.tly'>This Week Last Year</option>
+				<option value='week.last'>Last Week</option>
+				<option value='weeks.1'>This Week + 1 Prior</option>
+				<option value='weeks.2'>This Week + 2 Prior</option>
+				<option value='weeks.3'>This Week + 3 Prior</option>
+				<option value='weeks.4'>This Week + 4 Prior</option>
+				<option value='weeks.5'>This Week + 5 Prior</option>
+				<option value='weeks.6'>This Week + 6 Prior</option>
+				<option value='weeks.7'>This Week + 7 Prior</option>
+				<option value='weeks.8'>This Week + 8 Prior</option>
+			
+			</optgroup>
+			
+			<optgroup label='monthly' >
+				<option value='month.this'>This Month</option>
+				<option value='month.tly'>This Month Last Year</option>
+				<option value='month.last'>Last Month</option>
+				<option value='months.1'>This Month + 1 Prior</option>
+				<option value='months.2'>This Month + 2 Prior</option>
+				<option value='months.3'>This Month + 3 Prior</option>
+			</optgroup>
+			
+			<optgroup label='quarterly' >
+				<option value='quarter.this'>This Quarter</option>
+				<option value='quarter.tly'>This Quarter Last Year</option>
+				<option value='quarter.last'>Last Quarter</option>
+			</optgroup>
+			
+			<optgroup label='Annual'>
+				<option value='ytd.this'>Year-To-Date</option>
+				<option value='ytd.last'>Last Year</option>
+			</optgroup>
+		</select>
+		<span class='toolTip' title="How long of a time period the graph should encompass. This selection determines which grouping is available.">?</span>
+
+	</div>
+
+	<div class='floatLeft'>
+		<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
+			<option selected='selected' disabled='disabled' value=''>grouping</option>
+			<option value='none'>None (Merge Datasets)</option>
+			<option value='day'>Date: Day (Full Detail)</option>
+			<option value='week'>Date: Week</option>
+			<option value='month'>Date: Month</option>
+			<option value='quarter'>Date: Quarter</option>
+			<option value='dow'>Date: Day of Week</option>
+		</select>
+		<span class='toolTip' title="Dependant on the 'period' being selected. Determines how the data is grouped.">?</span>
+	</div>
+
 </div>
 
 
-<div class='label'>
-<select name='period' data-app-event="admin_reports|addTriggerKPIPeriodChange" required='required' data-bind="var: chart(period); format: popVal;">
-	<option selected='selected' disabled='disabled'>period</option>
-	<optgroup label='daily' >
-		<option value='day.today'>Today</option>
-		<option value='day.yesterday'>Yesterday</option>
-		<option value='days.7'>Last 7 Days</option>
-		<option value='days.10'>Last 10 Days</option>
-		<option value='days.14'>Last 14 Days</option>
-		<option value='days.21'>Last 21 Days</option>
-		<option value='days.28'>Last 28 Days</option>
-		<option value='days.90'>Last 90 Days</option>
-	</optgroup>
+
+<div class='marginBottom clearfix'>
+
+	<div class='floatLeft marginRight'>
+		<div class='label'>Data Columns:</div>
 	
-	<optgroup label='weekly' >
-		<option value='week.this'>This Week</option>
-		<option value='week.tly'>This Week Last Year</option>
-		<option value='week.last'>Last Week</option>
-		<option value='weeks.1'>This Week + 1 Prior</option>
-		<option value='weeks.2'>This Week + 2 Prior</option>
-		<option value='weeks.3'>This Week + 3 Prior</option>
-		<option value='weeks.4'>This Week + 4 Prior</option>
-		<option value='weeks.5'>This Week + 5 Prior</option>
-		<option value='weeks.6'>This Week + 6 Prior</option>
-		<option value='weeks.7'>This Week + 7 Prior</option>
-		<option value='weeks.8'>This Week + 8 Prior</option>
+		<label><input type='radio' name='dataColumns' value='dynamic' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popRadio;" /> Dynamic <span class='toolTip' title="Will provide a fixed set of data choices displayed with a predetermined number of columns.">?</span></label>
+		
+		<label><input type='radio' name='dataColumns' value='fixed' data-app-event="admin_reports|addTriggerKPIDataColumnsChange" data-bind="var:chart(dataColumns); format:popRadio;" /> Fixed <span class='toolTip' title="Allows you more flexibility on the data source and how many columns appear in the graph.">?</span></label>
+
+	</div>
 	
-	</optgroup>
 	
-	<optgroup label='monthly' >
-		<option value='month.this'>This Month</option>
-		<option value='month.tly'>This Month Last Year</option>
-		<option value='month.last'>Last Month</option>
-		<option value='months.1'>This Month + 1 Prior</option>
-		<option value='months.2'>This Month + 2 Prior</option>
-		<option value='months.3'>This Month + 3 Prior</option>
-	</optgroup>
 	
-	<optgroup label='quarterly' >
-		<option value='quarter.this'>This Quarter</option>
-		<option value='quarter.tly'>This Quarter Last Year</option>
-		<option value='quarter.last'>Last Quarter</option>
-	</optgroup>
 	
-	<optgroup label='Annual'>
-		<option value='ytd.this'>Year-To-Date</option>
-		<option value='ytd.last'>Last Year</option>
-	</optgroup>
-</select>
-<span class='toolTip' title="How long of a time period the graph should encompass. This selection determines which grouping is available.">?</span>
+
+	<div class='floatLeft displayNone' data-app-role='datasetTypeContainer'>
+		<div class='label'>Data:</div>
+	
+		<label><input type='radio' name='column' value='gms' data-bind="var:chart(column); format:popRadio;" /> Gross Sales</label>
+		<label><input type='radio' name='column' value='distinct' data-bind="var:chart(column); format:popRadio;" /> # Orders</label>
+		<label><input type='radio' name='column' value='total' data-bind="var:chart(column); format:popRadio;" /> # Units Sold</label>
+	
+	</div>
+	
+
+	
+	
+	
+	
 </div>
-
-<div class='label'>
-<select name='grpby' disabled='disabled' required='required' data-bind="var: chart(grpby); format:popVal;">
-	<option selected='selected' disabled='disabled' value=''>grouping</option>
-	<option value='none'>None (Merge Datasets)</option>
-	<option value='day'>Date: Day (Full Detail)</option>
-	<option value='week'>Date: Week</option>
-	<option value='month'>Date: Month</option>
-	<option value='quarter'>Date: Quarter</option>
-	<option value='dow'>Date: Day of Week</option>
-</select>
-<span class='toolTip' title="Dependant on the 'period' being selected. Determines how the data is grouped.">?</span>
-</div>
-
-
-
-
-<div class='label displayNone' data-app-role='datasetTypeContainer'>
-	<div class='label'>Data:</div>
-
-	<label><input type='radio' name='column' value='gms' /> Gross Sales</label>
-	<label><input type='radio' name='column' value='distinct' /> # Orders</label>
-	<label><input type='radio' name='column' value='total' /> # Units Sold</label>
-
-</div>
-
 
 <!-- if datacolumns is set to dynamic, show this: -->
 <div class='label displayNone' data-app-role='dDatasetContainer'>
-<select name='ddataset'>
+<select name='ddataset' data-bind="var:chart(ddataset); format:popVal;">
 	<option selected='selected' disabled="disabled" value=''>Data Source</option>
 	<option value='PRTS'>By Partitions</option>
 	<option value='SCHEDULES'>By Schedules</option>
@@ -254,7 +258,7 @@ LOAD THE FIRST SET OF GRAPHS HERE.
 
 
 <div data-app-role='fDatasetContainer' class='label displayNone'>
-<select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange">
+<select name='datasetGrp' data-app-event="admin_reports|addTriggerKPIDatasetChange"  data-bind="var:chart(datasetGrp); format:popVal;">
 	<option value='' disabled='disabled' selected='selected'>Dataset By</option>
 	<option value='OVERALL'>All Domains/Partitions</option>
 	<option value='COUPON'>Coupon</option>
@@ -270,7 +274,10 @@ LOAD THE FIRST SET OF GRAPHS HERE.
 </div>
 
 
-<div data-app-role='axisChooser' class='label displayNone'>
+
+
+
+<div data-app-role='axisChooser' class='label displayNone marginRight'>
 <table>
 <tr>
 	<td class='ui-widget-content valignTop ui-corner-left'>
@@ -288,12 +295,43 @@ LOAD THE FIRST SET OF GRAPHS HERE.
 </table>
 </div>
 
-<div class='buttonset'>
-<!--	<button class='floatLeft'>Preview (locked till enough data to generate)</button> -->
-	<button class='floatRight' data-app-event="admin_reports|execAdminKPIDBCollectionUpdate">Save</button>
+
+
+<fieldset class='displayNone marginTop' data-app-role='saveInputsFieldset'>
+	<legend>Graph Name &amp; Location</legend>
+
+	<div class='label'><input type='text' size='40' placeholder='graph title' required='required' name='title' data-bind="var: chart(title); format:popVal;" /> <span class='toolTip' title="Will be used in the graph display.">?</span></div>
+	
+	<div class='label'><select name='collection' required='required' ><!-- data-bind to select value won't work because options are not added till later. uses JS in add/update function -->
+		<option selected='selected' disabled='disabled'>collection/graph location</option>
+	<!-- 	<option>launchpad</option>if selected, remove 'size' option. add tile group option -->
+		<optgroup label="KPI" data-bind="var: users(@COLLECTIONS); format:processList; loadsTemplate:KPICollectionOptionTemplate;">
+		</optgroup>
+		<!-- this is dynamically generated -->
+	</select>
+	<span class='toolTip' title="Determines where the graph will appear.">?</span>
+	</div>
+
+</fieldset>
+
+
+
+<div class='buttonset marginBottom clearfix'>
+	<button class='floatRight' data-app-event="admin_reports|execAdminKPIDBCollectionUpdate">Save Graph to Collection</button>
+	<button class='floatRight' data-app-event="admin_reports|showKPIGraphPreview">Show Graph</button>
 </div>
 
+
+
+<!-- leave this inside the form. the form is used for context -->
+<section class='kpiGraphContainer marginTop'>
+	<div class='displayNone graph' data-app-role='KPIDataGraph'></div>
+</section>
+
 </form>
+
+
+	
 
 </div>
 

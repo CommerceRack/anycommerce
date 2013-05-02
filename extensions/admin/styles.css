@@ -1305,6 +1305,7 @@ ul.kpiSortable li:last-child	{border-bottom:0;}
 
 .kpiGraphContainer .graph	{
 	width:90%;
+	height:250px;
 	margin:0 auto 12px auto; padding-bottom:12px; border-bottom:1px dashed #ccc;
 	box-sizing:border-box;
 	-moz-box-sizing:border-box;

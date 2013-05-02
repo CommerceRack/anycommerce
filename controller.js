@@ -2834,6 +2834,11 @@ $tmp.empty().remove();
 			$tag.val(data.value);
 			}, //text
 
+// * 201318 -> allows for data-bind on a radio input.
+		popRadio : function($tag,data)	{
+			if($tag.val() == data.value)	{$tag.attr('checked','checked')}
+			},
+
 //only use this on fields where the value is boolean
 //if setting checked=checked by default, be sure to pass hideZero as false.
 		popCheckbox : function($tag,data){
