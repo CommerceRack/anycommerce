@@ -159,7 +159,7 @@ var admin_reports = function() {
 //collection could be passed in an 'add' mode if adding from a collection.
 //will also be set in update mode. graphs can not be moved between collections.
 						if(vars.collection)	{
-							$("[name='collection']",$D).attr('disabled','disabled').val(vars.collection).parent().hide(); //can't use data-bind because options are added after the select
+							$("[name='collection']",$D).val(vars.collection).parent().hide(); //can't use data-bind because options are added after the select
 							}
 
 						app.ext.admin.u.handleAppEvents($D);
