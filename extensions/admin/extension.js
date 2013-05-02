@@ -1457,8 +1457,8 @@ if giftcard is on there, no paypal will appear.
 		
 		helpSearch : {
 			init : function(keywords,_tag,Q)	{
-//				app.u.dump("BEGIN admin.calls.helpSearch");
-//				app.u.dump(" -> keywords: "+keywords);
+				app.u.dump("BEGIN admin.calls.helpSearch");
+				app.u.dump(" -> keywords: "+keywords);
 				var r = 0;
 				if(keywords)	{
 					_tag = _tag || {};

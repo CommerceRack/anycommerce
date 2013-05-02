@@ -442,7 +442,6 @@ var admin_support = function() {
 						$contentArea.showLoading({"message":"Searching for help files"});
 						app.ext.admin.calls.helpSearch.init(keywords,{'callback':'anycontent','jqObj':$contentArea},'mutable');
 						app.model.dispatchThis('mutable');
-
 						}
 					else	{
 						$('.dualModeListMessaging',$parent).first().empty().show().anymessage({'message':'Please enter some keywords into the form input above to search for.'});
