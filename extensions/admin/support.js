@@ -430,10 +430,10 @@ var admin_support = function() {
 					$form = $("[data-app-role='helpSearch']",$parent).first(),
 					keywords = $("[name='keywords']",$parent).val();
 
-					app.u.dump(" -> $parent.length: "+$parent.length);
-					app.u.dump(" -> $form.length: "+$form.length);
+//					app.u.dump(" -> $parent.length: "+$parent.length);
+//					app.u.dump(" -> $form.length: "+$form.length);
 //					app.u.dump(" -> formObj: "); app.u.dump(formObj);
-					app.u.dump(" -> keywords: "+keywords);
+//					app.u.dump(" -> keywords: "+keywords);
 
 					if(keywords)	{
 						$('.dualModeListMessaging',$parent).first().empty().hide();

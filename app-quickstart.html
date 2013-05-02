@@ -29,10 +29,13 @@ var app = {vars:{
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
 //baseURL as blank lets loadScript function run off local copy when testing locally.
-if(document.location.protocol != 'file:')	{
-	app.vars.baseURL  = "/";
-	document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+if(document.location.protocol == 'file:')	{
+	app.vars.baseURL  = "";
 	}
+else	{
+	app.vars.baseURL = document.location.protocol+"//"+document.domain+"/";
+	}
+document.getElementsByTagName('base')[0].href = app.vars.baseURL;
 </script>
 
 
