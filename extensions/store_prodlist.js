@@ -474,7 +474,7 @@ if no parentID is set, then this function gets the data into memory for later us
 							"withVariations":plObj.withVariations,
 							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
-							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {});  //tagObj not passed if parentID not set. 
+							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {}, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
 				if(numRequests > 0)	{app.model.dispatchThis()}
