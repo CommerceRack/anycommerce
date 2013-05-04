@@ -1036,6 +1036,16 @@ this will likely become more flexible in the future. ###
 		-->
 		<img class="pointer" width="98" height="25" src="img/prodPage/review-98x25.png" onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;' />
 		<img class="pointer" width="94" height="25" src="img/prodPage/printpage-94x25.png" onClick="app.u.printByElementID('productTemplate_'+app.u.makeSafeHTMLId($(this).parent().data('pid')));return false;" />
+		
+		<span data-bind='var:product(zoovy:prod_image8); format:showIfSetInline;' class="displayNone">
+		<span data-bind='var:product(user:prod_flashparams_jersey); format:showIfSetInline;' class="displayNone">
+		<span data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
+			<img class="pointer" width="101" height="25" src="img/prodPage/preview_item-101x25.png" 
+				onClick="app.ext.jerseypreview.a.setJerseyText($(this).parent().data('pid'),'Mickey','69'); app.ext.jerseypreview.a.showJerseyPreview($(this).parent()); return false;"/>
+			<div data-bind="useParentData:true; format:jerseypreview; extension:jerseypreview;" class=""></div>
+		</span>
+		</span>
+		</span>
 	</div>
 	<div class="socialLinks"></div>
 
@@ -1057,10 +1067,6 @@ this will likely become more flexible in the future. ###
 <!--
 <tr>
 	<td colspan='2' class="tabbedProductContentTD">
-<!--
-the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
-or the tab clicked won't open the right content.
-It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
 
 <div class='prodTabs tabbedProductContent'>
 

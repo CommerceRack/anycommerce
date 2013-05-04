@@ -65,6 +65,15 @@ var jerseypreview = function() {
 //actions are functions triggered by a user interaction, such as a click/tap.
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
+			showJerseyPreview : function($container){
+				$('.jerseyPreview',$container).dialog({'title':'Jersey Customizer Preview','height':400,'width':400});
+				},
+			
+			setJerseyText : function(pid, name, number){
+				console.debug(app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid));
+				app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+				}
+			
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -74,7 +83,8 @@ var jerseypreview = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			jerseypreview : function($tag, data){
-				var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400' id='player' align='middle'>"
+				var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400'"
+				swfStr +=	"id='jerseyPreview"+data.value.pid+"' align='middle'>"
 				swfStr += 	"<param name='allowScriptAccess' value='always' />"
 				swfStr += 	"<param name='allowFullScreen' value='true' />"
 				swfStr += 	"<param name='movie' value='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
@@ -84,11 +94,15 @@ var jerseypreview = function() {
 				swfStr +=	"'/>"
 				swfStr += 	"<param name='quality' value='high' />"
 				swfStr += 	"<param name='bgcolor' value='#FFFFFF' />"
-				swfStr += 	"<embed src='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/jersey_patches/chicago_cubs_personalized_jersey_back.jpg&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/LHFoldblockCONDMED.swf&text_color=28489B&name_text_size=30&name_text=&text_gab=6&number_gap=53&number_outline_color=0xDB2321&text_outline_color=0xDB2321&name_xloc=200&name_yloc=40&number_text=&number_xloc=185&number_yloc=87&number_text_size=115&number_color=28489B' quality='high' bgcolor='#FFFFFF' width='400' allowFullScreen='true' height='400' name='player' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash' pluginspage='http://www.macromedia.com/go/getflashplayer' />"
+				swfStr +=	"<embed src='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
+				swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
+				swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
+				swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
+				swfStr +=	"' quality='high' bgcolor='#FFFFFF' width='400' allowFullScreen='true' height='400' name='jerseyPreview"+data.value.pid+"' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash' pluginspage='http://www.macromedia.com/go/getflashplayer' />"
 				swfStr += 	"</object>"
 				
-				$tag += swfStr;
-				
+				$tag.html(swfStr);
+				$tag.addClass('jerseyPreview');
 				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -96,6 +110,14 @@ var jerseypreview = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			thisMovie : function(movieName) {
+				if (navigator.appName.indexOf("Microsoft") != -1) {
+					return window[movieName]
+					}
+				else {
+					return document[movieName]
+					}
+				}
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
