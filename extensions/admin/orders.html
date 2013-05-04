@@ -221,8 +221,9 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 		<div data-bind="var:order(cart/refer);format:text; pretext: meta: ;"></div>
 		<div data-bind="var:order(cart/ip_address);format:text; pretext: IP Address: ;"></div>
 		<div data-bind="var:order(our/order_ts); format:unix2mdy; showtime:1;"></div>
-		<div data-bind='var: cart(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
-		<div><b data-bind='var: cart(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+		<div data-bind='var: order(sum/order_total); format:money; hideZero:false; currencySign: $; pretext:Order Total: ;'></div>
+		<div><b data-bind='var: order(sum/balance_due_total); format:orderBalance; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:store_cart;'></b></div>
+		<h6 data-bind='var: order(want/po_number); format:text; pretext:PO #: ;'></h6>
 	</hgroup>
 
 	<div class='floatRight marginRight marginLeft shipAddressContainer topCol'>
@@ -375,13 +376,13 @@ That'll allow us to easily change the viewer from a modal to a plain dialog to a
 	</div>
 
 	<div class='leftCol'>
+	<h2>Transaction History</h2>
 	<table class='gridTable marginBottom'>
 	<thead>
 	<tr>
 		<th>Date</th>
 		<th>Action</th>
 		<th>Amt. Paid</th>
-		<th>Amt. Due</th>
 		<th>Tender</th>
 		<th title='Transaction ID'>TID</th>
 		<th>Notes</th>
@@ -472,7 +473,6 @@ The following templates are used in the 'order detail' modal/view.
 	<td><time data-bind='var: payment(ts); format:unix2mdy; showtime:true;'></time></td>
 	<td><div data-bind="format:paymentActions; extension:admin_orders; useParentData:true;"></div></td>
 	<td><span data-bind='var: payment(amt); format:money;'></span></td>
-	<td><span data-bind='var: payment(due); format:money;'></span></td>
 	<td><span data-bind='var: payment(tender); format:text;'></span></td>
 	<td><span data-bind='var: payment(uuid); format:text;'></span></td>
 	<td>
@@ -517,8 +517,10 @@ The following templates are used in the 'order detail' modal/view.
 		<div class='prodOptions stuffProdOptions' data-bind='var: order(%options); format:selectedOptionsDisplay;'></div>
 	</td>	
 	
-	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td>
-	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td>
+<!--	<td><input type='number' name='qty' data-bind="var: order(qty); format:popVal;" size='3' /></td> -->
+	<td data-bind="format:orderEditQtyInput; extension:admin_orders; useParentData:true;"></td>
+	<td data-bind="format:orderEditPriceInput; extension:admin_orders; useParentData:true;"></td>
+<!--	<td><input type='number' name='price' data-bind="var: order(price); format:popVal;" size='7' step='0.01' min='0' /></td> -->
 	<td class='sum'><span data-bind='var: order(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
 	<td><button data-app-event="admin_orders|orderItemUpdate">Update Item Price and/or Quantity</button></td>
 	<td><button data-app-event="admin_orders|orderItemRemove">Remove From Order</button></td>
@@ -590,7 +592,7 @@ The following templates are used both in the order editor AND in quickview.
 </div>
 
 <div id='orderTrackingHistoryContainerTemplate'>
-	<table class='gridTable'>
+	<table class='gridTable' data-app-role='trackingInformation'>
 	<thead>
 	<tr>
 		<th>Date</th>

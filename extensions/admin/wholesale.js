@@ -62,7 +62,7 @@ var admin_wholesale = function() {
 					else	{
 						$smTarget.anycontent({'templateID':'wholesaleSupplierManagerTemplate','datapointer':rd.datapointer});
 						app.ext.admin.u.handleAppEvents($smTarget);
-						$("[app-data-role='wholesaleSupplierList']",$smTarget).anytable();
+						$("[data-app-role='wholesaleSupplierList']",$smTarget).anytable();
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -191,7 +191,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					var $form = $btn.closest('form'),
 					formObj = $form.serializeJSON();
 					formObj.VENDORID = formObj.VENDORID.toUpperCase(); //codes are all uppercase.
-					if(app.ext.admin.u.validateForm($form))	{
+					if(app.u.validateForm($form))	{
 						$('body').showLoading({'message':'Adding new supplier '+formObj.VENDORID});
 						app.model.destroy('adminSupplierList');
 

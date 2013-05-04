@@ -195,7 +195,8 @@ A special translate template for product so that reviews can be merged into the 
 					tmp['reviews'] = app.ext.store_prodlist.u.summarizeReviews(pid); //generates a summary object (total, average)
 					tmp['reviews']['@reviews'] = app.data['appReviewsList|'+pid]['@reviews']
 					}
-				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
+				$(app.u.jqSelector('#',tagObj.parentID)).anycontent({'datapointer':tagObj.datapointer});
+//				app.renderFunctions.translateTemplate(app.data[tagObj.datapointer],tagObj.parentID);
 				},
 //error needs to clear parent or we end up with orphans (especially in UI finder).
 			onError : function(responseData,uuid)	{
@@ -205,7 +206,7 @@ A special translate template for product so that reviews can be merged into the 
 				app.u.throwMessage(responseData,uuid);
 //for UI prod finder. if admin session, adds a 'remove' button so merchant can easily take missing items from list.
 // ### !!! NOTE - upgrade this to proper admin verify (function)
-				if(app.sessionId && app.sessionId.indexOf('**') === 0)	{
+				if(app.vars.cartID && app.vars.cartID.indexOf('**') === 0)	{
 					$('.ui-state-error',$parent).append("<button class='ui-state-default ui-corner-all'  onClick='app.ext.admin.u.removePidFromFinder($(this).closest(\"[data-pid]\"));'>Remove "+responseData.pid+"<\/button>");
 					}
 				}
@@ -357,7 +358,7 @@ the object created here is passed as 'data' into the mulitpage template. that's 
 				var hideMultipageControls = false; //if set to true, will hide just the dropdown/page controls.
 				
 //can't build a prodlist without product.				
-				if(obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
+				if(obj && obj.csv && typeof obj.csv == 'object' && obj.csv.length > 0 && obj.loadsTemplate)	{
 
 					var L = obj.csv.length;
 
@@ -473,7 +474,7 @@ if no parentID is set, then this function gets the data into memory for later us
 							"withVariations":plObj.withVariations,
 							"withReviews":plObj.withReviews,
 							"withInventory":plObj.withInventory
-							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {});  //tagObj not passed if parentID not set. 
+							}, plObj.parentID ? {'callback':'translateTemplate','extension':'store_prodlist','parentID':this.getSkuSafeIdForList(plObj.parentID,pageCSV[i])} : {}, Q);  //tagObj not passed if parentID not set. 
 						}
 					}
 				if(numRequests > 0)	{app.model.dispatchThis()}
@@ -515,15 +516,28 @@ params that are missing will be auto-generated.
 					if($tag)	{$tag.attr('id',plObj.parentID);}
 					else	{$tag = $('#'+plObj.parentID);}
 //a wrapper around all the prodlist content is created just one. Used in multipage to clear old multipage content. This allows for multiple multi-page prodlists on one page. Hey. it could happen.
-					if($('#'+plObj.parentID+'_container').length == 0)	{$tag.wrap("<div id='"+plObj.parentID+"_container' />")}
+					if($('#'+plObj.parentID+'_container').length == 0)	{
+						if($tag.is('tbody'))	{
+							$tag.closest('table').wrap("<div id='"+plObj.parentID+"_container' />");
+							}
+						else	{
+							$tag.wrap("<div id='"+plObj.parentID+"_container' />");
+							}
+						}
 //adds all the placeholders. must happen before getProductDataForList so individual product translation can occur.
 //can't just transmogrify beccause sequence is important and if some data is local and some isn't, order will get messed up.
 					$tag.append(this.getProdlistPlaceholders(plObj)).removeClass('loadingBG');
 					$tag.data('prodlist',plObj); //sets data object on parent
 
 					if(!obj.hide_summary)	{
-						$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
-						$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
+						if($tag.is('tbody'))	{
+							$tag.closest('table').before(this.showProdlistSummary(plObj,'header')); //multipage Header
+							$tag.closest('table').after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
+							}
+						else	{
+							$tag.before(this.showProdlistSummary(plObj,'header')); //multipage Header
+							$tag.after(this.showProdlistSummary(plObj,'footer')); //multipage Footer
+							}
 						}
 //The timeout was here because of an issue where the placeholders were getting nuked. That issue was caused by translateTemplate doing a replace.
 //that code was changed in 201239 (as was this function) so the timeout was commented out. This comment is here in case the change to translateFunction is changed back.

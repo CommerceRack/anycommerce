@@ -3,27 +3,34 @@ var app = app || {vars:{},u:{}}; //make sure app exists.
 //http://www.nczonline.net/blog/2009/07/28/the-best-way-to-load-external-javascript/
 app.u.loadScript = function(url, callback, params){
 //	app.u.dump("load script: "+url);
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    if (script.readyState){  //IE
-        script.onreadystatechange = function(){
-            if (script.readyState == "loaded" || script.readyState == "complete"){
-                script.onreadystatechange = null;
-				if(typeof callback == 'function')	{callback(params);}
-				}
-			};
-		}
-	else {
-		if(typeof callback == 'function')	{
-			script.onload = function(){callback(params)}
+	if(url)	{
+		var script = document.createElement("script");
+		script.type = "text/javascript";
+		if (script.readyState){  //IE
+			script.onreadystatechange = function(){
+				if (script.readyState == "loaded" || script.readyState == "complete"){
+					script.onreadystatechange = null;
+					if(typeof callback == 'function')	{callback(params);}
+					}
+				};
 			}
-    	}
-//append release to the end of included files to reduce likelyhood of caching.
-	url += (url.indexOf('?') > -1 ) ? '&' : '?'; //add as initial or additional param based on whether or not any params are already present.
-	url += "_v="+app.vars.release;
-//	app.u.dump(url);
-    script.src = url;
-    document.getElementsByTagName("head")[0].appendChild(script);
+		else {
+			if(typeof callback == 'function')	{
+				script.onload = function(){callback(params)}
+				}
+			}
+	//append release to the end of included files to reduce likelyhood of caching.
+		url += (url.indexOf('?') > -1 ) ? '&' : '?'; //add as initial or additional param based on whether or not any params are already present.
+		url += "_v="+app.vars.release;
+	//	app.u.dump(url);
+		script.src = url;
+		document.getElementsByTagName("head")[0].appendChild(script);
+		}
+	else	{
+		//can't load a script without url being set.
+		//not sure how I want to handle this yet.
+		console.warn('loadscript run but no URL passed.');
+		}
 	}
 
 
@@ -32,11 +39,11 @@ app.u.loadScript = function(url, callback, params){
 Will load all scripts and extenstions with pass = 0.
 pass with any other value (including blank,null, undefined, etc) will get loaded later.
 this function is overwritten once the myRIA callback occurs with a similar but more powerful function (ignores pass, supports css).
-app.rq.push() = app.u.handleResourceQ so whatever the values in push() are get executed immediately.
+app.rq.push() = app.u.loadResourceFile so whatever the values in push() are get executed immediately.
 */
 
 app.u.handleRQ = function()	{
-	app.u.dump("BEGIN app.u.handleRQ");
+//	app.u.dump("BEGIN app.u.handleRQ");
 	var numIncludes = 0; //what is returned. The total number of includes for this pass.
 	var L = app.rq.length - 1;
 

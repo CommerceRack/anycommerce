@@ -1,0 +1,13 @@
+<div id='cartQuickaddTemplate' class='stdMargin'>
+	<h4>Item added to cart</h4>
+	<table class='fullWidth marginBottom'>
+	<tr>
+		<td><div class='marginRight'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_thumb); defaultVar: product(zoovy:prod_image1); format:imageURL;' width='45' height='45' /></div></td>
+		<td><div data-bind="var: product(zoovy:prod_name); format:text;"></div></td>
+	</tr>
+	</table>
+
+	<button class='continueShoppingButton' data-app-event="cart_quickadd|execQuickaddCartHide">Shop More</button>
+	<button class='ui-state-highlight checkoutButton' data-app-event="cart_quickadd|execCheckoutShow">Checkout Now</button>
+
+</div>

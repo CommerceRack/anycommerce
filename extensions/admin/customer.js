@@ -91,7 +91,7 @@ else	{
 //this will resort the panels into the order specified in local storage.
 		for(var i = 0; i < L; i += 1)	{
 			var $col = $("[data-app-column='"+(i+1)+"']",$custEditorTarget);
-			for(index in panArr[i])	{
+			for(var index in panArr[i])	{
 				$("[data-app-role='"+panArr[i][index]+"']",$custEditorTarget).first().appendTo($col);
 				}
 			}
@@ -174,7 +174,7 @@ else	{
 				$modal.dialog('open');
 				if(obj && obj.CID)	{
 					$modal.anycontent({'templateID':'customerWalletAddTemplate','showLoading':false,'dataAttribs':obj});
-					app.ext.admin.u.handleAppEvents($modal,{'$context':$walletPanel});
+					app.u.handleAppEvents($modal,{'$context':$walletPanel});
 					}
 				else	{
 					$modal.anymessage({'message':'In admin_customer.a.showAddWalletModal, no CID defined.',gMessage:true});
@@ -262,6 +262,10 @@ else	{
 						}
 					
 					$select.appendTo($tag);
+					$select.on('change',function(){
+						$select.addClass('edited');
+						app.ext.admin_customer.u.handleChanges($select.closest("form"));
+						});
 					
 					if(data.value.INFO && data.value.INFO.SCHEDULE)	{$select.val(data.value.INFO.SCHEDULE)} //preselect schedule, if set.
 					
@@ -292,7 +296,7 @@ else	{
 //					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
 						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
-						$("<label \/>").append($("<input \/>",{
+						$("<label \/>").addClass('clearfix').append($("<input \/>",{
 							'type':'checkbox',
 							'name':'newsletter_'+app.data.adminNewsletterList['@lists'][i].ID
 							}).prop('checked',app.ext.admin_customer.u.getNewslettersTF(listbw,Number(app.data.adminNewsletterList['@lists'][i].ID)))).append(app.data.adminNewsletterList['@lists'][i].NAME + " [prt: "+app.data.adminNewsletterList['@lists'][i].PRT+"]").appendTo($f);
@@ -334,7 +338,7 @@ else	{
 							}});
 
 						$("[data-app-role='wallets']",$customerEditor).anypanel('option','settingsMenu',{'Add Wallet':function(){
-							app.ext.admin_customer.a.showAddWalletModal(obj,$customerEditor);
+							app.ext.admin_customer.a.showAddWalletModal(obj,$("[data-app-role='wallets']",$customerEditor));
 							}});
 
 						$("[data-app-role='giftcards']",$customerEditor).anypanel('option','settingsMenu',{'Add a Giftcard':function(){
@@ -359,7 +363,7 @@ else	{
 //obj should contain CID and type. in the future, likely to contain partition.
 			customerAddressAddUpdate : function($form,MACRO,obj,callback)	{
 				if(MACRO && $form && $form instanceof jQuery && obj && obj.CID && typeof callback == 'function')	{
-					if(app.ext.admin.u.validateForm($form))	{
+					if(app.u.validateForm($form))	{
 						app.u.dump(" -> form validated. proceed.");
 						$form.showLoading({"message":"Updating customer address record."});
 //shortcut is turned into a readonly, which means serialize skips it, so it's added back here.
@@ -414,7 +418,7 @@ else	{
 					event.preventDefault();
 					var $form = $btn.closest('form');
 					
-					if(app.ext.admin.u.validateForm($form))	{
+					if(app.u.validateForm($form))	{
 var updates = new Array(),
 formObj = $form.serializeJSON();
 
@@ -443,7 +447,7 @@ app.model.dispatchThis('immutable');
 						//the validation function puts the errors next to the necessary fields
 						}
 
-					});;
+					});
 				},
 
 //saves all the changes to a customer editor
@@ -497,7 +501,7 @@ app.model.dispatchThis('immutable');
 									delete addr['_is_default'];
 									delete addr['_id'];
 //strip bill_ ship_ off of front.
-									for(index in addr)	{
+									for(var index in addr)	{
 										addr[index.substring(5)] = addr[index];
 										delete addr[index];
 										}
@@ -517,7 +521,7 @@ app.model.dispatchThis('immutable');
 								$panel.anymessage({'message':'In admin_customer.e.customerEditorSave, unable to determine action for update to this panel.'});
 								}
 							}
-						else if($tag.is('input'))	{
+						else if($tag.is('input') || $tag.is('select'))	{
 							if($tag.attr('name') == 'password')	{
 								macros.push("PASSWORDRESET?password="+$tag.val());
 								}
@@ -704,14 +708,17 @@ else	{
 				$btn.button();
 				$btn.off('click.walletCreate').on('click.walletCreate',function(event){
 					event.preventDefault();
-					
+					var $panel = false; //if passed in o, will be the parent panel.
+					if(o && o['$context'])	{
+						$panel = o['$context']; //shortcut and and to identify what the context is.
+						}
 					var $form = $btn.closest('form'),
 					CID = $btn.closest("[data-cid]").data('cid');
 					
 					if(!CID)	{
 						$form.anymessage({'message':'in admin_customer.e.walletCreate, could not determine CID.','gMessage':true});
 						}
-					else if(app.ext.admin.u.validateForm($form))	{
+					else if(app.u.validateForm($form))	{
 						$form.showLoading({'message':'Adding wallet to customer record '+CID+'.'});
 
 
@@ -722,11 +729,14 @@ else	{
 								}
 							else	{
 								$form.parent().empty().anymessage({'message':'Thank you, the wallet has been added','errtype':'success'});
-								if(o && o['$context'])	{
-									var $panel = o['$context']; //shortcut and and to identify what the context is.
+								if($panel)	{
+									app.u.dump(" -> $panel IS set");
 									$("tbody",$panel).empty(); //clear wallets
 									$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID}); //re-translate panel, which will update wallet list.
 									app.ext.admin.u.handleAppEvents($panel);
+									}
+								else	{
+									app.u.dump(" -> $panel is NOT set");
 									}
 								}
 							}},'immutable');
