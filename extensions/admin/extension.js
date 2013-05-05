@@ -248,6 +248,107 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminCustomerSet
 
 
+
+		adminCustomerOrganizationSearch : {
+			init : function(obj,_tag,Q)	{
+				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
+				var r = 0;
+				if(obj)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerSet, no variables passed. some sort of search query needed.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationSearch';
+				obj._cmd = "adminCustomerOrganizationSearch";
+				app.model.addDispatchToQ(obj,Q || 'mutable');
+				}
+			}, //adminCustomerOrganizationSearch
+		adminCustomerOrganizationCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationCreate, no variables passed."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationCreate';
+				obj._cmd = "adminCustomerOrganizationCreate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationCreate
+		adminCustomerOrganizationUpdate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ORGID)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationUpdate, either obj is blank or obj.ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationUpdate';
+				obj._cmd = "adminCustomerOrganizationUpdate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationUpdate
+		adminCustomerOrganizationDetail : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ORGID)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationDetail';
+				obj._cmd = "adminCustomerOrganizationDetail";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationDetail
+		adminCustomerOrganizationRemove : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ORGID)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, either obj is blank or obj.ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
+				obj._cmd = "adminCustomerOrganizationRemove";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationRemove
+
+
+
+
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -2838,6 +2939,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.vars.tab = '';
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
 					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
+					}
+				else if(path == '#!organizationManager')	{
+					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
+					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
