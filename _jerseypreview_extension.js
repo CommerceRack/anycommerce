@@ -66,12 +66,23 @@ var jerseypreview = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showJerseyPreview : function($container){
-				$('.jerseyPreview',$container).dialog({'title':'Jersey Customizer Preview','height':400,'width':400});
+				$('#jerseyPreviewContainer'+$container.attr('data-pid')).dialog({'title':'Jersey Customizer Preview','height':465,'width':438});
 				},
 			
-			setJerseyText : function(pid, name, number){
-				console.debug(app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid));
-				app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+			setJerseyText : function(pid){
+				var $options = $("#jerseyOptions"+pid);
+				var name = $('input[name=B5]', $options).val();
+				var number = $('input[name=B6]', $options).val();
+				if( name != "" && number != ""){
+					if(typeof app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome === 'function'){
+						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+						return true;
+						}
+					}
+				else {
+					app.u.throwMessage("Please enter a name and number to preview");
+					}
+				return false;
 				}
 			
 			}, //Actions
@@ -84,7 +95,7 @@ var jerseypreview = function() {
 		renderFormats : {
 			jerseypreview : function($tag, data){
 				var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400'"
-				swfStr +=	"id='jerseyPreview"+data.value.pid+"' align='middle'>"
+				swfStr +=	" id='jerseyPreview"+data.value.pid+"' align='middle'>"
 				swfStr += 	"<param name='allowScriptAccess' value='always' />"
 				swfStr += 	"<param name='allowFullScreen' value='true' />"
 				swfStr += 	"<param name='movie' value='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
@@ -102,7 +113,7 @@ var jerseypreview = function() {
 				swfStr += 	"</object>"
 				
 				$tag.html(swfStr);
-				$tag.addClass('jerseyPreview');
+				$tag.attr('id','jerseyPreviewContainer'+data.value.pid);
 				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -112,10 +123,10 @@ var jerseypreview = function() {
 		u : {
 			thisMovie : function(movieName) {
 				if (navigator.appName.indexOf("Microsoft") != -1) {
-					return window[movieName]
+					return window[movieName];
 					}
 				else {
-					return document[movieName]
+					return document.embeds[movieName];
 					}
 				}
 			}, //u [utilities]
