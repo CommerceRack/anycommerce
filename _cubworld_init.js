@@ -31,6 +31,8 @@ app.rq.push(['script',0,app.vars.baseURL+'includes.js']); //','validator':functi
 
 app.rq.push(['script',0,app.vars.baseURL+'controller.js']);
 
+app.rq.push(['script',0,app.vars.baseURL+'cycle-2.9998.js']);
+
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.showloading-v1.0.jt.js']); //used pretty early in process..
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); //in zero pass in case product page is first page.
 
