@@ -482,11 +482,13 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 							{text: 'Cancel', click: function(){$D.dialog('close')}},
 							{text: 'Delete Organization', click: function(){
 								$D.parent().showLoading({"message":"Deleting Organization..."});
+								app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
 								app.ext.admin.calls.adminCustomerOrganizationRemove.init(orgID,{'callback':function(rd){
 									$D.parent().hideLoading();
 									if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
 									else	{
 										$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
+										$btn.closest('tr').empty().remove(); //remove row in results list.
 										$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
 										}
 									}},'immutable');

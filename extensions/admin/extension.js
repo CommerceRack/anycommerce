@@ -356,18 +356,20 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminCustomerOrganizationDetail
 		adminCustomerOrganizationRemove : {
-			init : function(obj,_tag,Q)	{
+			init : function(ORGID,_tag,Q)	{
 				var r = 0;
-				if(obj && obj.ORGID)	{
-					this.dispatch(obj,_tag,Q)
+				if(ORGID)	{
+					this.dispatch(ORGID,_tag,Q)
 					r = 1;
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, either obj is blank or obj.ORGID not set, which is required."});
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, ORGID not set, which is required."});
 					}
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
+			dispatch : function(ORGID,_tag,Q)	{
+				var obj = {};
+				obj.ORGID = ORGID;
 				obj._tag = _tag || {};
 				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
 				obj._cmd = "adminCustomerOrganizationRemove";
