@@ -66,26 +66,27 @@ var jerseypreview = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showJerseyPreview : function($container){
-				$('#jerseyPreviewContainer'+$container.attr('data-pid')).dialog({'title':'Jersey Customizer Preview','height':465,'width':438});
-				},
-			
-			setJerseyText : function(pid){
+				var pid = $container.attr('data-pid');
 				var $options = $("#jerseyOptions"+pid);
 				var name = $('input[name=B5]', $options).val();
 				var number = $('input[name=B6]', $options).val();
 				if( name != "" && number != ""){
-					//try{
-						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
-						return true;
-					//	}
-					//catch(err){
-					//	app.u.throwMessage("Jersey Previewer currently unavailable, sorry!");
-					//	}
+					$('#jerseyPreviewContainer'+pid).dialog({'title':'Jersey Customizer Preview','height':465,'width':438});
+					this.setJerseyText(pid,name,number);
 					}
 				else {
-					app.u.throwMessage("Please enter a name and number to preview");
+					app.u.throwMessage("Please select a name and number to preview");
 					}
-				return false;
+				},
+			
+			setJerseyText : function(pid, name, number){
+				try{
+					app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+					}
+				catch(err){
+					app.u.dump(err);
+					app.u.throwMessage("Jesey Previewer currently unavailable, try again later!");
+					}
 				}
 			
 			}, //Actions
