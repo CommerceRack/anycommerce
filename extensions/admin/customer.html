@@ -197,6 +197,14 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	</div>
 </div>
 
+
+<div class='labelsAsBreaks alignedLabels panel' data-app-role="organization">
+	<h2>Organization</h2>
+	<div>
+	<label><span>Org ID: </span><input type="number" step='1' min='1' name="ORGID"  size="10" data-bind="var:customer(ORG.ORGID); format:popVal;" /></label>
+	</div>
+</div>
+
 <!--
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="wholesale">
 	<h2>Wholesale</h2>

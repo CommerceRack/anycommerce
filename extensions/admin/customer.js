@@ -72,7 +72,7 @@ var admin_customer = function() {
 					if(obj && obj.CID)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
-						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+//						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
 $custEditorTarget.hideLoading();
 
@@ -246,7 +246,7 @@ else	{
 //if the customer is already on a schedule, their schedule will be pre-selected.
 //generates the select list too, instead of just the options, so that error messaging can be handled in a good manner.
 //the customer object is what's passed in here.
-			wholesaleScheduleSelect : function($tag,data)	{
+/*			wholesaleScheduleSelect : function($tag,data)	{
 				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
 				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
 					$tag.anymessage({'message':'You have not created any schedules yet.'})
@@ -272,7 +272,7 @@ else	{
 					
 					}
 				}, //wholesaleScheduleSelect
-				
+				*/
 			orderHistoryTotal : function($tag,data)	{
 				app.u.dump("BEGIN admin_customer.renderFormat.orderHistoryTotal");
 				var L = data.value.length,
@@ -460,8 +460,8 @@ app.model.dispatchThis('immutable');
 					var $form = $btn.closest('form'),
 					macros = new Array(),
 					CID = $btn.closest("[data-cid]").data('cid'),
-					wholesale = "", //wholesale and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
-					dropshipAddrUpdate = false, //set to true if address update is present. sends entire address, not just changed fields.
+//					wholesale = "", //wholesale and general are used to concatonate the KvP for any changed fields within that panel. used to build macro
+//					dropshipAddrUpdate = false, //set to true if address update is present. sends entire address, not just changed fields.
 					general = "";
 
 //used to determine whether or not the val sent to the API should be a 1 (checked) or 0 (unchecked). necessary for something checked being unchecked.
@@ -533,7 +533,7 @@ app.model.dispatchThis('immutable');
 							else if(pr == 'newsletter')	{
 								general += $tag.attr('name')+"="+handleCheckbox($tag);
 								}
-							else if(pr == 'dropship')	{
+/*							else if(pr == 'dropship')	{
 								//Add something here for dropship logo.
 								if($tag.attr('name') == 'LOGO')	{
 									macros.push("WSSET?LOGO="+$tag.val());
@@ -544,6 +544,10 @@ app.model.dispatchThis('immutable');
 								}
 							else if(pr == 'wholesale')	{
 								wholesale += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&";  //val of checkbox is 'on'. change to 1.
+								}
+*/							else if(pr == 'organization')	{
+//								app.u.dump(" -> orgid being set to: "+$tag.val());
+								macros.push("LINKORG?orgid="+$tag.val());
 								}
 							else	{
 								$panel.anymessage({'message':'In admin_customer.e.adminEditorSave, panel role ['+pr+'] not an expected type'});
