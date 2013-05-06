@@ -1002,7 +1002,9 @@ app.u.throwMessage(responseData); is the default error handler.
 					var $target = _rtag.jqObj; //shortcut
 					
 //anycontent will disable hideLoading and loadingBG classes.
-					$target.anycontent({data: app.data[_rtag.datapointer],'templateID':_rtag.templateID});
+/*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
+// * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
+					$target.anycontent(_rtag);
 					app.u.handleAppEvents($target);
 
 					}

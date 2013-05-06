@@ -176,20 +176,35 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminCustomerDetail
+
+		adminCustomerRemove : {
+			init : function(CID,_tag,Q)	{
+				var r = 0;
+				if(CID)	{
+//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
+					_tag = _tag || {};
+					_tag.datapointer = "adminCustomerRemove";
+					this.dispatch(CID,_tag);
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerRemove, no CID specified.");
+					}
+				return r;
+				},
+			dispatch : function(CID,_tag)	{
+				var obj = {};
+				obj.CID = CID;
+				obj._cmd = "adminCustomerRemove";
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //adminCustomerDetail
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
-			init : function(email,_tag,Q)	{
+			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(email)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerSearch|"+email; //if changed, test order create for existing customer and customer manager.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(email,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
+				if(obj && obj.searchfor && obj.scope)	{
+					this.dispatch(obj,_tag,Q);
 					r = 1;
 					}
 				else	{
@@ -197,8 +212,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				return r;
 				},
-			dispatch : function(email,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag},Q || 'mutable');	
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._cmd = "adminCustomerSearch";
+				obj._tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer and customer manager.				
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
 //email is required in macro
@@ -224,6 +242,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
+			
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -308,21 +327,31 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminCustomerOrganizationUpdate
 		adminCustomerOrganizationDetail : {
-			init : function(obj,_tag,Q)	{
+			init : function(orgID,_tag,Q)	{
 				var r = 0;
-				if(obj && obj.ORGID)	{
-					this.dispatch(obj,_tag,Q)
-					r = 1;
+				if(orgID)	{
+					_tag = _tag || {};
+					_tag.datapointer = 'adminCustomerOrganizationDetail|'+orgID;
+					
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(orgID,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
 					}
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
+			dispatch : function(orgID,_tag,Q)	{
+				var obj = {}
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminCustomerOrganizationDetail';
+				
 				obj._cmd = "adminCustomerOrganizationDetail";
+				obj.ORGID = orgID
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //adminCustomerOrganizationDetail
@@ -345,9 +374,6 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			}, //adminCustomerOrganizationRemove
-
-
-
 
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{

@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerSearchResultsTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate');
+	var theseTemplates = new Array('customerManagerResultsRowTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate');
 	var r = {
 
 
@@ -68,6 +68,7 @@ var admin_customer = function() {
 			showCustomerEditor : function($custEditorTarget,obj)	{
 				
 				if($custEditorTarget && typeof $custEditorTarget == 'object')	{
+					$custEditorTarget.empty();
 					if(obj && obj.CID)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
@@ -292,7 +293,8 @@ else	{
 				else	{
 					var $f = $("<fieldset \/>"),
 					L = app.data.adminNewsletterList['@lists'].length,
-					listbw = data.value.INFO.NEWSLETTER; //list bitwise. just a shortcut.
+					listbw = null; //list bitwise. just a shortcut.
+					if(data.value.INFO && data.value.INFO.NEWSLETTER)	{listbw = data.value.INFO.NEWSLETTER}
 //					app.u.dump(" -> binary of dINFO.NEWSLETTER ["+data.value.INFO.NEWSLETTER+"]: "+Number(data.value.INFO.NEWSLETTER).toString(2));
 					for(var i = 0; i < L; i += 1)	{
 						if(app.data.adminNewsletterList['@lists'][i].NAME)	{
@@ -598,6 +600,7 @@ app.model.dispatchThis('immutable');
 					});
 				}, //customerEditorSave
 
+
 //run when searching the customer manager for a customer.
 			execCustomerSearch : function($btn){
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
@@ -607,24 +610,29 @@ app.model.dispatchThis('immutable');
 					var $custManager = $btn.closest("[data-app-role='dualModeContainer']"),
 					$form = $("[data-app-role='customerSearch']",$custManager).first(),
 					formObj = $form.serializeJSON(),
-					$custEditorTarget = $('.dualModeListContent',$custManager).first();
-					
-					$custEditorTarget.empty(); //make sure any previously open customers are cleared.
-					$custManager.showLoading({"message":"Searching for "+formObj.email});
+					$custEditorTarget = $("[data-app-role='dualModeContent']",$custManager).first();
+					$custManager.showLoading({"message":"Searching Customers"});
 //					app.u.dump(" -> formObj: "); app.u.dump(formObj);
-					app.ext.admin.calls.adminCustomerSearch.init(formObj.email,{callback:function(rd){
+					app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
 						$custManager.hideLoading();
 						
 $('.dualModeListMessaging',$custManager).empty();
 if(app.model.responseHasErrors(rd)){
-	$custManager.anymessage({'message':rd});
+	$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
 	}
 else	{
 	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
-		app.ext.admin_customer.a.showCustomerEditor($custEditorTarget,{'CID':app.data[rd.datapointer].CID});
+		app.ext.admin_customer.a.showCustomerEditor($custManager,{'CID':app.data[rd.datapointer].CID});
+		}
+	else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
+		
+		$("table tbody",$custEditorTarget).empty(); //clear any previous customer search results.
+		$custEditorTarget.anycontent({datapointer:rd.datapointer});
+		app.u.handleAppEvents($custEditorTarget);
+		$("table",$custEditorTarget).show();
 		}
 	else	{
-		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that email address. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
+		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
 		}
 	}
 						}},'mutable');
@@ -870,6 +878,14 @@ else	{
 					});
 				
 				}, //showCustomerCreate
+
+			showCustomerUpdate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(){
+					app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-app-role='dualModeContainer']"),{'CID':$btn.closest("[data-cid]").data('cid')});
+					});
+				//
+				},
 
 			showMediaLib4DropshipLogo : function($ele)	{
 				$ele.off('click.mediaLib').on('click.mediaLib',function(event){

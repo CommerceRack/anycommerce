@@ -4,40 +4,45 @@
 -->
 
 
-<div id='organizationManagerPageTemplate' class='page pageUser' data-app-role='dualModeContainer' data-app-mode='list'>
+<div id='organizationManagerPageTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
 
 	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<form>
+				<button data-app-event='admin_wholesale|showOrganizationCreate' class='floatRight'>Add Organization</button>
+				<form action='#' class='floatRight marginRight'>
 					<select name='searchby'>
 						<option value='CONTACT'>contact</option>
 						<option value='DOMAIN'>domain</option>
 						<option value='EMAIL'>email</option>
 						<option value='ORGID'>organization id</option>
 						<option value='PHONE'>phone</option>
+						<option value='ACCOUNT_MANAGER'>account manager</option>
 					</select>
 					<input type='search' name='keywords' size='20' />
+<!--					<button>Show All Locked</button> -->
 					<button data-app-event='admin_wholesale|execOrganizationSearch'>Search</button>
 				</form>
-				<button data-app-event='admin_wholesale|showOrganizationCreate'>Add New Organization</button>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			</div>
 			<h3 class='heading'>Organization List</h3>
 		</div>
 		
-		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth displayNone;' >
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+		<div class="dualModeListMessaging marginBottom">Please use the search above to find the organization(s) you are looking for.</div>
+		<table class='gridTable fullWidth displayNone' >
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
-			<th>ID</th>
-			<th>Company</th>
-			<th class='hideInDetailMode'>Name</th>
-			<th class='hideInDetailMode'>Email</th>
-			<th class='hideInDetailMode'>Created</th>
+			<th></th>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Company</th>
+			<th class='alignLeft'>Domain</th>
+			<th class='alignLeft'>Email</th>
+			<th class='alignLeft'>Account Manager</th>
+			<th class='alignLeft'>Billing Phone</th>
+			<th class='alignLeft'>Billing Contact</th>
 			<th></th>
 		</tr>
 		</thead>
@@ -51,68 +56,77 @@
 
 <table>
 <tr id='organizationManagerOrgRowTemplate'>
-	<td data-bind="var: organization(ORGID); "></td>
-	<td data-bind="var: organization(company); "></td>
+	<td><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></td>
+	<td data-bind="var: organization(ORGID); format:text;"></td>
+	<td data-bind="var: organization(COMPANY); format:text;"></td>
+	<td data-bind="var: organization(DOMAIN); format:text;"></td>
+	<td data-bind="var: organization(EMAIL); format:text;"></td>
+	<td data-bind="var: organization(ACCOUNT_MANAGER); format:text;"></td>
+	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
+	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin_wholesale|execOrganizationRemove">remove</button>
+		<button data-app-event="admin_wholesale|showOrganizationUpdate">edit</button>
+	</td>
 </tr>
 </table>
 
 
 
-<div id='organizationManagerUserCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer'>
+<div id='organizationManagerOrgCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer'>
 
-<form action='#'>
+<form action='#' onSubmit='return false'>
+<div class='marginBottom'  data-bind='var: org(ORG.ORGID); format:showIfSet;'>
+	<h1 data-bind='var: org(ORG.ORGID); format:popVal;'></h1>
+</div>
+
 <fieldset class='alignedInputs marginBottom floatLeft labelsAsBreaks'>
 	<legend>Organization Information</legend>
 	
-	<div class='label'><input type='text' placeholder='organization id' name='ORGID' required='required' value='' data-bind='var: org(ORGID); format:popVal;'  /></div>
-	<div class='label'><input type='text' placeholder='first name' name='firstname' required='required' value='' data-bind='var: org(firstname); format:popVal;'  /></div>
-	<div class='label'><input type='text' placeholder='last name' name='lastname' required='required' value='' data-bind='var: org(lastname); format:popVal;'  /></div>
+	<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
+	<div class='label'><input type='text' placeholder='last name' name='lastname' value='' data-bind='var: org(ORG.lastname); format:popVal;'  /></div>
 
-	<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(company); format:popVal;'  /></div>
-	<div class='label'><input type='url' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(DOMAIN); format:popVal;'  /></div>
-	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(company); format:popVal;'  /></div>
+	<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(ORG.company); format:popVal;'  /></div>
+	<div class='label'><input type='url' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div>
+	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;'  /></div><!-- phone is numbers only -->
+	<div class='label'><input type='text' name='address1' placeholder='address'  value='' data-bind='var: org(ORG.address1); format:popVal;'  /></div>
+	<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(ORG.address2); format:popVal;' /></div>
+	<div class='label'><input type='text' name='city' placeholder='city'  value='' data-bind='var: org(ORG.city); format:popVal;' /></div>
+	<div class='label'><input type='text' name='region' placeholder='state/region'  size='5' value='' data-bind='var: org(ORG.region); format:popVal;' maxlength='20' /></div>
 
-	<div class='label'><input type='text' name='address1' placeholder='address' required='required' value='' data-bind='var: org(address1); format:popVal;'  /></div>
-
-	<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(address2); format:popVal;' /></div>
-
-	<div class='label'><input type='text' name='city' placeholder='city' required='required' value='' data-bind='var: org(city); format:popVal;' /></div>
-	
-	<div class='label'><input type='text' name='region' placeholder='state/region' required='required' size='5' value='' data-bind='var: org(region); format:popVal;' maxlength='20' /></div>
-	
 	<!-- postal not required for international. don't add it. -->
-	<div class='label'><input type='text'  name='postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: org(postal); format:popVal;' maxlength='10' /></div>
+	<div class='label'><input type='text'  name='postal' placeholder='zip/postal code'  size='14' value='' data-bind='var: org(ORG.postal); format:popVal;' maxlength='10' /></div>
 
-	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code' required='required' data-bind='var: org(countrycode); format:popVal;'></select></div>
+	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;'></select></div>
 
 	<div class='label'>LOGO</div>
+
 </fieldset>
 
 <fieldset class='alignedInputs marginBottom floatLeft labelsAsBreaks'>
 	<legend>Billing</legend>
-	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(BILLING_CONTACT); format:popVal;' /></div>
-	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(BILLING_PHONE); format:popVal;' /></div>
-	<label class='label'><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
-	<label class='label'><input type='checkbox' name='ALLOW_RESALE' data-bind='var: org(ALLOW_RESALE); format:popVal;' />Allow Resale</label>
-	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(RESALE_PERMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(CREDIT_LIMIT); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(CREDIT_BALANCE); format:popVal;' /></div>
-	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(CREDIT_TERMS); format:popVal;' /></div>
+	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
+	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' /></div>
+	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
+	<label><input type='checkbox' name='ALLOW_RESALE' data-bind='var: org(ORG.ALLOW_RESALE); format:popCheckbox;' />Allow Resale</label>
+	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
+	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
 </fieldset>
 
 <fieldset class='alignedInputs marginBottom floatLeft'>
 	<legend>Account Information</legend>
-	<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ACCOUNT_MANAGER); format:popVal;' /></div>
-	<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ACCOUNT_TYPE); format:popVal;' /></div>
-	<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ACCOUNT_REFID); format:popVal;' /></div>
-	<div class='label'>JEDI go here?</div>
+	<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
+	<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
+	<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
 </fieldset>
 
 
 <div class='clearfix'></div>
 
 <div class='buttonset clearfix marginTop'>
-	<button data-app-event='admin_wholesale|execOrganizationCreate'>Save</button>
+	
 </div>
 
 </form>
