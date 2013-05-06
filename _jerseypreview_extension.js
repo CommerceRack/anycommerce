@@ -129,7 +129,7 @@ var jerseypreview = function() {
 					return window[movieName];
 					}
 				else {
-					return document.embeds[movieName];
+					return document[movieName];
 					}
 				}
 			}, //u [utilities]
