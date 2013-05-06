@@ -1693,6 +1693,7 @@ if(ps.indexOf('?') >= 1)	{
 					else if(infoObj.pageType == 'search' && infoObj.elasticsearch)	{
 						//r = '#search?KEYWORDS='+encodeURIComponent(infoObj.KEYWORDS);
 						r = '#search?elasticsearch='+encodeURIComponent(JSON.stringify(infoObj.elasticsearch));
+						
 						}
 					else if(infoObj.pageType && infoObj.show)	{r = '#'+infoObj.pageType+'?show='+infoObj.show}
 					else	{
@@ -1763,9 +1764,9 @@ if(ps.indexOf('?') >= 1)	{
 					//The below may not be necessary, depending on how the kvp2array function handles the parsing of the hash info with nested objects
 					
 					//De-stringify elastic search from page hash so we can build our raw elastic during showContent
-					//if(infoObj.pageType === 'search' && infoObj.elasticsearch){
-					//	infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
-					//} 
+					if(infoObj.pageType === 'search' && infoObj.elasticsearch){
+						infoObj.elasticsearch = JSON.parse(infoObj.elasticsearch);
+					} 
 				} catch (err){
 					//Problem parsing info
 					app.u.dump("Error parsing Hash: "+err, 'warn');
@@ -1814,7 +1815,7 @@ if(ps.indexOf('?') >= 1)	{
 
 				case 'search':
 //					app.u.dump("BUILDRELATIVEPATH");
-//					app.u.dump(infoObj.elasticsearch);
+					app.u.dump(infoObj.elasticsearch);
 					relativePath = '#search?elasticsearch=';
 					if(infoObj.KEYWORDS || infoObj.TAG)	{
 						relativePath += (infoObj.KEYWORDS) ? 'KEYWORDS='+infoObj.KEYWORDS : 'TAG='+infoObj.TAG;
@@ -2236,6 +2237,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					}
 				else if (infoObj.KEYWORDS) {
 					var qObj = {'query':infoObj.KEYWORDS} //what is submitted to the query generator.
+					
 					if(infoObj.fields)	{qObj.fields = infoObj.fields}
 					elasticsearch = app.ext.store_search.u.buildElasticSimpleQuery(qObj);
 					}
@@ -2248,7 +2250,7 @@ effects the display of the nav buttons only. should be run just after the handle
 if you are going to override any of the defaults in the elasticsearch, such as size, do it here BEFORE the elasticsearch is added as data on teh $page.
 ex:  elasticsearch.size = 200
 */
-elasticsearch.size = 50;
+elasticsearch.size = 20;
 
 				_tag = {'callback':'handleElasticResults','extension':'store_search','templateID':'productListTemplateResults','list':$('#resultsProductListContainer')};
 				_tag.datapointer = "appPublicSearch|"+JSON.stringify(elasticsearch);

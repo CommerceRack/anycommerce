@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201300501095720",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"20130506101420",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"testURL":"http://www.818b6f9.dagobah.zoovy.net/" //used ONLY if protocol is file: (for testing)
@@ -248,7 +248,7 @@ Welcome,
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'whats hot'});">WHAT'S HOT</a>
+							<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'})">WHAT'S HOT</a>
 							<div class="subMenu" style="height:400px !important;">
 								<div class="dropDownListHolder">
 								    <ul>
@@ -321,7 +321,7 @@ Welcome,
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'new arrivals'});">NEW ARRIVALS</a>
+							<a href="#" onClick="return showContent('search',{'TAG':'IS_NEWARRIVAL'})">NEW ARRIVALS</a>
 							<div style="display: none; overflow: hidden; height: 0px;" class="subMenu">
 								<div class="dropDownListHolder">
 									<ul>
@@ -505,7 +505,7 @@ Welcome,
 							</div>
 						</li>
 						<li>
-							<a href="#" onClick="return showContent('search',{KEYWORDS: 'clearance'});">CLEARANCE</a>
+							<a href="#" onClick="return showContent('search',{'TAG': 'IS_CLEARANCE'});">CLEARANCE</a>
 							<div class="subMenu">
 								<div class="dropDownListHolder">
                                     <ul>
@@ -587,7 +587,7 @@ Welcome,
 					</ul>
 					<ul>
 						<li>FIND IT HERE</li>
-						<li><a href="#" onClick="return showContent('category',{'navcat' : '.'});">All Categories</a></li>	
+						<li><a href="#" onClick="return showContent('search',{KEYWORDS : 'All Categories'});">All Categories</a></li>	
 						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'whats hot'});">What's Hot</a></li>
 						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'new arrivals'});">New Arrivals</a></li>	
 						<li><a href="#" onClick="return showContent('search',{KEYWORDS: 'item type'});">Item Type</a></li>
@@ -886,11 +886,11 @@ $35
 			</div>
 			<div class="ccItem">
 				<h2>WHAT'S HOT</h2>
-				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat2" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"Whats Hot "}},"filter":{"not":{"term":{"tags":"IS_BESTSELLERS"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>NEW ARRIVALS</h2>
-				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat3" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"new  arrivals"}},"filter":{"not":{"term":{"tags":"IS_NEWARRIVAL"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 			<div class="ccItem">
 				<h2>ITEM TYPE</h2>
@@ -902,7 +902,7 @@ $35
 			</div>			
             <div class="ccItem">
 				<h2>CLEARANCE</h2>
-				<ul id="carCat6" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_DISCONTINUED"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+				<ul id="carCat6" data-bind='var: elastic-native({"size":"8","mode":"elastic-native","query":{"query_string":{"query":"clearance items"}},"filter":{"not":{"term":{"tags":"IS_CLEARANCE"}}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 			</div>
 		</div>
 		<!--<ul data-bind='var: elastic-native({"size":"4","mode":"elastic-native","query":{"query_string":{"query":"featured"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResults; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>-->
@@ -1096,7 +1096,7 @@ SANITY -> if you change the height and width of this image, change the .minimalM
 -->
 
 <li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
-	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
+	<div class='pointer'>
 		<div class='prodThumbContainer' style="height:120px; text-align:center; margin-top:2px;">
 		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
 		</div>
@@ -1214,7 +1214,11 @@ Product Line</li>
     <div class='tabContent' data-anytab-content='prodDesc'>
 		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
 	</div></div>
-
+    
+<div id='recentlyViewedItemsContainer' class='displayNone'>
+<h2>Recently Viewed Items</h2>
+<ul data-bind="var: session(recentlyViewedItems); format: productList; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; hide_pagination:1; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
 	</td>
     
     <td class="RightPcol">
@@ -1345,10 +1349,10 @@ It's done this way because ID's hard coded into template are bad mojo (templates
 
 
 
-<div class='prodlistRelatedContainer'>
+<!--<div class='prodlistRelatedContainer'>
 	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
 </div>
-
+-->
 
 
 
@@ -1848,19 +1852,28 @@ subscribeListsArticle is used for authenticated buyers
 <div id='searchTemplate' class='searchResultsPage clearfix'>
 
 	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
-	<div class='previewProductDetail displayNone'></div>
+	<!--<div class='previewProductDetail displayNone'></div>-->
 
 	<div class='previewListContainer'>
     <ul class="sortby">
                                       <h2>Sort By Price</h2>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$2,500 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$1000 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$500 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$250 <span>and under</span></a></li>
-										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$100 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$50 <span>and under</span></a></li>
-                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$25 <span>and under</span></a></li>	
-                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">$10 <span>and under</span></a></li>	
+                                            <li><input name="" type="checkbox" value=""><a href='#' onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '100000', 'to' : '250000'}}}}});">$2,500 <span>and under</span></a></li>
+                                        
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '50000', 'to' : '100000'}}}}});">$1000 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '25000', 'to' : '50000'}}}}});">$500 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '10000', 'to' : '25000'}}}}});">$250 <span>and under</span></a></li>
+										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '5000', 'to' : '10000'}}}}});">$100 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '2500', 'to' : '5000'}}}}});">$50 <span>and under</span></a></li>
+                                        <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '1000', 'to' : '2500'}}}}});">$25 <span>and under</span></a></li>	
+                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{'elasticsearch':{'query' : { 
+        'range' : {'base_price' : { 'from' : '100', 'to' : '1000'}}}}});">$10 <span>and under</span></a></li>	
                                         <h2>Sort By Size</h2>
                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">32" <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">24" <span>and under</span></a></li>
@@ -1868,7 +1881,7 @@ subscribeListsArticle is used for authenticated buyers
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">12" <span>and under</span></a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">6" <span>and under</span></a></li>
                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'figure'});">4" <span>and under</span></a></li>
-                                        <h2>Sort By Size</h2>
+                                        <h2>Sort By Manufacturer</h2>
                                         <li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'Marvel comic'});">Marvel comics</a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'DC comic'});">Dc Comics</a></li>
 										<li><input name="" type="checkbox" value=""><a href="#" onClick="return showContent('search',{KEYWORDS: 'dark horse comic'});">Dark horse Comics</a></li>
@@ -2171,8 +2184,8 @@ document.getElementById('qtyval').innerHTML=a;
         <div id="light" class="white_content"><span class="savethis">SAVE THIS FOR LATER.</span> <br/><br/><span>This adds the selected item to your wishlist and removes it from your shopping cart. You can <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;" style="color:#990000;">view your wishlist</a> at any time</span> <br/><br/><div style="float:right;">  <a href = "javascript:void(0)" onclick = "document.getElementById('light').style.display='none';document.getElementById('fade').style.display='none'"><img src="images/close.png"/></a> <a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;"><img src="images/move_wishlist.png"/></a></div></div>
         <div id="fade" class="black_overlay"></div>
         
-        <select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:110px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>
-<br/><br/>
+        <!--<select type='number' id="my-dropdown"  class='qtyInput numberInput' style="width:110px;" onChange="app.ext.store_search.u.buildElasticSimpleQuery(EQ.query.query_string);"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="">Product Option</option><option value="Size">size</option><option value="price">Price</option> </select>-->
+
 
 <select type='number' id="my-dropdown"   class='qtyInput numberInput' style="width:110px;" onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;'><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
    <option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option>     </select>
