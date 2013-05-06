@@ -1042,8 +1042,8 @@ this will likely become more flexible in the future. ###
 		<span data-bind='var:product(user:prod_flashparams_jersey); format:showIfSetInline;' class="displayNone">
 		<span data-bind='var:product(pid); format:assignAttribute; attribute:data-pid;'>
 			<img class="pointer" width="101" height="25" src="img/prodPage/preview_item-101x25.png" 
-				onClick="if(app.ext.jerseypreview.a.setJerseyText($(this).parent().data('pid'))){app.ext.jerseypreview.a.showJerseyPreview($(this).parent());} return false;"/>
-			<div data-bind="useParentData:true; format:jerseypreview; extension:jerseypreview;" class="displayNone"></div>
+				onClick="app.ext.jerseypreview.a.setJerseyText($(this).parent().data('pid')); app.ext.jerseypreview.a.showJerseyPreview($(this).parent()); return false;"/>
+			<div data-bind="useParentData:true; format:jerseypreview; extension:jerseypreview;" class=""></div>
 		</span>
 		</span>
 		</span>
