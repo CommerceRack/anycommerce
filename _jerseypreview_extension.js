@@ -74,9 +74,12 @@ var jerseypreview = function() {
 				var name = $('input[name=B5]', $options).val();
 				var number = $('input[name=B6]', $options).val();
 				if( name != "" && number != ""){
-					if(typeof app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome === 'function'){
+					try{
 						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
 						return true;
+						}
+					catch(err){
+						app.u.throwMessage("Jersey Previewer currently unavailable, sorry!");
 						}
 					}
 				else {
