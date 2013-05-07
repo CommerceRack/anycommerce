@@ -79,13 +79,19 @@ var jerseypreview = function() {
 					}
 				},
 			
-			setJerseyText : function(pid, name, number){
-				try{
-					app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+			setJerseyText : function(pid, name, number, attempts){
+				attempts = attempts || 0;
+				app.u.dump(attempts);
+				if(attempts < 10){
+					try{
+						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
+						}
+					catch(err){
+						this.setJerseyText(pid,name,number,attempts+1);
+						}
 					}
-				catch(err){
-					app.u.dump(err);
-					app.u.throwMessage("Jesey Previewer currently unavailable, try again later!");
+				else {
+					app.u.throwMessage("Jesey Previewer currently unavailable, try again later!");				
 					}
 				}
 			
