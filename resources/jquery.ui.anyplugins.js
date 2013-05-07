@@ -66,8 +66,8 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-
-			o.messageElementID = 'msg_'+app.u.guidGenerator(); //a unique ID applied to the container of the message. used for animating.
+//a unique ID applied to the container of the message. used for animating and for checking if element is still on the DOM during close.
+			o.messageElementID = 'msg_'+app.u.guidGenerator();
 			
 //the content is in an array because otherwise adding multiple messages to one selector causes them to share properties, which is not a desired behavior.
 			if(typeof self.outputArr == 'object')	{}
@@ -82,7 +82,11 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			$t.prepend(self.outputArr[i]); //
 
 			if(o.persistant)	{} //message is persistant. do nothing.
-			else	{this.ts = setTimeout(function(){$t.anymessage('close');},10000);} //auto close message after a short duration.
+//message should auto-close. However, it is possible for a message to already have been removed by an 'empty', so verify it is still on the DOM or an error could result.
+// ** 201318 -> bug fix. jquery error if close method run on element that wasn't already instantiated as anymessage, such as an element already removed from DOM.
+			else	{this.ts = setTimeout(function(){
+				if($('#'+o.messageElementID).length)	{$t.anymessage('close');} 
+				},10000);} //auto close message after a short duration.
 			
 			}, //_init
 
@@ -632,33 +636,39 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 		_init : function(){
 			this._styleHeader();
 			var $table = this.element;
+			
+	
 			$('th',$table).each(function(){
 
 var th = $(this),
 thIndex = th.index(),
 inverse = false;
-
-th.click(function(){
-	$table.find('td').filter(function(){
-		return $(this).index() === thIndex;
-		}).sortElements(function(a, b){
-			var r;
-			var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
-			var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
-			if(numA && numB)	{
-//				console.log('is a number');
-				r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
-				}
-			else	{
-				r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
-				}
-			return r
-			},function(){
-		// parentNode is the element we want to move
-		return this.parentNode; 
+// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
+if(th.data('anytable-nosort'))	{} //sorting is disabled on this column. good for columns that only have buttons.
+else	{
+	th.on('click.anytablesort',function(){
+		$table.find('td').filter(function(){
+			return $(this).index() === thIndex;
+			}).sortElements(function(a, b){
+				var r;
+				var numA = Number($.text([a]).replace(/[^\w\s]/gi, ''));
+				var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
+				if(numA && numB)	{
+	//				console.log('is a number');
+					r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					}
+				else	{
+					r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					}
+				return r
+				},function(){
+			// parentNode is the element we want to move
+			return this.parentNode; 
+			});
+		inverse = !inverse;
 		});
-	inverse = !inverse;
-});
+	}
+
 				}); //ends 'each'
 			}, //_init
 
@@ -684,16 +694,25 @@ th.click(function(){
 
 		_styleHeader : function()	{
 			var $table = this.element;
-			$('th',$table)
-//				.attr("title",'click here to sort this column')
-				.css({'borderLeft':'none','borderTop':'none','borderBottom':'none'})
-				.addClass('ui-state-default').css('cursor','pointer')
-				.click(function(){
-					$('th',$table).removeClass('ui-state-active');
-					$(this).addClass('ui-state-active')
-					})
-				.mouseover(function(){$(this).addClass('ui-state-hover')})
-				.mouseout(function(){$(this).removeClass('ui-state-hover')}); // 
+			$('th',$table).each(function(){
+				var $th = $(this);
+
+// * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
+				$th.css({'borderLeft':'none','borderTop':'none','borderBottom':'none'})
+				.addClass('ui-state-default')
+				if($th.data('anytable-nosort'))	{} //sorting is disabled on this column. style accordingly.
+				else	{
+					$th
+					.css('cursor','pointer')
+					.on('click.anytablestyle',function(){
+						$('th',$table).removeClass('ui-state-active');
+						$th.addClass('ui-state-active')
+						})
+					.mouseover(function(){$th.addClass('ui-state-hover')})
+					.mouseout(function(){$th.removeClass('ui-state-hover')}); // 
+					}
+				})
+
 			},
 
 		destroy : function(){

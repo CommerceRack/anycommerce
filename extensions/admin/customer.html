@@ -6,28 +6,30 @@
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
 			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add Customer</button>
-			<form class='searchBar floatRight marginRight' action='#' data-app-role='customerSearch'>
-				<select name='scope'>
-<option value='GIFTCARD'>giftcard</option>
-<option value='ORDER'>order</option>
-<option value='NAME'>name</option>
-<option value='CID'>customer id</option>
-<option value='EMAIL'>email</option>
-<option value='PHONE'>phone</option>
-<option value='NOTES'>notes</option>
-				</select>
-				<input type='search' name='searchfor' placeholder='keyword'  />
-				<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
-			</form>
 			</div>
 			
 			<h3 class='heading'>Customer Search</h3>
+		</div>
+		<div class='ui-state-default smallPadding alignRight'>
+		<form action='#' data-app-role='customerSearch' onSubmit='return false'>
+		<select name='scope'>
+			<option value='GIFTCARD'>giftcard</option>
+			<option value='ORDER'>order</option>
+			<option value='NAME'>name</option>
+			<option value='CID'>customer id</option>
+			<option value='EMAIL'>email</option>
+			<option value='PHONE'>phone</option>
+			<option value='NOTES'>notes</option>
+		</select>
+		<input type='search' name='searchfor' placeholder='keyword'  />
+		<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
+		</form>		
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 			<div class='dualModeListMessaging marginBottom'>Please use the search above to find the customer(s) you are looking for.</div>
 			<div class='dualModeListContent' data-app-role='dualModeContent'>
-			<table class='gridTable fullWidth displayNone' >
+			<table class='gridTable fullWidth displayNone' data-app-role='dualModeResultsTable'>
 			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 			<thead>
 			<tr>
@@ -37,12 +39,12 @@
 				<th class='alignLeft'>Email</th>
 				<th class='alignLeft'>Phone</th>
 				<th class='alignLeft'>PRT</th>
-				<th></th>
+				<th data-anytable-nosort='true'></th>
 			</tr>
 			</thead>
 			<tbody data-bind="var: users(@CUSTOMERS); format:processList; loadsTemplate:customerManagerResultsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 			</table>
-			
+			<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
 			</div>
 
 		</div>

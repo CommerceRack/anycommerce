@@ -607,7 +607,7 @@ app.model.dispatchThis('immutable');
 
 //run when searching the customer manager for a customer.
 			execCustomerSearch : function($btn){
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.button({icons: {primary: "ui-icon-search"},text: true});
 				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
 					event.preventDefault();
 
@@ -626,14 +626,16 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
-		app.ext.admin_customer.a.showCustomerEditor($custManager,{'CID':app.data[rd.datapointer].CID});
+		$("[data-app-role='dualModeResultsTable']",$custManager).hide();
+		$("[data-app-role='dualModeDetailContainer']",$custManager).show();
+		app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$custManager),{'CID':app.data[rd.datapointer].CID});
 		}
 	else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
-		
+		$("[data-app-role='dualModeResultsTable']",$custManager).show();
+		$("[data-app-role='dualModeDetailContainer']",$custManager).hide();		
 		$("table tbody",$custEditorTarget).empty(); //clear any previous customer search results.
 		$custEditorTarget.anycontent({datapointer:rd.datapointer});
 		app.u.handleAppEvents($custEditorTarget);
-		$("table",$custEditorTarget).show();
 		}
 	else	{
 		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
@@ -886,7 +888,10 @@ else	{
 			showCustomerUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(){
-					app.ext.admin_customer.a.showCustomerEditor($btn.closest("[data-app-role='dualModeContainer']"),{'CID':$btn.closest("[data-cid]").data('cid')});
+					var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
+					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
+					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
+					app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$btn.closest("[data-cid]").data('cid')});
 					});
 				//
 				},

@@ -2249,7 +2249,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
 // app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-
+				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;

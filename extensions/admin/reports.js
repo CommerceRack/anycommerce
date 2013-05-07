@@ -54,12 +54,19 @@ var admin_reports = function() {
 
 				window.googleIntervalAttempts = 0;
 				window.googleInterval = setInterval(function(){
-					app.u.dump(" -> google interval attempt: "+googleIntervalAttempts);
+//					app.u.dump(" -> google interval attempt: "+googleIntervalAttempts);
 					if(window.google && window.google.loader)	{
 						google.load('visualization', '1.0', {'packages':['table']});
 						clearInterval(window.googleInterval);
 						delete window.googleInterval;
 						delete window.googleIntervalAttempts;
+						}
+					else if(window.googleIntervalAttempt > 50)	{
+						app.u.dump("Unable to load google visualization. ",'error');
+						$(".appMessaging").anymessage({'message':'The Google Visualization libraries did not successfully load. This means that some features in the reporting section may not be available. Refreshing the browser may help solve this error.','persistant':true});
+						delete window.googleInterval;
+						delete window.googleIntervalAttempts;
+
 						}
 					else	{
 						window.googleIntervalAttempts += 1;

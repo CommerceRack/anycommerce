@@ -70,6 +70,7 @@ var admin_wholesale = function() {
 			showOrganizationEditor : function($target,vars)	{
 				app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
 				if($target && vars && vars.orgID)	{
+					$target.empty();
 					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
 					app.ext.admin.calls.adminCustomerOrganizationDetail.init(vars.orgID,{'callback':function(rd){
 						$target.hideLoading();
@@ -434,6 +435,9 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						$dualModeContainer = $form.closest("[data-app-role='dualModeContainer']"),
 						$table = $("[data-app-role='dualModeListContents']",$dualModeContainer).closest('table');
 					
+					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
+					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
+					
 					if(sfo && sfo.keywords != '' && sfo.searchby)	{
 //						app.u.dump(" -> sfo: "); app.u.dump(sfo);
 						$('tbody',$table).empty(); //clear previous search results.
@@ -517,9 +521,15 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						$form = $btn.closest('form'),
 						sfo = $form.serializeJSON();
 					
-					sfo.ORGID = $form.data('orgid');
 					$form.showLoading({'message':'Saving Changes'});
-					
+					sfo.ORGID = $form.data('orgid');
+//checkbox values need to be set as 1/0, not ON/OFF
+					$(':checkbox',$form).each(function(){
+						var $CB = $(this);
+						sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
+						});
+
+
 					app.model.destroy('adminCustomerOrganizationDetail|'+sfo.ORGID)
 					app.ext.admin.calls.adminCustomerOrganizationUpdate.init(sfo,{'callback':function(rd){
 						$form.hideLoading();
@@ -536,14 +546,18 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showOrganizationUpdate').on('click.showOrganizationUpdate',function(event){
 					event.preventDefault();
+					app.u.dump('showOrganizationUpdate has been triggered.');
 					var
-						$tab = $(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),
-						$div = $("<div \/>").addClass('ui-widget ui-widget-content stdPadding ui-corner-all'),
+						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
 						orgID = $btn.closest('tr').data('orgid');
+					
+					app.u.dump('vars have been defined');
 
-					$tab.empty();
-					$div.appendTo($tab)
-					app.ext.admin_wholesale.a.showOrganizationEditor($div,{'orgID':orgID});
+					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
+					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
+					app.u.dump('results/content area display changes have occured.');
+					app.ext.admin_wholesale.a.showOrganizationEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'orgID':orgID});
+					app.u.dump('showOrganizationEditor has executed.');
 					});
 				},
 //triggered within the organization create modal when save is pushed.
@@ -551,11 +565,20 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$btn.button();
 				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
 					event.preventDefault();
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
 					
+					if(app.u.validateForm($form))	{
+
 						$form.showLoading({'message':'Creating New Organization'});
-						app.ext.admin.calls.adminCustomerOrganizationCreate.init($form.serializeJSON(),{callback : function(rd){
+//checkbox values need to be set as 1/0, not ON/OFF
+						$(':checkbox',$form).each(function(){
+							var $CB = $(this);
+							sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
+							});
+						
+						app.ext.admin.calls.adminCustomerOrganizationCreate.init(sfo,{callback : function(rd){
 							$form.hideLoading();
 							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
 							else	{

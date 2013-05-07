@@ -13,7 +13,7 @@
 			<div class='buttonSet'>
 				<button data-app-event='admin_wholesale|showOrganizationCreate' class='floatRight'>Add Organization</button>
 			</div>
-			<h3 class='heading'>Organization List</h3>
+			<h3 class='heading'>Organization Manager</h3>
 		</div>
 		<div class='ui-state-default smallPadding alignRight'>
 		<form action='#' onSubmit='return false'>
@@ -22,7 +22,7 @@
 				<option value='DOMAIN'>domain</option>
 				<option value='EMAIL'>email</option>
 				<option value='ORGID'>organization id</option>
-				<option value='PHONE'>phone</option>
+				<option value='PHONE' selected="selected">phone</option>
 				<option value='ACCOUNT_MANAGER'>account manager</option>
 			</select>
 			<input type='search' name='keywords' size='20' />
@@ -31,13 +31,13 @@
 		</form>
 		</div>
 		
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+		<div class='ui-widget-content ui-corner-bottom'>
 		<div class="dualModeListMessaging marginBottom">Please use the search above to find the organization(s) you are looking for.</div>
-		<table class='gridTable fullWidth displayNone' >
+		<table class='gridTable fullWidth displayNone marginBottom' data-app-role='dualModeResultsTable'>
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
-			<th></th>
+			<th data-anytable-nosort='true'></th>
 			<th class='alignLeft'>ID</th>
 			<th class='alignLeft'>Company</th>
 			<th class='alignLeft'>Domain</th>
@@ -45,11 +45,14 @@
 			<th class='alignLeft'>Account Manager</th>
 			<th class='alignLeft'>Billing Phone</th>
 			<th class='alignLeft'>Billing Contact</th>
-			<th></th>
+			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
 		<tbody data-bind="var: users(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerOrgRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
 		</div>
 	</section>
 </div>
@@ -78,11 +81,8 @@
 <div id='organizationManagerOrgCreateUpdateTemplate' title='User' class='createUpdateOrganizationContainer'>
 
 <form action='#' onSubmit='return false'>
-<div class='marginBottom'  data-bind='var: org(ORG.ORGID); format:showIfSet;'>
-	<h1 data-bind='var: org(ORG.ORGID); format:popVal;'></h1>
-</div>
 
-<fieldset class='alignedInputs marginBottom floatLeft labelsAsBreaks'>
+<fieldset class='alignedInputs labelsAsBreaks stdMargin floatLeft'>
 	<legend>Organization Information</legend>
 	
 	<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
@@ -103,12 +103,13 @@
 
 </fieldset>
 
-<fieldset class='alignedInputs marginBottom floatLeft labelsAsBreaks'>
+<fieldset class='alignedInputs stdMargin floatLeft labelsAsBreaks'>
 	<legend>Billing</legend>
 	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
 	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' /></div>
 	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
-	<label><input type='checkbox' name='ALLOW_RESALE' data-bind='var: org(ORG.ALLOW_RESALE); format:popCheckbox;' />Allow Resale</label>
+	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popCheckbox;' />Allow Resale</label>
+	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popCheckbox;' />Is Locked</label>
 	<div class='label'><input type='text' name='RESALE_PERMIT' placeholder='resale permit' value='' data-bind='var: org(ORG.RESALE_PERMIT); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
@@ -116,14 +117,14 @@
 </fieldset>
 
 
-<fieldset class='marginBottom floatLeft'>
+<fieldset class='stdMargin floatLeft'>
 	<legend>Company Logo</legend>
 	<img width="160" height="70" src="/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
 	<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
 	<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
 </fieldset>
 
-<fieldset class='alignedInputs marginBottom floatLeft'>
+<fieldset class='alignedInputs labelsAsBreaks stdMargin floatLeft'>
 	<legend>Account Information</legend>
 	<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
 	<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
@@ -133,9 +134,7 @@
 
 <div class='clearfix'></div>
 
-<div class='buttonset clearfix marginTop'>
-	
-</div>
+<div class='buttonset clearfix marginTop'></div><!-- buttons will be automatically added to this by buttonset class -->
 
 </form>
 
