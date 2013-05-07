@@ -211,7 +211,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						}
 					
 					$select.appendTo($tag);
-					if(data.value['%ORG'] && data.value['%ORG'].SCHEDULE)	{$select.val(data.value['%ORG'].SCHEDULE)} //preselect schedule, if set.
+					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
 					
 					}
 				} //wholesaleScheduleSelect
