@@ -611,10 +611,13 @@ app.model.dispatchThis('immutable');
 				$btn.off('click.customerSearch').on('click.customerSearch',function(event){
 					event.preventDefault();
 
-					var $custManager = $btn.closest("[data-app-role='dualModeContainer']"),
-					$form = $("[data-app-role='customerSearch']",$custManager).first(),
-					formObj = $form.serializeJSON(),
-					$custEditorTarget = $("[data-app-role='dualModeContent']",$custManager).first();
+					var
+						$custManager = $btn.closest("[data-app-role='dualModeContainer']"),
+						$resultsTable = $("[data-app-role='dualModeResultsTable']",$custManager).first(),
+						$editorContainer = $("[data-app-role='dualModeDetailContainer']",$custManager).first(),
+						$form = $("[data-app-role='customerSearch']",$custManager).first(),
+						formObj = $form.serializeJSON();
+
 					$custManager.showLoading({"message":"Searching Customers"});
 //					app.u.dump(" -> formObj: "); app.u.dump(formObj);
 					app.ext.admin.calls.adminCustomerSearch.init(formObj,{callback:function(rd){
@@ -625,17 +628,19 @@ if(app.model.responseHasErrors(rd)){
 	$('.dualModeListMessaging',$custManager).anymessage({'message':rd});
 	}
 else	{
+	//if there was only 1 result, the API returns just that CID. open that customer.
 	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
-		$("[data-app-role='dualModeResultsTable']",$custManager).hide();
-		$("[data-app-role='dualModeDetailContainer']",$custManager).show();
-		app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$custManager),{'CID':app.data[rd.datapointer].CID});
+		$resultsTable.hide();
+		$editorContainer.show();
+		app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
 		}
 	else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@CUSTOMERS'] && app.data[rd.datapointer]['@CUSTOMERS'].length)	{
-		$("[data-app-role='dualModeResultsTable']",$custManager).show();
-		$("[data-app-role='dualModeDetailContainer']",$custManager).hide();		
-		$("table tbody",$custEditorTarget).empty(); //clear any previous customer search results.
-		$custEditorTarget.anycontent({datapointer:rd.datapointer});
-		app.u.handleAppEvents($custEditorTarget);
+		$resultsTable.show();
+		$editorContainer.hide();	
+		$("tbody",$resultsTable).empty(); //clear any previous customer search results.
+		$resultsTable.anycontent({datapointer:rd.datapointer}); //show results
+		app.u.handleAppEvents($resultsTable);
+		$resultsTable.anytable();
 		}
 	else	{
 		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
