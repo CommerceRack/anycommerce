@@ -890,14 +890,14 @@ else	{
 					});
 				//
 				},
-
+/*
 			showMediaLib4DropshipLogo : function($ele)	{
 				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
 					event.preventDefault();
 					mediaLibrary($('#customerDropshipLogoImg'),$('#customerDropshipLogo'),'Choose Dropship Logo');
 					});
 				},
-
+*/
 //not in use yet. will show wallet details.
 			showWalletDetail : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-check"},text: false});

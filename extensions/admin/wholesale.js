@@ -413,9 +413,18 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					});
 				},
 
+			showMediaLib4OrganizationLogo : function($ele)	{
+				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
+					event.preventDefault();
+					var $context = $ele.closest('fieldset');
+					mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
+					});
+				},
+
+
 			execOrganizationSearch : function($btn){
 				
-				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.button({icons: {primary: "ui-icon-search"},text: true});
 				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
 					event.preventDefault();
 					$('.dualModeListMessaging').empty(); //clear existing messaging.
@@ -562,7 +571,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 //triggered in the editor to show the organiation create form/modal.
 			showOrganizationCreate : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: false});
+				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
 				$btn.off('click.showOrganizationCreate').on('click.showOrganizationCreate',function(event){
 					event.preventDefault();
 

@@ -12,21 +12,23 @@
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
 				<button data-app-event='admin_wholesale|showOrganizationCreate' class='floatRight'>Add Organization</button>
-				<form action='#' class='floatRight marginRight'>
-					<select name='searchby'>
-						<option value='CONTACT'>contact</option>
-						<option value='DOMAIN'>domain</option>
-						<option value='EMAIL'>email</option>
-						<option value='ORGID'>organization id</option>
-						<option value='PHONE'>phone</option>
-						<option value='ACCOUNT_MANAGER'>account manager</option>
-					</select>
-					<input type='search' name='keywords' size='20' />
-<!--					<button>Show All Locked</button> -->
-					<button data-app-event='admin_wholesale|execOrganizationSearch'>Search</button>
-				</form>
 			</div>
 			<h3 class='heading'>Organization List</h3>
+		</div>
+		<div class='ui-state-default smallPadding alignRight'>
+		<form action='#' onSubmit='return false'>
+			<select name='searchby'>
+				<option value='CONTACT'>contact</option>
+				<option value='DOMAIN'>domain</option>
+				<option value='EMAIL'>email</option>
+				<option value='ORGID'>organization id</option>
+				<option value='PHONE'>phone</option>
+				<option value='ACCOUNT_MANAGER'>account manager</option>
+			</select>
+			<input type='search' name='keywords' size='20' />
+			<label class='marginRight'><input type='checkbox' name="IS_LOCKED" />locked only</label>
+			<button data-app-event='admin_wholesale|execOrganizationSearch'>Search</button>
+		</form>
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
@@ -56,7 +58,7 @@
 
 <table>
 <tr id='organizationManagerOrgRowTemplate'>
-	<td><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></td>
+	<td><span data-bind="var: organization(IS_LOCKED); format:showIfSet;" class='displayNone'><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></span></td>
 	<td data-bind="var: organization(ORGID); format:text;"></td>
 	<td data-bind="var: organization(COMPANY); format:text;"></td>
 	<td data-bind="var: organization(DOMAIN); format:text;"></td>
@@ -99,8 +101,6 @@
 
 	<div class='label'><input name='countrycode' size='9' maxlength="9" data-min-length='2' plceholder='country code'  data-bind='var: org(ORG.countrycode); format:popVal;'></select></div>
 
-	<div class='label'>LOGO</div>
-
 </fieldset>
 
 <fieldset class='alignedInputs marginBottom floatLeft labelsAsBreaks'>
@@ -113,6 +113,14 @@
 	<div class='label'><input type='number' name='CREDIT_LIMIT' placeholder='credit limit' value='' data-bind='var: org(ORG.CREDIT_LIMIT); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_BALANCE' placeholder='credit balance' value='' data-bind='var: org(ORG.CREDIT_BALANCE); format:popVal;' /></div>
 	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
+</fieldset>
+
+
+<fieldset class='marginBottom floatLeft'>
+	<legend>Company Logo</legend>
+	<img width="160" height="70" src="/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+	<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
+	<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
 </fieldset>
 
 <fieldset class='alignedInputs marginBottom floatLeft'>

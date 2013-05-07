@@ -467,6 +467,11 @@ setTimeout(function(){
 					}
 				}, //uiShowMediaLib
 
+
+
+
+
+
 //This is what's executed when a file in the media library is selected.
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
@@ -497,13 +502,18 @@ setTimeout(function(){
 						}
 //update form element
 					if(mediaData.eleSelector){
-						// app.u.dump("took selector route");
-						$(mediaData.eleSelector).val(newFilename);
+						app.u.dump("took selector route. selector: "+mediaData.eleSelector);
+// ** 201318 -> the eleSelector on a few elements I tested had no #, so they weren't working right.
+//however, didn't want to assume it was broken everywhere so a check was added.
+						if(mediaData.eleSelector.indexOf('#') === 0)	{
+							mediaData.eleSelector = mediaData.eleSelector.substring(1);
+							}
+						$(app.u.jqSelector('#',mediaData.eleSelector)).val(newFilename);
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
 					else	{
-						// app.u.dump("took mode route");
+						app.u.dump("took mode route");
 						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':newFilename},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
 						}
@@ -516,6 +526,11 @@ setTimeout(function(){
 					} //something is amiss. required params not avail.
 				$medialib.hideLoading();
 				}, //selectThisMedia
+
+
+
+
+
 
 			showFoldersFor : function(P)	{
 				if(P.targetID && P.templateID)	{
