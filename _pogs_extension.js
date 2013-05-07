@@ -48,10 +48,10 @@ var pogs_cubworld = function() {
 						app.u.dump("Extending Pogs");
 						
 						app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {
-							app.ext.pogs_cubworld.vars.currentLabelDaddyContext = $(app.u.jqSelector('#',P.parentID));
+							app.ext.pogs_cubworld.vars.prodContext = $(app.u.jqSelector('#',P.parentID));
 							});
 						if($("#appView .productPage").length > 0){
-							app.ext.pogs_cubworld.vars.currentLabelDaddyContext = $("#appView .productPage:visible");
+							app.ext.pogs_cubworld.vars.prodContext = $("#appView .productPage:visible");
 							}
 						$.extend(handlePogs.prototype,app.ext.pogs_cubworld.variations);
 						UpdateMLBIcons = app.ext.pogs_cubworld.a.updateMLBIcons;
@@ -112,8 +112,34 @@ var pogs_cubworld = function() {
 				$option.append('<div class="labelPreview"></div>')
 				return $option;
 				},
+			renderOptionCUSTOMIZERNOTICE : function(pog){
+				$option = $("<input type='hidden' name='AK'/>");
+				
+				$atcForm = $('.prodViewerAddToCartForm', (app.ext.pogs_cubworld.vars.prodContext ? app.ext.pogs_cubworld.vars.prodContext : $('#mainContentArea')))
+				$atcForm.unbind('submit').attr('onSubmit','');
+				$atcForm.bind('submit', function(){
+					var $notice = $('<div>'+pog.prompt+'</div>');
+					
+					var $button = $('<button>I agree</button>');
+					$button.bind('click',function(){
+						$notice.dialog('close');
+						$option.val("ON");
+						app.ext.myRIA.u.addItemToCart($atcForm,{'action':'modal'}); 
+						return false;
+						});
+						
+					$notice.append($button);
+					
+					$notice.dialog({'modal':'true','title':'Custom Product Agreement'});
+					return false;
+				});
+				
+				
+				return $option
+				},
 			xinit : function(){
 				this.addHandler("pogid","CH","renderOptionLABELDADDYLIST");
+				this.addHandler("pogid","AK","renderOptionCUSTOMIZERNOTICE");
 				}
 			},
 
@@ -131,7 +157,7 @@ var pogs_cubworld = function() {
 				return false;
 				},
 			updateMLBIcons : function(iconset){
-				$('input[name=CH]', app.ext.pogs_cubworld.vars.currentLabelDaddyContext).val(iconset);
+				$('input[name=CH]', app.ext.pogs_cubworld.vars.prodContext).val(iconset);
 				app.ext.pogs_cubworld.u.showLabelPreview();
 				}
 			}, //Actions
@@ -150,15 +176,15 @@ var pogs_cubworld = function() {
 		u : {
 			showLabelPreview : function(){
 			
-				var labelName = $('input[name=CJ]', app.ext.pogs_cubworld.vars.currentLabelDaddyContext).val();
-				var labelLastName = $('input[name=CK]', app.ext.pogs_cubworld.vars.currentLabelDaddyContext).val();
-				var labelIcon = $('input[name=CH]', app.ext.pogs_cubworld.vars.currentLabelDaddyContext).val();
+				var labelName = $('input[name=CJ]', app.ext.pogs_cubworld.vars.prodContext).val();
+				var labelLastName = $('input[name=CK]', app.ext.pogs_cubworld.vars.prodContext).val();
+				var labelIcon = $('input[name=CH]', app.ext.pogs_cubworld.vars.prodContext).val();
 				
 
 				var queryString = "?labelName=" + labelName + "&labellastName=" + labelLastName + "&labelicon=" + labelIcon ;
 				var jsonp_url = "http://www.labeldaddy.com/widget/MLBPackWidget.php" + queryString + "&jsoncallback=?";
 				$.getJSON(jsonp_url, function(data) {
-					$('.labelPreview', app.ext.pogs_cubworld.vars.currentLabelDaddyContext).html(data.html);
+					$('.labelPreview', app.ext.pogs_cubworld.vars.prodContext).html(data.html);
 					});
 				}
 			}, //u [utilities]
@@ -171,7 +197,7 @@ var pogs_cubworld = function() {
 		e : {
 			}, //e [app Events]
 		vars : {
-			currentLabelDaddyContext : undefined
+			prodContext : undefined
 			}
 		} //r object.
 		

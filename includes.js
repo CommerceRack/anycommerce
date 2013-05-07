@@ -471,9 +471,9 @@ renderOption: function(pog,pid) {
 
 //create the label (prompt) for the form input and make it a child of the newly created div.
 	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).text(pog.prompt);
-
-	$formFieldDiv.append($formFieldLabel);
-	
+	if(pogid != 'AK'){
+		$formFieldDiv.append($formFieldLabel);
+		}
 //Push the new div into a div with id JSONPogDisplay as a new child.
 //	var $displayObject = $("#JSONPogDisplay_"+pid);
 //	$displayObject.append($formFieldDiv);   /// NOTE the form ID on this should probably be auto-generated from the element ID.
