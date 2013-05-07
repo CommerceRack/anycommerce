@@ -3131,7 +3131,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#utilitiesContent').empty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
+					$('#utilitiesContent').intervaledEmpty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'}); //navigateTo's hard coded on 2012/30
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{

@@ -1136,3 +1136,18 @@ jQuery.fn.toCSV = function() {
 
 
 
+$.fn.intervaledEmpty = function(interval, remove){
+	interval = interval || 1000;
+	if($(this).children().length > 0){
+		var i = 0;
+		$(this).children().each(function(){
+			$(this).detach();
+			setTimeout(function(){$(this).intervaledEmpty(interval, true);},interval*i);
+			i++;
+			});
+		}
+	if(remove){
+		$(this).remove();
+		}
+	return this;
+	}
