@@ -1280,6 +1280,14 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 			}, //getObjValFromString
 
+		getDomainFromURL : function(URL)	{
+			var r ; //what is returned. takes http://www.domain.com/something.html and converts to domain.com
+			r = URL.replace(/([^:]*:\/\/)?([^\/]+\.[^\/]+)/g, '$2');
+			if(r.indexOf('www.') == 0)	{r = r.replace('www.','')}
+			if(r.indexOf('/'))	{r = r.split('/')[0]}
+			return r;
+			},
+
 		isThisBitOn : function(bit,int)	{
 			var B = Number(int).toString(2); //binary
 			return (B.charAt(bit) == 1) ? true : false; //1

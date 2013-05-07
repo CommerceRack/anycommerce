@@ -212,7 +212,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					$select.appendTo($tag);
 					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
-					
+
 					}
 				} //wholesaleScheduleSelect
 			}, //renderFormats
@@ -548,6 +548,9 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					$form.showLoading({'message':'Saving Changes'});
 					sfo.ORGID = $form.data('orgid');
+					if(sfo.DOMAIN)	{
+						sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
+						}
 //checkbox values need to be set as 1/0, not ON/OFF
 					$(':checkbox',$form).each(function(){
 						var $CB = $(this);
@@ -597,6 +600,11 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					if(app.u.validateForm($form))	{
 
 						$form.showLoading({'message':'Creating New Organization'});
+
+						if(sfo.DOMAIN)	{
+							sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
+							}
+							
 //checkbox values need to be set as 1/0, not ON/OFF
 						$(':checkbox',$form).each(function(){
 							var $CB = $(this);

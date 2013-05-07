@@ -94,8 +94,8 @@
 	<div class='label'><input type='text' placeholder='last name' name='lastname' value='' data-bind='var: org(ORG.lastname); format:popVal;'  /></div>
 
 	<div class='label'><input type='text' name='company' placeholder='company' required='required' value='' data-bind='var: org(ORG.company); format:popVal;'  /></div>
-	<div class='label'><input type='url' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div>
-	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;'  /></div><!-- phone is numbers only -->
+	<div class='label'><input type='text' name='DOMAIN' placeholder='domain' value='' data-bind='var: org(ORG.DOMAIN); format:popVal;'  /></div><!-- do NOT use url as input type, only the domain is desired -->
+	<div class='label'><input type='tel' name='phone' placeholder='phone' value='' data-bind='var: org(ORG.phone); format:popVal;' onKeyPress='return app.u.numbersOnly(event);'  /></div><!-- phone is numbers only -->
 	<div class='label'><input type='text' name='address1' placeholder='address'  value='' data-bind='var: org(ORG.address1); format:popVal;'  /></div>
 	<div class='label'><input type='text' name='address2' placeholder='address 2' value='' data-bind='var: org(ORG.address2); format:popVal;' /></div>
 	<div class='label'><input type='text' name='city' placeholder='city'  value='' data-bind='var: org(ORG.city); format:popVal;' /></div>
@@ -111,7 +111,7 @@
 <fieldset class='alignedInputs stdMargin floatLeft labelsAsBreaks'>
 	<legend>Billing</legend>
 	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
-	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' /></div>
+	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return app.u.numbersOnly(event);' /></div>
 	<div class='label'>
 		<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
 	</div>
