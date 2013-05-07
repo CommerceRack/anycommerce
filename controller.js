@@ -2653,8 +2653,8 @@ return $r;
 				stid = data.value[i].stid;
 //				app.u.dump(" -> STID: "+stid);
 				$o = app.renderFunctions.transmogrify({'id':parentID+'_'+stid,'stid':stid},templateID,data.value[i])
-//make any inputs for coupons disabled.
-				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'}).addClass('disabled')}
+//make any inputs for coupons disabled. it is possible for stid to not be set, such as a fake product in admin_ordercreate unstructured add.
+				if(stid && stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'}).addClass('disabled')}
 				$tag.append($o);
 				}
 			}, //stuffList
