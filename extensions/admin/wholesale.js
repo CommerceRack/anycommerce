@@ -56,6 +56,7 @@ var admin_wholesale = function() {
 			
 			showOrganizationManager : function($target)	{
 				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
+				app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable'); //need this for add and edit.
 				if($target && $target.length)	{
 					$target.empty();
 					$target.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
@@ -72,6 +73,7 @@ var admin_wholesale = function() {
 				if($target && vars && vars.orgID)	{
 					$target.empty();
 					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+					app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 					app.ext.admin.calls.adminCustomerOrganizationDetail.init(vars.orgID,{'callback':function(rd){
 						$target.hideLoading();
 						if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
@@ -181,15 +183,38 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				var $wm = $('#wholesaleModal'),
 				optParams = optParams || {}; //optional params dumped into app events. allows for parent form of editor to be passed into modal.
 				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
-				$wm.empty().dialog('open').anycontent({'templateID':'wholesaleSupplierAddTemplate','showLoading':false});
-				app.ext.admin.u.handleAppEvents($wm,optParams);
+				app.ext.admin.calls.adminWholesaleScheduleList.init({'callback':function(rd)	{
+					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of pricing schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
+					$wm.empty().dialog('open').anycontent({'templateID':'wholesaleSupplierAddTemplate','showLoading':false});
+					app.ext.admin.u.handleAppEvents($wm,optParams);
+					}},'mutable');
 				} //showSupplierCreateModal
 			}, //a [actions]
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
-
+			wholesaleScheduleSelect : function($tag,data)	{
+				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
+				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
+					$tag.anymessage({'message':'You have not created any schedules yet.'})
+					}
+				else if(!data.value)	{$tag.anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
+				else	{
+					var $select = $("<select \/>",{'name':'SCHEDULE'}),
+					schedules =app.data.adminWholesaleScheduleList['@SCHEDULES'], //shortcut
+					L = app.data.adminWholesaleScheduleList['@SCHEDULES'].length
+					list = null;
+					$select.append($("<option \/>",{'value':''}).text('none'));
+					for(var i = 0; i < L; i += 1)	{
+						$select.append($("<option \/>",{'value':schedules[i].id}).text(schedules[i].id));
+						}
+					
+					$select.appendTo($tag);
+					if(data.value['%ORG'] && data.value['%ORG'].SCHEDULE)	{$select.val(data.value['%ORG'].SCHEDULE)} //preselect schedule, if set.
+					
+					}
+				} //wholesaleScheduleSelect
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -457,7 +482,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 								$table.show();
 								$table.anycontent({'datapointer':rd.datapointer});
 								$table.anytable();
-								app.u.handleAppEvents($table);
+								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
 								}
 
 							}},'mutable');
@@ -480,7 +505,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$btn.off('click.execOrganizationRemove').on('click.execOrganizationRemove',function(event){
 					event.preventDefault();
 					var
-						$D = $("<div \/>").attr('title',"Add a New Organization"),
+						$D = $("<div \/>").attr('title',"Permanently Remove Organization"),
 						orgID = $btn.closest('tr').data('orgid');
 
 					$D.append("<P>Are you sure you want to delete this organization? There is no undo for this action.<\/P>");

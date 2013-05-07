@@ -258,6 +258,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(CID,setObj,_tag)	{
 				var obj = {};
 				_tag = _tag || {};
+				_tag.datapointer = "adminCustomerUpdate|"+CID; //here so %CUSTOMER in response can be accessed. CID in datapointer to make sure it's unique
 				obj._cmd = "adminCustomerUpdate";
 				obj.CID = CID;
 				obj['@updates'] = setObj;
@@ -270,7 +271,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 		adminCustomerOrganizationSearch : {
 			init : function(obj,_tag,Q)	{
-				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
+//				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
 				var r = 0;
 				if(obj)	{
 					this.dispatch(obj,_tag,Q)
@@ -3095,8 +3096,8 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 			handleShowSection : function(path,P,$target)	{
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
 				this.bringTabIntoFocus(tab);
-				app.u.dump(" -> tab: "+tab);
-				app.u.dump(" -> path: "+path);
+//				app.u.dump(" -> tab: "+tab);
+//				app.u.dump(" -> path: "+path);
 				if(tab == 'product' && !P.dialog)	{
 //					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.

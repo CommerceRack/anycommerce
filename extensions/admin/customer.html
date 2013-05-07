@@ -13,13 +13,13 @@
 		<div class='ui-state-default smallPadding alignRight'>
 		<form action='#' data-app-role='customerSearch' onSubmit='return false'>
 		<select name='scope'>
-			<option value='GIFTCARD'>giftcard</option>
-			<option value='ORDER'>order</option>
-			<option value='NAME'>name</option>
 			<option value='CID'>customer id</option>
 			<option value='EMAIL'>email</option>
-			<option value='PHONE'>phone</option>
+			<option value='GIFTCARD'>giftcard</option>
+			<option value='NAME' selected="selected">name</option>
 			<option value='NOTES'>notes</option>
+			<option value='ORDER'>order</option>
+			<option value='PHONE'>phone</option>
 		</select>
 		<input type='search' name='searchfor' placeholder='keyword'  />
 		<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
@@ -85,6 +85,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		</h2>
 		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
+		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete Customer</button>
 	</div>
 
 
@@ -200,10 +201,19 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </div>
 
 
-<div class='labelsAsBreaks alignedLabels panel' data-app-role="organization">
+<div class='panel' data-app-role="organization">
 	<h2>Organization</h2>
 	<div>
-	<label><span>Org ID: </span><input type="number" step='1' min='1' name="ORGID"  size="10" data-bind="var:customer(ORG.ORGID); format:popVal;" /></label>
+	<label>
+		<span>Org ID: </span>
+		<input type="number" step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
+	</label>
+	<button data-app-event="admin_customer|showOrgChooser">Chooser</button>
+	
+	<div data-bind="var: customer(%ORG.company); format:text; pretext: Company: ;"></div>
+	<div data-bind="var: customer(%ORG.SCHEDULE); format:text; pretext: Schedule: ;"></div>
+	<div data-bind="var: customer(%ORG.DOMAIN); format:text; pretext: Domain: ;"></div>
+	
 	</div>
 </div>
 
@@ -442,3 +452,26 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </form>
 
 </div>
+
+
+
+
+<table>
+
+
+
+<tr id='organizationManagerChooserRowTemplate'>
+	<td><span data-bind="var: organization(IS_LOCKED); format:showIfSet;" class='displayNone'><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></span></td>
+	<td data-bind="var: organization(ORGID); format:text;"></td>
+	<td data-bind="var: organization(COMPANY); format:text;"></td>
+	<td data-bind="var: organization(DOMAIN); format:text;"></td>
+	<td data-bind="var: organization(EMAIL); format:text;"></td>
+	<td data-bind="var: organization(ACCOUNT_MANAGER); format:text;"></td>
+	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
+	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
+	<td class='alignRight'>
+	<input type='checkbox' data-app-event='admin_customer|saveOrgToField' />
+	</td>
+</tr>
+
+</table>

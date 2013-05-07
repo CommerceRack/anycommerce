@@ -115,6 +115,7 @@ var admin_reports = function() {
 					else	{
 						$("[data-app-role='slimLeftNav']",$KPI).anycontent({'datapointer':rd.datapointer});
 						app.u.handleAppEvents($KPI);
+						$("[data-app-role='slimLeftNav'] ul li:first",$KPI).trigger('click');
 						}
 					}},'mutable');
 				app.model.dispatchThis();

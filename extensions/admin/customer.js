@@ -21,7 +21,7 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerManagerResultsRowTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate');
+	var theseTemplates = new Array('customerManagerResultsRowTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate','organizationManagerChooserRowTemplate');
 	var r = {
 
 
@@ -73,7 +73,7 @@ var admin_customer = function() {
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 //						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{'callback':function(rd){
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
 $custEditorTarget.hideLoading();
 
 if(app.model.responseHasErrors(rd)){
@@ -211,7 +211,7 @@ else	{
 					var $form = $('form',$modal).first(),
 					$btn = $("<button \/>").text('Add Address').button().on('click',function(event){
 						event.preventDefault();
-						
+						app.model.destroy('adminCustomerDetail|'+obj.CID);
 						app.ext.admin_customer.u.customerAddressAddUpdate($form,'ADDRCREATE',obj,function(rd){
 							$form.hideLoading();
 							if(app.model.responseHasErrors(rd)){
@@ -220,9 +220,13 @@ else	{
 							else	{
 								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistant':true});
 								//clear existing addresses and re-render.
-								var $panel = $("[data-app-role='"+obj.type.substring(1)+"']",$customerEditor); //ship or bill panel.
+								var $panel = $("[data-app-role='"+obj.type.substring(1).toLowerCase()+"']",$customerEditor); //ship or bill panel.
+								app.u.dump(" -> $panel.length: "+$panel.length);
+								app.u.dump(" -> $customerEditor.length: "+$customerEditor.length);
 								$("tbody",$panel).empty(); //clear address rows so new can be added.
-								$panel.anycontent({'datapointer' : 'adminCustomerDetail|'+obj.CID}); //translate panel, which add all addresses.
+								$panel.anycontent({'data' : app.data[rd.datapointer]['%CUSTOMER']}); //translate panel, which add all addresses.
+								app.data['adminCustomerDetail|'+obj.CID] = app.data[rd.datapointer]['%CUSTOMER'];
+								delete app.data[rd.datapointer]; //get rid of this so pointer between customerDetail and customerUpdate is dropped.
 								app.ext.admin.u.handleAppEvents($panel);
 								}
 							});
@@ -372,7 +376,7 @@ else	{
 						app.ext.admin.calls.adminCustomerUpdate.init(obj.CID,[MACRO+"?"+((MACRO == 'ADDRUPDATE') ? "SHORTCUT="+$("[name='SHORTCUT']",$form).val()+"&" : "")+$form.serialize()],{'callback':callback},'immutable');
 //destroy and detail must occur after update
 						app.model.destroy('adminCustomerDetail|'+obj.CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -560,7 +564,7 @@ app.model.dispatchThis('immutable');
 						}); // ends .edited each()
 
 
-
+/*
 						if(wholesale != '')	{
 							if(wholesale.charAt(wholesale.length-1) == '&')	{wholesale = wholesale.substring(0, wholesale.length - 1)} //strip trailing ampersand.
 							macros.push("WSSET?"+wholesale);
@@ -571,7 +575,7 @@ app.model.dispatchThis('immutable');
 							app.u.dump(" -> wsAddrUpdate: "+wsAddrUpdate);
 							macros.push("ADDRUPDATE?TYPE=WS&"+wsAddrUpdate);
 							}						
-
+*/
 
 						if(general != '')	{
 							if(general.charAt(general.length-1) == '&')	{general = general.substring(0, general.length - 1)} //strip trailing ampersand.
@@ -595,7 +599,7 @@ app.model.dispatchThis('immutable');
 									}
 								}},'immutable');
 							app.model.destroy('adminCustomerDetail|'+CID);
-							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+							app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
 							app.model.dispatchThis('immutable');
 							}
 						else	{
@@ -604,6 +608,46 @@ app.model.dispatchThis('immutable');
 					});
 				}, //customerEditorSave
 
+
+			execCustomerRemove : function($btn)	{
+				
+				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
+				$btn.off('click.execCustomerRemove').on('click.execCustomerRemove',function(event){
+					event.preventDefault();
+					var
+						$D = $("<div \/>").attr('title',"Delete Customer Record"),
+						CID = $btn.closest('[data-cid]').data('cid');
+
+					$D.append("<P class='defaultText'>Are you sure you want to delete this Customer? There is no undo for this action.<\/P>");
+					$D.addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						modal: true,
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							},
+						buttons: [ 
+							{text: 'Cancel', click: function(){$D.dialog('close')}},
+							{text: 'Delete Customer', click: function(){
+								$D.parent().showLoading({"message":"Deleting Customer"});
+								app.model.destroy('adminCustomerDetail|'+CID); //nuke this so the customer editor can't be opened for a nonexistant org.
+								app.ext.admin.calls.adminCustomerRemove.init(CID,{'callback':function(rd){
+									$D.parent().hideLoading();
+									if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+									else	{
+										$(".defaultText",$D).hide(); //clear the default message.
+										$D.anymessage(app.u.successMsgObject('The customer has been removed.'));
+										$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
+										app.ext.admin_customer.a.showCustomerManager();
+										}
+									}},'immutable');
+								app.model.dispatchThis('immutable');
+								}}	
+							]
+						});
+					$D.dialog('open');
+					})
+				},
 
 //run when searching the customer manager for a customer.
 			execCustomerSearch : function($btn){
@@ -711,7 +755,7 @@ else	{
 							}},'immutable');
 //get a clean copy of the customer record so that the notes panel can be updated.
 						app.model.destroy('adminCustomerDetail|'+CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else if(!CID)	{
@@ -761,7 +805,7 @@ else	{
 							}},'immutable');
 //do this after the update so the detail includes the changes from the update.
 						app.model.destroy('adminCustomerDetail|'+CID);
-						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1},{},'immutable');
+						app.ext.admin.calls.adminCustomerDetail.init({'CID':CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{},'immutable');
 						app.model.dispatchThis('immutable');
 						}
 					else	{
@@ -892,7 +936,8 @@ else	{
 
 			showCustomerUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(){
+				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(event){
+					event.preventDefault();
 					var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
 					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
 					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
@@ -900,6 +945,44 @@ else	{
 					});
 				//
 				},
+			
+			saveOrgToField : function($cb)	{
+				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
+					var
+						$context = $("[data-app-role='customerManager']:visible").first(),
+						$orgidInput = $("[name='ORGID']",$context);
+//when a checkbox is clicked, close the modal, set the val of the orgid input and then trigger the change handler so the save button is clickable.
+					$orgidInput.val($cb.closest('tr').data('orgid'));
+					$orgidInput.toggleClass('edited');
+					app.ext.admin_customer.u.handleChanges($context);
+					$cb.closest('.ui-dialog-content').dialog('close');
+					})
+				
+				},
+			
+			showOrgChooser : function($btn)	{
+				
+				$btn.button({icons: {primary: "ui-icon-search"},text: true});
+				$btn.off('click.showOrgChooser').on('click.showOrgChooser',function(event){
+					event.preventDefault();
+					var $D = $("<div \/>").attr('title',"Add a New Organization");
+					
+					$D.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
+					
+					$D.dialog({
+						modal: true,
+						width : '70%',
+						close: function(event, ui)	{
+							$(this).dialog('destroy');
+							}
+						});
+					app.u.dump("Just a heads up.  The data-bind on the tbody in the org display (this instance only) was just overwritten in admin_customer.e.showOrgChooser");
+					$('.gridTable tbody',$D).attr('data-bind',"var: users(@ORGANIZATIONS); format:processList; loadsTemplate:organizationManagerChooserRowTemplate;");
+					app.u.handleAppEvents($D);
+					
+					});
+				},
+			
 /*
 			showMediaLib4DropshipLogo : function($ele)	{
 				$ele.off('click.mediaLib').on('click.mediaLib',function(event){

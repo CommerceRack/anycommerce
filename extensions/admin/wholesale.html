@@ -74,6 +74,11 @@
 		<button data-app-event="admin_wholesale|showOrganizationUpdate">edit</button>
 	</td>
 </tr>
+
+
+
+
+
 </table>
 
 
@@ -107,6 +112,9 @@
 	<legend>Billing</legend>
 	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
 	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' /></div>
+	<div class='label'>
+		<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+	</div>
 	<label><input type='checkbox' name='ALLOW_PO' data-bind='var: org(ORG.ALLOW_PO); format:popCheckbox;' />Allow Purchase Orders</label>
 	<label><input type='checkbox' name='RESALE' data-bind='var: org(ORG.RESALE); format:popCheckbox;' />Allow Resale</label>
 	<label><input type='checkbox' name='IS_LOCKED' data-bind='var: org(ORG.IS_LOCKED); format:popCheckbox;' />Is Locked</label>

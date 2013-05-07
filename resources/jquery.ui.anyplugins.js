@@ -780,7 +780,7 @@ and it'll turn the cb into an ios-esque on/off switch.
 				$input.is(':checked') ? self._turnOn() : self._turnOff(); //set default
 //				app.u.dump('got here');
 				$input.on('click.anycb',function(){
-					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
+//					app.u.dump(" -> anycb is toggled. checked: "+$input.is(':checked'));
 					if($input.is(':checked')){self._turnOn();}
 					else	{self._turnOff();}
 					});
@@ -791,14 +791,14 @@ and it'll turn the cb into an ios-esque on/off switch.
 
 			}, //_init
 		_turnOn : function()	{
-			app.u.dump(' -> anycb set to on');
+//			app.u.dump(' -> anycb set to on');
 			this.span.text(this.options.text.on);
 			this.span.addClass('ui-state-highlight ui-corner-left').removeClass('ui-state-default ui-corner-right');
 			this.span.animate({'left':-1},'fast');
 //			this.input.prop('checked',true);
 			},
 		_turnOff : function()	{
-			app.u.dump(' -> anycb set to off');
+//			app.u.dump(' -> anycb set to off');
 			this.span.text(this.options.text.off);
 			this.span.addClass('ui-state-default ui-corner-right').removeClass('ui-state-highlight ui-corner-left');
 			this.span.animate({'left': 24},'fast');
