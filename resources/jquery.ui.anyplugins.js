@@ -38,8 +38,8 @@ For the list of available params, see the 'options' object below.
 
 */
 
+// ** 201318 -> replacement for obsolete .browser() function.
 //.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
-
 // Figure out what browser is being used
 if(typeof typeof jQuery.browser == 'undefined')	{
 	jQuery.browser = {
@@ -50,6 +50,9 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
 		}
 	}
+
+
+
 
 (function($) {
 	$.widget("ui.anymessage",{
@@ -1151,3 +1154,164 @@ $.fn.intervaledEmpty = function(interval, remove){
 		}
 	return this;
 	}
+
+
+
+
+
+
+/*
+stickytabs
+run this on an element already on the DOM that has content in it, such as a table.  
+stickytabs will create a new container and, in an animated fashion, move the contents of the selector into the new container.
+The new container will have a tab on it and, shortly after the contents are moved, will 'close' by collapsing the content offscreen so only the tab remains.
+clicking the tab will toggle the tab contents into/out of view.
+tab will be 'fixed' so it retains position during scrolling (for browsers that support fixed positioning)
+
+supported methods include: open, close, toggle and destroy.
+supported options include tabID (given to the container), tabtext (what appears in the tab itself) and tabclass (the class applied to the tab)
+
+*/
+
+(function($) {
+
+	$.widget("ui.stickytab",{
+		options : {
+			tabID : '',
+			tabtext : 'unnamed tab', //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+			tabclass : 'ui-state-default' //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
+			},
+
+		_init : function(){
+//			console.log('init sticktab');
+			var self = this,
+			o = self.options, //shortcut
+			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
+			
+			if(o.tabID)	{}
+			else if($t.attr('id'))	{o.tabID = 'stickytab_'+$t.attr('id')}
+			else	{
+				o.tabID = 'stickytab_'+app.u.guidGenerator();
+				}
+			
+			var 
+				$tabContainer = this._handleContainer(),
+				$sticky = this._buildSticky(),
+				$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
+
+			this.sticky = $sticky; //global reference to container for easy access.
+
+			$sticky.appendTo($tabContainer);
+			this._moveAnimate();
+//			$('.ui-widget-stickytab-content',$sticky).append(this.element);
+			
+			//elements must be added to dom prior to obtaining width().
+			//the width and height on the tab needs to be fixed based on text length so that rotation works properly.
+			//only the text is rotated, not the container.
+			$('.ui-widget-stickytab-tab',$sticky).height($stickytabText.width()).width(24).css('right',($stickytabText.parent().width() * -1));
+//rotate the tab text.
+			$stickytabText.css({
+				'-webkit-transform': 'rotate(90deg)', //chrome and safari
+				'-moz-transform': 'rotate(90deg)', //firefox 3.5-15
+				'-ms-transform': 'rotate(90deg)', //IE9
+				'-o-transform':'rotate(90deg)', // Opera 10.50-12.00 
+				'transform': 'rotate(90deg)', // Firefox 16+, IE 10+, Opera 12.10+
+				'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	/* IE 7 & 8 */	
+				});
+//shrinks tab after a moments time.  This provides a good visual indicator the tab was added but uses little real-estate.
+			setTimeout(function(){
+				self.close();
+				},1500);
+			
+			}, //_init
+
+//if no sticktabs container exists, create one. if more control is desired over location, create a sticktabs element in your html and css to position as desired.
+		_handleContainer : function()	{
+//			console.log('building container');
+			var $container = $('#stickytabs');
+			if($container.length)	{} //container is already defined. do nothing.
+			else	{
+				$container = $("<div \/>",{'id':'stickytabs'}).css({
+					'position':'fixed',
+					'left':0,
+					'top':'120px',
+					'width':'120px',
+					'height':'300px',
+					'z-index':500
+					}).appendTo('body');
+				}
+			return $container;
+			},
+
+//moves the contents into the tab content and animates it for an added visual indicator of what just happened.
+		_moveAnimate : function(){
+				var element = this.element; 
+				var newParent= $('.ui-widget-stickytab-content',this.sticky);
+				var oldOffset = element.offset();
+				element.appendTo(newParent);
+				var newOffset = element.offset();
+		
+				var temp = element.clone().appendTo('body');
+				temp    .css('position', 'absolute')
+						.css('left', oldOffset.left)
+						.css('top', oldOffset.top)
+						.css('zIndex', 1000);
+				element.hide();
+				temp.animate( {'top': newOffset.top, 'left':newOffset.left}, 'slow', function(){
+				   element.show();
+				   temp.remove();
+				});
+			},
+//builds the tab and content container.
+		_buildSticky : function()	{
+//			console.log('building sticktab');
+			var 
+				$sticky = $("<div \/>",{'id':this.options.tabID}).css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
+				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
+				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode ui-widget ui-widget-content ui-corner-right");
+
+			this._addTabEvents($stickytab);
+			$stickytab.append("<div class='ui-widget-stickytab-tab-text'>"+this.options.tabtext+"</div>");
+			$sticky.append($stickytab).append($stickyContent);
+			return $sticky;
+			},
+		_addTabEvents : function($stickytab)	{
+			var self = this;
+			$stickytab.on('click.stickytab',function(){
+				console.log(self.sticky.position().left);
+				if(self.sticky.position().left >= 0)	{
+					self.close();
+					}
+				else	{
+					self.open();
+					}
+				});
+			},
+		toggle : function()	{
+			$('.ui-widget-stickytab-tab',this.sticky).trigger('click.stickytab');
+			},
+		open : function()	{
+			console.log('open tab');
+			if(this.sticky.position().left != 0)	{
+				this.sticky.animate({left: 0}, 'slow');
+				}
+			else	{} //already open.
+			},
+		close : function()	{
+			console.log('close tab');
+			this.sticky.animate({left: -(this.sticky.outerWidth())}, 'slow');
+			},
+		destroy : function()	{
+			this.sticky.empty().remove();
+			},
+		_setOption : function(option,value)	{
+			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
+			}
+		}); // create the widget
+})(jQuery); 
+
+
+
+
+
+

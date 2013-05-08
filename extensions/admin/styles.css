@@ -303,8 +303,45 @@ button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very sho
 
 
 
+/*
+
+STICKY TABS
+
+*/
 
 
+#stickytabs	{
+	position:fixed;
+	left:0;
+	top:120px;
+	width:40px;
+	height:300px;
+	z-index:500;
+	}
+
+#stickytabs .positionRelative	{width:400px;}
+/* positioning and text rotation was barfing. so only the span within the tab is rotated */
+#stickytabs .stickytab	{
+	position:absolute; cursor:pointer; z-index:510; 
+	text-align:center;
+	width:19px;
+	height:100px;
+	top:10px;
+	right:-30px; /* positioning takes into account there's some padding */
+	text-indent:6px;
+	}
+
+#stickytabs .stickytab .sticktabText	{
+	white-space: nowrap;
+	margin:auto;
+	display:block; /* block required for rotation, at least in FF.  */
+	-webkit-transform: rotate(90deg);/* Safari */
+	-moz-transform: rotate(90deg);/* Firefox */
+	-ms-transform: rotate(90deg);/* IE */
+	-o-transform: rotate(90deg);/* Opera */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	/* Internet Explorer */	
+	}
+#stickytabs .stickycontent	{font-size:.75em; overflow:auto; width:400px; height:300px;}
 
 
 /*

@@ -49,6 +49,7 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.mousewheel-3.0.6.min.
 
 //anycommerce plugins, such as anycontent, anytable, anycb, etc.
 app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']);
+app.rq.push(['css',1,app.vars.baseURL+'resources/anyplugins.css']);
 
 
 // jQuery-contextMenu - http://medialize.github.com/jQuery-contextMenu/  used in orders.
