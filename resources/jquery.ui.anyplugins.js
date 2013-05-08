@@ -1100,62 +1100,6 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 
 
-/* will convert a tbody into a csv */
-
-jQuery.fn.toCSV = function() {
-	var data = $(this).first(); //Only one table
-	var csvData = [];
-	var tmpArr = [];
-	var tmpStr = '';
-	data.find("tr").each(function() {
-	if($(this).find("th").length) {
-		$(this).find("th").each(function() {
-		tmpStr = $(this).text().replace(/"/g, '""');
-		tmpArr.push('"' + tmpStr + '"');
-		});
-		csvData.push(tmpArr);
-		}
-	else {
-          tmpArr = [];
-          $(this).find("td").each(function() {
-             $(this).find("td").each(function() {
-                if($(this).text().match(/^-{0,1}\d*\.{0,1}\d+$/)) {
-                    tmpArr.push(parseFloat($(this).text()));
-                } else {
-                    tmpStr = $(this).text().replace(/"/g, '""');
-                    tmpArr.push('"' + tmpStr + '"');
-                }
-            });
-          });
-          csvData.push(tmpArr.join(','));
-      }
-  });
-  var output = csvData.join('\n');
-  var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
-  window.open(uri);
-}
-
-
-
-
-
-$.fn.intervaledEmpty = function(interval, remove){
-	interval = interval || 1000;
-	if($(this).children().length > 0){
-		var i = 0;
-		$(this).children().each(function(){
-			$(this).detach();
-			setTimeout(function(){$(this).intervaledEmpty(interval, true);},interval*i);
-			i++;
-			});
-		}
-	if(remove){
-		$(this).remove();
-		}
-	return this;
-	}
-
-
 
 
 
@@ -1173,7 +1117,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 
 */
 
-(function($) {
+(function() {
 
 	$.widget("ui.stickytab",{
 		options : {
@@ -1216,7 +1160,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 				'-ms-transform': 'rotate(90deg)', //IE9
 				'-o-transform':'rotate(90deg)', // Opera 10.50-12.00 
 				'transform': 'rotate(90deg)', // Firefox 16+, IE 10+, Opera 12.10+
-				'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	/* IE 7 & 8 */	
+				'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	// IE 7 & 8
 				});
 //shrinks tab after a moments time.  This provides a good visual indicator the tab was added but uses little real-estate.
 			setTimeout(function(){
@@ -1308,10 +1252,68 @@ supported options include tabID (given to the container), tabtext (what appears 
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			}
 		}); // create the widget
-})(jQuery); 
+	});
 
 
 
+
+$.fn.intervaledEmpty = function(interval, remove){
+	interval = interval || 1000;
+	if($(this).children().length > 0){
+		var i = 0;
+		$(this).children().each(function(){
+			$(this).detach();
+			setTimeout(function(){$(this).intervaledEmpty(interval, true);},interval*i);
+			i++;
+			});
+		}
+	if(remove){
+		$(this).remove();
+		}
+	return this;
+	}
+
+
+
+
+
+
+
+/* will convert a tbody into a csv */
+
+jQuery.fn.toCSV = function() {
+	var data = $(this).first(); //Only one table
+	var csvData = [];
+	var tmpArr = [];
+	var tmpStr = '';
+	data.find("tr").each(function() {
+	if($(this).find("th").length) {
+		$(this).find("th").each(function() {
+			tmpStr = $(this).text().replace(/"/g, '""');
+			tmpArr.push('"' + tmpStr + '"');
+			});
+		csvData.push(tmpArr);
+		}
+	else {
+		tmpArr = [];
+		$(this).find("td").each(function() {
+			$(this).find("td").each(function() {
+				if($(this).text().match(/^-{0,1}\d*\.{0,1}\d+$/)) {
+					tmpArr.push(parseFloat($(this).text()));
+					}
+				else {
+					tmpStr = $(this).text().replace(/"/g, '""');
+					tmpArr.push('"' + tmpStr + '"');
+					}
+				});
+			});
+		csvData.push(tmpArr.join(','));
+		}
+	});
+	var output = csvData.join('\n');
+	var uri = 'data:application/csv;charset=UTF-8,' + encodeURIComponent(output);
+	window.open(uri);
+	}
 
 
 
