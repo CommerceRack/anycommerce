@@ -2202,7 +2202,7 @@ later, it will handle other third party plugins as well.
 					break;
 
 				case 'PO':
-					tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+					tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' value='";
 					if(data['payment/PO'])
 							tmp += data['payment/PO'];
 					tmp += "' /><\/li>";
