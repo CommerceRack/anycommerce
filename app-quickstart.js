@@ -3011,9 +3011,11 @@ else	{
 						if(cartObj)	{
 							app.calls.cartItemAppend.init(cartObj,{},'immutable');
 							app.model.destroy('cartDetail');
-							app.calls.cartDetail.init({'callback':function(rd){
-								if(obj.action === "modal"){
-									showContent('cart',obj);
+							app.calls.cartDetail.init({'callback':{
+								onSuccess : function(rd){
+									if(obj.action === "modal"){
+										showContent('cart',obj);
+										}
 									}
 								}},'immutable');
 							app.model.dispatchThis('immutable');
