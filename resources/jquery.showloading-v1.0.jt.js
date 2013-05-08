@@ -242,9 +242,11 @@
 		else {
 			indicatorID = $(this).attr('id');
 			}
-       	
-   		$(this).find('#loading-indicator-' + indicatorID ).remove();
-		$(this).find('#loading-indicator-' + indicatorID + '-overlay' ).remove();
+// ** 201318 -> better method for selector
+		$(app.u.jqSelector('#','loading-indicator-'+indicatorID),$(this)).remove();
+		$(app.u.jqSelector('#','loading-indicator-'+indicatorID+'-overlay'),$(this)).remove();
+//		$(this).find('#loading-indicator-' + indicatorID ).remove();
+//		$(this).find('#loading-indicator-' + indicatorID + '-overlay' ).remove();
 		
 		return this;
      	};

@@ -20,7 +20,18 @@
 
 
 var admin_wholesale = function() {
-	var theseTemplates = new Array('organizationManagerPageTemplate','organizationManagerOrgCreateUpdateTemplate','organizationManagerOrgRowTemplate','wholesaleSupplierAddTemplate','wholesaleSupplierManagerTemplate','wholesaleSupplierListTemplate','wholesaleSupplierUpdateTemplate');
+	var theseTemplates = new Array(
+		'organizationManagerPageTemplate',
+		'organizationManagerOrgCreateUpdateTemplate',
+		'organizationManagerOrgRowTemplate',
+		
+		'supplierAddTemplate',
+		'supplierManagerTemplate',
+		'supplierListItemTemplate',
+		'supplierUpdateTemplate',
+		'supplierOrderListTemplate',
+		'supplierOrderListItemTemplate'
+		);
 	var r = {
 
 
@@ -106,9 +117,9 @@ var admin_wholesale = function() {
 					$smTarget.hideLoading();
 					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
 					else	{
-						$smTarget.anycontent({'templateID':'wholesaleSupplierManagerTemplate','datapointer':rd.datapointer});
+						$smTarget.anycontent({'templateID':'supplierManagerTemplate','datapointer':rd.datapointer});
 						app.ext.admin.u.handleAppEvents($smTarget);
-						$("[data-app-role='wholesaleSupplierList']",$smTarget).anytable();
+						$("[data-app-role='supplierList']",$smTarget).anytable();
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -122,7 +133,7 @@ var admin_wholesale = function() {
 
 if(app.model.responseHasErrors(rd)){$editorContainer.anymessage({'message':rd})}
 else	{
-	$editorContainer.anycontent({'templateID':'wholesaleSupplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
+	$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
 	app.ext.admin.u.handleAppEvents($editorContainer);
 	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
 	$("[type='checkbox']",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
@@ -180,7 +191,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
 				app.ext.admin.calls.adminWholesaleScheduleList.init({'callback':function(rd)	{
 					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of pricing schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
-					$wm.empty().dialog('open').anycontent({'templateID':'wholesaleSupplierAddTemplate','showLoading':false});
+					$wm.empty().dialog('open').anycontent({'templateID':'supplierAddTemplate','showLoading':false});
 					app.ext.admin.u.handleAppEvents($wm,optParams);
 					}},'mutable');
 				} //showSupplierCreateModal
@@ -298,7 +309,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
 			execSupplierDelete : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.execSupplierDelete').on('click.execSupplierDelete',function(){
 					var $wm = $('#wholesaleModal'),
 					$row = $btn.closest('tr');
@@ -421,13 +432,39 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
 					event.preventDefault();
-					app.ext.admin.calls.adminSupplierItemList.init($btn.closest("[data-code]").data('code'),{},'mutable');
-					app.model.dispatchThis('mutable');
+					var code = $btn.closest("[data-code]").data('code');
+					if(code)	{
+						app.ext.admin.calls.adminSupplierItemList.init(code,{'callback':function(rd){
+
+							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
+							else	{
+								var $D = $(app.u.jqSelector('#',rd.datapointer));
+								if($D.length)	{$D.empty();}
+								else	{
+									$D = $("<div \/>").attr({'title':"Item list for vendor "+vendorID,'id':rd.datapointer});
+									$D.appendTo('body');
+									$D.dialog({
+										width : '70%',
+										height : ($(window).height() / 2),
+										autoOpen: false
+										});
+									}
+								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierItemListTemplate','showLoading':false});
+								$(".gridTable",$D).anytable();
+								$D.dialog('open');
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierItemList, unable to determine "code".','gMessage':true});
+						}
 					});
+
 				}, //showSupplierItemList
 
 			showSupplierOrderList : function($btn)	{
-				
+				$btn.button();
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
 					event.preventDefault();
 					var vendorID = $btn.closest("[data-code]").data('code');
@@ -436,9 +473,20 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':vendorID,'FILTER':'RECENT'},{'callback':function(rd){
 							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
 							else	{
-								var $D = $("<div \/>").attr({'title':"Order list for vendor "+vendorID,'id':rd.datapointer});
-								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierOrderViewTemplate'});
-								$D.appendTo('body');
+								var $D = $(app.u.jqSelector('#',rd.datapointer));
+								if($D.length)	{$D.empty();}
+								else	{
+									$D = $("<div \/>").attr({'title':"Order list for vendor "+vendorID,'id':rd.datapointer});
+									$D.appendTo('body');
+									$D.dialog({
+										width : '70%',
+										height : ($(window).height() / 2),
+										autoOpen: false
+										});
+									}
+								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierOrderListTemplate','showLoading':false});
+								$(".gridTable",$D).anytable();
+								$D.dialog('open');
 								}
 							}},'mutable');
 						app.model.dispatchThis('mutable');

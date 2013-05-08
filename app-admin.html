@@ -344,12 +344,11 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<li><a href='#' onClick="app.ext.admin_reports.a.showKPIAddEditInModal('add'); return false;">showKPIAddEditInModal</a></li>
-		<li><a href='#' onClick="navigateTo('#!launchpad');">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!batchManager');">batchjobs</a></li>
-		<li><a href='#' onClick="navigateTo('#!supplierManager');">Supplier Manager</a></li>
-		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
+		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
+		<li><a href='#' onClick="navigateTo('#!batchManager'); return false;">batchjobs</a></li>
+		<li><a href='#' onClick="navigateTo('#!supplierManager'); return false;">Supplier Manager</a></li>
+		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Test</a>
@@ -397,8 +396,6 @@ These two pieces of data are used for mapping after the uploads to set what fold
 This is content that isn't template worthy, but still necessary (most likely for modals or static pages)
 
 -->
-
-
 
 
 <div id='orderListTab' class='ui-widget ui-widget-content displayNone'>

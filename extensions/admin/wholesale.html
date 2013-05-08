@@ -162,7 +162,7 @@
 
 
 
-<div id='wholesaleSupplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
+<div id='supplierManagerTemplate'  class='page pageSupplier' data-app-role='supplierManager' data-app-mode='list'>
 
 	<section class='soloModeListContainer'>
 		<div class='ui-widget-header ui-corner-top'>
@@ -176,7 +176,7 @@
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 			<div class='soloModeListMessaging marginBottom'></div>
 			<div class='soloModeListContent' data-app-role='soloModeContentContainer'>
-			<table data-app-role='wholesaleSupplierList' class='fullWidth gridTable'>
+			<table data-app-role='supplierList' class='fullWidth gridTable'>
 			<thead>
 			<tr>
 				<th class='alignLeft'>Name</th>
@@ -186,7 +186,7 @@
 				<th></th>
 			</tr>
 			</thead>
-			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:wholesaleSupplierListTemplate;"></tbody>
+			<tbody data-bind="var:suppliers(@SUPPLIERS); format:processList; loadsTemplate:supplierListItemTemplate;"></tbody>
 			</table>
 				
 			</div>
@@ -199,7 +199,7 @@
 
 <!-- used in the list mode for each supplier -->
 <table>
-<tr id='wholesaleSupplierListTemplate'>
+<tr id='supplierListItemTemplate'>
 	<td class='lookLikeLink' data-bind="var:supplier(NAME); format:text;" data-app-event='admin_wholesale|showSupplierEditor'></td>
 	<td data-bind="var:supplier(CODE); format:text;"></td>
 	<td data-bind="var:supplier(FORMAT); format:text;" hideInMinimalMode></td>
@@ -212,7 +212,16 @@
 	</td>
 </tr>
 
-<tr id='supplierOrderListTemplate'>
+<tr id='supplierOrderListItemTemplate'>
+	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
+	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
+	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
+	<td data-bind="var:order(STATUS); format:text;"></td>
+	<td data-bind="var:order(CREATED_TS); format:text;"></td>
+	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
+	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
+</tr>
+<tr id='supplierItemListItemTemplate'>
 	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
 	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
 	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
@@ -226,7 +235,7 @@
 </table>
 
 
-<div id='supplierOrderViewTemplate'>
+<div id='supplierOrderListTemplate'>
 
 <table class='gridTable fullWidth'>
 <thead>
@@ -240,7 +249,27 @@
 	<th class='alignLeft'>Confirmed</th>
 </tr>
 </thead>
-<tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListTemplate;">
+<tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListItemTemplate;">
+</tbody>
+</table>
+
+</div>
+
+<div id='supplierItemListTemplate'>
+
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th data-anytable-nosort='true'></th>
+	<th class='alignLeft'>Order ID</th>
+	<th class='alignLeft'>Supplier Order ID</th>
+	<th class='alignLeft'>Status</th>
+	<th class='alignLeft'>Created</th>
+	<th class='alignLeft'>Dispatched</th>
+	<th class='alignLeft'>Confirmed</th>
+</tr>
+</thead>
+<tbody data-bind="var:orders(@PRODUCT); format:processList; loadsTemplate:supplierItemListItemTemplate;">
 </tbody>
 </table>
 
@@ -251,7 +280,7 @@
 
 <!-- template for adding a new supplier -->
 
-<div id='wholesaleSupplierAddTemplate'>
+<div id='supplierAddTemplate'>
 
 <form action='#' autocomplete="on">
 <fieldset class='labelsAsBreaks'>
@@ -280,13 +309,13 @@
 
 
 
-<div id='wholesaleSupplierUpdateTemplate' class='clearfix'>
+<div id='supplierUpdateTemplate' class='clearfix'>
 
 
 	<div class='buttonBar clearfix marginBottom ui-widget ui-widget-content ui-corner-all smallPadding'>
 		
-		<button class='floatRight'>Order List</button>
-		<button class='floatRight'>Product List</button>
+		<button class='floatRight' data-app-event='admin_wholesale|showSupplierOrderList'>Order List</button>
+		<button class='floatRight' data-app-event='admin_wholesale|showSupplierItemList'>Product List</button>
 		<button class='floatRight'>Add Product</button>
 		
 		<h2 class='floatLeft ui-widget-header-padding'>
