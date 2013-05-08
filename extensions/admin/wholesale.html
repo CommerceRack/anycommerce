@@ -210,9 +210,41 @@
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierItemList'>Products</button>
 	<button class='marginLeft' data-app-event='admin_wholesale|showSupplierOrderList'>Orders</button>
 	</td>
-	
 </tr>
+
+<tr id='supplierOrderListTemplate'>
+	<td><input type='checkbox' data-bind='var:order(ID);format:assignAttribute; attribute:name;' /></td>
+	<td data-bind="var:order(OUR_ORDERID); format:text;"></td>
+	<td data-bind="var:order(VENDOR_REFID); format:text;"></td>
+	<td data-bind="var:order(STATUS); format:text;"></td>
+	<td data-bind="var:order(CREATED_TS); format:text;"></td>
+	<td data-bind="var:order(DISPATCHED_TS); format:text;"></td>
+	<td data-bind="var:order(CONF_GMT); defaultVal:Never; format:text;"></td>
+</tr>
+
+
 </table>
+
+
+<div id='supplierOrderViewTemplate'>
+
+<table class='gridTable fullWidth'>
+<thead>
+<tr>
+	<th data-anytable-nosort='true'></th>
+	<th class='alignLeft'>Order ID</th>
+	<th class='alignLeft'>Supplier Order ID</th>
+	<th class='alignLeft'>Status</th>
+	<th class='alignLeft'>Created</th>
+	<th class='alignLeft'>Dispatched</th>
+	<th class='alignLeft'>Confirmed</th>
+</tr>
+</thead>
+<tbody data-bind="var:orders(@ORDERS); format:processList; loadsTemplate:supplierOrderListTemplate;">
+</tbody>
+</table>
+
+</div>
 
 
 

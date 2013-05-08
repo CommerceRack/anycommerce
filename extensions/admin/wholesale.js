@@ -96,11 +96,7 @@ var admin_wholesale = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showOrganizationUpdate, unable to determine orgID.','gMessage':true});
 					}
-
-				
 				},
-			
-			
 			
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
 			showSupplierManager : function($smTarget)	{
@@ -119,7 +115,6 @@ var admin_wholesale = function() {
 				
 				
 				}, //showSupplierManager
-
 
 			showSupplierEditor : function($editorContainer,VENDORID) {
 				if($editorContainer && VENDORID)	{
@@ -189,6 +184,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					app.ext.admin.u.handleAppEvents($wm,optParams);
 					}},'mutable');
 				} //showSupplierCreateModal
+
 			}, //a [actions]
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -434,8 +430,22 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				
 				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
 					event.preventDefault();
-					app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':$btn.closest("[data-code]").data('code'),'FILTER':'RECENT'},{},'mutable');
-					app.model.dispatchThis('mutable');
+					var vendorID = $btn.closest("[data-code]").data('code');
+					
+					if(vendorID)	{
+						app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':vendorID,'FILTER':'RECENT'},{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
+							else	{
+								var $D = $("<div \/>").attr({'title':"Order list for vendor "+vendorID,'id':rd.datapointer});
+								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierOrderViewTemplate'});
+								$D.appendTo('body');
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierOrderList, unable to determine vendorID.','gMessage':true})
+						}
 					});
 				},
 
