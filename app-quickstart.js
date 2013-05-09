@@ -3011,7 +3011,6 @@ else	{
 						if(cartObj)	{
 							app.calls.cartItemAppend.init(cartObj,{},'immutable');
 							app.model.destroy('cartDetail');
-// ** 201318 moved this callback into an onSuccess so that if the add to cart fails for some reason, the user isn't shown their cart
 							app.calls.cartDetail.init({'callback':{
 								onSuccess : function(rd){
 									if(obj.action === "modal"){
