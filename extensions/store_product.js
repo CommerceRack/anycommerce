@@ -701,15 +701,21 @@ NOTES
 
 							}
 						else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+							obj = false;
 							//the validation itself will display the errors.
 							}
 						}
 					else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+						obj = false;
 						$form.anymessage({'message':'The form for store_product.u.handleAddToCart was either missing a sku ['+sku+'] or qty input ['+$qtyInput.length+'].','gMessage':true});
 						}
 		
 					}
 				else	{
+// ** 201318 returning false will prevent the addItemToCart from dispatching calls
+					obj = false;
 					$('#globalMessaging').anymessage({'message':'In store_product.u.buildCartItemAppendObj, $form not passed.','gMessage':true});
 					}
 				return obj;
