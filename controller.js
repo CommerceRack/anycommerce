@@ -1354,10 +1354,12 @@ and model that needed to be permanently displayed had to be converted into an ob
 						}
 					}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
+				else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
 				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
+				else if($('#appView').length)	{$target = $('#appView')}
 				else	{
 					//tried and tried and tried. unable to find a good location.
-					$target = $('#globalMessaging');
+					$target = $('body');
 					}
 				$target.anymessage(msg);
 				}
