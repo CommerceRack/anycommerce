@@ -463,14 +463,14 @@ renderOption: function(pog,pid) {
 	var pogid = pog.id;
 
 //add a div to the dom that surrounds the pog
-	var $formFieldDiv = $("<div>").addClass("variation").addClass("pogType_"+pog.type);
+	var $formFieldDiv = $("<div>").addClass("variation variation_"+pog.type+" variation_"+pogid);
 	var $optionObj; //what is returned from the eval (the entire options object).
 //if ghint is set, use that as the title attribute, otherwise use the prompt.
 	var labelTitle = (pog.ghint) ? pog.ghint : pog.prompt;
 
 
 //create the label (prompt) for the form input and make it a child of the newly created div.
-	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).text(pog.prompt);
+	var $formFieldLabel = $('<label>').attr({"title":labelTitle}).addClass("label_"+pog.type).text(pog.prompt);
 
 	$formFieldDiv.append($formFieldLabel);
 	

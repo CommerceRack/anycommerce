@@ -1334,16 +1334,10 @@ and model that needed to be permanently displayed had to be converted into an ob
 			r = true; //what is returned. true if a message was output
 
 			if(typeof msg === 'string')	{
-				if($('.appMessaging:visible').length > 0)	{
-					$target = $('.appMessaging');
-					}
-				else	{
-					$target = $('#globalMessaging');
-					}
 				msg = this.youErrObject(msg,"#"); //put message into format anymessage can understand.
-				$target.anymessage(msg);
 				}
-			else if(typeof msg === 'object')	{
+
+			if(typeof msg === 'object')	{
 //				app.u.dump(" -> msg: "); app.u.dump(msg);
 				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
@@ -1353,15 +1347,20 @@ and model that needed to be permanently displayed had to be converted into an ob
 						$target = $(app.u.jqSelector(msg['_rtag'].selector.charAt(0),msg['_rtag'].selector));
 						}
 					}
-				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
+				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging:visible');}
 // ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
 //	target of last resort is now the body element
 				else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
 				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
-				else if($('#appView').length)	{$target = $('#appView')}
 				else	{
-					//tried and tried and tried. unable to find a good location.
-					$target = $('body');
+					$target = $("<div \/>").attr('title',"Error!");
+					$target.addClass('displayNone').appendTo('body'); 
+					$target.dialog({
+						modal: true,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
 					}
 				$target.anymessage(msg);
 				}
