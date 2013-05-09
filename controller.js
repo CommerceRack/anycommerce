@@ -1002,7 +1002,9 @@ app.u.throwMessage(responseData); is the default error handler.
 					var $target = _rtag.jqObj; //shortcut
 					
 //anycontent will disable hideLoading and loadingBG classes.
-					$target.anycontent({data: app.data[_rtag.datapointer],'templateID':_rtag.templateID});
+/*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
+// * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
+					$target.anycontent(_rtag);
 					app.u.handleAppEvents($target);
 
 					}
@@ -1278,6 +1280,14 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 			}, //getObjValFromString
 
+		getDomainFromURL : function(URL)	{
+			var r ; //what is returned. takes http://www.domain.com/something.html and converts to domain.com
+			r = URL.replace(/([^:]*:\/\/)?([^\/]+\.[^\/]+)/g, '$2');
+			if(r.indexOf('www.') == 0)	{r = r.replace('www.','')}
+			if(r.indexOf('/'))	{r = r.split('/')[0]}
+			return r;
+			},
+
 		isThisBitOn : function(bit,int)	{
 			var B = Number(int).toString(2); //binary
 			return (B.charAt(bit) == 1) ? true : false; //1
@@ -1344,10 +1354,14 @@ and model that needed to be permanently displayed had to be converted into an ob
 						}
 					}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
+// ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
+//	target of last resort is now the body element
+				else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
 				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
+				else if($('#appView').length)	{$target = $('#appView')}
 				else	{
 					//tried and tried and tried. unable to find a good location.
-					$target = $('#globalMessaging');
+					$target = $('body');
 					}
 				$target.anymessage(msg);
 				}
@@ -1829,7 +1843,7 @@ tag = boolean. Set to true to output the <img tag. set to false or blank to just
 app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag":1});
 */
 		makeImage : function(a)	{
-		//	app.u.dump('W = '+a.w+' and H = '+a.h);
+//			app.u.dump(a);
 
 			a.lib = app.u.isSet(a.lib) ? a.lib : app.vars.username;  //determine protocol
 			a.m = a.m ? 'M' : '';  //default to minimal mode off. If anything true value (not 0, false etc) is passed in as m, minimal is turned on.
@@ -1867,13 +1881,15 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 				}
 			url += '\/'+a.name;
 		
-		//		app.u.dump(url);
+//			app.u.dump(url);
 			
 			if(a.tag == true)	{
 				a['class'] = typeof a['class'] == 'string' ? a['class'] : ''; //default class to blank
 				a['id'] = typeof a['id'] == 'string' ? a['id'] : 'img_'+a.name; // default id to filename (more or less)
 				a['alt'] = typeof a['alt'] == 'string' ? a['alt'] : a.name; //default alt text to filename
-				
+// ** 201318 if width and height are present, they are added to the tag.  This solves an issue that occurs in loading
+//	pic sliders where the width of the images, and thus the scroll amount, is not calculated correctly the first time
+//	the slider loads
 				var tag = "<img src='"+url+"' alt='"+a.alt+"' id='"+a['id']+"' class='"+a['class']+"'"
 				if(a.w){
 					tag+=" width='"+a.w+"'";
@@ -1882,7 +1898,6 @@ app.u.makeImage({"name":"","w":150,"h":150,"b":"FFFFFF","class":"prodThumb","tag
 					tag+=" height='"+a.h+"'";
 				}
 				tag += " \/>";
-				
 				return tag;
 				}
 			else	{
@@ -2201,7 +2216,7 @@ later, it will handle other third party plugins as well.
 					break;
 
 				case 'PO':
-					tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' onChange='app.calls.cartSet.init({\"payment/PO\":this.value});' value='";
+					tmp += "<li><label for='payment-po'>PO #<\/label><input type='text' size='10' name='payment/PO' id='payment-po' class=' purchaseOrder' value='";
 					if(data['payment/PO'])
 							tmp += data['payment/PO'];
 					tmp += "' /><\/li>";
@@ -2652,8 +2667,8 @@ return $r;
 				stid = data.value[i].stid;
 //				app.u.dump(" -> STID: "+stid);
 				$o = app.renderFunctions.transmogrify({'id':parentID+'_'+stid,'stid':stid},templateID,data.value[i])
-//make any inputs for coupons disabled.
-				if(stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'}).addClass('disabled')}
+//make any inputs for coupons disabled. it is possible for stid to not be set, such as a fake product in admin_ordercreate unstructured add.
+				if(stid && stid[0] == '%')	{$o.find(':input').attr({'disabled':'disabled'}).addClass('disabled')}
 				$tag.append($o);
 				}
 			}, //stuffList
@@ -2661,6 +2676,7 @@ return $r;
 //handy for enabling tabs and whatnot based on whether or not a field is populated.
 //doesn't actually do anything with the value.
 		showIfSet : function($tag,data)	{
+			app.u.dump("showIfSet: "+data.value);
 			if(data.value)	{
 				$tag.show().css('display','block'); //IE isn't responding to the 'show', so the display:block is added as well.
 				}

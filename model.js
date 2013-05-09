@@ -141,8 +141,9 @@ function zoovyModel() {
 		addDispatchToQ : function(dispatch,QID) {
 //			app.u.dump('BEGIN: addDispatchToQ');
 //			app.u.dump(" -> QID: "+typeof QID);
+//** 201218 -> QID default needs to be before the string check (because a blank value typeof != string.
+			QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			var r; // return value.
-				QID = (QID === undefined) ? 'mutable' : QID; //default to the mutable Q, but allow for PDQ to be passed in.
 			if(dispatch['_cmd'] == 'undefined')	{
 				r = false;
 	//			zSTdErr(' -> _cmd not set. return false');

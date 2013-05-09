@@ -176,20 +176,35 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminCustomerDetail
+
+		adminCustomerRemove : {
+			init : function(CID,_tag,Q)	{
+				var r = 0;
+				if(CID)	{
+//if datapointer is fixed (set within call) it needs to be added prior to executing handleCallback (which needs datapointer to be set).
+					_tag = _tag || {};
+					_tag.datapointer = "adminCustomerRemove";
+					this.dispatch(CID,_tag);
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminCustomerRemove, no CID specified.");
+					}
+				return r;
+				},
+			dispatch : function(CID,_tag)	{
+				var obj = {};
+				obj.CID = CID;
+				obj._cmd = "adminCustomerRemove";
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,'immutable');
+				}
+			}, //adminCustomerDetail
 //no local storage to ensure latest data always present. 
 		adminCustomerSearch : {
-			init : function(email,_tag,Q)	{
+			init : function(obj,_tag,Q)	{
 				var r = 0;
-				if(email)	{
-					_tag = _tag || {};
-					_tag.datapointer = "adminCustomerSearch|"+email; //if changed, test order create for existing customer and customer manager.
-					if(app.model.fetchData(_tag.datapointer) == false)	{
-						r = 1;
-						this.dispatch(email,_tag,Q);
-						}
-					else	{
-						app.u.handleCallback(_tag);
-						}
+				if(obj && obj.searchfor && obj.scope)	{
+					this.dispatch(obj,_tag,Q);
 					r = 1;
 					}
 				else	{
@@ -197,8 +212,11 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				return r;
 				},
-			dispatch : function(email,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminCustomerSearch","email":email,"_tag" : _tag},Q || 'mutable');	
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._cmd = "adminCustomerSearch";
+				obj._tag.datapointer = "adminCustomerSearch"; //if changed, test order create for existing customer and customer manager.				
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminCustomerSearch
 //email is required in macro
@@ -224,6 +242,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,'immutable');
 				}
 			}, //adminCustomerSet
+			
 		adminCustomerUpdate : {
 			init : function(CID,updates,_tag)	{
 				var r = 0;
@@ -239,6 +258,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			dispatch : function(CID,setObj,_tag)	{
 				var obj = {};
 				_tag = _tag || {};
+				_tag.datapointer = "adminCustomerUpdate|"+CID; //here so %CUSTOMER in response can be accessed. CID in datapointer to make sure it's unique
 				obj._cmd = "adminCustomerUpdate";
 				obj.CID = CID;
 				obj['@updates'] = setObj;
@@ -247,6 +267,116 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminCustomerSet
 
+
+
+		adminCustomerOrganizationSearch : {
+			init : function(obj,_tag,Q)	{
+//				app.u.dump("BEGIN admin.calls.adminCustomerOrganizationSearch"); app.u.dump(obj);
+				var r = 0;
+				if(obj)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerSet, no variables passed. some sort of search query needed.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationSearch';
+				obj._cmd = "adminCustomerOrganizationSearch";
+				app.model.addDispatchToQ(obj,Q || 'mutable');
+				}
+			}, //adminCustomerOrganizationSearch
+		adminCustomerOrganizationCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationCreate, no variables passed."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationCreate';
+				obj._cmd = "adminCustomerOrganizationCreate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationCreate
+		adminCustomerOrganizationUpdate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(obj && obj.ORGID)	{
+					this.dispatch(obj,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationUpdate, either obj is blank or obj.ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationUpdate';
+				obj._cmd = "adminCustomerOrganizationUpdate";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationUpdate
+		adminCustomerOrganizationDetail : {
+			init : function(orgID,_tag,Q)	{
+				var r = 0;
+				if(orgID)	{
+					_tag = _tag || {};
+					_tag.datapointer = 'adminCustomerOrganizationDetail|'+orgID;
+					
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(orgID,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationDetail, either obj is blank or obj.ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(orgID,_tag,Q)	{
+				var obj = {}
+				obj._tag = _tag || {};
+				
+				obj._cmd = "adminCustomerOrganizationDetail";
+				obj.ORGID = orgID
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationDetail
+		adminCustomerOrganizationRemove : {
+			init : function(ORGID,_tag,Q)	{
+				var r = 0;
+				if(ORGID)	{
+					this.dispatch(ORGID,_tag,Q)
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminCustomerOrganizationRemove, ORGID not set, which is required."});
+					}
+				return r;
+				},
+			dispatch : function(ORGID,_tag,Q)	{
+				var obj = {};
+				obj.ORGID = ORGID;
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminCustomerOrganizationRemove';
+				obj._cmd = "adminCustomerOrganizationRemove";
+				app.model.addDispatchToQ(obj,Q || 'immutable');
+				}
+			}, //adminCustomerOrganizationRemove
 
 		adminDataQuery : {
 			init : function(obj,_tag,Q)	{
@@ -2120,7 +2250,7 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			showUI : function(path,opts){
 //make sure path passed in conforms to standard naming conventions.
 // app.u.dump("BEGIN admin.a.showUI ["+path+"]");
-
+				opts = opts || {}; //default to object so setting params within does not cause error.
 				if(path)	{
 //mode is either app or legacy. mode is required and generated based on path.
 					var mode = undefined;
@@ -2839,6 +2969,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.bringTabContentIntoFocus($("#launchpadContent"));
 					app.ext.admin_launchpad.a.showLaunchpad();  //don't run this till AFTER launchpad container is visible or resize doesn't work right
 					}
+				else if(path == '#!organizationManager')	{
+					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
+					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
@@ -2962,8 +3096,8 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 			handleShowSection : function(path,P,$target)	{
 				var tab = P.tab || app.ext.admin.u.getTabFromPath(path);
 				this.bringTabIntoFocus(tab);
-				app.u.dump(" -> tab: "+tab);
-				app.u.dump(" -> path: "+path);
+//				app.u.dump(" -> tab: "+tab);
+//				app.u.dump(" -> path: "+path);
 				if(tab == 'product' && !P.dialog)	{
 //					app.u.dump(" -> open product editor");
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
@@ -2997,7 +3131,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(tab == 'utilities' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#utilitiesContent').empty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
+					$('#utilitiesContent').intervaledEmpty().append(app.renderFunctions.createTemplateInstance('pageUtilitiesTemplate',{}));
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'utilitiesContent'}); //navigateTo's hard coded on 2012/30
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'import')	{

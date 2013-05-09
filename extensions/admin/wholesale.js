@@ -20,7 +20,18 @@
 
 
 var admin_wholesale = function() {
-	var theseTemplates = new Array('wholesaleSupplierAddTemplate','wholesaleSupplierManagerTemplate','wholesaleSupplierListTemplate','wholesaleSupplierUpdateTemplate');
+	var theseTemplates = new Array(
+		'organizationManagerPageTemplate',
+		'organizationManagerOrgCreateUpdateTemplate',
+		'organizationManagerOrgRowTemplate',
+		
+		'supplierAddTemplate',
+		'supplierManagerTemplate',
+		'supplierListItemTemplate',
+		'supplierUpdateTemplate',
+		'supplierOrderListTemplate',
+		'supplierOrderListItemTemplate'
+		);
 	var r = {
 
 
@@ -52,6 +63,52 @@ var admin_wholesale = function() {
 ////////////////////////////////////   ACTION [a]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			
+			showOrganizationManager : function($target)	{
+				app.u.dump("BEGIN admin_wholesale.a.showOrganizationManager");
+				app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable'); //need this for add and edit.
+				if($target && $target.length)	{
+					$target.empty();
+					$target.anycontent({'templateID':'organizationManagerPageTemplate','data':{}});
+					app.u.handleAppEvents($target);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_wholesale.a.showOrganizationManager, $target either not specified or has not length.','gMessage':true});
+					}
+				
+				}, //showSupplierManager
+			
+			showOrganizationEditor : function($target,vars)	{
+				app.u.dump("BEGIN admin_wholesale.a.showOrganizationEditor");
+				if($target && vars && vars.orgID)	{
+					$target.empty();
+					$target.showLoading({'message':'Fetching Data for Organization '+vars.orgID});
+					app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+					app.ext.admin.calls.adminCustomerOrganizationDetail.init(vars.orgID,{'callback':function(rd){
+						$target.hideLoading();
+						if(app.model.responseHasErrors(rd)){$target.anymessage({'message':rd})}
+						else	{
+							$target.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate',datapointer:rd.datapointer});
+							$('form',$target).data('orgid',vars.orgID);
+							$("input",$target).each(function(){
+								var $input = $(this);
+								$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
+								if($input.is(':checkbox'))	{
+									$input.anycb();
+									}
+								});
+							$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate'>Save Changes</button>");
+							app.u.handleAppEvents($target);
+							}
+						}},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showOrganizationUpdate, unable to determine orgID.','gMessage':true});
+					}
+				},
+			
 			//smTarget (supply manager target) is the jquery object of where it should be placed, ususally a tab.
 			showSupplierManager : function($smTarget)	{
 				$smTarget.showLoading({'message':'Fetching supplier list'});
@@ -60,9 +117,9 @@ var admin_wholesale = function() {
 					$smTarget.hideLoading();
 					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':rd})}
 					else	{
-						$smTarget.anycontent({'templateID':'wholesaleSupplierManagerTemplate','datapointer':rd.datapointer});
+						$smTarget.anycontent({'templateID':'supplierManagerTemplate','datapointer':rd.datapointer});
 						app.ext.admin.u.handleAppEvents($smTarget);
-						$("[data-app-role='wholesaleSupplierList']",$smTarget).anytable();
+						$("[data-app-role='supplierList']",$smTarget).anytable();
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -76,7 +133,7 @@ var admin_wholesale = function() {
 
 if(app.model.responseHasErrors(rd)){$editorContainer.anymessage({'message':rd})}
 else	{
-	$editorContainer.anycontent({'templateID':'wholesaleSupplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
+	$editorContainer.anycontent({'templateID':'supplierUpdateTemplate','datapointer':rd.datapointer,'dataAttribs':{'vendorid':VENDORID}});
 	app.ext.admin.u.handleAppEvents($editorContainer);
 	app.u.dump(" -> checkboxes.length: "+$("[type='checkbox']",$editorContainer).length);
 	$("[type='checkbox']",$editorContainer).parent().anycb(); //anycb gets executed on the labels, not the checkbox.
@@ -132,15 +189,39 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				var $wm = $('#wholesaleModal'),
 				optParams = optParams || {}; //optional params dumped into app events. allows for parent form of editor to be passed into modal.
 				$('.ui-dialog-title',$wm.parent()).text('Add New Supplier');
-				$wm.empty().dialog('open').anycontent({'templateID':'wholesaleSupplierAddTemplate','showLoading':false});
-				app.ext.admin.u.handleAppEvents($wm,optParams);
+				app.ext.admin.calls.adminWholesaleScheduleList.init({'callback':function(rd)	{
+					if(app.model.responseHasErrors(rd)){$smTarget.anymessage({'message':'An unknown error occured and the list of pricing schedules could not be obtained. Add the schedule in the organization editor at a later time. Sorry for any inconvenience.'})}
+					$wm.empty().dialog('open').anycontent({'templateID':'supplierAddTemplate','showLoading':false});
+					app.ext.admin.u.handleAppEvents($wm,optParams);
+					}},'mutable');
 				} //showSupplierCreateModal
+
 			}, //a [actions]
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
+			wholesaleScheduleSelect : function($tag,data)	{
+				if(!app.data.adminWholesaleScheduleList)	{$tag.anymessage({'message':'Unable to fetch wholesale list'})}
+				else if(!app.data.adminWholesaleScheduleList['@SCHEDULES'])	{
+					$tag.anymessage({'message':'You have not created any schedules yet.'})
+					}
+				else if(!data.value)	{$tag.anymessage({'message':'No data passed into wholesaleScheduleSelect renderFormat'})}
+				else	{
+					var $select = $("<select \/>",{'name':'SCHEDULE'}),
+					schedules =app.data.adminWholesaleScheduleList['@SCHEDULES'], //shortcut
+					L = app.data.adminWholesaleScheduleList['@SCHEDULES'].length
+					list = null;
+					$select.append($("<option \/>",{'value':''}).text('none'));
+					for(var i = 0; i < L; i += 1)	{
+						$select.append($("<option \/>",{'value':schedules[i].id}).text(schedules[i].id));
+						}
+					
+					$select.appendTo($tag);
+					if(data.value.ORG && data.value.ORG.SCHEDULE)	{$select.val(data.value.ORG.SCHEDULE)} //preselect schedule, if set.
 
+					}
+				} //wholesaleScheduleSelect
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
@@ -228,7 +309,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 //executed from within the 'list' mode (most likely) and will prompt the user in a modal to confirm, then will delete the user */
 			execSupplierDelete : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.execSupplierDelete').on('click.execSupplierDelete',function(){
 					var $wm = $('#wholesaleModal'),
 					$row = $btn.closest('tr');
@@ -322,7 +403,8 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 //applied to 'create user' button. just opens the modal.
 			showSupplierCreate : function($btn)	{
 				$btn.button();
-				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(){
+				$btn.off('click.showSupplierCreate').on('click.showSupplierCreate',function(event){
+					event.preventDefault();
 					app.ext.admin_wholesale.a.showSupplierCreateModal({"$context":$btn.closest("[data-app-role='supplierManager']").parent()});
 					})
 				}, //showSupplierCreate
@@ -348,17 +430,291 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 
 			showSupplierItemList : function($btn)	{
 				
-				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){
-					app.ext.admin.calls.adminSupplierItemList.init($btn.closest("[data-code]").data('code'),{},'mutable');
-					app.model.dispatchThis('mutable');
+				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
+					event.preventDefault();
+					var code = $btn.closest("[data-code]").data('code');
+					if(code)	{
+						app.ext.admin.calls.adminSupplierItemList.init(code,{'callback':function(rd){
+
+							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
+							else	{
+								var $D = $(app.u.jqSelector('#',rd.datapointer));
+								if($D.length)	{$D.empty();}
+								else	{
+									$D = $("<div \/>").attr({'title':"Item list for vendor "+vendorID,'id':rd.datapointer});
+									$D.appendTo('body');
+									$D.dialog({
+										width : '70%',
+										height : ($(window).height() / 2),
+										autoOpen: false
+										});
+									}
+								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierItemListTemplate','showLoading':false});
+								$(".gridTable",$D).anytable();
+								$D.dialog('open');
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierItemList, unable to determine "code".','gMessage':true});
+						}
 					});
+
 				}, //showSupplierItemList
 
 			showSupplierOrderList : function($btn)	{
+				$btn.button();
+				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(event){
+					event.preventDefault();
+					var vendorID = $btn.closest("[data-code]").data('code');
+					
+					if(vendorID)	{
+						app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':vendorID,'FILTER':'RECENT'},{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){$('#globalMessaging').anymessage({'message':rd})}
+							else	{
+								var $D = $(app.u.jqSelector('#',rd.datapointer));
+								if($D.length)	{$D.empty();}
+								else	{
+									$D = $("<div \/>").attr({'title':"Order list for vendor "+vendorID,'id':rd.datapointer});
+									$D.appendTo('body');
+									$D.dialog({
+										width : '70%',
+										height : ($(window).height() / 2),
+										autoOpen: false
+										});
+									}
+								$D.anycontent({datapointer:rd.datapointer,'templateID':'supplierOrderListTemplate','showLoading':false});
+								$(".gridTable",$D).anytable();
+								$D.dialog('open');
+								}
+							}},'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.showSupplierOrderList, unable to determine vendorID.','gMessage':true})
+						}
+					});
+				},
+
+			showMediaLib4OrganizationLogo : function($ele)	{
+				$ele.off('click.mediaLib').on('click.mediaLib',function(event){
+					event.preventDefault();
+					var $context = $ele.closest('fieldset');
+					mediaLibrary($("[data-app-role='organizationLogo']",$context),$("[name='LOGO']",$context),'Choose Dropship Logo');
+					});
+				},
+
+
+			execOrganizationSearch : function($btn){
 				
-				$btn.off('click.showSupplierItemList').on('click.showSupplierItemList',function(){
-					app.ext.admin.calls.adminSupplierOrderList.init({'VENDORID':$btn.closest("[data-code]").data('code'),'FILTER':'RECENT'},{},'mutable');
-					app.model.dispatchThis('mutable');
+				$btn.button({icons: {primary: "ui-icon-search"},text: true});
+				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
+					event.preventDefault();
+					$('.dualModeListMessaging').empty(); //clear existing messaging.
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON(),
+						$dualModeContainer = $form.closest("[data-app-role='dualModeContainer']"),
+						$table = $("[data-app-role='dualModeListContents']",$dualModeContainer).closest('table');
+					
+					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
+					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
+					
+					if(sfo && sfo.keywords != '' && sfo.searchby)	{
+//						app.u.dump(" -> sfo: "); app.u.dump(sfo);
+						$('tbody',$table).empty(); //clear previous search results.
+						$dualModeContainer.showLoading("Searching organizations by "+sfo.searchby+" for "+sfo.keywords);
+						
+						sfo[sfo.searchby] = sfo.keywords;
+						delete sfo.keywords; delete sfo.searchby; //sanitize before sending to API.
+						
+						app.ext.admin.calls.adminCustomerOrganizationSearch.init(sfo,{'callback':function(rd){
+							$dualModeContainer.hideLoading();
+
+							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
+								$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
+								}
+							else	{
+								$table.show();
+								$table.anycontent({'datapointer':rd.datapointer});
+								$table.anytable();
+								app.u.handleAppEvents($table,{'$context':$dualModeContainer});
+								}
+
+							}},'mutable');
+						app.model.dispatchThis();
+						}
+					else if (!sfo)	{
+						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execOrganizationSearch, unable to find form OR to serialize as JSON.','gMessage':true});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'Either keywords ['+sfo.keywords+'] or searchby ['+sfo.searchby+'] left blank.'});
+						}
+					
+					
+					});
+				},
+
+			execOrganizationRemove : function($btn)	{
+				
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.execOrganizationRemove').on('click.execOrganizationRemove',function(event){
+					event.preventDefault();
+					var
+						$D = $("<div \/>").attr('title',"Permanently Remove Organization"),
+						orgID = $btn.closest('tr').data('orgid');
+
+					$D.append("<P>Are you sure you want to delete this organization? There is no undo for this action.<\/P>");
+					$D.addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						modal: true,
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							},
+						buttons: [ 
+							{text: 'Cancel', click: function(){$D.dialog('close')}},
+							{text: 'Delete Organization', click: function(){
+								$D.parent().showLoading({"message":"Deleting Organization..."});
+								app.model.destroy('adminCustomerOrganizationDetail|'+orgID); //nuke this so the org editor can't be opened for a nonexistant org.
+								app.ext.admin.calls.adminCustomerOrganizationRemove.init(orgID,{'callback':function(rd){
+									$D.parent().hideLoading();
+									if(app.model.responseHasErrors(rd)){$D.anymessage({'message':rd})}
+									else	{
+										$D.anymessage(app.u.successMsgObject('The organization has been removed.'));
+										$btn.closest('tr').empty().remove(); //remove row in results list.
+										$D.dialog( "option", "buttons", [ {text: 'Close', click: function(){$D.dialog('close')}} ] );
+										}
+									}},'immutable');
+								app.model.dispatchThis('immutable');
+								}}	
+							]
+						});
+					$D.dialog('open');
+					})
+				},
+
+			execOrganizationUpdate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execOrganizationUpdate').on('click.execOrganizationUpdate',function(event){
+					event.preventDefault();
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
+					
+					$form.showLoading({'message':'Saving Changes'});
+					sfo.ORGID = $form.data('orgid');
+					if(sfo.DOMAIN)	{
+						sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
+						}
+//checkbox values need to be set as 1/0, not ON/OFF
+					$(':checkbox',$form).each(function(){
+						var $CB = $(this);
+						sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
+						});
+
+
+					app.model.destroy('adminCustomerOrganizationDetail|'+sfo.ORGID)
+					app.ext.admin.calls.adminCustomerOrganizationUpdate.init(sfo,{'callback':function(rd){
+						$form.hideLoading();
+						if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+						else	{
+							$form.anymessage(app.u.successMsgObject('Your changes have been saved.'));
+							}
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+				},
+
+			showOrganizationUpdate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.showOrganizationUpdate').on('click.showOrganizationUpdate',function(event){
+					event.preventDefault();
+					app.u.dump('showOrganizationUpdate has been triggered.');
+					var
+						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+						orgID = $btn.closest('tr').data('orgid');
+					
+					app.u.dump('vars have been defined');
+
+					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
+					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
+					app.u.dump('results/content area display changes have occured.');
+					app.ext.admin_wholesale.a.showOrganizationEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'orgID':orgID});
+					app.u.dump('showOrganizationEditor has executed.');
+					});
+				},
+//triggered within the organization create modal when save is pushed.
+			execOrganizationCreate : function($btn){
+				$btn.button();
+				$btn.off('click.execOrganizationCreate').on('click.execOrganizationCreate',function(event)	{
+					event.preventDefault();
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
+					
+					if(app.u.validateForm($form))	{
+
+						$form.showLoading({'message':'Creating New Organization'});
+
+						if(sfo.DOMAIN)	{
+							sfo.DOMAIN = app.u.getDomainFromURL(sfo.DOMAIN); //cleans off protocol and www.
+							}
+							
+//checkbox values need to be set as 1/0, not ON/OFF
+						$(':checkbox',$form).each(function(){
+							var $CB = $(this);
+							sfo[$CB.attr('name')] = ($CB.is(':checked')) ? 1 : 0;
+							});
+						
+						app.ext.admin.calls.adminCustomerOrganizationCreate.init(sfo,{callback : function(rd){
+							$form.hideLoading();
+							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+							else	{
+								$form.empty().anymessage(app.u.successMsgObject('The organization has been created.'));
+//								$form.append("<button>Close Window<\/button><button>Edit Organization<\/button><button>Add New Organization<\/button>");
+								}
+							}},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //form validation handles error display.
+					});
+				},
+
+//triggered in the editor to show the organiation create form/modal.
+			showOrganizationCreate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-circle-plus"},text: true});
+				$btn.off('click.showOrganizationCreate').on('click.showOrganizationCreate',function(event){
+					event.preventDefault();
+
+//by now, we know we have a valid mode and if that mode is edit, uuid is set.
+					var $D = $("<div \/>").attr('title',"Add a New Organization");
+//guid created at time modal is open. that way the guid of an edit can be added in same way and save button won't care if it's an edit or add.
+					$D.addClass('displayNone').appendTo('body'); 
+//add the content prior to turning it into a dialog so that width is properly calculated
+					$D.anycontent({'templateID':'organizationManagerOrgCreateUpdateTemplate','data':{}});
+					$D.dialog({
+						modal: true,
+						width:  '90%',
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
+					$D.dialog('open');
+
+					$("input",$D).each(function(){
+						var $input = $(this);
+						$input.attr('title',$input.attr('placeholder')); //add the placeholder of the input as the title so mouseover is indicative of what the field wants.
+						if($input.is(':checkbox'))	{
+							$input.parent().anycb({text : {'on':'yes','off':'no'}});
+							}
+						});
+					$('.buttonset',$D).append("<button data-app-event='admin_wholesale|execOrganizationCreate'>Create Organization</button>");
+					app.u.handleAppEvents($D);
+					
 					});
 				}
 			} //e [app Events]

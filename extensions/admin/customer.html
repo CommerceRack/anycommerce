@@ -6,18 +6,46 @@
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
 			<button class='floatRight marginLeft' data-app-event="admin_customer|showCustomerCreate">Add Customer</button>
-			<form class='searchBar floatRight marginRight' action='#' data-app-role='customerSearch'>
-				<input type='search' name='email' placeholder='email address'  />
-				<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
-			</form>
 			</div>
 			
 			<h3 class='heading'>Customer Search</h3>
 		</div>
+		<div class='ui-state-default smallPadding alignRight'>
+		<form action='#' data-app-role='customerSearch' onSubmit='return false'>
+		<select name='scope'>
+			<option value='CID'>customer id</option>
+			<option value='EMAIL'>email</option>
+			<option value='GIFTCARD'>giftcard</option>
+			<option value='NAME' selected="selected">name</option>
+			<option value='NOTES'>notes</option>
+			<option value='ORDER'>order</option>
+			<option value='PHONE'>phone</option>
+		</select>
+		<input type='search' name='searchfor' placeholder='keyword'  />
+		<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
+		</form>		
+		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom stdPadding'>
 			<div class='dualModeListMessaging marginBottom'>Please use the search above to find the customer(s) you are looking for.</div>
-			<div class='dualModeListContent'></div>
+			<div class='dualModeListContent' data-app-role='dualModeContent'>
+			<table class='gridTable fullWidth displayNone' data-app-role='dualModeResultsTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th class='alignLeft'>CID</th>
+				<th class='alignLeft'>Last Name</th>
+				<th class='alignLeft'>First Name</th>
+				<th class='alignLeft'>Email</th>
+				<th class='alignLeft'>Phone</th>
+				<th class='alignLeft'>PRT</th>
+				<th data-anytable-nosort='true'></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: users(@CUSTOMERS); format:processList; loadsTemplate:customerManagerResultsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+			</table>
+			<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+			</div>
 
 		</div>
 	</section>
@@ -26,13 +54,16 @@
 
 
 <table>
-<tr id='customerSearchResultsTemplate' onClick="app.ext.admin_support.a.showHelpDocInDialog($(this).data('docid'));" class='pointer'>
-	<td data-bind='var: help(title); format:text;'></td>
-	<td class='hideInDetailMode'>
-	<p data-bind='var: help(summary); format:text;'></p>
-	<div data-bind='var: help(docid); format:text;'></div>
+<tr id='customerManagerResultsRowTemplate' class='pointer'>
+	<td data-bind='var: customer(CID); format:text;'></td>
+	<td data-bind='var: customer(LASTNAME); format:text;'></td>
+	<td data-bind='var: customer(FIRSTNAME); format:text;'></td>
+	<td data-bind='var: customer(EMAIL); format:text;'></td>
+	<td data-bind='var: customer(PHONE); format:text;'></td>
+	<td data-bind='var: customer(PRT); hideZero:false; format:text;'></td>
+	<td>
+	<button data-app-event="admin_customer|showCustomerUpdate">Edit Customer</button>
 	</td>
-	<td data-bind='var: help(score); format:text;'></td>
 </tr>
 </table>
 
@@ -54,6 +85,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		</h2>
 		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
+		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete Customer</button>
 	</div>
 
 
@@ -169,6 +201,23 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </div>
 
 
+<div class='panel' data-app-role="organization">
+	<h2>Organization</h2>
+	<div>
+	<label>
+		<span>Org ID: </span>
+		<input type="number" step='1' min='1' name="ORGID" size="10" data-bind="var:customer(INFO.ORGID); format:popVal;" />
+	</label>
+	<button data-app-event="admin_customer|showOrgChooser">Chooser</button>
+	
+	<div data-bind="var: customer(%ORG.company); format:text; pretext: Company: ;"></div>
+	<div data-bind="var: customer(%ORG.SCHEDULE); format:text; pretext: Schedule: ;"></div>
+	<div data-bind="var: customer(%ORG.DOMAIN); format:text; pretext: Domain: ;"></div>
+	
+	</div>
+</div>
+
+<!--
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="wholesale">
 	<h2>Wholesale</h2>
 	<div>
@@ -181,7 +230,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<label><span>Account Manager: </span><input type="text" name="ACCOUNT_MANAGER"  size="10" data-bind="var:customer(WS.ACCOUNT_MANAGER); format:popVal;" /></label>
 	</div>
 </div>
-
+-->
 
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="wallets">
 	<h2>Wallets</h2>
@@ -221,6 +270,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	</div>
 </div>
 
+<!--
 <div class='labelsAsBreaks alignedLabels panel' data-app-role="dropship">
 	<h2>Dropship</h2>
 	<div>
@@ -229,6 +279,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<img width="200" height="70" src="/images/blank.gif" id='customerDropshipLogoImg'  data-bind='var: customer(WS.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' class='marginTop' >
 	<a data-app-event="admin_customer|showMediaLib4DropshipLogo" href="#"><b>[Edit]</b></a>
 	<input type='text' name='LOGO' id='customerDropshipLogo' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+	<!--
 </fieldset>
 <fieldset data-role='dropship-bill-address'>
 
@@ -247,7 +298,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </fieldset>
 	</div>
 </div>
-
+-->
 
 
 	</div><!-- /column 2 -->
@@ -401,3 +452,26 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 </form>
 
 </div>
+
+
+
+
+<table>
+
+
+
+<tr id='organizationManagerChooserRowTemplate'>
+	<td><span data-bind="var: organization(IS_LOCKED); format:showIfSet;" class='displayNone'><span data-bind="var: organization(IS_LOCKED); format:text;" class='ui-icon ui-icon-locked'></span></span></td>
+	<td data-bind="var: organization(ORGID); format:text;"></td>
+	<td data-bind="var: organization(COMPANY); format:text;"></td>
+	<td data-bind="var: organization(DOMAIN); format:text;"></td>
+	<td data-bind="var: organization(EMAIL); format:text;"></td>
+	<td data-bind="var: organization(ACCOUNT_MANAGER); format:text;"></td>
+	<td data-bind="var: organization(BILLING_PHONE); format:text;"></td>
+	<td data-bind="var: organization(BILLING_CONTACT); format:text;"></td>
+	<td class='alignRight'>
+	<input type='checkbox' data-app-event='admin_customer|saveOrgToField' />
+	</td>
+</tr>
+
+</table>

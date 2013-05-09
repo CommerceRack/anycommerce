@@ -181,6 +181,7 @@ using these shared margins will help make the UI more consistent.
 section.marginBottom	{margin-bottom:36px;} /* use on a section tag to divide portions of the page. */
 
 
+
 /* 
 LIST CLASSES
 apply liststylenone and nopadormargin to the UL to get an inline list.
@@ -264,7 +265,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 .ui-widget-buttonbar	{padding:3px 1px;} /* only 1 px on sides because button margin will add 2px */
 .ui-widget-buttonbar button	{margin:0 2px;}
 
-.ui-widget fieldset	{margin:0; padding:0; border:0;}
+.ui-widget fieldset	{border:0;}
 .ui-widget h1  {font-size:1.6em; color:#000000; font-weight:bold; 	margin: 0; padding: 0;} /* Used for the page title element */
 
 /* used for the wiki header 1 & 2 */
@@ -299,6 +300,48 @@ li.ui-menu-item	{
 li.ui-menu-item .ui-state-focus	{color:#ffffff;}
 
 button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very short. */
+
+
+
+/*
+
+STICKY TABS
+
+*/
+
+
+#stickytabs	{
+	position:fixed;
+	left:0;
+	top:120px;
+	width:40px;
+	height:300px;
+	z-index:500;
+	}
+
+#stickytabs .positionRelative	{width:400px;}
+/* positioning and text rotation was barfing. so only the span within the tab is rotated */
+#stickytabs .stickytab	{
+	position:absolute; cursor:pointer; z-index:510; 
+	text-align:center;
+	width:19px;
+	height:100px;
+	top:10px;
+	right:-30px; /* positioning takes into account there's some padding */
+	text-indent:6px;
+	}
+
+#stickytabs .stickytab .sticktabText	{
+	white-space: nowrap;
+	margin:auto;
+	display:block; /* block required for rotation, at least in FF.  */
+	-webkit-transform: rotate(90deg);/* Safari */
+	-moz-transform: rotate(90deg);/* Firefox */
+	-ms-transform: rotate(90deg);/* IE */
+	-o-transform: rotate(90deg);/* Opera */
+	filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);	/* Internet Explorer */	
+	}
+#stickytabs .stickycontent	{font-size:.75em; overflow:auto; width:400px; height:300px;}
 
 
 /*

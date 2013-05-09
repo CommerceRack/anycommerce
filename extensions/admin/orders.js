@@ -2297,14 +2297,14 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
 					delete formJSON['want/payby'];
 					
-//					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),
 						CMD, //the command for the cart update macro. set later.
 						errors = (typeof app.ext.store_checkout.validate[formJSON.tender] === 'function') ? app.ext.store_checkout.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
-						
+						app.u.dump('errors'); app.u.dump(errors);
 						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
 						
 

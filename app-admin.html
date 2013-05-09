@@ -55,8 +55,14 @@ css files should be included before any .js file to ensure they are downloaded i
 
 <!-- not much is going to run without these two. load em early -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script> -->
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.9.2/jquery-ui.min.js"></script>
+
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+
+
+<script src="jquery-1.8.2.min.js"></script>
+<script src="jquery-ui-1.9.1.custom.min.js"></script> -->
+
 
 <script type="text/javascript" src="loadscript.js"></script>
 
@@ -223,15 +229,9 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 		<div id='kpiContent' class='displayNone tabContent' data-section='kpi'></div>
 		<div id='utilitiesContent' class='displayNone tabContent' data-section='utilities'></div>
 		<div id='supportContent' class='displayNone tabContent' data-section='support'></div><!-- used for new support app -->
-		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'>
-
-
-
-
-
-		</div>
+		<div id='launchpadContent' class='displayNone tabContent' data-section='launchpad'></div>
 		<div id='jtContent' class='displayNone tabContent' data-section='jt'></div><!-- for testing -->
-	
+
 	</div>
 
 	<div id='mastFoot'></div><!-- if a footer is ever introduced, put it here for launchpad compatibility. -->
@@ -344,12 +344,11 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	</li>
 	<li><a href='#'>Pages</a>
 	<ul>
-		<li><a href='#' onClick="app.ext.admin_reports.a.showKPIAddEditInModal('add'); return false;">showKPIAddEditInModal</a></li>
-		<li><a href='#' onClick="navigateTo('#!launchpad');">Launchpad</a></li>
-		<li><a href='#' onClick="navigateTo('#!batchManager');">batchjobs</a></li>
-		<li><a href='#' onClick="navigateTo('#!supplierManager');">Supplier Manager</a></li>
-		<li><a href='#' onClick="navigateTo('#!appChooser');">App Chooser</a></li>
-		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent'));">showAchievementList (in setup)</a></li>
+		<li><a href='#' onClick="navigateTo('#!launchpad'); return false;">Launchpad</a></li>
+		<li><a href='#' onClick="navigateTo('#!batchManager'); return false;">batchjobs</a></li>
+		<li><a href='#' onClick="navigateTo('#!supplierManager'); return false;">Supplier Manager</a></li>
+		<li><a href='#' onClick="navigateTo('#!appChooser'); return false;">App Chooser</a></li>
+		<li><a href='#' onClick="$('#setupContent').empty(); app.ext.admin.a.showAchievementList($('#setupContent')); return false;">showAchievementList (in setup)</a></li>
 	</ul>
 	</li>
 	<li><a href='#'>Test</a>
