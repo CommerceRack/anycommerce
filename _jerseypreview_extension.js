@@ -104,7 +104,7 @@ var jerseypreview = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			jerseypreview : function($tag, data){
-				if(data.value['%attribs'] && data.value['%attribs']['user:prod_flashparams_jersey'])
+				if(data.value['%attribs'] && data.value['%attribs']['user:prod_flashparams_jersey']){
 					var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400'"
 					swfStr +=	" id='jerseyPreview"+data.value.pid+"' align='middle'>"
 					swfStr += 	"<param name='allowScriptAccess' value='always' />"
