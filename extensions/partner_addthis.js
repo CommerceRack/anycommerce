@@ -61,7 +61,7 @@ var partner_addthis = function() {
 			
 			startExtension : {
 				onSuccess : function (){
-					if(app.ext.myRIA && app.ext.myRIA.template && addthis){
+					if(app.ext.myRIA && app.ext.myRIA.template){
 						app.u.dump("Loading Addthis Extension");
 						app.ext.myRIA.template.productTemplate.onCompletes.push(function(P) {
 							//Adds the addthis code to the container specified
