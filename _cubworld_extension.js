@@ -97,7 +97,7 @@ var cubworld = function() {
 						}
 					}
 					$('#variableColumn > div').hide();
-					if($('#mainContentArea > div:visible').length === 1){
+					if($('#mainContentArea > div:visible').length > 0){
 						app.u.dump($('#mainContentArea div:visible').attr('id'));
 						if(!$('#mainContentArea div:visible').data('columncontent')){
 							app.ext.cubworld.u.hideColumnContent();
@@ -105,8 +105,9 @@ var cubworld = function() {
 							app.ext.cubworld.u.showColumnContent($('#mainContentArea div:visible').data('columncontent'));
 						}
 					} else {
-						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
-						app.ext.cubworld.u.showColumnContent('hotItemList');
+						
+						//app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
+						//app.ext.cubworld.u.showColumnContent('hotItemList');
 					}
 					
 //Dispatches a call to get the productList for the hotItems List
@@ -298,6 +299,19 @@ var cubworld = function() {
 			hideDropDownOnSelect : function($tag){
 				this.hideDropDown($tag);
 				$tag.data('timeoutNoShow', setTimeout(function(){$tag.data('timeoutNoShow', 'false');}, 500));
+				},
+				
+			sendInquiry : function($form){
+				var formJSON = $form.seralizeJSON();
+				obj = {
+					'sender' : formJSON.email,
+					'subject' : 'Player Inquiry Form Submission',
+					'body' : 'Player: '+formJSON.playername+"\n"
+							+'Team: '+formJSON.team+"\n"
+							+'Message:\n'+formJSON.body
+					};
+					
+				app.ext.store_crm.calls.appSendMessage(obj,{});
 				}
 			}, //Actions
 
@@ -488,8 +502,12 @@ var cubworld = function() {
 				'.size_chart' : 'categoryTemplateHTML',
 				'.sports_apparel_blog' : 'categoryTemplateHTML',
 				'.zzzzz_extra_innings.cubs_season_predictions_2011_-_in_haiku_' : 'categoryTemplateHTML',
-				'.zzzzz_extra_innings.in-store_discounts' : 'categoryTemplateHTML'
+				'.zzzzz_extra_innings.in-store_discounts' : 'categoryTemplateHTML',
+				
+				'.help_desk.nfl-phone-order' : 'categoryTemplateInquiry',
+				'.help_desk.player-inquiry' : 'categoryTemplateInquiry',
 
+				
 				}
 			}
 		} //r object.

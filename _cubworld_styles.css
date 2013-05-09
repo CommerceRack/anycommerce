@@ -450,7 +450,7 @@ COLUMN STYLES
 
 .thinColumn{ width:215px; padding-right:3px; overflow: hidden;}
 .thinColumn, .thinColumn * {position: relative; z-index: 0;}
-.wideColumn{ width:789px; padding-left:3px;}
+.wideColumn{ width:1007px; padding-left:3px;}
 .wideColumn [data-columncontent]{max-width: 789px;}
 .hotLineItemList {height: 408px; overflow:hidden;}
 li.productListTemplateHotLineItem {width: 203px;height: 60px; margin:4px 2px;}
