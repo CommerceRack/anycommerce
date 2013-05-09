@@ -118,9 +118,9 @@ var pogs_cubworld = function() {
 				$atcForm = $('.prodViewerAddToCartForm', (app.ext.pogs_cubworld.vars.prodContext ? app.ext.pogs_cubworld.vars.prodContext : $('#mainContentArea')))
 				$atcForm.unbind('submit').attr('onSubmit','');
 				$atcForm.bind('submit', function(){
-					var $notice = $('<div>'+pog.prompt+'</div>');
+					var $notice = $('<div><div>'+pog.prompt+'</div></div>');
 					
-					var $button = $('<button>I agree</button>');
+					var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
 					$button.bind('click',function(){
 						$notice.dialog('close');
 						$option.val("ON");
