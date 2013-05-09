@@ -2973,6 +2973,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.u.dump(" -> tab: "+app.ext.admin.vars.tab);
 					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!reports')	{
+					this.bringTabIntoFocus('reports');
+					this.bringTabContentIntoFocus($('#reportsContent'));
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
+					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
@@ -3022,7 +3029,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_task.a.showTaskManager();
 					}
 				else	{
-					app.u.throwGMessage("WARNING! unrecognized app mode passed into showUI. ["+path+"]");
+					app.u.throwGMessage("WARNING! unrecognized path/app ["+path+"] passed into loadNativeApp.");
 					}
 //				app.u.dump("END loadNativeApp");
 				},

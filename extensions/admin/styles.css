@@ -738,10 +738,10 @@ ICON LIBRARY
 
 
 
-/* three column panel layout (homepage/dashboard) */
+/* two column panel layout. used in reports too. */
 .twoColumn{  
-	width:49%;  
-	min-height:300px;  
+	width:48%;  
+	min-height:200px;  
 	float:left;  
 	}  
 

@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate');
+	var theseTemplates = new Array('reportsPageTemplate','ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate');
 	var r = {
 
 
@@ -89,6 +89,20 @@ var admin_reports = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			showReportsPage : function($target)	{
+				$target.empty();
+				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
+				app.u.handleAppEvents($target);
+				
+				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
+				$('.toolTip',$target).tooltip();
+				$('.datepicker',$target).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					dateFormat : "mm/dd/yy"
+					});
+				},
 			
 			showeBayListingsReport : function()	{
 				var $content = $("#utilitiesContent");

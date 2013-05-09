@@ -323,6 +323,8 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 		_addEvent2Tabs : function()	{
 			var self = this;
+// * 201318 -> more efficient selector and only 1 loop
+/*
 			this.tabs.find('li').each(function(){
 				$(this).off('click.anytab').on('click.anytab',function(){
 					self.reveal($(this));
@@ -333,6 +335,15 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 					event.preventDefault();
 					});
 				});
+*/
+			$('a',this.tabs).each(function(){
+				$(this).on('click.anytabs',function(event){
+					self.reveal($(this).parent());
+					event.preventDefault();
+					return false;
+					});
+				});
+
 			},
 
 		_addClasses2Tabs : function()	{
@@ -365,7 +376,8 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 				else	{$tab = '#'+$tab}
 				$('a',this.element).each(function(){
 					if($(this).attr('href') == $tab)	{
-						$(this).trigger('click'); //will re-execute this function with $tab as object.
+// * 201218 -> more targeted click name to reduce likelyhood of unintentional nuking of event
+						$(this).trigger('click.anytabs'); //will re-execute this function with $tab as object.
 						return false; //breaks out of each loop.
 						}
 					});
@@ -1280,7 +1292,7 @@ $.fn.intervaledEmpty = function(interval, remove){
 
 
 /* will convert a tbody into a csv */
-
+// for whatever reason, having this chuck of code not last is causing issues. leave it at bottom.
 jQuery.fn.toCSV = function() {
 	var data = $(this).first(); //Only one table
 	var csvData = [];

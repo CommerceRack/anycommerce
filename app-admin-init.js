@@ -19,10 +19,10 @@ app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
 app.rq.push(['extension',1,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
-app.rq.push(['extension',1,'admin_reports','extensions/admin/reports.js']);
+app.rq.push(['extension',0,'admin_reports','extensions/admin/reports.js']); //at zero pass for testing purposes.
 app.rq.push(['extension',1,'admin_batchJob','extensions/admin/batchjob.js']);
 app.rq.push(['extension',1,'admin_customer','extensions/admin/customer.js']);
-app.rq.push(['extension',0,'admin_wholesale','extensions/admin/wholesale.js']); //at zero pass for testing purposes.
+app.rq.push(['extension',1,'admin_wholesale','extensions/admin/wholesale.js']);
 app.rq.push(['extension',1,'admin_user','extensions/admin/user.js']);
 app.rq.push(['extension',0,'convertSessionToOrder','extensions/admin/order_create.js']); 
 app.rq.push(['extension',1,'admin_medialib','extensions/admin/medialib.js']); //do NOT set to zero. causes a script issue.

@@ -1,5 +1,8 @@
 
 
+<!--
+//////////////////// EBAY LISTINGS \\\\\\\\\\\\\\\\\\\\
+-->
 
 
 <div id='ebayListingsReportPageTemplate' class='ebayListingsReportPage'>
@@ -52,6 +55,9 @@
 
 
 
+<!--
+//////////////////// KPI \\\\\\\\\\\\\\\\\\\\
+-->
 
 
 
@@ -363,3 +369,162 @@
 		</td>
 	</tr>
 </table>
+
+
+
+
+
+
+
+
+
+<!--
+//////////////////// REPORTS \\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+
+
+<div id='reportsPageTemplate'>
+
+	<div data-app-role='reportsTabsContainer'>
+
+		<ul>
+			<li><a href='#reports'>Reports</a></li>
+			<li><a href='#salesReports'>Sales Reports</a></li>
+			<li><a href='#inventoryReports'>Inventory Reports</a></li>
+		</ul>
+		
+		
+		<section data-anytab-content='reports'>
+		Default content.
+		</section>
+		
+<!-- sales/order reporting -->
+		<section data-anytab-content='salesReports'>
+<!-- orders/sales reporting -->
+			<form onsubmit="return false">
+			<div class='clearfix'>
+		
+				<fieldset class='twoColumn labelsAsBreaks'>
+					<legend>Report Type</legend>
+					
+					<label><input type="radio" value="SALES" name="REPORT" /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
+					
+					<label><input type="radio" value="SALE_SUMMARY" name="REPORT" /> Order Summary <span class='toolTip' title='Displays only one summary row per order.'>?</span></label>
+					
+					<label><input type="radio" value="SALES_SKU_RANK" name="REPORT" /> Sales by SKU Ranking <span class='toolTip' title='Displays a summary grouped by SKU (each variation receives one row)'>?</span></label>
+					
+					<label><input type="radio" value="SALES_PRODUCT_RANK" name="REPORT" /> Sales by Product Ranking <span class='toolTip' title='Displays a summary grouped by PRODUCT (all variations are grouped together)'>?</span></label>
+					
+					<label><input type="radio" value="SALES_SOG_RANK" name="REPORT" /> Sales by Store Option Group Ranking <span class='toolTip' title='Displays one line per store variation (ex: color/red) and group sales by that'>?</span></label>
+					
+					<label><input type="radio" value="SALES_BY_SCHEDULE" name="REPORT" /> Sales by Pricing Schedule <span class='toolTip' title='Displays sales grouped by pricing schedule'>?</span></label>
+					
+				</fieldset>
+				
+				<fieldset class='twoColumn column2 labelsAsBreaks'>
+					<legend>Report Options</legend>
+					
+					<label>
+						<span>Report by:</span>
+						<select name="key">
+							<option value="CREATED">Created Date</option>
+							<option value="PAID">Paid Date</option>
+							<option value="SHIP">Shipped Date</option>
+						</select>
+					</label>
+		
+					<label><input type="checkbox" name="include_deleted" /> Gross Sales: Include Cancelled Orders</label>
+					
+					<label>
+						<span>Dates</span>
+						<select name='period' onChange="$(this).closest('fieldset').find('.formPeriodRange').hide(); $(this).closest('fieldset').find('.formPeriodRange-'+$(this).val()).show();">
+							<option value=''>please choose</option>
+							<option value='month'>by month</option>
+							<option value='daterange'>date range</option>
+							<option value='period'>by period</option>
+							<option value='invoicerange'>invoice range</option>
+						</select>
+					</label>
+					
+		
+		
+		<div class='formPeriodRange formPeriodRange-month displayNone'>
+		<select name="month">
+			<option value="1">January</option>
+			<option value="2">February</option>
+			<option value="3">March</option>
+			<option value="4">April</option>
+			<option value="5">May</option>
+			<option value="6">June</option>
+			<option value="7">July</option>
+			<option value="8">August</option>
+			<option value="9">September</option>
+			<option value="10">October</option>
+			<option value="11">November</option>
+			<option value="12">December</option>
+		</select>
+		<select name="year">
+			<option value="2007">2007</option>
+			<option value="2008">2008</option>
+			<option value="2009">2009</option>
+			<option value="2010">2010</option>
+			<option value="2011">2011</option>
+			<option value="2012">2012</option>
+			<option selected="selected" value="2013">2013</option>
+		</select>
+		</div>
+		
+		<div class='formPeriodRange formPeriodRange-daterange displayNone'>
+			<label>Begins <input type="text" name="begins" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
+			<label>Ends <input type="text" name="ends" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
+		</div>
+		
+		<div class='formPeriodRange formPeriodRange-period displayNone'>
+		<select name="PERIOD">
+			<option value="today">Today Only</option>
+			<option value="thismonth">Month to Date</option>
+			<option value="4week">Last 4 Weeks</option>
+			<option value="all">All Orders</option>
+		</select>
+		</div>
+		
+		<div class='formPeriodRange formPeriodRange-invoicerange displayNone'>
+			<label>First Invoice: <input type="text" name="startinv" maxlength="15" size="15"> ####-##-####</label>
+			<label>Last Invoice: <input type="text" name="endinv" maxlength="15" size="15"> ####-##-####</label>
+		</div>
+		
+		
+					
+					
+				</fieldset>
+		
+			</div>
+		
+			<div class='buttonset'><button>build report</button></div>
+		
+			</form>		
+		</section>
+		
+<!-- inventory reporting -->	
+		<section data-anytab-content='inventoryReports'>
+			<form onsubmit='return false'>
+			<fieldset class='lablesAsBreaks'>
+				<legend>Detail Level:</legend>
+				<label><input type="radio" value="INVENTORY_SIMPLE" name="REPORT"> Inventory Only (sku + quantity only)</label>
+				<label><input type="radio" value="INVENTORY_DETAIL" name="REPORT"> Inventory Detail (product names, prices, etc.)</label>
+				<label><input type="radio" value="INVENTORY_MISSING" name="REPORT"> Products w/o Inventory Configured</label>
+			</fieldset>
+			<div class='buttonset'>
+				<button>Run Report</button>
+			</div>
+			</form>		
+		</section>
+
+	</div>
+
+</div>
