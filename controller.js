@@ -1354,6 +1354,8 @@ and model that needed to be permanently displayed had to be converted into an ob
 						}
 					}
 				else if($('.appMessaging:visible').length > 0)	{$target = $('.appMessaging');}
+// ** 201318 moved globalMessaging targeting above mainContentArea, as it is a much preferable alternative.
+//	target of last resort is now the body element
 				else if($('#globalMessaging').length)	{$target = $('#globalMessaging')}
 				else if($('#mainContentArea').length)	{$target = $('#mainContentArea')}
 				else if($('#appView').length)	{$target = $('#appView')}
