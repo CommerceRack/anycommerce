@@ -104,26 +104,32 @@ var jerseypreview = function() {
 //that way, two render formats named the same (but in different extensions) don't overwrite each other.
 		renderFormats : {
 			jerseypreview : function($tag, data){
-				var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400'"
-				swfStr +=	" id='jerseyPreview"+data.value.pid+"' align='middle'>"
-				swfStr += 	"<param name='allowScriptAccess' value='always' />"
-				swfStr += 	"<param name='allowFullScreen' value='true' />"
-				swfStr += 	"<param name='movie' value='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
-				swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
-				swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
-				swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
-				swfStr +=	"'/>"
-				swfStr += 	"<param name='quality' value='high' />"
-				swfStr += 	"<param name='bgcolor' value='#FFFFFF' />"
-				swfStr +=	"<embed src='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
-				swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
-				swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
-				swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
-				swfStr +=	"' quality='high' bgcolor='#FFFFFF' width='400' allowFullScreen='true' height='400' name='jerseyPreview"+data.value.pid+"' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash' pluginspage='http://www.macromedia.com/go/getflashplayer' />"
-				swfStr += 	"</object>"
-				
-				$tag.html(swfStr);
-				$tag.attr('id','jerseyPreviewContainer'+data.value.pid);
+				if(data.value['%attribs'] && data.value['%attribs']['user:prod_flashparams_jersey'])
+					var swfStr=	"<object classid='clsid:d27cdb6e-ae6d-11cf-96b8-444553540000' codebase='http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,0,0' width='400' height='400'"
+					swfStr +=	" id='jerseyPreview"+data.value.pid+"' align='middle'>"
+					swfStr += 	"<param name='allowScriptAccess' value='always' />"
+					swfStr += 	"<param name='allowFullScreen' value='true' />"
+					swfStr += 	"<param name='movie' value='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
+					swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
+					swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
+					swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
+					swfStr +=	"'/>"
+					swfStr += 	"<param name='quality' value='high' />"
+					swfStr += 	"<param name='bgcolor' value='#FFFFFF' />"
+					swfStr +=	"<embed src='http://static.zoovy.com/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
+					swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
+					swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
+					swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
+					swfStr +=	"' quality='high' bgcolor='#FFFFFF' width='400' allowFullScreen='true' height='400' name='jerseyPreview"+data.value.pid+"' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash' pluginspage='http://www.macromedia.com/go/getflashplayer' />"
+					swfStr += 	"</object>"
+					
+					$tag.html(swfStr);
+					$tag.attr('id','jerseyPreviewContainer'+data.value.pid);
+					}
+				else {
+					//We are not needed here
+					$tag.remove();
+					}
 				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
