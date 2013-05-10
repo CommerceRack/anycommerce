@@ -230,14 +230,21 @@ var cubworld = function() {
 				app.u.dump(obj);
 				app.u.dump(errors);
 				if(errors.length == 0){
-					//app.ext.store_crm.calls.appSendMessage.init(obj, {});
+					var _tag = {
+						callback : function(){
+							$('#RMAFormMessaging', $form).anymessage({'message' : "Thank you, your request has been submitted"});
+							app.u.printByjqObj($form);
+							}
+						};
+					app.calls.appSendMessage.init(obj, _tag, 'mutable');
+					app.model.dispatchThis('mutable');
 					}
 				else {
-					var message = "";
+					var message = $("<ul></ul>");
 					for(var e in errors){
-						message += "<li>"+e+"/<li>";
+						message.append($("<li>"+e+"/<li>"));
 					}
-					$('#RMAFormMessaging', $form).anyMessage({'message' : message});
+					$('#RMAFormMessaging', $form).anymessage({'message' : message.html()});
 					}
 				},
 			showDropDown : function ($tag) {
