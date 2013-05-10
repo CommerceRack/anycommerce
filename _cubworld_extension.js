@@ -111,6 +111,18 @@ var cubworld = function() {
 					app.model.dispatchThis('mutable');
 					
 					}]);
+				app.rq.push(['templateFunction','categoryTemplateSitemap','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#', P.parentID));
+					var _tag={
+						'callback' : function(responseData){
+							app.u.dump(app.data[responseData.datapointer])
+							$context.anycontent({'templateID':'categoryTemplateSitemapList','datapointer':responseData.datapointer});
+							}
+						};
+					
+					app.ext.store_navcats.calls.appCategoryDetailMax.init('.', _tag, 'mutable');
+					app.model.dispatchThis('mutable');
+					}]);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -1845,6 +1857,8 @@ var cubworld = function() {
 				'.test.signup' : 'categoryTemplateAffiliates',
 				
 				'.group_sales' : 'categoryTemplateGroupSales',
+				
+				'.sitemap' : 'categoryTemplateSitemap',
 				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}

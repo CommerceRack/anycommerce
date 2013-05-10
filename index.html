@@ -892,6 +892,14 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<ul data-bind="var:search(hits.hits); format: stuffList; loadsTemplate: productListTemplateElasticClone;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 </div>
 
+<div id='categoryTemplateSitemap' class='loadingBG categoryTemplate categoryTemplateSitemap' data-columncontent="helpfulLinks">
+	
+</div>
+
+<div id='categoryTemplateSitemapList'>
+	<ul data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateRootCats; detail:max;"></ul>
+</div>
+
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id='categoryListTemplate'>
@@ -903,10 +911,12 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 
 <li id='categoryListTemplateRootCats'>
-	<div onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
-		<div class='thumbContainer'><img src='blank.gif' class='catThumb' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
-		<div class='catName'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
-	</div>
+	<h2 class='catName'><a href="#" data-bind='var: category(pretty); format:catText; extension: myRIA;' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" ></a></h2>
+	<ul data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateSubRootCats; detail:fast;"></ul>
+</li>
+
+<li id='categoryListTemplateSubRootCats'>
+	<a href="#" data-bind='var: category(pretty); format:catText; extension: myRIA;' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" ></a>
 </li>
 
 </ul>
