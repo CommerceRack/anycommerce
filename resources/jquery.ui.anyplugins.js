@@ -90,7 +90,16 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			else	{this.ts = setTimeout(function(){
 				if($('#'+o.messageElementID).length)	{$t.anymessage('close');} 
 				},10000);} //auto close message after a short duration.
-			
+// ** 201318 side effects bug- reset options after displaying the message to provide defaults for the next message --mc
+//EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistant true, message 2 does not set persistant.  
+//Message 2 is set to persistant because the defaults have been overwritten on the container
+			this.options = {
+				message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
+				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
+				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+				persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+				},
 			}, //_init
 
 		_setOption : function(option,value)	{
