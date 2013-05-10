@@ -716,6 +716,7 @@ div:hover > h4.subCatTitle {
 	width: 200px;
 }
 
+.categoryTemplateEarthCam .ztitle2,
 .categoryTemplateTickets .ztitle2{
 	color: #7F0000;
     font-family: arial,helvetica;
@@ -724,15 +725,27 @@ div:hover > h4.subCatTitle {
 	margin-bottom: 4px;
     padding: 5px 0;
 }
+.categoryTemplateEarthCam .ztable_row,
 .categoryTemplateTickets .ztable_row{
 	font-family: arial,helvetica;
     font-size: 8pt;
 }
+.categoryTemplateEarthCam div.no_underline a,
 .categoryTemplateTickets div.no_underline a {
 	text-decoration: none;
 }
+.categoryTemplateEarthCam tr,
 .categoryTemplateTickets tr {
 	padding: 10px 0px;
+}
+
+.categoryTemplateEarthCam .earthcamContainer {
+	width: 656px;
+	float: left;
+}
+.categoryTemplateEarthCam .bannerContainer {
+	width: 133px;
+	float: right;
 }
 /****************************************************************
 
