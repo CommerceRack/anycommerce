@@ -964,7 +964,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					break;
 				}
 			},
-
+// !!! update this to use anycontent.
 		_anyContent : function()	{
 			var $content = false, //what is returned. will either be a jquery object of content or false
 			o = this.options;
@@ -1127,7 +1127,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 
 
 /*
-stickytabs
+// * 201318 -> new plugin: stickytabs
 run this on an element already on the DOM that has content in it, such as a table.  
 stickytabs will create a new container and, in an animated fashion, move the contents of the selector into the new container.
 The new container will have a tab on it and, shortly after the contents are moved, will 'close' by collapsing the content offscreen so only the tab remains.
@@ -1139,8 +1139,8 @@ supported options include tabID (given to the container), tabtext (what appears 
 
 */
 
-(function() {
-
+(function($) {
+	
 	$.widget("ui.stickytab",{
 		options : {
 			tabID : '',
@@ -1154,40 +1154,48 @@ supported options include tabID (given to the container), tabtext (what appears 
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 			
-			if(o.tabID)	{}
-			else if($t.attr('id'))	{o.tabID = 'stickytab_'+$t.attr('id')}
-			else	{
-				o.tabID = 'stickytab_'+app.u.guidGenerator();
+			if($t.data('isstickytab'))	{
+				//already in a stickytab. do nothing.
 				}
-			
-			var 
-				$tabContainer = this._handleContainer(),
-				$sticky = this._buildSticky(),
-				$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
+			else	{
+				$t.data('isstickytab',true)
+				if(o.tabID)	{}
+				else if($t.attr('id'))	{o.tabID = 'stickytab_'+$t.attr('id')}
+				else	{
+					o.tabID = 'stickytab_'+app.u.guidGenerator();
+					}
+				
+				var 
+					$tabContainer = this._handleContainer(),
+					$sticky = this._buildSticky(),
+					$stickytabText = $('.ui-widget-stickytab-tab-text',$sticky)
+	
+				this.sticky = $sticky; //global reference to container for easy access.
+	
+				$sticky.appendTo($tabContainer);
+				this._moveAnimate();
+	//			$('.ui-widget-stickytab-content',$sticky).append(this.element);
+				
+				//elements must be added to dom prior to obtaining width().
+				//the width and height on the tab needs to be fixed based on text length so that rotation works properly.
+				//only the text is rotated, not the container.
+				$('.ui-widget-stickytab-tab',$sticky).height($stickytabText.width()).width(24).css('right',($stickytabText.parent().width() * -1));
+	//rotate the tab text.
+				$stickytabText.css({
+					'-webkit-transform': 'rotate(90deg)', //chrome and safari
+					'-moz-transform': 'rotate(90deg)', //firefox 3.5-15
+					'-ms-transform': 'rotate(90deg)', //IE9
+					'-o-transform':'rotate(90deg)', // Opera 10.50-12.00 
+					'transform': 'rotate(90deg)', // Firefox 16+, IE 10+, Opera 12.10+
+					'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	// IE 7 & 8
+					});
+	//shrinks tab after a moments time.  This provides a good visual indicator the tab was added but uses little real-estate.
+				setTimeout(function(){
+					self.close();
+					},1500);
+				
+				}
 
-			this.sticky = $sticky; //global reference to container for easy access.
-
-			$sticky.appendTo($tabContainer);
-			this._moveAnimate();
-//			$('.ui-widget-stickytab-content',$sticky).append(this.element);
-			
-			//elements must be added to dom prior to obtaining width().
-			//the width and height on the tab needs to be fixed based on text length so that rotation works properly.
-			//only the text is rotated, not the container.
-			$('.ui-widget-stickytab-tab',$sticky).height($stickytabText.width()).width(24).css('right',($stickytabText.parent().width() * -1));
-//rotate the tab text.
-			$stickytabText.css({
-				'-webkit-transform': 'rotate(90deg)', //chrome and safari
-				'-moz-transform': 'rotate(90deg)', //firefox 3.5-15
-				'-ms-transform': 'rotate(90deg)', //IE9
-				'-o-transform':'rotate(90deg)', // Opera 10.50-12.00 
-				'transform': 'rotate(90deg)', // Firefox 16+, IE 10+, Opera 12.10+
-				'filter': 'progid:DXImageTransform.Microsoft.BasicImage(rotation=3)'	// IE 7 & 8
-				});
-//shrinks tab after a moments time.  This provides a good visual indicator the tab was added but uses little real-estate.
-			setTimeout(function(){
-				self.close();
-				},1500);
 			
 			}, //_init
 
@@ -1274,7 +1282,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
 			}
 		}); // create the widget
-	});
+})(jQuery);
 
 
 

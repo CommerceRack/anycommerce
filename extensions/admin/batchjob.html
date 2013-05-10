@@ -34,15 +34,17 @@
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom'>
-		<table class='gridTable fullWidth' >
+		<table class='gridTable fullWidth marginBottom' >
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
 			<th>ID</th>
 			<th>Job Name</th>
-			<th>Job Type</th>
-			<th>User</th> <!--  class='hideInDetailMode' -->
-			<th>Created</th>
+			<th class='hideInMinimalMode'>Job Type</th>
+			<th class='hideInMinimalMode'>User</th>
+			<th class='hideInMinimalMode'>Created</th>
+			<th data-anytable-nosort='true'></th>
+			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
 		<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:batchJobRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
@@ -56,9 +58,9 @@
 <tr id='batchJobRowTemplate'>
 	<td data-bind="var: user(ID); format:text;"></td>
 	<td data-bind="var: user(TITLE); format:text;"></td>
-	<td data-bind="var: user(JOB_TYPE); format:text;"></td>
-	<td data-bind="var: user(LUSERNAME); format:text;"></td>
-	<td data-bind="var: user(CREATED_TS); format:text;"></td>
+	<td data-bind="var: user(JOB_TYPE); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: user(LUSERNAME); format:text;" class='hideInMinimalMode'></td>
+	<td data-bind="var: user(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
 	<td>loading gfx</td>
 	<td><button data-app-event="admin_batchJob|showJobDetail">Details</button>
 </tr>

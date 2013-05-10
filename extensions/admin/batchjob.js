@@ -107,7 +107,26 @@ var admin_batchJob = function() {
 				else	{
 					app.u.throwMessage("No jobid specified in admin_batchJob.a.showBatchJobStatus");
 					}
-				} //showTaskManager
+				}, //showTaskManager
+
+			showReport : function($target,batchGUID)	{
+				
+				if($target && batchGUID)	{
+					$target.empty();
+					app.ext.admin.calls.adminReportDownload.init(batchGUID,{'callback':function(rd)	{
+						if(app.model.responseHasErrors(rd)){
+							$target.anymessage({'message':rd});
+							}
+						else	{
+							// !!! report generation here.
+							}
+						}},'mutable'); app.model.dispatchThis('mutable');
+					}
+				else	{
+					// error message here.
+					}
+				
+				}
 
 			}, //Actions
 
@@ -148,8 +167,15 @@ var admin_batchJob = function() {
 				$btn.button();
 				$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
 					event.preventDefault();
-					$btn.closest('table').stickytab({'tabtext':'batch jobs'});
+					var $table = $btn.closest('table');
+					
+					$table.stickytab({'tabtext':'batch jobs'});
+					$('button',$table).removeClass('ui-state-active');
+					$btn.addClass('ui-state-active');
 //					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
+					
+					
+					
 					});
 				}
 			
