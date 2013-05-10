@@ -625,6 +625,30 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminKPIDBUserDataSetsList","_tag" : _tag},Q || 'mutable');	
 				}
 			}, //adminKPIDBUserDataSetsList
+//@head and @body in the response is the data I should use.
+//guid comes from batch list.
+		adminReportDownload : {
+			init : function(batchGUID,_tag,Q)	{
+				var r = 0;
+				if(batchGUID)	{
+					this.dispatch(batchGUID,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.adminEmailSave, no batchGUID passed.");
+					}
+				return r;
+				},
+			dispatch : function(batchGUID,_tag,Q)	{
+				var obj = {};
+				obj._cmd = 'adminReportDownload';
+				obj._tag = _tag || {};
+				obj._tag.datapointer = 'adminReportDownload';
+				obj.GUID = batchGUID;
+				app.model.addDispatchToQ(obj,Q || 'passive');
+				}
+			},
+
 
 
 		adminMessagesList : {
@@ -2982,7 +3006,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
-				else if(path == '#!batchManager')	{app.ext.admin_batchJob.a.showBatchJobManager();}
+				else if(path == '#!batchManager')	{
+					this.bringTabIntoFocus('utilities');
+					this.bringTabContentIntoFocus($('#utilitiesContent'));
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
+					}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
 				else if(path == '#!help')	{
 					$('#supportContent').empty(); //here just for testing. won't need at deployment.

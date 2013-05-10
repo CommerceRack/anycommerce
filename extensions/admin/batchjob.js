@@ -63,12 +63,10 @@ var admin_batchJob = function() {
 
 		a : {
 			
-			showBatchJobManager : function(){
-				
-				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
-//generate some of the task list content right away so the user knows something is happening.
+			showBatchJobManager : function($tabContent){
 				$tabContent.empty();
-				$tabContent.showLoading({'message':'Fetching your list of batch jobs'});
+//generate some of the task list content right away so the user knows something is happening.
+				$tabContent.showLoading({'message':'Fetching list of batch jobs'});
 				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
 					$tabContent.hideLoading();
 					if(app.model.responseHasErrors(rd)){
@@ -150,7 +148,8 @@ var admin_batchJob = function() {
 				$btn.button();
 				$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
 					event.preventDefault();
-					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
+					$btn.closest('table').stickytab({'tabtext':'batch jobs'});
+//					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
 					});
 				}
 			
