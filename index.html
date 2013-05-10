@@ -893,12 +893,36 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateSitemap' class='loadingBG categoryTemplate categoryTemplateSitemap' data-columncontent="helpfulLinks">
-	
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 </div>
-
 <div id='categoryTemplateSitemapList'>
 	<ul data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateRootCats; detail:max;"></ul>
 </div>
+
+<div id='categoryTemplateRewards'class='loadingBG categoryTemplate categoryTemplateRewards'>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	<img width="320" height="49" border="0" alt="" src="img/categoryPages/rewards/cw_c_rewardshead-320x49.png">
+	<form class="floatRight" action="#"onSubmit='app.ext.myRIA.u.loginFrmSubmit($"[name=login]",$(this)).val(),$"[name=password]",$(this)).val()); return false;'>
+		<div class="alignCenter">
+			<img width="125" height="176" border="0" alt="" src="img/categoryPages/rewards/moneybag.png">
+		</div>
+		<fieldset>
+			<legend>Account Login:</legend>
+			<div>Sign in here to check your reward points</div>
+			<div class="marginTop">
+				<input type="email" name="login" placeholder="login"/>
+			</div>
+			<div class="marginTop">
+				<input type="password" name="password" placeholder="password"/>
+			</div>
+			<div class="alignRight marginTop">
+				<input type='submit' value='Login' class='ui-button ui-button-text ui-corner-all ui-state-default'/>
+			</div>
+		</fieldset>
+	</form>
+	<div data-bind="var:category(%page.description); format: wiki;"></div>
+	<div data-bind="var:category(%page.description3); format: wiki;"></div>
+</div> 
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>

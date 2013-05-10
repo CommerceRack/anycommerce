@@ -711,6 +711,10 @@ div:hover > h4.subCatTitle {
     padding: 5px;
     text-align: justify;
 }
+
+.categoryTemplateRewards form{
+	width: 200px;
+}
 /****************************************************************
 
 PRODUCT STYLES

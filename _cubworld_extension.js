@@ -1860,6 +1860,9 @@ var cubworld = function() {
 				
 				'.sitemap' : 'categoryTemplateSitemap',
 				
+				'.rewards_program' : 'categoryTemplateRewards',
+				'.rewards_program.terms___conditions' : 'categoryTemplateRewards',
+				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
 			}
