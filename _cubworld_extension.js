@@ -1864,6 +1864,7 @@ var cubworld = function() {
 				'.rewards_program.terms___conditions' : 'categoryTemplateRewards',
 				
 				'.aa' : 'categoryTemplateTickets',
+				'.zzzzz_extra_innings.mlb_tickets' : 'categoryTemplateTickets',
 				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
