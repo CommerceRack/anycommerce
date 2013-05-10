@@ -699,7 +699,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateInquiry' class='loadingBG categoryTemplate categoryTemplateInquiry'>
-	<div class="topSpacer"></div>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	
 	<form class="floatRight" action="#" onSubmit="return false;">
 		<fieldset class="marginTop">
 			<legend>Contact Us for a Player Specific Product</legend>
@@ -721,7 +722,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateCuties' class='loadingBG categoryTemplate categoryTemplateCuties'>
-	<div class="topSpacer"></div>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture1); format:fancybox; extension:fancybox;" width="100" height="100"/>
 	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture3); format:fancybox; extension:fancybox;" width="100" height="100"/>
@@ -732,6 +734,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateAffiliates' class='loadingBG categoryTemplate categoryTemplateAffiliates' data-columncontent="hotItemList">
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	<div class="affiliate_category">
 		<div class="affliate_banner">
 			<img width="760" height="100" border="0" alt="CubWorld.com Affiliate Program" src="img/categoryPages/affiliates/affiliate_banner.jpg" id="TOP_SIDE1_img">
@@ -770,7 +773,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateGroupSales' class='loadingBG categoryTemplate categoryTemplateGroupSales'>
-	<div class="topSpacer"></div>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	
 	<div class="floatRight">
 		<img width="125" height="210" border="0" src="img/categoryPages/groupsales/cubs_group_events.jpg">
 	</div>
@@ -854,6 +858,40 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	
 </div>
 
+<div id='categoryTemplateFeaturedPlayer' class='loadingBG categoryTemplate categoryTemplateFeaturedPlayer'>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	
+	<div class="alignCenter marginBottom">
+		<img src="img/large_shipping_banner.png" class="pointer" onClick="return showContent('company',{'show':'shipping'});"/>
+	</div>
+	
+	<h1 class="page_title" >
+		<span data-bind="var: category(%page.page_title); format: text; editor: text;"></span>
+	</h1>
+	
+	<p class="hm_text_desc">
+		Browse below for your authentic <span data-bind="var:category(%page.player_name); format:text;"></span> jersey. Select from home, road, or any of our other 
+		<span data-bind="var:category(%page.team_name); format:text;"></span> jersey styles. We also have a wide selection of <span data-bind="var:category(%page.player_name); format:text;"></span> Shirt options, for 
+		when you need to slip into something a little more comfortable. All of our <span data-bind="var:category(%page.player_name); format:text;"></span> jerseys, 
+		shirts and other apparel is officially licensed MLB gear!
+	</p>
+	
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; hide_summary:1; loadsTemplate: productListTemplate; withReviews:1; withInventory:1; withVariations:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	
+	<div data-bind="var:category(%page.player_name); format:assignAttribute; attribute:data-playername;">
+		<!-- Elastic search for jerseys -->
+		<h4><span data-bind="var:category(%page.player_name); format:text;"></span> Jerseys - <span data-bind="var:category(%page.team_name); format:text;"></span></h4>
+		<div class="jerseyList marginTop"></div>
+		<h4><span data-bind="var:category(%page.player_name); format:text;"></span> Shirts - <span data-bind="var:category(%page.team_name); format:text;"></span></h4>
+		<!-- Elastic search for shirts -->
+		<div class="shirtList marginTop"></div>
+	</div>
+</div>
+
+<div id="featuredPlayerListTemplate">
+	<ul data-bind="var:search(hits.hits); format: stuffList; loadsTemplate: productListTemplateElasticClone;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+</div>
+
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id='categoryListTemplate'>
@@ -906,6 +944,28 @@ remember to NOT put the button inside the 'onClick' container or two events will
 		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 -->
+</li>
+
+<li id="productListTemplateElasticClone" class="productListItem" onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+	
+	<button data-bind='var:product(_source.pid);format:assignAttribute; attribute:data-pid;' class='floatRight pointer quickView ui-button ui-state-default displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).attr('data-pid')});">Quickview</button>
+	
+	<div onClick="return showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(_source.pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer positionRelative' data-bind='var:product(_source.pid); format:addPicSlider; extension:myRIA;'>
+			<img src='blank.gif' class='prodThumb' data-bind='var: product(_source.images); format:imageURL; isElastic:1;' width='180' height='124' />
+			<div data-bind="var: product(_source.tags); format:addTagSpans; isElastic:1;" class='prodListTagsContainer'></div>
+	
+		</div>
+
+		<h5 class="prodName" data-bind='var: product(_source.prod_name); format:truncText; numCharacters: 54;'></h5>
+
+		<h6 class="prodPrice" data-bind='var: product(_source.base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Only ;'></h6>
+		
+<!-- 	
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> 
+-->
+	</div>
 </li>
 
 <li id='productListTemplateHotItem' class='loadingBG alignCenter productListItem' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >

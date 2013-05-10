@@ -705,6 +705,14 @@ div:hover > h4.subCatTitle {
 	overflow:hidden;
 	display: inline-block;
 }
+
+.categoryTemplateFeaturedPlayer .hm_text_desc {
+    color: #58595B;
+    font: 12px Arial,Helvetica,sans-serif;
+    margin-bottom: 10px;
+    padding: 5px;
+    text-align: justify;
+}
 /****************************************************************
 
 PRODUCT STYLES
