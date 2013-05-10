@@ -87,8 +87,9 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			if(o.persistant)	{} //message is persistant. do nothing.
 //message should auto-close. However, it is possible for a message to already have been removed by an 'empty', so verify it is still on the DOM or an error could result.
 // ** 201318 -> bug fix. jquery error if close method run on element that wasn't already instantiated as anymessage, such as an element already removed from DOM.
+// ** ++ auto close bugfix.  The appropriate message is passed to the close function so that when the timeout executes it does not close all the messages in the container
 			else	{this.ts = setTimeout(function(){
-				if($('#'+o.messageElementID).length)	{$t.anymessage('close');} 
+				if($('#'+o.messageElementID).length)	{$t.anymessage('close',$('#'+o.messageElementID));} 
 				},10000);} //auto close message after a short duration.
 // ** 201318 side effects bug- reset options after displaying the message to provide defaults for the next message --mc
 //EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistant true, message 2 does not set persistant.  
