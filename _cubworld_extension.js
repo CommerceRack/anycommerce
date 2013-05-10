@@ -306,7 +306,7 @@ var cubworld = function() {
 				var formJSON = $form.serializeJSON();
 				
 				obj = {
-					'sender' : formJSON.email,
+					'sender' : formJSON.sender,
 					'subject' : 'Player Inquiry Form Submission',
 					'body' : 'Player: '+formJSON.playername+"\n"
 							+'Team: '+formJSON.team+"\n"
