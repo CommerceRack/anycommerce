@@ -715,6 +715,25 @@ div:hover > h4.subCatTitle {
 .categoryTemplateRewards form{
 	width: 200px;
 }
+
+.categoryTemplateTickets .ztitle2{
+	color: #7F0000;
+    font-family: arial,helvetica;
+    font-size: 9pt;
+    font-weight: bold;
+	margin-bottom: 4px;
+    padding: 5px 0;
+}
+.categoryTemplateTickets .ztable_row{
+	font-family: arial,helvetica;
+    font-size: 8pt;
+}
+.categoryTemplateTickets div.no_underline a {
+	text-decoration: none;
+}
+.categoryTemplateTickets tr {
+	padding: 10px 0px;
+}
 /****************************************************************
 
 PRODUCT STYLES
