@@ -720,7 +720,16 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 </div>
 
-
+<div id='categoryTemplateCuties' class='loadingBG categoryTemplate categoryTemplateCuties'>
+	<div class="topSpacer"></div>
+	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture1); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture3); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture4); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture5); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture6); format:fancybox; extension:fancybox;" width="100" height="100"/>
+	<img data-fancybox-group='cuties' src="blank.gif" data-bind="var: category(%page.picture7); format:fancybox; extension:fancybox;" width="100" height="100"/>
+</div>
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
@@ -978,7 +987,6 @@ this will likely become more flexible in the future. ###
 </div>
 
 	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
-	
 	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image2); format:fancybox; extension:fancybox;' width='54' height='54' />
 	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image3); format:fancybox; extension:fancybox;' width='54' height='54' />
 	<img src='blank.gif' class='prodSmallImage' data-bind='var: product(zoovy:prod_image4); format:fancybox; extension:fancybox;' width='54' height='54' />

@@ -46,6 +46,18 @@ var fancybox = function() {
 								}
 							});
 						}]);
+					app.rq.push(['templateFunction','categoryTemplateCuties','onCompletes',function(P) {
+						var $context = $(app.u.jqSelector('#',P.parentID)); 
+						$('.fancybox', $context).fancybox({
+							'helpers': {
+								'overlay' : {
+									'css' : {
+										'background': 'rgba(0,38,117,.45)'
+										}
+									}
+								}
+							});
+						}]);
 					}]);
 				},
 			onError : function()	{
@@ -65,7 +77,7 @@ var fancybox = function() {
 					
 					$tag.addClass('fancybox');
 					$tag.attr('src',imgSrc);
-					$tag.data('fancybox-href', app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor}));
+					$tag.attr('data-fancybox-href', app.u.makeImage({'tag':0,'name':data.value,'b':bgcolor}));
 					if($tag.parent().data('pid')){
 						$tag.attr('data-fancybox-group', 'prodGallery_'+$tag.parent().data('pid'));
 						}

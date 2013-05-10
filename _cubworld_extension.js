@@ -515,8 +515,8 @@ var cubworld = function() {
 				
 				'.help_desk.nfl-phone-order' : 'categoryTemplateInquiry',
 				'.help_desk.player-inquiry' : 'categoryTemplateInquiry',
-
 				
+				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
 			}
 		} //r object.
