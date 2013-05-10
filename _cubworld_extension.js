@@ -1866,6 +1866,9 @@ var cubworld = function() {
 				'.aa' : 'categoryTemplateTickets',
 				'.zzzzz_extra_innings.mlb_tickets' : 'categoryTemplateTickets',
 				
+				'.sports_world_connect' : 'categoryTemplateSWConnect',
+				'.wrigley_field_cam' : 'categoryTemplateSWConnect',
+				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
 			}
