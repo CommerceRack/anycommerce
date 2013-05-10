@@ -692,6 +692,19 @@ div:hover > h4.subCatTitle {
     padding: 9px 0 6px 16px;
     text-align: left;
 }
+
+.categoryTemplateGroupSales .ztxt {
+	color: #000000;
+    font-family: arial,helvetica;
+    font-size: 9pt;
+}
+.categoryTemplateGroupSales .halfScreen{width:50%;}
+.categoryTemplateGroupSales .slideshow{
+	width:375px;
+	height:375px;
+	overflow:hidden;
+	display: inline-block;
+}
 /****************************************************************
 
 PRODUCT STYLES

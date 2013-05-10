@@ -54,7 +54,19 @@ var cubworld = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
-
+				app.rq.push(['templateFunction','categoryTemplateGroupSales','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#', P.parentID));
+					$('.slideshow', $context).each(function(){
+						if(!$(this).hasClass('slideshowRunning')){
+							$(this).addClass('slideshowRunning').cycle({
+								fx:     'fade',
+								timeout: 3000,
+								});
+							}
+						
+						})
+					
+					}]);
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -83,7 +95,7 @@ var cubworld = function() {
 					if($("#appView #homepageTemplate_").length > 0){
 						app.ext.cubworld.u.showHomepageSlideshow();
 						}
-						
+					
 					for(var template in app.ext.myRIA.template){
 						if(template !== 'cartTemplate'){
 							app.ext.myRIA.template[template].onCompletes.push(function(P){
@@ -321,6 +333,19 @@ var cubworld = function() {
 					};
 				app.calls.appSendMessage.init(obj,{}, 'mutable');
 				app.model.dispatchThis('mutable');
+				},
+			sendGroupRequest : function($form){
+				var formJSON = $form.serializeJSON();
+				
+				obj = {
+					'sender' : formJSON.sender,
+					'subject' : formJSON.subject,
+					'body' : 'Name: '+formJSON.fullname+"\n"
+							+'Event Date: '+formJSON.eventdate+"\n"
+							+'Message:\n'+formJSON.body
+					};
+				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				app.model.dispatchThis('mutable');
 				}
 			}, //Actions
 
@@ -518,6 +543,8 @@ var cubworld = function() {
 				
 				'.affiliates' : 'categoryTemplateAffiliates',
 				'.test.signup' : 'categoryTemplateAffiliates',
+				
+				'.group_sales' : 'categoryTemplateGroupSales',
 				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}

@@ -33,6 +33,7 @@ var myRIA = function() {
 			'categoryTemplateHTML',
 			'categoryTemplateInquiry',
 			'categoryTemplateAffiliates',
+			'categoryTemplateGroupSales',
 			'categoryListTemplate',
 			'categoryListTemplateRootCats',
 			'productListTemplate',
@@ -3068,7 +3069,7 @@ else	{
 			createTemplateFunctions : function()	{
 
 				app.ext.myRIA.template = {};
-				var pageTemplates = new Array('categoryTemplate', 'categoryTemplateCuties','categoryTemplateHTML','categoryTemplateInquiry','categoryTemplateAffiliates','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
+				var pageTemplates = new Array('categoryTemplate', 'categoryTemplateCuties','categoryTemplateHTML','categoryTemplateInquiry','categoryTemplateAffiliates', 'categoryTemplateGroupSales','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
 					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[],"onDeparts":[]};
