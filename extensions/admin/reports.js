@@ -451,7 +451,8 @@ var admin_reports = function() {
 //when a table header is clicked to change sort, the entire contents of the container (id) are rewritten.
 //keep that in mind when and deciding what ID to pass in.
 			drawTable : function(id,header,rows) {
-
+//				app.u.dump("header: "); app.u.dump(header);
+//				app.u.dump("rows: "); app.u.dump(rows);
 				var data = new google.visualization.DataTable();
 //				app.u.dump(" -> header:"); app.u.dump(header);
 				for(var index in header)	{
@@ -460,7 +461,11 @@ var admin_reports = function() {
 				data.addRows(rows);
 			
 				var table = new google.visualization.Table(document.getElementById(id));
-				table.draw(data, {showRowNumber: true});
+				table.draw(data, {
+					page : 'enable',
+					pageSize : 250,
+					showRowNumber: true
+					});
 				}, //drawTable
 
 //used not on a form validation, but when requesting data. This is a global check to make sure all the necessary variables are present.

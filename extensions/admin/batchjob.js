@@ -110,20 +110,32 @@ var admin_batchJob = function() {
 				}, //showTaskManager
 
 			showReport : function($target,batchGUID)	{
-				
+				$target.showLoading({'message':'Generating Report Table'});
 				if($target && batchGUID)	{
 					$target.empty();
 					app.ext.admin.calls.adminReportDownload.init(batchGUID,{'callback':function(rd)	{
 						if(app.model.responseHasErrors(rd)){
+							$target.hideLoading();
 							$target.anymessage({'message':rd});
 							}
 						else	{
-							// !!! report generation here.
+							var L = app.data[rd.datapointer]['@HEAD'].length,
+							reportElementID = 'batchReport_'+batchGUID
+							tableHeads = new Array();
+//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
+							for(var i = 0; i < L; i += 1)	{
+								tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
+								}
+
+							$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt'));
+							app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
+							$target.hideLoading(); //this is after drawTable, which may take a moment.
 							}
 						}},'mutable'); app.model.dispatchThis('mutable');
+					app.model.dispatchThis('mutable');
 					}
 				else	{
-					// error message here.
+					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target ['+typeof $target+'] or batchGUID ['+batchGUID+'] not set.','gMessage':true});
 					}
 				
 				}
@@ -162,7 +174,8 @@ var admin_batchJob = function() {
 
 		u : {}, //u
 		e : {
-			
+
+//NOTE -> the batch_exec will = REPORT for reports.
 			showJobDetail : function($btn)	{
 				$btn.button();
 				$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
@@ -172,6 +185,8 @@ var admin_batchJob = function() {
 					$table.stickytab({'tabtext':'batch jobs'});
 					$('button',$table).removeClass('ui-state-active');
 					$btn.addClass('ui-state-active');
+					
+					app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('guid'));
 //					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
 					
 					
