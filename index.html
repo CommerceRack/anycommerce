@@ -698,16 +698,21 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 </div>
 
-<div id='categoryTemplateInquiry' class='loadingBG categoryTemplate'>
-	<form class="floatRight" action='#' onSubmit="app.ext.cubworld.a.sendInquiry(); return false;">
+<div id='categoryTemplateInquiry' class='loadingBG categoryTemplate categoryTemplateInquiry'>
+	<form class="floatRight" action="#" onSubmit="return false;">
 		<fieldset class="marginTop">
 			<legend>Contact Us for a Player Specific Product</legend>
-			<div id='contactFormMessaging'></div>
+			<div class="appMessaging"></div>
 			<div><label for='contactFormSubject'>Player Name: </label><input type='text' name='playername' /></div>
 			<div><label for='contactFormSubject'>Team: </label><input type='text' name='team' /></div>
 			<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' /></div>
 			<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required'></textarea></div>
-			<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
+			
+			
+			<div class='alignRight'>
+				<button onClick="app.ext.cubworld.a.sendInquiry($(this).closest('form'));" class='ui-button-text-only ui-button ui-state-default ui-corner-all'>
+					<span class="ui-button-text">Send Message</span>
+				</button>
 			</div>
 		</fieldset>
 	</form>

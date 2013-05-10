@@ -648,6 +648,11 @@ h4.subCatTitle {
 div:hover > h4.subCatTitle {
 	color: #7f0000;
 }
+
+.categoryTemplateInquiry label {
+	display: inline-block;
+	width: 100px;
+}
 /****************************************************************
 
 PRODUCT STYLES

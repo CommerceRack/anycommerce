@@ -302,7 +302,9 @@ var cubworld = function() {
 				},
 				
 			sendInquiry : function($form){
-				var formJSON = $form.seralizeJSON();
+				
+				var formJSON = $form.serializeJSON();
+				
 				obj = {
 					'sender' : formJSON.email,
 					'subject' : 'Player Inquiry Form Submission',
@@ -310,8 +312,8 @@ var cubworld = function() {
 							+'Team: '+formJSON.team+"\n"
 							+'Message:\n'+formJSON.body
 					};
-					
-				app.ext.store_crm.calls.appSendMessage(obj,{});
+				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				app.model.dispatchThis('mutable');
 				}
 			}, //Actions
 

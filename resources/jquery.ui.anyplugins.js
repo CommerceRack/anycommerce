@@ -88,9 +88,15 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 //message should auto-close. However, it is possible for a message to already have been removed by an 'empty', so verify it is still on the DOM or an error could result.
 // ** 201318 -> bug fix. jquery error if close method run on element that wasn't already instantiated as anymessage, such as an element already removed from DOM.
 			else	{this.ts = setTimeout(function(){
-				if($('#'+o.messageElementID).length)	{$t.anymessage('close');} 
+				if($('#'+o.messageElementID).length)	{$t.anymessage('close',$('#'+o.messageElementID));} 
 				},10000);} //auto close message after a short duration.
-			
+			self.options = {
+				message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
+				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
+				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
+				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
+				persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+				};
 			}, //_init
 
 		_setOption : function(option,value)	{
