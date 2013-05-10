@@ -866,7 +866,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	<div class="marginTop">
 		<img width="331" height="31" alt="" src="img/categoryPages/groupsales/cw09_c_groupsales_enjoysavings-331x31.gif">
 	</div>
-	<div data-bind="var:category(%page.description); format: text;"></div>
+	<div class="description" data-bind="var:category(%page.description); format: text;"></div>
 		
 	<div class="clear marginTop">
 		<table width="100%" cellspacing="0" cellpadding="0" border="0">
@@ -878,7 +878,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 				</tr>
 				<tr>
 					<td width="50%" valign="top" class="ztable_row">
-						<div data-bind="var:category(%page.description2); format:wiki; wikiFormats:myRIA;"></div>
+						<div class="description" data-bind="var:category(%page.description2); format:wiki; wikiFormats:myRIA;"></div>
 					</td>
 				
 
@@ -926,7 +926,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</div>
 	
 	<div class="marginTop">
-		<div class="floatLeft halfScreen ztxt" data-bind="var:category(%page.description3); format:wiki; wikiFormats:myRIA;"></div>
+		<div class="floatLeft halfScreen ztxt description" data-bind="var:category(%page.description3); format:wiki; wikiFormats:myRIA;"></div>
 		<div class="floatRight halfScreen alignCenter">
 			<div class='slideshow'>
 				<img src="img/categoryPages/groupsales/wrigleyville_roof_party_2.jpg" width="375" height="375"/>
@@ -1002,8 +1002,8 @@ don't modify the 'data-templateid' unless you are changing template names and up
 			</div>
 		</fieldset>
 	</form>
-	<div data-bind="var:category(%page.description); format: wiki;"></div>
-	<div data-bind="var:category(%page.description3); format: wiki;"></div>
+	<div class="description" data-bind="var:category(%page.description); format: wiki;"></div>
+	<div class="description" data-bind="var:category(%page.description3); format: wiki;"></div>
 </div> 
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
