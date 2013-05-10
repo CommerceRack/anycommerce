@@ -653,6 +653,45 @@ div:hover > h4.subCatTitle {
 	display: inline-block;
 	width: 150px;
 }
+
+.categoryTemplateAffiliates .text_desc {
+	color: #231F20;
+    font: 12px/15px Arial,Helvetica,sans-serif;
+    padding-bottom: 10px;
+    text-align: left;
+}
+
+.categoryTemplateAffiliates .text_desc h2 {
+	color: #231F20;
+    font: bold 16px Arial,Helvetica,sans-serif;
+    margin: 0;
+    padding-bottom: 15px;
+    text-align: left;
+}
+
+.categoryTemplateAffiliates .box_desc {
+	-moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: -moz-use-text-color #CFCFCF #CFCFCF;
+    border-image: none;
+    border-right: 1px solid #CFCFCF;
+    border-style: none solid solid;
+    border-width: 0 1px 1px;
+    color: #231F20;
+    font: 14px/19px Arial,Helvetica,sans-serif;
+    margin-bottom: 10px;
+    padding: 0 10px 10px;
+}
+.categoryTemplateAffiliates .box_desc h2{
+	background: none repeat scroll 0 0 #252F6A;
+    color: #FFFFFF;
+    font: bold 16px Arial,Helvetica,sans-serif;
+    margin: 0 -10px 10px;
+    padding: 9px 0 6px 16px;
+    text-align: left;
+}
 /****************************************************************
 
 PRODUCT STYLES

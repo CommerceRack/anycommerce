@@ -106,7 +106,7 @@ var cubworld = function() {
 						}
 					} else {
 						
-						//app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.  Showing hotItemList by default.")
+						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.")
 						//app.ext.cubworld.u.showColumnContent('hotItemList');
 					}
 					
@@ -515,6 +515,9 @@ var cubworld = function() {
 				
 				'.help_desk.nfl-phone-order' : 'categoryTemplateInquiry',
 				'.help_desk.player-inquiry' : 'categoryTemplateInquiry',
+				
+				'.affiliates' : 'categoryTemplateAffiliates',
+				'.test.signup' : 'categoryTemplateAffiliates',
 				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
