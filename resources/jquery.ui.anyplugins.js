@@ -100,7 +100,7 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
 				persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
-				},
+				}
 			}, //_init
 
 		_setOption : function(option,value)	{
