@@ -396,11 +396,64 @@
 			<li><a href='#reports'>Reports</a></li>
 			<li><a href='#salesReports'>Sales Reports</a></li>
 			<li><a href='#inventoryReports'>Inventory Reports</a></li>
+			<li><a href='#eBayReports'>eBay and Listings Report</a></li>
 		</ul>
 		
 		
-		<section data-anytab-content='reports'>
-		Default content.
+		<section data-anytab-content='reports' class='clearfix'>
+		
+			<div class='floatLeft'>
+
+<h2>Sales/Order Reporting</h2>
+<p>Find out what products are selling and what's not.</p>
+<ul>
+
+	<li>Order Detail: 
+	
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALES','PERIOD':'today','GUID':app.u.guidGenerator()}}); return false;" title="Today's Sales">Today</a> | 
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALES','PERIOD':'yesterday','GUID':app.u.guidGenerator()}}); return false;" title="Yesterday's Sales">Yesterday</a> | 
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALES','PERIOD':'thismonth','GUID':app.u.guidGenerator()}}); return false;" title="This Month's Sales">This Month</a>
+	</li>
+	
+	<li>Order Summary: 
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALE_SUMMARY','PERIOD':'today','GUID':app.u.guidGenerator()}}); return false;" >Today</a> |
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALE_SUMMARY','PERIOD':'thismonth','GUID':app.u.guidGenerator()}}); return false;">This Month</a>
+	</li>
+	
+	<li>Sales SKU Ranking: 
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALES_SKU_RANK','PERIOD':'today','GUID':app.u.guidGenerator()}}); return false;">Today</a> |
+	<a href='#' onClick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'SALES_SKU_RANK','PERIOD':'thismonth','GUID':app.u.guidGenerator()}}); return false;" >This Month</a>
+	</li>
+	
+	<li><b><a href='#'>More Options</a></b></li>
+
+</ul>
+
+
+
+<h2>Inventory Reports</h2>
+<p>See how much inventory you have in stock, reserved and available to your customers.</p>
+<ul>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'INVENTORY_SIMPLE'}}); return false;">Inventory Simple</a></li>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'INVENTORY_DETAIL'}}); return false;">Inventory Detail</a></li>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT','%vars':{'REPORT':'INVENTORY_MISSING'}}); return false;">Products w/o Inventory Configured</a></li>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'UTILITY', '%vars':{'APP':'INVENTORY_UPDATE_RESERVES'}}); return false;">Utility: Update Reserves</a></li>
+	<li><b><a href='#'>More Options</a></b></li>
+</ul>
+
+
+<h2>Listing Reports</h2>
+<p>Take a look at how many marketplaces each of your products is currently in.</p>
+<ul>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'EBAY_POWER'}}); return false;">eBay Powerlister</a></li>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'EBAY_LISTING', 'type':'ACTIVE-ALL', 'detail':'NONE'}}); return false;">eBay Active Listing w/Detail</a></li>
+	<li><a href='#' onclick="app.ext.admin_batchJob.a.adminBatchJobCreate({'type':'REPORT', '%vars':{'REPORT':'PRODUCT_DISPOSITION'}}); return false;">Marketplace Disposition Report</a></li>
+	<li><b><a href='#'>More Options</a></b></li>
+</ul>
+
+
+			</div>
+		
 		</section>
 		
 <!-- sales/order reporting -->
@@ -513,7 +566,7 @@
 <!-- inventory reporting -->	
 		<section data-anytab-content='inventoryReports'>
 			<form onsubmit='return false'>
-			<fieldset class='lablesAsBreaks'>
+			<fieldset class='labelsAsBreaks'>
 				<legend>Detail Level:</legend>
 				<label><input type="radio" value="INVENTORY_SIMPLE" name="REPORT"> Inventory Only (sku + quantity only)</label>
 				<label><input type="radio" value="INVENTORY_DETAIL" name="REPORT"> Inventory Detail (product names, prices, etc.)</label>
@@ -524,6 +577,11 @@
 			</div>
 			</form>		
 		</section>
+
+<!-- the ebay report page is in utilities and in reports, so rather than having two templates, this template loads the other -->		
+		<section data-anytab-content='eBayReports' data-bind="loadsTemplate: ebayListingsReportPageTemplate; format: loadsTemplate;">
+		</section>
+
 
 	</div>
 

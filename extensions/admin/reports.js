@@ -448,6 +448,27 @@ var admin_reports = function() {
 
 
 		u : {
+
+
+			drawToolbar : function (id)	{
+				if(id)	{
+					var components = [
+//						{type: 'igoogle', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',	gadget: 'https://www.google.com/ig/modules/pie-chart.xml',userprefs: {'3d': 1}},
+						{type: 'html', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA'},
+						{type: 'csv', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA'} //,
+//						{type: 'htmlcode', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',gadget: 'https://www.google.com/ig/modules/pie-chart.xml'}
+						];
+					
+					var container = document.getElementById(id);
+					google.visualization.drawToolbar(container, components);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_reports.u.drawToolbar, no ID passed.','gMessage':true});
+					}
+				
+				},
+			
+			
 //when a table header is clicked to change sort, the entire contents of the container (id) are rewritten.
 //keep that in mind when and deciding what ID to pass in.
 			drawTable : function(id,header,rows) {

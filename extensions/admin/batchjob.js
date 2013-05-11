@@ -83,7 +83,7 @@ var admin_batchJob = function() {
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.
 			adminBatchJobCreate : function(opts){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
 				app.ext.admin.calls.adminBatchJobCreate.init(opts,{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content"},'immutable');
 				app.model.dispatchThis('immutable');
@@ -109,10 +109,12 @@ var admin_batchJob = function() {
 					}
 				}, //showTaskManager
 
-			showReport : function($target,batchGUID)	{
+			showReport : function($target,vars)	{
+				app.u.dump("BEGIN admin_batchjob.a.showReport");
 				$target.showLoading({'message':'Generating Report Table'});
-				if($target && batchGUID)	{
+				if($target && vars && vars.guid)	{
 					$target.empty();
+					app.u.dump(" -> $target and batchGUID are set.");
 					app.ext.admin.calls.adminReportDownload.init(batchGUID,{'callback':function(rd)	{
 						if(app.model.responseHasErrors(rd)){
 							$target.hideLoading();
@@ -127,8 +129,11 @@ var admin_batchJob = function() {
 								tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
 								}
 
-							$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt'));
+							$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
+							$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+							
 							app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
+							app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
 							$target.hideLoading(); //this is after drawTable, which may take a moment.
 							}
 						}},'mutable'); app.model.dispatchThis('mutable');
@@ -166,6 +171,7 @@ var admin_batchJob = function() {
 					}
 				else	{} //do nothing (do NOT show button.
 				}
+			
 			}, //renderFormats
 
 
@@ -177,21 +183,22 @@ var admin_batchJob = function() {
 
 //NOTE -> the batch_exec will = REPORT for reports.
 			showJobDetail : function($btn)	{
-				$btn.button();
-				$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
-					event.preventDefault();
-					var $table = $btn.closest('table');
-					
-					$table.stickytab({'tabtext':'batch jobs'});
-					$('button',$table).removeClass('ui-state-active');
-					$btn.addClass('ui-state-active');
-					
-					app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')),$btn.closest('tr').data('guid'));
-//					app.ext.admin.u.toggleDualMode($('#batchJobManagerContent'),'detail');
-					
-					
-					
-					});
+				if($btn.closest('tr').data('batch_exec') == 'REPORT')	{
+					$btn.button().show();
+					$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
+						event.preventDefault();
+						var $table = $btn.closest('table');
+						
+						$table.stickytab({'tabtext':'batch jobs'});
+						$('button',$table).removeClass('ui-state-active');
+						$btn.addClass('ui-state-active');
+						
+						app.ext.admin_batchJob.a.showReport($('#utilitiesContent'),$btn.closest('tr').data());
+						});
+					}
+				else	{
+//btn hidden by default. no action needed.
+					}
 				}
 			
 			} //u
