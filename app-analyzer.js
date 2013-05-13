@@ -249,7 +249,7 @@ $('#tabs-4').append(app.ext.analyzer.u.buildTagsList({'id':'tagList'}));
 				return $div;
 				},
 			handleElasticFilterOrQuery : function()	{
-				var quilter = $.parseJSON($('#advsrch_filterQuery').val()); //query/filter object
+				var quilter = app.ext.store_search.u.buildElasticRaw($.parseJSON($('#advsrch_filterQuery').val())); //query/filter object
 				if(quilter)	{
 					app.ext.store_search.calls.appPublicProductSearch.init(quilter,{'callback':'handleElasticResults','extension':'analyzer','parentID':'elasticResults','datapointer':'elasticsearch|Test'});
 					app.model.dispatchThis();
