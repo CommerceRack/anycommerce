@@ -116,6 +116,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		<th class='alignLeft'>Note</th>
 		<th class='alignRight'>Created</th>
 		<th class='alignRight'>Expires</th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></tbody>
@@ -328,6 +329,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
 	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
 	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight'><button data-app-event="admin_customer|showGiftcardUpdate">Edit Giftcard</button></td>
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
@@ -443,8 +445,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 <!--
 <label><input type="checkbox" name="NEWS" checked='checked' /> Subscribe to all Default Newsletters</label>
--->
+The checkbox below does not work.
 <label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
+-->
 
 <button data-app-event='admin_customer|execAdminCustomerCreate'>Create Customer</button>
 

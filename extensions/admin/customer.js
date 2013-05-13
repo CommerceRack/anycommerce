@@ -946,6 +946,17 @@ else	{
 				//
 				},
 			
+			
+			showGiftcardUpdate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				
+				$btn.off('click.showGiftcardUpdate').on('click.showGiftcardUpdate',function(event){
+					event.preventDefault();
+					navigateTo("/biz/manage/giftcard/index.cgi?VERB=EDIT&GCID="+$btn.closest('tr').data('id'));
+					});
+				},
+			
+			
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
 					var
