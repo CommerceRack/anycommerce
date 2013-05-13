@@ -1141,7 +1141,7 @@ if giftcard is on there, no paypal will appear.
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminTicketDetail
-// !!!! THIS CALL IS NOT DONE ON THE API SIDE. the params here are placeholders and will need to be updated, most likely.
+
 // @updates holds the macros.
 // CLOSE -> no params
 // APPEND -> pass note.
@@ -2543,12 +2543,15 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 			changeDomain : function(domain,partition,path){
 				if(domain)	{
 					app.vars.domain = domain;
+
 					$('.domain','#appView').text(domain);
 //					app.rq.push(['script',0,'http://'+domain+'/jquery/config.js']); //load zGlobals. saves over existing values.
-					if(Number(partition) >= 0){}
+					if(Number(partition) >= 0){
+						}
 					else	{
 						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
 						}
+					app.vars.partition = partition;
 					$('.partition','#appView').text(partition || "");
 	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
 	//something here is causing session to not persist on reload.
@@ -2846,6 +2849,7 @@ var chart = new Highcharts.Chart({
 				$('.username','#appView').text(app.vars.userid);
 				var domain = this.getDomain();
 				
+				
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
 //immutable because that's wha the domain call uses. These will piggy-back.
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
@@ -2858,7 +2862,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
 					}
 				else {
-					app.ext.admin.calls.adminDomainList.init({},'immutable');
+					app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
+						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
+						else	{
+							app.vars.partition = app.ext.admin.a.getDataForDomain(domain,'prt');
+							$('.partition').text(app.vars.partition)
+							}
+						}},'immutable');
 					$('.domain','#appView').text(domain);
 					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
 					}
@@ -3933,7 +3943,6 @@ else	{
 				},
 
 
-
 			uiCompatAuthKVP : function()	{
 				return '_userid=' + app.vars.userid + '&_authtoken=' + app.vars.authtoken + '&_deviceid=' + app.vars.deviceid + '&_domain=' + app.vars.domain;
 				},
@@ -4031,11 +4040,11 @@ just lose the back button feature.
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
 					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
 					
-					if(typeof sessionData[ext] != 'object'){
+					if(typeof sessionData[ext] !== 'object'){
 						sessionData[ext] = {};
 						sessionData[ext][ns]= varObj;
 						} //each ext gets it's own object so that no ext writes over anothers.
-					else if(typeof sessionData[ext][ns] != 'object'){
+					else if(typeof sessionData[ext][ns] !== 'object'){
 						sessionData[ext][ns] = varObj;
 						} //each dataset in the extension gets a NameSpace. ex: orders.panelState
 					else	{

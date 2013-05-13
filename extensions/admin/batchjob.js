@@ -181,6 +181,19 @@ var admin_batchJob = function() {
 		u : {}, //u
 		e : {
 
+
+			execAdminBatchJobCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminBatchJobCreate').on('click.execAdminBatchJobCreate',function(){
+					var $form = $btn.closest('form');
+					
+					if(app.u.validateForm($form))	{
+						
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
 //NOTE -> the batch_exec will = REPORT for reports.
 			showJobDetail : function($btn)	{
 				if($btn.closest('tr').data('batch_exec') == 'REPORT')	{

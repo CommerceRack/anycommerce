@@ -831,6 +831,8 @@ HEADER
 #mastHead .menu span	{display:inline;}
 #mastHead .lookLikeLink	{text-decoration:underline; color:#565656;}
 
+#mastHead .partition:before	{content:"prt: ";}
+
 /*
 the row with the logo and text links
 

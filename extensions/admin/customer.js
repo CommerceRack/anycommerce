@@ -673,7 +673,7 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	//if there was only 1 result, the API returns just that CID. open that customer.
-	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
+	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID && (app.data[rd.datapointer].PRT == app.vars.partition))	{
 		$resultsTable.hide();
 		$editorContainer.show();
 		app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
@@ -936,13 +936,20 @@ else	{
 
 			showCustomerUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(event){
-					event.preventDefault();
-					var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
-					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
-					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
-					app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$btn.closest("[data-cid]").data('cid')});
-					});
+//a customer from a different partition SHOULD show up in the results, but is NOT editable unless logged in to that partition.
+				if($btn.closest('tr').data('prt') == app.vars.partition)	{
+					$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(event){
+						event.preventDefault();
+						var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
+						$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
+						$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
+						app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$btn.closest("[data-cid]").data('cid')});
+						});
+					}
+				else	{
+					$btn.button('disable').hide();
+					$("<span class='tooltip'>?<\/span>").attr('title','You must be logged in to a partition to edit a customer on that partition.').tooltip().insertAfter($btn);
+					}
 				//
 				},
 			

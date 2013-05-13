@@ -462,10 +462,10 @@
 			<form onsubmit="return false">
 			<div class='clearfix'>
 		
-				<fieldset class='twoColumn labelsAsBreaks'>
+				<fieldset class='twoColumn labelsAsBreaks noPadOrMargin'>
 					<legend>Report Type</legend>
 					
-					<label><input type="radio" value="SALES" name="REPORT" /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
+					<label><input type="radio" value="SALES" name="REPORT" required='required' /> Order Details <span class='toolTip' title='Displays a row for each item in each order.'>?</span></label>
 					
 					<label><input type="radio" value="SALE_SUMMARY" name="REPORT" /> Order Summary <span class='toolTip' title='Displays only one summary row per order.'>?</span></label>
 					
@@ -479,12 +479,12 @@
 					
 				</fieldset>
 				
-				<fieldset class='twoColumn column2 labelsAsBreaks'>
+				<fieldset class='twoColumn column2 labelsAsBreaks noPadOrMargin'>
 					<legend>Report Options</legend>
 					
 					<label>
 						<span>Report by:</span>
-						<select name="key">
+						<select name="key" required='required'>
 							<option value="CREATED">Created Date</option>
 							<option value="PAID">Paid Date</option>
 							<option value="SHIP">Shipped Date</option>
@@ -495,7 +495,7 @@
 					
 					<label>
 						<span>Dates</span>
-						<select name='period' onChange="$(this).closest('fieldset').find('.formPeriodRange').hide(); $(this).closest('fieldset').find('.formPeriodRange-'+$(this).val()).show();">
+						<select name='period' onChange="$(this).closest('fieldset').find('.formPeriodRange').hide(); $(this).closest('fieldset').find('.formPeriodRange-'+$(this).val()).show();" required='required'>
 							<option value=''>please choose</option>
 							<option value='month'>by month</option>
 							<option value='daterange'>date range</option>
