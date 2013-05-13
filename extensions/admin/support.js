@@ -293,7 +293,7 @@ var admin_support = function() {
 						$form.showLoading({'message':'Creating a new ticket'});
 						var sfo = $form.serializeJSON(),
 						uuid = $btn.closest('.ui-dialog-content').data('uuid'),
-						messageBody = sfo.description; //NOTE -> the user inputted message body should always be first. That way it's at the top of a high priority SMS/page.
+						messageBody = sfo.description+"\n"; //NOTE -> the user inputted message body should always be first. That way it's at the top of a high priority SMS/page.
 						for(var index in sfo)	{
 							//only pass populated fields and don't pass description again (see above).
 							if(sfo[index] && index != 'description'){messageBody += "\n"+index+": "+sfo[index]}
