@@ -1218,7 +1218,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 						var $ele = $(this),
 						extension = $ele.data('app-event').split("|")[0],
 						action = $ele.data('app-event').split("|")[1];
-						if(action && extension && typeof app.ext[extension].e[action] == 'function'){
+						if(action && extension && app.ext[extension] && app.ext[extension].e && typeof app.ext[extension].e[action] == 'function'){
 //if an action is declared, every button gets the jquery UI button classes assigned. That'll keep it consistent.
 //if the button doesn't need it (there better be a good reason), remove the classes in that button action.
 							app.ext[extension].e[action]($ele,obj);
@@ -1709,6 +1709,9 @@ VALIDATION
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						}
+//					else if($input.is("[type='radio']")){
+///						app.u.dump("IS A RADIO BUTTON");
+//						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						r = false;
 						$input.addClass('ui-state-error');

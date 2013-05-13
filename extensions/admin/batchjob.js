@@ -114,15 +114,15 @@ var admin_batchJob = function() {
 				$target.showLoading({'message':'Generating Report Table'});
 				if($target && vars && vars.guid)	{
 					$target.empty();
-					app.u.dump(" -> $target and batchGUID are set.");
-					app.ext.admin.calls.adminReportDownload.init(batchGUID,{'callback':function(rd)	{
+					app.u.dump(" -> $target and vars.guid are set.");
+					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':function(rd)	{
 						if(app.model.responseHasErrors(rd)){
 							$target.hideLoading();
 							$target.anymessage({'message':rd});
 							}
 						else	{
 							var L = app.data[rd.datapointer]['@HEAD'].length,
-							reportElementID = 'batchReport_'+batchGUID
+							reportElementID = 'batchReport_'+vars.guid
 							tableHeads = new Array();
 //@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
 							for(var i = 0; i < L; i += 1)	{
@@ -140,7 +140,7 @@ var admin_batchJob = function() {
 					app.model.dispatchThis('mutable');
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target ['+typeof $target+'] or batchGUID ['+batchGUID+'] not set.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target ['+typeof $target+'] or batchGUID ['+vars.guid+'] not set.','gMessage':true});
 					}
 				
 				}
@@ -184,11 +184,13 @@ var admin_batchJob = function() {
 
 			execAdminBatchJobCreate : function($btn)	{
 				$btn.button();
-				$btn.off('click.execAdminBatchJobCreate').on('click.execAdminBatchJobCreate',function(){
+				$btn.off('click.execAdminBatchJobCreate').on('click.execAdminBatchJobCreate',function(event){
+					event.preventDefault();
 					var $form = $btn.closest('form');
-					
 					if(app.u.validateForm($form))	{
-						
+						var sfo = $form.serializeJSON();
+						sfo.guid = app.u.guidGenerator();
+						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
 						}
 					else	{} //validateForm handles error display.
 					});
@@ -203,10 +205,15 @@ var admin_batchJob = function() {
 						var $table = $btn.closest('table');
 						
 						$table.stickytab({'tabtext':'batch jobs'});
-						$('button',$table).removeClass('ui-state-active');
-						$btn.addClass('ui-state-active');
-						
-						app.ext.admin_batchJob.a.showReport($('#utilitiesContent'),$btn.closest('tr').data());
+						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+						$('button',$table).removeClass('ui-state-highlight');
+						$btn.addClass('ui-state-highlight');
+						app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data());
+						$('button, a',$table).each(function(){
+							$(this).off('close.stickytab').on('click.closeStickytab',function(){
+								$table.stickytab('close');
+								})
+							})
 						});
 					}
 				else	{

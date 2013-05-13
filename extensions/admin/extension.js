@@ -3008,6 +3008,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_wholesale.a.showOrganizationManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!reports')	{
+					app.ext.admin.vars.tab = 'reports';
 					this.bringTabIntoFocus('reports');
 					this.bringTabContentIntoFocus($('#reportsContent'));
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.

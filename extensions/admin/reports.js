@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('reportsPageTemplate','ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate');
+	var theseTemplates = new Array('reportsPageTemplate','ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate','reportsRowTemplate');
 	var r = {
 
 
@@ -100,8 +100,39 @@ var admin_reports = function() {
 				$('.datepicker',$target).datepicker({
 					changeMonth: true,
 					changeYear: true,
-					dateFormat : "mm/dd/yy"
+					dateFormat : "mmddyy"
 					});
+				
+				
+				var $reportsList = $("[data-app-role='recentReportsList']",$target);
+				$reportsList.showLoading({'message':'Fetching Recent Reports'});
+				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
+					$reportsList.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$reportsList.anymessage({'message':rd});
+						}
+					else	{
+						var reports = new Array(), //used to store a small portion of the batch list. 10 reports.
+						L = app.data[rd.datapointer]['@JOBS'].length;
+						for(var i = 0; i < L; i += 1)	{
+							if(app.data[rd.datapointer]['@JOBS'][i].BATCH_EXEC == 'REPORT')	{
+								reports.push(app.data[rd.datapointer]['@JOBS'][i]);
+								}
+							else	{}
+							if(reports.length >= 10)	{break} //only need ten.
+							}
+						
+//						app.u.dump("$reportsList.length: "+$reportsList.length);
+						if(reports.length)	{
+							$reportsList.anycontent({data:{'@JOBS': reports}});
+							app.u.handleAppEvents($reportsList);
+							$('table',$reportsList).anytable();
+							}
+						
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				
 				},
 			
 			showeBayListingsReport : function()	{
@@ -1303,7 +1334,17 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					return false;
 					})
 				
-				} //handleCollectionMenu
+				}, //handleCollectionMenu
+			
+			showSalesReportPeriodInputs : function($ele)	{
+				$ele.off('change.showSalesReportPeriodInputs').on('change.showSalesReportPeriodInputs',function(){
+//hide any visible 'period' input containers. make sure no period-specific inputs are required (so validation can pass)
+					$ele.closest('fieldset').find('.formPeriodRange').hide().find('input, select').each(function(){$(this).attr('required','').removeAttr('required')}); 
+//show the input container desired. make all inputs within required.
+					$ele.closest('fieldset').find('.formPeriodRange-'+$(this).val()).show().effect('highlight',{},1500).find('input,select').each(function(){$(this).attr('required','required')});
+					});
+				}
+			
 			
 			} //E / Events
 

@@ -401,7 +401,20 @@
 		
 		
 		<section data-anytab-content='reports' class='clearfix'>
-		
+
+			<div data-app-role='recentReportsList' class='floatRight'>
+<table class='gridTable fullWidth marginBottom' >
+<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+<thead>
+<tr>
+	<th class='alignLeft'>Job Name</th>
+	<th data-anytable-nosort='true'></th>
+</tr>
+</thead>
+<tbody data-bind="var: users(@JOBS); format:processList; loadsTemplate:reportsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+</table>
+			</div>
+
 			<div class='floatLeft'>
 
 <h2>Sales/Order Reporting</h2>
@@ -495,7 +508,7 @@
 					
 					<label>
 						<span>Dates</span>
-						<select name='period' onChange="$(this).closest('fieldset').find('.formPeriodRange').hide(); $(this).closest('fieldset').find('.formPeriodRange-'+$(this).val()).show();" required='required'>
+						<select name='period' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
 							<option value=''>please choose</option>
 							<option value='month'>by month</option>
 							<option value='daterange'>date range</option>
@@ -558,7 +571,7 @@
 		
 			</div>
 		
-			<div class='buttonset'><button>build report</button></div>
+			<div class='buttonset'><button data-app-event="admin_batchJob|execAdminBatchJobCreate">Build Report</button></div>
 		
 			</form>		
 		</section>
@@ -573,7 +586,7 @@
 				<label><input type="radio" value="INVENTORY_MISSING" name="REPORT"> Products w/o Inventory Configured</label>
 			</fieldset>
 			<div class='buttonset'>
-				<button>Run Report</button>
+				<button data-app-event="admin_batchJob|execAdminBatchJobCreate">Build Report</button>
 			</div>
 			</form>		
 		</section>
@@ -586,3 +599,14 @@
 	</div>
 
 </div>
+
+
+
+
+
+<table>
+<tr id='reportsRowTemplate'>
+	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
+	<td><button data-app-event="admin_batchJob|showJobDetail" class='displayNone'>View Report</button>
+</tr>
+</table>
