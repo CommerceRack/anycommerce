@@ -110,11 +110,11 @@ var admin_batchJob = function() {
 				}, //showTaskManager
 
 			showReport : function($target,vars)	{
-				app.u.dump("BEGIN admin_batchjob.a.showReport");
-				$target.showLoading({'message':'Generating Report Table'});
+//				app.u.dump("BEGIN admin_batchjob.a.showReport");
 				if($target && vars && vars.guid)	{
 					$target.empty();
-					app.u.dump(" -> $target and vars.guid are set.");
+					$target.showLoading({'message':'Generating Report'}); //run after the empty or the loading gfx gets removed.
+//					app.u.dump(" -> $target and vars.guid are set.");
 					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':function(rd)	{
 						if(app.model.responseHasErrors(rd)){
 							$target.hideLoading();
@@ -217,6 +217,7 @@ var admin_batchJob = function() {
 						$('button',$table).removeClass('ui-state-highlight');
 						$btn.addClass('ui-state-highlight');
 						app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data());
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
 						$('button, a',$table).each(function(){
 							$(this).off('close.stickytab').on('click.closeStickytab',function(){
 								$table.stickytab('close');
