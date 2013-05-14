@@ -218,7 +218,7 @@ else	{
 								$modal.anymessage({'message':rd});
 								}
 							else	{
-								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistant':true});
+								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistent':true});
 								//clear existing addresses and re-render.
 								var $panel = $("[data-app-role='"+obj.type.substring(1).toLowerCase()+"']",$customerEditor); //ship or bill panel.
 								app.u.dump(" -> $panel.length: "+$panel.length);
@@ -292,7 +292,7 @@ else	{
 				
 				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
 				else if(app.data.adminNewsletterList['@lists'].length == 0)	{
-					$tag.anymessage({'message':'You have not created any subscriber lists.','persistant':true})
+					$tag.anymessage({'message':'You have not created any subscriber lists.','persistent':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
@@ -688,7 +688,7 @@ else	{
 		$resultsTable.anytable();
 		}
 	else	{
-		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
+		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
 		}
 	}
 						}},'mutable');
@@ -719,7 +719,7 @@ else	{
 								$modal.anymessage({'message':rd});
 								}
 							else	{
-								$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
+								$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistent':true})
 								}
 							}},'immutable');
 							app.model.dispatchThis('immutable');
@@ -908,7 +908,7 @@ else	{
 									$modal.anymessage({'message':rd});
 									}
 								else	{
-									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistant':true});
+									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistent':true});
 									//clear existing addresses and re-render.
 									$("tbody",$addrPanel).empty();
 									$addrPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
