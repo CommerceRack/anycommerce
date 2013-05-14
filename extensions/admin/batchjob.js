@@ -126,16 +126,28 @@ var admin_batchJob = function() {
 							tableHeads = new Array();
 							
 							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
+//google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
+								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'][0].length)	{
 //@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
-								for(var i = 0; i < L; i += 1)	{
-									tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
+									for(var i = 0; i < L; i += 1)	{
+										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
+										}
+		
+									$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
+									$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+									
+									app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
+									app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+									
 									}
-	
-								$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
-								$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+								else	{
+									var errorDetails = "";
+									for(index in vars)	{
+										errorDetails += "<br>"+index+": "+vars[index];
+										}
+									$target.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This will cause a fatal error in visualization. Details:'+errorDetails,'gMessage':true,'persistent':true});
+									}
 								
-								app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
-								app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
 								
 								}
 							else	{
