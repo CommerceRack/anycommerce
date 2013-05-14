@@ -1438,6 +1438,30 @@ if giftcard is on there, no paypal will appear.
 				}
 			},
 
+		authPasswordReset : {
+			init : function(login,_tag,Q)	{
+				var r = 0;
+				if(login)	{
+					this.dispatch(login,_tag,Q);
+					r = 1;
+					}
+				else	{
+					app.u.throwGMessage("In admin.calls.authPasswordReset, login was not passed.");
+					}
+				return r;
+				},
+			dispatch : function(login,_tag,Q)	{
+				var obj = {};
+				obj.login = login;
+				obj._cmd = "authPasswordReset";
+				obj._tag = _tag || {};
+				_tag.datapointer = "authPasswordReset";
+				app.model.addDispatchToQ(obj,Q);
+				}
+			},
+
+
+
 
 		finder : {
 			
@@ -4390,6 +4414,31 @@ just lose the back button feature.
 						$('#createAccountContainer').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
 						});
 					})
+				},
+
+			showPasswordRecover : function($btn)	{
+				$btn.button();
+				$btn.off('click.showPasswordRecover').on('click.showPasswordRecover',function(event){
+					event.preventDefault();
+					app.ext.admin.u.handleAppEvents($('#appPasswordRecover'));
+					$("#appLogin").css('position','relative').animate({right:($('body').width() + $("#appLogin").width() + 100)},'slow','',function(){
+						$("#appLogin").hide();
+						$('#appPasswordRecover').css({'left':'1000px','position':'relative'}).removeClass('displayNone').show().animate({'left':'0'},'slow'); //show and remove class. show needed for toggling between login and create account.
+						});
+					})
+				},
+
+			execPasswordRecover : function($btn)	{
+				$btn.button();
+				$btn.off('click.execPasswordRecover').on('click.execPasswordRecover',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						app.ext.admin.calls.authPasswordReset.init($("[name='login']",$form),{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //validateForm handles error display.
+					});
 				},
 
 			authShowLogin : function($ele)	{

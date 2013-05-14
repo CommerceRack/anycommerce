@@ -97,6 +97,25 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 </div>
 
 
+
+
+	
+<div id='appPasswordRecover' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
+	
+	<div class='alignCenter'>
+<form>
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+	<legend>Password Recovery</legend>
+	<label>Login: <input type='text' name='login' value='' required='required' ></label>
+	<button data-app-event='admin|execPasswordRecover'>Recover Password</button>
+</fieldset>
+</form>
+	</div>
+
+</div>
+
+
+
 <div id='appLogin' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
 	<div class='logo alignCenter'><a href="/index.html"><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
@@ -111,7 +130,9 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
 			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
 			
+	
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
+<!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
 			<label class='hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
 			<div class="hint"><b><a href='/app/201314/admin.html'> &#187; Use previous version</a></b></div>

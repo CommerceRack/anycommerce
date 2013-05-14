@@ -945,7 +945,7 @@ LOGIN and preView
 */
 
 
-#appPreView, #appLogin, #createAccountContainer	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
+#appPreView, #appLogin, #createAccountContainer, #appPasswordRecover	{font-size:1.2em; margin: auto; width:500px; position:relative; top:200px} /* top margin F's up FF and body/html 100% height */
 
 #appLogin label	{display:block; text-align:left; margin-bottom:12px;}
 #appLogin .hint	{font-size:14px;}
