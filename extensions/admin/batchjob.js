@@ -139,7 +139,7 @@ var admin_batchJob = function() {
 								
 								}
 							else	{
-								$target.anymessage({'message':'','persitent':true});
+								$target.anymessage({'message':'There are no rows/data in this report.','persitent':true});
 								}
 							
 							$target.hideLoading(); //this is after drawTable, which may take a moment.
