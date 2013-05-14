@@ -535,7 +535,7 @@ app.model.dispatchThis('immutable');
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
 								}
 							else if(pr == 'newsletter')	{
-								general += $tag.attr('name')+"="+handleCheckbox($tag);
+								general += $tag.attr('name')+"="+handleCheckbox($tag)+"&";
 								}
 /*							else if(pr == 'dropship')	{
 								//Add something here for dropship logo.
