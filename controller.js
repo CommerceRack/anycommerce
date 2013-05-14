@@ -518,7 +518,7 @@ see jquery/api webdoc for required/optional param
 				obj.authid = Crypto.MD5(obj.password+obj.ts);
 				obj._tag = _tag || {};
 				obj.device_notes = "";
-				if(obj.persitentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true.
+				if(obj.persistentAuth)	{obj._tag.datapointer = "authAdminLogin"} //this is only saved locally IF 'keep me logged in' is true.
 				delete obj.password;
 				app.model.addDispatchToQ(obj,'immutable');
 				}
