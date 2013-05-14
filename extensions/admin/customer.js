@@ -409,8 +409,9 @@ else	{
 
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 			getNewslettersTF : function(newsint,val)	{
-				B = Number(newsint).toString(2); //binary
-//				app.u.dump(" -> Binary of flags: "+B);
+//so what's happening here...   the tostring converts the int into binary. split/reverse/join reverse the order, changing 1000 (for 8) into 0001
+				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
+				app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
 				},
 
