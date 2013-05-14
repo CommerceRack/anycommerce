@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201318.b",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201318.c",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -78,7 +78,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 </head>
-<body class="control">
+<body class="control" onLoad="jQuery('#appversion').text(app.vars.release);">
 <!-- this div handles getting content to appear below the fixed header -->
 
 
@@ -148,9 +148,6 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 		</div>
-		<script type="text/javascript">
-		jQuery("#appversion").text(app.vars.release);
-		</script>
 	</div>
 </div>
 
