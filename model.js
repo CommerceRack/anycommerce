@@ -440,7 +440,7 @@ set adjustAttempts to true to increment by 1.
 				msgDetails += "<li>release: "+app.model.version+"|"+app.vars.release+"<\/li>";
 				msgDetails += "<\/ul>";
 				
-				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ISE','persistant':true,'errmsg':'The request has failed. The app may continue to operate normally.<br \/>Please try again or contact the site administrator with the following details:'+msgDetails})
+				this.handleErrorByUUID(uuid,QID,{'errid':666,'errtype':'ISE','persistent':true,'errmsg':'The request has failed. The app may continue to operate normally.<br \/>Please try again or contact the site administrator with the following details:'+msgDetails})
 				}
 			},
 	
@@ -1441,7 +1441,7 @@ only one extension was getting loaded, but it got loaded for each iteration in t
 					},
 				error: function(a,b,c) {
 					var msg = app.u.errMsgObject("Oops! It appears something went wrong with our app. If error persists, please contact the site administrator.<br \/>(error: ext "+extObjItem.namespace+" had error type "+b+")",123);
-					msg.persistant = true;
+					msg.persistent = true;
 					app.u.throwMessage(msg);
 					app.u.dump(" -> EXTCONTROL ("+namespace+")Got to error. error type = "+b+" c = ");
 					app.u.dump(c);

@@ -1321,10 +1321,10 @@ if an object, could be: {errid,errmsg,errtype}   OR   {msg_X_txt,msg_X_type,msg_
 $target - a jquery object of the target/destination for the message itself. Will check err for parentID, targetID and if not present, check to see if globalMessaging is present AND visible.  If not visible, will open modal.
 returns the id of the message, so that an action can be easily added if needed (onclick or timeout w/ a hide, etc)
 
-persistant - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
+persistent - this can be passed in as part of the msg object or a separate param. This was done because repeatedly, error messaging in the control
 and model that needed to be permanently displayed had to be converted into an object just for that and one line of code was turning into three.
 */
-		throwMessage : function(msg,persistant){
+		throwMessage : function(msg,persistent){
 //			app.u.dump("BEGIN app.u.throwMessage");
 //			app.u.dump(" -> msg follows: "); app.u.dump(msg);
 
@@ -2946,7 +2946,7 @@ $tmp.empty().remove();
 							$tag.append($o);
 							}
 						else	{
-							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistant':true});
+							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
 							}
 						}
 					int += 1;				
@@ -2954,7 +2954,7 @@ $tmp.empty().remove();
 				
 				}
 			else	{
-				$tag.anymessage({'message':'Unable to render list item - no loadsTemplate specified.','persistant':true});
+				$tag.anymessage({'message':'Unable to render list item - no loadsTemplate specified.','persistent':true});
 				}
 			}
 			

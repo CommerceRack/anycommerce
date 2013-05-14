@@ -1824,7 +1824,7 @@ else	{
 	}
 
 
-//if user is logged in already (persistant login), take them directly to the UI. otherwise, have them log in.
+//if user is logged in already (persistent login), take them directly to the UI. otherwise, have them log in.
 //the code for handling the support login is in the thisisanadminsession function (looking at uri)
 if(app.u.thisIsAnAdminSession())	{
 	app.ext.admin.u.showHeader();
@@ -1999,7 +1999,7 @@ else	{
 			onError: function(responseData)	{
 				var $target = $(app.u.jqSelector('#',responseData._rtag.targetID));
 				$target.hideLoading();
-				responseData.persistant = true;
+				responseData.persistent = true;
 				app.u.throwMessage(responseData);
 				$target.append("<P>Something has gone very wrong. We apologize, but we were unable to load your list of domains. A domain is required.</p>");
 				$("<button \/>").attr('title','Close Window').text('Close Window').click(function(){$target.dialog('close')}).button().appendTo($target);
@@ -3018,6 +3018,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
 				else if(path == '#!userManager')	{app.ext.admin_user.a.showUserManager();}
 				else if(path == '#!batchManager')	{
+					app.ext.admin.vars.tab = 'utilities';
 					this.bringTabIntoFocus('utilities');
 					this.bringTabContentIntoFocus($('#utilitiesContent'));
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
@@ -3305,7 +3306,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					for(var i = 0; i < L; i += 1)	{
 						msgObj = this.uiMsgObject(msg[i]);
 						msgObj.parentID = target; //targetID in throwMessage would get passed in _rtag. parent can be top level, so use that.
-						msgObj.persistant = true; //for testing, don't hide.
+						msgObj.persistent = true; //for testing, don't hide.
 						
 						if(msgObj.BATCH)	{
 							msgObj.errmsg += "<div><button class='buttonify' onClick='app.ext.admin_batchJob.a.showBatchJobStatus(\""+msgObj.BATCH+"\");'>View Batch Job Status<\/button><\/div>"

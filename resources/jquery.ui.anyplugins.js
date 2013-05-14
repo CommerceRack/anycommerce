@@ -17,6 +17,18 @@ http://net.tutsplus.com/tutorials/javascript-ajax/coding-your-first-jquery-ui-pl
 */
 
 
+// ** 201318 -> replacement for obsolete .browser() function.
+//.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
+// Figure out what browser is being used
+if(typeof typeof jQuery.browser == 'undefined')	{
+	jQuery.browser = {
+		version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
+		safari: /webkit/.test( userAgent ),
+		opera: /opera/.test( userAgent ),
+		msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
+		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
+		}
+	}
 
 
 /*
@@ -38,18 +50,6 @@ For the list of available params, see the 'options' object below.
 
 */
 
-// ** 201318 -> replacement for obsolete .browser() function.
-//.browser() is deprecated as of jquery 1.3 and removed in 1.9+ however a lot of plugins use it.
-// Figure out what browser is being used
-if(typeof typeof jQuery.browser == 'undefined')	{
-	jQuery.browser = {
-		version: (userAgent.match( /.+(?:rv|it|ra|ie)[\/: ]([\d.]+)/ ) || [0,'0'])[1],
-		safari: /webkit/.test( userAgent ),
-		opera: /opera/.test( userAgent ),
-		msie: /msie/.test( userAgent ) && !/opera/.test( userAgent ),
-		mozilla: /mozilla/.test( userAgent ) && !/(compatible|webkit)/.test( userAgent )
-		}
-	}
 
 
 
@@ -61,7 +61,7 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 			containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 			iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
-			persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+			persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 			},
 
 		_init : function(){
@@ -84,7 +84,7 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 			self.outputArr[i].append(self._getFormattedMessage(i));
 			$t.prepend(self.outputArr[i]); //
 
-			if(o.persistant)	{} //message is persistant. do nothing.
+			if(o.persistent)	{} //message is persistent. do nothing.
 //message should auto-close. However, it is possible for a message to already have been removed by an 'empty', so verify it is still on the DOM or an error could result.
 // ** 201318 -> bug fix. jquery error if close method run on element that wasn't already instantiated as anymessage, such as an element already removed from DOM.
 // ** ++ auto close bugfix.  The appropriate message is passed to the close function so that when the timeout executes it does not close all the messages in the container
@@ -92,14 +92,14 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 				if($('#'+o.messageElementID).length)	{$t.anymessage('close',$('#'+o.messageElementID));} 
 				},10000);} //auto close message after a short duration.
 // ** 201318 side effects bug- reset options after displaying the message to provide defaults for the next message --mc
-//EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistant true, message 2 does not set persistant.  
-//Message 2 is set to persistant because the defaults have been overwritten on the container
+//EXAMPLE: 2 messages are sent to the same container.  Message 1 calls persistent true, message 2 does not set persistent.  
+//Message 2 is set to persistent because the defaults have been overwritten on the container
 			this.options = {
 				message : null, //a string for output. if set, will ignore any _msgs or _err orr @issues in the 'options' object (passed by a request response)
 				gMessage : false, //set to true to throw a generic message. Will include extra error details and a default message before the value of message.
 				containerClass : 'ui-state-highlight', //will be added to container, if set. will add no ui-state class if this is set.
 				iconClass : null, //for icon display. ex: ui-state-info. if set, no attempt to auto-generate icon will be made.
-				persistant : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistant by default
+				persistent : false //if true, message will not close automatically. WILL still generate a close button. iseerr's are persistent by default
 				}
 			}, //_init
 
@@ -176,7 +176,7 @@ if(typeof typeof jQuery.browser == 'undefined')	{
 					if(msg.errtype == 'iseerr')	{
 //					app.u.dump(" -> msg IS iseerr.");
 
-					o.persistant = true; //iseErr should be persistant
+					o.persistent = true; //iseErr should be persistent
 					this.outputArr[instance].addClass('ui-state-error');
 //					$('button',this.outputArr[instance]).button('disable'); //I don't think we want to disable the ability to close this, we just don't want it to auto-close.
 
@@ -469,7 +469,7 @@ either templateID or (data or datapointer) are required.
 				}
 			else	{
 				$t.anymessage({
-					persistant : true,
+					persistent : true,
 					gMessage : true,
 					message:"Unable to translate. Either: <br \/>Template ["+o.templateID+"] not specified and/or does not exist ["+typeof app.templates[o.templateID]+"].<br \/> OR does not specified ["+typeof o.data+"] OR no datapointer ["+o.datapointer+"] does not exist in app.data "});
 				}
@@ -1084,7 +1084,7 @@ Additional a settings button can be added which will contain a dropdown of selec
 					r = true;
 					}
 				else	{
-					app.u.dump("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistant.",'warn');
+					app.u.dump("anypanel has persist enabled, but either name ["+this.name+"] or extension ["+this.extension+"] not declared. This is a non-critical error, but it means panel will not be persistent.",'warn');
 					}
 				}
 			return r;

@@ -63,7 +63,7 @@ var admin_reports = function() {
 						}
 					else if(window.googleIntervalAttempt > 50)	{
 						app.u.dump("Unable to load google visualization. ",'error');
-						$(".appMessaging").anymessage({'message':'The Google Visualization libraries did not successfully load. This means that some features in the reporting section may not be available. Refreshing the browser may help solve this error.','persistant':true});
+						$(".appMessaging").anymessage({'message':'The Google Visualization libraries did not successfully load. This means that some features in the reporting section may not be available. Refreshing the browser may help solve this error.','persistent':true});
 						delete window.googleInterval;
 						delete window.googleIntervalAttempts;
 

@@ -61,7 +61,7 @@
 	<td data-bind="var: user(JOB_TYPE); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: user(LUSERNAME); format:text;" class='hideInMinimalMode'></td>
 	<td data-bind="var: user(CREATED_TS); format:text;" class='hideInMinimalMode'></td>
-	<td>loading gfx</td>
-	<td><button data-app-event="admin_batchJob|showJobDetail" class='displayNone'>View Report</button>
+	<td data-bind="var: user(STATUS_MSG); format:text;"></td>
+	<td><button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button>
 </tr>
 </table>

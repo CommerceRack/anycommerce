@@ -124,16 +124,24 @@ var admin_batchJob = function() {
 							var L = app.data[rd.datapointer]['@HEAD'].length,
 							reportElementID = 'batchReport_'+vars.guid
 							tableHeads = new Array();
-//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
-							for(var i = 0; i < L; i += 1)	{
-								tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
-								}
-
-							$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
-							$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
 							
-							app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
-							app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
+//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
+								for(var i = 0; i < L; i += 1)	{
+									tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
+									}
+	
+								$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
+								$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+								
+								app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
+								app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+								
+								}
+							else	{
+								$target.anymessage({'message':'','persitent':true});
+								}
+							
 							$target.hideLoading(); //this is after drawTable, which may take a moment.
 							}
 						}},'mutable'); app.model.dispatchThis('mutable');
@@ -197,10 +205,10 @@ var admin_batchJob = function() {
 				},
 
 //NOTE -> the batch_exec will = REPORT for reports.
-			showJobDetail : function($btn)	{
+			showReport : function($btn)	{
 				if($btn.closest('tr').data('batch_exec') == 'REPORT')	{
 					$btn.button().show();
-					$btn.off('click.showJobDetail').on('click.showJobDetail',function(event){
+					$btn.off('click.showReport').on('click.showReport',function(event){
 						event.preventDefault();
 						var $table = $btn.closest('table');
 						
