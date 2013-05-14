@@ -25,7 +25,7 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','messageListTemplate','messageDetailTemplate'); 
+	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','messageListTemplate','messageDetailTemplate','mailToolTemplate'); 
 	var r = {
 		
 		vars : {
@@ -420,7 +420,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 		adminEmailList : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
-				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj); app.u.dump(_tag);
+//				app.u.dump(" -> obj:"+Number(obj.PRT)); app.u.dump(obj); app.u.dump(_tag);
 				if(obj && (Number(obj.PRT) >= 0) && obj.TYPE)	{
 					_tag = _tag || {};
 					_tag.datapointer = "adminEmailList|"+obj.PRT+"|"+obj.TYPE;
@@ -434,7 +434,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 						}
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminEmailList, PRT ["+obj.PRT+"] and TYPE ["+obj.TYPE+"] are required and one was not set.");
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminEmailList, PRT ["+obj.PRT+"] and TYPE ["+obj.TYPE+"] are required and one was not set."});
 					}
 				return r; 
 				},
@@ -2228,6 +2228,18 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 			$tag.append(lookupTable[data.value] || data.value); //if no translation, display report id.
 			},
 
+
+//used for adding email message types to a select menu.
+//designed for use with the vars object returned by a adminEmailList _cmd
+		emailMessagesListOptions : function($tag,data)	{
+			var L = data.value.length;
+//adminEmailListIndex below is used to lookup by index the message in the list object.
+			for(var i = 0; i < L; i += 1)	{
+				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
+				}
+			},
+
+
 //very simple data to list function. no template needed (or allowed. use processList for that).
 		array2ListItems : function($tag,data)	{
 			var L = data.value.length;
@@ -2399,6 +2411,81 @@ else	{
 				return this.showUI(path,$t ? $t : {});
 				},
 
+
+
+
+
+			showMailTool : function(vars)	{
+vars = vars || {};
+
+
+
+if(vars.listType && vars.partition)	{
+//listType must match one of these. an array is used because there will be more types:
+//  'TICKET','PRODUCT','ACCOUNT','SUPPLY','INCOMPLETE'
+	var types = ['ORDER','CUSTOMER']; 
+	if(types.indexOf(vars.listType) >= 0)	{
+
+		var $mailTool = $('#mailTool');
+		if($mailTool.length)	{
+			$mailTool.empty();
+			}
+		else	{
+			$mailTool = $("<div \/>",{'id':'mailTool','title':'Send Email'}).appendTo("body");
+			$mailTool.dialog({'width':500,'height':500,'autoOpen':false,'modal':true});
+			}
+
+		$mailTool.dialog('open');
+
+		$mailTool.showLoading({'message':'Fetching list of email messages/content'});
+		app.ext.admin.calls.adminEmailList.init({'TYPE':vars.listType,'PRT':vars.partition},{'callback':function(rd){
+			$mailTool.hideLoading();
+			if(app.model.responseHasErrors(rd)){
+				$mailTool.anymessage({'message':rd})
+				}
+			else	{
+				$mailTool.anycontent({'templateID':'mailToolTemplate','datapointer':rd.datapointer,'dataAttribs':{'adminemaillist-datapointer':rd.datapointer}});
+				app.u.handleAppEvents($mailTool,vars);
+				}
+			}},'mutable');
+		app.model.dispatchThis('mutable');
+		
+		}
+	else	{
+		$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, invalid listType ['+vars.listType+'] or partition ['+vars.partition+'] specified.'})
+		}
+
+//will open dialog so users can send a custom message (content 'can' be based on existing message) to the user. order specific.
+//though not a modal, only one can be open at a time.
+/*			if(orderID && Number(prt) >= 0)	{
+	
+				app.ext.admin.calls.adminEmailList.init({'TYPE':'ORDER','PRT':prt},{'callback':function(rd){
+					$target.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						if(rd._rtag && rd._rtag.selector)	{
+							$(app.u.jqSelector(rd._rtag.selector[0],rd._rtag.selector.substring(1))).empty();
+							}
+						app.u.throwMessage(rd);
+						}
+					else	{
+						$target.append(app.renderFunctions.transmogrify({'adminemaillist-datapointer':'adminEmailList|'+prt+'|ORDER','orderid':orderID,'prt':prt},'orderEmailCustomMessageTemplate',app.data[rd.datapointer]));
+						app.ext.admin.u.handleAppEvents($target);
+						}
+		
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				}
+			else	{
+				app.u.throwGMessage("In admin_orders.a.showCustomMailEditor, orderid ["+orderID+"] or partition ["+prt+"] not passed and both are required.");
+				}
+*/
+	}
+else	{
+	$('#globalMessaging').anymessage({'gMessage':true,'message':'In admin.a.showMailTool, no listType specified.'})
+	}
+				
+				
+				},
 
 
 /* loading content and adding a new 'page' */
@@ -4097,9 +4184,46 @@ just lose the back button feature.
 					app.u.throwGMessage("In admin.u.handleAppEvents, target was either not specified/an object ["+typeof $target+"] or does not exist ["+$target.length+"] on DOM.");
 					}
 				
-				} //handleAppEvents
+				}, //handleAppEvents
 
 
+
+//as more listTypes are added, make sure the call uses immutable.
+//vars should contain listType, partition and then depending on the list type, CID or OrderID.
+			sendEmail : function($form,vars)	{
+
+				if($form && typeof vars == 'object')	{
+					var sfo = $form.serializeJSON(),
+					numDispatches = 0,
+					callback = function(rd)	{
+						$form.hideLoading();
+						if(app.model.responseHasErrors(rd)){
+							$form.anymessage({'message':rd});
+							}
+						else	{
+							$form.empty().anymessage(app.u.successMsgObject('Your email has been sent.'));
+							}						
+						}
+				
+					$form.showLoading({'message':'Sending Email'});
+					
+					if(vars.listType == 'CUSTOMER' && vars.CID)	{
+						numDispatches += app.ext.admin.calls.adminCustomerUpdate.init(vars.CID,['SENDEMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.
+						}
+					else if(vars.listType == 'ORDER' && vars.orderID)	{
+						numDispatches += app.ext.admin.calls.adminCustomerUpdate.init(vars.orderID,['EMAIL?MSGID='+sfo.MSGID+'&MSGSUBJECT='+encodeURIComponent(sfo.SUBJECT)+'&MSGBODY='+encodeURIComponent(sfo.BODY)],{'callback':callback}); //update is always immutable.						
+						}
+					else	{
+						$form.hideLoading();
+						$form.anymessage({'gMessage':true,'persistent':true,'message':'In admin.u.sendEmail, based on listType, required var(s) were missing. Here is what was set: '+(typeof vars === 'object' ? JSON.stringify(vars) : vars)});
+						}
+					
+					}
+				else	{
+					$form.anymessage({'gMessage':true,'message':'In admin.u.sendEmail, either $form ['+typeof $form+'] or vars.CID ['+vars.CID+'] not set.'});
+					}
+				return numDispatches;
+				}
 
 
 			},	//util
@@ -4198,6 +4322,43 @@ just lose the back button feature.
 					$btn.closest('tr').empty().remove();
 					})
 				},
+//vars needs to include listType as well as any list type specific variables (CID for CUSTOMER, ORDERID for ORDER)
+			execMailToolSend : function($btn,vars){
+				$btn.button();
+				$btn.off('click.execMailToolSend').on('click.execMailToolSend',function(event){
+					event.preventDefault();
+					vars = vars || {};
+					var $form = $btn.closest('form');
+
+					if(vars.listType)	{
+						if(app.u.validateForm($form))	{
+							app.ext.admin.u.sendEmail($form,vars);	
+
+//handle updating the email message default if it was checked. this runs independant of the email send (meaning this may succeed but the send could fail).
+							if($("[name='updateSystemMessage']",$form).is(':checked') && $("[name='MSGID']",$form).val() != 'BLANK')	{
+								frmObj.PRT = vars.partition;
+								frmObj.TYPE = vars.listType; //Don't pass a blank FORMAT, must be set to correct type.
+								delete frmObj.updateSystemMessage; //clean up obj for _cmd var whitelist.
+								app.ext.admin.calls.adminEmailSave.init(frmObj,{'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$form.anymessage({'message':rd});
+										}
+									else	{
+										$form.anymessage(app.u.successMsgObject(frmObj.MSGID+" message has been updated."));
+										}
+									}},'immutable');
+								}
+							
+							app.model.dispatchThis('immutable');
+							}
+						else	{} //validateForm handles error display.
+
+						}
+					else	{
+						$form.anymessage({'message':'In admin.e.execMailToolSend, no list type specified in vars for app event.'});
+						}
+					});
+				},
 
 			showMessageDetail : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-arrowthick-1-e"}});
@@ -4267,6 +4428,33 @@ just lose the back button feature.
 					
 					});
 				},
+
+
+//applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
+			"toggleEmailInputValuesBySource" : function($select)	{
+				$select.off('change.toggleEmailInputValuesBySource').on('change.toggleEmailInputValuesBySource',function(){
+					var
+						$option = $("option:selected",$(this)),
+						datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
+						$form = $option.closest('form');
+
+					if($option.val() == 'BLANK')	{
+						$form.find("[name='body']").val(""); //clear the form.
+						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
+						$(".msgType",$form).empty();
+						}
+					else if(datapointer && app.data[datapointer])	{
+						$form.find("[name='BODY']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
+						$form.find("[name='SUBJECT']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
+						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
+						$(".msgType",$form).text($form.find("[name='MSGID']").val());
+						}
+					else	{
+						$form.anymessage({'gMessage':true,'message':"In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"]."});
+						}
+					})
+				}, //orderEmailCustomChangeSource
+
 
 			"toggleDualMode" : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-seek-next"},text: false});

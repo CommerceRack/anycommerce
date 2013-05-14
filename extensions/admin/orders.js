@@ -863,13 +863,14 @@ else	{
 
 //used for adding email message types to a select menu.
 //designed for use with the vars object returned by a adminEmailList _cmd
-		emailMessagesListOptions : function($tag,data)	{
+//* 201318 -> moved to admin extension as part of global email tool
+/*		emailMessagesListOptions : function($tag,data)	{
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
 				}
 			},
-			
+*/			
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
 			return true;
@@ -1437,6 +1438,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 				},
 
+			
 			
 //orderid and msgID are required.
 			sendOrderMail : function(orderID,msgID,$row)	{
@@ -2032,25 +2034,7 @@ else	{
 
 //applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
 			"orderEmailCustomChangeSource" : function($select)	{
-				$select.off('change.orderEmailCustomChangeSource').on('change.orderEmailCustomChangeSource',function(){
-					var $option = $("option:selected",$(this)),
-					datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
-					$form = $option.parents('form');
-					if($option.val() == 'BLANK')	{
-						$form.find("[name='body']").val(""); //clear the form.
-						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
-						$(".msgType",$form).empty();
-						}
-					else if(datapointer && app.data[datapointer])	{
-						$form.find("[name='BODY']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
-						$form.find("[name='SUBJECT']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
-						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
-						$(".msgType",$form).text($form.find("[name='MSGID']").val());
-						}
-					else	{
-						app.u.dump("In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"].");
-						}
-					})
+				app.ext.admin.e.toggleEmailInputValuesBySource($select);
 				}, //orderEmailCustomChangeSource
 
 //

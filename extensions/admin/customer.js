@@ -71,6 +71,7 @@ var admin_customer = function() {
 					$custEditorTarget.empty();
 					if(obj && obj.CID)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
+						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':app.vars.partition},{},'mutable');
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 //						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
@@ -389,7 +390,6 @@ else	{
 				}, //customerAddressAddUpdate
 
 
-
 			getAddressByID : function(addrObj,id)	{
 				var r = false; //what is returned. will be an address object if there's a match.
 				if(addrObj && id)	{
@@ -411,7 +411,7 @@ else	{
 			getNewslettersTF : function(newsint,val)	{
 //so what's happening here...   the tostring converts the int into binary. split/reverse/join reverse the order, changing 1000 (for 8) into 0001
 				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
-				app.u.dump(" -> Binary of flags: "+B);
+//				app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
 				},
 
@@ -977,6 +977,14 @@ else	{
 					$cb.closest('.ui-dialog-content').dialog('close');
 					})
 				
+				},
+			
+			showMailTool : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-mail-closed"},text: true});
+				$btn.off('click.showMailTool').on('click.showMailTool',function(event){
+					event.preventDefault();
+					app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':app.vars.partition,'CID':$btn.closest("[data-cid]").data('cid')});
+					});
 				},
 			
 			showOrgChooser : function($btn)	{
