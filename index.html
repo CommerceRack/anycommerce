@@ -1708,7 +1708,7 @@ used for store_crm.js
 
 <div id='reviewFrmTemplate'>
 
-<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
+<form name="reviewFrm" id="reviewFrm" action="#" onSubmit=" return false;">
 <input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
 
 <label for='reviewsCustomerName'>Your Name:</label>
@@ -1743,8 +1743,12 @@ used for store_crm.js
 </select>
 <br />
 
+<button onClick="app.ext.store_crm.u.handleReviews('reviewFrm');" class='ui-button-text ui-button ui-state-default ui-corner-all ui-button-text-only'>
+	<span class="ui-button-text">Submit Review</span>
+</button>
+<!--
 <input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
-
+-->
 </form>
 </div>
 
