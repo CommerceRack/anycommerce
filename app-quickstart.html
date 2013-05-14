@@ -1,0 +1,1534 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+
+<!-- do not populate or add meta data or title, the SEO layer will add it -->
+
+<!-- used for optional social media extensions -->
+<meta property="og:type" content="" id='ogType' >
+<meta property="og:image" content="" id='ogImage' >
+<meta property="og:description" content="" id='ogDescription' >
+
+
+<base href='' /><!-- leave blank so it works for a local file. updated to / if protocol is not file: -->
+
+
+
+<script type="text/javascript">
+var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPLOYMENT!
+var myCreole;
+
+var app = {vars:{
+	"release":"201318.a",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"_clientid":"zmvc",
+	"baseURL":"", //used in non-local mode.
+	"checkoutAuthMode" : "required",//can be passive, active or required
+	"testURL":"http://www.ylh.zoovy.com/" //used ONLY if protocol is file: (for testing)
+	},u:{},rq:[]};
+
+//set base url so images, css, js, etc all load from appropriate location once deployed.
+//baseURL as blank lets loadScript function run off local copy when testing locally.
+if(document.location.protocol == 'file:')	{
+	app.vars.baseURL  = "";
+	}
+else	{
+	app.vars.baseURL = document.location.protocol+"//"+document.domain+"/";
+	}
+document.getElementsByTagName('base')[0].href = app.vars.baseURL;
+</script>
+
+
+<!--
+all css includes need to be after the js that changes the base url.
+css files should be included before any .js file to ensure they are downloaded in parallel
+-->
+<link rel="stylesheet" type="text/css" href="app-quickstart.css" />
+<link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
+<script type="text/javascript" src="loadscript.js"></script>
+
+
+
+
+<script type="text/javascript">
+app.u.loadScript(app.vars.baseURL+"app-quickstart-init.js");
+</script>
+
+
+</head>
+
+<body>
+<!-- DELETE THIS WHEN YOU GET STARTED -->
+<h1>WELCOME TO QUICKSTART</h1>
+This file is intended to go along with the 10-step tutorial at:
+<a href="https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart">https://github.com/zoovy/AnyCommerce-Development/wiki/quickstart</a>
+<!-- /DELETE THIS WHEN YOU GET STARTED -->
+
+
+
+
+<!-- what is displayed onLoad until the view is loaded -->
+<div id='appPreView'>
+<table>
+<tr>
+	<td><!-- put logo here --></td>
+	<td>
+
+	<div id="loader">
+		<h3>One moment please.</h3>
+
+		<div class='alignCenter'>
+		<progress id="appPreViewProgressBar" max="100" value="0"></progress><br>
+		</div>
+		<div id='appPreViewProgressText'>0% Complete</div>
+	</div>
+	<div id="clickToLoad" class="displayNone pointer">
+		Click here to load your shopping experience!
+	</div>
+	<div class='appMessaging'></div>
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+<div id='appView' class='displayNone'>
+
+<!-- VIEW CONTENT -->
+<!-- leave the appView div, put your your html here ...  -->
+
+	<!--
+	** REMINDER : DO NOT PUT ANY GRAPHICS/CONTENT THAT SHOULD NOT APPEAR ON EVERY PAGE IN THE VIEW (HERE)
+	**				  INSTEAD PUT THEM INTO <div id="homepageTemplate"></div>
+	-->
+	
+<div id='globalMessaging' class='appMessaging'></div><!-- DO NOT REMOVE - used for some high level error handling (usually appears below breadcrumb nav or top bar) -->
+
+<!-- These add specific functionality for the app. In most cases, you want to leave them alone. -->
+<div id='appNav'>
+	<button class='displayNone prodDetailNextItemButton' data-app-role='prodDetailNextItemButton'>Next</button>
+	<button class='displayNone prodDetailPrevItemButton' data-app-role='prodDetailPrevItemButton'>Previous</button>
+</div>
+
+<div id='mainContentArea'></div><!-- DO NOT REMOVE - this is where the specific page (ex: homepage, product, category) content is going to go -->
+
+<!-- ... your html ends -->
+<!-- /VIEW CONTENT -->
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+*************************************************************************************************************
+**
+**
+**										T E M P L A T E S      S T A R T      H E R E
+**
+** template id's are specified within myria.js and loaded, then interpolated with dynamic data from the api.
+**
+*************************************************************************************************************
+-->
+
+
+<div id='appTemplates' class='displayNone'>
+
+
+<!--
+
+############################
+
+COMMONLY EDITED TEMPLATES
+
+############################
+
+-->
+
+
+
+<!--
+the homepageTemplate template is loaded into mainContentArea by default when the application loads
+-->
+<div id='homepageTemplate' class='homeTemplate'>
+	
+
+
+	
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul>
+
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; hide_summary:1; before:<h2>Featured Items</h2>; withReviews:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+
+<!-- a sample of how to format an elastic native search in a data-bind -->
+	<ul id='homeProdSearchBestSellers' data-bind='var: elastic-native({"size":"4","mode":"elastic-native","filter":{"term":{"tags":"IS_BESTSELLER"}}}); format: productSearch; extension: myRIA; loadsTemplate: productListTemplateResultsNoPreview; before:<h2>Best Sellers</h2>;' class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+
+	<a href="#" onClick="return showContent('search',{'TAG':'IS_BESTSELLER'});">See all Best Sellers</a>
+
+<!-- a sample of how to get a 'list' src onto the page. -->
+	<ul data-bind="var: list($models.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+used to organize content when a category is clicked.
+each of the 'sections' are used to load another template. don't change the id.
+don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
+-->
+<div id='categoryTemplate' class='loadingBG categoryTemplate'>
+
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+
+	<img data-bind="var: category(%page.banner1); format: banner; editor: banner; height:250; width:750; extension: myRIA;" src='images/blank.gif' alt='' />
+
+	<h2 data-bind="var: category(%page.header); format: text; editor: text;"></h2>
+
+	<p data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+
+	<ul data-bind="var: category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplate; detail:max;" class='listStyleNone fluidList clearfix noPadOrMargin categoryList'></ul><!-- outputs a list of subcategories -->
+
+	<ul data-bind="var: category(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplate; withReviews:1; items_per_page: 25;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul><!-- outputs the product list -->
+
+	<p data-bind="var: category(%page.description2); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
+
+
+</div>
+
+
+
+
+
+
+
+<!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
+<ul>
+<li id='categoryListTemplate'>
+	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' alt='' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='120' height='120' /></div>
+		<div class='catName white2LGray'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
+	</div>
+</li>
+
+
+<li id='categoryListTemplateRootCats'>
+	<div onClick="showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" class='pointer'>
+		<div class='thumbContainer'><img src='blank.gif' class='catThumb' alt='' data-bind='var: category(%meta.CAT_THUMB); format:imageURL;' width='35' height='35' /></div>
+		<div class='catName'><span data-bind='var: category(pretty); format:catText; extension: myRIA;'></span></div>
+	</div>
+</li>
+
+</ul>
+
+
+
+<ul>
+<!--
+Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
+the loadingBG class is removed (must be that classname) when the template is translated.
+remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
+-->
+<li id='productListTemplate' class='loadingBG  ' onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
+
+	<button class='floatRight pointer quickView displayNone' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">Quickview</button>
+
+	<div onClick="showContent('product',{'pid':$(this).attr('data-pid')})" data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='pointer'>
+		<div class='prodThumbContainer' data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		</div>
+
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+		
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+<!-- 	<span data-bind='var: reviews(reviews.total); format:text; pretext: from ;posttext: reviews; className:numReviews;'></span> -->
+	</div>
+	
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+		<input type='hidden' name='qty' value='1' />
+		<button data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+	</form>
+	
+</li>
+
+
+<!--
+for product lists with addToCart feature (accessories, for example)
+container ul should have lineItemProdlist class on it instead of productList
+-->
+<li id='productListTemplateATC' class='loadingBG  ' >
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+
+		<div class='prodThumbContainer floatLeft'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='120' height='120' />
+		</div>
+
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+	
+		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+	
+			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+	
+			<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+		</form>
+
+	</div>
+</li>
+
+
+<li id='productListTemplateBuyerList' class='loadingBG clearfix' >
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' >
+
+		<div class='prodThumbContainer floatLeft'>
+			<div class='ui-widget ui-widget-content ui-corner-all'>
+				<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='160' height='160' />
+				<div class='buttonList ui-widget ui-widget-header ui-corner-all alignCenter'>
+
+<button class='ui-state-default ui-corner-all' title='add item to cart' onClick="showContent('product',{'pid':$(this).closest('[data-pid]').attr('data-pid')});">
+<span class="ui-icon ui-icon-cart"></span>
+</button>
+
+<button class='ui-state-default ui-corner-all' title='more information' onClick="quickView('product',{'templateID':'productTemplateQuickView','pid':$(this).closest('[data-pid]').attr('data-pid')});">
+<span class="ui-icon ui-icon-info"></span>
+</button>
+
+<button class='ui-state-default ui-corner-all' title='write a review for this item' onClick="app.ext.store_crm.u.showReviewFrmInModal({'pid':$(this).closest('[data-pid]').attr('data-pid'),'templateID':'reviewFrmTemplate'});">
+<span class="ui-icon ui-icon-star"></span>
+</button>
+
+<button class='ui-state-default ui-corner-all' title='remove item from list' onClick="app.ext.myRIA.a.removeItemFromBuyerList({'stid':$(this).closest('[data-pid]').attr('data-pid'),'listID':$(this).closest('[data-buyerlistid]').attr('data-buyerlistid')},{'parentID':$(this).closest('li').attr('id')});">
+<span class="ui-icon ui-icon-trash"></span>
+</button>
+
+				</div>
+			</div>
+		</div>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite floatRight' ></span>
+
+		<h5 data-bind='var: product(zoovy:prod_name); format:text;'></h5>
+
+		<h6 data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+
+
+	</div>
+</li>
+
+
+</ul>
+
+
+
+
+
+<ul>
+<!--
+Used for the product in a product list (prodlist), usually in the body of a category or the homepage.
+the loadingBG class is removed (must be that classname) when the template is translated.
+remember to NOT put the button inside the 'onclick' container or two events will occur onclick.
+
+SANITY -> if you change the height and width of this image, change the .minimalMode .searchResultsProduct in qs_styles.css to match
+-->
+<li id='productListTemplateResults' class='loadingBG searchResultsProduct ' >
+	<div onClick="app.ext.myRIA.a.handleProdPreview($(this).parent().attr('data-pid'));" class='pointer'>
+		<div class='prodThumbContainer'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		</div>
+
+		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
+
+		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+	</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+</li>
+
+<li id='productListTemplateResultsNoPreview' class='loadingBG searchResultsProduct ' >
+	<div onClick="return showContent('product', {'pid' : $(this).parent().attr('data-pid')});" class='pointer'>
+		<div class='prodThumbContainer'>
+		<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(images); format:imageURL;isElastic:1;bgcolor:ffffff;' width='120' height='120' />
+		</div>
+
+		<h5 class='hideInMinimalMode' data-bind='var: product(prod_name); format:text;'></h5>
+
+		<h6 class='hideInMinimalMode' data-bind='var: product(base_price); format:money; isElastic:1; currencySign: $;  hideZero:true; className:price; pretext: Our Price: ;'></h6>
+	</div>
+	<div class='hideInMinimalMode pointer moreDetails' onClick="showContent('product',{'pid':$(this).parent().attr('data-pid')});">more details</div>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+<!--
+form - the form id gets modified to be unique in case multiple viewers are open at the same time. _pid is appended to it.
+NOTE - currently, variations.js supports only 1 viewer at a time. this will change.
+2 fieldsets are present:
+ -> One is for variations/options and really ought to be present.
+ -> The other is for a quantity input and is optional
+
+the submit button does not need to be within the form (a button could be used elsewhere if needed.
+ -> use the button to submit the form, not execute the call or utility separately. That way if additional
+ actions are added to the submit, they only have to be managed in one place.
+
+Additionally, the cross selling features also have hard coded id's, though they're specified within this extension in the xsell callback.
+
+this will likely become more flexible in the future. ###
+-->
+
+
+<div id='productTemplate' class='productPage'>
+
+<ul class='clearfix noPadOrMargin fluidList breadcrumb' data-bind='var: session(session.recentCategories.0); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+
+<table class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).attr("data-pid")});' class='pointer clearfix'  data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>
+
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='340' height='340' />
+
+</div>
+
+	<div data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='prodThumbs'>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"2"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image2); format:imageURL;' alt='' width='100' height='100' /></div>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"3"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image3); format:imageURL;' alt=''  width='100' height='100' /></div>
+
+<div onClick='app.ext.store_product.u.showPicsInModal({"pid":$(this).parent().attr("data-pid"),"int":"4"});' class='pointer'><img src='blank.gif' data-bind='var: product(zoovy:prod_image4); format:imageURL;' alt='' width='100' height='100' /></div>
+
+	</div>
+
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+
+	<hgroup class='marginBottom'>
+		<h5 class='stid' data-bind='var: product(pid); format:text; pretext: Sku: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfg); format:searchLink; extension:myRIA; pretext: Mfg: ;'></h5>
+		<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
+	</hgroup>
+
+	<div class='priceContainer marginBottom'>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		<span class='savings'>
+			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
+			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+		</span>
+	</div>
+	<div class="socialLinks"></div>
+
+
+	<table class='marginBottom fullWidth gridTable' data-app-role='childrenSiblingsContainer'>
+		<tbody data-bind="var: product(zoovy:grp_children); format:productList; extension:store_prodlist; loadsTemplate:productListTemplateChildren;hide_summary:true; withInventory:1; withVariations:1;"></tbody>
+	</table>
+
+
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency marginBottom'></div>
+	<div data-app-role='timeInTransit' class='displayNone'></div>
+
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this), {'action':'modal'}); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:1;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+
+	<div data-bind='var:product(zoovy:prod_cpsiawarning); format:cpsiaWarning; extension:myRIA;'></div>
+	<div data-bind='var:product(zoovy:qty_price);format:quantityDiscounts; extension:store_product; pretext:Quantity Discounts:; className:marginBottom;'></div>
+
+	<section class='marginBottom'>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+	</section>
+
+	<menu data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;' class='CRMButtonMenu'>
+
+	<a href='#' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).parent().attr("data-pid"),"templateID":"reviewFrmTemplate"}); return false;'>Write Review</a>	|
+
+	<a href='#' onClick="app.ext.myRIA.a.add2BuyerList({sku:$(this).parent().attr('data-pid'),'listid':'wishlist'}); return false;">Add to Wishlist</a>
+
+	</menu>
+
+	</td>
+</tr>
+<tr>
+	<td colspan='2' class="tabbedProductContentTD">
+<!--
+the tabs are built in an onComplete.  ID's are added based on sku AND index, so the index (order) of the tabs MUST match the order of the tabContent divs
+or the tab clicked won't open the right content.
+It's done this way because ID's hard coded into template are bad mojo (templates are recycled) and because using data-binds to add id's caused some serious issues
+-->
+<div class='prodTabs tabbedProductContent'>
+
+	<ul class='tabs'>
+		<li class='prodDescTab'><a href='#prodDesc'>Description</a></li>
+		<li class='prodDetailTab displayNone' data-bind='var: product(zoovy:prod_detail); format:showIfSet;'><a href='#prodSpecs'>Specs</a></li>
+		<li class='prodFeaturesTab displayNone' data-bind='var: product(zoovy:prod_features); format:showIfSet;'><a href='#prodFeatures'>Features</a></li>
+		<li class='prodReviewsTab'><a href='#prodReviews'>Reviews</a></li>
+		<li class='prodVideoTab displayNone' data-bind='var: product(youtube:videoid); format:showIfSet;'><a href='#prodVideo'>Video</a></li>
+		<li class='prodAccessoriesTab displayNone' data-bind='var: product(zoovy:accessory_products); format:showIfSet;'><a href='#prodAccessories'>Accessories</a></li>
+	</ul>
+
+	<div class='tabContent' data-anytab-content='prodDesc'>
+		<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodSpecs'>
+		<div data-bind='var: product(zoovy:prod_detail); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodFeatures'>
+		<div data-bind='var: product(zoovy:prod_features); format:wiki; wikiFormats:myRIA;'></div>
+	</div>
+
+
+	<div  class='tabContent' data-anytab-content='prodReviews'>
+
+		<div class='clearfix alignRight'>
+			<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick='app.ext.store_crm.u.showReviewFrmInModal({"pid":$(this).attr("data-pid"),"templateID":"reviewFrmTemplate"});' data-bind='var:product(pid);format:assignAttribute; attribute:data-pid;'>Write Review</button>
+		</div>
+
+		<ul class='listStyleNone clearfix productReviewsList' data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodVideo'>
+		<div data-bind='var: product(youtube:videoid); format:youtubeVideo;'></div>
+	</div>
+
+	<div class='tabContent' data-anytab-content='prodAccessories'>
+<ul class='listStyleNone fluidList clearfix noPadOrMargin lineItemProdlist' data-bind="var: product(zoovy:accessory_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplateATC;hide_pagination:true;hide_summary:true; withReviews:1; withInventory:1; withVariations:1;"></ul>
+	</div>
+
+
+
+
+</div>
+
+	</td>
+</tr>
+</table>
+<div class='prodlistRelatedContainer'>
+	<ul class='listStyleNone fluidList clearfix noPadOrMargin productList' data-bind="var: product(zoovy:related_products); format:productList; extension:store_prodlist;loadsTemplate:productListTemplate;hide_pagination:true;hide_summary:true; before:<h2>Similar Items</h2>; withReviews:1;"></ul>
+</div>
+
+
+</div><!-- productTemplate -->
+
+
+
+
+<!-- a template used for a quickview link off of a category page -->
+<div id='productTemplateQuickView'>
+
+<table class='prodViewerContainer'>
+<tr>
+	<td class='imageContainer'>
+<div>
+
+	<div data-bind="var: product(zoovy:prod_is_tags); format:addTagSpans;" class='tagsContainer'></div>
+	<div data-bind='var:product(pid); format:addPicSlider; extension:myRIA;'><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='240' height='240' /></div>
+
+</div>
+
+	</td>
+
+	<td class='prodSummaryContainer marginBottom no_underline'>
+	<h1 data-bind='var: product(zoovy:prod_name); format:text;'></h1>
+	<h6 class='ztable_row_small stid' data-bind='var: product(pid); format:text; className: stid; pretext: Sku#: ;'></h6>
+
+
+	<div class='priceContainer'>
+		<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
+		<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+		<span class='savings'>
+			<span class='savingsDifference' data-bind='var: product(pid); format:priceRetailSavingsDifference; extension:myRIA; pretext: You save: ;'></span>
+			<span class='savingsPercentage' data-bind='var: product(pid); format:priceRetailSavingsPercentage; extension:myRIA; pretext: (; posttext:);'></span>
+		</span>
+	</div>
+
+	<div data-bind='var: product(zoovy:ship_latency); format:text;pretext:Normally ships in ;posttext: day(s);' class='latency'></div>
+
+	<section class='marginBottom'>
+		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
+		<span data-bind='var: reviews(reviews.total); format:text;posttext: from ;posttext: reviews; className:numReviews;'></span>
+	</section>
+
+	<div data-bind='var: product(zoovy:prod_desc); format:wiki; wikiFormats:myRIA;'></div>
+
+	</td>
+</tr>
+<tr>
+	<td colspan='2'>
+
+	<ul class='listStyleNone clearfix productReviewsList'  data-bind="var: reviews(reviews.@reviews); format:processList; loadsTemplate:productReviewsTemplateDetail;"></ul>
+
+	</td>
+</tr>
+</table>
+
+
+</div><!-- productTemplateQuickView -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 404 page -->
+<div id='pageNotFoundTemplate'>
+
+	<h1>Unable to find page...</h1>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+
+############################
+
+MOST OFTEN YOU WANT TO LEAVE THESE TEMPLATES ALONE
+if modified, be careful about changing id's or classes.
+adding classes is not likely to have any bad effects.
+if you change these, you should move them above this comment so that when you (or the next person) does an upgrade, you know what isn't default
+
+############################
+
+-->
+
+
+
+
+
+<!--  used in breadcrumb -->
+<ul>
+	<li id='breadcrumbTemplate'>
+	<a href='#' onClick="return showContent('category',{'navcat':$(this).parent().attr('data-catsafeid')});" data-bind='var: category(pretty); format:catText; extension: myRIA;'></a>
+	</li>
+</ul>
+
+
+
+
+<!-- loadingBG needed on this for app init (content may take a moment to load) -->
+<div id='companyTemplate' class='clearfix loadingBG'>
+
+	<div class='sideline' >
+<nav id='companyNav'>
+<ul class='listStyleNone noPadOrMargin'>
+	<li><a href='#company?show=about'>About Us</a></li>
+	<li><a href='#company?show=contact'>Contact Information</a></li>
+	<li><a href='#company?show=faq'>FAQ</a></li>
+	<li><a href='#company?show=payment'>Payment Policy</a></li>
+	<li><a href='#company?show=privacy'>Privacy Statement</a></li>
+	<li><a href='#company?show=return'>Return Policy</a></li>
+	<li><a href='#company?show=shipping'>Shipping Information</a></li>
+</ul>
+</nav>
+	</div>
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector in quickstart.js because article tag type isn't ie8 friendly -->
+		<div id='aboutArticle' class='textContentArea article'>
+			<h1>About Us</h1>
+			<div data-bind='var: profile(zoovy:about); format:wiki; wikiFormats:myRIA;' id='aboutUsContent'></div>
+		</div>
+
+
+		<div id='contactArticle' class='displayNone textContentArea'>
+			<h1>Contact Information</h1>
+			<form action='#' onSubmit="app.calls.appSendMessage.init($(this).serializeJSON(),{'callback':'showMessaging','parentID':'contactFormMessaging','message':'Thank you, your message has been sent'},'immutable'); app.model.dispatchThis('immutable');  return false;" id='contactForm' name='contactForm'>
+			<fieldset>
+				<legend>Contact Us</legend>
+				<div id='contactFormMessaging'></div>
+				<div><label for='contactFormSender'>Email Address: </label><input type='email' name='sender' required='required' id='contactFormSender' /></div>
+				<div><label for='contactFormSubject'>Subject: </label><input type='text' name='subject' id='contactFormSubject' /></div>
+				<div><label for='contactFormOID'>Order ID: </label><input type='text' name='OID' id='contactFormOID' /></div>
+				<div><label for='contactFormBody'>Message: </label><textarea name='body' required='required' id='contactFormBody'></textarea></div>
+				<div class='alignRight'><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Send Message' />
+				</div>
+			</fieldset>
+			</form>
+			<div data-bind='var: profile(zoovy:contact); format:wiki; wikiFormats:myRIA;' id='contactContent'></div>
+		</div>
+
+
+
+		<div id='faqArticle' class='displayNone textContentArea'>
+			<h1>Frequently Asked Questions</h1>
+			<div id='faqContent' class='loadingBG ui-accordion ui-widget ui-helper-reset ui-accordion-icons appAccordianesque'></div>
+		</div>
+
+
+
+		<div class='displayNone textContentArea' id='paymentArticle'>
+			<h1>Payment Policy</h1>
+			<div data-bind='var: profile(zoovy:payment_policy); format:wiki; wikiFormats:myRIA;' id='paymentContent'></div>
+		</div>
+
+
+		<div class='displayNone textContentArea' id='privacyArticle'>
+			<h1>Privacy Statement</h1>
+	<h4>About this Privacy Policy:</h4>
+	<p>The entire site, or at least specific portions of this site are assisted by Zoovy technology. Zoovy has created this privacy policy as a template for customers who are using Zoovy technology with their websites. Zoovy in no way takes responsibility for the accuracy or enforcement of this policy. For a copy of Zoovy's privacy policy (which does not necessarily apply to the customers of its customers) visit http://www.zoovy.com/legal</p>
+
+	<p>Zoovy, Inc. has created this privacy statement for this Company in order to demonstrate our joint commitment to privacy. The following discloses the information gathering and dissemination practices for this website:</p>
+
+	<h5>Zoovy.com tracks IP Addresses</h5>
+	<p>Your IP address is used to help diagnose problems with our server, and to administer the Web site, in addition your IP address is used to help identify you and your shopping cart (in conjunction with a cookie.) We also use cookies to deliver content specific to your interests and to save your password so you don't have to re-enter it each time you visit our site.</p>
+
+
+	<h3>This site may contains links to other sites.</h3>
+	<p>This Company is not responsible for the privacy practices or the content of such Web sites, unless otherwise specified below your information is never shared with other companies, even those who are also using Zoovy technology. In the future Zoovy may provide you the ability to share your information across multiple websites which all utilize Zoovy technology however this will only be done at your explicit request.</p>
+
+	<h3>This site requires Unique Identifiers.</h3>
+	<p>This site uses an order form for customers to request information, products, and services, it also collects visitor's contact information (like their email address), in some circumstances their unique identifiers (like their pets name, or mothers maiden name), and financial information (like their account or credit card numbers). Contact information from the order form is used to send orders and information about our company to customers. The customer's contact information is also used to get in touch with the visitor when necessary. Users may opt-out of receiving future informational mailings; see the choice/opt-out section below, users may NOT opt out of receiving order notifications, or other contacts which are deemed essential by this Company.</p>
+
+	<h3>This site requires Financial Information.</h3>
+	<p>Financial information that is collected is used to bill the customer for products and services. Unique identifiers (such as pets name, and mothers maiden name) are collected from Web site visitors to verify the user's identity.</p>
+
+	<h3>This site may have Surveys and/or Contests.</h3>
+	<p>Our online surveys ask visitors for contact information (like their email address). We use contact data from our surveys to send the user information about our company. The customer's contact information is also used to contact the visitor when necessary. Users may opt-out of receiving future mailings; see the choice/opt-out section below. This site may also run contests in which case we may ask visitors for contact information (like their email address). Generally this information is used to verify eligibility, however we may also use contact data from our contests to send users information about this Company. The customer's contact information is also used to contact the visitor when necessary (for example winners). Users may opt-out of receiving future mailings; see the choice/opt-out section below. Financial information that is collected from our users is used to check the users' qualifications for registration and bill the user for products and services.</p>
+
+
+	<h3>Third Party Cookies</h3>
+	<p>Third party vendors, including Google, use cookies to serve the badge on the website and to serve ads based on a user's prior visits to the website.  Users may opt out of Google's use of cookies by visiting the Google advertising opt-out page.</p>
+
+	<h3>This site may contain Public Forums</h3>
+	<p>This site may include chat rooms, forums, message boards, and/or news groups available to its users. Please remember that any information that is disclosed in these areas becomes public information and you should exercise caution when deciding to disclose your personal information.</p>
+
+	<h3>About our System Security</h3>
+	<p>This site has security measures in place to protect the loss, misuse and alteration of the information under our control. Information is stored behind a firewall, against a password protected database system. Whenever sensitive information is accessed it is transmitted using strong SSL encryption. this Company may keep a copy of your information on its own system using Zoovy's WebAPI system, this system may have its own security measures in place.</p>
+
+	<h3>This site provides the choice to Opt In or Out</h3>
+	<p>Our site provides users the opportunity to opt-out of receiving communications from us at the point where we request information about the visitor. This site gives users the following options for removing their information from our database to not receive future communications or to no longer receive our service. Each time an information email is distributed, you have the option to use unique unsubscribe url which is attached to each outgoing email. Customers may unsubscribe at any time by simply logging into their accounts.</p>
+
+	<h3>We provide the ability to Correct/Update YOUR information.</h3>
+	<p>This site gives users the following options for changing and modifying information previously provided. Simply visit the customer login area of this website.</p>
+	<!-- !!! load amendments here -->
+		</div>
+
+
+
+
+		<div class='displayNone textContentArea' id='returnArticle'>
+			<h1>Return Policy</h1>
+			<div data-bind='var: profile(zoovy:return_policy); format:wiki; wikiFormats:myRIA;' id='returnContent'></div>
+		</div>
+
+
+
+		<div class='displayNone textContentArea' id='shippingArticle'>
+			<h1>Shipping Information</h1>
+			<div data-bind='var: profile(zoovy:shipping_policy); format:wiki; wikiFormats:myRIA;' id='shippingContent'></div>
+		</div>
+
+	</div>
+
+</div><!-- /companyTemplate -->
+
+
+
+<!-- loadingBG needed on this for app init (content may take a moment to load) -->
+<div id='customerTemplate' class='clearfix'>
+
+	<div class='sideline' >
+	<nav id='customerNav'>
+	<ul class='listStyleNone noPadOrMargin'>
+<!-- before restoring this, test cuz news form on left was causing some conflicts
+		<li><a href='#customer?show=subscriberLists'>Newsletter Subscription</a></li> -->
+		<li><a href='#customer?show=myaccount'>My Account</a></li>
+		<li><a href='#customer?show=changepassword'>Change Password</a></li>
+		<li><a href='#customer?show=orders'>Order History</a></li>
+		<li><a href='#customer?show=lists'>Manage Lists</a></li>
+		<li class='hideIfLoggedOut'><a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></li>
+	</ul>
+	</nav>
+	</div>
+
+	<div class='mainColumn'>
+<!-- .textContentArea is used as a selector because IE8 doesn't play well  with tag type article as a selector -->
+
+<!--
+newsletterArticle is used for buyers who are not logged in or do not have an account.
+subscribeListsArticle is used for authenticated buyers
+-->
+		<div id='newsletterArticle' class='displayNone textContentArea'>
+			<h1>Subscribe to our Newsletter and Save!</h1>
+			<div data-bind="format:loadsTemplate; loadsTemplate:subscribeFormTemplate;"></div>
+		</div>
+
+		<div id='subscriberListsArticle' class='displayNone textContentArea'>
+			<h1>Manage your Subscriptions</h1>
+<!-- save onchange -->
+<form action='#' name='subscribeFrm'>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+</form>
+
+		</div>
+
+		<div id='myaccountArticle' class='displayNone textContentArea'>
+			<h1>My Account</h1>
+
+			<section>
+
+<div class='billAddressContainer' data-app-role='addressContainer' data-app-addresstype='bill'>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Billing Address</button>
+		<h2>Billing Address(es)</h2>
+	</div>
+	<div class='billAddresses' data-bind="var: buyer(@bill); format:processList; loadsTemplate:billAddressTemplate;"></div>
+</div>
+
+<div class='shipAddressContainer' data-app-role='addressContainer' data-app-addresstype='ship'>
+	<div class='marginBottom'>
+		<button class='floatRight' data-app-event='myRIA|showBuyerAddressAdd'>Add New Shipping Address</button>
+		<h2>Shipping Address(es)</h2>
+	</div>
+	<div class='billAddresses' data-bind="var: buyer(@ship); format:processList; loadsTemplate:shipAddressTemplate;"></div>
+</div>
+
+
+			</section>
+
+
+		</div>
+
+
+		<div id='ordersArticle' class='displayNone textContentArea'>
+			<h1>Order History</h1>
+			<div data-bind="var: orders(@orders); format:processList; loadsTemplate:orderLineItemTemplate;" data-app-role='orderList' class='ui-accordion ui-widget ui-helper-reset ui-accordion-icons '></div>
+		</div>
+
+
+		<div id='invoiceArticle' class='displayNone textContentArea'>
+			<div data-bind="format:loadsTemplate; loadsTemplate: invoiceTemplate; useParentData:true;"></div>
+		</div>
+
+
+
+		<div id='changepasswordArticle' class='displayNone textContentArea'>
+			<h1>Change Password</h1>
+			<div id='changepasswordContainer'>
+
+<form action='#' id='changePasswordForm' name='changePasswordForm' onSubmit="app.ext.store_crm.u.handleChangePassword('changePasswordForm',{'callback':'showMessaging','message':'Thank you, your password has been changed','targetID':'changepasswordContainer'}); return false">
+<fieldset class='borderNone'>
+
+<div class='marginBottom'><label for='changePassword'>Password</label><input type='password' name='password' id='changePassword' size='35' /></div>
+<div class='marginBottom'><label for='changePassword2'>Confirm Password</label><input type='password' name='password2' id='changePassword2' size='35' /></div>
+<div class='marginBottom'><input type='submit' value='Change Password' class='loadingButton ui-button-text ui-button ui-state-default ui-corner-all'></div>
+
+</fieldset>
+</form>
+			</div>
+		</div>
+
+		<div id='listsArticle' class='displayNone textContentArea'>
+			<h1>List Manager</h1>
+			<div id='listsContainer' class='prodlist loadingBG'></div>
+
+			<div id='listEditorContainer' class='displayNone loadingBG'></div><!-- editor for a given list gets added here -->
+
+		</div>
+
+		<div id='forgetmeArticle' class='displayNone textContentArea'>
+			<h1>Your 'Forget Me' list</h1>
+			<p>Items on this list will not show up anywhere on the site. Use it for items you never want to see again. If you add an item to the list by mistake, use this page to remove it from the list and it will start re-appearing during your shopping experience.</p>
+			<ul id='forgetmeContainer' class='prodlist loadingBG'>
+			</ul>
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+<div id='searchTemplate' class='searchResultsPage clearfix'>
+
+	<!-- the div is use to show a detailed view of a product. should be hidden by default. -->
+	<div class='previewProductDetail displayNone'></div>
+
+	<div class='previewListContainer'>
+		<!-- productListTemplateResults gets loaded into here -->
+		<ul id='resultsProductListContainer' class='listStyleNone fluidList noPadOrMargin productList'></ul>
+	</div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!--
+a template for multipage controls
+after this is generated, actions for going to last and next page will be added by the extension.
+to any element with a class of paging and a data-role of either 'next' or 'previous'
+onclicks are recursive, so only add it to the parent element.
+.mpControlsPagination is used to 'hide' the pagination portion of the header if pagination is disabled.
+-->
+
+<div id='mpControlSpec' class='mpControlContainer'>
+	<div class='mpControls ui-widget ui-state-default ui-corner-top'>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='next' title="next page">
+	<span class="ui-icon ui-icon-circle-triangle-e"></span>
+</span>
+
+<div class='floatRight ddUlMenu mpControlsPagination'>
+<ul>
+	<li>
+
+	<a href='#' onClick='return false;'>
+	<span data-bind='var:prodlistmeta(page_in_focus); format:text; pretext: page ;'></span>
+	<span data-bind='var:prodlistmeta(total_page_count); format:text; pretext: of ;'></span>	</a>
+	<ul data-bind='var:prodlistmeta(total_page_count); format:mpPagesAsListItems; extension:store_prodlist;' class='ui-widget-content ui-corner-bottom'></ul>
+	</li>
+</ul>
+</div>
+
+<span class="mpControlsPagination ui-state-active ui-corner-all floatRight paging pointer" data-role='previous' title="previous page">
+	<span class="ui-icon ui-icon-circle-triangle-w"></span>
+</span>
+
+
+<span data-bind='var:prodlistmeta(page_start_point); format:text; pretext:items ;'></span>
+<span data-bind='var:prodlistmeta(page_end_point); format:text; pretext: - ;'></span>
+<span data-bind='var:prodlistmeta(total_product_count); format:text; pretext: of ;'></span>
+
+	</div><!-- /.mpControls -->
+</div><!-- /#mpControlSpec -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+used for store_cart.js
+
+
+The cart viewer is basically just a container for two other elements that get translated.
+Currently, the elements within that get translated have 'fixed' template ID's and element IDs.
+cartTemplateContents is the id used for a list of the items in the cart, and it uses template id cartTemplateProductTemplate.
+cartSummaryTotals is the id used for totals, subtotal, tax, shipping, etc. It uses template id cartSummaryTotalsTemplate.
+
+fixed id's and templates was a decision that was made for usability. transferring around the two id's for each template was
+sticky, so they're fixed. Makes it easier on the designer and the developer.
+
+So the cart template should contain these two elements and the extension should contain these two templates.
+-->
+
+<div id='cartTemplate' class='loadingBG'>
+
+<form id='cartTemplateForm' action='#' onSubmit='return false'>
+<table class='cartContainer'>
+<tr>
+	<td class='cartStuffContainer'>
+	<ul id='cartStuffList' data-bind="var: cart(@ITEMS); format:stuffList; loadsTemplate:productListTemplateCart;" class='listStyleNone fluidList clearfix noPadOrMargin productList lineItemProdlist'></ul>
+	</td>
+
+	<td class='cartSummaryTotalsContainer'>
+	<div class='ui-widget ui-widget-content ui-helper-clearfix ui-corner-all'>
+		<h2 class='ui-widget-header ui-helper-clearfix ui-corner-all ui-header'>Cart Totals</h2>
+		<div class='cartSummaryContainer'>
+
+<section id='cartTemplateCostSummary' class='cartSummary'>
+
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:store_cart;'></div>
+
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; hideZero:false; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; hideZero:false; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; hideZero:false; currencySign: $; pretext:Returns Credit: ; '></div>
+
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Estimated Total: ; extension:store_cart;'></div>
+
+</section>
+
+<section id='cartTemplateShippingContainer'>
+	<h3>Shipping:</h3>
+	<ul class='noPadOrMargin listStyleNone cartShipMethods' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension:store_cart;'></ul>
+</section>
+
+<section class='stdMargin'>
+
+	<div class='cartZipCodeContainer'>
+	<label for='data-ship_zip'>Zip/Postal Code:</label>
+	<input type='text' size='6'  name='ship/postal' id='data-ship_zip' value='' data-bind='var: cart(ship/postal); format:popVal;' maxlength='10' onChange="app.calls.cartSet.init({'ship/postal':this.value, 'ship/region':''});
+	app.ext.store_cart.u.updateCartSummary();
+	app.ext.store_cart.calls.cartShippingMethodsWithUpdate.init();
+	app.model.dispatchThis('immutable');"  />
+	</div>
+
+
+
+	<!-- some buttons that are alternatives to checkout. fewer is better -->
+	<menu class='cartAltButtonsContainer noPadOrMargin'>
+	<button class='ui-button-text ui-button ui-state-default ui-corner-all continueShoppingButton' onClick="$('#modalCart').dialog('close');">Continue Shopping</button>
+	</menu>
+
+	<div class='checkoutButtonsContainer'>
+
+		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="showContent('checkout',{});">Store Checkout</button></span>
+
+		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+
+		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
+
+		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+
+	</div>
+
+</section>
+
+		</div>
+	</div>
+	</td>
+</tr>
+
+</table>
+</form>
+</div><!-- /cartTemplate -->
+
+
+
+
+
+
+
+
+<!-- cart line-item template -->
+<ul>
+	<li id='productListTemplateCart' class='padMargBorderBottom clearfix'>
+
+		<button class='floatRight removeButton' data-bind='format:removeItemBtn; extension:store_cart; useParentData:true;' >Remove Item From Cart</button>
+		<button class='floatRight moveToWishlist marginRight' data-bind='format:moveToWishlistButton; extension:myRIA; useParentData:true;' >Move to Wishlist</button>
+
+		<div class='floatLeft'><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); defaultVar: product(%attribs.zoovy:prod_image1); format:imageURL;' width='75' height='75' /></div>
+
+		<h4 data-bind='var: product(prod_name); format:text; '></h4>
+
+		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+
+		<div>
+		qty: <input type='number' class='qtyInput numberInput' onChange="app.ext.store_cart.u.updateCartQty($(this)); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' />
+		<button class='displayNone'>update</button><!-- here to stop 'enter' in input above from closing modal -->
+		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+
+		</div>
+
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
+	</li>
+</ul>
+
+
+
+
+
+<!--
+used on a product layout. Some product have 'children' which may represent the same item in a different color (variations are commonly used for sizing)
+-->
+
+<table>
+<tr id='productListTemplateChildren'>
+	<td><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='45' height='45' /></td>
+	<td data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></td>
+	<td>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+
+		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
+		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
+
+		<input type='submit' value='Add to Cart' class='ui-button ui-button-text ui-corner-all ui-state-default addToCartButton displayNone' data-bind='var: product(pid); format:addToCartButton; extension:store_product;'  />
+	</form>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+<!-- individual review template -->
+<ul>
+	<li id='productReviewsTemplateDetail' class='reviewLineItem clearfix'>
+	<ul class='prodReviewInfo'>
+		<li data-bind='var:review(RATING); format:addClass; format:addClass; className:review_;' class='reviewSprite'></li>
+		<li data-bind='var:review(CUSTOMER_NAME); format:text;'></li>
+		<li data-bind='var:review(LOCATION); format:text; pretext:of ;'></li>
+		<li data-bind='var:review(CREATED_GMT); format:unix2mdy; pretext:on ;'></li>
+
+	</ul>
+	<blockquote>
+		<h2 data-bind='var:review(SUBJECT); format:text;'></h2>
+		<p data-bind='var:review(MESSAGE); format:text; ;'></p>
+	</blockquote>
+	</li>
+</ul>
+
+
+
+
+<!-- image viewer template -->
+<div id='imageViewerTemplate'>
+
+<table>
+<tr>
+	<td><img src='blank.gif' class='prodBigImage' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='500' height='500' /></td>
+	<td>
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image2); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image3); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image4); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image5); format:imageURL;' width='100' height='100' />
+	<img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image6); format:imageURL;' width='100' height='100' />
+	</td>
+</tr>
+</table>
+</div>
+
+
+
+
+
+
+
+
+<!--
+used for store_crm.js
+-->
+
+<div id='reviewFrmTemplate'>
+
+<form name="reviewFrm" id="reviewFrm" action="#" onSubmit="app.ext.store_crm.u.handleReviews('reviewFrm'); return false;">
+<input type='hidden' name='pid' id='reviewsPid' value='' data-bind='var: product(pid); format:popVal;' />
+
+<label for='reviewsCustomerName'>Your Name:</label>
+<input type="text" name="CUSTOMER_NAME" id='reviewsCustomerName' value="" MAXLENGTH="30" />
+<br>
+
+<label for='reviewsLocation'>Location:</label>
+<input type="text" MAXLENGTH="30" name="LOCATION" id='reviewsLocation' value="" />
+<br>
+
+<label for='reviewsSubject'>Subject:</label>
+<input type="text" MAXLENGTH="60" name="SUBJECT" id='reviewsSubject' />
+<br>
+
+
+<label for='reviewsMessage'>Review:</label>
+<textarea name="MESSAGE" id='reviewsMessage'></textarea>
+<br>
+
+<label for='reviewsRating'>Score:</label>
+<select name="RATING" id='reviewsRating'>
+	<option value="10">5</option>
+	<option value="9">4.5</option>
+	<option value="8">4</option>
+	<option value="7">3.5</option>
+	<option value="6">3</option>
+	<option value="5">2.5</option>
+	<option value="4">2</option>
+	<option value="3">1.5</option>
+	<option value="2">1</option>
+	<option value="1">.5</option>
+</select>
+<br>
+
+<input type="submit" value="Submit Review" class='ui-button-text ui-button ui-state-default ui-corner-all' />
+
+</form>
+</div>
+
+
+
+
+
+<div id='subscribeFormTemplate'>
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+
+<fieldset class='userInfo borderNone'>
+<div>
+<input type='email' placeholder='email address' maxlength='50' size='30' required='required' name='login' value='' />
+</div>
+
+<div>
+<input type='text' placeholder='full name' maxlength='50' size='30' required='required' name='fullname' value='' />
+</div>
+</fieldset>
+
+<fieldset data-bind="var:newsletters(@lists); format:subscribeCheckboxes; extension:store_crm;" class='borderNone subscriberLists'></fieldset>
+
+<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Subscribe' />
+
+</form>
+</div>
+
+
+
+
+
+
+<!-- used in the /customer section for order view -->
+
+<section id='orderLineItemTemplate' class='appAccordianesque' data-bind='var:order(ORDERID);format:assignAttribute; attribute:data-orderid;'>
+
+	<div data-app-role='orderHeader' onClick="app.ext.myRIA.u.showOrderDetails($(this).parent());" class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' >
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
+	<span data-bind='var:order(ORDERID);format:text;pretext:Order ID: ;'></span>
+	<span data-bind='var:order(MODIFIED_GMT);format:unix2mdy; pretext: Placed on ;'></span>
+	</div>
+
+	<div data-app-role='orderContents' class='ui-accordion-content ui-helper-reset displayNone ui-widget-content '></div>
+
+</section>
+
+
+
+
+
+
+
+
+
+<section  id='faqTopicTemplate'>
+
+	<div class='ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom' data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:data-topicid;' onClick="app.ext.myRIA.a.showFAQbyTopic($(this).attr('data-topicid'));">
+	<span class="ui-icon ui-icon-triangle-1-e floatLeft marginRight"></span>
+	<span data-bind='var:faq(TOPIC_TITLE);format:text;'></span>
+	</div>
+
+	<div data-bind='var:faq(TOPIC_ID);format:assignAttribute; attribute:id; valuePretext:faqDetails4Topic_;' class='ui-accordion-content ui-helper-reset ui-widget-content displayNone'></div>
+
+</section>
+
+
+<div id='faqQnATemplate'>
+	<div class='faqQuestion' data-bind="var:faq(QUESTION); format:text;"></div>
+	<div class='faqAnswer' data-bind="var:faq(ANSWER); format:text;"></div>
+</div>
+
+
+
+<!--
+
+The following classes used in the bill and ship address templates are used in the quickstart.js file: buyerAddressContainer, buttonMenu, offMenu, onMenu, editable
+The 'data-action' attribute is used to assign an onclick.
+
+-->
+
+<address id='billAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<div class='addressFullname'>
+		<span data-bind="var: address(bill/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(bill/lastname);format:text;"  title='last name'></span>
+	</div>
+	<div class='address'>
+		<div data-bind="var: address(bill/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(bill/address2);format:text;"  title='address 2'></div>
+
+		<span data-bind="var: address(bill/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(bill/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(bill/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(bill/countrycode);format:text;" title='country'></div>
+
+	</div>
+
+</address>
+
+
+<!-- used in the my account area -->
+<address id='shipAddressTemplate' class='ui-widget ui-widget-content ui-corner-all marginBottom '>
+	<button data-app-event="myRIA|showBuyerAddressUpdate" class='floatRight'>edit</button>
+	<div class='addressFullname'>
+		<span data-bind="var: address(ship/firstname);format:text;"  title='first name'></span>
+		<span data-bind="var: address(ship/lastname);format:text;"  title='last name'></span>
+	</div>
+	<div class='address'>
+		<div data-bind="var: address(ship/address1);format:text;"  title='address'></div>
+		<div data-bind="var: address(ship/address2);format:text;"  title='address 2'></div>
+
+		<span data-bind="var: address(ship/city);format:text;"  title='city'></span>,
+		<span data-bind="var: address(ship/region);format:text;"  title='state'></span>.
+		<span data-bind="var: address(ship/postal);format:text;"  title='zip'></span>
+		<div data-bind="var: address(ship/countrycode);format:text;" title='country'></div>
+
+	</div>
+
+</address>
+
+
+
+
+<table class='orderContentsTable' data-app-role='invoiceContainer' id='invoiceTemplate'>
+<tr>
+	<td colspan='2'>
+<div class='floatRight'>
+<button data-app-event="myRIA|execOrder2Cart">Re-order</button>
+<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
+</div>
+
+<h3 data-bind='var:order(order/flow/pool);format:text; pretext:Order Status: ;'></h3>
+
+	</td>
+</tr>
+<tr>
+	<td>
+<hgroup class='marginBottom'>
+<!-- print icon -->
+
+
+<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+
+<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+</hgroup>
+
+<address class='marginBottom'>
+<b>
+	<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+	<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/bill/address1);format:text;'></div>
+<div data-bind='var:order(order/bill/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(order/data.bill_int_zip);'></span>
+</div>
+<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
+</address>
+
+<address class='marginBottom'>
+<b>
+	<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+	<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+</b>
+<div data-bind='var:order(order/ship/address1);format:text;'></div>
+<div data-bind='var:order(order/ship/address2);format:text;'></div>
+<div>
+	<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+	<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+	<span data-bind='var:order(order/ship/postal);format:text;'></span>
+</div>
+<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
+</address>
+
+
+	</td>
+	<td class='orderContentsProdlistContainer'>
+	<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+	<table  class='listStyleNone lineItemProdlist'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+	</table>
+	</td>
+</tr>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div><!-- /templates -->
+
+
+
+
+
+
+
+
+
+
+<div id='loginFormForModal' class='loginOption displayNone' title='Please log in'>
+
+<!-- the contents of this div/id are toggled on/off when login/logout occurs. don't change the ID -->
+
+
+<p id='loginMessaging' class='marginBottom appMessaging'></p>
+
+<div id='loginFormContainer'>
+<form action='#' onSubmit='app.ext.myRIA.u.loginFrmSubmit($("#modalLoginlogin").val(),$("#modalLoginpassword").val()); return false;' id='modalLoginForm'>
+<input type='hidden' name='loginCallback' id='loginCallback' value='' /><!-- used to save a callback action in -->
+	<fieldset>
+
+	<div>
+	<label for='modalLoginlogin'>Login/Email</label>
+	<input type='email' class='zform_textbox zform_email'  name='login' id='modalLoginlogin' value='' size='25' />
+	</div>
+
+	<div>
+	<label for='modalLoginpassword'>Password</label>
+	<input type='password' class='zform_textbox zform_password'   name='password' id='modalLoginpassword' value='' size='25' />
+	</div>
+
+	<div>
+	<input type='submit' value='log in' class='ui-button-text ui-button ui-state-default ui-corner-all ' />
+	</div>
+	</fieldset>
+</form>
+
+<div id='recoverPasswordContainer'>
+<hr />
+
+<h3 class='marginBottom'>Recover Password</h3>
+<div id='recoverPasswordMessaging'></div>
+<form action='#' onSubmit="app.calls.appBuyerPasswordRecover.init($('#passwordRecoveryLogin').val(),{'callback':'showMessaging','message':'Thank you, will receive an email shortly','targetID':'recoverPasswordMessaging'}); app.model.dispatchThis('immutable'); return false;">
+<fieldset>
+<div class='marginBottom'><label for='passwordRecoveryLogin'>Login/Email</label> <input type='text' name='login' required='required' id='passwordRecoveryLogin' size='25' /></div>
+
+<div><input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all ' value='Email Password to Me' /></div>
+
+</fieldset>
+</form>
+
+</div><!-- /recoverPasswordContainer -->
+
+<div>
+<hr />
+<button class='ui-button-text ui-button ui-state-default ui-corner-all ' onClick="showContent('customer',{'show':'newsletter'});">Create Account</button>
+</div>
+
+
+
+</div>
+
+<!-- this div will appear after a successful login. if you bind a new action to the button, best to empty the div and re-add the button, so the actions don't statck. -->
+	<div id='loginSuccessContainer' class='center displayNone'>
+		<button class='ui-button-text ui-button ui-state-default ui-corner-all ' id='modalLoginContinueButton' onClick="$('#loginFormForModal').dialog('close');">Continue</button>
+	</div>
+</div>
+
+
+
+<div class='debug displayNone'>
+<table>
+<tr>
+	<td>
+<ul class='debugQuickLinks'>
+	<li>Store Links
+	<ul>
+		<li><a href='#' onClick="return showContent('homepage',{});">Homepage</a></li>
+		<li><a href='#' onClick="return showContent('customer',{'show':'orders'});">Orders</a></li>
+		<li><a href='#' onClick="return showContent('cart',{'show':'cart'});">Cart</a></li>
+		<li><a href='#' onClick="app.ext.store_cart.u.showCartInModal({'templateID':'cartTemplate'});">CartInModal</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'return'});">Returns</a></li>
+		<li><a href='#' onClick="return showContent('company',{'show':'privacy'});">Privacy</a></li>
+		<li><a href='#' onClick="return quickView('category',{'navcat':'.air_fresheners','templateID':'categoryTemplate'});">Cat in Modal</a></li>
+	</ul>
+	</li>
+	<li>Some JS test links
+	<ul>
+		<li><a href='#' onClick="localStorage.clear();">Clear Local Storage</a></li>
+		<li><a href='#' onClick="app.ext.orderCreate.a.startCheckout($('#mainContentArea'));">mobile checkout</a></li>
+		<li><a href='#' onClick="app.u.throwGMessage('All your base are belong to us','mainContentArea');">throwGmessage</a></li>
+	</ul>
+	</li>
+</ul>
+	</td>
+	<td>
+<form name='headerSearchFrm' action='#' class='productSearchForm marginLeft' method="get">
+	<input type='search' name='KEYWORDS' placeholder='product search' class="productSearchKeyword handleDefault" />
+	<button>Search</button>
+</form>
+	</td>
+</tr>
+</table>
+
+</div>
+
+
+</body>
+</html>

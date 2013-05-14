@@ -68,6 +68,29 @@ var admin_orders = function() {
 			}
 		},
 
+
+	tiles : {
+		
+		mktSummary : function(){
+			
+			app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //amazon
+			app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //buy.com
+			app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
+			
+			
+			var obj = {
+				'bgcolor' : 'magenta',
+				'target':'orders',
+				'$content' : $("<div \/>").append("<span class='focon-camera icon'></span><span class='tilename'>marketplace summary</span>"),
+				'size' : '1x1'
+				};
+			
+			return obj;
+			}
+		
+	},
+
+
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
@@ -564,6 +587,7 @@ else	{
 //if you are reusing a targetID, do your own empty before running this.
 var $target = $(app.u.jqSelector('#',targetID)),
 $order = $(app.renderFunctions.createTemplateInstance('orderDetailsTemplate',{'id':targetID+"_order",'orderid':orderID,'cid':CID}));
+
 $order.attr('data-order-view-parent',orderID); //put this on the parent so that any forms or whatnot that need to reload early can closest() this attrib and get id.
 
 //create an instance of the invoice display so something is in front of the user quickly.
@@ -573,6 +597,8 @@ $('body').showLoading({'message':'Fetching order'});
 
 //go fetch order data. callback handles data population.
 app.model.destroy('adminOrderDetail|'+orderID); //get a clean copy of the order.
+app.model.destroy('adminOrderPaymentMethods'); //though not stored in local, be sure the last orders methods aren't by accident.
+
 app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseData){
 //	app.u.dump("Executing callback for adminOrderDetail");
 	
@@ -591,6 +617,9 @@ app.ext.admin.calls.adminOrderDetail.init(orderID,{'callback':function(responseD
 		orderData.emailMessages = app.ext.admin_orders.vars.emailMessages; //pass in the email messages for use in the send mail button
 
 		app.renderFunctions.translateSelector(selector,orderData);
+		
+		$(".gridTable",selector).anytable();
+		
 //cartid isn't present till after the orderDetail request, so getting payment methods adds a second api request.
 		app.ext.admin.calls.adminOrderPaymentMethods.init({
 			'orderid':orderID,
@@ -658,9 +687,9 @@ app.ext.admin.u.handleAppEvents($target);
 
 
 		showOrderEditorInDialog : function(orderID,CID)	{
-//app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
-//app.u.dump(" -> orderID : "+orderID);
-//app.u.dump(" -> CID : "+CID);
+app.u.dump("BEGIN extensions.admin_orders.a.showOrderEditorInDialog");
+app.u.dump(" -> orderID : "+orderID);
+app.u.dump(" -> CID : "+CID);
 
 if(orderID)	{
 
@@ -834,13 +863,14 @@ else	{
 
 //used for adding email message types to a select menu.
 //designed for use with the vars object returned by a adminEmailList _cmd
-		emailMessagesListOptions : function($tag,data)	{
+//* 201318 -> moved to admin extension as part of global email tool
+/*		emailMessagesListOptions : function($tag,data)	{
 			var L = data.value.length;
 			for(var i = 0; i < L; i += 1)	{
 				$tag.append($("<option \/>").val(data.value[i].MSGID).text(data.value[i].MSGTITLE).data({'MSGID':data.value[i].MSGID,'adminEmailListIndex':i}));
 				}
 			},
-			
+*/			
 		billzone : function($tag,data){
 			$tag.text(data.value.substr(0,2)+". "+data.value.substr(2,2).toUpperCase()+", "+data.value.substr(4,5));
 			return true;
@@ -924,6 +954,19 @@ else	{
 			$tag.text(pretty).attr('title',data.value).addClass(className); //used in order list, so don't force any pre/posttext.
 			return true;
 			}, //paystatus
+
+
+		orderEditQtyInput : function($tag,data)	{
+			var $input = $("<input \/>",{'type':'number','name':'qty','size':4,'step':'0.01','min':0}).val(data.value.qty).css('width',35);
+			if(data.value.stid.charAt(0) == '%')	{$input.attr('readonly','readonly').css('border-width','0');} //make field not-editable and not look editable.
+			$tag.append($input);
+			},
+
+		orderEditPriceInput : function($tag,data)	{
+			var $input = $("<input \/>",{'type':'number','name':'price','size':4,'step':'0.01','min':0}).val(data.value.price).css('width',50);
+			if(data.value.stid.charAt(0) == '%')	{$input.attr('readonly','readonly').css('border-width','0');} //make field not-editable and not look editable.
+			$tag.append($input);
+			},
 
 		
 		paystatusDetailed : function($tag,data){
@@ -1018,7 +1061,7 @@ else	{
 						}
 					content += "<\/ul>";
 
-					for(index in data.value)	{
+					for(var index in data.value)	{
 						contents += index+": "+data.value[index]+"<br>";
 						}
 					
@@ -1131,7 +1174,7 @@ else	{
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 		getOrderFlagsAsArray : function(flagint)	{
 			var flags = new Array(),
-			B = Number(flagint).toString(2); //binary
+			B = Number(newsint).toString(2).split('').reverse().join(''); //binary
 //			app.u.dump(" -> Binary of flags: "+B);
 			B.charAt(0) == 1 ? flags.push('SINGLE_ITEM') : flags.push('MULTI_ITEM'); //1
 			B.charAt(1) == 1 ? flags.push('SHIP_EXPEDITED') : flags.push('SHIP_GROUND'); //2
@@ -1226,12 +1269,13 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				else if (pref['tender'] == 'PAYPALEC') {
 					// PAYPALEC is a separate tender type (but short term it's basically a credit card)
 					// long term it will have some specialized actions that are unique exclusively to paypal
+					// old orders may have a payment type of PAYPAL (IPN) but those are old and these actions are not applicable. no actions are.
 					if (pref['ps'] == '189') {	actions.push('capture') }
 					if (pref['ps'] == '199') {	actions.push('capture') }
 					if (pref['ps'] == '259') { actions.push('retry') }
 					if (pref['ps'].substring(0,1) == '0' || pref['ps'].substring(0,1) == '4') { 
-						actions.push('refund') 
-						actions.push('void')
+						actions.push('refund');
+						actions.push('void');
 						}
 					}
 				else if (pref['tender'] == 'CREDIT') {
@@ -1267,9 +1311,6 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				else if (pref['tender'] == 'LAYAWAY') {
 					actions.push('layaway')
 					actions.push('void')
-					}
-				else if (pref['tender'] == 'PAYPALEC') {
-					if (pref['ps'] == '199') { actions.push('capture') };
 					}
 				else{
 					app.u.dump(" -> no tender conditions met.");
@@ -1342,7 +1383,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							break;
 						case 'override':
 							output += "<h4 class='clearfix'>Override: "+pref.uuid+"<\/h4>";
-							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin.u.showHelpInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
+							output += "<div class='warning clearfix smallPadding'>This is an advanced interface intended for experts only.<br \/><b>Do not use without the guidance of technical support.</b><br \/><span class='lookLikeLink' onClick='app.ext.admin_support.a.showHelpDocInDialog(\"info_paymentstatus\");'>Payment Status Codes</span><\/div>";
 							output += "<br \/>New payment status: <input type='textbox' size='3' onKeyPress='return app.u.numbersOnly(event);' name='ps' value='"+pref.ps+"' \/>";
 							output += reasonInput;
 							output += "<button>Override</button>";
@@ -1397,6 +1438,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 				$('#orderListTableBody').data("selectable")._mouseStop(null); // trigger the mouse stop event 
 				},
 
+			
 			
 //orderid and msgID are required.
 			sendOrderMail : function(orderID,msgID,$row)	{
@@ -1457,7 +1499,7 @@ see the renderformat paystatus for a quick breakdown of what the first integer r
 							if(sdomain && sDomains[sdomain])	{} //dispatch already queued.
 							else if(sdomain)	{
 								sDomains[sdomain] = true; //add to array so that each sdomain is only requested once.
-								app.calls.appProfileInfo.init({'sdomain':sdomain},{},'immutable');
+								app.calls.appProfileInfo.init({'domain':sdomain},{},'immutable');
 								}
 							else	{
 								sdomain = "DEFAULT"; //use default profile if no sdomain is available.
@@ -1712,46 +1754,51 @@ $('.editable',$container).each(function(){
 				
 
 			"orderItemUpdate" : function($btn)	{
-				$btn.button();
-				$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
-				$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
-					var $parent = $btn.closest("[data-order-view-parent]"),
-					orderID = $parent.data('order-view-parent'),
-					$row = $btn.closest('tr'),
-					uuid = $row.data('uuid'),
-					qty = $("[name='qty']",$row).val(),
-					price = $("[name='price']",$row).val();
-					
-					if(uuid && orderID && qty && price)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
-						$parent.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
-						}
-					});
+				var $row = $btn.closest('tr');
+				if($row.data('stid') && $row.data('stid').charAt(0) == '%')	{$btn.hide()} //coupons can't be removed this way.
+				else	{
+					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-arrowrefresh-1-e"},text: false});
+					$btn.off('click.orderItemUpdate').on('click.orderItemUpdate',function(){
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent'),
+						uuid = $row.data('uuid'),
+						qty = $("[name='qty']",$row).val(),
+						price = $("[name='price']",$row).val();
+						if(uuid && orderID && qty && price)	{
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMUPDATE?uuid="+uuid+"&qty="+qty+"&price="+price]);
+							$parent.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.orderItemUpdate, unable to determine orderID ["+orderID+"], uuid ["+uuid+"], price ["+price+"], OR qty ["+qty+"]");
+							}
+						});
+					}
 				}, //orderItemUpdate
 
 			"orderItemRemove" : function($btn)	{
-				$btn.button();
-				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
-				$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
-					var $parent = $btn.closest("[data-order-view-parent]"),
-					orderID = $parent.data('order-view-parent'),
-					$row = $(this).closest('tr'),
-					stid = $row.data('stid');
-					if(stid && orderID)	{
-						app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
-						$parent.empty();
-						app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
-						app.model.dispatchThis('immutable');
-						}
-					else	{
-						app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
-						}
-					});
+				var $row = $btn.closest('tr');
+				if($row.data('stid') && $row.data('stid').charAt(0) == '%')	{$btn.hide()} //coupons can't be removed this way.
+				else	{
+					$btn.button();
+					$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+					$btn.off('click.orderItemRemove').on('click.orderItemRemove',function(){
+						var $parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent'),
+						stid = $row.data('stid');
+						if(stid && orderID)	{
+							app.ext.admin.calls.adminOrderUpdate.init(orderID,["ITEMREMOVE?stid="+stid]);
+							$parent.empty();
+							app.ext.admin_orders.a.showOrderView(orderID,app.data['adminOrderDetail|'+orderID].customer.cid,$parent.attr('id'),'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							app.u.throwGMessage("in admin_orders.buttonActions.orderItemRemove, unable to determine orderID ["+orderID+"] or pid ["+json.pid+"]");
+							}
+						});
+					}
 				}, //orderItemRemove
 
 			"orderItemAddStructured" : function($btn)	{
@@ -1770,7 +1817,7 @@ $('.editable',$container).each(function(){
 	
 						if(formJSON.sku && orderID)	{
 							if(app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
-								for(index in formJSON)	{
+								for(var index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
 //if the value is more than two characters and not all uppercase, it's likely a text based sog. add a tildae to the front of the value.
 //this is used on the API side to help distinguish what key value pairs are options.
@@ -1779,7 +1826,7 @@ $('.editable',$container).each(function(){
 										formJSON[index.substr(4)] = "~"+formJSON[index]
 										}
 //strip pog_ but no tildae, which is ONLY needed for text based sogs.
-									else if(index.substring(0,4) == 'pog_')	{
+									else if(index.length == 2 && index.toUpperCase() == index)	{
 										var pogID = index.substr(4)
 //special handling for checkboxes. If NOT optional and blank, needs to be set to NO.
 //on a checkbox sog, an extra param is passed pog_ID_cb which is set to 1. this is to 'know' that the cb was present so if the value is blank, we can handle accordingly.
@@ -1905,7 +1952,7 @@ $('.editable',$container).each(function(){
 				$btn.button();
 				$btn.off('click.orderPrintPackSlip').on('click.orderPrintPackSlip',function(event){
 					event.preventDefault();
-					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
+//					app.u.dump("BEGIN admin_orders.e.orderPrintPackSlip click event");
 					var orderID = $btn.data('orderid') || $btn.closest('[data-orderid]').data('orderid');
 					if(orderID)	{
 						app.ext.convertSessionToOrder.a.printOrder(orderID,{data:{'type':'packslip','profile':app.data['adminOrderDetail|'+orderID].our.profile,'domain':app.data['adminOrderDetail|'+orderID].our.sdomain}});
@@ -1987,25 +2034,7 @@ else	{
 
 //applied to the select list that contains the list of email messages. on change, it puts the message body into the textarea.
 			"orderEmailCustomChangeSource" : function($select)	{
-				$select.off('change.orderEmailCustomChangeSource').on('change.orderEmailCustomChangeSource',function(){
-					var $option = $("option:selected",$(this)),
-					datapointer = $option.closest("[data-adminemaillist-datapointer]").data('adminemaillist-datapointer'),
-					$form = $option.parents('form');
-					if($option.val() == 'BLANK')	{
-						$form.find("[name='body']").val(""); //clear the form.
-						$form.find("[name='updateSystemMessage']").attr({'disabled':'disabled','checked':false}); //can't update 'blank'.
-						$(".msgType",$form).empty();
-						}
-					else if(datapointer && app.data[datapointer])	{
-						$form.find("[name='BODY']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGBODY);
-						$form.find("[name='SUBJECT']").val(app.data[datapointer]['@MSGS'][$option.data('adminEmailListIndex')].MSGSUBJECT);
-						$form.find("[name='updateSystemMessage']").removeAttr('disabled');
-						$(".msgType",$form).text($form.find("[name='MSGID']").val());
-						}
-					else	{
-						app.u.dump("In admin.e.orderEmailCustomChangeSource, either unable to determine datapointer ["+datapointer+"] or app.data[datapointer] is undefined ["+typeof app.data[datapointer]+"].");
-						}
-					})
+				app.ext.admin.e.toggleEmailInputValuesBySource($select);
 				}, //orderEmailCustomChangeSource
 
 //
@@ -2252,14 +2281,14 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 					formJSON.tender = formJSON['want/payby']; //in a future version, want/payby will be renamed tender in the form. can't because this version 201248 is shared with 1PC. !!!.
 					delete formJSON['want/payby'];
 					
-//					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
+					app.u.dump(" -> formJSON.tender: "+formJSON.tender);
 					
 					if(formJSON.tender)	{
 						var $paymentContainer = $btn.closest("[data-ui-role='orderUpdatePaymentMethodsContainer']"),
 						CMD, //the command for the cart update macro. set later.
 						errors = (typeof app.ext.store_checkout.validate[formJSON.tender] === 'function') ? app.ext.store_checkout.validate[formJSON.tender](formJSON) : false; //if a validation function exists for this payment type, such as credit or echeck, then check for errors. otherwise, errors is false.
 
-						
+						app.u.dump('errors'); app.u.dump(errors);
 						$paymentContainer.find('.mandatory').removeClass('mandatory'); //remove css from previously failed inputs to avoid confusion.
 						
 
@@ -2274,7 +2303,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 							var msgObj = app.u.errMsgObject("Some required field(s) are missing or invalid. (indicated in red)");
 							msgObj.parentID = 'adminOrdersPaymentMethodsContainer';
 							app.u.throwMessage(msgObj);
-							for(index in errors)	{
+							for(var index in errors)	{
 								$("[name='"+errors[index]+"']",$paymentContainer).parent().addClass('mandatory');
 								}
 							}
@@ -2285,7 +2314,7 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 //when you do this, the validate.CREDIT function needs to be updated too.
 //the object used to create the suplementals is shared with checkout and it currently has the data as payment/cc et all.
 //so that's stripped to just cc. 
-								for(index in formJSON)	{
+								for(var index in formJSON)	{
 //									app.u.dump(" -> index.substring(0,8): "+index.substring(0,7));
 //									app.u.dump(" -> index.substr(8): "+index.substr(7));
 									if(index.substring(0,8) == 'payment/')	{
@@ -2293,6 +2322,11 @@ app.ext.admin.calls.adminOrderSearch.init(query,{'callback':'listOrders','extens
 										delete formJSON[index]; //clean out invalid params
 										}
 									}
+								}
+							else if(formJSON.tender.substr(0,7) == 'WALLET:')	{
+								CMD = "ADDPROCESSPAYMENT";
+//								formJSON.PN = 'WALLET';
+								formJSON.WI = formJSON.tender.split(':')[1]; //WI is what is after : in the wallet ID.
 								}
 							else if(formJSON.flagAsPaid && formJSON.flagAsPaid.toLowerCase() == 'on')	{
 								CMD = "ADDPAIDPAYMENT";

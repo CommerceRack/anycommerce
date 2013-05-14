@@ -7,7 +7,7 @@
 
 <body>
 
-<script src="../jquery-1.7.2.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 
 <script type='text/javascript'>
 
@@ -28,23 +28,26 @@ textarea	{width:90%; height:auto; font-size:.9em; line-height:1.3em; clear:both;
 h1,h2,h3,h4,h5,h6	{margin:12px 0}
 h3	{color:#333333;}
 section	{margin:12px 0;}
+
+.hint	{color:#666666;}
 </style>
 
 
 <h2>This code requires cycle.js</h2>
-<br />
+<span class='hint'>http://jquery.malsup.com/cycle/</span>
+<br /><br />
 <h3>put this into the homepage template:</h3>
-
+<div class='hint'>HINT: Change blank.gif for images/yourfilename.jpg</div>
 <code>
 
 <div id="slideshowContainer" class='clearfix marginBottom'>
 	<div id="slideshowNav"></div>
 	<ul id="wideSlideshow" class="pics slideshow">
-		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow1); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow2); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow3); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow4); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
-		<img src='blank.gif' width='900' height='300' data-bind="var: page(banner_slideshow5); format: banner; extension:myRIA; editor:banner; wrap:<li>;" />
+		<li><img src='blank.gif' width='900' height='300' alt='' /></li>
+		<li><img src='blank.gif' width='900' height='300' alt='' /></li>
+		<li><img src='blank.gif' width='900' height='300' alt='' /></li>
+		<li><img src='blank.gif' width='900' height='300' alt='' /></li>
+		<li><img src='blank.gif' width='900' height='300' alt='' /></li>
 	</ul>
 </div><!-- /slideshowContainer -->
 

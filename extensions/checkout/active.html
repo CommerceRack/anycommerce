@@ -1,0 +1,582 @@
+<!--
+
+Each panel (fieldset) loads it's own template within the panelContent so that as needed, the panel can be easily updated.
+This also allows for messaging to be easily added to the fieldset that is NOT impacted by a template being updated.
+The name of the role in the fieldset matches the template (ex: chkoutPreflight = chkoutPreflightTemplate).
+The chkout prefix is reserved for checkout.
+
+item list and summary are separate just to give more control over location.
+-->
+<div id='checkoutTemplate' class='checkoutFormContainer' data-app-role='checkout'>
+
+	<form action='#'>
+	<input type='hidden' name='bill/shortcut' data-bind="var: cart(bill/shortcut); format:popVal;" />
+	<input type='hidden' name='ship/shortcut' data-bind="var: cart(ship/shortcut); format:popVal;" />
+
+<!-- define panel order -->
+	<fieldset data-app-role='chkoutPreflight' class='marginBottom'>
+		<legend class='headerPadding' >Email / Account Login</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutPreflightTemplate; useParentData:true;'></div>
+	</fieldset>
+
+
+
+	<fieldset data-app-role='chkoutAccountCreate' class='displayNone marginBottom'>
+		<legend class='headerPadding' >Account Creation</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutAccountCreateTemplate; '></div>
+	</fieldset>
+
+
+
+	<fieldset data-app-role='chkoutAddressBill' data-app-addresstype='bill' class='marginBottom'>
+		<legend class='headerPadding' >Billing Address</legend>
+		<p data-app-role='addressExists' class='displayNone clearfix'>Click the checkmark of the address you would like to use</p>
+		
+		<div class='panelContent displayNone addressList' data-app-role='addressExists' data-bind='var: buyer(@bill); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
+		
+		<div class='clearfix marginBottom' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='bill'>Add New Address</button></div>
+		
+		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressBillTemplate;'></div><!-- for new customers -->
+		
+		<div data-app-role='billToShipContainer' >
+		<label>
+		<input type='checkbox' name='want/bill_to_ship' data-bind="var: cart(want/bill_to_ship); format:popCheckbox; hideZero:false;" checked='checked' data-app-event='orderCreate|tagAsBillToShip' />
+		ship to billing address
+		</label>
+		</div>
+	</fieldset>
+
+
+
+	<fieldset data-app-role='chkoutAddressShip'  data-app-addresstype='ship' class='displayNone marginBottom'>
+		<legend class='headerPadding' >Shipping Address</legend>
+		<div class='panelContent displayNone addressList' data-app-role='addressExists' data-bind='var: buyer(@ship); format:processList; loadsTemplate: chkoutBuyerAddressTemplate;'></div><!-- for return customers -->
+		<div class='panelContent' data-app-role='addressNew' data-bind='format:loadsTemplate; loadsTemplate: chkoutAddressShipTemplate;'></div><!-- for new customers -->
+		<div class='clearfix' data-app-role='addressExists'><button data-app-event='orderCreate|showBuyerAddressAdd' data-app-addresstype='ship'>Add New Shipping Address</button></div>
+	</fieldset>
+
+
+
+	<fieldset data-app-role='chkoutMethodsShip' class='marginBottom'>
+		<legend class='headerPadding' >Shipping Methods</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsShipTemplate;'></div>
+	</fieldset>
+
+
+	
+	<fieldset data-app-role='chkoutMethodsPay' class='marginBottom'>
+		<legend class='headerPadding' >Payment Choices</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutMethodsPayTemplate;'></div>
+	</fieldset>
+
+
+
+<!-- totals et all -->
+	<fieldset data-app-role='chkoutNotes' class='marginBottom'>
+		<legend class='headerPadding' >Order Notes/Special Instructions</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutNotesTemplate;'></div>
+	</fieldset>
+
+
+
+<!-- line items -->	
+	<fieldset data-app-role='chkoutCartItemsList' class='marginBottom'>
+		<legend class='headerPadding' >Contents</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartContentsTemplate;'></div>
+	</fieldset>
+
+
+
+<!-- totals et all -->
+	<fieldset data-app-role='chkoutCartSummary' class='marginBottom'>
+		<legend class='headerPadding' >Summary</legend>
+		<div class='panelContent' data-bind='format:loadsTemplate; loadsTemplate: chkoutCartSummaryTemplate;'></div>
+	</fieldset>
+
+	</form>
+	
+</div>
+
+
+
+
+<section id='chkoutPreflightTemplate'>
+
+<h4 class='displayNone' data-app-role='username' data-bind="var:cart(bill/email); defaultVar: cart(customer/login); format:text;"></h4>
+
+<div data-app-role='login'>
+
+	<div data-app-role='loginPasswordContainer' class='displayNone floatRight'>
+		<div>If you have an account with us, please enter your password below to login</div>
+		<input type='password' placeholder='password' size='30' name='password' /><button data-app-event='orderCreate|execBuyerLogin'>login</button>
+	</div>
+
+	<input type='email' name='bill/email' size='30' placeholder="email address" data-bind="var:cart(bill/email); defaultVar:cart(customer/login); format:popVal;" data-app-event='orderCreate|execBuyerEmailUpdate' /><br />
+	<label class='accountCreateContainer'><input type='checkbox' name='want/create_customer' data-app-event='orderCreate|tagAsAccountCreate' />Create customer account</label>
+	
+
+
+</div>
+
+</section>
+
+
+
+
+
+
+
+
+
+<!--
+billing address panel spec
+This template is also used in the myAccount page, which is why a default using _ is present.
+-->
+
+<section id='chkoutAddressBillTemplate'>
+
+	<div><input type='text' placeholder='first name' name='bill/firstname' required='required' value='' data-bind='var: cart(bill/firstname); defaultVar: cart(bill/firstname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='last name' name='bill/lastname' required='required' value='' data-bind='var: cart(bill/lastname); defaultVar: cart(bill/lastname); format:popVal;'  /></div>
+
+	<div class='bill_company'><input type='text' name='bill/company' placeholder='company' value='' data-bind='var: cart(bill/company); defaultVar: cart(bill/company); format:popVal;'  /></div><!-- class is added so it can be easily disabled w/ css -->
+
+	<div><input type='text' name='bill/address1' placeholder='address' required='required' value='' data-bind='var: cart(bill/address1); defaultVar: cart(bill/address1); format:popVal;'  data-app-event='orderCreate|execAddressUpdate' /></div>
+
+	<div><input type='text' name='bill/address2' placeholder='address 2' value='' data-bind='var: cart(bill/address2); defaultVar: cart(bill/address2); format:popVal;'  data-app-event='orderCreate|execAddressUpdate' /></div>
+
+	<div><input type='text' name='bill/city' placeholder='city' required='required' value='' data-bind='var: cart(bill/city); defaultVar: cart(bill/city); format:popVal;'  data-app-event='orderCreate|execAddressUpdate' /></div>
+	
+	<div><input type='text' name='bill/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(bill/region); defaultVar: cart(bill/region); format:popVal;' maxlength='20' data-app-event='orderCreate|execAddressUpdate' /></div>
+	
+	<!-- postal not required for international. don't add it. -->
+	<div><input type='text'  name='bill/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(bill/postal); defaultVar: cart(bill/postal); format:popVal;' maxlength='10'  data-app-event='orderCreate|execAddressUpdate' /></div>
+
+	<div class='billCountry' data-app-role='billCountry'><select name='bill/countrycode' data-bind='var: cart(bill/countrycode); defaultVar: cart(bill/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;' required='required' data-app-event="orderCreate|execCountryUpdate" ></select></div>
+
+	<div><input type='tel' name='bill/phone' placeholder='phone number' required='required' value='' data-bind='var: cart(bill/phone); defaultVar: cart(bill/phone); format:popVal;'  /> <span class='hint zhint'>in case of billing/delivery problems</span></div>
+
+</section>
+
+
+
+
+
+<!--
+shipping address panel.
+don't add required to any inputs because if bill to ship is checked, NONE of these fields are required/populated.
+-->
+
+<section id='chkoutAddressShipTemplate'>
+
+	<div><input type='text' placeholder='first name' name='ship/firstname' required='required' value='' data-bind='var: cart(ship/firstname); defaultVar: cart(ship/firstname); format:popVal;'  /></div>
+	<div><input type='text' placeholder='last name' name='ship/lastname' required='required' value='' data-bind='var: cart(ship/lastname); defaultVar: cart(ship/lastname); format:popVal;'  /></div>
+
+	<div class='bill_company'><input type='text' name='ship/company' placeholder='company' value='' data-bind='var: cart(ship/company); defaultVar: cart(ship/company); format:popVal;'  /></div><!-- class is added so it can be easily disabled w/ css -->
+
+	<div><input type='text' name='ship/address1' placeholder='address' required='required' value='' data-bind='var: cart(ship/address1); defaultVar: cart(ship/address1); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
+
+	<div><input type='text' name='ship/address2' placeholder='address 2' value='' data-bind='var: cart(ship/address2); defaultVar: cart(ship/address2); format:popVal;' /></div>
+
+	<div><input type='text' name='ship/city' placeholder='city' required='required' value='' data-bind='var: cart(ship/city); defaultVar: cart(ship/city); format:popVal;' data-app-event='orderCreate|execAddressUpdate' /></div>
+	
+	<div><input type='text'  name='ship/region' placeholder='state/region' required='required' size='5' value='' data-bind='var: cart(ship/region); defaultVar: cart(ship/region); format:popVal;' maxlength='20' data-app-event='orderCreate|execAddressUpdate' /></div>
+
+	
+	<div><input type='text'  name='ship/postal' placeholder='zip/postal code' required='required' size='14' value='' data-bind='var: cart(ship/postal); defaultVar: cart(ship/postal); format:popVal;' maxlength='10' data-app-event='orderCreate|execAddressUpdate'/></div>
+
+	<div class='shipCountry' data-app-role='shipCountry'><select name='ship/countrycode' data-bind='var: cart(ship/countrycode); defaultVar: cart(ship/countrycode); defaultValue:US; format:countriesAsOptions; extension: cco;'  data-app-event="orderCreate|execCountryUpdate" ></select></div>
+
+</section>
+
+
+<!-- a panel that only appears in 'nice' -->
+<section id='chkoutAccountCreateTemplate'>
+
+<div><input type='password' data-minlength='8' placeholder='password' required='required' name='want/new_password' size='12' data-bind='var: cart(want/new_password); format:popVal;' /> <span class='hint'>must be at least 8 characters</span></div>
+<div><input type='password' data-minlength='8' placeholder='verify password' required='required'  name='want/new_password2' size='12' data-bind='var: cart(want/new_password2); format:popVal;' /></div>
+<label>Recovery Question
+<select name='want/recovery_hint' data-bind='var: cart(want/recovery_hint); format:popVal;'>
+	<option value='2'>Name of your favorite childhood pet?</option>
+	<option value='3'>City you were born in?</option>
+	<option value='4'>Last name of your best friend growing up?</option>
+	<option value='5'>Last city you lived in?</option>
+</select>
+</label>
+
+<input type='text' placeholder='recovery answer' required='required' value='' name='want/recovery_answer' maxlength='20' size='20'  data-bind='var: cart(want/recovery_answer); format:popVal;' /></label>
+
+</section>
+
+
+
+<!--
+shipping methods panel spec
+do NOT change any div id's or messaging will not work properly.
+messaging are hidden by default, then displayed if needed. keeps panel from being jittery.
+-->
+
+<div id='chkoutMethodsShipTemplate'>
+	<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@SHIPMETHODS); format:shipMethodsAsRadioButtons; extension: orderCreate;' data-app-event='orderCreate|addTriggerShipMethodUpdate'></ul>
+</div>
+
+
+
+
+
+
+
+
+<!--
+payment options panel spec
+do NOT change any div id's or messaging will not work properly.
+-->
+
+
+<div id='chkoutMethodsPayTemplate'>
+
+	<div class='giftCardContainer' data-app-role="giftcardContainer">
+	<label for='giftcardCode'>Gift Certificate Code:</label>
+	<input type='text' name='giftcard' size='16'  data-app-event='orderCreate|addTriggerButtonClick' />
+	<button data-app-event='orderCreate|execGiftcardAdd'>add</button> 
+	<small data-app-role='giftcardHint' class='zhint hint displayNone'>if you wish to combine gift cards with another payment method, enter them here</small>
+	</div>
+
+	<div data-app-role='paymentQContainer' class='marginBottom'>
+		<ul class='noPadOrMargin listStyleNone' data-bind='var: cart(@PAYMENTQ); format:processList; loadsTemplate:cartPaymentQTemplate;'></ul>
+	</div>
+	
+<!-- used in paypal transactions to cancel as paypal -->	
+	<div data-app-event='orderCreate|execChangeFromPayPal' class='displayNone pointer zlink'>
+	Choose Alternate Payment Method
+	</div>
+
+<!-- more payment types is first but, when applicable, stored payments is shown. That way stored payments are easily selected but it's hard to miss that other payment choices are available. -->
+	<div data-app-role='paymentOptionsContainer' data-app-event="orderCreate|addTriggerPayMethodUpdate">
+		
+		<h2 data-app-role='nonStoredPaymentsHeader' class='displayNone'>More Payment Choices</h2>
+		<div data-app-role='nonStoredPaymentsContent'>
+			<div data-bind='var: getPaymentMethods(@methods); format:payMethodsAsRadioButtons; extension: orderCreate;'></div>
+		</div>
+		
+		<h2 data-app-role='storedPaymentsHeader' class='displayNone'>Your Stored Payments</h2>
+		<div data-app-role='storedPaymentsContent' class='displayNone' data-bind="var: buyerWalletList(@wallets); format:processList; loadsTemplate: chkoutBuyerWalletListItem;"></div>
+
+
+	</div>
+
+</div>
+
+
+
+
+
+
+<!--
+used in checkout for 'order total' panel. this is the line-item spec for a cart item (product/coupon/etc)
+the defaultVar on prodName & image is for promotions, which have a 'description' attribute
+-->
+<table>
+<tr id='chkoutCartItemTemplate'>
+	<td><img class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL; defaultVar: product(%attribs.zoovy:prod_image1);' width='50' height='50' /></td>
+	<td>
+	<div class='prodName' data-bind='var: product(prod_name); format:text; defaultVar: description;'></div>
+	<div class='stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+	<div class='prodLatency' data-bind='var:product(%attribs.zoovy:ship_latency); format:text; pretext:Normally ships in ; posttext: day(s);'></div>
+	<div class='prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
+	</td>
+	<td class='alignRight'><span data-bind='var: product(qty); format:text;'></span></td>
+	<td class='alignRight'><span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;'></span></td>
+	<td class='alignRight'><span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span></td>
+</tr>
+</table>
+
+
+<section id='chkoutCartContentsTemplate'>
+<table class='fullWidth gridTable'>
+<thead>
+<tr>
+	<th colspan='2' class='alignLeft'>product information</th>
+	<th class='alignRight'>qty</th>
+	<th class='alignRight'>price</th>
+	<th class='alignRight'>item total</th>
+</tr>
+</thead>
+<tbody data-bind='var: cart(@ITEMS); format:processList; loadsTemplate:chkoutCartItemTemplate;'></tbody>
+</table>
+</section>
+
+
+
+
+
+
+
+
+<section id='chkoutCartSummaryTemplate'>
+	
+	<div data-bind="var: cart(sum/items_total); format:money; className:orderSubtotal; hideZero:false; currencySign: $; pretext:Subtotal: ; "></div>
+	<div data-bind='var: cart(sum/tax_total); format:money; className:orderTax; hideZero:true;currencySign: $; pretext:Tax: ; '></div>
+	<div data-bind='var: cart(want/shipping_id); format:shipInfoById; className:orderShipping; hideZero:false; extension:cco;'></div>
+	<div data-bind='var: cart(sum/hnd_total); format:money; className:hndTotal; currencySign: $; pretext:Handling: ; '></div>
+	<div data-bind='var: cart(sum/order_total); format:money; className:orderTotal; hideZero:false; currencySign: $; pretext:Order Total: ; '></div>
+	<div data-bind='var: cart(sum/gfc_total); format:money; className:orderGiftcardTotal; currencySign: $; pretext:Giftcard(s): ; '></div>
+	<div data-bind='var: cart(sum/pnt_total); format:money; className:rewardPointsTotal; currencySign: $; pretext:Reward Points: ; '></div>
+	<div data-bind='var: cart(sum/rmc_total); format:money; className:returnsCreditTotal; currencySign: $; pretext:Returns Credit: ; '></div>
+	<div data-bind='var: cart(sum/spc_total); format:money; className:spcTotal; currencySign: $; pretext:Specialty: ; '></div>
+
+	<div data-bind='var: cart(sum/balance_due_total); format:orderBalance; className:orderBalanceDue; hideZero:false; currencySign: $; pretext:Balance Due: ; extension:cco;'></div>
+
+	<div class='couponEntryContainer' data-app-role='couponContainer'>
+		<label for='coupon'>Coupon/Promo Code:</label>
+		<input type='text' name='coupon' size='8'  data-app-event='orderCreate|addTriggerButtonClick' />
+		<button data-app-event="orderCreate|execCouponAdd" >add</button>
+	</div>
+
+	<button data-app-event="orderCreate|execCartOrderCreate">
+		Place Order
+	</button>
+
+<div data-app-role='referenceNumber' class='displayNone'>
+	<label>Purchase Order/Reference #: </label>
+	<input type'text' name='want/reference_number' size='12' />
+</div>
+
+
+</section>
+
+
+
+
+
+
+
+
+
+<address id='chkoutBuyerAddressTemplate' class='ui-widget ui-widget-content ui-corner-all stdPadding'>
+	<div data-bind="var:address(bill/address1); defaultVar: address(ship/address1); format:text;"></div>
+	<div data-bind="var:address(bill/postal); defaultVar: address(ship/postal); format:text;"></div>
+	<div class='clearfix'>
+		<button class='floatRight' data-app-event='orderCreate|execBuyerAddressSelect'>Use This Address</button>
+		<button class='floatRight marginRight' data-app-event="orderCreate|showBuyerAddressUpdate">Edit This Address</button>
+	</div>
+</address>
+
+
+
+
+
+
+<ul>
+	<li id='cartPaymentQTemplate'>
+	<span data-bind="var:payment(TN); format:text;"></span>
+	<span class='marginLeft' data-bind="var:payment($$); format:money; currencySign: $;  hideZero:false;"></span><span data-bind="var:payment($#); format:money; currencySign: $; pretext:/;"></span>
+<!--	<button class='marginLeft' title='Remove this payment method'>X</button> -->
+	</li>
+</ul>
+
+<!-- radio name is same as rest of payments so that only 1 can be selected and form still easily passes validation -->
+
+<div id='chkoutBuyerWalletListItem'>
+	<label>
+		<input type='radio' name='want/payby' value='' data-bind="var: wallet(ID); format:popVal;" />
+		<span data-bind="var: wallet(TD); format:text;"></span>
+		<span data-bind="var: wallet(TD); format: walletName2Icon; extension:cco;"></span>
+	</label>
+</div>
+
+
+<!--
+order notes panel spec
+do NOT change the input name or id or checkout will likely break.
+-->
+
+<div id='chkoutNotesTemplate'>
+<p>Please include any special instructions or comments here:</p>
+<textarea class='chkoutOrderNotes fullWidth' name='want/order_notes' data-app-event='orderCreate|execCartSet' data-bind='var: cart(want/order_notes); format:popVal;'></textarea>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!-- used after a successful checkout.  -->
+
+<div id='chkoutCompletedTemplate' class='checkoutSuccess'>
+
+	<div class='floatRight ocmThirdParty'>
+		<h2>What next?</h2>
+<!-- the twitter and facebook actions are added post checkout. The order contents are included as part of the message -->
+		<div class='ocm ocmFacebookComment pointer zlink marginBottom'><img src='fb_comment-133x32.png' width='132' height='32' alt='Comment on Facebook' /></div>
+		<div class='ocm ocmTwitterComment pointer zlink marginBottom' ><img src='tweet-133x32.png' width='132' height='32' alt='Tweet about it!' /></div>
+		<div class='ocm ocmContinue pointer zlink marginBottom'><img src='continue_shopping-133x32.png' width='132' height='32' alt='continue shopping' /></div>
+
+	</div>
+
+
+	<div class='orderSummaryDetails'>
+		<h2>Thank you! Your order has been placed.</h2>
+		<h3 data-bind='var: order(orderid); format:text; pretext:Your order id is ;'></h3>
+		<div class='pointer marginBottom' data-app-role='paymentMessaging'>
+			Click here to view/print your invoice.
+			<div class='zwarn' data-bind="var: order(payment_status_msg); format:text;"></div><!-- displays payment issues/errors -->
+		</div>
+		<div data-bind="var:order(payment_status_detail); format:text;" class='marginBottom'></div>
+		<div>You will receive an order confirmation email with details of your order</div>
+	</div>
+
+
+	<div class='clearAll'></div>
+	<span id='BuySafeGuaranteeSpan'></span>
+	<div class='clearAll'></div>
+
+<div data-app-role='invoiceContainer'>
+	<table class='orderContentsTable fullWidth'>
+	<tr>
+		<td colspan='2'>
+	<div class='floatRight hide4Print'>
+	<button data-app-event="orderCreate|execInvoicePrint">Print Invoice</button>
+	</div>
+	
+	<h3 data-bind='var:order(order/data/pool);format:text; pretext:Order Status: ;'></h3>
+	
+		</td>
+	</tr>
+	<tr>
+		<td>
+	<hgroup class='marginBottom'>
+	<!-- print icon -->
+	
+	
+	<!-- <h2 data-bind='var:order(bill/firstname);format:text; pretext:Shipping Status: ;'></h2> -->
+	
+	<h5 class='orderTotal' data-bind='var:order(order/sum/order_total);format:money; currencySign: $;  hideZero:false; pretext:Order Total: ;'></h5>
+	<h5 class='balanceDue' data-bind='var:order(order/sum/balance_due_total);format:money; currencySign: $;  hideZero:false; pretext:Balance Due: ;'></h5>
+	</hgroup>
+	
+	<address class='marginBottom'>
+	<h4>
+		<span data-bind='var:order(order/bill/firstname);format:text; pretext:Bill To: ;'></span>
+		<span data-bind='var:order(order/bill/lastname);format:text;'></span>
+	</h4>
+	<div data-bind='var:order(order/bill/address1);format:text;'></div>
+	<div data-bind='var:order(order/bill/address2);format:text;'></div>
+	<div>
+		<span data-bind='var:order(order/bill/city);format:text;posttext:, ;'></span>
+		<span data-bind='var:order(order/bill/region);format:text;posttext:. ;'></span>
+		<span data-bind='var:order(order/bill/postal);format:text; defaultVar:order(data.bill_int_zip);'></span>
+	</div>
+	<div data-bind='var:order(order/bill/countrycode);format:text;'></div>
+	</address>
+	
+	<address>
+	<h4>
+		<span data-bind='var:order(order/ship/firstname);format:text; pretext:Ship To: ;'></span>
+		<span data-bind='var:order(order/ship/lastname);format:text;'></span>
+	</h4>
+	<div data-bind='var:order(order/ship/address1);format:text;'></div>
+	<div data-bind='var:order(order/ship/address2);format:text;'></div>
+	<div>
+		<span data-bind='var:order(order/ship/city);format:text;posttext:, ;'></span>
+		<span data-bind='var:order(order/ship/region);format:text;posttext:. ;'></span>
+		<span data-bind='var:order(order/ship/postal);format:text; defaultVar:order(data.ship_int_zip);'></span>
+	</div>
+	<div data-bind='var:order(order/ship/countrycode);format:text;'></div>
+	</address>
+	
+	
+		</td>
+		<td class='orderContentsProdlistContainer'>
+		<ul data-bind='var:order(order/tracking); format:orderTrackingLinks; extension:store_crm;before:<h4>Shipping:</h4>;' class='displayNone noListStyle marginBottom'></ul>
+		<table  class='listStyleNone lineItemProdlist'>
+		<tbody data-bind="var: order(order/@ITEMS); format:stuffList; loadsTemplate:chkoutInvoiceItemTemplate;"></tbody>
+		</table>
+		</td>
+	</tr>
+	</table>
+</div>
+
+</div>
+
+
+
+
+
+
+
+<div id='cvvcidHelp' class='displayNone' title='Where to find your CVV/CID and why we ask for it'>
+	<img src='sec_code-159x100.gif' alt='Visa/MC/Discover card security code' width='238' height='150'  />
+	<img src='sec_code_amex-159x100.gif' alt='AMEX card security code' width='238' height='150' />
+	<p>For higher security and more efficient processing of your payment, you must provide a card security code to make this purchase. For Visa, MasterCard and Discover the security code is the last section of numbers in the signature area on the back of the card. For American Express the security code is the 4-digit number found in small print next to your account number on the front, usually above it on the right.</p>
+</div>
+
+
+
+
+
+<!--
+This template is used in customer/orders in order list mode and also in invoice view mode (after checkout)	
+likely, this will be used anywhere an invoice is shown.
+-->
+
+
+
+
+
+
+
+
+
+<!--
+order line-item template used in order history.
+note - on the write review button, var:product(product) will use the pid, not the stid (which includes options).
+'product' is how the pid is stored in buyerPurchaseHistoryDetail.
+If this gets recycled, test in order history after making changes.
+-->
+<table>
+	<tr id='chkoutInvoiceItemTemplate' class='padMargBorderBottom'>
+	
+	<td>
+	<div class='prodThumbContainer marginRight'>
+	<img src='blank.gif' class='prodThumb' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='55' height='55' />
+	</div>
+	</td>
+	
+	<td class='valignTop ztable_row'>
+	
+<div class='infoContainer'>
+
+	<h3 data-bind='var: product(prod_name); format:text; '></h3>
+	<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
+
+	<div>
+	<span data-bind='var: product(qty); format:text; pretext:qty: ;'></span>
+	<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
+	<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
+	</div>
+
+	<div class='ztable_row_small prodOptions' data-bind='var: product(%options); format:selectedOptionsDisplay;'></div>
+
+
+
+	
+</div>
+	</td>
+	
+	<td class='alignRight hide4Print'>
+	<button class='writeReview' data-app-event="store_crm|showWriteReview" data-bind='var:product(product);format:assignAttribute; attribute:data-pid;'>Write Review</button>	
+	</td>
+
+
+	</tr>
+</table>
+
+
+
+
+
+

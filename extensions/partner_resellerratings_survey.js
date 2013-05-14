@@ -50,7 +50,7 @@ var resellerratings_survey = function() {
 			startExtension : {
 				onSuccess : function(){
 							
-app.ext.store_checkout.checkoutCompletes.push(function(P){
+app.ext.orderCreate.checkoutCompletes.push(function(P){
 	//declared as window. to indicate they should be global.
 	window.__rr_inv = P.orderID;
 	window.__rr_email_pass = P.bill.email;

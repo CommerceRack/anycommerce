@@ -112,13 +112,13 @@ So the cart template should contain these two elements and the extension should 
 		<div class='ztable_row_small stid' data-bind='var: product(sku); format:text; className: stid; pretext: Sku: ;'></div>
 		
 		<div>
-		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this).attr('data-stid'),this.value); app.model.dispatchThis('immutable');"  data-bind='var: product(qty); format:cartItemQty;extension:store_cart;' size='3' />
+		qty: <input type='number' class='qtyInput' onChange="app.ext.store_cart.u.updateCartQty($(this).attr('data-stid'),this.value); app.model.dispatchThis('immutable');"  data-bind='format:cartItemQty;extension:store_cart;useParentData:true;' size='3' />
 		<span data-bind='var: product(price); format:money; currencySign: $;  hideZero:false; pretext: x ;' ></span>
 		<span data-bind='var: product(extended); format:money; currencySign: $; hideZero:false; pretext: = ;'></span>
 
 		</div>
 		
-		<div class='ztable_row_small prodOptions' data-bind='var: variations(*options); format:selectedOptionsDisplay;'></div>
+		<div class='ztable_row_small prodOptions' data-bind='var: variations(%options); format:selectedOptionsDisplay;'></div>
 	</li>
 </ul>
 

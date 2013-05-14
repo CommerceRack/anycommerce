@@ -1,9 +1,9 @@
 .displayNone	{display:none;}
-.clearfix	{clear:both;} /* experimenting here - 20120327 */
+.clearfix	{clear:both; display:block;} /* experimenting here - 20120327 */
 .clearfix:after {
     content: ".";
     display: block;
-    height: 0;
+    height: 1px;
     clear: both;
     visibility: hidden;
 	}

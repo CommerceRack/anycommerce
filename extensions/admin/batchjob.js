@@ -18,7 +18,7 @@
 
 
 var admin_batchJob = function() {
-	var theseTemplates = new Array('batchJobStatusTemplate');
+	var theseTemplates = new Array('batchJobStatusTemplate','batchJobManagerPageTemplate','batchJobRowTemplate');
 	var r = {
 
 
@@ -63,11 +63,27 @@ var admin_batchJob = function() {
 
 		a : {
 			
-			showBatchJobManager : function(){},
+			showBatchJobManager : function($tabContent){
+				$tabContent.empty();
+//generate some of the task list content right away so the user knows something is happening.
+				$tabContent.showLoading({'message':'Fetching list of batch jobs'});
+				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
+					$tabContent.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$tabContent.anymessage({'message':rd});
+						}
+					else	{
+						$tabContent.anycontent({'templateID':'batchJobManagerPageTemplate','dataAttribs':{'id':'batchJobManagerContent'},'datapointer':rd.datapointer});
+						$(".gridTable",$tabContent).anytable();
+						app.u.handleAppEvents($tabContent);
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				},
 
 //called by brian in the legacy UI. creates a batch job and then opens the job status.
 			adminBatchJobCreate : function(opts){
-				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading();
+				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).showLoading({'message':'Registering Batch Job'});
 //parentID is specified for error handling purposes. That's where error messages should go and also what the hideLoading() selector should be.
 				app.ext.admin.calls.adminBatchJobCreate.init(opts,{'callback':'showBatchJobStatus','extension':'admin_batchJob','parentID':app.ext.admin.vars.tab+"Content"},'immutable');
 				app.model.dispatchThis('immutable');
@@ -91,7 +107,63 @@ var admin_batchJob = function() {
 				else	{
 					app.u.throwMessage("No jobid specified in admin_batchJob.a.showBatchJobStatus");
 					}
-				} //showTaskManager
+				}, //showTaskManager
+
+			showReport : function($target,vars)	{
+//				app.u.dump("BEGIN admin_batchjob.a.showReport");
+				if($target && vars && vars.guid)	{
+					$target.empty();
+					$target.showLoading({'message':'Generating Report'}); //run after the empty or the loading gfx gets removed.
+//					app.u.dump(" -> $target and vars.guid are set.");
+					app.ext.admin.calls.adminReportDownload.init(vars.guid,{'callback':function(rd)	{
+						if(app.model.responseHasErrors(rd)){
+							$target.hideLoading();
+							$target.anymessage({'message':rd});
+							}
+						else	{
+							var L = app.data[rd.datapointer]['@HEAD'].length,
+							reportElementID = 'batchReport_'+vars.guid
+							tableHeads = new Array();
+							
+							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
+//google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
+								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'][0].length)	{
+//@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
+									for(var i = 0; i < L; i += 1)	{
+										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
+										}
+		
+									$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
+									$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
+									
+									app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
+									app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
+									
+									}
+								else	{
+									var errorDetails = "";
+									for(index in vars)	{
+										errorDetails += "<br>"+index+": "+vars[index];
+										}
+									$target.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This will cause a fatal error in visualization. Details:'+errorDetails,'gMessage':true,'persistent':true});
+									}
+								
+								
+								}
+							else	{
+								$target.anymessage({'message':'There are no rows/data in this report.','persistent':true});
+								}
+							
+							$target.hideLoading(); //this is after drawTable, which may take a moment.
+							}
+						}},'mutable'); app.model.dispatchThis('mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_batchjob.a.showReport, either $target ['+typeof $target+'] or batchGUID ['+vars.guid+'] not set.','gMessage':true});
+					}
+				
+				}
 
 			}, //Actions
 
@@ -119,13 +191,58 @@ var admin_batchJob = function() {
 					}
 				else	{} //do nothing (do NOT show button.
 				}
+			
 			}, //renderFormats
 
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-		u : {} //u
+		u : {}, //u
+		e : {
+
+
+			execAdminBatchJobCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminBatchJobCreate').on('click.execAdminBatchJobCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var sfo = $form.serializeJSON();
+						sfo.guid = app.u.guidGenerator();
+						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
+//NOTE -> the batch_exec will = REPORT for reports.
+			showReport : function($btn)	{
+				if($btn.closest('tr').data('batch_exec') == 'REPORT')	{
+					$btn.button().show();
+					$btn.off('click.showReport').on('click.showReport',function(event){
+						event.preventDefault();
+						var $table = $btn.closest('table');
+						
+						$table.stickytab({'tabtext':'batch jobs'});
+						$('button',$table).removeClass('ui-state-focus'); //removes class added by jqueryui onclick.
+						$('button',$table).removeClass('ui-state-highlight');
+						$btn.addClass('ui-state-highlight');
+						app.ext.admin_batchJob.a.showReport($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")),$btn.closest('tr').data());
+//make sure buttons and links in the stickytab content area close the sticktab on click. good usability.
+						$('button, a',$table).each(function(){
+							$(this).off('close.stickytab').on('click.closeStickytab',function(){
+								$table.stickytab('close');
+								})
+							})
+						});
+					}
+				else	{
+//btn hidden by default. no action needed.
+					}
+				}
+			
+			} //u
 
 
 		} //r object.

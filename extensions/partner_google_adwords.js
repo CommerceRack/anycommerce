@@ -21,14 +21,6 @@ An extension for Google Adwords conversion tracking.
 
 This extension is untested.
 
-Insert the following globar vars into your index.html while enabling 
-var google_conversion_id = <user adwords id>;
-var google_conversion_language = "en";
-var google_conversion_format = "2";
-var google_conversion_color = "ffffff";
-var google_conversion_label = "O1ylCOHf-QMQ766S4QM";
-var google_conversion_value = {}; // Will be replaced by subtotal on checkout
-
 */
 
 var google_adwords = function() {
@@ -51,8 +43,8 @@ var google_adwords = function() {
 			startExtension : {
 				onSuccess : function (){
 					if(app.ext.myRIA && app.ext.myRIA.template){
-						app.ext.store_checkout.checkoutCompletes.push(function(P){
-							app.u.dump("BEGIN google_adwords code pushed on store_checkout.checkoutCompletes");
+						app.ext.orderCreate.checkoutCompletes.push(function(P){
+							app.u.dump("BEGIN google_adwords code pushed on orderCreate.checkoutCompletes");
 							var order = app.data['order|'+P.orderID];
 							google_conversion_value = order.sum.items_total;
 							app.u.loadScript(('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.googleadservices.com/pagead/conversion.js');

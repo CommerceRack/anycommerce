@@ -1,5 +1,28 @@
 
 
+<table>
+<tr id='messageListTemplate'>
+	<td class='valignTop'>ICON</td>
+	<td class='valignTop'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:truncText; numCharacters: 75;"></p>
+	<button data-app-event='admin|showMessageDetail'>Details</button>
+	</td>
+	<td class='valignTop'>
+	<button data-app-event='admin|execMessageClear' class='smallButton'>Clear this message</button>
+	</td>
+</tr>
+</table>
+
+
+<div id='messageDetailTemplate'>
+	<h5 data-bind="var:message(author); format:text;"></h5>
+	<p data-bind="var:message(txt); format:text;"></p>
+	<hr />
+	More actions/buttons based on message type.
+</div>
+
+
 <!--
 
 ########################################################
@@ -137,9 +160,13 @@ PRODUCT FINDER/CHOOSER
 	<h5 data-bind='var: product(zoovy:prod_mfgid); format:text; pretext: Mfg ID: ;'></h5>
 	<h4 class='basePrice' data-bind='var: product(zoovy:base_price); format:money; currencySign: $;  hideZero:true; pretext: Our Price: ;'></h4>
 	<h5 class='prodMSRP' data-bind='var: product(zoovy:prod_msrp); format:money; currencySign: $;  hideZero:true; pretext: MSRP: ;'></h5>
+	
+	
+	
 	</td>
 </tr>
 </table>
+<div data-bind='useParentData:true; format:detailedInvDisplay; extension:store_product;' class='inventory'></div>
 	<form action='#' onSubmit="return false;">
 	<input type='hidden' data-bind='var: product(pid); format:popVal;' name='sku' />
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
@@ -455,10 +482,10 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/private/index.cgi'); return false;" title="/biz/setup/private/index.cgi">Private Files</a><br />
 			<div class="helper">Private files include diagnostic logs, reports, and ticket attachments.</div>
 			
-			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/index.cgi" >Developer SDK</a><br />
+			<a href="https://github.com/zoovy/AnyCommerce-Development/" target='_blank'>Developer SDK</a><br />
 			<div class="helper">Use this to easily custom integrations or apps</div>
 			
-			<a href="https://github.com/zoovy/Zoovy-MVC-Framework-JQuery-Plugin/wiki/index.cgi" >Dev Wiki</a><br />
+			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a><br />
 			<div class="helper">Learn more about what is possible, and what is included in the SDK.</div>
 
 			<div class='showForZoovyOnly'>
@@ -481,44 +508,86 @@ SETUP PAGE TEMPLATE
 
 
 <div id='pageTemplateSetupAppchooser' class='page pageSetup pageSetupAppchooser clearfix'>
+	<h1>Choose a Project</h1>
+	<div class='ui-widget ui-widget-content ui-corner-all stdPadding marginBottom alignCenter'>
+		<ul class='alignCenter noPadOrMargin listStyleNone clearfix'>
+			
+			<li class='floatLeft marginRight ui-state-active ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='fashion'>
+			<img src='app-fashion/preview-120x120.jpg' width='120' height='100' alt='Fashion' />
+			<div>Fashion</div>
+			</li>
+			
+			<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='mobile'>
+			<img src='app-mobile/preview-120x120.jpg' width='120' height='100' alt='mobile' />
+			<div>Mobile</div>
+			</li>
+			
+			<li class='floatLeft marginRight ui-state-default ui-corner-bottom pointer' data-app-event='admin|appChooserAppPreview' data-appid='b2b'>
+			<img src='app-b2b/preview-120x120.jpg' width='120' height='100' alt='Shadow' />
+			<div>B 2 B</div>
+			</li>
 
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='avalanche' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Avalanche</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_avalanche/preview.jpg' width='280' height='200' alt='Avalanche' /></div>
-			<div >
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-			</div>
-		</div>
-	</div>
+		</ul>
+	</div>	
+	
+	<div class='ui-widget ui-widget-content ui-corner-all stdPadding' id='appChooserDetailPanel'>
 
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='shadow' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Shadow</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_shadow/preview.jpg' width='280' height='200' alt='shadow' /></div>
-			<div>
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
-			</div>
-		</div>
-	</div>
+		<section id='details_fashion' data-app-role='appPreviewPanel'  data-appid='fashion' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
 
-	<div class='floatLeft marginRight marginBottom ui-widget alignCenter' data-appid='crispnclean' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
-		<div class='ui-widget-header ui-corner-top spacedLetters uppercase smallPadding'>Crisp &amp; Clean</div>
-		<div class='ui-widget-content ui-corner-bottom stdPadding'>
-			<div class='marginBottom'><img src='https://static.zoovy.com/graphics/wrappers/2011_crispnclean/preview.jpg' width='280' height='200' alt='crisp n clean' /></div>
-			<div>
-				<!--<button class='smallButton' data-app-event="admin|appChooserAppDetails">Details</button>-->
-				<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
-				<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
-				<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>Fashion</h2>
 			</div>
-		</div>
+			<div class='clearfix'>
+<img src='app-fashion/preview-374x500.jpg' width='374' height='500' alt='Fashion' class='floatLeft marginRight' />
+<p>Fashion is intended for apparel and jewelry sellers, however it could be easily adopted for any industry.</p>
+<p>The main navigation bar, homepage banner and homepage product lists rely heavily on product tagging, specifically new arrivals, best sellers, sale and clearance items.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
+		<section id='details_mobile' data-app-role='appPreviewPanel' class='displayNone' data-appid='mobile' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>Mobile</h2>
+			</div>
+			<div class='clearfix'>
+<img src='app-mobile/preview-193x500.jpg' width='193' height='500' alt='Mobile' class='floatLeft marginRight' />
+<p>Mobile is intended for all sellers, for use on their mobile domain. The site is responsive, so it will work on a variety of screen resolutions and devices.</p>
+<p>The homepage product lists rely heavily on product tagging, specifically new arrivals and best sellers. The various pages (product and category) are designed for a smaller screen size.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
+		<section id='details_b2b' data-app-role='appPreviewPanel' class='displayNone' data-appid='b2b' data-app-repo='https://github.com/zoovy/AnyCommerce-Development/'>
+
+			<div class='marginBottom clearfix'>
+				<div class='floatRight alignRight'>
+					<button class='smallButton' data-app-event="admin|appChooserAppChoose">Choose</button>
+					<button class='smallButton' data-app-event="admin|appChooserFork">Fork</button>
+					<button class='smallButton' data-app-event="admin|appChooserAppDownload">Download</button>
+				</div>
+				<h2>B2B</h2>
+			</div>
+			<div class='clearfix'>
+<img src='app-b2b/preview-500x486.jpg' width='500' height='486' alt='b2b' class='floatLeft marginRight' />
+<p>B2B is indended for business to business sellers.  It's a no-frills website that offers the buyer the ability to purchase directly from the category page and in bulk.</p>
+<p>The category pages feature subcategory and product imagery at a 1x1 aspect ratio (square).</p>
+			</div>
+		</section>
+
+
 	</div>
 
 </div>
@@ -745,14 +814,15 @@ SYNDICATION PAGE TEMPLATE
 	</div>
 		
 
+<!--
 	<div class='marginBottom'>	
 	<a onClick="navigateTo('/biz/syndication/buysafeshopping/index.cgi'); return false;" href="#/biz/syndication/buysafeshopping/index.cgi">
 	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/buysafe; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
 	<a onClick="navigateTo('/biz/syndication/buysafeshopping/index.cgi'); return false;" href="#/biz/syndication/buysafeshopping/index.cgi">Settings</a> | 
 	<a href="http://webdoc.zoovy.com/doc-50732" target="webdoc">More Info</a>		
 	</div>
+-->
 		
-
 	<div class='marginBottom'>	
 	<a onClick="navigateTo('/biz/syndication/shareasale/index.cgi'); return false;" href="#/biz/syndication/shareasale/index.cgi">
 	<img data-bind=" format:imageURL; lib:proshop; b:FFFFFF; defaultValue:zoovy/logos/shareasale.png; format:imageURL; lib:proshop; b:FFFFFF;" height="40" width="150"  src="blank.gif" /></a><br />
@@ -849,9 +919,12 @@ UTILITIES PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager (beta)</a><br />
-		<a href="#" onClick="navigateTo('/biz/manage/customer/index.cgi'); return false;">Customer Manager</a>
+		
+		<a href="#" onClick="navigateTo('#!customerManager'); return false;">Customer Manager</a><br />
+<!-- 		<a href="#" onClick="navigateTo('/biz/manage/customer/index.cgi'); return false;">Customer Manager</a> -->
 		<div class="helper">Find or create a customer record for your website.</div>
+
+		
 		
 		<a href="#" onClick="navigateTo('/biz/manage/giftcard/index.cgi'); return false;">GiftCard Manager</a>
 		<div class="helper">Create / Manage GiftCards.</div>
@@ -875,8 +948,12 @@ UTILITIES PAGE TEMPLATE
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Wholesale &amp; Warehouse</h3>
 		</div>
-		
+
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+		
+		<a href="#" onClick="navigateTo('#!organizationManager'); return false;">Organization Manager</a>
+		<div class="helper">Create / Manage Organizations for wholesale/b2b/resale.</div>
+
 		<a href="#" onClick="navigateTo('/biz/manage/suppliers/index.cgi'); return false;">Supply Chain Management</a>
 		<div class="helper">Track inventory, pricing and orders with your suppliers.</div>
 		
@@ -936,16 +1013,10 @@ UTILITIES PAGE TEMPLATE
 		<a href="#" onClick="navigateTo('/biz/manage/diskspace/index.cgi'); return false;">Disk Space Manager</a><br />
 		<div class="helper">Manage the amount of disk space in use by your account.</div>	
 	
-		<a href="#" onClick="navigateTo('/biz/manage/image/imgassoc/index.cgi'); return false;">Image Associations</a><br />
-		<div class="helper">View a list of images, and the products they are associated with</div>
-	
 		<a href="#" onClick="navigateTo('/biz/syndication/sitemap/index.cgi'); return false;">Static Google SiteMap</a><br />
 		<div class="helper">Configure nightly generation of a static sitemap file.</div>
 	
-		<a href="#" onClick="navigateTo('/biz/manage/debugger/index.cgi'); return false;">Website Debugger</a><br />
-		<div class="helper">Website Debugger</div>
-	
-		<a href="#" onClick="navigateTo('/biz/manage/custom/zephyrsports.cgi'); return false;">Custom Inventory Lookup</a>
+		<a href="#" onClick="navigateTo('/biz/manage/custom/zephyrsports.cgi'); return false;">Inventory Lookup</a>
 		<div class="helper"></div>
 	
 		<a href="#" onClick="navigateTo('/biz/manage/support/index.cgi'); return false;">Tech Support Utils</a>
@@ -1161,81 +1232,6 @@ PRODUCT TAB
 ########################################################
 
 
-WEBDOC
-
-########################################################
-
-
--->
-
-<div id='helpDocumentTemplate'>
-	<p class='helper'>hint: you can shrink or expand this window and continue to browse the interface</p>
-	<div data-bind="var: help(body); format:text;"></div>
-</div>
-
-<table>
-<tr id='helpSearchResultsTemplate' onClick="app.ext.admin.u.showHelpInDialog($(this).data('docid'));" class='pointer'>
-	<td data-bind='var: help(title); format:text;'></td>
-	<td class='hideInDetailMode'>
-	<p data-bind='var: help(summary); format:text;'></p>
-	<div data-bind='var: help(docid); format:text;'></div>
-	</td>
-	<td data-bind='var: help(score); format:text;'></td>
-</tr>
-</table>
-
-<div id='helpPageTemplate' class='page pageHelp' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-		
-			<div class='buttonSet'>
-				<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-			</div>
-			
-			<form class='searchBar floatRight' action='#' data-app-role='helpSearch'>
-				<input type='search' name='keywords'  />
-				<button data-app-event='admin|helpSearch'>Search</button>
-			</form>
-			
-			
-			<h3 class='heading'>Documentation</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		
-		<div class='dualModeListMessaging stdPadding'>Please use the search above to find the docs you are looking for.</div>
-		
-		<table class='gridTable fullWidth displayNone' >
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th>title</th>
-			<th class='hideInDetailMode'>Summary/id</th>
-			<th>Relevance</th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: users(@RESULTS); format:processList; loadsTemplate:helpSearchResultsTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		</div>
-	</section>
-</div>
-
-
-
-
-
-
-
-
-
-<!--
-
-########################################################
-
-
 ACHIEVEMENTS
 
 ########################################################
@@ -1283,3 +1279,46 @@ ACHIEVEMENTS
 </table>
 </div>
 
+
+
+
+<!--
+//////////////////////////  EMAIL TOOL \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='mailToolTemplate'>
+<form action='#'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs marginBottom'>
+<label>
+	<span>Message source:</span>
+	<select name='MSGID' data-bind="var: emailList(@MSGS); format: emailMessagesListOptions; extension:admin;" data-app-event="admin_orders|orderEmailCustomChangeSource">
+		<option value='BLANK'>blank</option>
+	</select>
+</label>
+
+<label>
+	<span>Subject:</span>
+	<input type='text' name='SUBJECT' required='required' maxlength="100" />
+</label>
+
+<label>
+	<span>Message:</span>
+	<textarea name='BODY' rows='10' required='required'></textarea>
+</label>
+</fieldset>
+
+
+<fieldset class='updateSystemMessageContainer marginBottom'>
+<label>
+	<input type='checkbox' name='updateSystemMessage' disabled='disabled' />
+	Save these changes to the message <span class='msgType'></span> for all future emails<!-- the .msgType is used to populate the message ID in focus. -->
+</label>
+</fieldset>
+
+<button data-app-event="admin|execMailToolSend">send email</button>
+
+</form>
+</div>

@@ -82,7 +82,7 @@ var admin_user = function() {
 				$table.empty();
 				app.renderFunctions.translateSelector("#userManagerContent [data-app-role='dualModeList']",app.data.bossUserList);
 				app.ext.admin.u.handleAppEvents($table);
-				app.ext.admin_user.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
+				app.ext.admin.u.toggleDualMode($('#userManagerContent'),$('#userManagerContent').data('app-mode'));
 
 				},
 
@@ -265,7 +265,7 @@ Whether it's a create or update is based on the data-usermode on the parent.
 
 var panelID = app.u.jqSelector('','userDetail_'+user.luser),
 $panel = $("<div\/>").data('luser',user.luser).hide().anypanel({
-	'title':'Edit: '+user.luser,
+	'header':'Edit: '+user.luser,
 	'templateID':'userManagerUserCreateUpdateTemplate',
 //	'data':user, //data not passed because it needs req and manipulation prior to translation.
 	'dataAttribs': {'id':panelID,'luser':user.luser,'usermode':'update'}
@@ -347,7 +347,7 @@ modal: true,
 buttons: {
 	"Delete User": function() {
 		$D.dialog('close');
-		$('body').showLoading();
+		$('body').showLoading({'message':'Deleting User'});
 		app.model.destroy('bossUserList'); //clear local so a dispatch occurs.
 		app.ext.admin.calls.bossUserDelete.init(data.luser,{},'immutable');
 		app.ext.admin.calls.bossUserList.init({'callback':function(rd){

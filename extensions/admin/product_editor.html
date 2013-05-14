@@ -135,24 +135,23 @@
 
 <form name="createNewProductForm" action="#" method="POST" onSubmit="app.ext.admin_prodEdit.u.handleCreateNewProduct($(this).serializeJSON()); return false;">
 	
-<fieldset class='marginBottom'>
+<fieldset class='marginBottom labelsAsBreaks alignedLabels alignedInputs'>
 	<legend>Required Fields</legend>
 
-	<div class='marginBottom'><label>Product ID/SKU:</label> <input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Product Name:</label> <INPUT TYPE="text" NAME="zoovy:prod_name" SIZE="55" maxlength="55" VALUE="" required='required' /></div>			
-	<div class='marginBottom'><label >Sell For Price:</label> $<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></div>
+	<label><span>Product ID/SKU: </span><input type="text" name="pid" SIZE="20" MAXLENGTH="20" VALUE="" required='required' /></label>
+	<label ><span>Product Name: </span><INPUT TYPE="text" NAME="zoovy:prod_name"  maxlength="55" VALUE="" required='required' /></label>
+	<label ><span>Sell For Price: </span>$<INPUT TYPE="number" NAME="zoovy:base_price" VALUE="" SIZE="15" required='required' step='0.01' min='0'></label>
 			
 </fieldset>
 
-<fieldset>
+<fieldset class='marginBottom labelsAsBreaks alignedLabels'>
 	<legend>Recommended Data</legend>
-	<div class='marginBottom'><label >Your Cost:</label> $<INPUT TYPE="number" NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></div>	
-	<div class='marginBottom'><label >Product Description:</label> <TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></div>	
-	<div class='marginBottom'><label >Base Weight:</label> <INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</div>	
-	<div class='marginBottom'><label >Is product taxable?:</label> 
+	<label ><span>Your Cost: </span>$<INPUT TYPE="number" NAME="zoovy:base_cost" VALUE="" SIZE="7" step='0.01' min='0'></label>
+	<label ><span>Product Description:</span><TEXTAREA NAME="zoovy:prod_desc" COLS=40 ROWS=5></TEXTAREA></label>
+	<label ><span>Base Weight:</span><INPUT TYPE="text" NAME="zoovy:base_weight" VALUE="" SIZE="8"> ounces (use # for pounds)</label>
+	<label ><span>Is product taxable?:</span></label> 
 		<INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='1' checked>&nbsp;Yes
         <INPUT TYPE='radio' NAME='zoovy:taxable' VALUE='0' >&nbsp;No
-		</div>
 	
 </fieldset>		
 		

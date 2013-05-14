@@ -41,11 +41,11 @@
 		<td data-bind="var: user(luser); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(fullname); format:text;"></td>
 		<td class='hideInDetailMode' data-bind="var: user(email); format:text;"></td>
-		<td data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></td>
+		<td><ul data-bind="var: user(@roles); format:array2ListItems; extension:admin;" class='ulAsCSV'></ul></td>
 		<td class='hideInDetailMode' data-bind="var: user(created_gmt); format:unix2mdy;"></td>
 		<td>
 		<button data-app-event="admin_user|bossUserDetail">edit</button>
-		<button data-app-event="admin_user|bossUserDelete" class='marginLeft'>delete</button>
+		<button data-app-event="admin_user|bossUserDelete" class='marginLeft hideInDetailMode'>delete</button>
 		</td>
 	</tr>
 

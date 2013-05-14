@@ -66,8 +66,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				app.model.addDispatchToQ({
 					"_cmd":"cartGoogleCheckoutURL",
 					"analyticsdata":"", //must be set, even if blank.
-					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
-					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId,
+					"edit_cart_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
+					"continue_shopping_url" : (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID,
 					'_tag':{'callback':'proceedToGoogleCheckout','extension':'store_checkout','datapointer':'cartGoogleCheckoutURL'}
 					},'immutable');
 				}
@@ -101,8 +101,8 @@ a callback was also added which just executes this call, so that checkout COULD 
 				var tagObj = {'callback':'handleCartPaypalSetECResponse',"datapointer":"cartPaypalSetExpressCheckout","extension":"convertSessionToOrder"}
 				app.model.addDispatchToQ({
 					"_cmd":"cartPaypalSetExpressCheckout",
-					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#cart?show=cart",
-					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.sessionId+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?sessionId="+app.sessionId+"#checkout?show=checkout",
+					"cancelURL":(app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/cart.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#cart?show=cart",
+					"returnURL": (app.vars._clientid == '1pc') ? zGlobals.appSettings.https_app_url+"c="+app.vars.cartID+"/checkout.cgis" : zGlobals.appSettings.https_app_url+"?cartID="+app.vars.cartID+"#checkout?show=checkout",
 					"getBuyerAddress":getBuyerAddress,'_tag':tagObj
 					},'immutable');
 				}
@@ -299,7 +299,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Attempting to create order']);
 /*
 Parameters included are as follows:
 P.orderID
-P.sessionID (this would be the sessionID associated w/ the order, not the newly generated session/cart id - reset immediately after checkout )
+P.cartID (this would be the cartID associated w/ the order, not the newly generated cart id - reset immediately after checkout )
 P.datapointer - pointer to cartOrderCreate
 
 note - the order object is available at app.data['order|'+P.orderID]
@@ -341,7 +341,8 @@ note - the order object is available at app.data['order|'+P.orderID]
 			
 			PO : function(vars)	{
 				var errors = new Array(); // what is returned. an array of the payment fields that are not correct. 
-				if(vars.PO){} else	{errors.push("PO")}
+				if(vars['payment/PO']){}
+				else	{errors.push("payment/PO")}
 				return (errors.length) ? errors : false;
 				}
 			
@@ -552,7 +553,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 						o += "<li>"+responseData['@issues'][i][3]+"<\/li>";
 						}
 					o += "<\/ul>";
-					$errorDiv.append(app.u.formatMessage({"message":o,"uiClass":"error","uiIcon":"alert"})).toggle(true);
+					$errorDiv.anymessage({"message":o,"uiClass":"error","uiIcon":"alert"}).toggle(true);
 					}
 				else	{
 					app.u.throwMessage(responseData);
@@ -618,7 +619,7 @@ this function closely mirrors core logic.
 
 //copy the billing address from the ID into the form fields.
 				app.ext.store_checkout.u.setAddressFormFromPredefined(addressClass,$x.attr('data-addressId'));
-				if(app.data.cartDetail){
+				if(app.data.cartDetail)	{
 					$('#data-bill_email').val() == app.data.cartDetail['bill/email']; //for passive, need to make sure email is updated too.
 					}
 //copy all the billing address fields to the shipping address fields, if appropriate.
@@ -744,6 +745,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Payment failure']);
 
 //This will tell if there's a paypal tender in the paymentQ. doesn't check validity or anything like that. a quick function to be used when re-rendering panels.
 			thisSessionIsPayPal : function()	{
+				app.u.dump("BEGIN store_checkout.u.thisSessionIsPayPal.");
 				return (this.modifyPaymentQbyTender('PAYPALEC',null)) ? true : false;
 				},
 //Will check the payment q for a valid paypal transaction. Used when a buyer leaves checkout and returns during the checkout init process.
@@ -760,11 +762,12 @@ payment methods or they may add something new to the cart. If they do, execute t
 note - dispatch isn't IN the function to give more control to developer. (you may want to execute w/ a group of updates)
 */
 			nukePayPalEC : function() {
-//				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
+				app.u.dump("BEGIN store_checkout.u.nukePayPalEC");
 				$('#returnFromThirdPartyPayment').hide(); //used to display a 'welcome back' message. should be hidden if paypal is no longer active payment.
 				app.ext.convertSessionToOrder.vars['payment-pt'] = null;
 				app.ext.convertSessionToOrder.vars['payment-pi'] = null;
 				return this.modifyPaymentQbyTender('PAYPALEC',function(PQI){
+//					app.u.dump(" -> got into anonymous function. PQI: "); app.u.dump(PQI);
 					app.ext.store_checkout.calls.cartPaymentQ.init({'cmd':'delete','ID':PQI.ID},{'callback':'suppressErrors'}); //This kill process should be silent.
 					});
 				},
@@ -775,18 +778,18 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //the value returned gets added to an array, which is returned by this function.
 //the entire lineitem in the paymentQ is passed in to someFunction.
 			modifyPaymentQbyTender : function(tender,someFunction){
-//				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
+				app.u.dump("BEGIN store_checkout.u.modifyPaymentQbyTender");
 				var inc = 0; //what is returned if someFunction not present or returns nothing. # of items in paymentQ affected.
 				var r = new Array(); //what is returned if someFunction returns anything.
 				if(tender && app.data.cartDetail && app.data.cartDetail['@PAYMENTQ'])	{
-//					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
+					app.u.dump(" -> all vars present. tender: "+tender+" and typeof someFunction: "+typeof someFunction);
 					var L = app.data.cartDetail['@PAYMENTQ'].length;
-//					app.u.dump(" -> paymentQ.length: "+L);
+					app.u.dump(" -> paymentQ.length: "+L);
 					for(var i = 0; i < L; i += 1)	{
-//						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
+						app.u.dump(" -> "+i+" TN: "+app.data.cartDetail['@PAYMENTQ'][i].TN);
 						if(app.data.cartDetail['@PAYMENTQ'][i].TN == tender)	{
 							inc += 1;
-							if(typeof someFunction == 'function')	{
+							if(typeof someFunction === 'function')	{
 								r.push(someFunction(app.data.cartDetail['@PAYMENTQ'][i]))
 								}
 							}
@@ -870,8 +873,8 @@ note - dispatch isn't IN the function to give more control to developer. (you ma
 //value is set to ISO and sent to API that way. however, cart object returned is in 'pretty'.
 //so a check occurs to set selectedCountry to the selected ISO value so it can be 'selected'
 			countriesAsOptions : function($tag,data)	{
-				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
-				app.u.dump(" -> Country: "+data.value);
+//				app.u.dump("BEGIN app.ext.convertSessionToOrder.renderFormats.countriesAsOptions");
+//				app.u.dump(" -> Country: "+data.value);
 				var r = '';
 				var L = app.data.appCheckoutDestinations['@destinations'].length;
 //				app.u.dump(" -> number of countries = "+L);

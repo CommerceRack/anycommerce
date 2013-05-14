@@ -1,0 +1,27 @@
+
+/* the tab itself. text is in tab-text */
+.ui-widget-stickytab-tab	{
+	text-align:center;
+	position:absolute;
+	cursor:pointer;
+	z-index:501; 
+	padding:6px 0;
+	top:15px;
+	}
+
+/* the text within the tab. rotation added after tab on dom so width can be computed */
+.ui-widget-stickytab-tab-text	{
+	white-space: nowrap;
+	margin:0;
+	display:block; /* block required for rotation, at least in FF.  */
+	}
+
+/* content container. z-index is higher than tab so left edge of tab always appears behind content (more aesthetic) */
+.ui-widget-stickytab-content	{min-height:150px; max-height:300px; overflow:auto; z-index:502; position:relative}
+
+.ui-widget-stickytab	{width:500px;}
+
+@media screen and (max-width: 550px) {
+	.ui-widget-stickytab	{width: 90%;}
+
+	}
