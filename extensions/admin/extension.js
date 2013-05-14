@@ -635,7 +635,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminEmailSave, no batchGUID passed.");
+					app.u.throwGMessage("In admin.calls.adminReportDownload, no batchGUID passed.");
 					}
 				return r;
 				},
@@ -660,7 +660,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					r = 1;
 					}
 				else	{
-					app.u.throwGMessage("In admin.calls.adminEmailSave, ID not passed and is required.");
+					app.u.throwGMessage("In admin.calls.adminMessagesList, MESSAGEID not passed and is required.");
 					}
 				return r;
 				},
