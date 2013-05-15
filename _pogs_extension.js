@@ -130,7 +130,7 @@ var pogs_cubworld = function() {
 						
 					$notice.append($button);
 					
-					$notice.dialog({'modal':'true','title':'Custom Product Agreement'});
+					$notice.dialog({'modal':'true','title':'Custom Product Agreement', 'width':400});
 					return false;
 				});
 				
