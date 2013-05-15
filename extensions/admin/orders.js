@@ -1174,7 +1174,7 @@ else	{
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 		getOrderFlagsAsArray : function(flagint)	{
 			var flags = new Array(),
-			B = Number(newsint).toString(2).split('').reverse().join(''); //binary
+			B = Number(flagint).toString(2).split('').reverse().join(''); //binary
 //			app.u.dump(" -> Binary of flags: "+B);
 			B.charAt(0) == 1 ? flags.push('SINGLE_ITEM') : flags.push('MULTI_ITEM'); //1
 			B.charAt(1) == 1 ? flags.push('SHIP_EXPEDITED') : flags.push('SHIP_GROUND'); //2
