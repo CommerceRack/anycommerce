@@ -17,7 +17,7 @@
 
 
 	<p data-bind="var: batchjob(notes); format:text; before:<h2>Notes:</h2>;" class='marginBottom'></p>
-	<button data-btn-action="adminBatchJobCleanup" class='displayNone' data-bind="var: batchjob(status); format:cleanUpButton; extension:admin_batchJob;">Clean Up/Remove</button>
+	<button data-app-event="admin_batchJob|execBatchCleanup">Clean Up/Remove</button>
 
 	<p>This panel will not update automatically. Please go to reports &#187; Batch Jobs for status</p>
 

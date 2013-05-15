@@ -171,28 +171,6 @@ var admin_batchJob = function() {
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		renderFormats : {
-//job status is passed in.
-//if status = error, finished or abort should show this button
-//button is hidden by default and shown if needed.
-			cleanUpButton : function($tag,data)	{
-				if(data.value == 'ERROR' || data.value == 'finished' || data.value == 'abort')	{
-					$tag.show();
-					$tag.button(); //daisy-chaining the button on the show didn't work. button didn't get classes.
-					$tag.on('click',function(){
-						var jobid = $tag.closest('[data-jobid]').data('jobid');
-						if(jobid)	{
-							$('#batchJobStatusModal').empty().addClass('loadingBG');
-							app.ext.admin.calls.adminBatchJobCleanup.init(jobid,{'callback':'showMessaging','message':'Batch job has been cleaned up','parentID':'batchJobStatus_'+jobid},'immutable');
-							app.model.dispatchThis('immutable');
-							}
-						else	{
-							app.u.dump("Unable to ascertain jobid for click action on button in admin_batch.renderFormats.cleanUpButton");
-							}
-						});
-					}
-				else	{} //do nothing (do NOT show button.
-				}
-			
 			}, //renderFormats
 
 
