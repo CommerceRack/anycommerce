@@ -14,14 +14,14 @@
 		<form action='#' data-app-role='customerSearch' onSubmit='return false'>
 		<select name='scope'>
 			<option value='CID'>customer id</option>
-			<option value='EMAIL'>email</option>
+			<option value='EMAIL' selected="selected">email</option>
 			<option value='GIFTCARD'>giftcard</option>
-			<option value='NAME' selected="selected">name</option>
+			<option value='NAME'>name</option>
 			<option value='NOTES'>notes</option>
 			<option value='ORDER'>order</option>
 			<option value='PHONE'>phone</option>
 		</select>
-		<input type='search' name='searchfor' placeholder='keyword'  />
+		<input type='search' name='searchfor' placeholder='keyword' size='30'  />
 		<button data-app-event='admin_customer|execCustomerSearch'>Search</button>
 		</form>		
 		</div>
@@ -85,7 +85,8 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		</h2>
 		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
-		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete Customer</button>
+		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete</button>
+		<button class='floatRight' data-app-event='admin_customer|showMailTool'>Email</button>
 	</div>
 
 
@@ -116,6 +117,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 		<th class='alignLeft'>Note</th>
 		<th class='alignRight'>Created</th>
 		<th class='alignRight'>Expires</th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
 	<tbody data-bind="var:customer(@GIFTCARDS); format:processList; loadsTemplate:customerEditorGiftcardListTemplate;"></tbody>
@@ -328,6 +330,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td class='alignLeft' data-bind="var:giftcart(NOTE); format:text;"></td>
 	<td class='alignRight' data-bind="var:giftcart(CREATED_GMT); format:epoch2pretty;"></td>
 	<td class='alignRight' data-bind="var:giftcart(EXPIRES_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight'><button data-app-event="admin_customer|showGiftcardUpdate">Edit Giftcard</button></td>
 </tr>
 
 <tr id='customerEditorOrderListTemplate' class='pointer' onClick="app.u.dump('click!'); app.ext.admin_orders.a.showOrderEditorInDialog($(this).data('orderid'),$(this).closest('[data-cid]').data('cid'));">
@@ -443,8 +446,9 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 
 <!--
 <label><input type="checkbox" name="NEWS" checked='checked' /> Subscribe to all Default Newsletters</label>
--->
+The checkbox below does not work.
 <label><input type="checkbox" name="generatepassword" checked='checked' /> Automatically generate a secure password</label>
+-->
 
 <button data-app-event='admin_customer|execAdminCustomerCreate'>Create Customer</button>
 

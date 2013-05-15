@@ -75,14 +75,17 @@ obj.PATH = .cat.safe.id
 				if(app.model.fetchData('appPageGet|'+obj.PATH) == false)	{
 					hasAllLocal = false;
 					}
-				else	{
+				else if(app.data['appPageGet|'+obj.PATH] && app.data['appPageGet|'+obj.PATH]['%page'])	{
 					var L = obj['@get'].length;
 					for(var i = 0; i < L; i += 1)	{
 						if(!app.data['appPageGet|'+obj.PATH]['%page'][obj['@get'][i]])	{
 							hasAllLocal = false;
 							break; //once we know 1 piece of data is missing, just get all of it.
 							}
-						}
+						}					
+					}
+				else	{
+					hasAllLocal = false;
 					}
 				if(hasAllLocal)	{
 					app.u.handleCallback(tagObj);

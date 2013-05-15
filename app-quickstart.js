@@ -29,17 +29,6 @@ var myRIA = function() {
 		"templates" : [
 //the list of templates that are commonly edited (same order as they appear in appTemplates
 			'homepageTemplate',	'categoryTemplate',
-			'categoryTemplateCuties',
-			'categoryTemplateHTML',
-			'categoryTemplateInquiry',
-			'categoryTemplateAffiliates',
-			'categoryTemplateGroupSales',
-			'categoryTemplateFeaturedPlayer',
-			'categoryTemplateSitemap',
-			'categoryTemplateRewards',
-			'categoryTemplateTickets',
-			'categoryTemplateSWConnect',
-			'categoryTemplateEarthCam',
 			'categoryListTemplate',
 			'categoryListTemplateRootCats',
 			'productListTemplate',
@@ -141,7 +130,7 @@ else if ("onhashchange" in window)	{ // does the browser support the hashchange 
 		}
 	}
 else	{
-	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistant':true});
+	$('#globalMessaging').anyMessage({'message':"You appear to be running a very old browser. Our app will run, but may not be an optimal experience.",'persistent':true});
 	// wow. upgrade your browser. should only get here if older than:
 	// Google Chrome 5, Safari 5, Opera 10.60, Firefox 3.6 and Internet Explorer 8
 	//NOTE: does not trigger in IE9 running IE7 or IE8 standards mode
@@ -1722,7 +1711,7 @@ if(ps.indexOf('?') >= 1)	{
 					}
 				else if(url.indexOf('app-quickstart.html') > -1)	{
 					var msg = app.u.errMsgObject('Rename this file as index.html to decrease the likelyhood of accidentally saving over it.',"MVC-INIT-MYRIA_1000")
-					msg.persistant = true;
+					msg.persistent = true;
 					app.u.throwMessage(msg);
 					r.pageType = 'homepage';
 					}
@@ -2724,9 +2713,6 @@ buyer to 'take with them' as they move between  pages.
 					else if(catSafeID == zGlobals.appSettings.rootcat || infoObj.pageType == 'homepage')	{
 						infoObj.templateID = 'homepageTemplate'
 						}
-					else if(app.ext.cubworld.vars.catTemplates[catSafeID]){
-						infoObj.templateID = app.ext.cubworld.vars.catTemplates[catSafeID];
-						}
 					else	{
 						infoObj.templateID = 'categoryTemplate'
 						}
@@ -3025,8 +3011,7 @@ else	{
 						if(cartObj)	{
 							app.calls.cartItemAppend.init(cartObj,{},'immutable');
 							app.model.destroy('cartDetail');
-// ** 201318 moved this callback into an onSuccess so that if the add to cart fails for some reason, the user isn't shown their cart
-							app.calls.cartDetail.init({'callback': function(rd){
+							app.calls.cartDetail.init({'callback':function(rd){
 								if(obj.action === "modal"){
 									showContent('cart',obj);
 									}
@@ -3075,7 +3060,7 @@ else	{
 			createTemplateFunctions : function()	{
 
 				app.ext.myRIA.template = {};
-				var pageTemplates = new Array('categoryTemplate', 'categoryTemplateCuties','categoryTemplateHTML','categoryTemplateInquiry','categoryTemplateAffiliates', 'categoryTemplateGroupSales','categoryTemplateFeaturedPlayer','categoryTemplateSitemap','categoryTemplateRewards','categoryTemplateTickets','categoryTemplateSWConnect','categoryTemplateEarthCam','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
+				var pageTemplates = new Array('categoryTemplate','productTemplate','companyTemplate','customerTemplate','homepageTemplate','searchTemplate','cartTemplate','checkoutTemplate','pageNotFoundTemplate');
 				var L = pageTemplates.length;
 				for(var i = 0; i < L; i += 1)	{
 					app.ext.myRIA.template[pageTemplates[i]] = {"onCompletes":[],"onInits":[],"onDeparts":[]};

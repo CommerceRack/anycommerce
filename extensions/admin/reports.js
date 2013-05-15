@@ -35,7 +35,7 @@ http://gdatatips.blogspot.com/2009/07/create-new-google-docs-spreadsheet-from.ht
 
 
 var admin_reports = function() {
-	var theseTemplates = new Array('ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate');
+	var theseTemplates = new Array('reportsPageTemplate','ebayListingsReportPageTemplate','KPIManagerPageTemplate','KPIGraphAddUpdateTemplate','KPICollectionListTemplate','KPICollectionOptionTemplate','KPICollectionEditorTemplate','KPICollectionEditorRowTemplate','reportsRowTemplate');
 	var r = {
 
 
@@ -63,7 +63,7 @@ var admin_reports = function() {
 						}
 					else if(window.googleIntervalAttempt > 50)	{
 						app.u.dump("Unable to load google visualization. ",'error');
-						$(".appMessaging").anymessage({'message':'The Google Visualization libraries did not successfully load. This means that some features in the reporting section may not be available. Refreshing the browser may help solve this error.','persistant':true});
+						$(".appMessaging").anymessage({'message':'The Google Visualization libraries did not successfully load. This means that some features in the reporting section may not be available. Refreshing the browser may help solve this error.','persistent':true});
 						delete window.googleInterval;
 						delete window.googleIntervalAttempts;
 
@@ -89,6 +89,52 @@ var admin_reports = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			showReportsPage : function($target)	{
+				$target.empty();
+				$target.anycontent({'templateID':'reportsPageTemplate',data:{}});
+				app.u.handleAppEvents($target);
+				
+				$("[data-app-role='reportsTabsContainer']",$target).anytabs();
+				$('.toolTip',$target).tooltip();
+				$('.datepicker',$target).datepicker({
+					changeMonth: true,
+					changeYear: true,
+					dateFormat : "mmddyy"
+					});
+				
+				
+				var $reportsList = $("[data-app-role='recentReportsList']",$target);
+				$reportsList.showLoading({'message':'Fetching Recent Reports'});
+				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
+					$reportsList.hideLoading();
+					if(app.model.responseHasErrors(rd)){
+						$reportsList.anymessage({'message':rd});
+						}
+					else	{
+						var reports = new Array(), //used to store a small portion of the batch list. 10 reports.
+						L = app.data[rd.datapointer]['@JOBS'].length - 1;
+//reports are in chronological order, oldest to newest. here, we want to show the ten newest.
+						for(var i = L; i >= 0; i -= 1)	{
+							if(app.data[rd.datapointer]['@JOBS'][i].BATCH_EXEC == 'REPORT')	{
+								reports.push(app.data[rd.datapointer]['@JOBS'][i]);
+								}
+							else	{}
+							if(reports.length >= 10)	{break} //only need ten.
+							}
+						
+//						app.u.dump("$reportsList.length: "+$reportsList.length);
+						if(reports.length)	{
+							$reportsList.anycontent({data:{'@JOBS': reports}});
+							app.u.handleAppEvents($reportsList);
+							$('table',$reportsList).anytable();
+							}
+						
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				
+				},
 			
 			showeBayListingsReport : function()	{
 				var $content = $("#utilitiesContent");
@@ -434,10 +480,32 @@ var admin_reports = function() {
 
 
 		u : {
+
+
+			drawToolbar : function (id)	{
+				if(id)	{
+					var components = [
+//						{type: 'igoogle', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',	gadget: 'https://www.google.com/ig/modules/pie-chart.xml',userprefs: {'3d': 1}},
+						{type: 'html', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA'},
+						{type: 'csv', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA'} //,
+//						{type: 'htmlcode', datasource: 'https://spreadsheets.google.com/tq?key=pCQbetd-CptHnwJEfo8tALA',gadget: 'https://www.google.com/ig/modules/pie-chart.xml'}
+						];
+					
+					var container = document.getElementById(id);
+					google.visualization.drawToolbar(container, components);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_reports.u.drawToolbar, no ID passed.','gMessage':true});
+					}
+				
+				},
+			
+			
 //when a table header is clicked to change sort, the entire contents of the container (id) are rewritten.
 //keep that in mind when and deciding what ID to pass in.
 			drawTable : function(id,header,rows) {
-
+//				app.u.dump("header: "); app.u.dump(header);
+//				app.u.dump("rows: "); app.u.dump(rows);
 				var data = new google.visualization.DataTable();
 //				app.u.dump(" -> header:"); app.u.dump(header);
 				for(var index in header)	{
@@ -446,7 +514,11 @@ var admin_reports = function() {
 				data.addRows(rows);
 			
 				var table = new google.visualization.Table(document.getElementById(id));
-				table.draw(data, {showRowNumber: true});
+				table.draw(data, {
+					page : 'enable',
+					pageSize : 250,
+					showRowNumber: true
+					});
 				}, //drawTable
 
 //used not on a form validation, but when requesting data. This is a global check to make sure all the necessary variables are present.
@@ -1263,7 +1335,34 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 					return false;
 					})
 				
-				} //handleCollectionMenu
+				}, //handleCollectionMenu
+			
+			showSalesReportPeriodInputs : function($ele)	{
+				$ele.off('change.showSalesReportPeriodInputs').on('change.showSalesReportPeriodInputs',function(){
+//hide any visible 'period' input containers. make sure no period-specific inputs are required (so validation can pass)
+					$ele.closest('fieldset').find('.formPeriodRange').hide().find('input, select').each(function(){$(this).attr('required','').removeAttr('required')}); 
+//show the input container desired. make all inputs within required.
+					$ele.closest('fieldset').find('.formPeriodRange-'+$(this).val()).show().effect('highlight',{},1500).find('input,select').each(function(){$(this).attr('required','required')});
+					});
+				},
+
+
+			execAdminReportCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var sfo = {'%vars':$form.serializeJSON()}
+						sfo.type = 'REPORT';
+						sfo.guid = app.u.guidGenerator();
+						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
+			
 			
 			} //E / Events
 

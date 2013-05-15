@@ -127,7 +127,7 @@ var orderCreate = function() {
 			onError : function(responseData,uuid)	{
 				$('body').showLoading({'message':'Updating order...'});
 				responseData['_msg_1_txt'] = "It appears something went wrong with the PayPal payment:<br \/>err: "+responseData['_msg_1_txt'];
-				$('#globalMessaging').anymessage({'message':responseData,'persistant':true});
+				$('#globalMessaging').anymessage({'message':responseData,'persistent':true});
 //nuke vars so user MUST go thru paypal again or choose another method.
 //nuke local copy right away too so that any cart logic executed prior to dispatch completing is up to date.
 				app.ext.cco.u.nukePayPalEC({'callback':function(rd){
@@ -175,7 +175,7 @@ app.ext.orderCreate.u.handlePanel($context,'chkoutAddressShip',['empty','transla
 						}},'immutable');
 					app.model.dispatchThis('immutable');
 					r += "<\/ul><\/p>";
-					$('#globalMessaging').anymessage({'message':r,'persistant':true});
+					$('#globalMessaging').anymessage({'message':r,'persistent':true});
 					}
 
 				return r;
@@ -385,7 +385,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						if(formObj['want/new_password'] == formObj['want/new_password2'])	{valid = 1;}
 						else	{
 							valid = 0;
-							$fieldset.anymessage({'persistant':true,'message':'Password and verify password must match'});
+							$fieldset.anymessage({'persistent':true,'message':'Password and verify password must match'});
 							}
 						} //the validateForm field takes care of highlighting necessary fields and hints.
 					else	{valid = 0;} //didn't pass the basic validation.
@@ -408,7 +408,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						}
 					else	{
 						valid = 0;
-						$fieldset.anymessage({'message':'Please select a shipping method','persistant':true})
+						$fieldset.anymessage({'message':'Please select a shipping method','persistent':true})
 						}
 					}
 				else	{
@@ -434,7 +434,7 @@ _gaq.push(['_trackEvent','Checkout','App Event','Order NOT created. error occure
 						}
 					else	{
 						valid = 0;
-						$fieldset.anymessage({'message':'Please select a payment method','persistant':true})
+						$fieldset.anymessage({'message':'Please select a payment method','persistent':true})
 						}
 					}
 				else	{
@@ -734,25 +734,25 @@ an existing user gets a list of previous addresses they've used and an option to
 					hasPredefShipAddr = app.ext.cco.u.buyerHasPredefinedAddresses('ship');
 					
 					if(formObj['want/bill_to_ship'] && hasPredefBillAddr && formObj['bill/shortcut']){
-						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistent":true});
 						}
 					else if(!formObj['want/bill_to_ship'] && app.ext.cco.u.buyerHasPredefinedAddresses('ship') == true && formObj['ship/shortcut']){
-						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistent":true});
 						}
 					else	{
-						$fieldset.anymessage({"message":"<p>Please enter/select an address for a list of shipping options.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>Please enter/select an address for a list of shipping options.</p>","persistent":true});
 						}
 					}
 //no shipping methods present and buyer is logged out.
 				else {
 					if(formObj['want/bill_to_ship'] && formObj['bill/postal'])	{
-						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>Please enter a billing/shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
 					else if(!formObj['want/bill_to_ship'] && formObj['ship/postal'])	{
-						$fieldset.anymessage({"message":"<p>Please enter a shipping zip code for a list of shipping options.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>Please enter a shipping zip code for a list of shipping options.</p>","persistent":true});
 						}
 					else	{
-						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistant":true});
+						$fieldset.anymessage({"message":"<p>No shipping methods are available.</p>","persistent":true});
 						}
 					}
 				}, //chkoutMethodsShip

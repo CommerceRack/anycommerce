@@ -332,9 +332,9 @@ if the P.pid and data-pid do not match, empty the modal before openeing/populati
 				$('#'+formID+' .zMessage').empty().remove(); //clear any existing error messages.
 				var isValid = app.ext.store_crm.validate.addReview(frmObj); //returns true or some errors.
 				if(isValid === true)	{
-					app.ext.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."});
-					app.model.dispatchThis();
-					$('reviewFrm').hide(); //hide existing form to avoid confusion.
+					app.calls.appReviewAdd.init(frmObj,{"callback":"showMessaging","parentID":formID,"message":"Thank you for your review. Pending approval, it will be added to the store."},'mutable');
+					app.model.dispatchThis('mutable');
+					$('#'+formID).hide(); //hide existing form to avoid confusion.
 					}
 				else	{
 					//report errors.

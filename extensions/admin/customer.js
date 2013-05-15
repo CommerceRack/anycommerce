@@ -59,7 +59,7 @@ var admin_customer = function() {
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
 			showCustomerManager : function() {
 				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
-				$tabContent.empty();
+				$tabContent.intervaledEmpty();
 				$tabContent.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
 				app.ext.admin.u.handleAppEvents($tabContent);
 				}, //showCustomerManager
@@ -71,6 +71,7 @@ var admin_customer = function() {
 					$custEditorTarget.empty();
 					if(obj && obj.CID)	{
 						$custEditorTarget.showLoading({"message":"Fetching Customer Record"});
+						app.ext.admin.calls.adminEmailList.init({'TYPE':'CUSTOMER','PRT':app.vars.partition},{},'mutable');
 						app.ext.admin.calls.adminNewsletterList.init({},'mutable');
 //						app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 						app.ext.admin.calls.adminCustomerDetail.init({'CID':obj.CID,'rewards':1,'wallets':1,'tickets':1,'notes':1,'events':1,'orders':1,'giftcards':1,'organization':1},{'callback':function(rd){
@@ -218,7 +219,7 @@ else	{
 								$modal.anymessage({'message':rd});
 								}
 							else	{
-								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistant':true});
+								$modal.empty().anymessage({'message':'Thank you, the address has been added','persistent':true});
 								//clear existing addresses and re-render.
 								var $panel = $("[data-app-role='"+obj.type.substring(1).toLowerCase()+"']",$customerEditor); //ship or bill panel.
 								app.u.dump(" -> $panel.length: "+$panel.length);
@@ -292,7 +293,7 @@ else	{
 				
 				if(!app.data.adminNewsletterList)	{$tag.anymessage({'message':'Unable to fetch newsletter list'})}
 				else if(app.data.adminNewsletterList['@lists'].length == 0)	{
-					$tag.anymessage({'message':'You have not created any subscriber lists.','persistant':true})
+					$tag.anymessage({'message':'You have not created any subscriber lists.','persistent':true})
 					}
 				else	{
 					var $f = $("<fieldset \/>"),
@@ -389,7 +390,6 @@ else	{
 				}, //customerAddressAddUpdate
 
 
-
 			getAddressByID : function(addrObj,id)	{
 				var r = false; //what is returned. will be an address object if there's a match.
 				if(addrObj && id)	{
@@ -409,7 +409,8 @@ else	{
 
 //The flags field in the order is an integer. The binary representation of that int (bitwise and) will tell us what flags are enabled.
 			getNewslettersTF : function(newsint,val)	{
-				B = Number(newsint).toString(2); //binary
+//so what's happening here...   the tostring converts the int into binary. split/reverse/join reverse the order, changing 1000 (for 8) into 0001
+				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
 //				app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
 				},
@@ -535,7 +536,7 @@ app.model.dispatchThis('immutable');
 								general += $tag.attr('name')+"="+($tag.is(":checkbox") ? handleCheckbox($tag) : $tag.val())+"&"; //val of checkbox is 'on'. change to 1.
 								}
 							else if(pr == 'newsletter')	{
-								general += $tag.attr('name')+"="+handleCheckbox($tag);
+								general += $tag.attr('name')+"="+handleCheckbox($tag)+"&";
 								}
 /*							else if(pr == 'dropship')	{
 								//Add something here for dropship logo.
@@ -673,7 +674,7 @@ if(app.model.responseHasErrors(rd)){
 	}
 else	{
 	//if there was only 1 result, the API returns just that CID. open that customer.
-	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID)	{
+	if(app.data[rd.datapointer] && app.data[rd.datapointer].CID && (app.data[rd.datapointer].PRT == app.vars.partition))	{
 		$resultsTable.hide();
 		$editorContainer.show();
 		app.ext.admin_customer.a.showCustomerEditor($editorContainer,{'CID':app.data[rd.datapointer].CID});
@@ -687,7 +688,7 @@ else	{
 		$resultsTable.anytable();
 		}
 	else	{
-		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistant':true});
+		$('.dualModeListMessaging',$custManager).anymessage({'message':'No customers matched that search. Please try again.<br />Searches are partition specific, so if you can not find this user on this partition, switch to one of your other partitions','persistent':true});
 		}
 	}
 						}},'mutable');
@@ -718,7 +719,7 @@ else	{
 								$modal.anymessage({'message':rd});
 								}
 							else	{
-								$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistant':true})
+								$modal.empty().anymessage({'message':'Thank you, the hint has been reset.','iconClass':'ui-icon-z-success','persistent':true})
 								}
 							}},'immutable');
 							app.model.dispatchThis('immutable');
@@ -907,7 +908,7 @@ else	{
 									$modal.anymessage({'message':rd});
 									}
 								else	{
-									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistant':true});
+									$modal.empty().anymessage({'message':'Thank you, the address has been changed','persistent':true});
 									//clear existing addresses and re-render.
 									$("tbody",$addrPanel).empty();
 									$addrPanel.anycontent({'datapointer' : 'adminCustomerDetail|'+CID});
@@ -936,15 +937,33 @@ else	{
 
 			showCustomerUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(event){
-					event.preventDefault();
-					var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
-					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
-					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
-					app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$btn.closest("[data-cid]").data('cid')});
-					});
+//a customer from a different partition SHOULD show up in the results, but is NOT editable unless logged in to that partition.
+				if($btn.closest('tr').data('prt') == app.vars.partition)	{
+					$btn.off('click.showCustomerUpdate').on('click.showCustomerUpdate',function(event){
+						event.preventDefault();
+						var $dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']")
+						$("[data-app-role='dualModeResultsTable']",$dualModeContainer).hide();
+						$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).show();
+						app.ext.admin_customer.a.showCustomerEditor($("[data-app-role='dualModeDetailContainer']",$dualModeContainer),{'CID':$btn.closest("[data-cid]").data('cid')});
+						});
+					}
+				else	{
+					$btn.button('disable').hide();
+					$("<span class='tooltip'>?<\/span>").attr('title','You must be logged in to a partition to edit a customer on that partition.').tooltip().insertAfter($btn);
+					}
 				//
 				},
+			
+			
+			showGiftcardUpdate : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				
+				$btn.off('click.showGiftcardUpdate').on('click.showGiftcardUpdate',function(event){
+					event.preventDefault();
+					navigateTo("/biz/manage/giftcard/index.cgi?VERB=EDIT&GCID="+$btn.closest('tr').data('id'));
+					});
+				},
+			
 			
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
@@ -958,6 +977,14 @@ else	{
 					$cb.closest('.ui-dialog-content').dialog('close');
 					})
 				
+				},
+			
+			showMailTool : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-mail-closed"},text: true});
+				$btn.off('click.showMailTool').on('click.showMailTool',function(event){
+					event.preventDefault();
+					app.ext.admin.a.showMailTool({'listType':'CUSTOMER','partition':app.vars.partition,'CID':$btn.closest("[data-cid]").data('cid')});
+					});
 				},
 			
 			showOrgChooser : function($btn)	{

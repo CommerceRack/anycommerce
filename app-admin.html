@@ -26,7 +26,7 @@ else {
 
 var app = {vars:{
 	/////////////////////////////////\
-	"release":"201318.a",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
+	"release":"201318.c",   ///|> Increment this with each change. model version followed by each deployed update getting a new letter in the alphabet.
 	//////////////////////////////////
 	"thisSessionIsAdmin": true,
 	"_clientid":"admin",
@@ -78,7 +78,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 </head>
-<body class="control">
+<body class="control" onLoad="jQuery('#appversion').text(app.vars.release);">
 <!-- this div handles getting content to appear below the fixed header -->
 
 
@@ -97,6 +97,25 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 </div>
 
 
+
+
+	
+<div id='appPasswordRecover' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
+	
+	<div class='alignCenter'>
+<form>
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
+	<legend>Password Recovery</legend>
+	<label>Login: <input type='text' name='login' value='' required='required' ></label>
+	<button data-app-event='admin|execPasswordRecover'>Recover Password</button>
+</fieldset>
+</form>
+	</div>
+
+</div>
+
+
+
 <div id='appLogin' class='displayNone ui-widget ui-widget-content ui-corner-all stdPadding'>
 	
 	<div class='logo alignCenter'><a href="/index.html"><img src='extensions/admin/images/zoovy_logo-173x30.png' width='173' height='30' alt='zoovy' /></a></div>
@@ -111,10 +130,12 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			<label><span>Login: </span><input type='text' name='userid' value='' required='required' class='textbox' /></label>
 			<label><span>Password: </span><input type='password' name='password' value=''  required='required' class='textbox' /></label>
 			
+	
 			<button class='loginbutton floatRight' data-app-event="admin|accountLogin">login</button>
+<!--			<button class='floatRight' data-app-event="admin|showPasswordRecover">Recover Password</button> -->
 			<div class="hint">App Release #: <span id="appversion">??</span></div>
-			<label class='hint'><input type='checkbox' name='persitentAuth' value='1' checked='checked' /> Keep me logged in</label>
-			<div class="hint"><b><a href='/app/201312/admin.html'> &#187; Use previous version</a></b></div>
+			<label class='hint'><input type='checkbox' name='persistentAuth' value='1' checked='checked' /> Keep me logged in</label>
+			<div class="hint"><b><a href='/app/201314/admin.html'> &#187; Use previous version</a></b></div>
 
 		</fieldset>
 		</form>
@@ -127,9 +148,6 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 
 
 		</div>
-		<script type="text/javascript">
-		jQuery("#appversion").text(app.vars.release);
-		</script>
 	</div>
 </div>
 
@@ -180,7 +198,7 @@ app.u.loadScript(app.vars.baseURL+"app-admin-init.js");
 			</div>
 			
 		</div>
-	
+
 		<div class='mhTabsContainer'>
 		<ul class='showIcons navIcons'>
 			<li class='toggleArrow alignCenter' onClick="app.ext.admin.a.toggleHeaderTabHeight()" title='Toggle this menu to be taller or shorter'>&#9650;</li>
@@ -354,6 +372,8 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<li><a href='#'>Test</a>
 	<ul>
 
+		<li><a href='#' onClick="app.model.destroy('adminReportDownload'); app.ext.admin.calls.adminReportDownload.init('39A81CB2-9706-11E2-8FFD-99F4EA1F',{},'mutable'); app.model.dispatchThis('mutable');">adminReportDownload</a></li>
+		
 		<li><a href='#' onClick="app.model.destroy('adminKPIDBCollectionList'); app.ext.admin.calls.adminKPIDBCollectionList.init({},'mutable'); app.model.dispatchThis('mutable');">adminKPIDBCollectionList</a></li>
 		<li><a href='#' onClick="app.model.destroy('adminKPIDBCollectionDetail|1528'); app.ext.admin.calls.adminKPIDBCollectionDetail.init(1528,{},'mutable'); app.model.dispatchThis('mutable');">adminKPIDBCollectionDetail</a></li>
 		<li><a href='#' onClick="app.ext.admin.calls.adminMessagesList.init(0,{},'mutable'); app.model.dispatchThis('mutable');">adminMessagesList</a></li>
