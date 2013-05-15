@@ -1343,7 +1343,24 @@ $btn.off('click.execAdminKPIDBCollectionUpdate').on('click.execAdminKPIDBCollect
 //show the input container desired. make all inputs within required.
 					$ele.closest('fieldset').find('.formPeriodRange-'+$(this).val()).show().effect('highlight',{},1500).find('input,select').each(function(){$(this).attr('required','required')});
 					});
-				}
+				},
+
+
+			execAdminReportCreate : function($btn)	{
+				$btn.button();
+				$btn.off('click.execAdminReportCreate').on('click.execAdminReportCreate',function(event){
+					event.preventDefault();
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var sfo = {'%vars':$form.serializeJSON()}
+						sfo.type = 'REPORT';
+						sfo.guid = app.u.guidGenerator();
+						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
+						}
+					else	{} //validateForm handles error display.
+					});
+				},
+
 			
 			
 			} //E / Events

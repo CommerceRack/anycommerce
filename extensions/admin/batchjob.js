@@ -50,8 +50,9 @@ var admin_batchJob = function() {
 				app.ext.admin_batchJob.a.showBatchJobStatus(app.data[tagObj.datapointer].jobid);
 				},
 			onError : function(responseData)	{
-				$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
-				app.u.throwMessage(responseData);
+				var $target = $(app.u.jqSelector('#',responseData._rtag.parentID));
+				$target.hideLoading();
+				$target.anymessage({'message':responseData,'persistent':true});
 				}
 			},
 		
@@ -135,7 +136,7 @@ var admin_batchJob = function() {
 		
 									$target.append($("<div \/>",{'id':reportElementID+"_toolbar"})); //add element to dom for visualization toolbar
 									$target.append($("<div \/>",{'id':reportElementID}).addClass('smallTxt')); //add element to dom for visualization table
-									
+
 									app.ext.admin_reports.u.drawTable(reportElementID,tableHeads,app.data[rd.datapointer]['@BODY']);
 									app.ext.admin_reports.u.drawToolbar(reportElementID+"_toolbar");
 									
@@ -145,7 +146,7 @@ var admin_batchJob = function() {
 									for(index in vars)	{
 										errorDetails += "<br>"+index+": "+vars[index];
 										}
-									$target.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This will cause a fatal error in visualization. Details:'+errorDetails,'gMessage':true,'persistent':true});
+									$target.anymessage({'message':'The number of columns in the data do not match the number of columns in the head. This is likely due to an old report being opened in the new report interface. <b>Please re-run the report and open the new copy.</b>  If the error persist, please report to support with the following error details:'+errorDetails,'persistent':true});
 									}
 								
 								
@@ -202,19 +203,7 @@ var admin_batchJob = function() {
 		e : {
 
 
-			execAdminBatchJobCreate : function($btn)	{
-				$btn.button();
-				$btn.off('click.execAdminBatchJobCreate').on('click.execAdminBatchJobCreate',function(event){
-					event.preventDefault();
-					var $form = $btn.closest('form');
-					if(app.u.validateForm($form))	{
-						var sfo = $form.serializeJSON();
-						sfo.guid = app.u.guidGenerator();
-						app.ext.admin_batchJob.a.adminBatchJobCreate(sfo);
-						}
-					else	{} //validateForm handles error display.
-					});
-				},
+
 
 //NOTE -> the batch_exec will = REPORT for reports.
 			showReport : function($btn)	{

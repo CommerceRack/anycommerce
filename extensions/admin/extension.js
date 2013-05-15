@@ -2970,7 +2970,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
 //if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
-				if (!domain) {
+				if(!domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
 					}
