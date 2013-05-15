@@ -113,8 +113,9 @@ var admin_reports = function() {
 						}
 					else	{
 						var reports = new Array(), //used to store a small portion of the batch list. 10 reports.
-						L = app.data[rd.datapointer]['@JOBS'].length;
-						for(var i = 0; i < L; i += 1)	{
+						L = app.data[rd.datapointer]['@JOBS'].length - 1;
+//reports are in chronological order, oldest to newest. here, we want to show the ten newest.
+						for(var i = L; i >= 0; i -= 1)	{
 							if(app.data[rd.datapointer]['@JOBS'][i].BATCH_EXEC == 'REPORT')	{
 								reports.push(app.data[rd.datapointer]['@JOBS'][i]);
 								}

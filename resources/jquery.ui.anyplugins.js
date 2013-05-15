@@ -1158,11 +1158,11 @@ supported options include tabID (given to the container), tabtext (what appears 
 				//already in a stickytab. do nothing.
 				}
 			else	{
-				$t.data('isstickytab',true)
-				if(o.tabID)	{}
-				else if($t.attr('id'))	{o.tabID = 'stickytab_'+$t.attr('id')}
+				$t.data('isstickytab',true);
+//add an id if one doesn't already exist.
+				if($t.attr('id'))	{}
 				else	{
-					o.tabID = 'stickytab_'+app.u.guidGenerator();
+					$t.attr({'id':(o.tabID || 'stickytab_'+app.u.guidGenerator())}); //the ID goes onto the element this is run on.  allows for methods to easily be run later.
 					}
 				
 				var 
@@ -1240,7 +1240,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 		_buildSticky : function()	{
 //			console.log('building sticktab');
 			var 
-				$sticky = $("<div \/>",{'id':this.options.tabID}).css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
+				$sticky = $("<div \/>").css({'position':'relative'}).addClass('ui-widget ui-widget-stickytab'),
 				$stickytab = $("<div \/>").addClass("ui-widget-stickytab-tab ui-corner-right "+this.options.tabclass),
 				$stickyContent = $("<div \/>").addClass("ui-widget-stickytab-content minimalMode ui-widget ui-widget-content ui-corner-right");
 

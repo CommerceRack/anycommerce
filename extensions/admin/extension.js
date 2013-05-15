@@ -2370,6 +2370,7 @@ if(opts.dialog){
 else if(opts.tab)	{
 	opts.targetID = opts.tab+"Content";
 	$target = $(app.u.jqSelector('#',opts.targetID));
+
 //this is for the left side tab that appears in the orders/product interface after perfoming a search and navigating to a result.
 	if(opts.tab != 'orders')	{
 		app.ext.admin_orders.u.handleOrderListTab('deactivate');
@@ -2377,6 +2378,10 @@ else if(opts.tab)	{
 	if(opts.tab != 'product')	{
 		app.ext.admin_prodEdit.u.handleProductListTab('deactivate');
 		}
+	if(opts.tab != 'reports')	{
+		$('#batchJobsStickyTab').stickytab('destroy');
+		}
+	
 	}
 //no tab was specified. use the open tab, if it's set.
 else if(app.ext.admin.vars.tab)	{
