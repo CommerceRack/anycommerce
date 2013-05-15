@@ -59,7 +59,7 @@ var admin_customer = function() {
 // later, we may add the ability to load directly into 'edit' mode and open a specific user. not supported just yet.
 			showCustomerManager : function() {
 				var $tabContent = $(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content"));
-				$tabContent.empty();
+				$tabContent.intervaledEmpty();
 				$tabContent.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
 				app.ext.admin.u.handleAppEvents($tabContent);
 				}, //showCustomerManager
