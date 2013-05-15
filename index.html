@@ -516,7 +516,7 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 	</div>
 	<div id="footerSubscribeBar">
 		<img src="img/cw12_tit_signup-364x15.png" />
-		<form action='#' id='footerSubscribeForm' name='footerSubscribeForm' onSubmit="app.ext.store_crm.u.handleSubscribe('footerSubscribeForm'); return false">
+		<form action='#' id='footerSubscribeForm' name='footerSubscribeForm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
 			<input class="text" type='text' placeholder="Full Name" maxlength='50' size='30' name='fullname' id='subscribeFullname' value='' />
 			<input class="text"  type='email' placeholder="Email Address" maxlength='50' size='30' name='login' id='subscribeLogin' value='' />
 
