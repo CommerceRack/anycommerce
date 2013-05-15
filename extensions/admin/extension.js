@@ -2662,6 +2662,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					else	{
 						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
 						}
+					
+					app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
 					app.vars.partition = partition;
 					$('.partition','#appView').text(partition || "");
 	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
@@ -2973,11 +2975,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
 					}
 				else {
+					
 					app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
 						else	{
 							app.vars.partition = app.ext.admin.a.getDataForDomain(domain,'prt');
-							$('.partition').text(app.vars.partition)
+							$('.partition').text(app.vars.partition);
+							app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
 							}
 						}},'immutable');
 					$('.domain','#appView').text(domain);
