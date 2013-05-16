@@ -56,6 +56,7 @@ function initialize() {
   }
 
   function requestTurn(turn_url) {
+	app.u.dump("BEGIN requestTurn. turn_url: "+turn_url);
     var turnExists = false;
     for (var i in pc_config.iceServers) {
       if (pc_config.iceServers[i].url.substr(0, 5) == 'turn:') {
@@ -114,7 +115,7 @@ function initialize() {
   function createPeerConnection() {    
     // Force the use of a number IP STUN server for Firefox.
     if (webrtcDetectedBrowser == "firefox") {
-      pc_config = {"iceServers":[{"url":"stun:192.168.99.100"}]};
+      pc_config = {"iceServers":[{"url":"stun:23.21.150.121"}]};
     }
     try {
       // Create an RTCPeerConnection via the polyfill (adapter.js).
