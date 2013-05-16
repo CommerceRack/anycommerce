@@ -12,9 +12,10 @@ var socket;
 var initiator = 0;
 var started = false;
 var pc_config = {
-	"iceServers": [{
-		"url": "stun:stun.l.google.com:19302" //:3478 is port, if required.
-		}]
+	"iceServers": [
+		{"url": "stun:stun.l.google.com:19302"}, //:3478 is port, if required.
+		{"url": "turn://192.168.99.100?username=test&password=1234"}
+		]
 	};
 var pc_constraints = {"optional": [{"DtlsSrtpKeyAgreement": true}]};
 // Set up audio and video regardless of what devices are present.
@@ -43,36 +44,36 @@ function initialize() {
 	doGetUserMedia();
 	}
 
-  function openChannel(channelToken) {
-    console.log("Opening channel.");
-    var channel = new goog.appengine.Channel(channelToken);
-    var handler = {
-      'onopen': onChannelOpened,
-      'onmessage': onChannelMessage,
-      'onerror': onChannelError,
-      'onclose': onChannelClosed
-    };
-    socket = channel.open(handler);
-  }
+function openChannel(channelToken) {
+	console.log("Opening channel.");
+	var channel = new goog.appengine.Channel(channelToken);
+	var handler = {
+		'onopen': onChannelOpened,
+		'onmessage': onChannelMessage,
+		'onerror': onChannelError,
+		'onclose': onChannelClosed
+		};
+	socket = channel.open(handler);
+	}
 
-  function requestTurn(turn_url) {
+function requestTurn(turn_url) {
 	app.u.dump("BEGIN requestTurn. turn_url: "+turn_url);
-    var turnExists = false;
-    for (var i in pc_config.iceServers) {
-      if (pc_config.iceServers[i].url.substr(0, 5) == 'turn:') {
-        turnExists = true;
-        turnReady = true;
-        break;
-      }
-    }
-    if (!turnExists) {
-      // No turn server. Get one from computeengineondemand.appspot.com:
-      xmlhttp = new XMLHttpRequest();
-      xmlhttp.onreadystatechange = onTurnResult;
-      xmlhttp.open("GET", turn_url, true);
-      xmlhttp.send();
-    }
-  }
+	var turnExists = false;
+	for (var i in pc_config.iceServers) {
+		if (pc_config.iceServers[i].url.substr(0, 5) == 'turn:') {
+			turnExists = true;
+			turnReady = true;
+			break;
+			}
+		}
+	if (!turnExists) {
+// No turn server. Get one from computeengineondemand.appspot.com:
+		xmlhttp = new XMLHttpRequest();
+		xmlhttp.onreadystatechange = onTurnResult;
+		xmlhttp.open("GET", turn_url, true);
+		xmlhttp.send();
+		}
+	}
 
   function onTurnResult() {
 	  app.u.dump("BEGIN onTurnResult");
@@ -399,26 +400,29 @@ function initialize() {
   // Ctrl-D: toggle audio mute; Ctrl-E: toggle video mute.
   // On Mac, Command key is instead of Ctrl.
   // Return false to screen out original Chrome shortcuts.
-  document.onkeydown = function() {
+  document.onkeydown = function(e) {
+//if no stram is defined, then these hotkeys have no action.
+	  if(localStream){
     if (navigator.appVersion.indexOf("Mac") != -1) {
-      if (event.metaKey && event.keyCode === 68) {
+      if (e.metaKey && e.keyCode === 68) {
         toggleAudioMute();
         return false;
       }
-      if (event.metaKey && event.keyCode === 69) {
+      if (e.metaKey && e.keyCode === 69) {
         toggleVideoMute();
         return false;
       }
     } else {
-      if (event.ctrlKey && event.keyCode === 68) {
+      if (e.ctrlKey && e.keyCode === 68) {
         toggleAudioMute();
         return false;
       }
-      if (event.ctrlKey && event.keyCode === 69) {
+      if (e.ctrlKey && e.keyCode === 69) {
         toggleVideoMute();
         return false;
       }
     }
+	  }
   }
 
   // Set Opus as the default audio codec if it's present.
