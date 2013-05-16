@@ -142,11 +142,11 @@ function initialize() {
   }
 
 	function setStatus(state) {
-		if(footer)	{}
+		if(typeof footer === 'object')	{}
 		else	{
-			footer = document.getElementById("footer");
+			footer = $("#footer");
 			}
-		footer.innerHTML = state;
+		footer.append(state);
 		}
 
   function doCall() {
