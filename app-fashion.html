@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201320.b",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201320.c",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"checkoutAuthMode" : "active", //can be passive, active or required
 	"baseURL":"",
@@ -52,23 +52,19 @@ css files should be included before any .js file to ensure they are downloaded i
 <script src="resources/jquery.ui.widget.min.js"></script>
 <script type="text/javascript" src="loadscript.js"></script>
 
+<script src="resources/webrtc_core.js"></script>
+<script src="resources/webrtc_jsapi.min.js"></script>
+<script src="resources/webrtc_adapter.js"></script>
 
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"app-fashion-init.js");
-
-function doVideo()	{
-	app.u.loadScript(app.vars.baseURL+"resources/webrtc_adapter.js");
-	app.u.loadScript(app.vars.baseURL+"resources/webrtc_core.js");
-	app.u.loadScript(app.vars.baseURL+"resources/webrtc_jsapi.min.js");
-	}
-
 </script>
 
 
 </head>
 
 <body>
-<button onClick='doVideo();'>do video</button>
+
 
 <!-- what is displayed onLoad until the view is loaded -->
 <div id='appPreView'>
