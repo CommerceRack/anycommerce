@@ -473,6 +473,9 @@ see jquery/api webdoc for required/optional param
 			
 
 
+
+
+
 //the authentication through FB sdk has already taken place and this is an internal server check to verify integrity.	
 //the getFacebookUserData function also updates bill_email and adds the fb.user info into memory in a place quickly accessed
 //the obj passed in is passed into the request as the _tag
