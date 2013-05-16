@@ -114,6 +114,7 @@ function requestTurn(turn_url) {
   }
 
   function createPeerConnection() {    
+  	console.log("BEGIN createPeerConnection");
     // Force the use of a number IP STUN server for Firefox.
     if (webrtcDetectedBrowser == "firefox") {
       pc_config = {"iceServers":[{"url":"stun:23.21.150.121"}]};
@@ -135,6 +136,7 @@ function requestTurn(turn_url) {
   }
 
   function maybeStart() {
+	console.log('BEGIN maybe start');
     if (!started && localStream && channelReady && turnReady) {
       setStatus("Connecting...");
       console.log("Creating PeerConnection.");
@@ -205,6 +207,7 @@ function requestTurn(turn_url) {
   }
 
   function processSignalingMessage(message) {
+	 console.log("BEGIN processSignalingMessage. message: "+message);
     var msg = JSON.parse(message);
     if (msg.type === 'offer') {
       // Callee creates PeerConnection
@@ -230,7 +233,7 @@ function requestTurn(turn_url) {
   }
 
   function onChannelOpened() {
-    console.log('Channel opened.');
+    console.log('Channel opened. initiator: '+initiator);
     channelReady = true;
     if (initiator) maybeStart();
   }
@@ -389,7 +392,7 @@ function requestTurn(turn_url) {
     isAudioMuted = !isAudioMuted;  
   }
 
-  setTimeout(initialize, 1);
+  setTimeout(initialize, 2000);
 
   // Send BYE on refreshing(or leaving) a demo page
   // to ensure the room is cleaned for next session.

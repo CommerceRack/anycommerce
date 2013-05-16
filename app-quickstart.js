@@ -201,7 +201,7 @@ document.write = function(v){
 				var tagObj = {};
 //we always get the tier 1 cats so they're handy, but we only do something with them out of the get if necessary (tier1categories is defined)
 				if($('#tier1categories').length)	{
-					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
+//					app.u.dump("#tier1categories is set. fetch tier1 cat data.");
 					app.ext.store_navcats.u.getChildDataOf(zGlobals.appSettings.rootcat,{'parentID':'tier1categories','callback':'addCatToDom','templateID':'categoryListTemplateRootCats','extension':'store_navcats'},'appCategoryDetailMax');  //generate nav for 'browse'. doing a 'max' because the page will use that anway.
 					app.model.dispatchThis();
 					}
@@ -1434,7 +1434,7 @@ P.listID (buyer list id)
 //executed when the app loads.  
 //sets a default behavior of loading homepage. Can be overridden by passing in infoObj.
 			handleAppInit : function(infoObj)	{
-app.u.dump("BEGIN myRIA.u.handleAppInit");
+//app.u.dump("BEGIN myRIA.u.handleAppInit");
 //!!! need to write/test this in IE7
 //				if(app.u.getBrowserInfo().indexOf('explorer') > -1)	{}
 				

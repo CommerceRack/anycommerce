@@ -56,7 +56,7 @@ var prodlist_infinite = function() {
 //callbacks.init need to return either a true or a false, depending on whether or not the file will execute properly based on store account configuration.
 		init : {
 			onSuccess : function()	{
-				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
+//				app.u.dump('BEGIN app.ext.prodlist_infinite.init.onSuccess ');
 				return true;  //currently, there are no config or extension dependencies, so just return true. may change later.
 //unbind this from window anytime a category page is left.
 //NOTE! if infinite prodlist is used on other pages, remove run this on that template as well.
