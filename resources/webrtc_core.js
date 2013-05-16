@@ -13,7 +13,7 @@ var initiator = 0;
 var started = false;
 var pc_config = {
 	"iceServers": [{
-		"url": "stun:stun.l.google.com:19302"
+		"url": "stun:192.168.99.100" //:3478 is port, if required.
 		}]
 	};
 var pc_constraints = {"optional": [{"DtlsSrtpKeyAgreement": true}]};
@@ -38,7 +38,7 @@ function initialize() {
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
 	openChannel('AHRlWrr_SucgYpVS1vFccailVKKgRkmIH8p0fXwkdCtJ4qIK2QkkHAuyxxM3_qqusdwVkLtoMB8s6yhSg0QUfQavT2RmnIey-YgNsEsxqrVGYGxTlSIUf1E');
-	requestTurn('turn:192.168.99.100');
+	requestTurn('https://192.168.99.100?username=test&password=1234');
 	stereo = false;
 	doGetUserMedia();
 	}
