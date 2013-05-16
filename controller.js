@@ -470,10 +470,30 @@ see jquery/api webdoc for required/optional param
 				app.model.addDispatchToQ(obj,Q || 'immutable');
 				}
 			},//appReviewAdd
-			
 
+		appStash : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj["_cmd"] = "appStash";
+				obj['_tag'] = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			},//appStash
 
-
+		appSuck : {
+			init : function(obj,_tag,Q)	{
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj["_cmd"] = "appSuck";
+				obj['_tag'] = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			},//appSuck
 
 
 //the authentication through FB sdk has already taken place and this is an internal server check to verify integrity.	
