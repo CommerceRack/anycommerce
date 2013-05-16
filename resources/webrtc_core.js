@@ -13,7 +13,7 @@ var initiator = 0;
 var started = false;
 var pc_config = {
 	"iceServers": [
-		{"url": "stun:stun.l.google.com:19302"}, //:3478 is port, if required.
+		{"url": "stun://192.168.99.100"}, //:3478 is port, if required.
 		{"url": "turn://192.168.99.100?username=test&password=1234"}
 		]
 	};
