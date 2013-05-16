@@ -38,7 +38,7 @@ function initialize() {
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
 	openChannel('AHRlWrr_SucgYpVS1vFccailVKKgRkmIH8p0fXwkdCtJ4qIK2QkkHAuyxxM3_qqusdwVkLtoMB8s6yhSg0QUfQavT2RmnIey-YgNsEsxqrVGYGxTlSIUf1E');
-	requestTurn('https://192.168.99.100?username=test&password=1234');
+	requestTurn('turn://192.168.99.100?username=test&password=1234');
 	stereo = false;
 	doGetUserMedia();
 	}
@@ -74,6 +74,11 @@ function initialize() {
   }
 
   function onTurnResult() {
+	  app.u.dump("BEGIN onTurnResult");
+	  app.u.dump(" -> xmlhttp.status: "+xmlhttp.status);
+	  app.u.dump(" -> xmlhttp.responseText: "+xmlhttp.responseText);
+	  app.u.dump(" -> turnServer: ");	  app.u.dump(turnServer);
+	  
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       var turnServer = JSON.parse(xmlhttp.responseText);
       pc_config.iceServers.push({
@@ -109,7 +114,7 @@ function initialize() {
   function createPeerConnection() {    
     // Force the use of a number IP STUN server for Firefox.
     if (webrtcDetectedBrowser == "firefox") {
-      pc_config = {"iceServers":[{"url":"stun:23.21.150.121"}]};
+      pc_config = {"iceServers":[{"url":"stun:192.168.99.100"}]};
     }
     try {
       // Create an RTCPeerConnection via the polyfill (adapter.js).
