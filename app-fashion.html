@@ -20,7 +20,7 @@ var _gaq = _gaq || {'push':function(){}} //here for testing. REPLACE BEFORE DEPL
 var myCreole;
 
 var app = {vars:{
-	"release":"201320.d",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
+	"release":"201320.e",  //increment this with each change. should solve caching issues. format: YYYYMMDDHHMMSS
 	"_clientid":"zmvc",
 	"checkoutAuthMode" : "active", //can be passive, active or required
 	"baseURL":"",
@@ -1694,6 +1694,31 @@ The 'data-action' attribute is used to assign an onclick.
 
 
 
+
+
+
+<!-- this is for video -->
+
+<div id="container" ondblclick="enterFullScreen()"> 
+  <div id="card">
+    <div id="local">
+      <video width="100%" height="100%" id="localVideo" autoplay muted="true"/>
+    </div>
+    <div id="remote">
+      <video width="100%" height="100%" id="remoteVideo" autoplay>
+      </video>
+      <div id="mini">
+        <video width="100%" height="100%" id="miniVideo" autoplay muted="true"/>
+      </div>
+    </div>
+  </div>
+  <div id="footer">
+  </div>
+</div>
+
+
+
+
 <script type='text/javascript'>
 
 
@@ -1724,26 +1749,6 @@ function handleCategoryMenu(state)	{
 </script>
 
 
-
-
-<!-- this is for video -->
-
-<div id="container" ondblclick="enterFullScreen()"> 
-  <div id="card">
-    <div id="local">
-      <video width="100%" height="100%" id="localVideo" autoplay muted="true"/>
-    </div>
-    <div id="remote">
-      <video width="100%" height="100%" id="remoteVideo" autoplay>
-      </video>
-      <div id="mini">
-        <video width="100%" height="100%" id="miniVideo" autoplay muted="true"/>
-      </div>
-    </div>
-  </div>
-  <div id="footer">
-  </div>
-</div>
 
 
 

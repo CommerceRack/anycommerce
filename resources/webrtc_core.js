@@ -3,6 +3,7 @@ var miniVideo;
 var remoteVideo;
 var localStream;
 var remoteStream;
+var footer;
 var channel;
 var channelReady = false;
 var turnReady = false;
@@ -33,6 +34,7 @@ function initialize() {
 	localVideo = document.getElementById("localVideo");
 	miniVideo = document.getElementById("miniVideo");
 	remoteVideo = document.getElementById("remoteVideo");
+	footer = document.getElementById("footer");
 	resetStatus();
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
@@ -140,9 +142,9 @@ function initialize() {
     }
   }
 
-  function setStatus(state) {
-    footer.innerHTML = state;
-  }
+	function setStatus(state) {
+		footer.innerHTML = state;
+		}
 
   function doCall() {
     var constraints = {"optional": [], "mandatory": {"MozDontOfferDataChannel": true}};
