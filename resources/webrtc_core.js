@@ -394,7 +394,7 @@ function doCall() {
     isAudioMuted = !isAudioMuted;  
   }
 
-  setTimeout(initialize, 1);
+  setTimeout(initialize, 2510);
 
   // Send BYE on refreshing(or leaving) a demo page
   // to ensure the room is cleaned for next session.
