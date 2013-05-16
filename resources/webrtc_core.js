@@ -13,8 +13,8 @@ var initiator = 0;
 var started = false;
 var pc_config = {
 	"iceServers": [
-		{"url": "stun://192.168.99.100"}, //:3478 is port, if required.
-		{"url": "turn://192.168.99.100?username=test&password=1234"}
+		{"url": "stun:192.168.99.100"}, //:3478 is port, if required.  stun:stun.l.google.com:19302
+		{"url": "turn:192.168.99.100?username=test&password=1234"}
 		]
 	};
 var pc_constraints = {"optional": [{"DtlsSrtpKeyAgreement": true}]};
@@ -39,7 +39,7 @@ function initialize() {
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
 	openChannel('AHRlWrr_SucgYpVS1vFccailVKKgRkmIH8p0fXwkdCtJ4qIK2QkkHAuyxxM3_qqusdwVkLtoMB8s6yhSg0QUfQavT2RmnIey-YgNsEsxqrVGYGxTlSIUf1E');
-	requestTurn('turn://192.168.99.100?username=test&password=1234');
+	requestTurn('turn:192.168.99.100?username=test&password=1234');
 	stereo = false;
 	doGetUserMedia();
 	}
@@ -67,6 +67,7 @@ function requestTurn(turn_url) {
 			}
 		}
 	if (!turnExists) {
+		console.log('Turn Exists. sent xmlhttp request.');
 // No turn server. Get one from computeengineondemand.appspot.com:
 		xmlhttp = new XMLHttpRequest();
 		xmlhttp.onreadystatechange = onTurnResult;
@@ -233,7 +234,7 @@ function requestTurn(turn_url) {
   }
 
   function onChannelOpened() {
-    console.log('Channel opened. initiator: '+initiator);
+    console.log('Channel opened.');
     channelReady = true;
     if (initiator) maybeStart();
   }
@@ -392,7 +393,7 @@ function requestTurn(turn_url) {
     isAudioMuted = !isAudioMuted;  
   }
 
-  setTimeout(initialize, 2000);
+  setTimeout(initialize, 1);
 
   // Send BYE on refreshing(or leaving) a demo page
   // to ensure the room is cleaned for next session.
