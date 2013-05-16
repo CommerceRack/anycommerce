@@ -1,3 +1,6 @@
+/*
+This will determine whether the browser is chrome or FF and then migrate the browser specific API calls to generic ones so that the rest of the code doesn't have to check and, based on what browser is being used, execute a different function.
+*/
 var RTCPeerConnection = null;
 var getUserMedia = null;
 var attachMediaStream = null;

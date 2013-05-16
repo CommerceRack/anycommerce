@@ -78,9 +78,11 @@ function requestTurn(turn_url) {
 
   function onTurnResult() {
 	  app.u.dump("BEGIN onTurnResult");
-	  app.u.dump(" -> xmlhttp.status: "+xmlhttp.status);
-	  app.u.dump(" -> xmlhttp.responseText: "+xmlhttp.responseText);
-	  app.u.dump(" -> turnServer: ");	  app.u.dump(turnServer);
+	  if(xmlhttp)	{
+		  app.u.dump(" -> xmlhttp.status: "+xmlhttp.status);
+		  app.u.dump(" -> xmlhttp.responseText: "+xmlhttp.responseText);
+		  app.u.dump(" -> turnServer: ");	  app.u.dump(turnServer);
+	  	}
 	  
     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
       var turnServer = JSON.parse(xmlhttp.responseText);
@@ -151,29 +153,28 @@ function requestTurn(turn_url) {
     }
   }
 
-	function setStatus(state) {
-		if(typeof footer === 'object')	{}
-		else	{
-			footer = $("#footer");
-			}
-		footer.append(state);
+function setStatus(state) {
+	if(typeof footer === 'object')	{}
+	else	{
+		footer = $("#footer");
 		}
+	footer.append(state);
+	}
 
-  function doCall() {
-    var constraints = {"optional": [], "mandatory": {"MozDontOfferDataChannel": true}};
-    // temporary measure to remove Moz* constraints in Chrome
-    if (webrtcDetectedBrowser === "chrome") {
-      for (prop in constraints.mandatory) {
-        if (prop.indexOf("Moz") != -1) {
-          delete constraints.mandatory[prop];
-        }
-       }
-     }   
-    constraints = mergeConstraints(constraints, sdpConstraints);
-    console.log("Sending offer to peer, with constraints: \n" +
-                "  \"" + JSON.stringify(constraints) + "\".")
-    pc.createOffer(setLocalAndSendMessage, null, constraints);
-  }
+function doCall() {
+	var constraints = {"optional": [], "mandatory": {"MozDontOfferDataChannel": true}};
+// temporary measure to remove Moz* constraints in Chrome
+	if (webrtcDetectedBrowser === "chrome") {
+		for (prop in constraints.mandatory) {
+			if (prop.indexOf("Moz") != -1) {
+				delete constraints.mandatory[prop];
+				}
+			}
+		}   
+	constraints = mergeConstraints(constraints, sdpConstraints);
+	console.log("Sending offer to peer, with constraints: \n" +"  \"" + JSON.stringify(constraints) + "\".")
+	pc.createOffer(setLocalAndSendMessage, null, constraints);
+	}
 
   function doAnswer() {
     console.log("Sending answer to peer.");
