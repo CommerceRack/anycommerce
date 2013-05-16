@@ -37,7 +37,7 @@ function initialize() {
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
 	openChannel('AHRlWrr_SucgYpVS1vFccailVKKgRkmIH8p0fXwkdCtJ4qIK2QkkHAuyxxM3_qqusdwVkLtoMB8s6yhSg0QUfQavT2RmnIey-YgNsEsxqrVGYGxTlSIUf1E');
-	requestTurn('fsockopen.php');
+	requestTurn('https://192.168.99.100');
 	stereo = false;
 	doGetUserMedia();
 	}
