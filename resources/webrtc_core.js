@@ -34,7 +34,6 @@ function initialize() {
 	localVideo = document.getElementById("localVideo");
 	miniVideo = document.getElementById("miniVideo");
 	remoteVideo = document.getElementById("remoteVideo");
-	footer = document.getElementById("footer");
 	resetStatus();
 	// NOTE: AppRTCClient.java searches & parses this line; update there when
 	// changing here.
@@ -143,6 +142,10 @@ function initialize() {
   }
 
 	function setStatus(state) {
+		if(footer)	{}
+		else	{
+			footer = document.getElementById("footer");
+			}
 		footer.innerHTML = state;
 		}
 
