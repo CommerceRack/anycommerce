@@ -248,14 +248,14 @@ renderOptionIMGSELECT: function(pog) {
 renderOptionRADIO: function(pog)	{
 	var pogid = pog.id;
 
-	var $parentDiv = $("<span \/>");
+	var $parentDiv = $("<span \/>").addClass('labelsAsBreaks');
 	
 //display ? with hint in hidden div IF ghint is set
 	if(pog['ghint']) {$parentDiv.append(pogs.showHintIcon(pogid,pog['ghint']))}
     var i = 0;
     var len = pog['options'].length;
 	while (i < len) {
-		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']}).after(pog['options'][i]['prompt'])));
+		$parentDiv.append($("<label \/>").append($('<input>').attr({type: "radio", name: pogid, value: pog['options'][i]['v']})).append(pog['options'][i]['prompt']));
 		i++;
 		}
 	return $parentDiv;
@@ -1136,13 +1136,43 @@ the rest of the code below that is for backward compatibility with IE7... and ma
 
 if(typeof jQuery === 'function')	{
 //will serialize a form into JSON
-	jQuery.fn.serializeJSON=function() {
+/*	jQuery.fn.serializeJSON=function() {
 		var json = {};
 		jQuery.map($(this).serializeArray(), function(n, i){
 			json[n['name']] = n['value'];
 			});
 		return json;
 		};
+*/
+//the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
+ $.fn.serializeJSON = function(){
+    var json = {}
+    var form = $(this);
+    form.find('input, select, textarea').each(function(){
+      var val
+      if (!this.name) return;
+ 
+      if ('radio' === this.type) {
+        if (json[this.name]) { return; } //value already set, exit early.
+         json[this.name] = this.checked ? this.value : '';
+      } else if ('checkbox' === this.type) {
+        val = json[this.name];
+ 
+        if (!this.checked) {
+          if (!val) { json[this.name] = ''; }
+        } else {
+          json[this.name] = 
+            typeof val === 'string' ? [val, this.value] :
+            $.isArray(val) ? $.merge(val, [this.value]) :
+            this.value;
+        }
+      } else {
+        json[this.name] = this.value;
+      }
+    })
+    return json;
+  }
+
 	}
 
 

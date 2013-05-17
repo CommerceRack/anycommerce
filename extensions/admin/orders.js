@@ -1817,17 +1817,20 @@ $('.editable',$container).each(function(){
 	
 						if(formJSON.sku && orderID)	{
 							if(app.ext.store_product.validate.addToCart(formJSON.sku,$form))	{
+									app.u.dump("formJSON"); app.u.dump(formJSON);
 								for(var index in formJSON)	{
 //if the key is two characters long and uppercase, it's likely an option group.
 //if the value is more than two characters and not all uppercase, it's likely a text based sog. add a tildae to the front of the value.
 //this is used on the API side to help distinguish what key value pairs are options.
 //									app.u.dump(" -> index.substr(4): "+index.substr(4));
 									if(index.length == 2 && index.toUpperCase() == index && formJSON[index].length > 2 && formJSON[index].toUpperCase != formJSON[index])	{
+										app.u.dump(" -> index: "+index+" is most likely a non-inventory-able blob option");
 										formJSON[index.substr(4)] = "~"+formJSON[index]
 										}
 //strip pog_ but no tildae, which is ONLY needed for text based sogs.
 									else if(index.length == 2 && index.toUpperCase() == index)	{
-										var pogID = index.substr(4)
+										app.u.dump(" -> index: "+index+" is most likely a sog");
+										var pogID = index.substr(4);
 //special handling for checkboxes. If NOT optional and blank, needs to be set to NO.
 //on a checkbox sog, an extra param is passed pog_ID_cb which is set to 1. this is to 'know' that the cb was present so if the value is blank, we can handle accordingly.
 										if(pogID.indexOf('_cb') > -1)	{
@@ -1849,8 +1852,10 @@ $('.editable',$container).each(function(){
 											delete formJSON[index]; //deletes the pog_ID_on param, which isn't needed by the API.
 											}
 										else	{
-											formJSON[pogID] = formJSON[index]
-											delete formJSON[index];
+// pog indices used to have a pog_ prefix. They no longer do so no sanitization necessary anymore.
+//											app.u.dump(" -> index: "+index+" is not a sog");
+//											formJSON[pogID] = formJSON[index]
+//											delete formJSON[index];
 											}
 										}
 									
