@@ -506,11 +506,11 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 			<img src="img/custom_shirt_shop_banner_3.jpg" />
 		</a>
 		
-		<a href="#">
+		<a href="#" onClick="return showContent('product',{'pid':'OGC'});">
 			<img src="img/sportsworld_giftcard_promotion.png" />
 		</a>
 		
-		<a href="#">
+		<a href="#" onClick="return showContent('category',{'navcat':'.help_desk.player-inquiry'});" class="noMarginRight">
 			<img src="img/cant_find_a_player_banner_5.png" />
 		</a>
 	</div>
@@ -614,7 +614,7 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 			<div id="slideshowContainer">
 				<div id="slideshowNav"></div>
 				<ul id="wideSlideshow" class="pics slideshow">
-					<li><img class="pointer" onClick="return showContent('search',{'KEYWORS':'Nike','fields':'prod_brand'});" src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
+					<li><img class="pointer" onClick="return showContent('search',{'KEYWORDS':'Nike','fields':'prod_brand'});" src='img/homepage/slideshow/nike589.png' width='589' height='193'/></li>
 					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.on-field-gear'});" src='img/homepage/slideshow/cubs_authentic_gear_banner.png' width='589' height='193'/></li>
 					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.ww'});" src='img/homepage/slideshow/hats.png' width='589' height='193'/></li>
 					<li><img class="pointer" onClick="return showContent('category',{'navcat':'.new-arrivals.z_custom_design_studio'});" src='img/homepage/slideshow/custom_shirt_shop_2.jpg' width='589' height='193'/></li>
@@ -1165,6 +1165,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 -->
+
 </li>
 
 <li id="productListTemplateElasticClone" class="productListItem" onMouseOver="$('.quickView',$(this)).show();" onMouseOut="$('.quickView').hide();" >
@@ -1207,8 +1208,9 @@ remember to NOT put the button inside the 'onClick' container or two events will
 -->
 	</div>
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
-		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
+	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+		<input type='hidden' name='qty' value='1' />
+		<div class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</div>
 	</form>
 	
 </li>
