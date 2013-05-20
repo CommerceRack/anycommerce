@@ -1251,10 +1251,18 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 
 					$parent.addClass('minimalMode'); //use a class to toggle elements on/off instead of show/hide. That way if content is regenerated, visibility state is preserved
 					$detail.css({'float':'right'});
-					$liContainer.css({'float':'left','overflow':'auto','height':'500px'});
+					$liContainer.css({'float':'left','height':'500px'});
+					$('#resultsProductListContainer',$liContainer).css({'display':'block','height':'450px','overflow':'auto'});
+					$('#resultsProductListContainer',$liContainer).scrollTop(0);
 					
-					$detail.animate({'width':'65%'},'slow');
-					$liContainer.animate({'width':'30%'},'slow');
+					app.u.dump($("[data-pid='"+pid+"']", $liContainer).position());
+					setTimeout(function(){
+						$('#resultsProductListContainer',$liContainer).animate({'scrollTop':$("li[data-pid='"+pid+"']", $liContainer).position().top - 50});
+						}, 700);
+					
+					
+					$detail.animate({'width':'790px'},'slow');
+					$liContainer.animate({'width':'215px'},'slow');
 					}
 
 				if($('.buttonBar',$parent).data('pid') == pid)	{} //already in focus. do nothing.
@@ -1267,7 +1275,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 	//all the other li items and remove when the active border (hard coded to 1px to make sure compensate values are =) is added.
 	//this needs to be after if/else above so that styling in 'else' happens first.
 					$('.ui-state-active',$liContainer).removeClass('ui-state-active').css({'border-width':'0','padding':'1px'}); //restore previously 'active' li to former state.
-					$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'1','padding':0}); //remove padding to compensate for border.
+					$("[data-pid='"+pid+"']",$liContainer).first().addClass('ui-state-active').css({'border-width':'2','padding':0}); //remove padding to compensate for border.
 	
 					
 					

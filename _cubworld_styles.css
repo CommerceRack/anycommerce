@@ -855,6 +855,8 @@ SEARCH STYLES
 .productQuickview{background: white; min-height: 469px;}
 #resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}
 
+.minimalMode .searchResultsProduct {height:153px; width: 185px;}
+.quickviewPage {background: white;}
 /****************************************************************
 
 COMPANY PAGE STYLES
