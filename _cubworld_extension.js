@@ -300,7 +300,8 @@ var cubworld = function() {
 				if(errors.length == 0){
 					var _tag = {
 						callback : function(){
-							$('#RMAFormMessaging', $form).anymessage({'message' : "Thank you, your request has been submitted"});
+							$('#rma-form').dialog('close');
+							app.u.throwMessage({'message' : "Thank you, your request has been submitted"});
 							app.u.printByjqObj($form);
 							}
 						};

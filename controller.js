@@ -1236,6 +1236,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 		printByjqObj : function($ele)	{
 			if($ele && $ele.length)	{
+				/*
 				var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
 				html+= $ele.html();
 				html+="</body></html>";
@@ -1244,11 +1245,26 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 //a browser could disallow the window.open, which results in printWin NOT being defined and that ends in a JS error, so 'if' added.
 				if(printWin)	{
 					printWin.document.write(html);
-					printWin.document.close();
+					//printWin.document.close();
 					printWin.focus();
 					printWin.print();
 					printWin.close();
-					}				
+					}
+				*/
+				$('input',$ele).each(function(){
+					$(this).attr('value',$(this).val());
+					});
+				$('textarea',$ele).each(function(){
+					$(this).text($(this).val());
+					});
+				if($('#printContent').length < 1){
+					$('body').append($("<div id='printContent' class='displayNone'></div>"));
+					}
+				else{
+					$('#printContent').empty();
+					}
+				$('#printContent').append($($ele.html()));
+				window.print();
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':'In app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});
