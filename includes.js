@@ -1148,7 +1148,7 @@ if(typeof jQuery === 'function')	{
 $.fn.serializeJSON = function(){
 	var json = {}
 	var $form = $(this);
-	$form.find('input, select, textarea').each(function(){
+	$form.find('input, select, textarea, datalist, keygen, output').each(function(){
 		var val;
 		if(!this.name){return}; //early exit if name not set, which is required.
 
