@@ -1236,7 +1236,15 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 
 		printByjqObj : function($ele)	{
 			if($ele && $ele.length)	{
-				/*
+				//NEEDS TO HAPPEN REGARDLESS
+				$('input',$ele).each(function(){
+					$(this).attr('value',$(this).val());
+					});
+				$('textarea',$ele).each(function(){
+					$(this).text($(this).val());
+					});
+					
+				//NEW WINDOW METHOD
 				var html="<html><style>@media print{.pageBreak {page-break-after:always} .hide4Print {display:none;}}</style><body style='font-family:sans-serif;'>";
 				html+= $ele.html();
 				html+="</body></html>";
@@ -1250,13 +1258,8 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					printWin.print();
 					printWin.close();
 					}
-				*/
-				$('input',$ele).each(function(){
-					$(this).attr('value',$(this).val());
-					});
-				$('textarea',$ele).each(function(){
-					$(this).text($(this).val());
-					});
+				/*
+				//DIV ON PAGE METHOD
 				if($('#printContent').length < 1){
 					$('body').append($("<div id='printContent' class='displayNone'></div>"));
 					}
@@ -1265,6 +1268,7 @@ css : type, pass, path, id (id should be unique per css - allows for not loading
 					}
 				$('#printContent').append($($ele.html()));
 				window.print();
+				*/
 				}
 			else	{
 				$('#globalMessaging').anymessage({'message':'In app.u.printBySelector, $ele not passed or not on DOM','gMessage':true});

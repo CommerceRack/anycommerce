@@ -9,15 +9,6 @@ body {
 	top: 0px
 }
 
-@media print{
-	.pageBreak {page-break-after:always} 
-	.hide4Print {display:none;}
-	#appView {display:none;}
-	#rma-form {display:none;}
-	.ui-widget-overlay, .ui-dialog{display:none;}
-	#printContent{display: block;}
-}
-
 .labelPreview *{
 	background-repeat:no-repeat;
 }

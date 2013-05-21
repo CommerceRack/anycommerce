@@ -301,8 +301,8 @@ var cubworld = function() {
 					var _tag = {
 						callback : function(){
 							$('#rma-form').dialog('close');
-							app.u.throwMessage({'message' : "Thank you, your request has been submitted"});
-							app.u.printByjqObj($form);
+							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted. Please enclose your printed RMA-form with your package!"));
+							//app.u.printByjqObj($form);
 							}
 						};
 					app.calls.appSendMessage.init(obj, _tag, 'mutable');

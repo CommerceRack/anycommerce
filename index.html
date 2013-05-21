@@ -2773,7 +2773,9 @@ The 'data-action' attribute is used to assign an onclick.
 			
 			
 			<div id="RMAFormMessaging" class='alignCenter'>
-				<input type='submit' class='ui-button-text ui-button ui-state-default ui-corner-all' value='Submit Return Request' />
+				<button class='ui-button-text ui-button ui-state-default ui-corner-all' onClick="app.u.printByElementID('rma-form-form'); $('#rma-form-form').submit();">
+					<span class="ui-button-text">Submit Return Request</span>
+				</button>
 			</div>
 			
 			<div class="mailingAddress">
