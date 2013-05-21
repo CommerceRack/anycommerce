@@ -1145,34 +1145,27 @@ if(typeof jQuery === 'function')	{
 		};
 */
 //the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
- $.fn.serializeJSON = function(){
-    var json = {}
-    var form = $(this);
-    form.find('input, select, textarea').each(function(){
-      var val
-      if (!this.name) return;
- 
-      if ('radio' === this.type) {
-        if (json[this.name]) { return; } //value already set, exit early.
-         json[this.name] = this.checked ? this.value : '';
-      } else if ('checkbox' === this.type) {
-        val = json[this.name];
- 
-        if (!this.checked) {
-          if (!val) { json[this.name] = ''; }
-        } else {
-          json[this.name] = 
-            typeof val === 'string' ? [val, this.value] :
-            $.isArray(val) ? $.merge(val, [this.value]) :
-            this.value;
-        }
-      } else {
-        json[this.name] = this.value;
-      }
-    })
-    return json;
-  }
+$.fn.serializeJSON = function(){
+	var json = {}
+	var $form = $(this);
+	$form.find('input, select, textarea').each(function(){
+		var val;
+		if(!this.name){return}; //early exit if name not set, which is required.
 
+		if ('radio' === this.type) {
+			if(json[this.name]) { return; } //value already set, exit early.
+			json[this.name] = this.checked ? this.value : '';
+			}
+		else if ('checkbox' === this.type) {
+			if (this.checked) {json[this.name] = 'ON';}
+//			else	{json[this.name] = 0;}
+			}
+		else {
+			json[this.name] = this.value;
+			}
+		})
+		return json;
+		}
 	}
 
 
