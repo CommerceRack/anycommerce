@@ -150,6 +150,27 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminBatchJobStatus
 
 
+		adminConfigDetail : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				if(!$.isEmptyObject(obj))	{
+					this.dispatch(obj,_tag,Q);
+					r = 1;
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminConfigDetail, obj is empty",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminConfigDetail"
+				obj._tag = _tag || {};
+				obj._tag.datapointer = obj._tag.datapointer || "adminConfigDetail"; //allows for dp to be set by app.
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminBatchJobStatus
+
+
 		adminCustomerDetail : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -3172,6 +3193,11 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin.a.showAppChooser();
+					}
+				else if (path == '#!paymentManager')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 					}
 				else if(path == '#!orders')	{
 //					app.u.dump("into loadNativeApp -> #!orders");

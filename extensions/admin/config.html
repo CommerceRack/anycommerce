@@ -1,0 +1,544 @@
+
+
+
+<div id='PaymentManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+	
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Gateways</h4>
+	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+		<li data-tender='CC'>Credit Card</li>
+		<li data-tender='ECHECK'>eCheck</li>
+	</ul>
+</div>
+
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Wallets</h4>
+	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+		<li data-tender='AMZCBA'>Amazon</li>
+		<li data-tender='GOOGLE'>Google</li>
+		<li data-tender='PAYPALEC'>PayPal</li>
+	</ul>
+</div>
+
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Offline</h4>
+	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+		<li data-tender='CASH'>Cash (for P.O.S.)</li>
+		<li data-tender='MO'>Cashiers Check or Money Order by Mail</li>
+		<li data-tender='COD'>Cashiers Check or Money Order on Delivery</li>
+		<li data-tender='CHECK'>Check by Mail</li>
+		<li data-tender='CHKOD'>Check on Delivery</li>
+		<li data-tender='GIFTCARD'>Gift Cards</li>
+		<li data-tender='PICKUP'>Pay at Pickup</li>
+		<li data-tender='PO'>Purchase Orders</li>
+		<li data-tender='WIRE'>Wire Transfer</li>
+	</ul>
+</div>
+
+
+	</section>
+
+	<section class='slimLeftContentSection' data-app-role='slimLeftContentSection'>
+
+		<div class='ui-widget-header ui-corner-top'>
+			<h3 class='heading'>Edit:</h3>
+		</div>
+		<form class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels' data-app-role='slimLeftContent'></form>
+
+	</section>
+
+
+</div>
+
+
+<label  id='paymentAvailabilityTemplate'>
+	<span>Availability: </span>
+	<select name='availability' data-bind='var: payment(enabled); format:popVal;'>
+		<option value="0">Disabled</option>
+		<option value="1">US Only</option>
+		<option value="3">US + Canada</option>
+		<option value="7">Low Rish</option>
+		<option value="15">World Wide</option>
+	</select>
+</label>
+
+<label  id='paymentHandlingFeeTemplate'>
+	<span>Handling Fee: </span>
+	<input type='number' name='fee' step='0.01' min='0'  data-bind='var: payment(fee); format:popVal;' />
+</label>
+
+<label  id='paymentTransferInstructionsTemplate'>
+	<span>Transfer Instructions: </span>
+	<textarea name='pay_wire_instructions'  data-bind='var: payment(pay_wire_instructions); format:popVal;'></textarea>
+</label>
+
+
+
+
+
+<div id='paymentWallet_amzcba'>
+
+<p>To access your Amazon Account: <a href="https://payments.amazon.com">https://payments.amazon.com</a>.<br>
+NOTE: the values below are configured in Setup | Amazon are are shared with your Amazon.com feed.
+</p>
+
+
+<table>
+<tr>
+	<td valign="top">Merchant ID:</td>
+	<td valign="top"><i>Not set</i></td>
+</tr>
+<tr>
+	<td valign="top">Access Key Id:</td>
+	<td valign="top"><i>Not set</i></td>
+</tr>
+<tr>
+  	<td valign="top">Secret Key Id:</td>
+	<td valign="top"><i>Not set</i></td>
+</tr>
+</table>
+
+<p><a href="#/biz/setup/amazon" title="/biz/setup/amazon">Configure Token &amp; Secret Key</a></p>
+
+
+
+<label>
+	<span>Payment Environment</span>
+	<select name="amzpay_env" data-bind='var: payment(amzpay_env); format:popVal;'>
+		<option value="0" selected="">Disable</option>
+		<option value="1">Sandbox/Testing</option>
+		<option value="2">Production</option>
+	</select>
+</label>
+
+
+
+<h5>Checkout Button</h5>
+
+<label>
+	<span>Color</span>
+	<select name="color" data-bind='var: payment(color); format:popVal;'>
+		<option value="orange">Orange</option>
+		<option value="tan">Tan</option>
+	</select>
+</label>
+
+<label>
+	<span>Size</span>
+	<select name="size" data-bind='var: payment(size); format:popVal;'>
+		<option value="small">Small</option>
+		<option value="large">Large</option>
+	</select>
+</label>
+
+<label>
+	<span>Background</span>
+	<select name="background" data-bind='var: payment(background); format:popVal;'>
+		<option value="white">White</option>
+		<option value="other">Other</option>
+	</select>
+</label>
+</div>
+
+
+
+
+<div id='paymentWallet_paypalec'>
+
+
+<fieldset>
+	<legend>Processing Configuration</legend>
+	<label>
+		<span>Capture Funds:</span>
+		<select  name="cc_instant_capture" data-bind='var: payment(cc_instant_capture); format:popVal;'>
+			<option value=""></option>
+			<option value="ALWAYS">Instant Capture (authorization and transfer of funds occurs at time of checkout)</option>
+			<option value="NEVER">Delayed Capture (only authorization occurs at checkout, funds transferred later by merchant)</option>
+			<option value="NOAUTH_DELAY">No Authorization (store in wallet then process later)</option>
+		</select>
+	</label>
+	<p class="hint">
+	WARNING: capture funds setting is a "store setting", and is shared between paypal and credit card processing configurations.
+	NO AUTHORIZATION settings will behave like "Delayed Capture" for Paypal EC transactions regardless of setting above.
+	</p>
+	
+	
+	<label>
+		<span>Confirmed Address:</span>
+		<select  name="paypal_api_reqconfirmship" data-bind='var: payment(paypal_api_reqconfirmship); format:popVal;'>
+			<option value="0" selected=""> Optional</option>
+			<option value="1"> Required</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Use Callbacks:</span>
+		<select  name="paypal_api_callbacks"  data-bind='var: payment(paypal_api_callbacks); format:popVal;'>
+			<option value="0" selected=""> Disabled</option>
+			<option value="1"> Enabled (RECOMMENDED)</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Paypal Email:</span>
+		<input type="textbox" value="" name="paypal_email" data-bind='var: payment(paypal_email); format:popVal;'>
+	</label>
+	
+	<label>
+		<span>Environment:</span>
+		<select name="paypal_api_env"  data-bind='var: payment(paypal_api_env); format:popVal;'>
+			<option></option>
+			<option value="2">LIVE (PRODUCTION)</option>
+			<option value="0" selected="">DISABLE</option>
+			<option value="1">TEST (PUBLIC SANDBOX)</option>
+			<option value="3">BETA (BETA SANDBOX)</option>
+		</select>
+	</label>
+</fieldset>
+
+
+<fieldset>
+	<legend>Optional Configuration</legend>
+<p class='hint'>
+Paypal offers two different methods of authentication for api requests.<br>
+1st party: where you create your own unique credentials<br>
+3rd party: where you give paypal_api1.zoovy.com access to your account (recommended, easier)
+</p>
+<p class='warn'>
+If you have already granted API access to paypal_api1.zoovy.com on PayPal.com, then leave all the fields below empty of the configuration will NOT work.
+</p>
+
+<label><span>Paypal API Username</span><input type="textbox" data-bind='var: payment(paypal_api_user); format:popVal;'  name="paypal_api_user"></label>
+<label><span>Paypal API Password</span><input type="textbox" data-bind='var: payment(paypal_api_pass); format:popVal;' name="paypal_api_pass"></label>
+<label><span>Paypal API Signature</span><input type="textbox" data-bind='var: payment(paypal_api_sig); format:popVal;' name="paypal_api_sig"></label>
+<label><span></span></label>
+
+<!--
+WHAT TO DO HERE?
+<input type="hidden" value="15" name="pay_credit">
+<input type="hidden" value="checked" name="cc_type_visa">
+<input type="hidden" value="checked" name="cc_type_amex">
+<input type="hidden" value="checked" name="cc_type_mc">
+<input type="hidden" value="checked" name="cc_type_novus">
+<input type="hidden" value="0" name="VISA_TRANSFEE">
+<input type="hidden" value="0" name="VISA_DISCRATE">
+<input type="hidden" value="0" name="MC_TRANSFEE">
+<input type="hidden" value="0" name="MC_DISCRATE">
+<input type="hidden" value="0" name="AMEX_TRANSFEE">
+<input type="hidden" value="0" name="AMEX_DISCRATE">
+<input type="hidden" value="0" name="NOVUS_TRANSFEE">
+<input type="hidden" value="0" name="NOVUS_DISCRATE">
+<input type="hidden" value="NONE" name="cc_avs_require">
+<input type="hidden" value="402" name="cc_avs_fail_code">
+<input type="hidden" value="0" name="cc_cvvcid">
+<input type="hidden" value="ALWAYS" name="cc_report_voice_fail">
+<input type="hidden" value="202" name="cc_voice_fail_code">
+-->
+</fieldset>
+
+</div>
+
+
+
+
+<div id='paymentWallet_google'>
+<label>
+	<span>Google Merchant ID:</span>
+	<input type="textbox" value="" name="google_merchantid" data-bind='var: payment(google_merchantid); format:popVal;'>
+</label>
+<label>
+	<span>Google Merchant Key:</span>
+	<input type="textbox" value="" name="google_key" data-bind='var: payment(google_key); format:popVal;'>
+</label>
+<label>
+	<span>Tax Calculations:</span>
+	<select name="google_tax_tables" data-bind='var: payment(google_tax_tables); format:popVal;'>
+		<option value="0" selected="">Use Partition Tax Tables</option>
+		<option value="1">Use Googles Tax tables (*Must be enabled at Google)</option>
+	</select>
+</label>
+<label>
+	<span>Environment:</span>
+	<select name="google_api_env" data-bind='var: payment(google_api_env); format:popVal;'>
+		<option value="0" selected="">DISABLE</option>
+		<option value="1">TEST (SANDBOX)</option>
+		<option value="2">LIVE (PRODUCTION)</option>
+	</select>
+</label>
+<label>
+	<span>Google Analytics Support:</span>
+	<select name="google_api_analytics" data-bind='var: payment(google_api_analytics); format:popVal;'>
+		<option value="0" selected="">DISABLE</option>
+		<option value="1">ENABLE PAGETRACKER (LEGACY NON-ASYNC)</option>
+		<option value="2">ENABLE GAQ (ASYNC)</option>
+	</select>
+</label>
+<label>
+	<span>Merchant Calculations:</span>
+	<select name="google_api_merchantcalc" data-bind='var: payment(google_api_merchantcalc); format:popVal;'>
+		<option value="2">Enable + Audit Rates</option>
+		<option value="1">Enable + Do Not Audit</option>
+		<option value="0" selected="">Disable</option>
+	</select>
+</label>
+<label>
+	<span>Ship Quote Zip:</span>
+	<input type="textbox" name="google_dest_zip"  data-bind='var: payment(google_dest_zip); format:popVal;'>
+</label>
+<div class="hint marginBottom">
+Zoovy must provide a shipping "ESTIMATE" to Google prior to initiating a transaction, and before the 
+destination zip code is known. This Zip code will be used for providing an estimate to Google.<br>
+<br>
+We recommend you put in a far away zip code, because the estimate will be used in the event that 
+Google Checkout is not able to obtain shipping rates from Zoovy once the customer has provided their shipping address.<br>
+<br>
+
+You may safely set this to 00000 if you use fixed price shipping and have no suppliers who use zone-based shipping.
+<br>
+In cases were there is a communication error the "Do Not Audit" setting will use whatever rate Google checkout quoted the customer.
+This is the most common setting since it creates the lowest amount of work for the seller, 
+although it could also cause orders to occasionally have more or less than the correct shipping 
+rates due to timeout issues with merchant calculations.
+</div>
+
+<label>
+	<span>
+	International Shipping:
+	</span>
+	<select name="google_int_shippolicy" data-bind='var: payment(google_int_shippolicy); format:popVal;'>
+		<option value="0" selected="">No international</option>
+		<option value="1">Use Fixed Price Estimates</option>
+	</select>
+</label>
+
+<p class="hint">
+Google requires that Zoovy pass shipping rate estimates for all international
+countries before the actual shipping address is known. 
+This can unfortunately lead to very "bad" rate quotes for merchants who wish to use
+zone based shipping. Only enable this if you use fixed price international shipping.
+</p>
+
+<label>
+	<span>3rd Party Pixels:</span>
+	<textarea name="google_pixelurls" cols="100" rows="3"  data-bind='var: payment(google_pixelurls); format:popVal;'></textarea>
+</label>
+<p class="hint">
+Use the format:<br>
+http://www.domain.com/pixel.gif?x=1&amp;y=2&amp;orderID=[order-id]&amp;totalCost=[order-total]<br>
+<br>
+The values in [brackets] are the parameterized url keys/values. A complete list can be found here:<br>
+<a href="http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html">
+http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
+</p>
+</div>
+
+
+
+
+
+
+
+
+
+<div id='paymentEcheckTemplate'>
+<label>
+	<span>Wells Fargo SecureSource</span>
+	<select  name="authorizenet_wellsfargo" data-bind='var: payment(authorizenet_wellsfargo); format:popVal;'>
+		<option value="0">My account is not through Wells Fargo, do not collect additional information</option>
+		<option value="1">Request additional information required for Wells Fargo SecureSource transactions (Credit Cards + eCheck)</option>
+		<option value="2">Request additional information required for Wells Fargo SecureSource transactions (eCheck Only)</option>
+	</select>
+</label>
+
+<label>
+	<span>Successful Transactions</span>
+	<select  name="echeck_success_code" data-bind='var: payment(echeck_success_code); format:popVal;'>
+		<option value="120">Set order payment status to Pending (120)</option>
+		<option value="006">Set order payment status to Paid In Full (006)</option>
+	</select>
+</label>
+</div>
+
+
+
+<div class='marginBottom' id='paymentCCTemplate'>
+
+<fieldset>
+	<label>
+	<span>Gateway:</span>
+	<select name='gateway' data-app-event="admin_config|showCCSuppInputs">
+		<option value='NONE'>None</option>
+		<option value='MANUAL'>Manual</option>
+		<option value='PAYPALWP'>PayPal Website Payments Pro</option>
+		<option value='VERISIGN'>PayPal Payflow Pro</option>
+		<option value='AUTHORIZENET'>Authorize.Net</option>
+		<option value='LINKPOINT'>Cardservice Linkpoint API</option>
+		<option value='ECHO'>ECHO - OpenEcho</option>
+		<option value='SKIPJACK'>SkipJack</option>
+		<option value='TESTING'>Testing Mode</option>
+	</select>
+	</label>
+</fieldset>
+
+<div data-app-role='providerSpecificInputs'></div>
+
+<fieldset>
+	<legend class='marginBottom'>Accepted Credit Cards &amp; Fees:</legend>
+	<table class='marginBottom fullWidth gridTable'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Accept/Allow</th>
+		<th class='alignLeft'>Transaction Type</th>
+		<th class='alignRight'>Transaction Fee</th>
+		<th class='alignRight'>Discount Rate (%)</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>&nbsp;</td>
+		<td>CC Fees</td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="CC_TRANSFEE" data-bind='var: payment(CC_TRANSFEE); format:popVal;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal;' /></td>
+	</tr>
+	<tr>
+		<td align="center"><input type="checkbox" name="cc_type_visa"></td>
+		<td>Visa</td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal;' /></td>
+	</tr>
+	<tr>
+		<td align="center"><input type="checkbox" name="cc_type_mc"></td>
+		<td>Mastercard</td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal;' /></td>
+	</tr>
+	<tr>
+		<td align="center"><input type="checkbox" name="cc_type_amex"></td>
+		<td>American Express</td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal;' /></td>
+	</tr>
+	<tr>
+		<td align="center"><input type="checkbox" name="cc_type_novus"></td>
+		<td>Discover/Novus</td>
+		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal;' /></td>
+		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal;' /></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+<fieldset>
+	<legend class='marginBottom'>Gateway Settings &amp; Fees:</legend>
+	<label>
+		<span>Capture Funds:</span>
+		<select name="cc_instant_capture" required='required' data-bind='var: payment(cc_instant_capture); format:popVal;'>
+			<option value="" disabled='disabled'>Please Choose</option>
+			<option value="ALWAYS">Instant Capture (authorization and transfer of funds occurs at time of checkout)</option>
+			<option value="NEVER">Delayed Capture (only authorization occurs at checkout, funds transferred later by merchant)</option>
+			<option value="NOAUTH_DELAY">No Authorization (store in wallet then process later)</option>
+		</select>
+		
+	</label>
+	<div class="hint">
+	WARNING: capture funds setting is a "store setting", and is shared between paypal and credit card processing configurations.
+	</div>
+	
+	<label>
+		<span>AVS Fraud Result:</span>
+		<select name="cc_avs_review" data-bind='var: payment(cc_avs_review); format:popVal;'>
+			<option value="">Use Zoovy Recommended Values</option>
+			<option value="A=AAV|P=AAV|D=AAV|X=AAV">Partial: Approve, No Match: Approve, N/A: Approve</option>
+			<option value="A=AAV|P=AAV|D=RAV|X=AAV">Partial: Approve, No Match: Review, N/A: Approve</option>
+			<option value="A=AAV|P=AAV|D=DAV|X=AAV">Partial: Approve, No Match: Decline, N/A: Approve</option>
+			<option value="A=AAV|P=AAV|D=DAV|X=RAV">Partial: Approve, No Match: Decline, N/A: Review</option>
+			<option value="A=AAV|P=AAV|D=RAV|X=RAV">Partial: Approve, No Match: Review, N/A: Review</option>
+			<option value="A=AAV|P=RAV|D=RAV|X=RAV">Partial: Review, No Match: Review, N/A: Review</option>
+			<option value="A=AAV|P=RAV|D=DAV|X=RAV">Partial: Review, No Match: Decline, N/A: Review</option>
+		</select>	
+	</label>
+	
+	<label>
+		<span>CVV Fraud Result:</span>
+		<select name="cc_cvv_review" data-bind='var: payment(cc_cvv_review); format:popVal;'>
+			<option value="">Use Zoovy Recommended Values</option>
+			<option value="A=AAV|D=DCV|X=RCV">No Match: Decline, N/A: Review</option>
+			<option value="A=AAV|D=DCV|X=ACV">No Match: Decline, N/A: Approve</option>
+			<option value="A=AAV|D=ACV|X=ACV">No Match: Approve, N/A: Approve</option>
+			<option value="A=AAV|D=RCV|X=ACV">No Match: Review, N/A: Approve</option>
+			<option value="A=AAV|D=RCV|X=RCV">No Match: Review, N/A: Review</option>
+			<option value="A=AAV|D=RCV|X=RCV">No Match: Review, N/A: Review</option>
+			<option value="A=AAV|D=DCV|X=RCV">No Match: Decline, N/A: Review</option>
+		</select>	
+	</label>
+
+	<label>
+		<span>Request Card Code</span>
+		<select name="cc_cvvcid" data-bind='var: payment(cc_cvvcid); format:popVal;'>
+			<option value="0" selected="">Do not request card code during checkout</option>
+			<option value="1">Request card code, but do not require it</option>
+			<option value="2">Require card code</option>
+		</select>
+	</label>
+</fieldset>
+</div>
+
+
+
+
+
+
+
+
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_authorizenet'>
+	<legend class='marginBottom'>Authorize.net Setup</legend>
+	<label><span>API Login</span><input type='text' name='authorizenet_username' required='required' data-bind='var: payment(authorizenet_username); format:popVal;' /></label>
+	<label><span>Password</span><input type='text' name='authorizenet_password' required='required' data-bind='var: payment(authorizenet_password); format:popVal;' /></label>
+	<label><span>Transaction Key</span><input type='text' name='authorizenet_key' required='required' data-bind='var: payment(authorizenet_key); format:popVal;' /></label>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_echo'>
+	<legend class='marginBottom'>Echo Setup</legend>
+	<label><span>Username</span><input type='text' name='authorizenet_username' required='required' data-bind='var: payment(authorizenet_username); format:popVal;' /></label>
+	<label><span>Password</span><input type='text' name='authorizenet_password' required='required' data-bind='var: payment(authorizenet_password); format:popVal;' /></label>
+	<label><span>Cybersource</span><input type='text' name='echo_cybersource' required='required' data-bind='var: payment(echo_cybersource); format:popVal;' /></label>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_paypalwp'>
+	<legend class='marginBottom'>PayPal Website Payments Setup</legend>
+	<label><span>PayPal Email Address</span><input type="email" value="" name="email" required='required' data-bind='var: payment(email); format:popVal;'></label>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_verisign'>
+	<legend class='marginBottom'>PayPal Payflow Pro Setup</legend>
+	<label><span>Username</span><input type="text" value="" name="verisign_username" data-bind='var: payment(verisign_username); format:popVal;'></label>
+	<label><span>Password</span><input type="password" value="" name="verisign_password" data-bind='var: payment(verisign_password); format:popVal;'></label>
+	<label><span>Partner</span><input type="textbox" value="" name="verisign_partner" data-bind='var: payment(verisign_partner); format:popVal;'></label>
+	<label><span>Vendor</span><input type="textbox" value="" name="verisign_vendor" data-bind='var: payment(verisign_vendor); format:popVal;'></label>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_linkpoint'>
+	<legend class='marginBottom'>Card Services/LinkPoint Setup</legend>
+	<label><span>Store Name</span><input type="text" value="" name="storename" data-bind='var: payment(storename); format:popVal;'></label>
+	<div class='hint'>
+	NOTE: Your cardservice account cannot be used until your signed certificate has been received from Cardservice, this may take up to 5 days from the time you request the certificate.
+	</div>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_skipjack'>
+	<legend class='marginBottom'>SkipJack Setup</legend>
+	<label><span>HTML Serial Number</span><input type='text' name='skipjack_htmlserial'  data-bind='var: payment(skipjack_htmlserial); format:popVal;' /></label>
+</fieldset>
+
+<fieldset class='marginBottom' id='paymentSuppInputsTemplate_manual'>
+	<legend class='marginBottom'>Manual Setup</legend>
+	<label>
+		<input type="checkbox" name="cc_emulate_gateway" data-bind='var: payment(cc_emulate_gateway); format:popVal;'>
+		Emulate Payment Gateway: Always return Success/PAID 005 for capture requests (advanced users only)
+	</label>
+</fieldset>
+
+
