@@ -4157,19 +4157,17 @@ just lose the back button feature.
 //for instance, in orders, what were the most recently selected filter criteria.
 //ext is required (currently). reduces likelyhood of nuking entire preferences object.
 			dpsSet : function(ext,ns,varObj)	{
-//				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
+				app.u.dump(" -> ext: "+ext); app.u.dump(" -> settings: "); app.u.dump(varObj);
 				if(ext && ns && varObj)	{
 //					app.u.dump("device preferences for "+ext+"["+ns+"] have just been updated");
-					var sessionData =  app.storageFunctions.readLocal('session') || {}; //readLocal returns false if no data local.
-					
-					if(typeof sessionData[ext] !== 'object'){
-						sessionData[ext] = {};
-						sessionData[ext][ns]= varObj;
-						} //each ext gets it's own object so that no ext writes over anothers.
-					else if(typeof sessionData[ext][ns] !== 'object'){
+					var sessionData = app.storageFunctions.readLocal('session'); //readLocal returns false if no data local.
+					sessionData = (typeof sessionData === 'object') ? sessionData : {};
+//					app.u.dump(" -> sessionData: "); app.u.dump(sessionData);
+					if(typeof sessionData[ext] === 'object'){
 						sessionData[ext][ns] = varObj;
-						} //each dataset in the extension gets a NameSpace. ex: orders.panelState
+						}
 					else	{
+						sessionData[ext] = {}; //each dataset in the extension gets a NameSpace. ex: orders.panelState
 						sessionData[ext][ns] = varObj;
 						} //object  exists already. update it.
 
