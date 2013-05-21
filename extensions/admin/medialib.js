@@ -476,15 +476,15 @@ setTimeout(function(){
 //$obj = jquery object of image container. properties for data-fid and some others will be set.
 //in some cases, this function is executed when returning the value of the attribute to blank. when that's the case, set2Blank will b true.
 			selectThisMedia : function($obj,set2Blank){
-				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
+//				app.u.dump("BEGIN admin_medialib.a.selectThisMedia");
 //the image is what's clickable, but the data is in a parent container. don't just check parent().data() because template may change and img could be nested lower.
 				var fileInfo = $obj.closest('[data-path]').data();
 				var newFilename = (set2Blank === true) ? '' : fileInfo.path; //set2Blank
 				var $medialib = $('#mediaModal');
 				$medialib.showLoading();
 				var mediaData = $medialib.data();
-				app.u.dump("mediaData: "); app.u.dump(mediaData);
-				app.u.dump("fileInfo: "); app.u.dump(fileInfo);
+//				app.u.dump("mediaData: "); app.u.dump(mediaData);
+//				app.u.dump("fileInfo: "); app.u.dump(fileInfo);
 				var error = false;
 //imageID should always be set. And the presence of eleSelector or mode determines the action.
 //eleSelector just updates some form on the page.
@@ -494,7 +494,7 @@ setTimeout(function(){
 //update the image on the page to show what has been selected.
 					if(mediaData.imageID)	{
 						var $image = $(mediaData.imageID);
-						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
+//						app.u.dump(app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}));
 						$image.attr({
 							'src':app.u.makeImage({'tag':0,'w':$image.attr('width'),'h':$image.attr('height'),'name':newFilename,'b':'ffffff'}),
 							'alt':fileInfo.Name
@@ -502,21 +502,21 @@ setTimeout(function(){
 						}
 //update form element
 					if(mediaData.eleSelector){
-						app.u.dump("took selector route. selector: "+mediaData.eleSelector);
+//						app.u.dump("took selector route. selector: "+mediaData.eleSelector);
 // ** 201318 -> the eleSelector on a few elements I tested had no #, so they weren't working right.
 //however, didn't want to assume it was broken everywhere so a check was added.
 						if(mediaData.eleSelector.indexOf('#') === 0)	{
-							app.u.dump(" -> # on selector. strip it.");
+//							app.u.dump(" -> # on selector. strip it.");
 							mediaData.eleSelector = mediaData.eleSelector.substring(1);
 							}
-						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
-						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);
+//						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
+//						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);
 						$(app.u.jqSelector('#',mediaData.eleSelector)).val(newFilename);
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
 					else	{
-						app.u.dump("took mode route");
+//						app.u.dump("took mode route");
 						app.ext.admin_medialib.calls.adminUIMediaLibraryExecute.init({'verb':'SAVE','src':mediaData.src,'IMG':newFilename},{'callback':'handleMediaLibUpdate','extension':'admin_medialib'});
 						app.model.dispatchThis('immutable');
 						}
