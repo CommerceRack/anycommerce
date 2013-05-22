@@ -285,6 +285,7 @@ app.u.dump(" -> pageInFocus: "+pageInFocus);
 						query.from = (newPage - 1) * EQ.size; //page is passed in, which starts at 1. but elastic starts at 0.
 						app.ext.store_search.u.updateDataOnListElement($list,query,newPage);
 						app.ext.store_search.calls.appPublicSearch.init(query,_tag);
+						$('#resultsProductListContainer').animate({'scrollTop':0})
 						app.model.dispatchThis();
 						}
 					else	{
