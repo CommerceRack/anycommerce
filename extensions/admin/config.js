@@ -58,7 +58,8 @@ var admin_config = function() {
 		'shippingFlex_price',
 		
 		'ruleBuilderTemplate',
-		'ruleBuilderRowTemplate'
+		'ruleBuilderRowTemplate',
+		'rulesFieldset_shipping'
 		);
 	var r = {
 
@@ -290,7 +291,7 @@ app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'ad
 		$D.anycontent({'templateID':'ruleBuilderTemplate','data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
 		$("[data-app-role='dualModeListContents']",$D).sortable();
 		app.u.handleAppEvents($D);
-		//$.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipments'])
+		//
 		}
 	}},'mutable');
 app.model.dispatchThis('mutable');	
@@ -391,10 +392,15 @@ var
 
 $panel = $("<div\/>").hide().anypanel({
 	'header':'Edit: '+data.provider,
+	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipments|'+app.vars.partition]),
 	'templateID':'rulesFieldset_shipping'
 	}).prependTo($target);
-
-$panel.slideDown('fast');				
+app.ext.admin.u.toggleDualMode($container,'detail');
+$panel.slideDown('fast');
+//the schedule select list doesn't have a good mechanism for pre-checking a value.
+if(data.schedule)	{
+	$("[name='SCHEDULE']",$panel).val();
+	}
 					
 					});
 				},

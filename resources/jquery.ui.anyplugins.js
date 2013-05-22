@@ -922,8 +922,8 @@ Additional a settings button can be added which will contain a dropdown of selec
 				self._handleButtons($header);
 			
 				$content = self._anyContent();
-
-				if($content.length)	{$content.appendTo($t);} //content generated via template of some kind.
+//* 201320 -> if _anyContent returned false, this caused a js error.
+				if($content && $content.length)	{$content.appendTo($t);} //content generated via template of some kind.
 				else if(o.title)	{$content = $t.children(":first");} //no content yet, title specified. use first child.
 				else	{$content = $t.children(":nth-child(2)");} //no content. first child is title. second child is content.
 				

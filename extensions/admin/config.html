@@ -8,12 +8,12 @@
 	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top clearfix'>
+		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
 				<button class='floatRight' data-app-event="admin_config|showAddRule">Add Rule</button>
 				<button class='floatRight' data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			</div>
-			<h3 class='heading' data-bind="var: rules(title); format:text;"></h3>
+			<h3 class='heading' data-bind="var: rules(title); format:text; defaultValue: Builder;"></h3>
 		</div>
 	
 		<div class='ui-widget-content ui-corner-bottom'>
@@ -61,13 +61,13 @@
 
 <label>
 	<span>Rule name</span>
-	<input type="text" maxlength="60" size="60" placeholder="new rule" name="NAME" required='required'>
+	<input type="text" maxlength="60" size="60" placeholder="new rule" name="NAME" required='required' data-bind="var: rule(NAME); format:popVal;" />
 	<span class='toolTip' title="The name should remind you 'why does this rule exist?'">?</span>
 </label>
 
 <label>
 	<span>Use rule if</span>
-	<select name="MATCH">
+	<select name="MATCH" data-bind="var: rule(MATCH); format:popVal;">
 		<option value="IGNORE">Disabled (will be skipped)</option>
 		<option value="IS_TRUE">Is True (Always run this rule)</option>
 		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
@@ -107,16 +107,16 @@
 		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
 		<option value="SANDBOX/NO">User is on LIVE version</option>
 	</select>
-	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc'></span>
+	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc floatRight'></span>
 </label>
 
 <label>
 	<span>Filter criteria</span>
-	<textarea rows="3" name="FILTER"></textarea>
+	<textarea rows="3" name="FILTER" data-bind="var: rule(FILTER); format:popVal;"></textarea>
 </label>
 <label>
 	<span>Action if match</span>
-	<select name="EXEC">
+	<select name="EXEC" data-bind="var: rule(EXEC); format:popVal;">
 		<option value="STOP">Stop Processing</option>
 		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
 		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
@@ -132,17 +132,11 @@
 
 <label>
 	<span>Value</span>
-	<input type="text" value="0.00" name="VALUE">
+	<input type="text" value="0.00" name="VALUE" data-bind="var: rule(VALUE); format:popVal;">
 </label>
 <p class='hint'>NOTE: values must be written as -%5 or +$5 to be valid.</p>
-<label>
-	<span>Schedule</span>
-	<select name='SCHEDULE'>
-		<option>N/A</option>
-	</select>
-	NEED TO ADD LIST OF SCHEDULES HERE. HIDE if no schedules are present.
-	<span class='toolTip' title="Schedule is only relevant when stores have multiple pricing schedules">?</span>
-</label>
+
+<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
 
 </fieldset>
 </form>

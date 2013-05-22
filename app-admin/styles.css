@@ -1262,10 +1262,10 @@ see shipping panel in product editor for example
 .alignedInputs input[type=url],
 .alignedInputs input[type=password],
 .alignedInputs input[type=url],
-.alignedInputs input[type=text]	{width:60%; }
+.alignedInputs input[type=text]	{width:55%; } /* slighly less than 100% is used for label/input so room for toolTip or linkDoc is available */
 
 .alignedInputs input[type=number], 
-.alignedInputs select	{max-width:60%;} /* shrink to fit widest option, but stay under threshold */
+.alignedInputs select	{max-width:55%;} /* shrink to fit widest option, but stay under threshold */
 
 
 
