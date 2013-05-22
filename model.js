@@ -1324,6 +1324,7 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 				var namespace = extObjItem.namespace; //for easy reference.
 				var errors = ""; // list of errors. what is returned
 				var initPassed;
+				var startTime = (new Date()).getTime();
 //the .js file for the extension contains a function matching the namespace used.
 //the following line executes that function and saves the object returned to the control.
 //this is essentially what makes the extension available for use.
@@ -1388,7 +1389,8 @@ respond accordingly.
 				else	{
 //							app.u.dump(" -> extension "+namespace+" loaded fine but contained no callback");
 					}
-
+				var endTime = (new Date()).getTime();
+				//app.u.dump("Extension Loaded: "+namespace+" .. "+startTime+" .. "+endTime+" .. "+(endTime - startTime));
 				},
 
 /*

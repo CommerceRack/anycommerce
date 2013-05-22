@@ -54,6 +54,7 @@ var cubworld = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+				
 				app.rq.push(['templateFunction','categoryTemplateGroupSales','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					$('.slideshow', $context).each(function(){
@@ -133,6 +134,7 @@ var cubworld = function() {
 						});
 					}]);
 					
+				
 				var funcTemplates = [
 					'categoryTemplate',
 					'categoryTemplateCuties',
@@ -182,7 +184,7 @@ var cubworld = function() {
 			onSuccess : function() {
 				if(app.ext.store_navcats){
 //Dispatches a call to get the productList for the hotItems List
-					app.ext.store_navcats.calls.appNavcatDetail.init('$hot_items', {'list':'$hot_items','callback':'populateHotItemsList','extension':'cubworld', 'parentID':'hotItemList'});
+					app.ext.store_navcats.calls.appNavcatDetail.init('$hot_items', {'callback':'populateHotItemsList','extension':'cubworld', 'parentID':'hotItemList'});
 					app.model.dispatchThis();
 					
 					}
@@ -199,13 +201,19 @@ var cubworld = function() {
 			onSuccess : function(tagObj){
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.populateHotItemsList.onSuccess');
 				app.u.dump(tagObj);
-				var tmp = {};
-				tmp[tagObj.list] = app.data['appNavcatDetail|'+tagObj.list];
 				
-				app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
+				//app.data[tagObj.datapointer]['@products'] = app.data[tagObj.datapointer]['@products'].slice(0,10);
+				
+				//var tmp = {};
+				//tmp[tagObj.list] = app.data['appNavcatDetail|'+tagObj.list];
+				var startTime = (new Date()).getTime();
+				var endTime = (new Date()).getTime();
+				app.u.dump(endTime-startTime);
+				//app.renderFunctions.translateTemplate(tmp,tagObj.parentID);
 				setTimeout(function(){
-					app.ext.cubworld.u.startHotItemSlideshow()
-					}, 250);
+					$("#"+tagObj.parentID).anycontent({'datapointer':tagObj.datapointer});
+					app.ext.cubworld.u.startHotItemSlideshow();
+					}, 1000);
 				},
 			onError : function(){
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.populateHotItemsList.onError');

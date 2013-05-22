@@ -118,11 +118,13 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 <div id="header">
 	<div id="logo" class="pointer"><img src="img/cw12_logo-366x64.png" onClick="return showContent('homepage',{});" /></div>
 	
-	<div class="livechat">
 		<!-- BEGIN ProvideSupport.com Custom Images Chat Button Code -->
+	
+	<div class="livechat">
 		<div id="ciQYEp" style="z-index:100;position:absolute;"></div><div id="scQYEp" style="display:inline"></div><div id="sdQYEp" style="display:none"></div><script type="text/javascript">var seQYEp=document.createElement("script");seQYEp.type="text/javascript";var seQYEps=(location.protocol.indexOf("https")==0?"https":"http")+"://image.providesupport.com/js/cubworld/safe-standard.js?ps_h=QYEp&ps_t="+new Date().getTime()+"&online-image=http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw12_livechat-203x41.png&offline-image=http://static.zoovy.com/merchant/cubworld/_ticket_468079/cw12_livechat-203x41.png";setTimeout("seQYEp.src=seQYEps;document.getElementById('sdQYEp').appendChild(seQYEp)",1)</script><noscript><div style="display:inline"><a href="http://www.providesupport.com?messenger=cubworld">Live Support</a></div></noscript>
-		<!-- END ProvideSupport.com Custom Images Chat Button Code -->
 	</div>
+	
+		<!-- END ProvideSupport.com Custom Images Chat Button Code -->
 	
 	<div id="headerNav">
 		<!-- note- the order of these elements is backwards as they are floated right -->
@@ -457,10 +459,10 @@ app.u.loadScript(app.vars.baseURL+"_cubworld_init.js");
 				<div id="hotItemList" class="displayNone">
 					<div id="hotItemSpotlightContainer">
 						<img width="207" height="30" alt="Hot Item" src="img/cw_tit_hotitem-207x30.gif">
-						<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
+						<ul data-bind="var: list(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList'></ul>
 					</div>
 					
-					<ul data-bind="var: list($hot_items.@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotLineItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList hotLineItemList'></ul>
+					<ul data-bind="var: list(@products); format: productList; editor: finder; extension: store_prodlist; loadsTemplate: productListTemplateHotLineItem; hide_summary:1; withInventory:1; withVariations:1;" class='listStyleNone fluidList clearfix noPadOrMargin productList hotLineItemList'></ul>
 					
 				</div>
 				
