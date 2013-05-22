@@ -175,6 +175,18 @@ var admin_config = function() {
 					else	{
 						$target.hideLoading();
 						$target.anycontent({'templateID':'shippingManagerPageTemplate',data:{}});
+						
+						var
+							shipments = app.data['adminConfigDetail|shipments']['@SHIPMENTS'], //shortcut
+							L = shipments.length,
+							$flexUL = $("[data-app-role='shipMethodsByFlex']",$target);
+						
+						for(var i = 0; i < L; i += 1)	{
+							if(shipments[i].provider.indexOf('FLEX:') === 0)	{
+								$("<li \/>").data('provider',shipments[i].provider).text(shipments[i].name).appendTo($flexUL);
+								}
+							}
+						
 						app.u.handleAppEvents($target);
 						
 						var

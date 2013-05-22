@@ -344,6 +344,220 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 
 
+
+
+
+<div id='shippingFlex_shared'>
+
+
+<fieldset>
+	<legend>General Settings</legend>
+	<label><input type="checkbox" name="METHOD_ACTIVE"> Enable method</label>
+	<label>
+		<span>Region</span>
+		<select name="METHOD_REGION">
+			<option value="US" selected="">United States</option>
+			<option value="CA">Canada</option>
+			<option value="INT">International</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Description</span>
+		<input type="text" name="METHOD_NAME" value="" maxlength="25" size="25">
+	</label>
+	
+	<label>
+		<span>Carrier code</span>
+		<input type="text" name="METHOD_CARRIER" value="" size="4">
+	</label>
+</fieldset>
+
+<fieldset>
+	<legend>Rules</legend>
+	<label><input type="checkbox" name="METHOD_RULES"> Enable shipping rules</label>
+	<button>Manage Rules</button>
+</fieldset>
+
+
+</div>
+
+
+
+<div id='shippingFlex_free'>
+<fieldset>
+	<legend>Free Shipping Configuration</legend>
+
+<label>
+	<span>Amount:</span>
+	$<input type="number" value="" name="total" step='0.01' min='0' />
+</label>
+<p class='hint'>The mininum order/package total that qualifies for free shipping (ex: use zero dollars for free shipping on every order/package)</p>
+	
+</fieldset>
+</div>
+
+
+
+<div id='shippingFlex_fixed'>
+<fieldset>
+	<legend>Configuration Notes</legend>
+	<p class='hint'>At this time you can only configure one fixed shipping method per destination region.</p>
+</fieldset>
+</div>
+
+
+
+<div id='shippingFlex_weight'>
+<fieldset>
+	<legend>Weight Restrictions</legend>
+
+<label>
+   <span>Min weight:</span>
+   <input size=6 type="text" value="" name="minwt" step='0.01' min='0' />
+</label>
+<p class='hint'>The minimum weight of a cart in order to use this method. Use zero for none.</p>
+
+</fieldset>
+
+<fieldset class='clearfix'>
+	<legend>Weight Based Shipping Table</legend>
+	
+	<div class='floatRight'>
+	<label><span>Max weight</span><input size='6' type='text' name='weight' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='price'  step='0.01' min='0' /></label>
+	<button>Add</button>
+	</div>
+	
+	<table class='floatLeft gridTable'>
+	<thead><tr><th>Weight</th><th>Price</th><th>Action</th></tr></thead>
+	<tbody>
+	<tr><td>NOT DONE YET</td></tr>
+	<tbody>
+	</table>
+
+</fieldset>
+</div>
+
+
+<div id='shippingFlex_price'>
+<fieldset>
+	<legend>Price Restrictions</legend>
+
+<label>
+   <span>Min price:</span>
+   <input size=6 type="number" value="" name="minprice" step='0.01' min='0' />
+</label>
+<p class='hint'>The minimum price of a cart in order to use this method.</p>
+
+</fieldset>
+
+<fieldset class='clearfix'>
+	<legend>Price Based Shipping Table</legend>
+	
+	<div class='floatRight'>
+	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='price'  step='0.01' min='0' /></label>
+	<button>Add</button>
+	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
+	</div>
+	
+	<table class='floatLeft gridTable'>
+	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
+	<tbody>
+	<tr><td>NOT DONE YET</td></tr>
+	<tbody>
+	</table>
+
+</fieldset>
+</div>
+
+
+<div id='shippingFlex_simple'>
+<fieldset>
+	<legend>Simple Shipping Configuration</legend>
+
+
+<label>
+   <span>First item:</span>
+   <input size=6 type="number" value="" name="itemprice" step='0.01' min='0' />
+   The price if only one item is in the cart.
+</label>
+
+
+<label>
+   <span>Each additional item:</span>
+   <input size=6 type="number" value="" name="addprice" step='0.01' min='0' />
+   The price for each subsequent item after the first.
+</label>
+
+
+</fieldset>
+</div>
+
+
+
+<div id='shippingFlex_local'>
+<fieldset class='clearfix'>
+	<legend>Local Pickup Configuration</legend>
+<ul class='clearfix'>
+	<li>Specify Eligible Zip Codes (leave blank for all zip codes 00000-99999).</li>
+	<li>You may specify a range of zip codes (eg: 92000 to 92111) for your local area.</li>
+	<li>To specify a single zip code you must enter it twice (as both the starting and ending number).</li>
+	<li>For single Zip codes use the same number in both beginning and ending. (eg: 11111-11111)</li>
+	<li>Please avoid using ZIP+4 routing codes, only enter 5 digit Zip codes.</li>
+</ul>
+
+	<div class='floatRight'>
+	<label><span>Start zip</span><input size='6' type='text' name='startzip' /></label>
+	<label><span>End zip</span><input size='6' type='text' name='endzip' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
+	<button>Add</button>
+	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
+	</div>
+	
+	<table class='floatLeft gridTable'>
+	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
+	<tbody>
+	<tr><td>NOT DONE YET</td></tr>
+	<tbody>
+	</table>
+
+
+</fieldset>
+</div>
+
+
+<div id='shippingFlex_canada'>
+<fieldset class='clearfix'>
+	<legend>Canadian Local Pickup Configuration</legend>
+<p class='hint'>
+	Delivery/Pickup filters by geography, allowing clients to visit to your store, or opt for delivery rather than using a standard carrier.<br />
+	If you plan to deliver to a small geographic area, or are able to accept customer walk-ins then this can be a great way to give customers the convience of purchasing online without the expense of shipping.
+</p>
+
+	<div class='floatRight'>
+	<label><span>Zip code pattern</span><input size='6' type='text' name='zippattern' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
+	<label>
+		<span>Pickup instructions</span>
+		<textarea name='instructions'></textarea>
+	</label>
+	<button>Add</button>
+	</div>
+	
+	<table class='floatLeft gridTable'>
+	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
+	<tbody>
+	<tr><td>NOT DONE YET</td></tr>
+	<tbody>
+	</table>
+
+
+</fieldset>
+</div>
+
+
 <!--
 /////////////////////// PAYMENTS \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
