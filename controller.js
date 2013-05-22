@@ -1728,6 +1728,7 @@ VALIDATION
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
 						}
+
 //					app.u.dump(" -> "+$input.attr('name')+" - required: "+$input.attr('required'));
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
@@ -1752,6 +1753,22 @@ VALIDATION
 						r = false;
 						$input.addClass('ui-state-error');
 						$input.after($span.text('requires a minimum of '+$input.data('minlength')+' characters'));
+						removeClass($input);
+						}
+// * 201320 -> now support 'min' attr which is the minimum numerical value (ex: 0 or 7) for the input value.
+//number input type has a native min for minimum value
+					else if($input.attr('min') && Number($input.val()) < Number($input.attr('min')))	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('requires a minimum value of '+$input.attr('min')));
+						removeClass($input);
+						}
+// * 201320 -> now support 'min' attr which is the minimum numerical value (ex: 0 or 7) for the input value.
+//number input type has a native min for minimum value
+					else if($input.attr('max') && Number($input.val()) > Number($input.attr('max')))	{
+						r = false;
+						$input.addClass('ui-state-error');
+						$input.after($span.text('requires a maximum value of '+$input.attr('max')));
 						removeClass($input);
 						}
 //** 201318 -> moved this down so that the more specific error messages would be displayed earlier
