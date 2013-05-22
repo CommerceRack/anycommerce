@@ -40,9 +40,19 @@ var admin_config = function() {
 		'paymentSuppInputsTemplate_skipjack',
 		
 		'shippingManagerPageTemplate',
+		
 		'shippingZone_fedex',
 		'shippingZone_usps',
-		'shippingZone_ups'
+		'shippingZone_ups',
+		
+		'shippingFlex_shared',
+		'shippingFlex_fixed',
+		'shippingFlex_local',
+		'shippingFlex_local_canada',
+		'shippingFlex_free',
+		'shippingFlex_simple',
+		'shippingFlex_weight',
+		'shippingFlex_price'
 		);
 	var r = {
 
@@ -213,14 +223,15 @@ var admin_config = function() {
 				if(provider && $target)	{
 					$target.empty();
 					var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
-					if(provider.indexOf('FLEX:') === 0)	{
-						$target.append('stuff will go here');
+					if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
+						$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
+						$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
 						}
 					else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
 						$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
 						}
 					else	{
-						$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed.','gMessage':true});
+						$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true});
 						}
 					
 					$('label :checkbox',$target).anycb();
