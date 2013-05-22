@@ -380,7 +380,7 @@ app.model.dispatchThis('mutable');
 					});
 				},
 			
-			showEditRule : function($btn)	{
+			showRuleBuilderAsPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showEditRule').on('click.showEditRule',function(){
 
@@ -397,7 +397,7 @@ $panel = $("<div\/>").hide().anypanel({
 	}).prependTo($target);
 app.ext.admin.u.toggleDualMode($container,'detail');
 $panel.slideDown('fast');
-//the schedule select list doesn't have a good mechanism for pre-checking a value.
+//the schedule render format doesn't have a good mechanism for pre-checking a value.
 if(data.schedule)	{
 	$("[name='SCHEDULE']",$panel).val();
 	}

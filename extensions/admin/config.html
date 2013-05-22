@@ -50,7 +50,7 @@
 	<td data-bind="var: rule(MATCH); format:text;"></td>
 	<td data-bind="var: rule(SCHEDULE); format:text;"></td>
 	<td data-bind="var: rule(VALUE); format:text;"></td>
-	<td><button data-app-event="admin_config|showEditRule">Edit Rule</button></td>
+	<td><button data-app-event="admin_config|showRuleBuilderAsPanel">Edit Rule</button></td>
 </tr>
 </table>
 
@@ -209,19 +209,19 @@
 
 <div class='label'>
 	Insurance fees for orders will be:
-	<label><input type="radio" value="0" name="insurance" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="insurance" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="insurance" /> Displays as it's own line item under shipping.</label>
+	<label><input type="radio" value="0" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 	<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
 </div>
 
 <div class='label'>
 	Insurance is:
-	<label><input type="radio" value="1" name="ins_optional" /> Optional (user will be prompted)</label>
-	<label><input type="radio" value="0" name="ins_optional" /> Mandatory (will be automatically included in order)</label>
+	<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipment(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
+	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipment(ins_optional); format: popRadio;" /> Mandatory (will be automatically included in order)</label>
 </div>
 
-<label><input type="checkbox" name="flat" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+<label><input type="checkbox" name="flat" data-bind="var: shipment(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 
 
 <table>
@@ -237,15 +237,15 @@
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value='' size="5"></td>
-	<td>$<input type="number" name="can_item1" value='' size="5"></td>
-	<td>$<input type="number" name="int_item1" value='' size="5"></td>
+	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipment(dom_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipment(can_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipment(int_item1); format: popRadio;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value='' size="5"></td>
-	<td>$<input type="number" name="can_item2" value='' size="5"></td>
-	<td>$<input type="number" name="int_item2" value='' size="5"></td>
+	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipment(dom_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipment(can_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipment(int_item2); format: popRadio;" /></td>
 </tr>
 </tbody></table>
 	</td>
@@ -256,18 +256,18 @@
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
 
-<label><input type="radio" value="0" name="product"> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product"> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product"> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product"> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product"> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product"> Use per product for canada + international orders</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipment(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada + international orders</label>
 
 
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 
-<label><input type="checkbox" name="weight"> Enable</label>
+<label><input type="checkbox" name="weight" data-bind="var: shipment(weight); format: popCheckbox;" /> Enable</label>
 
 <table>
 <thead>
@@ -284,9 +284,9 @@
 	<td class='valignTop'>DATA GOES HERE</td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="weight_area"> Edit</td>
-	<td><input type="radio" value="can" name="weight_area"> Edit</td>
-	<td><input type="radio" value="int" name="weight_area"> Edit</td>
+	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 
@@ -304,7 +304,7 @@
 
 <h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 
-<label><input type="checkbox" name="price"> Enable</label>
+<label><input type="checkbox" name="price"  data-bind="var: shipment(price); format: popCheckbox;" /> Enable</label>
 
 <table>
 <tbody>
@@ -319,9 +319,9 @@
 	<td class='valignTop'>DATA GOES HERE</td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="price_area"> Edit</td>
-	<td><input type="radio" value="can" name="price_area"> Edit</td>
-	<td><input type="radio" value="int" name="price_area"> Edit</td>
+	<td><input type="radio" value="dom" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 
@@ -357,14 +357,14 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <div class='label'>
 	Handling fees for orders will be:<br>
-	<label><input type="radio" value="0" name="handling"> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="handling"> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="handling"> Displays as it's own line item under shipping.</label>
+	<label><input type="radio" value="0" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 <p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
 </div>
 
 
-<label><input type="checkbox" name="flat" >Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+<label><input type="checkbox" name="flat"  data-bind="var: shipment(flat); format: popCheckbox;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
 
 
 <table>
@@ -379,15 +379,15 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(dom_item1); format: popVal;" /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(can_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(int_item1); format: popRadio;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(dom_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(can_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(int_item2); format: popRadio;" /></td>
 </tr>
 </tbody>
 </table>
@@ -395,17 +395,17 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
-<label><input type="radio" value="0" name="product"> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product"> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product"> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product"> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product"> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product"> Use per product for canada + international orders</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipment(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada + international orders</label>
 
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
 lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" name="weight"> Enable</label>
+<label><input type="checkbox" name="weight" data-bind="var: shipment(weight); format: popCheckbox;" /> Enable</label>
 
 
 <table>
@@ -426,9 +426,9 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<td colspan="3"><hr></td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="weight_area"> Edit</td>
-	<td><input type="radio" value="can" name="weight_area"> Edit</td>
-	<td><input type="radio" value="int" name="weight_area"> Edit</td>
+	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 </table>
