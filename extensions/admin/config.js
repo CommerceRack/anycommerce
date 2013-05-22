@@ -22,7 +22,7 @@
 
 var admin_config = function() {
 	var theseTemplates = new Array(
-		'PaymentManagerPageTemplate',
+		'paymentManagerPageTemplate',
 		'paymentAvailabilityTemplate',
 		'paymentHandlingFeeTemplate',
 		'paymentTransferInstructionsTemplate',
@@ -37,7 +37,12 @@ var admin_config = function() {
 		'paymentSuppInputsTemplate_authorizenet',
 		'paymentSuppInputsTemplate_linkpoint',
 		'paymentSuppInputsTemplate_echo',
-		'paymentSuppInputsTemplate_skipjack'
+		'paymentSuppInputsTemplate_skipjack',
+		
+		'shippingManagerPageTemplate',
+		'shippingZone_fedex',
+		'shippingZone_usps',
+		'shippingZone_ups'
 		);
 	var r = {
 
@@ -70,7 +75,7 @@ var admin_config = function() {
 ////////////////////////////////////   ACTION    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		a : {
 			showPaymentManager : function($target)	{
-				$target.showLoading({'message':'Fetching your active payments'});
+				$target.showLoading({'message':'Fetching your Active Payment Methods'});
 				app.model.destroy('adminConfigDetail|payment');
 				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment',callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
@@ -78,7 +83,7 @@ var admin_config = function() {
 						}
 					else	{
 						$target.hideLoading();
-						$target.anycontent({'templateID':'PaymentManagerPageTemplate',data:{}});
+						$target.anycontent({'templateID':'paymentManagerPageTemplate',data:{}});
 						app.u.handleAppEvents($target);
 						
 						var
@@ -158,6 +163,61 @@ var admin_config = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
 					}
+				},
+			
+			showShippingManager : function($target)	{
+				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
+				app.model.destroy('adminConfigDetail|shipments');
+				app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments',callback : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$('#globalMessaging').anymessage({'message':rd});
+						}
+					else	{
+						$target.hideLoading();
+						$target.anycontent({'templateID':'shippingManagerPageTemplate',data:{}});
+						app.u.handleAppEvents($target);
+						
+						var
+							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
+							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
+						
+						$leftColumn.find('li').each(function(){
+							var $li = $(this);
+							$li.addClass('ui-corner-none pointer').on('click',function(){
+								$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
+								$li.addClass('ui-state-focus');
+								$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$li.text());
+								app.ext.admin_config.a.showShipMethodEditorByProvider($li.data('provider'),$contentColumn)
+								app.u.handleAppEvents($contentColumn);
+								});
+							});
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				},
+
+			showShipMethodEditorByProvider : function(provider,$target)	{
+				
+				if(provider && $target)	{
+					$target.empty();
+					var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
+					if(provider.indexOf('FLEX:') === 0)	{
+						$target.append('stuff will go here');
+						}
+					else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
+						$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
+						}
+					else	{
+						$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed.','gMessage':true});
+						}
+					
+					$('label :checkbox',$target).anycb();
+					$('.toolTip',$target).tooltip();
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
+					}
+				
 				}
 			
 			}, //Actions
@@ -177,7 +237,7 @@ var admin_config = function() {
 					if(app.data['adminConfigDetail|payment'] && app.data['adminConfigDetail|payment']['@PAYMENTS'])	{
 						r = {};
 						var payments = app.data['adminConfigDetail|payment']['@PAYMENTS'], //shortcut
-						L = app.data['adminConfigDetail|payment']['@PAYMENTS'].length;
+						L = payments.length;
 						
 						for(var i = 0; i < L; i += 1)	{
 							if(payments[i].tender == tender)	{
@@ -192,6 +252,31 @@ var admin_config = function() {
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.u.getPaymentByTender, no tender passed.','gMessage':true});
+					}
+				return r;
+				},
+
+			getShipMethodByProvider : function(provider)	{
+				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
+				if(provider)	{
+					if(app.data['adminConfigDetail|shipments'] && app.data['adminConfigDetail|shipments']['@SHIPMENTS'])	{
+						r = {};
+						var shipments = app.data['adminConfigDetail|shipments']['@SHIPMENTS'], //shortcut
+						L = shipments.length;
+						
+						for(var i = 0; i < L; i += 1)	{
+							if(shipments[i].provider == provider)	{
+								r = shipments[i];
+								break; //have a match. exit early.
+								}
+							}
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_config.u.getShipMethodByProvider, adminConfigDetail|shipments not in memory and is required.','gMessage':true});
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_config.u.getShipMethodByProvider, no provider passed.','gMessage':true});
 					}
 				return r;
 				}

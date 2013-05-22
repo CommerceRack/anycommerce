@@ -3199,6 +3199,11 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 					}
+				else if (path == '#!shippingManager')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					}
 				else if(path == '#!orders')	{
 //					app.u.dump("into loadNativeApp -> #!orders");
 					app.ext.admin.vars.tab = 'orders';

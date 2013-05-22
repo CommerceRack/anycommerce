@@ -1,13 +1,364 @@
 
 
 
-<div id='PaymentManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+
+
+<!--
+/////////////////////// SHIPPING \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+<div id='shippingManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
+	
+	<section class='slimLeftNav' data-app-role='slimLeftNav'>
+
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Zone Based</h4>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByZone' >
+		<li data-provider='FEDEX'>FedEx</li>
+		<li data-provider='UPS'>UPS OnLine&reg; Tools</li>
+		<li data-provider='USPS'>USPS</li>
+	</ul>
+</div>
+
+<div class='ui-widget marginBottom clearfix'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Flex Methods</h4>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByFlex' >
+	</ul>
+	<button>Add</button>
+</div>
+
+
+	</section>
+
+	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
+
+		<div class='ui-widget-header ui-corner-top'>
+			<h3 class='heading'>Edit:</h3>
+		</div>
+		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder' data-app-role='slimLeftContent'></div>
+
+	</section>
+
+
+</div>
+
+
+
+
+
+<div id='shippingZone_fedex'>
+<fieldset>
+<p>
+Please provide the information needed below to setup your FedEx&reg; meter:<br>
+</p>
+<label><span>Fedex&reg; Account Number:</span>
+<input type="text" value="" name="ACCOUNT" data-bind="var: shipment(ACCOUNT); format:popVal;" />
+</label>
+
+<label><span>Contact First Name</span>	
+<input type="text" value="" name="FIRSTNAME" data-bind="var: shipment(FIRSTNAME); format:popVal;" />
+</label>
+
+<label><span>Contact Last Name</span>	
+<input type="text" value="" name="LASTNAME" data-bind="var: shipment(LASTNAME); format:popVal;" />
+</label>
+
+<label><span>Company Name</span>	
+<input type="text" value="" name="COMPANY" data-bind="var: shipment(COMPANY); format:popVal;" />
+</label>
+
+<label><span>Address Line 1</span>	
+<input type="text" value="" name="ADDRESS1" data-bind="var: shipment(ADDRESS1); format:popVal;" />
+</label>
+
+<label><span>Address Line 2</span>	
+<input type="text" value="" name="ADDRESS2" data-bind="var: shipment(ADDRESS2); format:popVal;" />
+</label>
+
+<label><span>City</span>	
+<input type="text" value="" name="CITY" data-bind="var: shipment(CITY); format:popVal;" />
+</label>
+
+<label><span>State Code</span>	
+<input type="text" value="" name="STATE" data-bind="var: shipment(STATE); format:popVal;" ><br>
+<i>(required for Canada or US)</i>
+</label>
+
+<label><span>Postal/Zip Code</span>	
+<input type="text" value="" name="ZIP" data-bind="var: shipment(ZIP); format:popVal;" />
+</label>
+
+<label><span>Country Code</span>	
+<input type="text" value="" name="COUNTRY" size="2" data-bind="var: shipment(COUNTRY); format:popVal;" />
+</label>
+
+<label><span>Phone Number</span>	
+<input type="tel" value="" name="PHONE" data-bind="var: shipment(PHONE); format:popVal;" />
+</label>
+
+<label><span>Email Address</span>	
+<input type="email" value="" name="EMAIL" data-bind="var: shipment(EMAIL); format:popVal;"  />
+</label>
+
+<label><span>Fax Number</span>
+<input type="tel" value="" name="FAX" data-bind="var: shipment(FAX); format:popVal;" />
+</label>
+
+</fieldset>
+
+</div>
+
+
+
+<div id='shippingZone_ups'>
+
+
+<p class='warn'>
+UPS rates cannot be displayed in conjunction with rates from other shipping carriers during checkout.
+Doing so is a violation of your UPS license agreement.  Therefore, <b>if you enable this shipping method,
+it will be the only one displayed!
+</b>
+
+
+<p>
+UPS Shipper Number: <span></span><br>
+<a href="#/biz/setup/shipping/upsapi.cgi?VERB=apply&amp;SUPPLIER_ID=" title="/biz/setup/shipping/upsapi.cgi?VERB=apply&amp;SUPPLIER_ID=">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br>
+</p>
+
+
+<fieldset class='showForZoovyOnly'>
+<legend>AIRBILL PRINTING (via Windows Order Manager):</legend>
+<label><input type="checkbox" name="PRIMARY_SHIPPER" data-bind='var: shipment(PRIMARY_SHIPPER); format:popCheckbox;' /> Designate UPS as my primary Shipping provider</label>
+<p class='hint'>
+NOTE: This feature *requires* a UPS Shipper Number. 
+We apologize but due to contractual obligations you may only have have one shipping company designated as your primary shipper - enabling this feature will override any other previously designated primary shipper.<br>
+</p>
+</fieldset>
+
+
+<fieldset>
+<legend>Rating Services <span class='toolTip' title="Please select the method(s) of UPS shipping you want to offer to your customers. During checkout the price will be derived from UPS based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
+
+<label>
+	<span>Rate Chart to Use</span>
+	<select name="rate_chart" data-bind='var: shipment(rate_chart); format:popVal;' >
+		<option value="01" >Daily Pickup</option>
+		<option value="03">Occasional Shipper</option>
+	</select>
+</label>
+
+
+<label><input type="checkbox" name="option_multibox" data-bind='var: shipment(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipment. Recommended for customers with large non-combinable items.</label>
+<label><input type="checkbox" name="option_residential" data-bind='var: shipment(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
+<label><input type="checkbox" name="option_validation" data-bind='var: shipment(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
+<label><input type="checkbox" name="option_use_rules" data-bind='var: shipment(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
+
+</fieldset>
+
+
+<fieldset>
+	<legend>UPS Domestic Settings</legend>
+	
+	<label><input type="checkbox" value="on" name="dom" data-bind='var: shipment(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support [<a href="#!ruleBuilder?method=UPSAPI_DOM">general rules</a>]</label>
+	<label><span>Quote Domestic Packaging As:</span>
+	<select name="dom_packaging" data-bind='var: shipment(dom_packaging); format:popVal;'>
+		<option value="00" >Your Packaging</option>
+		<option value="01">UPS Letter Envelope</option>
+		<option value="03">UPS Tube</option>
+		<option value="04">UPS Express&reg; Pak</option>
+		<option value="24">UPS 25KG Box&reg;</option>
+		<option value="25">UPS 10KG Box&reg;</option>
+		<option value="30">Pallet</option>
+		<option value="2a">UPS Express Box&reg; - Small</option>
+		<option value="2b">UPS Express Box&reg; - Medium</option>
+		<option value="2c">UPS Express Box&reg; - Large</option>
+		<option value="SMART">UPS Letter Envelope up 4 oz, Your Packaging for more</option>
+	</select>
+	</label>
+
+<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+<table class='fullWidth gridTable'>
+<tbody>
+<tr >
+	<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipment(dom_gnd); format:popCheckbox;' /></td>
+	<td>UPS Ground</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_GND" title="#!ruleBuilder?method=UPSAPI_DOM_GND">specific rules</a>]</td>
+</tr>
+<tr>
+	<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipment(dom_3ds); format:popCheckbox;' /></td>
+	<td>UPS 3 Day Select&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_3DS" title="#!ruleBuilder?method=UPSAPI_DOM_3DS">specific rules</a>]</td>
+</tr>
+<tr >
+	<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipment(dom_2dm); format:popCheckbox;' /></td>
+	<td>UPS 2nd Day Air A.M.&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_2DM" title="#!ruleBuilder?method=UPSAPI_DOM_2DM">specific rules</a>]</td>
+</tr>
+<tr>
+	<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipment(dom_2da); format:popCheckbox;' /></td>
+	<td>UPS 2nd Day Air&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_2DA" title="#!ruleBuilder?method=UPSAPI_DOM_2DA">specific rules</a>]</td>
+</tr>
+<tr >
+	<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipment(dom_1dp); format:popCheckbox;' /></td>
+	<td>UPS Next Day Air Saver&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DP" title="#!ruleBuilder?method=UPSAPI_DOM_1DP">specific rules</a>]</td>
+</tr>
+<tr>
+	<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipment(dom_1da); format:popCheckbox;' /></td>
+	<td>UPS Next Day Air&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DA" title="#!ruleBuilder?method=UPSAPI_DOM_1DA">specific rules</a>]</td>
+</tr>
+<tr >
+	<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipment(dom_1dm); format:popCheckbox;' /></td>
+	<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
+	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DM" title="#!ruleBuilder?method=UPSAPI_DOM_1DM">specific rules</a>]</td>
+</tr>
+</tbody>
+</table>
+
+</fieldset>
+
+
+<fieldset>
+<legend>UPS International Settings</legend>
+
+	<label><input type="checkbox" value="on" name="int" data-bind='var: shipment(int); format:popCheckbox;' /> Enable UPS International Shipping Support [<a href="#!ruleBuilder?method=upsapi_int" title="#!ruleBuilder?method=upsapi_int">general rules</a>]</label>
+	
+	<label>
+		<span>Quote International Packaging As:</span>
+		<select name="int_packaging" data-bind='var: shipment(int_packaging); format:popVal;'>
+			<option value="00" >Your Packaging</option>
+			<option value="01">UPS Letter Envelope</option>
+			<option value="03">UPS Tube</option>
+			<option value="04">UPS Express&reg; Pak</option>
+			<option value="24">UPS 25KG Box&reg;</option>
+			<option value="25">UPS 10KG Box&reg;</option>
+			<option value="30">Pallet</option>
+			<option value="2a">UPS Express&reg; Box - Small</option>
+			<option value="2b">UPS Express&reg; Box - Medium</option>
+			<option value="2c">UPS Express&reg; Box - Large</option>
+			<option value="SMART">UPS Letter Envelope up 4 oz, Your Packaging for more</option>
+		</select>
+	</label>
+	<p class='warn'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+	
+	<table class='fullWidth gridTable'>
+	<tbody>
+	<tr >
+		<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipment(int_std); format:popCheckbox;' /></td>
+		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to
+	Canada</a></td>
+		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_STD">specific rules</a>]</td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipment(int_xsv); format:popCheckbox;' /></td>
+		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
+		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XSV" >specific rules</a>]</td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipment(int_xpr); format:popCheckbox;' /></td>
+		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
+		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XPR" >specific rules</a>]</td>
+	</tr>
+	<tr >
+		<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipment(int_xdm); format:popCheckbox;' /></td>
+		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
+		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XDM">specific rules</a>]</td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipment(int_xpd); format:popCheckbox;' /></td>
+		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
+		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XPD" >specific rules</a>]</td>
+	</tr>
+	</tbody>
+	</table>
+
+</fieldset>
+
+</div>
+
+
+
+<div id='shippingZone_usps'>
+
+<table class="fullWidth gridTable">
+<thead>
+<tr>
+	<th></th>
+	<th>Domestic</th>
+	<th>International</th>
+</tr>
+</thead>
+   <tr >
+      <td>Enable</td>
+      <td><input type="checkbox" name="usps_dom" data-bind="var: shipment(usps_dom); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_int" data-bind="var: shipment(usps_int); format: popCheckbox;" /></td>
+   </tr>
+   <tr>
+      <td>First Class</td>
+      <td></td>
+      <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipment(usps_int_parcelpost); format: popCheckbox;" /></td>
+   </tr>
+   <tr>
+      <td>Parcel Post</td>
+      <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipment(usps_dom_bulkrate); format: popCheckbox;" /></td>
+      <td></td>
+   </tr>
+   <tr>
+      <td>Priority Mail (6-10 days)</td>
+      <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipment(usps_dom_priority); format: popCheckbox;" /></td>
+      <td>
+         <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipment(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipment(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br>
+         <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipment(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br>
+      </td>
+   </tr>
+   <tr>
+      <td>Express Mail (3-5 days)</td>
+      <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipment(usps_dom); format: popCheckbox;" /></td>
+      <td>
+         <input type="checkbox" name="usps_int_express_1" data-bind="var: shipment(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_express_2" data-bind="var: shipment(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br>
+      </td>
+   </tr>
+   <tr>
+      <td>Global Express Guaranteed (1-3 days)</td>
+      <td></td>
+      <td>
+         <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipment(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipment(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br>
+         <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipment(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br>
+      </td>
+   </tr>
+   <tr>
+      <td>Rules</td>
+      <td>[<a href="#!ruleBuilder?method=USPS_DOM">Rules</a>]</td>
+      <td>[<a href="#!ruleBuilder?method=USPS_INT">Rules</a>]</td>
+   </tr>
+
+</table>
+</div>
+
+
+
+<!--
+/////////////////////// PAYMENTS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+
+<div id='paymentManagerPageTemplate' class='page pageUser slimLeftContainer' data-app-role='slimLeftContainer'>
 	
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Gateways</h4>
-	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
 		<li data-tender='CC'>Credit Card</li>
 		<li data-tender='ECHECK'>eCheck</li>
 	</ul>
@@ -15,7 +366,7 @@
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Wallets</h4>
-	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
 		<li data-tender='AMZCBA'>Amazon</li>
 		<li data-tender='GOOGLE'>Google</li>
 		<li data-tender='PAYPALEC'>PayPal</li>
@@ -24,7 +375,7 @@
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Offline</h4>
-	<ul class='listStyleNone roundedList noPadOrMargin ui-widget-content ui-corner-bottom'  data-app-role='gatewayPaymentList'>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'  >
 		<li data-tender='CASH'>Cash (for P.O.S.)</li>
 		<li data-tender='MO'>Cashiers Check or Money Order by Mail</li>
 		<li data-tender='COD'>Cashiers Check or Money Order on Delivery</li>
@@ -53,7 +404,7 @@
 </div>
 
 
-<label  id='paymentAvailabilityTemplate'>
+<label id='paymentAvailabilityTemplate'>
 	<span>Availability: </span>
 	<select name='availability' data-bind='var: payment(enabled); format:popVal;'>
 		<option value="0">Disabled</option>
@@ -64,14 +415,14 @@
 	</select>
 </label>
 
-<label  id='paymentHandlingFeeTemplate'>
+<label id='paymentHandlingFeeTemplate'>
 	<span>Handling Fee: </span>
 	<input type='number' name='fee' step='0.01' min='0'  data-bind='var: payment(fee); format:popVal;' />
 </label>
 
-<label  id='paymentTransferInstructionsTemplate'>
+<label id='paymentTransferInstructionsTemplate'>
 	<span>Transfer Instructions: </span>
-	<textarea name='pay_wire_instructions'  data-bind='var: payment(pay_wire_instructions); format:popVal;'></textarea>
+	<textarea name='pay_wire_instructions' class='fullWidth' rows='8' data-bind='var: payment(pay_wire_instructions); format:popVal;'></textarea>
 </label>
 
 
@@ -87,16 +438,16 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 
 <table>
 <tr>
-	<td valign="top">Merchant ID:</td>
-	<td valign="top"><i>Not set</i></td>
+	<td>Merchant ID:</td>
+	<td><i>Not set</i></td>
 </tr>
 <tr>
-	<td valign="top">Access Key Id:</td>
-	<td valign="top"><i>Not set</i></td>
+	<td>Access Key Id:</td>
+	<td><i>Not set</i></td>
 </tr>
 <tr>
-  	<td valign="top">Secret Key Id:</td>
-	<td valign="top"><i>Not set</i></td>
+  	<td>Secret Key Id:</td>
+	<td><i>Not set</i></td>
 </tr>
 </table>
 
@@ -107,7 +458,7 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 <label>
 	<span>Payment Environment</span>
 	<select name="amzpay_env" data-bind='var: payment(amzpay_env); format:popVal;'>
-		<option value="0" selected="">Disable</option>
+		<option value="0" >Disable</option>
 		<option value="1">Sandbox/Testing</option>
 		<option value="2">Production</option>
 	</select>
@@ -168,7 +519,7 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 	<label>
 		<span>Confirmed Address:</span>
 		<select  name="paypal_api_reqconfirmship" data-bind='var: payment(paypal_api_reqconfirmship); format:popVal;'>
-			<option value="0" selected=""> Optional</option>
+			<option value="0" > Optional</option>
 			<option value="1"> Required</option>
 		</select>
 	</label>
@@ -176,14 +527,14 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 	<label>
 		<span>Use Callbacks:</span>
 		<select  name="paypal_api_callbacks"  data-bind='var: payment(paypal_api_callbacks); format:popVal;'>
-			<option value="0" selected=""> Disabled</option>
+			<option value="0" > Disabled</option>
 			<option value="1"> Enabled (RECOMMENDED)</option>
 		</select>
 	</label>
 	
 	<label>
 		<span>Paypal Email:</span>
-		<input type="textbox" value="" name="paypal_email" data-bind='var: payment(paypal_email); format:popVal;'>
+		<input type="email" value="" name="paypal_email" data-bind='var: payment(paypal_email); format:popVal;'>
 	</label>
 	
 	<label>
@@ -191,7 +542,7 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 		<select name="paypal_api_env"  data-bind='var: payment(paypal_api_env); format:popVal;'>
 			<option></option>
 			<option value="2">LIVE (PRODUCTION)</option>
-			<option value="0" selected="">DISABLE</option>
+			<option value="0" >DISABLE</option>
 			<option value="1">TEST (PUBLIC SANDBOX)</option>
 			<option value="3">BETA (BETA SANDBOX)</option>
 		</select>
@@ -210,9 +561,9 @@ Paypal offers two different methods of authentication for api requests.<br>
 If you have already granted API access to paypal_api1.zoovy.com on PayPal.com, then leave all the fields below empty of the configuration will NOT work.
 </p>
 
-<label><span>Paypal API Username</span><input type="textbox" data-bind='var: payment(paypal_api_user); format:popVal;'  name="paypal_api_user"></label>
-<label><span>Paypal API Password</span><input type="textbox" data-bind='var: payment(paypal_api_pass); format:popVal;' name="paypal_api_pass"></label>
-<label><span>Paypal API Signature</span><input type="textbox" data-bind='var: payment(paypal_api_sig); format:popVal;' name="paypal_api_sig"></label>
+<label><span>Paypal API Username</span><input type="text" data-bind='var: payment(paypal_api_user); format:popVal;'  name="paypal_api_user"></label>
+<label><span>Paypal API Password</span><input type="text" data-bind='var: payment(paypal_api_pass); format:popVal;' name="paypal_api_pass"></label>
+<label><span>Paypal API Signature</span><input type="text" data-bind='var: payment(paypal_api_sig); format:popVal;' name="paypal_api_sig"></label>
 <label><span></span></label>
 
 <!--
@@ -246,23 +597,23 @@ WHAT TO DO HERE?
 <div id='paymentWallet_google'>
 <label>
 	<span>Google Merchant ID:</span>
-	<input type="textbox" value="" name="google_merchantid" data-bind='var: payment(google_merchantid); format:popVal;'>
+	<input type="text" value="" name="google_merchantid" data-bind='var: payment(google_merchantid); format:popVal;'>
 </label>
 <label>
 	<span>Google Merchant Key:</span>
-	<input type="textbox" value="" name="google_key" data-bind='var: payment(google_key); format:popVal;'>
+	<input type="text" value="" name="google_key" data-bind='var: payment(google_key); format:popVal;'>
 </label>
 <label>
 	<span>Tax Calculations:</span>
 	<select name="google_tax_tables" data-bind='var: payment(google_tax_tables); format:popVal;'>
-		<option value="0" selected="">Use Partition Tax Tables</option>
+		<option value="0" >Use Partition Tax Tables</option>
 		<option value="1">Use Googles Tax tables (*Must be enabled at Google)</option>
 	</select>
 </label>
 <label>
 	<span>Environment:</span>
 	<select name="google_api_env" data-bind='var: payment(google_api_env); format:popVal;'>
-		<option value="0" selected="">DISABLE</option>
+		<option value="0" >DISABLE</option>
 		<option value="1">TEST (SANDBOX)</option>
 		<option value="2">LIVE (PRODUCTION)</option>
 	</select>
@@ -270,7 +621,7 @@ WHAT TO DO HERE?
 <label>
 	<span>Google Analytics Support:</span>
 	<select name="google_api_analytics" data-bind='var: payment(google_api_analytics); format:popVal;'>
-		<option value="0" selected="">DISABLE</option>
+		<option value="0" >DISABLE</option>
 		<option value="1">ENABLE PAGETRACKER (LEGACY NON-ASYNC)</option>
 		<option value="2">ENABLE GAQ (ASYNC)</option>
 	</select>
@@ -280,12 +631,12 @@ WHAT TO DO HERE?
 	<select name="google_api_merchantcalc" data-bind='var: payment(google_api_merchantcalc); format:popVal;'>
 		<option value="2">Enable + Audit Rates</option>
 		<option value="1">Enable + Do Not Audit</option>
-		<option value="0" selected="">Disable</option>
+		<option value="0" >Disable</option>
 	</select>
 </label>
 <label>
 	<span>Ship Quote Zip:</span>
-	<input type="textbox" name="google_dest_zip"  data-bind='var: payment(google_dest_zip); format:popVal;'>
+	<input type="text" name="google_dest_zip"  data-bind='var: payment(google_dest_zip); format:popVal;'>
 </label>
 <div class="hint marginBottom">
 Zoovy must provide a shipping "ESTIMATE" to Google prior to initiating a transaction, and before the 
@@ -308,7 +659,7 @@ rates due to timeout issues with merchant calculations.
 	International Shipping:
 	</span>
 	<select name="google_int_shippolicy" data-bind='var: payment(google_int_shippolicy); format:popVal;'>
-		<option value="0" selected="">No international</option>
+		<option value="0" >No international</option>
 		<option value="1">Use Fixed Price Estimates</option>
 	</select>
 </label>
@@ -403,25 +754,25 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="CC_DISCRATE" data-bind='var: payment(CC_DISCRATE); format:popVal;' /></td>
 	</tr>
 	<tr>
-		<td align="center"><input type="checkbox" name="cc_type_visa"></td>
+		<td><input type="checkbox" name="cc_type_visa"></td>
 		<td>Visa</td>
 		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="VISA_TRANSFEE" data-bind='var: payment(VISA_TRANSFEE); format:popVal;' /></td>
 		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="VISA_DISCRATE" data-bind='var: payment(VISA_DISCRATE); format:popVal;' /></td>
 	</tr>
 	<tr>
-		<td align="center"><input type="checkbox" name="cc_type_mc"></td>
+		<td><input type="checkbox" name="cc_type_mc"></td>
 		<td>Mastercard</td>
 		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="MC_TRANSFEE" data-bind='var: payment(MC_TRANSFEE); format:popVal;' /></td>
 		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="MC_DISCRATE" data-bind='var: payment(MC_DISCRATE); format:popVal;' /></td>
 	</tr>
 	<tr>
-		<td align="center"><input type="checkbox" name="cc_type_amex"></td>
+		<td><input type="checkbox" name="cc_type_amex"></td>
 		<td>American Express</td>
 		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="AMEX_TRANSFEE" data-bind='var: payment(AMEX_TRANSFEE); format:popVal;' /></td>
 		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="AMEX_DISCRATE" data-bind='var: payment(AMEX_DISCRATE); format:popVal;' /></td>
 	</tr>
 	<tr>
-		<td align="center"><input type="checkbox" name="cc_type_novus"></td>
+		<td><input type="checkbox" name="cc_type_novus"></td>
 		<td>Discover/Novus</td>
 		<td class='alignRight'>$<input type='number' step='0.01' min='0' size="5"  name="NOVUS_TRANSFEE" data-bind='var: payment(NOVUS_TRANSFEE); format:popVal;' /></td>
 		<td class='alignRight'>%<input type='number' step='0.01' min='0' size="5"  name="NOVUS_DISCRATE" data-bind='var: payment(NOVUS_DISCRATE); format:popVal;' /></td>
@@ -477,7 +828,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<label>
 		<span>Request Card Code</span>
 		<select name="cc_cvvcid" data-bind='var: payment(cc_cvvcid); format:popVal;'>
-			<option value="0" selected="">Do not request card code during checkout</option>
+			<option value="0" >Do not request card code during checkout</option>
 			<option value="1">Request card code, but do not require it</option>
 			<option value="2">Require card code</option>
 		</select>
@@ -516,8 +867,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	<legend class='marginBottom'>PayPal Payflow Pro Setup</legend>
 	<label><span>Username</span><input type="text" value="" name="verisign_username" data-bind='var: payment(verisign_username); format:popVal;'></label>
 	<label><span>Password</span><input type="password" value="" name="verisign_password" data-bind='var: payment(verisign_password); format:popVal;'></label>
-	<label><span>Partner</span><input type="textbox" value="" name="verisign_partner" data-bind='var: payment(verisign_partner); format:popVal;'></label>
-	<label><span>Vendor</span><input type="textbox" value="" name="verisign_vendor" data-bind='var: payment(verisign_vendor); format:popVal;'></label>
+	<label><span>Partner</span><input type="text" value="" name="verisign_partner" data-bind='var: payment(verisign_partner); format:popVal;'></label>
+	<label><span>Vendor</span><input type="text" value="" name="verisign_vendor" data-bind='var: payment(verisign_vendor); format:popVal;'></label>
 </fieldset>
 
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_linkpoint'>

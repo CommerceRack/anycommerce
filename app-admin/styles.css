@@ -273,7 +273,7 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 /* used for the wiki header 1 & 2 */
 .ui-widget h2	{font-size:1.4em; font-weight:bold; margin: 0; padding: 0;}
-.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; 	margin: 0; padding: 0;}
+.ui-widget h3, .ui-widget  legend	{font-size:1.3em; font-weight:bold; margin: 0; padding: 0;}
 .ui-widget h4	{font-size:1.2em; font-weight:bold; margin: 0; padding: 0;}
 .ui-widget h5	{font-size:1.1em; font-weight:bold; margin: 0; padding: 0;}
 .ui-widget h6	{font-size:1em; font-weight:bold; margin: 0; padding: 0;}
@@ -1223,7 +1223,7 @@ STYLES FOR SPECIFIC UI LAYOUTS (dualMode, soloMode, slimLeft, etc)
 
 
 
-.slimLeftNav .roundedList li	{margin-bottom:3px; padding:3px 6px;}
+.slimLeftNav .roundedList li, .slimLeftNav .paddedList li	{margin-bottom:3px; padding:3px 6px;}
 
 /*
 
