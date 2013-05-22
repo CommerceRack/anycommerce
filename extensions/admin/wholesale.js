@@ -520,8 +520,8 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					
 					$("[data-app-role='dualModeResultsTable']",$dualModeContainer).show();
 					$("[data-app-role='dualModeDetailContainer']",$dualModeContainer).hide();
-					
-					if(sfo && sfo.keywords != '' && sfo.searchby)	{
+/* keywords and searchby are NOT required. if empty, a list of recent orgs will be returned */
+					if(sfo)	{
 //						app.u.dump(" -> sfo: "); app.u.dump(sfo);
 						$('tbody',$table).empty(); //clear previous search results.
 						$dualModeContainer.showLoading("Searching organizations by "+sfo.searchby+" for "+sfo.keywords);
@@ -532,7 +532,9 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						app.ext.admin.calls.adminCustomerOrganizationSearch.init(sfo,{'callback':function(rd){
 							$dualModeContainer.hideLoading();
 
-							if(app.model.responseHasErrors(rd)){$form.anymessage({'message':rd})}
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd})
+								}
 							else if(app.data[rd.datapointer] && app.data[rd.datapointer]['@ORGANIZATIONS'].length === 0){
 								$('.dualModeListMessaging').anymessage({'message':'There were no results for your search.'}); //clear existing messaging.
 								}
@@ -550,6 +552,7 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						$('#globalMessaging').anymessage({'message':'In admin_wholesale.e.execOrganizationSearch, unable to find form OR to serialize as JSON.','gMessage':true});
 						}
 					else	{
+// never reached, blank search shows last 50 results 
 						$('#globalMessaging').anymessage({'message':'Either keywords ['+sfo.keywords+'] or searchby ['+sfo.searchby+'] left blank.'});
 						}
 					
