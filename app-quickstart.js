@@ -1212,7 +1212,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 					}
 				else	{
 					//class below is used as a selector for setting data() on button bar. don't change.
-					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':0}).prependTo($parent);
+					var $buttonBar = $("<div \/>").addClass('buttonBar').css({'position':'absolute','right':20}).prependTo($parent);
 					$buttonBar.data('page-in-focus',$('#resultsProductListContainer').data('page-in-focus')); //used to determine if a page change has occured in next/prev product buttons.
 
 					
@@ -1251,8 +1251,8 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 
 					$parent.addClass('minimalMode'); //use a class to toggle elements on/off instead of show/hide. That way if content is regenerated, visibility state is preserved
 					$detail.css({'float':'right'});
-					$liContainer.css({'float':'left','height':'500px'});
-					$('#resultsProductListContainer',$liContainer).css({'display':'block','height':'450px','overflow':'auto'});
+					$liContainer.css({'float':'left','height':'700px'});
+					$('#resultsProductListContainer',$liContainer).css({'display':'block','height':'650px','overflow':'auto'});
 					$('#resultsProductListContainer',$liContainer).scrollTop(0);
 					
 					app.u.dump($("[data-pid='"+pid+"']", $liContainer).position());
@@ -2621,7 +2621,7 @@ by closing modals only (instead of all dialogs), we can use dialogs to show info
 buyer to 'take with them' as they move between  pages.
 */
 			closeAllModals : function(){
-//				app.u.dump("BEGIN myRIA.u.closeAllModals");
+				app.u.dump("BEGIN myRIA.u.closeAllModals");
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
 ///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));

@@ -39,21 +39,6 @@ var jerseypreview = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN app.ext.cubworld.callbacks.init.onError');
 				}
-			},
-			
-		startExtension : {
-			onSuccess : function() {
-				//app.u.dump(typeof jQuery.fn.cycle);
-				if(app.ext.myRIA && app.ext.myRIA.template && typeof jQuery.fn.cycle === 'function'){
-
-					}
-				else {
-					setTimeout(function(){app.ext.cubworld.callbacks.startExtension.onSuccess()},250);
-					}
-				},
-			onError : function() { 
-				app.u.dump('BEGIN app.ext.cubworld.callbacks.startExtension.onError');
-				}
 			}
 			
 		}, //callbacks

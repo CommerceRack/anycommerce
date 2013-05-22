@@ -123,6 +123,49 @@ var cubworld = function() {
 					app.ext.store_navcats.calls.appCategoryDetailMax.init('.', _tag, 'mutable');
 					app.model.dispatchThis('mutable');
 					}]);
+				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#',P.parentID));
+					
+					app.ext.cubworld.u.showHomepageSlideshow();
+					
+					$('.randomList', $context).each(function(){
+						app.ext.cubworld.u.randomizeList($(this));
+						});
+					}]);
+					
+				var funcTemplates = [
+					'categoryTemplate',
+					'categoryTemplateCuties',
+					'categoryTemplateHTML',
+					'categoryTemplateInquiry',
+					'categoryTemplateAffiliates',
+					'categoryTemplateGroupSales',
+					'categoryTemplateFeaturedPlayer',
+					'categoryTemplateSitemap',
+					'categoryTemplateRewards',
+					'categoryTemplateTickets',
+					'categoryTemplateSWConnect',
+					'categoryTemplateEarthCam',
+					'productTemplate',
+					'companyTemplate',
+					'customerTemplate',
+					'homepageTemplate',
+					'searchTemplate',
+					'checkoutTemplate',
+					'pageNotFoundTemplate'
+					]
+				for(var t in funcTemplates){
+					app.rq.push(['templateFunction', funcTemplates[t],'onCompletes',function(P){
+						var $context = $(app.u.jqSelector('#',P.parentID));
+						if(!$context.data('columncontent')){
+							app.ext.cubworld.u.hideColumnContent();
+							}
+						else {
+							app.ext.cubworld.u.showColumnContent($context.data('columncontent'));
+							}
+						}]);
+					}
+				$('#variableColumn > div').hide();
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
@@ -137,47 +180,7 @@ var cubworld = function() {
 			
 		startExtension : {
 			onSuccess : function() {
-				//app.u.dump(typeof jQuery.fn.cycle);
-				if(app.ext.myRIA && app.ext.myRIA.template && typeof jQuery.fn.cycle === 'function'){
-					app.ext.myRIA.template.homepageTemplate.onCompletes.push(function(P) {
-						var $context = $(app.u.jqSelector('#',P.parentID));
-						
-						app.ext.cubworld.u.showHomepageSlideshow();
-						
-						$('.randomList', $context).each(function(){
-							app.ext.cubworld.u.randomizeList($(this));
-						});
-						});
-					if($("#appView #homepageTemplate_").length > 0){
-						app.ext.cubworld.u.showHomepageSlideshow();
-						}
-					
-					for(var template in app.ext.myRIA.template){
-						if(template !== 'cartTemplate'){
-							app.ext.myRIA.template[template].onCompletes.push(function(P){
-								var $context = $(app.u.jqSelector('#',P.parentID));
-								if(!$context.data('columncontent')){
-									app.ext.cubworld.u.hideColumnContent();
-								} else {
-									app.ext.cubworld.u.showColumnContent($context.data('columncontent'));
-								}
-							});
-						}
-					}
-					$('#variableColumn > div').hide();
-					if($('#mainContentArea > div:visible').length > 0){
-						app.u.dump($('#mainContentArea div:visible').attr('id'));
-						if(!$('#mainContentArea div:visible').data('columncontent')){
-							app.ext.cubworld.u.hideColumnContent();
-						} else {
-							app.ext.cubworld.u.showColumnContent($('#mainContentArea div:visible').data('columncontent'));
-						}
-					} else {
-						
-						app.u.dump("WARNING: not finding a single visible area in mainContentArea to populate column content.")
-						//app.ext.cubworld.u.showColumnContent('hotItemList');
-					}
-					
+				if(app.ext.store_navcats){
 //Dispatches a call to get the productList for the hotItems List
 					app.ext.store_navcats.calls.appNavcatDetail.init('$hot_items', {'list':'$hot_items','callback':'populateHotItemsList','extension':'cubworld', 'parentID':'hotItemList'});
 					app.model.dispatchThis();

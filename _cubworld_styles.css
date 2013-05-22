@@ -851,7 +851,7 @@ SEARCH STYLES
 ****************************************************************/
 .searchResultsPage{margin-top: 14px;}
 .previewListContainer{position:relative; z-index: 10001; background: white;}
-.previewProductDetail {height: 469px; overflow-y: scroll; padding: 0px;}
+.previewProductDetail {height: 669px; overflow-y: scroll; padding: 0px;}
 .productQuickview{background: white; min-height: 469px;}
 #resultsProductListContainer .searchResultsProduct.ui-state-active {border: 1px solid #d41502;}
 
