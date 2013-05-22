@@ -1269,6 +1269,10 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 					}
 				$templateSpec.empty(); //ensure previous spec isn't used on next iteration.
 				}
+// * 201320 -> consoles based error reporting to help track these down.
+			if(errors)	{
+				app.u.dump("Some templates were not found. "+errors,'error');
+				}
 			return errors;
 			},
 
@@ -1311,7 +1315,8 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 				$remoteTemps.html(data);
 				var templateErrors = app.model.loadTemplates(templates);
 				if(templateErrors)	{
-					app.u.throwMessage(templateErrors,true);
+// * 201320 -> error messages were only displaying in appPreView.
+					$('.appMessaging').anymessage({'message':templateErrors,'persistent':true});
 	//				app.u.dump(templateErrors);
 					}
 				});
