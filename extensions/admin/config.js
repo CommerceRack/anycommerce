@@ -45,6 +45,9 @@ var admin_config = function() {
 		'shippingZone_usps',
 		'shippingZone_ups',
 		
+		'shippingGlobal_handling',
+		'shippingGlobal_insurance',
+		
 		'shippingFlex_shared',
 		'shippingFlex_fixed',
 		'shippingFlex_local',
@@ -52,7 +55,10 @@ var admin_config = function() {
 		'shippingFlex_free',
 		'shippingFlex_simple',
 		'shippingFlex_weight',
-		'shippingFlex_price'
+		'shippingFlex_price',
+		
+		'ruleBuilderTemplate',
+		'ruleBuilderRowTemplate'
 		);
 	var r = {
 
@@ -177,8 +183,8 @@ var admin_config = function() {
 			
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
-				app.model.destroy('adminConfigDetail|shipments');
-				app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments',callback : function(rd){
+				app.model.destroy('adminConfigDetail|shipments|'+app.vars.partition);
+				app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
@@ -187,7 +193,7 @@ var admin_config = function() {
 						$target.anycontent({'templateID':'shippingManagerPageTemplate',data:{}});
 						
 						var
-							shipments = app.data['adminConfigDetail|shipments']['@SHIPMENTS'], //shortcut
+							shipments = app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'], //shortcut
 							L = shipments.length,
 							$flexUL = $("[data-app-role='shipMethodsByFlex']",$target);
 						
@@ -230,6 +236,9 @@ var admin_config = function() {
 					else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
 						$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
 						}
+					else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
+						$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
+						}
 					else	{
 						$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true});
 						}
@@ -245,7 +254,7 @@ var admin_config = function() {
 			
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
-				
+
 				if(vars.mode == 'shipping' || vars.mode == 'promotions')	{
 
 
@@ -269,7 +278,22 @@ $D.dialog({
 	});
 $D.dialog('open');
 
-
+//need pricing schedules.
+$D.showLoading({'message':'Fetching Data'});
+app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments|'+app.vars.partition,callback : function(rd){
+	$D.hideLoading();
+	if(app.model.responseHasErrors(rd)){
+		$D.anymessage({'message':rd});
+		}
+	else	{
+		$D.anycontent({'templateID':'ruleBuilderTemplate','data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
+		$("[data-app-role='dualModeListContents']",$D).sortable();
+		app.u.handleAppEvents($D);
+		//$.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipments'])
+		}
+	}},'mutable');
+app.model.dispatchThis('mutable');	
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.mode+'] was passed.','gMessage':true});
@@ -315,10 +339,11 @@ $D.dialog('open');
 			getShipMethodByProvider : function(provider)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(provider)	{
-					if(app.data['adminConfigDetail|shipments'] && app.data['adminConfigDetail|shipments']['@SHIPMENTS'])	{
+					if(app.data['adminConfigDetail|shipments|'+app.vars.partition] && app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'])	{
 						r = {};
-						var shipments = app.data['adminConfigDetail|shipments']['@SHIPMENTS'], //shortcut
-						L = shipments.length;
+						var
+							shipments = app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'], //shortcut
+							L = shipments.length;
 						
 						for(var i = 0; i < L; i += 1)	{
 							if(shipments[i].provider == provider)	{
@@ -352,6 +377,31 @@ $D.dialog('open');
 						$suppContainer.anycontent({'data':{},'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
 						}
 					});
+				},
+			
+			showEditRule : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.showEditRule').on('click.showEditRule',function(){
+
+var
+	$container = $btn.closest("[data-app-role='dualModeContainer']"),
+	data = $btn.closest('tr').data(),
+	$target = $("[data-app-role='dualModeDetail']",$container)
+	panelID = app.u.jqSelector('','ruleBuilder_'+data.provider);
+
+$panel = $("<div\/>").hide().anypanel({
+	'header':'Edit: '+data.provider,
+	'templateID':'rulesFieldset_shipping'
+	}).prependTo($target);
+
+$panel.slideDown('fast');				
+					
+					});
+				},
+			
+			showAddRule : function($btn)	{
+//				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+//				$btn.off('click.showAddRule').on('click.showAddRule',function(){});
 				}
 			} //e [app Events]
 		} //r object.

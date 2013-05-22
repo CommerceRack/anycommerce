@@ -3,39 +3,61 @@
 -->
 
 
-<div id='ruleBuilderTemplate'>
-	<div class='buttonset'>
-		<button>add rule</button>
-	</div>
-	<table>
-	<tr>
-		<td>
+<div id='ruleBuilderTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
 
-Rule List
-<ol>
-	<li>rule</li>
-	<li>rule</li>
-	<li>rule</li>
-	<li>rule</li>
-</ol>
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
-		</td>
-		<td>
-Editor/creator
-		</td>
-	</tr>
-	</table>
-
-
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top clearfix'>
+			<div class='buttonSet'>
+				<button class='floatRight' data-app-event="admin_config|showAddRule">Add Rule</button>
+				<button class='floatRight' data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
+			</div>
+			<h3 class='heading' data-bind="var: rules(title); format:text;"></h3>
+		</div>
+	
+		<div class='ui-widget-content ui-corner-bottom'>
+		<div class="dualModeListMessaging marginBottom"></div>
+		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th class='alignLeft'>Code</th>
+			<th class='alignLeft'>Name</th>
+			<th class='alignLeft'>Created</th>
+			<th class='alignLeft'>Exec</th>
+			<th class='alignLeft'>Match</th>
+			<th class='alignLeft'>Schedule</th>
+			<th class='alignLeft'>Value</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
+		</div>
+	</section>
 </div>
 
 
+<table>
+<tr id='ruleBuilderRowTemplate'>
+	<td data-bind="var: rule(CODE); format:text;"></td>
+	<td data-bind="var: rule(NAME); format:text;"></td>
+	<td data-bind="var: rule(CREATED); format:text;"></td>
+	<td data-bind="var: rule(EXEC); format:text;"></td>
+	<td data-bind="var: rule(MATCH); format:text;"></td>
+	<td data-bind="var: rule(SCHEDULE); format:text;"></td>
+	<td data-bind="var: rule(VALUE); format:text;"></td>
+	<td><button data-app-event="admin_config|showEditRule">Edit Rule</button></td>
+</tr>
+</table>
 
 
 
-
-
-<fieldset class='labelsAsBreaks alignedInputs alignedLabels' id='rulesFieldset_shipping'>
+<form  id='rulesFieldset_shipping'>
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 
 <label>
 	<span>Rule name</span>
@@ -123,7 +145,7 @@ Editor/creator
 </label>
 
 </fieldset>
-
+</form>
 
 
 
@@ -150,6 +172,14 @@ Editor/creator
 	</ul>
 </div>
 
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Global</h4>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByZone' >
+		<li data-provider='INSURANCE'>Insurance</li>
+		<li data-provider='HANDLING'>Handling</li>
+	</ul>
+</div>
+
 <div class='ui-widget marginBottom clearfix'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Flex Methods</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByFlex' >
@@ -171,6 +201,264 @@ Editor/creator
 
 
 </div>
+
+
+
+
+<div id='shippingGlobal_insurance'>
+
+
+
+
+
+<p>Insurance fees are applied after the rules based shipping calculation.  Insurance fees are typically used to cover the cost of 3rd party insurance companies, or as a profit center for companies who decide to be "self insuring". You may enable as many insurance calculations as you like, all methods will be summed together to arrive at the final insurance total.</p>
+
+<div class='label'>
+	Insurance fees for orders will be:
+	<label><input type="radio" value="0" name="insurance" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="insurance" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="insurance" /> Displays as it's own line item under shipping.</label>
+	<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
+</div>
+
+<div class='label'>
+	Insurance is:
+	<label><input type="radio" value="1" name="ins_optional" /> Optional (user will be prompted)</label>
+	<label><input type="radio" value="0" name="ins_optional" /> Mandatory (will be automatically included in order)</label>
+</div>
+
+<label><input type="checkbox" name="flat" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+
+
+<table>
+<thead>
+<tr>
+	<td></td>
+	<th>Domestic</th>
+	<th>Canada</th>
+	<th>International</th>
+	
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>First Item:</td>
+	<td>$<input type="number" name="dom_item1" value='' size="5"></td>
+	<td>$<input type="number" name="can_item1" value='' size="5"></td>
+	<td>$<input type="number" name="int_item1" value='' size="5"></td>
+</tr>
+<tr>
+	<td>Additional Items:</td>
+	<td>$<input type="number" name="dom_item2" value='' size="5"></td>
+	<td>$<input type="number" name="can_item2" value='' size="5"></td>
+	<td>$<input type="number" name="int_item2" value='' size="5"></td>
+</tr>
+</tbody></table>
+	</td>
+</tr></tbody></table>
+
+
+
+<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
+
+
+<label><input type="radio" value="0" name="product"> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product"> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product"> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product"> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product"> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product"> Use per product for canada + international orders</label>
+
+
+
+<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
+
+<label><input type="checkbox" name="weight"> Enable</label>
+
+<table>
+<thead>
+<tr>
+	<th>Domestic</th>
+	<th>Canada</th>
+	<th>International</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class='valignTop'>DATA GOES HERE</td>
+	<td class='valignTop'>DATA GOES HERE</td>
+	<td class='valignTop'>DATA GOES HERE</td>
+</tr>
+<tr>
+	<td><input type="radio" value="dom" name="weight_area"> Edit</td>
+	<td><input type="radio" value="can" name="weight_area"> Edit</td>
+	<td><input type="radio" value="int" name="weight_area"> Edit</td>
+</tr>
+</tbody>
+
+<table>
+<tbody>
+<tr>
+	<td  ><input type="button" value=" Add " style="width: 75; font-size: 8pt; font-family: helvetica;" onclick="jQuery('#ACTION').value='WEIGHT_EDIT'; jQuery('#thisFrm').submit();" class="button showLoadingModal"></td>
+	<td >Up to Weight:<input type="textbox" size="8" name="weight_upto" ></td>
+	<td >Fee:<input type="textbox" size="5" name="weight_fee" ></td>
+</tr>
+</tbody>
+</table>
+<p class='hint'>HINT: To reset/remove a value, simply enter a blank fee.</p>
+
+
+<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
+
+<label><input type="checkbox" name="price"> Enable</label>
+
+<table>
+<tbody>
+<tr>
+	<th>Domestic</th>
+	<th>Canada</th>
+	<th>International</th>
+</tr>
+<tr>
+	<td class='valignTop'>DATA GOES HERE</td>
+	<td class='valignTop'>DATA GOES HERE</td>
+	<td class='valignTop'>DATA GOES HERE</td>
+</tr>
+<tr>
+	<td><input type="radio" value="dom" name="price_area"> Edit</td>
+	<td><input type="radio" value="can" name="price_area"> Edit</td>
+	<td><input type="radio" value="int" name="price_area"> Edit</td>
+</tr>
+</tbody>
+
+<table>
+<tbody>
+<tr>
+	<td  ><input type="button" value=" Add " style="width: 75; font-size: 8pt; font-family: helvetica;" onclick="$('#ACTION').value = 'PRICE_EDIT'; jQuery('#thisFrm').submit();" class="button showLoadingModal"></td>
+	<td >Up to Price:<input type="textbox" size="8" name="price_upto" ></td>
+	<td >Ins. Fee:<input type="textbox" size="5" name="price_fee" ></td>
+</tr>
+</tbody>
+</table>
+<p>HINT: To reset/remove a value, simply enter a blank fee.</p>
+
+
+<b>Special Handling Rules: </b><br>
+Use shipping rules to handle the "special cases" that come up from time to time.<br>
+<a href="#/biz/setup/shipping/rulebuilder.cgi?method=INSURANCE" title="/biz/setup/shipping/rulebuilder.cgi?method=INSURANCE">Edit/View Advanced Rules</a>
+
+
+
+
+
+
+</div>
+
+
+<div id='shippingGlobal_handling'>
+
+
+
+<p>Handling fees are applied to all shipping methods after the rules based shipping calculation. Handling fees are typically used to cover the packaging expenses and/or labor involved in assembling an order. You may enable as many handling calculations as you like,  all methods will be summed together to arrive at the final handling total. </p>
+
+<div class='label'>
+	Handling fees for orders will be:<br>
+	<label><input type="radio" value="0" name="handling"> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="handling"> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="handling"> Displays as it's own line item under shipping.</label>
+<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
+</div>
+
+
+<label><input type="checkbox" name="flat" >Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+
+
+<table>
+<thead>
+<tr>
+	<td></td>
+	<th>Domestic</th>
+	<th>Canada</th>
+	<th>International</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>First Item:</td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' /></td>
+</tr>
+<tr>
+	<td>Additional Items:</td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' /></td>
+</tr>
+</tbody>
+</table>
+
+
+<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
+
+<label><input type="radio" value="0" name="product"> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product"> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product"> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product"> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product"> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product"> Use per product for canada + international orders</label>
+
+
+<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
+lookup table to determine the next highest handling fee.">?</span></h4>
+<label><input type="checkbox" name="weight"> Enable</label>
+
+
+<table>
+<thead>
+<tr>
+	<th>Domestic</th>
+	<th>Canada</th>
+	<th>International</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td class='valignTop'>LIST OF WEIGHTS</td>
+	<td class='valignTop'>LIST OF WEIGHTS</td>
+	<td class='valignTop'>LIST OF WEIGHTS</td>
+</tr>
+<tr>
+	<td colspan="3"><hr></td>
+</tr>
+<tr>
+	<td><input type="radio" value="dom" name="weight_area"> Edit</td>
+	<td><input type="radio" value="can" name="weight_area"> Edit</td>
+	<td><input type="radio" value="int" name="weight_area"> Edit</td>
+</tr>
+</tbody>
+</table>
+<table>
+<tbody>
+<tr>
+	<td  ><input type="button" value=" Add " onclick="jQuery('#ACTION').val('WEIGHT_EDIT'); jQuery('#thisFrm').submit();"></td>
+	<td >Up to Weight:<input type="textbox" size="8" name="weight_upto" /></td>
+	<td >Fee:<input type="textbox" size="5" name="weight_fee" /></td>
+</tr>
+</tbody>
+</table>
+<p>HINT: To reset/remove a value, simply enter a blank handling fee.</p>
+
+<b>Special Handling Rules: </b><br>
+Use shipping rules to handle the "special cases" that come up from time to time.<br>
+<a href="#/biz/setup/shipping/rulebuilder.cgi?method=HANDLING" title="/biz/setup/shipping/rulebuilder.cgi?method=HANDLING">Edit/View Advanced Rules</a>
+
+
+</div>
+
+
+
+
 
 
 
@@ -257,7 +545,7 @@ UPS Shipper Number: <span></span><br>
 
 
 <fieldset class='showForZoovyOnly'>
-<legend>AIRBILL PRINTING (via Windows Order Manager):</legend>
+<legend>AirBill Printing (via Windows Order Manager):</legend>
 <label><input type="checkbox" name="PRIMARY_SHIPPER" data-bind='var: shipment(PRIMARY_SHIPPER); format:popCheckbox;' /> Designate UPS as my primary Shipping provider</label>
 <p class='hint'>
 NOTE: This feature *requires* a UPS Shipper Number. 

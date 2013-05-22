@@ -149,13 +149,28 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminBatchJobStatus
 
-
+//for configDetail requests, no datapointer is set by default for shipment, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
+//That means if no datapointer is passed, no localstorage is used.
+//so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
 		adminConfigDetail : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
 				if(!$.isEmptyObject(obj))	{
-					this.dispatch(obj,_tag,Q);
-					r = 1;
+					if(_tag && _tag.datapointer)	{
+						if(app.model.fetchData(_tag.datapointer) == false)	{
+							r = 1;
+							this.dispatch(obj,_tag,Q);
+							}
+						else	{
+							app.u.handleCallback(_tag);
+							}
+						}
+					else	{
+						_tag = _tag || {};
+						_tag.datapointer = 'adminConfigDetail';
+						this.dispatch(obj,_tag,Q);
+						r = 1;
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({"message":"In admin.calls.adminConfigDetail, obj is empty",'gMessage':true});
@@ -164,8 +179,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				},
 			dispatch : function(obj,_tag,Q)	{
 				obj._cmd = "adminConfigDetail"
-				obj._tag = _tag || {};
-				obj._tag.datapointer = obj._tag.datapointer || "adminConfigDetail"; //allows for dp to be set by app.
+				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminBatchJobStatus
