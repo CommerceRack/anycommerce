@@ -443,10 +443,10 @@ else{
 //						app.u.dump(" -> $form validated.");
 						app.ext.store_crm.calls.setNewsletters.init(frmObj,{'callback':function(rd){
 							if(app.model.responseHasErrors(rd)){
-								app.u.throwMessage({'message':rd});
+								$form.anymessage({'message':rd});
 								}
 							else	{
-								app.u.throwMessage(app.u.successMsgObject("Thank you, you are now subscribed."));
+								$form.anymessage(app.u.successMsgObject("Thank you, you are now subscribed."));
 								}
 							}});
 						app.model.dispatchThis();

@@ -803,19 +803,15 @@ fallback is to just output the value.
 //				app.u.dump(" -> inv: "+inv);
 				$tag.addClass(className).text(buttonText);
 				$tag.button();
-				
 				if(buttonState)	{$tag.button(buttonState)}
 				else	{
-				
 					if(buttonText.toLowerCase() == 'add to cart')	{
-							app.u.dump("SUBMIT");
 						$tag.on('click.detailsOrAdd',function(event){
 							event.preventDefault();
 							$form.trigger('submit'); //submitting the form (which has an add to cart action) instead of directly executing some action here, makes this more versatile. allows the action to be changed to support other add to cart/display cart actions.
 							})
 						}
 					else	{
-							app.u.dump("SHOWCONTENT");
 						$tag.on('click.detailsOrAdd',function(event){
 							event.preventDefault();
 							showContent('product',{'pid':pid}); 
@@ -2621,7 +2617,7 @@ by closing modals only (instead of all dialogs), we can use dialogs to show info
 buyer to 'take with them' as they move between  pages.
 */
 			closeAllModals : function(){
-				app.u.dump("BEGIN myRIA.u.closeAllModals");
+//				app.u.dump("BEGIN myRIA.u.closeAllModals");
 				$(".ui-dialog-content").each(function(){
 					var $dialog = $(this);
 ///					app.u.dump(" -> $dialog.dialog('option','dialog'): "); app.u.dump($dialog.dialog('option','dialog'));
