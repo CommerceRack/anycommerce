@@ -1128,7 +1128,7 @@ app.u.handleCallback(tagObj);
 					callback = _rtag.extension ? app.ext[_rtag.extension].callbacks[_rtag.callback] : app.callbacks[_rtag.callback];
 //					app.u.dump(" -> typeof app.callbacks[_rtag.callback]: "+typeof callback);
 					if(typeof callback.onSuccess == 'function')	{
-						setTimeout(function(){callback.onSuccess(_rtag);},100);
+						setTimeout(function(){callback.onSuccess(_rtag);},1);
 						}
 					else	{}//callback defined as string, but callback.onsuccess is not a function.
 					}
