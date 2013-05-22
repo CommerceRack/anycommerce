@@ -1,3 +1,131 @@
+<!--
+/////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='ruleBuilderTemplate'>
+	<div class='buttonset'>
+		<button>add rule</button>
+	</div>
+	<table>
+	<tr>
+		<td>
+
+Rule List
+<ol>
+	<li>rule</li>
+	<li>rule</li>
+	<li>rule</li>
+	<li>rule</li>
+</ol>
+
+		</td>
+		<td>
+Editor/creator
+		</td>
+	</tr>
+	</table>
+
+
+</div>
+
+
+
+
+
+
+
+<fieldset class='labelsAsBreaks alignedInputs alignedLabels' id='rulesFieldset_shipping'>
+
+<label>
+	<span>Rule name</span>
+	<input type="text" maxlength="60" size="60" placeholder="new rule" name="NAME" required='required'>
+	<span class='toolTip' title="The name should remind you 'why does this rule exist?'">?</span>
+</label>
+
+<label>
+	<span>Use rule if</span>
+	<select name="MATCH">
+		<option value="IGNORE">Disabled (will be skipped)</option>
+		<option value="IS_TRUE">Is True (Always run this rule)</option>
+		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
+		<option value="ALL_IN_FILTER">*  [All Must Match]</option>
+		<option value="ALL_NOT_PRESENT">!* [All Don't Match]</option>
+		<option value="TWO_IN_FILTER">2+ [Two or More Must Match]</option>
+		<option value="NOTHING_IN_FILTER">x [No Matches Found]</option>
+		<option value="CRAZY_FILTER">! [Filter Match]</option>
+		<option value="THREE_IN_FILTER">! [Three+ must Match]</option>
+		<option value="STATE_MATCH">STATE matches filter criteria</option>
+		<option value="COUNTRY_MATCH">Country Name matches filter criteria</option>
+		<option value="COUNTRYCODE_MATCH">Country ISOX matches filter criteria</option>
+		<option value="IPADDR_MATCH">IP Address matches</option>
+		<option value="IS_POBOX">Address appears to be a PO Box</option>
+		<option value="HAS_DOM_ADDRESS">Cart has Domestic Zip Code/Address specified</option>
+		<option value="DATE/LT">Date is in past</option>
+		<option value="DATE/GT">Date is in future</option>
+		<option value="DAY_OF_WEEK">Day of Week (1=Mon, 3=Wed, 7=Sun)</option>
+		<option value="TIME_PAST">Time is past HH:MM (always computed in PST)</option>
+		<option value="HAS_CLAIM">Incomplete Item present</option>
+		<option value="SUBSTRING_MATCH">Substring in product title</option>
+		<option value="WEIGHT/GT">Weight greater than</option>
+		<option value="WEIGHT/LT">Weight less than</option>
+		<option value="SUBTOTAL/GT">Subtotal before Promotions greater than</option>
+		<option value="SUBTOTAL/LT">Subtotal before Promotions less than</option>
+		<option value="TRUE_SUBTOTAL/GT">Subtotal including Promotions greater than</option>
+		<option value="TRUE_SUBTOTAL/LT">Subtotal including Promotions less than</option>
+		<option value="SHIPPING/GT">Shipping price greater than</option>
+		<option value="SHIPPING/LT">Shipping price less than</option>
+		<option value="META/EXACT">Meta Exactly matches Match Value</option>
+		<option value="META/FUZZY">Meta Fuzzy matches Filter</option>
+		<option value="MULTIVARSITE/A">Visitor is on Site-A</option>
+		<option value="MULTIVARSITE/B">Visitor is on Site-B</option>
+		<option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option>
+		<option value="POGMATCH">POG Matches</option>
+		<option value="COUPON/ANY">Coupon(s) Present</option>
+		<option value="SANDBOX/YES">User is on Sandbox/Test Site</option>
+		<option value="SANDBOX/NO">User is on LIVE version</option>
+	</select>
+	<span onClick='app.ext.admin_support.a.showHelpDocInDialog("info_rules");' class='ui-icon ui-icon-lightbulb helpDoc'></span>
+</label>
+
+<label>
+	<span>Filter criteria</span>
+	<textarea rows="3" name="FILTER"></textarea>
+</label>
+<label>
+	<span>Action if match</span>
+	<select name="EXEC">
+		<option value="STOP">Stop Processing</option>
+		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
+		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
+		<option value="SHIP/ADD-VALUE">Add [value] to Shipping Price</option>
+		<option value="SHIP/SET-VALUE">Set Shipping Price to [value]</option>
+		<option value="SHIP/DISABLE">Disallow Shipping Type</option>
+		<option value="SHIP/ADD-VALUE-MATCH-ITEM">Add [value] for each matching item</option>
+		<option value="SHIP/ADD-VALUE-MATCH-SKU">Add [value] for each matching sku</option>
+		<option value="SHIP/ADD-VALUE-COUNT-ITEM">Add [value] for every item in cart</option>
+		<option value="SHIP/ADD-VALUE-COUNT-ITEM-MINUS-ONE">Add [value] for each matching item, minus one</option>
+	</select>
+</label>
+
+<label>
+	<span>Value</span>
+	<input type="text" value="0.00" name="VALUE">
+</label>
+<p class='hint'>NOTE: values must be written as -%5 or +$5 to be valid.</p>
+<label>
+	<span>Schedule</span>
+	<select name='SCHEDULE'>
+		<option>N/A</option>
+	</select>
+	NEED TO ADD LIST OF SCHEDULES HERE. HIDE if no schedules are present.
+	<span class='toolTip' title="Schedule is only relevant when stores have multiple pricing schedules">?</span>
+</label>
+
+</fieldset>
+
+
+
 
 
 
@@ -500,28 +628,30 @@ We apologize but due to contractual obligations you may only have have one shipp
 <div id='shippingFlex_local'>
 <fieldset class='clearfix'>
 	<legend>Local Pickup Configuration</legend>
-<ul class='clearfix'>
+
+	<div class='clearfix'>
+		<div class='floatRight'>
+		<label><span>Start zip</span><input size='6' type='text' name='startzip' /></label>
+		<label><span>End zip</span><input size='6' type='text' name='endzip' /></label>
+		<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
+		<button>Add</button>
+		<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
+		</div>
+		
+		<table class='floatLeft gridTable'>
+		<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
+		<tbody>
+		<tr><td>NOT DONE YET</td></tr>
+		</tbody>
+		</table>
+	</div>
+<ul >
 	<li>Specify Eligible Zip Codes (leave blank for all zip codes 00000-99999).</li>
 	<li>You may specify a range of zip codes (eg: 92000 to 92111) for your local area.</li>
 	<li>To specify a single zip code you must enter it twice (as both the starting and ending number).</li>
 	<li>For single Zip codes use the same number in both beginning and ending. (eg: 11111-11111)</li>
 	<li>Please avoid using ZIP+4 routing codes, only enter 5 digit Zip codes.</li>
 </ul>
-
-	<div class='floatRight'>
-	<label><span>Start zip</span><input size='6' type='text' name='startzip' /></label>
-	<label><span>End zip</span><input size='6' type='text' name='endzip' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
-	<button>Add</button>
-	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
-	</div>
-	
-	<table class='floatLeft gridTable'>
-	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
-	<tbody>
-	<tr><td>NOT DONE YET</td></tr>
-	<tbody>
-	</table>
 
 
 </fieldset>

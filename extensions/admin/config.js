@@ -241,8 +241,41 @@ var admin_config = function() {
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
 					}
 				
-				}
+				},
 			
+			showRulesBuilderInModal : function(vars)	{
+				vars = vars || {};
+				
+				if(vars.mode == 'shipping' || vars.mode == 'promotions')	{
+
+
+var $D = $("<div \/>").attr('title',"Rule Builder: "+vars.mode);
+$D.addClass('displayNone').appendTo('body'); 
+$D.dialog({
+	width : '90%',
+	modal: true,
+	autoOpen: false,
+	close: function(event, ui)	{
+		$(this).dialog('destroy').remove();
+		},
+	buttons: [ 
+		{text: 'Cancel', click: function(){
+			$D.dialog('close');
+			if(typeof vars.closeFunction === 'function')	{
+				vars.closeFunction($(this));
+				}
+			}}	
+		]
+	});
+$D.dialog('open');
+
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.mode+'] was passed.','gMessage':true});
+					}
+				var $dialog = $("<div \/>");
+				}
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
