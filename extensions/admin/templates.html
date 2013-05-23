@@ -511,6 +511,79 @@ SETUP PAGE TEMPLATE
 
 
 
+<div id='pageTemplateSites'>
+
+<ul>
+	<li><a href='#domains' onClick='return false'>Domains</a></li>
+	<li><a href='#partitions' onClick='return false'>Partitions</a></li>
+	<li><a href='#debug' onClick='return false'>Debug</a></li>
+</ul>
+
+<section data-anytab-content='domains' class='clearfix'>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th class='alignLeft'>Logo</th>
+		<th class='alignLeft'>Domain</th>
+		<th>Partition</th>
+		<th data-anytable-nosort='true'></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+	
+	</tbody>
+	</table>
+</section>
+
+<section data-anytab-content='partitions' class='clearfix'>
+	<table class='gridTable fullWidth'>
+	<thead>
+	<tr>
+		<th>#/PRT</th>
+		<th>Name</th>
+		<th>Segmented Customers</th>
+		<th>Segmented Navcats</th>
+		<th data-anytable-nosort='true'></th>
+	</thead>
+	<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:domainListTemplate;">
+	
+	</tbody>
+	</table>
+</section>
+
+<section data-anytab-content='debug' class='clearfix'>
+show debug
+</section>
+
+
+</div>
+
+<table>
+
+<tr id='domainListTemplate'>
+	<td><img src='blank.gif' class='prodThumb' data-bind='var: domain(logo); format:imageURL;' width='150' height='50' /></td>
+	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: domain(prt); format:text; hideZero:false;" class='alignCenter'></td>
+	<td class='alignRight'>
+		<button data-app-event="admin|domainPutInFocus">use domain</button>
+		<button data-app-event="admin|domainView">view store</button>
+		<button data-app-event="admin|domainEdit">edit</button>
+		<button data-app-event="admin|domainSettings">settings</button>
+	</td>
+</tr>
+
+<tr id='partitionListTemplate'>
+	<td data-bind="var: domain(id); format:text;"></td>
+	<td data-bind="var: partition(name); format:text;"></td>
+	<td data-bind="var: domain(p_customers); format:text; hideZero:false;" class='alignCenter'></td>
+	<td data-bind="var: domain(p_navcats); format:text; hideZero:false;" class='alignCenter'></td>
+	<td class='alignRight'>
+
+	</td>
+</tr>
+
+</table>
+
 
 <div id='pageTemplateSetupAppchooser' class='page pageSetup pageSetupAppchooser clearfix'>
 	<h1>Choose a Project</h1>

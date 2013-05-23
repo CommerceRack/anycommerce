@@ -25,7 +25,37 @@ An extension for working within the Zoovy UI.
 var admin = function() {
 // theseTemplates is it's own var because it's loaded in multiple places.
 // here, only the most commonly used templates should be loaded. These get pre-loaded. Otherwise, load the templates when they're needed or in a separate extension (ex: admin_orders)
-	var theseTemplates = new Array('adminProdStdForList','adminProdSimpleForList','adminElasticResult','adminProductFinder','adminMultiPage','domainPanelTemplate','pageSetupTemplate','pageUtilitiesTemplate','adminChooserElasticResult','productTemplateChooser','pageSyndicationTemplate','pageTemplateSetupAppchooser','dashboardTemplate','recentNewsItemTemplate','quickstatReportTemplate','achievementsListTemplate','messageListTemplate','messageDetailTemplate','mailToolTemplate'); 
+	var theseTemplates = new Array(
+		'adminProdStdForList',
+		'adminProdSimpleForList',
+		'adminElasticResult',
+		'adminProductFinder',
+		'adminMultiPage',
+		'adminChooserElasticResult',
+		'productTemplateChooser',
+
+		'domainPanelTemplate',
+
+		'pageSetupTemplate',
+		'pageUtilitiesTemplate',
+		'pageSyndicationTemplate',
+		'pageTemplateSetupAppchooser',
+		
+		'dashboardTemplate',
+		'recentNewsItemTemplate',
+		'quickstatReportTemplate',
+//		'achievementsListTemplate',
+		
+		'messageListTemplate',
+		'messageDetailTemplate',
+		
+		'mailToolTemplate',
+		
+		'pageTemplateSites',
+		'domainListTemplate',
+		'partitionListTemplate'
+		
+		); 
 	var r = {
 		
 		vars : {
@@ -2477,6 +2507,29 @@ else	{
 
 
 
+			showSitesTab : function($target)	{
+				$target.empty();
+				app.u.dump($target.attr('widget'));
+//if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
+				if(app.ext.admin.calls.adminDomainList.init({},'mutable'))	{
+					app.model.destroy('adminConfigDetail|prts');
+					}
+				app.ext.admin.calls.adminConfigDetail.init({'prts':true},{'datapointer':'adminConfigDetail|prts','callback': function(rd){
+					$target.hideLoading();
+					app.u.dump('got here too');
+					if(app.model.responseHasErrors(rd)){
+						$target.anymessage({'message':rd})
+						}
+					else	{
+						app.u.dump('and into the callback else');
+						$target.anycontent({'templateID':'pageTemplateSites',data : $.extend(true,{},app.data['adminConfigDetail|prts'],app.data['adminDomainList'])});
+						$target.anytabs();
+						$('.gridTable',$target).anytable();
+						app.u.handleAppEvents($target);
+						}
+					}},'mutable');
+				app.model.dispatchThis('mutable');
+				},
 
 
 			showMailTool : function(vars)	{
@@ -3222,6 +3275,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					}
+				else if(path == '#!sites')	{
+					app.u.dump("GOT HERE");
+					app.ext.admin.vars.tab = 'sites';
+					app.ext.admin.u.bringTabIntoFocus('sites');
+					app.ext.admin.u.bringTabContentIntoFocus($("#sitesContent"));
+					app.ext.admin.a.showSitesTab($("#sitesContent"));
 					}
 				else if(path == '#!orders')	{
 //					app.u.dump("into loadNativeApp -> #!orders");
@@ -4569,10 +4629,59 @@ just lose the back button feature.
 					event.preventDefault();
 					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
 					});
-				} //toggleDualMode
+				}, //toggleDualMode
 
 
-			
+			domainPutInFocus : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-check"},text: true});
+				var domain = $btn.closest('tr').data('id');
+				if(domain == app.vars.domain)	{$btn.addClass('ui-state-highlight')}
+				$btn.off('click.domainPutInFocus').on('click.domainPutInFocus',function(){
+//					$btn.closest('table').find('button.ui-state-focus').removeClass('ui-state-focus');
+					app.ext.admin.a.changeDomain(domain,$btn.closest('tr').data('prt'));
+					});
+				//
+				},
+			domainView : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-newwin"},text: true});
+				$btn.off('click.domainView').on('click.domainView',function(){
+					window.open("http://www."+$btn.closest('tr').data('id'));
+					});
+				},
+//opens the domain configuration panel in a modal.
+			domainEdit : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: true});
+				
+				var domain = $btn.closest('tr').data('id');
+				if(domain == app.vars.domain)	{}
+				else	{$btn.button("disable");}
+				
+				$btn.off('click.domainEdit').on('click.domainEdit',function(){
+					navigateTo("/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&NS="+$btn.closest('tr').data('id'));
+					});
+				},
+//opens the company information panel for a domain
+			domainSettings : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-wrench"},text: true});
+				$btn.off('click.domainSettings').on('click.domainSettings',function(){
+				
+var domain = $btn.closest('tr').data('id');
+var $D = $("<div \/>").attr('title',"Edit Domain: "+domain);
+$D.addClass('displayNone').appendTo('body'); 
+$D.dialog({
+	width : '70%',
+	modal: true,
+	autoOpen: false,
+	close: function(event, ui)	{
+		$(this).dialog('destroy').remove();
+		}
+	});
+$D.dialog('open');				
+$D.append(app.renderFunctions.transmogrify({'domain':domain},'domainPanelTemplate',$btn.closest('tr').data()));	
+$('.panelHeader',$D).trigger('click');
+
+					});	
+				}
 
 			
 			} //e / appEvents
