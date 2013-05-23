@@ -59,7 +59,9 @@ var admin_config = function() {
 		
 		'ruleBuilderTemplate',
 		'ruleBuilderRowTemplate',
-		'rulesFieldset_shipping'
+		'rulesFieldset_shipping',
+		
+		'contactInformationTemplate'
 		);
 	var r = {
 
@@ -180,6 +182,13 @@ var admin_config = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
 					}
+				},
+				
+			showContactInformation : function($target)	{
+				$target.showLoading({'message':'Fetching Contact Details'});
+				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
+				app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
+				app.model.dispatchThis('mutable');
 				},
 			
 			showShippingManager : function($target)	{

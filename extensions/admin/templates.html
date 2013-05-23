@@ -349,9 +349,11 @@ SETUP PAGE TEMPLATE
 			- <a href="#" onClick="navigateTo('/biz/setup/customfiles/index.cgi'); return false;" title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br />
 			</div>
 			
+			<div class='showForZoovyOnly'>
 			<a href="#" onClick="navigateTo('/biz/setup/navcats/index.cgi'); return false;" title="/biz/setup/navcats/index.cgi">Categories &amp; Lists</a><br />
 			<div class="helper">Build your store category tree or add product lists.</div>
-			
+			</div>
+						
 			<div class='showForZoovyOnly'>
 			<a href="#" onClick="navigateTo('/biz/setup/analytics/index.cgi'); return false;" title="/biz/setup/analytics/index.cgi">Analytics &amp; Plugins</a><br />
 			<div class="helper">Integrate approved 3rd party applications with your site.</div>
@@ -389,10 +391,12 @@ SETUP PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/shipping/index.cgi'); return false;" title="/biz/setup/shipping/index.cgi">Shipping</a><br />
+			<a href="#" onClick="navigateTo('/biz/setup/shipping/index.cgi'); return false;">Shipping</a><br />
+			<a href="#!shippingManager">Shipping (beta)</a><br />
 			<div class="helper">Determine how shipping will be calculated for your products.</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/payment/index.cgi'); return false;" title="/biz/setup/payment/index.cgi">Payment Methods</a><br />
+			<a href="#" onClick="navigateTo('/biz/setup/payment/index.cgi'); return false;">Payment Methods</a><br />
+			<a href="#!paymentManager">Payment (beta)</a><br />
 			<div class="helper">Configure which payment methods you will accept from customers.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/tax/index.cgi'); return false;" title="/biz/setup/tax/index.cgi">Sales Tax</a><br />
@@ -445,7 +449,8 @@ SETUP PAGE TEMPLATE
 		</div>
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" title="/biz/setup/account/index.cgi">Contact Information</a><br />
+			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" >Contact Information</a><br />
+			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br />
 			<div class="helper">Change Administrative/Billing Information</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/global/index.cgi'); return false;" title="/biz/setup/global/index.cgi">Global Settings</a><br />
