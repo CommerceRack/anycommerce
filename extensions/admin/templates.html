@@ -1397,3 +1397,55 @@ ACHIEVEMENTS
 
 </form>
 </div>
+
+
+
+
+
+<!--
+//////////////////////////  PROJECTS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='projectsPageTemplate' class='page pageProjects' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button class='floatRight'>New Project</button>
+			</div>
+			<h3 class='heading'>Projects</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<div class="dualModeListMessaging marginBottom"></div>
+		<table class='gridTable fullWidth displayNone marginBottom' data-app-role='dualModeResultsTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th data-anytable-nosort='true'></th>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Billing Phone</th>
+			<th class='alignLeft'>Billing Contact</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: users(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
+		</div>
+	</section>
+</div>
+
+
+<table>
+<tr id='projectsListTemplate'>
+	<td>stuff</td>
+</tr>
+</table>

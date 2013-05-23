@@ -53,7 +53,10 @@ var admin = function() {
 		
 		'pageTemplateSites',
 		'domainListTemplate',
-		'partitionListTemplate'
+		'partitionListTemplate',
+		
+		'projectsPageTemplate',
+		'projectsListTemplate'
 		
 		); 
 	var r = {
@@ -779,6 +782,55 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ(obj,Q);
 				}
 			}, //adminPrivateSearch
+
+
+
+
+
+
+
+
+		adminProjectList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminProjectList"
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+//					app.u.dump(' -> data is local');
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminProjectList","_tag" : _tag},Q || 'immutable');	
+				}
+			},//adminProjectList	
+
+		adminProjectDetail : {
+			init : function(projectID,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminProjectDetail|"+projectID
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminProjectDetail","_tag" : _tag},Q || 'immutable');	
+				}
+			},//adminProjectDetail	
+
+
+
 
 
 
@@ -2909,6 +2961,20 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 
+			showProjects : function($target)	{
+				$target.empty().showLoading({'message':'Fetching project list'});
+				app.ext.admin.calls.adminProjectList.init({'callback':function(rd){
+//
+$target.hideLoading();
+if(app.model.responseHasErrors(rd)){
+	app.u.throwMessage(rd);
+	}
+else	{
+	$target.anycontent({'templateID':projectsPageTemplate,'datapointer':rd.datapointer});
+	}
+					}},'mutable');
+					app.model.dispatchThis('mutable');
+				},
 
 //opens a dialog with a list of domains for selection.
 //a domain being selected for their UI experience is important, so the request is immutable.
@@ -3254,6 +3320,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 				else if (path == '#!appChooser')	{
 					app.ext.admin.a.showAppChooser();
+					}
+				else if (path == '#!projects')	{
+					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 					}
 				else if (path == '#!paymentManager')	{
 					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
