@@ -286,10 +286,10 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			var self = this,
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
-			
-			if($t.attr('widget') == 'anytabs')	{} //id has already been set as tabs.
+// * 201320 -> changed attr from widget to data-widget-anytabs. widget isn't a valid attribute plus no conducive to multiple widgets on one element.
+			if($t.attr('data-widget-anytabs'))	{} //id has already been set as tabs.
 			else	{
-				$t.attr('widget','anytabs')
+				$t.attr('data-widget-anytabs',true)
 				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
 				self.tabs = $("ul",$t).first();
 	
@@ -411,7 +411,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			this.element.removeClass("ui-tabs");
 			this.element.removeClass("ui-widget");
 			this.element.removeClass("ui-widget-anytabs");
-			this.element.attr("widget","");
+			this.element.attr("data-widget-anytabs","").removeAttr('data-widget-anytabs');
 			}
 		}); // create the widget
 })(jQuery); 
