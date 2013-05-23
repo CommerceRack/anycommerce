@@ -46,7 +46,7 @@ var partner_addthis = function() {
 		callbacks : {
 			init : {
 				onSuccess : function(){
-					var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/250/addthis_widget.js';
+					var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/300/addthis_widget.js';
 					if(typeof addthis_id !== 'undefined'){
 						scriptPath+= '#pubid='+addthis_id;
 					}
