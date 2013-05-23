@@ -385,20 +385,6 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 					}); //$btn.on
 				},
 
-//apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
-			showConnectorFieldset : function($select)	{
-				
-//change event toggles which panel is displayed.
-				$select.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
-					$select.closest('.panel').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){
-						var $fieldset = $(this);
-//						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
-						if($select.val() == $fieldset.data('app-role'))	{$fieldset.show()}
-						else	{$fieldset.hide();}
-						})
-					});
-				$select.trigger('change');
-				}, //showConnectorFieldset
 
 //applied to 'create user' button. just opens the modal.
 			showSupplierCreate : function($btn)	{

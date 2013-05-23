@@ -1520,6 +1520,201 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 
 <!--
+/////////////////////// TAXES INFO \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<div id='taxConfigTemplate'>
+
+
+<section class='ui-widget twoColumn labelsAsBreaks alignedLabels'>
+	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
+	<div class='ui-widget-content ui-corner-bottom'>
+	<form onsubmit="return false">
+	<fieldset>
+		<label>
+		<span>Rule type</span>
+		<select name="type" required='required' data-app-event='admin|showSiblingFieldset'>
+			<option selected='selected' disabled='disabled'>Please Chooser</option>
+			<option value="state" selected="">STATE: US Two Digit Abbreviation.</option>
+			<option value="city">LOCAL: US State+City</option>
+			<option value="zipspan">LOCAL: US Zip Range</option>
+			<option value="zip4">LOCAL: US Zip+4</option>
+			<option value="country">STATE: Country</option>
+			<option value="intprovince">LOCAL: Country+Province</option>
+			<option value="intzip">LOCAL: Country+Zip</option>
+		</select>
+		</label>
+	</fieldset>
+
+
+<!-- fieldsets for rule type selection go here -->
+	<div data-app-role='connectorFieldsetContainer'>
+
+		<fieldset data-app-role='state'>
+			<label>
+			<span>US state </span>
+			<input type="text" value="" name="match-state" size="2" maxlength="2" />
+			</label>
+			<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
+		</fieldset>
+
+		<fieldset data-app-role='city'>
+			<label>
+			<span>State</span>
+			<input type="textbox" value="" name="match-citys" size="2" maxlength="2">
+			</label>
+			
+			<label>
+			<span>City</span>
+			<input type="textbox" value="" name="match-cityc" size="20">
+			</label>
+			
+			<p class='hint'>For City rules is an exact string match, you can also use wildcards. ex: <br>
+			"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
+			<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
+		</fieldset>
+
+		<fieldset data-app-role='zipspan'>
+			<label>
+			<span>Start Zip</span>
+			<input type="number" value="" name="match-zipstart" size="5" maxlength="5" step='1' min='0' />
+			</label>
+			
+			<label>
+			<span>End zip</span>
+			<input type="number" value="" name="match-zipend" size="5" maxlength="5" step='1' min='0' />
+			</label>
+			
+			<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
+
+		</fieldset>
+
+		<fieldset data-app-role='zip4'>
+			<label>
+			<span>Zip +4</span>
+			<input type="text" value="" name="match-zip4" size="10" maxlength="10" />
+			</label>
+			<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
+			<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
+		</fieldset>
+
+		<fieldset data-app-role='country'>
+			<label>
+			<span>ISO code</span>
+			<input type="text" value="" name="match-country" size="2" maxlength="2" data-minlength='2' />
+			</label>
+			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+		</fieldset>
+
+		<fieldset data-app-role='intprovince'>
+			<label>
+			<span>ISO country code</span>
+			<input type="textbox" value="" name="match-ipcountry" size="2" maxlength="2" data-minlength='2'>
+			</label>
+			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+			<label>
+			<span>Country province</span>
+			<input type="textbox" value="" name="match-ipstate" size="20" maxlength="20">
+			</label>
+			<p class='hint'>Enter a province code, or province name for matching.</p>
+		</fieldset>
+
+		<fieldset data-app-role='intzip'>
+			<label>
+			<span>ISO country code</span>
+			<input type="textbox" value="" name="match-izcountry" size="2" maxlength="2"  data-minlength='2'>
+			</label>
+			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
+			<label>
+			<span>Zip</span>
+			<input type="textbox" value="" name="match-izzip" size="20" maxlength="20">
+			</label>
+			<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
+		</fieldset>
+	
+	</div>
+
+
+
+	<fieldset>
+
+		<label><span>Tax percentage</span><input type="number" value="" name="rate" size="5" step='0.01' min='0' />%</label>
+
+		<div class='label'>
+		Also applies to:
+			<div class='stdMargin'>
+<label class='clearfix'><input type="checkbox" name="SHIPPING" /> Shipping</label>
+<label class='clearfix'><input type="checkbox" name="HANDLING" /> Handling</label>
+<label class='clearfix'><input type="checkbox" name="INSURANCE" /> Insurance</label>
+<label class='clearfix'><input type="checkbox" name="SPECIAL" /> Speciality Fees</label>
+			</div>
+		</div>
+	
+	<label>
+		<span>Zone</span>
+		<input type="text" size="25" name="zone" value="" />
+		<span class='toolTip' title="Optional: Provide a description about what/where this rule is applicable.">?</span>
+	</label>
+
+	<label>
+		<span>Expiration</span>
+		<input type='number' size="8" name='expires' value="" />
+		<span class='toolTip' title="Optional: Provide a Year, Month, and Day that a particular rate will expire. Remember: rules are applied from top to bottom, the last matching rule will set the rate. Be sure to have the rule which will supercede the expiring rule above the expiring rule.">?</span>
+	</label>
+
+	<label>
+		<span>Group ID</span>
+		<input type="text" maxlength="4" data-minlength="4" size="4" name="group" value="" />
+		<span class='toolTip' title="4 Digit alpha-numeric tax group id. Leave this field blank if you do not need multiple tax tables.">?</span>
+	</label>
+	</fieldset>
+
+	<button>Save Rule</button>
+
+	</form>
+	</div>
+</section>
+
+<section class='ui-widget twoColumn column2 labelsAsBreaks alignedInputs'>
+	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Existing Rules</h2>
+	<div class='ui-widget-content ui-corner-bottom'>
+	<table class='gridTable fullWidth marginBottom'>
+	<thead>
+	<tr>
+		<th>id</th>
+		<th>rate</th>
+		<th>enabled</th>
+		<th>zone</th>
+		<th>match</th>
+		<th>type</th>
+		<th>expires</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;"></tbody>
+	</table>
+	</div>
+</section>
+
+</div>
+
+
+<table>
+<tr id='taxConfigRuleRowTemplate'>
+	<td data-bind="var:taxes(id); format:text;"></td>
+	<td data-bind="var:taxes(rate); format:text;"></td>
+	<td data-bind="var:taxes(enable); format:text;"></td>
+	<td data-bind="var:taxes(zone); format:text;"></td>
+	<td data-bind="var:taxes(match); format:text;"></td>
+	<td data-bind="var:taxes(type); format:text;"></td>
+	<td data-bind="var:taxes(expires); format:text;"></td>
+	<td><button>Delete</button></td>
+</tr>
+</table>
+
+
+
+<!--
 /////////////////////// ACCOUNT INFO \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
 

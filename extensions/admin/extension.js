@@ -2509,19 +2509,19 @@ else	{
 
 			showSitesTab : function($target)	{
 				$target.empty();
-				app.u.dump($target.attr('widget'));
+				if($target.attr('data-widget-anytabs'))	{
+					$target.anytabs('destroy');
+					}
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
 				if(app.ext.admin.calls.adminDomainList.init({},'mutable'))	{
 					app.model.destroy('adminConfigDetail|prts');
 					}
 				app.ext.admin.calls.adminConfigDetail.init({'prts':true},{'datapointer':'adminConfigDetail|prts','callback': function(rd){
 					$target.hideLoading();
-					app.u.dump('got here too');
 					if(app.model.responseHasErrors(rd)){
 						$target.anymessage({'message':rd})
 						}
 					else	{
-						app.u.dump('and into the callback else');
 						$target.anycontent({'templateID':'pageTemplateSites',data : $.extend(true,{},app.data['adminConfigDetail|prts'],app.data['adminDomainList'])});
 						$target.anytabs();
 						$('.gridTable',$target).anytable();
@@ -3199,6 +3199,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 			loadNativeApp : function(path,opts){
 //				app.u.dump("BEGIN loadNativeApp");
+				app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+				app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+
+
 				if(path == '#!mediaLibraryManageMode')	{
 					app.ext.admin_medialib.a.showMediaLib({'mode':'manage'});
 					}
@@ -3219,8 +3223,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.vars.tab = 'reports';
 					this.bringTabIntoFocus('reports');
 					this.bringTabContentIntoFocus($('#reportsContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_reports.a.showReportsPage($('#reportsContent'));
 					}
 				else if(path == '#!kpi')	{app.ext.admin_reports.a.showKPIInterface();}
@@ -3229,8 +3231,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.vars.tab = 'utilities';
 					this.bringTabIntoFocus('utilities');
 					this.bringTabContentIntoFocus($('#utilitiesContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_batchJob.a.showBatchJobManager($('#utilitiesContent'));
 					}
 				else if(path == '#!customerManager')	{app.ext.admin_customer.a.showCustomerManager();}
@@ -3238,16 +3238,12 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					$('#supportContent').empty(); //here just for testing. won't need at deployment.
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_support.a.showHelpInterface($('#supportContent'));
 					}
 				else if(path == '#!support')	{
 					$('#supportContent').empty(); //here just for testing. won't need at deployment.
 					this.bringTabIntoFocus('support');
 					this.bringTabContentIntoFocus($('#supportContent'));
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_support.a.showTicketManager($('#supportContent'));
 					}
 				else if(path == '#!eBayListingsReport')	{app.ext.admin_reports.a.showeBayListingsReport();}
@@ -3257,31 +3253,25 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!domainConfigPanel')	{app.ext.admin.a.showDomainConfig();}
 
 				else if (path == '#!appChooser')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin.a.showAppChooser();
 					}
 				else if (path == '#!paymentManager')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 					}
 				else if (path == '#!shippingManager')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 					}
 				else if (path == '#!contactInformation')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
 					}
 				else if(path == '#!sites')	{
-					app.u.dump("GOT HERE");
 					app.ext.admin.vars.tab = 'sites';
 					app.ext.admin.u.bringTabIntoFocus('sites');
 					app.ext.admin.u.bringTabContentIntoFocus($("#sitesContent"));
 					app.ext.admin.a.showSitesTab($("#sitesContent"));
+					}
+				else if(path == '#!taxConfig')	{
+					app.ext.admin_config.a.showTaxConfig($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 					}
 				else if(path == '#!orders')	{
 //					app.u.dump("into loadNativeApp -> #!orders");
@@ -3296,8 +3286,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_prodEdit.u.showProductEditor(path,opts);
 					}
 				else if(path == '#!taskManager')	{
-					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
-					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_task.a.showTaskManager();
 					}
 				else	{
@@ -3389,6 +3377,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_reports.a.showKPIInterface();
+					}
+				else if(tab == 'sites' || path == '/biz/sites/index.cgi')	{
+					app.ext.admin.u.bringTabIntoFocus('sites');
+					app.ext.admin.u.bringTabContentIntoFocus($('#sitesContent'));
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin.a.showSitesTab($("#sitesContent"));
 					}
 				else if(tab == 'setup' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
@@ -4630,6 +4625,23 @@ just lose the back button feature.
 					app.ext.admin.u.toggleDualMode($btn.closest("[data-app-role='dualModeContainer']").first());
 					});
 				}, //toggleDualMode
+
+
+//apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
+//put all the fieldsets that may get toggld into an element with data-app-role='connectorFieldsetContainer' on it.
+//that way only the fieldsets in question get turned off/on.
+
+			showSiblingFieldset : function($ele)	{
+				$ele.off('change.showOrderFieldset').on('change.showConnectorFieldset',function(){
+					$ele.closest('form').find("[data-app-role='connectorFieldsetContainer'] fieldset").each(function(){
+						var $fieldset = $(this);
+//						app.u.dump(" -> $fieldset.data('app-role'): "+$fieldset.data('app-role'));
+						if($ele.val() == $fieldset.data('app-role'))	{$fieldset.show().effect( 'highlight', {}, 500);}
+						else	{$fieldset.hide();}
+						})
+					});
+				$ele.trigger('change'); //trigger the change so that if a databind has selected the field, the related fieldset is displayed.
+				}, //showConnectorFieldset
 
 
 			domainPutInFocus : function($btn)	{

@@ -400,6 +400,7 @@ SETUP PAGE TEMPLATE
 			<div class="helper">Configure which payment methods you will accept from customers.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/tax/index.cgi'); return false;" title="/biz/setup/tax/index.cgi">Sales Tax</a><br />
+			<a href="#" onClick="navigateTo('#!taxConfig'); return false;">Sales Tax (beta)</a><br />
 			<div class="helper">Configure state and local tax collection amounts.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/promotions/index.cgi'); return false;" title="/biz/setup/promotions/index.cgi">Coupons/Promotions</a><br />
@@ -543,9 +544,8 @@ SETUP PAGE TEMPLATE
 		<th>Name</th>
 		<th>Segmented Customers</th>
 		<th>Segmented Navcats</th>
-		<th data-anytable-nosort='true'></th>
 	</thead>
-	<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:domainListTemplate;">
+	<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:partitionListTemplate;">
 	
 	</tbody>
 	</table>
@@ -577,9 +577,6 @@ show debug
 	<td data-bind="var: partition(name); format:text;"></td>
 	<td data-bind="var: domain(p_customers); format:text; hideZero:false;" class='alignCenter'></td>
 	<td data-bind="var: domain(p_navcats); format:text; hideZero:false;" class='alignCenter'></td>
-	<td class='alignRight'>
-
-	</td>
 </tr>
 
 </table>

@@ -127,7 +127,9 @@ var admin_batchJob = function() {
 							
 							if(app.data[rd.datapointer]['@BODY'] && app.data[rd.datapointer]['@BODY'].length)	{
 //google visualization will error badly if the # of columns in the each body row doesn't match the # of columns in the head.
-								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'][0].length)	{
+app.u.dump(" -> app.data[rd.datapointer]['@BODY'][0].length: "+app.data[rd.datapointer]['@BODY'][0].length);
+app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datapointer]['@HEAD'][0].length);
+								if(app.data[rd.datapointer]['@BODY'][0].length == app.data[rd.datapointer]['@HEAD'].length)	{
 //@HEAD is returned with each item as an object. google visualization wants a simple array. this handles the conversion.							
 									for(var i = 0; i < L; i += 1)	{
 										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);

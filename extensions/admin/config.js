@@ -61,7 +61,9 @@ var admin_config = function() {
 		'ruleBuilderRowTemplate',
 		'rulesFieldset_shipping',
 		
-		'contactInformationTemplate'
+		'contactInformationTemplate',
+		'taxConfigTemplate',
+		'taxConfigRuleRowTemplate'
 		);
 	var r = {
 
@@ -186,8 +188,37 @@ var admin_config = function() {
 				
 			showContactInformation : function($target)	{
 				$target.showLoading({'message':'Fetching Contact Details'});
-				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
+//				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
 				app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
+				app.model.dispatchThis('mutable');
+				},
+		
+			showTaxConfig : function($target)	{
+				$target.empty().showLoading({'message':'Fetching Tax Details'});
+				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
+				app.model.destroy(datapointer);
+				app.ext.admin.calls.adminConfigDetail.init({'taxes':true},{'datapointer' : datapointer, 'callback' : function(rd){
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	$target.hideLoading();
+	$target.anycontent({'templateID':'taxConfigTemplate','datapointer':rd.datapointer});
+	
+	$('.gridTable',$target).anytable();
+	$('.toolTip',$target).tooltip();
+	$(':checkbox',$target).anycb();
+	$("[name='expires']",$target).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		minDate: 0,
+		dateFormat : "yymmdd"
+		});
+	
+	app.u.handleAppEvents($target);
+	}
+
+					}},'mutable');
 				app.model.dispatchThis('mutable');
 				},
 			
