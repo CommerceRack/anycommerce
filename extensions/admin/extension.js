@@ -56,7 +56,8 @@ var admin = function() {
 		'partitionListTemplate',
 		
 		'projectsPageTemplate',
-		'projectsListTemplate'
+		'projectsListTemplate',
+		'projectDetailTemplate'
 		
 		); 
 	var r = {
@@ -811,21 +812,21 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			},//adminProjectList	
 
 		adminProjectDetail : {
-			init : function(projectID,_tag,Q)	{
+			init : function(uuid,_tag,Q)	{
 				var r = 0;
 				_tag = _tag || {}; 
-				_tag.datapointer = "adminProjectDetail|"+projectID
+				_tag.datapointer = "adminProjectDetail|"+uuid;
 				if(app.model.fetchData(_tag.datapointer) == false)	{
 					r = 1;
-					this.dispatch(_tag,Q);
+					this.dispatch(uuid,_tag,Q);
 					}
 				else	{
 					app.u.handleCallback(_tag);
 					}
 				return r;
 				},
-			dispatch : function(_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminProjectDetail","_tag" : _tag},Q || 'immutable');	
+			dispatch : function(uuid,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminProjectDetail","files":true,"UUID":uuid,"_tag" : _tag},Q || 'immutable');	
 				}
 			},//adminProjectDetail	
 
@@ -2963,14 +2964,18 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 			showProjects : function($target)	{
 				$target.empty().showLoading({'message':'Fetching project list'});
+				app.model.destroy('adminProjectList');
 				app.ext.admin.calls.adminProjectList.init({'callback':function(rd){
-//
+
 $target.hideLoading();
 if(app.model.responseHasErrors(rd)){
 	app.u.throwMessage(rd);
 	}
 else	{
-	$target.anycontent({'templateID':projectsPageTemplate,'datapointer':rd.datapointer});
+	$target.anycontent({'templateID':'projectsPageTemplate','datapointer':rd.datapointer});
+	
+	$('.gridTable',$target).anytable();
+	app.u.handleAppEvents($target);
 	}
 					}},'mutable');
 					app.model.dispatchThis('mutable');
@@ -4769,6 +4774,58 @@ $D.append(app.renderFunctions.transmogrify({'domain':domain},'domainPanelTemplat
 $('.panelHeader',$D).trigger('click');
 
 					});	
+				},
+			
+			
+			projectLinkOpen : function($btn)	{
+				if($btn.closest('tr').data('link'))	{
+					$btn.button({icons: {primary: "ui-icon-refresh"},text: false});
+					$btn.off('click.projectLinkOpen').on('click.projectLinkOpen',function(){
+						window.open($btn.closest('tr').data('link'));
+						});
+					}
+				else	{
+					$btn.hide();
+					}
+				},			
+			projectUpdateShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(){
+
+var
+	$container = $btn.closest("[data-app-role='dualModeContainer']"),
+	data = $btn.closest('tr').data(),
+	$target = $("[data-app-role='dualModeDetail']",$container)
+	panelID = app.u.jqSelector('','project_'+data.id);
+
+
+var $panel = $("<div\/>").hide().anypanel({
+	'header':'Edit: '+data.title || data.id,
+	data : {},
+	'templateID':'projectDetailTemplate'
+	}).prependTo($target);
+
+app.ext.admin.u.toggleDualMode($container,'detail');
+$panel.slideDown('fast');
+
+app.model.destroy('adminProjectDetail|'+data.uuid);
+app.ext.admin.calls.adminProjectDetail.init(data.uuid,{'callback':'anycontent',jqObj:$panel},'mutable');
+app.model.dispatchThis('mutable');
+
+					});
+				},
+			
+			
+			projectGitRepoOpen : function($btn)	{
+				if($btn.closest('tr').data('github_repo'))	{
+					$btn.button({icons: {primary: "ui-icon-newwin"},text: false});
+					$btn.off('click.projectGitRepoOpen').on('click.projectGitRepoOpen',function(){
+						window.open($btn.closest('tr').data('github_repo'));
+						});
+					}
+				else	{
+					$btn.hide();
+					}
 				}
 
 			

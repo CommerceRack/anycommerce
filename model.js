@@ -395,7 +395,8 @@ can't be added to a 'complete' because the complete callback gets executed after
 
 	app.globalAjax.requests[QID][pipeUUID].success(function(d)	{
 		delete app.globalAjax.requests[QID][pipeUUID];
-		app.model.handleResponse(d);}
+		app.model.handleResponse(d);
+			}
 		)
 	r = pipeUUID; //return the pipe uuid so that a request can be cancelled if need be.
 
