@@ -839,11 +839,13 @@ fieldset.variationsFieldset{
 	background: url(img/prodPage/cw12_add_to_cart.png) top left no-repeat;
 	border: none;
 }
-.prodDescContainer {
+.prodDescContainer, .prodCustomerReviewsContainer {
 	color: #58595B;
 	padding: 10px;
 	font: normal 12px Arial, Helvetica, sarif;
 }
+
+
 /****************************************************************
 
 SEARCH STYLES
