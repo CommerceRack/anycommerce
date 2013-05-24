@@ -362,6 +362,7 @@ SETUP PAGE TEMPLATE
 			
 			
 			<a href="#" onClick="navigateTo('/biz/setup/rss/index.cgi'); return false;" title="/biz/setup/rss/index.cgi">RSS Feeds</a><br />
+			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds (beta)</a><br />
 			<div class="helper">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
 		</div>
 	</div><!-- /manage -->
@@ -1518,6 +1519,81 @@ ACHIEVEMENTS
 	<div class='buttonset'>
 		<button data-app-event="admin|projectAddExec">Save</button>
 	</div>
+</fieldset>
+</form>
+
+</div>
+
+
+
+
+
+
+
+
+<!--
+//////////////////////////  RSS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='rssPageTemplate' class='page pageRss' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='buttonSet'>
+				<button class='floatRight' >New RSS Feed</button>
+			</div>
+			<h3 class='heading'>RSS Feeds</h3>
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom'>
+		<div class="dualModeListMessaging marginBottom"></div>
+		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
+		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+		<thead>
+		<tr>
+			<th class='alignLeft'>ID</th>
+			<th class='alignLeft'>Title</th>
+			<th class='alignLeft hideInMinimalMode'>Type</th>
+			<th class='alignLeft hideInMinimalMode'>Created</th>
+			<th class='alignLeft hideInMinimalMode'>Updated</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: projects(@FEEDS); format:processList; loadsTemplate:rssListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		</table>
+		
+		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
+		
+		</div>
+	</section>
+</div>
+
+
+<table>
+<tr id='rssListTemplate'>
+	<td data-bind="var: projects(ID); format:text;"></td>
+	<td data-bind="var: projects(TITLE); format:text;"></td>
+	<td data-bind="var: projects(TYPE); format:text;"></td>
+	<td data-bind="var: projects(CREATED_TS); format:text;"></td>
+	<td data-bind="var: projects(UPDATED_TS); format:text;"></td>
+	<td class='alignRight'>
+	<button >Delete Feed</button>
+	<button >Clone Feed</button>
+	<button >Edit Feed</button>
+	</td>
+</tr>
+</table>
+
+<div id='rssAddUpdateTemplate'>
+
+<form onSubmit='return false'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+
 </fieldset>
 </form>
 

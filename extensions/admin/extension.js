@@ -58,7 +58,11 @@ var admin = function() {
 		'projectsPageTemplate',
 		'projectsListTemplate',
 		'projectDetailTemplate',
-		'projectAddTemplate'
+		'projectAddTemplate',
+		
+		'rssAddUpdateTemplate',
+		'rssPageTemplate',
+		'rssListTemplate'		
 		
 		); 
 	var r = {
@@ -719,6 +723,75 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			},
 
+
+
+
+
+
+
+		adminRSSList : {
+			init : function(_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminRSSList"
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminRSSList","_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminRSSList
+
+
+//obj requires title and uuid, priority and @GRAPHS are optional.
+		adminRSSCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminRSSCreate"
+				obj = obj || {};
+				if(obj.title && obj.uuid)	{ // !!! this validation needs updating.
+					r = 1;
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminRSSCreate, uuid or title not passed","gMessage":true})
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminRSSCreate'
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminRSSCreate
+
+
+
+		adminRSSDetail : {
+			init : function(uuid,_tag,Q)	{
+				var r = 0;
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminRSSList|"+uuid
+				if(app.model.fetchData(_tag.datapointer) == false)	{
+					r = 1;
+					this.dispatch(uuid,_tag,Q);
+					}
+				else	{
+					app.u.handleCallback(_tag);
+					}
+				return r;
+				},
+			dispatch : function(_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminRSSList","UUID":uuid,"_tag" : _tag},Q || 'mutable');	
+				}
+			}, //adminRSSList
 
 
 		adminMessagesList : {
@@ -2998,6 +3071,25 @@ else	{
 					app.model.dispatchThis('mutable');
 				},
 
+			showRSS : function($target)	{
+				$target.empty().showLoading({'message':'Fetching project list'});
+				app.model.destroy('adminRSSList');
+				app.ext.admin.calls.adminRSSList.init({'callback':function(rd){
+
+$target.hideLoading();
+if(app.model.responseHasErrors(rd)){
+	app.u.throwMessage(rd);
+	}
+else	{
+	$target.anycontent({'templateID':'rssPageTemplate','datapointer':rd.datapointer});
+	
+	$('.gridTable',$target).anytable();
+	app.u.handleAppEvents($target);
+	}
+					}},'mutable');
+					app.model.dispatchThis('mutable');
+				},
+
 //opens a dialog with a list of domains for selection.
 //a domain being selected for their UI experience is important, so the request is immutable.
 //a domain is necessary so that API knows what data to respond with, including profile and partition specifics.
@@ -3345,6 +3437,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					}
 				else if (path == '#!projects')	{
 					app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+					}
+				else if (path == '#!rss')	{
+					app.ext.admin.a.showRSS($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
 					}
 				else if (path == '#!paymentManager')	{
 					app.ext.admin_config.a.showPaymentManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
