@@ -845,6 +845,19 @@ fieldset.variationsFieldset{
 	font: normal 12px Arial, Helvetica, sarif;
 }
 
+.socialLinks {
+	margin-top: 10px;
+}
+
+.socialLinks .addthis_default_style .at300b, 
+.socialLinks .addthis_default_style .at300m{ 
+	float: right;
+}
+
+.socialLinks a {
+	margin: 0px 5px;
+}
+
 
 /****************************************************************
 
