@@ -1417,7 +1417,7 @@ ACHIEVEMENTS
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button class='floatRight' data-app-event="admin|projectAddShow">New Project</button>
+				<button class='floatRight' data-app-event="admin|projectAddShow" data-update-list='true'>New Project</button>
 			</div>
 			<h3 class='heading'>Projects</h3>
 		</div>
@@ -1456,15 +1456,24 @@ ACHIEVEMENTS
 	<td class='alignRight'>
 	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
 	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
-	<button data-app-event='admin|projectUpdateShow'>Edit</button>
+	<button data-app-event='admin|projectUpdateShow'>View Details</button><!-- this will eventually be 'edit' -->
 	</td>
 </tr>
 </table>
 
 
-<div id='projectDetailTemplate'>
+<div id='projectDetailTemplate' class='labelsAsBreaks'>
 
-Stuff
+	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
+	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
+	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
+	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
+	<div class='label' data-bind="var: project(APP_ROOT); format:text; pretext:App root: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_REPO); format:text; pretext:GitHub repository: ;"></div>
+	<div class='label' data-bind="var: project(GITHUB_BRANCH); format:text; pretext:GitHub branch: ;"></div>
+	<div class='label' data-bind="var: project(APP_EXPIRE); format:text; pretext:Expiration: ;"></div>
+	<div class='label' data-bind="var: project(UPDATED_TS); format:text; pretext:Last update: ;"></div>
 
 </div>
 
@@ -1475,14 +1484,14 @@ Stuff
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
 	<label>
 	<span>Project title</span>
-	<input type="text" name="title">
+	<input type="text" name="title" required='required' />
 	<span class='toolTip' title="ex: domain.com master">?</span>
 	</label>
 
 
 	<label>
 	<span>Project type</span>
-	<select name="type" id="type" class="stdform">
+	<select name="type" >
 		<option value="APP">Shopping App (index.html)</option>
 		<option value="VSTORE">Legacy vStore Project (beta)</option>
 		<option value="ADMIN">Hosted Admin App (beta)</option>
@@ -1494,7 +1503,7 @@ Stuff
 
 	<label>
 	<span>GitHub repo</span>
-	<input type="text" name="repo" maxlength="128" />
+	<input type="url" name="repo" maxlength="128" required='required' />
 	</label>
 	<p class="hint">ex: http://github.com/yourname/project.git<br />
 	At this time only GITHUB hosted projects with public http urls are supported.
@@ -1505,9 +1514,10 @@ Stuff
 	<input type="text" name="branch"maxlength="20" />
 	</label>
 	
-	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label>
-
-	<button>Save</button>
+<!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
+	<div class='buttonset'>
+		<button data-app-event="admin|projectAddExec">Save</button>
+	</div>
 </fieldset>
 </form>
 

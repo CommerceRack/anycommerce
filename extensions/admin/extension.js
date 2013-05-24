@@ -812,6 +812,22 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			},//adminProjectList	
 
+
+
+		adminProjectCreate : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminProjectCreate";
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminProjectCreate";
+				obj._tag = _tag || {};
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			},//adminProjectCreate	
+
 		adminProjectDetail : {
 			init : function(uuid,_tag,Q)	{
 				var r = 0;
@@ -4759,20 +4775,22 @@ just lose the back button feature.
 				$btn.button({icons: {primary: "ui-icon-wrench"},text: true});
 				$btn.off('click.domainSettings').on('click.domainSettings',function(){
 				
-var domain = $btn.closest('tr').data('id');
-var $D = $("<div \/>").attr('title',"Edit Domain: "+domain);
-$D.addClass('displayNone').appendTo('body'); 
-$D.dialog({
-	width : '70%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		}
-	});
-$D.dialog('open');				
-$D.append(app.renderFunctions.transmogrify({'domain':domain},'domainPanelTemplate',$btn.closest('tr').data()));	
-$('.panelHeader',$D).trigger('click');
+					var
+						domain = $btn.closest('tr').data('id'),
+						$D = $("<div \/>").attr('title',"Edit Domain: "+domain);
+					
+					$D.addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						width : '70%',
+						modal: true,
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
+					$D.dialog('open');				
+					$D.append(app.renderFunctions.transmogrify({'domain':domain},'domainPanelTemplate',$btn.closest('tr').data()));	
+					$('.panelHeader',$D).trigger('click');
 
 					});	
 				},
@@ -4790,56 +4808,93 @@ $('.panelHeader',$D).trigger('click');
 					}
 				},			
 			projectUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.button({icons: {primary: "ui-icon-info"},text: false});
 				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(){
 
-var
-	$container = $btn.closest("[data-app-role='dualModeContainer']"),
-	data = $btn.closest('tr').data(),
-	$target = $("[data-app-role='dualModeDetail']",$container)
-	panelID = app.u.jqSelector('','project_'+data.id);
-
-
-var $panel = $("<div\/>").hide().anypanel({
-	'header':'Edit: '+data.title || data.id,
-	data : {},
-	'templateID':'projectDetailTemplate'
-	}).prependTo($target);
-
-app.ext.admin.u.toggleDualMode($container,'detail');
-$panel.slideDown('fast');
-
-app.model.destroy('adminProjectDetail|'+data.uuid);
-app.ext.admin.calls.adminProjectDetail.init(data.uuid,{'callback':'anycontent',jqObj:$panel},'mutable');
-app.model.dispatchThis('mutable');
+					var
+						$container = $btn.closest("[data-app-role='dualModeContainer']"),
+						data = $btn.closest('tr').data(),
+						$target = $("[data-app-role='dualModeDetail']",$container)
+						panelID = app.u.jqSelector('','project_'+data.id);
+					
+					
+					var $panel = $("<div\/>").hide().anypanel({
+						'header':'Edit: '+data.title || data.id,
+						data : {},
+						'templateID':'projectDetailTemplate'
+						}).prependTo($target);
+					
+					app.ext.admin.u.toggleDualMode($container,'detail');
+					$panel.slideDown('fast');
+					
+					app.model.destroy('adminProjectDetail|'+data.uuid);
+					app.ext.admin.calls.adminProjectDetail.init(data.uuid,{'callback':'anycontent',jqObj:$panel},'mutable');
+					app.model.dispatchThis('mutable');
 
 					});
+				},
+			
+			projectAddExec  : function($btn,vars)	{
+				$btn.button();
+				vars = vars || {};
+				$btn.off('click.projectAddExec').on('click.projectAddExec',function(){
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON();
+					
+					
+					if(app.u.validateForm($form))	{
+						$form.showLoading({'message':'Adding new project'});
+						app.model.destroy('adminProjectList');
+						sfo.UUID = app.u.guidGenerator();
+						app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								$form.anymessage({'message':rd})
+								}
+							else	{
+								$form.empty().anymessage(app.u.successMsgObject('Thank you, your project has been created.'));
+								$form.closest('.ui-dialog-content').dialog("option", "buttons", [ { text: "Ok", click: function() { $( this ).dialog( "close" ); } } ] );
+								}
+							}},'immutable');
+
+//if the list should be updated, the initial 'add project' button should have a data-update-list attribute set. 
+//that way, this app event can be recycled for other uses.
+						app.ext.admin.calls.adminProjectList.init({callback : (vars['update-list'] ? function(){
+							app.ext.admin.a.showProjects($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")));
+							} : "")},'immutable'); //after the add so the new project is returned in the list.
+
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //validateForm handles error display.
+					})
 				},
 			
 			projectAddShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.projectAddShow').on('click.projectAddShow',function(){
 
-var $D = $("<div \/>").attr('title',"Add a new project");
-$D.addClass('displayNone').appendTo('body'); 
-$D.dialog({
-	width : '70%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		},
-	buttons: [ 
-		{text: 'Cancel', click: function(){
-			$D.dialog('close');
-			if(typeof vars.closeFunction === 'function')	{
-				vars.closeFunction($(this));
-				}
-			}}	
-		]
-	});
-$D.anycontent({'templateID':'projectAddTemplate','data':{}});
-$D.dialog('open');
+					var $D = $("<div \/>").attr('title',"Add a new project");
+					$D.addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						width : '70%',
+						modal: true,
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							},
+						buttons: [ 
+							{text: 'Cancel', click: function(){
+								$D.dialog('close');
+								if(typeof vars.closeFunction === 'function')	{
+									vars.closeFunction($(this));
+									}
+								}}	
+							]
+						});
+					$D.anycontent({'templateID':'projectAddTemplate','data':{}});
+					app.u.handleAppEvents($D,{'updateList':$btn.data('update-list')});
+					$('.toolTip',$D).tooltip();
+					$D.dialog('open');
 
 					});
 				},
