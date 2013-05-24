@@ -1418,7 +1418,7 @@ ACHIEVEMENTS
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button class='floatRight' data-app-event="admin|projectAddShow" data-update-list='true'>New Project</button>
+				<button class='floatRight' data-app-event="admin|projectCreateShow" data-update-list='true'>New Project</button>
 			</div>
 			<h3 class='heading'>Projects</h3>
 		</div>
@@ -1479,7 +1479,7 @@ ACHIEVEMENTS
 </div>
 
 
-<div id='projectAddTemplate'>
+<div id='projectCreateTemplate'>
 
 <form onSubmit='return false'>
 <fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
@@ -1517,7 +1517,7 @@ ACHIEVEMENTS
 	
 <!--	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label> -->
 	<div class='buttonset'>
-		<button data-app-event="admin|projectAddExec">Save</button>
+		<button data-app-event="admin|projectCreateExec">Save</button>
 	</div>
 </fieldset>
 </form>

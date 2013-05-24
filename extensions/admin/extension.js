@@ -58,7 +58,7 @@ var admin = function() {
 		'projectsPageTemplate',
 		'projectsListTemplate',
 		'projectDetailTemplate',
-		'projectAddTemplate',
+		'projectCreateTemplate',
 		
 		'rssAddUpdateTemplate',
 		'rssPageTemplate',
@@ -4929,20 +4929,21 @@ just lose the back button feature.
 					});
 				},
 			
-			projectAddExec  : function($btn,vars)	{
+			projectCreateExec  : function($btn,vars)	{
 				$btn.button();
 				vars = vars || {};
-				$btn.off('click.projectAddExec').on('click.projectAddExec',function(){
+				$btn.off('click.projectCreateExec').on('click.projectCreateExec',function(){
 					var
 						$form = $btn.closest('form'),
 						sfo = $form.serializeJSON();
 					
 					
 					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding new project'});
+						$form.showLoading({'message':'Adding New Project'});
 						app.model.destroy('adminProjectList');
 						sfo.UUID = app.u.guidGenerator();
 						app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
+							$form.hideLoading();
 							if(app.model.responseHasErrors(rd)){
 								$form.anymessage({'message':rd})
 								}
@@ -4964,9 +4965,9 @@ just lose the back button feature.
 					})
 				},
 			
-			projectAddShow : function($btn)	{
+			projectCreateShow : function($btn)	{
 				$btn.button();
-				$btn.off('click.projectAddShow').on('click.projectAddShow',function(){
+				$btn.off('click.projectCreateShow').on('click.projectCreateShow',function(){
 
 					var $D = $("<div \/>").attr('title',"Add a new project");
 					$D.addClass('displayNone').appendTo('body'); 
@@ -4986,7 +4987,7 @@ just lose the back button feature.
 								}}	
 							]
 						});
-					$D.anycontent({'templateID':'projectAddTemplate','data':{}});
+					$D.anycontent({'templateID':'projectCreateTemplate','data':{}});
 					app.u.handleAppEvents($D,{'updateList':$btn.data('update-list')});
 					$('.toolTip',$D).tooltip();
 					$D.dialog('open');
