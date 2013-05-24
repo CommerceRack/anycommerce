@@ -57,7 +57,8 @@ var admin = function() {
 		
 		'projectsPageTemplate',
 		'projectsListTemplate',
-		'projectDetailTemplate'
+		'projectDetailTemplate',
+		'projectAddTemplate'
 		
 		); 
 	var r = {
@@ -4815,6 +4816,33 @@ app.model.dispatchThis('mutable');
 					});
 				},
 			
+			projectAddShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.projectAddShow').on('click.projectAddShow',function(){
+
+var $D = $("<div \/>").attr('title',"Add a new project");
+$D.addClass('displayNone').appendTo('body'); 
+$D.dialog({
+	width : '70%',
+	modal: true,
+	autoOpen: false,
+	close: function(event, ui)	{
+		$(this).dialog('destroy').remove();
+		},
+	buttons: [ 
+		{text: 'Cancel', click: function(){
+			$D.dialog('close');
+			if(typeof vars.closeFunction === 'function')	{
+				vars.closeFunction($(this));
+				}
+			}}	
+		]
+	});
+$D.anycontent({'templateID':'projectAddTemplate','data':{}});
+$D.dialog('open');
+
+					});
+				},
 			
 			projectGitRepoOpen : function($btn)	{
 				if($btn.closest('tr').data('github_repo'))	{

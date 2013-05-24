@@ -317,6 +317,7 @@ SETUP PAGE TEMPLATE
 			<div class="helper">Register and Link Domains.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/projects/index.cgi'); return false;" title="/biz/setup/projects/index.cgi">App Hosting</a><br />
+			<a href="#" onClick="navigateTo('#!projects'); return false;">App Hosting (beta)</a><br />
 			<div class="helper">Manage Hosted Application Projects</div>
 
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
@@ -1416,25 +1417,26 @@ ACHIEVEMENTS
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button class='floatRight'>New Project</button>
+				<button class='floatRight' data-app-event="admin|projectAddShow">New Project</button>
 			</div>
 			<h3 class='heading'>Projects</h3>
 		</div>
 		
 		<div class='ui-widget-content ui-corner-bottom'>
 		<div class="dualModeListMessaging marginBottom"></div>
-		<table class='gridTable fullWidth displayNone marginBottom' data-app-role='dualModeResultsTable'>
+		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
 		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 		<thead>
 		<tr>
-			<th data-anytable-nosort='true'></th>
 			<th class='alignLeft'>ID</th>
-			<th class='alignLeft'>Billing Phone</th>
-			<th class='alignLeft'>Billing Contact</th>
+			<th class='alignLeft'>Title</th>
+			<th class='alignLeft hideInMinimalMode'>Type</th>
+			<th class='alignLeft hideInMinimalMode'>Created</th>
+			<th class='alignLeft hideInMinimalMode'>Updated</th>
 			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: users(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		<tbody data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 		</table>
 		
 		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
@@ -1446,6 +1448,67 @@ ACHIEVEMENTS
 
 <table>
 <tr id='projectsListTemplate'>
-	<td>stuff</td>
+	<td data-bind="var: projects(ID); format:text;"></td>
+	<td data-bind="var: projects(TITLE); format:text;"></td>
+	<td data-bind="var: projects(TYPE); format:text;"></td>
+	<td data-bind="var: projects(CREATED_TS); format:text;"></td>
+	<td data-bind="var: projects(UPDATED_TS); format:text;"></td>
+	<td class='alignRight'>
+	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
+	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
+	<button data-app-event='admin|projectUpdateShow'>Edit</button>
+	</td>
 </tr>
 </table>
+
+
+<div id='projectDetailTemplate'>
+
+Stuff
+
+</div>
+
+
+<div id='projectAddTemplate'>
+
+<form onSubmit='return false'>
+<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+	<label>
+	<span>Project title</span>
+	<input type="text" name="title">
+	<span class='toolTip' title="ex: domain.com master">?</span>
+	</label>
+
+
+	<label>
+	<span>Project type</span>
+	<select name="type" id="type" class="stdform">
+		<option value="APP">Shopping App (index.html)</option>
+		<option value="VSTORE">Legacy vStore Project (beta)</option>
+		<option value="ADMIN">Hosted Admin App (beta)</option>
+		<option value="CHECKOUT">Checkout Intercept (beta)</option>
+		<option value="DSS">Decision Support System (beta)</option>
+	</select>
+	</label>
+
+
+	<label>
+	<span>GitHub repo</span>
+	<input type="text" name="repo" maxlength="128" />
+	</label>
+	<p class="hint">ex: http://github.com/yourname/project.git<br />
+	At this time only GITHUB hosted projects with public http urls are supported.
+	</p>
+
+	<label>
+	<span>GitHub branch</span>
+	<input type="text" name="branch"maxlength="20" />
+	</label>
+	
+	<label><input type="checkbox" name="domain"> Reserve a test domain for this project.</label>
+
+	<button>Save</button>
+</fieldset>
+</form>
+
+</div>
