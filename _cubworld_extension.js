@@ -18,25 +18,13 @@
 
 (function($){
  
-    $.fn.shuffle = function() {
- 
-        var allElems = this.get(),
-            getRandom = function(max) {
-                return Math.floor(Math.random() * max);
-            },
-            shuffled = $.map(allElems, function(){
-                var random = getRandom(allElems.length),
-                    randEl = $(allElems[random]).clone(true)[0];
-                allElems.splice(random, 1);
-                return randEl;
-           });
- 
-        this.each(function(i){
-            $(this).replaceWith($(shuffled[i]));
-        });
- 
-        return $(shuffled);
- 
+	$.fn.shuffle = function () {
+        var j;
+        for (var i = 0; i < this.length; i++) {
+            j = Math.floor(Math.random() * this.length);
+            $(this[i]).before($(this[j]));
+        }
+        return this;
     };
  
 })(jQuery);
@@ -499,8 +487,7 @@ var cubworld = function() {
 					}
 				},
 			randomizeList : function($list){
-				var $tmp = $list.children().shuffle();
-				$list.empty().append($tmp)
+				$list.children().shuffle();
 				}
 			}, //u [utilities]
 
