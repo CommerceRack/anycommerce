@@ -394,11 +394,11 @@ SETUP PAGE TEMPLATE
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('/biz/setup/shipping/index.cgi'); return false;">Shipping</a><br />
-			<a href="#!shippingManager">Shipping (beta)</a><br />
+			<a href="#" onClick="navigateTo('#!shippingManager'); return false;">Shipping (beta)</a><br />
 			<div class="helper">Determine how shipping will be calculated for your products.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/payment/index.cgi'); return false;">Payment Methods</a><br />
-			<a href="#!paymentManager">Payment (beta)</a><br />
+			<a href="#" onClick="navigateTo('#!paymentManager'); return false;">Payment (beta)</a><br />
 			<div class="helper">Configure which payment methods you will accept from customers.</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/tax/index.cgi'); return false;" title="/biz/setup/tax/index.cgi">Sales Tax</a><br />
@@ -1545,7 +1545,7 @@ ACHIEVEMENTS
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button class='floatRight' >New RSS Feed</button>
+				<button class='floatRight' data-app-event='admin|adminRSSCreateShow' >New RSS Feed</button>
 			</div>
 			<h3 class='heading'>RSS Feeds</h3>
 		</div>
@@ -1558,13 +1558,13 @@ ACHIEVEMENTS
 		<tr>
 			<th class='alignLeft'>ID</th>
 			<th class='alignLeft'>Title</th>
-			<th class='alignLeft hideInMinimalMode'>Type</th>
-			<th class='alignLeft hideInMinimalMode'>Created</th>
-			<th class='alignLeft hideInMinimalMode'>Updated</th>
+			<th class='alignLeft hideInMinimalMode'>Status</th>
+			<th class='alignLeft hideInMinimalMode'>Profile</th>
+			<th class='alignLeft hideInMinimalMode'>Schedule</th>
 			<th data-anytable-nosort='true'></th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: projects(@FEEDS); format:processList; loadsTemplate:rssListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+		<tbody data-bind="var: projects(@RSSFEEDS); format:processList; loadsTemplate:rssListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
 		</table>
 		
 		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
@@ -1577,24 +1577,144 @@ ACHIEVEMENTS
 <table>
 <tr id='rssListTemplate'>
 	<td data-bind="var: projects(ID); format:text;"></td>
-	<td data-bind="var: projects(TITLE); format:text;"></td>
-	<td data-bind="var: projects(TYPE); format:text;"></td>
-	<td data-bind="var: projects(CREATED_TS); format:text;"></td>
-	<td data-bind="var: projects(UPDATED_TS); format:text;"></td>
+	<td data-bind="var: projects(NAME); format:text;"></td>
+	<td data-bind="var: projects(STATUS); format:text;"></td>
+	<td data-bind="var: projects(PROFILE); format:text;"></td>
+	<td data-bind="var: projects(SCHEDULE); format:text;"></td>
 	<td class='alignRight'>
-	<button >Delete Feed</button>
-	<button >Clone Feed</button>
-	<button >Edit Feed</button>
+	<button data-app-event="admin|adminRSSRemove">Delete Feed</button>
+<!--	<button >Clone Feed</button>-->
+	<button data-app-event="admin|adminRSSUpdateShow">Edit Feed</button>
 	</td>
 </tr>
 </table>
 
 <div id='rssAddUpdateTemplate'>
 
-<form onSubmit='return false'>
-<fieldset class='labelsAsBreaks alignedLabels alignedInputs'>
+<form onSubmit='return false' class='labelsAsBreaks alignedLabels'>
+<fieldset>
+	<legend>General Properties</legend>
+	<label>
+		<span>Domain/Profile:</span>
+		<select name="profile" required='required' data-bind="var: rss(@DOMAINS); format:optionsFromList; text:id; value:id;" />
+			<option></option>
+		</select>
+	</label>
+
+	<label>
+		<span>Feed Campaign Code</span>
+		<input type="text" maxlength="6" size="6" name="CPG" value="" data-bind="var: rss(CPG); format: popVal;" />
+		<span class="toolTip" title="A unique 6 digit code to identify this campaign. (leave blank to auto generate). Once set, this code can not be changed.">?</span>
+		
+	</label>
+	<label>
+		<span>Image WxH</span>
+		<input type="number" step='1' min='1' name="image_w" required='required' value="75" size='4' data-bind="var: rss(image_w); format: popVal;" /> x
+		<input type="number" step='1' min='1' name="image_h" required='required' value="75" size='4' data-bind="var: rss(image_h); format: popVal;" /> 
+	</label>
+
+	<label>
+		<span>Feed Title</span>
+		<input type="text" name="feed_title" value="" required='required'  data-bind="var: rss(feed_title); format: popVal;" />
+		<span class="toolTip" title="The name of this feed, included in the feed">?</span>
+	</label>
+	
+	<label>
+		<span>Feed Link</span>
+			<input type="url" name="feed_link" value="" data-bind="var: rss(feed_link); format: popVal;" />
+			<span class="toolTip" title="The URL to your store, or for this promotion.">?</span>
+	</label>
+	<label>
+		<span>Feed Translation</span>
+		<select name="translation"  data-bind="var: rss(translation); format: popVal;">
+			<option value="RAW">Raw (No Formatting)</option>
+			<option value="WIKISTRIP">Strip WIKI</option>
+			<option value="WIKISTRIP">Strip HTML</option>
+			<option value="WIKI2HTML">WIKI -&gt; HTML</option>
+			<option value="WIKI2HTMLIMG">WIKI -&gt; Enhanced HTML (Images and Buy Buttons)</option>
+<!--			<option value="LEGACYV1">Legacy1 (pre 8/14/09 format)</option> -->
+		</select>
+	</label>
+
+	<label>
+		<input type="checkbox" name="feed_link_override" data-bind="var: rss(feed_link_override); format: popCheckbox;" /> Feed Link Override
+		<span class="toolTip" title="Enable this to use the Feed Link instead of individual product links in the feed.">?</span>
+	</label>
+
+	<label>
+		<span>Feed Subject/Category</span>
+		<input type="text" name="feed_subject" value="" data-bind="var: rss(feed_subject); format: popVal;" />
+		<span class="toolTip" title="A dmoz category, or other taxonomy/navigation to help spiders categorize this feed."></span>
+	</label>
+
+	<label>
+		<span>Source List:</span>
+		<select name="list" required='required' data-bind="var: rss(@paths); format:optionsFromList;">
+			<option></option>
+		</select>
+		<span class="toolTip" title="The list from which this RSS feed is built (where the product come from).">?</span>
+	</label>
 
 </fieldset>
+
+<fieldset>
+	<legend>Promotion Settings</legend>
+	
+	<label>
+		<span>Pricing Schedule:</span>
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
+			<option>none</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Max Products to Include</span>
+		<select name="max_products" data-bind="var: rss(max_products); format: popVal;">
+			<option value="-1">unlimited</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+			<option value="25">25</option>
+		</select>
+		<span class="toolTip" title="The maximum number of products included in the feed at one time.">?</span>
+	</label>
+
+	<label>
+		<span>Cycle Interval (minutes)</span>
+		<select name="cycle_interval" data-bind="var: rss(cycle_interval); format: popVal;">
+			<option value="-1">Never</option>
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="15">15</option>
+			<option value="20">20</option>
+			<option value="25">25</option>
+			<option value="30">30</option>
+			<option value="60">60</option>
+			<option value="120">120</option>
+			<option value="360">360</option>
+			<option value="1440">1440</option>
+		</select>
+		<span class="toolTip" title="How often the products from the list are changed.">?</span>
+	</label>
+</fieldset>
+
+<!-- save button is added within the function that uses this template. That way the save vs update buttons can easily have their own click actions. -->
+<div class='buttonbar clearfix'></div>
+
+
 </form>
 
 </div>

@@ -326,6 +326,10 @@ If the data is not there, or there's no data to be retrieved (a Set, for instanc
 			},//appCategoryDetail		
 
 
+
+
+
+
 //get a list of newsletter subscription lists. partition specific.
 		appNewsletterList : {
 			init : function(_tag,Q)	{
@@ -2738,6 +2742,13 @@ return $r;
 		hideIfSet : function($tag,data)	{
 			if(data.value)	{
 				$tag.hide(); //IE isn't responding to the 'show', so the display:block is added as well.
+				}
+			},
+
+		optionsFromList : function($tag,data)	{
+			var L = data.value.length;
+			for(var i = 0; i < L; i += 1)	{
+				$("<option \/>").val((data.bindData.value) ? data.value[i][data.bindData.value] : data.value[i]).text((data.bindData.text) ? data.value[i][data.bindData.text] : data.value[i]).appendTo($tag);
 				}
 			},
 
