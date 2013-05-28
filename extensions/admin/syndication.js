@@ -21,8 +21,8 @@ var admin_syndication = function() {
 	var theseTemplates = new Array(
 	'pageSyndicationTemplate',
 	'syndicationDetailTemplate',
-	'syndicationFilesRowTemplate',
-	'syndication_goo'
+	'syndicationFilesRowTemplate'
+	//all the DST specific templates are intentionally NOT included here. They'll get loaded as needed.
 	);
 	var r = {
 
@@ -36,8 +36,8 @@ var admin_syndication = function() {
 		init : {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
+//the list of templates in theseTemplate intentionally has a lot of the templates left off.  This was done intentionally to keep the memory footprint low. They'll get loaded on the fly if/when they are needed.
 				app.model.fetchNLoadTemplates(app.vars.baseURL+'extensions/admin/syndication.html',theseTemplates);
-				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
 
 				return r;

@@ -896,6 +896,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			return responseData['_cartid'];
 			}, //handleResponse_appCartCreate
 
+
 /*
 in most cases, the errors are handled well by the API and returned either as a single message (errmsg)
 or as a series of messages (_msg_X_id) where X is incremented depending on the number of errors.
@@ -1309,6 +1310,11 @@ will return false if datapointer isn't in app.data or local (or if it's too old)
 	//can't use append because it'll treat content as text not html
 	//so if the templateurl is /something/checkout/templates.html, the template id will be remoteTemplates_checkout
 				var templateContainerID = 'remoteTemplates_'+templateURL.split('/').splice(-2,1);
+//** 201320 -> in admin extensions, all templates were getting added to the same container element and nothing could be 'left' behind for adding later on the fly.
+				if(templateContainerID == 'remoteTemplates_admin')	{
+					templateContainerID += '_'+templateURL.split('/').splice(-1,1);
+					templateContainerID = templateContainerID.replace('.html','');
+					}
 				var $remoteTemps = $('#'+templateContainerID);
 				if($remoteTemps.length == 0)	{
 					$remoteTemps = $("<div />").attr('id',templateContainerID).hide().appendTo('body');
