@@ -895,7 +895,7 @@ so to ensure saving to appPageGet|.safe doesn't save over previously requested d
 			app.u.dump("cartID = "+responseData['_cartid']);
 			return responseData['_cartid'];
 			}, //handleResponse_appCartCreate
-	
+
 /*
 in most cases, the errors are handled well by the API and returned either as a single message (errmsg)
 or as a series of messages (_msg_X_id) where X is incremented depending on the number of errors.

@@ -1284,62 +1284,62 @@ if giftcard is on there, no paypal will appear.
 
 
 		adminSyndicationDetail : {
-			init : function(MKT,_tag,Q)	{
+			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationDetail";
-				this.dispatch(MKT,_tag,Q);
+				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
-			dispatch : function(MKT,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+			dispatch : function(DST,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationDetail
 
 		adminSyndicationHistory : {
-			init : function(MKT,_tag,Q)	{
+			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationHistory";
-				this.dispatch(MKT,_tag,Q);
+				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
-			dispatch : function(MKT,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationHistory","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+			dispatch : function(DST,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationHistory","_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationHistory
 
 		adminSyndicationFeedErrors : {
-			init : function(MKT,_tag,Q)	{
+			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationFeedErrors";
-				this.dispatch(MKT,_tag,Q);
+				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
-			dispatch : function(MKT,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+			dispatch : function(DST,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationFeedErrors
 
 		adminSyndicationDebug : {
-			init : function(MKT,_tag,Q)	{
+			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationDebug";
-				this.dispatch(MKT,_tag,Q);
+				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
-			dispatch : function(MKT,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationDebug","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+			dispatch : function(DST,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationDebug","_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationDebug
 
 		adminSyndicationListFiles : {
-			init : function(MKT,_tag,Q)	{
+			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationListFiles";
-				this.dispatch(MKT,_tag,Q);
+				this.dispatch(DST,_tag,Q);
 				return 1;
 				},
-			dispatch : function(MKT,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationListFiles","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+			dispatch : function(DST,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationListFiles","_tag":_tag,'DST':DST},Q || 'mutable');	
 				}
 			}, //adminSyndicationListFiles
 

@@ -64,24 +64,25 @@ var admin_syndication = function() {
 				app.u.handleAppEvents($target);
 				},
 
-			showMKTDetails : function(MKT,$target)	{
-				if($target && MKT)	{
+			showDSTDetails : function(DST,$target)	{
+				if($target && DST)	{
 					$target.empty();
 					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{}});
+					$('.anytabsContainer',$target).anytabs();
 					$("[data-anytab-content='settings']",$target).showLoading({'message':'Fetching Marketplace Details'});
 
-app.ext.admin.calls.adminSyndicationHistory.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='history']",$target)},'mutable');
-app.ext.admin.calls.adminSyndicationFeedErrors.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='errors']",$target)},'mutable');
-app.ext.admin.calls.adminSyndicationDebug.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='diagnostics']",$target)},'mutable');
-app.ext.admin.calls.adminSyndicationListFiles.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='files']",$target)},'mutable');					
-app.ext.admin.calls.adminSyndicationDetail.init(MKT,{callback : 'anycontent','templateID':'syndication_'+MKT.toLowerCase(),'jqObj':$("[data-anytab-content='settings']",$target)},'mutable');
+app.ext.admin.calls.adminSyndicationHistory.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='history']",$target)},'mutable');
+app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='errors']",$target)},'mutable');
+// app.ext.admin.calls.adminSyndicationDebug.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='diagnostics']",$target)},'mutable'); -> use as action on form button
+// app.ext.admin.calls.adminSyndicationListFiles.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='files']",$target)},'mutable'); -> slow
+app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontent','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$("[data-anytab-content='settings']",$target)},'mutable');
 					app.model.dispatchThis();
 					}
 				else if($target)	{
-					$target.anymessage({"message":"In admin.a.showMKTDetails, no MKT specified.",'gMessage':true});
+					$target.anymessage({"message":"In admin.a.showDSTDetails, no DST specified.",'gMessage':true});
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin.a.showMKTDetails, no MKT or target specified.",'gMessage':true});
+					$('#globalMessaging').anymessage({"message":"In admin.a.showDSTDetails, no DST or target specified.",'gMessage':true});
 					}
 				
 				},
@@ -109,14 +110,14 @@ app.ext.admin.calls.adminSyndicationDetail.init(MKT,{callback : 'anycontent','te
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
 			
-			showMKTDetail : function($ele)	{
-				$ele.off('click.showMKTDetail').on('click.showMKTDetail',function(){
+			showDSTDetail : function($ele)	{
+				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){
 					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
 					if($ele.data('mkt'))	{
-						app.ext.admin_syndication.a.showMKTDetails($ele.data('mkt'),$mktContainer)
+						app.ext.admin_syndication.a.showDSTDetails($ele.data('mkt'),$mktContainer)
 						}
 					else	{
-						$mktContainer.anymessage({"message":"In admin_syndication.e.showMKTDetail, unable to determine mkt.","gMessage":true});
+						$mktContainer.anymessage({"message":"In admin_syndication.e.showDSTDetail, unable to determine mkt.","gMessage":true});
 						}
 					});
 				}
