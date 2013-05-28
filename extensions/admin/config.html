@@ -174,11 +174,20 @@
 	</ul>
 </div>
 
-<div class='ui-widget marginBottom clearfix'>
+<div class='ui-widget marginBottom clearfix marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Flex Methods</h4>
-	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByFlex' >
-	</ul>
-	<button>Add</button>
+	<div class='ui-widget-content ui-corner-bottom '>
+		<ul class='listStyleNone paddedList noPadOrMargin ' data-app-role='shipMethodsByFlex' >
+		</ul>
+		<div class='buttonset clearfix marginBottom marginRight' data-app-event="admin_config|handleAddShipment">
+			<button >Add Flex Method</button>
+			<button >Choose Method</button>
+		</div>
+		<ul>
+			<li><a href='#'>Price</a></li>
+			<li><a href='#'>Weight</a></li>
+		</ul>
+	</div>
 </div>
 
 
@@ -455,7 +464,26 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 
 
-
+<table>
+<tr id='shippingLocalRowTemplate'>
+	<td data-bind="var: shipment(zip1); format:text;"></td>
+	<td data-bind="var: shipment(zip2); format:text;"></td>
+	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+</tr>
+<tr id='shippingWeightRowTemplate'>
+	<td data-bind="var: shipment(weight); hideZero:false; format:text;"></td>
+	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+</tr>
+<tr id='shippingPriceRowTemplate'>
+	<td data-bind="var: shipment(subtotal); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+</tr>
+<tr id='shippingLocalCanadaRowTemplate'>
+	<td data-bind="var: shipment(postal); format:text;"></td>
+	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipment(txt); format:text;"></td>
+</tr>
+</table>
 
 
 
@@ -840,12 +868,16 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<button>Add</button>
 	</div>
 	
-	<table class='floatLeft gridTable'>
-	<thead><tr><th>Weight</th><th>Price</th><th>Action</th></tr></thead>
-	<tbody>
-	<tr><td>NOT DONE YET</td></tr>
-	<tbody>
-	</table>
+		<table class='floatLeft gridTable'>
+		<thead>
+		<tr>
+			<th>Weight</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		</tbody>
+		</table>
 
 </fieldset>
 </div>
@@ -874,11 +906,16 @@ We apologize but due to contractual obligations you may only have have one shipp
 	</div>
 	
 	<table class='floatLeft gridTable'>
-	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
-	<tbody>
-	<tr><td>NOT DONE YET</td></tr>
-	<tbody>
+	<thead>
+	<tr>
+		<th>Subtotal</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	</tbody>
 	</table>
+
 
 </fieldset>
 </div>
@@ -922,9 +959,14 @@ We apologize but due to contractual obligations you may only have have one shipp
 		</div>
 		
 		<table class='floatLeft gridTable'>
-		<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
-		<tbody>
-		<tr><td>NOT DONE YET</td></tr>
+		<thead>
+		<tr>
+			<th>Start Zip</th>
+			<th>End Zip</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingLocalRowTemplate;">
 		</tbody>
 		</table>
 	</div>
@@ -960,9 +1002,14 @@ We apologize but due to contractual obligations you may only have have one shipp
 	</div>
 	
 	<table class='floatLeft gridTable'>
-	<thead><tr><th>Subtotal</th><th>Price</th><th>Action</th></tr></thead>
-	<tbody>
-	<tr><td>NOT DONE YET</td></tr>
+	<thead>
+	<tr>
+		<th>Postal</th>
+		<th>Fee</th>
+		<th>Text</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingLocalCanadaRowTemplate;">
 	</tbody>
 	</table>
 

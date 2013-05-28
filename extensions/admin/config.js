@@ -57,6 +57,10 @@ var admin_config = function() {
 		'shippingFlex_weight',
 		'shippingFlex_price',
 		
+		'shippingLocalRowTemplate',
+		'shippingWeightRowTemplate',
+		'shippingPriceRowTemplate',
+		
 		'ruleBuilderTemplate',
 		'ruleBuilderRowTemplate',
 		'rulesFieldset_shipping',
@@ -418,6 +422,31 @@ app.model.dispatchThis('mutable');
 						$suppContainer.anycontent({'data':{},'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
 						}
 					});
+				},
+			
+			handleAddShipment : function($ele)	{
+				var $menu = $ele.next('ul');
+				$menu.menu().hide().css({'width':'200','position':'absolute'});
+				$('button:first',$ele).button().off('click.handleAddShipment').on('click.handleAddShipment',function(){
+					$(this).next('button').trigger('click'); //trigger the dropdown on the down arrow button.
+					});
+				$('button:last',$ele).button({text: false,icons: {primary: "ui-icon-triangle-1-s"}}).off('click.handleAddShipment').on('click.handleAddShipment',function(){
+					//show the menu for selecting what type of flex method.
+					$menu.show().position({
+						my: "right top",
+						at: "right bottom",
+						of: this
+						});
+//hide the menu if the doc is clicked anywhere else. add w/ timeout so initial 'click' doesn't trigger the one.click.
+					setTimeout(function(){
+						$( document ).one( "click", function() {
+							$menu.hide();
+							});
+						},500);
+
+					});
+				$ele.buttonset();
+				
 				},
 			
 			showRuleBuilderAsPanel : function($btn)	{
