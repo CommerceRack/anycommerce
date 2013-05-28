@@ -56,6 +56,7 @@ var cubworld = function() {
 						})
 					
 					}]);
+				/*
 				app.rq.push(['templateFunction','categoryTemplateFeaturedPlayer','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					var $jerseyList = $('.jerseyList', $context);
@@ -100,6 +101,7 @@ var cubworld = function() {
 					app.model.dispatchThis('mutable');
 					
 					}]);
+				*/
 				app.rq.push(['templateFunction','categoryTemplateSitemap','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					var _tag={
@@ -130,7 +132,7 @@ var cubworld = function() {
 					'categoryTemplateInquiry',
 					'categoryTemplateAffiliates',
 					'categoryTemplateGroupSales',
-					'categoryTemplateFeaturedPlayer',
+					//'categoryTemplateFeaturedPlayer',
 					'categoryTemplateSitemap',
 					'categoryTemplateRewards',
 					'categoryTemplateTickets',
@@ -500,6 +502,7 @@ var cubworld = function() {
 			}, //e [app Events]
 		vars : {
 			catTemplates : {
+				/*
 				'.mlb.arizona_diamondbacks.z_adam_eaton' : 'categoryTemplateFeaturedPlayer',
 				'.mlb.arizona_diamondbacks.z_aj_pollock' : 'categoryTemplateFeaturedPlayer',
 				'.mlb.arizona_diamondbacks.z_barry_enright' : 'categoryTemplateFeaturedPlayer',
@@ -1755,7 +1758,7 @@ var cubworld = function() {
 				'.mlb.washington_nationals.z_wilson_ramos' : 'categoryTemplateFeaturedPlayer',
 				'.mlb.washington_nationals.z_xavier_nady' : 'categoryTemplateFeaturedPlayer',
 				'.mlb.washington_nationals.z_yunesky_maya' : 'categoryTemplateFeaturedPlayer',
-				
+				*/
 				'.aa.arizona_diamondbacks_tickets' : 'categoryTemplateHTML',
 				'.aa.atlanta_braves_tickets' : 'categoryTemplateHTML',
 				'.aa.baltimore_orioles_tickets' : 'categoryTemplateHTML',
