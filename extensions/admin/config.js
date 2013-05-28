@@ -274,7 +274,7 @@ else	{
 					$target.empty();
 					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{}}).appendTo($target);
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
-					$target.append("<p><b>Once you save the ship method, more specific inputs will be available.<\/b><\/p>");
+					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
 					$target.append("<button>save<\/button>");
 //					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipment.toLowerCase(),data:{}}).appendTo($target);
 					}
