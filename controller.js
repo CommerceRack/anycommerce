@@ -1032,6 +1032,11 @@ app.u.throwMessage(responseData); is the default error handler.
 /*					$target.anycontent({data: app.data[.datapointer],'templateID':_rtag.templateID}); */
 // * 201318 -> anycontent should have more flexibility. templateID isn't always required, template placeholder may have been added already.
 					$target.anycontent(_rtag);
+// * 201320 -> these are a few commonly used plugins that can now be applied w/out a custom callback.
+					$('.toolTip',$target).tooltip();
+					$(':checkbox.applyAnycb').anycb();
+					$('table.applyAnytable').anytable();
+					$('.applyAnytabs').anytabs();
 					app.u.handleAppEvents($target);
 
 					}

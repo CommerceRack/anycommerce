@@ -38,7 +38,6 @@ var admin = function() {
 
 		'pageSetupTemplate',
 		'pageUtilitiesTemplate',
-		'pageSyndicationTemplate',
 		'pageTemplateSetupAppchooser',
 		
 		'dashboardTemplate',
@@ -1282,6 +1281,68 @@ if giftcard is on there, no paypal will appear.
 				}
 			
 			}, //adminSupplierCreate
+
+
+		adminSyndicationDetail : {
+			init : function(MKT,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSyndicationDetail";
+				this.dispatch(MKT,_tag,Q);
+				return 1;
+				},
+			dispatch : function(MKT,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationDetail","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+				}
+			}, //adminSyndicationDetail
+
+		adminSyndicationHistory : {
+			init : function(MKT,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSyndicationHistory";
+				this.dispatch(MKT,_tag,Q);
+				return 1;
+				},
+			dispatch : function(MKT,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationHistory","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+				}
+			}, //adminSyndicationHistory
+
+		adminSyndicationFeedErrors : {
+			init : function(MKT,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSyndicationFeedErrors";
+				this.dispatch(MKT,_tag,Q);
+				return 1;
+				},
+			dispatch : function(MKT,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationFeedErrors","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+				}
+			}, //adminSyndicationFeedErrors
+
+		adminSyndicationDebug : {
+			init : function(MKT,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSyndicationDebug";
+				this.dispatch(MKT,_tag,Q);
+				return 1;
+				},
+			dispatch : function(MKT,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationDebug","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+				}
+			}, //adminSyndicationDebug
+
+		adminSyndicationListFiles : {
+			init : function(MKT,_tag,Q)	{
+				_tag = _tag || {};
+				_tag.datapointer = "adminSyndicationListFiles";
+				this.dispatch(MKT,_tag,Q);
+				return 1;
+				},
+			dispatch : function(MKT,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationListFiles","_tag":_tag,'MKT':MKT},Q || 'mutable');	
+				}
+			}, //adminSyndicationListFiles
+
 
 		adminTaskList : {
 			init : function(_tag,q)	{
@@ -3123,9 +3184,11 @@ once multiple instances of the finder can be opened at one time, this will get u
 				},
 
 
+
+
 			showProjects : function($target)	{
 				$target.empty().showLoading({'message':'Fetching project list'});
-				app.model.destroy('adminProjectList');
+//				app.model.destroy('adminProjectList');
 				app.ext.admin.calls.adminProjectList.init({'callback':function(rd){
 
 $target.hideLoading();
@@ -3657,7 +3720,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(tab == 'syndication' && path.split('/')[3] == 'index.cgi')	{
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
-					$('#syndicationContent').empty().append(app.renderFunctions.transmogrify('','pageSyndicationTemplate',{}));
+					app.ext.admin_syndication.a.showSyndication($('#syndicationContent'));
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
 					}
 				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{
@@ -3845,7 +3908,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				
 					for(var i = 0; i < L; i += 1)	{
 						className = tabs[i].selected ? 'header_sublink_active' : 'header_sublink'
-						$a = $("<a \/>").attr({'title':tabs[i].name,'href':'#'}).addClass(className).append("<span>"+tabs[i].name+"<\/span>");
+						var $a = $("<a \/>").attr({'title':tabs[i].name,'href':'#'}).addClass(className).append("<span>"+tabs[i].name+"<\/span>");
 //a tab may contain some javascript to execute instead of a link.
 //product editor -> edit web page -> back to editor is an example
 						if(tabs[i].jsexec)	{
