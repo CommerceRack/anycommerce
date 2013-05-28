@@ -61,6 +61,7 @@ var admin_syndication = function() {
 				$target.empty();
 				$target.anycontent({'templateID':'pageSyndicationTemplate',data:{}});
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
+				app.u.handleAppEvents($target);
 				},
 
 			showMKTDetails : function(MKT,$target)	{
@@ -70,8 +71,8 @@ var admin_syndication = function() {
 					$("[data-anytab-content='settings']",$target).showLoading({'message':'Fetching Marketplace Details'});
 
 app.ext.admin.calls.adminSyndicationHistory.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='history']",$target)},'mutable');
-//app.ext.admin.calls.adminSyndicationFeedErrors.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='errors']",$target)},'mutable');
-//app.ext.admin.calls.adminSyndicationDebug.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='diagnostics']",$target)},'mutable');
+app.ext.admin.calls.adminSyndicationFeedErrors.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='errors']",$target)},'mutable');
+app.ext.admin.calls.adminSyndicationDebug.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='diagnostics']",$target)},'mutable');
 app.ext.admin.calls.adminSyndicationListFiles.init(MKT,{'callback':'anycontent','jqObj':$("[data-anytab-content='files']",$target)},'mutable');					
 app.ext.admin.calls.adminSyndicationDetail.init(MKT,{callback : 'anycontent','templateID':'syndication_'+MKT.toLowerCase(),'jqObj':$("[data-anytab-content='settings']",$target)},'mutable');
 					app.model.dispatchThis();
@@ -109,7 +110,15 @@ app.ext.admin.calls.adminSyndicationDetail.init(MKT,{callback : 'anycontent','te
 		e : {
 			
 			showMKTDetail : function($ele)	{
-				
+				$ele.off('click.showMKTDetail').on('click.showMKTDetail',function(){
+					var $mktContainer = $ele.closest("[data-app-role='syndicationContainer']").find("[data-app-role='slimLeftContentSection']").first();
+					if($ele.data('mkt'))	{
+						app.ext.admin_syndication.a.showMKTDetails($ele.data('mkt'),$mktContainer)
+						}
+					else	{
+						$mktContainer.anymessage({"message":"In admin_syndication.e.showMKTDetail, unable to determine mkt.","gMessage":true});
+						}
+					});
 				}
 			
 			
