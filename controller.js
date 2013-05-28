@@ -1034,9 +1034,10 @@ app.u.throwMessage(responseData); is the default error handler.
 					$target.anycontent(_rtag);
 // * 201320 -> these are a few commonly used plugins that can now be applied w/out a custom callback.
 					$('.toolTip',$target).tooltip();
-					$(':checkbox.applyAnycb').anycb();
-					$('table.applyAnytable').anytable();
-					$('.applyAnytabs').anytabs();
+					$(':checkbox.applyAnycb',$target).anycb();
+					$('table.applyAnytable',$target).anytable();
+					$('.applyAnytabs',$target).anytabs();
+
 					app.u.handleAppEvents($target);
 
 					}

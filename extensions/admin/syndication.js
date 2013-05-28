@@ -47,7 +47,101 @@ var admin_syndication = function() {
 //you may or may not need it.
 				app.u.dump('BEGIN admin_orders.callbacks.init.onError');
 				}
+			},
+//when this macro response syntax gets adopted elsewhere, move this to admin extension.
+		handleMacroUpdate : {
+			onSuccess : function(_rtag)	{
+				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate");
+				app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
+				var $target;
+				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj === 'object')	{
+					$target = _rtag.jqObj
+					}
+				else	{
+					$target = $('#globalMessaging');
+					}
+
+
+if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@RESPONSES'])	{
+	var
+		responses = app.data[_rtag.datapointer]['@RESPONSES'], //shortcut
+		L = responses.length,
+		errors = "";
+		
+	for(var i = 0; i < L; i += 1)	{
+		if(responses[i]['msgtype'] == 'ERROR')	{
+			errors += responses[i]['msg']+"<br \/>";
 			}
+		}
+
+	if(errors)	{
+		$target.anymessage({"message":errors});
+		}
+	
+	} 
+//if everything was successful, revert the form to normal.			
+//				$("[data-app-role='saveButton']",$form).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
+//				$('.edited',$target).removeClass('edited'); //revert inputs to non-changed state.
+
+				
+				}
+			},
+
+
+		anycontentPlus : {
+			onSuccess : function(_rtag)	{
+//				app.u.dump("BEGIN callbacks.anycontent");
+
+				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj == 'object')	{
+					
+					var $target = _rtag.jqObj; //shortcut
+//need both the data in the response and the wholesaleScheduleList for 'settings' page.
+					$target.anycontent({data: $.extend(true,{},app.data[_rtag.datapointer],app.data.adminWholesaleScheduleList),'templateID':_rtag.templateID});
+
+					$('.toolTip',$target).tooltip();
+					$(':checkbox.applyAnycb',$target).anycb();
+					$('table.applyAnytable',$target).anytable();
+					$('.applyAnytabs',$target).anytabs();
+
+					app.u.handleAppEvents($target);
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
+					}
+
+				if(_rtag.addSaveChangeEvents)	{
+					$("textarea, input, select ",_rtag.jqObj).each(function(){
+						var $formInput = $(this);
+//checkboxes get a slightly different event. that way if they are turned on then off (or vice-versa) w/out a save between, the button updates correctly.
+						if($formInput.is(':checkbox'))	{
+							$formInput.on('change',function(){
+								$formInput.toggleClass('edited');
+								app.ext.admin_syndication.u.handleDetailSaveButton($formInput);
+								});
+							
+							}
+						else	{
+							$formInput.on('change',function(){
+								$formInput.addClass('edited');
+								app.ext.admin_syndication.u.handleDetailSaveButton($formInput);
+								});
+							}
+						});
+					}
+				
+				},
+			onError : function(rd)	{
+				if(rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj == 'object'){
+					rd._rtag.jqObj.hideLoading().anymessage({'message':rd});
+					}
+				else	{
+					$('#globalMessage').anymessage({'message':rd});
+					}
+				}
+			}, //translateSelector
+
+
 		}, //callbacks
 
 
@@ -58,6 +152,9 @@ var admin_syndication = function() {
 //these are going the way of the do do, in favor of app events. new extensions should have few (if any) actions.
 		a : {
 			showSyndication : function($target)	{
+				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
+				app.model.dispatchThis('passive');
+
 				$target.empty();
 				$target.anycontent({'templateID':'pageSyndicationTemplate',data:{}});
 				$("[data-app-role='slimLeftNav']",$target).first().accordion();
@@ -65,18 +162,63 @@ var admin_syndication = function() {
 				},
 
 			showDSTDetails : function(DST,$target)	{
+
+				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
+				app.model.dispatchThis('passive');
+
 				if($target && DST)	{
 					$target.empty();
-					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{}});
+					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
 					$('.anytabsContainer',$target).anytabs();
-					$("[data-anytab-content='settings']",$target).showLoading({'message':'Fetching Marketplace Details'});
-
-app.ext.admin.calls.adminSyndicationHistory.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='history']",$target)},'mutable');
-app.ext.admin.calls.adminSyndicationFeedErrors.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='errors']",$target)},'mutable');
-// app.ext.admin.calls.adminSyndicationDebug.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='diagnostics']",$target)},'mutable'); -> use as action on form button
-// app.ext.admin.calls.adminSyndicationListFiles.init(DST,{'callback':'anycontent','jqObj':$("[data-anytab-content='files']",$target)},'mutable'); -> slow
-app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontent','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$("[data-anytab-content='settings']",$target)},'mutable');
+					var $form = $("[data-anytab-content='settings'] form:first",$target);
+					$form.showLoading({'message':'Fetching Marketplace Details'});
+					
+					app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
+					
+					app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','addSaveChangeEvents':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
 					app.model.dispatchThis();
+
+//add an action to the tab click. the tab code itself already opens the associated content area.
+$("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='errorsTab']").on('click.fetchData',function(){
+	var
+		$tab = $(this),
+		$tabContent,
+		cmd = "" 
+
+	if($tab.data('app-role') == 'filesTab')	{
+		cmd = "adminSyndicationListFiles";
+		$tabContent = $("[data-anytab-content='files']",$target);
+		}
+	else if($tab.data('app-role') == 'historyTab')	{
+		cmd = "adminSyndicationHistory";
+		$tabContent = $("[data-anytab-content='history']",$target);
+		}
+	else if($tab.data('app-role') == 'errorsTab')	{
+		cmd = "adminSyndicationFeedErrors";
+		$tabContent = $("[data-anytab-content='errors']",$target);
+		}
+	else	{
+		app.u.dump("UH OH!  got someplace we shouldn't get. In admin.a.showDSTDetails");
+		} //unsupported role. shouldn't get here based on the selector to get into this loop.
+	
+	
+
+	if($tab.data('haveContent'))	{} //do nothing. content has already been fetched.
+	else if(cmd)	{
+		$tab.data('haveContent',true);
+		$tabContent.showLoading({'message':'Fetching File List'});
+		app.ext.admin.calls[cmd].init(DST,{callback : 'anycontentPlus','extension':'admin_syndication','jqObj':$tabContent},'mutable');
+		app.model.dispatchThis('mutable');
+		}
+	else	{
+		//should never get here.
+		$('#globalMessaging').anymessage({'message':'In showDSTDetails, the click event added to the tab has an invalid app-role (no cmd could be determined)'});
+		}
+	app.u.dump(" -> Tab Click: "+cmd);
+	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
+	});
+
+
 					}
 				else if($target)	{
 					$target.anymessage({"message":"In admin.a.showDSTDetails, no DST specified.",'gMessage':true});
@@ -101,6 +243,26 @@ app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontent','te
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+
+//this doesn't impact what the action on the button is, just whether or not the button is enabled/disabled and what class is applied.
+			handleDetailSaveButton : function($ele)	{
+				
+				var
+					$settingsContainer = $ele.closest("[data-anytab-content='settings']"),
+					$form = $('form',$settingsContainer).first(),
+					$button = $settingsContainer.find("[data-app-role='saveButton']"),
+					numChanges = $('.edited',$form).length;
+				
+				if(numChanges)	{
+					$button.addClass('ui-state-highlight').button('enable');
+					$('.numChanges',$button).text(numChanges);
+					}
+				else	{
+					$("[data-app-role='saveButton']",$form).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
+					}
+				
+				}
+			
 			}, //u [utilities]
 
 //app-events are added to an element through data-app-event="extensionName|functionName"
@@ -118,6 +280,105 @@ app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontent','te
 						}
 					else	{
 						$mktContainer.anymessage({"message":"In admin_syndication.e.showDSTDetail, unable to determine mkt.","gMessage":true});
+						}
+					});
+				}, //showDSTDetail
+			
+			adminSyndicationMacroExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSyndicationMacroExec').on('click.adminSyndicationMacroExec',function(){
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var macros = new Array(),
+						saveMacro = ""
+						DST = $("[name='DST']",$form).val();
+						
+						$('.edited',$form).each(function(){
+							var $input = $(this);
+							
+							if($input.attr('name') == 'ENABLE')	{
+								if($input.is(':checked'))	{macros.push("ENABLE")}
+								else	{macros.push("DISABLE")}							
+								}
+							else if($input.is(':checkbox'))	{
+								saveMacro += $input.attr('name')+"="+($input.is(':checked') ? 1 : 0)+"&"
+								}
+							else	{
+								saveMacro += $input.attr('name')+"="+encodeURIComponent($input.val())+"&"
+								}
+							});
+						
+						if(saveMacro)	{
+							macros.push("SAVE?"+saveMacro);
+							}
+						
+						if(DST && macros.length)	{
+							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_syndication'},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+							}
+						
+						}
+					else	{} //validateForm handles error display.
+					});
+				}, //adminSyndicationMacroExec
+			
+			adminSyndicationUnsuspendMacro : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
+					DST = btn.closest("[data-dst]").data('dst');
+					if(DST)	{
+						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND'],{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+						}
+					});
+				},			
+			adminSyndicationUnsuspendAndClearErrorMacro : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
+					DST = btn.closest("[data-dst]").data('dst');
+					if(DST)	{
+						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND','CLEAR-FEED-ERRORS'],{},'immutable');
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
+						}
+					});
+				},
+			
+			adminSyndicationDebugExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminSyndicationDebugExec').on('click.adminSyndicationDebugExec',function(){
+					var
+						$form = $btn.closest('form'),
+						$container = $btn.closest("[data-app-role='syndicationDetailContainer']"),
+						DST = $btn.closest("[data-dst]").data('dst');
+					
+					if(DST)	{
+						if(app.u.validateForm($form))	{
+							app.ext.admin.calls.adminSyndicationDebug.init(DST,$form.serializeJSON(),{callback : function(rd){
+if(app.model.responseHasErrors(rd)){
+	$container.anymessage({'message':rd})
+	}
+else	{
+	$("[data-app-role='diagnosticsResultsContainer']",$container).html(app.data[rd.datapointer]['HTML']);
+	}
+								}},'mutable');
+							app.model.dispatchThis('mutable');
+							}
+						else	{
+							//validateForm handles error display.
+							}
+						}
+					else	{
+						$form.anymessage({"message":"In admin.e.adminSyndicationDebugExec, unable to ascertain DST, which is required to proceed.","gMessage":true});
 						}
 					});
 				}

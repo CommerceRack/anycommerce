@@ -223,6 +223,21 @@ if no handler is in place, then the app would use legacy compatibility mode.
 			}, //adminBatchJobStatus
 
 
+
+		adminConfigMacro : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				this.dispatch(obj,_tag,Q);
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminConfigMacro"
+				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminConfigMacro
+
+
 		adminCustomerDetail : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -1295,6 +1310,28 @@ if giftcard is on there, no paypal will appear.
 				}
 			}, //adminSyndicationDetail
 
+
+		adminSyndicationMacro : {
+			init : function(DST, macros,_tag,Q)	{
+				var r = 0;
+				if(DST && macros && macros.length)	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminSyndicationMacro";
+					this.dispatch(DST,macros,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminSyndicationMacro, macros ["+typeof macros+"] and/or DST ["+DST+"] is empty or not passed","gMessage":true});
+					}
+				return r;
+				},
+			dispatch : function(DST,macros,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminSyndicationMacro","DST":DST,"@updates":macros,"_tag":_tag,'DST':DST},Q || 'mutable');	
+				}
+			}, //adminSyndicationDetail
+
+
+
 		adminSyndicationHistory : {
 			init : function(DST,_tag,Q)	{
 				_tag = _tag || {};
@@ -1320,14 +1357,18 @@ if giftcard is on there, no paypal will appear.
 			}, //adminSyndicationFeedErrors
 
 		adminSyndicationDebug : {
-			init : function(DST,_tag,Q)	{
+			init : function(DST,obj,_tag,Q)	{
 				_tag = _tag || {};
 				_tag.datapointer = "adminSyndicationDebug";
-				this.dispatch(DST,_tag,Q);
+				this.dispatch(DST,obj,_tag,Q);
 				return 1;
 				},
-			dispatch : function(DST,_tag,Q)	{
-				app.model.addDispatchToQ({"_cmd":"adminSyndicationDebug","_tag":_tag,'DST':DST},Q || 'mutable');	
+			dispatch : function(DST,obj,_tag,Q)	{
+				obj = obj || {};
+				obj._cmd = "adminSyndicationDebug";
+				obj._tag = _tag;
+				obj.DST = DST;
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
 			}, //adminSyndicationDebug
 
@@ -2251,6 +2292,7 @@ else	{
 				$(app.u.jqSelector('#',tagObj.targetID)).removeClass('loadingBG').hideLoading().html(app.data[tagObj.datapointer].html); //.wrap("<form id='bob'>");
 				}
 			}, //showDataHTML
+
 
 
 		handleLogout : {

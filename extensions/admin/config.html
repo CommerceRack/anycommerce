@@ -199,12 +199,21 @@
 	</section>
 
 	<section class='slimLeftContentSection ui-widget' data-app-role='slimLeftContentSection'>
-
+		<form onsubmit="return false">
 		<div class='ui-widget-header ui-corner-top'>
 			<h3 class='heading'>Edit:</h3>
 		</div>
-		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder' data-app-role='slimLeftContent'></div>
+		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
+			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom'>
+				<button data-app-event="admin_config|shipmethodAddUpdateExec">Save</button>
+			</div>
+		
+			<div data-app-role='slimLeftContent'></div>
+		
+		</div>
 
+
+		</form>
 	</section>
 
 

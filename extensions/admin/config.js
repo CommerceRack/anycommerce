@@ -481,6 +481,25 @@ app.model.dispatchThis('mutable');
 				
 				},
 			
+			shipmethodAddUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.shipmethodAddUpdateExec').on('click.shipmethodAddUpdateExec',function(){
+
+var
+	$form = $btn.closest('form'),
+	sfo = $form.serializeJSON();
+
+
+if(app.u.validateForm($form))	{
+	//shipping updates are destructive, so the entire form needs to go up.
+	app.ext.admin.calls.adminConfigMacro.init();
+	}
+else	{
+	//validateForm handles error display
+	}
+					});
+				},
+			
 			showRuleBuilderAsPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showEditRule').on('click.showEditRule',function(){
