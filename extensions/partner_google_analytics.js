@@ -89,7 +89,7 @@ app.ext.orderCreate.checkoutCompletes.push(function(P){
 			L = order['@ITEMS'].length, hasPreBack = 'N', discounts = 0;
 			
 			for(var i = 0; i < L; i += 1)	{
-				if(order['@ITEMS'].SKU.charAt(0) == '%')	{discounts += Number(order['@ITEMS'].extended)}
+				if(order['@ITEMS'][i].SKU.charAt(0) == '%')	{discounts += Number(order['@ITEMS'][i].extended)}
 				}
 			
 			$("<span \/>",{'id':'gts-o-id'}).text(P.orderID).appendTo($div);
