@@ -122,7 +122,7 @@ This file is intended to go along with the 10-step tutorial at:
 				<span class="fl">
 Welcome,
 <span class="loginShow username" onClick="return showContent('customer',{'show':'myaccount'});" ></span> <span class="loginShow"> <a href="#" onClick="app.ext.myRIA.u.handleLogoutActions(); return false;">Log Out</a></span>
-<span class="loginHide">Guest ( <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login  </a><span>or</span> <a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign Up</a> )</span>
+<span class="loginHide">Guest! <a href="#" onClick="return showContent('customer',{'show':'myaccount'});">Login</a> <span>or</span> <a href="#customer?show=createaccount" class='bindByAnchor' id="account">Sign-Up</a></span>
         </span>
 				<img src="images/view-cart-icon.png" alt="View Cart">
 				<p><span class="cartItemCount">0</span> Items in your Shopping Cart <a href="#" onClick="return showContent('cart',{});">VIEW CART</a></p>
@@ -674,8 +674,20 @@ the homepageTemplate template is loaded into mainContentArea by default when the
 
 <div class="sliderM">
 <div class="bannerS">
+<div id="slideshowContainer">
+<div id="slideshowNav"></div>
+<ul id="wideSlideshow" class="pics slideshow">
+<li><img src="images/1.jpg"/></li>
+<li><img src="images/2.jpg"/></li>
+<li><img src="images/3.jpg"/></li>
+<li><img src="images/4.jpg"/></li>
+<li><img src="images/5.jpg"/></li>
+<li><img src="images/6.jpg"/></li>
+<li><img src="images/7.jpg"/></li>
 
-   </div>
+</ul>
+</div>
+    </div>
 <div class="rightB"><img src="images/cyber.jpg" width="300" height="346"></div><div class="cb"></div>
 </div>
 

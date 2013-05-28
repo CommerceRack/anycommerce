@@ -141,7 +141,7 @@ and offMenu is toggle off, hiding the change button.
 */
 .onMenu	{display:none;}
 .offMenu	{}
-.loginHide a{ font-size:12px; color:#fff; font-weight:bold; text-transform:uppercase; }
+.loginHide a{ font-size:12px; color:#fff; /*font-weight:bold;*/ text-transform:uppercase; }
 .cb{ clear:both;}
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
@@ -209,7 +209,7 @@ div#container
 				div#container div#topNav div#topNavContent p a
 				{
 					color: #FFFFFF;
-					font-weight:bold;
+					/*font-weight:bold;*/
 				}
 		div#container div#header
 		{
@@ -1676,3 +1676,38 @@ div.catCarousel2 h2
 
 .a2apage_wide a2a_wide{display:none;opacity:0;}
 
+#slideshowContainer{
+	height:340px;
+	position: relative;
+	overflow:hidden;
+	margin:0 0 10px 10px;
+}
+#wideSlideshow{
+	position:absolute;
+}
+#slideshowNav{
+	position:absolute;
+	right:10px;
+	bottom: 10px;
+	text-align: right;
+	z-index: 9999;
+}
+#slideshowNav a {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 1px solid #C0B3AD;
+    border-radius: 2px 2px 2px 2px;
+    color: #635F5C;
+    display: inline-block;
+    font-size: 0.9em;
+    margin: 0 8px;
+    padding: 1px 8px;
+    text-decoration: none;
+}
+#slideshowNav a:hover, #slideshowNav a.activeSlide {
+    background: none repeat scroll 0 0 #A29688;
+    border-color: #C0B3AD;
+    color: #EBDED5;
+}
+#slideshowNav a:focus {
+    outline: medium none;
+}

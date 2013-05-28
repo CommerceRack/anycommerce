@@ -83,7 +83,14 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 }]);
 
 
+app.rq.push(['script',1,app.vars.baseURL+'cycle-2.9999.81.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});
 
+app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
+		var $target=$('#wideSlideshow');
+		if(!$target.hasClass('slideshowSet')){ //target doesn't already have slideshow
+			$target.addClass('slideshowSet').cycle({fx:'fade',speed:'slow',timeout:5000,pager:'#slideshowNav'});	
+			}
+		}]);
 //add tabs to product data.
 //tabs are handled this way because jquery UI tabs REALLY wants an id and this ensures unique id's between product
 app.rq.push(['templateFunction','productTemplate','onCompletes',function(P) {
@@ -193,6 +200,8 @@ $container.show();
 $("ul",$container).empty(); //empty product list
 $container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
 }]);
+
+
 
 
 //don't execute script till both jquery AND the dom are ready.
