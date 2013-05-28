@@ -253,8 +253,8 @@ else	{
 						var
 							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
 							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
-						
-						$leftColumn.find('li').each(function(){
+						// 
+						$("[data-app-role='shipMethodsByZone']:first, [data-app-role='shipMethodsGlobal']:first, [data-app-role='shipMethodsByFlex']:first",$leftColumn).find('li').each(function(){
 							var $li = $(this);
 							$li.addClass('ui-corner-none pointer').on('click',function(){
 								$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
@@ -267,6 +267,23 @@ else	{
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
+				},
+
+			showAddFlexShipment : function(shipment,$target)	{
+				if(shipment && $target)	{
+					$target.empty();
+					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{}}).appendTo($target);
+					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
+					$target.append("<p><b>Once you save the ship method, more specific inputs will be available.<\/b><\/p>");
+					$target.append("<button>save<\/button>");
+//					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipment.toLowerCase(),data:{}}).appendTo($target);
+					}
+				else if($target)	{
+					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipment not passed.','gMessage':true});
+					}
+				else	{
+					$("#globalMessaging").anymessage({'message':'In admin_config.a.showAddFlexShipment, shipment and target not passed.','gMessage':true});
+					}
 				},
 
 			showShipMethodEditorByProvider : function(provider,$target)	{
@@ -425,7 +442,10 @@ app.model.dispatchThis('mutable');
 				},
 			
 			handleAddShipment : function($ele)	{
-				var $menu = $ele.next('ul');
+				var
+					$menu = $ele.next('ul')
+					$pageContainer = $ele.closest("[data-app-role='slimLeftContainer']");
+					
 				$menu.menu().hide().css({'width':'200','position':'absolute'});
 				$('button:first',$ele).button().off('click.handleAddShipment').on('click.handleAddShipment',function(){
 					$(this).next('button').trigger('click'); //trigger the dropdown on the down arrow button.
@@ -446,6 +466,17 @@ app.model.dispatchThis('mutable');
 
 					});
 				$ele.buttonset();
+				
+				$('a',$menu).each(function(){
+					var $a = $(this);
+//					app.u.dump("$a.data('shipment'): "+$a.data('shipment'));
+					$a.on('click',function(event){
+						event.preventDefault();
+						app.u.dump(" -> add new "+$a.data('shipment')+" shipmethod");
+						$("h3.heading:first",$pageContainer).text("Add New Flex Shipmethod: "+$a.text());
+						app.ext.admin_config.a.showAddFlexShipment($a.data('shipment'),$("[data-app-role='slimLeftContent']:first",$pageContainer));
+						});
+					});
 				
 				},
 			

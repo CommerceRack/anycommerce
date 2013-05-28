@@ -168,7 +168,7 @@
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Global</h4>
-	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByZone' >
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsGlobal' >
 		<li data-provider='INSURANCE'>Insurance</li>
 		<li data-provider='HANDLING'>Handling</li>
 	</ul>
@@ -179,13 +179,18 @@
 	<div class='ui-widget-content ui-corner-bottom '>
 		<ul class='listStyleNone paddedList noPadOrMargin ' data-app-role='shipMethodsByFlex' >
 		</ul>
-		<div class='buttonset clearfix marginBottom marginRight' data-app-event="admin_config|handleAddShipment">
+		<div class='buttonset clearfix stdMargin alignCenter' data-app-event="admin_config|handleAddShipment">
 			<button >Add Flex Method</button>
 			<button >Choose Method</button>
 		</div>
 		<ul>
-			<li><a href='#'>Price</a></li>
-			<li><a href='#'>Weight</a></li>
+			<li><a href='#' data-shipment='FREE'>Free</a></li>
+			<li><a href='#' data-shipment='FIXED'>Fixed</a></li>
+			<li><a href='#' data-shipment='PRICE'>Price</a></li>
+			<li><a href='#' data-shipment='WEIGHT'>Weight</a></li>
+			<li><a href='#' data-shipment='SIMPLE'>Simple</a></li>
+			<li><a href='#' data-shipment='LOCAL'>Local Pickup/Delivery</a></li>
+			<li><a href='#' data-shipment='LOCAL_CANADA'>Canada Local Pickup/Delivery</a></li>
 		</ul>
 	</div>
 </div>
@@ -812,7 +817,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 	</label>
 </fieldset>
 
-<fieldset>
+<fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
 	<label><input type="checkbox" name="METHOD_RULES"> Enable shipping rules</label>
 	<button>Manage Rules</button>
