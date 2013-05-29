@@ -479,3 +479,174 @@ The checkbox below does not work.
 </tr>
 
 </table>
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+////////////////////////////////////     CRM     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+
+
+<div id='crmManagerPageTemplate' class='page pageCRM' data-app-role='dualModeContainer' data-app-mode='list'>
+
+	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
+
+	<section class='dualModeListContainer' data-app-role='dualModeList'>
+		<div class='ui-widget-header ui-corner-top'>
+			<div class='floatRight smallPadding'>
+			<button data-app-event="admin_customer|appAdminTicketCreateShow">Add Ticket</button>
+			</div>
+			
+			<h3 class='heading'>Customer Ticketing System</h3>
+		</div>
+		<div class='ui-state-default smallPadding clearfix'>
+		
+		<form action='#' data-app-role='crmFilter' class='floatLeft' onSubmit='return false'>
+			<label>Status 
+			<select name='status' data-app-event="admin_customer|appAdminTicketListFilterExec">
+				<option></option>
+				<option value='NEW'>New</option>
+				<option value='OPEN'>Open</option>
+				<option value='WAIT'>Waiting</option>
+			</select>
+			</label>
+		</form>
+
+		
+		<form action='#' data-app-role='crmSearch' class='floatRight' onSubmit='return false'>
+		<select name='scope'>
+			<option value='email' selected="selected">email</option>
+			<option value='orderid'>order #</option>
+			<option value='phone'>phone #</option>
+			<option value='ticket'>ticket #</option>
+		</select>
+		<input type='search' name='searchfor' placeholder='keyword' required='required' size='30'  />
+		<button data-app-event="admin_customer|appAdminTicketListSearchExec">Search</button>
+		</form>		
+		</div>
+		
+		<div class='ui-widget-content ui-corner-bottom stdPadding'>
+			<div class='dualModeListMessaging marginBottom'></div>
+			<div class='dualModeListContent' data-app-role='dualModeContent'>
+			<table class='gridTable fullWidth applyAnytable' data-app-role='dualModeResultsTable'>
+			<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
+			<thead>
+			<tr>
+				<th class='alignLeft'></th>
+				<th class='alignLeft'>ID</th>
+				<th class='alignLeft'>Status</th>
+				<th class='alignLeft'>Subject</th>
+				<th class='alignLeft'>Class</th>
+				<th class='alignLeft'>Created</th>
+				<th class='alignLeft'>Last Update</th>
+				<th data-anytable-nosort='true'></th>
+			</tr>
+			</thead>
+			<tbody data-bind="var: crm(@TICKETS); format:processList; loadsTemplate:crmManagerResultsRowTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
+			</table>
+			</div>
+
+		</div>
+	</section>
+</div>
+
+
+
+<table>
+<tr id='crmManagerResultsRowTemplate' class='pointer'>
+	<td data-bind='var: ticket(ESCALATED); format:text;'></td>
+	<td data-bind='var: ticket(TKTCODE); format:text;'></td>
+	<td data-bind='var: ticket(STATUS); format:text;'></td>
+	<td data-bind='var: ticket(SUBJECT); format:text;'></td>
+	<td data-bind='var: ticket(CLASS); format:text;'></td>
+	<td data-bind='var: ticket(CREATED_GMT); format:epoch2pretty;'></td>
+	<td data-bind='var: ticket(UPDATED_GMT); format:epoch2pretty;'></td>
+	<td>
+	<button data-app-event="admin_customer|appAdminTicketDetailShow" >Details</button>
+	</td>
+</tr>
+</table>
+
+<div id='crmManagerTicketDetailTemplate'>
+<hgroup>
+	<h3 data-bind="var: ticket(SUBJECT); format:text; pretext:subject: ;"></h3>
+	<h4 data-bind="var: ticket(STATUS); format:text; pretext:status: ;"></h4>
+</hgroup>
+
+<section class='marginBottom'>
+	<div class="ui-widget-header ui-corner-top marginBottom"><h3 class="heading">Original Issue:</h3></div>
+	<div data-bind="var: ticket(NOTE); format:text;"></div>
+</section>
+
+<section class='marginBottom'>
+	<div class="ui-widget-header ui-corner-top marginBottom"><h3 class="heading">Update:</h3></div>
+	form input
+</section>
+
+
+</div>
+
+
+
+
+<div id='crmManagerTicketCreateTemplate'>
+<form action="#" onSubmit='return false' class='labelsAsBreaks alignedLabels alignedInputs'>
+
+<p>All fields are optional, matching will be done automatically based on data provided.</p>
+
+<label>
+	<span>Order #</span>
+	<input type="text" value="" name="orderid" size="12" /> ####-##-######
+</label>
+
+<label>
+	<span>Phone</span>
+	<input type="tel" value="" name="phone" size="12" /> ###-###-####
+</label>
+
+<label>
+	<span>Email</span>
+	<input type="email" value="" name="email" size="45" />
+</label>
+
+<label class='marginLeft'>
+	<input type="checkbox" class='applyAnycb' name="create" /> Create account if one does not exist.
+</label>
+
+
+<label>
+	<span>Subject</span>
+	<input type="text" value="" name="subject" size="45" />
+</label>
+
+
+<label>
+	<span>Issue</span>
+	<textarea name="body" rows="5" cols="60"></textarea>
+</label>
+
+<label>
+	<span>Class</span>
+	<select name='class'>
+		<option>Not Specified</option>
+		<option value='PRESALE'>Presale</option>
+		<option value='POSTSALE'>Postsale</option>
+		<option value='RETURN'>Return</option>
+		<option value='EXCHANGE'>Exchange</option>
+	</select>
+</label>
+
+<button data-app-event="admin_customer|appAdminTicketCreateExec">Create Ticket</button>
+</form>
+</div>

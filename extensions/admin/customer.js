@@ -21,7 +21,27 @@
 
 
 var admin_customer = function() {
-	var theseTemplates = new Array('customerManagerResultsRowTemplate','CustomerPageTemplate','customerEditorTemplate','customerEditorTicketListTemplate','customerEditorGiftcardListTemplate','customerEditorWalletListTemplate','customerEditorAddressListTemplate','customerEditorNoteListTemplate','customerAddressAddUpdateTemplate','customerEditorOrderListTemplate','customerWalletAddTemplate','customerCreateTemplate','organizationManagerChooserRowTemplate');
+	var theseTemplates = new Array(
+	'customerManagerResultsRowTemplate',
+	'CustomerPageTemplate',
+	'customerEditorTemplate',
+	'customerEditorTicketListTemplate',
+	'customerEditorGiftcardListTemplate',
+	'customerEditorWalletListTemplate',
+	'customerEditorAddressListTemplate',
+	'customerEditorNoteListTemplate',
+	'customerAddressAddUpdateTemplate',
+	'customerEditorOrderListTemplate',
+	'customerWalletAddTemplate',
+	'customerCreateTemplate',
+	'organizationManagerChooserRowTemplate',
+	
+	'crmManagerPageTemplate',
+	'crmManagerResultsRowTemplate',
+	'crmManagerTicketDetailTemplate',
+	'crmManagerTicketCreateTemplate'
+	
+	);
 	var r = {
 
 
@@ -63,6 +83,14 @@ var admin_customer = function() {
 				$tabContent.anycontent({'templateID':'CustomerPageTemplate','showLoading':false}); //clear contents and add help interface
 				app.ext.admin.u.handleAppEvents($tabContent);
 				}, //showCustomerManager
+
+			showCRMManager : function($target)	{
+				$target.empty()
+				$target.showLoading({"message":"Fetching list of recently updated/created tickets."});
+				
+				app.ext.admin.calls.adminAppTicketList.init('NEW',{'callback':'anycontent','jqObj':$target,'templateID':'crmManagerPageTemplate'},'mutable');
+				app.model.dispatchThis();
+				},
 
 //in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
 			showCustomerEditor : function($custEditorTarget,obj)	{
@@ -417,7 +445,145 @@ else	{
 
 			}, //u [utilities]
 
+
+
+
+
+
+
 		e : {
+
+//ele is a select list, most likely.
+			appAdminTicketListFilterExec : function($ele)	{
+				$ele.off('change.appAdminTicketListFilterExec').on('change.appAdminTicketListFilterExec',function(event){
+event.preventDefault();
+
+if($ele.val())	{
+	var
+		$dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']"),
+		$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
+	
+	$dualModeListContents.empty(); //empty all the existing rows.
+	$dualModeListContents.parent().showLoading(); //applied showLoading to table.
+	
+	app.ext.admin.calls.adminAppTicketList.init($ele.val(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
+	app.model.dispatchThis();
+	}
+					});
+				},
+
+//ele is a select list, most likely.
+			appAdminTicketListSearchExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-search"},text: false});
+				$btn.off('click.appAdminTicketListFilterExec').on('click.appAdminTicketListFilterExec',function(event){
+event.preventDefault();
+
+var
+	$form = $btn.closest('form');
+	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+	$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
+
+if(app.u.validateForm($form))	{
+	$dualModeListContents.empty(); //empty all the existing rows.
+	$dualModeListContents.parent().showLoading(); //applied showLoading to table.
+	app.ext.admin.calls.adminAppTicketSearch.init($form.serializeJSON(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
+	app.model.dispatchThis();
+	}
+else	{} //validateForm will handle error display.
+
+					});
+				},
+
+			appAdminTicketDetailShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.appAdminTicketDetailsShow').on('click.appAdminTicketDetailsShow',function(event){
+					event.preventDefault();
+
+var
+	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+	$dualModeDetails = $("[data-app-role='dualModeDetail']",$dualModeContainer),
+	data = $btn.closest('tr').data(),
+	panelID = app.u.jqSelector('','crmDetail_'+data.tktcode),
+	$panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
+		'header':'Edit: '+data.tktcode,
+		'templateID':'crmManagerTicketDetailTemplate',
+	//	'data':user, //data not passed because it needs req and manipulation prior to translation.
+		'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
+		}).prependTo($dualModeDetails);
+
+app.ext.admin.u.handleAppEvents($panel);
+app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
+$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
+
+
+app.ext.admin.calls.adminAppTicketDetail.init(data.tktcode,{
+	'callback':function(rd){
+		if(app.model.responseHasErrors(rd)){
+			app.u.throwMessage(rd);
+			}
+		else	{		
+			$panel.anycontent({'datapointer':rd.datapointer});
+			app.u.handleAppEvents($panel);
+			}
+		}
+	},'mutable');
+app.model.dispatchThis('mutable');
+
+
+
+					});
+
+				//
+				}, //appAdminTicketDetailShow
+
+			appAdminTicketCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.appAdminTicketCreateShow').on('click.appAdminTicketCreateShow',function(event){
+event.preventDefault();
+var $D = $("<div \/>").attr('title',"Add a New Organization");
+
+$D.anycontent({'templateID':'crmManagerTicketCreateTemplate','data':{}});
+app.u.handleAppEvents($D);
+$D.dialog({
+	modal: true,
+	width : '70%',
+	close: function(event, ui)	{
+		$(this).dialog('destroy');
+		}
+	});
+
+$D.dialog('open');
+
+
+					});
+				},
+
+			appAdminTicketCreateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.appAdminTicketCreateExec').on('click.appAdminTicketCreateExec',function(event){
+event.preventDefault();
+
+var
+	$form = $btn.closest('form'),
+	sfo = $form.serializeJSON();
+
+app.ext.admin.calls.adminAppTicketCreate.init(sfo,{'callback' : function(rd){
+	if(app.model.responseHasErrors(rd)){
+		$form.anymessage({'message':rd})
+		}
+	else	{
+		$form.empty().anymessage(app.u.successMsgObject('The ticket has been created.'));
+		}
+	}},'immutable');
+app.model.dispatchThis('immutable');
+
+					});
+				},
+
+
+
+
+
 
 //executed within the customer create form to validate form and create user.
 			execAdminCustomerCreate : function($btn)	{

@@ -306,6 +306,8 @@
 </table>
 
 
+
+
 <div id='syndication_goo'>
 <h1 class='marginBottom'>Google Shopping Submission Manager</h1>
 
@@ -354,7 +356,7 @@
 	<label>
 		<span>Pricing Schedule:</span>
 		<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select>
 		<span class='hint'>Requires Wholesale Bundle</span>
 	</label>
@@ -408,7 +410,7 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
 	<label>
 		<span>Pricing Schedule:</span>
 		<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select>
 		<span class='hint'>Requires Wholesale Bundle</span>
 	</label>
@@ -462,7 +464,7 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
    <tr>
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select> <i>(Requires Wholesale Bundle)</i></td>
    </tr>
 	<tr>
@@ -499,43 +501,43 @@ These settings *MUST* match the settings in your Buy.com account.
 
 <label>
 	<span>FTP User</span>
-	<input type="textbox" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
+	<input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" />
 </label>
 		
 <label>
 	<span>FTP Password</span>
-	<input type="textbox" value="" name="ftp_pass" required='required' data-bind="var: mkt(ftp_pass); format:popVal;" />
+	<input type="text" value="" name="ftp_pass" required='required' data-bind="var: mkt(ftp_pass); format:popVal;" />
 </label>
 		
 <label>
 	<span>FTP Server</span>
-	<input type="textbox" value="" name="ftp_server" required='required' data-bind="var: mkt(ftp_server); format:popVal;" />
+	<input type="text" value="" name="ftp_server" required='required' data-bind="var: mkt(ftp_server); format:popVal;" />
 </label>
 		
 <label>
 	<span>Vendor ID</span>
-	<input type="textbox" value="" name="vendorid" required='required' data-bind="var: mkt(vendorid); format:popVal;" />
+	<input type="text" value="" name="vendorid" required='required' data-bind="var: mkt(vendorid); format:popVal;" />
 </label>
 		
 <label>
 	<span>Order FTP Server</span>
-	<input type="textbox" value="" name="order_ftp_server" required='required' data-bind="var: mkt(order_ftp_server); format:popVal;" />
+	<input type="text" value="" name="order_ftp_server" required='required' data-bind="var: mkt(order_ftp_server); format:popVal;" />
 </label>
 		
 <label>
 	<span>Order FTP Username</span>
-	<input type="textbox" value="" name="order_ftp_user" required='required' data-bind="var: mkt(order_ftp_user); format:popVal;" />
+	<input type="text" value="" name="order_ftp_user" required='required' data-bind="var: mkt(order_ftp_user); format:popVal;" />
 </label>
 		
 <label>
 	<span>Order FTP Password</span>
-	<input type="textbox" value="" name="order_ftp_pass" required='required' data-bind="var: mkt(order_ftp_pass); format:popVal;" />
+	<input type="text" value="" name="order_ftp_pass" required='required' data-bind="var: mkt(order_ftp_pass); format:popVal;" />
 </label>
 		
 <label>
 	<span>Pricing Schedule:</span>
 	<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-		<option>none</option>
+		<option value=''>none</option>
 	</select>
 </label>
 <p class='hint'>Requires Wholesale Bundle</p>
@@ -563,32 +565,32 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
 	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> <b>Is Active</b></td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 <tr>
   <td><b>CJ Account #:</b></td>
-  <td><input type="textbox" name="cjcid" value="" required='required' data-bind="var: mkt(cjcid); format:popVal;" /></td>
+  <td><input type="text" name="cjcid" value="" required='required' data-bind="var: mkt(cjcid); format:popVal;" /></td>
 </tr>
 <tr>
   <td><b>CJ Subscription Id:</b></td>
-  <td><input type="textbox" name="cjsubid" value="" required='required' data-bind="var: mkt(cjsubid); format:popVal;" /></td>
+  <td><input type="text" name="cjsubid" value="" required='required' data-bind="var: mkt(cjsubid); format:popVal;" /></td>
 </tr>
 <tr>
   <td><b>CJ Ad Id:</b></td>
-  <td><input type="textbox" name="cjaid" value="" required='required' data-bind="var: mkt(cjaid); format:popVal;" /></td>
+  <td><input type="text" name="cjaid" value="" required='required' data-bind="var: mkt(cjaid); format:popVal;" /></td>
 </tr>
 <tr>
   <td><b>FTP Host :</b></td>
-  <td><input type="textbox" name="host" value="" required='required' data-bind="var: mkt(host); format:popVal;" /></td>
+  <td><input type="text" name="host" value="" required='required' data-bind="var: mkt(host); format:popVal;" /></td>
 </tr>
 <tr>
   <td><b>FTP Username:</b></td>
-  <td><input type="textbox" name="user" value="" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
+  <td><input type="text" name="user" value="" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
 </tr>
 <tr>
   <td><b>FTP Password:</b></td>
-  <td><input type="textbox" name="pass" value="" required='required' data-bind="var: mkt(pass); format:popVal;" /></td>
+  <td><input type="text" name="pass" value="" required='required' data-bind="var: mkt(pass); format:popVal;" /></td>
 </tr>
 <tr>
   <td>Pricing Schedule:</td>
   <td><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select> <i>(Requires Wholesale Bundle)</i></td>
 </tr>
 <tr>
@@ -637,7 +639,7 @@ CommissionJunction.</p>
    <tr>
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select> <i>(Requires Wholesale Bundle)</i></td>
    </tr>
 	<tr>
@@ -681,7 +683,7 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
    <tr>
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select> <i>(Requires Wholesale Bundle)</i><br></td>
    </tr>
 	<tr>
@@ -731,7 +733,7 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
    <tr>
       <td valign="top">Pricing Schedule:</td>
       <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select> <i>(Requires Wholesale Bundle)</i><br></td>
    </tr>
 	<tr>
@@ -790,7 +792,7 @@ in diagnosing issues with auto-pilot.
 <label>
 	<span>Pricing Schedule:</span>
 	<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-		<option>none</option>
+		<option value=''>none</option>
 	</select>
 	<span class='hint'>Requires Wholesale Bundle</span>
 </label>
@@ -908,10 +910,10 @@ Create/Verify MWS Token
 	
 </fieldset>
 
-<fieldset>
+<fieldset class='clearfix'>
 	<legend>Thesauras</legend>
-	
-	<table>
+
+	<table data-app-role='dataTable' class='floatLeft marginRight gridTable'>
 	<thead>
 	<tr>
 		<th>Name</th>
@@ -926,8 +928,48 @@ Create/Verify MWS Token
 	
 	</tbody>
 	</table>
+
+
+<div class='floatLeft'>
+
+	<label>
+		<span>Name:</span>
+		<input type="text" size="20" value="" name="name" class='skipTrack'  data-bind="var: thesaurus(name); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Item Type:</span>
+		<input type="text" size="20" value="" name="itemtype" class='skipTrack'  data-bind="var: thesaurus(itemtype); format:popVal;" /> [1 max]
+	</label>
+
+	<label>
+		<input type='checkbox' class='applyAnycb' name='isgiftwrapavailable'  class='skipTrack' data-bind="var: thesaurus(isgiftwrapavailable); format:popCheckbox;" />
+		Is Gift Wrap Available:
+	</label>
+
+	<label>
+		<input type='checkbox' class='applyAnycb' name='isgiftmessageavailable'  class='skipTrack' data-bind="var: thesaurus(isgiftmessageavailable); format:popCheckbox;" />
+		Is Gift Message Available:
+	</label>
 	
-	<button>Add New Thesauras</button>
+	<label>
+		<span>Subject Content:</span>
+		<input type="text" size="20" value="" name="subjectcontent"  class='skipTrack' data-bind="var: thesaurus(subjectcontent); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Target Audience:</span>
+		<input type="text" size="20" value="" name="targetaudience"  class='skipTrack' data-bind="var: thesaurus(targetaudience); format:popVal;" />
+	</label>
+
+	<label>
+		<span>Search Terms (250 chars max):</span>
+		<textarea rows="5" name="search_terms" maxlength='250' class='skipTrack' data-bind="var: thesaurus(search_terms); format:popVal;" /></textarea>
+	</label>
+
+	<button data-app-event="admin_config|dataTableAddExec">Add</button>
+</div>
+
 </fieldset>
 
 
@@ -981,7 +1023,7 @@ Create/Verify MWS Token
 	<label>
 		<span>Pricing Schedule:</span>
 		<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-			<option>none</option>
+			<option value=''>none</option>
 		</select>
 	</label>
 </fieldset>
@@ -989,15 +1031,16 @@ Create/Verify MWS Token
 
 </div>
 
-		
+
 <table>
 <tr id='amazonThesauriiRowTemplate'>
-	<td data-bind="var:mkt(PROFILE); format:text;"></td>
-	<td data-bind="var:mkt(ITEMTYPE); format:text;"></td>
-	<td data-bind="var:mkt(SUBJECTCONTENT); format:text;"></td>
-	<td data-bind="var:mkt(TARGETAUDIENCE); format:text;"></td>
-	<td data-bind="var:mkt(ISGIFTWRAPAVAILABLE); format:text;"></td>
-	<td data-bind="var:mkt(ISGIFTMESSAGEAVAILABLE); format:text;"></td>
+	<td data-bind="var:mkt(name); format:text;"></td>
+	<td data-bind="var:mkt(itemtype); format:text;"></td>
+	<td data-bind="var:mkt(subjectcontent); format:text;"></td>
+	<td data-bind="var:mkt(targetaudience); format:text;"></td>
+	<td data-bind="var:mkt(isgiftwrapavailable); format:text;"></td>
+	<td data-bind="var:mkt(isgiftmessageavailable); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 </table>
 
@@ -1019,7 +1062,7 @@ Create/Verify MWS Token
 <label>
 	<span>Pricing Schedule:</span>
 	<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-		<option>none</option>
+		<option value=''>none</option>
 	</select>
 </label>
 
@@ -1048,7 +1091,7 @@ SOMETHING SHOULD GO HERE!!!
 <label>
 	<span>Pricing Schedule:</span>
 	<select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-		<option>none</option>
+		<option value=''>none</option>
 	</select>
 </label>
 
@@ -1087,7 +1130,7 @@ SOMETHING SHOULD GO HERE!!!
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1131,7 +1174,7 @@ These settings *MUST* match the settings in your Shopping.com account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1174,7 +1217,7 @@ These settings *MUST* match the settings in your TheFind.com account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1228,7 +1271,7 @@ These settings *MUST* match the settings in your bing.com account.
 <tr>
   <td valign="top">Pricing Schedule:</td>
   <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i><br></td>
 </tr>
 	<tr>
@@ -1275,7 +1318,7 @@ These settings *MUST* match the settings in your Shopzilla account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1318,7 +1361,7 @@ These settings *MUST* match the settings in your pronto.com account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1359,7 +1402,7 @@ These settings *MUST* match the settings in your become.com account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1401,7 +1444,7 @@ These settings *MUST* match the settings in your smarter.com account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 
@@ -1459,7 +1502,7 @@ HINT: The username, password, etc. are provided by Dijipop.com. These settings *
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 <p class='hint'>
@@ -1519,7 +1562,7 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 <tr>
   <td valign="top">Pricing Schedule:</td>
   <td valign="top"><select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i></td>
 </tr>
 <tr>
@@ -1567,7 +1610,7 @@ These settings *MUST* match the settings in your Sears account.
 <label>
   Pricing Schedule:
   <select name='SCHEDULE' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
-	<option>none</option>
+	<option value=''>none</option>
 </select> <i>(Requires Wholesale Bundle)</i>
 </label>
 

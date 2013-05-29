@@ -276,7 +276,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 					if(app.u.validateForm($form))	{
 						
 						var macros = new Array(),
-						saveMacro = ""
+						saveMacro = "",
 						DST = $("[name='DST']",$form).val();
 						
 						$('.edited',$form).each(function(){
@@ -285,6 +285,23 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 							if($input.attr('name') == 'ENABLE')	{
 								if($input.is(':checked'))	{macros.push("ENABLE")}
 								else	{macros.push("DISABLE")}							
+								}
+//amazon has a thesaurus table
+							else if(DST == 'AMZ' && $input.is('tr'))	{
+
+								if($input.hasClass('rowTaggedForRemove') && $input.hasClass('isNewRow'))	{
+									//if it's a new row that was deleted before a save occured, no macro needed to remove it.
+									}
+								else if($input.hasClass('rowTaggedForRemove'))	{
+									macros.push("AMZ-THESAURUS-DELETE?ID="+$input.data('thid'));
+									}
+								else if($input.hasClass('isNewRow'))	{
+									macros.push("AMZ-THESAURUS-SAVE?"+app.ext.admin.u.getSanitizedKVPFromObject($input.data()));
+									}
+								else	{
+									//HUH! shouldn't have gotten here.
+									$('#globalMessaging').anymessage({'message':'in admin_syndication.e.adminSyndicationMacroExec, unknown case for amazon thesaurus. Does not appear to be new or delete, why is it flagged as edited?','gMessage':true});
+									}
 								}
 							else if($input.is(':checkbox'))	{
 								saveMacro += $input.attr('name')+"="+($input.is(':checked') ? 1 : 0)+"&"
@@ -336,6 +353,28 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 						$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
 						}
 					});
+				},
+			
+			amazonThesaurusAddShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.amazonThesaurusAddShow').on('click.amazonThesaurusAddShow',function(event){
+					event.preventDefault();
+					var $D = $("<div \/>").attr('title',"Add Thesaurus");
+					$D.anycontent({'templateID':'syndicationAmazonThesaurasAdd','data':{}});
+					$D.addClass('displayNone').appendTo('body'); 
+					$D.dialog({
+						modal: true,
+						width: '90%',
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
+//					$(':checkbox',$D).anycb(); //{'text' : {'on' : 'yes','off':'no'}} //not working in a dialog for some reason.
+					$D.dialog('open');
+
+					});
+//				
 				},
 			
 			adminSyndicationDebugExec : function($btn)	{

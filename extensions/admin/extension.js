@@ -113,6 +113,94 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 	calls : {
 
+
+
+//filter is required
+		adminAppTicketList : {
+			init : function(status,_tag,Q)	{
+				var r = 0;
+				if(status)	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminAppTicketList|"+status;
+					this.dispatch(status,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminAppTicketList, status is required.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(status,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminAppTicketList","STATUS":status,"_tag":_tag},Q || 'mutable');	
+				}
+			}, //adminAppTicketList
+
+		adminAppTicketSearch : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				obj = obj || {};
+				if(obj)	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminAppTicketSearch";
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminAppTicketList, filter is required.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = "adminAppTicketSearch";
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminAppTicketSearch
+
+		adminAppTicketDetail : {
+			init : function(tktcode,_tag,Q)	{
+				var r = 0;
+				if(tktcode)	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminAppTicketDetail|"+tktcode;
+					this.dispatch(tktcode,_tag,Q);
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminAppTicketDetail, tktcode is required.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(tktcode,_tag,Q)	{
+				app.model.addDispatchToQ({"_cmd":"adminAppTicketDetail","TKTCODE":tktcode,"_tag":_tag},Q || 'mutable');	
+				}
+			}, //adminAppTicketDetail
+
+		adminAppTicketCreate : {
+			init : function(obj,_tag,Q)	{
+				var r = 0;
+				obj = obj || {};
+				if(!$.isEmptyObject(obj))	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminAppTicketCreate";
+					this.dispatch(obj,_tag,Q);
+					}
+				else	{
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminAppTicketCreate, form params were empty.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminAppTicketCreate';
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminAppTicketCreate
+
+
+
+
 //status is optional
 		adminBatchJobList : {
 			init : function(status,_tag,Q)	{
@@ -3311,76 +3399,6 @@ else	{
 				app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //ebay fixed price
 				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{'callback':'transmogrify','parentID':'dashboardReportTbody','templateID':'quickstatReportTemplate'},'mutable'); //sears
 				
-/*
-## NOTE - if you use the code below, streamline so that all the appResource calls don't get executed twice.
-
-				$('#dashboardColumn2',$content).append($("<div \/>").attr('id','dashboardMktplacePanel').anypanel({
-					'title' : 'Popular Marketplace Summary',
-					'showClose' : false,
-					'showLoading' : false,
-					'content' : $("<div \/>")
-					}));
-
-//recent news panel.
-				app.ext.admin.calls.appResource.init('quickstats/SAMZ.json',{},'mutable'); //amazon
-				app.ext.admin.calls.appResource.init('quickstats/SEBA.json',{},'mutable'); //ebay auction
-				app.ext.admin.calls.appResource.init('quickstats/SEBF.json',{},'mutable'); //ebay fixed price
-				app.ext.admin.calls.appResource.init('quickstats/SSRS.json',{},'mutable'); //sears
-				app.ext.admin.calls.appResource.init('quickstats/SGOO.json',{},'mutable'); //google
-				app.ext.admin.calls.appResource.init('quickstats/SBYS.json',{'callback':function(){
-
-$('#dashboardMktplacePanel .ui-widget-content',$content).append($("<div \/>").attr('id','container'));
-
-
-//build chart data arrray.
-var chartData = new Array();
-if(app.data['appResource|quickstats/SAMZ.json'].contents.count)	{chartData.push(['Amazon', Number(app.data['appResource|quickstats/SAMZ.json'].contents.count)])}
-if(app.data['appResource|quickstats/SEBA.json'].contents.count)	{chartData.push(['eBay Auction', Number(app.data['appResource|quickstats/SEBA.json'].contents.count)]);}
-if(app.data['appResource|quickstats/SEBF.json'].contents.count)	{chartData.push(['eBay Store', Number(app.data['appResource|quickstats/SEBF.json'].contents.count)]);}
-if(app.data['appResource|quickstats/SSRS.json'].contents.count)	{chartData.push(['Sears', Number(app.data['appResource|quickstats/SSRS.json'].contents.count)]);}
-if(app.data['appResource|quickstats/SBYS.json'].contents.count)	{chartData.push(['Buy.com', Number(app.data['appResource|quickstats/SBYS.json'].contents.count)]);}
-if(app.data['appResource|quickstats/SGOO.json'].contents.count)	{chartData.push(['Google', Number(app.data['appResource|quickstats/SGOO.json'].contents.count)]);}
-
-
-
-var chart = new Highcharts.Chart({
-            chart: {
-                renderTo: 'container',
-                plotBackgroundColor: null,
-                plotBorderWidth: null,
-                plotShadow: false
-            },
-            title: {
-                text: 'Sales Since Midnight'
-            },
-            tooltip: {
-        	    pointFormat: '{series.name}: <b>{point.percentage}%</b>',
-            	percentageDecimals: 1
-            },
-            plotOptions: {
-                pie: {
-                    allowPointSelect: true,
-                    cursor: 'pointer',
-                    dataLabels: {
-                        enabled: true,
-                        color: '#000000',
-                        connectorColor: '#000000',
-                        formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ Number(this.percentage).toFixed(2) +' %';
-                        }
-                    }
-                }
-            },
-            series: [{
-                type: 'pie',
-                name: 'Popular Marketplaces',
-                data: chartData
-            }]
-        });
-
-
-					}},'mutable'); //buy
-*/
 
 				app.model.dispatchThis('mutable');
 				} //showdashboard
@@ -3526,6 +3544,10 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				return domain;
 				}, //getDomain
 
+
+
+
+
 //used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.
 // .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
 			handleSaveButtonByEditedClass : function($context)	{
@@ -3538,6 +3560,15 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					$('.numChanges',$button).text("")
 					$button.button("disable").removeClass('ui-state-highlight');
 					}
+				},
+
+//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
+			getSanitizedKVPFromObject : function(obj)	{
+				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
+				delete newObj.isTranslated;
+				delete newObj.sortableItem;
+				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
+				return $.param(newObj);
 				},
 
 
@@ -3785,6 +3816,12 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
 					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
 					app.ext.admin_syndication.a.showSyndication($('#syndicationContent'));
+//					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
+					}
+				else if(tab == 'crm' && path.split('/')[3] == 'index.cgi')	{
+					app.ext.admin.u.uiHandleBreadcrumb({}); //make sure previous breadcrumb does not show up.
+					app.ext.admin.u.uiHandleNavTabs({}); //make sure previous navtabs not show up.
+					app.ext.admin_customer.a.showCRMManager($('#crmContent'));
 //					app.ext.admin.u.uiHandleLinkRewrites(path,{},{'targetID':'syndicationContent'});
 					}
 				else if(tab == 'orders' && path.split('/')[3] == 'index.cgi')	{

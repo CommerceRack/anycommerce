@@ -326,11 +326,15 @@ else	{
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
 
-				if(vars.mode == 'shipping' || vars.mode == 'promotions')	{
+				if((vars.mode == 'shipping' && vars.provider && vars.table) || vars.mode == 'promotions')	{
 
 
 var $D = $("<div \/>").attr('title',"Rule Builder: "+vars.mode);
+if(vars.mode == 'shipping')	{
+	$D.attr({'data-provider':vars.provider,'data-table':vars.table})
+	}
 $D.addClass('displayNone').appendTo('body'); 
+
 $D.dialog({
 	width : '90%',
 	modal: true,
@@ -349,8 +353,8 @@ $D.dialog({
 	});
 $D.dialog('open');
 
-//need pricing schedules.
-$D.showLoading({'message':'Fetching Data'});
+
+//need pricing schedules. This is for shipping.
 app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
 app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 	$D.hideLoading();
@@ -359,15 +363,19 @@ app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : '
 		}
 	else	{
 		$D.anycontent({'templateID':'ruleBuilderTemplate','data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
-		$("[data-app-role='dualModeListContents']",$D).sortable();
+		$("[data-app-role='dualModeListContents']",$D).sortable().on("sortupdate",function(evt,ui){
+				ui.item.addClass('edited');
+				app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form'));
+				});;
 		app.u.handleAppEvents($D);
-		//
 		}
 	}},'mutable');
-app.model.dispatchThis('mutable');	
+app.model.dispatchThis('mutable');
+
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.mode+'] was passed.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.mode+'] was passed or a required param based on mode was not set. see console for vars.','gMessage':true});
+					app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); app.u.dump(vars);
 					}
 				var $dialog = $("<div \/>");
 				}
@@ -448,7 +456,7 @@ app.model.dispatchThis('mutable');
 						$suppContainer.anycontent({'data':{},'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
 						}
 					});
-				},
+				}, //showCCSuppInputs
 			
 			handleAddShipment : function($ele)	{
 				var
@@ -487,23 +495,29 @@ app.model.dispatchThis('mutable');
 						});
 					});
 				
-				},
+				}, //handleAddShipment
 			
-			shipmethodDataTableAddExec : function($btn)	{
+			dataTableAddExec : function($btn,vars)	{
 				$btn.button();
-				$btn.off('click.shipmethodDataTableAddExec').on('click.shipmethodDataTableAddExec',function(){
+				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
+event.preventDefault();
+
+app.u.dump("BEGIN admin_config.e.dataTableAddExec");
 
 var
 	$fieldset = $btn.closest('fieldset'),
-	$dataTbody = $("[data-app-role='dataTable'] tbody",$fieldset);
+//tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
+	$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$fieldset),
+	$form = (vars['$form']) ? vars['$form'] : $fieldset.closest('form');
 
 
 if($fieldset.length && $dataTbody.length && $dataTbody.data('bind'))	{
-
+	app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
 //none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
 //so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
-	$('input',$fieldset).attr('required','required'); 
+//	$('input',$fieldset).attr('required','required'); 
 	if(app.u.validateForm($fieldset))	{
+		app.u.dump(" -> form is validated.");
 		var 
 			bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
 			sfo = $fieldset.serializeJSON(),
@@ -511,21 +525,28 @@ if($fieldset.length && $dataTbody.length && $dataTbody.data('bind'))	{
 		
 		$tr.anycontent({data:sfo});
 		$tr.addClass('edited');
-		$tr.data('isNewRow',true); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-		
-		$tr.appendTo($dataTbody);
+		$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+
+//if a row already exists with this guid, this is an UPDATE, not an ADD.
+		if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
+			$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
+			}
+		else	{
+			$tr.appendTo($dataTbody);
+			}
 		app.u.handleAppEvents($tr);
 //this function will look for .edited in the form and, if present, enable and update the save button.
-		app.ext.admin.u.handleSaveButtonByEditedClass($fieldset.closest('form'));
+		app.ext.admin.u.handleSaveButtonByEditedClass($form);
 		}
 	else	{
+		app.u.dump("form did not validate");
 		//validateForm handles error display.
 		}
-	$('input',$fieldset).attr('required','').removeAttr('required');
+//	$('input',$fieldset).attr('required','').removeAttr('required');
 	
 	}
 else	{
-	$btn.closest('form').anymessage({"message":"In admin_config.e.shipmethodDataTableAddExec, unable to ascertain parent fieldset ["+$fieldset.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
+	$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain parent fieldset ["+$fieldset.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
 	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
 	app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
 	app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
@@ -533,7 +554,7 @@ else	{
 
 
 					});
-				},
+				}, //dataTableAddExec
 			
 			shipmethodRemoveExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
@@ -575,7 +596,7 @@ else	{
 						$('#globalMessaging').anymessage({'message':'In admin_config.e.shipmethodRemoveExec, unable to ascertain provider for ship method to be deleted.','gMessage':true});
 						}
 					});
-				},
+				}, //shipmethodRemoveExec
 			
 			shipmethodAddUpdateExec : function($btn)	{
 				$btn.button();
@@ -591,14 +612,29 @@ if(app.u.validateForm($form))	{
 	//shipping updates are destructive, so the entire form needs to go up.
 	macros.push("SHIPMETHOD/UPDATE?"+$.param(sfo));
 
-	if($dataTable.length && sfo.provider)	{
-		macros.push("SHIPMETHOD/DATATABLE-EMPTY&provider="+sfo.provider);
+
+//The following block is for handling data/fee tables.
+
+//currently, handling and insurance have multiple tables, so they get handled slight differently, a table is passed in addition to provider.
+	if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{
+		$dataTable.each(function(){
+			var tableID = $(this).attr('data-table');
+			macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider+"&table="+tableID);
+			$('tbody',$(this)).find('tr').each(function(){
+				if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+				else	{
+					macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+					}
+				});
+			});
+		}
+//currently, only insurance and handling have more than one data table. If that changes, the code below will need updating.
+	else if($dataTable.length && sfo.provider)	{
+		macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider);
 		$('tbody',$dataTable).find('tr').each(function(){
 			if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 			else	{
-				var tmp = $.extend(true,{},$(this).data());
-				delete tmp.templateid; delete tmp.obj_index; delete tmp.anycontent; delete tmp.uiAnycontent; //some extras not needed.
-				macros.push("SHIPMETHOD/DATATABLE-INSERT&provider="+sfo.provider+"&"+$.param(tmp));
+				macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
 				}
 			});
 		}
@@ -606,29 +642,59 @@ if(app.u.validateForm($form))	{
 		$form.anymessage({"message":"Something has gone wrong with the save. The rows added to the table could not be updated. Please try your save again and if the error persists, please contact the site administrator. If you made other changes and no error was reported besides this one, they most likely saved. In admin_config.e.shipmethodAddUpdateExec, unable to ascertain provider for datatable update.","gMessage":false});
 		}
 	else	{} //perfectlynormal to not have a data table.
+
 //	app.u.dump(" -> macros"); app.u.dump(macros);
-	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'handleMacroUpdate','extension':'admin_syndication'},'immutable');
+	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'handleMacroUpdate','extension':'admin_syndication','jqObj':$form},'immutable');
 	app.model.dispatchThis('immutable');
 	}
 else	{
 	//validateForm handles error display
 	}
 					});
+				}, //shipmethodAddUpdateExec
+			
+			ruleBuilderUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.ruleBuilderUpdateExec').on('click.ruleBuilderUpdateExec',function(event){
+event.preventDefault();
+
+var
+	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+	$tbody = $("[data-app-role='dualModeListContents']",$dualModeContainer).first(),
+	macros = new Array(),
+	provider = $btn.closest('[data-provider]').data('provider'),
+	table = $btn.closest('[data-table]').data('table');
+
+
+macros.push("SHIPMETHOD/RULESTABLE-EMPTY?provider="+provider+"&table="+table);
+$('tr',$tbody).each(function(){
+	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+	else	{
+		macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+provider+"&table="+table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+		}
+	});
+//app.u.dump(' -> macros: '); app.u.dump(macros);
+
+app.ext.admin.calls.adminConfigMacro.init(macros,[],'immutable');
+app.model.dispatchThis('immutable');
+
+					});
 				},
 			
-			showRuleBuilderAsPanel : function($btn)	{
+			showRuleEditorAsPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
-				$btn.off('click.showEditRule').on('click.showEditRule',function(){
+				$btn.off('click.showRuleEditorAsPanel').on('click.showRuleEditorAsPanel',function(){
 
 var
 	$container = $btn.closest("[data-app-role='dualModeContainer']"),
 	data = $btn.closest('tr').data(),
+	provider = $btn.closest("[data-provider]").data('provider'),
 	$target = $("[data-app-role='dualModeDetail']",$container)
 	panelID = app.u.jqSelector('','ruleBuilder_'+data.provider);
-
+app.u.dump(" -> provider: "+provider);
 $panel = $("<div\/>").hide().anypanel({
-	'header':'Edit: '+data.provider,
-	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipmethods|'+app.vars.partition]),
+	'header':'Edit: '+data.name,
+	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data()), //app.ext.admin_config.u.getShipMethodByProvider(provider)['@RULES'][$btn.closest('tr').attr('data-obj_index')]
 	'templateID':'rulesFieldset_shipping'
 	}).prependTo($target);
 app.ext.admin.u.toggleDualMode($container,'detail');
@@ -637,7 +703,7 @@ $panel.slideDown('fast');
 if(data.schedule)	{
 	$("[name='SCHEDULE']",$panel).val();
 	}
-					
+app.u.handleAppEvents($panel,{'$dataTbody':$btn.closest('tbody'),'$form':$btn.closest('form')});			
 					});
 				},
 			

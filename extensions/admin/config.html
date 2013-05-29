@@ -4,16 +4,18 @@
 
 
 <div id='ruleBuilderTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
-
+	
 	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
 
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
+	<form action='#' onSubmit='return false'><!-- used for rule adds and rule order changes. necessary for data-table feature -->
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='buttonSet'>
-				<button class='floatRight' data-app-event="admin_config|showAddRule">Add Rule</button>
 				<button class='floatRight' data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
+				<button class='floatRight' data-app-event="admin_config|showAddRule">Add Rule</button>
+				<button class='floatRight' disabled="disabled" data-app-role='saveButton' data-app-event="admin_config|ruleBuilderUpdateExec">Save Changes</button><!-- left count out intentionally because row change updates would be hard to track accurately -->
 			</div>
-			<h3 class='heading' data-bind="var: rules(title); format:text; defaultValue: Builder;"></h3>
+			<h3 class='heading' data-bind="var: rules(title); format:text; defaultValue: Rules;"></h3>
 		</div>
 	
 		<div class='ui-widget-content ui-corner-bottom'>
@@ -37,20 +39,24 @@
 		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
 		
 		</div>
+	</form>
 	</section>
 </div>
 
 
 <table>
 <tr id='ruleBuilderRowTemplate'>
-	<td data-bind="var: rule(CODE); format:text;"></td>
-	<td data-bind="var: rule(NAME); format:text;"></td>
-	<td data-bind="var: rule(CREATED); format:text;"></td>
-	<td data-bind="var: rule(EXEC); format:text;"></td>
-	<td data-bind="var: rule(MATCH); format:text;"></td>
-	<td data-bind="var: rule(SCHEDULE); format:text;"></td>
-	<td data-bind="var: rule(VALUE); format:text;"></td>
-	<td><button data-app-event="admin_config|showRuleBuilderAsPanel">Edit Rule</button></td>
+	<td data-bind="var: rule(code); format:text;"></td>
+	<td data-bind="var: rule(name); format:text;"></td>
+	<td data-bind="var: rule(created); format:text;"></td>
+	<td data-bind="var: rule(exec); format:text;"></td>
+	<td data-bind="var: rule(match); format:text;"></td>
+	<td data-bind="var: rule(schedule); format:text;"></td>
+	<td data-bind="var: rule(value); format:text;"></td>
+	<td>
+		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>
+		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
+	</td>
 </tr>
 </table>
 
@@ -59,15 +65,18 @@
 <form  id='rulesFieldset_shipping'>
 <fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 
+	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
+	<input type='hidden' name="created" data-bind="var: rule(created); format:popVal;" />
+	
 <label>
 	<span>Rule name</span>
-	<input type="text" maxlength="60" size="60" placeholder="new rule" name="NAME" required='required' data-bind="var: rule(NAME); format:popVal;" />
+	<input type="text" maxlength="60" size="60" placeholder="new rule" name="name" required='required' data-bind="var: rule(name); format:popVal;" />
 	<span class='toolTip' title="The name should remind you 'why does this rule exist?'">?</span>
 </label>
 
 <label>
 	<span>Use rule if</span>
-	<select name="MATCH" data-bind="var: rule(MATCH); format:popVal;">
+	<select name="match" data-bind="var: rule(match); format:popVal;">
 		<option value="IGNORE">Disabled (will be skipped)</option>
 		<option value="IS_TRUE">Is True (Always run this rule)</option>
 		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
@@ -112,11 +121,11 @@
 
 <label>
 	<span>Filter criteria</span>
-	<textarea rows="3" name="FILTER" data-bind="var: rule(FILTER); format:popVal;"></textarea>
+	<textarea rows="3" name="filter" data-bind="var: rule(filter); format:popVal;"></textarea>
 </label>
 <label>
 	<span>Action if match</span>
-	<select name="EXEC" data-bind="var: rule(EXEC); format:popVal;">
+	<select name="exec" data-bind="var: rule(exec); format:popVal;">
 		<option value="STOP">Stop Processing</option>
 		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
 		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
@@ -132,11 +141,17 @@
 
 <label>
 	<span>Value</span>
-	<input type="text" value="0.00" name="VALUE" data-bind="var: rule(VALUE); format:popVal;">
+	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal;">
 </label>
 <p class='hint'>NOTE: values must be written as -%5 or +$5 to be valid.</p>
 
-<label data-bind="useParentData:true; format:wholesaleScheduleSelect; extension:admin_wholesale;">Schedule: </label>
+	<label>
+		<span>Pricing Schedule:</span>
+		<select name='schedule' data-bind="var: rss(@SCHEDULES);format:optionsFromList; text:id; value:id;">
+			<option value=''>none</option>
+		</select>
+	</label>
+<button data-app-event="admin_config|dataTableAddExec">Add/Update</button>
 
 </fieldset>
 </form>
@@ -226,7 +241,7 @@
 <div id='shippingGlobal_insurance'>
 
 
-
+<input type='hidden' name='provider' value='INSURANCE' />
 
 
 <p>Insurance fees are applied after the rules based shipping calculation.  Insurance fees are typically used to cover the cost of 3rd party insurance companies, or as a profit center for companies who decide to be "self insuring". You may enable as many insurance calculations as you like, all methods will be summed together to arrive at the final insurance total.</p>
@@ -293,73 +308,183 @@
 
 <label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
 
-<table>
-<thead>
-<tr>
-	<th>Domestic</th>
-	<th>Canada</th>
-	<th>International</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td class='valignTop'>DATA GOES HERE</td>
-	<td class='valignTop'>DATA GOES HERE</td>
-	<td class='valignTop'>DATA GOES HERE</td>
-</tr>
-<tr>
-	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-</tr>
-</tbody>
-</table>
 
-<table>
-<tbody>
-<tr>
-	<td  ><input type="button" value=" Add " style="width: 75; font-size: 8pt; font-family: helvetica;" onclick="jQuery('#ACTION').value='WEIGHT_EDIT'; jQuery('#thisFrm').submit();" class="button showLoadingModal"></td>
-	<td >Up to Weight:<input type="text" size="8" name="weight_upto" ></td>
-	<td >Fee:<input type="text" size="5" name="weight_fee" ></td>
-</tr>
-</tbody>
-</table>
-<p class='hint'>HINT: To reset/remove a value, simply enter a blank fee.</p>
 
+
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Domestic</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_US'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Canada</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_CA'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>International</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_INT'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+<div class='clearfix'></div>
 
 <h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 
 <label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popCheckbox;" /> Enable</label>
 
-<table>
-<tbody>
-<tr>
-	<th>Domestic</th>
-	<th>Canada</th>
-	<th>International</th>
-</tr>
-<tr>
-	<td class='valignTop'>DATA GOES HERE</td>
-	<td class='valignTop'>DATA GOES HERE</td>
-	<td class='valignTop'>DATA GOES HERE</td>
-</tr>
-<tr>
-	<td><input type="radio" value="dom" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
-</tr>
-</tbody>
 
-<table>
-<tbody>
-<tr>
-	<td  ><input type="button" value=" Add " style="width: 75; font-size: 8pt; font-family: helvetica;" onclick="$('#ACTION').value = 'PRICE_EDIT'; jQuery('#thisFrm').submit();" class="button showLoadingModal"></td>
-	<td >Up to Price:<input type="text" size="8" name="price_upto" ></td>
-	<td >Ins. Fee:<input type="text" size="5" name="price_fee" ></td>
-</tr>
-</tbody>
-</table>
-<p>HINT: To reset/remove a value, simply enter a blank fee.</p>
+
+
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Domestic</legend>
+	<table data-app-role='dataTable' data-table='PRICE_US'>
+	<thead>
+	<tr>
+		<th>Subtotal</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Canada</legend>
+	<table data-app-role='dataTable' data-table='PRICE_CA'>
+	<thead>
+	<tr>
+		<th>Subtotal</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>International</legend>
+	<table data-app-role='dataTable' data-table='PRICE_INT'>
+	<thead>
+	<tr>
+		<th>Subtotal</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+<div class='clearfix'></div>
+
+
 
 
 <b>Special Handling Rules: </b><br>
@@ -376,7 +501,7 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <div id='shippingGlobal_handling'>
 
-
+<input type='hidden' name='provider' value='HANDLING' />
 
 <p>Handling fees are applied to all shipping methods after the rules based shipping calculation. Handling fees are typically used to cover the packaging expenses and/or labor involved in assembling an order. You may enable as many handling calculations as you like,  all methods will be summed together to arrive at the final handling total. </p>
 
@@ -404,15 +529,15 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(dom_item1); format: popVal;" /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;" /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
 </tr>
 </tbody>
 </table>
@@ -433,40 +558,88 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 <label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
 
 
-<table>
-<thead>
-<tr>
-	<th>Domestic</th>
-	<th>Canada</th>
-	<th>International</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td class='valignTop'>LIST OF WEIGHTS</td>
-	<td class='valignTop'>LIST OF WEIGHTS</td>
-	<td class='valignTop'>LIST OF WEIGHTS</td>
-</tr>
-<tr>
-	<td colspan="3"><hr></td>
-</tr>
-<tr>
-	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
-</tr>
-</tbody>
-</table>
-<table>
-<tbody>
-<tr>
-	<td  ><input type="button" value=" Add " onclick="jQuery('#ACTION').val('WEIGHT_EDIT'); jQuery('#thisFrm').submit();"></td>
-	<td >Up to Weight:<input type="text" size="8" name="weight_upto" /></td>
-	<td >Fee:<input type="text" size="5" name="weight_fee" /></td>
-</tr>
-</tbody>
-</table>
-<p>HINT: To reset/remove a value, simply enter a blank handling fee.</p>
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Domestic</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_US'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>Canada</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_CA'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+
+
+
+<fieldset class='floatLeft marginRight'>
+	<legend>International</legend>
+	<table data-app-role='dataTable' data-table='WEIGHT_INT'>
+	<thead>
+	<tr>
+		<th>Weight</th>
+		<th>Fee</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+	
+	</tbody>
+	</table>
+
+	<table>
+	<tbody>
+	<tr>
+		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+	</tr>
+	</tbody>
+	</table>
+</fieldset>
+
+<div class='clearfix'></div>
 
 <b>Special Handling Rules: </b><br>
 Use shipping rules to handle the "special cases" that come up from time to time.<br>
@@ -885,7 +1058,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<div class='floatRight'>
 	<label><span>Max weight</span><input size='6' type='text' name='weight' class='skipTrack' /></label>
 	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack'  step='0.01' min='0' /></label>
-	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
+	<button data-app-event="admin_config|dataTableAddExec">Add</button>
 	</div>
 	
 		<table class='floatLeft gridTable' data-app-role='dataTable'>
@@ -921,7 +1094,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<div class='floatRight'>
 	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' class='skipTrack' /></label>
 	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
-	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
+	<button data-app-event="admin_config|dataTableAddExec">Add</button>
 	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 	</div>
 	
@@ -974,7 +1147,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 		<label><span>Start zip</span><input size='6' type='text' name='zip1' class='skipTrack' /></label>
 		<label><span>End zip</span><input size='6' type='text' name='zip2' class='skipTrack' /></label>
 		<label><span>Ship price</span><input size='6' type='number' name='fee' step='0.01' min='0' class='skipTrack' /></label>
-		<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
+		<button data-app-event="admin_config|dataTableAddExec">Add</button>
 		<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 		</div>
 
@@ -1018,7 +1191,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 		<span>Pickup instructions</span>
 		<textarea name='text' class='skipTrack'></textarea>
 	</label>
-	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
+	<button data-app-event="admin_config|dataTableAddExec">Add</button>
 	</div>
 	
 	<table class='floatLeft gridTable' data-app-role='dataTable'>
