@@ -83,7 +83,7 @@ User: <span data-bind="var:customer(_EMAIL); format:text;"></span> <span data-bi
 Prt: <span data-bind="var:customer(_PRT); format:text; hideZero:false;" class='paddingRight'></span>
 Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></span>	
 		</h2>
-		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave'>Save <span class='numChanges'></span> Changes</button>
+		<button class='floatRight' disabled='disabled' data-app-event='admin_customer|execCustomerEditorSave' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 		<button class='floatRight' name="reset_hint" data-app-event='admin_customer|execHintReset'>Remove Password Hint</button>
 		<button class='floatRight' data-app-event='admin_customer|execCustomerRemove'>Delete</button>
 		<button class='floatRight' data-app-event='admin_customer|showMailTool'>Email</button>
@@ -352,7 +352,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td data-bind="var:address(bill_phone); defaultVar: address(ship_phone); format:text;"></td>
 	<td class='alignRight'>
 <button data-app-event="admin_customer|showAddrUpdate">Edit this address</button>
-<button data-app-event="admin_customer|tagRowForRemove">Delete this address</button><!--
+<button data-app-event="admin|tagRowForRemove">Delete this address</button><!--
 <button data-app-event="admin_customer|tagRowForIsDefault">Set address as default</button> -->
 	</td>
 </tr>
@@ -362,7 +362,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td data-bind="var:note(LUSER); format:text;"></td>
 	<td data-bind="var:note(NOTE); format:text;"></td>
 	<td class='alignRight'>
-	<button data-app-event="admin_customer|tagRowForRemove">Delete this note</button>
+	<button data-app-event="admin|tagRowForRemove">Delete this note</button>
 	</td>
 </tr>
 
@@ -372,7 +372,7 @@ Created: <span data-bind="var:customer(INFO.CREATED_GMT); format:unix2mdy;"></sp
 	<td class='alignRight' data-bind="var:wallet(TE); format:text;"></td>
 	<td class='alignRight'>
 <!--	<button data-app-event="admin_customer|showWalletDetail">View this wallet</button> -->
-	<button data-app-event="admin_customer|tagRowForRemove">Delete this wallet</button><!--
+	<button data-app-event="admin|tagRowForRemove">Delete this wallet</button><!--
 	<button data-app-event="admin_customer|tagRowForIsDefault">Set wallet as default</button>--></td>
 </tr>
 </table>

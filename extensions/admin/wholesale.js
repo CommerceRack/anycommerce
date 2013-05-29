@@ -98,7 +98,7 @@ var admin_wholesale = function() {
 									$input.anycb();
 									}
 								});
-							$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate'>Save Changes</button>");
+							$('.buttonset',$target).append("<button data-app-event='admin_wholesale|execOrganizationUpdate' data-app-role='saveButton'>Save Changes</button>");
 							app.u.handleAppEvents($target);
 							}
 						}},'mutable');

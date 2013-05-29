@@ -841,6 +841,8 @@ else	{
 
 //use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
 //the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
+/*
+Removed in favor of data-app-event="admin|tagRowForRemove".
 			tagRowForRemove : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
 				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
@@ -865,7 +867,7 @@ else	{
 					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
 					});
 				}, //tagRowForRemove
-
+*/
 			tagNoteButtonAsEnabled : function($ele)	{
 				$ele.off('keyup.tagNoteButtonAsEnabled'); //remove old event so nuking val doesn't trigger change code.
 				$ele.val(''); //reset value. panel has events re-run after note added. this clears the last note.

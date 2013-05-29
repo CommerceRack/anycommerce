@@ -184,13 +184,13 @@
 			<button >Choose Method</button>
 		</div>
 		<ul>
-			<li><a href='#' data-shipment='FREE'>Free</a></li>
-			<li><a href='#' data-shipment='FIXED'>Fixed</a></li>
-			<li><a href='#' data-shipment='PRICE'>Price</a></li>
-			<li><a href='#' data-shipment='WEIGHT'>Weight</a></li>
-			<li><a href='#' data-shipment='SIMPLE'>Simple</a></li>
-			<li><a href='#' data-shipment='LOCAL'>Local Pickup/Delivery</a></li>
-			<li><a href='#' data-shipment='LOCAL_CANADA'>Canada Local Pickup/Delivery</a></li>
+			<li><a href='#' data-shipmethod='FREE'>Free</a></li>
+			<li><a href='#' data-shipmethod='FIXED'>Fixed</a></li>
+			<li><a href='#' data-shipmethod='PRICE'>Price</a></li>
+			<li><a href='#' data-shipmethod='WEIGHT'>Weight</a></li>
+			<li><a href='#' data-shipmethod='SIMPLE'>Simple</a></li>
+			<li><a href='#' data-shipmethod='LOCAL'>Local Pickup/Delivery</a></li>
+			<li><a href='#' data-shipmethod='LOCAL_CANADA'>Canada Local Pickup/Delivery</a></li>
 		</ul>
 	</div>
 </div>
@@ -204,8 +204,9 @@
 			<h3 class='heading'>Edit:</h3>
 		</div>
 		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels fieldsetBorder'>
-			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom'>
-				<button data-app-event="admin_config|shipmethodAddUpdateExec">Save</button>
+			<div class='buttonset alignRight ui-widget-content ui-corner-all marginBottom smallPadding displayNone'>
+				<button data-app-event="admin_config|shipmethodRemoveExec">Delete Method</button>
+				<button data-app-event="admin_config|shipmethodAddUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
 			<div data-app-role='slimLeftContent'></div>
@@ -232,19 +233,19 @@
 
 <div class='label'>
 	Insurance fees for orders will be:
-	<label><input type="radio" value="0" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="insurance" data-bind="var: shipment(insurance); format: popRadio;" /> Displays as it's own line item under shipping.</label>
+	<label><input type="radio" value="0" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 	<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
 </div>
 
 <div class='label'>
 	Insurance is:
-	<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipment(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
-	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipment(ins_optional); format: popRadio;" /> Mandatory (will be automatically included in order)</label>
+	<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
+	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Mandatory (will be automatically included in order)</label>
 </div>
 
-<label><input type="checkbox" name="flat" data-bind="var: shipment(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
 
 
 <table>
@@ -260,15 +261,15 @@
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipment(dom_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipment(can_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipment(int_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipment(dom_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipment(can_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipment(int_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
 </tr>
 </tbody></table>
 	</td>
@@ -279,18 +280,18 @@
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
 
-<label><input type="radio" value="0" name="product" data-bind="var: shipment(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada + international orders</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada + international orders</label>
 
 
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 
-<label><input type="checkbox" name="weight" data-bind="var: shipment(weight); format: popCheckbox;" /> Enable</label>
+<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
 
 <table>
 <thead>
@@ -307,9 +308,9 @@
 	<td class='valignTop'>DATA GOES HERE</td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 </table>
@@ -328,7 +329,7 @@
 
 <h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
 
-<label><input type="checkbox" name="price"  data-bind="var: shipment(price); format: popCheckbox;" /> Enable</label>
+<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popCheckbox;" /> Enable</label>
 
 <table>
 <tbody>
@@ -343,9 +344,9 @@
 	<td class='valignTop'>DATA GOES HERE</td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="price_area" data-bind="var: shipment(price_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="dom" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="price_area" data-bind="var: shipmethod(price_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 
@@ -381,14 +382,14 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <div class='label'>
 	Handling fees for orders will be:<br>
-	<label><input type="radio" value="0" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="handling" data-bind="var: shipment(handling); format: popRadio;" /> Displays as it's own line item under shipping.</label>
+	<label><input type="radio" value="0" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 <p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
 </div>
 
 
-<label><input type="checkbox" name="flat"  data-bind="var: shipment(flat); format: popCheckbox;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
+<label><input type="checkbox" name="flat"  data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Handling Per Item: <span class='toolTip' title='This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item,  and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.'>?</span></label>
 
 
 <table>
@@ -403,15 +404,15 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(dom_item1); format: popVal;" /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(can_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(int_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(dom_item1); format: popVal;" /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(dom_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(can_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipment(int_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0'  data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
 </tr>
 </tbody>
 </table>
@@ -419,17 +420,17 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
-<label><input type="radio" value="0" name="product" data-bind="var: shipment(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product" data-bind="var: shipment(product); format: popRadio;" /> Use per product for canada + international orders</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for all destinations</label>
+<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for domestic orders only</label>
+<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada orders only</label>
+<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for international orders only</label>
+<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada + international orders</label>
 
 
 <h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a
 lookup table to determine the next highest handling fee.">?</span></h4>
-<label><input type="checkbox" name="weight" data-bind="var: shipment(weight); format: popCheckbox;" /> Enable</label>
+<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
 
 
 <table>
@@ -450,9 +451,9 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 	<td colspan="3"><hr></td>
 </tr>
 <tr>
-	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
-	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipment(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="dom" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="can" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
+	<td><input type="radio" value="int" name="weight_area" data-bind="var: shipmethod(weight_area); format: popRadio;" /> Edit</td>
 </tr>
 </tbody>
 </table>
@@ -480,22 +481,26 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 
 <table>
 <tr id='shippingLocalRowTemplate'>
-	<td data-bind="var: shipment(zip1); format:text;"></td>
-	<td data-bind="var: shipment(zip2); format:text;"></td>
-	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipmethod(zip1); format:text;"></td>
+	<td data-bind="var: shipmethod(zip2); format:text;"></td>
+	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 <tr id='shippingWeightRowTemplate'>
-	<td data-bind="var: shipment(weight); hideZero:false; format:text;"></td>
-	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipmethod(weight); hideZero:false; format:text;"></td>
+	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 <tr id='shippingPriceRowTemplate'>
-	<td data-bind="var: shipment(subtotal); hideZero:false; format:money;"></td>
-	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipmethod(subtotal); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 <tr id='shippingLocalCanadaRowTemplate'>
-	<td data-bind="var: shipment(postal); format:text;"></td>
-	<td data-bind="var: shipment(fee); hideZero:false; format:money;"></td>
-	<td data-bind="var: shipment(txt); format:text;"></td>
+	<td data-bind="var: shipmethod(postal); format:text;"></td>
+	<td data-bind="var: shipmethod(fee); hideZero:false; format:money;"></td>
+	<td data-bind="var: shipmethod(txt); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 </table>
 
@@ -507,56 +512,56 @@ Use shipping rules to handle the "special cases" that come up from time to time.
 Please provide the information needed below to setup your FedEx&reg; meter:<br>
 </p>
 <label><span>Fedex&reg; Account Number:</span>
-<input type="text" value="" name="ACCOUNT" data-bind="var: shipment(ACCOUNT); format:popVal;" />
+<input type="text" value="" name="ACCOUNT" data-bind="var: shipmethod(ACCOUNT); format:popVal;" />
 </label>
 
 <label><span>Contact First Name</span>	
-<input type="text" value="" name="FIRSTNAME" data-bind="var: shipment(FIRSTNAME); format:popVal;" />
+<input type="text" value="" name="FIRSTNAME" data-bind="var: shipmethod(FIRSTNAME); format:popVal;" />
 </label>
 
 <label><span>Contact Last Name</span>	
-<input type="text" value="" name="LASTNAME" data-bind="var: shipment(LASTNAME); format:popVal;" />
+<input type="text" value="" name="LASTNAME" data-bind="var: shipmethod(LASTNAME); format:popVal;" />
 </label>
 
 <label><span>Company Name</span>	
-<input type="text" value="" name="COMPANY" data-bind="var: shipment(COMPANY); format:popVal;" />
+<input type="text" value="" name="COMPANY" data-bind="var: shipmethod(COMPANY); format:popVal;" />
 </label>
 
 <label><span>Address Line 1</span>	
-<input type="text" value="" name="ADDRESS1" data-bind="var: shipment(ADDRESS1); format:popVal;" />
+<input type="text" value="" name="ADDRESS1" data-bind="var: shipmethod(ADDRESS1); format:popVal;" />
 </label>
 
 <label><span>Address Line 2</span>	
-<input type="text" value="" name="ADDRESS2" data-bind="var: shipment(ADDRESS2); format:popVal;" />
+<input type="text" value="" name="ADDRESS2" data-bind="var: shipmethod(ADDRESS2); format:popVal;" />
 </label>
 
 <label><span>City</span>	
-<input type="text" value="" name="CITY" data-bind="var: shipment(CITY); format:popVal;" />
+<input type="text" value="" name="CITY" data-bind="var: shipmethod(CITY); format:popVal;" />
 </label>
 
 <label><span>State Code</span>	
-<input type="text" value="" name="STATE" data-bind="var: shipment(STATE); format:popVal;" ><br>
+<input type="text" value="" name="STATE" data-bind="var: shipmethod(STATE); format:popVal;" ><br>
 <i>(required for Canada or US)</i>
 </label>
 
 <label><span>Postal/Zip Code</span>	
-<input type="text" value="" name="ZIP" data-bind="var: shipment(ZIP); format:popVal;" />
+<input type="text" value="" name="ZIP" data-bind="var: shipmethod(ZIP); format:popVal;" />
 </label>
 
 <label><span>Country Code</span>	
-<input type="text" value="" name="COUNTRY" size="2" data-bind="var: shipment(COUNTRY); format:popVal;" />
+<input type="text" value="" name="COUNTRY" size="2" data-bind="var: shipmethod(COUNTRY); format:popVal;" />
 </label>
 
 <label><span>Phone Number</span>	
-<input type="tel" value="" name="PHONE" data-bind="var: shipment(PHONE); format:popVal;" />
+<input type="tel" value="" name="PHONE" data-bind="var: shipmethod(PHONE); format:popVal;" />
 </label>
 
 <label><span>Email Address</span>	
-<input type="email" value="" name="EMAIL" data-bind="var: shipment(EMAIL); format:popVal;"  />
+<input type="email" value="" name="EMAIL" data-bind="var: shipmethod(EMAIL); format:popVal;"  />
 </label>
 
 <label><span>Fax Number</span>
-<input type="tel" value="" name="FAX" data-bind="var: shipment(FAX); format:popVal;" />
+<input type="tel" value="" name="FAX" data-bind="var: shipmethod(FAX); format:popVal;" />
 </label>
 
 </fieldset>
@@ -583,7 +588,7 @@ UPS Shipper Number: <span></span><br>
 
 <fieldset class='showForZoovyOnly'>
 <legend>AirBill Printing (via Windows Order Manager):</legend>
-<label><input type="checkbox" name="PRIMARY_SHIPPER" data-bind='var: shipment(PRIMARY_SHIPPER); format:popCheckbox;' /> Designate UPS as my primary Shipping provider</label>
+<label><input type="checkbox" name="PRIMARY_SHIPPER" data-bind='var: shipmethod(PRIMARY_SHIPPER); format:popCheckbox;' /> Designate UPS as my primary Shipping provider</label>
 <p class='hint'>
 NOTE: This feature *requires* a UPS Shipper Number. 
 We apologize but due to contractual obligations you may only have have one shipping company designated as your primary shipper - enabling this feature will override any other previously designated primary shipper.<br>
@@ -596,17 +601,17 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 <label>
 	<span>Rate Chart to Use</span>
-	<select name="rate_chart" data-bind='var: shipment(rate_chart); format:popVal;' >
+	<select name="rate_chart" data-bind='var: shipmethod(rate_chart); format:popVal;' >
 		<option value="01" >Daily Pickup</option>
 		<option value="03">Occasional Shipper</option>
 	</select>
 </label>
 
 
-<label><input type="checkbox" name="option_multibox" data-bind='var: shipment(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipment. Recommended for customers with large non-combinable items.</label>
-<label><input type="checkbox" name="option_residential" data-bind='var: shipment(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
-<label><input type="checkbox" name="option_validation" data-bind='var: shipment(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
-<label><input type="checkbox" name="option_use_rules" data-bind='var: shipment(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
+<label><input type="checkbox" name="option_multibox" data-bind='var: shipmethod(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
+<label><input type="checkbox" name="option_residential" data-bind='var: shipmethod(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
+<label><input type="checkbox" name="option_validation" data-bind='var: shipmethod(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
+<label><input type="checkbox" name="option_use_rules" data-bind='var: shipmethod(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
 
 </fieldset>
 
@@ -614,9 +619,9 @@ We apologize but due to contractual obligations you may only have have one shipp
 <fieldset>
 	<legend>UPS Domestic Settings</legend>
 	
-	<label><input type="checkbox" value="on" name="dom" data-bind='var: shipment(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support [<a href="#!ruleBuilder?method=UPSAPI_DOM">general rules</a>]</label>
+	<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support [<a href="#!ruleBuilder?method=UPSAPI_DOM">general rules</a>]</label>
 	<label><span>Quote Domestic Packaging As:</span>
-	<select name="dom_packaging" data-bind='var: shipment(dom_packaging); format:popVal;'>
+	<select name="dom_packaging" data-bind='var: shipmethod(dom_packaging); format:popVal;'>
 		<option value="00" >Your Packaging</option>
 		<option value="01">UPS Letter Envelope</option>
 		<option value="03">UPS Tube</option>
@@ -635,37 +640,37 @@ We apologize but due to contractual obligations you may only have have one shipp
 <table class='fullWidth gridTable'>
 <tbody>
 <tr >
-	<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipment(dom_gnd); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popCheckbox;' /></td>
 	<td>UPS Ground</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_GND" title="#!ruleBuilder?method=UPSAPI_DOM_GND">specific rules</a>]</td>
 </tr>
 <tr>
-	<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipment(dom_3ds); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popCheckbox;' /></td>
 	<td>UPS 3 Day Select&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_3DS" title="#!ruleBuilder?method=UPSAPI_DOM_3DS">specific rules</a>]</td>
 </tr>
 <tr >
-	<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipment(dom_2dm); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popCheckbox;' /></td>
 	<td>UPS 2nd Day Air A.M.&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_2DM" title="#!ruleBuilder?method=UPSAPI_DOM_2DM">specific rules</a>]</td>
 </tr>
 <tr>
-	<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipment(dom_2da); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popCheckbox;' /></td>
 	<td>UPS 2nd Day Air&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_2DA" title="#!ruleBuilder?method=UPSAPI_DOM_2DA">specific rules</a>]</td>
 </tr>
 <tr >
-	<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipment(dom_1dp); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popCheckbox;' /></td>
 	<td>UPS Next Day Air Saver&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DP" title="#!ruleBuilder?method=UPSAPI_DOM_1DP">specific rules</a>]</td>
 </tr>
 <tr>
-	<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipment(dom_1da); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popCheckbox;' /></td>
 	<td>UPS Next Day Air&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DA" title="#!ruleBuilder?method=UPSAPI_DOM_1DA">specific rules</a>]</td>
 </tr>
 <tr >
-	<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipment(dom_1dm); format:popCheckbox;' /></td>
+	<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popCheckbox;' /></td>
 	<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
 	<td>[<a href="#!ruleBuilder?method=UPSAPI_DOM_1DM" title="#!ruleBuilder?method=UPSAPI_DOM_1DM">specific rules</a>]</td>
 </tr>
@@ -678,11 +683,11 @@ We apologize but due to contractual obligations you may only have have one shipp
 <fieldset>
 <legend>UPS International Settings</legend>
 
-	<label><input type="checkbox" value="on" name="int" data-bind='var: shipment(int); format:popCheckbox;' /> Enable UPS International Shipping Support [<a href="#!ruleBuilder?method=upsapi_int" title="#!ruleBuilder?method=upsapi_int">general rules</a>]</label>
+	<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable UPS International Shipping Support [<a href="#!ruleBuilder?method=upsapi_int" title="#!ruleBuilder?method=upsapi_int">general rules</a>]</label>
 	
 	<label>
 		<span>Quote International Packaging As:</span>
-		<select name="int_packaging" data-bind='var: shipment(int_packaging); format:popVal;'>
+		<select name="int_packaging" data-bind='var: shipmethod(int_packaging); format:popVal;'>
 			<option value="00" >Your Packaging</option>
 			<option value="01">UPS Letter Envelope</option>
 			<option value="03">UPS Tube</option>
@@ -701,28 +706,28 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<table class='fullWidth gridTable'>
 	<tbody>
 	<tr >
-		<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipment(int_std); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popCheckbox;' /></td>
 		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to
 	Canada</a></td>
 		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_STD">specific rules</a>]</td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipment(int_xsv); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popCheckbox;' /></td>
 		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
 		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XSV" >specific rules</a>]</td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipment(int_xpr); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popCheckbox;' /></td>
 		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
 		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XPR" >specific rules</a>]</td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipment(int_xdm); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popCheckbox;' /></td>
 		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
 		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XDM">specific rules</a>]</td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipment(int_xpd); format:popCheckbox;' /></td>
+		<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popCheckbox;' /></td>
 		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
 		<td>[<a href="#!ruleBuilder?method=UPSAPI_INT_XPD" >specific rules</a>]</td>
 	</tr>
@@ -747,43 +752,43 @@ We apologize but due to contractual obligations you may only have have one shipp
 </thead>
    <tr >
       <td>Enable</td>
-      <td><input type="checkbox" name="usps_dom" data-bind="var: shipment(usps_dom); format: popCheckbox;" /></td>
-      <td><input type="checkbox" name="usps_int" data-bind="var: shipment(usps_int); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popCheckbox;" /></td>
    </tr>
    <tr>
       <td>First Class</td>
       <td></td>
-      <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipment(usps_int_parcelpost); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popCheckbox;" /></td>
    </tr>
    <tr>
       <td>Parcel Post</td>
-      <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipment(usps_dom_bulkrate); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popCheckbox;" /></td>
       <td></td>
    </tr>
    <tr>
       <td>Priority Mail (6-10 days)</td>
-      <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipment(usps_dom_priority); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popCheckbox;" /></td>
       <td>
-         <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipment(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipment(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br>
-         <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipment(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br>
+         <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br>
+         <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br>
       </td>
    </tr>
    <tr>
       <td>Express Mail (3-5 days)</td>
-      <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipment(usps_dom); format: popCheckbox;" /></td>
+      <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
       <td>
-         <input type="checkbox" name="usps_int_express_1" data-bind="var: shipment(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_express_2" data-bind="var: shipment(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br>
+         <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br>
       </td>
    </tr>
    <tr>
       <td>Global Express Guaranteed (1-3 days)</td>
       <td></td>
       <td>
-         <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipment(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipment(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br>
-         <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipment(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br>
+         <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br>
+         <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br>
+         <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br>
       </td>
    </tr>
    <tr>
@@ -805,10 +810,11 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 <fieldset>
 	<legend>General Settings</legend>
-	<label><input type="checkbox" name="METHOD_ACTIVE"> Enable method</label>
+	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
+	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popVal;" /> Enable method</label>
 	<label>
 		<span>Region</span>
-		<select name="METHOD_REGION">
+		<select name="region"  data-bind="var:shipmethod(region); format:popVal;" >
 			<option value="US" selected="">United States</option>
 			<option value="CA">Canada</option>
 			<option value="INT">International</option>
@@ -817,18 +823,18 @@ We apologize but due to contractual obligations you may only have have one shipp
 	
 	<label>
 		<span>Description</span>
-		<input type="text" name="METHOD_NAME" value="" maxlength="25" size="25">
+		<input type="text" name="name" value="" maxlength="25" size="25"  data-bind="var:shipmethod(name); format:popVal;" />
 	</label>
 	
 	<label>
 		<span>Carrier code</span>
-		<input type="text" name="METHOD_CARRIER" value="" size="4">
+		<input type="text" name="carrier" value="" size="4" maxlength='4' data-bind="var:shipmethod(carrier); format:popVal;" />
 	</label>
 </fieldset>
 
 <fieldset data-app-role='rulesFieldset'>
 	<legend>Rules</legend>
-	<label><input type="checkbox" name="METHOD_RULES"> Enable shipping rules</label>
+	<label><input type="checkbox" name="rules"  data-bind="var:shipmethod(rules); format:popVal;" /> Enable shipping rules</label>
 	<button>Manage Rules</button>
 </fieldset>
 
@@ -877,19 +883,19 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<legend>Weight Based Shipping Table</legend>
 	
 	<div class='floatRight'>
-	<label><span>Max weight</span><input size='6' type='text' name='weight' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='price'  step='0.01' min='0' /></label>
-	<button>Add</button>
+	<label><span>Max weight</span><input size='6' type='text' name='weight' class='skipTrack' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack'  step='0.01' min='0' /></label>
+	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
 	</div>
 	
-		<table class='floatLeft gridTable'>
+		<table class='floatLeft gridTable' data-app-role='dataTable'>
 		<thead>
 		<tr>
 			<th>Weight</th>
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingWeightRowTemplate;">
 		</tbody>
 		</table>
 
@@ -913,20 +919,20 @@ We apologize but due to contractual obligations you may only have have one shipp
 	<legend>Price Based Shipping Table</legend>
 	
 	<div class='floatRight'>
-	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='price'  step='0.01' min='0' /></label>
-	<button>Add</button>
+	<label><span>Subtotal</span><input size='6' type='text' name='subtotal' class='skipTrack' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
+	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
 	<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 	</div>
 	
-	<table class='floatLeft gridTable'>
+	<table class='floatLeft gridTable' data-app-role='dataTable'>
 	<thead>
 	<tr>
 		<th>Subtotal</th>
 		<th>Fee</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+	<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingPriceRowTemplate;">
 	</tbody>
 	</table>
 
@@ -965,14 +971,14 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 	<div class='clearfix'>
 		<div class='floatRight'>
-		<label><span>Start zip</span><input size='6' type='text' name='startzip' /></label>
-		<label><span>End zip</span><input size='6' type='text' name='endzip' /></label>
-		<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
-		<button>Add</button>
+		<label><span>Start zip</span><input size='6' type='text' name='zip1' class='skipTrack' /></label>
+		<label><span>End zip</span><input size='6' type='text' name='zip2' class='skipTrack' /></label>
+		<label><span>Ship price</span><input size='6' type='number' name='fee' step='0.01' min='0' class='skipTrack' /></label>
+		<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
 		<p class='hint'>HINT: Specify %#.## in shipping price to use a percentage of the cart subtotal</p>
 		</div>
-		
-		<table class='floatLeft gridTable'>
+
+		<table class='floatLeft gridTable' data-app-role='dataTable'>
 		<thead>
 		<tr>
 			<th>Start Zip</th>
@@ -980,7 +986,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 			<th>Fee</th>
 		</tr>
 		</thead>
-		<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingLocalRowTemplate;">
+		<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalRowTemplate;">
 		</tbody>
 		</table>
 	</div>
@@ -1006,16 +1012,16 @@ We apologize but due to contractual obligations you may only have have one shipp
 </p>
 
 	<div class='floatRight'>
-	<label><span>Zip code pattern</span><input size='6' type='text' name='zippattern' /></label>
-	<label><span>Ship price</span><input size='6' type='number' name='price' step='0.01' min='0' /></label>
+	<label><span>Zip code pattern</span><input size='6' type='text' name='postal' class='skipTrack' /></label>
+	<label><span>Ship price</span><input size='6' type='number' name='fee' class='skipTrack' step='0.01' min='0' /></label>
 	<label>
 		<span>Pickup instructions</span>
-		<textarea name='instructions'></textarea>
+		<textarea name='text' class='skipTrack'></textarea>
 	</label>
-	<button>Add</button>
+	<button data-app-event="admin_config|shipmethodDataTableAddExec">Add</button>
 	</div>
 	
-	<table class='floatLeft gridTable'>
+	<table class='floatLeft gridTable' data-app-role='dataTable'>
 	<thead>
 	<tr>
 		<th>Postal</th>
@@ -1023,7 +1029,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 		<th>Text</th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: shipment(@TABLE); format:processList; loadsTemplate:shippingLocalCanadaRowTemplate;">
+	<tbody data-bind="var: shipmethod(@TABLE); format:processList; loadsTemplate:shippingLocalCanadaRowTemplate;">
 	</tbody>
 	</table>
 

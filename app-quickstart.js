@@ -2206,9 +2206,7 @@ effects the display of the nav buttons only. should be run just after the handle
 					parentID = infoObj.templateID+"_"+app.u.makeSafeHTMLId(pid);
 					infoObj.parentID = parentID;
 					app.ext.myRIA.u.handleTemplateFunctions(infoObj);
-					
-
-					
+	
 //no need to render template again.
 					if(!$('#'+parentID).length){
 						var $content = app.renderFunctions.createTemplateInstance(infoObj.templateID,{'id':parentID,'app-pagetype':'product'});

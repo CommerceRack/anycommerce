@@ -1145,9 +1145,14 @@ if(typeof jQuery === 'function')	{
 		};
 */
 //the old serializeJSON function stopped working correctly for radio buttons w/ jquery 1.9.1
-$.fn.serializeJSON = function(){
+// ** 201320 -> serializeJSON now supports an options object.  set cb:true to get a more rational way of managing checkboxes.
+// 				the serialized object will have any cb set to 1 or 0 based on whether it's checked. That means unchecked items WILL get serialized.
+$.fn.serializeJSON = function(options){
 	var json = {}
 	var $form = $(this);
+	options = options || {}
+	options.cb = options.cb || false;
+
 	$form.find('input, select, textarea, datalist, keygen, output').each(function(){
 		var val;
 		if(!this.name){return}; //early exit if name not set, which is required.
@@ -1157,7 +1162,13 @@ $.fn.serializeJSON = function(){
 			json[this.name] = this.checked ? this.value : '';
 			}
 		else if ('checkbox' === this.type) {
-			if (this.checked) {json[this.name] = 'ON';}
+			if(options.cb)	{
+				if (this.checked) {json[this.name] = '1';}
+				else {json[this.name] = '0';}
+				}
+			else	{
+				if (this.checked) {json[this.name] = 'ON';}
+				}
 //			else	{json[this.name] = 0;}
 			}
 		else {

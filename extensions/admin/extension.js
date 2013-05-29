@@ -187,7 +187,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminBatchJobStatus
 
-//for configDetail requests, no datapointer is set by default for shipment, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
+//for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
 		adminConfigDetail : {
@@ -225,12 +225,14 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 		adminConfigMacro : {
-			init : function(obj,_tag,Q)	{
+			init : function(macros,_tag,Q)	{
 				var r = 0;
-				this.dispatch(obj,_tag,Q);
+				this.dispatch(macros,_tag,Q);
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
+			dispatch : function(macros,_tag,Q)	{
+				var obj = {};
+				obj['@updates'] = macros;
 				obj._cmd = "adminConfigMacro"
 				obj._tag = _tag; //tag will be set in this call for datapointer purposes.
 				app.model.addDispatchToQ(obj,Q || 'immutable');	
@@ -3524,28 +3526,48 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				return domain;
 				}, //getDomain
 
+//used in conjunctions with applyEditTrackingToInputs. it's a separate function so it can be called independantly.
+// .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
+			handleSaveButtonByEditedClass : function($context)	{
+				var $button = $("[data-app-role='saveButton']",$context);
+				if($('.edited',$context).length)	{
+					$('.numChanges',$button).text($('.edited',$context).length)
+					$button.button("enable").addClass('ui-state-highlight');
+					}
+				else	{
+					$('.numChanges',$button).text("")
+					$button.button("disable").removeClass('ui-state-highlight');
+					}
+				},
+
 
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
 //will also update a .numChanges selector with the number of elements within the context that have edited on them.
 //will also 'enable' the parent button of that class.
 			applyEditTrackingToInputs : function($context)	{
 
-				$("input",$context).each(function(){
-					
-					if($(this).hasClass('skipTrack')){} //allows for a field to be skipped.
-					else if($(this).is(':checkbox') || $(this).is('select'))	{
-						$(this).off('change.trackChange').on('change.trackChange',function(){
-							$(this).toggleClass('edited');
-							$('.numChanges',$context).text($('.edited',$context).length).closest('button').button("enable");
+				$("input, textarea, select",$context).each(function(){
+
+					var $input = $(this);
+					if($input.hasClass('skipTrack')){} //allows for a field to be skipped.
+					else if($input.is(':checkbox'))	{
+						$input.off('change.trackChange').on('change.trackChange',function(){
+							$input.toggleClass('edited');
+							app.ext.admin.u.handleSaveButtonByEditedClass($context);
 							});			
 						}
-					else	{
-						$(this).off('keyup.trackChange').one('keyup.trackChange',function(){
-							$(this).addClass('edited');
-							$('.numChanges',$context).text($('.edited',$context).length).closest('button').button("enable");
+					else if($input.is('select'))	{
+						$input.off('change.trackChange').one('change.trackChange',function(){
+							$input.addClass('edited');
+							app.ext.admin.u.handleSaveButtonByEditedClass($context);
 							});
 						}
-			
+					else	{
+						$input.off('keyup.trackChange').one('keyup.trackChange',function(){
+							$input.addClass('edited');
+							app.ext.admin.u.handleSaveButtonByEditedClass($context);
+							});
+						}
 					});
 
 				}, //applyEditTrackingToInputs
@@ -5052,6 +5074,35 @@ else	{
 					});
 				}, //toggleDualMode
 
+
+//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
+//The .edited class is used to key off of to see it's ben edited.
+//The .rowTaggedForRemove class is used to know what action was taken. Thought being later other classesmay be applied (update, new, etc)
+//The customer manager keys off of the ui-state0error, so don't change that w/out updating
+			tagRowForRemove : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.tagRowForRemove').on('click.tagRowForRemove',function(event){
+					event.preventDefault();
+					
+//if this class is already present, the button is set for delete already. unset the delete.
+//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
+					if($btn.hasClass('ui-state-error'))	{
+						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').removeClass('rowTaggedForRemove').find('button').each(function(){
+							$(this).button('enable');
+							}); //enable the other buttons
+						$btn.button('enable');
+						}
+					else	{
+//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
+						$btn.addClass('ui-state-error').parents('tr').addClass('edited').addClass('rowTaggedForRemove').find('button').each(function(){
+							$(this).button('disable')
+							}); //disable the other buttons
+						$btn.button('enable');
+
+						}
+					app.ext.admin.u.handleSaveButtonByEditedClass($btn.closest("form"));
+					});
+				}, //tagRowForRemove
 
 //apply to a select list and, on change, a corresponding fieldset will be turned on (and any other fieldsets will be turned off)
 //put all the fieldsets that may get toggld into an element with data-app-role='connectorFieldsetContainer' on it.

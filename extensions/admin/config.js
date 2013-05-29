@@ -229,23 +229,26 @@ else	{
 			
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
-				app.model.destroy('adminConfigDetail|shipments|'+app.vars.partition);
-				app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments|'+app.vars.partition,callback : function(rd){
+				app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+				app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
 					else	{
 						$target.hideLoading();
 						$target.anycontent({'templateID':'shippingManagerPageTemplate',data:{}});
-						
+						var shipmethods = new Array();
+						if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
+							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'];
+							}
+
 						var
-							shipments = app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'], //shortcut
-							L = shipments.length,
+							L = shipmethods.length,
 							$flexUL = $("[data-app-role='shipMethodsByFlex']",$target);
 						
 						for(var i = 0; i < L; i += 1)	{
-							if(shipments[i].provider.indexOf('FLEX:') === 0)	{
-								$("<li \/>").data('provider',shipments[i].provider).text(shipments[i].name).appendTo($flexUL);
+							if(shipmethods[i].provider.indexOf('FLEX:') === 0)	{
+								$("<li \/>").data('provider',shipmethods[i].provider).text(shipmethods[i].name).appendTo($flexUL);
 								}
 							}
 						
@@ -270,20 +273,20 @@ else	{
 				app.model.dispatchThis('mutable');
 				},
 
-			showAddFlexShipment : function(shipment,$target)	{
-				if(shipment && $target)	{
+			showAddFlexShipment : function(shipmethod,$target)	{
+				if(shipmethod && $target)	{
 					$target.empty();
 					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{}}).appendTo($target);
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
 					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
 					$target.append("<button>save<\/button>");
-//					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipment.toLowerCase(),data:{}}).appendTo($target);
+//					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipmethod.toLowerCase(),data:{}}).appendTo($target);
 					}
 				else if($target)	{
-					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipment not passed.','gMessage':true});
+					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod not passed.','gMessage':true});
 					}
 				else	{
-					$("#globalMessaging").anymessage({'message':'In admin_config.a.showAddFlexShipment, shipment and target not passed.','gMessage':true});
+					$("#globalMessaging").anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod and target not passed.','gMessage':true});
 					}
 				},
 
@@ -292,6 +295,10 @@ else	{
 				if(provider && $target)	{
 					$target.empty();
 					var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
+					
+					$target.closest('form').find('.buttonset').show();
+					app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
+					
 					if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
 						$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
 						$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
@@ -308,6 +315,7 @@ else	{
 					
 					$('label :checkbox',$target).anycb();
 					$('.toolTip',$target).tooltip();
+					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
@@ -344,7 +352,7 @@ $D.dialog('open');
 //need pricing schedules.
 $D.showLoading({'message':'Fetching Data'});
 app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
-app.ext.admin.calls.adminConfigDetail.init({'shipments':true},{datapointer : 'adminConfigDetail|shipments|'+app.vars.partition,callback : function(rd){
+app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 	$D.hideLoading();
 	if(app.model.responseHasErrors(rd)){
 		$D.anymessage({'message':rd});
@@ -402,21 +410,21 @@ app.model.dispatchThis('mutable');
 			getShipMethodByProvider : function(provider)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(provider)	{
-					if(app.data['adminConfigDetail|shipments|'+app.vars.partition] && app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'])	{
+					if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
 						r = {};
 						var
-							shipments = app.data['adminConfigDetail|shipments|'+app.vars.partition]['@SHIPMENTS'], //shortcut
-							L = shipments.length;
+							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'], //shortcut
+							L = shipmethods.length;
 						
 						for(var i = 0; i < L; i += 1)	{
-							if(shipments[i].provider == provider)	{
-								r = shipments[i];
+							if(shipmethods[i].provider == provider)	{
+								r = shipmethods[i];
 								break; //have a match. exit early.
 								}
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_config.u.getShipMethodByProvider, adminConfigDetail|shipments not in memory and is required.','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_config.u.getShipMethodByProvider, adminConfigDetail|shipmethods not in memory and is required.','gMessage':true});
 						}
 					}
 				else	{
@@ -470,15 +478,103 @@ app.model.dispatchThis('mutable');
 				
 				$('a',$menu).each(function(){
 					var $a = $(this);
-//					app.u.dump("$a.data('shipment'): "+$a.data('shipment'));
+//					app.u.dump("$a.data('shipmethod'): "+$a.data('shipmethod'));
 					$a.on('click',function(event){
 						event.preventDefault();
-						app.u.dump(" -> add new "+$a.data('shipment')+" shipmethod");
+						app.u.dump(" -> add new "+$a.data('shipmethod')+" shipmethod");
 						$("h3.heading:first",$pageContainer).text("Add New Flex Shipmethod: "+$a.text());
-						app.ext.admin_config.a.showAddFlexShipment($a.data('shipment'),$("[data-app-role='slimLeftContent']:first",$pageContainer));
+						app.ext.admin_config.a.showAddFlexShipment($a.data('shipmethod'),$("[data-app-role='slimLeftContent']:first",$pageContainer));
 						});
 					});
 				
+				},
+			
+			shipmethodDataTableAddExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.shipmethodDataTableAddExec').on('click.shipmethodDataTableAddExec',function(){
+
+var
+	$fieldset = $btn.closest('fieldset'),
+	$dataTbody = $("[data-app-role='dataTable'] tbody",$fieldset);
+
+
+if($fieldset.length && $dataTbody.length && $dataTbody.data('bind'))	{
+
+//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
+//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
+	$('input',$fieldset).attr('required','required'); 
+	if(app.u.validateForm($fieldset))	{
+		var 
+			bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+			sfo = $fieldset.serializeJSON(),
+			$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+		
+		$tr.anycontent({data:sfo});
+		$tr.addClass('edited');
+		$tr.data('isNewRow',true); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+		
+		$tr.appendTo($dataTbody);
+		app.u.handleAppEvents($tr);
+//this function will look for .edited in the form and, if present, enable and update the save button.
+		app.ext.admin.u.handleSaveButtonByEditedClass($fieldset.closest('form'));
+		}
+	else	{
+		//validateForm handles error display.
+		}
+	$('input',$fieldset).attr('required','').removeAttr('required');
+	
+	}
+else	{
+	$btn.closest('form').anymessage({"message":"In admin_config.e.shipmethodDataTableAddExec, unable to ascertain parent fieldset ["+$fieldset.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
+	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
+	app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+	app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
+	}
+
+
+					});
+				},
+			
+			shipmethodRemoveExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
+				$btn.off('click.shipmethodRemoveExec').on('click.shipmethodRemoveExec',function(event){
+					event.preventDefault();
+					var
+						$D = $("<div \/>").attr('title',"Delete Shipping Method"),
+						$form = $btn.closest('form'),
+						provider = $("[name='provider']",$form).val();
+					if(provider)	{
+						$D.append("<P class='defaultText'>Are you sure you want to delete Shipping Method "+provider+"? There is no undo for this action.<\/P>");
+						$D.addClass('displayNone').appendTo('body'); 
+						$D.dialog({
+							modal: true,
+							autoOpen: false,
+							close: function(event, ui)	{
+								$(this).dialog('destroy').remove();
+								},
+							buttons: [ 
+								{text: 'Cancel', click: function(){$D.dialog('close')}},
+								{text: 'Delete Ship Method', click: function(){
+									$D.parent().showLoading({"message":"Deleting Ship Method "+provider});
+									app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+									app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/REMOVE?provider="+provider],{'callback':function(){
+if(app.model.responseHasErrors(rd)){
+	$('#globalMessaging').anymessage({'message':rd});
+	}
+else	{
+	app.ext.admin_config.a.showShippingManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+	}
+										}},'immutable');
+									app.model.dispatchThis('immutable');
+									}}	
+								]
+							});
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_config.e.shipmethodRemoveExec, unable to ascertain provider for ship method to be deleted.','gMessage':true});
+						}
+					});
 				},
 			
 			shipmethodAddUpdateExec : function($btn)	{
@@ -487,12 +583,32 @@ app.model.dispatchThis('mutable');
 
 var
 	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
+	sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
+	$dataTable = $("[data-app-role='dataTable']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
+	macros = new Array();
 
 if(app.u.validateForm($form))	{
 	//shipping updates are destructive, so the entire form needs to go up.
-	app.ext.admin.calls.adminConfigMacro.init();
+	macros.push("SHIPMETHOD/UPDATE?"+$.param(sfo));
+
+	if($dataTable.length && sfo.provider)	{
+		macros.push("SHIPMETHOD/DATATABLE-EMPTY&provider="+sfo.provider);
+		$('tbody',$dataTable).find('tr').each(function(){
+			if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+			else	{
+				var tmp = $.extend(true,{},$(this).data());
+				delete tmp.templateid; delete tmp.obj_index; delete tmp.anycontent; delete tmp.uiAnycontent; //some extras not needed.
+				macros.push("SHIPMETHOD/DATATABLE-INSERT&provider="+sfo.provider+"&"+$.param(tmp));
+				}
+			});
+		}
+	else if($dataTable.length)	{
+		$form.anymessage({"message":"Something has gone wrong with the save. The rows added to the table could not be updated. Please try your save again and if the error persists, please contact the site administrator. If you made other changes and no error was reported besides this one, they most likely saved. In admin_config.e.shipmethodAddUpdateExec, unable to ascertain provider for datatable update.","gMessage":false});
+		}
+	else	{} //perfectlynormal to not have a data table.
+//	app.u.dump(" -> macros"); app.u.dump(macros);
+	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'handleMacroUpdate','extension':'admin_syndication'},'immutable');
+	app.model.dispatchThis('immutable');
 	}
 else	{
 	//validateForm handles error display
@@ -512,7 +628,7 @@ var
 
 $panel = $("<div\/>").hide().anypanel({
 	'header':'Edit: '+data.provider,
-	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipments|'+app.vars.partition]),
+	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],app.data['adminConfigDetail|shipmethods|'+app.vars.partition]),
 	'templateID':'rulesFieldset_shipping'
 	}).prependTo($target);
 app.ext.admin.u.toggleDualMode($container,'detail');

@@ -105,30 +105,15 @@ if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.d
 
 					app.u.handleAppEvents($target);
 
+					if(_rtag.applyEditTrackingToInputs)	{
+						app.ext.admin.u.applyEditTrackingToInputs($target);
+						}
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin.callbacks.anycontent, jqOjb not set or not an object ['+typeof _rtag.jqObj+'].','gMessage':true});
 					}
 
-				if(_rtag.addSaveChangeEvents)	{
-					$("textarea, input, select ",_rtag.jqObj).each(function(){
-						var $formInput = $(this);
-//checkboxes get a slightly different event. that way if they are turned on then off (or vice-versa) w/out a save between, the button updates correctly.
-						if($formInput.is(':checkbox'))	{
-							$formInput.on('change',function(){
-								$formInput.toggleClass('edited');
-								app.ext.admin_syndication.u.handleDetailSaveButton($formInput);
-								});
-							
-							}
-						else	{
-							$formInput.on('change',function(){
-								$formInput.addClass('edited');
-								app.ext.admin_syndication.u.handleDetailSaveButton($formInput);
-								});
-							}
-						});
-					}
+
 				
 				},
 			onError : function(rd)	{
@@ -175,7 +160,7 @@ if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.d
 					
 					app.u.handleAppEvents($("[data-anytab-content='diagnostics']",$target));
 					
-					app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','addSaveChangeEvents':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
+					app.ext.admin.calls.adminSyndicationDetail.init(DST,{callback : 'anycontentPlus','applyEditTrackingToInputs':true,'extension':'admin_syndication','templateID':'syndication_'+DST.toLowerCase(),'jqObj':$form},'mutable');
 					app.model.dispatchThis();
 
 //add an action to the tab click. the tab code itself already opens the associated content area.
