@@ -907,7 +907,11 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 //at the time of this version, some requests don't have especially good warning/error in the response.
 //as response error handling is improved, this function may no longer be necessary.
 			var r = false; //defaults to no errors found.
-			if(responseData['_rtag'] && responseData['_rtag'].forceError == 1)	{r = true; responseData.errid = "MVC-M-000"; responseData.errtype = "intendedErr"; responseData.errmsg = "forceError is set to 1 on _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
+			if(responseData['_rtag'] && responseData['_rtag'].forceError == 1)	{
+				r = true;
+				responseData.errid = "MVC-M-000";
+				responseData.errtype = "intendedErr";
+				responseData.errmsg = "forceError is set to 1 on _tag. cmd = "+responseData['_rcmd']+" and uuid = "+responseData['_uuid'];
 //			app.u.dump(responseData);
 				}
 			else	{
@@ -944,8 +948,18 @@ or as a series of messages (_msg_X_id) where X is incremented depending on the n
 							}  
 						break;
 					default:
-						if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
 						if(Number(responseData['errid']) > 0) {r = true}
+						else if(Number(responseData['_msgs']) > 0 && responseData['_msg_1_id'] > 0)	{r = true} //chances are, this is an error. may need tuning later.
+						else if(responseData['@RESPONSES'] && responseData['@RESPONSES'].length)	{
+							var L = responseData['@RESPONSES'].length;
+							for(var i = 0; i < L; i += 1)	{
+								if(responseData['@RESPONSES'][i]['msgtype'] == 'ERROR')	{
+									r = true;
+									break; //if we have an error, exit early.
+									}
+								}
+							}
+						else {}
 		//				app.u.dump('default case for error handling');
 						break;
 					}

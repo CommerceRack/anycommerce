@@ -1448,7 +1448,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 </tr>
 <tr>
 	<td align="right" valign="top"><b>State Code:</b></td>	
-	<td valign="top"><input type="text" name="state" value="" size="35" required='required' onkeyup="$(this).val().toUpperCase();" /></td>
+	<td valign="top"><input type="text" name="state" value="" size="35" required='required' onkeyup="$(this).val($(this).val().toUpperCase());" /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Postal/Zip Code:</b></td>	
@@ -1468,7 +1468,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 </tr>
 <tr>
 	<td align="right" valign="top">
-		<b>UPS Account Number:</b><br>
+		<b>UPS Account Number:</b>
 	</td>
 	<td valign="top">
 		<input type="text" name="shipper_number" value="" size="35" required='required' />

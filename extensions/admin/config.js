@@ -293,10 +293,9 @@ else	{
 					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{'provider':"FLEX:"+shipmethod+"_"+Math.round(+new Date()/1000)}}).appendTo($target);
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
 					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
-					$target.append($("<input \/>").attr({'type':'hidden','name':'handler'}).val(shipmethod));
-					$target.append("<button data-app-event='admin_config|shipmethodAddUpdateExec' data-mode='insert'>save<\/button>");
+					$target.append("<button data-app-event='admin_config|shipmethodAddUpdateExec'>save<\/button>");
 //					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipmethod.toLowerCase(),data:{}}).appendTo($target);
-					app.u.handleAppEvents($target);
+					app.u.handleAppEvents($target,{'handler':shipmethod,'mode':'insert'});
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod not passed.','gMessage':true});
@@ -562,7 +561,7 @@ if(app.u.validateForm($form))	{
 			$form.anymessage({'message':rd});
 			}
 		else	{
-
+			$form.anymessage(app.u.successMsgObject('Activation successful!'));
 			}
 		}},'immutable');
 	app.model.dispatchThis('immutable');
@@ -690,71 +689,72 @@ else	{
 
 //saves the changes for a shipmethod/provider.
 //also used for a new flex shipping method. In that case, add a data-mode='insert' to the button to trigger the additional macro.
-			shipmethodAddUpdateExec : function($btn)	{
+			shipmethodAddUpdateExec : function($btn,vars)	{
 				$btn.button();
+				vars = vars || {};
 				$btn.off('click.shipmethodAddUpdateExec').on('click.shipmethodAddUpdateExec',function(){
 
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
-	$dataTable = $("[data-app-role='dataTable']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
-	macros = new Array(),
-	callback = 'handleMacroUpdate'; //will be changed if in insert mode.
-
-if(app.u.validateForm($form))	{
-	
-	if($btn.data('mode') == 'insert')	{
-		callback = function(rd){
-			app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$btn.closest("[data-app-role='slimLeftContent']"))
-			}; //
-		macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider);
-		}
-	
-	//shipping updates are destructive, so the entire form needs to go up.
-	macros.push("SHIPMETHOD/UPDATE?"+$.param(sfo));
-
-
-//The following block is for handling data/fee tables.
-
-//currently, handling and insurance have multiple tables, so they get handled slight differently, a table is passed in addition to provider.
-	if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{
-		$dataTable.each(function(){
-			var tableID = $(this).attr('data-table');
-			macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider+"&table="+tableID);
-			$('tbody',$(this)).find('tr').each(function(){
-				if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
-				else	{
-					macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
-					}
-				});
-			});
-		}
-//currently, only insurance and handling have more than one data table. If that changes, the code below will need updating.
-	else if($dataTable.length && sfo.provider)	{
-		macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider);
-		$('tbody',$dataTable).find('tr').each(function(){
-			if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
-			else	{
-				macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
-				}
-			});
-		}
-	else if($dataTable.length)	{
-		$form.anymessage({"message":"Something has gone wrong with the save. The rows added to the table could not be updated. Please try your save again and if the error persists, please contact the site administrator. If you made other changes and no error was reported besides this one, they most likely saved. In admin_config.e.shipmethodAddUpdateExec, unable to ascertain provider for datatable update.","gMessage":false});
-		}
-	else	{} //perfectlynormal to not have a data table.
-
-	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_syndication','jqObj':$form},'immutable');
-//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
-	app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
-
-//	app.u.dump(" -> macros"); app.u.dump(macros);
-	app.model.dispatchThis('immutable');
-	}
-else	{
-	//validateForm handles error display
-	}
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
+						$dataTable = $("[data-app-role='dataTable']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
+						macros = new Array(),
+						callback = 'handleMacroUpdate'; //will be changed if in insert mode.
+					
+					if(app.u.validateForm($form))	{
+						
+						if(vars.mode == 'insert')	{
+							callback = function(rd){
+								app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$btn.closest("[data-app-role='slimLeftContent']"))
+								}; //
+							macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider+"&handler="+vars.handler);
+							}
+						
+						//shipping updates are destructive, so the entire form needs to go up.
+						macros.push("SHIPMETHOD/UPDATE?"+$.param(sfo));
+					
+					
+					//The following block is for handling data/fee tables.
+					
+					//currently, handling and insurance have multiple tables, so they get handled slight differently, a table is passed in addition to provider.
+						if(sfo.provider == 'HANDLING' || sfo.provider == 'INSURANCE')	{
+							$dataTable.each(function(){
+								var tableID = $(this).attr('data-table');
+								macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider+"&table="+tableID);
+								$('tbody',$(this)).find('tr').each(function(){
+									if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+									else	{
+										macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&table="+tableID+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+										}
+									});
+								});
+							}
+					//currently, only insurance and handling have more than one data table. If that changes, the code below will need updating.
+						else if($dataTable.length && sfo.provider)	{
+							macros.push("SHIPMETHOD/DATATABLE-EMPTY?provider="+sfo.provider);
+							$('tbody',$dataTable).find('tr').each(function(){
+								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+								else	{
+									macros.push("SHIPMETHOD/DATATABLE-INSERT?provider="+sfo.provider+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+									}
+								});
+							}
+						else if($dataTable.length)	{
+							$form.anymessage({"message":"Something has gone wrong with the save. The rows added to the table could not be updated. Please try your save again and if the error persists, please contact the site administrator. If you made other changes and no error was reported besides this one, they most likely saved. In admin_config.e.shipmethodAddUpdateExec, unable to ascertain provider for datatable update.","gMessage":false});
+							}
+						else	{} //perfectlynormal to not have a data table.
+					
+						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_syndication','jqObj':$form},'immutable');
+					//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
+						app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+						app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+					
+					//	app.u.dump(" -> macros"); app.u.dump(macros);
+						app.model.dispatchThis('immutable');
+						}
+					else	{
+						//validateForm handles error display
+						}
 					});
 				}, //shipmethodAddUpdateExec
 
