@@ -36,7 +36,6 @@ var cubworld = function() {
 ////////////////////////////////////   CALLBACKS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-
 	callbacks : {
 //executed when extension is loaded. should include any validation that needs to occur.
 		init : {
@@ -417,6 +416,27 @@ var cubworld = function() {
 				if(data.value && data.value > 0){
 					$tag.hide();
 					}
+				},
+			atcForm : function($tag,data)	{
+				$tag.append("<input type='hidden' name='sku' value='"+data.value.pid+"' />");
+				if(data.value["%attribs"]["is:user3"]){
+					$tag.attr("onSubmit","").unbind("submit");
+					$tag.bind('submit', function(){
+						var $notice = $('<div><div>'+app.ext.cubworld.vars.customPrompt+'</div></div>');
+						
+						var $button = $('<div class="alignRight"><button class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"><span class="ui-button-text">I agree</span></button></div>');
+						$button.bind('click',function(){
+							$notice.dialog('close');
+							app.ext.myRIA.u.addItemToCart($tag,{'action':'modal'}); 
+							return false;
+							});
+							
+						$notice.append($button);
+						
+						$notice.dialog({'modal':'true','title':'Custom Product Agreement', 'width':400});
+						return false;
+						});
+					}
 				}
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -501,6 +521,8 @@ var cubworld = function() {
 		e : {
 			}, //e [app Events]
 		vars : {
+			customPrompt : "I understand it takes 3-14 business days to customize my item. This item is not returnable / exchangeable as it is considered customized. Once this order is placed, no changes or cancellations are permitted.",
+		
 			catTemplates : {
 				/*
 				'.mlb.arizona_diamondbacks.z_adam_eaton' : 'categoryTemplateFeaturedPlayer',

@@ -1165,7 +1165,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 -->
 	</div>
 <!--
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
 		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 -->
@@ -1212,7 +1212,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 -->
 	</div>
 	
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm alignCenter clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
 		<input type='hidden' name='qty' value='1' />
 		<div class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</div>
 	</form>
@@ -1237,7 +1237,7 @@ remember to NOT put the button inside the 'onClick' container or two events will
 -->
 	</div>
 <!--
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm alignCenter clearfix' action='#'>
 		<button class="displayNone" data-bind='format:addToCartButton; extension:myRIA; useParentData:true;'>more details</button>
 	</form>
 -->
@@ -1260,7 +1260,7 @@ container ul should have lineItemProdlist class on it instead of productList
 
 		<span data-bind='var: reviews(reviews.average); format:addClass; className:review_;' class='reviewSprite'></span>
 	
-		<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+		<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
 	
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 			<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>
@@ -1441,7 +1441,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
 		<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
 		</div>
@@ -1648,7 +1648,7 @@ this will likely become more flexible in the future. ###
 -->
 
 
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this),{'action':'modal'}); return false;">
 		<div data-bind="var:product(pid); format:assignAttribute; attribute:id; valuePretext:jerseyOptions;">
 			<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone variationsFieldset'></fieldset>
 		</div>
@@ -2302,7 +2302,7 @@ used on a product layout. Some product have 'children' which may represent the s
 	<td><img src='blank.gif' class='prodThumb' alt='' data-bind='var: product(zoovy:prod_image1); format:imageURL;' width='45' height='45' /></td>
 	<td data-bind='var: product(amz:grp_varvalue); defaultVar: product(zoovy:prod_name); format:text;'></td>
 	<td>
-	<form data-bind='var: product(pid); format:atcForm; extension:store_product;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
+	<form data-bind='useParentData:true; format:atcForm; extension:cubworld;' class='prodViewerAddToCartForm clearfix' action='#' onSubmit="app.ext.myRIA.u.addItemToCart($(this)); return false;">
 
 		<fieldset data-bind='var: product(pid); format:atcVariations; extension:store_product;' class='borderNone'></fieldset>
 		<fieldset data-bind='useParentData:true; format:atcQuantityInput; extension:store_product; pretext:Quantity: ; defaultValue:0;' class='borderNone'></fieldset>

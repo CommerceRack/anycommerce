@@ -135,7 +135,7 @@ var pogs_cubworld = function() {
 				},
 			xinit : function(){
 				this.addHandler("pogid","CH","renderOptionLABELDADDYLIST");
-				this.addHandler("pogid","AK","renderOptionCUSTOMIZERNOTICE");
+				//this.addHandler("pogid","AK","renderOptionCUSTOMIZERNOTICE");
 				}
 			},
 
