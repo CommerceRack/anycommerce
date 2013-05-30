@@ -41,7 +41,7 @@ var admin_config = function() {
 		'paymentSuppInputsTemplate_skipjack',
 */		
 		'shippingManagerPageTemplate',
-		'shippingSettingsTemplate',
+		'shippingGeneralTemplate',
 /*		
 		'shippingZone_fedex',
 		'shippingZone_usps',
@@ -314,7 +314,7 @@ else	{
 					if(provider == 'GENERAL')	{
 						$target.closest('form').find('.buttonset').hide();
 						$target.anycontent({
-							'templateID':'shippingSettingsTemplate',
+							'templateID':'shippingGeneralTemplate',
 							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
 							});
 						}
@@ -409,11 +409,11 @@ app.model.dispatchThis('mutable');
 					}
 				var $dialog = $("<div \/>");
 				},
-				
-			showUPSOnlineToolsRegInModal : function()	{
-
+			
+			showUPSOnlineToolsRegInModal : function(vars)	{
+vars = vars || {}; //may include supplier
 var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
-$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{} });
+$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{},'dataAttribs' : vars });
 $D.dialog({
 	width : '90%',
 	modal: true,
@@ -422,6 +422,7 @@ $D.dialog({
 		$(this).dialog('destroy').remove();
 		}
 	});
+app.u.handleAppEvents($D);
 $D.dialog('open');	
 				}
 			}, //Actions
@@ -543,6 +544,45 @@ $D.dialog('open');
 				
 				}, //handleAddShipment
 
+			upsOnlineRegExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.upsOnlineRegExec').on('click.upsOnlineRegExec',function(){
+var $form = $btn.closest('form');
+if(app.u.validateForm($form))	{
+	
+	var sfo = $form.serializeJSON({'cb':true});
+//supplier 'may' be set on the parent container. This is used in supply chain.
+	if($btn.closest("[data-app-role='UPSONlineToolsRegContainer']").data('supplier'))	{
+		sfo.supplier = $btn.closest("[data-app-role='UPSONlineToolsRegContainer']").data('supplier');
+		}
+	$form.showLoading({'message':'Registering account with UPS. This may take a few moments.'});
+	app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/UPSAPI-REGISTER?"+$.param(sfo)],{'callback':function(rd){
+		$form.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$form.anymessage({'message':rd});
+			}
+		else	{
+
+			}
+		}},'immutable');
+	app.model.dispatchThis('immutable');
+	}
+else	{} //validateForm handles error display.
+					});
+				},
+
+			paymentMethodUpdateExec : function($ele)	{
+				$ele.button();
+				$ele.off('click.paymentMethodUpdateExec').on('click.paymentMethodUpdateExec',function(){
+var $form = $btn.closest('form');
+if(app.u.validateForm($form))	{
+	app.ext.admin.calls.adminConfigMacro();
+	}
+else	{
+	
+	}
+					});
+				},
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).

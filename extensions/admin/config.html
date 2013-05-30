@@ -245,7 +245,7 @@
 
 
 
-<div id='shippingSettingsTemplate'>
+<div id='shippingGeneralTemplate'>
 <div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
 	<button disabled='disabled' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 </div>
@@ -1379,7 +1379,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 
 
-<div id='shippingUPSOnlineToolsRegTemplate'>
+<div id='shippingUPSOnlineToolsRegTemplate' data-app-role='UPSONlineToolsRegContainer'>
 
 
 <p>You are about to complete the neccessary licensing and registration requirements to activate and use UPS OnLine® Tools.</p>
@@ -1420,78 +1420,72 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 		<b>Title:</b><br>
 		(Mr., Mrs., etc.)
 	</td>	
-	<td valign="top"><input type="text" name="UPS_TITLE" value="" size="35"></td>
+	<td valign="top"><input type="text" name="title" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Contact Name:</b></td>	
-	<td valign="top"><input type="text" name="UPS_NAME" value="" size="35"></td>
+	<td valign="top"><input type="text" name="name" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Company Name:</b></td>	
-	<td valign="top"><input type="text" name="UPS_COMPANY_NAME" value="" size="35"></td>
+	<td valign="top"><input type="text" name="company_name" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Company URL:</b></td>	
-	<td valign="top"><input type="text" name="UPS_URL" value="" size="35"></td>
+	<td valign="top"><input type="text" name="url" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Address Line 1:</b></td>	
-	<td valign="top"><input type="text" name="UPS_ADDRESS1" value="" size="35"></td>
+	<td valign="top"><input type="text" name="address1" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Address Line 2:</b></td>	
-	<td valign="top"><input type="text" name="UPS_ADDRESS2" value="" size="35"></td>
+	<td valign="top"><input type="text" name="address2" value="" size="35"  /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>City:</b></td>	
-	<td valign="top"><input type="text" name="UPS_CITY" value="" size="35"></td>
+	<td valign="top"><input type="text" name="city" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>State Code:</b></td>	
-	<td valign="top"><input type="text" name="UPS_STATE" value="" size="35"></td>
+	<td valign="top"><input type="text" name="state" value="" size="35" required='required' onkeyup="$(this).val().toUpperCase();" /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Postal/Zip Code:</b></td>	
-	<td valign="top"><input type="text" name="UPS_ZIP" value="" size="35"></td>
+	<td valign="top"><input type="text" name="zip" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Country:</b></td>	
-	<td valign="top">Only U.S. origins supported currently</td>
+	<td align="right" valign="top"><b>Country: <span class='toolTip' title="Two digit country code. ex: US">?</span></b></td>	
+	<td valign="top"><input type="text" name="country" value="" size="2" maxlength='2' required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Phone Number:</b></td>	
-	<td valign="top"><input type="text" name="UPS_PHONE" value="" size="35"></td>
+	<td valign="top"><input type="tel" name="phone" value="" size="35"  required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top"><b>Email Address:</b></td>	
-	<td valign="top"><input type="text" name="UPS_EMAIL" value="" size="35"></td>
+	<td valign="top"><input type="email" name="email" value="" size="35" required='required' /></td>
 </tr>
 <tr>
 	<td align="right" valign="top">
 		<b>UPS Account Number:</b><br>
 	</td>
 	<td valign="top">
-		<input type="text" name="UPS_SHIPPER_NUMBER" value="" size="35">
-	</td>
-</tr>
-<tr>
-	<td colspan="2" align="left">
-	<i>Account number is optional, unless you plan to use the UPS Shipping (Airbill Printing) feature in order manager - then account number is required.</i>
+		<input type="text" name="shipper_number" value="" size="35" required='required' />
 	</td>
 </tr>
 <tr>
 	<td colspan="2" align="left">
 		<br>
-		<input type="radio" name="UPS_CONTACT" value="Yes">
-		Yes, I would like a UPS Sales Represenatative to contact me about opening a UPS shipping account or to
-		answer questions about UPS services.<br>
-		<input type="radio" name="UPS_CONTACT" value="No">
+		<input type="radio" name="contact" value="Yes" required='required' />
+		Yes, I would like a UPS Sales Represenatative to contact me about opening a UPS shipping account or to answer questions about UPS services.<br>
+		<input type="radio" name="contact" value="No" />
 		No, I would not like a UPS Sales Represenatative to contact me.<br>
 	</td>
 </tr>
 </tbody></table>
 
-	<button>Proceed</button>
+	<button data-app-event='admin_config|upsOnlineRegExec'>Proceed</button>
 
 </form>
 </section>
