@@ -246,7 +246,7 @@ else	{
 							'templateID':'shippingManagerPageTemplate',
 							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
 							});
-						$('.toolTip',$target).tooltip()
+
 						var shipmethods = new Array();
 						if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
 							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'];
@@ -275,9 +275,12 @@ else	{
 								$li.addClass('ui-state-focus');
 								$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$li.text());
 								app.ext.admin_config.a.showShipMethodEditorByProvider($li.data('provider'),$contentColumn)
-								app.u.handleAppEvents($contentColumn);
+								
 								});
 							});
+						
+						app.ext.admin_config.a.showShipMethodEditorByProvider('GENERAL',$contentColumn);
+						
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
@@ -286,11 +289,14 @@ else	{
 			showAddFlexShipment : function(shipmethod,$target)	{
 				if(shipmethod && $target)	{
 					$target.empty();
-					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{}}).appendTo($target);
+					$target.closest('form').find('.buttonset:first').hide() //this contains the buttons for the editor. create has it's own button.
+					$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:{'provider':"FLEX:"+shipmethod+"_"+Math.round(+new Date()/1000)}}).appendTo($target);
 					$("[data-app-role='rulesFieldset']",$target).hide(); //disallow rule creation till after ship method is created.
 					$target.append("<p><b>Once you save the ship method, more specific inputs and rules will be available.<\/b><\/p>");
-					$target.append("<button>save<\/button>");
+					$target.append($("<input \/>").attr({'type':'hidden','name':'handler'}).val(shipmethod));
+					$target.append("<button data-app-event='admin_config|shipmethodAddUpdateExec' data-mode='insert'>save<\/button>");
 //					$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipmethod.toLowerCase(),data:{}}).appendTo($target);
+					app.u.handleAppEvents($target);
 					}
 				else if($target)	{
 					$target.anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod not passed.','gMessage':true});
@@ -304,28 +310,42 @@ else	{
 				
 				if(provider && $target)	{
 					$target.empty();
-					var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
 					
-					$target.closest('form').find('.buttonset').show();
-					app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
-					
-					if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
-						$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
-						$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
-						}
-					else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
-						$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
-						}
-					else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
-						$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
+					if(provider == 'GENERAL')	{
+						$target.closest('form').find('.buttonset').hide();
+						$target.anycontent({
+							'templateID':'shippingSettingsTemplate',
+							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
+							});
 						}
 					else	{
-						$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true});
+						var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
+						
+						$target.closest('form').find('.buttonset').show();
+						app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
+						
+						if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
+							$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
+							$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
+							}
+						else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
+							$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
+							}
+						else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
+							$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
+							}
+						else	{
+							$target.anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, unrecognized provider ['+provider+'] passed and/or handler for shipping method could not be determined.','gMessage':true,'persistent':true});
+							}
+						
 						}
-					
+
 					$('label :checkbox',$target).anycb();
 					$('.toolTip',$target).tooltip();
+					app.u.handleAppEvents($target);
 					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
+
+
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
@@ -388,6 +408,21 @@ app.model.dispatchThis('mutable');
 					app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); app.u.dump(vars);
 					}
 				var $dialog = $("<div \/>");
+				},
+				
+			showUPSOnlineToolsRegInModal : function()	{
+
+var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
+$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{} });
+$D.dialog({
+	width : '90%',
+	modal: true,
+	autoOpen: false,
+	close: function(event, ui)	{
+		$(this).dialog('destroy').remove();
+		}
+	});
+$D.dialog('open');	
 				}
 			}, //Actions
 
@@ -467,7 +502,8 @@ app.model.dispatchThis('mutable');
 						}
 					});
 				}, //showCCSuppInputs
-			
+
+//this is applied to the 'add flex method' shipping button.  It adds the dropdown for choosing the method type and also the click events.
 			handleAddShipment : function($ele)	{
 				var
 					$menu = $ele.next('ul')
@@ -506,7 +542,10 @@ app.model.dispatchThis('mutable');
 					});
 				
 				}, //handleAddShipment
-			
+
+//This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
+//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset
+//the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
 			dataTableAddExec : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
@@ -565,7 +604,8 @@ else	{
 
 					});
 				}, //dataTableAddExec
-			
+
+//deletes a given shipmethod/provider. then reloads shippingManager.
 			shipmethodRemoveExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-trash"},text: true});
 				$btn.off('click.shipmethodRemoveExec').on('click.shipmethodRemoveExec',function(event){
@@ -607,7 +647,9 @@ else	{
 						}
 					});
 				}, //shipmethodRemoveExec
-			
+
+//saves the changes for a shipmethod/provider.
+//also used for a new flex shipping method. In that case, add a data-mode='insert' to the button to trigger the additional macro.
 			shipmethodAddUpdateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.shipmethodAddUpdateExec').on('click.shipmethodAddUpdateExec',function(){
@@ -616,9 +658,18 @@ var
 	$form = $btn.closest('form'),
 	sfo = $form.serializeJSON({'cb':true}), //cb true returns checkboxes w/ 1 or 0 based on whether it's checked/unchecked, respecticely. strings, not ints.
 	$dataTable = $("[data-app-role='dataTable']",$form), //a table used for data such as price breakdowns on a flex priced based ship method (or zip,weight,etc data)
-	macros = new Array();
+	macros = new Array(),
+	callback = 'handleMacroUpdate'; //will be changed if in insert mode.
 
 if(app.u.validateForm($form))	{
+	
+	if($btn.data('mode') == 'insert')	{
+		callback = function(rd){
+			app.ext.admin_config.a.showShipMethodEditorByProvider(sfo.provider,$btn.closest("[data-app-role='slimLeftContent']"))
+			}; //
+		macros.push("SHIPMETHOD/INSERT?provider="+sfo.provider);
+		}
+	
 	//shipping updates are destructive, so the entire form needs to go up.
 	macros.push("SHIPMETHOD/UPDATE?"+$.param(sfo));
 
@@ -653,8 +704,12 @@ if(app.u.validateForm($form))	{
 		}
 	else	{} //perfectlynormal to not have a data table.
 
+	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':callback,'extension':'admin_syndication','jqObj':$form},'immutable');
+//nuke and re-obtain shipmethods so re-editing THIS method shows most up to date info.
+	app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+
 //	app.u.dump(" -> macros"); app.u.dump(macros);
-	app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'handleMacroUpdate','extension':'admin_syndication','jqObj':$form},'immutable');
 	app.model.dispatchThis('immutable');
 	}
 else	{
@@ -662,11 +717,57 @@ else	{
 	}
 					});
 				}, //shipmethodAddUpdateExec
-			
+
+//executed on a mange rules button.  shows the rule builder.
+			ruleBuilderShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.ruleBuilderShow').on('click.ruleBuilderShow',function(event){
+					event.preventDefault();
+					var provider = $btn.closest('form').find("[name='provider']").val();
+					if(provider && $btn.data('table'))	{
+						app.ext.admin_config.a.showRulesBuilderInModal({'mode':'shipping','provider':provider,'table':$btn.data('table')});
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, unable to ascertain provider ['+provider+'] and/or table ['+$btn.data('table')+'].','gMessage':true});
+						}
+					});
+// return false;				
+				},
+
+//executed by the 'add new rule' button. opens a dialog and, on save, updates the tbody of the rule builder.
+//the rule is NOT actually saved until the 'save' button is pushed.
+			ruleBuilderAddShow : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
+				$btn.off('click.ruleBuilderAddShow').on('click.ruleBuilderAddShow',function(){
+					var $D = $("<div \/>").attr('title',"Add New Rule");
+//					$D.addClass('displayNone').appendTo('body'); 
+//on a new rule, guid needs to be set. there's a hidden input in the form that, by passing it in thru data, will get populated.
+//this allows for the editing of a new rule before it is saved.
+					$D.anycontent({'templateID':'rulesFieldset_shipping','data': $.extend(true,{'guid':app.u.guidGenerator()},app.data['adminWholesaleScheduleList'])});
+					$D.dialog({
+						width : '90%',
+						modal: true,
+						autoOpen: false,
+						close: function(event, ui)	{
+							$(this).dialog('destroy').remove();
+							}
+						});
+					$D.dialog('open');
+					app.u.handleAppEvents($D,{'$form':$btn.closest('form'),'$dataTbody':$btn.closest('form').find("[data-app-role='dualModeListContents']")});
+//add an extra event to the rule button to close the modal. The template is shared w/ the rule edit panel, so the action is not hard coded into the app event.
+					$("[data-app-event='admin_config|dataTableAddExec']",$D).on('click.closeModal',function(){
+						$D.dialog('close');
+						})			
+					})
+				},
+
+//executed by the 'save' button once new rules or rule order has changed.
 			ruleBuilderUpdateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.ruleBuilderUpdateExec').on('click.ruleBuilderUpdateExec',function(event){
 event.preventDefault();
+
+$btn.closest('.ui-dialog-content').showLoading({'message':'Updating Rules'});
 
 var
 	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
@@ -685,12 +786,26 @@ $('tr',$tbody).each(function(){
 	});
 //app.u.dump(' -> macros: '); app.u.dump(macros);
 
-app.ext.admin.calls.adminConfigMacro.init(macros,[],'immutable');
+app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
+		}
+	else	{
+		$btn.closest('.ui-dialog-content').dialog('close');
+		$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
+		}
+	}},'immutable');
+
+//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
+app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+
+
 app.model.dispatchThis('immutable');
 
 					});
 				},
-			
+//opens an editor for an individual rule. uses anypanel/dualmode
 			showRuleEditorAsPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showRuleEditorAsPanel').on('click.showRuleEditorAsPanel',function(){
@@ -715,11 +830,6 @@ if(data.schedule)	{
 	}
 app.u.handleAppEvents($panel,{'$dataTbody':$btn.closest('tbody'),'$form':$btn.closest('form')});			
 					});
-				},
-			
-			showAddRule : function($btn)	{
-//				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
-//				$btn.off('click.showAddRule').on('click.showAddRule',function(){});
 				}
 			} //e [app Events]
 		} //r object.

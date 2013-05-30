@@ -300,6 +300,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 //for configDetail requests, no datapointer is set by default for shipmethod, payment, etc. It DOES accept a _tag.datapointer and, if set, will look for local.
 //That means if no datapointer is passed, no localstorage is used.
 //so for this call, you need to be particularly careful about setting a datapointer if you want to take advantage of localStorage.
+// payment, shipment, shipping, crm-config
 		adminConfigDetail : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;

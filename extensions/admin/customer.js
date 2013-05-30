@@ -502,7 +502,7 @@ app.model.dispatchThis('immutable');
 
 					});
 				},
-				
+// !!! This still needs a little work.
 			appAdminTicketChangeEscalation : function($btn)	{
 				
 				var tktcode = $btn.closest("[data-tktcode]").data('tktcode');
@@ -511,15 +511,18 @@ app.model.dispatchThis('immutable');
 				$btn.button();
 				$btn.off('click.appAdminTicketChangeEscalation').on('click.appAdminTicketChangeEscalation',function(){
 					$btn.button('disable');
-					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$btn.data('escalated')],{'callback':function(rd){
+					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$btn.data('escalateTicket')],{'callback':function(rd){
 if(app.model.responseHasErrors(rd)){
 	app.u.throwMessage(rd);
 	}
 else	{		
 	$btn.button('enable');
-	$btn.data('escalated') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
+	$btn.data('escalateTicket') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
 	}					
 						}},'immutable');
+					
+					app.model.destroy('adminAppTicketDetail|'+tktcode);
+					app.ext.admin.calls.adminAppTicketDetail.init(tktcode,{},'immutable');
 					app.model.dispatchThis('immutable');
 					});
 				
