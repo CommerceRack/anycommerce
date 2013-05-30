@@ -103,8 +103,8 @@ var admin_config = function() {
 		a : {
 			showPaymentManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Payment Methods'});
-				app.model.destroy('adminConfigDetail|payment');
-				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment',callback : function(rd){
+				app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
+				app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
 						$('#globalMessaging').anymessage({'message':rd});
 						}
@@ -123,8 +123,8 @@ var admin_config = function() {
 								$('.ui-state-focus',$leftColumn).removeClass('ui-state-focus');
 								$li.addClass('ui-state-focus');
 								$("[data-app-role='slimLeftContentSection'] .heading",$target).text("Edit: "+$li.text());
-								app.ext.admin_config.a.showPaymentTypeEditorByTender($li.data('tender'),$contentColumn)
-								app.u.handleAppEvents($contentColumn);
+								app.u.handleAppEvents($contentColumn); //handles app events outside the content area.
+								app.ext.admin_config.a.showPaymentTypeEditorByTender($li.data('tender'),$contentColumn);
 								});
 							});
 						}
@@ -133,10 +133,12 @@ var admin_config = function() {
 				},
 			
 			showPaymentTypeEditorByTender : function(tender,$target){
+//				app.u.dump("BEGIN showPaymentTypeEditorByTender ["+tender+"]");
 				if(tender && $target)	{
 					$target.empty();
 					var payData = app.ext.admin_config.u.getPaymentByTender(tender);
-					app.u.dump(" -> payData: "); app.u.dump(payData);
+//					app.u.dump(" -> payData: "); app.u.dump(payData);
+					$target.append($("<input \/>",{'name':'tender','type':'hidden'}).val(tender));
 					switch(tender){
 /* offline payment types */
 						case 'CASH':
@@ -144,6 +146,7 @@ var admin_config = function() {
 						case 'PO':
 						case 'MO':
 						case 'PICKUP':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$target.anycontent({'templateID':'paymentAvailabilityTemplate',data : payData});
 							break;
 						
@@ -151,11 +154,13 @@ var admin_config = function() {
 						case 'CHECK':
 						case 'COD':
 						case 'CHKOD':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentHandlingFeeTemplate',data : payData}).appendTo($target);
 							break;
 						
 						case 'WIRE':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('OFFLINE'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentHandlingFeeTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentTransferInstructionsTemplate',data : payData}).appendTo($target);
@@ -164,11 +169,13 @@ var admin_config = function() {
 
 /* gateways */
 						case 'ECHECK':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('GATEWAY'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentEcheckTemplate',data : payData}).appendTo($target);
 							break;
 
 						case 'CC':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('GATEWAY'));
 							$("<div \/>").anycontent({'templateID':'paymentAvailabilityTemplate',data : payData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'paymentCCTemplate',data : payData}).appendTo($target);
 							break;
@@ -178,6 +185,7 @@ var admin_config = function() {
 						case 'GOOGLE':
 						case 'PAYPALEC':
 						case 'AMZCBA':
+							$target.append($("<input \/>",{'name':'tenderGroup','type':'hidden'}).val('WALLET'));
 							$target.anycontent({'templateID':'paymentWallet_'+tender.toLowerCase(),data : payData});
 							break;
 
@@ -185,7 +193,7 @@ var admin_config = function() {
 						default:
 							$target.anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, unrecognized tender: '+tender+'.','gMessage':true});
 						}
-
+					app.u.handleAppEvents($target);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
@@ -233,7 +241,7 @@ else	{
 				
 				app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
 				app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-				
+				app.ext.admin.calls.appResource.init('shipcountries.json',{},'mutable');
 				app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'mutable');
 				app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
@@ -244,7 +252,7 @@ else	{
 						
 						$target.anycontent({
 							'templateID':'shippingManagerPageTemplate',
-							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
+							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition],app.data['appResource|shipcountries.json'])
 							});
 
 						var shipmethods = new Array();
@@ -449,9 +457,9 @@ $D.dialog('open');
 			getPaymentByTender : function(tender)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(tender)	{
-					if(app.data['adminConfigDetail|payment'] && app.data['adminConfigDetail|payment']['@PAYMENTS'])	{
+					if(app.data['adminConfigDetail|payment|'+app.vars.partition] && app.data['adminConfigDetail|payment|'+app.vars.partition]['@PAYMENTS'])	{
 						r = {};
-						var payments = app.data['adminConfigDetail|payment']['@PAYMENTS'], //shortcut
+						var payments = app.data['adminConfigDetail|payment|'+app.vars.partition]['@PAYMENTS'], //shortcut
 						L = payments.length;
 						
 						for(var i = 0; i < L; i += 1)	{
@@ -462,7 +470,7 @@ $D.dialog('open');
 							}
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_config.u.getPaymentByTender, adminConfigDetail|payment not in memory and is required.','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_config.u.getPaymentByTender, adminConfigDetail|payment|'+app.vars.partition+' not in memory and is required.','gMessage':true});
 						}
 					}
 				else	{
@@ -508,10 +516,12 @@ $D.dialog('open');
 						gateway = $ele.val(),
 						$suppContainer = $("[data-app-role='providerSpecificInputs']",$ele.closest('form'));
 					$suppContainer.empty();
+//the contents are emptied rather than having several hidden fieldsets so that no extra/unnecesary data is sent on the post (and no white/blacklisting needs to be done).
 					if(gateway != 'TESTING' && gateway != 'NONE')	{
 						$suppContainer.anycontent({'data':{},'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
 						}
 					});
+				$ele.trigger('change.showCCSuppInputs'); //trigger the change to show the selected fieldset (for initial load)
 				}, //showCCSuppInputs
 
 //this is applied to the 'add flex method' shipping button.  It adds the dropdown for choosing the method type and also the click events.
@@ -589,15 +599,39 @@ $D.dialog('open');
 					});
 				},
 
-			paymentMethodUpdateExec : function($ele)	{
-				$ele.button();
-				$ele.off('click.paymentMethodUpdateExec').on('click.paymentMethodUpdateExec',function(){
-var $form = $btn.closest('form');
-if(app.u.validateForm($form))	{
-	app.ext.admin.calls.adminConfigMacro(["PAYMENT/UPDATE?"+$.param($form.serializeJSON({'cb':true}))]);
-	app.model.dispatchThis();
-	}
-else	{} //validateForm will display the error logic.
+			paymentMethodUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.paymentMethodUpdateExec').on('click.paymentMethodUpdateExec',function(){
+					app.u.dump(" -> BEGIN click.paymentMethodUpdateExec (admin_config).");
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON({'cb':true}) || {},
+						macroCmd;
+					
+					if(sfo.tender && sfo.tenderGroup)	{
+						
+						app.u.dump(" -> tender: "+sfo.tender);
+						app.u.dump(" -> tenderGroup: "+sfo.tenderGroup);
+						
+						if(app.u.validateForm($form))	{
+							if(sfo.tenderGroup == 'WALLET')	{
+								macroCmd = "PAYMENT/WALLET-"+sfo.tender;
+								}
+							else	{
+								macroCmd = "PAYMENT/"+sfo.tenderGroup;
+								}
+							app.u.dump(" -> macroCmd: "+macroCmd);
+							app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.'},'immutable');
+					
+							app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
+							app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition},'immutable');
+							app.model.dispatchThis('immutable');
+							}
+						else	{app.u.dump("Did not pass validation in admin_config.e.paymentMethodUpdateExec");} //validateForm will display the error logic.
+						}
+					else	{
+						$form.anymessage({"message":"In admin_config.e.paymentMethodUpdateExec, either tender ["+sfo.tender+"] or tenderGroup ["+sfo.tenderGroup+"] not set. Expecting these within the form/sfo.","gMessage":true});
+						}
 					});
 				},
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.

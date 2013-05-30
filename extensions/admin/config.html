@@ -301,8 +301,8 @@
 <div class='marginBottom'>
 	<label>
 		<span>Country</span>
-		<select name="country">
-			<option value="">-</option>
+		<select name='country' data-bind="var: rss(contents);format:optionsFromList; text:Z; value:ISOX;">
+			<option value=''>none</option>
 		</select>
 	</label>
 	
@@ -1627,7 +1627,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 
 	<button data-app-event='admin_config|shippingPartnerRegExec'>Proceed</button>
 
-
+</form>
 </section>
 
 
@@ -1690,8 +1690,15 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 		<div class='ui-widget-header ui-corner-top'>
 			<h3 class='heading'>Edit:</h3>
 		</div>
-		<form class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels' data-app-role='slimLeftContent'></form>
-
+		<div class='ui-widget-content ui-corner-bottom slimLeftContent paymentEditorContainer stdPadding labelsAsBreaks alignedLabels'>
+			<form action='#' onsubmit="return false;">
+			<div class='buttonset alignRight marginBottom ui-widget-content ui-corner-all smallPadding'>
+				<button data-app-role='saveButton' data-app-event="admin_config|paymentMethodUpdateExec">Save <span class='numChanges'></span>Changes</button>
+			</div>
+			<div data-app-role='slimLeftContent'></div>
+			</form>
+		</div>	
+			
 	</section>
 
 
@@ -1700,7 +1707,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 
 <label id='paymentAvailabilityTemplate'>
 	<span>Availability: </span>
-	<select name='availability' data-bind='var: payment(enabled); format:popVal;'>
+	<select name='enable' data-bind='var: payment(enable); format:popVal;'>
 		<option value="0">Disabled</option>
 		<option value="1">US Only</option>
 		<option value="3">US + Canada</option>
@@ -2013,7 +2020,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <fieldset>
 	<label>
 	<span>Gateway:</span>
-	<select name='gateway' data-app-event="admin_config|showCCSuppInputs">
+	<select name='processor' data-app-event="admin_config|showCCSuppInputs" data-bind="var:payment(processor); format:popVal;">
 		<option value='NONE'>None</option>
 		<option value='MANUAL'>Manual</option>
 		<option value='PAYPALWP'>PayPal Website Payments Pro</option>
