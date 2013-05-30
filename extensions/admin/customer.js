@@ -502,6 +502,28 @@ app.model.dispatchThis('immutable');
 
 					});
 				},
+				
+			appAdminTicketChangeEscalation : function($btn)	{
+				
+				var tktcode = $btn.closest("[data-tktcode]").data('tktcode');
+//escalateTicket is what gets passed as the value for escalate on the update. so if the ticket is NOT escalated already, escalateTicket is set to 1 and, when passed, the ticket is escalated.
+				Number(app.data['adminAppTicketDetail|'+tktcode].ESCALATED) === 1 ? $btn.text('De-Escalate').data('escalateTicket',0) : $btn.text('Escalate').data('escalateTicket',1) ; //set when button event runs. updated when button is pushed.
+				$btn.button();
+				$btn.off('click.appAdminTicketChangeEscalation').on('click.appAdminTicketChangeEscalation',function(){
+					$btn.button('disable');
+					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$btn.data('escalated')],{'callback':function(rd){
+if(app.model.responseHasErrors(rd)){
+	app.u.throwMessage(rd);
+	}
+else	{		
+	$btn.button('enable');
+	$btn.data('escalated') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
+	}					
+						}},'immutable');
+					app.model.dispatchThis('immutable');
+					});
+				
+				},
 			appAdminTicketClose : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
@@ -550,7 +572,7 @@ var
 		'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
 		}).prependTo($dualModeDetails);
 
-app.ext.admin.u.handleAppEvents($panel);
+
 app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
 $panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
 
@@ -562,7 +584,7 @@ app.ext.admin.calls.adminAppTicketDetail.init(data.tktcode,{
 			}
 		else	{		
 			$panel.anycontent({'datapointer':rd.datapointer});
-			app.u.handleAppEvents($panel);
+			app.u.handleAppEvents($panel); 
 			}
 		}
 	},'mutable');

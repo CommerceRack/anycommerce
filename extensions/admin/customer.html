@@ -566,7 +566,7 @@ The checkbox below does not work.
 
 <table>
 <tr id='crmManagerResultsRowTemplate' class='pointer'>
-	<td data-bind='var: ticket(ESCALATED); format:text;'></td>
+	<td><span  data-bind='var: ticket(ESCALATED); format:showIfSet;' class='ui-icon ui-icon-flag displayNone'></span></td>
 	<td data-bind='var: ticket(TKTCODE); format:text;'></td>
 	<td data-bind='var: ticket(STATUS); format:text;'></td>
 	<td data-bind='var: ticket(SUBJECT); format:text;'></td>
@@ -583,6 +583,7 @@ The checkbox below does not work.
 
 <div class='buttonset marginBottom alignRight'>
 	<button data-app-event="admin_customer|appAdminTicketClose">Close Ticket</button>
+	<button data-app-event="admin_customer|appAdminTicketChangeEscalation">Change Escalation</button>
 </div>
 <section class='marginBottom clearfix'>
 	<hgroup class='floatRight'>
