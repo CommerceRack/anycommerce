@@ -136,6 +136,7 @@ var admin_config = function() {
 //				app.u.dump("BEGIN showPaymentTypeEditorByTender ["+tender+"]");
 				if(tender && $target)	{
 					$target.empty();
+					$target.closest('form').find('.buttonset:first').show().find('button').button('disable').find('.numChanges').text("");
 					var payData = app.ext.admin_config.u.getPaymentByTender(tender);
 //					app.u.dump(" -> payData: "); app.u.dump(payData);
 					$target.append($("<input \/>",{'name':'tender','type':'hidden'}).val(tender));
@@ -194,6 +195,7 @@ var admin_config = function() {
 							$target.anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, unrecognized tender: '+tender+'.','gMessage':true});
 						}
 					app.u.handleAppEvents($target);
+					app.ext.admin.u.applyEditTrackingToInputs($target.closest('form'));
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
