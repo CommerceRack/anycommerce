@@ -507,6 +507,7 @@ The checkbox below does not work.
 			<div class='floatRight smallPadding'>
 			<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			<button data-app-event="admin_customer|appAdminTicketCreateShow">Add Ticket</button>
+			<button>Manage Settings</button>
 			</div>
 			
 			<h3 class='heading'>Customer Ticketing System</h3>
@@ -708,5 +709,37 @@ The checkbox below does not work.
 </label>
 
 <button data-app-event="admin_customer|appAdminTicketCreateExec">Create Ticket</button>
+</form>
+</div>
+
+
+
+
+<div id='crmSettingsTemplate'>
+<form action='#' onsubmit="return false;">
+<fieldset>
+	<legend>Case Management/Returns:</legend>
+	
+	<label>
+		<span>For use</span>
+		<select name="style" data-bind="var:crm(style); format:popVal;">
+			<option value="0">Internal only</option>
+			<option selected="" value="10">Allow customers to open new tickets</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Ticket ID Format:</span>
+		<select name="sequence" data-bind="var:crm(sequence); format:popVal;">
+			<option value="ALPHA">6 digit Alpha-Numeric</option>
+			<option value="SEQ5">Sequenced #####</option>
+			<option value="DATEYYMM4">Hybrid Date+Sequence YYMM####</option>
+		</select>
+	</label>
+	<label>
+		<span>Ticket Sequence #</span>
+		<input type="text" value="1002" size="5" name="ticket_number"  data-bind="var:crm(ticket_number); format:popVal;" />
+	</label>
+</fieldset>
 </form>
 </div>
