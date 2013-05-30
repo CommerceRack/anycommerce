@@ -394,6 +394,11 @@
 
 </table>
 
+
+
+
+
+
 <div id='shippingGlobal_insurance'>
 
 
@@ -649,11 +654,10 @@
 	<button data-app-event="admin_config|ruleBuilderShow" data-table='RULES'>Manage Rules</button>
 </p>
 
-
-
-
-
 </div>
+
+
+
 
 
 <div id='shippingGlobal_handling'>
@@ -843,64 +847,142 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 <div id='shippingZone_fedex'>
+
+
+
+<h1>Zoovy FedEx&reg; Shipping Options</h1>
+
+<section class='marginBottom'>
+	<h2>Rating Configuration</h2>
+	<div data-bind="var: shipmethod(meter); format:text; pretext:Meter: ;"></div>
+	<div data-bind="var: shipmethod(meter_link); format:text;"></div>
+	<div data-bind="var: shipmethod(origin_zip); format:text; pretext:Origin zip: ;"></div>
+	<div data-bind="var: shipmethod(origin_state); format:text; pretext:Origin state: ;"></div>
+	<div data-bind="var: shipmethod(origin_country); format:text; pretext:Origin country: ;"></div>
+</section>
+
+
 <fieldset>
-<p>
-Please provide the information needed below to setup your FedEx&reg; meter:<br>
-</p>
-<label><span>Fedex&reg; Account Number:</span>
-<input type="text" value="" name="ACCOUNT" data-bind="var: shipmethod(ACCOUNT); format:popVal;" />
-</label>
-
-<label><span>Contact First Name</span>	
-<input type="text" value="" name="FIRSTNAME" data-bind="var: shipmethod(FIRSTNAME); format:popVal;" />
-</label>
-
-<label><span>Contact Last Name</span>	
-<input type="text" value="" name="LASTNAME" data-bind="var: shipmethod(LASTNAME); format:popVal;" />
-</label>
-
-<label><span>Company Name</span>	
-<input type="text" value="" name="COMPANY" data-bind="var: shipmethod(COMPANY); format:popVal;" />
-</label>
-
-<label><span>Address Line 1</span>	
-<input type="text" value="" name="ADDRESS1" data-bind="var: shipmethod(ADDRESS1); format:popVal;" />
-</label>
-
-<label><span>Address Line 2</span>	
-<input type="text" value="" name="ADDRESS2" data-bind="var: shipmethod(ADDRESS2); format:popVal;" />
-</label>
-
-<label><span>City</span>	
-<input type="text" value="" name="CITY" data-bind="var: shipmethod(CITY); format:popVal;" />
-</label>
-
-<label><span>State Code</span>	
-<input type="text" value="" name="STATE" data-bind="var: shipmethod(STATE); format:popVal;" ><br>
-<i>(required for Canada or US)</i>
-</label>
-
-<label><span>Postal/Zip Code</span>	
-<input type="text" value="" name="ZIP" data-bind="var: shipmethod(ZIP); format:popVal;" />
-</label>
-
-<label><span>Country Code</span>	
-<input type="text" value="" name="COUNTRY" size="2" data-bind="var: shipmethod(COUNTRY); format:popVal;" />
-</label>
-
-<label><span>Phone Number</span>	
-<input type="tel" value="" name="PHONE" data-bind="var: shipmethod(PHONE); format:popVal;" />
-</label>
-
-<label><span>Email Address</span>	
-<input type="email" value="" name="EMAIL" data-bind="var: shipmethod(EMAIL); format:popVal;"  />
-</label>
-
-<label><span>Fax Number</span>
-<input type="tel" value="" name="FAX" data-bind="var: shipmethod(FAX); format:popVal;" />
-</label>
-
+	<legend>Rate Display <span class='toolTip' title="Please select the method(s) of FedEx shipping you want to offer to your customers. During checkout the price will be derived from FedEx based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
+	
+	<label>
+	<input type="radio" name="rates" value="actual" data-bind="var: shipmethod(rates); format:popRadio;"> Display Actual Shipping Rates
+	</label>
+	
+	<label>
+	<input type="radio"  name="rates" value="retail" data-bind="var: shipmethod(rates); format:popRadio;"> Display Retail (FedEx.com) Rates
+	</label>
+	
 </fieldset>
+
+
+<fieldset>
+	<legend>FedEx Domestic Settings</legend>
+	<label>
+		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage General Rules</button></div>
+		<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable FedEx Domestic Shipping Support
+	</label>
+
+
+<table class='gridTable fullWidth'>
+   <tr>
+      <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popCheckbox;' /></td>
+      <td>FedEx First Overnight&reg; (8:30am next day)</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextearly'>Manage Rules</button></td>
+   </tr>
+   <tr >
+      <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popCheckbox;' /></td>
+      <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextnoon'>Manage Rules</button></td>
+   </tr>
+   <tr>
+      <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popCheckbox;' /></td>
+      <td>FedEx Standard Overnight&reg; (3pm next day)</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextday'>Manage Rules</button></td>
+   </tr>
+   <tr >
+      <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popCheckbox;' /></td>
+      <td>FedEx 2Day&reg;</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_2day'>Manage Rules</button></td>
+   </tr>
+   <tr>
+      <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popCheckbox;' /></td>
+      <td>FedEx Express Saver&reg; (3 Days)</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_3day'>Manage Rules</button></td>
+   </tr>
+   <tr >
+      <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popCheckbox;' /></td>
+      <td>FedEx&reg; Ground</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_ground'>Manage Rules</button></td>
+   </tr>
+   <tr>
+      <td colspan=3>
+      <div class="hint">NOTE: FedEx Home Delivery Options are *NOT* available for all addresses
+and may not show as shipping options. We recommend enabling both FedEx
+Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</div>
+      </td>
+   </tr>
+   <tr>
+      <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popCheckbox;' /></td>
+      <td>FedEx&reg; Home Delivery</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home'>Manage Rules</button></td>
+   </tr>
+ <tr>
+      <td><input type="checkbox"  name="dom_home_eve" data-bind='var: shipmethod(dom_home_eve); format:popCheckbox;' /></td>
+      <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home_eve'>Manage Rules</button></td>
+   </tr>
+</table>
+
+
+
+<fieldset>
+	<legend>FedEx International Settings</legend>
+
+	<label>
+		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage General Rules</button></div>
+		<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable FedEx International Shipping Support
+	</label>
+
+<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+<table width=800 width="100%" border="0" cellspacing="0" cellpadding="0">
+   <tr>
+      <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popCheckbox;' /></td>
+      <td>FedEx International First&reg;</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextearly'>Manage Rules</button></td>
+   </tr>
+   <tr >
+      <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popCheckbox;' /></td>
+      <td>FedEx International Priority&reg;</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextnoon'>Manage Rules</button></td>
+   </tr>
+   <tr>
+      <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popCheckbox;' /></td>
+      <td>FedEx International Economy&reg;*</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_2day'>Manage Rules</button></td>
+   </tr>
+   <tr >
+      <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popCheckbox;' /></td>
+      <td>FedEx International Ground&reg;</td>
+      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_ground'>Manage Rules</button></td>
+   </tr>
+</table>
+</fieldset>
+
+<p class="hint">* This shipping method does not support certain packaging, and will assume the FedEx&reg; Pak price if Envelopes, 10kg or 25kg boxes are selected.</p>
+<p class="hint">
+	<b>Other Considerations:</b>
+	<ul>
+		<li> Specific rules only take effect on the shipping type they are created for, whereas general rules will be
+		applied to each available shipping method.
+		<li> Currently no rating support is provided for quoting Saturday delivery, or Freight.
+		<li> FedEx logo used by permission. All rights reserved.
+	</ul>
+</p>
+
+
+
+
 
 </div>
 
@@ -920,16 +1002,6 @@ it will be the only one displayed!
 UPS Shipper Number: <span></span><br>
 <a href="#" onClick="app.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br>
 </p>
-
-
-<fieldset class='showForZoovyOnly'>
-<legend>AirBill Printing (via Windows Order Manager):</legend>
-<label><input type="checkbox" name="PRIMARY_SHIPPER" data-bind='var: shipmethod(PRIMARY_SHIPPER); format:popCheckbox;' /> Designate UPS as my primary Shipping provider</label>
-<p class='hint'>
-NOTE: This feature *requires* a UPS Shipper Number. 
-We apologize but due to contractual obligations you may only have have one shipping company designated as your primary shipper - enabling this feature will override any other previously designated primary shipper.<br>
-</p>
-</fieldset>
 
 
 <fieldset>
@@ -1379,7 +1451,80 @@ We apologize but due to contractual obligations you may only have have one shipp
 
 
 
-<div id='shippingUPSOnlineToolsRegTemplate' data-app-role='UPSONlineToolsRegContainer'>
+
+
+<div id='shippingFedExRegTemplate' data-app-role='shippingPartnerRegContainer'>
+
+<h1>FedEx&reg; API License Agreement for:</h1>
+<fieldset>
+	<input type='hidden' name='provider' value='FEDEX' />
+<p>
+Please provide the information needed below to setup your FedEx&reg; meter:<br>
+</p>
+<label><span>Fedex&reg; Account Number:</span>
+<input type="text" value="" name="account" data-bind="var: shipmethod(account); format:popVal;" required='required' />
+</label>
+
+<label><span>Contact First Name</span>	
+<input type="text" value="" name="firstname" data-bind="var: shipmethod(firstname); format:popVal;" required='required' />
+</label>
+
+<label><span>Contact Last Name</span>	
+<input type="text" value="" name="lastname" data-bind="var: shipmethod(lastname); format:popVal;" required='required' />
+</label>
+
+<label><span>Company Name</span>	
+<input type="text" value="" name="company" data-bind="var: shipmethod(company); format:popVal;" required='required' />
+</label>
+
+<label><span>Address Line 1</span>	
+<input type="text" value="" name="address1" data-bind="var: shipmethod(address1); format:popVal;" required='required' />
+</label>
+
+<label><span>Address Line 2</span>	
+<input type="text" value="" name="address2" data-bind="var: shipmethod(address2); format:popVal;" />
+</label>
+
+<label><span>City</span>	
+<input type="text" value="" name="city" data-bind="var: shipmethod(city); format:popVal;" required='required' />
+</label>
+
+<label><span>State Code</span>	
+<input type="text" value="" name="state" data-bind="var: shipmethod(state); format:popVal;" required='required' ><br>
+<i>(required for Canada or US)</i>
+</label>
+
+<label><span>Postal/Zip Code</span>	
+<input type="text" value="" name="zip" data-bind="var: shipmethod(zip); format:popVal;" required='required' />
+</label>
+
+<label><span>Country Code</span>	
+<input type="text" value="" name="country" size="2" data-bind="var: shipmethod(country); format:popVal;" required='required' />
+</label>
+
+<label><span>Phone Number</span>	
+<input type="tel" value="" name="phone" data-bind="var: shipmethod(phone); format:popVal;"  required='required'/>
+</label>
+
+<label><span>Email Address</span>	
+<input type="email" value="" name="email" data-bind="var: shipmethod(email); format:popVal;"  required='required' />
+</label>
+
+<label><span>Fax Number</span>
+<input type="tel" value="" name="fax" data-bind="var: shipmethod(fax); format:popVal;" />
+</label>
+
+</fieldset>
+
+<button data-app-event='admin_config|shippingPartnerRegExec'>Proceed</button>
+
+</div>
+
+
+
+
+
+<div id='shippingUPSOnlineToolsRegTemplate' data-app-role='shippingPartnerRegContainer'>
 
 
 <p>You are about to complete the neccessary licensing and registration requirements to activate and use UPS OnLine® Tools.</p>
@@ -1400,8 +1545,8 @@ UPS, THE UPS SHIELD TRADEMARK, THE UPS READY MARK, THE UPS ONLINE TOOLS MARK AND
 </p>
 
 
-<button onClick="$(this).parents('section').hide().next('section').show();">Yes, I Do Agree</button>
-<button onClick="$(this).closest('.ui-dialog-content').dialog('close');">No, I Do Not Agree</button>
+<button onClick="$(this).closest('section').hide().next('section').show();">Yes, I Do Agree</button>
+<button onClick="if($(this).closest('.ui-dialog-content').length){$(this).closest('.ui-dialog-content').dialog('close');} else {navigateTo('#!shippingManager')}">No, I Do Not Agree</button>
 <button onClick="app.u.printByjqObj($('#upsOnlineToolsLicenseAgreement'));">Print This Agreement</button>
 
 </section>
@@ -1413,6 +1558,7 @@ Please provide the information needed below to setup your UPS Shipping.  To open
 Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call 1-800-PICK-UPS.
 </p>
 <form action='#' onsubmit="return false;">
+	<input type='hidden' name='provider' value='UPS' />
 <table>
 <tbody>
 <tr>
@@ -1485,9 +1631,9 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 </tr>
 </tbody></table>
 
-	<button data-app-event='admin_config|upsOnlineRegExec'>Proceed</button>
+	<button data-app-event='admin_config|shippingPartnerRegExec'>Proceed</button>
 
-</form>
+
 </section>
 
 

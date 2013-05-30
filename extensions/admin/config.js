@@ -309,9 +309,9 @@ else	{
 				
 				if(provider && $target)	{
 					$target.empty();
+					$target.closest('form').find('.buttonset').hide(); //turn this off always. turn on when needed.
 					
 					if(provider == 'GENERAL')	{
-						$target.closest('form').find('.buttonset').hide();
 						$target.anycontent({
 							'templateID':'shippingGeneralTemplate',
 							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
@@ -320,17 +320,28 @@ else	{
 					else	{
 						var shipData = app.ext.admin_config.u.getShipMethodByProvider(provider);
 						
-						$target.closest('form').find('.buttonset').show();
 						app.ext.admin.u.handleSaveButtonByEditedClass($target.closest('form')); //reset the save button.
 						
 						if(provider.indexOf('FLEX:') === 0 && shipData.handler)	{
+							$target.closest('form').find('.buttonset').show();
 							$("<div \/>").anycontent({'templateID':'shippingFlex_shared',data:shipData}).appendTo($target);
 							$("<div \/>").anycontent({'templateID':'shippingFlex_'+shipData.handler.toLowerCase(),data:shipData}).appendTo($target);
 							}
+						else if(provider == 'FEDEX' && !shipData.meter)	{
+//the fedex account has not been registered through us yet. show reg form.
+							$target.anycontent({'templateID':'shippingFedExRegTemplate',data:{}});
+							}
+						else if(provider == 'UPS' && !shipData.shipper_number)	{
+//the UPS account has not been registered through us yet. show reg form.
+							$target.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate',data:{}});
+							}
+						
 						else if(provider == 'FEDEX' || provider == 'UPS' || provider == 'USPS')	{
+							$target.closest('form').find('.buttonset').show();
 							$target.anycontent({'templateID':'shippingZone_'+provider.toLowerCase(),data:shipData});
 							}
 						else if(provider == 'INSURANCE' || provider == 'HANDLING')	{
+							$target.closest('form').find('.buttonset').show();
 							$target.anycontent({'templateID':'shippingGlobal_'+provider.toLowerCase(),data:shipData});
 							}
 						else	{
@@ -543,30 +554,38 @@ $D.dialog('open');
 				
 				}, //handleAddShipment
 
-			upsOnlineRegExec : function($btn)	{
+			shippingPartnerRegExec : function($btn)	{
 				$btn.button();
-				$btn.off('click.upsOnlineRegExec').on('click.upsOnlineRegExec',function(){
-var $form = $btn.closest('form');
-if(app.u.validateForm($form))	{
-	
-	var sfo = $form.serializeJSON({'cb':true});
-//supplier 'may' be set on the parent container. This is used in supply chain.
-	if($btn.closest("[data-app-role='UPSONlineToolsRegContainer']").data('supplier'))	{
-		sfo.supplier = $btn.closest("[data-app-role='UPSONlineToolsRegContainer']").data('supplier');
-		}
-	$form.showLoading({'message':'Registering account with UPS. This may take a few moments.'});
-	app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/UPSAPI-REGISTER?"+$.param(sfo)],{'callback':function(rd){
-		$form.hideLoading();
-		if(app.model.responseHasErrors(rd)){
-			$form.anymessage({'message':rd});
-			}
-		else	{
-			$form.anymessage(app.u.successMsgObject('Activation successful!'));
-			}
-		}},'immutable');
-	app.model.dispatchThis('immutable');
-	}
-else	{} //validateForm handles error display.
+				$btn.off('click.shippingPartnerRegExec').on('click.shippingPartnerRegExec',function(){
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						
+						var sfo = $form.serializeJSON({'cb':true});
+					//supplier 'may' be set on the parent container. This is used in supply chain.
+						if($btn.closest("[data-app-role='shippingPartnerRegContainer']").data('supplier'))	{
+							sfo.supplier = $btn.closest("[data-app-role='shippingPartnerRegContainer']").data('supplier');
+							}
+						
+						if(sfo.provider == 'FEDEX' || sfo.provider == 'UPS')	{
+							$form.showLoading({'message':'Registering account. This may take a few moments.'});
+							var macroCmd = (sfo.provider == 'FEDEX') ? "FEDEX-REGISTER" : "UPSAPI-REGISTER";
+							app.ext.admin.calls.adminConfigMacro.init(["SHIPMETHOD/"+macroCmd+"?"+$.param(sfo)],{'callback':function(rd){
+								$form.hideLoading();
+								if(app.model.responseHasErrors(rd)){
+									$form.anymessage({'message':rd});
+									}
+								else	{
+									$form.empty().anymessage(app.u.successMsgObject('Activation successful!'));
+									}
+								}},'immutable');
+							app.model.dispatchThis('immutable');
+
+							}
+						else	{
+							$form.anymessage({"message":"In admin_config.e.shippingPartnerRegExec, unable to ascertain provider. Was expecting it in the serialized form.","gMessage":true});
+							}
+						}
+					else	{} //validateForm handles error display.
 					});
 				},
 
@@ -575,7 +594,8 @@ else	{} //validateForm handles error display.
 				$ele.off('click.paymentMethodUpdateExec').on('click.paymentMethodUpdateExec',function(){
 var $form = $btn.closest('form');
 if(app.u.validateForm($form))	{
-	app.ext.admin.calls.adminConfigMacro();
+	app.ext.admin.calls.adminConfigMacro(["PAYMENT/UPDATE?"+$.param($form.serializeJSON({'cb':true}))]);
+	app.model.dispatchThis();
 	}
 else	{
 	
