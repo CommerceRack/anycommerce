@@ -505,13 +505,14 @@ setTimeout(function(){
 //						app.u.dump("took selector route. selector: "+mediaData.eleSelector);
 // ** 201318 -> the eleSelector on a few elements I tested had no #, so they weren't working right.
 //however, didn't want to assume it was broken everywhere so a check was added.
-						if(mediaData.eleSelector.indexOf('#') === 0)	{
-//							app.u.dump(" -> # on selector. strip it.");
-							mediaData.eleSelector = mediaData.eleSelector.substring(1);
+						var correctedSelector = mediaData.eleSelector;
+						if(mediaData.eleSelector.indexOf('#') == -1)	{
+							app.u.dump(" -> # some dumbass called medialib but used selector \'"+mediaData.eleSelector+"\'! i will *attempt* to fix it.");
+							correctedSelector = app.u.jqSelector('#',mediaData.eleSelector);
 							}
 //						app.u.dump(" -> mediaData.eleSelector: "+mediaData.eleSelector);
 //						app.u.dump(" -> selector.length: "+$(app.u.jqSelector('#',mediaData.eleSelector)).length);
-						$(app.u.jqSelector('#',mediaData.eleSelector)).val(newFilename);
+						$(correctedSelector).val(newFilename);
 						$medialib.dialog('close');
 						}
 //selector OR mode WILL be set by the time we get here.
