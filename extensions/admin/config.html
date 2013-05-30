@@ -848,17 +848,16 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <div id='shippingZone_fedex'>
 
-
-
+<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
 <h1>Zoovy FedEx&reg; Shipping Options</h1>
 
 <section class='marginBottom'>
 	<h2>Rating Configuration</h2>
 	<div data-bind="var: shipmethod(meter); format:text; pretext:Meter: ;"></div>
 	<div data-bind="var: shipmethod(meter_link); format:text;"></div>
-	<div data-bind="var: shipmethod(origin_zip); format:text; pretext:Origin zip: ;"></div>
-	<div data-bind="var: shipmethod(origin_state); format:text; pretext:Origin state: ;"></div>
-	<div data-bind="var: shipmethod(origin_country); format:text; pretext:Origin country: ;"></div>
+	<div data-bind="var: shipmethod(origin__zip); format:text; pretext:Origin zip: ;"></div>
+	<div data-bind="var: shipmethod(origin__state); format:text; pretext:Origin state: ;"></div>
+	<div data-bind="var: shipmethod(origin__country); format:text; pretext:Origin country: ;"></div>
 </section>
 
 
@@ -878,59 +877,52 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <fieldset>
 	<legend>FedEx Domestic Settings</legend>
+	<button data-app-event="admin_config|ruleBuilderShow" data-table='DOM' class='floatRight'>Manage General Rules</button>
 	<label>
-		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage General Rules</button></div>
 		<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable FedEx Domestic Shipping Support
 	</label>
 
 
-<table class='gridTable fullWidth'>
+<table class='gridTable fullWidth marginBottom'>
    <tr>
       <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popCheckbox;' /></td>
       <td>FedEx First Overnight&reg; (8:30am next day)</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextearly'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextearly'>Manage Rules</button></td>
    </tr>
    <tr >
       <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popCheckbox;' /></td>
       <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextnoon'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextnoon'>Manage Rules</button></td>
    </tr>
    <tr>
       <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popCheckbox;' /></td>
       <td>FedEx Standard Overnight&reg; (3pm next day)</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextday'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextday'>Manage Rules</button></td>
    </tr>
    <tr >
       <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popCheckbox;' /></td>
       <td>FedEx 2Day&reg;</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_2day'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_2day'>Manage Rules</button></td>
    </tr>
    <tr>
       <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popCheckbox;' /></td>
       <td>FedEx Express Saver&reg; (3 Days)</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_3day'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_3day'>Manage Rules</button></td>
    </tr>
    <tr >
       <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popCheckbox;' /></td>
       <td>FedEx&reg; Ground</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_ground'>Manage Rules</button></td>
-   </tr>
-   <tr>
-      <td colspan=3>
-      <div class="hint">NOTE: FedEx Home Delivery Options are *NOT* available for all addresses
-and may not show as shipping options. We recommend enabling both FedEx
-Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</div>
-      </td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_ground'>Manage Rules</button></td>
    </tr>
    <tr>
       <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popCheckbox;' /></td>
-      <td>FedEx&reg; Home Delivery</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home'>Manage Rules</button></td>
+      <td>FedEx&reg; Home Delivery**</td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home'>Manage Rules</button></td>
    </tr>
  <tr>
-      <td><input type="checkbox"  name="dom_home_eve" data-bind='var: shipmethod(dom_home_eve); format:popCheckbox;' /></td>
-      <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home_eve'>Manage Rules</button></td>
+      <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popCheckbox;' /></td>
+      <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_evening'>Manage Rules</button></td>
    </tr>
 </table>
 
@@ -939,37 +931,39 @@ Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</div>
 <fieldset>
 	<legend>FedEx International Settings</legend>
 
+	<button data-app-event="admin_config|ruleBuilderShow" data-table='INT' class='floatRight'>Manage General Rules</button>
 	<label>
-		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage General Rules</button></div>
 		<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable FedEx International Shipping Support
 	</label>
 
 <p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
-<table width=800 width="100%" border="0" cellspacing="0" cellpadding="0">
+<table class='gridTable fullWidth'>
    <tr>
       <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popCheckbox;' /></td>
       <td>FedEx International First&reg;</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextearly'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextearly'>Manage Rules</button></td>
    </tr>
    <tr >
       <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popCheckbox;' /></td>
       <td>FedEx International Priority&reg;</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextnoon'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextnoon'>Manage Rules</button></td>
    </tr>
    <tr>
       <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popCheckbox;' /></td>
       <td>FedEx International Economy&reg;*</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_2day'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_2day'>Manage Rules</button></td>
    </tr>
    <tr >
       <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popCheckbox;' /></td>
       <td>FedEx International Ground&reg;</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='int_ground'>Manage Rules</button></td>
+      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_ground'>Manage Rules</button></td>
    </tr>
 </table>
 </fieldset>
 
 <p class="hint">* This shipping method does not support certain packaging, and will assume the FedEx&reg; Pak price if Envelopes, 10kg or 25kg boxes are selected.</p>
+<p class='hint'>** FedEx Home Delivery Options are *NOT* available for all addresses and may not show as shipping options. We recommend enabling both FedEx Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</p>
+
 <p class="hint">
 	<b>Other Considerations:</b>
 	<ul>
@@ -990,7 +984,7 @@ Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</div>
 
 <div id='shippingZone_ups'>
 
-
+<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
 <p class='warn'>
 UPS rates cannot be displayed in conjunction with rates from other shipping carriers during checkout.
 Doing so is a violation of your UPS license agreement.  Therefore, <b>if you enable this shipping method,
@@ -1150,7 +1144,7 @@ UPS Shipper Number: <span></span><br>
 
 
 <div id='shippingZone_usps'>
-
+<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
 <table class="fullWidth gridTable">
 <thead>
 <tr>
@@ -1454,7 +1448,7 @@ UPS Shipper Number: <span></span><br>
 
 
 <div id='shippingFedExRegTemplate' data-app-role='shippingPartnerRegContainer'>
-
+<form action='#' onsubmit="return false;">
 <h1>FedEx&reg; API License Agreement for:</h1>
 <fieldset>
 	<input type='hidden' name='provider' value='FEDEX' />
@@ -1517,7 +1511,7 @@ Please provide the information needed below to setup your FedEx&reg; meter:<br>
 </fieldset>
 
 <button data-app-event='admin_config|shippingPartnerRegExec'>Proceed</button>
-
+</form>
 </div>
 
 

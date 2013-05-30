@@ -193,6 +193,16 @@ For the list of available params, see the 'options' object below.
 						}
 					}
 //the validate order request returns a list of issues.
+				else if(msg['@RESPONSES'])	{
+					var L = msg['@RESPONSES'].length;
+//					console.dir("Got to @issues, length: "+L);
+					$r = $("<ul \/>"); //adds a left margin to make multiple messages all align.
+					for(var i = 0; i < L; i += 1)	{
+						$r.append("<li>"+msg['@RESPONSES'][i].type+": "+msg['@RESPONSES'][i].msg+"<\/li>");
+						}
+					}
+
+//the validate order request returns a list of issues.
 				else if(msg['@issues'])	{
 					var L = msg['@issues'].length;
 //					console.dir("Got to @issues, length: "+L);

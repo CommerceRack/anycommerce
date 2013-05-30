@@ -597,9 +597,7 @@ if(app.u.validateForm($form))	{
 	app.ext.admin.calls.adminConfigMacro(["PAYMENT/UPDATE?"+$.param($form.serializeJSON({'cb':true}))]);
 	app.model.dispatchThis();
 	}
-else	{
-	
-	}
+else	{} //validateForm will display the error logic.
 					});
 				},
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
