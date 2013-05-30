@@ -505,12 +505,13 @@ The checkbox below does not work.
 	<section class='dualModeListContainer' data-app-role='dualModeList'>
 		<div class='ui-widget-header ui-corner-top'>
 			<div class='floatRight smallPadding'>
+			<button data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
 			<button data-app-event="admin_customer|appAdminTicketCreateShow">Add Ticket</button>
 			</div>
 			
 			<h3 class='heading'>Customer Ticketing System</h3>
 		</div>
-		<div class='ui-state-default smallPadding clearfix'>
+		<div class='ui-state-default smallPadding formRow'>
 		
 		<form action='#' data-app-role='crmFilter' class='floatLeft' onSubmit='return false'>
 			<label>Status 
@@ -579,24 +580,82 @@ The checkbox below does not work.
 </table>
 
 <div id='crmManagerTicketDetailTemplate'>
-<hgroup>
-	<h3 data-bind="var: ticket(SUBJECT); format:text; pretext:subject: ;"></h3>
-	<h4 data-bind="var: ticket(STATUS); format:text; pretext:status: ;"></h4>
-</hgroup>
 
-<section class='marginBottom'>
-	<div class="ui-widget-header ui-corner-top marginBottom"><h3 class="heading">Original Issue:</h3></div>
-	<div data-bind="var: ticket(NOTE); format:text;"></div>
+<div class='buttonset marginBottom alignRight'>
+	<button data-app-event="admin_customer|appAdminTicketClose">Close Ticket</button>
+</div>
+<section class='marginBottom clearfix'>
+	<hgroup class='floatRight'>
+		<h6 data-bind="var: ticket(CREATED_GMT); format:epoch2pretty; pretext:Created: ;"></h6>
+		<h6 data-bind="var: ticket(UPDATED_GMT); format:epoch2pretty; pretext:Updated: ;"></h6>
+	</hgroup>
+	
+	<hgroup>
+		<h3 data-bind="var: ticket(SUBJECT); format:text; pretext:Subject: ;"></h3>
+		<h4 data-bind="var: ticket(STATUS); format:text; pretext:Status: ;"></h4>
+	</hgroup>
 </section>
 
-<section class='marginBottom'>
-	<div class="ui-widget-header ui-corner-top marginBottom"><h3 class="heading">Update:</h3></div>
-	form input
+<section class='marginBottom clearfix'>
+	<h3 class="marginBottom clearfix">Customer Information</h3>
+	
+	<div class='floatLeft'>
+		<div data-bind="var: ticket(%meta.fullname); format:text;  pretext:Full name: ;"></div>
+		<div data-bind="var: ticket(%meta.email); format:text;  pretext:Email: ;"></div>
+		<div data-bind="var: ticket(%meta.phone); format:text;  pretext:Phone: ;"></div>
+	</div>
+	
+	<div class='floatRight alignRight'>
+		<div data-bind="var: ticket(%meta.schedule); format:text;  pretext:Schedule: ;"></div>
+		<div data-bind="var: ticket(%meta.order_count); format:text; pretext:# Orders: ;"></div>
+		<div>Tickets open/total:
+			<span data-bind="var: ticket(%meta.TKT_open); format:text; hideZero:false;"></span> / 
+			<span data-bind="var: ticket(%meta.TKT_total); format:text;"></span>
+		</div>
+		<div data-bind="var: ticket(%meta.customer_since); format:text;  pretext:Customer since: ;"></div>
+	</div>
+</section>
+
+
+<section class='marginBottom clearfix'>
+	<h3 class="clearfix">Original Issue:</h3>
+	<div class="marginBottom marginTop" data-bind="var: ticket(NOTE); format:text;"></div>
+</section>
+
+<section class='marginBottom clearfix'>
+	<h3  class="marginBottom">Update:</h3>
+	<div class="marginBottom">
+	<form action='#' onsubmit="return false;" class='labelsAsBreaks alignedInputs alignedLabels'>
+	<textarea name='note' class='fullWidth' rows='8'></textarea>
+	<label><input type='checkbox' name='private' /> Private note</label>
+	<button data-app-event="admin_customer|appAdminTicketAddNote">Update Ticket</button>
+	</form>
+	</div>
+</section>
+
+<section class='marginBottom clearfix'>
+	<h3 class="marginBottom">History:</h3>
+	<div class="marginBottom">
+	<table class='fullWidth gridTable' data-app-role='ticketHistory'>
+	<tbody data-bind="var: ticket(@MSGS); format:processList; loadsTemplate:crmManagerTicketMsgRowTemplate;"></tbody>
+	</table>
+	</div>
 </section>
 
 
 </div>
 
+<table>
+<tr id='crmManagerTicketMsgRowTemplate'>
+	<td class='valignTop'>
+	<div data-bind="var: ticket(AUTHOR); format:text;  pretext:By: ;" class='marginRight'></div>
+	<div data-bind="var: ticket(CREATED_GMT); format:epoch2pretty;  pretext:On: ;" class='marginRight'></div>
+	</td>
+	<td class='valignTop'>
+	<div class='marginLeft'  data-bind="var: ticket(NOTE); format:text;"></div>
+	</td>
+</tr>
+</table>
 
 
 

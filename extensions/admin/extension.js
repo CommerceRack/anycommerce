@@ -198,7 +198,29 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				}
 			}, //adminAppTicketCreate
 
-
+		adminAppTicketMacro : {
+			init : function(tktcode,macros,_tag,Q)	{
+				var r = 0;
+				if(tktcode && macros && macros.length)	{
+					r = 1;
+					_tag = _tag || {};
+					_tag.datapointer = "adminAppTicketMacro";
+					this.dispatch(tktcode,macros,_tag,Q);
+					}
+				else	{
+					$('.appMessaging').anymessage({"message":"In admin.calls.adminAppTicketMacro, either tktcode not set or macros were empty.",'gMessage':true});
+					}
+				return r;
+				},
+			dispatch : function(tktcode,macros,_tag,Q)	{
+				var obj = {};
+				obj.tktcode = tktcode; 
+				obj['@updates'] = macros;
+				obj._cmd = 'adminAppTicketMacro';
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'immutable');	
+				}
+			}, //adminAppTicketCreate
 
 
 //status is optional
@@ -3565,6 +3587,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 //used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
 			getSanitizedKVPFromObject : function(obj)	{
 				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
+//				var whitelist = new Array('fee','weight','subtotal');
 				delete newObj.isTranslated;
 				delete newObj.sortableItem;
 				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.

@@ -41,6 +41,7 @@ var admin_config = function() {
 		'paymentSuppInputsTemplate_skipjack',
 */		
 		'shippingManagerPageTemplate',
+		'shippingSettingsTemplate',
 /*		
 		'shippingZone_fedex',
 		'shippingZone_usps',
@@ -48,7 +49,7 @@ var admin_config = function() {
 		
 		'shippingGlobal_handling',
 		'shippingGlobal_insurance',
-		
+
 		'shippingFlex_shared',
 		'shippingFlex_fixed',
 		'shippingFlex_local',
@@ -229,14 +230,23 @@ else	{
 			
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
+				
+				app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
 				app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+				
+				app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'mutable');
 				app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 					if(app.model.responseHasErrors(rd)){
+						$target.hideLoading();
 						$('#globalMessaging').anymessage({'message':rd});
 						}
 					else	{
-						$target.hideLoading();
-						$target.anycontent({'templateID':'shippingManagerPageTemplate',data:{}});
+						
+						$target.anycontent({
+							'templateID':'shippingManagerPageTemplate',
+							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
+							});
+						$('.toolTip',$target).tooltip()
 						var shipmethods = new Array();
 						if(app.data['adminConfigDetail|shipmethods|'+app.vars.partition] && app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'])	{
 							shipmethods = app.data['adminConfigDetail|shipmethods|'+app.vars.partition]['@SHIPMETHODS'];

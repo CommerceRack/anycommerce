@@ -173,19 +173,29 @@
 	<section class='slimLeftNav' data-app-role='slimLeftNav'>
 
 <div class='ui-widget marginBottom'>
-	<h4 class='ui-widget-header ui-corner-top smallPadding'>Zone Based</h4>
-	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByZone' >
-		<li data-provider='FEDEX'>FedEx</li>
-		<li data-provider='UPS'>UPS OnLine&reg; Tools</li>
-		<li data-provider='USPS'>USPS</li>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Settings</h4>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom'>
+		<li>General</li>
+		<li>Countries / Block List</li>
+		<li>Debugger</li>
 	</ul>
 </div>
+	
+
 
 <div class='ui-widget marginBottom'>
 	<h4 class='ui-widget-header ui-corner-top smallPadding'>Global</h4>
 	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsGlobal' >
 		<li data-provider='INSURANCE'>Insurance</li>
 		<li data-provider='HANDLING'>Handling</li>
+	</ul>
+</div>
+<div class='ui-widget marginBottom'>
+	<h4 class='ui-widget-header ui-corner-top smallPadding'>Zone Based</h4>
+	<ul class='listStyleNone paddedList noPadOrMargin ui-widget-content ui-corner-bottom' data-app-role='shipMethodsByZone' >
+		<li data-provider='FEDEX'>FedEx</li>
+		<li data-provider='UPS'>UPS OnLine&reg; Tools</li>
+		<li data-provider='USPS'>USPS</li>
 	</ul>
 </div>
 
@@ -224,7 +234,11 @@
 				<button data-app-event="admin_config|shipmethodAddUpdateExec" disabled="disabled" data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
 			</div>
 		
-			<div data-app-role='slimLeftContent'></div>
+			<div data-app-role='slimLeftContent' data-bind="format:loadsTemplate; useParentData:true; loadsTemplate:shippingSettingsTemplate;">
+			
+			
+			
+			</div>
 		
 		</div>
 
@@ -237,6 +251,152 @@
 
 
 
+
+<div id='shippingSettingsTemplate'>
+<div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'><button disabled='disabled' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button></div>
+<form action='#' onsubmit="return false;">
+<fieldset>
+	<legend>Destinations</legend>
+	<label><input type="radio" value="NONE" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States</label>
+	<label><input type="radio" value="ALL51" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Canada.</label>
+	<label><input type="radio" value="SOME" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Low Risk International countries.</label>
+	<label><input type="radio" value="FULL" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> Anywhere in the world</label>
+</fieldset>
+
+
+<fieldset>
+	<legend>US Shipping Origin</legend>
+	<label>
+		<span>Zip:</span>
+		<input type="number" min='0' step='1' value="" maxlength="5" size="5" name="ship_origin_zip" data-bind="var: shipping(ship_origin_zip); format: popVal;" />
+		<span class='toolTip' title="zip code your packages will ship from">?</span>
+	</label>
+</fieldset>			
+
+
+<fieldset>
+	<legend>Fulfillment</legend>
+
+	<label>
+		<span>Fulfillment Latency (in days)</span>
+		<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal;" />
+		<span class='toolTip' title="# of days products take to be fulfilled">?</span>
+	</label>
+	<label>
+		<span>Cut Off Time, PDT (use military time)</span>
+		<input type="textbox" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal;" />
+		<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
+	</label>
+	<label>
+		<input class='applyAnycb' type="checkbox" name="chkout_deny_ship_po" data-bind="var: shipping(chkout_deny_ship_po); format: popCheckbox;">
+		Do not allow checkout for addresses that appear to be P.O. Boxes.
+	</label>
+	<label>
+		<input type="checkbox" name="ebay_merge_shipping" data-bind="var: shipping(ebay_merge_shipping); format: popCheckbox;">
+		Use Zoovy store shipping when two or more eBay items are purchased together.
+	</label>
+
+</fieldset>
+
+
+<fieldset class='floatLeft'>
+	<legend>Blacklisted Countries</legend>
+
+<div class='marginBottom'>
+	<label>
+		<span>Country</span>
+		<select name="country">
+			<option value="">-</option>
+		</select>
+	</label>
+	
+	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+</div>
+<div>
+<table data-app-role='dataTable'>
+<thead>
+<tr>
+	<th>Country</th>
+	<th></th>
+</tr>
+</thead>
+<tbody data-bind="var: shipping(%SHIPPING/@BLACKLIST); format:processList; loadsTemplate:shippingBlacklistCountryTemplate;">
+</tbody>
+</table>
+</div>
+
+
+
+
+</fieldset>
+
+<fieldset class='floatRight'>
+	<legend>Banned List</legend>
+
+
+<div>
+	<label>
+		<span>Type</span>
+		<select name="type">
+			<option value="">-</option>
+			<option value="ip">IP Address</option>
+			<option value="email">Email</option>
+			<option value="zip">Zip Code</option>
+		</select>
+	</label>
+	
+	<label>
+		<span>Matches</span>
+		<input type="text" name="matches" />
+	</label>
+	<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
+	
+	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+</div>
+
+<div>
+<table data-app-role='dataTable'>
+<thead>
+<tr>
+	<th>Type</th>
+	<th>Matches</th>
+	<th>Created</th>
+</tr>
+</thead>
+<tbody data-bind="var: shipping(%SHIPPING/@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
+</tbody>
+</table>
+</div>
+
+
+
+
+</fieldset>
+
+<div class='clearfix'></div>
+
+</form>
+
+
+
+</div>
+
+
+
+<table>
+<tr id='shippingBlacklistCountryTemplate'>
+	<td data-bind="var:banned(country); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+
+<tr id='shippingBannedTemplate'>
+	<td data-bind="var:banned(type); format:text;"></td>
+	<td data-bind="var:banned(matches); format:text;"></td>
+	<td data-bind="var:banned(created); format:text;"></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
+</tr>
+
+</table>
 
 <div id='shippingGlobal_insurance'>
 
@@ -1277,7 +1437,7 @@ We apologize but due to contractual obligations you may only have have one shipp
 		<option value="0">Disabled</option>
 		<option value="1">US Only</option>
 		<option value="3">US + Canada</option>
-		<option value="7">Low Rish</option>
+		<option value="7">Low Risk</option>
 		<option value="15">World Wide</option>
 	</select>
 </label>
@@ -1775,14 +1935,14 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<label>
 		<span>Rule type</span>
 		<select name="type" required='required' data-app-event='admin|showSiblingFieldset'>
-			<option selected='selected' disabled='disabled'>Please Chooser</option>
-			<option value="state" selected="">STATE: US Two Digit Abbreviation.</option>
-			<option value="city">LOCAL: US State+City</option>
-			<option value="zipspan">LOCAL: US Zip Range</option>
-			<option value="zip4">LOCAL: US Zip+4</option>
-			<option value="country">STATE: Country</option>
-			<option value="intprovince">LOCAL: Country+Province</option>
-			<option value="intzip">LOCAL: Country+Zip</option>
+			<option selected='selected' disabled='disabled'>Please Choose</option>
+			<option value="state" selected="">State: US Two Digit Abbreviation.</option>
+			<option value="city">Local: US State+City</option>
+			<option value="zipspan">Local: US Zip Range</option>
+			<option value="zip4">Local: US Zip+4</option>
+			<option value="country">State: Country</option>
+			<option value="intprovince">Local: Country+Province</option>
+			<option value="intzip">Local: Country+Zip</option>
 		</select>
 		</label>
 	</fieldset>

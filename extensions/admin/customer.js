@@ -39,7 +39,8 @@ var admin_customer = function() {
 	'crmManagerPageTemplate',
 	'crmManagerResultsRowTemplate',
 	'crmManagerTicketDetailTemplate',
-	'crmManagerTicketCreateTemplate'
+	'crmManagerTicketCreateTemplate',
+	'crmManagerTicketMsgRowTemplate'
 	
 	);
 	var r = {
@@ -470,6 +471,44 @@ if($ele.val())	{
 	app.model.dispatchThis();
 	}
 					});
+				}, //appAdminTicketListFilterExec
+
+			appAdminTicketAddNote : function($btn)	{
+				$btn.button();
+				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
+
+var
+	$form = $btn.closest('form');
+	sfo = $form.serializeJSON({'cb':true});
+
+$form.showLoading({'message':'Updating Ticket'})
+app.ext.admin.calls.adminAppTicketMacro.init($btn.closest("[data-tktcode]").data('tktcode'),["ADDNOTE?"+$.param(sfo)],{'callback':function(rd){
+		$form.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$form.anymessage({'message':rd});
+			}
+		else	{		
+			$form.anymessage(app.u.successMsgObject('The ticket has been updated.'));
+			$('textarea',$form).val('');
+			
+			//adds an instance of the template to the history table to show the update took place.
+			var $tr = app.renderFunctions.createTemplateInstance('crmManagerTicketMsgRowTemplate',sfo);
+			sfo.NOTE = sfo.note; //input is lowercase for macro. data-binds want uppercase.
+			$tr.anycontent({data:sfo});
+			$btn.closest('.ui-widget-anypanel').find("[data-app-role='ticketHistory'] tbody:first").append($tr);
+			}
+	}},'immutable');
+app.model.dispatchThis('immutable');
+
+					});
+				},
+			appAdminTicketClose : function($btn)	{
+				$btn.button();
+				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
+					app.ext.admin.calls.adminAppTicketMacro.init($btn.closest("[data-tktcode]").data('tktcode'),["CLOSE"],{},'immutable');
+					app.model.dispatchThis('immutable');
+					$btn.closest('.ui-widget-anypanel').anypanel('destroy');
+					});
 				},
 
 //ele is a select list, most likely.
@@ -492,7 +531,7 @@ if(app.u.validateForm($form))	{
 else	{} //validateForm will handle error display.
 
 					});
-				},
+				}, //appAdminTicketListSearchExec
 
 			appAdminTicketDetailShow : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -556,7 +595,7 @@ $D.dialog('open');
 
 
 					});
-				},
+				}, //appAdminTicketCreateShow
 
 			appAdminTicketCreateExec : function($btn)	{
 				$btn.button();
@@ -578,7 +617,7 @@ app.ext.admin.calls.adminAppTicketCreate.init(sfo,{'callback' : function(rd){
 app.model.dispatchThis('immutable');
 
 					});
-				},
+				}, //appAdminTicketCreateExec
 
 
 
@@ -1005,35 +1044,6 @@ else	{
 					});
 				}, //tagRowForIsDefault
 
-//use this on any delete button that is in a table row and that does NOT automatically delete, but just queue's it.
-//the ui-state-error class is also used in the 'customerEditorSave' function, so be sure to update both if the classname changes.
-/*
-Removed in favor of data-app-event="admin|tagRowForRemove".
-			tagRowForRemove : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-circle-close"},text: false});
-				$btn.off('click.customerAddressRemove').on('click.customerAddressRemove',function(event){
-					event.preventDefault();
-					
-//if this class is already present, the button is set for delete already. unset the delete.
-//added to the tr since that's where all the data() is, used in the save. If class destination changes, update customerEditorSave app event function.
-					if($btn.hasClass('ui-state-error'))	{
-						$btn.removeClass('ui-state-error').parents('tr').removeClass('edited').find('button').each(function(){
-							$(this).button('enable')
-							}); //enable the other buttons
-						$btn.button('enable');
-						}
-					else	{
-//adding the 'edited' class does NOT change the row, but does let the save changes button record the accurate # of updates.
-						$btn.addClass('ui-state-error').parents('tr').addClass('edited').find('button').each(function(){
-							$(this).button('disable')
-							}); //disable the other buttons
-						$btn.button('enable');
-
-						}
-					app.ext.admin_customer.u.handleChanges($btn.closest("form"));
-					});
-				}, //tagRowForRemove
-*/
 			tagNoteButtonAsEnabled : function($ele)	{
 				$ele.off('keyup.tagNoteButtonAsEnabled'); //remove old event so nuking val doesn't trigger change code.
 				$ele.val(''); //reset value. panel has events re-run after note added. this clears the last note.
@@ -1119,9 +1129,7 @@ Removed in favor of data-app-event="admin|tagRowForRemove".
 					$btn.button('disable').hide();
 					$("<span class='tooltip'>?<\/span>").attr('title','You must be logged in to a partition to edit a customer on that partition.').tooltip().insertAfter($btn);
 					}
-				//
 				},
-			
 			
 			showGiftcardUpdate : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
@@ -1131,7 +1139,6 @@ Removed in favor of data-app-event="admin|tagRowForRemove".
 					navigateTo("/biz/manage/giftcard/index.cgi?VERB=EDIT&GCID="+$btn.closest('tr').data('id'));
 					});
 				},
-			
 			
 			saveOrgToField : function($cb)	{
 				$cb.off('change.saveOrgToField').on('change.saveOrgToField',function(){
