@@ -703,6 +703,8 @@ $D.dialog('open');
 				},
 
 //this is a generic button for use on a update macro.  For simple ones, like company information. Anything more complicated like shipping or tax will need a custom handler.
+/*
+NOT COMPLETED YET
 			adminConfigMacroExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminConfigMacroExec').on('click.adminConfigMacroExec',function(){
@@ -720,7 +722,7 @@ else	{
 	}
 					});
 				},
-
+*/
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).

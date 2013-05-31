@@ -3654,7 +3654,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 							app.ext.admin.u.handleSaveButtonByEditedClass($context);
 							});			
 						}
-					else if($input.is('select'))	{
+					else if($input.is('select') || $input.is(':radio'))	{
 						$input.off('change.trackChange').one('change.trackChange',function(){
 							$input.addClass('edited');
 							app.ext.admin.u.handleSaveButtonByEditedClass($context);
