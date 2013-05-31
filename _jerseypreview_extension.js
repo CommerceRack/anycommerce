@@ -95,16 +95,16 @@ var jerseypreview = function() {
 					swfStr +=	" id='jerseyPreview"+data.value.pid+"' align='middle'>"
 					swfStr += 	"<param name='allowScriptAccess' value='always' />"
 					swfStr += 	"<param name='allowFullScreen' value='true' />"
-					swfStr += 	"<param name='movie' value='https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=https://static---cubworld.app-hosted.com/media/img/cubworld/W400-H400-Bffffff/"
+					swfStr += 	"<param name='movie' value='/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=/media/img/cubworld/W400-H400-Bffffff/"
 					swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
-					swfStr +=	"&font=http://static.zoovy.com/merchant/cubworld/_ticket_468079/"
+					swfStr +=	"&font=/media/merchant/cubworld/_ticket_468079/"
 					swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
 					swfStr +=	"'/>"
 					swfStr += 	"<param name='quality' value='high' />"
 					swfStr += 	"<param name='bgcolor' value='#FFFFFF' />"
-					swfStr +=	"<embed src='https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=https://static---cubworld.app-hosted.com/media/img/cubworld/W400-H400-Bffffff/"
+					swfStr +=	"<embed src='/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=/media/img/cubworld/W400-H400-Bffffff/"
 					swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
-					swfStr +=	"&font=https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/"
+					swfStr +=	"&font=/media/merchant/cubworld/_ticket_468079/"
 					swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
 					swfStr +=	"' quality='high' bgcolor='#FFFFFF' width='400' allowFullScreen='true' height='400' name='jerseyPreview"+data.value.pid+"' align='middle' allowScriptAccess='always' type='application/x-shockwave-flash' pluginspage='http://www.macromedia.com/go/getflashplayer' />"
 					swfStr += 	"</object>"
