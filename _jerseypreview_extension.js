@@ -67,7 +67,7 @@ var jerseypreview = function() {
 			setJerseyText : function(pid, name, number, attempts){
 				attempts = attempts || 0;
 				app.u.dump(attempts);
-				if(attempts < 10){
+				if(attempts < 20){
 					try{
 						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
 						}
