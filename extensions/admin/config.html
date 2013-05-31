@@ -250,11 +250,13 @@
 
 
 <div id='shippingGeneralTemplate'>
+
+<form action='#' onsubmit="return false;">
+
 <div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
 	<button disabled='disabled' data-app-role='saveButton' data-app-event="admin_config|shippingGeneralUpdateExec">Save <span class='numChanges'></span> Changes</button>
 </div>
 
-<form action='#' onsubmit="return false;">
 <fieldset>
 	<legend>Destinations</legend>
 	<label><input type="radio" value="NONE" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States</label>
