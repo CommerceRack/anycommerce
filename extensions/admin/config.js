@@ -42,6 +42,7 @@ var admin_config = function() {
 */		
 		'shippingManagerPageTemplate',
 		'shippingGeneralTemplate',
+		'shippingBlacklistTemplate',
 /*		
 		'shippingZone_fedex',
 		'shippingZone_usps',
@@ -456,11 +457,21 @@ $D.dialog({
 app.u.handleAppEvents($D);
 $D.dialog('open');	
 				}
+
 			}, //Actions
 
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		renderFormats : {
-
+			blacklistedCountries : function($tag,data)	{
+				if(data.bindData.loadsTemplate)	{
+					for(var i in data.value)	{
+						$tag.append(app.renderFunctions.transmogrify({'country':data.value[i]},data.bindData.loadsTemplate,{'country':data.value[i]}));
+						}
+					}
+				else	{
+					$tag.anymessage({'message':'Unable to render list item - no loadsTemplate specified.','persistent':true});
+					}
+				}
 			}, //renderFormats
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -617,7 +628,7 @@ $D.dialog('open');
 					var $form = $btn.closest('form');
 					if(app.u.validateForm($form))	{
 						var macros = new Array();
-						macros.push("SHIPPING?CONFIG"+$.param($form.serializeJSON({'cb':true})));
+						macros.push("SHIPPING/CONFIG?"+$.param($form.serializeJSON({'cb':true})));
 
 //if any new bans have occured, update the list.
 						var $bannedContainer = $("[data-app-role='bannedlistContainer']",$form);
@@ -625,29 +636,29 @@ $D.dialog('open');
 							macros.push("SHIPPING/BANNEDTABLE-EMPTY");
 							var countries = "";
 							$('tr.edited',$bannedContainer).each(function(){
+								var $tr = $(this);
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
-									countries += $(this).data('country')+","
+									macros.push("SHIPPING/BANNEDTABLE-INSERT?match="+$tr.data('match')+"&type="+$tr.data('type'));
 									}
 								});
-							macros.push("SHIPPING/BANNEDTABLE-INSERT?type=banned"+countries);
 							}
-
+// COUNTRIES!
 //if any changes have occured to the blacklisted countries, update the list.
 						var $blacklistContainer = $("[data-app-role='blacklistContainer']",$form);
 						if($blacklistContainer.find('.edited').length)	{
-							macros.push("SHIPPING/BLACKLISTTABLE-EMPTY");
+							var blacklistMacro = "SHIPPING/CONFIG?blacklist="
 							$('tr.edited',$blacklistContainer).each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
-									macros.push("SHIPPING/BANNEDTABLE-INSERT?type=ship_blacklist?"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+									blacklistMacro += $(this).data('country')+',';
 									}
 								});
+							macros.push(blacklistMacro);
 							}
-$form.append("THIS SAVE DID NOT OCCUR. THIS FEATURE IS NOT DONE.");
-						app.u.dump("macros: "); app.u.dump(macros);
-//						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'throwMessage','jqObj':$form,'message':'Your changes have been saved.'},'immutable');
-//						app.model.dispatchThis('immutable');
+//						app.u.dump("macros: "); app.u.dump(macros);
+						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.'},'immutable');
+						app.model.dispatchThis('immutable');
 
 
 						}

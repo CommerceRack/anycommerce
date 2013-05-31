@@ -319,10 +319,46 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('#!projects'); return false;">App Hosting </a><br />
 			<div class="helper">Manage Hosted Application Projects</div>
 
+
+			
+			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
+			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
+			<div class="helper">
+			- <a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Upload New Image</a><br />
+			- <a href="#" onClick="navigateTo('/biz/setup/customfiles/index.cgi'); return false;" title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br />
+			</div>
+
+			
+			
+			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds</a><br />
+			<div class="helper">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
+		</div>
+	</div><!-- /manage -->
+
+	
+	<div id="market" class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Integrated Marketplaces</h3>
+		</div>
+
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;" title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
+			<div class="helper">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
+		</div>
+	</div><!-- /market -->
+
+
+	
+	<div id="vstore" class='ui-widget marginBottom' class='showForZoovyOnly'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>vStore</h3>
+		</div>
+		
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/index.cgi?ACTION=COMPANYEDIT&amp;NS=DEFAULT">Company Information</a><br />
 			<div class="helper">Put in Logo, Address, Policies, etc.</div>
 
-			<div class='showForZoovyOnly'>
 			<a href="#" onClick="navigateTo('/biz/setup/builder/index.cgi'); return false;" title="/biz/setup/builder/index.cgi">Site Builder</a><br />
 			<div class="helper">Build the content for your storefront.  Select page layouts and add product to categories and lists.</div>
 				
@@ -340,14 +376,7 @@ SETUP PAGE TEMPLATE
 				
 				- <a href="#" onClick="navigateTo('/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT'); return false;" title="/biz/setup/builder/emails/index.cgi?VERB=EDIT&amp;NS=DEFAULT">Edit Email Messages</a><br />
 				<div class="helper">Customize the emails that are sent to customers.</div>
-			</div>			
-			
-			<a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Media Library</a><br />
-			<div class="helper">Upload and manage your images, sounds, movies, documents and flash.</div>
-			<div class="helper">
-			- <a href="#" onClick="navigateTo('#!mediaLibraryManageMode'); return false;" title="#!mediaLibraryManageMode">Upload New Image</a><br />
-			- <a href="#" onClick="navigateTo('/biz/setup/customfiles/index.cgi'); return false;" title="/biz/setup/customfiles/index.cgi">Public Files Library</a><br />
-			</div>
+
 			
 			<div class='showForZoovyOnly'>
 			<a href="#" onClick="navigateTo('/biz/setup/navcats/index.cgi'); return false;" title="/biz/setup/navcats/index.cgi">Categories &amp; Lists</a><br />
@@ -358,28 +387,13 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/analytics/index.cgi'); return false;" title="/biz/setup/analytics/index.cgi">Analytics &amp; Plugins</a><br />
 			<div class="helper">Integrate approved 3rd party applications with your site.</div>
 			</div>
-			
-			
-			<a href="#" onClick="navigateTo('#!rss'); return false;">RSS Feeds</a><br />
-			<div class="helper">Create RSS Feeds to easily share your product lists with affiliate sites.</div>
-		</div>
-	</div><!-- /manage -->
 
-	
-	<div id="market" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Integrated Marketplaces</h3>
-		</div>
 
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;" title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
-			<div class="helper">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
-
-			<a href="#" onClick="navigateTo('/biz/syndication/amazon/index.cgi'); return false;" title="/biz/syndication/amazon/index.cgi">Amazon Configuration</a><br />
-			<div class="helper">Manage Amazon Tokens and learn more about Zoovy's integration.</div>
 		</div>
-	</div><!-- /market -->
-	
+	</div><!-- /utility -->
+
+
+
 	</td>
 
 
@@ -448,7 +462,7 @@ SETUP PAGE TEMPLATE
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" >Contact Information</a><br />
-<!--			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br /> -->
+			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br />
 			<div class="helper">Change Administrative/Billing Information</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/global/index.cgi'); return false;" title="/biz/setup/global/index.cgi">Global Settings</a><br />

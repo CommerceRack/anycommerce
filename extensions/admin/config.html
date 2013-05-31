@@ -316,12 +316,10 @@
 	<th></th>
 </tr>
 </thead>
-<tbody data-bind="var: shipping(%SHIPPING/@BLACKLIST); format:processList; loadsTemplate:shippingBlacklistCountryTemplate;">
+<tbody data-bind="var: shipping(%SHIPPING.@BLACKLIST); format:blacklistedCountries; extension:admin_config; loadsTemplate:shippingBlacklistTemplate;">
 </tbody>
 </table>
 </div>
-
-
 
 
 </fieldset>
@@ -343,7 +341,7 @@
 	
 	<label>
 		<span>Matches</span>
-		<input type="text" name="matches" class='skipTrack' />
+		<input type="text" name="match" class='skipTrack' />
 	</label>
 	<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
 	
@@ -359,7 +357,7 @@
 	<th>Created</th>
 </tr>
 </thead>
-<tbody data-bind="var: shipping(%SHIPPING/@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
+<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
 </tbody>
 </table>
 </div>
@@ -380,14 +378,14 @@
 
 
 <table>
-<tr id='shippingBlacklistCountryTemplate'>
+<tr id='shippingBlacklistTemplate'>
 	<td data-bind="var:banned(country); format:text;"></td>
 	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 
 <tr id='shippingBannedTemplate'>
 	<td data-bind="var:banned(type); format:text;"></td>
-	<td data-bind="var:banned(matches); format:text;"></td>
+	<td data-bind="var:banned(match); format:text;"></td>
 	<td data-bind="var:banned(created); format:text;"></td>
 	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
