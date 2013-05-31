@@ -702,7 +702,24 @@ $D.dialog('open');
 					});
 				},
 
-
+//this is a generic button for use on a update macro.  For simple ones, like company information. Anything more complicated like shipping or tax will need a custom handler.
+			adminConfigMacroExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.adminConfigMacroExec').on('click.adminConfigMacroExec',function(){
+var $form = $btn.closest('form');
+if($form.data('macroCmd'))	{
+	if(app.u.validateForm($form))	{
+		$form.showLoading({"Message":"Saving Changes"});
+		
+		
+		}
+	else	{} //form validation will handle error display.
+	}
+else	{
+	$form.anymessage();
+	}
+					});
+				},
 
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
