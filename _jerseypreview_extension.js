@@ -101,7 +101,7 @@ var jerseypreview = function() {
 					swfStr +=	"'/>"
 					swfStr += 	"<param name='quality' value='high' />"
 					swfStr += 	"<param name='bgcolor' value='#FFFFFF' />"
-					swfStr +=	"<embed src='https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=http://static.zoovy.com/img/cubworld/W400-H400-Bffffff/"
+					swfStr +=	"<embed src='https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/jersey_builder-400x400-20110908.swf?imagesrc=https://static---cubworld.app-hosted.com/media/img/cubworld/W400-H400-Bffffff/"
 					swfStr +=	data.value['%attribs']['zoovy:prod_image8'];
 					swfStr +=	"&font=https://static---cubworld.app-hosted.com/media/merchant/cubworld/_ticket_468079/"
 					swfStr +=	data.value['%attribs']['user:prod_flashparams_jersey'];
