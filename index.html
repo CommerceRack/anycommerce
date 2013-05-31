@@ -679,7 +679,7 @@ each of the 'sections' are used to load another template. don't change the id.
 don't modify the 'data-templateid' unless you are changing template names and updating everywhere appropriate.
 -->
 <div id='categoryTemplate' class='loadingBG categoryTemplate'>
-
+	
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
 	<div class="alignCenter marginBottom">
@@ -703,6 +703,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateTickets' class='loadingBG categoryTemplate categoryTemplateTickets'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	<div class="content_body_pad">
 		<div style="margin:10px 0;">
@@ -786,11 +787,13 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateHTML' class='loadingBG categoryTemplate'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
 </div>
 
 <div id='categoryTemplateInquiry' class='loadingBG categoryTemplate categoryTemplateInquiry'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
 	<form class="floatRight" action="#" onSubmit="return false;">
@@ -814,6 +817,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateCuties' class='loadingBG categoryTemplate categoryTemplateCuties'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
 	<p class="description" data-bind="var: category(%page.description); format:wiki; wikiFormats:myRIA; editor: textarea;"></p>
@@ -826,6 +830,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateAffiliates' class='loadingBG categoryTemplate categoryTemplateAffiliates' data-columncontent="hotItemList">
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	<div class="affiliate_category">
 		<div class="affliate_banner">
@@ -865,6 +870,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 
 <div id='categoryTemplateGroupSales' class='loadingBG categoryTemplate categoryTemplateGroupSales'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	
 	<div class="floatRight">
@@ -983,13 +989,16 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 -->
 <div id='categoryTemplateSitemap' class='loadingBG categoryTemplate categoryTemplateSitemap' data-columncontent="helpfulLinks">
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 </div>
 <div id='categoryTemplateSitemapList'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateRootCats; detail:max;"></ul>
 </div>
 
 <div id='categoryTemplateRewards'class='loadingBG categoryTemplate categoryTemplateRewards'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
 	<img width="320" height="49" border="0" alt="" src="img/categoryPages/rewards/cw_c_rewardshead-320x49.png">
 	<form class="floatRight" action="#"onSubmit='app.ext.myRIA.u.loginFrmSubmit($"[name=login]",$(this)).val(),$"[name=password]",$(this)).val()); return false;'>
@@ -1015,10 +1024,12 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div> 
 
 <div id='categoryTemplateSWConnect' class='loadingBG categoryTemplate categoryTemplateSWConnect' data-columncontent="hotItemList">
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<div data-bind="var:category(%page.html);format:text;"></div>
 </div>
 
 <div id='categoryTemplateEarthCam' class='loadingBG categoryTemplate categoryTemplateEarthCam' data-columncontent="hotItemList">
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
 	<div class="earthcamContainer">
 		<div data-bind="var:category(%page.html);format:text;"></div>
 		

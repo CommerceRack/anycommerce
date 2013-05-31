@@ -148,7 +148,7 @@ var cubworld = function() {
 					'searchTemplate',
 					'checkoutTemplate',
 					'pageNotFoundTemplate'
-					]
+					];
 				for(var t in funcTemplates){
 					app.rq.push(['templateFunction', funcTemplates[t],'onCompletes',function(P){
 						var $context = $(app.u.jqSelector('#',P.parentID));
@@ -160,6 +160,51 @@ var cubworld = function() {
 							}
 						}]);
 					}
+					
+				var catTemplates = [
+					'categoryTemplate',
+					'categoryTemplateCuties',
+					'categoryTemplateHTML',
+					'categoryTemplateInquiry',
+					'categoryTemplateAffiliates',
+					'categoryTemplateGroupSales',
+					//'categoryTemplateFeaturedPlayer',
+					'categoryTemplateSitemap',
+					'categoryTemplateRewards',
+					'categoryTemplateTickets',
+					'categoryTemplateSWConnect',
+					'categoryTemplateEarthCam'
+					];
+				for(var t in catTemplates){
+					app.rq.push(['templateFunction', catTemplates[t],'onCompletes',function(P){
+						var title = app.data["appPageGet|"+P.navcat]['%page'].page_title;
+						app.ext.cubworld.u.setTitle(title);
+						}]);
+					}
+				app.rq.push(['templateFunction', 'productTemplate','onCompletes',function(P){
+					var title = app.data["appProductGet|"+P.pid]['%attribs']['zoovy:prod_name'];
+					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'companyTemplate','onCompletes',function(P){
+					var title = "SportsWorldChicago Help Desk";
+					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P){
+					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
+					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'pageNotFoundTemplate','onCompletes',function(P){
+					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
+					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P){
+					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
+					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P){
+					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
+					app.ext.cubworld.u.setTitle(title);
+					}]);
 				$('#variableColumn > div').hide();
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
 				r = true;
@@ -448,6 +493,17 @@ var cubworld = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
+			setTitle : function(title){
+				if(title && typeof title ==="string"){
+					//This is what we expect
+					}
+				else{
+					//Go home title.  You are drunk.
+					title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago"; 
+					}
+				
+				document.title = title;
+				},
 			loadBanners : function(){
 				app.u.dump("loadbanners");
 				$.getJSON("_banners.json?_v="+(new Date()).getTime(), function(json){
