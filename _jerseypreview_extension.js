@@ -72,6 +72,7 @@ var jerseypreview = function() {
 						app.ext.jerseypreview.u.thisMovie('jerseyPreview'+pid).goHome(name,number);
 						}
 					catch(err){
+						app.u.dump(err);
 						setTimeout(function(){app.ext.jerseypreview.a.setJerseyText(pid,name,number,attempts+1);},250);
 						}
 					}
