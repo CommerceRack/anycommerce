@@ -231,7 +231,7 @@ else	{
 		dateFormat : "yymmdd"
 		});
 	
-	app.u.handleAppEvents($target);
+	app.u.handleAppEvents($target,{'$form':$("[data-app-role='taxTableExecForm']",$target),'$container':$("[data-app-role='taxTableInputForm']",$target),'$dataTbody':$("[data-app-role='dataTableTbody']",$target)});
 	}
 
 					}},'mutable');
@@ -254,7 +254,7 @@ else	{
 						
 						$target.anycontent({
 							'templateID':'shippingManagerPageTemplate',
-							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition],app.data['appResource|shipcountries.json'])
+							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
 							});
 
 						var shipmethods = new Array();
@@ -265,19 +265,30 @@ else	{
 						var
 							L = shipmethods.length,
 							$flexUL = $("[data-app-role='shipMethodsByFlex']",$target);
-						
+//genrate the list of flex methods.
+//disabled methods will get a class to help indicate they're disabled.
 						for(var i = 0; i < L; i += 1)	{
 							if(shipmethods[i].provider.indexOf('FLEX:') === 0)	{
-								$("<li \/>").data('provider',shipmethods[i].provider).text(shipmethods[i].name).appendTo($flexUL);
+//								app.u.dump("shipmethods[i].enabled: "+shipmethods[i].enable);
+								$("<li \/>").data('provider',shipmethods[i].provider).text(shipmethods[i].name).appendTo($flexUL).addClass((shipmethods[i].enable == 1) ? '' :'opacity50');
 								}
 							}
+						
+						
 						
 						app.u.handleAppEvents($target);
 						
 						var
 							$leftColumn = $("[data-app-role='slimLeftNav']",$target),
 							$contentColumn = $("[data-app-role='slimLeftContent']",$target);
-						// 
+
+//add classes to fedex,ups and usps to indicate they are enabled/disabled.
+						
+//						$("[data-provider='FEDEX']",$leftColumn).addClass(app.ext.admin_config.u.getShipMethodByProvider('FEDEX')['enable'] == 1 ? '' : 'opacity50');
+//						$("[data-provider='UPS']",$leftColumn).addClass(app.ext.admin_config.u.getShipMethodByProvider('UPS')['enable'] == 1 ? '' : 'opacity50');
+//						$("[data-provider='USPS']",$leftColumn).addClass(app.ext.admin_config.u.getShipMethodByProvider('USPS')['enable'] == 1 ? '' : 'opacity50');
+						
+ 
 						$("[data-app-role='shipMethodsByZone']:first, [data-app-role='shipMethodsGlobal']:first, [data-app-role='shipMethodsByFlex']:first",$leftColumn).find('li').each(function(){
 							var $li = $(this);
 							$li.addClass('ui-corner-none pointer').on('click',function(){
@@ -324,7 +335,7 @@ else	{
 					if(provider == 'GENERAL')	{
 						$target.anycontent({
 							'templateID':'shippingGeneralTemplate',
-							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition])
+							'data':$.extend(true,{},app.data['adminConfigDetail|shipping|'+app.vars.partition],app.data['adminConfigDetail|shipmethods|'+app.vars.partition],app.data['appResource|shipcountries.json'])
 							});
 						}
 					else	{
@@ -454,8 +465,7 @@ $D.dialog('open');
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 		u : {
-			
-	
+
 			getPaymentByTender : function(tender)	{
 				var r = false; //returns false if an error occurs. If no error, either an empty object OR the payment details are returned.
 				if(tender)	{
@@ -601,6 +611,50 @@ $D.dialog('open');
 					});
 				},
 
+			shippingGeneralUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.shippingGeneralUpdateExec').on('click.shippingGeneralUpdateExec',function(){
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						var macros = new Array();
+						macros.push("SHIPPING?CONFIG"+$.param($form.serializeJSON({'cb':true})));
+
+//if any new bans have occured, update the list.
+						var $bannedContainer = $("[data-app-role='bannedlistContainer']",$form);
+						if($bannedContainer.find('.edited').length)	{
+							macros.push("SHIPPING/BANNEDTABLE-EMPTY");
+							var countries = "";
+							$('tr.edited',$bannedContainer).each(function(){
+								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+								else	{
+									countries += $(this).data('country')+","
+									}
+								});
+							macros.push("SHIPPING/BANNEDTABLE-INSERT?type=banned"+countries);
+							}
+
+//if any changes have occured to the blacklisted countries, update the list.
+						var $blacklistContainer = $("[data-app-role='blacklistContainer']",$form);
+						if($blacklistContainer.find('.edited').length)	{
+							macros.push("SHIPPING/BLACKLISTTABLE-EMPTY");
+							$('tr.edited',$blacklistContainer).each(function(){
+								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
+								else	{
+									macros.push("SHIPPING/BANNEDTABLE-INSERT?type=ship_blacklist?"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+									}
+								});
+							}
+$form.append("THIS SAVE DID NOT OCCUR. THIS FEATURE IS NOT DONE.");
+						app.u.dump("macros: "); app.u.dump(macros);
+//						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'throwMessage','jqObj':$form,'message':'Your changes have been saved.'},'immutable');
+//						app.model.dispatchThis('immutable');
+
+
+						}
+					else	{} //validateForm handles error display
+					});
+				},
+
 			paymentMethodUpdateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.paymentMethodUpdateExec').on('click.paymentMethodUpdateExec',function(){
@@ -636,9 +690,15 @@ $D.dialog('open');
 						}
 					});
 				},
+
+
+
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
-//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset
+//It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
+// $form = the parent form of the data table. It's used for updating the corresponding 'save' button w/ the number of changes.
+// $dataTbody = the tbody of the dataTable to be updated (where rows get added when the entry form is saved).
+// $container = the fieldset (or some other element) that contains the form inputs used to generate a new row. NOT always it's own form.
 			dataTableAddExec : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
@@ -647,22 +707,22 @@ event.preventDefault();
 app.u.dump("BEGIN admin_config.e.dataTableAddExec");
 
 var
-	$fieldset = $btn.closest('fieldset'),
+	$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
 //tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
-	$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$fieldset),
-	$form = (vars['$form']) ? vars['$form'] : $fieldset.closest('form');
+	$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
+	$form = (vars['$form']) ? vars['$form'] : $container.closest('form');
 
 
-if($fieldset.length && $dataTbody.length && $dataTbody.data('bind'))	{
+if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
 	app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
 //none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
 //so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
-//	$('input',$fieldset).attr('required','required'); 
-	if(app.u.validateForm($fieldset))	{
+//	$('input',$container).attr('required','required'); 
+	if(app.u.validateForm($container))	{
 		app.u.dump(" -> form is validated.");
 		var 
 			bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-			sfo = $fieldset.serializeJSON(),
+			sfo = $container.serializeJSON(),
 			$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 		
 		$tr.anycontent({data:sfo});
@@ -684,13 +744,14 @@ if($fieldset.length && $dataTbody.length && $dataTbody.data('bind'))	{
 		app.u.dump("form did not validate");
 		//validateForm handles error display.
 		}
-//	$('input',$fieldset).attr('required','').removeAttr('required');
+//	$('input',$container).attr('required','').removeAttr('required');
 	
 	}
 else	{
-	$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain parent fieldset ["+$fieldset.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
-	app.u.dump(" -> $fieldset.length: "+$fieldset.length);
+	$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
+	app.u.dump(" -> $container.length: "+$container.length);
 	app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+	app.u.dump(" -> $form.length: "+$form.length);
 	app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
 	}
 
@@ -811,6 +872,38 @@ else	{
 						}
 					});
 				}, //shipmethodAddUpdateExec
+
+
+			taxTableUpdateExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.taxTableUpdateExec').on('click.taxTableUpdateExec',function(){
+
+$('body').showLoading({'message':'Updating tax table'});
+
+var macros = new Array();
+macros.push("TAXRULES/EMPTY");
+$btn.closest('form').find('tbody tr').each(function(){ //tbody needs to be is selector so that tr in thead isn't included.
+	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+	else	{
+//		app.u.dump($(this).data());
+		macros.push("TAXRULES/INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+		}
+	});
+
+//app.u.dump(" -> macros: "); app.u.dump(macros);
+app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
+	$('body').hideLoading();	
+	if(app.model.responseHasErrors(rd)){
+		$('#globalMessaging').anymessage({'message':rd});
+		}
+	else	{
+		$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
+		navigateTo('#!taxConfig');
+		}
+	}},'immutable');
+app.model.dispatchThis('immutable');
+					});
+				},
 
 //executed on a mange rules button.  shows the rule builder.
 			ruleBuilderShow : function($btn)	{

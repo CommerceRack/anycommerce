@@ -247,7 +247,7 @@
 
 <div id='shippingGeneralTemplate'>
 <div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
-	<button disabled='disabled' data-app-role='saveButton'>Save <span class='numChanges'></span> Changes</button>
+	<button disabled='disabled' data-app-role='saveButton' data-app-event="admin_config|shippingGeneralUpdateExec">Save <span class='numChanges'></span> Changes</button>
 </div>
 
 <form action='#' onsubmit="return false;">
@@ -280,7 +280,7 @@
 	</label>
 	<label>
 		<span>Cut Off Time, PDT (use military time)</span>
-		<input type="textbox" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal;" />
+		<input type="text" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal;" />
 		<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
 	</label>
 	<label>
@@ -301,14 +301,14 @@
 <div class='marginBottom'>
 	<label>
 		<span>Country</span>
-		<select name='country' data-bind="var: rss(contents);format:optionsFromList; text:Z; value:ISOX;">
+		<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
 			<option value=''>none</option>
 		</select>
 	</label>
 	
 	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
 </div>
-<div>
+<div data-app-role='blacklistContainer'>
 <table data-app-role='dataTable'>
 <thead>
 <tr>
@@ -333,7 +333,7 @@
 <div>
 	<label>
 		<span>Type</span>
-		<select name="type">
+		<select name="type" class='skipTrack'>
 			<option value="">-</option>
 			<option value="ip">IP Address</option>
 			<option value="email">Email</option>
@@ -343,14 +343,14 @@
 	
 	<label>
 		<span>Matches</span>
-		<input type="text" name="matches" />
+		<input type="text" name="matches" class='skipTrack' />
 	</label>
 	<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
 	
 	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
 </div>
 
-<div>
+<div data-app-role='bannedlistContainer'>
 <table data-app-role='dataTable'>
 <thead>
 <tr>
@@ -668,10 +668,10 @@
 
 <div class='label'>
 	Handling fees for orders will be:<br>
-	<label><input type="radio" value="0" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="handling" data-bind="var: shipmethod(handling); format: popRadio;" /> Displays as it's own line item under shipping.</label>
-<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
+	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" required='required' /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
+	<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
 </div>
 
 
@@ -1149,8 +1149,8 @@ UPS Shipper Number: <span></span><br>
 <thead>
 <tr>
 	<th></th>
-	<th>Domestic</th>
-	<th>International</th>
+	<th class='alignLeft'>Domestic</th>
+	<th class='alignLeft'>International</th>
 </tr>
 </thead>
    <tr >
@@ -1214,7 +1214,7 @@ UPS Shipper Number: <span></span><br>
 <fieldset>
 	<legend>General Settings</legend>
 	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popVal;" /> Enable method</label>
+	<label><input type="checkbox" name="enable" data-bind="var:shipmethod(enable); format:popCheckbox;" /> Enable method</label>
 	<label>
 		<span>Region</span>
 		<select name="region"  data-bind="var:shipmethod(region); format:popVal;" >
@@ -2204,13 +2204,15 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <section class='ui-widget twoColumn labelsAsBreaks alignedLabels'>
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Add a New Rule</h2>
 	<div class='ui-widget-content ui-corner-bottom'>
-	<form onsubmit="return false">
+	<form onsubmit="return false" data-app-role='taxTableInputForm'>
+	
+	<input type='hidden' name='enable' value='1' />
 	<fieldset>
 		<label>
 		<span>Rule type</span>
 		<select name="type" required='required' data-app-event='admin|showSiblingFieldset'>
 			<option selected='selected' disabled='disabled'>Please Choose</option>
-			<option value="state" selected="">State: US Two Digit Abbreviation.</option>
+			<option value="state">State: US Two Digit Abbreviation.</option>
 			<option value="city">Local: US State+City</option>
 			<option value="zipspan">Local: US Zip Range</option>
 			<option value="zip4">Local: US Zip+4</option>
@@ -2228,7 +2230,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='state'>
 			<label>
 			<span>US state </span>
-			<input type="text" value="" name="match-state" size="2" maxlength="2" />
+			<input type="text" value="" name="state" size="2" maxlength="2" />
 			</label>
 			<p class="hint">For State Rules use the two letter state abbreviation ex: "CA" for California</p>
 		</fieldset>
@@ -2236,12 +2238,12 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='city'>
 			<label>
 			<span>State</span>
-			<input type="textbox" value="" name="match-citys" size="2" maxlength="2">
+			<input type="text" value="" name="citys" size="2" maxlength="2" />
 			</label>
 			
 			<label>
 			<span>City</span>
-			<input type="textbox" value="" name="match-cityc" size="20">
+			<input type="text" value="" name="cityc" size="20" />
 			</label>
 			
 			<p class='hint'>For City rules is an exact string match, you can also use wildcards. ex: <br>
@@ -2252,12 +2254,12 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='zipspan'>
 			<label>
 			<span>Start Zip</span>
-			<input type="number" value="" name="match-zipstart" size="5" maxlength="5" step='1' min='0' />
+			<input type="number" value="" name="zipstart" size="5" maxlength="5" step='1' min='0' />
 			</label>
 			
 			<label>
 			<span>End zip</span>
-			<input type="number" value="" name="match-zipend" size="5" maxlength="5" step='1' min='0' />
+			<input type="number" value="" name="zipend" size="5" maxlength="5" step='1' min='0' />
 			</label>
 			
 			<p class='hint'>For Zip Span rules you may either specific a zip code ex: "92024" or a zip-span ex: "92024-92050"</p>
@@ -2267,7 +2269,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='zip4'>
 			<label>
 			<span>Zip +4</span>
-			<input type="text" value="" name="match-zip4" size="10" maxlength="10" />
+			<input type="text" value="" name="zip4" size="10" maxlength="10" />
 			</label>
 			<p class='hint'>Enter the valid zip+4 digit code for a single zip code ex: "90210-1234"</p>
 			<p class='warn'>WARNING: Zip+4 logic will NOT work unless you utilize address validation.</p>
@@ -2276,7 +2278,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='country'>
 			<label>
 			<span>ISO code</span>
-			<input type="text" value="" name="match-country" size="2" maxlength="2" data-minlength='2' />
+			<input type="text" value="" name="country" size="2" maxlength="2" data-minlength='2' data-validation-rules="skipIfHidden" />
 			</label>
 			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
 		</fieldset>
@@ -2284,12 +2286,12 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='intprovince'>
 			<label>
 			<span>ISO country code</span>
-			<input type="textbox" value="" name="match-ipcountry" size="2" maxlength="2" data-minlength='2'>
+			<input type="text" value="" name="ipcountry" size="2" maxlength="2" data-minlength='2'  data-validation-rules="skipIfHidden" />
 			</label>
 			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
 			<label>
 			<span>Country province</span>
-			<input type="textbox" value="" name="match-ipstate" size="20" maxlength="20">
+			<input type="text" value="" name="ipstate" size="20" maxlength="20" />
 			</label>
 			<p class='hint'>Enter a province code, or province name for matching.</p>
 		</fieldset>
@@ -2297,12 +2299,12 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 		<fieldset data-app-role='intzip'>
 			<label>
 			<span>ISO country code</span>
-			<input type="textbox" value="" name="match-izcountry" size="2" maxlength="2"  data-minlength='2'>
+			<input type="text" value="" name="izcountry" size="2" maxlength="2"  data-minlength='2'  data-validation-rules="skipIfHidden" />
 			</label>
 			<p class='hint'>Enter the valid ISO Country Code e.g. "CA" for Canada</p>
 			<label>
 			<span>Zip</span>
-			<input type="textbox" value="" name="match-izzip" size="20" maxlength="20">
+			<input type="text" value="" name="izzip" size="20" maxlength="20">
 			</label>
 			<p class='hint'>Enter a valid zip code, or use a pattern such as "A*" to match any zip which starts with the letter A.</p>
 		</fieldset>
@@ -2344,8 +2346,10 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 	</label>
 	</fieldset>
 
-	<button>Save Rule</button>
-
+	<div class='buttonset smallPadding alignRight'>
+	<button data-app-event="admin_config|dataTableAddExec">Add Rule to Tax Table</button>
+	</div>
+	
 	</form>
 	</div>
 </section>
@@ -2353,21 +2357,25 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <section class='ui-widget twoColumn column2 labelsAsBreaks alignedInputs'>
 	<h2 class='ui-widget-header ui-corner-top ui-widget-header-padding'>Existing Rules</h2>
 	<div class='ui-widget-content ui-corner-bottom'>
-	<table class='gridTable fullWidth marginBottom'>
+	<form data-app-role='taxTableExecForm'>
+
+	<table class='gridTable fullWidth marginBottom' data-app-role='dataTable'>
 	<thead>
 	<tr>
-		<th>id</th>
-		<th>rate</th>
-		<th>enabled</th>
-		<th>zone</th>
-		<th>match</th>
-		<th>type</th>
-		<th>expires</th>
-		<th></th>
+		<th>Group</th>
+		<th>Rate</th>
+		<th>Enabled</th>
+		<th>Zone</th>
+		<th>Match</th>
+		<th>Type</th>
+		<th>Expires</th>
+		<th data-anytable-nosort='true'></th>
 	</tr>
 	</thead>
-	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;"></tbody>
+	<tbody data-bind="var: rules(@TAXES); format:processList; loadsTemplate:taxConfigRuleRowTemplate;" data-app-role='dataTableTbody'></tbody>
 	</table>
+	<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_config|taxTableUpdateExec">Save <span class='numChanges'></span> Changes to Tax Table</button>
+	</form>
 	</div>
 </section>
 
@@ -2376,14 +2384,14 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <table>
 <tr id='taxConfigRuleRowTemplate'>
-	<td data-bind="var:taxes(id); format:text;"></td>
-	<td data-bind="var:taxes(rate); format:text;"></td>
+	<td data-bind="var:taxes(group); format:text;"></td>
+	<td data-bind="var:taxes(rate); format:text; posttext:%;"></td>
 	<td data-bind="var:taxes(enable); format:text;"></td>
 	<td data-bind="var:taxes(zone); format:text;"></td>
 	<td data-bind="var:taxes(match); format:text;"></td>
 	<td data-bind="var:taxes(type); format:text;"></td>
 	<td data-bind="var:taxes(expires); format:text;"></td>
-	<td><button>Delete</button></td>
+	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 </table>
 

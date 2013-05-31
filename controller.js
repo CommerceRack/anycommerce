@@ -1792,6 +1792,11 @@ VALIDATION
 					else	{
 						$input.removeClass('ui-state-error'); //removed in case added in previous validation attempt.
 						}
+					
+					if($input.hasClass('ui-state-error'))	{
+						app.u.dump(" -> "+$input.attr('name')+" did not validate. ishidden: "+$input.is(':hidden'));
+						}
+					
 					});
 				$form.hideLoading();
 				}
@@ -2753,10 +2758,14 @@ return $r;
 			},
 
 		optionsFromList : function($tag,data)	{
+//			app.u.dump("BEGIN renderFormats.optionsFromList.  data.value: "); app.u.dump(data.value);
 			var L = data.value.length;
-			for(var i = 0; i < L; i += 1)	{
-				$("<option \/>").val((data.bindData.value) ? data.value[i][data.bindData.value] : data.value[i]).text((data.bindData.text) ? data.value[i][data.bindData.text] : data.value[i]).appendTo($tag);
+			for(var index in data.value)	{
+				$("<option \/>").val((data.bindData.value) ? data.value[index][data.bindData.value] : data.value[index]).text((data.bindData.text) ? data.value[index][data.bindData.text] : data.value[index]).appendTo($tag);
 				}
+//			for(var i = 0; i < L; i += 1)	{
+//				$("<option \/>").val((data.bindData.value) ? data.value[i][data.bindData.value] : data.value[i]).text((data.bindData.text) ? data.value[i][data.bindData.text] : data.value[i]).appendTo($tag);
+//				}
 			},
 
 //for embedding. There is an action for showing a youtube video in an iframe in quickstart.
