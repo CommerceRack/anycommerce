@@ -2254,6 +2254,20 @@ if(app.u.getBrowserInfo().substr(0,4) == 'msie' && parseFloat(navigator.appVersi
 					open: function(event, ui) {$(".ui-dialog-titlebar-close", $(this).parent()).hide();} //hide 'close' icon. will close on domain selection
 					});
 
+//** 201320 -> no more hunting and pecking for domain. stored in dps and if it isn't there, the user will be prompted (in showHeader) to select one.
+//the domainChange will set these three vars in localStorage so they'll be there next time.
+//all three of the vars are required. images require the https_domain and several configDetail calls require partition.
+				app.vars.domain = app.ext.admin.u.dpsGet('admin','domain');
+				app.vars.partition = app.ext.admin.u.dpsGet('admin','partition');
+				app.vars.https_domain = app.ext.admin.u.dpsGet('admin','https_domain');
+				
+				app.u.dump(" -> domain: "+app.vars.domain);
+				app.u.dump(" -> partition: "+app.vars.partition);
+				app.u.dump(" -> https_domain: "+app.vars.https_domain);
+				
+				if(!app.vars.domain || !app.vars.partition || !app.vars.https_domain)	{
+					app.vars.domain = false;  //
+					}
 
 //make sure all the links in the header use the proper syntax.
 				$('.bindByAnchor','#mastHead').each(function(){
@@ -3176,27 +3190,33 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //changeDomain(domain,partition,path). partition and path are optional. If you have the partition, pass it to avoid me looking it up.
 			changeDomain : function(domain,partition,path){
 				if(domain)	{
-					app.vars.domain = domain;
-
-					$('.domain','#appView').text(domain);
-//					app.rq.push(['script',0,'http://'+domain+'/jquery/config.js']); //load zGlobals. saves over existing values.
+//if no partition available, get it.					
 					if(Number(partition) >= 0){
 						}
 					else	{
 						partition = app.ext.admin.a.getDataForDomain(domain,'prt');
 						}
 					
-					app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
+					app.vars.domain = domain;
 					app.vars.partition = partition;
+					app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
+//set the vars in localStorage. This is what will be used upon return to preselect a domain.
+					app.ext.admin.u.dpsSet('admin',"domain",domain); 
+					app.ext.admin.u.dpsSet('admin',"partition",partition); 
+					app.ext.admin.u.dpsSet('admin',"https_domain",app.vars.https_domain); 
+//update the view.
 					$('.partition','#appView').text(partition || "");
-	//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
-	//something here is causing session to not persist on reload.
-					if(app.model.fetchData('authAdminLogin'))	{
+					$('.domain','#appView').text(domain);
+					
+//get entire auth localstorage var (flattened on save, so entire object must be retrieved and saved)
+//something here is causing session to not persist on reload.
+/*					if(app.model.fetchData('authAdminLogin'))	{
 						var localVars = app.data['authAdminLogin'];
 						localVars.domain = domain;
 						localVars.partition = partition || null;
 						app.storageFunctions.writeLocal('authAdminLogin',localVars);
 						}
+*/
 //					app.u.dump(" -> path: "+path);
 					showUI(app.ext.admin.u.whatPageToShow(path || '/biz/setup/index.cgi'));
 					}
@@ -3450,8 +3470,6 @@ else	{
 				$("#closePanelButton",'#appView').button({icons: {primary: "ui-icon-triangle-1-n"},text: false});
 				
 				$('body').hideLoading(); //make sure this gets turned off or it will be a layer over the content.
-				$('.username','#appView').text(app.vars.userid);
-				var domain = this.getDomain();
 				
 				
 //				app.ext.admin.calls.bossUserDetail(app.vars.userid.split('@')[0],{},'passive'); //will contain list of user permissions.
@@ -3459,14 +3477,18 @@ else	{
 app.ext.admin.calls.adminMessagesList.init(app.ext.admin.u.getLastMessageID(),{'callback':'handleMessaging','extension':'admin'},'immutable');
 app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get this for orders.
 
+				
 //show the domain chooser if no domain is set. see showDomainChooser function for more info on why.
 //if a domain is already set, this is a return visit. Get the list of domains  passively because they'll be used.
-				if(!domain) {
+				if(!app.vars.domain) {
 					//the selection of a domain name will load the page content. (but we'll still need to nav)
 					app.ext.admin.a.showDomainChooser(); //does not dispatch itself.
 					}
 				else {
 					
+/*
+//** 201320 -> as part of the change to using dpsGet in the extension init, the callback here is no longer needed.
+//The call is still executed so that the domainList is in memory.
 					app.ext.admin.calls.adminDomainList.init({'callback':function(rd){
 						if(app.model.responseHasErrors(rd)){app.u.throwMessage(rd);}
 						else	{
@@ -3475,7 +3497,13 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 							app.vars.https_domain = app.ext.admin.a.getDataForDomain(domain,'https');
 							}
 						}},'immutable');
-					$('.domain','#appView').text(domain);
+*/					
+					app.ext.admin.calls.adminDomainList.init({},'immutable');
+					
+					$('.username','#appView').text(app.vars.userid);
+					$('.domain','#appView').text(app.vars.domain);
+					$('.partition','#appView').text(app.vars.partition);
+					
 					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
 					}
 				app.model.dispatchThis('immutable');
@@ -3547,6 +3575,8 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 
 //used to determine what domain should be used. mostly in init, but could be used elsewhere.
+/*
+// * 201320 -> this function is no longer used.
 			getDomain : function(){
 				var domain = false;
 				var localVars = {};
@@ -3567,7 +3597,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				return domain;
 				}, //getDomain
 
-
+*/
 
 
 
@@ -4689,23 +4719,23 @@ just lose the back button feature.
 				},
 
 //Device Persistent Settings (DPS) Get  ### here for search purposes:   preferences settings localstorage
-//undefined is returned if there are no matchings session vars.
+//false is returned if there are no matchings session vars.
 //if no extension is passed, return the entire sesssion object (if it exists).
 //this allows for one extension to read anothers preferences and use/change them.
-//ns is an optional param. NameSpace.
+//ns is an optional param. NameSpace. allows for nesting.
 			dpsGet : function(ext,ns)	{
-				var obj = app.storageFunctions.readLocal('session');
+				var r = false, obj = app.storageFunctions.readLocal('session');
 //				app.u.dump("ACCESSING DPS:"); app.u.dump(obj);
 				if(obj == undefined)	{
 					// if nothing is local, no work to do. this allows an early exit.
 					} 
 				else	{
-					if(ext && obj[ext] && ns)	{obj = obj[ext][ns]} //an extension was passed and an object exists.
-					else if(ext && obj[ext])	{obj = obj[ext]} //an extension was passed and an object exists.
-					else if(!ext)	{} //return the global object. obj existing is already known by here.
+					if(ext && obj[ext] && ns)	{r = obj[ext][ns]} //an extension was passed and an object exists.
+					else if(ext && obj[ext])	{r = obj[ext]} //an extension was passed and an object exists.
+					else if(!ext)	{r = obj} //return the global object. obj existing is already known by here.
 					else	{} //could get here if ext passed but obj.ext doesn't exist.
 					}
-				return obj;
+				return r;
 				},
 
 //Device Persistent Settings (DPS) Set
