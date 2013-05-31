@@ -18,6 +18,7 @@ app.rq.push(['extension',0,'cubworld','_cubworld_extension.js','startExtension']
 app.rq.push(['extension',0,'jerseypreview','_jerseypreview_extension.js']);
 app.rq.push(['extension',0,'pogs_cubworld','_pogs_extension.js','startExtension']);
 app.rq.push(['extension',0,'fancybox','extensions/fancybox/extension_fancybox.js','startExtension']);
+app.rq.push(['extension',0,'prodlist_infinite','extensions/prodlist_infinite.js']);
 
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js']);
