@@ -143,7 +143,7 @@
 
 <label>
 	<span>Value</span>
-	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal;">
+	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal; hideZero:false;">
 </label>
 <p class='hint'>NOTE: values must be written as -%5 or +$5 to be valid.</p>
 
@@ -281,12 +281,12 @@
 
 	<label>
 		<span>Fulfillment Latency (in days)</span>
-		<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal;" />
+		<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal; hideZero:false;" />
 		<span class='toolTip' title="# of days products take to be fulfilled">?</span>
 	</label>
 	<label>
 		<span>Cut Off Time, PDT (use military time)</span>
-		<input type="text" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal;" />
+		<input type="text" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal; hideZero:false;" />
 		<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
 	</label>
 	<label>
@@ -413,16 +413,16 @@
 
 <div class='label'>
 	Insurance fees for orders will be:
-	<label><input type="radio" value="0" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="insurance" data-bind="var: shipmethod(insurance); format: popRadio;" /> Displays as it's own line item under shipping.</label>
+	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio; hideZero:false;" /> Not Used/Disabled.</label>
+	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
+	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 	<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
 </div>
 
 <div class='label'>
 	Insurance is:
 	<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
-	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Mandatory (will be automatically included in order)</label>
+	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
 </div>
 
 <label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
@@ -441,15 +441,15 @@
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popRadio; hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popRadio; hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popRadio; hideZero:false;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popRadio; hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popRadio; hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popRadio; hideZero:false;" /></td>
 </tr>
 </tbody></table>
 	</td>
@@ -672,7 +672,7 @@
 
 <div class='label'>
 	Handling fees for orders will be:<br>
-	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" required='required' /> Not Used/Disabled.</label>
+	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio; hideZero:false;" required='required' /> Not Used/Disabled.</label>
 	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
 	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
 	<p class='hint'>*NOTE: If you combine handling as part of shipping - it cannot be reported on separately  and may affect some aspects of reporting.</p>
@@ -694,15 +694,15 @@
 <tbody>
 <tr>
 	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;" /></td>
-	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item1); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item1" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item1); format: popVal;  hideZero:false;" /></td>
 </tr>
 <tr>
 	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popRadio;" /></td>
-	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popRadio;" /></td>
+	<td>$<input type="number" name="dom_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(dom_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="can_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(can_item2); format: popVal;  hideZero:false;" /></td>
+	<td>$<input type="number" name="int_item2" value="" size="5" step='0.01' min='0' data-bind="var: shipmethod(int_item2); format: popVal;  hideZero:false;" /></td>
 </tr>
 </tbody>
 </table>
@@ -710,7 +710,7 @@
 
 <h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_handling). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
 
-<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio; hideZero:false;" /> Disabled (do not configure handling per product)</label>
 <label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for all destinations</label>
 <label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for domestic orders only</label>
 <label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada orders only</label>
@@ -1256,7 +1256,7 @@ UPS Shipper Number: <span></span><br>
 
 <label>
 	<span>Amount:</span>
-	$<input type="number" value="" name="total" step='0.01' min='0' />
+	$<input type="number" value="" name="total" step='0.01' min='0' data-bind="var:shipmethod(total); format:popVal; hideZero:false;" />
 </label>
 <p class='hint'>The mininum order/package total that qualifies for free shipping (ex: use zero dollars for free shipping on every order/package)</p>
 	
@@ -1280,7 +1280,7 @@ UPS Shipper Number: <span></span><br>
 
 <label>
    <span>Min weight:</span>
-   <input size=6 type="text" value="" name="minwt" step='0.01' min='0' />
+   <input size=6 type="text" value="" name="min_wt" step='0.01' min='0' data-bind="var:shipmethod(min_wt); format:popVal; hideZero:false;" />
 </label>
 <p class='hint'>The minimum weight of a cart in order to use this method. Use zero for none.</p>
 
@@ -1316,7 +1316,7 @@ UPS Shipper Number: <span></span><br>
 
 <label>
    <span>Min price:</span>
-   <input size=6 type="number" value="" name="minprice" step='0.01' min='0' />
+   <input size=6 type="number" value="" name="min_price" step='0.01' min='0' data-bind="var:shipmethod(min_price); format:popVal; hideZero:false;" />
 </label>
 <p class='hint'>The minimum price of a cart in order to use this method.</p>
 
@@ -1355,14 +1355,14 @@ UPS Shipper Number: <span></span><br>
 
 <label>
    <span>First item:</span>
-   <input size=6 type="number" value="" name="itemprice" step='0.01' min='0' />
+   <input size=6 type="number" value="" name="itemprice" step='0.01' min='0' data-bind="var:shipmethod(itemprice); format:popVal; hideZero:false;" />
    The price if only one item is in the cart.
 </label>
 
 
 <label>
    <span>Each additional item:</span>
-   <input size=6 type="number" value="" name="addprice" step='0.01' min='0' />
+   <input size=6 type="number" value="" name="addprice" step='0.01' min='0' data-bind="var:shipmethod(addprice); format:popVal; hideZero:false;" />
    The price for each subsequent item after the first.
 </label>
 
