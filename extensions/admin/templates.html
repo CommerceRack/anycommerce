@@ -335,7 +335,7 @@ SETUP PAGE TEMPLATE
 		</div>
 	</div><!-- /manage -->
 
-	
+	<!-- 
 	<div id="market" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Integrated Marketplaces</h3>
@@ -345,7 +345,7 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;" title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
 			<div class="helper">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
 		</div>
-	</div><!-- /market -->
+	</div>/market -->
 
 
 	
@@ -378,17 +378,42 @@ SETUP PAGE TEMPLATE
 				<div class="helper">Customize the emails that are sent to customers.</div>
 
 			
-			<div class='showForZoovyOnly'>
+			<div >
 			<a href="#" onClick="navigateTo('/biz/setup/navcats/index.cgi'); return false;" title="/biz/setup/navcats/index.cgi">Categories &amp; Lists</a><br />
 			<div class="helper">Build your store category tree or add product lists.</div>
 			</div>
 						
-			<div class='showForZoovyOnly'>
+			<div >
 			<a href="#" onClick="navigateTo('/biz/setup/analytics/index.cgi'); return false;" title="/biz/setup/analytics/index.cgi">Analytics &amp; Plugins</a><br />
 			<div class="helper">Integrate approved 3rd party applications with your site.</div>
 			</div>
 
 
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
+			<div class="helper">Specify what info is optional/required during checkout.</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
+			<div class="helper">Configure what options customers have when they login to their accounts on your store.</div>
+			
+			<div >
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
+			<div class="helper">Customize System Messages used throughout the site</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
+			<div class="helper">Customize Checkout Messaging used during checkout.</div>
+			</div>
+			
+			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
+			<div class="helper">Configure which languages and currencies are available.</div>
+
+			<div >
+			<a href="#" onClick="navigateTo('/biz/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
+			<div class="helper">Manage feature bundles installed on this account.</div>
+			</div>
+			<div >
+			<a href="#" onClick="navigateTo('/biz/setup/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/setup/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
+			<div class="helper">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
+			</div>
 		</div>
 	</div><!-- /utility -->
 
@@ -417,26 +442,11 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/promotions/index.cgi'); return false;" title="/biz/setup/promotions/index.cgi">Coupons/Promotions</a><br />
 			<div class="helper">Create discounts for special purchases</div>
 			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=GENERAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=GENERAL">Checkout Setup</a><br />
-			<div class="helper">Specify what info is optional/required during checkout.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CUSTOMERADMIN">Customer Admin Config</a><br />
-			<div class="helper">Configure what options customers have when they login to their accounts on your store.</div>
-			
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=SYS-MESSAGES">System Messages</a><br />
-			<div class="helper">Customize System Messages used throughout the site</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES'); return false;" title="/biz/setup/checkout/index.cgi?MODE=CHK-MESSAGES">Checkout Messages</a><br />
-			<div class="helper">Customize Checkout Messaging used during checkout.</div>
-			</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
-			<div class="helper">Configure which languages and currencies are available.</div>
+<!--
 			
 			<a href="#" onClick="navigateTo('/biz/crm/index.cgi?VERB=CONFIG'); return false;" title="/biz/crm/index.cgi?VERB=CONFIG">CRM Behaviors</a><br />
 			<div class="helper">Configure preferences in the CRM area.</div>
-		</div>
+-->		</div>
 	</div><!-- /properties -->
 	
 	<div id="utility" class='ui-widget marginBottom'>
@@ -462,7 +472,7 @@ SETUP PAGE TEMPLATE
 		
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 			<a href="#" onClick="navigateTo('/biz/setup/account/index.cgi'); return false;" >Contact Information</a><br />
-			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br />
+<!--			<a href="#" onClick="navigateTo('#!contactInformation'); return false;">Contact Information (beta)</a><br /> -->
 			<div class="helper">Change Administrative/Billing Information</div>
 			
 			<a href="#" onClick="navigateTo('/biz/setup/global/index.cgi'); return false;" title="/biz/setup/global/index.cgi">Global Settings</a><br />
@@ -477,10 +487,7 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/password/index.cgi'); return false;" title="/biz/setup/password/index.cgi">Change Password</a><br />
 			<div class="helper">You should change your password every 60 days.</div>
 			
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
-			<div class="helper">Manage feature bundles installed on this account.</div>
-			</div>
+
 			
 			<a href="#" onClick="navigateTo('/biz/setup/billing/index.cgi'); return false;" title="/biz/setup/billing/index.cgi">Billing History</a><br />
 			<div class="helper">View your billing history, update payment information.</div>
@@ -505,10 +512,7 @@ SETUP PAGE TEMPLATE
 			<a href="https://github.com/zoovy/AnyCommerce-Development/wiki" target='_blank'>Dev Wiki</a><br />
 			<div class="helper">Learn more about what is possible, and what is included in the SDK.</div>
 
-			<div class='showForZoovyOnly'>
-			<a href="#" onClick="navigateTo('/biz/setup/toxml/index.cgi?ACTION=HELP'); return false;" title="/biz/setup/toxml/index.cgi?ACTION=HELP">Legacy toxml edit</a><br />
-			<div class="helper">Mange Legacy Custom VSTORE Templates for your site, emails, auctions,etc.</div>
-			</div>
+
 			
 		</div>
 	</div><!-- /developer -->
