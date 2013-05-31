@@ -146,6 +146,43 @@ if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.d
 				app.u.handleAppEvents($target);
 				},
 
+			showAmzRegisterModal : function(){
+				var $D = $("<div \/>").attr('title',"Approve Amazon Create/Verify your MWS Token").append("<p><b>Welcome back!<\/b>. To complete this process, please push the 'complete activation' button below.<\/p><p class='hint'>You were given this notice because we detected you just returned from Amazon to Create/Verify your MWS Token. If you are not returning directly from Amazon, please do not push the complete activation button..<\/p>");
+				$D.dialog({
+					modal: true,
+					width: ($('body').width() > 400) ? 400 : '90%',
+					autoOpen: false,
+					close: function(event, ui)	{
+						$(this).dialog('destroy').remove();
+						},
+					buttons: [ 
+						{text: 'Cancel', click: function(){
+							$D.dialog('close');
+							}},
+						{text: 'Complete Activation', click: function(){
+							if(window.location.href.indexOf('?') > 0)	{
+								var uriParams = app.u.kvp2Array(window.location.href.split('?')[1]);
+								app.ext.admin.calls.adminSyndicationMacro.init("AMZ",["AMZ-TOKEN-UPDATE?marketplaceId="+uriParams.marketplaceId+"&merchantId="+uriParams.merchantId+"&amazon-token="+uriParams['amazon-token']],{'callback':function(rd){
+									if(app.model.responseHasErrors(rd)){
+										$D.anymessage({'message':rd})
+										}
+									else	{
+										$D.empty().anymessage(app.u.successMsgObject('Activation successful!'));
+										$D.dialog({ buttons: [ { text: "Close", click: function() { $( this ).dialog( "close" ); } } ] });
+										}
+									}},'immutable');
+								app.model.dispatchThis('immutable');
+								}
+							else	{
+								$D.anymessage({"message":"URL contains no question mark with params. expecting marketplaceId and merchantId.",'gMessage':true});
+								}
+							}}	
+						]
+					});
+//					$(':checkbox',$D).anycb(); //{'text' : {'on' : 'yes','off':'no'}} //not working in a dialog for some reason.
+				$D.dialog('open');
+				},
+
 			showDSTDetails : function(DST,$target)	{
 
 				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
@@ -199,8 +236,8 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 		//should never get here.
 		$('#globalMessaging').anymessage({'message':'In showDSTDetails, the click event added to the tab has an invalid app-role (no cmd could be determined)'});
 		}
-	app.u.dump(" -> Tab Click: "+cmd);
-	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
+//	app.u.dump(" -> Tab Click: "+cmd);
+//	app.u.dump(" -> $tabContent.length: "+$tabContent.length);
 	});
 
 
@@ -256,6 +293,15 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 //while no naming convention is stricly forced, 
 //when adding an event, be sure to do off('click.appEventName') and then on('click.appEventName') to ensure the same event is not double-added if app events were to get run again over the same template.
 		e : {
+			
+			amazonMWSLinkTo : function($btn)	{
+				$btn.button();
+				$btn.off('click.amazonMWSLinkTo').on('click.amazonMWSLinkTo',function(event){
+					event.preventDefault();
+					window.location = "https://sellercentral.amazon.com/gp/maws/maws-registration.html?ie=UTF8&amp;id=APF889O5V4GVL&amp;userType=web&amp;returnUrl="
+					+ encodeURIComponent(window.location.href.split('?')[0]+"?linkFrom=amazon-token&PRT="+app.vars.partition)
+					});
+				},
 			
 			showDSTDetail : function($ele)	{
 				$ele.off('click.showDSTDetail').on('click.showDSTDetail',function(){

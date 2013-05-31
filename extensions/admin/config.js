@@ -623,7 +623,7 @@ $D.dialog('open');
 								macroCmd = "PAYMENT/"+sfo.tenderGroup;
 								}
 							app.u.dump(" -> macroCmd: "+macroCmd);
-							app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.'},'immutable');
+							app.ext.admin.calls.adminConfigMacro.init([macroCmd+"?"+$.param(sfo)],{'callback':'showMessaging','message':'Payment has been updated.','jqObj':$form},'immutable');
 					
 							app.model.destroy('adminConfigDetail|payment|'+app.vars.partition);
 							app.ext.admin.calls.adminConfigDetail.init({'payment':true},{datapointer : 'adminConfigDetail|payment|'+app.vars.partition},'immutable');

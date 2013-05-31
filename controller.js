@@ -1372,7 +1372,8 @@ and model that needed to be permanently displayed had to be converted into an ob
 
 			if(typeof msg === 'object')	{
 //				app.u.dump(" -> msg: "); app.u.dump(msg);
-				if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
+				if(msg.jqObj)	{$target = msg.jqObj}
+				else if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
 					if(msg._rtag.parentID)	{$target = $(app.u.jqSelector('#',msg._rtag.parentID))}
 					else if(msg._rtag.targetID)	{$target = $(app.u.jqSelector('#',msg._rtag.targetID))}

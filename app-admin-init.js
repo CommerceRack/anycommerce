@@ -19,7 +19,7 @@ app.rq.push(['extension',1,'store_product','extensions/store_product.js']);
 
 app.rq.push(['extension',1,'admin_support','extensions/admin/support.js']); 
 app.rq.push(['extension',1,'admin_task','extensions/admin/task.js']);
-app.rq.push(['extension',0,'admin_syndication','extensions/admin/syndication.js']);
+app.rq.push(['extension',0,'admin_syndication','extensions/admin/syndication.js']); //needs to be in pass 0 for linkFrom (links from marketplaces)
  
 app.rq.push(['extension',0,'admin_config','extensions/admin/config.js']);
 app.rq.push(['extension',0,'admin_reports','extensions/admin/reports.js']);

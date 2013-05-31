@@ -3504,7 +3504,20 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					$('.domain','#appView').text(app.vars.domain);
 					$('.partition','#appView').text(app.vars.partition);
 					
-					app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+					var linkFrom = linkFrom = app.u.getParameterByName('linkFrom');
+					if(linkFrom)	{
+						app.u.dump("INCOMING! looks like we've just returned from a partner page");
+						if(linkFrom == 'amazon-token')	{
+							app.ext.admin.a.showUI('#!syndication');
+							app.ext.admin.a.showAmzRegisterModal();
+							}
+						else	{
+							app.ext.admin.a.showUI('#!dashboard');
+							}
+						}
+					else	{
+						app.ext.admin.a.showUI(app.ext.admin.u.whatPageToShow('#!dashboard'));
+						}
 					}
 				app.model.dispatchThis('immutable');
 				}, //showHeader
@@ -3731,6 +3744,12 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					}
 				else if (path == '#!contactInformation')	{
 					app.ext.admin_config.a.showContactInformation($(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty());
+					}
+				else if (path == '#!syndication')	{
+					app.ext.admin.vars.tab = 'syndication';
+					app.ext.admin.u.bringTabIntoFocus('syndication');
+					app.ext.admin.u.bringTabContentIntoFocus($("#syndicationContent"));
+					app.ext.admin_syndication.a.showSyndication($("#syndicationContent"));
 					}
 				else if(path == '#!sites')	{
 					app.ext.admin.vars.tab = 'sites';
