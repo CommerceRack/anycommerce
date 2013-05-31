@@ -1,0 +1,32 @@
+[
+	{
+		"src":"banners/2012/nike589.png",
+		"alt":"Chicago Cubs Nike Gear at SportsWorldChicago.com",
+		"title":"",
+		"searchLink":{"KEYWORDS":"Nike","fields":"prod_brand"}
+	},
+	{
+		"src":"banners/2012/cubs_authentic_gear_banner.png",
+		"alt":"Authentic Chicago Cubs On-Field Gear at SportsWorldChicago.com",
+		"title":"",
+		"catLink":".on-field-gear"
+	},
+	{
+		"src":"banners/2012/hats.png",
+		"alt":"Chicago Cubs Baseball Hats at SportsWorldChicago.com",
+		"title":"",
+		"catLink":".chicago-cubs-hats"
+	},
+	{
+		"src":"banners/custom_shirt_shop_2.jpg",
+		"alt":"Custom Apparel Shop",
+		"title":"",
+		"catLink":".new-arrivals.z_custom_design_studio"
+	},
+	{
+		"src":"banners/2012/institutional_clothing_homepage_banner.png",
+		"alt":"Institutional Team Clothing",
+		"title":"",
+		"catLink":".new-arrivals.team-baseball-clothing-apparel"
+	}
+]

@@ -42,6 +42,8 @@ var cubworld = function() {
 			onSuccess : function()	{
 				var r = false; //return false if extension won't load for some reason (account config, dependencies, etc).
 				
+				
+				
 				app.rq.push(['templateFunction','categoryTemplateGroupSales','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
 					$('.slideshow', $context).each(function(){
@@ -113,6 +115,8 @@ var cubworld = function() {
 					app.ext.store_navcats.calls.appCategoryDetailMax.init('.', _tag, 'mutable');
 					app.model.dispatchThis('mutable');
 					}]);
+				
+				app.ext.cubworld.u.loadBanners();
 				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#',P.parentID));
 					
@@ -444,16 +448,67 @@ var cubworld = function() {
 //utilities are typically functions that are exected by an event or action.
 //any functions that are recycled should be here.
 		u : {
-			
-			showHomepageSlideshow : function(){
-				if($('#wideSlideshow').data('slideshow') !== 'true'){
-					$('#wideSlideshow').data('slideshow','true').cycle({
-						fx:     'fade',
-						speed:  'slow',
-						timeout: 5000,
-						pager:  '#slideshowNav',
-						slideExpr: 'li'
+			loadBanners : function(){
+				app.u.dump("loadbanners");
+				$.getJSON("_banners.json?_v="+(new Date()).getTime(), function(json){
+					app.ext.cubworld.vars.homepageBanners = json;
+					}).fail(function(){
+						app.u.dump("BANNERS FAILED TO LOAD");
 						});
+				},
+			makeBanner : function(bannerJSON, w, h, b){
+				var $img = $(app.u.makeImage({
+					tag : true,
+					w : w,
+					h : h,
+					b : b,
+					name : bannerJSON.src,
+					alt : bannerJSON.alt,
+					title : bannerJSON.title
+					}));
+				if(bannerJSON.prodLink){
+					$img.addClass('pointer').data('pid', bannerJSON.prodLink).click(function(){
+						showContent('product',{'pid':$(this).data('pid')});
+						});
+					}
+				else if(bannerJSON.catLink){
+					$img.addClass('pointer').data('navcat', bannerJSON.catLink).click(function(){
+						showContent('category',{'navcat':$(this).data('navcat')});
+						});
+					}
+				else if(bannerJSON.searchLink){
+					$img.addClass('pointer').data('elasticsearch', bannerJSON.searchLink).click(function(){
+						showContent('search',$(this).data('elasticsearch'));
+						});
+					}
+				else {
+					//just a banner!
+					}
+				return $img;
+				},
+			showHomepageSlideshow : function(){
+				if(app.ext.cubworld.vars.homepageBanners){
+					var $slideshow = $('#wideSlideshow');
+					if($slideshow.data('slideshow') !== 'true'){
+						for(var i=0; i<app.ext.cubworld.vars.homepageBanners.length; i++){
+							//app.u.dump(app.ext.cubworld.vars.homepageBanners[i]);
+							var $img = app.ext.cubworld.u.makeBanner(app.ext.cubworld.vars.homepageBanners[i], 589, 193, "ffffff");
+							$slideshow.append($img);
+							$img.wrap("<li />");
+							
+							}
+						
+						$slideshow.data('slideshow','true').cycle({
+							fx:     'fade',
+							speed:  'slow',
+							timeout: 5000,
+							pager:  '#slideshowNav',
+							slideExpr: 'li'
+							});
+						}
+					}
+				else {
+					setTimeout(function(){app.ext.cubworld.u.showHomepageSlideshow();}, 250);
 					}
 				},
 			startHotItemSlideshow : function(){
