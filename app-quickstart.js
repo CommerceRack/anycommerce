@@ -2649,6 +2649,7 @@ buyer to 'take with them' as they move between  pages.
 				
 				var subject;
 				if(typeof infoObj == 'object')	{
+					$('.sideline .navLink').each(function(){$(this).removeClass('ui-state-highlight');});
 					subject = infoObj.show
 					$('.sideline .navLink_'+subject).addClass('ui-state-highlight');
 					}
