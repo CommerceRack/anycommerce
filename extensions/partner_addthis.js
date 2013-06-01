@@ -58,15 +58,15 @@ var partner_addthis = function() {
 						app.u.dump("SOCIAL LINKS");
 						$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).append(
 								'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-							+		'<a class="addthis_button_compact"></a>'
-							+		'<a class="addthis_button_preferred_8"></a>'
-							+		'<a class="addthis_button_preferred_7"></a>'
-							+		'<a class="addthis_button_preferred_6"></a>'
-							+		'<a class="addthis_button_preferred_5"></a>'
-							+		'<a class="addthis_button_preferred_4"></a>'
-							+		'<a class="addthis_button_preferred_3"></a>'
-							+		'<a class="addthis_button_preferred_2"></a>'
 							+		'<a class="addthis_button_preferred_1"></a>'
+							+		'<a class="addthis_button_preferred_2"></a>'
+							+		'<a class="addthis_button_preferred_3"></a>'
+							+		'<a class="addthis_button_preferred_4"></a>'
+							+		'<a class="addthis_button_preferred_5"></a>'
+							+		'<a class="addthis_button_preferred_6"></a>'
+							+		'<a class="addthis_button_preferred_7"></a>'
+							+		'<a class="addthis_button_preferred_8"></a>'
+							+		'<a class="addthis_button_compact"></a>'
 							+	'</div>');
 						
 						//Set URL+title for most sharing code
