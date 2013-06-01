@@ -3,7 +3,7 @@
 		"src":"banners/2012/nike589.png",
 		"alt":"Chicago Cubs Nike Gear at SportsWorldChicago.com",
 		"title":"",
-		"searchLink":{"KEYWORDS":"Nike","fields":"prod_brand"}
+		"searchLink":{"KEYWORDS":"Nike","fields":["prod_mfg"]}
 	},
 	{
 		"src":"banners/2012/cubs_authentic_gear_banner.png",

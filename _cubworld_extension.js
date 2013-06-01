@@ -534,6 +534,7 @@ var cubworld = function() {
 					}
 				else if(bannerJSON.searchLink){
 					$img.addClass('pointer').data('elasticsearch', bannerJSON.searchLink).click(function(){
+						app.u.dump($(this).data('elasticsearch'));
 						showContent('search',$(this).data('elasticsearch'));
 						});
 					}
