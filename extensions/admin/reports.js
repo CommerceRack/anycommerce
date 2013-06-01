@@ -492,7 +492,7 @@ var admin_reports = function() {
 						];
 					
 					var container = document.getElementById(id);
-					google.visualization.drawToolbar(container, components);
+//					google.visualization.drawToolbar(container, components);
 					}
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_reports.u.drawToolbar, no ID passed.','gMessage':true});
