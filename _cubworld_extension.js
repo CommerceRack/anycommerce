@@ -189,21 +189,21 @@ var cubworld = function() {
 					var title = "SportsWorldChicago Help Desk";
 					app.ext.cubworld.u.setTitle(title);
 					}]);
-				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P){
-					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
+				app.rq.push(['templateFunction', 'customerTemplate','onCompletes',function(P){
+					var title = "My Sports World Chicago";
 					app.ext.cubworld.u.setTitle(title);
+					}]);
+				app.rq.push(['templateFunction', 'homepageTemplate','onCompletes',function(P){
+					app.ext.cubworld.u.setTitle();
 					}]);
 				app.rq.push(['templateFunction', 'pageNotFoundTemplate','onCompletes',function(P){
-					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
-					app.ext.cubworld.u.setTitle(title);
+					app.ext.cubworld.u.setTitle();
 					}]);
 				app.rq.push(['templateFunction', 'checkoutTemplate','onCompletes',function(P){
-					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
-					app.ext.cubworld.u.setTitle(title);
+					app.ext.cubworld.u.setTitle();
 					}]);
 				app.rq.push(['templateFunction', 'searchTemplate','onCompletes',function(P){
-					var title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago";
-					app.ext.cubworld.u.setTitle(title);
+					app.ext.cubworld.u.setTitle();
 					}]);
 				$('#variableColumn > div').hide();
 				//if there is any functionality required for this extension to load, put it here. such as a check for async google, the FB object, etc. return false if dependencies are not present. don't check for other extensions.
@@ -517,10 +517,10 @@ var cubworld = function() {
 					}
 				else{
 					//Go home title.  You are drunk.
-					title = "Chicago Cubs Apparel & Merchandise | Sports World Chicago"; 
+					title = "Chicago Cubs Apparel & Merchandise"; 
 					}
 				
-				document.title = title;
+				document.title = title+" | Sports World Chicago";
 				},
 			loadBanners : function(){
 				app.u.dump("loadbanners");
