@@ -446,7 +446,7 @@ else{
 								$form.anymessage({'message':rd});
 								}
 							else	{
-								$form.anymessage(app.u.successMsgObject("Thank you, you are now subscribed."));
+								$form.anymessage(app.u.successMsgObject("Thanks! Check your email for a special discount code!"));
 								}
 							}});
 						app.model.dispatchThis();
