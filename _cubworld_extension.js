@@ -437,7 +437,16 @@ var cubworld = function() {
 							+'Team: '+formJSON.team+"\n"
 							+'Message:\n'+formJSON.body
 					};
-				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				var _tag = {
+					"callback":function(rd){
+						if(app.model.responseHasErrors(rd){
+							}
+						else {
+							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted!"));
+							}
+						}
+					};
+				app.calls.appSendMessage.init(obj,_tag, 'mutable');
 				app.model.dispatchThis('mutable');
 				},
 			sendGroupRequest : function($form){
@@ -450,7 +459,16 @@ var cubworld = function() {
 							+'Event Date: '+formJSON.eventdate+"\n"
 							+'Message:\n'+formJSON.body
 					};
-				app.calls.appSendMessage.init(obj,{}, 'mutable');
+				var _tag = {
+					"callback":function(rd){
+						if(app.model.responseHasErrors(rd){
+							}
+						else {
+							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted!"));
+							}
+						}
+					};
+				app.calls.appSendMessage.init(obj,_tag, 'mutable');
 				app.model.dispatchThis('mutable');
 				}
 			}, //Actions
