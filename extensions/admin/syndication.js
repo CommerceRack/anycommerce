@@ -184,12 +184,12 @@ if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.d
 				},
 
 			showDSTDetails : function(DST,$target)	{
-				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
+//				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
 				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
 
 				if($target && DST)	{
-					app.u.dump(" -> $target and DST are set ");
+//					app.u.dump(" -> $target and DST are set ");
 
 
 					$target.empty();

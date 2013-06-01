@@ -360,7 +360,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 */
 			$('a',this.tabs).each(function(){
 				$(this).on('click.anytabs',function(event){
-					app.u.dump('tab clicked!')
+//					app.u.dump('tab clicked!');
 					self.reveal($(this).parent());
 					event.preventDefault();
 					return false;
