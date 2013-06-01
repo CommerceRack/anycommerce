@@ -225,11 +225,9 @@
 	<table class='gridTable fullWidth applyAnytable'>
 	<thead>
 	<tr>
-		<th class='alignLeft'>title</th>
-		<th class='alignLeft'>created</th>
-		<th class='alignLeft'>expires</th>
-		<th class='alignLeft'>created by</th>
-		<th class='alignLeft'>filename</th>
+		<th class='alignLeft'>type</th>
+		<th class='alignLeft'>id</th>
+		<th class='alignLeft'>message</th>
 	</tr>
 	</thead>
 	<tbody data-bind="var: mkt(@ROWS); format:processList; loadsTemplate:syndicationHistoryRowTemplate;">
@@ -291,11 +289,9 @@
 
 
 <tr id='syndicationHistoryRowTemplate'>
-	<td data-bind="var: file(TITLE); format:text;"></td>
-	<td data-bind="var: file(CREATED); format:text;"></td>
-	<td data-bind="var: file(EXPIRES); format:text;"></td>
-	<td data-bind="var: file(CREATEDBY); format:text;"></td>
-	<td data-bind="var: file(FILENAME); format:text;"></td>
+	<td data-bind="var: file(0); format:text;"></td>
+	<td data-bind="var: file(1); format:text;"></td>
+	<td data-bind="var: file(2); format:text;"></td>
 </tr>
 
 
