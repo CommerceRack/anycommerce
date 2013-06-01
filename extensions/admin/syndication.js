@@ -51,39 +51,36 @@ var admin_syndication = function() {
 //when this macro response syntax gets adopted elsewhere, move this to admin extension.
 		handleMacroUpdate : {
 			onSuccess : function(_rtag)	{
-				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate");
+				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate.onSuccess");
 				app.u.dump(" -> typeof _rtag.jqObj: "+typeof _rtag.jqObj);
 				var $target;
 				if(_rtag && _rtag.jqObj && typeof _rtag.jqObj === 'object')	{
 					$target = _rtag.jqObj
+					$target.hideLoading();
 					}
 				else	{
 					$target = $('#globalMessaging');
 					}
+				
+				$target.anymessage(app.u.successMsgObject('Your changes have been saved'))
 
-
-if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.datapointer]['@RESPONSES'])	{
-	var
-		responses = app.data[_rtag.datapointer]['@RESPONSES'], //shortcut
-		L = responses.length,
-		errors = "";
-		
-	for(var i = 0; i < L; i += 1)	{
-		if(responses[i]['msgtype'] == 'ERROR')	{
-			errors += responses[i]['msg']+"<br \/>";
-			}
-		}
-
-	if(errors)	{
-		$target.anymessage({"message":errors});
-		}
-	
-	} 
-//if everything was successful, revert the form to normal.			
-//				$("[data-app-role='saveButton']",$form).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
-//				$('.edited',$target).removeClass('edited'); //revert inputs to non-changed state.
+//if everything was successful, revert the form to a pre-change state.
+				$("[data-app-role='saveButton']",$target).button('disable').find('.numChanges').text(""); //make save buttons not clickable.
+				$('.edited',$target).removeClass('edited'); //revert inputs to non-changed state.
 
 				
+				},
+			onError : function(rd)	{
+				app.u.dump("BEGIN admin_syndication.callbacks.handleMacroUpdate.onError");
+				var $target;
+				if(rd && rd._rtag && rd._rtag.jqObj && typeof rd._rtag.jqObj=== 'object')	{
+					$target = rd._rtag.jqObj;
+					$target.hideLoading();
+					}
+				else	{
+					$target = $('#globalMessaging');
+					}
+				$target.anymessage({'message':rd})
 				}
 			},
 
@@ -331,52 +328,58 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 					if(app.u.validateForm($form))	{
 						
 						var macros = new Array(),
-						saveMacro = "",
-						DST = $("[name='DST']",$form).val();
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON({'cb':true}) || {},
+						DST = sfo.DST; //shortcut.
 						
-						$('.edited',$form).each(function(){
-							var $input = $(this);
-							
-							if($input.attr('name') == 'ENABLE')	{
-								if($input.is(':checked'))	{macros.push("ENABLE")}
-								else	{macros.push("DISABLE")}							
-								}
-//amazon has a thesaurus table
-							else if(DST == 'AMZ' && $input.is('tr'))	{
-
-								if($input.hasClass('rowTaggedForRemove') && $input.hasClass('isNewRow'))	{
-									//if it's a new row that was deleted before a save occured, no macro needed to remove it.
-									}
-								else if($input.hasClass('rowTaggedForRemove'))	{
-									macros.push("AMZ-THESAURUS-DELETE?ID="+$input.data('thid'));
-									}
-								else if($input.hasClass('isNewRow'))	{
-									macros.push("AMZ-THESAURUS-SAVE?"+app.ext.admin.u.getSanitizedKVPFromObject($input.data()));
+						if(DST)	{
+							for(var index in sfo)	{
+								if(index == 'ENABLE')	{
+									if(sfo[index] >= 1)	{macros.push("ENABLE")}
+									else	{macros.push("DISABLE")}	
 									}
 								else	{
-									//HUH! shouldn't have gotten here.
-									$('#globalMessaging').anymessage({'message':'in admin_syndication.e.adminSyndicationMacroExec, unknown case for amazon thesaurus. Does not appear to be new or delete, why is it flagged as edited?','gMessage':true});
+									//no other special treatment... yet
 									}
 								}
-							else if($input.is(':checkbox'))	{
-								saveMacro += $input.attr('name')+"="+($input.is(':checked') ? 1 : 0)+"&"
-								}
-							else	{
-								saveMacro += $input.attr('name')+"="+encodeURIComponent($input.val())+"&"
-								}
-							});
 						
-						if(saveMacro)	{
-							macros.push("SAVE?"+saveMacro);
-							}
+							macros.push("SAVE?"+$.param(sfo));
 						
-						if(DST && macros.length)	{
-							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_syndication'},'immutable');
+							if(DST == 'AMZ')	{
+								$('tr.edited',$form).each(function(){
+									var $tr = $(this);
+									if($tr.hasClass('rowTaggedForRemove') && $tr.hasClass('isNewRow'))	{
+										//if it's a new row that was deleted before a save occured, no macro needed to remove it.
+										}
+									else if($tr.hasClass('rowTaggedForRemove'))	{
+										macros.push("AMZ-THESAURUS-DELETE?ID="+$tr.data('thid'));
+										}
+									else if($tr.hasClass('isNewRow'))	{
+										macros.push("AMZ-THESAURUS-SAVE?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+										}
+									else	{
+										//HUH! shouldn't have gotten here.
+										$('#globalMessaging').anymessage({'message':'in admin_syndication.e.adminSyndicationMacroExec, unknown case for amazon thesaurus. Does not appear to be new or delete, why is it flagged as edited?','gMessage':true});
+										}
+									});
+								}
+							app.u.dump("macros: "); app.u.dump(macros);
+							$form.showLoading({'message':'Updating Marketplace Settings...'});
+							app.ext.admin.calls.adminSyndicationMacro.init(DST,macros,{'callback':'handleMacroUpdate','extension':'admin_syndication','jqObj':$form},'immutable');
+							app.ext.admin.calls.adminSyndicationDetail.init(DST,{},'immutable');
 							app.model.dispatchThis('immutable');
+
 							}
 						else	{
 							$form.anymessage({"message":"In admin_syndication.u.handleDSTDetailSave, unable to determine DST ["+DST+"] or macros ["+macros.length+"] was empty","gMessage":true});
-							}
+							}		
+						
+						
+						
+
+						
+
+						
 						
 						}
 					else	{} //validateForm handles error display.
@@ -409,7 +412,32 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 						}
 					});
 				},
-			
+			adminSyndicationPublishExec : function($btn)	{
+				$btn.button();
+				
+				//"adminSyndicationPublish"
+				$btn.off('click.adminSyndicationPublishExec').on('click.adminSyndicationPublishExec',function(){
+					var
+						$form = $btn.closest('form'),
+						sfo = $form.serializeJSON({'cb':true});
+					
+					if(sfo.DST)	{
+						if(sfo.enable)	{
+$form.showLoading({"message":"Creating batch job for syndication feed publication..."});
+app.ext.admin.calls.adminSyndicationPublish.init(sfo.DST,{'callback':'showBatchJobStatus','extension':'admin_batchJob','jqObj':$form},'immutable');
+app.model.dispatchThis('immutable');
+
+							}
+						else	{
+							$form.anymessage({"message":"Before you can publish to this marketplace you must enable it."});
+							}
+						}
+					else	{
+						$form.anymessage({"message":"In admin.e.adminSyndicationPublishExec, unable to ascertain DST, which is required to proceed.","gMessage":true});
+						}
+					
+					})
+				},
 			amazonThesaurusAddShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.amazonThesaurusAddShow').on('click.amazonThesaurusAddShow',function(event){

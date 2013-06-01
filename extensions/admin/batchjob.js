@@ -45,7 +45,13 @@ var admin_batchJob = function() {
 		
 		showBatchJobStatus : {
 			onSuccess : function(tagObj){
-				$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
+				if(tagObj.parentID)	{
+					$(app.u.jqSelector('#',tagObj.parentID)).hideLoading();
+					}
+				else if(tagObj.jqObj && typeof tabgbj.jqObj === 'object')	{
+					tabgbj.jqObj.hideLoading();
+					}
+				else	{} //nothing to hideloading on.
 //error handling for no jobid is handled inside this function.
 				app.ext.admin_batchJob.a.showBatchJobStatus(app.data[tagObj.datapointer].jobid);
 				},

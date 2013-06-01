@@ -178,8 +178,9 @@
 	<section data-anytab-content='settings' class='clearfix'>
 		<form onSubmit='return false' class='labelsAsBreaks alignedLabels'>
 		<div class='buttonset marginBottom alignRight'>
-			<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_syndication|adminSyndicationMacroExec">Save <span class='numChanges'></span> Changes</button>
+			<button data-app-event="admin_syndication|adminSyndicationPublishExec">Publish</button>
 			<button data-app-event="admin_syndication|adminSyndicationUnsuspendMacro">Unsuspend</button>
+			<button data-app-role='saveButton' disabled='disabled' data-app-event="admin_syndication|adminSyndicationMacroExec">Save <span class='numChanges'></span> Changes</button>
 		</div>
 		</form>
 	</section>
@@ -479,24 +480,24 @@ http://webapi.zoovy.com/webapi/nextag/index.cgi/sporks.D4FB7659.txt
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> <b>Is Active</b></td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
-		<td valign="top"><b>Buy.com FTP Username</b></td>
+		<td valign="top">Buy.com FTP Username</td>
 		<td valign="top"><input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>Buy.com FTP Password</b></td>
+		<td valign="top">Buy.com FTP Password</td>
 		<td valign="top"><input type="text" value="" name="ftp_pass" required='required' data-bind="var: mkt(ftp_pass); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>Buy.com Seller ID</b></td>
+		<td valign="top">Buy.com Seller ID</td>
 		<td valign="top"><input type="text" value="" name="sellerid" required='required' data-bind="var: mkt(sellerid); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>Buy.com Seller Password</b></td>
+		<td valign="top">Buy.com Seller Password</td>
 		<td valign="top"><input type="text" value="" name="sellerpass" required='required' data-bind="var: mkt(sellerpass); format:popVal;" /></td>
 		</tr>
 			
@@ -602,29 +603,29 @@ HINT: The username, password, etc. are provided by HSN.com. These settings *MUST
 
 <table>
 <tr>
-	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> <b>Is Active</b></td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 <tr>
-  <td><b>CJ Account #:</b></td>
+  <td>CJ Account #:</td>
   <td><input type="text" name="cjcid" value="" required='required' data-bind="var: mkt(cjcid); format:popVal;" /></td>
 </tr>
 <tr>
-  <td><b>CJ Subscription Id:</b></td>
+  <td>CJ Subscription Id:</td>
   <td><input type="text" name="cjsubid" value="" required='required' data-bind="var: mkt(cjsubid); format:popVal;" /></td>
 </tr>
 <tr>
-  <td><b>CJ Ad Id:</b></td>
+  <td>CJ Ad Id:</td>
   <td><input type="text" name="cjaid" value="" required='required' data-bind="var: mkt(cjaid); format:popVal;" /></td>
 </tr>
 <tr>
-  <td><b>FTP Host :</b></td>
+  <td>FTP Host :</td>
   <td><input type="text" name="host" value="" required='required' data-bind="var: mkt(host); format:popVal;" /></td>
 </tr>
 <tr>
-  <td><b>FTP Username:</b></td>
+  <td>FTP Username:</td>
   <td><input type="text" name="user" value="" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
 </tr>
 <tr>
-  <td><b>FTP Password:</b></td>
+  <td>FTP Password:</td>
   <td><input type="text" name="pass" value="" required='required' data-bind="var: mkt(pass); format:popVal;" /></td>
 </tr>
 <tr>
@@ -654,24 +655,24 @@ CommissionJunction.</p>
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> <b>Is Active</b></td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE'  data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
-		<td valign="top"><b>BestBuy Marketplace FTP Username</b></td>
+		<td valign="top">BestBuy Marketplace FTP Username</td>
 		<td valign="top"><input type="text" value="" required='required' name="ftp_user" data-bind="var: mkt(ftp_user); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>BestBuy Marketplace FTP Password</b></td>
+		<td valign="top">BestBuy Marketplace FTP Password</td>
 		<td valign="top"><input type="text" value="" required='required' name="ftp_pass" data-bind="var: mkt(ftp_pass); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>BestBuy Marketplace Seller ID</b></td>
+		<td valign="top">BestBuy Marketplace Seller ID</td>
 		<td valign="top"><input type="text" value="" required='required' name="sellerid" data-bind="var: mkt(sellerid); format:popVal;" /></td>
 		</tr>
 			
 	<tr>
-		<td valign="top"><b>BestBuy Marketplace Seller Password</b></td>
+		<td valign="top">BestBuy Marketplace Seller Password</td>
 		<td valign="top"><input type="text" value="" required='required' name="sellerpass" data-bind="var: mkt(sellerpass); format:popVal;" /></td>
 		</tr>
 			
@@ -708,14 +709,14 @@ These settings *MUST* match the settings in your BestBuy Marketplace account.
 <table>
 	
 	
-	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE' data-bind="var: mkt(enable); format:popCheckbox;" /> <b>Is Active</b></td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
+	<tbody><tr><td align="left" colspan="2"><input type="checkbox" name='ENABLE' data-bind="var: mkt(enable); format:popCheckbox;" /> Is Active</td></tr><tr><td colspan="2"><div class="hint">Checkbox must be selected or syndication will not be attempted.</div></td></tr>
 	<tr>
-		<td valign="top"><b>PriceGrabber.com FTP/Web Username</b></td>
+		<td valign="top">PriceGrabber.com FTP/Web Username</td>
 		<td valign="top"><input type="text" value="" name="user" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
 		</tr>
 			<tr><td colspan="2"><div class="hint">hint: uploaded filename is always username.csv</div></td></tr>
 	<tr>
-		<td valign="top"><b>PriceGrabber.com FTP/Web Password</b></td>
+		<td valign="top">PriceGrabber.com FTP/Web Password</td>
 		<td valign="top"><input type="text" value="" name="pass" required='required' data-bind="var: mkt(pass); format:popVal;" /></td>
 		</tr>
 			
@@ -755,17 +756,17 @@ HINT: The username, password, etc. are provided by PriceGrabber.com.
 <table>
 <tbody>
 <tr>
-	<td valign="top"><b>Amazon Product Ads FTP/Web Username</b></td>
+	<td valign="top">Amazon Product Ads FTP/Web Username</td>
 	<td valign="top"><input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" /></td>
 	</tr>
 		<tr><td colspan="2"><div class="hint">hint: uploaded filename is always username.csv</div></td></tr>
 <tr>
-	<td valign="top"><b>Amazon Product Ads FTP/Web Password</b></td>
+	<td valign="top">Amazon Product Ads FTP/Web Password</td>
 	<td valign="top"><input type="text" value="" name="ftp_pass" required='required' data-bind="var: mkt(ftp_pass); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Amazon Product Ads FTP Server</b></td>
+	<td valign="top">Amazon Product Ads FTP Server</td>
 	<td valign="top"><input type="text" value="" name="ftp_server" required='required'   data-bind="var: mkt(ftp_server); format:popVal;" /></td>
 	</tr>
 			
@@ -1278,27 +1279,27 @@ These settings *MUST* match the settings in your bing.com account.
 <table>
 <tbody>
 <tr>
-	<td valign="top"><b>Shopzilla Web Login Username</b></td>
+	<td valign="top">Shopzilla Web Login Username</td>
 	<td valign="top"><input type="text" value="" name="user" required='required' data-bind="var: mkt(user); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Shopzilla Web Login Password</b></td>
+	<td valign="top">Shopzilla Web Login Password</td>
 	<td valign="top"><input type="text" value="" name="pass" required='required' data-bind="var: mkt(pass); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Shopzilla FTP User</b></td>
+	<td valign="top">Shopzilla FTP User</td>
 	<td valign="top"><input type="text" value="" name="ftp_user" required='required' data-bind="var: mkt(ftp_user); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Shopzilla FTP Password</b></td>
+	<td valign="top">Shopzilla FTP Password</td>
 	<td valign="top"><input type="text" value="" name="ftp_pass" required='required' data-bind="var: mkt(ftp_pass); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Shopzilla FTP Server</b></td>
+	<td valign="top">Shopzilla FTP Server</td>
 	<td valign="top"><input type="text" value="" name="ftp_server" required='required' data-bind="var: mkt(ftp_server); format:popVal;" /></td>
 	</tr>
 <tr>
@@ -1577,20 +1578,32 @@ HINT: The username, password, etc. are provided by LinkShare.com. These settings
 
 <tbody>
 <tr>
-	<td valign="top"><b>Sears API User</b></td>
+	<td valign="top">Sears API User</td>
 	<td valign="top"><input type="text" value="" required='required' name="user" data-bind="var: mkt(user); format:popVal;" /></td>
 	</tr>
-		
 <tr>
-	<td valign="top"><b>Sears API Password</b></td>
+	<td valign="top">Sears API Password</td>
 	<td valign="top"><input type="text" value="" required='required' name="pass" data-bind="var: mkt(pass); format:popVal;" /></td>
 	</tr>
 		
 <tr>
-	<td valign="top"><b>Sears Location ID</b></td>
+	<td valign="top">Sears Location ID</td>
 	<td valign="top"><input type="text" value="" required='required' name="location_id" data-bind="var: mkt(location_id); format:popVal;" /></td>
-	</tr>
-		<tr><td colspan="2"><div class="hint">This ID is created when a location is configured in the Sears UI.</div></td></tr><tr><td align="right"><input type="checkbox"  class='applyAnycb' name="safe_sku" data-bind="var: mkt(safe_sku); format:popCheckbox;"></td><td><b>Use Safe SKU Algorithm</b></td></tr><tr><td colspan="2"><div class="hint">When necessary, an alternate SKU that is compatible with the marketplace will be generated. (Recommended)</div></td></tr>
+</tr>
+<tr>
+	<td colspan="2">
+	<div class="hint">This ID is created when a location is configured in the Sears UI.</div></td>
+</tr>
+<tr>
+	<td colspan='2'>
+	<label>
+		<input type="checkbox"  class='applyAnycb' name="safe_sku" data-bind="var: mkt(safe_sku); format:popCheckbox;"> Use Safe SKU Algorithm
+	</label>
+	</td>
+</tr>
+<tr>
+	<td colspan="2"><div class="hint">When necessary, an alternate SKU that is compatible with the marketplace will be generated. (Recommended)</div></td>
+</tr>
 
 <tr>
   <td valign="top">Pricing Schedule:</td>
