@@ -102,7 +102,7 @@ var admin_batchJob = function() {
 					var $target = $('#batchJobStatusModal'); //modal id.
 					if($target.length)	{$target.empty()}
 					else	{
-						$target = $("<div \/>").attr({'id':'batchJobStatusModal','title':'Batch Job Status'}).appendTo('body');
+						$target = $("<div \/>").attr({'id':'batchJobStatusModal','title':'Batch Job Status: '+jobid}).appendTo('body');
 						$target.dialog({'modal':true,'width':500,'height':300,'autoOpen':false});
 						}
 					$target.dialog('open');
