@@ -184,14 +184,23 @@ if(_rtag && _rtag.datapointer && app.data[_rtag.datapointer] && app.data[_rtag.d
 				},
 
 			showDSTDetails : function(DST,$target)	{
-
+				app.u.dump("BEGIN admin_syndication.a.showDSTDetails"); 
 				app.ext.admin.calls.adminWholesaleScheduleList.init({},'passive'); //most syndication 'settings' use this. have it handy
 				app.model.dispatchThis('passive');
 
 				if($target && DST)	{
+					app.u.dump(" -> $target and DST are set ");
+
+
 					$target.empty();
 					$target.anycontent({'templateID':'syndicationDetailTemplate','data':{},'dataAttribs':{'dst':DST}});
+
+					
 					$('.anytabsContainer',$target).anytabs();
+//there is a bug either in the tab script or the browser. Even though the container is emptied (i even destroyed the tabs at one point) 
+// when the new editor appears, whichever tab was previously selected stays selected. The code below triggers a tab click but not the request code.
+					$('.anytabsContainer',$target).find('li:first a').trigger('click.anytabs');
+					
 					var $form = $("[data-anytab-content='settings'] form:first",$target);
 					$form.showLoading({'message':'Fetching Marketplace Details'});
 					

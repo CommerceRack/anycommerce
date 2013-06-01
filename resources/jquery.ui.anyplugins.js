@@ -297,7 +297,9 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 			o = self.options, //shortcut
 			$t = self.element; //this is the targeted element (ex: $('#bob').anymessage() then $t is bob)
 // * 201320 -> changed attr from widget to data-widget-anytabs. widget isn't a valid attribute plus no conducive to multiple widgets on one element.
-			if($t.attr('data-widget-anytabs'))	{} //id has already been set as tabs.
+			if($t.attr('data-widget-anytabs'))	{
+				app.u.dump("data-widget-anytabs -> already enabled.");
+				} //element has already been set as tabs.
 			else	{
 				$t.attr('data-widget-anytabs',true)
 				$t.addClass('ui-tabs ui-widget ui-widget-anytabs')
@@ -358,6 +360,7 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 */
 			$('a',this.tabs).each(function(){
 				$(this).on('click.anytabs',function(event){
+					app.u.dump('tab clicked!')
 					self.reveal($(this).parent());
 					event.preventDefault();
 					return false;
@@ -417,10 +420,11 @@ or this: $('#bob').find('.ui-tabs-nav li:nth-child(2)').trigger('click');
 
 //clear the message entirely. run after a close. removes element from DOM.
 		destroy : function(){
-			this.element.empty();
+			this.element.intervaledEmpty(500,true);
 			this.element.removeClass("ui-tabs");
 			this.element.removeClass("ui-widget");
 			this.element.removeClass("ui-widget-anytabs");
+			this.element.data("widget-anytabs","");
 			this.element.attr("data-widget-anytabs","").removeAttr('data-widget-anytabs');
 			}
 		}); // create the widget
