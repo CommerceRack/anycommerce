@@ -996,7 +996,7 @@ don't modify the 'data-templateid' unless you are changing template names and up
 </div>
 <div id='categoryTemplateSitemapList'>
 	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
-	<ul data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateRootCats; detail:max;"></ul>
+	<ul class="sitemapList" data-bind="var:category(@subcategoryDetail); format: categoryList; extension: store_navcats; loadsTemplate: categoryListTemplateRootCats; detail:max;"></ul>
 </div>
 
 <div id='categoryTemplateRewards'class='loadingBG categoryTemplate categoryTemplateRewards'>
