@@ -52,7 +52,7 @@ var partner_addthis = function() {
 						}
 					app.u.loadScript(scriptPath);
 					app.rq.push(['templateFunction', 'productTemplate', 'onCompletes', function(P){
-						app.ext.partner_addthis.u.createSocialLinks(P, $(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))), "socialLinks");
+						app.ext.partner_addthis.u.createSocialLinksProduct(P, $(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))), "socialLinks");
 						}]);
 					return true;
 					},
