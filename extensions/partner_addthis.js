@@ -62,7 +62,7 @@ var partner_addthis = function() {
 				}
 			},
 		u : {
-			createSocialLinksProduct(P, $container, id){
+			createSocialLinksProduct : function(P, $container, id){
 				$('#'+id).remove();
 				
 				//Adds the addthis code to the container specified
