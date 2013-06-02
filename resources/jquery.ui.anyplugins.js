@@ -472,7 +472,6 @@ either templateID or (data or datapointer) are required.
 // the 'or' portion will attemplate to add a template if the ID is on the DOM.
 
 //			app.u.dump("anycontent params: "); app.u.dump(o);
-
 			if(o.templateID && (app.templates[o.templateID] || self._addNewTemplate(o.templateID)))	{
 //				app.u.dump(" -> passed template check.");
 				self._anyContent();
@@ -546,6 +545,7 @@ either templateID or (data or datapointer) are required.
 			},
 
 		_addNewTemplate : function()	{
+
 			var r = false; //what's returned. true if able to create template.
 			var $tmp = $(app.u.jqSelector('#',this.options.templateID));
 			if($tmp.length > 0)	{
@@ -553,6 +553,7 @@ either templateID or (data or datapointer) are required.
 				r = true;
 				}
 			else{} //do nothing. Error will get thrown later.
+			return r;
 			},
 
 //clear the message entirely. run after a close. removes element from DOM.

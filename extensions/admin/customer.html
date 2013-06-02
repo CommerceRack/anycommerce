@@ -744,3 +744,26 @@ The checkbox below does not work.
 </form>
 </div>
 -->
+
+
+
+
+
+<!--
+////////////////////////////////////     GIFTCARDS     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<table>
+<tr id='giftcardsResultsRowTemplate'>
+	<td data-bind="var: giftcard(CODE); format:text;"></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: giftcard(EXPIRES_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: giftcard(LAST_ORDER); format:text;"></td>
+	<td data-bind="var: giftcard(CID); format:text;"></td>
+	<td data-bind="var: giftcard(BALANCE); format:money;"></td>
+	<td data-bind="var: giftcard(TXNCNT); format:text;"></td>
+	<td data-bind="var: giftcard(TYPE); format:text;"></td>
+	<td data-bind="var: giftcard(SERIES); format:text;"></td>
+	<td><button>Edit</button></td>
+</tr>
+</table>

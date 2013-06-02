@@ -664,6 +664,50 @@ if no handler is in place, then the app would use legacy compatibility mode.
 
 
 //obj requires title and uuid, priority and @GRAPHS are optional.
+		adminGiftcardSearch : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminGiftcardSearch"
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd = 'adminGiftcardSearch'
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminGiftcardSearch
+//obj requires title and uuid, priority and @GRAPHS are optional.
+		adminGiftcardDetail : {
+			init : function(GCID,_tag,Q)	{
+				var r = 0;
+				if(GCID)	{
+					_tag = _tag || {}; 
+					_tag.datapointer = "adminGiftcardDetail|"+GCID;
+					if(app.model.fetchData(_tag.datapointer) == false)	{
+						r = 1;
+						this.dispatch(GCID,_tag,Q);
+						}
+					else	{
+						app.u.handleCallback(_tag);
+						}
+					}
+				else	{
+					$('#globalMessaging').anymessage({"message":"In admin.calls.adminGiftcardDetail, GCID not passed","gMessage":true});
+					}
+				return r;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				var obj = {};
+				obj.GCID = GCID;
+				obj._cmd = 'adminGiftcardSearch'
+				obj._tag = _tag;
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminGiftcardSearch
+		
+
+//obj requires title and uuid, priority and @GRAPHS are optional.
 		adminKPIDBCollectionCreate : {
 			init : function(obj,_tag,Q)	{
 				var r = 0;
@@ -3670,6 +3714,127 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 				}, //applyEditTrackingToInputs
 
+/*
+Will build an instance of the dual Mode Interface.
+rather than letting the individual 'show' functions do all the manipulation, we do a lot of the basics here.
+will allow us to make changes to the interface more easily going forward.
+
+vars:
+	thead: an array, each of which is added as a thead.
+	tbodyDatabind: will be applied as attr(data-bind) to the tbody tag.
+	buttons: an array of buttons. Buttons can be HTML snippets or jquery objects. One button for toggling dual mode will already be present.
+	controls: an html object that will be added to a row below the header and buttons. optional. if not set, that row is hidden. usually a form or two (search or filter)
+	header: A piece of text added as the interface header.
+	className : optional css applied to the template. Use this instead of applying the class to the target (which may be a tabContent and the class would persist between content).
+	anytable: boolean. defaults on. will apply anytable (sortable headers) to dualModeListTable.
+	showLoading : boolean. on by defualt.
+	showLoadingMessage: if set, will add showLoading to $target.
+*/
+			DMICreate : function($target,vars)	{
+				app.u.dump("BEGIN admin.u.buildDualModeInterface");
+				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
+				if($target instanceof jQuery)	{
+					vars = vars || {};
+//set up the defaults.
+					vars.showLoading = vars.showLoading || true; //to be consistent, default this to on.
+					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
+					vars.anytable = vars.anytable || true;
+					vars.handleAppEvents = vars.handleAppEvents || true;
+
+					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
+
+					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
+
+//if set, build thead.
+					if(vars.thead && typeof vars.thead == 'object')	{
+						var
+							L = vars.thead.length,
+							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
+
+						for(var i = 0; i < L; i += 1)	{
+							$('<th \/>').text(vars.thead[i]).appendTo($Thead);
+							}
+						}// thead loop
+					else if(vars.thead)	{
+						app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
+						}
+					else	{} //no thead. that's fine.
+
+					if(vars.className)	{$('.dualModeContainer:first').addClass(vars.className)}
+					if(vars.tbodyDatabind)	{
+						$("[data-app-role='dualModeListTbody']:first",$DM).attr('data-bind',vars.tbodyDatabind);
+						}
+						
+					if(vars.header)	{
+						$("[data-app-role='dualModeListHeader']:first",$DM).text(vars.header);
+						}
+
+					if(vars.controls)	{
+						$("[data-app-role='dualModeListControls']:first",$DM).append(vars.controls);
+						}
+					else	{
+						$("[data-app-role='dualModeListControls']:first",$DM).addClass('displayNone');
+						}
+
+//if set, build buttons.
+					if(typeof vars.buttons === 'object')	{
+//						app.u.dump(' -> buttons are an object');
+						var
+							BL = vars.buttons.length,
+							$buttonContainer = $("[data-app-role='dualModeListButtons']:first",$DM);
+
+						for(var i = 0; i < BL; i += 1)	{
+							$buttonContainer.append(vars.buttons[i]);
+							}
+						}// thead loop
+
+					if(vars.handleAppEvents)	{
+						app.u.handleAppEvents($DM);
+						}
+
+					$DM.children().appendTo($target);
+					r = $(".dualModeListTable:first",$target) //the table gets returned
+//showLoading is applied to the table, not the parent, because that's what is rturned and what anycontent is going to be run on (which will run hideLoading).
+					if(vars.showLoading)	{
+						r.showLoading({"message":vars.showLoadingMessage || undefined});
+						}
+					
+					if(vars.anytable)	{
+						r.anytable();
+						}
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({});
+					}
+				return r;
+				},
+
+/*
+vars can include:
+header -> panel header text.
+templateID -> the template ID used to generate the content.
+data -> used to interpolate contents.
+
+*/
+
+			DMIPanelOpen : function($btn,vars)	{
+vars = vars || {};
+
+vars.panelID = vars.panelID || 'panel_'+app.u.generateGUID();
+vars.data = vars.data || undefined;
+
+$panel = $("<div\/>").anypanel({
+	'header': vars.header,
+	'templateID':vars.templateID,
+	'data' : vars.data,
+	}).prependTo($target);
+$panel.attr('id',panelID);
+
+//append detail children before changing modes. descreases 'popping'.
+app.ext.admin.u.toggleDualMode($('#userManagerContent'),'detail');
+
+				},
 
 
 			loadNativeApp : function(path,opts){
@@ -3727,6 +3892,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!orderCreate')	{app.ext.convertSessionToOrder.a.openCreateOrderForm();}
 				else if(path == '#!domainConfigPanel')	{app.ext.admin.a.showDomainConfig();}
 
+				else if(path == '#!giftcardManager')	{
+					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if (path == '#!appChooser')	{
 					app.ext.admin.a.showAppChooser();
 					}

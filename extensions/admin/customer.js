@@ -14,6 +14,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
+This extension includes the code for the following features:
+
+CRM
+CustomerManager
+Giftcards
+
 ************************************************************** */
 
 
@@ -92,6 +98,26 @@ var admin_customer = function() {
 				app.ext.admin.calls.adminAppTicketList.init('NEW',{'callback':'anycontent','jqObj':$target,'templateID':'crmManagerPageTemplate'},'mutable');
 				app.model.dispatchThis();
 				},
+
+
+			showGiftcardManager : function($target)	{
+				$target.empty();
+				var $table = app.ext.admin.u.DMICreate($target,{
+					'header' : 'Giftcard Manager',
+					'className' : 'giftcardManager',
+					'buttons' : ["<button>Add Giftcard</button>"],
+					'thead' : ['code','Created','Expirces','Last Order','Customer','Balance','Txn #','Type','Series',''],
+					'controls' : "bob",
+					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardsResultsRowTemplate;"
+					});
+
+				if($table)	{
+					app.ext.admin.calls.adminGiftcardSearch.init({},{'callback':'anycontent','jqObj':$table},'mutable');
+					app.model.dispatchThis();
+					}
+				else	{} //buildDualMode will handle the error display.
+				},
+
 
 //in obj, currently only CID is present (and required). but most likely, PRT will be here soon.
 			showCustomerEditor : function($custEditorTarget,obj)	{
