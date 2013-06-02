@@ -2248,14 +2248,17 @@ So the cart template should contain these two elements and the extension should 
 	</menu>
 
 	<div class='checkoutButtonsContainer'>
-
-		<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="return showContent('checkout',{});">Store Checkout</button></span>
-
-		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
-
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:googleCheckoutButton;'></span>
-
-		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+		<div>
+			<span title='proceed to secure checkout'><button class='ui-button ui-button-text ui-state-default ui-corner-all checkoutButton' onClick="return showContent('checkout',{});">Store Checkout</button></span>
+			<img class="floatLeft marginLeft" src="img/payment_icons-177x21.png">
+			<div class="clear"></div>
+		</div>
+		<div>
+			<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
+			<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:googleCheckoutButton;'></span>
+			<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
+			<div class="clear"></div>
+		</div>
 
 	</div>
 

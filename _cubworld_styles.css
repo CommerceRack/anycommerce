@@ -944,3 +944,18 @@ COMPANY PAGE STYLES
 .mailingAddress {
 	margin: 20px 0px;
 }
+/****************************************************************
+
+CART STYLES
+
+****************************************************************/
+.checkoutButtonsContainer > div{
+	padding: 10px 0px;
+	clear:left;
+	border-bottom: 1px dotted black;
+}
+
+
+.checkoutButtonsContainer span {
+    margin: 0px 10px;
+}
