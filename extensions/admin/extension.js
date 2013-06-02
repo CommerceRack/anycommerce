@@ -697,10 +697,10 @@ if no handler is in place, then the app would use legacy compatibility mode.
 					}
 				return r;
 				},
-			dispatch : function(obj,_tag,Q)	{
+			dispatch : function(GCID,_tag,Q)	{
 				var obj = {};
 				obj.GCID = GCID;
-				obj._cmd = 'adminGiftcardSearch'
+				obj._cmd = 'adminGiftcardDetail'
 				obj._tag = _tag;
 				app.model.addDispatchToQ(obj,Q || 'mutable');	
 				}
@@ -3165,29 +3165,36 @@ HEADER CODE
 /*
 A generic form handler. 
 $form is a jquery object of the form.
-Either _cmd or call must be set in the form data (as hidden, for instance).
+_cmd or call must be set in the form data (as hidden, for instance).
  -> _cmd will take the entire serialized form into a dispatch (see note on _tag below).
  -> call should be formatted as extension/call (ex: admin_task/adminTaskUpdate)
-If you want to set any _tag attributes, set them as hidden inputs, like so:  <input type='hidden' name='_tag/something' value='someval'> 
+
+The _tag can be generated two ways.
+1. Passed in thru _tag (optional third param) in which case _tag in form is ignored.
+2. OR as hidden inputs, like so:  <input type='hidden' name='_tag/something' value='someval'> 
  -> these would get formatted as _tag : {'something':'someval'}
 
 Execute your own dispatch. This allows the function to be more versatile
 set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('mutable'); return false;"
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
-			processForm : function($form,q)	{
+			processForm : function($form,q,_tag)	{
 				var obj = $form.serializeJSON() || {};
+				_tag = _tag || {};
+				
 				if($form.length && (obj._cmd || obj.call))	{
-//						app.u.dump(" -> admin.a.processForm data attributes: "); app.u.dump(data);
-					var _tag = {};
-//build the _tag obj.
-					for(var key in obj)	{
-						if(key.substring(0,5) == "_tag/")	{
-							_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
-							delete obj[key]; //remove from object so it isn't part of query.
+
+					if($.isEmptyObject(_tag))	{
+						for(var key in obj)	{
+							if(key.substring(0,5) == "_tag/")	{
+								_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
+								delete obj[key]; //remove from object so it isn't part of query.
+								}
+							else{}
 							}
-						else{}
 						}
+					else	{}
+//build the _tag obj.
 					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
 					if(obj._cmd)	{
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
@@ -3206,7 +3213,10 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 					}
 				}, //processForm
-				
+
+
+
+
 			showDomainConfig : function(){
 				$(app.u.jqSelector('#',app.ext.admin.vars.tab+"Content")).empty().showLoading({"message":"Requesting up to date list of domains."});
 				app.ext.admin.calls.adminDomainList.init({'callback':'showDomainConfig','extension':'admin'},'immutable');
@@ -3714,127 +3724,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 				}, //applyEditTrackingToInputs
 
-/*
-Will build an instance of the dual Mode Interface.
-rather than letting the individual 'show' functions do all the manipulation, we do a lot of the basics here.
-will allow us to make changes to the interface more easily going forward.
 
-vars:
-	thead: an array, each of which is added as a thead.
-	tbodyDatabind: will be applied as attr(data-bind) to the tbody tag.
-	buttons: an array of buttons. Buttons can be HTML snippets or jquery objects. One button for toggling dual mode will already be present.
-	controls: an html object that will be added to a row below the header and buttons. optional. if not set, that row is hidden. usually a form or two (search or filter)
-	header: A piece of text added as the interface header.
-	className : optional css applied to the template. Use this instead of applying the class to the target (which may be a tabContent and the class would persist between content).
-	anytable: boolean. defaults on. will apply anytable (sortable headers) to dualModeListTable.
-	showLoading : boolean. on by defualt.
-	showLoadingMessage: if set, will add showLoading to $target.
-*/
-			DMICreate : function($target,vars)	{
-				app.u.dump("BEGIN admin.u.buildDualModeInterface");
-				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
-				if($target instanceof jQuery)	{
-					vars = vars || {};
-//set up the defaults.
-					vars.showLoading = vars.showLoading || true; //to be consistent, default this to on.
-					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
-					vars.anytable = vars.anytable || true;
-					vars.handleAppEvents = vars.handleAppEvents || true;
-
-					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
-
-					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
-
-//if set, build thead.
-					if(vars.thead && typeof vars.thead == 'object')	{
-						var
-							L = vars.thead.length,
-							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
-
-						for(var i = 0; i < L; i += 1)	{
-							$('<th \/>').text(vars.thead[i]).appendTo($Thead);
-							}
-						}// thead loop
-					else if(vars.thead)	{
-						app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
-						}
-					else	{} //no thead. that's fine.
-
-					if(vars.className)	{$('.dualModeContainer:first').addClass(vars.className)}
-					if(vars.tbodyDatabind)	{
-						$("[data-app-role='dualModeListTbody']:first",$DM).attr('data-bind',vars.tbodyDatabind);
-						}
-						
-					if(vars.header)	{
-						$("[data-app-role='dualModeListHeader']:first",$DM).text(vars.header);
-						}
-
-					if(vars.controls)	{
-						$("[data-app-role='dualModeListControls']:first",$DM).append(vars.controls);
-						}
-					else	{
-						$("[data-app-role='dualModeListControls']:first",$DM).addClass('displayNone');
-						}
-
-//if set, build buttons.
-					if(typeof vars.buttons === 'object')	{
-//						app.u.dump(' -> buttons are an object');
-						var
-							BL = vars.buttons.length,
-							$buttonContainer = $("[data-app-role='dualModeListButtons']:first",$DM);
-
-						for(var i = 0; i < BL; i += 1)	{
-							$buttonContainer.append(vars.buttons[i]);
-							}
-						}// thead loop
-
-					if(vars.handleAppEvents)	{
-						app.u.handleAppEvents($DM);
-						}
-
-					$DM.children().appendTo($target);
-					r = $(".dualModeListTable:first",$target) //the table gets returned
-//showLoading is applied to the table, not the parent, because that's what is rturned and what anycontent is going to be run on (which will run hideLoading).
-					if(vars.showLoading)	{
-						r.showLoading({"message":vars.showLoadingMessage || undefined});
-						}
-					
-					if(vars.anytable)	{
-						r.anytable();
-						}
-
-					}
-				else	{
-					$('#globalMessaging').anymessage({});
-					}
-				return r;
-				},
-
-/*
-vars can include:
-header -> panel header text.
-templateID -> the template ID used to generate the content.
-data -> used to interpolate contents.
-
-*/
-
-			DMIPanelOpen : function($btn,vars)	{
-vars = vars || {};
-
-vars.panelID = vars.panelID || 'panel_'+app.u.generateGUID();
-vars.data = vars.data || undefined;
-
-$panel = $("<div\/>").anypanel({
-	'header': vars.header,
-	'templateID':vars.templateID,
-	'data' : vars.data,
-	}).prependTo($target);
-$panel.attr('id',panelID);
-
-//append detail children before changing modes. descreases 'popping'.
-app.ext.admin.u.toggleDualMode($('#userManagerContent'),'detail');
-
-				},
 
 
 			loadNativeApp : function(path,opts){
@@ -5089,8 +4979,242 @@ else	{
 
 
 			},	//util
+			
+//Special functions for building niterface  (i) components.
+		i : {
+
+/*
+Will build an instance of the dual Mode Interface.
+rather than letting the individual 'show' functions do all the manipulation, we do a lot of the basics here.
+will allow us to make changes to the interface more easily going forward.
+
+vars:
+	tbodyDatabind: will be applied as attr(data-bind) to the tbody tag. REQUIRED.
+	thead: an array, each of which is added as a thead.
+	buttons: an array of buttons. Buttons can be HTML snippets or jquery objects. One button for toggling dual mode will already be present.
+	controls: an html object that will be added to a row below the header and buttons. optional. if not set, that row is hidden. usually a form or two (search or filter)
+	header: A piece of text added as the interface header.
+	className : optional css applied to the template. Use this instead of applying the class to the target (which may be a tabContent and the class would persist between content).
+	anytable: boolean. defaults on. will apply anytable (sortable headers) to dualModeListTable.
+	showLoading : boolean. on by defualt.
+	showLoadingMessage: if set, will add showLoading to $target.
+*/
+			DMICreate : function($target,vars)	{
+				app.u.dump("BEGIN admin.u.buildDualModeInterface");
+				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
+				vars = vars || {};
+				if($target instanceof jQuery && vars.tbodyDatabind)	{
+//set up the defaults.
+					vars.showLoading = vars.showLoading || true; //to be consistent, default this to on.
+					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
+					vars.anytable = vars.anytable || true;
+					vars.handleAppEvents = vars.handleAppEvents || true;
+
+					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
+
+					$DM.anycontent({'templateID':'dualModeTemplate','showLoading':false}); //showloading disabled so it can be added AFTER content added toDOM (works better)
+
+//if set, build thead.
+					if(vars.thead && typeof vars.thead == 'object')	{
+//find and get a copy of the template used in the loadsTemplate. use it to determine which headers should be hidden in midetail mode.
+						var bindData = app.renderFunctions.parseDataBind(vars.tbodyDatabind);
+						var $tmp;
+						if(app.templates[bindData.loadsTemplate])	{
+							$tmp =  app.templates[bindData.loadsTemplate].clone(); //always clone to leave original unmolested.
+							}
+						else if($(app.u.jqSelector('#',bindData.loadsTemplate)).length)	{
+							app.model.makeTemplate($(app.u.jqSelector('#',bindData.loadsTemplate)),bindData.loadsTemplate);
+							$tmp =  app.templates[bindData.loadsTemplate].clone();
+							}
+						else	{}//empty tmp means no check to add hide in detail mode class.
+
+						var
+							L = vars.thead.length,
+							$Thead = $("[data-app-role='dualModeListThead'] tr:first",$DM);
+
+						for(var i = 0; i < L; i += 1)	{
+//looks at corresponding td in loadsTemplate (if set) and applies hide class (
+							$('<th \/>').addClass(($tmp && $("td:nth-child("+i+")",$tmp).hasClass('hideInDetailMode')) ? "hideInDetailMode" : "").text(vars.thead[i]).appendTo($Thead);
+							}
+						}// thead loop
+					else if(vars.thead)	{
+						app.u.dump("In admin.u.buildDualModeInterface, vars.thead was passed but not in a valid format. Expecting an array.",warn)
+						}
+					else	{} //no thead. that's fine.
+
+					if(vars.className)	{$('.dualModeContainer:first').addClass(vars.className)}
+					if(vars.tbodyDatabind)	{
+						$("[data-app-role='dualModeListTbody']:first",$DM).attr('data-bind',vars.tbodyDatabind);
+						}
+						
+					if(vars.header)	{
+						$("[data-app-role='dualModeListHeader']:first",$DM).text(vars.header);
+						}
+
+					if(vars.controls)	{
+						$("[data-app-role='dualModeListControls']:first",$DM).append(vars.controls);
+						}
+					else	{
+						$("[data-app-role='dualModeListControls']:first",$DM).addClass('displayNone');
+						}
+
+//if set, build buttons.
+					if(typeof vars.buttons === 'object')	{
+//						app.u.dump(' -> buttons are an object');
+						var
+							BL = vars.buttons.length,
+							$buttonContainer = $("[data-app-role='dualModeListButtons']:first",$DM);
+
+						for(var i = 0; i < BL; i += 1)	{
+							$buttonContainer.append(vars.buttons[i]);
+							}
+						}// thead loop
+
+					if(vars.handleAppEvents)	{
+						app.u.handleAppEvents($DM);
+						}
+
+					$DM.children().appendTo($target);
+					r = $(".dualModeListTable:first",$target) //the table gets returned
+//showLoading is applied to the table, not the parent, because that's what is rturned and what anycontent is going to be run on (which will run hideLoading).
+					if(vars.showLoading)	{
+						r.showLoading({"message":vars.showLoadingMessage || undefined});
+						}
+					//needs to be done after table added to DOM.
+					if(vars.anytable)	{
+						r.anytable();
+						}
+
+					}
+				else	{
+					$('#globalMessaging').anymessage({});
+					}
+				return r;
+				},
+
+/*
+Execute this on a search button where the results list in a DMI need to be updated.
+$ele is an elmeent anywhere within the DMI. It'll trace up to the parent DMI and work under that umbrella.
+vars should include everything for the dispatch. _cmd is required.
+vars._tag._listpointer is the ID of i the data object of where the list is. ex: in giftcards, @GIFTCARDS. if not set, no 'no results' message is displayed.
+Function does NOT dispatch. 
+*/
+			DMIUpdateResults : function($ele,vars){
+				var
+					$DMI = $ele.closest("[data-app-role='dualModeList']")
+					$tbody = $DMI.find("[data-app-role='dualModeListTbody']:first");
+
+				$tbody.empty();
+				vars = vars || {};
+				vars._tag = vars._tag || {};
+				vars._tag.datapointer = vars._tag.datapointer || vars._cmd; //default to _cmd is no datapointer is set.
+				vars._tag.callback = function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$form.anymessage({'message':rd});
+						}
+					else	{
+						if((!vars._tag.listpointer) || (vars._tag.listpointer && rd.datapointer && app.data[rd.datapointer] && app.data[rd.datapointer][vars._tag.listpointer] && app.data[rd.datapointer][vars._tag.listpointer].length))	{
+							app.renderFunctions.translateSelector($tbody,app.data[rd.datapointer]);
+							app.u.handleAppEvents($tbody);
+							}
+						else	{
+							$('.dualModeListMessaging',$DMI).anymessage();
+							}
+						}
+					}
+				app.model.addDispatchToQ(vars,'mutable');
+				},
+/*
+vars is passed directly into anypanel and can include any params supported by that plugin, including:
+header -> panel header text.
+templateID -> the template ID used to generate the content.
+data -> used to interpolate contents.
+panelID -> an ID 
+dataAttribs -> an object that will be set as data- on the panel.
+*/
+
+			DMIPanelOpen : function($btn,vars)	{
+
+				vars = vars || {};
+				var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
+				
+				vars.panelID = vars.panelID || 'panel_'+app.u.generateGUID();
+				vars.data = vars.data || undefined;
+				
+				$panel = $("<div\/>").anypanel(vars);
+				$panel.attr('id',vars.panelID);
+				
+				$("[data-app-role='dualModeDetail']",$DMI).append($panel);
+				$panel.slideDown('fast');
+				//append detail children before changing modes. descreases 'popping'.
+				app.ext.admin.u.toggleDualMode($DMI,'detail');
+				
+				if(vars.handleAppEvents)	{
+					app.u.handleAppEvents($panel);
+					}
+				
+				$('.applyAnycb',$panel).anycb();
+				$('.applyAnytable',$panel).anytable();
+				$('.toolTip',$panel).tooltip();
+				
+				return $panel;
+				},
+
+//used for creating a disposable dialog. returns dialog.
+//does NOT open dialog.
+			dialogCreate : function(vars)	{
+				vars = vars || {};
+				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
+				vars.anycontent = vars.anycontent || true; //default to runing anycontent. if no templateID specified, won't run.
+				vars.handleAppEvents = vars.handleAppEvents || true; //default to runing anycontent. if no templateID specified, won't run.
+
+				var $D = $("<div \/>").attr('title',vars.title);
+				if(vars.anycontent && vars.templateID)	{
+					$D.anycontent(vars);
+					}
+				$D.dialog({
+					modal: true,
+					width : '90%',
+					close: function(event, ui)	{
+						$(this).dialog('destroy');
+						}, //will remove from dom on close
+					open : function(event,ui)	{
+						$(this).position({my: "center",at: "center",of: window}); //will reposition modal to center upon open. handy for when content added between create and open.
+						}
+					});
+
+				if(vars.handleAppEvents)	{
+					app.u.handleAppEvents($D);
+					}
+
+//				$('.applyAnycb',$D).anycb();
+				$('.applyAnytable',$D).anytable();
+				$('.toolTip',$D).tooltip();
+				
+				return $D;
+				}
+
+			},
+			
+			
 
 		e : {
+			//used in conjuction with the new interface (i) functions.
+			processForm : function($btn,vars)	{
+				$btn.button();
+				$btn.off('click.processForm').on('click.processForm',function(){
+					app.u.dump("trying to process the form")
+					var $form = $btn.closest('form');
+					if(app.u.validateForm($form))	{
+						app.ext.admin.a.processForm($form,'immutable',vars);
+						app.model.dispatchThis('immutable');
+						}
+					else	{} //validateForm handles error display.
+					
+					});
+				},
+			
+			
 			
 			alphaNumeric : function($input)	{
 				$input.off('keypress.alphaNumeric').on('keypress.alphaNumeric',function(event){

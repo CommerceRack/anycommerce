@@ -102,13 +102,13 @@ var admin_customer = function() {
 
 			showGiftcardManager : function($target)	{
 				$target.empty();
-				var $table = app.ext.admin.u.DMICreate($target,{
+				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
-					'buttons' : ["<button>Add Giftcard</button>"],
+					'buttons' : ["<button data-app-event='admin_customer|giftcardCreateShow'>Add Giftcard</button>"],
 					'thead' : ['code','Created','Expirces','Last Order','Customer','Balance','Txn #','Type','Series',''],
-					'controls' : "bob",
-					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardsResultsRowTemplate;"
+					'controls' : "<form action='#' onsubmit='return false'><input type='search' name='CODE' \/><button data-app-event='admin_customer|giftcardSearchExec'>Search<\/button><\/form>",
+					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;"
 					});
 
 				if($table)	{
@@ -468,7 +468,7 @@ else	{
 				var B = Number(newsint).toString(2).split('').reverse().join(''); //binary. converts 8 to 1000 or 12 to 1100.
 //				app.u.dump(" -> Binary of flags: "+B);
 				return B.charAt(val - 1) == 1 ? true : false; //1
-				},
+				}
 
 			}, //u [utilities]
 
@@ -528,7 +528,7 @@ app.model.dispatchThis('immutable');
 
 					});
 				},
-// !!! This still needs a little work.
+
 			appAdminTicketChangeEscalation : function($btn)	{
 				
 				var tktcode = $btn.closest("[data-tktcode]").data('tktcode');
@@ -553,6 +553,7 @@ else	{
 					});
 				
 				},
+
 			appAdminTicketClose : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
@@ -670,10 +671,54 @@ app.model.dispatchThis('immutable');
 					});
 				}, //appAdminTicketCreateExec
 
+			giftcardCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.giftcardCreateShow').on('click.giftcardCreateShow',function(){
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Giftcard',
+						'templateID':'giftcardCreateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' />");
+					 $( ".applyDatepicker",$D).datepicker({
+						changeMonth: true,
+						changeYear: true
+						});
+					});
+				//
+				},
 
+			giftcardDetailDMIPanel : function($btn)	{
+				$btn.button();
+				$btn.off('click.giftcardDetailDMIPanel').on('click.giftcardDetailDMIPanel',function(){
 
+var GCID = $btn.closest('tr').data('id');
+var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+	'templateID' : 'giftcardDetailTemplate',
+	'panelID' : 'giftcard_'+GCID,
+	'header' : 'Edit Giftcard: '+GCID
+	});
+app.ext.admin.calls.adminGiftcardDetail.init(GCID,{'callback':'anycontent','jqObj':$panel},'mutable');
+app.model.dispatchThis('mutable');
+					});
+				},
 
-
+			giftcardSearchExec : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-search"},text: true});
+				$btn.off('click.giftcardSearchExec').on('click.giftcardSearchExec',function(event){
+					event.preventDefault();
+					var sfo = $btn.closest('form').serializeJSON();
+					sfo._cmd = 'adminGiftcardSearch';
+					sfo._tag = {
+							'datapointer' : 'adminGiftcardSearch',
+							'listpointer' : '@GIFTCARDS'
+							}
+					app.ext.admin.i.DMIUpdateResults($btn,sfo);
+					app.model.dispatchThis('mutable');
+					});
+				},
 
 //executed within the customer create form to validate form and create user.
 			execAdminCustomerCreate : function($btn)	{
