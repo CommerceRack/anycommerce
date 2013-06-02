@@ -439,7 +439,7 @@ var cubworld = function() {
 					};
 				var _tag = {
 					"callback":function(rd){
-						if(app.model.responseHasErrors(rd){
+						if(app.model.responseHasErrors(rd)){
 							}
 						else {
 							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted!"));
@@ -461,7 +461,7 @@ var cubworld = function() {
 					};
 				var _tag = {
 					"callback":function(rd){
-						if(app.model.responseHasErrors(rd){
+						if(app.model.responseHasErrors(rd)){
 							}
 						else {
 							app.u.throwMessage(app.u.successMsgObject("Thank you, your request has been submitted!"));

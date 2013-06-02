@@ -33,7 +33,8 @@ var app = {vars:{
 	"_clientid":"zmvc",
 	"baseURL":"", //used in non-local mode.
 	"checkoutAuthMode" : "active",//can be passive, active or required
-	"testURL":"http://www.c7efb3a5.hoth.zoovy.net/" //used ONLY if protocol is file: (for testing)
+	//"testURL":"http://www.c7efb3a5.hoth.zoovy.net/" //used ONLY if protocol is file: (for testing)
+	"testURL":"http://app.sportsworldchicago.com/" //used ONLY if protocol is file: (for testing)
 	},u:{},rq:[]};
 
 //set base url so images, css, js, etc all load from appropriate location once deployed.
@@ -2252,7 +2253,7 @@ So the cart template should contain these two elements and the extension should 
 
 		<span id='paypalECButton' data-bind='var: cart(cart/cartid); format:paypalECButton;'></span>
 
-		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(sum/items_total); format:googleCheckoutButton;'></span>
+		<span id='googleCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:googleCheckoutButton;'></span>
 
 		<span id='amazonCheckoutButton' class='pointer' data-bind='var: cart(cart/cartid); format:amazonCheckoutButton;'></span>
 
