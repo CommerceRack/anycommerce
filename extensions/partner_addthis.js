@@ -41,7 +41,7 @@ var partner_addthis = function() {
 	var r= {
 		vars : {
 			selector : ".socialLinks"
-		},
+			},
 		
 		callbacks : {
 			init : {
@@ -49,52 +49,53 @@ var partner_addthis = function() {
 					var scriptPath = (document.location.protocol == 'https:' ? 'https:' : 'http:')+'//s7.addthis.com/js/300/addthis_widget.js';
 					if(typeof addthis_id !== 'undefined'){
 						scriptPath+= '#pubid='+addthis_id;
-					}
+						}
 					app.u.loadScript(scriptPath);
 					app.rq.push(['templateFunction', 'productTemplate', 'onCompletes', function(P){
-						//Adds the addthis code to the container specified
-						//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
-						//Note: this also includes using custom share icons.
-						app.u.dump("SOCIAL LINKS");
-						$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).append(
-								'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
-							+		'<a class="addthis_button_preferred_1"></a>'
-							+		'<a class="addthis_button_preferred_2"></a>'
-							+		'<a class="addthis_button_preferred_3"></a>'
-							+		'<a class="addthis_button_preferred_4"></a>'
-							+		'<a class="addthis_button_preferred_5"></a>'
-							+		'<a class="addthis_button_preferred_6"></a>'
-							+		'<a class="addthis_button_preferred_7"></a>'
-							+		'<a class="addthis_button_preferred_8"></a>'
-							+		'<a class="addthis_button_compact"></a>'
-							+	'</div>');
-						
-						//Set URL+title for most sharing code
-						var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";
-						addthis_share.url = url;
-						addthis_share.title = app.data[P.datapointer]['%attribs']['zoovy:prod_name'];
-						
-						//Set URL+title for Facebook
-						$('#ogURL').attr('content',url);
-						$('#ogTitle').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_name']);
-						$('#ogImage').attr('content',app.u.makeImage({"name":app.data[P.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
-						$('#ogDescription, #metaDescription').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_desc']);
-						
-						//Hooks everything in
-						addthis.toolbox('#socialLinks');
+						app.ext.partner_addthis.u.createSocialLinks(P, $(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))), "socialLinks");
 						}]);
-					app.rq.push(['templateFunction', 'productTemplate', 'onDeparts', function(P){
-						$(app.ext.partner_addthis.vars.selector, $('#productTemplate_'+app.u.makeSafeHTMLId(P.pid))).empty();
-						}]);
-					
-					
 					return true;
-				},
+					},
 				onError : function() {
 					app.u.dump('BEGIN app.ext.partner_addthis.callbacks.init.onError');
+					}
+				}
+			},
+		u : {
+			createSocialLinksProduct(P, $container, id){
+				$('#'+id).remove();
+				
+				//Adds the addthis code to the container specified
+				//To Customize the look and feel of the share icons, see here: http://support.addthis.com/customer/portal/articles/381238-addthis-toolbox
+				//Note: this also includes using custom share icons.
+				$container.append(
+						'<div id="socialLinks" class="addthis_toolbox addthis_default_style">'
+					+		'<a class="addthis_button_preferred_1"></a>'
+					+		'<a class="addthis_button_preferred_2"></a>'
+					+		'<a class="addthis_button_preferred_3"></a>'
+					+		'<a class="addthis_button_preferred_4"></a>'
+					+		'<a class="addthis_button_preferred_5"></a>'
+					+		'<a class="addthis_button_preferred_6"></a>'
+					+		'<a class="addthis_button_preferred_7"></a>'
+					+		'<a class="addthis_button_preferred_8"></a>'
+					+		'<a class="addthis_button_compact"></a>'
+					+	'</div>');
+				
+				//Set URL+title for most sharing code
+				var url = zGlobals.appSettings.http_app_url+"product/"+P.pid+"/";
+				addthis_share.url = url;
+				addthis_share.title = app.data[P.datapointer]['%attribs']['zoovy:prod_name'];
+				
+				//Set URL+title for Facebook
+				$('#ogURL').attr('content',url);
+				$('#ogTitle').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_name']);
+				$('#ogImage').attr('content',app.u.makeImage({"name":app.data[P.datapointer]['%attribs']['zoovy:prod_image1'],"w":150,"h":150,"b":"FFFFFF","tag":0}));
+				$('#ogDescription, #metaDescription').attr('content',app.data[P.datapointer]['%attribs']['zoovy:prod_desc']);
+				
+				//Hooks everything in
+				addthis.toolbox('#'+id);
 				}
 			}
-		}
 	}
 	return r;
 }
