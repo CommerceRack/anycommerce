@@ -1290,7 +1290,7 @@ app.ext.myRIA.pageTransition($old,$('#'+infoObj.parentID));
 								}
 							else	{
 								$detail.anycontent({'templateID':'productTemplateQuickView','data' : app.data[rd.datapointer]})
-								app.ext.partner_addthis.u.createSocialLinksProduct(rd,$('.socialLinks', $detail,"socialLinks"));
+								app.ext.partner_addthis.u.createSocialLinksProduct(rd,$('.socialLinks', $detail),"socialLinks");
 								}
 
 //in a timeout to prevent a doubleclick on the buttons. if data in memory, doubleclick will load two templates.
