@@ -754,6 +754,15 @@ div:hover > h4.subCatTitle {
 	width: 133px;
 	float: right;
 }
+
+.categoryTemplateContest .zbox {
+	border: 1px solid #780000;
+}
+.categoryTemplateContest .ztable_row {
+	color: #000000;
+	font-family: arial, helvetica;
+	font-size: 8pt;
+}
 /****************************************************************
 
 PRODUCT STYLES
