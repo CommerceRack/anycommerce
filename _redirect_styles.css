@@ -1,0 +1,5 @@
+.hideDialog .ui-dialog-titlebar-close,
+.hideDialog .ui-dialog-titlebar {
+	display: none;
+}
+.redirectToSiteApp {display:none; text-align:center;}
