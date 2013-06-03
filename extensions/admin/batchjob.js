@@ -141,8 +141,8 @@ app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datap
 										tableHeads.push(app.data[rd.datapointer]['@HEAD'][i].name);
 										}
 
-									var $expBtn = $("<button \/>").text('Export to CSV').button().on('click',function(){
-										app.ext.admin_batchJob.u.buildCSVFromReport(vars.guid);
+									var $expBtn = $("<button \/>").text('Export Page to CSV').button().on('click',function(){
+										$('.google-visualization-table-table').toCSV();
 										}).appendTo($target);
 
 
@@ -194,44 +194,6 @@ app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datap
 
 		u : {
 			
-			buildCSVFromReport : function(batchGUID)	{
-
-
-/* will convert a tbody into a csv */
-// for whatever reason, having this chuck of code not last is causing issues. leave it at bottom.
-
-	if(batchGUID && app.data['adminReportDownload|'+batchGUID])	{
-	var
-		data = app.data['adminReportDownload|'+batchGUID], //shortcut
-		csvData = [],
-		tmpArr = [],
-		tmpStr = '',
-		HL = data['@HEAD'].length,
-		BL = data['@BODY'].length;
-
-//get the headers into the csvData.		
-	for(var i = 0; i < HL; i += 1)	{
-		tmpArr.push('"' + data['@HEAD'][i].name.replace(/"/g, '""') + '"');
-		}
-	csvData.push(tmpArr);
-
-	tmpArr = []; //reset the temporary array for the body.
-//get the body into the CSV.
-	for(var i = 0; i < BL; i += 1)	{
-		tmpArr.push(data['@BODY'][i]);
-		}
-	csvData.push(tmpArr);
-
-	var output = csvData.join('\n');
-	window.open('data:application/csv;charset=UTF-8,' + encodeURIComponent(output));
-		
-		}
-	else	{
-		$('#globalMessaging').anymessage({"message":"In admin_batchJob.u.buildCSVFromReport, either batchGUID ["+batchGUID+"] not set or report is not in memory ["+typeof app.data['adminReportDownload|'+batchGUID]+"].","gMessage":true})
-		}
-	}
-
-
 			
 			
 			}, //u
