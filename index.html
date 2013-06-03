@@ -1157,18 +1157,18 @@ don't modify the 'data-templateid' unless you are changing template names and up
 									<div></div>
 					
 									<div style="margin-top:10px;">
-										<form action="https://www.sportsworldchicago.com/c=q8FJiq9ZwY3Wk8HLRVXV0yLaB/s=www.sportsworldchicago.com/subscribe.cgis" method="post" name="subscribeForm" id="subscribeForm" onsubmit="return submitSubscribe()">
+										<form action="https://www.sportsworldchicago.com/c=q8FJiq9ZwY3Wk8HLRVXV0yLaB/s=www.sportsworldchicago.com/subscribe.cgis" method="post" name="subscribeForm" id="subscribeForm" onsubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false;">
 											<fieldset style="border:0;">
 												<input type="hidden" name="check" value="1">
 													<table cellspacing="3" cellpadding="0" align="center">
 														<tbody>
 															<tr>
 																<td class="ztable_row"><label for="email">email:</label></td>
-																<td><input type="text" class="zform_textbox" maxlength="50" size="10" id="email" name="email" value="" style="width:180px;"></td>
+																<td><input type="text" class="zform_textbox" maxlength="50" size="10" name="login" value="" style="width:180px;"></td>
 															</tr>
 															<tr>
 																<td class="ztable_row"><label for="fullname">full name:</label></td>
-																<td><input type="text" class="zform_textbox" maxlength="50" size="10" name="fullname" id="fullname" value="" style="width:180px;"></td>
+																<td><input type="text" class="zform_textbox" maxlength="50" size="10" name="fullname" value="" style="width:180px;"></td>
 															</tr>
 
 															<tr>
@@ -2552,7 +2552,7 @@ used for store_crm.js
 
 
 <div id='subscribeFormTemplate'>
-<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false">
+<form action='#' name='subscribeFrm' onSubmit="app.ext.store_crm.u.handleSubscribe($(this)); return false;">
 
 <fieldset class='userInfo borderNone'>
 <div>
