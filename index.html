@@ -1130,6 +1130,11 @@ don't modify the 'data-templateid' unless you are changing template names and up
 	</div>
 </div>
 
+<div id='categoryTemplateContest' class='loadingBG categoryTemplate categoryTemplateContest'>
+	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
+	<div data-bind="var:category(%page.html);format:text;"></div>
+</div>
+
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->
 <ul>
 <li id='categoryListTemplate'>

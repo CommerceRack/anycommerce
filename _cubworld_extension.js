@@ -141,6 +141,7 @@ var cubworld = function() {
 					'categoryTemplateTickets',
 					'categoryTemplateSWConnect',
 					'categoryTemplateEarthCam',
+					'categoryTemplateContest',
 					'productTemplate',
 					'companyTemplate',
 					'customerTemplate',
@@ -173,7 +174,8 @@ var cubworld = function() {
 					'categoryTemplateRewards',
 					'categoryTemplateTickets',
 					'categoryTemplateSWConnect',
-					'categoryTemplateEarthCam'
+					'categoryTemplateEarthCam',
+					'categoryTemplateContest'
 					];
 				for(var t in catTemplates){
 					app.rq.push(['templateFunction', catTemplates[t],'onCompletes',function(P){
