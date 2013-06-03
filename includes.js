@@ -1167,7 +1167,7 @@ $.fn.serializeJSON = function(options){
 				else {json[this.name] = '0';}
 				}
 			else	{
-				if (this.checked) {json[this.name] = 'ON';}
+				if (this.checked) {json[this.name] = 'on';}
 				}
 //			else	{json[this.name] = 0;}
 			}
