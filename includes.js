@@ -1167,7 +1167,7 @@ $.fn.serializeJSON = function(options){
 				else {json[this.name] = '0';}
 				}
 			else	{
-				if (this.checked) {json[this.name] = 'on';}
+				if (this.checked) {json[this.name] = 'on';} //must be lowercase. that's the html default and what the old cgi's are looking for.
 				}
 //			else	{json[this.name] = 0;}
 			}

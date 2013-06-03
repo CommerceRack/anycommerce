@@ -306,7 +306,10 @@ SETUP PAGE TEMPLATE
 <tr>
 
 	<td width="33%" valign="top">
-	
+
+			
+			
+
 	<div id="manage" class='ui-widget marginBottom'>
 		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
 		<h3>Manage Apps/Website</h3>
@@ -335,17 +338,7 @@ SETUP PAGE TEMPLATE
 		</div>
 	</div><!-- /manage -->
 
-	<!-- 
-	<div id="market" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Integrated Marketplaces</h3>
-		</div>
 
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('/biz/setup/ebay/index.cgi'); return false;" title="/biz/setup/ebay/index.cgi">eBay Configuration</a><br />
-			<div class="helper">Manage eBay tokens, feedback, shipping &amp; launch profiles.</div>
-		</div>
-	</div>/market -->
 
 
 	
@@ -406,6 +399,11 @@ SETUP PAGE TEMPLATE
 			<a href="#" onClick="navigateTo('/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL'); return false;" title="/biz/setup/checkout/index.cgi?MODE=INTERNATIONAL">Languages &amp; Currencies</a><br />
 			<div class="helper">Configure which languages and currencies are available.</div>
 
+
+			
+			<a href="#" onClick="navigateTo('/biz/setup/search/index.cgi'); return false;" title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
+			<div class="helper">Create custom searchable indexes of your product database.</div>
+
 			<div >
 			<a href="#" onClick="navigateTo('/biz/configurator/index.cgi'); return false;" title="/biz/configurator/index.cgi">Add/Remove Features</a><br />
 			<div class="helper">Manage feature bundles installed on this account.</div>
@@ -449,22 +447,7 @@ SETUP PAGE TEMPLATE
 -->		</div>
 	</div><!-- /properties -->
 	
-	<div id="utility" class='ui-widget marginBottom'>
-		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
-		<h3>Utility Features</h3>
-		</div>
-		
-		<div class='stdPadding ui-widget-content ui-corner-bottom'>
-			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
-			<div class="helper">A list of recently run batches, including reports and syndication 'publishes'.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;" title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
-			<div class="helper">Import data from a variety of formats.</div>
-			
-			<a href="#" onClick="navigateTo('/biz/setup/search/index.cgi'); return false;" title="/biz/setup/search/index.cgi">Manage Search Catalogs</a><br />
-			<div class="helper">Create custom searchable indexes of your product database.</div>
-		</div>
-	</div><!-- /utility -->
+
 	</td>
 
 	<td width="33%" valign="top">
@@ -754,7 +737,23 @@ UTILITIES PAGE TEMPLATE
 		
 		</div>
 	</div>
-	
+
+
+	<div id="tools" class='ui-widget marginBottom'>
+		<div class='ui-widget-header ui-widget-header-padding ui-corner-top'>
+		<h3>Tools</h3>
+		</div>
+		<div class='stdPadding ui-widget-content ui-corner-bottom'>
+			<a href="#" onClick="navigateTo('#!batchManager'); return false;">Batch Manager</a><br />
+			<div class="helper">A list of recently run batches, including reports and syndication 'publishes'.</div>
+			
+						
+			<a href="#" onClick="navigateTo('/biz/setup/import/index.cgi?verb=product'); return false;" title="/biz/setup/import/index.cgi?verb=product">CSV Import Utility</a><br />
+			<div class="helper">Import data from a variety of formats.</div>
+		</div>
+	</div>
+
+
 	</td>
 	
 	<td width="33%" valign="top">

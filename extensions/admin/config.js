@@ -456,6 +456,13 @@ $D.dialog({
 	});
 app.u.handleAppEvents($D);
 $D.dialog('open');	
+				},
+			
+			showFedExMeterInModal : function(vars)	{
+vars = vars || {}; //may include supplier
+var $D = app.ext.admin.i.dialogCreate();
+app.u.handleAppEvents($D);
+$D.dialog('open');	
 				}
 
 			}, //Actions

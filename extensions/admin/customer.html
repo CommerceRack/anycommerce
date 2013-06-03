@@ -933,3 +933,20 @@ The checkbox below does not work.
 
 
 
+
+<!--
+////////////////////////////////////     REVIEWS     \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<table>
+<tr id='reviewsResultsRowTemplate'>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(PID); format:text;"></td>
+	<td data-bind="var: giftcard(LOCATION); format:text;"></td>
+	<td data-bind="var: giftcard(SUBJECT); format:epoch2pretty;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode'></td>
+	<td><button>Details</button></td>
+</tr>
+
+</table>

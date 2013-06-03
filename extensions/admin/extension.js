@@ -870,6 +870,26 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				app.model.addDispatchToQ({"_cmd":"adminKPIDBUserDataSetsList","_tag" : _tag},Q || 'mutable');	
 				}
 			}, //adminKPIDBUserDataSetsList
+
+
+
+
+		adminProductReviewList : {
+			init : function(obj,_tag,Q)	{
+				_tag = _tag || {}; 
+				_tag.datapointer = "adminProductReviewList"
+				this.dispatch(obj,_tag,Q);
+				return 1;
+				},
+			dispatch : function(obj,_tag,Q)	{
+				obj._cmd ="adminProductReviewList";
+				obj._tag = _tag
+				app.model.addDispatchToQ(obj,Q || 'mutable');	
+				}
+			}, //adminKPIDBCollectionList	
+
+
+
 //@head and @body in the response is the data I should use.
 //guid comes from batch list.
 		adminReportDownload : {
@@ -3786,6 +3806,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
+				else if(path == '#!reviewsManager')	{
+					app.ext.admin_customer.a.showReviewsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
 				else if (path == '#!appChooser')	{
 					app.ext.admin.a.showAppChooser();
 					}
@@ -5222,10 +5245,11 @@ dataAttribs -> an object that will be set as data- on the panel.
 				},
 			
 			//used in conjuction with the new interface (i) functions.
+			//won't currently work for macro based commands.
 			processForm : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(){
-					app.u.dump("trying to process the form")
+//					app.u.dump("trying to process the form");
 					var $form = $btn.closest('form');
 					
 					if(app.u.validateForm($form))	{

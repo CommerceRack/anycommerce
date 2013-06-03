@@ -106,13 +106,32 @@ var admin_customer = function() {
 					'header' : 'Giftcard Manager',
 					'className' : 'giftcardManager',
 					'buttons' : ["<button data-app-event='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button><button data-app-event='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
-					'thead' : ['code','Created','Expirces','Last Order','Customer','Balance','Txn #','Type','Series',''],
+					'thead' : ['code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
 					'controls' : "<form action='#' onsubmit='return false'><input type='search' name='CODE' \/><button data-app-event='admin_customer|giftcardSearchExec'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;"
 					});
 
 				if($table)	{
 					app.ext.admin.calls.adminGiftcardSearch.init({},{'callback':'anycontent','jqObj':$table},'mutable');
+					app.model.dispatchThis();
+					}
+				else	{} //buildDualMode will handle the error display.
+				},
+
+
+			showReviewsManager : function($target)	{
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Reviews Manager',
+					'className' : 'reviewsManager',
+					'buttons' : [],
+					'thead' : ['Rating','Review',''],
+//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
+					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
+					});
+
+				if($table)	{
+					app.ext.admin.calls.adminProductReviewList.init({'filter':'UNAPPROVED'},{'callback':'anycontent','jqObj':$table},'mutable');
 					app.model.dispatchThis();
 					}
 				else	{} //buildDualMode will handle the error display.
