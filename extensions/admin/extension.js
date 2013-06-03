@@ -3183,18 +3183,16 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				_tag = _tag || {};
 				
 				if($form.length && (obj._cmd || obj.call))	{
-
-					if($.isEmptyObject(_tag))	{
-						for(var key in obj)	{
-							if(key.substring(0,5) == "_tag/")	{
-								_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
-								delete obj[key]; //remove from object so it isn't part of query.
-								}
-							else{}
-							}
-						}
-					else	{}
+//hidden form inputs will override what's passed in _tag.
 //build the _tag obj.
+					for(var key in obj)	{
+						if(key.substring(0,5) == "_tag/")	{
+							_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
+							delete obj[key]; //remove from object so it isn't part of query.
+							}
+						else{}
+						}
+					_tag.jqObj = _tag.jqObj || $form;
 					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
 					if(obj._cmd)	{
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
@@ -5184,7 +5182,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 
 				if(vars.handleAppEvents)	{
-					app.u.handleAppEvents($D);
+					app.u.handleAppEvents($D,vars);
 					}
 
 //				$('.applyAnycb',$D).anycb();
@@ -5199,13 +5197,36 @@ dataAttribs -> an object that will be set as data- on the panel.
 			
 
 		e : {
+//used for loading a simple dialog w/ no data translation.
+//if translation is needed, use a custom app-event, but use the dialogCreate function and pass in data. see admin_customer.e.giftcardCreateShow for an example
+			openDialog : function($btn,vars)	{
+				
+				$btn.button();
+				$btn.off('click.openDialog').on('click.openDialog',function(){
+					vars = vars || {};
+					if($btn.data('templateid'))	{
+						vars.templateID = $btn.data('templateid');
+						vars.title = $btn.data('title');
+						vars.showLoading = false;
+						var $D = app.ext.admin.i.dialogCreate(vars);
+						$D.dialog('open');
+						}
+					else	{
+						$('#globalMessaging').anymessage({'message':'In admin.e.openDialog, expected button to have a data-templateid.','gMessage':true});
+						}
+					});
+				
+				},
+			
 			//used in conjuction with the new interface (i) functions.
 			processForm : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(){
 					app.u.dump("trying to process the form")
 					var $form = $btn.closest('form');
+					
 					if(app.u.validateForm($form))	{
+						$form.showLoading({'message':'Updating...'});						
 						app.ext.admin.a.processForm($form,'immutable',vars);
 						app.model.dispatchThis('immutable');
 						}

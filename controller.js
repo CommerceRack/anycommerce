@@ -1092,6 +1092,7 @@ app.u.throwMessage(responseData); is the default error handler.
 		showMessaging : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
+				if(_rtag.jqObj)	{_rtag.jqObj.hideLoading();}
 				var msg = app.u.successMsgObject(_rtag.message);
 				msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
 				app.u.throwMessage(msg);
@@ -1372,7 +1373,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 
 			if(typeof msg === 'object')	{
 //				app.u.dump(" -> msg: "); app.u.dump(msg);
-				if(msg.jqObj)	{$target = msg.jqObj}
+				if(msg._rtag && msg._rtag.jqObj)	{$target = msg._rtag.jqObj}
 				else if(msg.parentID){$target = $(app.u.jqSelector('#',msg.parentID));}
 				else if(msg._rtag && (msg._rtag.parentID || msg._rtag.targetID || msg._rtag.selector))	{
 					if(msg._rtag.parentID)	{$target = $(app.u.jqSelector('#',msg._rtag.parentID))}

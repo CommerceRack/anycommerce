@@ -816,6 +816,52 @@ The checkbox below does not work.
 
 
 
+<div id='giftcardAddProductTemplate'>
+
+<p>This will create a product in your store, which when purchased will create a gift card for the customer. The product will be assigned a SKU, but have unlimited inventory.</p>
+
+
+
+<form action='#' onsubmit="return false;">
+<input type='hidden' name='_cmd' value='adminGiftcardSetupProduct' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Your changes have been saved.' />
+
+
+<fieldset class='labelsAsBreaks'>
+	<label>
+		<span>SKU</span>
+		<input type="text" name="SKU" required='required' />
+	</label>
+	
+	<label>
+		<span>Amount</span>
+		<input type="number" min='0' step='.01' name="RETAIL" size="5" required='required' />
+	</label>
+	<p class='hint'>HINT: set an amount of 0 to create an "amount" option that lets the user select an amount. </p>
+
+	<label>
+	<input type="checkbox" name="ALLOW_NOTE" class='applyAnycb' checked="checked"> Allow buyer to put note on card.
+	</label>
+	<p class="hint">
+	This will let the user specify a text note that will be sent to the recipient.
+	</p>	
+
+	<label>
+	<input type="checkbox" name="ALLOW_RECIPIENT" checked=""> Allow buyer to specify electronic recipient
+	</label>
+	<p class="hint">
+	This will automatically create an account for a recipient.
+	</p>
+
+	<button data-app-event="admin|processForm">Save</button>
+
+</fieldset>
+</form>
+
+</div>
+
+
 
 <!-- admin.a.processForm requireds _cmd to be passed as part of form. added w/ js so that create template could be recycled for update -->
 <div id='giftcardCreateTemplate'>
