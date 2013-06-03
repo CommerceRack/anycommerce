@@ -908,7 +908,7 @@ if no handler is in place, then the app would use legacy compatibility mode.
 				var obj = {};
 				obj._cmd = 'adminReportDownload';
 				obj._tag = _tag || {};
-				obj._tag.datapointer = 'adminReportDownload';
+				obj._tag.datapointer = 'adminReportDownload|'+batchGUID;
 				obj.GUID = batchGUID;
 				app.model.addDispatchToQ(obj,Q || 'passive');
 				}
