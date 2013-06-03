@@ -1132,7 +1132,105 @@ don't modify the 'data-templateid' unless you are changing template names and up
 
 <div id='categoryTemplateContest' class='loadingBG categoryTemplate categoryTemplateContest'>
 	<span class="displayNone" data-bind="var: category(%page.page_title); format: text;"></span>
-	<div data-bind="var:category(%page.html);format:text;"></div>
+	<ul class='breadcrumb clearfix noPadOrMargin fluidList' data-bind='var: category(id); format:breadcrumb; extension:store_navcats; loadsTemplate: breadcrumbTemplate;'></ul>
+	
+	
+	<table cellspacing="0" cellpadding="0" border="0" width="100%">
+		<tbody>
+			<tr>
+				<td valign="top" width="80%">
+					<div data-bind="var:category(%page.description); format:wiki;"></div>
+				</td>
+
+
+				<td valign="top" width="20%">
+					<div style="margin-left:20px;">
+						<div class="zbox zbox_body" style="margin-bottom:40px;">
+							<div class="zbox_head"><img src="img/categoryPages/contest/cw09_c_head_subscribe2-321x24.png" width="321" height="24" alt="Enter here to win!" border="0"></div>
+							<div style="padding:10px;">
+
+								<div id="errorsSubscribe" class="zwarn" style="text-align:left; padding-bottom:5px;"></div>
+								<div id="successSubscribe" style="text-align:left;"></div>
+				
+								<div id="contentSubscribe">
+
+									<div></div>
+					
+									<div style="margin-top:10px;">
+										<form action="https://www.sportsworldchicago.com/c=q8FJiq9ZwY3Wk8HLRVXV0yLaB/s=www.sportsworldchicago.com/subscribe.cgis" method="post" name="subscribeForm" id="subscribeForm" onsubmit="return submitSubscribe()">
+											<fieldset style="border:0;">
+												<input type="hidden" name="check" value="1">
+													<table cellspacing="3" cellpadding="0" align="center">
+														<tbody>
+															<tr>
+																<td class="ztable_row"><label for="email">email:</label></td>
+																<td><input type="text" class="zform_textbox" maxlength="50" size="10" id="email" name="email" value="" style="width:180px;"></td>
+															</tr>
+															<tr>
+																<td class="ztable_row"><label for="fullname">full name:</label></td>
+																<td><input type="text" class="zform_textbox" maxlength="50" size="10" name="fullname" id="fullname" value="" style="width:180px;"></td>
+															</tr>
+
+															<tr>
+																<td colspan="2" align="right"><input type="image" src="img/categoryPages/contest/cw09_c_btn_enter-240x28.png" value="Subscribe"></td>
+															</tr>
+														</tbody>
+													</table>
+											</fieldset>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+
+
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<td valign="top">
+					<div style="margin-bottom:10px;" class="ztxt">
+<table cellspacing="0" cellpadding="0" border="0" width="100%">
+<tbody><tr>
+	<td rowspan="2" valign="top"><img src="img/categoryPages/contest/cw09_c_groups_left-12x160.gif" width="12" height="160" alt=""></td>
+
+	<td valign="top" width="99%" style="background:url(img/categoryPages/contest/cw09_c_groupsales_header_bg-1x47.gif) repeat-x; height:30px;"><div style="padding-top:5px;"><img src="img/categoryPages/contest/cw09_c_head_recentwinners-146x19.gif" width="146" height="19" border="0"></div></td>
+
+	<td rowspan="2" valign="top" align="right"><img src="img/categoryPages/contest/cw09_c_groups_right-12x160.gif" width="12" height="160" alt=""></td>
+
+</tr>
+<tr>
+
+	<td class="ztable_row" valign="top">
+		<div data-bind="var:category(%page.description3);format:wiki;"></div>
+	</td>
+</tr>
+</tbody></table>
+</div>
+				</td>
+	
+	
+				<td valign="top">
+					<div class="slideshow" style="margin-left:20px;">
+	
+	
+						<img src="img/categoryPages/contest/cubs_rotation_pic.jpg" width="323" height="323"/>
+						<img src="img/categoryPages/contest/cubs_flash_pic_1.jpg" width="323" height="323"/>
+						<img src="img/categoryPages/contest/chicago_cubs_kids_pic.jpg" width="323" height="323"/>
+						<img src="img/categoryPages/contest/hot_cubs_ladies_pic.jpg" width="323" height="323"/>
+						<img src="img/categoryPages/contest/rooftop_pic.jpg" width="323" height="323"/>
+
+	
+	
+					</div>
+				</td>
+	
+	
+			</tr>
+		</tbody>
+	</table>
 </div>
 
 <!-- used to display a category within a 'list', usually in the body of a category or the homepage. -->

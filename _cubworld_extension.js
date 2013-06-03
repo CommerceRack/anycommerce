@@ -57,6 +57,20 @@ var cubworld = function() {
 						})
 					
 					}]);
+					
+				app.rq.push(['templateFunction','categoryTemplateContest','onCompletes',function(P) {
+					var $context = $(app.u.jqSelector('#', P.parentID));
+					$('.slideshow', $context).each(function(){
+						if(!$(this).hasClass('slideshowRunning')){
+							$(this).addClass('slideshowRunning').cycle({
+								fx:     'fade',
+								timeout: 3000,
+								});
+							}
+						
+						})
+					
+					}]);
 				/*
 				app.rq.push(['templateFunction','categoryTemplateFeaturedPlayer','onCompletes',function(P) {
 					var $context = $(app.u.jqSelector('#', P.parentID));
@@ -2025,6 +2039,8 @@ var cubworld = function() {
 				'.sports_world_connect' : 'categoryTemplateSWConnect',
 				
 				'.wrigley_field_cam' : 'categoryTemplateEarthCam',
+				
+				'.contest' : 'categoryTemplateContest',
 				
 				'.zzzzz_extra_innings.cubs_cuttie_contest' : 'categoryTemplateCuties'
 				}
