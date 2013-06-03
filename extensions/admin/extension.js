@@ -2870,12 +2870,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{
-//						app.u.dump(" -> is #:");
+						app.u.dump(" -> is #:");
 						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
 						opts.tab = opts.tab || path.substring(2);
 						path = "/biz/"+path.substring(2)+"/index.cgi";
-//						app.u.dump(" -> opts:"); app.u.dump(opts);
+						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
@@ -2899,7 +2899,10 @@ document.location.hash = path; //update hash on URI.
 if(opts.tab){} // if tab is specified, always use it.
 else if(mode == 'app')	{} //apps load into whatever content area is open, unless opt.tab is defined.
 else if(opts.dialog)	{} //dialogs do not effect tab, unless opt.tab is defined.
-else if(mode == 'legacy' || mode == 'tabClick'){
+
+//* 201220 -> tab is already set in the if(path) code at the top.
+//else if(mode == 'legacy' || (mode == 'tabClick' ){
+else if(mode == 'legacy'){
 	opts.tab = app.ext.admin.u.getTabFromPath(path);
 	} //#: denotes to open a tab, but not refresh the content.
 else	{
@@ -2910,7 +2913,7 @@ if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab 
 else	{} //do nothing. perfectly normal to not change what tab is in focus.
 
 
-//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
+app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
@@ -2946,7 +2949,7 @@ else	{
 	}
 
 
-//app.u.dump(" -> $target determined.");
+app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
 
 if($target && $target.length)	{
 	if(opts.dialog)	{
@@ -2997,7 +3000,7 @@ else	{
 
 			showSitesTab : function($target)	{
 				$target.empty();
-				if($target.attr('data-widget-anytabs'))	{
+				if($("[data-app-role='sitesTabContainer']",$target).attr('data-widget-anytabs'))	{
 					$target.anytabs('destroy');
 					}
 //if domains are not already in memory, get a new partition list too. that way the callback isn't executed before the domains are available.
@@ -3011,7 +3014,7 @@ else	{
 						}
 					else	{
 						$target.anycontent({'templateID':'pageTemplateSites',data : $.extend(true,{},app.data['adminConfigDetail|prts'],app.data['adminDomainList'])});
-						$target.anytabs();
+						$("[data-app-role='sitesTabContainer']",$target).anytabs();
 						$('.gridTable',$target).anytable();
 						app.u.handleAppEvents($target);
 						}

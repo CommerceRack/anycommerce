@@ -536,48 +536,51 @@ SETUP PAGE TEMPLATE
 	<div class='betaWarning ui-widget ui-widget-content ui-corner-all smallPadding marginBottom clearfix'>
 	<p>This section has been updated as of 201320. If you experience issues please logout and click the previous version link, then come back to this page to make your changes.</p>
 	</div>
-
-<ul>
-	<li><a href='#domains' onClick='return false'>Domains</a></li>
-	<li><a href='#partitions' onClick='return false'>Partitions</a></li>
-	<li><a href='#debug' onClick='return false'>Debug</a></li>
-</ul>
-
-<section data-anytab-content='domains' class='clearfix'>
-	<table class='gridTable fullWidth'>
-	<thead>
-	<tr>
-		<th class='alignLeft'>Logo</th>
-		<th class='alignLeft'>Domain</th>
-		<th>Partition</th>
-		<th data-anytable-nosort='true'></th>
+	
+	<div data-app-role='sitesTabContainer'>
+	<ul>
+		<li><a href='#domains' onClick='return false'>Domains</a></li>
+		<li><a href='#partitions' onClick='return false'>Partitions</a></li>
+		<li><a href='#debug' onClick='return false'>Debug</a></li>
+	</ul>
+	
+	<section data-anytab-content='domains' class='clearfix'>
+		<table class='gridTable fullWidth'>
+		<thead>
+		<tr>
+			<th class='alignLeft'>Logo</th>
+			<th class='alignLeft'>Domain</th>
+			<th>Partition</th>
+			<th data-anytable-nosort='true'></th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+		
+		</tbody>
+		</table>
+	</section>
+	
+	<section data-anytab-content='partitions' class='clearfix'>
+		<table class='gridTable fullWidth'>
+		<thead>
+		<tr>
+			<th>#/PRT</th>
+			<th>Name</th>
+			<th>Segmented Customers</th>
+			<th>Segmented Navcats</th>
 	</tr>
-	</thead>
-	<tbody data-bind="var: rules(@DOMAINS); format:processList; loadsTemplate:domainListTemplate;">
+		</thead>
+		<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:partitionListTemplate;">
+		
+		</tbody>
+		</table>
+	</section>
 	
-	</tbody>
-	</table>
-</section>
-
-<section data-anytab-content='partitions' class='clearfix'>
-	<table class='gridTable fullWidth'>
-	<thead>
-	<tr>
-		<th>#/PRT</th>
-		<th>Name</th>
-		<th>Segmented Customers</th>
-		<th>Segmented Navcats</th>
-	</thead>
-	<tbody data-bind="var: rules(@PRTS); format:processList; loadsTemplate:partitionListTemplate;">
+	<section data-anytab-content='debug' class='clearfix'>
+	Coming Soon
+	</section>
 	
-	</tbody>
-	</table>
-</section>
-
-<section data-anytab-content='debug' class='clearfix'>
-Coming Soon
-</section>
-
+	</div>
 
 </div>
 

@@ -684,10 +684,10 @@ app.model.dispatchThis('immutable');
 					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminGiftcardCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your giftcard has been created.' />");
 					 $( ".applyDatepicker",$D).datepicker({
 						changeMonth: true,
-						changeYear: true
+						changeYear: true,
+						dateFormat : 'yymmdd'
 						});
 					});
-				//
 				},
 
 			giftcardDetailDMIPanel : function($btn)	{
