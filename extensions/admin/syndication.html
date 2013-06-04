@@ -888,21 +888,22 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	</label>
 	<p class='hint'>The merchant token for account e.g. M_COMPANY_#######</p>
 
+<!-- as per andrew, merchantid, accesskey and secretkey are NOT required -->
 	<label>
 		<span>Amazon Syndication Merchant ID</span>
-		<input name="amz_merchantid" value="" type="text" required='required' data-bind="var: mkt(amz_merchantid); format:popVal;" />
+		<input name="amz_merchantid" value="" type="text" data-bind="var: mkt(amz_merchantid); format:popVal;" />
 	</label>
 	<p class='hint'>Number used by Amazon to identify a Checkout by Amazon account</p>
 
 	<label>
 		<span>Amazon Syndication AWS Access Key</span>
-		<input name="amz_accesskey" value="" type="text" required='required' data-bind="var: mkt(amz_accesskey); format:popVal;" />
+		<input name="amz_accesskey" value="" type="text" data-bind="var: mkt(amz_accesskey); format:popVal;" />
 	</label>
 	<p class='hint'>Required for Checkout by Amazon, or Amazon Web Services</p>
 
 	<label>
 		<span>Amazon Syndication Signing Secret Key</span>
-		<input name="amz_secretkey" value="" type="text" required='required' data-bind="var: mkt(amz_secretkey); format:popVal;" />
+		<input name="amz_secretkey" value="" type="text" data-bind="var: mkt(amz_secretkey); format:popVal;" />
 	</label>
 	<p class='hint'>Required for Checkout by Amazon</p>
 
