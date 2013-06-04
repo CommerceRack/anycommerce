@@ -45,6 +45,9 @@
 </div>
 
 
+
+
+
 <table>
 <tr id='ruleBuilderRowTemplate'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
@@ -61,6 +64,8 @@
 	</td>
 </tr>
 </table>
+
+
 
 
 
@@ -163,7 +168,6 @@
 
 
 
-
 <!--
 /////////////////////// SHIPPING \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
@@ -249,137 +253,144 @@
 
 
 
+
+
+
+
 <div id='shippingGeneralTemplate'>
 
-<form action='#' onsubmit="return false;">
-
-<div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
-	<button disabled='disabled' data-app-role='saveButton' data-app-event="admin_config|shippingGeneralUpdateExec">Save <span class='numChanges'></span> Changes</button>
-</div>
-
-<fieldset>
-	<legend>Destinations</legend>
-	<label><input type="radio" value="NONE" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States</label>
-	<label><input type="radio" value="ALL51" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Canada.</label>
-	<label><input type="radio" value="SOME" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Low Risk International countries.</label>
-	<label><input type="radio" value="FULL" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> Anywhere in the world</label>
-</fieldset>
-
-
-<fieldset>
-	<legend>US Shipping Origin</legend>
-	<label>
-		<span>Zip:</span>
-		<input type="number" min='0' step='1' value="" maxlength="5" size="5" name="ship_origin_zip" data-bind="var: shipping(ship_origin_zip); format: popVal;" />
-		<span class='toolTip' title="zip code your packages will ship from">?</span>
-	</label>
-</fieldset>			
-
-
-<fieldset>
-	<legend>Fulfillment</legend>
-
-	<label>
-		<span>Fulfillment Latency (in days)</span>
-		<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal; hideZero:false;" />
-		<span class='toolTip' title="# of days products take to be fulfilled">?</span>
-	</label>
-	<label>
-		<span>Cut Off Time, PDT (use military time)</span>
-		<input type="text" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal; hideZero:false;" />
-		<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
-	</label>
-	<label>
-		<input class='applyAnycb' type="checkbox" name="chkout_deny_ship_po" data-bind="var: shipping(chkout_deny_ship_po); format: popCheckbox;">
-		Do not allow checkout for addresses that appear to be P.O. Boxes.
-	</label>
-	<label>
-		<input type="checkbox" name="ebay_merge_shipping" data-bind="var: shipping(ebay_merge_shipping); format: popCheckbox;">
-		Use Zoovy store shipping when two or more eBay items are purchased together.
-	</label>
-
-</fieldset>
-
-
-<fieldset class='floatLeft'>
-	<legend>Blacklisted Countries</legend>
-
-<div class='marginBottom'>
-	<label>
-		<span>Country</span>
-		<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
-			<option value=''>none</option>
-		</select>
-	</label>
+	<form action='#' onsubmit="return false;">
 	
-	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
-</div>
-<div data-app-role='blacklistContainer'>
-<table data-app-role='dataTable'>
-<thead>
-<tr>
-	<th>Country</th>
-	<th></th>
-</tr>
-</thead>
-<tbody data-bind="var: shipping(%SHIPPING.@BLACKLIST); format:blacklistedCountries; extension:admin_config; loadsTemplate:shippingBlacklistTemplate;">
-</tbody>
-</table>
-</div>
-
-
-</fieldset>
-
-<fieldset class='floatRight'>
-	<legend>Banned List</legend>
-
-
-<div>
-	<label>
-		<span>Type</span>
-		<select name="type" class='skipTrack'>
-			<option value="">-</option>
-			<option value="ip">IP Address</option>
-			<option value="email">Email</option>
-			<option value="zip">Zip Code</option>
-		</select>
-	</label>
+	<div class='buttonset ui-corner-all ui-widget-content alignRight smallPadding marginBottom'>
+		<button disabled='disabled' data-app-role='saveButton' data-app-event="admin_config|shippingGeneralUpdateExec">Save <span class='numChanges'></span> Changes</button>
+	</div>
 	
-	<label>
-		<span>Matches</span>
-		<input type="text" name="match" class='skipTrack' />
-	</label>
-	<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
+	<fieldset>
+		<legend>Destinations</legend>
+		<label><input type="radio" value="NONE" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States</label>
+		<label><input type="radio" value="ALL51" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Canada.</label>
+		<label><input type="radio" value="SOME" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> United States, and Low Risk International countries.</label>
+		<label><input type="radio" value="FULL" name="ship_int_risk" data-bind="var:shipping(ship_int_risk); format:popRadio;" /> Anywhere in the world</label>
+	</fieldset>
 	
-	<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+	
+	<fieldset>
+		<legend>US Shipping Origin</legend>
+		<label>
+			<span>Zip:</span>
+			<input type="number" min='0' step='1' value="" maxlength="5" size="5" name="ship_origin_zip" data-bind="var: shipping(ship_origin_zip); format: popVal;" />
+			<span class='toolTip' title="zip code your packages will ship from">?</span>
+		</label>
+	</fieldset>			
+	
+	
+	<fieldset>
+		<legend>Fulfillment</legend>
+	
+		<label>
+			<span>Fulfillment Latency (in days)</span>
+			<input type="number" value="" maxlength="2" size="2" name="ship_latency" step='1' min='0' data-bind="var: shipping(ship_latency); format: popVal; hideZero:false;" />
+			<span class='toolTip' title="# of days products take to be fulfilled">?</span>
+		</label>
+		<label>
+			<span>Cut Off Time, PDT (use military time)</span>
+			<input type="text" value="" maxlength="5" size="5" name="ship_cutoff" data-bind="var: shipping(ship_cutoff); format: popVal; hideZero:false;" />
+			<span class='toolTip' title="orders created after this time start their fulfillment the next day">?</span>
+		</label>
+		<label>
+			<input class='applyAnycb' type="checkbox" name="chkout_deny_ship_po" data-bind="var: shipping(chkout_deny_ship_po); format: popCheckbox;">
+			Do not allow checkout for addresses that appear to be P.O. Boxes.
+		</label>
+		<label>
+			<input type="checkbox" name="ebay_merge_shipping" data-bind="var: shipping(ebay_merge_shipping); format: popCheckbox;">
+			Use Zoovy store shipping when two or more eBay items are purchased together.
+		</label>
+	
+	</fieldset>
+	
+	
+	<fieldset class='floatLeft'>
+		<legend>Blacklisted Countries</legend>
+	
+	<div class='marginBottom'>
+		<label>
+			<span>Country</span>
+			<select name='country' class='skipTrack' data-bind="var: shipcodes(contents); format:optionsFromList; text:Z; value:ISOX;">
+				<option value=''>none</option>
+			</select>
+		</label>
+		
+		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+	</div>
+	<div data-app-role='blacklistContainer'>
+	<table data-app-role='dataTable'>
+	<thead>
+	<tr>
+		<th>Country</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipping(%SHIPPING.@BLACKLIST); format:blacklistedCountries; extension:admin_config; loadsTemplate:shippingBlacklistTemplate;">
+	</tbody>
+	</table>
+	</div>
+	
+	
+	</fieldset>
+	
+	<fieldset class='floatRight'>
+		<legend>Banned List</legend>
+	
+	
+	<div>
+		<label>
+			<span>Type</span>
+			<select name="type" class='skipTrack'>
+				<option value="">-</option>
+				<option value="ip">IP Address</option>
+				<option value="email">Email</option>
+				<option value="zip">Zip Code</option>
+			</select>
+		</label>
+		
+		<label>
+			<span>Matches</span>
+			<input type="text" name="match" class='skipTrack' />
+		</label>
+		<p class="hint">Hint: you can use wildcards e.g. 192.168.0.* or *@domain.com</p>
+		
+		<div class='buttonset'><button data-app-event="admin_config|dataTableAddExec">Add</button></div>
+	</div>
+	
+	<div data-app-role='bannedlistContainer'>
+	<table data-app-role='dataTable'>
+	<thead>
+	<tr>
+		<th>Type</th>
+		<th>Matches</th>
+		<th>Created</th>
+	</tr>
+	</thead>
+	<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
+	</tbody>
+	</table>
+	</div>
+	
+	
+	
+	
+	</fieldset>
+	
+	<div class='clearfix'></div>
+	
+	</form>
+
 </div>
 
-<div data-app-role='bannedlistContainer'>
-<table data-app-role='dataTable'>
-<thead>
-<tr>
-	<th>Type</th>
-	<th>Matches</th>
-	<th>Created</th>
-</tr>
-</thead>
-<tbody data-bind="var: shipping(%SHIPPING.@BANNED); format:processList; loadsTemplate:shippingBannedTemplate;">
-</tbody>
-</table>
-</div>
 
 
 
 
-</fieldset>
-
-<div class='clearfix'></div>
-
-</form>
-
-
-
-</div>
 
 
 
@@ -405,260 +416,262 @@
 
 <div id='shippingGlobal_insurance'>
 
+	
+	<input type='hidden' name='provider' value='INSURANCE' />
+	
+	
+	<p>Insurance fees are applied after the rules based shipping calculation.  Insurance fees are typically used to cover the cost of 3rd party insurance companies, or as a profit center for companies who decide to be "self insuring". You may enable as many insurance calculations as you like, all methods will be summed together to arrive at the final insurance total.</p>
+	
+	<div class='label'>
+		Insurance fees for orders will be:
+		<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio; hideZero:false;" /> Not Used/Disabled.</label>
+		<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
+		<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
+		<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
+	</div>
+	
+	<div class='label'>
+		Insurance is:
+		<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
+		<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
+	</div>
+	
+	<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
+	
+	<table>
+	<thead>
+	<tr>
+		<td></td>
+		<th>Domestic</th>
+		<th>Canada</th>
+		<th>International</th>
+	</tr>
+	</thead>
+	<tbody>
+	<tr>
+		<td>First Item:</td>
+		<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popRadio; hideZero:false;" /></td>
+		<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popRadio; hideZero:false;" /></td>
+		<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popRadio; hideZero:false;" /></td>
+	</tr>
+	<tr>
+		<td>Additional Items:</td>
+		<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popRadio; hideZero:false;" /></td>
+		<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popRadio; hideZero:false;" /></td>
+		<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popRadio; hideZero:false;" /></td>
+	</tr>
+	</tbody>
+	</table>
 
-<input type='hidden' name='provider' value='INSURANCE' />
+	
+	
+	<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
+	
+	
+	<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
+	<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for all destinations</label>
+	<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for domestic orders only</label>
+	<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada orders only</label>
+	<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for international orders only</label>
+	<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada + international orders</label>
+	
+	
+	
+	<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
+	
+	<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
+	
+	
+	
+	
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>Domestic</legend>
+		<table data-app-role='dataTable' data-table='WEIGHT_US'>
+		<thead>
+		<tr>
+			<th>Weight</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>Canada</legend>
+		<table data-app-role='dataTable' data-table='WEIGHT_CA'>
+		<thead>
+		<tr>
+			<th>Weight</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>International</legend>
+		<table data-app-role='dataTable' data-table='WEIGHT_INT'>
+		<thead>
+		<tr>
+			<th>Weight</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	<div class='clearfix'></div>
+	
+	<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
+	
+	<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popCheckbox;" /> Enable</label>
+	
+	
+	
+	
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>Domestic</legend>
+		<table data-app-role='dataTable' data-table='PRICE_US'>
+		<thead>
+		<tr>
+			<th>Subtotal</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>Canada</legend>
+		<table data-app-role='dataTable' data-table='PRICE_CA'>
+		<thead>
+		<tr>
+			<th>Subtotal</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	
+	
+	
+	<fieldset class='floatLeft marginRight'>
+		<legend>International</legend>
+		<table data-app-role='dataTable' data-table='PRICE_INT'>
+		<thead>
+		<tr>
+			<th>Subtotal</th>
+			<th>Fee</th>
+		</tr>
+		</thead>
+		<tbody data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
+		
+		</tbody>
+		</table>
+	
+		<table>
+		<tbody>
+		<tr>
+			<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
+			<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
+			<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
+		</tr>
+		</tbody>
+		</table>
+	</fieldset>
+	
+	<div class='clearfix'></div>
+	
+	
+	
+	
+	<p>
+		<h5>Special Handling Rules:</h5>
+		Use shipping rules to handle the "special cases" that come up from time to time.<br />
+		<button data-app-event="admin_config|ruleBuilderShow" data-table='RULES'>Manage Rules</button>
+	</p>
 
-
-<p>Insurance fees are applied after the rules based shipping calculation.  Insurance fees are typically used to cover the cost of 3rd party insurance companies, or as a profit center for companies who decide to be "self insuring". You may enable as many insurance calculations as you like, all methods will be summed together to arrive at the final insurance total.</p>
-
-<div class='label'>
-	Insurance fees for orders will be:
-	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio; hideZero:false;" /> Not Used/Disabled.</label>
-	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
-	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
-	<p class='hint'>*NOTE: If you combine insurance as part of shipping - it cannot be reported on separately and may affect some aspects of reporting.</p>
 </div>
 
-<div class='label'>
-	Insurance is:
-	<label><input type="radio" value="1" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio;" /> Optional (user will be prompted)</label>
-	<label><input type="radio" value="0" name="ins_optional" data-bind="var: shipmethod(ins_optional); format: popRadio; hideZero:false;" /> Mandatory (will be automatically included in order)</label>
-</div>
-
-<label><input type="checkbox" name="flat" data-bind="var: shipmethod(flat); format: popCheckbox;" />Flat Insurance Per Item <span class='toolTip' title="This method works off the total count of all items in the cart, if a customer purchases qty 2 of one item, and qty 3 of another, this would charge the first item price, plus the second item price for each of the remaining qty of 4.">?</span></label>
-
-
-<table>
-<thead>
-<tr>
-	<td></td>
-	<th>Domestic</th>
-	<th>Canada</th>
-	<th>International</th>
-	
-</tr>
-</thead>
-<tbody>
-<tr>
-	<td>First Item:</td>
-	<td>$<input type="number" name="dom_item1" value='' size="5" data-bind="var: shipmethod(dom_item1); format: popRadio; hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item1" value='' size="5" data-bind="var: shipmethod(can_item1); format: popRadio; hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item1" value='' size="5" data-bind="var: shipmethod(int_item1); format: popRadio; hideZero:false;" /></td>
-</tr>
-<tr>
-	<td>Additional Items:</td>
-	<td>$<input type="number" name="dom_item2" value='' size="5" data-bind="var: shipmethod(dom_item2); format: popRadio; hideZero:false;" /></td>
-	<td>$<input type="number" name="can_item2" value='' size="5" data-bind="var: shipmethod(can_item2); format: popRadio; hideZero:false;" /></td>
-	<td>$<input type="number" name="int_item2" value='' size="5" data-bind="var: shipmethod(int_item2); format: popRadio; hideZero:false;" /></td>
-</tr>
-</tbody></table>
-	</td>
-</tr></tbody></table>
-
-
-
-<h4>Per Product <span class='toolTip' title="Enabling a per product handling will allow you to specify a different handling charge for each product (stored as zoovy:ship_insurance). Each handling charge will only be applied once per product, regardless of how many are purchased.">?</span></h4>
-
-
-<label><input type="radio" value="0" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Disabled (do not configure handling per product)</label>
-<label><input type="radio" value="7" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for all destinations</label>
-<label><input type="radio" value="1" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for domestic orders only</label>
-<label><input type="radio" value="2" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada orders only</label>
-<label><input type="radio" value="4" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for international orders only</label>
-<label><input type="radio" value="6" name="product" data-bind="var: shipmethod(product); format: popRadio;" /> Use per product for canada + international orders</label>
-
-
-
-<h4>Weight Based <span class='toolTip' title="A Weight Based calculation will sum the total weight of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
-
-<label><input type="checkbox" name="weight" data-bind="var: shipmethod(weight); format: popCheckbox;" /> Enable</label>
 
 
 
 
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>Domestic</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_US'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_US); format:processList; loadsTemplate:shippingWeightRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>Canada</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_CA'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_CA); format:processList; loadsTemplate:shippingWeightRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>International</legend>
-	<table data-app-role='dataTable' data-table='WEIGHT_INT'>
-	<thead>
-	<tr>
-		<th>Weight</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@WEIGHT_INT); format:processList; loadsTemplate:shippingWeightRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Up to weight:<input type="text" size="8" name="weight" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-<div class='clearfix'></div>
-
-<h4>Price Based <span class='toolTip' title="A Price Based calculation uses the sum of all the items in the cart combined and then use a lookup table to determine the next highest handling fee.">?</span></h4>
-
-<label><input type="checkbox" name="price"  data-bind="var: shipmethod(price); format: popCheckbox;" /> Enable</label>
-
-
-
-
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>Domestic</legend>
-	<table data-app-role='dataTable' data-table='PRICE_US'>
-	<thead>
-	<tr>
-		<th>Subtotal</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@PRICE_US); format:processList; loadsTemplate:shippingPriceRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>Canada</legend>
-	<table data-app-role='dataTable' data-table='PRICE_CA'>
-	<thead>
-	<tr>
-		<th>Subtotal</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@PRICE_CA); format:processList; loadsTemplate:shippingPriceRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-
-
-
-<fieldset class='floatLeft marginRight'>
-	<legend>International</legend>
-	<table data-app-role='dataTable' data-table='PRICE_INT'>
-	<thead>
-	<tr>
-		<th>Subtotal</th>
-		<th>Fee</th>
-	</tr>
-	</thead>
-	<tbody data-bind="var: shipment(@PRICE_INT); format:processList; loadsTemplate:shippingPriceRowTemplate;">
-	
-	</tbody>
-	</table>
-
-	<table>
-	<tbody>
-	<tr>
-		<td >Subtotal:<input type="text" size="8" name="subtotal" class='skipTrack' /></td>
-		<td >Fee:<input type="number" min='0' step='.01' size="5" name="fee" class='skipTrack' /></td>
-		<td  ><button data-app-event="admin_config|dataTableAddExec">Add</button></td>
-	</tr>
-	</tbody>
-	</table>
-</fieldset>
-
-<div class='clearfix'></div>
-
-
-
-
-<p>
-	<h5>Special Handling Rules:</h5>
-	Use shipping rules to handle the "special cases" that come up from time to time.<br>
-	<button data-app-event="admin_config|ruleBuilderShow" data-table='RULES'>Manage Rules</button>
-</p>
-
-</div>
 
 
 
@@ -671,7 +684,7 @@
 <p>Handling fees are applied to all shipping methods after the rules based shipping calculation. Handling fees are typically used to cover the packaging expenses and/or labor involved in assembling an order. You may enable as many handling calculations as you like,  all methods will be summed together to arrive at the final handling total. </p>
 
 <div class='label'>
-	Handling fees for orders will be:<br>
+	Handling fees for orders will be:<br />
 	<label><input type="radio" value="0" name="enable" data-bind="var: shipmethod(enable); format: popRadio; hideZero:false;" required='required' /> Not Used/Disabled.</label>
 	<label><input type="radio" value="1" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Included as part of the shipping total.</label>
 	<label><input type="radio" value="2" name="enable" data-bind="var: shipmethod(enable); format: popRadio;" /> Displays as it's own line item under shipping.</label>
@@ -810,7 +823,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 <p>
 	<h5>Special Handling Rules:</h5>
-	Use shipping rules to handle the "special cases" that come up from time to time.<br>
+	Use shipping rules to handle the "special cases" that come up from time to time.<br />
 	<button data-app-event="admin_config|ruleBuilderShow" data-table='RULES'>Manage Rules</button>
 </p>
 
@@ -818,6 +831,7 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 </div>
+
 
 
 
@@ -850,135 +864,135 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 
+
+
 <div id='shippingZone_fedex'>
 
-<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-<h1>Zoovy FedEx&reg; Shipping Options</h1>
-
-<section class='marginBottom'>
-	<h2>Rating Configuration</h2>
-	<div data-bind="var: shipmethod(meter); format:text; pretext:Meter: ;"></div>
-	<div data-bind="var: shipmethod(meter_link); format:text;"></div>
-	<div data-bind="var: shipmethod(origin__zip); format:text; pretext:Origin zip: ;"></div>
-	<div data-bind="var: shipmethod(origin__state); format:text; pretext:Origin state: ;"></div>
-	<div data-bind="var: shipmethod(origin__country); format:text; pretext:Origin country: ;"></div>
-</section>
-
-
-<fieldset>
-	<legend>Rate Display <span class='toolTip' title="Please select the method(s) of FedEx shipping you want to offer to your customers. During checkout the price will be derived from FedEx based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
+	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
+	<h1>Zoovy FedEx&reg; Shipping Options</h1>
 	
-	<label>
-	<input type="radio" name="rates" value="actual" data-bind="var: shipmethod(rates); format:popRadio;"> Display Actual Shipping Rates
-	</label>
+	<section class='marginBottom'>
+		<span class='floatRight'><a href="#" onClick="app.ext.admin_config.a.showFedExMeterInModal(); return false;">Re-Apply for FedEx Meter</a></span>
+		<h2>Rating Configuration</h2>
+		<div data-bind="var: shipmethod(meter); format:text; pretext:Meter: ;"></div>
+		<div data-bind="var: shipmethod(meter_link); format:text;"></div>
+		<div data-bind="var: shipmethod(origin__zip); format:text; pretext:Origin zip: ;"></div>
+		<div data-bind="var: shipmethod(origin__state); format:text; pretext:Origin state: ;"></div>
+		<div data-bind="var: shipmethod(origin__country); format:text; pretext:Origin country: ;"></div>
+	</section>
 	
-	<label>
-	<input type="radio"  name="rates" value="retail" data-bind="var: shipmethod(rates); format:popRadio;"> Display Retail (FedEx.com) Rates
-	</label>
 	
-</fieldset>
+	<fieldset>
+		<legend>Rate Display <span class='toolTip' title="Please select the method(s) of FedEx shipping you want to offer to your customers. During checkout the price will be derived from FedEx based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
+		
+		<label>
+		<input type="radio" name="rates" value="actual" data-bind="var: shipmethod(rates); format:popRadio;"> Display Actual Shipping Rates
+		</label>
+		
+		<label>
+		<input type="radio"  name="rates" value="retail" data-bind="var: shipmethod(rates); format:popRadio;"> Display Retail (FedEx.com) Rates
+		</label>
+		
+	</fieldset>
+	
+	
+	<fieldset>
+		<legend>FedEx Domestic Settings</legend>
+		<button data-app-event="admin_config|ruleBuilderShow" data-table='DOM' class='floatRight'>Manage General Rules</button>
+		<label>
+			<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable FedEx Domestic Shipping Support
+		</label>
+	
+	
+	<table class='gridTable fullWidth marginBottom'>
+	   <tr>
+		  <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popCheckbox;' /></td>
+		  <td>FedEx First Overnight&reg; (8:30am next day)</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextearly'>Manage Rules</button></td>
+	   </tr>
+	   <tr >
+		  <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popCheckbox;' /></td>
+		  <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextnoon'>Manage Rules</button></td>
+	   </tr>
+	   <tr>
+		  <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popCheckbox;' /></td>
+		  <td>FedEx Standard Overnight&reg; (3pm next day)</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextday'>Manage Rules</button></td>
+	   </tr>
+	   <tr >
+		  <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popCheckbox;' /></td>
+		  <td>FedEx 2Day&reg;</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_2day'>Manage Rules</button></td>
+	   </tr>
+	   <tr>
+		  <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popCheckbox;' /></td>
+		  <td>FedEx Express Saver&reg; (3 Days)</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_3day'>Manage Rules</button></td>
+	   </tr>
+	   <tr >
+		  <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popCheckbox;' /></td>
+		  <td>FedEx&reg; Ground</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_ground'>Manage Rules</button></td>
+	   </tr>
+	   <tr>
+		  <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popCheckbox;' /></td>
+		  <td>FedEx&reg; Home Delivery**</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home'>Manage Rules</button></td>
+	   </tr>
+	 <tr>
+		  <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popCheckbox;' /></td>
+		  <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_evening'>Manage Rules</button></td>
+	   </tr>
+	</table>
+	</fieldset>
+	
+	
+	<fieldset>
+		<legend>FedEx International Settings</legend>
+	
+		<button data-app-event="admin_config|ruleBuilderShow" data-table='INT' class='floatRight'>Manage General Rules</button>
+		<label>
+			<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable FedEx International Shipping Support
+		</label>
+	
+	<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+	<table class='gridTable fullWidth'>
+	   <tr>
+		  <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popCheckbox;' /></td>
+		  <td>FedEx International First&reg;</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextearly'>Manage Rules</button></td>
+	   </tr>
+	   <tr >
+		  <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popCheckbox;' /></td>
+		  <td>FedEx International Priority&reg;</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextnoon'>Manage Rules</button></td>
+	   </tr>
+	   <tr>
+		  <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popCheckbox;' /></td>
+		  <td>FedEx International Economy&reg;*</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_2day'>Manage Rules</button></td>
+	   </tr>
+	   <tr >
+		  <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popCheckbox;' /></td>
+		  <td>FedEx International Ground&reg;</td>
+		  <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_ground'>Manage Rules</button></td>
+	   </tr>
+	</table>
+	</fieldset>
 
-
-<fieldset>
-	<legend>FedEx Domestic Settings</legend>
-	<button data-app-event="admin_config|ruleBuilderShow" data-table='DOM' class='floatRight'>Manage General Rules</button>
-	<label>
-		<input type="checkbox" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable FedEx Domestic Shipping Support
-	</label>
-
-
-<table class='gridTable fullWidth marginBottom'>
-   <tr>
-      <td><input type="checkbox" name="dom_nextearly" data-bind='var: shipmethod(dom_nextearly); format:popCheckbox;' /></td>
-      <td>FedEx First Overnight&reg; (8:30am next day)</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextearly'>Manage Rules</button></td>
-   </tr>
-   <tr >
-      <td><input type="checkbox" name="dom_nextnoon" data-bind='var: shipmethod(dom_nextnoon); format:popCheckbox;' /></td>
-      <td>FedEx Priority Overnight&reg; (10:30am next day)</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextnoon'>Manage Rules</button></td>
-   </tr>
-   <tr>
-      <td><input type="checkbox" name="dom_nextday" data-bind='var: shipmethod(dom_nextday); format:popCheckbox;' /></td>
-      <td>FedEx Standard Overnight&reg; (3pm next day)</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_nextday'>Manage Rules</button></td>
-   </tr>
-   <tr >
-      <td><input type="checkbox" name="dom_2day" data-bind='var: shipmethod(dom_2day); format:popCheckbox;' /></td>
-      <td>FedEx 2Day&reg;</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_2day'>Manage Rules</button></td>
-   </tr>
-   <tr>
-      <td><input type="checkbox" name="dom_3day" data-bind='var: shipmethod(dom_3day); format:popCheckbox;' /></td>
-      <td>FedEx Express Saver&reg; (3 Days)</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_3day'>Manage Rules</button></td>
-   </tr>
-   <tr >
-      <td><input type="checkbox" name="dom_ground" data-bind='var: shipmethod(dom_ground); format:popCheckbox;' /></td>
-      <td>FedEx&reg; Ground</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_ground'>Manage Rules</button></td>
-   </tr>
-   <tr>
-      <td><input type="checkbox"  name="dom_home" data-bind='var: shipmethod(dom_home); format:popCheckbox;' /></td>
-      <td>FedEx&reg; Home Delivery**</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_home'>Manage Rules</button></td>
-   </tr>
- <tr>
-      <td><input type="checkbox"  name="dom_evening" data-bind='var: shipmethod(dom_evening); format:popCheckbox;' /></td>
-      <td>FedEx&reg; Home Delivery (w/Evening Delivery Surcharge)**</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='dom_evening'>Manage Rules</button></td>
-   </tr>
-</table>
-
-
-
-<fieldset>
-	<legend>FedEx International Settings</legend>
-
-	<button data-app-event="admin_config|ruleBuilderShow" data-table='INT' class='floatRight'>Manage General Rules</button>
-	<label>
-		<input type="checkbox" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable FedEx International Shipping Support
-	</label>
-
-<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
-<table class='gridTable fullWidth'>
-   <tr>
-      <td><input type="checkbox" name="int_nextearly" data-bind='var: shipmethod(int_nextearly); format:popCheckbox;' /></td>
-      <td>FedEx International First&reg;</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextearly'>Manage Rules</button></td>
-   </tr>
-   <tr >
-      <td><input type="checkbox" name="int_nextnoon" data-bind='var: shipmethod(int_nextnoon); format:popCheckbox;' /></td>
-      <td>FedEx International Priority&reg;</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_nextnoon'>Manage Rules</button></td>
-   </tr>
-   <tr>
-      <td><input type="checkbox" name="int_2day" data-bind='var: shipmethod(int_2day); format:popCheckbox;' /></td>
-      <td>FedEx International Economy&reg;*</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_2day'>Manage Rules</button></td>
-   </tr>
-   <tr >
-      <td><input type="checkbox" name="int_ground" data-bind='var: shipmethod(int_ground); format:popCheckbox;' /></td>
-      <td>FedEx International Ground&reg;</td>
-      <td class='alignRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='int_ground'>Manage Rules</button></td>
-   </tr>
-</table>
-</fieldset>
-
-<p class="hint">* This shipping method does not support certain packaging, and will assume the FedEx&reg; Pak price if Envelopes, 10kg or 25kg boxes are selected.</p>
-<p class='hint'>** FedEx Home Delivery Options are *NOT* available for all addresses and may not show as shipping options. We recommend enabling both FedEx Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</p>
-
-<p class="hint">
-	<b>Other Considerations:</b>
-	<ul>
-		<li> Specific rules only take effect on the shipping type they are created for, whereas general rules will be
-		applied to each available shipping method.
-		<li> Currently no rating support is provided for quoting Saturday delivery, or Freight.
-		<li> FedEx logo used by permission. All rights reserved.
-	</ul>
-</p>
-
-
+	<p class="hint">* This shipping method does not support certain packaging, and will assume the FedEx&reg; Pak price if Envelopes, 10kg or 25kg boxes are selected.</p>
+	<p class='hint'>** FedEx Home Delivery Options are *NOT* available for all addresses and may not show as shipping options. We recommend enabling both FedEx Ground and FedEx Home Delivery to ensure a shipping rate is displayed.</p>
+	
+	<p class="hint">
+		Other Considerations:
+		<ul>
+			<li> Specific rules only take effect on the shipping type they are created for, whereas general rules will be applied to each available shipping method.</li>
+			<li> Currently no rating support is provided for quoting Saturday delivery, or Freight.</li>
+			<li> FedEx logo used by permission. All rights reserved.</li>
+		</ul>
+	</p>
 
 
 
@@ -986,116 +1000,51 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 
 
 
+
 <div id='shippingZone_ups'>
-
-<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-<p class='warn'>
-UPS rates cannot be displayed in conjunction with rates from other shipping carriers during checkout.
-Doing so is a violation of your UPS license agreement.  Therefore, <b>if you enable this shipping method,
-it will be the only one displayed!
-</b>
-
-
-<p>
-UPS Shipper Number: <span></span><br>
-<a href="#" onClick="app.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br>
-</p>
-
-
-<fieldset>
-<legend>Rating Services <span class='toolTip' title="Please select the method(s) of UPS shipping you want to offer to your customers. During checkout the price will be derived from UPS based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
-
-<label>
-	<span>Rate Chart to Use</span>
-	<select name="rate_chart" data-bind='var: shipmethod(rate_chart); format:popVal;' >
-		<option value="01" >Daily Pickup</option>
-		<option value="03">Occasional Shipper</option>
-	</select>
-</label>
-
-
-<label><input type="checkbox" name="option_multibox" data-bind='var: shipmethod(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
-<label><input type="checkbox" name="option_residential" data-bind='var: shipmethod(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
-<label><input type="checkbox" name="option_validation" data-bind='var: shipmethod(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
-<label><input type="checkbox" name="option_use_rules" data-bind='var: shipmethod(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
-
-</fieldset>
-
-
-<fieldset>
-	<legend>UPS Domestic Settings</legend>
 	
-	<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage General Rules</button></div>
+	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
+	<p class='warn'>
+	UPS rates cannot be displayed in conjunction with rates from other shipping carriers during checkout.
+	Doing so is a violation of your UPS license agreement.  Therefore, if you enable this shipping method,
+	it will be the only one displayed!
+	</p>
 	
-	<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support </label>
-	<label><span>Quote Domestic Packaging As:</span>
-	<select name="dom_packaging" data-bind='var: shipmethod(dom_packaging); format:popVal;'>
-		<option value="00" >Your Packaging</option>
-		<option value="01">UPS Letter Envelope</option>
-		<option value="03">UPS Tube</option>
-		<option value="04">UPS Express&reg; Pak</option>
-		<option value="24">UPS 25KG Box&reg;</option>
-		<option value="25">UPS 10KG Box&reg;</option>
-		<option value="30">Pallet</option>
-		<option value="2a">UPS Express Box&reg; - Small</option>
-		<option value="2b">UPS Express Box&reg; - Medium</option>
-		<option value="2c">UPS Express Box&reg; - Large</option>
-		<option value="SMART">UPS Letter Envelope up 4 oz, Your Packaging for more</option>
-	</select>
-	</label>
-
-<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
-<table class='fullWidth gridTable'>
-<tbody>
-<tr >
-	<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popCheckbox;' /></td>
-	<td>UPS Ground</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_GND'>Manage Rules</button></td>
-</tr>
-<tr>
-	<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popCheckbox;' /></td>
-	<td>UPS 3 Day Select&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_3DS'>Manage Rules</button></td>
-</tr>
-<tr >
-	<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popCheckbox;' /></td>
-	<td>UPS 2nd Day Air A.M.&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_2DM'>Manage Rules</button></td>
-</tr>
-<tr>
-	<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popCheckbox;' /></td>
-	<td>UPS 2nd Day Air&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_2DA'>Manage Rules</button></td>
-</tr>
-<tr >
-	<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popCheckbox;' /></td>
-	<td>UPS Next Day Air Saver&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DP'>Manage Rules</button></td>
-</tr>
-<tr>
-	<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popCheckbox;' /></td>
-	<td>UPS Next Day Air&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DA'>Manage Rules</button></td>
-</tr>
-<tr >
-	<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popCheckbox;' /></td>
-	<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
-	<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DM'>Manage Rules</button></td>
-</tr>
-</tbody>
-</table>
-
-</fieldset>
-
-
-<fieldset>
-<legend>UPS International Settings</legend>
-	<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage International Rules</button></div>
-	<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable UPS International Shipping Support</label>
+	
+	<p>
+	UPS Shipper Number: <span></span><br />
+	<a href="#" onClick="app.ext.admin_config.a.showUPSOnlineToolsRegInModal(); return false;">Re-Apply for UPS OnLine&reg; Tools / Change Shipper Number</a><br />
+	</p>
+	
+	
+	<fieldset>
+	<legend>Rating Services <span class='toolTip' title="Please select the method(s) of UPS shipping you want to offer to your customers. During checkout the price will be derived from UPS based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
 	
 	<label>
-		<span>Quote International Packaging As:</span>
-		<select name="int_packaging" data-bind='var: shipmethod(int_packaging); format:popVal;'>
+		<span>Rate Chart to Use</span>
+		<select name="rate_chart" data-bind='var: shipmethod(rate_chart); format:popVal;' >
+			<option value="01" >Daily Pickup</option>
+			<option value="03">Occasional Shipper</option>
+		</select>
+	</label>
+	
+	
+	<label><input type="checkbox" name="option_multibox" data-bind='var: shipmethod(option_multibox); format:popCheckbox;' /> Quote each item as it's own shipmethod. Recommended for customers with large non-combinable items.</label>
+	<label><input type="checkbox" name="option_residential" data-bind='var: shipmethod(option_residential); format:popCheckbox;' /> Treat all customers as residential (default is business).</label>
+	<label><input type="checkbox" name="option_validation" data-bind='var: shipmethod(option_validation); format:popCheckbox;' /> Use UPS OnLine&reg; Tools Address Validation in checkout.</label>
+	<label><input type="checkbox" name="option_use_rules" data-bind='var: shipmethod(option_use_rules); format:popCheckbox;' /> Perform rule processing. (RECOMMENDED)</label>
+	
+	</fieldset>
+	
+	
+	<fieldset>
+		<legend>UPS Domestic Settings</legend>
+		
+		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage General Rules</button></div>
+		
+		<label><input type="checkbox" value="on" name="dom" data-bind='var: shipmethod(dom); format:popCheckbox;' /> Enable UPS Domestic Shipping Support </label>
+		<label><span>Quote Domestic Packaging As:</span>
+		<select name="dom_packaging" data-bind='var: shipmethod(dom_packaging); format:popVal;'>
 			<option value="00" >Your Packaging</option>
 			<option value="01">UPS Letter Envelope</option>
 			<option value="03">UPS Tube</option>
@@ -1103,109 +1052,182 @@ UPS Shipper Number: <span></span><br>
 			<option value="24">UPS 25KG Box&reg;</option>
 			<option value="25">UPS 10KG Box&reg;</option>
 			<option value="30">Pallet</option>
-			<option value="2a">UPS Express&reg; Box - Small</option>
-			<option value="2b">UPS Express&reg; Box - Medium</option>
-			<option value="2c">UPS Express&reg; Box - Large</option>
+			<option value="2a">UPS Express Box&reg; - Small</option>
+			<option value="2b">UPS Express Box&reg; - Medium</option>
+			<option value="2c">UPS Express Box&reg; - Large</option>
 			<option value="SMART">UPS Letter Envelope up 4 oz, Your Packaging for more</option>
 		</select>
-	</label>
-	<p class='warn'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+		</label>
 	
+	<p class='hint'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
 	<table class='fullWidth gridTable'>
 	<tbody>
 	<tr >
-		<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popCheckbox;' /></td>
-		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to Canada</a></td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_STD'>Manage Rules</button></td>
+		<td><input type="checkbox" value="1" name="dom_gnd" data-bind='var: shipmethod(dom_gnd); format:popCheckbox;' /></td>
+		<td>UPS Ground</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_GND'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popCheckbox;' /></td>
-		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XSV'>Manage Rules</button></td>
-	</tr>
-	<tr>
-		<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popCheckbox;' /></td>
-		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XPR'>Manage Rules</button></td>
+		<td><input type="checkbox" value="1" name="dom_3ds" data-bind='var: shipmethod(dom_3ds); format:popCheckbox;' /></td>
+		<td>UPS 3 Day Select&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_3DS'>Manage Rules</button></td>
 	</tr>
 	<tr >
-		<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popCheckbox;' /></td>
-		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XDM'>Manage Rules</button></td>
+		<td><input type="checkbox" value="1" name="dom_2dm" data-bind='var: shipmethod(dom_2dm); format:popCheckbox;' /></td>
+		<td>UPS 2nd Day Air A.M.&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_2DM'>Manage Rules</button></td>
 	</tr>
 	<tr>
-		<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popCheckbox;' /></td>
-		<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
-		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XPD'>Manage Rules</button></td>
+		<td><input type="checkbox" value="1" name="dom_2da" data-bind='var: shipmethod(dom_2da); format:popCheckbox;' /></td>
+		<td>UPS 2nd Day Air&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_2DA'>Manage Rules</button></td>
+	</tr>
+	<tr >
+		<td><input type="checkbox" value="1" name="dom_1dp" data-bind='var: shipmethod(dom_1dp); format:popCheckbox;' /></td>
+		<td>UPS Next Day Air Saver&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DP'>Manage Rules</button></td>
+	</tr>
+	<tr>
+		<td><input type="checkbox" value="1" name="dom_1da" data-bind='var: shipmethod(dom_1da); format:popCheckbox;' /></td>
+		<td>UPS Next Day Air&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DA'>Manage Rules</button></td>
+	</tr>
+	<tr >
+		<td><input type="checkbox" value="1" name="dom_1dm" data-bind='var: shipmethod(dom_1dm); format:popCheckbox;' /></td>
+		<td>UPS Next Day Air&reg; Early A.M.&reg;</td>
+		<td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM_1DM'>Manage Rules</button></td>
 	</tr>
 	</tbody>
 	</table>
-
-</fieldset>
+	
+	</fieldset>
+	
+	
+	<fieldset>
+	<legend>UPS International Settings</legend>
+		<div class='floatRight'><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage International Rules</button></div>
+		<label><input type="checkbox" value="on" name="int" data-bind='var: shipmethod(int); format:popCheckbox;' /> Enable UPS International Shipping Support</label>
+		
+		<label>
+			<span>Quote International Packaging As:</span>
+			<select name="int_packaging" data-bind='var: shipmethod(int_packaging); format:popVal;'>
+				<option value="00" >Your Packaging</option>
+				<option value="01">UPS Letter Envelope</option>
+				<option value="03">UPS Tube</option>
+				<option value="04">UPS Express&reg; Pak</option>
+				<option value="24">UPS 25KG Box&reg;</option>
+				<option value="25">UPS 10KG Box&reg;</option>
+				<option value="30">Pallet</option>
+				<option value="2a">UPS Express&reg; Box - Small</option>
+				<option value="2b">UPS Express&reg; Box - Medium</option>
+				<option value="2c">UPS Express&reg; Box - Large</option>
+				<option value="SMART">UPS Letter Envelope up 4 oz, Your Packaging for more</option>
+			</select>
+		</label>
+		<p class='warn'>The more of these shipping methods you allow, the slower the checkout page will be.</p>
+		
+		<table class='fullWidth gridTable'>
+		<tbody>
+		<tr >
+			<td><input type="checkbox" value="1" name="int_std" data-bind='var: shipmethod(int_std); format:popCheckbox;' /></td>
+			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/standard.html" target="_new">UPS Standard to Canada</a></td>
+			<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_STD'>Manage Rules</button></td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="1" name="int_xsv" data-bind='var: shipmethod(int_xsv); format:popCheckbox;' /></td>
+			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/worldwide_saver.html" target="_new">UPS Worldwide Saver&reg;</a></td>
+			<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XSV'>Manage Rules</button></td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="1" name="int_xpr" data-bind='var: shipmethod(int_xpr); format:popCheckbox;' /></td>
+			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express.html" target="_new">UPS Worldwide Express&reg;</a></td>
+			<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XPR'>Manage Rules</button></td>
+		</tr>
+		<tr >
+			<td><input type="checkbox" value="1" name="int_xdm" data-bind='var: shipmethod(int_xdm); format:popCheckbox;' /></td>
+			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/express_plus.html" target="_new">UPS Worldwide Express Plus&reg;</a></td>
+			<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XDM'>Manage Rules</button></td>
+		</tr>
+		<tr>
+			<td><input type="checkbox" value="1" name="int_xpd" data-bind='var: shipmethod(int_xpd); format:popCheckbox;' /></td>
+			<td><a href="http://www.ups.com/content/us/en/shipping/time/service/expedited.html" target="_new">UPS Worldwide Expedited&reg;</a></td>
+			<td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT_XPD'>Manage Rules</button></td>
+		</tr>
+		</tbody>
+		</table>
+	
+	</fieldset>
 
 </div>
+
+
+
+
 
 
 
 <div id='shippingZone_usps'>
-<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
-<table class="fullWidth gridTable">
-<thead>
-<tr>
-	<th></th>
-	<th class='alignLeft'>Domestic</th>
-	<th class='alignLeft'>International</th>
-</tr>
-</thead>
-   <tr >
-      <td>Enable</td>
-      <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
-      <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popCheckbox;" /></td>
-   </tr>
-   <tr>
-      <td>First Class</td>
-      <td></td>
-      <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popCheckbox;" /></td>
-   </tr>
-   <tr>
-      <td>Parcel Post</td>
-      <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popCheckbox;" /></td>
-      <td></td>
-   </tr>
-   <tr>
-      <td>Priority Mail (6-10 days)</td>
-      <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popCheckbox;" /></td>
-      <td>
-         <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br>
-         <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br>
-      </td>
-   </tr>
-   <tr>
-      <td>Express Mail (3-5 days)</td>
-      <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
-      <td>
-         <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br>
-      </td>
-   </tr>
-   <tr>
-      <td>Global Express Guaranteed (1-3 days)</td>
-      <td></td>
-      <td>
-         <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br>
-         <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br>
-         <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br>
-      </td>
-   </tr>
-   <tr>
-      <td>Rules</td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage International Rules</button></td>
-      <td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage International Rules</button></td>
-   </tr>
-
-</table>
+	<input type='hidden' name='provider' value='' data-bind="var:shipmethod(provider); format:popVal;" />
+	<table class="fullWidth gridTable">
+	<thead>
+	<tr>
+		<th></th>
+		<th class='alignLeft'>Domestic</th>
+		<th class='alignLeft'>International</th>
+	</tr>
+	</thead>
+	   <tr >
+		  <td>Enable</td>
+		  <td><input type="checkbox" name="usps_dom" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
+		  <td><input type="checkbox" name="usps_int" data-bind="var: shipmethod(usps_int); format: popCheckbox;" /></td>
+	   </tr>
+	   <tr>
+		  <td>First Class</td>
+		  <td></td>
+		  <td><input type="checkbox" name="usps_int_parcelpost" data-bind="var: shipmethod(usps_int_parcelpost); format: popCheckbox;" /></td>
+	   </tr>
+	   <tr>
+		  <td>Parcel Post</td>
+		  <td><input type="checkbox" name="usps_dom_bulkrate" data-bind="var: shipmethod(usps_dom_bulkrate); format: popCheckbox;" /></td>
+		  <td></td>
+	   </tr>
+	   <tr>
+		  <td>Priority Mail (6-10 days)</td>
+		  <td><input type="checkbox" name="usps_dom_priority" data-bind="var: shipmethod(usps_dom_priority); format: popCheckbox;" /></td>
+		  <td>
+			 <input type="checkbox" name="usps_int_priority_1" data-bind="var: shipmethod(usps_int_priority_1); format: popCheckbox;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_priority_2" data-bind="var: shipmethod(usps_int_priority_2); format: popCheckbox;" /> Flat Box.<br />
+			 <input type="checkbox" name="usps_int_priority_4" data-bind="var: shipmethod(usps_int_priority_4); format: popCheckbox;" /> Flat Env.<br />
+		  </td>
+	   </tr>
+	   <tr>
+		  <td>Express Mail (3-5 days)</td>
+		  <td><input type="checkbox" name="usps_dom_express" data-bind="var: shipmethod(usps_dom); format: popCheckbox;" /></td>
+		  <td>
+			 <input type="checkbox" name="usps_int_express_1" data-bind="var: shipmethod(usps_int_express_1); format: popCheckbox;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_express_2" data-bind="var: shipmethod(usps_int_express_2); format: popCheckbox;" /> Flat Env.<br />
+		  </td>
+	   </tr>
+	   <tr>
+		  <td>Global Express Guaranteed (1-3 days)</td>
+		  <td></td>
+		  <td>
+			 <input type="checkbox" name="usps_int_expressg_1" data-bind="var: shipmethod(usps_int_expressg_1); format: popCheckbox;" /> Other Pkg.<br />
+			 <input type="checkbox" name="usps_int_expressg_2" data-bind="var: shipmethod(usps_int_expressg_2); format: popCheckbox;" /> Rectangular.<br />
+			 <input type="checkbox" name="usps_int_expressg_4" data-bind="var: shipmethod(usps_int_expressg_4); format: popCheckbox;" /> Non-Rectangular.<br />
+		  </td>
+	   </tr>
+	   <tr>
+		  <td>Rules</td>
+		  <td><button data-app-event="admin_config|ruleBuilderShow" data-table='DOM'>Manage International Rules</button></td>
+		  <td><button data-app-event="admin_config|ruleBuilderShow" data-table='INT'>Manage International Rules</button></td>
+	   </tr>
+	
+	</table>
 </div>
+
+
+
 
 
 
@@ -1457,59 +1479,59 @@ UPS Shipper Number: <span></span><br>
 <fieldset>
 	<input type='hidden' name='provider' value='FEDEX' />
 <p>
-Please provide the information needed below to setup your FedEx&reg; meter:<br>
+Please provide the information needed below to setup your FedEx&reg; meter:<br />
 </p>
 <label><span>Fedex&reg; Account Number:</span>
 <input type="text" value="" name="account" data-bind="var: shipmethod(account); format:popVal;" required='required' />
 </label>
 
 <label><span>Contact First Name</span>	
-<input type="text" value="" name="firstname" data-bind="var: shipmethod(firstname); format:popVal;" required='required' />
+<input type="text" value="" name="firstname" data-bind="var: shipmethod(register_firstname); format:popVal;" required='required' />
 </label>
 
 <label><span>Contact Last Name</span>	
-<input type="text" value="" name="lastname" data-bind="var: shipmethod(lastname); format:popVal;" required='required' />
+<input type="text" value="" name="lastname" data-bind="var: shipmethod(register_lastname); format:popVal;" required='required' />
 </label>
 
 <label><span>Company Name</span>	
-<input type="text" value="" name="company" data-bind="var: shipmethod(company); format:popVal;" required='required' />
+<input type="text" value="" name="company" data-bind="var: shipmethod(register_company); format:popVal;" required='required' />
 </label>
 
 <label><span>Address Line 1</span>	
-<input type="text" value="" name="address1" data-bind="var: shipmethod(address1); format:popVal;" required='required' />
+<input type="text" value="" name="address1" data-bind="var: shipmethod(register_streetlines); format:popVal;" required='required' />
 </label>
 
 <label><span>Address Line 2</span>	
-<input type="text" value="" name="address2" data-bind="var: shipmethod(address2); format:popVal;" />
+<input type="text" value="" name="address2" data-bind="var: shipmethod(register_address2); format:popVal;" />
 </label>
 
 <label><span>City</span>	
-<input type="text" value="" name="city" data-bind="var: shipmethod(city); format:popVal;" required='required' />
+<input type="text" value="" name="city" data-bind="var: shipmethod(register_city); format:popVal;" required='required' />
 </label>
 
 <label><span>State Code</span>	
-<input type="text" value="" name="state" data-bind="var: shipmethod(state); format:popVal;" required='required' ><br>
+<input type="text" value="" name="state" data-bind="var: shipmethod(register_state); format:popVal;" required='required' ><br />
 <i>(required for Canada or US)</i>
 </label>
 
 <label><span>Postal/Zip Code</span>	
-<input type="text" value="" name="zip" data-bind="var: shipmethod(zip); format:popVal;" required='required' />
+<input type="text" value="" name="zip" data-bind="var: shipmethod(register_zip); format:popVal;" required='required' />
 </label>
 
 <label><span>Country Code</span>	
-<input type="text" value="" name="country" size="2" data-bind="var: shipmethod(country); format:popVal;" required='required' />
+<input type="text" value="" name="country" size="2" data-bind="var: shipmethod(register_country); format:popVal;" required='required' />
 </label>
 
 <label><span>Phone Number</span>	
-<input type="tel" value="" name="phone" data-bind="var: shipmethod(phone); format:popVal;"  required='required'/>
+<input type="tel" value="" name="phone" data-bind="var: shipmethod(register_phone); format:popVal;"  required='required'/>
 </label>
 
 <label><span>Email Address</span>	
-<input type="email" value="" name="email" data-bind="var: shipmethod(email); format:popVal;"  required='required' />
+<input type="email" value="" name="email" data-bind="var: shipmethod(register_email); format:popVal;"  required='required' />
 </label>
 
 <label><span>Fax Number</span>
-<input type="tel" value="" name="fax" data-bind="var: shipmethod(fax); format:popVal;" />
+<input type="tel" value="" name="fax" data-bind="var: shipmethod(register_fax); format:popVal;" />
 </label>
 
 </fieldset>
@@ -1560,71 +1582,71 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 <table>
 <tbody>
 <tr>
-	<td align="right" valign="top">
-		<b>Title:</b><br>
+	<td  class='valignTop'>
+		Title:<br />
 		(Mr., Mrs., etc.)
 	</td>	
-	<td valign="top"><input type="text" name="title" value="" size="35" required='required' /></td>
+	<td class='valignTop'><input type="text" name="title" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Contact Name:</b></td>	
-	<td valign="top"><input type="text" name="name" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Contact Name:</td>	
+	<td class='valignTop'><input type="text" name="name" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Company Name:</b></td>	
-	<td valign="top"><input type="text" name="company_name" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Company Name:</td>	
+	<td class='valignTop'><input type="text" name="company_name" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Company URL:</b></td>	
-	<td valign="top"><input type="text" name="url" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Company URL:</td>	
+	<td class='valignTop'><input type="text" name="url" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Address Line 1:</b></td>	
-	<td valign="top"><input type="text" name="address1" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Address Line 1:</td>	
+	<td class='valignTop'><input type="text" name="address1" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Address Line 2:</b></td>	
-	<td valign="top"><input type="text" name="address2" value="" size="35"  /></td>
+	<td  class='valignTop'>Address Line 2:</td>	
+	<td class='valignTop'><input type="text" name="address2" value="" size="35"  /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>City:</b></td>	
-	<td valign="top"><input type="text" name="city" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>City:</td>	
+	<td class='valignTop'><input type="text" name="city" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>State Code:</b></td>	
-	<td valign="top"><input type="text" name="state" value="" size="35" required='required' onkeyup="$(this).val($(this).val().toUpperCase());" /></td>
+	<td  class='valignTop'>State Code:</td>	
+	<td class='valignTop'><input type="text" name="state" value="" size="35" required='required' onkeyup="$(this).val($(this).val().toUpperCase());" /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Postal/Zip Code:</b></td>	
-	<td valign="top"><input type="text" name="zip" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Postal/Zip Code:</td>	
+	<td class='valignTop'><input type="text" name="zip" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Country: <span class='toolTip' title="Two digit country code. ex: US">?</span></b></td>	
-	<td valign="top"><input type="text" name="country" value="" size="2" maxlength='2' required='required' /></td>
+	<td  class='valignTop'>Country: <span class='toolTip' title="Two digit country code. ex: US">?</span></td>	
+	<td class='valignTop'><input type="text" name="country" value="" size="2" maxlength='2' required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Phone Number:</b></td>	
-	<td valign="top"><input type="tel" name="phone" value="" size="35"  required='required' /></td>
+	<td  class='valignTop'>Phone Number:</td>	
+	<td class='valignTop'><input type="tel" name="phone" value="" size="35"  required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top"><b>Email Address:</b></td>	
-	<td valign="top"><input type="email" name="email" value="" size="35" required='required' /></td>
+	<td  class='valignTop'>Email Address:</td>	
+	<td class='valignTop'><input type="email" name="email" value="" size="35" required='required' /></td>
 </tr>
 <tr>
-	<td align="right" valign="top">
-		<b>UPS Account Number:</b>
+	<td  class='valignTop'>
+		UPS Account Number:
 	</td>
-	<td valign="top">
+	<td class='valignTop'>
 		<input type="text" name="shipper_number" value="" size="35" required='required' />
 	</td>
 </tr>
 <tr>
 	<td colspan="2" align="left">
-		<br>
+		<br />
 		<input type="radio" name="contact" value="Yes" required='required' />
-		Yes, I would like a UPS Sales Represenatative to contact me about opening a UPS shipping account or to answer questions about UPS services.<br>
+		Yes, I would like a UPS Sales Represenatative to contact me about opening a UPS shipping account or to answer questions about UPS services.<br />
 		<input type="radio" name="contact" value="No" />
-		No, I would not like a UPS Sales Represenatative to contact me.<br>
+		No, I would not like a UPS Sales Represenatative to contact me.<br />
 	</td>
 </tr>
 </tbody></table>
@@ -1741,7 +1763,7 @@ Account visit <a href="http://www.ups.com" target="_new">www.ups.com</a> or call
 
 <div id='paymentWallet_amzcba'>
 
-<p>To access your Amazon Account: <a href="https://payments.amazon.com">https://payments.amazon.com</a>.<br>
+<p>To access your Amazon Account: <a href="https://payments.amazon.com">https://payments.amazon.com</a>.<br />
 NOTE: the values below are configured in Setup | Amazon are are shared with your Amazon.com feed.
 </p>
 
@@ -1863,8 +1885,8 @@ NOTE: the values below are configured in Setup | Amazon are are shared with your
 <fieldset>
 	<legend>Optional Configuration</legend>
 <p class='hint'>
-Paypal offers two different methods of authentication for api requests.<br>
-1st party: where you create your own unique credentials<br>
+Paypal offers two different methods of authentication for api requests.<br />
+1st party: where you create your own unique credentials<br />
 3rd party: where you give paypal_api1.zoovy.com access to your account (recommended, easier)
 </p>
 <p class='warn'>
@@ -1950,14 +1972,14 @@ WHAT TO DO HERE?
 </label>
 <div class="hint marginBottom">
 Zoovy must provide a shipping "ESTIMATE" to Google prior to initiating a transaction, and before the 
-destination zip code is known. This Zip code will be used for providing an estimate to Google.<br>
-<br>
+destination zip code is known. This Zip code will be used for providing an estimate to Google.<br />
+<br />
 We recommend you put in a far away zip code, because the estimate will be used in the event that 
-Google Checkout is not able to obtain shipping rates from Zoovy once the customer has provided their shipping address.<br>
-<br>
+Google Checkout is not able to obtain shipping rates from Zoovy once the customer has provided their shipping address.<br />
+<br />
 
 You may safely set this to 00000 if you use fixed price shipping and have no suppliers who use zone-based shipping.
-<br>
+<br />
 In cases were there is a communication error the "Do Not Audit" setting will use whatever rate Google checkout quoted the customer.
 This is the most common setting since it creates the lowest amount of work for the seller, 
 although it could also cause orders to occasionally have more or less than the correct shipping 
@@ -1986,10 +2008,10 @@ zone based shipping. Only enable this if you use fixed price international shipp
 	<textarea name="google_pixelurls" cols="100" rows="3"  data-bind='var: payment(google_pixelurls); format:popVal;'></textarea>
 </label>
 <p class="hint">
-Use the format:<br>
-http://www.domain.com/pixel.gif?x=1&amp;y=2&amp;orderID=[order-id]&amp;totalCost=[order-total]<br>
-<br>
-The values in [brackets] are the parameterized url keys/values. A complete list can be found here:<br>
+Use the format:<br />
+http://www.domain.com/pixel.gif?x=1&amp;y=2&amp;orderID=[order-id]&amp;totalCost=[order-total]<br />
+<br />
+The values in [brackets] are the parameterized url keys/values. A complete list can be found here:<br />
 <a href="http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html">
 http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 </p>
@@ -2258,7 +2280,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 			<input type="text" value="" name="cityc" size="20" />
 			</label>
 			
-			<p class='hint'>For City rules is an exact string match, you can also use wildcards. ex: <br>
+			<p class='hint'>For City rules is an exact string match, you can also use wildcards. ex: <br />
 			"Encinitas" could also be written as: "Encin*". Names are case insensitive.</p>
 			<p class='warn'>WARNING: City rules are NOT fully-compatible with Google Checkout.</p>
 		</fieldset>
@@ -2426,7 +2448,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 </tr>
 <tr>
 
-	<td width="50%" valign="top">
+	<td width="50%" class='valignTop'>
 
 <fieldset class='labelsAsBreaks alignedInputs'>
 	<legend>Organization Information</legend>
@@ -2445,7 +2467,7 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 </fieldset>
 	</td>
 
-	<td width="50%" valign="top">
+	<td width="50%" class='valignTop'>
 <fieldset class='marginBottom labelsAsBreaks alignedInputs'>
 	<legend>Administrative Contact</legend>
 	<div class='label'><input type="text" placeholder="first name" value="" name="bill.firstname" data-bind="var: account(bill.firstname); format:popVal;" /></div>

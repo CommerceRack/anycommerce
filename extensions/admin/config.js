@@ -201,7 +201,7 @@ var admin_config = function() {
 				else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
 					}
-				},
+				}, //showPaymentTypeEditorByTender
 				
 			showContactInformation : function($target)	{
 				$target.showLoading({'message':'Fetching Contact Details'});
@@ -237,7 +237,7 @@ else	{
 
 					}},'mutable');
 				app.model.dispatchThis('mutable');
-				},
+				}, //showContactInformation
 			
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
@@ -306,7 +306,7 @@ else	{
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
-				},
+				}, //showShippingManager
 
 			showAddFlexShipment : function(shipmethod,$target)	{
 				if(shipmethod && $target)	{
@@ -325,7 +325,7 @@ else	{
 				else	{
 					$("#globalMessaging").anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod and target not passed.','gMessage':true});
 					}
-				},
+				}, //showAddFlexShipment
 
 			showShipMethodEditorByProvider : function(provider,$target)	{
 				
@@ -383,7 +383,7 @@ else	{
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showShipMethodEditorByProvider, both $target ['+typeof $target+'] and provider ['+provider+'] are required.','gMessage':true});
 					}
 				
-				},
+				}, //showShipMethodEditorByProvider
 			
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
@@ -440,8 +440,9 @@ app.model.dispatchThis('mutable');
 					app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); app.u.dump(vars);
 					}
 				var $dialog = $("<div \/>");
-				},
-			
+				}, //showRulesBuilderInModal
+
+
 			showUPSOnlineToolsRegInModal : function(vars)	{
 vars = vars || {}; //may include supplier
 var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
@@ -460,8 +461,9 @@ $D.dialog('open');
 			
 			showFedExMeterInModal : function(vars)	{
 vars = vars || {}; //may include supplier
-var $D = app.ext.admin.i.dialogCreate();
+var $D = app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':'shippingFedExRegTemplate','data':app.ext.admin_config.u.getShipMethodByProvider('FEDEX')});
 app.u.handleAppEvents($D);
+$D.addClass('labelsAsBreaks alignedLabels');
 $D.dialog('open');	
 				}
 
