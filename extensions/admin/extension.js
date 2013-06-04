@@ -5202,8 +5202,16 @@ dataAttribs -> an object that will be set as data- on the panel.
 					close: function(event, ui)	{
 						$(this).dialog('destroy');
 						}, //will remove from dom on close
+//'open' event will reposition modal to center upon open. handy for when content added between create and open.
+//timeout is to have it happen after content is populated.
 					open : function(event,ui)	{
-						$(this).position({my: "center",at: "center",of: window}); //will reposition modal to center upon open. handy for when content added between create and open.
+						setTimeout(function(){
+							//make sure dialog is smaller than window. do this BEFORE reposition so new position takes into account new height.
+							if($D.closest('.ui-dialog').height() > $(window).height())	{
+								$D.dialog("option", "height", ($(window).height() - 200));
+								}
+							$D.dialog("option", "position", "center");
+							},500);
 						}
 					});
 

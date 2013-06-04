@@ -1741,10 +1741,17 @@ $('.editable',$container).each(function(){
 			"orderCustomerEdit" : function($btn)	{
 				$btn.button();
 				$btn.off('click.orderCreate').on('click.orderCreate',function(){
-					var $parent = $btn.closest("[data-order-view-parent]"),
-					orderID = $parent.data('order-view-parent');
-					if(orderID)	{
-						navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+app.data['adminOrderDetail|'+orderID].customer.cid,{'dialog':true});
+					var
+						$parent = $btn.closest("[data-order-view-parent]"),
+						orderID = $parent.data('order-view-parent');
+
+// ** 201320 -> upgraded to use new customer editor. Also added better error checking.
+//					if(orderID)	{
+//						navigateTo('/biz/utilities/customer/index.cgi?VERB=EDIT&CID='+app.data['adminOrderDetail|'+orderID].customer.cid,{'dialog':true});
+//						}
+					if(orderID && app.data['adminOrderDetail|'+orderID] && app.data['adminOrderDetail|'+orderID].customer && app.data['adminOrderDetail|'+orderID].customer.cid)	{
+						var $D = app.ext.admin.i.dialogCreate({title:'Edit Customer: '+app.data['adminOrderDetail|'+orderID].customer.cid});
+						app.ext.admin_customer.a.showCustomerEditor($D,{'CID':app.data['adminOrderDetail|'+orderID].customer.cid});
 						}
 					else	{
 						app.u.throwGMessage("in admin_orders.buttonActions.orderCustomerEdit, unable to determine orderID ["+orderID+"]");
