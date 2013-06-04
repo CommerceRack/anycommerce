@@ -2949,6 +2949,8 @@ $tmp.empty().remove();
 //			app.u.dump(" -> popCheckbox data.value: "+data.value);
 			if(Number(data.value))	{$tag.attr('checked',true);}
 			else if(data.value === 'on')	{$tag.attr('checked',true);}
+// * 201320 -> //here for amazon syndication hot fix (b out of town). may b able to remove when that bug is fixed. 20130604 !!!
+			else if(data.value === 'checked')	{$tag.attr('checked',true);} 
 			else if(data.value == true)	{$tag.attr('checked',true);}
 			else if(Number(data.value) === 0){ //treat as number in case API return "0"
 				$tag.attr('checked',false); //have to handle unchecking in case checked=checked when template created.
