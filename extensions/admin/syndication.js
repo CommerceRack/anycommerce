@@ -389,7 +389,7 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 			adminSyndicationUnsuspendMacro : function($btn)	{
 				$btn.button();
 				$btn.off('click.adminSyndicationUnsuspendMacro').on('click.adminSyndicationUnsuspendMacro',function(){
-					DST = btn.closest("[data-dst]").data('dst');
+					DST = $btn.closest("[data-dst]").data('dst');
 					if(DST)	{
 						app.ext.admin.calls.adminSyndicationMacro.init(DST,['UNSUSPEND'],{},'immutable');
 						app.model.dispatchThis('immutable');
