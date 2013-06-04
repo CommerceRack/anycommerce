@@ -1011,9 +1011,9 @@ These settings *MUST* match the settings in your eBay Syndication account.
 <fieldset>
 	<legend>Feed Configuration</legend>
 
-	<label><input name="feed_inventory" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_inventory); format:popCheckbox;" /> Sync Inventory to Amazon</label>
-	<label><input name="feed_price" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_price); format:popCheckbox;" /> Sync Prices/Shipping to Amazon</label>
-	<label><input name="feed_product" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_product); format:popCheckbox;" /> Sync Products/Relations/Images to Amazon</label>
+	<label><input name="inventory_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_inventory); format:popCheckbox;" /> Sync Inventory to Amazon</label>
+	<label><input name="prices_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_price); format:popCheckbox;" /> Sync Prices/Shipping to Amazon</label>
+	<label><input name="product_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(feed_product); format:popCheckbox;" /> Sync Products/Relations/Images to Amazon</label>
 
 </fieldset>
 
@@ -1037,7 +1037,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	<legend>Order Configuration</legend>
 	
 	<label>
-		<input name="orderpermissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(orderpermissions); format:popCheckbox;" />
+		<input name="order_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(orderpermissions); format:popCheckbox;" />
 		Import Orders and Send Tracking
 	</label>
 </fieldset>
@@ -1047,7 +1047,7 @@ These settings *MUST* match the settings in your eBay Syndication account.
 	<legend>Fulfillment by Amazon (EXPERIMENTAL)</legend>
 	
 	<label>
-		<input name="fbapermissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(fbapermissions); format:popCheckbox;" />
+		<input name="fba_permissions" type="checkbox" class='applyAnycb' data-bind="var: mkt(fbapermissions); format:popCheckbox;" />
 		Import FBA Orders and Tracking from Amazon
 	</label>
 </fieldset>
