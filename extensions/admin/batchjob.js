@@ -204,7 +204,7 @@ app.u.dump(" -> app.data[rd.datapointer]['@HEAD'][0].length: "+app.data[rd.datap
 
 //NOTE -> the batch_exec will = REPORT for reports.
 			showReport : function($btn)	{
-				if($btn.closest('tr').data('batch_exec') == 'REPORT')	{
+				if($btn.closest('tr').data('batch_exec') == 'REPORT' && $btn.closest('tr').data('status').indexOf('END') >= 0)	{
 					$btn.button({text: false,icons: {primary: "ui-icon-image"}}).show();
 					$btn.off('click.showReport').on('click.showReport',function(event){
 						event.preventDefault();

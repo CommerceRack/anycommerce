@@ -105,7 +105,7 @@ var admin_reports = function() {
 				
 				
 				var $reportsList = $("[data-app-role='recentReportsList']",$target);
-				$reportsList.showLoading({'message':'Fetching Recent Reports'});
+				$reportsList.showLoading({'message':'Fetching Recently Run Reports'});
 				app.ext.admin.calls.adminBatchJobList.init('',{'callback':function(rd){
 					$reportsList.hideLoading();
 					if(app.model.responseHasErrors(rd)){

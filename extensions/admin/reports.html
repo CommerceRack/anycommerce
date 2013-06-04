@@ -403,10 +403,12 @@
 		<section data-anytab-content='reports' class='clearfix'>
 
 			<div data-app-role='recentReportsList' class='floatRight'>
-<table class='gridTable fullWidth marginBottom' >
+			<h2>Recently Run Reports</h2>
+<table class='gridTable fullWidth marginBottom marginTop' >
 <!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
 <thead>
 <tr>
+	<th class='alignLeft'>Job ID</th>
 	<th class='alignLeft'>Job Name</th>
 	<th data-anytable-nosort='true'></th>
 </tr>
@@ -472,6 +474,7 @@
 <!-- sales/order reporting -->
 		<section data-anytab-content='salesReports'>
 <!-- orders/sales reporting -->
+			
 			<form onsubmit="return false">
 			<div class='clearfix'>
 		
@@ -606,7 +609,8 @@
 
 <table>
 <tr id='reportsRowTemplate'>
+	<td data-bind="var: user(ID); format:text;"></td>
 	<td data-bind="var: user(TITLE); format:truncText; numCharacters:45;"></td>
-	<td><button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button></td>
+	<td><button data-app-event="admin_batchJob|showReport" class='displayNone'>View Report</button><button data-app-event="admin_batchJob|showBatchDetail">Batch Details</button></td>
 </tr>
 </table>

@@ -201,6 +201,8 @@ if you want the list responsive, apply the .fluidList class.
 
 
 
+.minHeight100	{min-height:300px; min-width:300px;} /* apply onto elements that will have showloading run on them if they're empty.
+
 
 /* some generic styles for tables */
 
