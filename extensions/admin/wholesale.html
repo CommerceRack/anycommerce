@@ -620,3 +620,87 @@
 
 </form>
 </div>
+
+
+
+
+
+
+<!--
+////////////////  WAREHOUSE  \\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='warehouseAddUpdateTemplate'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<!-- inputs for _cmd and _tag are added in JS, based on whether we are in update or add mode -->
+
+<fieldset>
+	<label>
+		<span>Warehouse Title:</span>
+		<input type="text" value="" name="WAREHOUSE_TITLE" maxlength="41" size="41" />
+	</label>
+	<label>
+		<span>Warehouse Code:</span>
+		<input type="text" value="" name="WAREHOUSE_CODE" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' />
+		<span class='toolTip' title="A 3 digit code consisting of letters A-Z and 0-9. Warehouse code will usually be the three digit code for the nearest airport.">?</span>
+	</label>
+	
+	<label>
+		<span>City:</span>
+		<input type="text" value="" name="WAREHOUSE_CITY" maxlength="31" size="31" />
+	</label>
+	
+	<label>
+		<span>State:</span>
+		<input type="text" value="" name="WAREHOUSE_STATE" maxlength="31" size="31" data-minlength='2' />
+	</label>
+	
+	<label>
+		<span>Zip:</span>
+		<input type="text" value="" name="WAREHOUSE_ZIP" maxlength="5" size="5" />
+	</label>
+	
+	<label>
+		<span>Shipping Latency (in Days):</span>
+		<input type="text" value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" />
+		<span class='toolTip' title="The maximum number of days before an order is processed.">?</span>
+	</label>
+	
+	<label>
+		<span>Shipping Cutoff Hour:</span>
+		<input type="text" value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" />
+		<span class='toolTip' title="Use 24 hour format, PST time zone (ex: '16' is 4:00pm PST).">?</span>
+	</label>
+
+</fieldset>
+
+<button data-app-event="admin|processForm">Save</button>
+
+
+</form>
+
+
+
+<table>
+<tr id='warehouseResultsRowTemplate'>
+	<td data-bind="var: warehouse(ID); format:text;"></td>
+	<td data-bind="var: warehouse(TYPE); format:text;"></td>
+	<td data-bind="var: warehouse(TITLE); format:text;"></td>
+	<td data-bind="var: warehouse(CREATED_GMT); format:epoch2pretty;"></td>
+	<td class='alignRight'>
+<button>Remove</button>
+<button>Edit</button>
+	</td>
+</tr>
+
+
+
+
+
+</table>
+
+
+
+</div>

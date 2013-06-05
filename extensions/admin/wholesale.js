@@ -23,14 +23,15 @@ var admin_wholesale = function() {
 	var theseTemplates = new Array(
 		'organizationManagerPageTemplate',
 		'organizationManagerOrgCreateUpdateTemplate',
-		'organizationManagerOrgRowTemplate',
-		
+		'organizationManagerOrgRowTemplate'
+/*		
 		'supplierAddTemplate',
 		'supplierManagerTemplate',
 		'supplierListItemTemplate',
 		'supplierUpdateTemplate',
 		'supplierOrderListTemplate',
 		'supplierOrderListItemTemplate'
+*/		
 		);
 	var r = {
 
@@ -63,6 +64,25 @@ var admin_wholesale = function() {
 ////////////////////////////////////   ACTION [a]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		a : {
+			
+			showWarehouseManager : function($target)	{
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Warehouse Manager',
+					'className' : 'warehouseManager',
+//add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
+					'buttons' : ["<button data-app-event='admin|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"],
+					'thead' : ['Code','Type','Title','Modified',''],
+					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;"
+					});
+
+				if($table)	{
+					
+					app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag' : {'datapointer':'adminWarehouseList'}},'mutable');
+					app.model.dispatchThis('mutable');
+					}
+				else	{} //buildDualMode will handle the error display.
+				},
 			
 			
 			showOrganizationManager : function($target)	{
@@ -264,6 +284,46 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
 
 		e : {
+
+//can't use defualt createDialog app event because we need to add a few params to the form.
+			warehouseCreateShow : function($btn)	{
+				$btn.button();
+				$btn.off('click.warehouseCreateShow').on('click.warehouseCreateShow',function(event){
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Warehouse',
+						'templateID':'warehouseAddUpdateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminWarehouseUpdate'  /><input type='hidden' name='_tag/callback' value='showMessaging'  /><input type='hidden' name='_tag/message' value='The warehouse has been added.'  />");
+					});
+				},
+
+			warehouseDetailDMIPanel : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
+					event.preventDefault();
+					var	WID = $btn.closest('tr').data('id');
+					
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'warehouseAddUpdateTemplate',
+						'panelID' : 'warehouse_'+WID,
+						'header' : 'Edit Warehouse: '+WID,
+						'handleAppEvents' : true
+						});
+					$("[name='WID']",$panel).closest('label').hide(); //warehouse id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+					
+					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminWarehouseMacro' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+					
+					//app.model.addDispatchToQ({'WID':WID,'_cmd':'adminWarehouseDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
+					//app.model.dispatchThis('mutable');
+					});
+				},
+
+
+
 
 //executed within the create new supplier form. actually creates the new supplier.
 			execSupplierCreate : function($btn,obj)	{
