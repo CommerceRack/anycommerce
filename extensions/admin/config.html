@@ -403,7 +403,7 @@
 <tr id='shippingBannedTemplate'>
 	<td data-bind="var:banned(type); format:text;"></td>
 	<td data-bind="var:banned(match); format:text;"></td>
-	<td data-bind="var:banned(created); format:text;"></td>
+	<td data-bind="var:banned(created); format:epoch2pretty;"></td>
 	<td><button data-app-event="admin|tagRowForRemove">Delete Rule</button></td>
 </tr>
 
