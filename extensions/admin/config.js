@@ -651,7 +651,7 @@ $D.dialog('open');
 						if($bannedContainer.find('.edited').length)	{
 							macros.push("SHIPPING/BANNEDTABLE-EMPTY");
 							var countries = "";
-							$('tr.edited',$bannedContainer).each(function(){
+							$('tbody tr',$bannedContainer).each(function(){
 								var $tr = $(this);
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
@@ -664,7 +664,7 @@ $D.dialog('open');
 						var $blacklistContainer = $("[data-app-role='blacklistContainer']",$form);
 						if($blacklistContainer.find('.edited').length)	{
 							var blacklistMacro = "SHIPPING/CONFIG?blacklist="
-							$('tr.edited',$blacklistContainer).each(function(){
+							$('tbody tr',$blacklistContainer).each(function(){
 								if($(this).hasClass('rowTaggedForRemove'))	{} //row is being deleted. do not add. first macro clears all, so no specific remove necessary.
 								else	{
 									blacklistMacro += $(this).data('country')+',';
@@ -674,6 +674,8 @@ $D.dialog('open');
 							}
 //						app.u.dump("macros: "); app.u.dump(macros);
 						app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':'showMessaging','jqObj':$form,'message':'Your changes have been saved.'},'immutable');
+						app.model.destroy('adminConfigDetail|shipping|'+app.vars.partition);
+						app.ext.admin.calls.adminConfigDetail.init({'shipping':true},{datapointer : 'adminConfigDetail|shipping|'+app.vars.partition},'immutable');
 						app.model.dispatchThis('immutable');
 
 
