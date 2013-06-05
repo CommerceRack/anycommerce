@@ -2451,6 +2451,54 @@ else	{
 
 
 
+//_rtag.jqObj should be data-app-role='dualModeList'.
+/*
+Execute this on a search button where the results list in a DMI need to be updated.
+$ele is an elmeent anywhere within the DMI. It'll trace up to the parent DMI and work under that umbrella.
+vars should include everything for the dispatch. _cmd is required.
+vars._tag._listpointer is the ID of i the data object of where the list is. ex: in giftcards, @GIFTCARDS. if not set, no 'no results' message is displayed.
+Function does NOT dispatch. 
+*/
+
+		DMIUpdateResults : {
+			onSuccess : function(_rtag)	{
+				_rtag = _rtag || {};
+				if(_rtag && _rtag.jqObj && _rtag.datapointer)	{
+
+					var
+						$DMI = _rtag.jqObj,
+						$tbody = $DMI.find("[data-app-role='dualModeListTbody']:first"),
+						bindData = app.renderFunctions.parseDataBind($tbody.data('bind')), //creates an object of the data-bind params.
+						listpointer = app.renderFunctions.parseDataVar(bindData['var']),
+						data = app.data[_rtag.datapointer]; //shortcut.
+	
+					$DMI.hideLoading();
+					$tbody.empty();
+					
+					if(listpointer && !$.isEmptyObject(data)  && data[listpointer] && data[listpointer].length)	{
+						//no errors have occured and results are present.
+						$tbody.anycontent({'data':data});
+						app.u.handleAppEvents($tbody);
+						}
+					else if(listpointer && !$.isEmptyObject(data)  && data[listpointer])	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"Your search/filter returned zero results."});
+						}
+					else if(!listpointer)	{
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, unable to ascertain listpointer.","gMessage":true});
+						}
+					else 	{
+						//should never get here.
+						$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, an unknown error occured.","gMessage":true});
+						}
+
+
+					}
+				else	{
+					$('.dualModeListMessaging',$DMI).anymessage({"message":"In admin.callbacks.DMIUpdateResults.onSuccess, Either no jqObj ["+typeof _rtag.jqObj+"] passed or no datapointer ["+_rtag.datapointer+"] set.","gMessage":true});
+					}
+				}
+			},
+
 
 //very similar to the original translate selector in the control and intented to replace it. 
 //This executes the handleAppEvents in addition to the normal translation.
@@ -3206,15 +3254,8 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 				_tag = _tag || {};
 				
 				if($form.length && (obj._cmd || obj.call))	{
-//hidden form inputs will override what's passed in _tag.
 //build the _tag obj.
-					for(var key in obj)	{
-						if(key.substring(0,5) == "_tag/")	{
-							_tag[key.substring(5)] = obj[key];//_tag/ must be stripped from key.
-							delete obj[key]; //remove from object so it isn't part of query.
-							}
-						else{}
-						}
+					_tag = $.extend(true,_tag,app.ext.admin.u.getTagObjFromSFO(obj));
 					_tag.jqObj = _tag.jqObj || $form;
 					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
 					if(obj._cmd)	{
@@ -3234,7 +3275,6 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 					}
 				}, //processForm
-
 
 
 
@@ -3703,15 +3743,6 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					}
 				},
 
-//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
-			getSanitizedKVPFromObject : function(obj)	{
-				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
-//				var whitelist = new Array('fee','weight','subtotal');
-				delete newObj.isTranslated;
-				delete newObj.sortableItem;
-				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
-				return $.param(newObj);
-				},
 
 
 //pass in a form and this will apply some events to add a 'edited' class any time the field is edited.
@@ -3746,6 +3777,33 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				}, //applyEditTrackingToInputs
 
 
+//used when converting a tr.data() into a kvp array. used in amazon thesaurus and shipments.
+			getSanitizedKVPFromObject : function(obj)	{
+				var newObj = $.extend(true,{},obj); //extend will create a duplicate so original object is unmodified.
+//				var whitelist = new Array('fee','weight','subtotal');
+				delete newObj.isTranslated;
+				delete newObj.sortableItem;
+				delete newObj.templateid; delete newObj.obj_index; delete newObj.anycontent; delete newObj.uiAnycontent; //some extras not needed.
+				return $.param(newObj);
+				},
+
+
+
+//pass in an object (probably a Serialized Form Object) and any tag that starts with _tag/ will be returned as part of an object.
+			getTagObjFromSFO : function(sfo)	{
+				var r = {}; //what is returned.
+				if(!$.isEmptyObject(sfo))	{
+					app.u.dump('not empty object');
+					for(var key in sfo)	{
+						if(key.substring(0,5) == "_tag/")	{
+							r[key.substring(5)] = sfo[key];//_tag/ must be stripped from key.
+							delete sfo[key]; //remove from original object so it isn't part of query.
+							}
+						else{}
+						}
+					}
+				return r;
+				},
 
 
 			loadNativeApp : function(path,opts){
@@ -5116,38 +5174,10 @@ vars:
 				return r;
 				},
 
-/*
-Execute this on a search button where the results list in a DMI need to be updated.
-$ele is an elmeent anywhere within the DMI. It'll trace up to the parent DMI and work under that umbrella.
-vars should include everything for the dispatch. _cmd is required.
-vars._tag._listpointer is the ID of i the data object of where the list is. ex: in giftcards, @GIFTCARDS. if not set, no 'no results' message is displayed.
-Function does NOT dispatch. 
-*/
-			DMIUpdateResults : function($ele,vars){
-				var
-					$DMI = $ele.closest("[data-app-role='dualModeList']")
-					$tbody = $DMI.find("[data-app-role='dualModeListTbody']:first");
 
-				$tbody.empty();
-				vars = vars || {};
-				vars._tag = vars._tag || {};
-				vars._tag.datapointer = vars._tag.datapointer || vars._cmd; //default to _cmd is no datapointer is set.
-				vars._tag.callback = function(rd){
-					if(app.model.responseHasErrors(rd)){
-						$form.anymessage({'message':rd});
-						}
-					else	{
-						if((!vars._tag.listpointer) || (vars._tag.listpointer && rd.datapointer && app.data[rd.datapointer] && app.data[rd.datapointer][vars._tag.listpointer] && app.data[rd.datapointer][vars._tag.listpointer].length))	{
-							app.renderFunctions.translateSelector($tbody,app.data[rd.datapointer]);
-							app.u.handleAppEvents($tbody);
-							}
-						else	{
-							$('.dualModeListMessaging',$DMI).anymessage();
-							}
-						}
-					}
-				app.model.addDispatchToQ(vars,'mutable');
-				},
+
+
+
 /*
 vars is passed directly into anypanel and can include any params supported by that plugin, including:
 header -> panel header text.
@@ -5182,10 +5212,34 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$('.toolTip',$panel).tooltip();
 				
 				return $panel;
-				},
+				}, //DMIPanelOpen
+
+//Opens a dialog for removal confirmation. Displayes a default message (which can be overwritten) and a confirm and cancel button.
+//requires a function be passed in (removeFunction) for the action on the confirm button.
+			dialogConfirmRemove : function(vars)	{
+				vars = vars || {};
+				vars.message = vars.message || "Are you sure you want to remove this? There is no undo for this action."
+				vars.title = vars.title || "Please Confirm"
+				if(typeof vars.removeFunction == 'function')	{
+					var $D = this.dialogCreate(vars)
+					$D.append("<p>"+vars.message+"<\/p>");
+					$D.dialog("option", "width", ($(window).width() > 400)) ? 300 : '90%';
+					$D.dialog({ buttons: [
+						{ text: "Cancel", click: function() { $( this ).dialog( "close" ); } },
+						{ text: "Remove", click: function() {
+							vars.removeFunction(vars);
+							}}
+						] });
+					$D.dialog('open');
+					}
+				else	{
+					
+					}
+				
+				}, //dialogConfirmRemove
 
 //used for creating a disposable dialog. returns dialog.
-//does NOT open dialog.
+//does NOT open dialog. this allows for customization of the dialog prior to display.
 			dialogCreate : function(vars)	{
 				vars = vars || {};
 				vars.title = vars.title || ""; //don't want 'undefind' as title if not set.
@@ -5199,6 +5253,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$D.dialog({
 					modal: true,
 					width : '90%',
+					autoOpen : false,
 					close: function(event, ui)	{
 						$(this).dialog('destroy');
 						}, //will remove from dom on close
@@ -5224,7 +5279,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				$('.toolTip',$D).tooltip();
 				
 				return $D;
-				}
+				} //dialogCreate
 
 			},
 			
@@ -5252,8 +5307,8 @@ dataAttribs -> an object that will be set as data- on the panel.
 				
 				},
 			
-			//used in conjuction with the new interface (i) functions.
-			//won't currently work for macro based commands.
+//used in conjuction with the new interface (i) functions.
+//won't currently work for macro based commands.
 			processForm : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.processForm').on('click.processForm',function(){
@@ -5269,15 +5324,33 @@ dataAttribs -> an object that will be set as data- on the panel.
 					
 					});
 				},
-			
-			
-			
+
+			controlFormSubmit : function($btn)	{
+				$btn.button();
+				$btn.off('click.controlFormSubmit').on('click.controlFormSubmit',function(){
+					var
+						sfo = $btn.closest('form').serializeJSON({"cb":true}),
+						$DMI = $btn.closest("[data-app-role='dualModeList']");
+					
+					sfo._tag = app.ext.admin.u.getTagObjFromSFO(sfo)
+					sfo._tag.jqObj = $DMI;
+					if(sfo._cmd)	{
+						$DMI.showLoading();
+						app.model.addDispatchToQ(sfo,'mutable');
+						app.model.dispatchThis('mutable');
+						}
+					else	{
+						$btn.closest('.appMessaging').first().anymessage({"message":"In admin.e.controlFormSubmit, serialized form object had no _cmd specified.",'gMessage':true});
+						}
+					});
+				},
+
 			alphaNumeric : function($input)	{
 				$input.off('keypress.alphaNumeric').on('keypress.alphaNumeric',function(event){
 					return app.u.alphaNumeric(event);
 					})
 				},
-			
+
 			achievementDetail : function($row)	{
 				$row.on('mouseover.achievementDetail',function(){
 					$(this).addClass("ui-state-highlight").css({'border':'none','cursor':'pointer'});

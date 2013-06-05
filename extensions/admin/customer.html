@@ -946,7 +946,10 @@ The checkbox below does not work.
 	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
 	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
 	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
-	<td><button data-app-event='admin_customer|reviewDetailDMIPanel'>Details</button></td>
+	<td class='alignRight'>
+	<button data-app-event='admin_customer|reviewRemoveConfirm'>Delete Review</button>
+	<button data-app-event='admin_customer|reviewDetailDMIPanel'>Edit Review</button>
+	</td>
 </tr>
 
 </table>
@@ -954,8 +957,6 @@ The checkbox below does not work.
 
 
 <div id='reviewAddUpdateTemplate'>
-This template is NOT complete.
-
 <form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
 <fieldset>
 	<legend>Review Details</legend>

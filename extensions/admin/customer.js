@@ -107,7 +107,7 @@ var admin_customer = function() {
 					'className' : 'giftcardManager',
 					'buttons' : ["<button data-app-event='admin|openDialog' data-templateid='giftcardAddProductTemplate' data-title='Create a New Giftcard Product'>Create Giftcard Product</button><button data-app-event='admin_customer|giftcardCreateShow'>Add New Giftcard</button>"],
 					'thead' : ['code','Created','Expires','Last Order','Customer','Balance','Txn #','Type','Series',''],
-					'controls' : "<form action='#' onsubmit='return false'><input type='search' name='CODE' \/><button data-app-event='admin_customer|giftcardSearchExec'>Search<\/button><\/form>",
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/datapointer' value='adminGiftcardSearch' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='CODE' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@GIFTCARDS); format:processList; loadsTemplate:giftcardResultsRowTemplate;"
 					});
 
@@ -124,7 +124,8 @@ var admin_customer = function() {
 				var $table = app.ext.admin.i.DMICreate($target,{
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
-					'buttons' : [],
+					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
+					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec' disabled='disabled'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 //					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
@@ -717,12 +718,52 @@ $D.dialog('open');
 				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
 				$btn.off('click.reviewRemoveConfirm').on('click.reviewRemoveConfirm',function(event){
 					event.preventDefault();
+					var 
+						$tr = $btn.closest('tr'),
+						data = $tr.data(),
+						$D = $btn.closest('.ui-dialog-content');
 
-
-
+					app.ext.admin.i.dialogConfirmRemove({'removeFunction':function(){
+						$D.showLoading({"message":"Deleting Review"});
+						app.model.addDispatchToQ({'RID':data.id,'PID':data.pid,'_cmd':'adminProductReviewRemove','_tag':{'callback':function(rd){
+							$D.hideLoading();
+							if(app.model.responseHasErrors(rd)){
+								$('#globalMessaging').anymessage({'message':rd});
+								}
+							else	{
+								$D.dialog('close');
+								$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
+								$tr.empty().remove(); //removes row for list.
+								}
+							}}},'mutable');
+					app.model.dispatchThis('mutable');
+						}});
 					})
+				}, //reviewRemoveConfirm
+			
+			reviewCreateShow : function($btn)	{
+
+				$btn.button();
+				$btn.off('click.reviewCreateShow').on('click.reviewCreateShow',function(event){
+
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Review',
+						'templateID':'reviewAddUpdateTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminProductReviewCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					 $( ".applyDatepicker",$D).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						dateFormat : 'yymmdd'
+						});
+					});
 				},
 			
+			reviewApproveExec : function($btn)	{},
 
 			giftcardCreateShow : function($btn)	{
 				$btn.button();
@@ -756,21 +797,6 @@ var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 	});
 app.ext.admin.calls.adminGiftcardDetail.init(GCID,{'callback':'anycontent','jqObj':$panel},'mutable');
 app.model.dispatchThis('mutable');
-					});
-				},
-
-			giftcardSearchExec : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-search"},text: true});
-				$btn.off('click.giftcardSearchExec').on('click.giftcardSearchExec',function(event){
-					event.preventDefault();
-					var sfo = $btn.closest('form').serializeJSON();
-					sfo._cmd = 'adminGiftcardSearch';
-					sfo._tag = {
-							'datapointer' : 'adminGiftcardSearch',
-							'listpointer' : '@GIFTCARDS'
-							}
-					app.ext.admin.i.DMIUpdateResults($btn,sfo);
-					app.model.dispatchThis('mutable');
 					});
 				},
 
