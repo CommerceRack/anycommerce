@@ -125,7 +125,7 @@ var admin_customer = function() {
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
 					'buttons' : [],
-					'thead' : ['Rating','Review',''],
+					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 //					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
 					});
@@ -315,7 +315,7 @@ else	{
 					$modal.anymessage({'message':'In admin_customer.a.showAddAddressInModal, either CID ['+obj.CID+'] or type ['+obj.type+'] is not set.','gMessage':true});
 					}
 				
-				}
+				} //showAddAddressModal
 			
 			}, //Actions
 
@@ -396,6 +396,7 @@ else	{
 
 		u : {
 //run after a form input on the page has changed. updates the 'numChanges' class to indicate # of changes and enable parent button.
+// !!! blech. rename this function
 			handleChanges : function($customerEditor)	{
 				var numChanges = $('.edited',$customerEditor).length;
 				if(numChanges)	{
@@ -503,26 +504,26 @@ else	{
 //ele is a select list, most likely.
 			appAdminTicketListFilterExec : function($ele)	{
 				$ele.off('change.appAdminTicketListFilterExec').on('change.appAdminTicketListFilterExec',function(event){
-event.preventDefault();
-
-if($ele.val())	{
-	var
-		$dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']"),
-		$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
-	
-	$dualModeListContents.empty(); //empty all the existing rows.
-	$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-	
-	app.ext.admin.calls.adminAppTicketList.init($ele.val(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
-	app.model.dispatchThis();
-	}
+					event.preventDefault();
+					
+					if($ele.val())	{
+						var
+							$dualModeContainer = $ele.closest("[data-app-role='dualModeContainer']"),
+							$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
+						
+						$dualModeListContents.empty(); //empty all the existing rows.
+						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
+						
+						app.ext.admin.calls.adminAppTicketList.init($ele.val(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
+						app.model.dispatchThis();
+						}
 					});
 				}, //appAdminTicketListFilterExec
 
 			appAdminTicketAddNote : function($btn)	{
 				$btn.button();
-				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(){
-
+				$btn.off('click.appAdminTicketAddNote').on('click.appAdminTicketAddNote',function(event){
+event.preventDefault();
 var
 	$form = $btn.closest('form');
 	sfo = $form.serializeJSON({'cb':true});
@@ -555,16 +556,17 @@ app.model.dispatchThis('immutable');
 //escalateTicket is what gets passed as the value for escalate on the update. so if the ticket is NOT escalated already, escalateTicket is set to 1 and, when passed, the ticket is escalated.
 				Number(app.data['adminAppTicketDetail|'+tktcode].ESCALATED) === 1 ? $btn.text('De-Escalate').data('escalateTicket',0) : $btn.text('Escalate').data('escalateTicket',1) ; //set when button event runs. updated when button is pushed.
 				$btn.button();
-				$btn.off('click.appAdminTicketChangeEscalation').on('click.appAdminTicketChangeEscalation',function(){
+				$btn.off('click.appAdminTicketChangeEscalation').on('click.appAdminTicketChangeEscalation',function(event){
+					event.preventDefault();
 					$btn.button('disable');
 					app.ext.admin.calls.adminAppTicketMacro.init(tktcode,["UPDATE?escalate="+$btn.data('escalateTicket')],{'callback':function(rd){
-if(app.model.responseHasErrors(rd)){
-	app.u.throwMessage(rd);
-	}
-else	{		
-	$btn.button('enable');
-	$btn.data('escalateTicket') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
-	}					
+						if(app.model.responseHasErrors(rd)){
+							app.u.throwMessage(rd);
+							}
+						else	{		
+							$btn.button('enable');
+							$btn.data('escalateTicket') === 1 ? $btn.button({ label: "De-Escalate" }).data('escalateTicket',0) : $btn.button({ label: "Escalate" }).data('escalateTicket',1) ;
+							}					
 						}},'immutable');
 					
 					app.model.destroy('adminAppTicketDetail|'+tktcode);
@@ -587,20 +589,20 @@ else	{
 			appAdminTicketListSearchExec : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-search"},text: false});
 				$btn.off('click.appAdminTicketListFilterExec').on('click.appAdminTicketListFilterExec',function(event){
-event.preventDefault();
-
-var
-	$form = $btn.closest('form');
-	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-	$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
-
-if(app.u.validateForm($form))	{
-	$dualModeListContents.empty(); //empty all the existing rows.
-	$dualModeListContents.parent().showLoading(); //applied showLoading to table.
-	app.ext.admin.calls.adminAppTicketSearch.init($form.serializeJSON(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
-	app.model.dispatchThis();
-	}
-else	{} //validateForm will handle error display.
+					event.preventDefault();
+					
+					var
+						$form = $btn.closest('form');
+						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+						$dualModeListContents = $("[data-app-role='dualModeListContents']",$dualModeContainer).first();
+					
+					if(app.u.validateForm($form))	{
+						$dualModeListContents.empty(); //empty all the existing rows.
+						$dualModeListContents.parent().showLoading(); //applied showLoading to table.
+						app.ext.admin.calls.adminAppTicketSearch.init($form.serializeJSON(),{'callback':'anycontent','jqObj':$dualModeListContents.parent()},'mutable');
+						app.model.dispatchThis();
+						}
+					else	{} //validateForm will handle error display.
 
 					});
 				}, //appAdminTicketListSearchExec
@@ -610,41 +612,37 @@ else	{} //validateForm will handle error display.
 				$btn.off('click.appAdminTicketDetailsShow').on('click.appAdminTicketDetailsShow',function(event){
 					event.preventDefault();
 
-var
-	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-	$dualModeDetails = $("[data-app-role='dualModeDetail']",$dualModeContainer),
-	data = $btn.closest('tr').data(),
-	panelID = app.u.jqSelector('','crmDetail_'+data.tktcode),
-	$panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
-		'header':'Edit: '+data.tktcode,
-		'templateID':'crmManagerTicketDetailTemplate',
-	//	'data':user, //data not passed because it needs req and manipulation prior to translation.
-		'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
-		}).prependTo($dualModeDetails);
-
-
-app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
-$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
-
-
-app.ext.admin.calls.adminAppTicketDetail.init(data.tktcode,{
-	'callback':function(rd){
-		if(app.model.responseHasErrors(rd)){
-			app.u.throwMessage(rd);
-			}
-		else	{		
-			$panel.anycontent({'datapointer':rd.datapointer});
-			app.u.handleAppEvents($panel); 
-			}
-		}
-	},'mutable');
-app.model.dispatchThis('mutable');
-
-
-
+					var
+						$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
+						$dualModeDetails = $("[data-app-role='dualModeDetail']",$dualModeContainer),
+						data = $btn.closest('tr').data(),
+						panelID = app.u.jqSelector('','crmDetail_'+data.tktcode),
+						$panel = $("<div\/>").data('tktcode',data.tktcode).hide().anypanel({
+							'header':'Edit: '+data.tktcode,
+							'templateID':'crmManagerTicketDetailTemplate',
+						//	'data':user, //data not passed because it needs req and manipulation prior to translation.
+							'dataAttribs': {'id':panelID,'tktcode':data.tktcode}
+							}).prependTo($dualModeDetails);
+					
+					
+					app.ext.admin.u.toggleDualMode($dualModeContainer,'detail');
+					$panel.slideDown('fast',function(){$panel.showLoading({'message':'Fetching Ticket Details.'});});
+					
+					
+					app.ext.admin.calls.adminAppTicketDetail.init(data.tktcode,{
+						'callback':function(rd){
+							if(app.model.responseHasErrors(rd)){
+								app.u.throwMessage(rd);
+								}
+							else	{		
+								$panel.anycontent({'datapointer':rd.datapointer});
+								app.u.handleAppEvents($panel); 
+								}
+							}
+						},'mutable');
+					app.model.dispatchThis('mutable');
 					});
 
-				//
 				}, //appAdminTicketDetailShow
 
 			appAdminTicketCreateShow : function($btn)	{
@@ -665,35 +663,71 @@ $D.dialog({
 
 $D.dialog('open');
 
-
 					});
 				}, //appAdminTicketCreateShow
 
 			appAdminTicketCreateExec : function($btn)	{
 				$btn.button();
 				$btn.off('click.appAdminTicketCreateExec').on('click.appAdminTicketCreateExec',function(event){
-event.preventDefault();
-
-var
-	$form = $btn.closest('form'),
-	sfo = $form.serializeJSON();
-
-app.ext.admin.calls.adminAppTicketCreate.init(sfo,{'callback' : function(rd){
-	if(app.model.responseHasErrors(rd)){
-		$form.anymessage({'message':rd})
-		}
-	else	{
-		$form.empty().anymessage(app.u.successMsgObject('The ticket has been created.'));
-		}
-	}},'immutable');
-app.model.dispatchThis('immutable');
+				event.preventDefault();
+				
+				var
+					$form = $btn.closest('form'),
+					sfo = $form.serializeJSON();
+				
+				app.ext.admin.calls.adminAppTicketCreate.init(sfo,{'callback' : function(rd){
+					if(app.model.responseHasErrors(rd)){
+						$form.anymessage({'message':rd})
+						}
+					else	{
+						$form.empty().anymessage(app.u.successMsgObject('The ticket has been created.'));
+						}
+					}},'immutable');
+				app.model.dispatchThis('immutable');
 
 					});
 				}, //appAdminTicketCreateExec
 
+
+			reviewDetailDMIPanel : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.reviewDetailDMIPanel').on('click.reviewDetailDMIPanel',function(event){
+					event.preventDefault();
+					var
+						RID = $btn.closest('tr').data('id'),
+						PID = $btn.closest('tr').data('pid');
+					
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'reviewAddUpdateTemplate',
+						'panelID' : 'review_'+RID,
+						'header' : 'Edit Review: '+RID,
+						'handleAppEvents' : true,
+						'data' : app.data.adminProductReviewList['@REVIEWS'][$btn.closest('tr').data('obj_index')]
+						});
+					$("[name='PID']",$panel).closest('label').hide(); //product id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminProductReviewUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+					
+					//app.model.addDispatchToQ({'RID':RID,'PID':PID,'_cmd':'adminProductReviewDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
+					//app.model.dispatchThis('mutable');
+					});
+				},
+			
+			
+			reviewRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.reviewRemoveConfirm').on('click.reviewRemoveConfirm',function(event){
+					event.preventDefault();
+
+
+
+					})
+				},
+			
+
 			giftcardCreateShow : function($btn)	{
 				$btn.button();
-				$btn.off('click.giftcardCreateShow').on('click.giftcardCreateShow',function(){
+				$btn.off('click.giftcardCreateShow').on('click.giftcardCreateShow',function(event){
+					event.preventDefault();
 					var $D = app.ext.admin.i.dialogCreate({
 						'title':'Add New Giftcard',
 						'templateID':'giftcardCreateTemplate',
@@ -1252,6 +1286,7 @@ else	{
 				
 				$btn.off('click.showGiftcardUpdate').on('click.showGiftcardUpdate',function(event){
 					event.preventDefault();
+					//!!! when giftcard macro is in place, update this.
 					navigateTo("/biz/manage/giftcard/index.cgi?VERB=EDIT&GCID="+$btn.closest('tr').data('id'));
 					});
 				},

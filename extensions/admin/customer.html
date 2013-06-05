@@ -940,13 +940,87 @@ The checkbox below does not work.
 
 <table>
 <tr id='reviewsResultsRowTemplate'>
-	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode'></td>
-	<td data-bind="var: giftcard(PID); format:text;"></td>
-	<td data-bind="var: giftcard(LOCATION); format:text;"></td>
-	<td data-bind="var: giftcard(SUBJECT); format:epoch2pretty;" class='hideInDetailMode'></td>
-	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode'></td>
-	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode'></td>
-	<td><button>Details</button></td>
+	<td><input type='checkbox' /></td>
+	<td data-bind="var: giftcard(CREATED_GMT); format:epoch2pretty;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(PID); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(SUBJECT); format:text;" class='valignTop'></td>
+	<td data-bind="var: giftcard(CUSTOMER_NAME); format:text;" class='hideInDetailMode valignTop'></td>
+	<td data-bind="var: giftcard(MESSAGE); format:text;" class='hideInDetailMode valignTop'></td>
+	<td><button data-app-event='admin_customer|reviewDetailDMIPanel'>Details</button></td>
 </tr>
 
 </table>
+
+
+
+<div id='reviewAddUpdateTemplate'>
+This template is NOT complete.
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<fieldset>
+	<legend>Review Details</legend>
+
+	<label>
+		<span>Subject</span>
+		<input name='SUBJECT' data-bind="var: review(SUBJECT); format:popVal;" type='text' required='required' />
+	</label>
+
+	<label>
+		<span>Rating</span>
+		<select name='RATING' data-bind="var: review(RATINGDECIMAL); format:popVal;" >
+			<option value='10'>10</option>
+			<option value='9'>9</option>
+			<option value='8'>8</option>
+			<option value='7'>7</option>
+			<option value='6'>6</option>
+			<option value='5'>5</option>
+			<option value='4'>4</option>
+			<option value='3'>3</option>
+			<option value='2'>2</option>
+			<option value='1'>1</option>
+		</select>
+	</label>
+
+	<label>
+		<span>Message</span>
+		<textarea name='MESSAGE' data-bind="var: review(MESSAGE); format:popVal;" required='required'></textarea>
+	</label>
+	
+	<label>
+		<span>Product ID</span>
+		<input name='PID' data-bind="var: review(PID); format:popVal;" type='text' required='required' />
+	</label>
+
+</fieldset>
+
+<fieldset>
+	<legend>Customer Details</legend>
+	
+	<label>
+		<span>Customer Name</span>
+		<input name='CUSTOMER_NAME' data-bind="var: review(CUSTOMER_NAME); format:popVal;" type='text' required='required' />
+	</label>
+	
+	<label>
+		<span>Location</span>
+		<input name='LOCATION' data-bind="var: review(LOCATION); format:popVal;" type='text' />
+	</label>
+	
+	<label>
+		<span>Blog URL:</span>
+		<input name='BLOG_URL' data-bind="var: review(BLOG_URL); format:popVal;" type='url' />
+	</label>
+	
+	<label>
+		<span>Customer ID:</span>
+		<input name='CID' data-bind="var: review(CID); format:popVal;" type='number' min='-1' step='1' />
+	</label>
+
+</fieldset>
+
+
+<button data-app-event="admin|processForm">Save</button>
+
+</form>
+
+</div>

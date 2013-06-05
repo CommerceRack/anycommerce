@@ -384,6 +384,13 @@ else	{
 					}
 				
 				}, //showShipMethodEditorByProvider
+				
+				
+			showPromotionsManager : function(vars)	{
+				vars = vars || {};
+				
+				
+				},//showPromotionsManager
 			
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
