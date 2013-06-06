@@ -386,10 +386,46 @@ else	{
 				}, //showShipMethodEditorByProvider
 				
 				
-			showPromotionsManager : function(vars)	{
-				vars = vars || {};
+			showPromotionsManager : function($target)	{
 				
+				$target.empty().anycontent({'templateID':'promotionsPageTemplate','showLoading':false});
+				$("[data-app-role='promotionsTabContainer']",$target).anytabs();
 				
+				var $table = app.ext.admin.i.DMICreate($("[data-anytab-content='coupon']",$target),{
+					'header' : '', //left off because the interface is in a tab.
+					'className' : 'couponManager',
+					'controls' : "",
+//					'buttons' : ["<button data-app-event='admin_customer|couponCreateShow'>Add Coupon<\/button>"],
+					'thead' : ['','Enabled','Code','Title','Created','Begins','Expires',''],
+//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
+					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
+					});
+
+				if($table)	{
+					app.ext.admin.calls.adminConfigDetail.init({'coupons':true},{'datapointer':'adminConfigDetail|coupons|'+app.vars.partition,'callback':'anycontent','jqObj':$table},'mutable');
+					app.model.dispatchThis();
+					}
+				else	{} //buildDualMode will handle the error display.
+
+/*				
+				var $promoTable = app.ext.admin.i.DMICreate($("[data-anytab-content='coupon']",$target),{
+					'header' : 'Coupons',
+					'className' : 'couponManager',
+					'controls' : "",
+					'buttons' : ["<button data-app-event='admin_customer|couponCreateShow'>Add Coupon<\/button>"],
+					'thead' : ['','Enabled','Code','Title','Created','Begins','Expires',''],
+//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
+					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
+					});
+
+				if($promoTable)	{
+					app.ext.admin.calls.adminProductReviewList.init({'filter':'UNAPPROVED'},{'callback':'anycontent','jqObj':$promoTable},'mutable');
+					app.model.dispatchThis();
+					}
+				else	{} //buildDualMode will handle the error display.
+*/
+
+
 				},//showPromotionsManager
 			
 			showRulesBuilderInModal : function(vars)	{
@@ -563,14 +599,47 @@ $D.dialog('open');
 				newSfo['@updates'].push("GLOBAL/ACCOUNT?"+$.param(sfo));
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
+				},
+// !!! Update this to match the macro name.
+			"couponUpdate" : function(sfo)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 				
+				
+				return newSfo;
 				}
-			
 			},
 
 
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {
+			
+			
+			couponDetailDMIPanel : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.couponDetailDMIPanel').on('click.couponDetailDMIPanel',function(event){
+					event.preventDefault();
+					var couponCode = $btn.closest('tr').data('code');
+					
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'couponAddUpdateContentTemplate',
+						'panelID' : 'coupon_'+couponCode,
+						'header' : 'Edit Coupon: '+couponCode,
+						'handleAppEvents' : true,
+						'data' : app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'][$btn.closest('tr').data('obj_index')]
+						});
+
+					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_config|couponUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+
+					});
+				},
+						
+			
 			showCCSuppInputs : function($ele)	{
 				$ele.off('change.showCCSuppInputs').on('change.showCCSuppInputs',function(){
 					var

@@ -1,3 +1,4 @@
+
 <!--
 /////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\
 -->
@@ -166,6 +167,109 @@
 
 
 
+
+
+<!--
+/////////////////////// PROMOTIONS/COUPONS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+
+<div id='promotionsPageTemplate'>
+
+	<div data-app-role='promotionsTabContainer'>
+
+		<ul>
+			<li><a href='#coupon'>Coupons</a></li>
+			<li><a href='#promotion'>Promotions</a></li>
+			<li><a href='#debug'>Debug</a></li>
+		</ul>
+		
+		
+		<section data-anytab-content='coupon' class='clearfix'></section>
+		<section data-anytab-content='promotion' class='clearfix'></section>
+		<section data-anytab-content='debug' class='clearfix'></section>
+
+	</div>
+
+</div>
+
+
+
+<div id='couponAddUpdateContentTemplate'>
+
+<form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
+<fieldset>
+<label>
+	<input type="checkbox" name="disable" data-bind='var:coupon(disable); format:popCheckbox;'> Disable/Expire
+	<span class='toolTip' title="Check this when the promotion is finished so customers receive a 'this coupon has expired' message">?</span>
+</label>
+
+<label>
+	<span>Coupon Title</span>
+	<input type="text" name="title" value="Free shipping" size="50"  data-bind='var:coupon(title); format:popVal;' />
+	<span class='toolTip' title="What will appear in the cart below the subtotal.">?</span>
+</label>
+
+<div class='label'>
+
+<img width="50" border="0" height="50" src="" name="THUMBURL" data-bind='var: coupon(image); format:imageURL;'>
+<button onclick="mediaLibrary($(this).closest('div').find('img').first(),$(this).closest('div').find('input').first(),'Coupon Thumbnail'); return(false);" type="button" class="minibutton">Edit</button>
+<button onclick="jQuery('#THUMBURL').val(''); jQuery('#IMAGE').val(''); return(false);" type="button" class="minibutton">Clear</button>
+<input type="hidden" value="" name='image' data-bind='var: coupon(image); format:popVal;' >
+</div>
+
+
+<label>
+	<span>Valid From</span>
+	<input type='datetime' maxlength="20" value="" name="begins" data-bind='var:coupon(begins); format:popVal;' />
+	<span class='toolTip' title="Leave empty for no start time (active as soon as enabled).">?</span>
+</label>
+
+<label>
+	<span>Valid Until</span>
+	<input type='datetime' maxlength="20" value="" name="expires"  data-bind='var:coupon(expires); format:popVal;' />
+	<span class='toolTip' title="Leave expires empty for 'never'.">?</span>
+</label>
+
+<label>
+	<input type="checkbox" name="limiteduse" data-bind='var:coupon(limiteduse); format:popCheckbox;' /> Newsletter/Limited Use
+	<span class='toolTip' title="When enabled this coupon may only be added to the cart using a limited use link. Limited use links are automatically generated when a newsletter is sent out, but could also be generated programatically by custom applications. If this is enabled the coupon MAY NOT be added directly to the cart from 'Coupon Code' box.">?</span>
+</label>
+
+<label>
+	<input type="checkbox" name="stackable" data-bind='var:coupon(stackable); format:popCheckbox;' /> Allow Coupon Stacking/Combinations.
+	<span class='toolTip' title="How this works: Coupons codes are added to the cart in alphanumeric order based on coupon code.  Each non-stackable coupon will remove all other coupons (which may have been added before it). When stacking is enabled, any non-combinable codes will need to be explicitly removed using rules. If you're not sure what to do here, leave this disabled.">?</span>
+</label>
+
+<label>
+	<input type="checkbox" checked="" name="taxable" data-bind='var:coupon(taxable); format:popCheckbox;' /> Coupon value should be applied/deducted from tax.
+</label>
+
+
+<button data-app-event="admin|processForm">Save</button>
+
+</fieldset>
+</form>
+</div>
+
+
+
+
+<!-- ['','Enabled','Code','Title','Created','Begins','Expires',''] -->
+<table>
+<tr id='couponsResultsRowTemplate'>
+	<td></td>
+	<td data-bind="var:coupon(disabled); format:text;"></td>
+	<td data-bind="var:coupon(code); format:text;"></td>
+	<td data-bind="var:coupon(title); format:text;"></td>
+	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;"></td>
+	<td data-bind="var:coupon(begins_gmt); format:epoch2pretty;"></td>
+	<td data-bind="var:coupon(expires_gmt); format:epoch2pretty;"></td>
+	<td class='alignRight'>
+	<button data-app-event='admin_config|couponDetailDMIPanel'>Edit Coupon</button>
+	</td>
+</tr>
+</table>
 
 
 <!--
