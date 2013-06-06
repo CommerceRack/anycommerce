@@ -546,6 +546,28 @@ $D.dialog('open');
 			
 			}, //u [utilities]
 
+//this is used in conjunction w/ admin.a.processForm.
+//in the form, set _tag/macrobuilder='extension/name' where name is the name of the function in mb. should be same or derive from macro cmd.
+		macrobuilders : {
+			
+			"GLOBAL/ACCOUNT" : function(sfo)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push("GLOBAL/ACCOUNT?"+$.param(sfo));
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+				return newSfo;
+				}
+			
+			},
+
+
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 		e : {

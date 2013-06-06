@@ -3291,7 +3291,7 @@ _cmd or call must be set in the form data (as hidden, for instance).
  -> call should be formatted as extension/call (ex: admin_task/adminTaskUpdate)
 
 The _tag can be generated two ways.
-1. Passed in thru _tag (optional third param) in which case _tag in form is ignored.
+1. Passed in thru _tag. _tag in form will override.
 2. OR as hidden inputs, like so:  <input type='hidden' name='_tag/something' value='someval'> 
  -> these would get formatted as _tag : {'something':'someval'}
 
@@ -3300,15 +3300,28 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
 			processForm : function($form,q,_tag)	{
+				var r = true;  //what is returned.
 				var obj = $form.serializeJSON() || {};
 				_tag = _tag || {};
 				
-				if($form.length && (obj._cmd || obj.call))	{
+				if($form.length && (obj._cmd || obj.call || obj._macrobuilder))	{
 //build the _tag obj.
 					_tag = $.extend(true,_tag,app.ext.admin.u.getTagObjFromSFO(obj));
 					_tag.jqObj = _tag.jqObj || $form;
-					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
-					if(obj._cmd)	{
+//					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
+					
+					if(obj._macrobuilder)	{
+						var mbArr = obj._macrobuilder.split('|');
+						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
+						if(mbArr.length > 1 && app.ext[mbArr[0]] && app.ext[mbArr[0]].macrobuilders &&  typeof app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
+							app.model.addDispatchToQ(app.ext[mbArr[0]].macrobuilders[mbArr[1]](obj),q);
+							}
+						else	{
+							r = false;
+							$form.closest('.appMessaging').anymessage({'message':'In admin.a.processForm, macrobuilder was passed ['+obj.macrobuilder+'] but does not map to a valid macrobuilder. should be extension|functionname where functionname is a function residing in macrobuilders of specified extension.','gMessage':true});
+							}
+						}
+					else if(obj._cmd)	{
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 						app.model.addDispatchToQ(obj,q);
 						}
@@ -3322,8 +3335,10 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 					
 					}
 				else	{
+					r = false;
 					app.u.throwGMessage("Warning! $form was empty or _cmd or call not present within $form in admin.a.processForm");
 					}
+				return r;
 				}, //processForm
 
 
@@ -5371,8 +5386,12 @@ dataAttribs -> an object that will be set as data- on the panel.
 					
 					if(app.u.validateForm($form))	{
 						$form.showLoading({'message':'Updating...'});						
-						app.ext.admin.a.processForm($form,'immutable',vars);
-						app.model.dispatchThis('immutable');
+						if(app.ext.admin.a.processForm($form,'immutable',vars))	{
+							app.model.dispatchThis('immutable');
+							}
+						else	{
+							//processForm will handle error display.
+							}
 						}
 					else	{} //validateForm handles error display.
 					

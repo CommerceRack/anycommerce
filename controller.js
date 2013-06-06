@@ -1418,7 +1418,7 @@ and model that needed to be permanently displayed had to be converted into an ob
 // function used in store_product (and probably more)
 // once throwMessage is gone completely, we can nuke the uiClass and uiIcon
 		successMsgObject : function(msg)	{
-			return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','uiIcon':'check','uiClass':'success','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success','persistent':true}
+			return {'errid':'#','errmsg':msg,'message':msg,'errtype':'success','uiIcon':'check','uiClass':'success','iconClass':'ui-icon-check','containerClass':'ui-state-highlight ui-state-success'}
 			},
 
 		errMsgObject : function(msg,errid)	{

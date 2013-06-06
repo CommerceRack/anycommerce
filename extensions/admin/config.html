@@ -886,11 +886,11 @@ lookup table to determine the next highest handling fee.">?</span></h4>
 		<legend>Rate Display <span class='toolTip' title="Please select the method(s) of FedEx shipping you want to offer to your customers. During checkout the price will be derived from FedEx based on your account number and the total weight of the order, making the assumption that all the contents will fit into a standard box size.">?</span></legend>
 		
 		<label>
-		<input type="radio" name="rates" value="actual" data-bind="var: shipmethod(rates); format:popRadio;"> Display Actual Shipping Rates
+		<input type="radio" name="rates" value="actual" data-bind="var: shipmethod(rates); format:popRadio;" /> Display Actual Shipping Rates
 		</label>
 		
 		<label>
-		<input type="radio"  name="rates" value="retail" data-bind="var: shipmethod(rates); format:popRadio;"> Display Retail (FedEx.com) Rates
+		<input type="radio"  name="rates" value="retail" data-bind="var: shipmethod(rates); format:popRadio;" /> Display Retail (FedEx.com) Rates
 		</label>
 		
 	</fieldset>
@@ -2439,6 +2439,11 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <div id='contactInformationTemplate'  class='ui-widget ui-widget-content ui-corner-all'>
 
 <form onSubmit='return false'>
+
+<input type='hidden' name='_macrobuilder' value='admin_config|GLOBAL/ACCOUNT' />
+<input type='hidden' name='_tag/callback' value='showMessaging' />
+<input type='hidden' name='_tag/message' value='Thank you, your changes have been saved.' />
+
 <table class='noPadOrMargin fullWidth stdCellSpacing'>
 <tbody>
 <tr>
@@ -2489,12 +2494,13 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <tr>
 	<td>
 	<div class='buttonset'>
-<!--	<button>Save</button> -->
+	<button data-app-event='admin|processForm'>Save</button>
 	</div>
 	</td>
 </tr>
 </tbody>
 </table>
+
 </form>
 </div>
 
