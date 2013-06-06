@@ -1528,12 +1528,13 @@ data-contentloaded is used to determine if dynamic content has already been load
 
 <div id='pickerTemplate'>
 	<h5>Select Product:</h5>
-	<div data-app-role='accordionContainer'>
+	<div data-app-role='accordionContainer' class='labelsAsBreaks'>
 
 		<h6 data-pickmethod='all'>All</h6>
 		<div data-contentloaded='true'>
 		<label><input type='checkbox' name='selectAllProduct' /> Select all Product</label>
-		Note to JT -> on click, close picker.
+		Note to JT -> on click, disable accordion
+		<p class='note'>If checked, all other menus will be disabled</p>
 		</div>
 
 		<h6  data-pickmethod='list'>From List</h6>
@@ -1548,18 +1549,16 @@ data-contentloaded is used to determine if dynamic content has already been load
 
 
 		<h6 data-pickmethod='navcat'>By Category</h6>
-		<div>
-			<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
-		</div>
+		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
 
 		<h6 data-pickmethod='profile'>By Profile</h6>
 		<div></div>
 
 		<h6 data-pickmethod='supplier'>By Supplier</h6>
-		<div></div>
+		<div data-bind="var: list(@SUPPLIERS); format: processList; loadsTemplate:pickerSupplierRowTemplate;"></div>
 		
 		<h6 data-pickmethod='managementCategory'>By Management Category</h6>
-		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
+		<div data-bind="var: list(%CATEGORIES); format: manCatsList; extension:admin_prodEdit; loadsTemplate:pickerManCatsRowTemplate;"></div>
 		
 		<h6 data-pickmethod='csv'>By CSV Upload</h6>
 		<div data-contentloaded='true'>
@@ -1573,4 +1572,10 @@ data-contentloaded is used to determine if dynamic content has already been load
 
 <label id='pickerPathsRowTemplate'>
 	<input type='checkbox' name='' data-bind="var:list(value); format:assignAttribute; attribute:name;" /><span data-bind="var: list(value); format:text;"></span></label>
+</label>
+<label id='pickerSupplierRowTemplate'>
+	<input type='checkbox' name='' data-bind="var:list(CODE); format:assignAttribute; attribute:name;" /><span data-bind="var: list(NAME); format:text;"></span></label>
+</label>
+<label id='pickerManCatsRowTemplate'>
+	<input type='checkbox' name='' data-bind="var:list(MCID); format:assignAttribute; attribute:name;" /><span data-bind="var: list(MCID); format:text;"></span></label>
 </label>

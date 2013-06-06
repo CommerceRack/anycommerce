@@ -3084,27 +3084,23 @@ $("[data-app-role='accordionContainer']",$D).first().accordion({
 					$target.anymessage({'message':rd})
 					}
 				else	{
-					ui.newPanel.anycontent(rd);
+					ui.newPanel.anycontent(rd).data('contentloaded',true);
 					}
 				}
 			if(ui.newHeader.data('pickmethod') == 'list')	{
 				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
-				_tag.listpointer = '@paths';
 				}
 			else if(ui.newHeader.data('pickmethod') == 'navcat')	{
 				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
-				_tag.listpointer = '@paths';
 				}
 			else if(ui.newHeader.data('pickmethod') == 'profile')	{
 				// !!! profiles?
 				}
 			else if(ui.newHeader.data('pickmethod') == 'supplier')	{
 				app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
-				_tag.listpointer = '@SUPPLIERS';
 				}
 			else if(ui.newHeader.data('pickmethod') == 'managementCategory')	{
 				app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
-				_tag.listpointer = '%CATEGORIES';
 				}
 			else	{
 				//ERROR! unrecognized pick method. !!!

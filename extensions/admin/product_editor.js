@@ -263,7 +263,30 @@ var admin_prodEdit = function() {
 ////////////////////////////////////   RENDERFORMATS    \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 
-	renderFormats : {},
+	renderFormats : {
+//Management categories (mancats) is an array where the key is the category ID and the value is a list of product.
+//This function sorts the list alphabetically and puts the key, product and lenght into an associative array before running it through the translates.
+//
+//regular sort won't work because Bob comes before andy because of case. The function normalizes the case for sorting purposes, but the array retains case sensitivity.
+//uses a loadsTemplate Parameter on the data-bind to format each row.
+
+		manCatsList : function($tag,data)	{
+
+				var cats = Object.keys(data.value).sort(function (a, b) {return a.toLowerCase().localeCompare(b.toLowerCase());});
+//				app.u.dump(cats);
+				for(var index in cats)	{
+					if(cats[index])	{
+						app.u.dump(" -> index: "+cats[index]);
+						app.u.dump(" -> data.value[index]: "+data.value[cats[index]]);
+						var obj = {'MCID':cats[index], 'product_count' : data.value[cats[index]].length, '@product' : data.value[cats[index]]}
+						$o = app.renderFunctions.transmogrify({'mcid':index},data.bindData.loadsTemplate,obj);
+						$tag.append($o);
+						}
+					}
+
+			}
+		
+		},
 
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
