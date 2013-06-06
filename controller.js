@@ -3015,17 +3015,23 @@ $tmp.empty().remove();
 			if(data.bindData.loadsTemplate)	{
 				var $o, //recycled. what gets added to $tag for each iteration.
 				int = 0;
+				app.u.dump(" -> data.value.length: "+data.value.length)
 				for(var i in data.value)	{
 					if(data.bindData.limit && int >= Number(data.bindData.limit)) {break;}
 					else	{
-						$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
-						if(typeof $o == 'object')	{
-							if(data.value[i].id){} //if an id was set, do nothing.
+//if data.value was an associative array....
+// ** 201320 -> needed processList to support indexed arrays AND associative arrays.
+						if(typeof data.value[i] == 'object')	{
+							$o = app.renderFunctions.transmogrify(data.value[i],data.bindData.loadsTemplate,data.value[i]);
+							if(data.value[i].id){} //if an id was set, do nothing. there will error on an array (vs object)
 							else	{$o.attr('data-obj_index',i)} //set index for easy lookup later.
 							$tag.append($o);
 							}
 						else	{
-							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
+							$o = app.renderFunctions.transmogrify({'value':data.value[i]},data.bindData.loadsTemplate,{'value':data.value[i]});
+							$tag.append($o);
+							$o.attr('data-obj_index',i);
+//							$tag.anymessage({'message':'Issue creating template using '+data.bindData.loadsTemplate,'persistent':true});
 							}
 						}
 					int += 1;				

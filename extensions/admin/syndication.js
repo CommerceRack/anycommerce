@@ -342,9 +342,9 @@ $("[data-app-role='filesTab'], [data-app-role='historyTab'], [data-app-role='err
 									//no other special treatment... yet
 									}
 								}
-						
+
 							macros.push("SAVE?"+$.param(sfo));
-						
+
 							if(DST == 'AMZ')	{
 								$('tr.edited',$form).each(function(){
 									var $tr = $(this);

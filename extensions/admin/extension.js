@@ -3057,6 +3057,7 @@ else	{
 //app.u.dump(" -> END showUI. ");
 				return false;
 				}, //showUI
+
 //this is a function that brian has in the UI on some buttons.
 //it's diferent than showUI so we can add extra functionality if needed.
 //the app itself should never use this function.
@@ -3064,7 +3065,60 @@ else	{
 				return this.showUI(path,$t ? $t : {});
 				},
 
+			showPicker : function()	{
 
+var $D = app.ext.admin.i.dialogCreate({'title':"You've got to pick a product or two..",'templateID':'pickerTemplate','data':{}});
+$D.dialog('option','height',($(window).height() - 100));
+$D.dialog('open'); //accordion will behave better if it's run after modal is opened.
+$("[data-app-role='accordionContainer']",$D).first().accordion({
+	heightStyle: "content",
+	activate : function(event,ui)	{
+		app.u.dump("ui.newHeader.data('pickmethod'): "+ui.newHeader.data('pickmethod'));
+		app.u.dump("ui.newPanel.data('contentloaded'): "+ui.newPanel.data('contentloaded'));
+
+		if(!ui.newPanel.data('contentloaded'))	{
+			var _tag = {}
+			_tag.callback = function(rd)	{
+				app.u.dump('got into callback');
+				if(app.model.responseHasErrors(rd)){
+					$target.anymessage({'message':rd})
+					}
+				else	{
+					ui.newPanel.anycontent(rd);
+					}
+				}
+			if(ui.newHeader.data('pickmethod') == 'list')	{
+				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
+				_tag.listpointer = '@paths';
+				}
+			else if(ui.newHeader.data('pickmethod') == 'navcat')	{
+				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
+				_tag.listpointer = '@paths';
+				}
+			else if(ui.newHeader.data('pickmethod') == 'profile')	{
+				// !!! profiles?
+				}
+			else if(ui.newHeader.data('pickmethod') == 'supplier')	{
+				app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
+				_tag.listpointer = '@SUPPLIERS';
+				}
+			else if(ui.newHeader.data('pickmethod') == 'managementCategory')	{
+				app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
+				_tag.listpointer = '%CATEGORIES';
+				}
+			else	{
+				//ERROR! unrecognized pick method. !!!
+				}
+			app.model.dispatchThis('mutable');
+			}
+		else	{}
+		}
+	});
+
+//use this to disable the accordion if 'select all' is checked.	
+//$( ".selector" ).accordion( "option", "disabled", true );
+
+				},
 
 			showSitesTab : function($target)	{
 				$target.empty();
