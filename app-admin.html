@@ -377,24 +377,14 @@ These two pieces of data are used for mapping after the uploads to set what fold
 	<ul>
 
 
-		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved')); return false;">throw success message</a></li>
+		<li><a href='#' onClick="$('#globalMessaging').anymessage(app.u.successMsgObject('Changes have been saved. and then there is this other text to make the text block a bit more texty and long, which is good for testing because it sometimes happens.')); return false;">throw success message</a></li>
 		
 		<li><a href='#' onClick="app.model.destroy('adminSyndicationList'); app.model.addDispatchToQ({'_cmd':'adminSyndicationList'},'mutable'); app.model.dispatchThis('mutable');">adminSyndicationList</a></li>
 
-		<li><a href='#' onClick="app.model.destroy('adminConfigDetail'); app.ext.admin.calls.adminConfigDetail.init({'account':true},{},'mutable'); app.model.dispatchThis('mutable');">adminConfigDetail</a></li>
+		<li><a href='#' onClick="app.model.destroy('adminConfigDetail'); app.ext.admin.calls.adminConfigDetail.init({'coupons':true},{},'mutable'); app.model.dispatchThis('mutable');">adminConfigDetail</a></li>
 
-		<li><a href='#' onClick="app.model.destroy('adminReportDownload'); app.ext.admin.calls.adminReportDownload.init('39A81CB2-9706-11E2-8FFD-99F4EA1F',{},'mutable'); app.model.dispatchThis('mutable');">adminReportDownload</a></li>
 		
-		<li><a href='#' onClick="app.model.destroy('adminKPIDBCollectionList'); app.ext.admin.calls.adminKPIDBCollectionList.init({},'mutable'); app.model.dispatchThis('mutable');">adminKPIDBCollectionList</a></li>
-		<li><a href='#' onClick="app.model.destroy('adminKPIDBCollectionDetail|1528'); app.ext.admin.calls.adminKPIDBCollectionDetail.init(1528,{},'mutable'); app.model.dispatchThis('mutable');">adminKPIDBCollectionDetail</a></li>
-		<li><a href='#' onClick="app.ext.admin.calls.adminMessagesList.init(0,{},'mutable'); app.model.dispatchThis('mutable');">adminMessagesList</a></li>
-		<li><a href='#' onClick="app.model.destroy('adminKPIDBUserDataSetsList'); app.ext.admin.calls.adminKPIDBUserDataSetsList.init({},'mutable'); app.model.dispatchThis('mutable');">adminKPIDBUserDataSetsList</a></li>
-		
-		
-		
-		<li><a href='#' onClick="app.model.addDispatchToQ({'_cmd':'adminUIExecuteCGI','uri':'/biz/syndication/buycom/index.cgi'},'mutable'); app.model.dispatchThis('mutable');">UIExecCGI addDispatchToQ</a></li>
-		<li><a href='#' onClick="app.ext.admin.calls.adminUIExecuteCGI.init('/biz/syndication/buycom/index.cgi'); app.model.dispatchThis('mutable');">adminUIExecuteCGI call</a></li>
-		<li><a href='#' onClick="app.u.throwMessage('Something Wicked This Way Comes');">throwMessage</a></li>
+		<li><a href='#' onClick="app.u.throwMessage('This is the old way to throw a message. use anymessage.');">throwMessage</a></li>
 		
 	</ul>
 	</li>	

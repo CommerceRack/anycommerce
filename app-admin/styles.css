@@ -1094,6 +1094,13 @@ Messaging Styles
 	border-radius: 4px;
 	}
 
+
+.ui-state-success	{background:#c3e6c2; border:#abc8aa 1px solid;}
+.ui-state-success .ui-icon-check, .ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
+.ui-state-success p	{padding-top:7px;} /* top padding aligns text w/ middle of icon */
+
+
+
 /*.appMessage .ui-icon-alert	{background:url(images/error-82x82.png) no-repeat; height:82px; width:82px; margin:0 10px 10px 0;} */
 .appMessage .appMessageTxt	{float:left;}
 
@@ -1108,7 +1115,6 @@ Messaging Styles
 .ui-icon-z-legacy	{background:url(images/legacy-25x22.png) no-repeat !important; width:25px; height:22px;}
 .ui-icon-z-todo	{background: url(images/todo-25x29.png) no-repeat !important; width:25px; height:29px;}
 .ui-icon-z-hint	{background: url(images/hint-25x25.png) no-repeat !important; width:25px; height:25px;}
-.ui-icon-z-success	{background: url(images/success-25x25.png) no-repeat !important; width:25px; height:29px;}
 .ui-icon-z-debug	{background: url(images/debug-25x20.png) no-repeat !important; width:25px; height:24px;}
 .ui-icon-z-youerr	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
 .ui-icon-z-warn	{background:url(images/ise-25x22.png) no-repeat center center !important; width:29px; height:26px;}
