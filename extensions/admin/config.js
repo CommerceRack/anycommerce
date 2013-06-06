@@ -795,6 +795,8 @@ if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
 			sfo = $container.serializeJSON(),
 			$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 		
+		app.u.dump(" -> sfo: "); app.u.dump(sfo);
+		
 		$tr.anycontent({data:sfo});
 		$tr.addClass('edited');
 		$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.

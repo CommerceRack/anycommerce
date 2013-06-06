@@ -3065,11 +3065,10 @@ else	{
 				return this.showUI(path,$t ? $t : {});
 				},
 
-			showPicker : function()	{
-
-var $D = app.ext.admin.i.dialogCreate({'title':"You've got to pick a product or two..",'templateID':'pickerTemplate','data':{}});
-$D.dialog('option','height',($(window).height() - 100));
-$D.dialog('open'); //accordion will behave better if it's run after modal is opened.
+			getPicker : function(data)	{
+data = data || {};
+var $D = $("<div \/>"); //container for the template. It's children() are what's returned.
+$D.anycontent({'templateID':'pickerTemplate','showLoading':'false',data:data});
 $("[data-app-role='accordionContainer']",$D).first().accordion({
 	heightStyle: "content",
 	activate : function(event,ui)	{
@@ -3087,19 +3086,19 @@ $("[data-app-role='accordionContainer']",$D).first().accordion({
 					ui.newPanel.anycontent(rd).data('contentloaded',true);
 					}
 				}
-			if(ui.newHeader.data('pickmethod') == 'list')	{
+			if(ui.newHeader.data('pickmethod') == 'LIST')	{
 				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':'lists'},_tag,'mutable');
 				}
-			else if(ui.newHeader.data('pickmethod') == 'navcat')	{
+			else if(ui.newHeader.data('pickmethod') == 'NAVCAT')	{
 				app.ext.admin.calls.appCategoryList.init({'root':'.','filter':''},_tag,'mutable');
 				}
-			else if(ui.newHeader.data('pickmethod') == 'profile')	{
+			else if(ui.newHeader.data('pickmethod') == 'PROFILE')	{
 				// !!! profiles?
 				}
-			else if(ui.newHeader.data('pickmethod') == 'supplier')	{
+			else if(ui.newHeader.data('pickmethod') == 'SUPPLIER')	{
 				app.ext.admin.calls.adminSupplierList.init(_tag,'mutable');
 				}
-			else if(ui.newHeader.data('pickmethod') == 'managementCategory')	{
+			else if(ui.newHeader.data('pickmethod') == 'MCAT')	{
 				app.ext.admin.calls.adminProductManagementCategoryList.init(_tag,'mutable');
 				}
 			else	{
@@ -3109,11 +3108,12 @@ $("[data-app-role='accordionContainer']",$D).first().accordion({
 			}
 		else	{}
 		}
+	
 	});
 
 //use this to disable the accordion if 'select all' is checked.	
 //$( ".selector" ).accordion( "option", "disabled", true );
-
+				return $D.children();
 				},
 
 			showSitesTab : function($target)	{
@@ -3928,6 +3928,9 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+					}
+				else if(path == '#!productPowerTool')	{
+					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!warehouseManager')	{
 					app.ext.admin_wholesale.a.showWarehouseManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
@@ -5417,6 +5420,21 @@ dataAttribs -> an object that will be set as data- on the panel.
 						}
 					});
 				},
+
+
+			lockAccordionIfChecked : function($cb)	{
+
+				$cb.off('click.lockAccordionIfChecked').on('click.lockAccordionIfChecked',function(event){
+					if($cb.is(':checked'))	{
+						$cb.closest('.ui-accordion').accordion( "disable" );
+						}
+					else	{
+						$cb.closest('.ui-accordion').accordion( "enable" );
+						}
+					})
+				},
+
+
 
 			alphaNumeric : function($input)	{
 				$input.off('keypress.alphaNumeric').on('keypress.alphaNumeric',function(event){

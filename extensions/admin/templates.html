@@ -1527,20 +1527,18 @@ data-contentloaded is used to determine if dynamic content has already been load
 
 
 <div id='pickerTemplate'>
-	<h5>Select Product:</h5>
 	<div data-app-role='accordionContainer' class='labelsAsBreaks'>
 
-		<h6 data-pickmethod='all'>All</h6>
+		<h6 data-pickmethod='SELECTALL'>All</h6>
 		<div data-contentloaded='true'>
-		<label><input type='checkbox' name='selectAllProduct' /> Select all Product</label>
-		Note to JT -> on click, disable accordion
+		<label><input type='checkbox' name='SELECTALL' data-app-event='admin|lockAccordionIfChecked' /> Select all Product</label>
 		<p class='note'>If checked, all other menus will be disabled</p>
 		</div>
 
-		<h6  data-pickmethod='list'>From List</h6>
+		<h6  data-pickmethod='LIST'>From List</h6>
 		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
 
-		<h6>From Range</h6>
+		<h6 data-pickmethod='RANGE'>From Range</h6>
 		<div class='labelsAsBreaks' data-contentloaded='true'>
 <p class='hint'>NOTE: Products are sorted alphanumerically (e.g. 1, 100, 101, 2, 3, 4, 40, 41, 42, A123, B001)</p>
 <label><input name="RSTART" type="text" placeholder='first product' /></label>
@@ -1548,19 +1546,19 @@ data-contentloaded is used to determine if dynamic content has already been load
 		</div>
 
 
-		<h6 data-pickmethod='navcat'>By Category</h6>
+		<h6 data-pickmethod='NAVCAT'>By Category</h6>
 		<div data-bind="var: list(@paths); format: processList; loadsTemplate:pickerPathsRowTemplate;"></div>
 
-		<h6 data-pickmethod='profile'>By Profile</h6>
+		<h6 data-pickmethod='PROFILE'>By Profile</h6>
 		<div></div>
 
-		<h6 data-pickmethod='supplier'>By Supplier</h6>
+		<h6 data-pickmethod='SUPPLIER'>By Supplier</h6>
 		<div data-bind="var: list(@SUPPLIERS); format: processList; loadsTemplate:pickerSupplierRowTemplate;"></div>
 		
-		<h6 data-pickmethod='managementCategory'>By Management Category</h6>
+		<h6 data-pickmethod='MCAT'>By Management Category</h6>
 		<div data-bind="var: list(%CATEGORIES); format: manCatsList; extension:admin_prodEdit; loadsTemplate:pickerManCatsRowTemplate;"></div>
 		
-		<h6 data-pickmethod='csv'>By CSV Upload</h6>
+		<h6 data-pickmethod='CUSTOM'>By CSV Upload</h6>
 		<div data-contentloaded='true'>
 <textarea NAME='PRODUCTS' rows='10' class='fullWidth'></textarea>
 		</div>

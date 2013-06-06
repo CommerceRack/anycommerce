@@ -1735,7 +1735,9 @@ VALIDATION
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 
-//					app.u.dump(" -> validating input."+$input.attr('name'));
+					if($input.not(':radio'))	{
+						app.u.dump(" -> validating input."+$input.attr('name')+" required: "+$input.attr('required'))
+						}
 					
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
