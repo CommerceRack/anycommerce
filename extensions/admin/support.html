@@ -177,6 +177,9 @@
 	</form>
 	</div>
 
+	<table>
+	<tbody data-bind="var: ticket(@FILES); format:processList; loadsTemplate:supportTicketFilesRowTemplate;"></tbody>
+	</table>
 
 </div>
 
@@ -193,6 +196,10 @@
 	</td>
 </tr>
 
+<tr id='supportTicketFilesRowTemplate'>
+	<td data-bind='var: ticket(uploaded); format:text;'></td>
+	<td data-bind='var: ticket(created); format:text;'></td>
+</tr>
 </table>
 
 
