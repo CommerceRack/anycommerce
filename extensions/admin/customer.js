@@ -112,8 +112,7 @@ var admin_customer = function() {
 					});
 
 				if($table)	{
-					// !!! THIS SHOULD BE A LIST, but 'call' does not exist. any shouldn't add to q directly.
-					app.ext.admin.calls.adminGiftcardSearch.init({},{'callback':'anycontent','jqObj':$table},'mutable');
+					app.model.addDispatchToQ({'_cmd':'adminGiftcardList','_tag' : {'datapointer':'adminGiftcardList','callback':'anycontent','jqObj':$table}},'mutable');
 					app.model.dispatchThis();
 					}
 				else	{} //buildDualMode will handle the error display.

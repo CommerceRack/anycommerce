@@ -2941,12 +2941,12 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 					if(path.substr(0,5) == "/biz/") {mode = 'legacy'}
 					if(path.substr(0,6) == "#/biz/") {mode = 'legacy'}
 					else if(path.substr(0,2) == "#:")	{
-						app.u.dump(" -> is #:");
+//						app.u.dump(" -> is #:");
 						$('#ordersContent').empty(); //always get new content for orders.
 						mode = 'tabClick';
 						opts.tab = opts.tab || path.substring(2);
 						path = "/biz/"+path.substring(2)+"/index.cgi";
-						app.u.dump(" -> opts:"); app.u.dump(opts);
+//						app.u.dump(" -> opts:"); app.u.dump(opts);
 						} //path gets changed, so a separate mode is used for tracking when reloadTab is needed.
 					else if (path.substr(0,2) == "#!") {mode = 'app'}
 					else	{}
@@ -2984,7 +2984,7 @@ if(opts.tab)	{app.ext.admin.u.bringTabIntoFocus(opts.tab);} //changes which tab 
 else	{} //do nothing. perfectly normal to not change what tab is in focus.
 
 
-app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
+//app.u.dump(" -> passed if/else tab determination code. tab: "+opts.tab);
 
 //set the targetID and $target for the content. 
 // By now, tab will be set IF tab is needed. (dialog and/or app mode support no tab specification)
@@ -3020,7 +3020,7 @@ else	{
 	}
 
 
-app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
+//app.u.dump(" -> $target determined ("+$target.attr('id')+"). length: "+$target.length);
 
 if($target && $target.length)	{
 	if(opts.dialog)	{
@@ -4134,7 +4134,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 					app.ext.admin_medialib.u.showPublicFiles(path,P);
 					}
 				else	{
-					app.u.dump(" -> open something wonderful .. "+path);
+//					app.u.dump(" -> open something wonderful .. "+path);
 					$target.empty().append("<div class='loadingBG'></div>");
 //					alert(path);
 					app.model.fetchAdminResource(path,P);
