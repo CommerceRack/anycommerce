@@ -470,7 +470,7 @@ else if(vars.rulesmode == 'coupons')	{
 else	{}
 
 var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
-//
+
 $("[data-app-role='dualModeListContents']",$D).sortable().on("sortupdate",function(evt,ui){
 	ui.item.addClass('edited');
 	app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form'));
