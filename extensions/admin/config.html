@@ -2427,15 +2427,16 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 			<option value="A=AAV|D=DCV|X=RCV">No Match: Decline, N/A: Review</option>
 		</select>	
 	</label>
-
-	<label>
+<!-- apps and 1PC ignore this setting -->
+	<label class='showForZoovyOnly'>
 		<span>Request Card Code</span>
 		<select name="cc_cvvcid" data-bind='var: payment(cc_cvvcid); format:popVal;'>
-			<option value="0" >Do not request card code during checkout</option>
-			<option value="1">Request card code, but do not require it</option>
+			<option value="0">Do not request card code during checkout</option>
+			<option value="1" selected="selected">Request card code, but do not require it</option>
 			<option value="2">Require card code</option>
 		</select>
 	</label>
+
 </fieldset>
 </div>
 
@@ -2456,8 +2457,8 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 
 <fieldset class='marginBottom' id='paymentSuppInputsTemplate_echo'>
 	<legend class='marginBottom'>Echo Setup</legend>
-	<label><span>Username</span><input type='text' name='authorizenet_username' required='required' data-bind='var: payment(authorizenet_username); format:popVal;' /></label>
-	<label><span>Password</span><input type='text' name='authorizenet_password' required='required' data-bind='var: payment(authorizenet_password); format:popVal;' /></label>
+	<label><span>Username</span><input type='text' name='echo_username' required='required' data-bind='var: payment(echo_username); format:popVal;' /></label>
+	<label><span>Password</span><input type='text' name='echo_password' required='required' data-bind='var: payment(echo_password); format:popVal;' /></label>
 	<label><span>Cybersource</span><input type='text' name='echo_cybersource' required='required' data-bind='var: payment(echo_cybersource); format:popVal;' /></label>
 </fieldset>
 
