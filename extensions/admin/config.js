@@ -923,7 +923,7 @@ if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
 		app.u.dump(" -> form is validated.");
 		var 
 			bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-			sfo = $container.serializeJSON(),
+			sfo = $container.serializeJSON({'cb':true}),
 			$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
 		
 		app.u.dump(" -> sfo: "); app.u.dump(sfo);
