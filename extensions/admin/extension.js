@@ -2479,6 +2479,9 @@ Function does NOT dispatch.
 						//no errors have occured and results are present.
 						$tbody.anycontent({'data':data});
 						app.u.handleAppEvents($tbody);
+						if(_rtag.message)	{
+							$('.dualModeListMessaging',$DMI).anymessage(app.u.successMsgObject(_rtag.message));
+							}
 						}
 					else if(listpointer && !$.isEmptyObject(data)  && data[listpointer])	{
 						$('.dualModeListMessaging',$DMI).anymessage({"message":"Your search/filter returned zero results."});
@@ -5227,7 +5230,7 @@ vars:
 						}// thead loop
 
 					if(vars.handleAppEvents)	{
-						app.u.handleAppEvents($DM);
+						app.u.handleAppEvents($DM,{'$context':$DM.children().first()}); //
 						}
 
 					$DM.children().appendTo($target);
@@ -5269,7 +5272,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 				vars.panelID = vars.panelID || 'panel_'+app.u.generateGUID();
 				vars.data = vars.data || undefined;
 				
-				$panel = $("<div\/>").anypanel(vars);
+				var $panel = $("<div\/>").anypanel(vars);
 				$panel.attr('id',vars.panelID);
 				
 				$("[data-app-role='dualModeDetail']",$DMI).append($panel);
@@ -5345,6 +5348,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					});
 
 				if(vars.handleAppEvents)	{
+					
 					app.u.handleAppEvents($D,vars);
 					}
 
@@ -5991,7 +5995,7 @@ var
 
 numRequests += app.ext.admin.calls.adminRSSDetail.init(data.cpg,{},'mutable');
 
-$panel = $("<div\/>").hide().anypanel({
+var $panel = $("<div\/>").hide().anypanel({
 	'header':'Edit: '+data.provider,
 	content : $div,
 	}).prependTo($target);

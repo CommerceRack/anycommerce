@@ -763,7 +763,7 @@ $D.dialog('open');
 					});
 				},
 			
-			reviewApproveExec : function($btn)	{},
+//			reviewApproveExec : function($btn)	{},
 
 			giftcardCreateShow : function($btn)	{
 				$btn.button();

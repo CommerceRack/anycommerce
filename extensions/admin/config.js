@@ -65,8 +65,8 @@ var admin_config = function() {
 		'shippingPriceRowTemplate',
 */		
 		'ruleBuilderTemplate',
-		'ruleBuilderRowTemplate',
-		'rulesFieldset_shipping',
+		'ruleBuilderRowTemplate_shipping',
+		'rulesInputsTemplate_shipping',
 		
 		'contactInformationTemplate',
 		'taxConfigTemplate',
@@ -395,7 +395,7 @@ else	{
 					'header' : '', //left off because the interface is in a tab.
 					'className' : 'couponManager',
 					'controls' : "",
-//					'buttons' : ["<button data-app-event='admin_customer|couponCreateShow'>Add Coupon<\/button>"],
+					'buttons' : ["<button data-app-event='admin_config|couponCreateShow'>Add Coupon<\/button>"],
 					'thead' : ['','Enabled','Code','Title','Created','Begins','Expires',''],
 //					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
@@ -431,58 +431,82 @@ else	{
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
 
-				if((vars.mode == 'shipping' && vars.provider && vars.table) || vars.mode == 'promotions')	{
+				if(vars.table && ((vars.rulesmode == 'shipping' && vars.provider) || vars.rulesmode == 'coupons'))	{
 
 
-var $D = $("<div \/>").attr('title',"Rule Builder: "+vars.mode);
-if(vars.mode == 'shipping')	{
-	$D.attr({'data-provider':vars.provider,'data-table':vars.table})
-	}
-$D.addClass('displayNone').appendTo('body'); 
 
-$D.dialog({
-	width : '90%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		},
-	buttons: [ 
-		{text: 'Cancel', click: function(){
-			$D.dialog('close');
-			if(typeof vars.closeFunction === 'function')	{
-				vars.closeFunction($(this));
-				}
-			}}	
-		]
+var $D = app.ext.admin.i.dialogCreate({
+	'title' : 'Rules Builder',
+	'dataAttribs' : {'data-table':vars.table,'rulesmode' : vars.rulesmode}
 	});
+
+$D.dialog('option','buttons',[ 
+	{text: 'Cancel', click: function(){
+		$D.dialog('close');
+		if(typeof vars.closeFunction === 'function')	{
+			vars.closeFunction($(this));
+			}
+		}}	
+	]);
 $D.dialog('open');
 
+//these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
+var DMIVars = {
+	'header' : 'Rules Editor'
+	}; 
 
+//set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
+if(vars.rulesmode == 'shipping')	{
+	DMIVars.thead = ['Code','Name','Created','Exec','Match','Schedule','Value'];
+	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
+	DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
+	$D.attr('provider',vars.provider);
+	}
+else if(vars.rulesmode == 'coupons')	{
+	DMIVars.thead = ['Code','Name','Created','Expires'];
+	DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
+	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
+	}
+else	{}
+
+var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
+//
+$("[data-app-role='dualModeListContents']",$D).sortable().on("sortupdate",function(evt,ui){
+	ui.item.addClass('edited');
+	app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form'));
+	});
+app.u.handleAppEvents($D);
+
+
+if(vars.rulesmode == 'shipping')	{
 //need pricing schedules. This is for shipping.
-app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
-app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
-	$D.hideLoading();
-	if(app.model.responseHasErrors(rd)){
-		$D.anymessage({'message':rd});
-		}
-	else	{
-		$D.anycontent({'templateID':'ruleBuilderTemplate','data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
-		$("[data-app-role='dualModeListContents']",$D).sortable().on("sortupdate",function(evt,ui){
-				ui.item.addClass('edited');
-				app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form'));
-				});;
-		app.u.handleAppEvents($D);
-		}
-	}},'mutable');
-app.model.dispatchThis('mutable');
+	app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
+		$D.hideLoading();
+		if(app.model.responseHasErrors(rd)){
+			$D.anymessage({'message':rd});
+			}
+		else	{
+			$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
+			}
+		}},'mutable');
+	app.model.dispatchThis('mutable');
+
+	}
+else if(vars.rulesmode == 'coupons')	{
+
+	}
+else	{
+	 //should never get here. if statement above accounts for mode being shipping or coupons. failsafe.
+	$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
+	}
 
 					}
 				else	{
-					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.mode+'] was passed or a required param based on mode was not set. see console for vars.','gMessage':true});
+					$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, invalid/no mode ['+vars.rulesmode+'] was passed or a required param based on mode was not set. see console for vars.','gMessage':true});
 					app.u.dump("admin_config.a.showRulesBuilderInModal vars: "); app.u.dump(vars);
 					}
-				var $dialog = $("<div \/>");
+
 				}, //showRulesBuilderInModal
 
 
@@ -611,6 +635,18 @@ $D.dialog('open');
 					}; 				
 				
 				return newSfo;
+				},
+// !!! Update this to match the macro name.
+			"couponCreate" : function(sfo)	{
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminConfigMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 				
+				
+				return newSfo;
 				}
 			},
 
@@ -634,11 +670,37 @@ $D.dialog('open');
 						'data' : app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'][$btn.closest('tr').data('obj_index')]
 						});
 
-					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_config|couponUpdate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
-
+					$('form',$panel)
+						.append("<input type='hidden' name='_macrobuilder' value='admin_config|couponUpdate' /><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' />")
+					 	.find(".applyDatepicker").datepicker({
+							changeMonth: true,
+							changeYear: true,
+							dateFormat : 'yymmdd'
+							});
 					});
 				},
-						
+
+			couponCreateShow : function($btn)	{
+
+				$btn.button();
+				$btn.off('click.couponCreateShow').on('click.couponCreateShow',function(event){
+
+					event.preventDefault();
+					var $D = app.ext.admin.i.dialogCreate({
+						'title':'Add New Coupon',
+						'templateID':'couponAddUpdateContentTemplate',
+						'showLoading':false //will get passed into anycontent and disable showLoading.
+						});
+					$D.dialog('open');
+//These fields are used for processForm on save.
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_config|couponCreate' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/jqObjEmpty' value='true' /><input type='hidden' name='_tag/message' value='Thank you, your review has been created.' />");
+					 $( ".applyDatepicker",$D).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						dateFormat : 'yymmdd'
+						});
+					});
+				},	
 			
 			showCCSuppInputs : function($ele)	{
 				$ele.off('change.showCCSuppInputs').on('change.showCCSuppInputs',function(){
@@ -657,7 +719,7 @@ $D.dialog('open');
 //this is applied to the 'add flex method' shipping button.  It adds the dropdown for choosing the method type and also the click events.
 			handleAddShipment : function($ele)	{
 				var
-					$menu = $ele.next('ul')
+					$menu = $ele.next('ul'),
 					$pageContainer = $ele.closest("[data-app-role='slimLeftContainer']");
 					
 				$menu.menu().hide().css({'width':'200','position':'absolute'});
@@ -1051,13 +1113,28 @@ app.model.dispatchThis('immutable');
 				$btn.button();
 				$btn.off('click.ruleBuilderShow').on('click.ruleBuilderShow',function(event){
 					event.preventDefault();
-					var provider = $btn.closest('form').find("[name='provider']").val();
-					if(provider && $btn.data('table'))	{
-						app.ext.admin_config.a.showRulesBuilderInModal({'mode':'shipping','provider':provider,'table':$btn.data('table')});
+					var rulesMode = $btn.data('rulesmode');
+					if($btn.data('table') && (rulesMode == 'shipping' || rulesMode == 'coupons'))	{
+						if(rulesMode == 'shipping')	{
+							var provider = $btn.closest('form').find("[name='provider']").val();
+							if(provider)	{
+								app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'provider':provider,'table':$btn.data('table')});
+								}
+							else	{
+								$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, unable to ascertain provider ['+provider+'] and/or table ['+$btn.data('table')+'].','gMessage':true});
+								}
+							}
+						else if(rulesMode == 'coupons')	{
+							app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'table':$btn.data('table')});
+							}
+						else	{
+							$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
+							} //should never get here.
 						}
 					else	{
-						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, unable to ascertain provider ['+provider+'] and/or table ['+$btn.data('table')+'].','gMessage':true});
+						$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesMode is empty or invalid ['+rulesMode+'] OR no data-table ['+$btn.data('table')+'] set. data-rulesmode should be set as data-rulesmode on the button with the app-event and the value must be coupons or shipping. data-table should likewise be set on the button.','gMessage':true});
 						}
+
 					});
 // return false;				
 				},
@@ -1071,7 +1148,7 @@ app.model.dispatchThis('immutable');
 //					$D.addClass('displayNone').appendTo('body'); 
 //on a new rule, guid needs to be set. there's a hidden input in the form that, by passing it in thru data, will get populated.
 //this allows for the editing of a new rule before it is saved.
-					$D.anycontent({'templateID':'rulesFieldset_shipping','data': $.extend(true,{'guid':app.u.guidGenerator()},app.data['adminWholesaleScheduleList'])});
+					$D.anycontent({'templateID':'rulesInputsTemplate_shipping','data': $.extend(true,{'guid':app.u.guidGenerator()},app.data['adminWholesaleScheduleList'])});
 					$D.dialog({
 						width : '90%',
 						modal: true,
@@ -1139,24 +1216,52 @@ app.model.dispatchThis('immutable');
 				$btn.off('click.showRuleEditorAsPanel').on('click.showRuleEditorAsPanel',function(){
 
 var
-	$container = $btn.closest("[data-app-role='dualModeContainer']"),
+	$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
 	data = $btn.closest('tr').data(),
-	provider = $btn.closest("[data-provider]").data('provider'),
-	$target = $("[data-app-role='dualModeDetail']",$container)
-	panelID = app.u.jqSelector('','ruleBuilder_'+data.provider);
-app.u.dump(" -> provider: "+provider);
-$panel = $("<div\/>").hide().anypanel({
-	'header':'Edit: '+data.name,
-	data : $.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data()), //app.ext.admin_config.u.getShipMethodByProvider(provider)['@RULES'][$btn.closest('tr').attr('data-obj_index')]
-	'templateID':'rulesFieldset_shipping'
-	}).prependTo($target);
-app.ext.admin.u.toggleDualMode($container,'detail');
-$panel.slideDown('fast');
-//the schedule render format doesn't have a good mechanism for pre-checking a value.
-if(data.schedule)	{
-	$("[name='SCHEDULE']",$panel).val();
+	$target = $("[data-app-role='dualModeDetail']",$DMI),
+	header = '', //heading for rules editor.
+	templateID = '',
+	panelID = '',
+	showRules = true; //a boolean used after some error checking.
+
+if($DMI.data('rulesmode'))	{
+	if($DMI.data('rulesmode') == 'shipping')	{
+		$.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data());
+		var provider = $btn.closest("[data-provider]").data('provider');
+		panelID = 'ruleBuilder_'+data.provider;
+		header = 'Edit: '+data.name;
+		templateID = 'rulesInputsTemplate_shipping';
+		}
+	else if($DMI.data('rulesmode') == 'coupons')	{
+		header = 'Edit: '+data.id;
+		panelID = 'ruleBuilder_'+data.id;
+		templateID = 'rulesInputsTemplate_coupons';
+		}
+	else	{
+		showRules = false;
+		}
+	
+	if(showRules)	{
+		var $panel = $("<div\/>").hide().anypanel({
+			'header':header,
+			data : data, //app.ext.admin_config.u.getShipMethodByProvider(provider)['@RULES'][$btn.closest('tr').attr('data-obj_index')]
+			'templateID':templateID
+			}).prependTo($target);
+		app.ext.admin.u.toggleDualMode($DMI,'detail');
+		$panel.slideDown('fast');
+		//the schedule render format doesn't have a good mechanism for pre-checking a value.
+		if(data.schedule)	{
+			$("[name='SCHEDULE']",$panel).val();
+			}
+		app.u.handleAppEvents($panel,{'$dataTbody':$btn.closest('tbody'),'$form':$btn.closest('form')});			
+		}
+	
+	
 	}
-app.u.handleAppEvents($panel,{'$dataTbody':$btn.closest('tbody'),'$form':$btn.closest('form')});			
+else {
+	
+	}
+
 					});
 				}
 			} //e [app Events]

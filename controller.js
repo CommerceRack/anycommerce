@@ -1092,7 +1092,12 @@ app.u.throwMessage(responseData); is the default error handler.
 		showMessaging : {
 			onSuccess : function(_rtag)	{
 //				app.u.dump("BEGIN app.callbacks.showMessaging");
-				if(_rtag.jqObj)	{_rtag.jqObj.hideLoading();}
+				if(_rtag.jqObj)	{
+					_rtag.jqObj.hideLoading();
+					if(_rtag.jqObjEmpty)	{
+						_rtag.jqObj.empty();
+						}
+					}
 				var msg = app.u.successMsgObject(_rtag.message);
 				msg['_rtag'] = _rtag; //pass in _rtag as well, as that contains info for parentID.
 				app.u.throwMessage(msg);
