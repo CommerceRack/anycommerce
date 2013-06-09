@@ -1,52 +1,9 @@
 
 <!--
 /////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\
+
+The main portion of the rule builder interface is built w/  app.ext.admin.i.DMICreate
 -->
-
-
-<div id='ruleBuilderTemplate' class='page pageOrganization' data-app-role='dualModeContainer' data-app-mode='list'>
-	
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-	<form action='#' onSubmit='return false'><!-- used for rule adds and rule order changes. necessary for data-table feature -->
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='buttonSet'>
-				<button class='floatRight' data-app-event='admin|toggleDualMode'>Toggle between list and detail view</button>
-				<button class='floatRight' data-app-event="admin_config|ruleBuilderAddShow">Add Rule</button>
-				<button class='floatRight' disabled="disabled" data-app-role='saveButton' data-app-event="admin_config|ruleBuilderUpdateExec">Save Changes</button><!-- left count out intentionally because row change updates would be hard to track accurately -->
-			</div>
-			<h3 class='heading' data-bind="var: rules(title); format:text; defaultValue: Rules;"></h3>
-		</div>
-	
-		<div class='ui-widget-content ui-corner-bottom'>
-		<div class="dualModeListMessaging marginBottom"></div>
-		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th></th>
-			<th class='alignLeft'>Code</th>
-			<th class='alignLeft'>Name</th>
-			<th class='alignLeft'>Created</th>
-			<th class='alignLeft'>Exec</th>
-			<th class='alignLeft'>Match</th>
-			<th class='alignLeft'>Schedule</th>
-			<th class='alignLeft'>Value</th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		
-		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
-		
-		</div>
-	</form>
-	</section>
-</div>
-
-
-
 
 
 <table>

@@ -17,9 +17,6 @@
 ************************************************************** */
 
 
-
-//    !!! ->   TODO: replace 'username' in the line below with the merchants username.     <- !!!
-
 var admin_config = function() {
 	var theseTemplates = new Array(
 		'paymentManagerPageTemplate',
@@ -64,7 +61,6 @@ var admin_config = function() {
 		'shippingWeightRowTemplate',
 		'shippingPriceRowTemplate',
 */		
-		'ruleBuilderTemplate',
 		'ruleBuilderRowTemplate_shipping',
 		'rulesInputsTemplate_shipping',
 		
@@ -427,7 +423,13 @@ else	{
 
 
 				},//showPromotionsManager
-			
+
+
+//will open the rules builder in a modal.
+//vars.rulesmode is REQUIRED.  should be set to shipping or coupons.
+//if shipping, vars.provided is also required.
+//vars will be passed as param 2 (vars) into handleAppEvents so that the button events will know what mode to use.
+
 			showRulesBuilderInModal : function(vars)	{
 				vars = vars || {};
 
@@ -437,7 +439,6 @@ else	{
 
 var $D = app.ext.admin.i.dialogCreate({
 	'title' : 'Rules Builder',
-	'dataAttribs' : {'data-table':vars.table,'rulesmode' : vars.rulesmode}
 	});
 
 $D.dialog('option','buttons',[ 
@@ -452,15 +453,16 @@ $D.dialog('open');
 
 //these will be tailored based on which set of rules is showing up, then passed into the DMICreate function.
 var DMIVars = {
-	'header' : 'Rules Editor'
+	'header' : 'Rules Editor',
+	'buttons' : ["<button data-app-event='admin_config|ruleBuilderAddShow'>Add Rule<\/button>","<button disabled='disabled' data-app-event='admin_config|ruleBuilderUpdateExec' data-app-role='saveButton'>Save <span class='numChanges'><\/span> Changes<\/button>"]
 	}; 
 
 //set the mode specific variables for DMI create and add any 'data' attribs to the modal, if necessary.
 if(vars.rulesmode == 'shipping')	{
-	DMIVars.thead = ['Code','Name','Created','Exec','Match','Schedule','Value'];
+	DMIVars.thead = ['','Code','Name','Created','Exec','Match','Schedule','Value',''];
 	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_shipping;';
 	DMIVars.showLoading = true; //need to get schedules before allowing use of interface.
-	$D.attr('provider',vars.provider);
+	$D.attr('data-provider',vars.provider);
 	}
 else if(vars.rulesmode == 'coupons')	{
 	DMIVars.thead = ['Code','Name','Created','Expires'];
@@ -470,17 +472,24 @@ else if(vars.rulesmode == 'coupons')	{
 else	{}
 
 var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
+$DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode})
 
-$("[data-app-role='dualModeListContents']",$D).sortable().on("sortupdate",function(evt,ui){
+
+
+$("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
 	ui.item.addClass('edited');
-	app.ext.admin.u.handleSaveButtonByEditedClass(ui.item.closest('form'));
+	app.ext.admin.u.handleSaveButtonByEditedClass($D);
 	});
-app.u.handleAppEvents($D);
+
 
 
 if(vars.rulesmode == 'shipping')	{
 //need pricing schedules. This is for shipping.
-	app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+	var numDispatches = app.ext.admin.calls.adminWholesaleScheduleList.init({},'mutable');
+//if making a request for the wholesale list, re-request shipmethods too. callback is on shipmethods
+	if(numDispatches)	{
+		app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+		}
 	app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition,callback : function(rd){
 		$D.hideLoading();
 		if(app.model.responseHasErrors(rd)){
@@ -488,17 +497,17 @@ if(vars.rulesmode == 'shipping')	{
 			}
 		else	{
 			$D.anycontent({'data':app.ext.admin_config.u.getShipMethodByProvider(vars.provider)});
+			app.u.handleAppEvents($D,vars); //needs to happen after request, because that's when the row contents are populated.
 			}
 		}},'mutable');
 	app.model.dispatchThis('mutable');
-
 	}
 else if(vars.rulesmode == 'coupons')	{
-
+	app.u.handleAppEvents($D,vars);
 	}
 else	{
 	 //should never get here. if statement above accounts for mode being shipping or coupons. failsafe.
-	$('#globalMessaging').anymessage({'message':'In admin_config.a.showRulesBuilderInModal, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
+	$('.dualModeListMessaging',$DMI).anymessage({'message':'In admin_config.a.showRulesBuilderInModal, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
 	}
 
 					}
@@ -873,27 +882,6 @@ $D.dialog('open');
 					});
 				},
 
-//this is a generic button for use on a update macro.  For simple ones, like company information. Anything more complicated like shipping or tax will need a custom handler.
-/*
-NOT COMPLETED YET
-			adminConfigMacroExec : function($btn)	{
-				$btn.button();
-				$btn.off('click.adminConfigMacroExec').on('click.adminConfigMacroExec',function(){
-var $form = $btn.closest('form');
-if($form.data('macroCmd'))	{
-	if(app.u.validateForm($form))	{
-		$form.showLoading({"Message":"Saving Changes"});
-		
-		
-		}
-	else	{} //form validation will handle error display.
-	}
-else	{
-	$form.anymessage();
-	}
-					});
-				},
-*/
 //This is where the magic happens. This button is used in conjunction with a data table, such as a shipping price or weight schedule.
 //It takes the contents of the fieldset it is in and adds them as a row in a corresponding table. it will allow a specific table to be set OR, it will look for a table within the fieldset (using the data-app-role='dataTable' selector).
 //the 'or' was necessary because in some cases, such as handling, there are several tables on one page and there wasn't a good way to pass different params into the appEvent handler (which gets executed once for the entire page).
@@ -939,7 +927,7 @@ if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
 		else	{
 			$tr.appendTo($dataTbody);
 			}
-		app.u.handleAppEvents($tr);
+		app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
 //this function will look for .edited in the form and, if present, enable and update the save button.
 		app.ext.admin.u.handleSaveButtonByEditedClass($form);
 		}
@@ -1108,7 +1096,7 @@ app.model.dispatchThis('immutable');
 					});
 				},
 
-//executed on a mange rules button.  shows the rule builder.
+//executed on a manage rules button.  shows the rule builder.
 			ruleBuilderShow : function($btn)	{
 				$btn.button();
 				$btn.off('click.ruleBuilderShow').on('click.ruleBuilderShow',function(event){
@@ -1141,24 +1129,22 @@ app.model.dispatchThis('immutable');
 
 //executed by the 'add new rule' button. opens a dialog and, on save, updates the tbody of the rule builder.
 //the rule is NOT actually saved until the 'save' button is pushed.
-			ruleBuilderAddShow : function($btn)	{
+			ruleBuilderAddShow : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-plus"},text: true});
 				$btn.off('click.ruleBuilderAddShow').on('click.ruleBuilderAddShow',function(){
-					var $D = $("<div \/>").attr('title',"Add New Rule");
-//					$D.addClass('displayNone').appendTo('body'); 
+
 //on a new rule, guid needs to be set. there's a hidden input in the form that, by passing it in thru data, will get populated.
 //this allows for the editing of a new rule before it is saved.
-					$D.anycontent({'templateID':'rulesInputsTemplate_shipping','data': $.extend(true,{'guid':app.u.guidGenerator()},app.data['adminWholesaleScheduleList'])});
-					$D.dialog({
-						width : '90%',
-						modal: true,
-						autoOpen: false,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
-							}
+					var data = {'guid':app.u.guidGenerator()};
+					if(vars.rulesmode == 'shipping')	{$.extend(true,data,app.data['adminWholesaleScheduleList'])};
+					var $DMI = $btn.closest("[data-app-role='dualModeContainer']");
+					var $D = app.ext.admin.i.dialogCreate({
+						'title' : 'Add New Rule',
+						'templateID' : 'rulesInputsTemplate_shipping',
+						'data': data
 						});
 					$D.dialog('open');
-					app.u.handleAppEvents($D,{'$form':$btn.closest('form'),'$dataTbody':$btn.closest('form').find("[data-app-role='dualModeListContents']")});
+					app.u.handleAppEvents($D,$.extend(true,{},vars,{'$form':$DMI,'$dataTbody': $("[data-app-role='dualModeListTbody']",$DMI)}));
 //add an extra event to the rule button to close the modal. The template is shared w/ the rule edit panel, so the action is not hard coded into the app event.
 					$("[data-app-event='admin_config|dataTableAddExec']",$D).on('click.closeModal',function(){
 						$D.dialog('close');
@@ -1167,53 +1153,69 @@ app.model.dispatchThis('immutable');
 				},
 
 //executed by the 'save' button once new rules or rule order has changed.
-			ruleBuilderUpdateExec : function($btn)	{
+			ruleBuilderUpdateExec : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.ruleBuilderUpdateExec').on('click.ruleBuilderUpdateExec',function(event){
 event.preventDefault();
 
-$btn.closest('.ui-dialog-content').showLoading({'message':'Updating Rules'});
+
+vars = vars || {};
+app.u.dump(" -> vars: "); app.u.dump(vars);
 
 var
 	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
-	$tbody = $("[data-app-role='dualModeListContents']",$dualModeContainer).first(),
-	macros = new Array(),
-	provider = $btn.closest('[data-provider]').data('provider'),
-	table = $btn.closest('[data-table]').data('table');
+	$tbody = $("[data-app-role='dualModeListTbody']",$dualModeContainer).first() || "", //default to blank so .length doesn't error.
+	macros = new Array();
 
-
-macros.push("SHIPMETHOD/RULESTABLE-EMPTY?provider="+provider+"&table="+table);
-$('tr',$tbody).each(function(){
-	if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+//need a table and rulesmode. for shipping, provider is also needed.
+if(vars.table && (vars.rulesmode == 'coupons' || (vars.rulesmode == 'shipping' && vars.provider)))	{
+	if($tbody.length)	{
+		$btn.closest('.ui-dialog-content').showLoading({'message':'Updating Rules'});
+		macros.push("SHIPMETHOD/RULESTABLE-EMPTY?provider="+vars.provider+"&table="+vars.table);
+		$('tr',$tbody).each(function(){
+			if($(this).hasClass('rowTaggedForRemove'))	{} //row tagged for delete. do not insert.
+			else	{
+				macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+				}
+			});
+		//app.u.dump(' -> macros: '); app.u.dump(macros);
+		
+		app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
+			if(app.model.responseHasErrors(rd)){
+				$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':rd});
+				}
+			else	{
+				$btn.closest('.ui-dialog-content').dialog('close');
+				$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
+				}
+			}},'immutable');
+		
+		//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
+		app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+		app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+		
+		
+		app.model.dispatchThis('immutable');
+		}
 	else	{
-		macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+provider+"&table="+table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+		$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':'In admin_config.e.ruleBuilderUpdateExec, unable to locate tbody for building rules macro.','gMesage':true})
 		}
-	});
-//app.u.dump(' -> macros: '); app.u.dump(macros);
-
-app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
-	if(app.model.responseHasErrors(rd)){
-		$('#globalMessaging').anymessage({'message':rd});
-		}
-	else	{
-		$btn.closest('.ui-dialog-content').dialog('close');
-		$('#globalMessaging').anymessage(app.u.successMsgObject('Your rules have been saved.'));
-		}
-	}},'immutable');
-
-//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
-app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
-
-
-app.model.dispatchThis('immutable');
-
+	}
+else	{
+	$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':'In admin_config.e.ruleBuilderUpdateExec, unable to ascertain vars.rulesmode ['+vars.rulesmode+'] vars.table ['+vars.table+'] OR vars.rulesmode is shipping and vars.provider not found ['+vars.provider+'].','gMesage':true})
+	}
 					});
 				},
+
+
+
+
 //opens an editor for an individual rule. uses anypanel/dualmode
-			showRuleEditorAsPanel : function($btn)	{
+			showRuleEditorAsPanel : function($btn,vars)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.showRuleEditorAsPanel').on('click.showRuleEditorAsPanel',function(){
+
+app.u.dump("BEGIN admin_config.e.showRuleEditorAsPanel click event");
 
 var
 	$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
@@ -1224,15 +1226,15 @@ var
 	panelID = '',
 	showRules = true; //a boolean used after some error checking.
 
-if($DMI.data('rulesmode'))	{
-	if($DMI.data('rulesmode') == 'shipping')	{
+if(vars.rulesmode)	{
+	if(vars.rulesmode == 'shipping')	{
 		$.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data());
 		var provider = $btn.closest("[data-provider]").data('provider');
 		panelID = 'ruleBuilder_'+data.provider;
 		header = 'Edit: '+data.name;
 		templateID = 'rulesInputsTemplate_shipping';
 		}
-	else if($DMI.data('rulesmode') == 'coupons')	{
+	else if(vars.rulesmode == 'coupons')	{
 		header = 'Edit: '+data.id;
 		panelID = 'ruleBuilder_'+data.id;
 		templateID = 'rulesInputsTemplate_coupons';
@@ -1259,7 +1261,7 @@ if($DMI.data('rulesmode'))	{
 	
 	}
 else {
-	
+	$('#globalMessaging').anymessage({'message':'In admin_config.e.showRuleEditorAsPanel, unable to ascertain rulemode. Should be passed into handleAppEvents as param 2 (vars).','gMesage':true})
 	}
 
 					});

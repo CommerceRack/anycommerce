@@ -3801,6 +3801,7 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 // .edited is used with no element qualifier (such as input) so that it can be applied to non inputs, like table rows, when tables are updated (shipmethods)
 			handleSaveButtonByEditedClass : function($context)	{
 				var $button = $("[data-app-role='saveButton']",$context);
+				app.u.dump(" -> button.length: "+$button.length);
 				if($('.edited',$context).length)	{
 					$('.numChanges',$button).text($('.edited',$context).length)
 					$button.button("enable").addClass('ui-state-highlight');
