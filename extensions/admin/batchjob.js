@@ -81,7 +81,8 @@ var admin_batchJob = function() {
 						}
 					else	{
 						$tabContent.anycontent({'templateID':'batchJobManagerPageTemplate','dataAttribs':{'id':'batchJobManagerContent'},'datapointer':rd.datapointer});
-						$(".gridTable",$tabContent).anytable();
+						$(".gridTable",$tabContent).anytable({'inverse':true}); //inverse will sort high to low.
+						$(".gridTable",$tabContent).find('th').first().trigger('click'); //sort by batch job.
 						app.u.handleAppEvents($tabContent);
 						}
 					}},'mutable');
