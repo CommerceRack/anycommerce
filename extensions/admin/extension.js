@@ -3308,6 +3308,7 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
  -> if data-q is set to passive or immutable, change the value of dispatchThis to match.
 */
 			processForm : function($form,q,_tag)	{
+				app.u.dump("BEGIN admin.a.processForm");
 				var r = true;  //what is returned.
 				var obj = $form.serializeJSON() || {};
 				_tag = _tag || {};
@@ -3319,21 +3320,26 @@ set as onSubmit="app.ext.admin.a.processForm($(this)); app.model.dispatchThis('m
 //					app.u.dump(" -> _tag in processForm: "); app.u.dump(_tag);
 					
 					if(obj._macrobuilder)	{
+						app.u.dump(" -> is a macrobuilder.");
 						var mbArr = obj._macrobuilder.split('|');
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 						if(mbArr.length > 1 && app.ext[mbArr[0]] && app.ext[mbArr[0]].macrobuilders &&  typeof app.ext[mbArr[0]].macrobuilders[mbArr[1]] == 'function')	{
+							app.u.dump(" -> built macro. adding to dispatch Q.");
 							app.model.addDispatchToQ(app.ext[mbArr[0]].macrobuilders[mbArr[1]](obj),q);
 							}
 						else	{
+							app.u.dump(" -> UNABLE to build macro.");
 							r = false;
-							$form.closest('.appMessaging').anymessage({'message':'In admin.a.processForm, macrobuilder was passed ['+obj.macrobuilder+'] but does not map to a valid macrobuilder. should be extension|functionname where functionname is a function residing in macrobuilders of specified extension.','gMessage':true});
+							$form.anymessage({'message':'In admin.a.processForm, macrobuilder was passed ['+obj.macrobuilder+'] but does not map to a valid macrobuilder. should be extension|functionname where functionname is a function residing in macrobuilders of specified extension.','gMessage':true});
 							}
 						}
 					else if(obj._cmd)	{
+						app.u.dump(" -> is a command.");
 						obj._tag = _tag; //when adding straight to Q, _tag should be a param in the cmd object.
 						app.model.addDispatchToQ(obj,q);
 						}
 					else if(obj.call)	{
+						app.u.dump(" -> is a call.");
 						var call = obj.call; //save to another var. obj.call needs to be deleted so it isn't passed in dispatch.
 						delete obj.call;
 						app.u.dump(" -> call: "+call);
@@ -5312,7 +5318,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					$D.dialog({ buttons: [
 						{ text: "Cancel", click: function() { $( this ).dialog( "close" ); } },
 						{ text: vars.removeButtonText, click: function() {
-							vars.removeFunction(vars);
+							vars.removeFunction(vars,$(this));
 							}}
 						] });
 					$D.dialog('open');
@@ -5402,9 +5408,9 @@ dataAttribs -> an object that will be set as data- on the panel.
 //					app.u.dump("trying to process the form");
 					var $form = $btn.closest('form');
 					
-					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Updating...'});						
+					if(app.u.validateForm($form))	{					
 						if(app.ext.admin.a.processForm($form,'immutable',vars))	{
+							$form.showLoading({'message':'Updating...'});	
 							app.model.dispatchThis('immutable');
 							}
 						else	{

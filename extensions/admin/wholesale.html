@@ -639,38 +639,38 @@
 <fieldset>
 	<label>
 		<span>Warehouse Title:</span>
-		<input type="text" value="" name="WAREHOUSE_TITLE" maxlength="41" size="41" />
+		<input type="text" value="" name="WAREHOUSE_TITLE" maxlength="41" size="41" data-bind='var:warehouse(WAREHOUSE_TITLE); format:popVal;' />
 	</label>
 	<label>
 		<span>Warehouse Code:</span>
-		<input type="text" value="" name="WAREHOUSE_CODE" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' />
+		<input type="text" value="" name="CODE" size="3" maxlength="3" data-minlength='3' data-app-event='admin|alphaNumeric' data-bind='var:warehouse(WAREHOUSE_CODE); format:popVal;' />
 		<span class='toolTip' title="A 3 digit code consisting of letters A-Z and 0-9. Warehouse code will usually be the three digit code for the nearest airport.">?</span>
 	</label>
 	
 	<label>
 		<span>City:</span>
-		<input type="text" value="" name="WAREHOUSE_CITY" maxlength="31" size="31" />
+		<input type="text" value="" name="WAREHOUSE_CITY" maxlength="31" size="31" data-bind='var:warehouse(WAREHOUSE_CITY); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>State:</span>
-		<input type="text" value="" name="WAREHOUSE_STATE" maxlength="31" size="31" data-minlength='2' />
+		<input type="text" value="" name="WAREHOUSE_STATE" maxlength="31" size="31" data-minlength='2' data-bind='var:warehouse(WAREHOUSE_STATE); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Zip:</span>
-		<input type="text" value="" name="WAREHOUSE_ZIP" maxlength="5" size="5" />
+		<input type="text" value="" name="WAREHOUSE_ZIP" maxlength="5" size="5" data-bind='var:warehouse(WAREHOUSE_ZIP); format:popVal;' />
 	</label>
 	
 	<label>
 		<span>Shipping Latency (in Days):</span>
-		<input type="text" value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" />
+		<input type="number" value="" name="SHIPPING_LATENCY_IN_DAYS" maxlength="2" size="2" min='0' step='1' data-bind='var:warehouse(SHIPPING_LATENCY_IN_DAYS); format:popVal;' />
 		<span class='toolTip' title="The maximum number of days before an order is processed.">?</span>
 	</label>
 	
 	<label>
 		<span>Shipping Cutoff Hour:</span>
-		<input type="text" value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" />
+		<input type="number" value="" name="SHIPPING_CUTOFF_HOUR_PST" maxlength="2" size="2" min='0' step='1' max="24" data-bind='var:warehouse(SHIPPING_CUTOFF_HOUR_PST); format:popVal;' />
 		<span class='toolTip' title="Use 24 hour format, PST time zone (ex: '16' is 4:00pm PST).">?</span>
 	</label>
 
@@ -686,12 +686,16 @@
 <table>
 <tr id='warehouseResultsRowTemplate'>
 	<td data-bind="var: warehouse(ID); format:text;"></td>
-	<td data-bind="var: warehouse(TYPE); format:text;"></td>
-	<td data-bind="var: warehouse(TITLE); format:text;"></td>
-	<td data-bind="var: warehouse(CREATED_GMT); format:epoch2pretty;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_CODE); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_TITLE); format:text;"></td>
+	<td data-bind="var: warehouse(WAREHOUSE_STATE); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(WAREHOUSE_ZIP); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(SHIPPING_CUTOFF_HOUR_PST); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(SHIPPING_LATENCY_IN_DAYS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: warehouse(CREATED_TS); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
-<button>Remove</button>
-<button>Edit</button>
+<button data-app-event="admin_wholesale|warehouseRemoveConfirm">Remove</button>
+<button data-app-event="admin_wholesale|warehouseDetailDMIPanel">Edit</button>
 	</td>
 </tr>
 

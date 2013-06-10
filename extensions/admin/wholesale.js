@@ -71,14 +71,13 @@ var admin_wholesale = function() {
 					'header' : 'Warehouse Manager',
 					'className' : 'warehouseManager',
 //add button doesn't use admin|createDialog because extra inputs are needed for cmd/tag and the template is shared w/ update.
-					'buttons' : ["<button data-app-event='admin|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"],
-					'thead' : ['Code','Type','Title','Modified',''],
+					'buttons' : ["<button data-app-event='admin_wholesale|warehouseCreateShow' data-title='Create a New Warehouse'>Add Warehouse</button>"],
+					'thead' : ['ID','Code','Title','State','Zip','Latency','Cutoff','Created',''],
 					'tbodyDatabind' : "var: users(@WAREHOUSES); format:processList; loadsTemplate:warehouseResultsRowTemplate;"
 					});
 
 				if($table)	{
-					
-					app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag' : {'datapointer':'adminWarehouseList'}},'mutable');
+					app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag' : {'datapointer':'adminWarehouseList','callback':'anycontent','jqObj':$table}},'mutable');
 					app.model.dispatchThis('mutable');
 					}
 				else	{} //buildDualMode will handle the error display.
@@ -245,7 +244,43 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 			}, //renderFormats
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-		buildMacros : {
+		macrobuilders : {
+			
+			
+			'WAREHOUSE-CREATE' : function(sfo)	{
+				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-create");
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminWarehouseMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push('WAREHOUSE-CREATE?CODE='+sfo.CODE);
+				newSfo['@updates'].push('WAREHOUSE-UPDATE?'+$.param(sfo));
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+				return newSfo;
+				}, //adminWarehouseMacroCreate
+
+			'WAREHOUSE-UPDATE' : function(sfo)	{
+				app.u.dump("BEGIN admin_wholesale.macrobuilders.warehouse-update");
+				sfo = sfo || {};
+//a new object, which is sanitized and returned.
+				var newSfo = {
+					'_cmd':'adminWarehouseMacro',
+					'_tag':sfo._tag,
+					'@updates':new Array()
+					}; 
+				delete sfo._tag; //removed from original object so serialization into key value pair string doesn't include it.
+				delete sfo._macrobuilder;
+				newSfo['@updates'].push('WAREHOUSE-UPDATE?'+$.param(sfo));
+//				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
+				return newSfo;
+				} //adminWarehouseMacroCreate
+
+/*			
 			general : function($form)	{
 				if($form)	{
 					var formObj = $form.serializeJSON(),
@@ -272,14 +307,14 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						}
 					}
 				else	{
-					$('#globalMessaging').anymessage({"message":"In admin_wholesale.buildMacros.general, $form not set or not a jquery object.","gMessage":true})
+					$('#globalMessaging').anymessage({"message":"In admin_wholesale.macroBuilders.general, $form not set or not a jquery object.","gMessage":true})
 					}
 				},
-				
+
 			shippingCalculations : function($form)	{
 				
 				},
-			}, //buildMacros
+*/			}, //macroBuilders
 
 ////////////////////////////////////   EVENTS [e]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\                    
 
@@ -297,25 +332,27 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 						});
 					$D.dialog('open');
 //These fields are used for processForm on save.
-					$('form',$D).first().append("<input type='hidden' name='_cmd' value='adminWarehouseUpdate'  /><input type='hidden' name='_tag/callback' value='showMessaging'  /><input type='hidden' name='_tag/message' value='The warehouse has been added.'  />");
+					$('form',$D).first().append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-CREATE'  \/><input type='hidden' name='_tag/callback' value='showMessaging' \/><input type='hidden' name='_tag/message' value='The warehouse has been successfully created.' \/><input type='hidden' name='_tag/jqObjEmpty' value='true' \/>");
 					});
 				},
+
+
 
 			warehouseDetailDMIPanel : function($btn)	{
 				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
 				$btn.off('click.warehouseDetailDMIPanel').on('click.warehouseDetailDMIPanel',function(event){
 					event.preventDefault();
-					var	WID = $btn.closest('tr').data('id');
+					var	CODE = $btn.closest('tr').data('warehouse_code');
 					
 					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
 						'templateID' : 'warehouseAddUpdateTemplate',
-						'panelID' : 'warehouse_'+WID,
-						'header' : 'Edit Warehouse: '+WID,
+						'panelID' : 'warehouse_'+CODE,
+						'header' : 'Edit Warehouse: '+CODE,
+						'data' : app.data.adminWarehouseList['@WAREHOUSES'][$btn.closest('tr').data('obj_index')],
 						'handleAppEvents' : true
 						});
-					$("[name='WID']",$panel).closest('label').hide(); //warehouse id isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
-					
-					$('form',$panel).append("<input type='hidden' name='_cmd' value='adminWarehouseMacro' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='RID' value='"+RID+"' /><input type='hidden' name='_tag/message' value='The review has been successfully updated.' />");
+					$("[name='CODE']",$panel).closest('label').hide(); //warehouse code isn't editable. hide it. setting 'disabled' will remove from serializeJSON.
+					$('form',$panel).append("<input type='hidden' name='_macrobuilder' value='admin_wholesale|WAREHOUSE-UPDATE' /><input type='hidden' name='_tag/callback' value='showMessaging' /><input type='hidden' name='_tag/message' value='The warehouse has been successfully updated.' />");
 					
 					//app.model.addDispatchToQ({'WID':WID,'_cmd':'adminWarehouseDetail','_tag':{'callback':'anycontent','jqObj':$panel}},'mutable');
 					//app.model.dispatchThis('mutable');
@@ -323,6 +360,30 @@ app.ext.admin.u.applyEditTrackingToInputs($editorContainer);
 				},
 
 
+			warehouseRemoveConfirm : function($btn)	{
+				$btn.button({icons: {primary: "ui-icon-trash"},text: false});
+				$btn.off('click.warehouseRemoveExec').on('click.warehouseRemoveExec',function(event){
+					event.preventDefault();
+					
+					var CODE = $btn.closest('tr').data('warehouse_code');
+					var $D = app.ext.admin.i.dialogConfirmRemove({
+						'message':'Are you sure you want to delete warehouse '+CODE+'? There is no undo for this action.',
+						'removeButtonText' : 'Delete Warehouse',
+						'removeFunction':function(vars,$modal){
+							var $panel = $(app.u.jqSelector('#','warehouse_'+CODE));
+							if($panel.length)	{
+								$panel.anypanel('destroy'); //make sure there is no editor for this warehouse still open.
+								}
+							app.model.addDispatchToQ({'_cmd':'adminWarehouseMacro','@updates':["WAREHOUSE-DELETE?CODE="+CODE]},'immutable');
+							app.model.addDispatchToQ({'_cmd':'adminWarehouseList','_tag':{'datapointer':'adminWarehouseList','callback':'DMIUpdateResults','extension':'admin','jqObj':$btn.closest("[data-app-role='dualModeContainer']")}},'immutable');
+							app.model.dispatchThis('immutable');
+							$modal.dialog('close');
+							}
+						});
+					
+
+					});
+				}, //execTicketClose
 
 
 //executed within the create new supplier form. actually creates the new supplier.

@@ -633,6 +633,7 @@ $D.dialog('open');
 //				app.u.dump(" -> newSfo:"); app.u.dump(newSfo);
 				return newSfo;
 				},
+
 // !!! Update this to match the macro name.
 			"couponUpdate" : function(sfo)	{
 				sfo = sfo || {};
