@@ -354,6 +354,7 @@ var admin_support = function() {
 						
 						var $D = app.ext.admin.i.dialogConfirmRemove({
 							'message':'Are you sure you want to close this ticket?',
+							'removeButtonText' : 'Close Ticket',
 							'removeFunction':function(rd){
 								var
 									$tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
