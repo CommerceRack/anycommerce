@@ -352,13 +352,21 @@ var admin_support = function() {
 					$btn.off('click.execTicketClose').on('click.execTicketClose',function(event){
 						event.preventDefault();
 						
-						var $tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
-						ticketID = $btn.closest('tr').data('id');
+						var $D = app.ext.admin.i.dialogConfirmRemove({
+							'message':'Are you sure you want to close this ticket?',
+							'removeFunction':function(rd){
+								var
+									$tbody = $btn.closest("[data-app-role='dualModeList']").find("[data-app-role='dualModeListContents']"),
+									ticketID = $btn.closest('tr').data('id');
+								app.model.destroy('adminTicketList');
+								app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
+								app.ext.admin_support.u.reloadTicketList($tbody,$btn.closest("[data-app-role='dualModeList']").find("[name='disposition']").val(),'immutable'); //handles showloading
+								app.model.dispatchThis('immutable');
+								$D.dialog('close');
+								}
+							});
 						
-						app.model.destroy('adminTicketList');
-						app.ext.admin.calls.adminTicketMacro.init(ticketID,new Array('CLOSE'),{},'immutable');
-						app.ext.admin_support.u.reloadTicketList($tbody,$btn.closest("[data-app-role='dualModeList']").find("[name='disposition']").val(),'immutable'); //handles showloading
-						app.model.dispatchThis('immutable');
+
 						});
 					}
 				}, //execTicketClose

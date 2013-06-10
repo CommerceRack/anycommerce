@@ -5297,11 +5297,12 @@ dataAttribs -> an object that will be set as data- on the panel.
 			dialogConfirmRemove : function(vars)	{
 				vars = vars || {};
 				vars.message = vars.message || "Are you sure you want to remove this? There is no undo for this action."
-				vars.title = vars.title || "Please Confirm"
+				vars.title = vars.title || "Please Confirm";
+				
 				if(typeof vars.removeFunction == 'function')	{
 					var $D = this.dialogCreate(vars)
 					$D.append("<p>"+vars.message+"<\/p>");
-					$D.dialog("option", "width", ($(window).width() > 400)) ? 300 : '90%';
+					$D.dialog("option", "width", 300);
 					$D.dialog({ buttons: [
 						{ text: "Cancel", click: function() { $( this ).dialog( "close" ); } },
 						{ text: "Remove", click: function() {
