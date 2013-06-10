@@ -4879,6 +4879,9 @@ else	{
 				var dps = app.ext.admin.u.dpsGet(); //all 'session' vars
 				localStorage.clear();
 				app.storageFunctions.writeLocal('authAdminLogin',admin);
+// * 201320 -> domain and partition were persitent between sessions. bad for multi-account users and also support.
+				dps.admin.domain = '';
+				dps.admin.partition = '';
 				app.storageFunctions.writeLocal('session',dps);
 				},
 
