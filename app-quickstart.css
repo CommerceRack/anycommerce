@@ -1,5 +1,3 @@
-
-
 body,html	{font-size:100%; background:#B7A58B; margin:0px; padding:0px;  font-family:'Conv_HelveticaNeueLTPro-Roman',Sans-Serif;}
 @font-face {
   font-family: 'Anton';
@@ -53,7 +51,7 @@ div#appPreView {
     box-shadow: 0 0 6px 2px #555555;*/
     margin: 100px auto;
     padding: 20px;
-    width: 462px;
+    width:80%;
 }
 div#appPreView table {
     margin: 0 auto;
@@ -74,8 +72,7 @@ div#appPreView table div#loader > div {
     -moz-border-right-colors: none;
     -moz-border-top-colors: none;
     height: 31px;
-    width: 459px;
-}
+ }
 div#appPreView table div#loader > div > div.alignCenter {
     border-color: #494134 #655948 #C4BAAD;
     border-style: solid;
@@ -146,23 +143,17 @@ and offMenu is toggle off, hiding the change button.
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
 #mainContentArea{ background:#b7a58b;}
-.sliderM{width:948px; margin:20px auto;}
-.bannerS{ width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
-.rightB{ float:left; width:300px;box-shadow:0px 0px 9px #000;}
-   /* box-shadow: 1px 1px 5px 1px #222222;
-    height: 216px;
-    margin-left: 0;
-    margin-right: 20px;
-    position: relative;
-    text-align: center;
-    width: 216px;}*/
+.sliderM{max-width:948px; margin:70px auto 20px;}
+.bannerS{width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
+.rightB{ float:left; max-width:300px; box-shadow:0px 0px 9px #000;}
+.rightB img{width:100%;} 
 #couponCode{ height:15px; width:124px; margin:0 -6px 0 0; padding:2px 6px;}
 #addCouponBtn{ background:none !important; border:none !important; margin:-2px 0 0 0px;}
 div#container
 	{
 		margin: 0px auto;
 		position: relative;
-		width: 1020px;
+		max-width: 1020px;
 		
 	}
 		div#container div#topNav
@@ -171,7 +162,7 @@ div#container
 			height: 30px;
 			position: relative;
 			width: 100%;
-		}
+ 		}
 			div#container div#topNav div#topNavContent
 			{
 				color: #FFFFFF;
@@ -179,7 +170,8 @@ div#container
 				height: 30px;
 				margin: 0px auto;
 				position: relative;
-				width: 960px;
+				max-width: 960px;
+				
 			}
 			div#container div#topNav div#topNavContent img, div#container div#topNav div#topNavContent p
 			{
@@ -217,13 +209,13 @@ div#container
 			height: 124px;
 			position: relative;
 			width: 100%;
-		}
+ 		}
 			div#container div#header div#headerContent
 			{
 				height: 124px;
 				margin: 0px auto;
 				position: relative;
-				width: 960px;
+				max-width: 960px;
 			}
 				div#container div#header div#headerContent img#logo
 				{
@@ -235,9 +227,9 @@ div#container
 				div#container div#header div#headerContent input#txtSearch
 				{
 					height: 32px;
-					left: 470px;
+					/*left: 470px;
 					position: absolute;
-					top: 46px;
+					top: 46px;*/
 					width: 125px;
 					color:#999;
 					font-size:14px;
@@ -246,56 +238,55 @@ div#container
 				#btnTopNavSearch
 				{	
 					cursor: pointer;
-					height: 33px;
+					/*height: 33px;
 					left: 617px;
-					position: absolute;
 					top: 47px;
-					width: 35px;
-				
-					
-				}
+					*/
+					position: absolute;
+ 					width: 35px;
+ 				}
 				div#container div#header div#headerContent div#headerFreeShipping
 				{
 					background: url(images/header-free-shipping.png);
 					height: 54px;
-					left: 730px;
-					position: absolute;
+					/*left: 730px;
+					position: absolute;*/
 					width: 220px;
 					top: 20px;
 				}
 					div#container div#header div#headerContent div#headerFreeShipping img
 					{
 						left: -20px;
-						position: absolute;
+						position: relative;
 						top: -10px;
 					}
 				div#container div#header div#headerContent a#btnSocialFacebook
 				{
 					cursor: pointer;
-					left: 776px;
-					position: absolute;
-					top: 94px;
+					left: 10px;
+					position: relative;
+					top: 21px;
 				}
 				div#container div#header div#headerContent a#btnSocialTwitter
 				{
 					cursor: pointer;
-					left: 823px;
-					position: absolute;
-					top: 94px;
+					left: 20px;
+					position: relative;
+					top: 21px;
 				}
 				div#container div#header div#headerContent a#btnSocialYoutube
 				{
 					cursor: pointer;
-					left: 869px;
-					position: absolute;
-					top: 94px;
+					left: 30px;
+					position: relative;
+					top: 21px;
 				}				
 				div#container div#header div#headerContent a#btnSocialMail
 				{
 					cursor: pointer;
-					left: 916px;
-					position: absolute;
-					top: 94px;
+					left: 40px;
+					position: relative;
+					top: 21px;
 				}
 
 div#container div#footer
@@ -308,12 +299,12 @@ div#container div#footer
 			{
 				height: 358px;
 				margin: 0px auto;
-				width: 960px;
+				max-width: 960px;
 			}
 				div#container div#footer div#footerContent div#footerLinks
 				{
 					height: 290px;
-					width: 960px;
+					max-width: 960px;
 				}	
 					div#container div#footer div#footerContent div#footerLinks > ul
 					{
@@ -397,7 +388,7 @@ div#container div#footer
 				div#container div#footer div#footerContent div#copyright
 				{
 					color: #FFFFFF;
-					width: 960px;
+					max-width: 960px;
 				}
 					div#container div#footer div#footerContent div#copyright p
 					{
@@ -422,7 +413,7 @@ div#container div#footer
 				div#container div#footer div#footerContent div#copyright
 				{
 					height: 68px;
-					width: 960px;
+					max-width: 960px;
 				}
 				
 
@@ -433,23 +424,22 @@ div#container div.nav
 			height: 50px;
 			position: relative;
 			width: 100%;
-			
-			-moz-box-shadow:    1px 1px 5px 1px #222222;
+ 			-moz-box-shadow:    1px 1px 5px 1px #222222;
 			-webkit-box-shadow: 1px 1px 5px 1px #222222;
-			box-shadow:         1px 1px 5px 1px #222222;				
-		}
+			box-shadow:         1px 1px 5px 1px #222222; float:left;
+  		}
 			div#container div.nav div.navContent
 			{
 				height: 50px;
 				margin: 0px auto;
 				position: relative;
-				width: 960px;
+				max-width: 960px;
 			}
 				div#container div.nav div.navContent > ul
 				{
 					height: 50px;
 					margin: 0px auto;
-					width: 850px;
+					max-width: 850px;
 					padding:0px;
 				}
 					div#container div.nav div.navContent > ul > li
@@ -489,7 +479,7 @@ div#container div.nav
 							left: 25px;
 							position: absolute;
 							top: 50px;
-							width: 905px;
+							max-width: 905px;
 							z-index: 2000;
 							
 							-moz-box-shadow:    0px 1px 5px 1px #222222;
@@ -727,7 +717,7 @@ and override using classes or id's as needed.
 #cartStuffList li{ background:#c9bca8;}
 #cartStuffList li h4{ font-size:14px;}
 .productList h4, .productList h5, .productList h6, .categoryList h4, .categoryList h5, .categoryList h6	{padding:0; margin:0; font-size:12px;} /* h4 - h6 are used in default templates for name, price, etc */
-.midmain{ margin:0px auto; width:948px;}
+.midmain{ margin:0px auto; max-width:948px;}
 .midmain .productList li{font-size:.8em;border: 2px solid #FFFFFF;
     box-shadow: 1px 1px 5px 1px #222222;
 	background:#fff;
@@ -736,7 +726,7 @@ and override using classes or id's as needed.
     margin-right: 20px;
     position: relative;
     text-align: center;
-    width: 213px;}
+    max-width: 213px;}
 .midmain .productList li img.prodThumb{ width:213px;}
 .midmain .prodThumbContainer{ width:215px !important;}
 .productList li, .categoryList li	{font-size:.8em;}
@@ -773,7 +763,7 @@ and override using classes or id's as needed.
 PRODUCT DETAIL PAGE (productTemplate)
 
 ***************************************************/
-#container{ width:1000px; margin:0px auto;}
+#container{ max-width:1000px; margin:0px auto;}
 .prodViewerContainer	{width:938px; margin:20px auto 28px;}
 
 .breadAndAddThisContainer	{margin-bottom:8px; padding-bottom:8px; border-bottom:1px dotted #b6b6b6;}
@@ -1337,7 +1327,7 @@ CHECKOUT
 }
 ul.categoryList {
     margin: 0 auto;
-    width: 960px;
+    mix-width: 960px;
 }
 ul.categoryList li {
     background-color: #FFFFFF;
@@ -1381,7 +1371,7 @@ ul.categoryList li div.catName span {
 {
 	margin: 0px auto;
 	overflow: hidden;
-	width: 1000px;
+	width:auto !important;
 }
 
 .caroufredsel_wrapper div.ccItem
@@ -1389,12 +1379,12 @@ ul.categoryList li div.catName span {
 	float: left;
 	height: auto;
 	overflow: hidden;
-	padding-left:9px;
+	padding-left:25px;
 	/*width: 970px;*/
-	width: 977px;
+	max-width:977px;
 }
 
-.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ width:948px; margin:0px auto; padding:10px 0 0 9px;}
+.caroufredsel_wrapper div.ccItem #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ max-width:948px; margin:0px auto; padding:10px 0 0 9px;}
 
 div.catCarousel h2
 {
@@ -1413,9 +1403,9 @@ div.catCarousel2 h2
 	overflow: hidden;
 	padding-left:9px;
 	/*width: 970px;*/
-	width: 977px;
+	max-width: 977px !Important;
 }
-.caroufredsel_wrapper div.ccItem1 #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{ width:948px; margin:0px auto; padding:10px 0 0 9px;}
+.caroufredsel_wrapper div.ccItem1 #carCat1, #carCat2, #carCat3, #carCat4, #carCat5{width:948px; margin:0px auto; padding:10px 0 0 9px;}
 .productList > li {
     background: none repeat scroll 0 0 #FFFFFF;
     border: 0px solid #FFFFFF;
@@ -1690,7 +1680,7 @@ div.catCarousel2 h2
 	right:10px;
 	bottom: 10px;
 	text-align: right;
-	z-index: 9999;
+	z-index:9;
 }
 #slideshowNav a {
     background: none repeat scroll 0 0 #FFFFFF;
@@ -1711,3 +1701,127 @@ div.catCarousel2 h2
 #slideshowNav a:focus {
     outline: medium none;
 }
+
+/***** NEW STYLESHEET *****/
+
+.headert1{margin:11px 0 0 10px; padding:0px; float:left; cursor:pointer;}
+.headert2{margin:41px 0 0 156px; padding:0px; float:left;}
+.headert3{margin:15px 0 0 113px; padding:0px; float:left;}
+.socialicona{margin:0 0 0 35px; padding:0px; float:left;} 
+
+@media screen and (max-width: 320px) 
+{
+.headert1{margin:11px 0 0 0; padding:0px; float:left; cursor:pointer;}
+.headert1 img{width:90%;}
+.headert2{margin:41px 0 0 0; padding:0px; float:left;}
+.headert3{margin:15px 0 0 0; padding:0px; float:left;}  
+.bannerS{width:300px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
+.hlogo{width:250px !important;}
+}
+
+@media screen and (max-width:480px) 
+{
+div#appPreView table div#loader > div.alignCenter > progress{border-color: #352820 #352820 #C7BAAA; border-style: solid; border-width: 2px; height: 27px; width:100%;}
+.dropDownListHolder img{width:100%;}
+
+}
+
+@media screen and (max-width:600px) 
+{
+.bannerS{width:100%; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
+.dropDownListHolder img{width:100%;}
+}
+.dropDownListHolder img{width:100%;}
+
+
+
+/*@media screen and (min-width: 320px) and (max-width: 480px) {
+  
+}*/
+
+
+
+/* Layered/filtered Search */
+
+label.break	{display:block; margin-bottom:2px;}
+.layeredSearch	{color:#ffffff;}
+.layeredSearch legend	{
+	font-size:16px; 
+	font-weight:bold;
+	font-family: 'Neuton', serif;
+	color:#6F290F;
+	}
+.layeredSearch label{
+	font-size:12px;
+	color:#6F290F;
+}
+.layeredSearch fieldset	{margin-bottom:12px;}
+
+.layeredSearch div{
+	"border:thin solid white; 
+	width:90%; 
+	margin-left:5%; 
+	margin-right:5%; 
+	margin-bottom:15px; 
+	background-image: none;
+	background: rgb(164,134,114); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(164,134,114,1) 0%, rgba(119,80,50,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(164,134,114,1)), color-stop(100%,rgba(119,80,50,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a48672', endColorstr='#775032',GradientType=0 ); /* IE6-9 */
+}
+
+.woodType{
+	
+}
+.kingHeight{
+	
+}
+.resetButton{
+	width:100px;
+	height:30px;
+	margin-left: 50px;
+	margin-bottom: 10px;
+	border:none;
+	border-radius:4px;
+	color:white;
+	background: rgb(164,134,114); /* Old browsers */
+	background: -moz-linear-gradient(top,  rgba(164,134,114,1) 0%, rgba(119,80,50,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(164,134,114,1)), color-stop(100%,rgba(119,80,50,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(164,134,114,1) 0%,rgba(119,80,50,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a48672', endColorstr='#775032',GradientType=0 ); /* IE6-9 */
+}
+div .slider-range a:nth-of-type(1){
+	background-image:url(images/arrow_circle_green_right.png) !important;
+}
+
+div .slider-range a:nth-of-type(2){
+	background-image:url(images/arrow_circle_green_left.png) !important;
+}
+.layeredSearch input{
+	color:#6F290F;
+}
+
+div ul .filterSearchResults3{
+	height: 330px;
+	width: 220px;
+}
+.catBrowseSidebar{
+	width:200px;
+	background-color:#B29F6B;
+	float:left;
+	border-radius:5px;
+	
+}
+.catBrowseSidebar a{
+	color:#ffffff;
+	font-size:16px;
+	font-family: 'Neuton', serif;
+	text-decoration:none;
+} 

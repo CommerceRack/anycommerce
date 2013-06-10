@@ -14,7 +14,7 @@ app.rq.push(['extension',0,'store_product','extensions/store_product.js']);
 app.rq.push(['extension',0,'store_cart','extensions/store_cart.js']);
 app.rq.push(['extension',0,'store_crm','extensions/store_crm.js']);
 app.rq.push(['extension',0,'myRIA','app-quickstart.js','startMyProgram']);
-
+app.rq.push(['extension',0,'store_filter','extensions/_thechessstore.js']);
 //app.rq.push(['extension',1,'google_analytics','extensions/partner_google_analytics.js','startExtension']);
 //app.rq.push(['extension',0,'partner_addthis','extensions/partner_addthis.js','startExtension']);
 //app.rq.push(['extension',1,'resellerratings_survey','extensions/partner_buysafe_guarantee.js','startExtension']); /// !!! needs testing.
@@ -202,6 +202,46 @@ $container.anycontent({data:app.ext.myRIA.vars.session}); //build product list
 }]);
 
 
+app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
+	
+	var $context = $(app.u.jqSelector('#',P.parentID));
+	//**COMMENT TO REMOVE AUTO-RESETTING WHEN LEAVING CAT PAGE FOR FILTERED SEARCH**
+	
+	app.ext.store_filter.vars.catPageID = $(app.u.jqSelector('#',P.parentID)); 
+	
+	
+	app.u.dump("BEGIN categoryTemplate onCompletes for filtering");
+	if(app.ext.store_filter.filterMap[P.navcat])	{
+		app.u.dump(" -> safe id DOES have a filter.");
+
+		var $page = $(app.u.jqSelector('#',P.parentID));
+		app.u.dump(" -> $page.length: "+$page.length);
+		if($page.data('filterAdded'))	{} //filter is already added, don't add again.
+		else	{
+			$page.data('filterAdded',true)
+			var $form = $("[name='"+app.ext.store_filter.filterMap[P.navcat].filter+"']",'#appFilters').clone().appendTo($('.filterContainer',$page));
+			$form.on('submit.filterSearch',function(event){
+				event.preventDefault()
+				app.u.dump(" -> Filter form submitted.");
+				app.ext.store_filter.a.execFilter($form,$page);
+				});
+	
+			if(typeof app.ext.store_filter.filterMap[P.navcat].exec == 'function')	{
+				app.ext.store_filter.filterMap[P.navcat].exec($form,P)
+				}
+	
+	//make all the checkboxes auto-submit the form.
+			$(":checkbox",$form).off('click.formSubmit').on('click.formSubmit',function() {
+				$form.submit();      
+				});
+			}
+		}
+		
+		$('.resetButton', $context).click(function(){
+		$context.empty().remove();
+		showContent('category',{'navcat':P.navcat});
+		});
+	}]);
 
 
 //don't execute script till both jquery AND the dom are ready.
