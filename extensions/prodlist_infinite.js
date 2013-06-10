@@ -135,7 +135,9 @@ It is run once, executed by the renderFormat.
 //also need a list of product (csv)
 				if($tag && bindData.csv)	{
 //					app.u.dump(" -> required parameters exist. Proceed...");
+					
 					bindData.csv = app.ext.store_prodlist.u.cleanUpProductList(bindData.csv); //strip blanks and make sure this is an array. prod attributes are not, by default.
+					app.u.dump(" -> bindData.csv after cleanup: "); app.u.dump(bindData.csv);
 					this.addProductToPage($tag);
 					}
 				else	{
