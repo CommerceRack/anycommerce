@@ -2687,36 +2687,36 @@ http://code.google.com/apis/checkout/developer/checkout_pixel_tracking.html</a>
 <fieldset class='labelsAsBreaks alignedInputs'>
 	<legend>Organization Information</legend>
 	
-	<div class='label'><input type="text" placeholder="Legal Company Name" value="" name="org.company" data-bind="var: account(org.company); format:popVal;" /></div>
-	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="org.email" data-bind="var: account(org.email); format:popVal;" /></div>
-	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="org.phone" data-bind="var: account(org.phone); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="owner first name" value="" name="org.firstname" data-bind="var: account(org.firstname); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="owner last name" value="" name="org.lastname" data-bind="var: account(org.lastname); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="address1" value="191 Calle Magdalena" name="org.address1" data-bind="var: account(org.address1); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="address2" value="suite 200" name="org.address2" data-bind="var: account(org.address2); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="city" value="Del Mar" name="org.city" data-bind="var: account(org.city); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="state" value="" name="org.region" data-bind="var: account(org.region); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="zip" value="" name="org.postal" data-bind="var: account(org.postal); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="country" value="" name="org.country" data-bind="var: account(org.country); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="Legal Company Name" value="" name="org.company" data-bind="var: account(%ACCOUNT.org.company); format:popVal;" /></div>
+	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="org.email" data-bind="var: account(%ACCOUNT.org.email); format:popVal;" /></div>
+	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="org.phone" data-bind="var: account(%ACCOUNT.org.phone); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="owner first name" value="" name="org.firstname" data-bind="var: account(%ACCOUNT.org.firstname); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="owner last name" value="" name="org.lastname" data-bind="var: account(%ACCOUNT.org.lastname); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="address1" value="" name="org.address1" data-bind="var: account(%ACCOUNT.org.address1); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="address2" value="" name="org.address2" data-bind="var: account(%ACCOUNT.org.address2); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="city" value="" name="org.city" data-bind="var: account(%ACCOUNT.org.city); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="state" value="" name="org.region" data-bind="var: account(%ACCOUNT.org.region); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="zip" value="" name="org.postal" data-bind="var: account(%ACCOUNT.org.postal); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="country" value="" name="org.country" data-bind="var: account(%ACCOUNT.org.country); format:popVal;" /></div>
 </fieldset>
 	</td>
 
 	<td width="50%" class='valignTop'>
 <fieldset class='marginBottom labelsAsBreaks alignedInputs'>
 	<legend>Administrative Contact</legend>
-	<div class='label'><input type="text" placeholder="first name" value="" name="bill.firstname" data-bind="var: account(bill.firstname); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="last name" value="" name="bill.lastname" data-bind="var: account(bill.lastname); format:popVal;" /></div>
-	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="bill.email" data-bind="var: account(bill.email); format:popVal;" /></div>
-	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="bill.phone" data-bind="var: account(bill.phone); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="first name" value="" name="bill.firstname" data-bind="var: account(%ACCOUNT.bill.firstname); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="last name" value="" name="bill.lastname" data-bind="var: account(%ACCOUNT.bill.lastname); format:popVal;" /></div>
+	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="bill.email" data-bind="var: account(%ACCOUNT.bill.email); format:popVal;" /></div>
+	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="bill.phone" data-bind="var: account(%ACCOUNT.bill.phone); format:popVal;" /></div>
 
 </fieldset>
 
 <fieldset class='labelsAsBreaks alignedInputs'>
 	<legend>Technical Contact</legend>
-	<div class='label'><input type="text" placeholder="first name" value="" name="tech.firstname"  data-bind="var: account(tech.firstname); format:popVal;" /></div>
-	<div class='label'><input type="text" placeholder="last name" value="" name="tech.lastname" data-bind="var: account(tech.lastname); format:popVal;" /></div>
-	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="tech.email" data-bind="var: account(tech.email); format:popVal;" /></div>
-	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="tech.phone" data-bind="var: account(tech.phone); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="first name" value="" name="tech.firstname"  data-bind="var: account(%ACCOUNT.tech.firstname); format:popVal;" /></div>
+	<div class='label'><input type="text" placeholder="last name" value="" name="tech.lastname" data-bind="var: account(%ACCOUNT.tech.lastname); format:popVal;" /></div>
+	<div class='label'><input type="email" placeholder="email@domain.com" value="" name="tech.email" data-bind="var: account(%ACCOUNT.tech.email); format:popVal;" /></div>
+	<div class='label'><input type="tel" placeholder="555-555-1212" value="" name="tech.phone" data-bind="var: account(%ACCOUNT.tech.phone); format:popVal;" /></div>
 </fieldset>
 	</td>
 </tr>

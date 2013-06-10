@@ -201,7 +201,7 @@ var admin_config = function() {
 				
 			showContactInformation : function($target)	{
 				$target.showLoading({'message':'Fetching Contact Details'});
-//				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
+				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
 				app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
 				app.model.dispatchThis('mutable');
 				},
