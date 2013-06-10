@@ -2014,7 +2014,7 @@ else	{
 	}
 							}});
 //						app.u.dump(" -> frmObj.updateSystemMessage: "+frmObj.updateSystemMessage);
-						if(frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
+						if(frmObj.updateSystemMessage && frmObj.updateSystemMessage.toLowerCase() == 'on' && frmObj.MSGID != 'BLANK')	{
 //							app.u.dump(" -> updating default system messaging");
 							frmObj.PRT = partition;
 							frmObj.TYPE = 'ORDER'; //Don't pass a blank FORMAT, must be set to correct type.
