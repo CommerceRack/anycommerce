@@ -143,7 +143,7 @@ and offMenu is toggle off, hiding the change button.
 .bindByAnchor	{} /* here just to give a little aid to wysiwyg editors. no styles should be applied. used w/ bindNav feature */
 
 #mainContentArea{ background:#b7a58b;}
-.sliderM{max-width:948px; margin:70px auto 20px;}
+.sliderM{max-width:948px; margin:70px auto 20px; display:none;}
 .bannerS{width:620px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
 .rightB{ float:left; max-width:300px; box-shadow:0px 0px 9px #000;}
 .rightB img{width:100%;} 
@@ -161,7 +161,7 @@ div#container
 			background: url(images/background-top-nav.png) repeat-x;
 			height: 30px;
 			position: relative;
-			width: 100%;
+			width: 100%; 
  		}
 			div#container div#topNav div#topNavContent
 			{
@@ -208,7 +208,7 @@ div#container
 			background: url(images/background-header.png) repeat-x;
 			height: 124px;
 			position: relative;
-			width: 100%;
+			width: 100%;  
  		}
 			div#container div#header div#headerContent
 			{
@@ -293,7 +293,7 @@ div#container div#footer
 		{
 			background: url(images/background-footer.png);
 			height: 358px;
-			width: 100%;
+			width: 100%;  
 		}
 			div#container div#footer div#footerContent
 			{
@@ -426,7 +426,7 @@ div#container div.nav
 			width: 100%;
  			-moz-box-shadow:    1px 1px 5px 1px #222222;
 			-webkit-box-shadow: 1px 1px 5px 1px #222222;
-			box-shadow:         1px 1px 5px 1px #222222; float:left;
+			box-shadow:         1px 1px 5px 1px #222222; float:left; 
   		}
 			div#container div.nav div.navContent
 			{
@@ -1717,6 +1717,7 @@ div.catCarousel2 h2
 .headert3{margin:15px 0 0 0; padding:0px; float:left;}  
 .bannerS{width:300px; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
 .hlogo{width:250px !important;}
+.featuredCategories div.catNavContent p:not(:last-child){width:100px; font-family:'Conv_BebasNeue';}
 }
 
 @media screen and (max-width:480px) 
@@ -1731,14 +1732,9 @@ div#appPreView table div#loader > div.alignCenter > progress{border-color: #3528
 .bannerS{width:100%; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
 .dropDownListHolder img{width:100%;}
 }
+
+
 .dropDownListHolder img{width:100%;}
-
-
-
-/*@media screen and (min-width: 320px) and (max-width: 480px) {
-  
-}*/
-
 
 
 /* Layered/filtered Search */
