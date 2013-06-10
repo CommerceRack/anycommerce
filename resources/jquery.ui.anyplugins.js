@@ -1224,7 +1224,7 @@ supported options include tabID (given to the container), tabtext (what appears 
 					'position':'fixed',
 					'left':0,
 					'top':'120px',
-					'width':'120px',
+					'width':'25px', // ** 201320 -> changed from 120 to 25 to solve a z-index issue. probably a typo to begin with.
 					'height':'300px',
 					'z-index':500
 					}).appendTo('body');

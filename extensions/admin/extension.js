@@ -2955,6 +2955,8 @@ app.ext.admin.u.changeFinderButtonsState('enable'); //make buttons clickable
 
 //app.u.dump(" -> mode: "+mode);
 //app.u.dump(" -> path: "+path);
+//app.u.dump(" -> opts: "); app.u.dump(opts);
+
 
 var reloadTab = 0; //used in conjunction with #: to determine if new or old contens should be displayed.
 var $target = undefined; //jquery object of content destination
@@ -3005,7 +3007,10 @@ else if(opts.tab)	{
 	if(opts.tab != 'product')	{
 		app.ext.admin_prodEdit.u.handleProductListTab('deactivate');
 		}
-	if(opts.tab != 'reports')	{
+
+	if(opts.tab == 'utilities' && path == '#!batchManager')	{}
+	else	{
+//nuke sticky tab once leaving batchManager.
 		$('#batchJobsStickyTab').stickytab('destroy');
 		}
 	
