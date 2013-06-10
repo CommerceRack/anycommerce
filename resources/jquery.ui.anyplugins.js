@@ -672,17 +672,20 @@ run $('#someTable').anytable() to have the headers become clickable for sorting 
 (function($) {
 	$.widget("ui.anytable",{
 		options : {
+			inverse : false
 			},
 		_init : function(){
 			this._styleHeader();
-			var $table = this.element;
+			var
+				$table = this.element,
+				o = this.options;
 			
 	
 			$('th',$table).each(function(){
 
 var th = $(this),
-thIndex = th.index(),
-inverse = false;
+thIndex = th.index();
+
 // * 201318 -> support for data-anytable-nosort='true' which will disable sorting on the th.
 if(th.data('anytable-nosort'))	{} //sorting is disabled on this column. good for columns that only have buttons.
 else	{
@@ -695,17 +698,17 @@ else	{
 				var numB = Number($.text([b]).replace(/[^\w\s]/gi, ''));
 				if(numA && numB)	{
 	//				console.log('is a number');
-					r = numA > numB ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					r = numA > numB ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
 					}
 				else	{
-					r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? inverse ? -1 : 1 : inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
+					r = $.text([a]).toLowerCase() > $.text([b]).toLowerCase() ? o.inverse ? -1 : 1 : o.inverse ? 1 : -1; //toLowerCase make the sort case-insensitive.
 					}
 				return r
 				},function(){
 			// parentNode is the element we want to move
 			return this.parentNode; 
 			});
-		inverse = !inverse;
+		o.inverse = !o.inverse;
 		});
 	}
 
@@ -714,7 +717,8 @@ else	{
 
 		_setOption : function(option,value)	{
 			$.Widget.prototype._setOption.apply( this, arguments ); //method already exists in widget factory, so call original.
-			switch (option)	{
+// * 201320 -> the code below isn't necessary (from the copy/paste used to create widget
+/*			switch (option)	{
 				case 'state':
 					(value === 'close') ? this.close() : this.open(); //the open/close function will change the options.state val as well.
 					break;
@@ -730,7 +734,7 @@ else	{
 					console.log(" -> option: "+option);
 					break;
 				}
-			}, //_setOption
+*/			}, //_setOption
 
 		_styleHeader : function()	{
 			var $table = this.element;
