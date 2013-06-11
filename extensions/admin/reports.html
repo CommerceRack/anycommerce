@@ -511,18 +511,18 @@
 					
 					<label>
 						<span>Dates</span>
-						<select name='period' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
+						<select name='VERB' data-app-event="admin_reports|showSalesReportPeriodInputs" required='required'>
 							<option value=''>please choose</option>
-							<option value='month'>by month</option>
-							<option value='daterange'>date range</option>
-							<option value='period'>by period</option>
-							<option value='invoicerange'>invoice range</option>
+							<option value='SALES-BYMONTH'>by month</option>
+							<option value='SALES-BYPERIOD'>date range</option>
+							<option value='SALES-QUICK'>by period</option>
+							<option value='SALES-BYINVOICE'>invoice range</option>
 						</select>
 					</label>
 					
 		
 		
-		<div class='formPeriodRange formPeriodRange-month displayNone'>
+		<div class='formPeriodRange formPeriodRange-SALES-BYMONTH displayNone'>
 		<select name="month">
 			<option value="1">January</option>
 			<option value="2">February</option>
@@ -548,12 +548,12 @@
 		</select>
 		</div>
 		
-		<div class='formPeriodRange formPeriodRange-daterange displayNone'>
+		<div class='formPeriodRange formPeriodRange-SALES-BYPERIOD displayNone'>
 			<label>Begins <input type="text" name="begins" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
 			<label>Ends <input type="text" name="ends" maxlength="8" size="8" class='datepicker' > MM/DD/YY</label>
 		</div>
 		
-		<div class='formPeriodRange formPeriodRange-period displayNone'>
+		<div class='formPeriodRange formPeriodRange-SALES-QUICK displayNone'>
 		<select name="PERIOD">
 			<option value="today">Today Only</option>
 			<option value="thismonth">Month to Date</option>
@@ -562,7 +562,7 @@
 		</select>
 		</div>
 		
-		<div class='formPeriodRange formPeriodRange-invoicerange displayNone'>
+		<div class='formPeriodRange formPeriodRange-SALES-BYINVOICE displayNone'>
 			<label>First Invoice: <input type="text" name="startinv" maxlength="15" size="15"> ####-##-####</label>
 			<label>Last Invoice: <input type="text" name="endinv" maxlength="15" size="15"> ####-##-####</label>
 		</div>
