@@ -26,11 +26,10 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 <tr id='ruleBuilderRowTemplate_coupons'>
 	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
 	<td data-bind="var: rule(code); format:text;"></td>
-	<td data-bind="var: rule(name); format:text;"></td>
-	<td data-bind="var: rule(created); format:text;"></td>
+	<td data-bind="var: rule(hint); format:text;"></td>
 	<td data-bind="var: rule(exec); format:text;"></td>
 	<td data-bind="var: rule(match); format:text;"></td>
-	<td data-bind="var: rule(schedule); format:text;"></td>
+	<td data-bind="var: rule(matchvalue); format:text;"></td>
 	<td data-bind="var: rule(value); format:text;"></td>
 	<td class='alignRight'>
 		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
@@ -47,7 +46,7 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 
 <form id='rulesInputsTemplate_coupons'>
 
-<fieldset>
+<fieldset class='labelsAsBreaks alignedLabels'>
 <label>
 	<span>Hint:</span>
 	<input type="text" name="HINT" value="New Rule" size="20">
@@ -296,26 +295,6 @@ ITEM Matching rules: extended total (qty * price) <br>
 -->
 
 
-<div id='promotionsPageTemplate'>
-
-	<div data-app-role='promotionsTabContainer'>
-
-		<ul>
-			<li><a href='#coupon'>Coupons</a></li>
-			<li><a href='#promotion'>Promotions</a></li>
-			<li><a href='#debug'>Debug</a></li>
-		</ul>
-		
-		
-		<section data-anytab-content='coupon' class='clearfix'></section>
-		<section data-anytab-content='promotion' class='clearfix'></section>
-		<section data-anytab-content='debug' class='clearfix'></section>
-
-	</div>
-
-</div>
-
-
 
 <div id='couponAddUpdateContentTemplate'>
 
@@ -382,8 +361,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 <!-- ['','Enabled','Code','Title','Created','Begins','Expires',''] -->
 <table>
 <tr id='couponsResultsRowTemplate'>
-	<td></td>
-	<td data-bind="var:coupon(disabled); format:text;"></td>
+	<td data-bind="var:coupon(disabled); format:isNotDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(code); format:text;"></td>
 	<td data-bind="var:coupon(title); format:text;"></td>
 	<td data-bind="var:coupon(created_gmt); format:epoch2pretty;"></td>

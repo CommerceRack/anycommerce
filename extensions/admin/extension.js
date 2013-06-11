@@ -3944,8 +3944,8 @@ app.ext.admin.calls.appResource.init('shipcodes.json',{},'immutable'); //get thi
 				else if(path == '#!giftcardManager')	{
 					app.ext.admin_customer.a.showGiftcardManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
-				else if(path == '#!promotionsManager')	{
-					app.ext.admin_config.a.showPromotionsManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
+				else if(path == '#!couponManager')	{
+					app.ext.admin_config.a.showCouponManager($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
 					}
 				else if(path == '#!productPowerTool')	{
 					app.ext.admin_tools.a.showPPT($(app.u.jqSelector('#',app.ext.admin.vars.tab+'Content')));
@@ -5149,8 +5149,28 @@ else	{
 	}
 
 				
+				},
+				
+			getValueByKeyFromArray : function(obj,key,value)	{
+//				app.u.dump("BEGIN admin.u.getValueByKeyFromArray");
+//				app.u.dump("key: "+key);
+//				app.u.dump("value: "+value);
+//				app.u.dump("obj: "); app.u.dump(obj);
+				var r = false; //what is returned. false or the object isf a match is found.
+				if(key && value && !$.isEmptyObject(obj))	{
+					for(var index in obj)	{
+						if(obj[index][key] == value)	{
+							r = obj[index];
+							break; //once a match is found, exit early.
+							}
+						}
+//					app.u.dump("getValueByKeyFromArray r: "); app.u.dump(r);
+					}
+				else	{
+					$('#globalMessaging').anymessage({'message':'In admin.u.getValueByKeyFromArray, either obj is empty or key ['+key+'] and/or value ['+value+'] is not set.','gMessage':true});
+					}
+				return r;
 				}
-
 
 			},	//util
 			
@@ -5179,10 +5199,10 @@ vars:
 				vars = vars || {};
 				if($target instanceof jQuery && vars.tbodyDatabind)	{
 //set up the defaults.
-					vars.showLoading = vars.showLoading || true; //to be consistent, default this to on.
+					vars.showLoading = (vars.showLoading === false) ? false  : true; //to be consistent, default this to on.
 					vars.showLoadingMessage = vars.showLoadingMessage || "Fetching Content...";
-					vars.anytable = vars.anytable || true;
-					vars.handleAppEvents = vars.handleAppEvents || true;
+					vars.anytable = (vars.anytable === false) ? false  : true;
+					vars.handleAppEvents = (vars.handleAppEvents === false) ? false  : true;
 
 					var $DM = $("<div \/>"); //used as a holder for the content. It's children are appended to $target. Allows DOM to only be updated once.
 

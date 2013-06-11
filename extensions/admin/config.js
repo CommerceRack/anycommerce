@@ -127,7 +127,7 @@ var admin_config = function() {
 						}
 					}},'mutable');
 				app.model.dispatchThis('mutable');
-				},
+				}, //showPaymentManager
 			
 			showPaymentTypeEditorByTender : function(tender,$target){
 //				app.u.dump("BEGIN showPaymentTypeEditorByTender ["+tender+"]");
@@ -198,14 +198,16 @@ var admin_config = function() {
 					$('#globalMessaging').anymessage({'message':'In admin_config.a.showPaymentTypeEditorByTender, both $target ['+typeof $target+'] and tender ['+tender+'] are required.','gMessage':true});
 					}
 				}, //showPaymentTypeEditorByTender
-				
+
+
 			showContactInformation : function($target)	{
 				$target.showLoading({'message':'Fetching Contact Details'});
 				app.model.destroy('adminConfigDetail|account|'+app.vars.partition);
 				app.ext.admin.calls.adminConfigDetail.init({'account':true},{'templateID':'contactInformationTemplate','datapointer' : 'adminConfigDetail|account|'+app.vars.partition, 'callback' : 'anycontent','jqObj':$target},'mutable');
 				app.model.dispatchThis('mutable');
-				},
-		
+				}, //showContactInformation
+
+
 			showTaxConfig : function($target)	{
 				$target.empty().showLoading({'message':'Fetching Tax Details'});
 				var datapointer = 'adminConfigDetail|taxes|'+app.vars.partition
@@ -233,8 +235,9 @@ else	{
 
 					}},'mutable');
 				app.model.dispatchThis('mutable');
-				}, //showContactInformation
-			
+				}, //showTaxConfig
+
+
 			showShippingManager : function($target)	{
 				$target.showLoading({'message':'Fetching your Active Shipping Methods'});
 				
@@ -304,6 +307,7 @@ else	{
 				app.model.dispatchThis('mutable');
 				}, //showShippingManager
 
+
 			showAddFlexShipment : function(shipmethod,$target)	{
 				if(shipmethod && $target)	{
 					$target.empty();
@@ -322,6 +326,7 @@ else	{
 					$("#globalMessaging").anymessage({'message':'In admin_config.a.showAddFlexShipment, shipmethod and target not passed.','gMessage':true});
 					}
 				}, //showAddFlexShipment
+
 
 			showShipMethodEditorByProvider : function(provider,$target)	{
 				
@@ -382,17 +387,15 @@ else	{
 				}, //showShipMethodEditorByProvider
 				
 				
-			showPromotionsManager : function($target)	{
+			showCouponManager : function($target)	{
 				
-				$target.empty().anycontent({'templateID':'promotionsPageTemplate','showLoading':false});
-				$("[data-app-role='promotionsTabContainer']",$target).anytabs();
+				$target.empty();
 				
-				var $table = app.ext.admin.i.DMICreate($("[data-anytab-content='coupon']",$target),{
-					'header' : '', //left off because the interface is in a tab.
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Coupon Manager', //left off because the interface is in a tab.
 					'className' : 'couponManager',
-					'controls' : "",
 					'buttons' : ["<button data-app-event='admin_config|couponCreateShow'>Add Coupon<\/button>"],
-					'thead' : ['','Enabled','Code','Title','Created','Begins','Expires',''],
+					'thead' : ['Enabled','Code','Title','Created','Begins','Expires',''],
 //					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
 					});
@@ -403,25 +406,6 @@ else	{
 					}
 				else	{} //buildDualMode will handle the error display.
 
-/*				
-				var $promoTable = app.ext.admin.i.DMICreate($("[data-anytab-content='coupon']",$target),{
-					'header' : 'Coupons',
-					'className' : 'couponManager',
-					'controls' : "",
-					'buttons' : ["<button data-app-event='admin_customer|couponCreateShow'>Add Coupon<\/button>"],
-					'thead' : ['','Enabled','Code','Title','Created','Begins','Expires',''],
-//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
-					'tbodyDatabind' : "var: users(@COUPONS); format:processList; loadsTemplate:couponsResultsRowTemplate;"
-					});
-
-				if($promoTable)	{
-					app.ext.admin.calls.adminProductReviewList.init({'filter':'UNAPPROVED'},{'callback':'anycontent','jqObj':$promoTable},'mutable');
-					app.model.dispatchThis();
-					}
-				else	{} //buildDualMode will handle the error display.
-*/
-
-
 				},//showPromotionsManager
 
 
@@ -431,9 +415,11 @@ else	{
 //vars will be passed as param 2 (vars) into handleAppEvents so that the button events will know what mode to use.
 
 			showRulesBuilderInModal : function(vars)	{
+				app.u.dump("BEGIN admin_config.a.showRulesBuilderInModal");
+				app.u.dump("vars: "); app.u.dump(vars);
 				vars = vars || {};
 
-				if(vars.table && ((vars.rulesmode == 'shipping' && vars.provider) || vars.rulesmode == 'coupons'))	{
+				if(vars.table && ((vars.rulesmode == 'shipping' && vars.provider) || (vars.rulesmode == 'coupons' && vars.couponCode)))	{
 
 
 
@@ -465,16 +451,14 @@ if(vars.rulesmode == 'shipping')	{
 	$D.attr('data-provider',vars.provider);
 	}
 else if(vars.rulesmode == 'coupons')	{
-	DMIVars.thead = ['Code','Name','Created','Expires'];
+	DMIVars.thead = ['','Code','hint','Exec','Match','Match Value','Value','']; //first empty is for drag icon. last one is for buttons.
 	DMIVars.showLoading = false; //There's no data request required. this allows immediate editing.
-	DMIVars.tbodyDatabind = 'var: rules(@RULES); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
+	DMIVars.tbodyDatabind = 'var: rules(@rules); format:processList; loadsTemplate:ruleBuilderRowTemplate_coupons;'
 	}
 else	{}
 
 var $DMI = app.ext.admin.i.DMICreate($D,DMIVars);
 $DMI.attr({'data-table':vars.table,'data-rulesmode' : vars.rulesmode})
-
-
 
 $("[data-app-role='dualModeListTbody']",$D).sortable().on("sortupdate",function(evt,ui){
 	ui.item.addClass('edited');
@@ -503,6 +487,8 @@ if(vars.rulesmode == 'shipping')	{
 	app.model.dispatchThis('mutable');
 	}
 else if(vars.rulesmode == 'coupons')	{
+	var data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'],'id',vars.couponCode);
+	$D.anycontent({'data': data});
 	app.u.handleAppEvents($D,vars);
 	}
 else	{
@@ -520,20 +506,20 @@ else	{
 
 
 			showUPSOnlineToolsRegInModal : function(vars)	{
-vars = vars || {}; //may include supplier
-var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
-$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{},'dataAttribs' : vars });
-$D.dialog({
-	width : '90%',
-	modal: true,
-	autoOpen: false,
-	close: function(event, ui)	{
-		$(this).dialog('destroy').remove();
-		}
-	});
-app.u.handleAppEvents($D);
-$D.dialog('open');	
-				},
+				vars = vars || {}; //may include supplier
+				var $D = $("<div \/>").attr('title',"Apply for UPS onLine Tools / Change Shipper Number")
+				$D.anycontent({'templateID':'shippingUPSOnlineToolsRegTemplate','data':{},'dataAttribs' : vars });
+				$D.dialog({
+					width : '90%',
+					modal: true,
+					autoOpen: false,
+					close: function(event, ui)	{
+						$(this).dialog('destroy').remove();
+						}
+					});
+				app.u.handleAppEvents($D);
+				$D.dialog('open');	
+				}, //showUPSOnlineToolsRegInModal
 			
 			showFedExMeterInModal : function(vars)	{
 vars = vars || {}; //may include supplier
@@ -541,7 +527,7 @@ var $D = app.ext.admin.i.dialogCreate({'title':'Renew FedEx Meter','templateID':
 app.u.handleAppEvents($D);
 $D.addClass('labelsAsBreaks alignedLabels');
 $D.dialog('open');	
-				}
+				} //showFedExMeterInModal
 
 			}, //Actions
 
@@ -556,7 +542,15 @@ $D.dialog('open');
 				else	{
 					$tag.anymessage({'message':'Unable to render list item - no loadsTemplate specified.','persistent':true});
 					}
+				},
+//for coupons, disabled=1 is returned, as opposed to enabled=1. so we look for an absolute zero value.
+			isNotDisabled : function($tag,data)	{
+				if(Number(data.value) === 0)	{
+					$tag.append("<span class='ui-icon ui-icon-check' />");
+					}
+				else	{}
 				}
+			
 			}, //renderFormats
 
 ////////////////////////////////////   UTIL [u]   \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -679,7 +673,7 @@ $D.dialog('open');
 						'handleAppEvents' : true,
 						'data' : app.data['adminConfigDetail|coupons|'+app.vars.partition]['@COUPONS'][$btn.closest('tr').data('obj_index')]
 						});
-
+					$panel.attr('data-couponcode',couponCode);
 					$('form',$panel)
 						.append("<input type='hidden' name='_macrobuilder' value='admin_config|couponUpdate' /><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/message' value='The coupon has been successfully updated.' />")
 					 	.find(".applyDatepicker").datepicker({
@@ -1114,7 +1108,7 @@ app.model.dispatchThis('immutable');
 								}
 							}
 						else if(rulesMode == 'coupons')	{
-							app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'table':$btn.data('table')});
+							app.ext.admin_config.a.showRulesBuilderInModal({'rulesmode':rulesMode,'table':$btn.data('table'),'couponCode':$btn.closest("[data-couponcode]").data('couponcode')});
 							}
 						else	{
 							$('#globalMessaging').anymessage({'message':'In admin_config.e.ruleBuilderShow, rulesmode value is not valid ['+vars.rulesmode+']. must be shipping or coupons','gMessage':true});
@@ -1161,7 +1155,7 @@ event.preventDefault();
 
 
 vars = vars || {};
-app.u.dump(" -> vars: "); app.u.dump(vars);
+//app.u.dump(" -> vars: "); app.u.dump(vars);
 
 var
 	$dualModeContainer = $btn.closest("[data-app-role='dualModeContainer']"),
@@ -1220,7 +1214,7 @@ app.u.dump("BEGIN admin_config.e.showRuleEditorAsPanel click event");
 
 var
 	$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
-	data = $btn.closest('tr').data(),
+	data = {},
 	$target = $("[data-app-role='dualModeDetail']",$DMI),
 	header = '', //heading for rules editor.
 	templateID = '',
@@ -1229,7 +1223,7 @@ var
 
 if(vars.rulesmode)	{
 	if(vars.rulesmode == 'shipping')	{
-		$.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data());
+		data = $.extend(true,{},app.data['adminWholesaleScheduleList'],$btn.closest('tr').data());
 		var provider = $btn.closest("[data-provider]").data('provider');
 		panelID = 'ruleBuilder_'+data.provider;
 		header = 'Edit: '+data.name;
@@ -1237,6 +1231,7 @@ if(vars.rulesmode)	{
 		}
 	else if(vars.rulesmode == 'coupons')	{
 		header = 'Edit: '+data.id;
+		data = $btn.closest('tr').data();
 		panelID = 'ruleBuilder_'+data.id;
 		templateID = 'rulesInputsTemplate_coupons';
 		}
