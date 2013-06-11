@@ -1186,7 +1186,7 @@ var
 	macros = new Array();
 
 //need a table and rulesmode. for shipping, provider is also needed.
-if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponID) || (vars.rulesmode == 'shipping' && vars.provider)))	{
+if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponCode) || (vars.rulesmode == 'shipping' && vars.provider)))	{
 	if($tbody.length)	{
 		$btn.closest('.ui-dialog-content').showLoading({'message':'Updating Rules'});
 
@@ -1199,18 +1199,32 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponID) || (vars.rulesm
 					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
 					}
 				});
-			//app.u.dump(' -> macros: '); app.u.dump(macros);
 			
-			//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
-			app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
-			app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+
 			}
 		else if(vars.rulesmode == 'coupons')	{
-			
-			console.log('This is not done yet.','warn');
-			
+			//unlike shipping, coupon rules are non-destructive. so we only impact codes that were edited, added or deleted.
+			$('tr',$tbody).each(function(){
+				var $tr = $(this);
+				if($tr.hasClass('rowTaggedForRemove'))	{
+					macros.push("COUPON:REMOVE?CODE="+$tr.data('code'));//row tagged for delete. do not insert.
+					}
+				else if($tr.hasClass('isNewRow'))	{
+					macros.push("COUPON:INSERT?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+					}
+				else if($tr.hasClass('edited'))	{
+					macros.push("COUPON:UPDATE?"+app.ext.admin.u.getSanitizedKVPFromObject($tr.data()));
+					}
+				else	{
+					macros.push("SHIPMETHOD/RULESTABLE-INSERT?provider="+vars.provider+"&table="+vars.table+"&"+app.ext.admin.u.getSanitizedKVPFromObject($(this).data()));
+					}
+				});
+
+
 			}
 		else	{} //catch all. shouldn't get here.
+
+		app.u.dump(' -> macros: '); app.u.dump(macros);
 
 		app.ext.admin.calls.adminConfigMacro.init(macros,{'callback':function(rd){
 			if(app.model.responseHasErrors(rd)){
@@ -1222,7 +1236,18 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponID) || (vars.rulesm
 				}
 			}},'immutable');
 
-		
+//These subsequents requests need to take place AFTER the configMacro so that the changes set there are reflected in the detail updates below.
+		if(vars.rulesmode == 'shipping')	{
+			//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
+			app.model.destroy('adminConfigDetail|shipmethods|'+app.vars.partition);
+			app.ext.admin.calls.adminConfigDetail.init({'shipmethods':true},{datapointer : 'adminConfigDetail|shipmethods|'+app.vars.partition},'immutable');
+			}
+		else if(vars.rulesmode == 'coupons')	{
+			//need to get shipments updated so that the rules for the method are updated in memory. important if the user comes right back into the editor.
+			app.model.destroy('adminConfigDetail|coupons|'+app.vars.partition);
+			app.ext.admin.calls.adminConfigDetail.init({'coupons':true},{datapointer : 'adminConfigDetail|coupons|'+app.vars.partition},'immutable');
+			}
+		else	{} //coupons and shipping are the only two valid modes, so far.
 		
 		app.model.dispatchThis('immutable');
 		}
@@ -1231,7 +1256,7 @@ if(vars.table && ((vars.rulesmode == 'coupons' && vars.couponID) || (vars.rulesm
 		}
 	}
 else	{
-	$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':'In admin_config.e.ruleBuilderUpdateExec, unable to ascertain vars.rulesmode ['+vars.rulesmode+'] vars.table ['+vars.table+'] OR (vars.rulesmode is shipping and vars.provider not found ['+vars.provider+'] OR  vars.rulesmode is coupons and vars.couponID not found ['+vars.couponID+']).','gMesage':true})
+	$('.dualModeListMessaging',$dualModeContainer).anymessage({'message':'In admin_config.e.ruleBuilderUpdateExec, unable to ascertain vars.rulesmode ['+vars.rulesmode+'] vars.table ['+vars.table+'] OR (vars.rulesmode is shipping and vars.provider not found ['+vars.provider+'] OR  vars.rulesmode is coupons and vars.couponCode not found ['+vars.couponCode+']).','gMesage':true})
 	}
 					});
 				},

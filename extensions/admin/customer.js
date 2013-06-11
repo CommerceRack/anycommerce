@@ -127,7 +127,6 @@ var admin_customer = function() {
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
 					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec' disabled='disabled'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
-//					'controls' : "<form action='#' onsubmit='return false'><label>Product ID: <input type='search' name='PID' \/><\/label><button>Search<\/button><\/form>",
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
 					});
 

@@ -52,16 +52,15 @@ var admin = function() {
 		
 		'pageTemplateSites',
 		'domainListTemplate',
-		'partitionListTemplate',
+		'partitionListTemplate'
 		
-		'projectsPageTemplate',
-		'projectsListTemplate',
-		'projectDetailTemplate',
-		'projectCreateTemplate',
+//		'projectsListTemplate',
+//		'projectDetailTemplate',
+//		'projectCreateTemplate',
 		
-		'rssAddUpdateTemplate',
-		'rssPageTemplate',
-		'rssListTemplate'		
+//		'rssAddUpdateTemplate',
+//		'rssPageTemplate',
+//		'rssListTemplate'		
 		
 		); 
 	var r = {
@@ -3556,22 +3555,23 @@ once multiple instances of the finder can be opened at one time, this will get u
 
 
 			showProjects : function($target)	{
-				$target.empty().showLoading({'message':'Fetching project list'});
-//				app.model.destroy('adminProjectList');
-				app.ext.admin.calls.adminProjectList.init({'callback':function(rd){
 
-$target.hideLoading();
-if(app.model.responseHasErrors(rd)){
-	app.u.throwMessage(rd);
-	}
-else	{
-	$target.anycontent({'templateID':'projectsPageTemplate','datapointer':rd.datapointer});
-	
-	$('.gridTable',$target).anytable();
-	app.u.handleAppEvents($target);
-	}
-					}},'mutable');
+				$target.empty();
+				var $table = app.ext.admin.i.DMICreate($target,{
+					'header' : 'Projects',
+					'className' : 'projects',
+					'controls' : "",
+					'buttons' : ["<button data-app-event='admin|openDialog' data-templateid='projectCreateTemplate' title='Create a new project' data-update-list='true'>New Project</button>"],
+					'thead' : ['ID','Title','Type','Created','Updated',''],
+					'tbodyDatabind' : "var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;"
+					});
+
+				if($table)	{
+					app.model.addDispatchToQ({'_cmd':'adminProjectList','_tag': {'datapointer':'adminProjectList','callback':'anycontent','jqObj':$table}},'mutable');
 					app.model.dispatchThis('mutable');
+					}
+				else	{} //buildDualMode will handle the error display.
+
 				},
 
 			showRSS : function($target)	{
@@ -5853,30 +5853,33 @@ dataAttribs -> an object that will be set as data- on the panel.
 					}
 				},			
 			projectUpdateShow : function($btn)	{
-				$btn.button({icons: {primary: "ui-icon-info"},text: false});
-				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(){
 
-					var
-						$container = $btn.closest("[data-app-role='dualModeContainer']"),
-						data = $btn.closest('tr').data(),
-						$target = $("[data-app-role='dualModeDetail']",$container)
-						panelID = app.u.jqSelector('','project_'+data.id);
+
+				$btn.button({icons: {primary: "ui-icon-pencil"},text: false});
+				$btn.off('click.projectUpdateShow').on('click.projectUpdateShow',function(event){
+					event.preventDefault();
+					var	projectUUID = $btn.closest('tr').data('uuid');
 					
-					
-					var $panel = $("<div\/>").hide().anypanel({
-						'header':'Edit: '+data.title || data.id,
-						data : {},
-						'templateID':'projectDetailTemplate'
-						}).prependTo($target);
-					
-					app.ext.admin.u.toggleDualMode($container,'detail');
-					$panel.slideDown('fast');
-					
-					app.model.destroy('adminProjectDetail|'+data.uuid);
-					app.ext.admin.calls.adminProjectDetail.init(data.uuid,{'callback':'anycontent',jqObj:$panel},'mutable');
+					var $panel = app.ext.admin.i.DMIPanelOpen($btn,{
+						'templateID' : 'projectDetailTemplate', //not currently editable. just more details.
+						'panelID' : 'project_'+projectUUID,
+						'header' : 'Edit Project: '+$btn.closest('tr').data('title') || projectUUID,
+						'handleAppEvents' : true,
+						showLoading : true
+						});
+//files are not currently fetched. slows things down and not really necessary since we link to github. set files=true in dispatch to get files.
+					app.model.addDispatchToQ({
+						"_cmd":"adminProjectDetail",
+						"UUID":projectUUID,
+						"_tag": {
+							'callback':'anycontent',
+							jqObj:$panel,
+							'datapointer' : 'adminProjectDetail|'+projectUUID
+							}
+						},'mutable');
 					app.model.dispatchThis('mutable');
-
 					});
+
 				},
 			
 			projectCreateExec  : function($btn,vars)	{
@@ -5889,7 +5892,7 @@ dataAttribs -> an object that will be set as data- on the panel.
 					
 					
 					if(app.u.validateForm($form))	{
-						$form.showLoading({'message':'Adding New Project'});
+						$form.showLoading({'message':'Adding your new project. This may take a few moments as the repository is imported.'});
 						app.model.destroy('adminProjectList');
 						sfo.UUID = app.u.guidGenerator();
 						app.ext.admin.calls.adminProjectCreate.init(sfo,{'callback':function(rd){
@@ -5915,32 +5918,6 @@ dataAttribs -> an object that will be set as data- on the panel.
 					})
 				},
 			
-			projectCreateShow : function($btn)	{
-				$btn.button();
-				$btn.off('click.projectCreateShow').on('click.projectCreateShow',function(){
-
-
-					var $D = $("<div \/>").attr('title',"Add a new project");
-					$D.addClass('displayNone').appendTo('body'); 
-					$D.dialog({
-						width : '70%',
-						modal: true,
-						autoOpen: false,
-						close: function(event, ui)	{
-							$(this).dialog('destroy').remove();
-							},
-						buttons: [ 
-							{text: 'Cancel', click: function(){
-								$D.dialog('close');
-								if(typeof vars.closeFunction === 'function')	{
-									vars.closeFunction($(this));
-									}
-								}}	
-							]
-						});
-					$D.dialog('open');
-					});
-				},
 			
 			projectGitRepoOpen : function($btn)	{
 				if($btn.closest('tr').data('github_repo'))	{

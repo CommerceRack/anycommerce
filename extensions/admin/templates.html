@@ -1145,45 +1145,6 @@ ACHIEVEMENTS
 
 
 
-<div id='projectsPageTemplate' class='page pageProjects' data-app-role='dualModeContainer' data-app-mode='list'>
-
-	
-	<div class='betaWarning ui-widget ui-widget-content ui-corner-all smallPadding marginBottom clearfix'>
-	<p>This section has been updated as of 201320. If you experience issues please logout and click the previous version link, then come back to this page to make your changes.</p>
-	</div>
-
-	<section class='dualModeDetailContainer' data-app-role='dualModeDetail'></section>
-
-	<section class='dualModeListContainer' data-app-role='dualModeList'>
-		<div class='ui-widget-header ui-corner-top'>
-			<div class='buttonSet'>
-				<button class='floatRight' data-app-event="admin|projectCreateShow" data-update-list='true'>New Project</button>
-			</div>
-			<h3 class='heading'>Projects</h3>
-		</div>
-		
-		<div class='ui-widget-content ui-corner-bottom'>
-		<div class="dualModeListMessaging marginBottom"></div>
-		<table class='gridTable fullWidth marginBottom' data-app-role='dualModeResultsTable'>
-		<!-- thead is needed, whether visible or not, so that the data-name attributes can be used to look up column # -->
-		<thead>
-		<tr>
-			<th class='alignLeft'>ID</th>
-			<th class='alignLeft'>Title</th>
-			<th class='alignLeft hideInMinimalMode'>Type</th>
-			<th class='alignLeft hideInMinimalMode'>Created</th>
-			<th class='alignLeft hideInMinimalMode'>Updated</th>
-			<th data-anytable-nosort='true'></th>
-		</tr>
-		</thead>
-		<tbody data-bind="var: projects(@PROJECTS); format:processList; loadsTemplate:projectsListTemplate;" class='dualModeList' data-app-role='dualModeListContents'></tbody>
-		</table>
-		
-		<div data-app-role='dualModeDetailContainer' class='displayNone stdPadding'></div>
-		
-		</div>
-	</section>
-</div>
 
 
 <table>
@@ -1191,8 +1152,8 @@ ACHIEVEMENTS
 	<td data-bind="var: projects(ID); format:text;"></td>
 	<td data-bind="var: projects(TITLE); format:text;"></td>
 	<td data-bind="var: projects(TYPE); format:text;"></td>
-	<td data-bind="var: projects(CREATED_TS); format:text;"></td>
-	<td data-bind="var: projects(UPDATED_TS); format:text;"></td>
+	<td data-bind="var: projects(CREATED_TS); format:text;" class='hideInDetailMode'></td>
+	<td data-bind="var: projects(UPDATED_TS); format:text;" class='hideInDetailMode'></td>
 	<td class='alignRight'>
 	<button data-app-event='admin|projectGitRepoOpen'>Visit GitHub Repo</button>
 	<button data-app-event='admin|projectLinkOpen'>Update Project From Repo</button>
@@ -1206,6 +1167,7 @@ ACHIEVEMENTS
 
 	<h3 class='label' data-bind="var: project(TITLE); format:text;"></h3>
 	<div class='label' data-bind="var: project(ID); format:text; pretext:ID: ;"></div>
+	<div class='label' data-bind="var: project(TYPE); format:text; pretext:Type: ;"></div>
 	<div class='label' data-bind="var: project(CREATED_TS); format:text; pretext:Created: ;"></div>
 	<div class='label' data-bind="var: project(APP_VERSION); format:text; pretext:App version: ;"></div>
 	<div class='label' data-bind="var: project(APP_RELEASE); format:text; pretext:App release: ;"></div>
