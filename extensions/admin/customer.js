@@ -125,7 +125,7 @@ var admin_customer = function() {
 					'header' : 'Reviews Manager',
 					'className' : 'reviewsManager',
 					'controls' : "<form action='#' onsubmit='return false'><input type='hidden' name='_cmd' value='adminProductReviewList' \/><input type='hidden' name='_tag/datapointer' value='adminProductReviewList' \/><input type='hidden' name='_tag/callback' value='DMIUpdateResults' /><input type='hidden' name='_tag/extension' value='admin' /><input type='search' name='PID' \/><button data-app-event='admin|controlFormSubmit'>Search<\/button><\/form>",
-					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec' disabled='disabled'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
+					'buttons' : ["<button data-app-event='admin_customer|reviewApproveExec'>Approve Reviews<\/button>","<button data-app-event='admin_customer|reviewCreateShow'>Add Review<\/button>"],
 					'thead' : ['','Created','Product ID','Subject','Customer','Review',''],
 					'tbodyDatabind' : "var: users(@REVIEWS); format:processList; loadsTemplate:reviewsResultsRowTemplate;"
 					});
@@ -734,8 +734,8 @@ $D.dialog('open');
 								$('#globalMessaging').anymessage(app.u.successMsgObject('The review has been removed.'));
 								$tr.empty().remove(); //removes row for list.
 								}
-							}}},'mutable');
-					app.model.dispatchThis('mutable');
+							}}},'immutable');
+					app.model.dispatchThis('immutable');
 						}});
 					})
 				}, //reviewRemoveConfirm
@@ -762,7 +762,36 @@ $D.dialog('open');
 					});
 				},
 			
-//			reviewApproveExec : function($btn)	{},
+			reviewApproveExec : function($btn)	{
+				$btn.button();
+				$btn.off('click.reviewApproveExec').on('click.reviewApproveExec',function(){
+					var
+						$DMI = $btn.closest("[data-app-role='dualModeContainer']"),
+						$tbody = $("[data-app-role='dualModeListTbody']",$DMI),
+						i = 0;
+						
+					$tbody.find('tr').each(function(){
+						var $tr = $(this);
+						if($(':checkbox:first',$tr).is(':checked'))	{
+							i += 1;
+							app.model.addDispatchToQ({'RID':$tr.data('id'),'_cmd':'adminProductReviewApprove'},'immutable');
+							}
+						}); // ends tr loop.
+					
+					
+					if(i)	{
+						$tbody.showLoading({'message':'Setting review status to approved for '+i+' review(s)'})
+//reload the reviews manager.
+app.model.addDispatchToQ({'_cmd':'adminProductReviewList','filter':'UNAPPROVED','_tag' : {'datapointer':'adminProductReviewList','jqObj':$DMI,'callback':'DMIUpdateResults'}},'immutable');
+app.model.dispatchThis('immutable');
+					
+						}
+					else	{
+						$('.dualModeListMessaging',$DMI).anymessage({'message':'Please check at least one checkbox below to approve the reviews.'})
+						}
+					
+					});
+				},
 
 			giftcardCreateShow : function($btn)	{
 				$btn.button();
