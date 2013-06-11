@@ -53,7 +53,7 @@ function prepFlip($obj)
 	$obj.removeAttr("flipped");
 }*/
 
-$(document).ready(function()
+jQuery(document).ready(function()
 {
 	var carousel1;
 	function foo1(){ $(".catCarousel").carouFredSel({

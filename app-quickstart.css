@@ -1709,7 +1709,67 @@ div.catCarousel2 h2
 .headert3{margin:15px 0 0 113px; padding:0px; float:left;}
 .socialicona{margin:0 0 0 35px; padding:0px; float:left;} 
 
-@media screen and (max-width: 320px) 
+@media (min-width: 768px) and (max-width: 1024px)  { 
+#container {width:96%;}
+.caroufredsel_wrapper div.ccItem {padding-left:0px;margin-left:-5px;}
+.sortby {margin:0 0 0 2px;}
+.Account {width:600px;margin-left:-20px;}
+.featuredCategories div.catNavContent p:not(:last-child){width:290px;}
+}
+
+/*ipad*/
+@media  only screen and (min-width: 768px) and (max-width: 979px)  and (orientation:portrait) {
+#container {width:99%;}
+.headert1{margin:11px 0 0 -25% ;width:290px;}
+.headert2{margin:41px 35px 0 25px;}
+.headert3{margin:10px 0 0 29px;}
+div#container div.nav div.navContent > ul > li > a {font-size:20px;}
+div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
+.midmain {margin-left:18px;}
+.featuredCategories div.catNavContent p:not(:last-child) {width:195px;}
+.caroufredsel_wrapper div.ccItem {padding-left:5px;}
+.productList > li{width:216px;}
+div#container div#topNav div#topNavContent p:not(:last-child){ /*{padding-right:11px;*/}
+.fl {padding:8px 21px 0 0}
+div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
+.featuredCategories img.btnViewAllCategories {margin-right:180px;}
+#resultsProductListContainer {width:500px!important;}
+.sortby {margin:20px 0 0 2px; width:215px;}
+}
+
+@media  only screen and (max-width: 767px) {
+
+}
+
+/*Samsung Big Phone*/
+@media only screen and (min-width: 480px) and (max-width: 767px) {
+#container {width:99%;}
+.headert1{margin:11px 0 0 -25%;width:290px;}
+
+.headert2{margin:41px 20px 0 25px;}
+.headert3{margin:10px 0 0 29px;}
+div#container div.nav div.navContent > ul > li > a {font-size:20px;}
+div#container div.nav div.navContent > ul > li {padding-left:15px;padding-right:15px;}
+.midmain {margin-left:18px;}
+.featuredCategories div.catNavContent p:not(:last-child) {width:195px;}
+.caroufredsel_wrapper div.ccItem {padding-left:5px;}
+.productList > li{width:216px;}div#container div#topNav div#topNavContent p:not(:last-child) {/*padding-right:11px;*/}
+.fl {padding:8px 21px 0 0}
+div#container div#footer div#footerContent div#footerLinks > ul {padding-left:18px;width:140px;padding-right:10px;}
+.featuredCategories img.btnViewAllCategories {margin-right:180px;}
+#resultsProductListContainer {width:500px!important;}
+.sortby {margin:20px 0 0 2px;width:215px;}
+}
+
+/*iphone used*/
+@media only screen and (min-width: 320px) and (max-width: 479px) {
+#mainContentArea {display:none;}
+#footer {display:none;}
+.headert2{display:none;}
+.headert3{display:none;}
+ }
+
+/*@media screen and (max-width: 320px) 
 {
 .headert1{margin:11px 0 0 0; padding:0px; float:left; cursor:pointer;}
 .headert1 img{width:90%;}
@@ -1731,7 +1791,7 @@ div#appPreView table div#loader > div.alignCenter > progress{border-color: #3528
 {
 .bannerS{width:100%; float:left; margin:0 20px 0 0; box-shadow:0px 0px 9px #000;}
 .dropDownListHolder img{width:100%;}
-}
+}*/
 
 
 .dropDownListHolder img{width:100%;}

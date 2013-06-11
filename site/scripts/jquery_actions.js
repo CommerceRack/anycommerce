@@ -175,7 +175,7 @@ $(document).ready(function()
 		{
 			if($(this).css("display") != "none")
 			{
-				$(this).stop().animate({"height":"0px"}, 300, $(this).hide());
+				$(this).stop().animate({left:"50%"},{duration: 3000,easing: 'easeOutBounce'});
 			}
 		});
 	});	

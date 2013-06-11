@@ -33,7 +33,7 @@ app.rq.push(['script',0,app.vars.baseURL+'resources/jquery.ui.anyplugins.js']); 
 
 
 app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
+	app.rq.push(['script',1,app.vars.baseURL+'site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js']);	
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 }]);
 
@@ -57,30 +57,7 @@ app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
 	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions.js']);
 }]);
 
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed1.js']);	
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
 
-app.rq.push(['templateFunction','homepageTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','categoryTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','companyTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','customerTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
-
-app.rq.push(['templateFunction','searchTemplate','onCompletes',function(P) {
-	app.rq.push(['script',1,app.vars.baseURL+'site/script/app_actions1.js']);
-}]);
 
 
 app.rq.push(['script',1,app.vars.baseURL+'cycle-2.9999.81.js']);//','validator':function(){return (jQuery().cycle) ? true : false;}});

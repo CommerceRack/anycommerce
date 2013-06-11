@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <!-- do not populate or add meta data or title, the SEO layer will add it -->
 
 <!-- used for optional social media extensions -->
@@ -33,11 +33,13 @@ css files should be included before any .js file to ensure they are downloaded i
 -->
 <link rel="stylesheet" type="text/css" href="app-quickstart.css" />
 <link rel="stylesheet" type="text/css" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.1/themes/ui-lightness/jquery-ui.css" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script src="jquery.min.js"></script>
 <script src="resources/jquery.ui.widget.min.js"></script><!-- here so that plugins that may load before the jqueryui lib load without error -->
 <script type="text/javascript" src="loadscript.js"></script>
-<script type="text/javascript" src="jquery_actions.js"></script>
+<script type="text/javascript" src="site/scripts/jquery_actions.js"></script>
+
 <script type="text/javascript" src="site/scripts/carouFredSel-6.2.0/jquery.carouFredSel-6.2.0-packed.js"></script>
+
 <script type="text/javascript">
 app.u.loadScript(app.vars.baseURL+"_init.js");
 </script>
@@ -105,8 +107,8 @@ This file is intended to go along with the 10-step tutorial at:
 			<div id="headerContent">
                 <div class="headert1"><img src="images/logo.png" alt="Toy Wars" title="Toy Wars" onClick="return showContent('category',{'navcat' : '.'});"></div>
                 <div class="headert2">
-                	<form id='headerSearchFrm' name='headerSearchFrm' action='#'  method="get">
-						<input type='search' name='KEYWORDS' id='txtSearch' value="Find it here..." />
+                	<form id='headerSearchFrm' name='headerSearchFrm' action='#' class='productSearchForm' method="get">
+						<input type='search' name='KEYWORDS' id='txtSearch' value="Find it here..." class="productSearchKeyword handleDefault" />
 						<input id="btnTopNavSearch" type="image" src="images/nav-search.png" value=""/>
 					</form>
                 </div>
