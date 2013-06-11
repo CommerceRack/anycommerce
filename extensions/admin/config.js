@@ -712,14 +712,16 @@ $D.dialog('open');
 
 
 			showCCSuppInputs : function($ele)	{
+				var
+					$suppContainer = $("[data-app-role='providerSpecificInputs']",$ele.closest('form')),
+					data = app.ext.admin.u.getValueByKeyFromArray(app.data['adminConfigDetail|payment|'+app.vars.partition]['@PAYMENTS'],'tender','CC'); //gathered outside 'click' so only executed once. supplies content to supplemental inputs (to pre-populate).
+
 				$ele.off('change.showCCSuppInputs').on('change.showCCSuppInputs',function(){
-					var
-						gateway = $ele.val(),
-						$suppContainer = $("[data-app-role='providerSpecificInputs']",$ele.closest('form'));
+					var gateway = $ele.val();
 					$suppContainer.empty();
 //the contents are emptied rather than having several hidden fieldsets so that no extra/unnecesary data is sent on the post (and no white/blacklisting needs to be done).
 					if(gateway != 'TESTING' && gateway != 'NONE')	{
-						$suppContainer.anycontent({'data':{},'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
+						$suppContainer.anycontent({'data':data ,'templateID':'paymentSuppInputsTemplate_'+gateway.toLowerCase()});
 						}
 					});
 				$ele.trigger('change.showCCSuppInputs'); //trigger the change to show the selected fieldset (for initial load)
@@ -891,60 +893,60 @@ $D.dialog('open');
 			dataTableAddExec : function($btn,vars)	{
 				$btn.button();
 				$btn.off('click.dataTableAddExec').on('click.dataTableAddExec',function(event){
-event.preventDefault();
-
-app.u.dump("BEGIN admin_config.e.dataTableAddExec");
-
-var
-	$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
-//tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
-	$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
-	$form = (vars['$form']) ? vars['$form'] : $container.closest('form');
-
-
-if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
-	app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
-//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
-//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
-//	$('input',$container).attr('required','required'); 
-	if(app.u.validateForm($container))	{
-		app.u.dump(" -> form is validated.");
-		var 
-			bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
-			sfo = $container.serializeJSON({'cb':true}),
-			$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
-		
-//		app.u.dump(" -> sfo: "); app.u.dump(sfo);
-		
-		$tr.anycontent({data:sfo});
-		$tr.addClass('edited');
-		$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
-
-//if a row already exists with this guid, this is an UPDATE, not an ADD.
-		if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
-			$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
-			}
-		else	{
-			$tr.appendTo($dataTbody);
-			}
-		app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
-//this function will look for .edited in the form and, if present, enable and update the save button.
-		app.ext.admin.u.handleSaveButtonByEditedClass($form);
-		}
-	else	{
-		app.u.dump("form did not validate");
-		//validateForm handles error display.
-		}
-//	$('input',$container).attr('required','').removeAttr('required');
-	
-	}
-else	{
-	$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
-	app.u.dump(" -> $container.length: "+$container.length);
-	app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
-	app.u.dump(" -> $form.length: "+$form.length);
-	app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
-	}
+					event.preventDefault();
+					
+					app.u.dump("BEGIN admin_config.e.dataTableAddExec");
+					
+					var
+						$container = vars['$container'] ? vars['$container'] : $btn.closest('fieldset'),
+					//tbody can be passed in thru vars or, if not passed, it will look for one within the fieldset. rules engine uses vars approach. shipping doesn't. same for form.
+						$dataTbody = (vars['$dataTbody']) ? vars['$dataTbody'] : $("[data-app-role='dataTable'] tbody",$container),
+						$form = (vars['$form']) ? vars['$form'] : $container.closest('form');
+					
+					
+					if($container.length && $dataTbody.length && $dataTbody.data('bind'))	{
+						app.u.dump(" -> all necessary jquery objects found. databind set on tbody.");
+					//none of the table data inputs are required because they're within the parent 'edit' form and in that save, are not required.
+					//so temporarily make inputs required for validator. then unrequire them at the end. This feels very dirty.
+					//	$('input',$container).attr('required','required'); 
+						if(app.u.validateForm($container))	{
+							app.u.dump(" -> form is validated.");
+							var 
+								bindData = app.renderFunctions.parseDataBind($dataTbody.attr('data-bind')),
+								sfo = $container.serializeJSON({'cb':true}),
+								$tr = app.renderFunctions.createTemplateInstance(bindData.loadsTemplate,sfo);
+							
+					//		app.u.dump(" -> sfo: "); app.u.dump(sfo);
+							
+							$tr.anycontent({data:sfo});
+							$tr.addClass('edited');
+							$tr.addClass('isNewRow'); //used in the 'save'. if a new row immediately gets deleted, it isn't added.
+					
+					//if a row already exists with this guid, this is an UPDATE, not an ADD.
+							if(sfo.guid && $("tr[data-guid='"+sfo.guid+"']",$dataTbody).length)	{
+								$("tr[data-guid='"+sfo.guid+"']",$dataTbody).replaceWith($tr);
+								}
+							else	{
+								$tr.appendTo($dataTbody);
+								}
+							app.u.handleAppEvents($tr,vars); //vars are passed through so that buttons in list can inheret. rules uses this.
+					//this function will look for .edited in the form and, if present, enable and update the save button.
+							app.ext.admin.u.handleSaveButtonByEditedClass($form);
+							}
+						else	{
+							app.u.dump("form did not validate");
+							//validateForm handles error display.
+							}
+					//	$('input',$container).attr('required','').removeAttr('required');
+						
+						}
+					else	{
+						$btn.closest('form').anymessage({"message":"In admin_config.e.dataTableAddExec, unable to ascertain container ["+$container.length+"], tbody for data table or that tbody ["+$dataTbody.length+"] has no bind-data.","gMessage":true});
+						app.u.dump(" -> $container.length: "+$container.length);
+						app.u.dump(" -> $dataTbody.length: "+$dataTbody.length);
+						app.u.dump(" -> $form.length: "+$form.length);
+						app.u.dump(" -> $dataTbody.data('bind'): "); app.u.dump($dataTbody.data('bind'));
+						}
 
 
 					});
