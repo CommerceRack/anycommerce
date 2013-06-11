@@ -1,3 +1,54 @@
+<!--
+/////////////////////// GLOBAL SETTINGS \\\\\\\\\\\\\\\\\\\\\\\\\
+-->
+
+<div id='globalSettingsTemplate'>
+
+	<div data-app-role="tabContainer">
+	<ul>
+		<li><a href='#general'>General</a></li>
+		<li><a href='#inventory'>Inventory</a></li>
+		<li><a href='#partitions'>Partitions</a></li>
+	</ul>
+	
+	
+	<section data-anytab-content='general' class='clearfix'>
+
+
+<form class='labelsAsBreaks alignedLabels'>
+<fieldset class='marginBottom'>
+	<legend>Order Sequence</legend>
+	
+	<label>
+		<span>Next Order #</span>
+		<input type="number" min='' step='1' value="" size="5" name="order_num" /><!-- use a custom render format and set min to whatever the value is -->
+		<input type="hidden" value="" name="hidden_order_num" />
+	</label>
+	<p class='hint'>
+	Note #1: You should NEVER move this number backwards - very BAD things could happen, including the possibility of 3rd party integration with tools like Quickbooks not working correctly.<br>
+	Note #2: Order ID's are not sequential numbers, they just appear that way. Specifically, using Zoovy Order Manager will reserve numbers in the sequence.<br>
+	Note #3: When the SAVE button is pressed the number you see on this page will be permanently lost - this is an intentional safety mechanism built to avoid duplicating order numbers.
+	</p>
+</fieldset>
+
+
+
+</form>
+
+	</section>
+	<section data-anytab-content='inventory' class='clearfix'></section>
+	<section data-anytab-content='partitions' class='clearfix'></section>
+	
+	</div>
+
+
+
+
+</div>
+
+
+
+
 
 <!--
 /////////////////////// RULE BUILDER \\\\\\\\\\\\\\\\\\\\\\\\\

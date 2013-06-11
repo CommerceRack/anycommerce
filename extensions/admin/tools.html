@@ -2,7 +2,7 @@
 
 <div id='productPowerToolTemplate'>
 
-<form name="powerToolFrm" action='#' onSubmit="return false" class='labelsAsBreaks'>
+<form action='#' onSubmit="return false" class='labelsAsBreaks'>
 <input type="hidden" value="0" name="JOBID" />
 
 <h1>Product Power Tool</h1>
@@ -32,12 +32,12 @@
 		<div class='stdPadding ui-widget-content ui-corner-bottom'>
 		<fieldset>
 			<legend>Which attribute to Change</legend>
-			
+
 			<label>
 				<span>Attribute</span>
 				<select required='required' name='attrib' data-app-event="admin_tools|powerToolAttribChange">
 
-<option>Please Choose</option>
+<option value=''>Please Choose</option>
 <option value="_">custom attribute (specify below)</option>
 
 <optgroup label="Base Fields">
@@ -320,6 +320,7 @@
 </table>
 </form>
 </div>
+
 
 
 

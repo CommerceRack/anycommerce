@@ -202,7 +202,7 @@ if you want the list responsive, apply the .fluidList class.
 
 
 
-.minHeight100	{min-height:300px; min-width:300px;} /* apply onto elements that will have showloading run on them if they're empty.
+.minHeight100	{min-height:100px;} /* apply onto elements that will have showloading run on them if they're empty.
 
 
 /* some generic styles for tables */
@@ -295,6 +295,10 @@ li.loadingBG, tr.loadingBG	{background:url(images/wait.gif) no-repeat center cen
 
 
 
+
+
+
+
 /*
 some jquery ui overrides/corrections
 */
@@ -311,6 +315,10 @@ li.ui-menu-item	{
 li.ui-menu-item .ui-state-focus	{color:#ffffff;}
 
 button.ui-button	{min-height:16px;} /* buttons were sometimes appearing very short. */
+
+
+
+
 
 
 
@@ -762,8 +770,11 @@ ICON LIBRARY
 	background: #ffffff;  
 	}  
 
+.threeColumn	{width:31%; margin:0 1%;}
 
-
+/* for a three column layout, where two columns are Narrow and one is Wide (NW) */
+.nwColumnN	{width:19%;}
+.nwColumnW	{width:60%;}
 
 
 

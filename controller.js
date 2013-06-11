@@ -1730,6 +1730,7 @@ VALIDATION
 
 				
 				var r = true; //what is returned. false if any required fields are empty.
+				var radios = {};  //an object used to store whether or not radios are required and, if so, whether one is selected.
 				$form.showLoading({'message':'Validating'});
 
 				$('.formValidationError',$form).empty().remove(); //clear all previous error messaging
@@ -1740,9 +1741,9 @@ VALIDATION
 					
 					$input.removeClass('ui-state-error'); //remove previous error class
 
-//					if($input.not(':radio'))	{
-//						app.u.dump(" -> validating input."+$input.attr('name')+" required: "+$input.attr('required'))
-//						}
+					if($input.prop('type') != 'radio')	{
+						app.u.dump(" -> validating input name: "+$input.attr('name')+" required: "+$input.attr('required') || 'no')
+						}
 					
 					function removeClass($t){
 						$t.off('focus.removeClass').on('focus.removeClass',function(){$t.removeClass('ui-state-error')});
@@ -1752,8 +1753,8 @@ VALIDATION
 					if($input.is(':hidden') && $input.data('validation-rules') && $input.data('validation-rules').indexOf('skipIfHidden') >= 0)	{
 						//allows for a form to allow hidden fields that are only validated if they're displayed. ex: support fieldset for topic based questions.
 						}
-//					else if($input.is("[type='radio']")){
-///						app.u.dump("IS A RADIO BUTTON");
+//					else if($input.prop('type') == 'radio'){
+//						app.u.dump("IS A RADIO BUTTON");
 //						}
 					else if ($input.attr('type') == 'email' && !app.u.isValidEmail($input.val()))	{
 						r = false;

@@ -88,7 +88,7 @@
 
 <form action='#' onSubmit='return false'>
 
-<fieldset class='alignedInputs labelsAsBreaks stdMargin floatLeft'>
+<fieldset class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
 	<legend>Organization Information</legend>
 	
 	<div class='label'><input type='text' placeholder='first name' name='firstname' value='' data-bind='var: org(ORG.firstname); format:popVal;'  /></div>
@@ -109,7 +109,7 @@
 
 </fieldset>
 
-<fieldset class='alignedInputs stdMargin floatLeft labelsAsBreaks'>
+<fieldset class='alignedInputs floatLeft labelsAsBreaks threeColumn'>
 	<legend>Billing</legend>
 	<div class='label'><input type='text' name='BILLING_CONTACT' placeholder='billing contact' value='' data-bind='var: org(ORG.BILLING_CONTACT); format:popVal;' /></div>
 	<div class='label'><input type='tel' name='BILLING_PHONE' placeholder='billing phone' value='' data-bind='var: org(ORG.BILLING_PHONE); format:popVal;' onKeyPress='return app.u.numbersOnly(event);' /></div>
@@ -125,25 +125,25 @@
 	<div class='label'><input type='number' name='CREDIT_TERMS' placeholder='credit terms' value='' data-bind='var: org(ORG.CREDIT_TERMS); format:popVal;' /></div>
 </fieldset>
 
-
-<fieldset class='stdMargin floatLeft'>
-	<legend>Company Logo</legend>
-	<img width="160" height="70" src="/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
-	<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
-	<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
-</fieldset>
-
-<fieldset class='alignedInputs labelsAsBreaks stdMargin floatLeft'>
-	<legend>Account Information</legend>
-	<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
-	<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
-	<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
-</fieldset>
-
+<div class='alignedInputs labelsAsBreaks floatLeft threeColumn'>
+	<fieldset class='marginBottom'>
+		<legend>Company Logo</legend>
+		<img width="160" height="70" src="/images/blank.gif" data-app-role='organizationLogo'  data-bind='var: org(ORG.LOGO); format:imageURL;bgcolor:TTTTTT; defaultValue: i/imagenotfound;' >
+		<a data-app-event="admin_wholesale|showMediaLib4OrganizationLogo" href="#"><b>[Edit]</b></a>
+		<input type='text' name='LOGO' class='displayNone' /><!-- use text input cuz hidden inputs don't support change events -->
+	</fieldset>
+	
+	<fieldset class='marginTop'>
+		<legend>Account Information</legend>
+		<div class='label'><input type='text' name='ACCOUNT_MANAGER' placeholder='account manager' value='' data-bind='var: org(ORG.ACCOUNT_MANAGER); format:popVal;' /></div>
+		<div class='label'><input type='text' name='ACCOUNT_TYPE' placeholder='account type' value='' data-bind='var: org(ORG.ACCOUNT_TYPE); format:popVal;' /></div>
+		<div class='label'><input type='text' name='ACCOUNT_REFID' placeholder='account reference id' value='' data-bind='var: org(ORG.ACCOUNT_REFID); format:popVal;' /></div>
+	</fieldset>
+</div>
 
 <div class='clearfix'></div>
 
-<div class='buttonset clearfix marginTop'></div><!-- buttons will be automatically added to this by buttonset class -->
+<div class='buttonset clearfix marginTop alignRight'></div><!-- buttons will be automatically added to this by buttonset class -->
 
 </form>
 
