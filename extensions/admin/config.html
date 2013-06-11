@@ -23,163 +23,8 @@ The main portion of the rule builder interface is built w/  app.ext.admin.i.DMIC
 </tr>
 
 
-<tr id='ruleBuilderRowTemplate_coupons'>
-	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
-	<td data-bind="var: rule(code); format:text;"></td>
-	<td data-bind="var: rule(hint); format:text;"></td>
-	<td data-bind="var: rule(exec); format:text;"></td>
-	<td data-bind="var: rule(match); format:text;"></td>
-	<td data-bind="var: rule(matchvalue); format:text;"></td>
-	<td data-bind="var: rule(value); format:text;"></td>
-	<td class='alignRight'>
-		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
-		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>
-	</td>
-</tr>
 
 </table>
-
-
-
-
-
-
-<form id='rulesInputsTemplate_coupons'>
-
-<fieldset class='labelsAsBreaks alignedLabels'>
-<label>
-	<span>Hint:</span>
-	<input type="text" name="HINT" value="New Rule" size="20">
-</label>
-<p class="hint">Something you use to remind yourself what the purpose of the rule is.</p>
-
-
-<label>
-	<span>Use Rule if:</span>
-	<select name="MATCH">
-	<option value="IGNORE">Ignore (for testing)</option><option selected="" value="SOME_IN_FILTER">ANY product in cart matches filter</option><option value="NOTHING_IN_FILTER">NOTHING in cart matches the filter</option><option value="STATE_MATCH">STATE matches</option><option value="COUNTRY_MATCH">Country Name matches</option><option value="COUNTRYCODE_MATCH">Country ISOX matches</option><option value="HAS_CLAIM">Incomplete Item in Cart</option><option value="SUBTOTAL/GT">cart total price is GREATER than MATCH VALUE</option><option value="SUBTOTAL/LT">cart total price is LESS than MATCH VALUE</option><option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option><option value="POGMATCH">STID contains POG in filter criteria (examples: ":A0", ":A001", "/A001")</option><option value="STIDMATCH/GT">More than MATCH VALUE items are found in the filter</option><option value="STIDMATCH/LT">Less than MATCH VALUE items match the filter</option><option value="STIDTOTAL/GT">sum of filter matching items is GREATER than MATCH VALUE</option><option value="STIDTOTAL/LT">sum of filter matching items is LESS than MATCH VALUE</option><option value="FILTER_IS_SUBSTRING">Filter appears as substring in ANY items description</option><option value="TRUE">Always True</option><option value="COUPON/ANY">Coupon(s) Present</option><option value="SANDBOX/YES">User is on Sandbox/Test Site</option><option value="SANDBOX/NO">User is on LIVE version</option>	
-	</select>
-</label>
-
-<label>
-	<span>Match Value</span>
-	<input type="text" name="MATCHVALUE" value=""> (if needed)
-</label>
-<p class="hint">Match values are only necessary for rules which say 'MATCH VALUE'</p>
-
-
-<label>
-	<span>Filter Criteria:</span>
-	<textarea name="FILTER" class='fullWidth' rows="3"></textarea>
-</label>
-
-
-<label>
-	<span>Action if Match:</span>
-
-	<select name="EXEC">	
-	<option value="GOGO">GoGo - Continue to Next Rule (if true, stop if not)</option><option value="STOP">Completely STOP Rule Processing</option><option value="MATCHADD*B3GO">ADD to Discount (B3GO: Buy-Three-Get-One Matching Items)</option><option value="MATCHADD*B2GO">ADD to Discount (B2GO: Buy-Two-Get-One Matching Items)</option><option value="MATCHADD*BOGO">ADD to Discount (BOGO: Buy-One-Get-One Matching Items)</option><option value="MATCHADD*MINUS0">ADD to Discount (SubTotal=Match Items) (% modify only)</option><option value="MATCHADD*MINUS1">ADD to Discount (SubTotal=Match Items - Single Most Expensive Match) (% modify only)</option><option value="MATCHADD*MINUS2">ADD to Discount (Subtotal=Match Items - Two Most Expensive Matches) (% modify only)</option><option value="MATCHADD*MINUS3">ADD to Discount (SubTotal=Match Items - Three Most Expensive Matches) (% modify only)</option><option value="MATCHADD*ONLY1">ADD to Discount (SubTotal=Single Most Expensive Match Item)</option><option value="DISABLE">DISABLE (Remove coupon and stop processing)</option><option selected="" value="SET">SET Discount to modify value ($ or %)</option><option value="ADD*ONE">ADD modify value to Discount Amount</option><option value="ADD*MATCHITEMS">ADD modify value to Discount Amount FOR EVERY MATCHING ITEM QTY, set quantity=1</option><option value="ADD*MATCHLINES">ADD modify value to Discount Amount FOR EACH MATCHING UNIQUE SKU/LINE, set quantity=1</option><option value="ADD*ALLSKU">ADD modify value to Discount Amount FOR EVERY UNIQUE SKU/LINE REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*ALLITEMS">ADD modify value to Discount Amount FOR EVERY ITEM QTY REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*EFFECTIVESUBTOTAL">Apply modify value to effective subtotal (even if previous coupons have been applied)</option>		
-	</select>
-</label>
-<p class="hint">
-*Note: modifiers with percentages will be calculated as follows:<br>
-SKU Matching rules: product price only (ignores quantity)<br>
-ITEM Matching rules: extended total (qty * price) <br>
-</p>
-
-
-
-<label>
-	<span>Modify Value:</span>
-	<input type="text" name="VALUE" value="-10.00"> (remember to use negative numbers to subtract)
-</label>
-
-</fieldset>
-
-
-
-</form>
-
-
-
-
-
-
-
-<form  id='rulesInputsTemplate_promotions'>
-
-<fieldset>
-
-<label>
-	<span>Discount Code</span>
-	<input  type="text" name="CODE" value=""> (for grouping)
-</label>
-<label>
-	<span>Discount Description</span>
-	<input  type="text" name="NAME" value="10% off all items in cart" size="60">
-</label>
-
-
-<label>
-	<span>Use Rule if</span>
-	<select name="MATCH">
-	<option value="IGNORE">Ignore (for testing)</option><option value="SOME_IN_FILTER">ANY product in cart matches filter</option><option value="ALL_IN_FILTER">ALL products in cart match the filter</option><option value="ALL_NOT_PRESENT">ALL products in cart do NOT match the filter</option><option value="NOTHING_IN_FILTER">NOTHING in cart matches the filter</option><option value="CRAZY_FILTER">ONLY+ALL products in filter are present in cart (no wildcards allowed)</option><option value="STATE_MATCH">STATE matches</option><option selected="" value="COUNTRY_MATCH">Country Name matches</option><option value="COUNTRYCODE_MATCH">Country ISOX matches</option><option value="DATE/LT">Date value is in the past (specify date value in match value: YYYYMMDDHHMNSS)</option><option value="DATE/GT">Date value is in the future (specify date value in match value: YYYYMMDDHHMNSS)</option><option value="HAS_CLAIM">Incomplete Item in Cart</option><option value="SUBTOTAL/GT">cart total price is GREATER than MATCH VALUE</option><option value="SUBTOTAL/LT">cart total price is LESS than MATCH VALUE</option><option value="META/EXACT">Meta Exactly matches Match Value</option><option value="META/FUZZY">Meta Fuzzy matches Filter</option><option value="MULTIVARSITE/A">Visitor is on Site-A</option><option value="MULTIVARSITE/B">Visitor is on Site-B</option><option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option><option value="POGMATCH">STID contains POG in filter criteria (examples: ":A0", ":A001", "/A001")</option><option value="STIDMATCH/GT">More than MATCH VALUE items are found in the filter</option><option value="STIDMATCH/EQ">Exactly MATCH VALUE items are found in the filter</option><option value="STIDMATCH/LT">Less than MATCH VALUE items match the filter</option><option value="STIDTOTAL/GT">sum of filter matching items is GREATER than MATCH VALUE</option><option value="STIDTOTAL/LT">sum of filter matching items is LESS than MATCH VALUE</option><option value="FILTER_IS_SUBSTRING">Filter appears as substring in ANY items description</option><option value="TRUE">Always True</option><option value="COUPON/ANY">Coupon(s) Present</option><option value="SANDBOX/YES">User is on Sandbox/Test Site</option><option value="SANDBOX/NO">User is on LIVE version</option>	
-	</select>
-</label>
-
-<label>
-	<span>Match Value</b>
-	<input  type="text" name="MATCHVALUE" value="US">
-</label>
-<p class='hint'>Match values are only necessary for rules which say 'MATCH VALUE'</p>
-
-<label>
-	<span>Filter Criteria</span>
-	<textarea  name="FILTER" class='fullWidth' rows="3"></textarea>
-</label>
-
-
-<label>
-	<span>Action if Match</span>
-
-	<select name="EXEC">	
-	<option value="GOGO">GoGo - Continue to Next Rule (if true, stop if not)</option><option value="STOP">Completely STOP Rule Processing</option><option value="MATCHADD*B3GO">ADD to Discount (B3GO: Buy-Three-Get-One Matching Items)</option><option value="MATCHADD*B2GO">ADD to Discount (B2GO: Buy-Two-Get-One Matching Items)</option><option value="MATCHADD*BOGO">ADD to Discount (BOGO: Buy-One-Get-One Matching Items)</option><option value="MATCHADD*MINUS0">ADD to Discount (SubTotal=Match Items) (% modify only)</option><option value="MATCHADD*MINUS1">ADD to Discount (SubTotal=Match Items - Single Most Expensive Match) (% modify only)</option><option value="MATCHADD*MINUS2">ADD to Discount (Subtotal=Match Items - Two Most Expensive Matches) (% modify only)</option><option value="MATCHADD*MINUS3">ADD to Discount (SubTotal=Match Items - Three Most Expensive Matches) (% modify only)</option><option value="MATCHADD*ONLY1">ADD to Discount (SubTotal=Single Most Expensive Match Item)</option><option value="REMOVE">REMOVE the Discount code (uber promotions only)</option><option value="DISABLE">DISABLE (Remove coupon and stop processing)</option><option selected="" value="SET">SET Discount to modify value ($ or %)</option><option value="ADD*ONE">ADD modify value to Discount Amount</option><option value="ADD*MATCHITEMS">ADD modify value to Discount Amount FOR EVERY MATCHING ITEM QTY, set quantity=1</option><option value="ADD*MATCHLINES">ADD modify value to Discount Amount FOR EACH MATCHING UNIQUE SKU/LINE, set quantity=1</option><option value="ADD*ALLSKU">ADD modify value to Discount Amount FOR EVERY UNIQUE SKU/LINE REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*ALLITEMS">ADD modify value to Discount Amount FOR EVERY ITEM QTY REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*EFFECTIVESUBTOTAL">Apply modify value to effective subtotal (even if previous coupons have been applied)</option><option value="SETQTY*MATCHSKU">SET Discount Quantity equal to EVERY MATCHING UNIQUE SKU/LINE</option><option value="SETQTY*MATCHITEM">SET Discount Quantity equal to EVERY MATCHING ITEM QTY</option><option value="SETQTY*ALLSKU">SET Discount Quantity equal to EVERY UNIQUE SKU/LINE REGARDLESS OF MATCH</option><option value="SETQTY*ALLITEMS">SET Discount Quantity equal to EVERY ITEM QTY REGARDLESS OF MATCH</option><option value="SETQTY*MATCHITEM2">SET Discount Quantity equal to EVERY MATCHING ITEM / 2</option>		
-	</select>
-</label>
-<p class='hint'>
-*Note: modifiers with percentages will be calculated as follows:<br>
-SKU Matching rules: product price only (ignores quantity)<br>
-ITEM Matching rules: extended total (qty * price) <br>
-</p>
-
-
-<label>
-	<span>Modify Value</span>
-	<input  type="text" name="VALUE" value="-10%"> (remember to use negative numbers to subtract)
-</label>
-
-<label>
-	<span>Apply Tax</span>
-	<input type="checkbox" name="TAX"><br>
-		<font color="red">Warning: tax does NOT apply to this promotion.</font>
-	
-</label>
-<label>
-	<span>Weight in Oz</span>
-	<input  type="text" name="WEIGHT" value="">
-</label>
-<label>
-	<span>Image</span>
-	
-	<a href="#" onclick="mediaLibrary($('#THUMBURL'), $('#IMAGE'),'Choose Promo Thumbnail');">
-	<img id="THUMBURL" name="THUMBURL" height="50" width="50" border="0" src="https://static---sporks.app-hosted.com/media/img/sporks/W50-H50-Bffffff/blank"><br>[ Edit ]</a> 
-	<input type="hidden" id="IMAGE" name="IMAGE" value="">
-</label>
-
-</fieldset>
-
-</form>
-
 
 
 
@@ -192,6 +37,8 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 
 <form  id='rulesInputsTemplate_shipping'>
+
+<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
 <fieldset class='labelsAsBreaks alignedInputs alignedLabels'>
 
 	<input type='hidden' name="guid" data-bind="var: rule(guid); format:popVal;" />
@@ -205,7 +52,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <label>
 	<span>Use rule if</span>
-	<select name="match" data-bind="var: rule(match); format:popVal;">
+	<select name="match" data-bind="var: rule(match); format:popVal;" class='smallTxt'>
 		<option value="IGNORE">Disabled (will be skipped)</option>
 		<option value="IS_TRUE">Is True (Always run this rule)</option>
 		<option value="SOME_IN_FILTER">1+ [Any Match]</option>
@@ -254,7 +101,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 </label>
 <label>
 	<span>Action if match</span>
-	<select name="exec" data-bind="var: rule(exec); format:popVal;">
+	<select name="exec" data-bind="var: rule(exec); format:popVal;"  class='smallTxt'>
 		<option value="STOP">Stop Processing</option>
 		<option value="SHIP/ADD-PERCENT-MATCH">Add [value] percent of matching items subtotal.</option>
 		<option value="SHIP/ADD-PERCENT-SUBTOTAL">Add [value] percent of the cart subtotal</option>
@@ -272,7 +119,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<span>Value</span>
 	<input type="text" value="0.00" name="value" data-bind="var: rule(value); format:popVal; hideZero:false;">
 </label>
-<p class='hint'>NOTE: values must be written as -%5 or +$5 to be valid.</p>
+<p class='hint'>Values must be written as -%5 or +$5 to be valid.</p>
 
 	<label data-app-role='pricingScheduleContainer'>
 		<span>Pricing Schedule:</span>
@@ -280,7 +127,7 @@ ITEM Matching rules: extended total (qty * price) <br>
 			<option value=''>none</option>
 		</select>
 	</label>
-<button data-app-event='admin_config|dataTableAddExec'>Add/Update</button>
+<button data-app-event='admin_config|dataTableAddExec'>Add/Update</button><!-- needs to be within fieldset for taxTableUpdateExec -->
 
 </fieldset>
 </form>
@@ -300,24 +147,34 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 <form action='#' onsubmit="return false" class='labelsAsBreaks alignedLabels'>
 <fieldset>
+
 <label>
-	<input type="checkbox" name="disable" data-bind='var:coupon(disable); format:popCheckbox;'> Disable/Expire
+	<span>Discount Code</span>
+	<input type="text" name='code' value="" size="50"  data-bind='var:coupon(code); format:popVal;' required='required' />
+	<span class='toolTip' title="This is what you will give to your customers for entry on the cart page or during checkout. It is also what will appear in the cart for the coupon line-item. Once this field is set, it can not be changed.">?</span>
+</label>
+
+<label>
+	<input type="checkbox" name="disable" data-bind='var:coupon(disable); format:popCheckbox;' class='applyAnycb' /> Disable/Expire
 	<span class='toolTip' title="Check this when the promotion is finished so customers receive a 'this coupon has expired' message">?</span>
 </label>
 
 <label>
 	<span>Coupon Title</span>
-	<input type="text" name="title" value="Free shipping" size="50"  data-bind='var:coupon(title); format:popVal;' />
+	<input type="text" name="title" value="" size="50"  data-bind='var:coupon(title); format:popVal;' required='required' />
 	<span class='toolTip' title="What will appear in the cart below the subtotal.">?</span>
 </label>
 
-<div class='label'>
 
-<img width="50" border="0" height="50" src="" name="THUMBURL" data-bind='var: coupon(image); format:imageURL;'>
-<button onclick="mediaLibrary($(this).closest('div').find('img').first(),$(this).closest('div').find('input').first(),'Coupon Thumbnail'); return(false);" type="button" class="minibutton">Edit</button>
-<button onclick="jQuery('#THUMBURL').val(''); jQuery('#IMAGE').val(''); return(false);" type="button" class="minibutton">Clear</button>
-<input type="hidden" value="" name='image' data-bind='var: coupon(image); format:popVal;' >
-</div>
+
+
+<label class='label'>
+	<span>Thumbnail</span>
+	<img width="50" border="0" height="50" src="" name="THUMBURL" data-bind='var: coupon(image); format:imageURL;'>
+	<button onclick="mediaLibrary($(this).closest('div').find('img').first(),$(this).closest('div').find('input').first(),'Coupon Thumbnail'); return(false);" type="button" class="minibutton">Edit</button>
+	<button onclick="$(this).closest('div').find('img').first().attr('src',''); $(this).closest('div').find('input').first().val(''); return(false);" type="button" class="minibutton">Clear</button>
+	<input type="hidden" value="" name='image' data-bind='var: coupon(image); format:popVal;' >
+</label>
 
 
 <label>
@@ -358,8 +215,85 @@ ITEM Matching rules: extended total (qty * price) <br>
 
 
 
+
+
+<form id='rulesInputsTemplate_coupons'>
+
+<!-- 1 fieldset w/ all code for taxTableUpdateExec -->
+<fieldset class='labelsAsBreaks alignedLabels'>
+
+	<input type='hidden' name='guid' value='' data-bind='var: rule(guid); format:popVal;' />
+	<input type='hidden' name="created" data-bind="var: rule(created); format:popVal;" />
+
+<label>
+	<span>Hint:</span>
+	<input type="text" name="hint" value="" size="20" data-bind='var: rule(hint); format:popVal;' required='required' />
+	<span class="hint">To remind you of the rule's purpose.</span>
+</label>
+
+
+
+<label>
+	<span>Use Rule if:</span>
+	<select name="match"  class='smallTxt' data-bind='var: rule(match); format:popVal;'>
+	<option value="IGNORE">Ignore (for testing)</option><option selected="" value="SOME_IN_FILTER">ANY product in cart matches filter</option><option value="NOTHING_IN_FILTER">NOTHING in cart matches the filter</option><option value="STATE_MATCH">STATE matches</option><option value="COUNTRY_MATCH">Country Name matches</option><option value="COUNTRYCODE_MATCH">Country ISOX matches</option><option value="HAS_CLAIM">Incomplete Item in Cart</option><option value="SUBTOTAL/GT">cart total price is GREATER than MATCH VALUE</option><option value="SUBTOTAL/LT">cart total price is LESS than MATCH VALUE</option><option value="SCHEDULE_MATCH">Wholesale Schedule Matches</option><option value="POGMATCH">STID contains POG in filter criteria (examples: ":A0", ":A001", "/A001")</option><option value="STIDMATCH/GT">More than MATCH VALUE items are found in the filter</option><option value="STIDMATCH/LT">Less than MATCH VALUE items match the filter</option><option value="STIDTOTAL/GT">sum of filter matching items is GREATER than MATCH VALUE</option><option value="STIDTOTAL/LT">sum of filter matching items is LESS than MATCH VALUE</option><option value="FILTER_IS_SUBSTRING">Filter appears as substring in ANY items description</option><option value="TRUE">Always True</option><option value="COUPON/ANY">Coupon(s) Present</option><option value="SANDBOX/YES">User is on Sandbox/Test Site</option><option value="SANDBOX/NO">User is on LIVE version</option>	
+	</select>
+</label>
+
+<label>
+	<span>Match Value</span>
+	<input type="text" name="matchvalue" value="" data-bind='var: rule(matchvalue); format:popVal;' />
+	<span class="hint">Only necessary for rules which say 'MATCH VALUE'</span>
+</label>
+
+
+
+<label>
+	<span>Filter Criteria:</span>
+	<textarea name="filter" class='fullWidth' rows="3"  data-bind='var: rule(filter); format:popVal;'></textarea>
+</label>
+
+
+<label>
+	<span>Action if Match:</span>
+
+	<select name="exec"  class='smallTxt' data-bind='var: rule(exec); format:popVal;'>	
+	<option value="GOGO">GoGo - Continue to Next Rule (if true, stop if not)</option><option value="STOP">Completely STOP Rule Processing</option><option value="MATCHADD*B3GO">ADD to Discount (B3GO: Buy-Three-Get-One Matching Items)</option><option value="MATCHADD*B2GO">ADD to Discount (B2GO: Buy-Two-Get-One Matching Items)</option><option value="MATCHADD*BOGO">ADD to Discount (BOGO: Buy-One-Get-One Matching Items)</option><option value="MATCHADD*MINUS0">ADD to Discount (SubTotal=Match Items) (% modify only)</option><option value="MATCHADD*MINUS1">ADD to Discount (SubTotal=Match Items - Single Most Expensive Match) (% modify only)</option><option value="MATCHADD*MINUS2">ADD to Discount (Subtotal=Match Items - Two Most Expensive Matches) (% modify only)</option><option value="MATCHADD*MINUS3">ADD to Discount (SubTotal=Match Items - Three Most Expensive Matches) (% modify only)</option><option value="MATCHADD*ONLY1">ADD to Discount (SubTotal=Single Most Expensive Match Item)</option><option value="DISABLE">DISABLE (Remove coupon and stop processing)</option><option selected="" value="SET">SET Discount to modify value ($ or %)</option><option value="ADD*ONE">ADD modify value to Discount Amount</option><option value="ADD*MATCHITEMS">ADD modify value to Discount Amount FOR EVERY MATCHING ITEM QTY, set quantity=1</option><option value="ADD*MATCHLINES">ADD modify value to Discount Amount FOR EACH MATCHING UNIQUE SKU/LINE, set quantity=1</option><option value="ADD*ALLSKU">ADD modify value to Discount Amount FOR EVERY UNIQUE SKU/LINE REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*ALLITEMS">ADD modify value to Discount Amount FOR EVERY ITEM QTY REGARDLESS OF MATCH, set quantity=1</option><option value="ADD*EFFECTIVESUBTOTAL">Apply modify value to effective subtotal (even if previous coupons have been applied)</option>		
+	</select>
+</label>
+<p class="hint marginBottom">
+*Note: modifiers with percentages will be calculated as follows:<br>
+SKU Matching rules: product price only (ignores quantity)<br>
+ITEM Matching rules: extended total (qty * price) <br>
+</p>
+
+
+
+<label>
+	<span>Modify Value:</span>
+	<input type="number" step='.01' name="value" value="" size='8' data-bind='var: rule(value); format:popVal;' /> <span class='hint'>(remember to use negative numbers to subtract)</span>
+</label>
+
+<button data-app-event='admin_config|dataTableAddExec'>Add/Update</button><!-- needs to be within the fieldset for taxTableUpdateExec -->
+</fieldset>
+
+
+</form>
+
+
+
+
+
+
+
+
+
+
+
 <!-- ['','Enabled','Code','Title','Created','Begins','Expires',''] -->
 <table>
+
+<!-- used for each coupon in the coupons 'list'. -->
 <tr id='couponsResultsRowTemplate'>
 	<td data-bind="var:coupon(disabled); format:isNotDisabled; extension:admin_config; hideZero:false;"></td>
 	<td data-bind="var:coupon(code); format:text;"></td>
@@ -371,6 +305,24 @@ ITEM Matching rules: extended total (qty * price) <br>
 	<button data-app-event='admin_config|couponDetailDMIPanel'>Edit Coupon</button>
 	</td>
 </tr>
+
+
+<!-- used for each coupon rule in a coupon's rules 'list'. -->
+<tr id='ruleBuilderRowTemplate_coupons'>
+	<td><span class='ui-icon ui-icon-grip-dotted-vertical pointer'></span></td>
+	<td data-bind="var: rule(code); format:text;"></td>
+	<td data-bind="var: rule(hint); format:text;"></td>
+	<td data-bind="var: rule(exec); format:text;"></td>
+	<td data-bind="var: rule(match); format:text;"></td>
+	<td data-bind="var: rule(matchvalue); format:text;"></td>
+	<td data-bind="var: rule(value); format:text;"></td>
+	<td class='alignRight'>
+		<button data-app-event="admin|tagRowForRemove">Delete Rule</button>
+		<button data-app-event="admin_config|showRuleEditorAsPanel">Edit Rule</button>
+	</td>
+</tr>
+
+
 </table>
 
 

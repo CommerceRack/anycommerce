@@ -5194,7 +5194,7 @@ vars:
 	showLoadingMessage: if set, will add showLoading to $target.
 */
 			DMICreate : function($target,vars)	{
-				app.u.dump("BEGIN admin.u.buildDualModeInterface");
+//				app.u.dump("BEGIN admin.u.buildDualModeInterface");
 				var r = false; //what is returned. will be the results table element if able to create dualModeInterface
 				vars = vars || {};
 				if($target instanceof jQuery && vars.tbodyDatabind)	{
